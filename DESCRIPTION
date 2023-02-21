@@ -1,0 +1,14 @@
+Package: plot2
+Type: Package
+Title: What the Package Does Using Title Case
+Version: 1.0
+Date: 2023-02-21
+Author: Grant McDermott
+Maintainer: Grant McDermott <grant.mcdermott@gmail.com>
+Description: More details about what the package does. See
+         <http://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file>
+         for details on how to write this part.
+License: GPL (>= 2)
+Suggests: tinytest
+Encoding: UTF-8
+RoxygenNote: 7.2.3

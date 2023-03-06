@@ -146,7 +146,7 @@ plot2.default = function(
   if (!is.null(grid)) grid
   
   # draw the points/lines
-  if (type %in% c("p", "o", "b")) invisible(
+  if (type=="p") invisible(
     lapply(
       seq_along(split_data), 
       function(i) points(
@@ -164,7 +164,9 @@ plot2.default = function(
       function(i) lines(
         x=split_data[[i]]$x, 
         y=split_data[[i]]$y, 
-        col = cols[i], type = type
+        col = cols[i], 
+        type = type,
+        pch = pch
         )
       )
   )

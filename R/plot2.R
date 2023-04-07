@@ -184,8 +184,8 @@ plot2.default = function(
   if (is.null(ylab)) ylab = deparse(substitute(y))
   if (is.null(legend.args$title)) ltitle = deparse(substitute(by))
     
-  if (is.null(xlim)) xlim = range(x)
-  if (is.null(ylim)) ylim = range(y)
+  if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
+  if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
   
   if (!is.null(by)) {
     split_data = lapply(list(x=x, y=y), split, by)
@@ -430,8 +430,8 @@ plot2.formula = function(
     by = data[[by]]
   }
   
-  if (is.null(xlim)) xlim = range(x)
-  if (is.null(ylim)) ylim = range(y)
+  if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
+  if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
   
   plot2.default(
     x = x, y = y, by = by, 

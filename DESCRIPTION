@@ -1,14 +1,20 @@
 Package: plot2
 Type: Package
-Title: What the Package Does Using Title Case
-Version: 1.0
+Title: Lightweight extension of the base R plot function, with support for
+      automatic grouping and legend printing, and several other enhancements
+Version: 0.0.0.9000
 Date: 2023-02-21
 Author: Grant McDermott
 Maintainer: Grant McDermott <grant.mcdermott@gmail.com>
-Description: More details about what the package does. See
-         <http://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file>
-         for details on how to write this part.
-License: GPL (>= 2)
-Suggests: tinytest
+Description: Making base plot less painful.
+License: GPL (>= 2) 
+Depends:
+  R (>= 3.3)
+Imports:  
+  graphics,
+  grDevices
+Suggests:
+  tinytest,
+  basetheme
 Encoding: UTF-8
 RoxygenNote: 7.2.3

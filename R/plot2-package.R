@@ -1,0 +1,21 @@
+#' \code{plot2-package}
+#'
+#' @title plot2: Lightweight extension of the base R plot function, with support
+#'   for automatic grouping and legend printing, and several other enhancements
+#'
+#' @description The goal of **plot2** is to extend the functionality of base R's
+#'   default (2D) `plot()` function, particularly as it applies to scatter and
+#'   line plots with grouped data. For example, **plot2** makes it easy to plot
+#'   different categories of a dataset in a single function call and highlight
+#'   these categories (groups) using modern colour palettes. Coincident with
+#'   this grouping support, **plot2** also produces automatic legends with scope
+#'   for further customization. While the package also offers several other
+#'   minor enhancements, it tries as far as possible to be a drop-in replacement
+#'   for the equivalent base plot function. Users should be able to swap a valid
+#'   `plot` call with `plot2` without any changes to the expected output.
+#'
+#' @docType package
+#' @aliases plot2-package
+#' @name plot2-package
+#' @keywords internal
+"_PACKAGE"

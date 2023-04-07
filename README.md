@@ -111,8 +111,8 @@ plot2(airquality$Day, airquality$Temp, by = airquality$Month)
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-Even more convenient approach is to use the equivalent formula syntax.
-Just place the grouping variable after a vertical bar `|`.
+An even more convenient approach is to use the equivalent formula
+syntax. Just place the grouping variable after a vertical bar `|`.
 
 ``` r
 plot2(Temp ~ Day | Month, airquality)
@@ -130,8 +130,8 @@ grouping doesn’t carry over to line plots (i.e., type=“l”). Instead, you
 have to transpose your data and use `mplot`.[^2]
 
 We can contrast this with `plot2` where converting to a grouped line
-plot is a simple argument change. I’ll also use this as opportunity to
-highlight that the legend responds accordingly to these plot element
+plot is a simple argument change. I’ll also use this as an opportunity
+to highlight that the legend responds accordingly to these plot element
 changes and can be further customized. Note the use of the “!” in the
 `legend.position` argument to place the legend *outside* the plot area.
 
@@ -145,7 +145,7 @@ plot2(
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
-Let’s quickly pivot to colour palettes. The default group colours in
+Let’s discuss colour palettes briefly. The default group colours in
 `plot2` are either “Okabe-Ito” or “Viridis”, depending on the number of
 groups. But this is easily changed via the `palette` argument. Note that
 all palettes supported by `palette.pals()` and `hcl.pals()` are

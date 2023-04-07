@@ -101,10 +101,9 @@ par(op) # reset to a unique (single) plot frame
 ```
 
 So far, so good. Where `plot2` starts to diverge from its base
-counterpart, however, is when it comes to grouped data. In particular,
-`plot2` allows you to characterize groups using either the `by`
-argument. Notice that we also get an automatic legend (we’ll return to
-that shortly).
+counterpart is with respect to grouped data. In particular, `plot2`
+allows you to characterize groups using the `by` argument. Notice that
+we also get an automatic legend (we’ll return to that shortly).
 
 ``` r
 plot2(airquality$Day, airquality$Temp, by = airquality$Month)
@@ -112,8 +111,8 @@ plot2(airquality$Day, airquality$Temp, by = airquality$Month)
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-Even more convenient is to use the equivalent formula syntax. Just place
-the grouping variable after a vertical bar `|`.
+Even more convenient approach is to use the equivalent formula syntax.
+Just place the grouping variable after a vertical bar `|`.
 
 ``` r
 plot2(Temp ~ Day | Month, airquality)
@@ -174,10 +173,10 @@ argument.
 ``` r
 plot2(
   Temp ~ Day | Month, airquality,
-  type = "b", pch = 17,
+  type = "b", pch = 16,
   grid = grid(), frame.plot = FALSE,
-  legend.position = "right!", legend.args = list(bty = "n", title = NULL),
-  palette = "Tropic", palette.args = list(alpha = 0.8)
+  legend.position = "right!", legend.args = list(bty = "n"),
+  palette = "Tableau 10", palette.args = list(alpha = 0.5)
 )
 ```
 

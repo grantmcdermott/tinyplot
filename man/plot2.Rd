@@ -7,7 +7,7 @@
 \title{Lightweight extension of the base R plotting function that supports
   automatic grouping and legend printing, and a several other enhancements.}
 \usage{
-plot2(x, y, ...)
+plot2(x, ...)
 
 \method{plot2}{default}(
   x,
@@ -35,7 +35,7 @@ plot2(x, y, ...)
 )
 
 \method{plot2}{formula}(
-  formula,
+  x = NULL,
   data = parent.frame(),
   type = "p",
   xlim = NULL,
@@ -54,6 +54,7 @@ plot2(x, y, ...)
   legend.position = NULL,
   legend.args = list(),
   pch = NULL,
+  formula = NULL,
   ...
 )
 }
@@ -129,7 +130,8 @@ the moment, only "bty", "horiz", "xpd", and "title" are supported.}
 \item{pch}{plotting "character", i.e., symbol to use. See `pch`.}
 
 \item{formula}{a `formula` that may also include a grouping variable after a
-"|", such as `y ~ x | z`.}
+"|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should
+not be specified in the same call.}
 }
 \description{
 `plot2` extends the functionality of base R's
@@ -193,10 +195,10 @@ plot2(
 
 plot2(
   Temp ~ Day | Month, airquality,
-  type = "b", pch = 17,
+  type = "b", pch = 16,
   grid = grid(), frame.plot = FALSE,
   legend.position = "right!", legend.args = list(bty = "n", title = NULL),
-  palette = "Tropic", palette.args = list(alpha = 0.8)
+  palette = "Tableau 10", palette.args = list(alpha = 0.5)
 )
 
 # Because plot2 is ultimately just a wrapper around regular plot, any

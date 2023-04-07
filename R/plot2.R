@@ -19,7 +19,8 @@
 #' @param by the grouping variable that you want to categorize (i.e., colour)
 #'   the plot by.
 #' @param formula a `formula` that may also include a grouping variable after a
-#'   "|", such as `y ~ x | z`.
+#'   "|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should
+#'   not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
 #' @param type 1-character string giving the type of plot desired. The
@@ -118,10 +119,10 @@
 #' 
 #' plot2(
 #'   Temp ~ Day | Month, airquality,
-#'   type = "b", pch = 17,
+#'   type = "b", pch = 16,
 #'   grid = grid(), frame.plot = FALSE,
 #'   legend.position = "right!", legend.args = list(bty = "n", title = NULL),
-#'   palette = "Tropic", palette.args = list(alpha = 0.8)
+#'   palette = "Tableau 10", palette.args = list(alpha = 0.5)
 #' )
 #' 
 #' # Because plot2 is ultimately just a wrapper around regular plot, any
@@ -144,7 +145,7 @@
 #' @rdname plot2
 #' @export
 plot2 =
-  function(x, y, ...) {
+  function(x, ...) {
     UseMethod("plot2")
   }
 
@@ -387,7 +388,7 @@ plot2.default = function(
 #' @rdname plot2
 #' @export
 plot2.formula = function(
-    formula,
+    x = NULL,
     data = parent.frame(),
     type = "p",
     xlim = NULL,
@@ -407,8 +408,29 @@ plot2.formula = function(
     legend.position = NULL,
     legend.args = list(),
     pch = NULL,
+    formula = NULL,
     ...
     ) {
+  
+  # delete_formula = TRUE
+  if(missing(x)) {
+    if(!missing(formula)) {
+      x = formula
+      # delete_formula = FALSE
+    } else {
+      stop("Argument 'x' is  missing -- it has been renamed from 'formula'")
+    }
+  } else {
+    if(!missing(formula)) {
+      warning(
+        "\nOnly one of the arguments 'x' and 'formula' should be specified.",
+        "Defaulting to the 'formula' argument.\n"
+        )
+    } else {
+      formula = x
+      x = NULL
+    }
+  }
 
   # x, y, and by vars
   x = paste(formula[3])

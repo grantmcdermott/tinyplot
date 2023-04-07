@@ -24,8 +24,8 @@ remotes::install_github("grantmcdermott/plot2")
 R users are spoiled for choice when it comes to visualization
 frameworks. The options of course include **ggplot2** (in my opinion,
 the most important graphics system of the last decade) and **lattice**,
-not to mention a bewildering array of extensions built around, on top,
-and in between these amazing packages.
+not to mention a bewildering array of extensions built around, on top
+of, and in between these amazing packages.
 
 It is perhaps not surprising then that the base R graphics system
 sometimes gets short shrift. This is unfortunate, because base R offers
@@ -37,8 +37,8 @@ excellent
 The downside of this power and flexibility is that plotting in base R
 can require quite a lot of manual tinkering. A case in point is plotting
 grouped data and then generating an appropriate legend. Doing this with
-the generic `plot()` function can require several function calls (e.g.,
-or a loop), fiddling with your plot regions, and writing the legend out
+the generic `plot()` function can require several function calls (or a
+loop), fiddling with your plot regions, and writing the legend out
 manually.
 
 The goal of `plot2` is to remove this annoyance by providing a

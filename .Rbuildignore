@@ -3,3 +3,6 @@
 ^\.Rproj\.user$
 ^_EXAMPLES$
 ^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

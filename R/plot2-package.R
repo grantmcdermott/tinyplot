@@ -15,7 +15,6 @@
 #'   `plot` call with `plot2` without any changes to the expected output.
 #'
 #' @docType package
-#' @aliases plot2-package
-#' @name plot2-package
+#' @aliases plot2-package NULL
 #' @keywords internal
 "_PACKAGE"

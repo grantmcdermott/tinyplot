@@ -3,7 +3,6 @@
 \docType{package}
 \name{plot2-package}
 \alias{plot2-package}
-\alias{_PACKAGE}
 \title{plot2: Lightweight extension of the base R plot function, with support
   for automatic grouping and legend printing, and several other enhancements}
 \description{
@@ -25,6 +24,7 @@ The goal of **plot2** is to extend the functionality of base R's
 Useful links:
 \itemize{
   \item \url{https://grantmcdermott.com/plot2/}
+  \item \url{http://grantmcdermott.com/plot2/}
   \item Report bugs at \url{https://github.com/grantmcdermott/plot2/issues}
 }
 

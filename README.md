@@ -168,7 +168,7 @@ penultimate example, where we also show off `plot2`’s enhanced `grid`
 argument.
 
 ``` r
-par(family = "Hershey") # Use R's built-in Hershey fonts instead of Arial default
+par(family = "HersheySans") # Use one of R's built-in Hershey fonts instead of Arial default
 
 plot2(
   Temp ~ Day | Month, airquality,
@@ -189,6 +189,8 @@ the former. For nice out-of-the-box themes, I recommend the
 **basetheme** package.
 
 ``` r
+par(family = "") # revert global font change from above
+
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
 
@@ -204,7 +206,7 @@ plot2(
 
 ``` r
 
-# basetheme(NULL) # back to default
+basetheme(NULL)  # back to default theme
 ```
 
 [^1]: At this point, experienced base plot users might protest that you

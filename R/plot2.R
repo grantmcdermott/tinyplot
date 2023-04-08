@@ -197,6 +197,19 @@ plot2.default = function(
   
   ngrps = length(split_data)
     
+  # point shape
+  if (isTRUE(length(pch) == ngrps)) {
+    for (i in seq_along(split_data)) {
+      split_data[[i]][["pch"]] = pch[[i]]
+    }
+  } else if (isTRUE(length(pch) %in% 0:1)) {
+    for (i in seq_along(split_data)) {
+      split_data[[i]][["pch"]] = pch
+    }
+  } else {
+    stop(sprintf("`pch` must be `NULL` or a vector of length 1 or %s.", ngrps), call. = FALSE)
+  }
+
   # colour palette
   if (is.null(palette)) {
     if (ngrps<=9) {
@@ -261,10 +274,18 @@ plot2.default = function(
       legend = ylab
     }
     
-    pch_type = lty_type = NULL
-    if (type %in% c("p", "b", "o")) pch_type = ifelse(!is.null(pch), pch, 1)
+    lty_type = pch_type = NULL
+
+    if (type %in% c("p", "b", "o")) {
+      if (!is.null(pch)) {
+        pch_type = pch
+      } else {
+        pch_type = 1
+      }
+    }
+
     if (type %in% c("l", "b", "o")) lty_type = 1
-    
+
     if (legend.position=="bottom!") {
       
       reset_par = TRUE
@@ -357,7 +378,7 @@ plot2.default = function(
         y=split_data[[i]]$y, 
         col = cols[i], 
         type = type, 
-        pch = pch
+        pch=split_data[[i]]$pch,
         )
       )
   )
@@ -369,7 +390,7 @@ plot2.default = function(
         y=split_data[[i]]$y, 
         col = cols[i], 
         type = type,
-        pch = pch
+        pch=split_data[[i]]$pch
         )
       )
   )

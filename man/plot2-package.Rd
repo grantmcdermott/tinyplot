@@ -21,4 +21,16 @@ The goal of **plot2** is to extend the functionality of base R's
 \details{
 \code{plot2-package}
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://grantmcdermott.com/plot2/}
+  \item Report bugs at \url{https://github.com/grantmcdermott/plot2/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Grant McDermott \email{grantmcd@uoregon.edu}
+
+}
 \keyword{internal}

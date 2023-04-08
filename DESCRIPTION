@@ -5,10 +5,18 @@ Version: 0.0.1
 Date: 2023-02-21
 Authors@R: 
   c(
-    person(given = "Grant",
-           family = "McDermott",
-           role = c("aut", "cre"),
-           email = "grantmcd@uoregon.edu"
+    person(
+      given = "Grant",
+      family = "McDermott",
+      role = c("aut", "cre"),
+      email = "grantmcd@uoregon.edu"
+    ),
+    person(
+      given = "Vincent",
+      family = "Arel-Bundock",
+      role = "ctb",
+      email = "vincent.arel-bundock@umontreal.ca",
+      comment = c(ORCID = "0000-0003-1995-6531", Twitter = "@vincentab")
     )
   )
 Description: Lightweight extension of the base R plot function, with support for

@@ -365,7 +365,10 @@ plot2.default = function(
   )
   
   # axes, plot.frame and grid
-  if (axes) axis(1); axis(2)
+  if (axes) {
+    axis(1)
+    axis(2)
+  }
   if (frame.plot) box()
   if (!is.null(grid)) grid
   

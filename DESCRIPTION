@@ -23,3 +23,5 @@ Suggests:
   basetheme
 Encoding: UTF-8
 RoxygenNote: 7.2.3
+URL: https://grantmcdermott.com/plot2/
+BugReports: https://github.com/grantmcdermott/plot2/issues

@@ -4,12 +4,13 @@ Title: Easier base twoway plots
 Version: 0.0.1
 Date: 2023-02-21
 Authors@R: 
-    c(
+  c(
     person(given = "Grant",
            family = "McDermott",
            role = c("aut", "cre"),
            email = "grantmcd@uoregon.edu"
     )
+  )
 Description: Lightweight extension of the base R plot function, with support for
       automatic grouping and legend printing, and several other enhancements.
 License: GPL (>= 2) 

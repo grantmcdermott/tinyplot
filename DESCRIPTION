@@ -16,13 +16,16 @@ Description: Lightweight extension of the base R plot function, with support for
 License: GPL (>= 2) 
 Depends:
   R (>= 4.0)
-Imports:  
+Imports: 
   graphics,
   grDevices
 Suggests:
   tinytest,
-  basetheme
+  basetheme,
+  knitr,
+  rmarkdown
 Encoding: UTF-8
 RoxygenNote: 7.2.3
-URL: https://grantmcdermott.com/plot2/
+URL: https://grantmcdermott.com/plot2/,
+    http://grantmcdermott.com/plot2/
 BugReports: https://github.com/grantmcdermott/plot2/issues

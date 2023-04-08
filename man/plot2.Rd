@@ -55,6 +55,9 @@ plot2(x, ...)
   legend.args = list(),
   pch = NULL,
   formula = NULL,
+  subset = NULL,
+  na.action = NULL,
+  drop.unused.levels = TRUE,
   ...
 )
 }
@@ -132,6 +135,9 @@ the moment, only "bty", "horiz", "xpd", and "title" are supported.}
 \item{formula}{a `formula` that may also include a grouping variable after a
 "|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should
 not be specified in the same call.}
+
+\item{subset, na.action, drop.unused.levels}{arguments passed to `model.frame`
+when extracting the data from `formula` and `data`.}
 }
 \description{
 `plot2` extends the functionality of base R's

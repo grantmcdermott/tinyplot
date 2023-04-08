@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![R-universe status
+badge](https://grantmcdermott.r-universe.dev/badges/plot2)](https://grantmcdermott.r-universe.dev)
 [![R-CMD-check](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -13,12 +15,10 @@ automatic grouping and legend handling, and several other enhancements.
 
 ## Installation
 
-You can install the development version of **plot2** from
-[GitHub](https://github.com/):
+**plot2** is not yet on CRAN, but can be installed from R-universe.
 
 ``` r
-# install.packages("remotes")
-remotes::install_github("grantmcdermott/plot2")
+install.packages("plot2", repos = "https://grantmcdermott.r-universe.dev")
 ```
 
 ## Motivation

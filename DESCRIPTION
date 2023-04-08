@@ -1,6 +1,6 @@
 Package: plot2
 Type: Package
-Title: Easier base twoway plots.
+Title: Easier base twoway plots
 Version: 0.0.1
 Date: 2023-02-21
 Authors@R: 

@@ -1,15 +1,20 @@
 Package: plot2
 Type: Package
-Title: Lightweight extension of the base R plot function, with support for
-      automatic grouping and legend printing, and several other enhancements
-Version: 0.0.0.9000
+Title: Easier twoway plots.
+Version: 0.0.1
 Date: 2023-02-21
-Author: Grant McDermott
-Maintainer: Grant McDermott <grant.mcdermott@gmail.com>
-Description: Making base plot less painful.
+Authors@R: 
+    c(
+    person(given = "Grant",
+           family = "McDermott",
+           role = c("aut", "cre"),
+           email = "grantmcd@uoregon.edu"
+    )
+Description: Lightweight extension of the base R plot function, with support for
+      automatic grouping and legend printing, and several other enhancements.
 License: GPL (>= 2) 
 Depends:
-  R (>= 3.3)
+  R (>= 4.0)
 Imports:  
   graphics,
   grDevices

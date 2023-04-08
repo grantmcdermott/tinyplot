@@ -26,7 +26,8 @@ Depends:
   R (>= 4.0)
 Imports: 
   graphics,
-  grDevices
+  grDevices,
+  stats
 Suggests:
   tinytest,
   basetheme

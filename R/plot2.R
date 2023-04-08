@@ -63,6 +63,8 @@
 #' @param legend.args list of additional arguments passed on to `legend`. At
 #'   the moment, only "bty", "horiz", "xpd", and "title" are supported.
 #' @param pch plotting "character", i.e., symbol to use. See `pch`.
+#' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
+#'   when extracting the data from `formula` and `data`.
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).
 #'   
@@ -410,6 +412,7 @@ plot2.default = function(
 }
 
 #' @rdname plot2
+#' @importFrom stats as.formula model.frame
 #' @export
 plot2.formula = function(
     x = NULL,
@@ -433,51 +436,61 @@ plot2.formula = function(
     legend.args = list(),
     pch = NULL,
     formula = NULL,
+    subset = NULL,
+    na.action = NULL,
+    drop.unused.levels = TRUE,
     ...
     ) {
   
-  # delete_formula = TRUE
-  if(missing(x)) {
-    if(!missing(formula)) {
-      x = formula
-      # delete_formula = FALSE
-    } else {
-      stop("Argument 'x' is  missing -- it has been renamed from 'formula'")
+  ## formula for variables must be specified through 'x' or 'formula' but not both
+  if (missing(x)) {
+    if (missing(formula)) {
+      stop("plot formula must be specified by either 'x' or 'formula' argument")
     }
   } else {
-    if(!missing(formula)) {
-      warning(
-        "\nOnly one of the arguments 'x' and 'formula' should be specified.",
-        "Defaulting to the 'formula' argument.\n"
-        )
-    } else {
+    if (missing(formula)) {
       formula = x
-      x = NULL
+    } else {
+      warning("only one of the arguments 'x' and 'formula' should be specified, defaulting to the 'formula' argument")
     }
   }
 
-  # x, y, and by vars
-  x = paste(formula[3])
-  if (grepl(" | ", x)) {
-    by = gsub(".* | ", "", x)
-    x = gsub(" | .*", "", x)
-  } else {
-    by = NULL
+  ## convert y ~ x | z to y ~ x + z for standard formula parsing
+  if (!inherits(formula, "formula")) formula = as.formula(formula)
+  if (length(formula[[3L]]) == 3L) {
+    if (formula[[3L]][[1L]] == as.name("|")) {
+      formula[[3L]][[1L]] = as.name("+")
+    }
   }
-  y = paste(formula[2])
-  
-  if (is.null(xlab)) xlab = x
-  if (is.null(ylab)) ylab = y
-  
-  x = data[[x]]
-  y = data[[y]]
-  if (!is.null(by)) {
-    if (!exists("title", where = legend.args)) legend.args$title = by
-    by = data[[by]]
+
+  ## extract x, y, by (if any) from formula
+  m = match.call(expand.dots = FALSE)
+  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
+  m$formula = formula
+  ## need stats:: for non-standard evaluation
+  m[[1L]] = quote(stats::model.frame)
+  mf = eval.parent(m)
+  if (NCOL(mf) < 2L) {
+    stop("plot formula should specify exactly at least two variables")
+  } 
+  y = mf[,1L]
+  x = mf[,2L]
+  by = NULL
+  if (NCOL(mf) == 3L) {
+    by = mf[,3L]
+    bylab = names(mf)[3L]
+    if (!inherits(by, "factor")) {
+      by = as.factor(by)
+    }
+  } else if (NCOL(mf) > 3L) {
+    by = do.call("interaction", mf[, -(1L:2L)])
+    bylab = sprintf("interaction(%s)", paste(names(mf)[-(1L:2L)], collapse = ", "))
   }
-  
-  if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
-  if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
+
+  ## nice axis and legend labels
+  if (is.null(ylab)) ylab = names(mf)[1L]
+  if (is.null(xlab)) xlab = names(mf)[2L]
+  if (!is.null(by) && !exists("title", where = legend.args)) legend.args$title = bylab
   
   plot2.default(
     x = x, y = y, by = by, 

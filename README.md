@@ -4,6 +4,8 @@
 # plot2
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 A lightweight extension of the base R `plot` function, with support for

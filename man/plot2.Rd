@@ -31,6 +31,8 @@ plot2(x, ...)
   legend.position = NULL,
   legend.args = list(),
   pch = NULL,
+  col = NULL,
+  lty = NULL,
   ...
 )
 
@@ -54,6 +56,8 @@ plot2(x, ...)
   legend.position = NULL,
   legend.args = list(),
   pch = NULL,
+  col = NULL,
+  lty = NULL,
   formula = NULL,
   subset = NULL,
   na.action = NULL,
@@ -130,7 +134,11 @@ legend is desired, then the user can also specify "none".}
 \item{legend.args}{list of additional arguments passed on to `legend`. At
 the moment, only "bty", "horiz", "xpd", and "title" are supported.}
 
-\item{pch}{plotting "character", i.e., symbol to use. See `pch`.}
+\item{pch}{plotting "character", i.e., symbol to use. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `pch`.}
+
+\item{col}{plotting color. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `col`.}
+
+\item{lty}{line type. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `lty`.}
 
 \item{formula}{a `formula` that may also include a grouping variable after a
 "|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should

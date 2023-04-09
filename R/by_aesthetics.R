@@ -48,6 +48,8 @@ by_col = function(ngrps, col = NULL, palette = NULL, palette.args = NULL) {
     function(...) Map(palette_fun, palette = palette, ...), 
     args = palette.args
     )[[1]]
+  
+  out = out[col]
  
   return(out)
 

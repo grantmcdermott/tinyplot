@@ -36,7 +36,9 @@ Imports:
   grDevices,
   stats
 Suggests:
+  svglite,
   tinytest,
+  tinysnapshot,
   basetheme
 Encoding: UTF-8
 RoxygenNote: 7.2.3

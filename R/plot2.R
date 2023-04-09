@@ -213,7 +213,7 @@ plot2.default = function(
     col = col,
     palette = palette,
     palette.args = palette.args)
-
+  
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
   reset_par = FALSE

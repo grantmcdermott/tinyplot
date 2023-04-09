@@ -2,12 +2,11 @@
 
 Enhancements
 
-- Allow users to specify different `pch` types per group (#5 @vincentarelbundock).
-
+- Allow users to specify different `pch`, `col`, and `lty` types per group (#5 and #10 @vincentarelbundock).
 
 Internals
 
-- Better formula parsing for `plot2.formula` (#8 @zeileis). 
+- Better formula parsing for `plot2.formula` (#8 @zeileis).
 
 # plot2 0.0.1
 

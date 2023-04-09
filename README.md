@@ -99,7 +99,7 @@ dev.off() # reset to default (single) plot window
 
 So far, so good. But where `plot2` starts to diverge from its base
 counterpart is with respect to grouped data. In particular, `plot2`
-allows you to characterize groups using the `by` argument.[^1]
+allows you to characterize groups using the `by` argument.\[1\]
 
 ``` r
 plot2(airquality$Day, airquality$Temp, by = airquality$Month)
@@ -123,7 +123,7 @@ plot2(Temp ~ Day | Month, airquality)
 Converting to a grouped line plot is a simple matter of adjusting the
 `type` argument. I’ll also use this as an opportunity to highlight that
 the legend responds to these plot element changes accordingly and can be
-further customized. Note the use of the “!” in the `legend.position`
+further customized. Note the use of the “\!” in the `legend.position`
 argument to place the legend *outside* the plot area.
 
 ``` r
@@ -140,7 +140,7 @@ Let’s discuss colour palettes briefly. The default group colours in
 `plot2` are either “Okabe-Ito” or “Viridis”, depending on the number of
 groups. But this is easily changed via the `palette` argument. Note that
 all palettes listed by `palette.pals()` and `hcl.pals()` are supported
-out-of-the-box.[^2] Just pass on an appropriate palette name as a
+out-of-the-box.\[2\] Just pass on an appropriate palette name as a
 string.
 
 ``` r
@@ -211,7 +211,7 @@ makes it an attractive option for situations where dependency management
 is expensive (e.g., an R application running in a browser via
 [WebAssembly](https://docs.r-wasm.org/webr/latest/).)
 
-[^1]: At this point, experienced base plot users might protest that you
+1.  At this point, experienced base plot users might protest that you
     *can* colour by groups using the `col` argument, e.g.
     `plot(airquality$Day, airquality$Temp, col = airquality$Month)`.
     This is true, but there are several limitations. First, you don’t
@@ -224,6 +224,6 @@ is expensive (e.g., an R application running in a browser via
     [this](https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops)
     old StackOverflow thread for a longer discussion.
 
-[^2]: See the accompanying help pages of those functions for more
-    details, or read the [article](https://arxiv.org/pdf/2303.04918.pdf)
-    by Achim Zeileis and Paul Murrell.
+2.  See the accompanying help pages of those functions for more details,
+    or read the [article](https://arxiv.org/pdf/2303.04918.pdf) by Achim
+    Zeileis and Paul Murrell.

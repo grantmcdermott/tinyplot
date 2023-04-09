@@ -36,6 +36,7 @@ Imports:
   grDevices,
   stats
 Suggests:
+  rsvg,
   svglite,
   tinytest,
   tinysnapshot,

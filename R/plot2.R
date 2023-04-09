@@ -378,7 +378,11 @@ plot2.default = function(
     sub = sub
     )
   
-  if (reset_par) on.exit(par(opar))
+  if (reset_par) {
+    ousr = par("usr")
+    on.exit(par(opar), add = TRUE)
+    on.exit(par(usr = ousr), add = TRUE)
+  }
   
 }
 

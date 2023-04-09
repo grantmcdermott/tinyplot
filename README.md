@@ -24,44 +24,37 @@ install.packages("plot2", repos = "https://grantmcdermott.r-universe.dev")
 ## Motivation
 
 R users are spoiled for choice when it comes to visualization
-frameworks. The options of course include **ggplot2** (in my opinion,
-the most important graphics system of the last decade) and **lattice**,
-not to mention a bewildering array of extensions built around, on top
-of, and in between these amazing packages.
+frameworks. The options of course include **ggplot2** (arguably the most
+important graphics system of the last decade) and **lattice**, not to
+mention a bewildering array of extensions built around, on top of, and
+in between these amazing packages.
 
-It is perhaps not surprising then that the base R graphics system
+It is perhaps not surprising, then, that the base R graphics system
 sometimes gets short shrift. This is unfortunate, because base R offers
-very powerful and flexible plotting facilities. Just type in
-`demo(graphics)` or `demo(persp)` into your R console to get an idea, or
-see these two excellent
-[introductory](https://github.com/karoliskoncevicius/tutorial_r_introduction/blob/main/baseplotting.md)
-[tutorials](https://quizzical-engelbart-d15a44.netlify.app/2021-2022_m2-data-2_visu-2_practice#1).
-The downside of this power and flexibility is that plotting in base R
-can require a fair bit of manual tinkering. A case in point is plotting
-grouped data and then generating an appropriate legend. Doing this with
-the generic `plot()` function can require several function calls (or a
-loop), fiddling with your plot regions, and writing the legend out
+very powerful and flexible plotting facilities. Just type
+`demo(graphics)` or `demo(persp)` into your R console to get an idea.
+Or, take a look at
+[these](https://github.com/karoliskoncevicius/tutorial_r_introduction/blob/main/baseplotting.md)
+[two](https://quizzical-engelbart-d15a44.netlify.app/2021-2022_m2-data-2_visu-2_practice#1)
+excellent tutorials. The downside of this power and flexibility is that
+base R plotting can require a fair bit of manual tinkering. A case in
+point is plotting grouped data with an appropriate legend. Doing so with
+the generic `plot()` function can require several function calls or a
+loop, fiddling with your plot regions, and then generating the legend
 manually.
 
-The goal of `plot2` is to remove this annoyance by providing a
-lightweight extension of the base (2D) `plot` function, particularly as
-it applies to scatter and line plots with grouped data. For example,
-`plot2` makes it easy to plot different categories of a dataset in a
-single function call and highlight these categories (groups) using
-modern colour palettes. Coincident with this grouping support, `plot2`
-also produces automatic legends with scope for further customization.
-While the package offers several other minor enhancements, it tries as
-far as possible to be a drop-in replacement for the equivalent base plot
-function. Users should be able to swap a valid `plot` call with `plot2`
-without any changes to the expected output.
-
-In summary, consider trying the **plot2** package if you are looking for
-a more convenient version of the base R `plot` functionality. You can
-use pretty much the same syntax and all of your theming elements should
-carry over too. It has no other dependencies than base R itself, which
-might make it more suitable for situations where dependency management
-is expensive (e.g., an R application running in a browser via
-[WebAssembly](https://docs.r-wasm.org/webr/latest/).)
+The **plot2** package aims to remove this overhead. It provides a
+lightweight extension of the base R plot system with various convenience
+features, particularly for creating (2D) scatter and line plots using
+grouped data. For example, the core `plot2()` function makes it easy to
+plot different categories of a dataset in a single function call and
+highlight these categories (groups) using modern colour palettes.
+Coincident with this grouping support, `plot2()` also produces automatic
+legends with scope for further customization. While the package offers
+several other enhancements, it tries as far as possible to be a drop-in
+replacement for the equivalent base plot function. Users should
+(generally) be able to swap a valid `plot()` call with `plot2()` without
+any changes to the expected output.
 
 ## Examples
 
@@ -75,7 +68,7 @@ As far as possible, `plot2` tries to be a drop-in replacement for
 regular `plot` calls.
 
 ``` r
-op = par(mfrow = c(1, 2))
+par(mfrow = c(1, 2))
 
 plot(0:10, main = "plot")
 plot2(0:10, main = "plot2")
@@ -87,7 +80,7 @@ Similarly, we can plot elements from a data frame using either the
 atomic or formula methods.
 
 ``` r
-op = par(mfrow = c(2, 2))
+par(mfrow = c(2, 2))
 
 plot(airquality$Day, airquality$Temp, main = "plot")
 plot(Temp ~ Day, data = airquality, main = "plot (formula)")
@@ -99,13 +92,14 @@ plot2(Temp ~ Day, data = airquality, main = "plot2 (formula)")
 
 ``` r
 
-par(op) # reset to a unique (single) plot frame
+dev.off() # reset to default (single) plot window
+#> null device 
+#>           1
 ```
 
 So far, so good. But where `plot2` starts to diverge from its base
 counterpart is with respect to grouped data. In particular, `plot2`
-allows you to characterize groups using the `by` argument.[^1] for a
-longer discussion.\]
+allows you to characterize groups using the `by` argument.[^1]
 
 ``` r
 plot2(airquality$Day, airquality$Temp, by = airquality$Month)
@@ -145,9 +139,9 @@ plot2(
 Let’s discuss colour palettes briefly. The default group colours in
 `plot2` are either “Okabe-Ito” or “Viridis”, depending on the number of
 groups. But this is easily changed via the `palette` argument. Note that
-all palettes supported by `palette.pals()` and `hcl.pals()` are
-supported out-of-the-box.[^2] Just pass on an appropriate palette name
-as a string.
+all palettes listed by `palette.pals()` and `hcl.pals()` are supported
+out-of-the-box.[^2] Just pass on an appropriate palette name as a
+string.
 
 ``` r
 plot2(
@@ -160,7 +154,7 @@ plot2(
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
-Its possible to add a lot more customization to your plots. For example,
+Customizing your plots further is fairly straightforward. For example,
 the accompanying `legend.args` and `palette.args` arguments allow you to
 turn off the legend title and bounding box, switch the direction of the
 text, add transparency to your colour palette, etc. etc. Here’s a quick
@@ -209,18 +203,26 @@ plot2(
 basetheme(NULL)  # back to default theme
 ```
 
+In summary, consider the **plot2** package if you are looking for base R
+`plot` functionality with some additional convenience features. You can
+use pretty much the same syntax and all of your theming elements should
+carry over too. It has no dependencies other than base R itself and this
+makes it an attractive option for situations where dependency management
+is expensive (e.g., an R application running in a browser via
+[WebAssembly](https://docs.r-wasm.org/webr/latest/).)
+
 [^1]: At this point, experienced base plot users might protest that you
     *can* colour by groups using the `col` argument, e.g.
     `plot(airquality$Day, airquality$Temp, col = airquality$Month)`.
-    This is true, but there are several points to push back on. First,
-    you don’t get an automatic legend. Second, the base `plot` formula
-    method doesn’t specify the grouping within the formula itself (not a
+    This is true, but there are several limitations. First, you don’t
+    get an automatic legend. Second, the base `plot` formula method
+    doesn’t specify the grouping within the formula itself (not a
     deal-breaker, but not particularly consistent in my view). Third,
     and perhaps most importantly, this grouping doesn’t carry over to
     line plots (i.e., type=“l”). Instead, you have to transpose your
     data and use `mplot`. See
     [this](https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops)
-    old StackOverflow thread
+    old StackOverflow thread for a longer discussion.
 
 [^2]: See the accompanying help pages of those functions for more
     details, or read the [article](https://arxiv.org/pdf/2303.04918.pdf)

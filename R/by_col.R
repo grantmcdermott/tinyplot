@@ -1,5 +1,9 @@
 by_col = function(ngrps, col = NULL, palette = NULL, palette.args = NULL) {
-    
+  
+  if (is.null(col)) {
+    col = seq_len(ngrps)
+  }
+
   if (is.atomic(col) && is.vector(col)) {
     if (length(col) == 1) {
         col = rep(col, ngrps)
@@ -37,17 +41,13 @@ by_col = function(ngrps, col = NULL, palette = NULL, palette.args = NULL) {
     }
   }
 
+  # n is a required argument for viridis and other palettes
+  if (!"n" %in% names(palette.args)) palette.args[["n"]] = max(col)
+
   out = do.call(
     function(...) Map(palette_fun, palette = palette, ...), 
     args = palette.args
     )[[1]]
- 
-  if (is.numeric(col)) {
-    if (max(col) > length(out)) {
-        stop(sprintf("The palette only has %s colors.", length(out)), call. = FALSE)
-    }
-    out = out[col]
-  }
  
   return(out)
 

@@ -62,7 +62,8 @@
 #'   legend is desired, then the user can also specify "none".
 #' @param legend.args list of additional arguments passed on to `legend`. At
 #'   the moment, only "bty", "horiz", "xpd", and "title" are supported.
-#' @param pch plotting "character", i.e., symbol to use. See `pch`.
+#' @param pch plotting "character", i.e., symbol to use. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `pch`.
+#' @param col plotting color. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `col`.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
@@ -470,6 +471,7 @@ plot2.formula = function(
     legend.position = legend.position,
     legend.args = legend.args,
     pch = pch,
+    col = col,
     ...
     )
 

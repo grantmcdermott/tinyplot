@@ -62,7 +62,9 @@
 #'   legend is desired, then the user can also specify "none".
 #' @param legend.args list of additional arguments passed on to `legend`. At
 #'   the moment, only "bty", "horiz", "xpd", and "title" are supported.
-#' @param pch plotting "character", i.e., symbol to use. See `pch`.
+#' @param pch plotting "character", i.e., symbol to use. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `pch`.
+#' @param col plotting color. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `col`.
+#' @param lty line type. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `lty`.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
@@ -176,6 +178,8 @@ plot2.default = function(
     legend.position = NULL,
     legend.args = list(),
     pch = NULL,
+    col = NULL,
+    lty = NULL,
     ...) {
   
   if (is.null(y)) {
@@ -199,51 +203,15 @@ plot2.default = function(
   
   ngrps = length(split_data)
     
-  # point shape
-  if (isTRUE(length(pch) == ngrps)) {
-    for (i in seq_along(split_data)) {
-      split_data[[i]][["pch"]] = pch[[i]]
-    }
-  } else if (isTRUE(length(pch) %in% 0:1)) {
-    for (i in seq_along(split_data)) {
-      split_data[[i]][["pch"]] = pch
-    }
-  } else {
-    stop(sprintf("`pch` must be `NULL` or a vector of length 1 or %s.", ngrps), call. = FALSE)
-  }
+  pch = by_pch(ngrps = ngrps, pch = pch)
+  
+  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
 
-  # colour palette
-  if (is.null(palette)) {
-    if (ngrps<=9) {
-      palette = "Okabe-Ito"
-      palette_fun = palette.colors
-    } else {
-      palette = "Viridis"
-      palette_fun = hcl.colors
-    }
-  } else if (palette %in% palette.pals()) {
-    palette_fun = palette.colors
-  } else if (palette %in% hcl.pals()) {
-    palette_fun = hcl.colors
-  } else {
-    warning(
-      "\nPalette string not recogized. Must be a value produced by either",
-      "`palette.pals()` or `hcl.pals()`.",
-      "\nUsing default option instead.\n"
-      )
-    if (ngrps<=9) {
-      palette = "Okabe-Ito"
-      palette_fun = palette.colors
-    } else {
-      palette = "Viridis"
-      palette_fun = hcl.colors
-    }
-  }
-
-  cols = do.call(
-    function(...) Map(palette_fun, n = ngrps, palette = palette, ...), 
-    args = palette.args
-    )[[1]]
+  col = by_col(
+    ngrps = ngrps,
+    col = col,
+    palette = palette,
+    palette.args = palette.args)
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
@@ -276,18 +244,6 @@ plot2.default = function(
       legend = ylab
     }
     
-    lty_type = pch_type = NULL
-
-    if (type %in% c("p", "b", "o")) {
-      if (!is.null(pch)) {
-        pch_type = pch
-      } else {
-        pch_type = 1
-      }
-    }
-
-    if (type %in% c("l", "b", "o")) lty_type = 1
-
     if (legend.position=="bottom!") {
       
       reset_par = TRUE
@@ -301,7 +257,9 @@ plot2.default = function(
       lgnd = legend(
         0, 0, bty = "n", legend = legend,
         horiz = horiz,
-        pch = pch_type, lty = lty_type,
+        pch = pch,
+        lty = lty,
+        col = col,
         # title = ltitle,
         plot = FALSE
       )
@@ -324,7 +282,9 @@ plot2.default = function(
       
       lgnd = legend(
         0, 0, bty = "n", legend = legend,
-        pch = pch_type, lty = lty_type,
+        col = col,
+        pch = pch,
+        lty = lty,
         title = ltitle,
         plot = FALSE
       )
@@ -347,8 +307,9 @@ plot2.default = function(
       legend = legend,
       bty = bty,
       horiz = horiz,
-      pch = pch_type, lty = lty_type,
-      col = cols,
+      pch = pch,
+      lty = lty,
+      col = col,
       xpd = xpd,
       title = ltitle
     )
@@ -375,31 +336,41 @@ plot2.default = function(
   if (!is.null(grid)) grid
   
   # draw the points/lines
-  if (type=="p") invisible(
-    lapply(
-      seq_along(split_data), 
-      function(i) points(
-        x=split_data[[i]]$x, 
-        y=split_data[[i]]$y, 
-        col = cols[i], 
-        type = type, 
-        pch=split_data[[i]]$pch,
-        )
+  if (type == "p") {
+    invisible(
+      lapply(
+        seq_along(split_data),
+        function(i) {
+          points(
+            x = split_data[[i]]$x,
+            y = split_data[[i]]$y,
+            col = col[i],
+            type = type,
+            pch = pch[i],
+            lty = lty[i]
+          )
+        }
       )
-  )
-  if (type %in% c("l", "o", "b")) invisible(
-    lapply(
-      seq_along(split_data), 
-      function(i) lines(
-        x=split_data[[i]]$x, 
-        y=split_data[[i]]$y, 
-        col = cols[i], 
-        type = type,
-        pch=split_data[[i]]$pch
-        )
+    )
+  }
+  if (type %in% c("l", "o", "b")) {
+    invisible(
+      lapply(
+        seq_along(split_data),
+        function(i) {
+          lines(
+            x = split_data[[i]]$x,
+            y = split_data[[i]]$y,
+            col = col[i],
+            type = type,
+            pch = pch[i],
+            lty = lty[i]
+          )
+        }
       )
-  )
-  
+    )
+  }
+
   title(
     xlab = xlab,
     ylab = ylab,
@@ -407,11 +378,7 @@ plot2.default = function(
     sub = sub
     )
   
-  if (reset_par) {
-    ousr = par("usr")
-    on.exit(par(opar), add = TRUE)
-    on.exit(par(usr = ousr), add = TRUE)
-  }
+  if (reset_par) on.exit(par(opar))
   
 }
 
@@ -439,6 +406,8 @@ plot2.formula = function(
     legend.position = NULL,
     legend.args = list(),
     pch = NULL,
+    col = NULL,
+    lty = NULL,
     formula = NULL,
     subset = NULL,
     na.action = NULL,
@@ -517,6 +486,8 @@ plot2.formula = function(
     legend.position = legend.position,
     legend.args = legend.args,
     pch = pch,
+    col = col,
+    lty = lty,
     ...
     )
 

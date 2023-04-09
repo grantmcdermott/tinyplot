@@ -2,7 +2,7 @@
 
 Enhancements
 
-- Allow users to specify different `pch` types per group (#5 @vincentarelbundock).
+- Allow users to specify different `pch`, `lty`, and `col` types per group (#5 @vincentarelbundock).
 
 Bug fixes
 

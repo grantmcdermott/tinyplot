@@ -176,6 +176,7 @@ plot2.default = function(
     legend.position = NULL,
     legend.args = list(),
     pch = NULL,
+    col = NULL,
     ...) {
   
   if (is.null(y)) {
@@ -199,52 +200,14 @@ plot2.default = function(
   
   ngrps = length(split_data)
     
-  # point shape
-  if (isTRUE(length(pch) == ngrps)) {
-    for (i in seq_along(split_data)) {
-      split_data[[i]][["pch"]] = pch[[i]]
-    }
-  } else if (isTRUE(length(pch) %in% 0:1)) {
-    for (i in seq_along(split_data)) {
-      split_data[[i]][["pch"]] = pch
-    }
-  } else {
-    stop(sprintf("`pch` must be `NULL` or a vector of length 1 or %s.", ngrps), call. = FALSE)
-  }
+  pch = by_pch(ngrps = ngrps, pch = pch)
 
-  # colour palette
-  if (is.null(palette)) {
-    if (ngrps<=9) {
-      palette = "Okabe-Ito"
-      palette_fun = palette.colors
-    } else {
-      palette = "Viridis"
-      palette_fun = hcl.colors
-    }
-  } else if (palette %in% palette.pals()) {
-    palette_fun = palette.colors
-  } else if (palette %in% hcl.pals()) {
-    palette_fun = hcl.colors
-  } else {
-    warning(
-      "\nPalette string not recogized. Must be a value produced by either",
-      "`palette.pals()` or `hcl.pals()`.",
-      "\nUsing default option instead.\n"
-      )
-    if (ngrps<=9) {
-      palette = "Okabe-Ito"
-      palette_fun = palette.colors
-    } else {
-      palette = "Viridis"
-      palette_fun = hcl.colors
-    }
-  }
+  col = by_col(
+    ngrps = ngrps,
+    col = col,
+    palette = palette,
+    palette.args = palette.args)
 
-  cols = do.call(
-    function(...) Map(palette_fun, n = ngrps, palette = palette, ...), 
-    args = palette.args
-    )[[1]]
-  
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
   reset_par = FALSE
@@ -276,15 +239,7 @@ plot2.default = function(
       legend = ylab
     }
     
-    lty_type = pch_type = NULL
-
-    if (type %in% c("p", "b", "o")) {
-      if (!is.null(pch)) {
-        pch_type = pch
-      } else {
-        pch_type = 1
-      }
-    }
+    lty_type = NULL
 
     if (type %in% c("l", "b", "o")) lty_type = 1
 
@@ -301,7 +256,7 @@ plot2.default = function(
       lgnd = legend(
         0, 0, bty = "n", legend = legend,
         horiz = horiz,
-        pch = pch_type, lty = lty_type,
+        pch = pch, lty = lty_type,
         # title = ltitle,
         plot = FALSE
       )
@@ -324,7 +279,7 @@ plot2.default = function(
       
       lgnd = legend(
         0, 0, bty = "n", legend = legend,
-        pch = pch_type, lty = lty_type,
+        pch = pch, lty = lty_type,
         title = ltitle,
         plot = FALSE
       )
@@ -347,8 +302,9 @@ plot2.default = function(
       legend = legend,
       bty = bty,
       horiz = horiz,
-      pch = pch_type, lty = lty_type,
-      col = cols,
+      pch = pch,
+      lty = lty_type,
+      col = col,
       xpd = xpd,
       title = ltitle
     )
@@ -381,9 +337,9 @@ plot2.default = function(
       function(i) points(
         x=split_data[[i]]$x, 
         y=split_data[[i]]$y, 
-        col = cols[i], 
+        col = col[i], 
         type = type, 
-        pch=split_data[[i]]$pch,
+        pch=pch[i],
         )
       )
   )
@@ -393,13 +349,13 @@ plot2.default = function(
       function(i) lines(
         x=split_data[[i]]$x, 
         y=split_data[[i]]$y, 
-        col = cols[i], 
+        col = col[i], 
         type = type,
-        pch=split_data[[i]]$pch
+        pch=pch[i]
         )
       )
   )
-  
+
   title(
     xlab = xlab,
     ylab = ylab,
@@ -435,6 +391,7 @@ plot2.formula = function(
     legend.position = NULL,
     legend.args = list(),
     pch = NULL,
+    col = NULL,
     formula = NULL,
     subset = NULL,
     na.action = NULL,

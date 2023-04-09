@@ -1,8 +1,7 @@
 Package: plot2
 Type: Package
 Title: Easier base twoway plots
-Version: 0.0.1.9002
-Date: 2023-02-21
+Version: 0.0.1.9004
 Authors@R: 
   c(
     person(
@@ -36,6 +35,9 @@ Imports:
   grDevices,
   stats
 Suggests:
+  rsvg,
+  svglite,
+  tinysnapshot,
   tinytest,
   basetheme
 Encoding: UTF-8

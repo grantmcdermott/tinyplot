@@ -64,6 +64,7 @@
 #'   the moment, only "bty", "horiz", "xpd", and "title" are supported.
 #' @param pch plotting "character", i.e., symbol to use. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `pch`.
 #' @param col plotting color. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `col`.
+#' @param lty line type. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `lty`.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
@@ -178,6 +179,7 @@ plot2.default = function(
     legend.args = list(),
     pch = NULL,
     col = NULL,
+    lty = NULL,
     ...) {
   
   if (is.null(y)) {
@@ -202,6 +204,9 @@ plot2.default = function(
   ngrps = length(split_data)
     
   pch = by_pch(ngrps = ngrps, pch = pch)
+  
+  
+  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
 
   col = by_col(
     ngrps = ngrps,
@@ -240,10 +245,6 @@ plot2.default = function(
       legend = ylab
     }
     
-    lty_type = NULL
-
-    if (type %in% c("l", "b", "o")) lty_type = 1
-
     if (legend.position=="bottom!") {
       
       reset_par = TRUE
@@ -257,7 +258,8 @@ plot2.default = function(
       lgnd = legend(
         0, 0, bty = "n", legend = legend,
         horiz = horiz,
-        pch = pch, lty = lty_type,
+        pch = pch,
+        lty = lty,
         # title = ltitle,
         plot = FALSE
       )
@@ -280,7 +282,8 @@ plot2.default = function(
       
       lgnd = legend(
         0, 0, bty = "n", legend = legend,
-        pch = pch, lty = lty_type,
+        pch = pch,
+        lty = lty,
         title = ltitle,
         plot = FALSE
       )
@@ -304,7 +307,7 @@ plot2.default = function(
       bty = bty,
       horiz = horiz,
       pch = pch,
-      lty = lty_type,
+      lty = lty,
       col = col,
       xpd = xpd,
       title = ltitle
@@ -332,30 +335,40 @@ plot2.default = function(
   if (!is.null(grid)) grid
   
   # draw the points/lines
-  if (type=="p") invisible(
-    lapply(
-      seq_along(split_data), 
-      function(i) points(
-        x=split_data[[i]]$x, 
-        y=split_data[[i]]$y, 
-        col = col[i], 
-        type = type, 
-        pch=pch[i],
-        )
+  if (type == "p") {
+    invisible(
+      lapply(
+        seq_along(split_data),
+        function(i) {
+          points(
+            x = split_data[[i]]$x,
+            y = split_data[[i]]$y,
+            col = col[i],
+            type = type,
+            pch = pch[i],
+            lty = lty[i]
+          )
+        }
       )
-  )
-  if (type %in% c("l", "o", "b")) invisible(
-    lapply(
-      seq_along(split_data), 
-      function(i) lines(
-        x=split_data[[i]]$x, 
-        y=split_data[[i]]$y, 
-        col = col[i], 
-        type = type,
-        pch=pch[i]
-        )
+    )
+  }
+  if (type %in% c("l", "o", "b")) {
+    invisible(
+      lapply(
+        seq_along(split_data),
+        function(i) {
+          lines(
+            x = split_data[[i]]$x,
+            y = split_data[[i]]$y,
+            col = col[i],
+            type = type,
+            pch = pch[i],
+            lty = lty[i]
+          )
+        }
       )
-  )
+    )
+  }
 
   title(
     xlab = xlab,
@@ -393,6 +406,7 @@ plot2.formula = function(
     legend.args = list(),
     pch = NULL,
     col = NULL,
+    lty = NULL,
     formula = NULL,
     subset = NULL,
     na.action = NULL,
@@ -472,6 +486,7 @@ plot2.formula = function(
     legend.args = legend.args,
     pch = pch,
     col = col,
+    lty = lty,
     ...
     )
 

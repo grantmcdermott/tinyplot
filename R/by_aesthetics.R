@@ -52,3 +52,44 @@ by_col = function(ngrps, col = NULL, palette = NULL, palette.args = NULL) {
   return(out)
 
 }
+
+
+by_pch = function(ngrps, pch) {
+  if (is.null(pch)) pch = 1
+
+  if (!is.atomic(pch) || !is.vector(pch) || !is.numeric(pch) || (length(pch) != 1 && length(pch) != ngrps)) {
+    stop(sprintf("`pch` must be `NULL` or a numeric vector of length 1 or %s.", ngrps), call. = FALSE)
+  }
+  
+  if (length(pch) == 1) {
+    pch = rep(pch, ngrps)
+  }
+  
+  return(pch)
+}
+
+
+by_lty = function(ngrps, type, lty) {
+
+  # don't care about line type, return NULL
+  if (!type %in% c("l", "b", "o")) {
+    out = NULL
+
+  # NULL -> solid line
+  } else if (is.null(lty)) {
+    out = rep(1, ngrps)
+  
+  # atomic vector: sanity check length
+  } else if (is.atomic(lty) && is.vector(lty)) {
+    if (length(lty) == 1) {
+      out = rep(lty, ngrps)
+    } else {
+      if (length(lty) != ngrps) {
+        stop(sprintf("`lty` must be `NULL` or a numeric vector of length 1 or %s.", ngrps), call. = FALSE)
+      }
+      out = lty
+    }
+  }
+
+  return(out)
+}

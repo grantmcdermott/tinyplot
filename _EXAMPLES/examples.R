@@ -51,7 +51,7 @@ plot2(mpg ~ wt, mtcars, grid = grid(), frame.plot = FALSE)
 
 plot2(mpg~wt, mtcars, legend.position = "bottom!")
 plot2(mpg~wt, mtcars, legend.position = "bottom", pch = 17)
-plot2(mpg~wt, mtcars, legend.position = "right")
+plot2(mpg~wt, mtcars, legend.position = "topright")
 plot2(mpg~wt, mtcars, legend.position = "right!")
 
 plot2(mtcars$wt, mtcars$mpg, by = mtcars$cyl)

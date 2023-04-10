@@ -466,7 +466,7 @@ plot2.formula = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
-    par_restore = TRUE,
+    par_restore = FALSE,
     formula = NULL,
     subset = NULL,
     na.action = NULL,
@@ -547,6 +547,7 @@ plot2.formula = function(
     pch = pch,
     col = col,
     lty = lty,
+    par_restore = par_restore,
     ...
     )
 

@@ -231,7 +231,7 @@ plot2.default = function(
   
   # legend
   
-  bty = ifelse(!is.null(legend.args[["bty"]]), legend.args[["bty"]], "o")
+  bty = ifelse(!is.null(legend.args[["bty"]]), legend.args[["bty"]], "n")
   horiz = ifelse(!is.null(legend.args[["horiz"]]), legend.args[["horiz"]], FALSE)
   xpd = ifelse(!is.null(legend.args[["xpd"]]), legend.args[["xpd"]], NA)
   
@@ -239,7 +239,7 @@ plot2.default = function(
   if(!is.null(legend.args[["title"]])) ltitle = legend.args[["title"]]
 
   if (is.null(legend.position)) {
-    legend.position = ifelse(length(split_data)>1, "bottom!", "none")
+    legend.position = ifelse(length(split_data)>1, "right!", "none")
   }
   
   if (legend.position!="none") {
@@ -256,32 +256,7 @@ plot2.default = function(
       legend = ylab
     }
     
-    if (legend.position=="bottom!") {
-      
-      # par_restore = TRUE
-      # Margins of the plot (the first is the bottom margin)
-      # par(mar=c(0.1, par('mar')[2:4])) # optional, removes bottom inner margin space
-      plot.new()
-      
-      pos_anchor = "top"
-      horiz = TRUE
-      
-      lgnd = legend(
-        0, 0, bty = "n", legend = legend,
-        horiz = horiz,
-        pch = pch,
-        lty = lty,
-        col = col,
-        # title = ltitle,
-        plot = FALSE
-      )
-      # calculate bottom margin height in ndc
-      h = grconvertX(lgnd$rect$h, to="ndc") - grconvertX(0, to="ndc")
-      inset = c(0, 1+2.5*h)
-      par(omd = c(0,1,0+h,1))
-      
-
-    } else if (legend.position=="right!") {
+    if (legend.position=="right!") {
       
       # par_restore = TRUE
       # Margins of the plot (the first is the bottom margin)
@@ -305,6 +280,31 @@ plot2.default = function(
       w = w*1.5
       inset = c(1.025, 0)
       par(omd = c(0, 1-w, 0, 1))
+      
+    } else if (legend.position=="bottom!") {
+      
+      # par_restore = TRUE
+      # Catch to reset right margin if previous legend position was "right!"
+      if (par("mar")[4]== 0.1) par(mar=c(par("mar")[1:3], par("mar")[2]-2)) 
+      
+      plot.new()
+      
+      pos_anchor = "top"
+      horiz = TRUE
+      
+      lgnd = legend(
+        0, 0, bty = "n", legend = legend,
+        horiz = horiz,
+        pch = pch,
+        lty = lty,
+        col = col,
+        # title = ltitle,
+        plot = FALSE
+      )
+      # calculate bottom margin height in ndc
+      h = grconvertX(lgnd$rect$h, to="ndc") - grconvertX(0, to="ndc")
+      inset = c(0, 1+2.5*h)
+      par(omd = c(0,1,0+h,1))
       
     } else {
       pos_anchor = legend.position

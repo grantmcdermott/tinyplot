@@ -3,7 +3,7 @@
 Breaking changes:
 
 - Legend defaults have been changed. The default position is now "right!" and
-drawn without a border, i.e. bty = "n" (#7).
+drawn without a border, i.e. bty = "n" (#14 by @grantmcdermott).
 
 New features:
 
@@ -14,6 +14,7 @@ Bug fixes:
 
 - Adding further elements to `plot2` now works (#13 by @grantmcdermott, thanks
 @karoliskoncevicius for reporting).
+
 Internals:
 
 - Better formula parsing for `plot2.formula` (#8 by @zeileis).

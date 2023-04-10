@@ -56,15 +56,26 @@ by_col = function(ngrps, col = NULL, palette = NULL, palette.args = NULL) {
 }
 
 
-by_pch = function(ngrps, pch) {
-  if (is.null(pch)) pch = 1
-
-  if (!is.atomic(pch) || !is.vector(pch) || !is.numeric(pch) || (length(pch) != 1 && length(pch) != ngrps)) {
-    stop(sprintf("`pch` must be `NULL` or a numeric vector of length 1 or %s.", ngrps), call. = FALSE)
-  }
+by_pch = function(ngrps, type, pch) {
   
-  if (length(pch) == 1) {
-    pch = rep(pch, ngrps)
+  no_pch = FALSE
+  # return NULL if not a valid point type
+  if (!type %in% c("p", "b", "o")) {
+    no_pch = TRUE
+    pch = NULL
+  } else if (is.null(pch)) {
+    pch = 1
+  }
+
+  if (!no_pch) {
+    
+    if (!is.atomic(pch) || !is.vector(pch) || !is.numeric(pch) || (length(pch) != 1 && length(pch) != ngrps)) {
+      stop(sprintf("`pch` must be `NULL` or a numeric vector of length 1 or %s.", ngrps), call. = FALSE)
+    }
+    
+    if (length(pch) == 1) {
+      pch = rep(pch, ngrps)
+    }
   }
   
   return(pch)

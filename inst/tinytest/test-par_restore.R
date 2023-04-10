@@ -14,7 +14,7 @@ f1 = function() {
 }
 expect_snapshot_plot(f1, label = "par_restore_bottom")
 
-f2a = function() {
+f2 = function() {
   plot2(
     mpg ~ wt | cyl, mtcars,
     pch = 19,
@@ -22,11 +22,9 @@ f2a = function() {
     legend.position = "right!", legend.args = list(title = "How many cylnders do you have?")
   )
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
+  plot(1:10)
 }
-expect_snapshot_plot(f2a, label = "par_restore_right")
-
-f2b = function() plot(1:10)
-expect_snapshot_plot(f2b, label = "par_restore_FALSE")
+expect_snapshot_plot(f2, label = "par_restore_FALSE")
 
 # restore original par settings and then rerun with par_restore=TRUE
 par(op)

@@ -33,7 +33,7 @@ plot2(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
-  restore_par = FALSE,
+  par_restore = FALSE,
   ...
 )
 
@@ -59,7 +59,7 @@ plot2(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
-  restore_par = TRUE,
+  par_restore = TRUE,
   formula = NULL,
   subset = NULL,
   na.action = NULL,
@@ -146,7 +146,7 @@ the number of categories in the `by` variable. See `col`.}
 \item{lty}{line type. Character, integer, or vector of length equal to the
 number of categories in the `by` variable. See `lty`.}
 
-\item{restore_par}{a logical value indicating whether the `par` settings
+\item{par_restore}{a logical value indicating whether the `par` settings
 prior to calling `plot2` should be restored on exit. Defaults to FALSE,
 which makes it possible to add elements to the plot after it has been
 drawn. However, note the the outer margins of the graphics device may have

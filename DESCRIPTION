@@ -1,6 +1,6 @@
 Package: plot2
 Type: Package
-Title: Easier base twoway plots
+Title: Lightweight extension of base R plot
 Version: 0.0.1.9006
 Authors@R: 
   c(

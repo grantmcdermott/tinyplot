@@ -11,3 +11,7 @@ expect_snapshot_plot(f, label = "aesthetics_type_b_lty")
 
 f = function() plot2(Temp ~ Day | Month, data = airquality, type = "b", col = 1, pch = 1:5)
 expect_snapshot_plot(f, label = "aesthetics_type_b_col_pch")
+
+# check that non-point types don't generate points accidentally
+f = function() plot2(Temp ~ Day | Month, data = airquality, type = "l")
+expect_snapshot_plot(f, label = "aesthetics_type_l")

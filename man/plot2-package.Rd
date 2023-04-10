@@ -32,10 +32,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Grant McDermott \email{grantmcd@uoregon.edu}
 
-Other contributors:
+Authors:
 \itemize{
-  \item Vincent Arel-Bundock \email{vincent.arel-bundock@umontreal.ca} (\href{https://orcid.org/0000-0003-1995-6531}{ORCID}) (@vincentab) [contributor]
-  \item Achim Zeileis \email{Achim.Zeileis@R-project.org} (\href{https://orcid.org/0000-0003-0918-3766}{ORCID}) [contributor]
+  \item Vincent Arel-Bundock \email{vincent.arel-bundock@umontreal.ca} (\href{https://orcid.org/0000-0003-1995-6531}{ORCID}) (@vincentab)
+  \item Achim Zeileis \email{Achim.Zeileis@R-project.org} (\href{https://orcid.org/0000-0003-0918-3766}{ORCID})
 }
 
 }

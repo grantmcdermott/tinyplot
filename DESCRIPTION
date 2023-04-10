@@ -1,7 +1,7 @@
 Package: plot2
 Type: Package
 Title: Easier base twoway plots
-Version: 0.0.1.9004
+Version: 0.0.1.9005
 Authors@R: 
   c(
     person(
@@ -13,14 +13,14 @@ Authors@R:
     person(
       given = "Vincent",
       family = "Arel-Bundock",
-      role = "ctb",
+      role = "aut",
       email = "vincent.arel-bundock@umontreal.ca",
       comment = c(ORCID = "0000-0003-1995-6531", Twitter = "@vincentab")
     ),
     person(
       given = "Achim",
       family = "Zeileis",
-      role = "ctb",
+      role = "aut",
       email = "Achim.Zeileis@R-project.org",
       comment = c(ORCID = "0000-0003-0918-3766")
      )

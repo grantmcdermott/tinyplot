@@ -215,7 +215,7 @@ plot2.default = function(
   
   ngrps = length(split_data)
     
-  pch = by_pch(ngrps = ngrps, pch = pch)
+  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
 

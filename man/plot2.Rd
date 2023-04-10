@@ -59,7 +59,7 @@ plot2(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
-  par_restore = TRUE,
+  par_restore = FALSE,
   formula = NULL,
   subset = NULL,
   na.action = NULL,

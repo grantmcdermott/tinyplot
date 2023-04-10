@@ -25,6 +25,7 @@ Authors@R:
       comment = c(ORCID = "0000-0003-0918-3766")
      )
   )
+Remotes: vincentarelbundock/tinysnapshot
 Description: Lightweight extension of the base R plot function, with support for
       automatic grouping and legend printing, and several other enhancements.
 License: GPL (>= 2) 
@@ -35,11 +36,12 @@ Imports:
   grDevices,
   stats
 Suggests:
+  basetheme,
+  fontquiver,
   rsvg,
   svglite,
   tinysnapshot,
-  tinytest,
-  basetheme
+  tinytest
 Encoding: UTF-8
 RoxygenNote: 7.2.3
 URL: https://grantmcdermott.com/plot2/,

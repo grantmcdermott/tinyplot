@@ -69,7 +69,7 @@
 #'   the number of categories in the `by` variable. See `col`.
 #' @param lty line type. Character, integer, or vector of length equal to the
 #'   number of categories in the `by` variable. See `lty`.
-#' @param restore_par a logical value indicating whether the `par` settings
+#' @param par_restore a logical value indicating whether the `par` settings
 #'   prior to calling `plot2` should be restored on exit. Defaults to FALSE,
 #'   which makes it possible to add elements to the plot after it has been
 #'   drawn. However, note the the outer margins of the graphics device may have
@@ -191,7 +191,7 @@ plot2.default = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
-    restore_par = FALSE,
+    par_restore = FALSE,
     ...) {
   
   if (is.null(y)) {
@@ -227,7 +227,7 @@ plot2.default = function(
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
-  # restore_par = FALSE
+  # par_restore = FALSE
   
   # legend
   
@@ -258,7 +258,7 @@ plot2.default = function(
     
     if (legend.position=="bottom!") {
       
-      # restore_par = TRUE
+      # par_restore = TRUE
       # Margins of the plot (the first is the bottom margin)
       # par(mar=c(0.1, par('mar')[2:4])) # optional, removes bottom inner margin space
       plot.new()
@@ -283,7 +283,7 @@ plot2.default = function(
 
     } else if (legend.position=="right!") {
       
-      # restore_par = TRUE
+      # par_restore = TRUE
       # Margins of the plot (the first is the bottom margin)
       par(mar=c(par("mar")[1:3], 0.1)) # remove right inner margin space
     
@@ -390,7 +390,7 @@ plot2.default = function(
     sub = sub
     )
   
-  if (restore_par) {
+  if (par_restore) {
     on.exit(par(opar), add = TRUE)
   }
   
@@ -422,7 +422,7 @@ plot2.formula = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
-    restore_par = TRUE,
+    par_restore = TRUE,
     formula = NULL,
     subset = NULL,
     na.action = NULL,

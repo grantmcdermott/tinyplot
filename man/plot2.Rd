@@ -33,6 +33,7 @@ plot2(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
+  restore_par = FALSE,
   ...
 )
 
@@ -58,6 +59,7 @@ plot2(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
+  restore_par = TRUE,
   formula = NULL,
   subset = NULL,
   na.action = NULL,
@@ -134,11 +136,23 @@ legend is desired, then the user can also specify "none".}
 \item{legend.args}{list of additional arguments passed on to `legend`. At
 the moment, only "bty", "horiz", "xpd", and "title" are supported.}
 
-\item{pch}{plotting "character", i.e., symbol to use. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `pch`.}
+\item{pch}{plotting "character", i.e., symbol to use. Character, integer, or
+vector of length equal to the number of categories in the `by` variable.
+See `pch`.}
 
-\item{col}{plotting color. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `col`.}
+\item{col}{plotting color. Character, integer, or vector of length equal to
+the number of categories in the `by` variable. See `col`.}
 
-\item{lty}{line type. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `lty`.}
+\item{lty}{line type. Character, integer, or vector of length equal to the
+number of categories in the `by` variable. See `lty`.}
+
+\item{restore_par}{a logical value indicating whether the `par` settings
+prior to calling `plot2` should be restored on exit. Defaults to FALSE,
+which makes it possible to add elements to the plot after it has been
+drawn. However, note the the outer margins of the graphics device may have
+been altered to make space for the `plot2` legend. Users can opt out of
+this persistent behaviour by setting to TRUE instead. (Another option would
+be calling `dev.off()` to reset all `par` settings to their defaults.)}
 
 \item{formula}{a `formula` that may also include a grouping variable after a
 "|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should

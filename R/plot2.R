@@ -62,9 +62,20 @@
 #'   legend is desired, then the user can also specify "none".
 #' @param legend.args list of additional arguments passed on to `legend`. At
 #'   the moment, only "bty", "horiz", "xpd", and "title" are supported.
-#' @param pch plotting "character", i.e., symbol to use. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `pch`.
-#' @param col plotting color. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `col`.
-#' @param lty line type. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `lty`.
+#' @param pch plotting "character", i.e., symbol to use. Character, integer, or
+#'   vector of length equal to the number of categories in the `by` variable.
+#'   See `pch`.
+#' @param col plotting color. Character, integer, or vector of length equal to
+#'   the number of categories in the `by` variable. See `col`.
+#' @param lty line type. Character, integer, or vector of length equal to the
+#'   number of categories in the `by` variable. See `lty`.
+#' @param restore_par a logical value indicating whether the `par` settings
+#'   prior to calling `plot2` should be restored on exit. Defaults to FALSE,
+#'   which makes it possible to add elements to the plot after it has been
+#'   drawn. However, note the the outer margins of the graphics device may have
+#'   been altered to make space for the `plot2` legend. Users can opt out of
+#'   this persistent behaviour by setting to TRUE instead. (Another option would
+#'   be calling `dev.off()` to reset all `par` settings to their defaults.)
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
@@ -180,6 +191,7 @@ plot2.default = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
+    restore_par = FALSE,
     ...) {
   
   if (is.null(y)) {
@@ -215,7 +227,7 @@ plot2.default = function(
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
-  reset_par = FALSE
+  # restore_par = FALSE
   
   # legend
   
@@ -223,7 +235,7 @@ plot2.default = function(
   horiz = ifelse(!is.null(legend.args[["horiz"]]), legend.args[["horiz"]], FALSE)
   xpd = ifelse(!is.null(legend.args[["xpd"]]), legend.args[["xpd"]], NA)
   
-  ltitle = NULL
+  ltitle = w = h = NULL
   if(!is.null(legend.args[["title"]])) ltitle = legend.args[["title"]]
 
   if (is.null(legend.position)) {
@@ -246,7 +258,7 @@ plot2.default = function(
     
     if (legend.position=="bottom!") {
       
-      reset_par = TRUE
+      # restore_par = TRUE
       # Margins of the plot (the first is the bottom margin)
       # par(mar=c(0.1, par('mar')[2:4])) # optional, removes bottom inner margin space
       plot.new()
@@ -271,7 +283,7 @@ plot2.default = function(
 
     } else if (legend.position=="right!") {
       
-      reset_par = TRUE
+      # restore_par = TRUE
       # Margins of the plot (the first is the bottom margin)
       par(mar=c(par("mar")[1:3], 0.1)) # remove right inner margin space
     
@@ -378,10 +390,8 @@ plot2.default = function(
     sub = sub
     )
   
-  if (reset_par) {
-    ousr = par("usr")
+  if (restore_par) {
     on.exit(par(opar), add = TRUE)
-    on.exit(par(usr = ousr), add = TRUE)
   }
   
 }
@@ -412,6 +422,7 @@ plot2.formula = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
+    restore_par = TRUE,
     formula = NULL,
     subset = NULL,
     na.action = NULL,

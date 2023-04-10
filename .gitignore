@@ -35,3 +35,7 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 docs
+
+# tinysnapshot extras
+inst/tinytest/_tinysnapshot_OLD/
+inst/tinytest/_tinysnapshot_review/

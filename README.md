@@ -220,7 +220,7 @@ is expensive (e.g., an R application running in a browser via
     deal-breaker, but not particularly consistent in my view). Third,
     and perhaps most importantly, this grouping doesn’t carry over to
     line plots (i.e., type=“l”). Instead, you have to transpose your
-    data and use `mplot`. See
+    data and use `matplot`. See
     [this](https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops)
     old StackOverflow thread for a longer discussion.
 

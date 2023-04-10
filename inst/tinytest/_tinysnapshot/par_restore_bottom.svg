@@ -25,10 +25,10 @@
 <circle cx='165.10' cy='488.08' r='2.70' style='stroke-width: 0.75;' />
 <circle cx='238.03' cy='488.08' r='2.70' style='stroke-width: 0.75; stroke: #E69F00;' />
 <circle cx='310.97' cy='488.08' r='2.70' style='stroke-width: 0.75; stroke: #56B4E9;' />
-<text x='266.40' y='473.32' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
-<text x='175.90' y='492.45' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='35.35px' lengthAdjust='spacingAndGlyphs'>setosa</text>
-<text x='248.83' y='492.45' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='51.34px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
-<text x='321.77' y='492.45' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='44.01px' lengthAdjust='spacingAndGlyphs'>virginica</text>
+<text x='266.40' y='473.32' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
+<text x='175.90' y='492.45' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='35.35px' lengthAdjust='spacingAndGlyphs'>setosa</text>
+<text x='248.83' y='492.45' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='51.34px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
+<text x='321.77' y='492.45' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='44.01px' lengthAdjust='spacingAndGlyphs'>virginica</text>
 <line x1='95.73' y1='398.41' x2='469.07' y2='398.41' style='stroke-width: 0.75;' />
 <line x1='95.73' y1='398.41' x2='95.73' y2='405.61' style='stroke-width: 0.75;' />
 <line x1='149.07' y1='398.41' x2='149.07' y2='405.61' style='stroke-width: 0.75;' />
@@ -38,25 +38,25 @@
 <line x1='362.40' y1='398.41' x2='362.40' y2='405.61' style='stroke-width: 0.75;' />
 <line x1='415.73' y1='398.41' x2='415.73' y2='405.61' style='stroke-width: 0.75;' />
 <line x1='469.07' y1='398.41' x2='469.07' y2='405.61' style='stroke-width: 0.75;' />
-<text x='95.73' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>4.5</text>
-<text x='149.07' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>5.0</text>
-<text x='202.40' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>5.5</text>
-<text x='255.73' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>6.0</text>
-<text x='309.07' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>6.5</text>
-<text x='362.40' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>7.0</text>
-<text x='415.73' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>7.5</text>
-<text x='469.07' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>8.0</text>
+<text x='95.73' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>4.5</text>
+<text x='149.07' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>5.0</text>
+<text x='202.40' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>5.5</text>
+<text x='255.73' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>6.0</text>
+<text x='309.07' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>6.5</text>
+<text x='362.40' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>7.0</text>
+<text x='415.73' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>7.5</text>
+<text x='469.07' y='424.33' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>8.0</text>
 <line x1='59.04' y1='385.84' x2='59.04' y2='123.98' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='385.84' x2='51.84' y2='385.84' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='320.38' x2='51.84' y2='320.38' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='254.91' x2='51.84' y2='254.91' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='189.45' x2='51.84' y2='189.45' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='123.98' x2='51.84' y2='123.98' style='stroke-width: 0.75;' />
-<text transform='translate(41.76,385.84) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>2.0</text>
-<text transform='translate(41.76,320.38) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>2.5</text>
-<text transform='translate(41.76,254.91) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>3.0</text>
-<text transform='translate(41.76,189.45) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>3.5</text>
-<text transform='translate(41.76,123.98) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>4.0</text>
+<text transform='translate(41.76,385.84) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>2.0</text>
+<text transform='translate(41.76,320.38) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>2.5</text>
+<text transform='translate(41.76,254.91) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>3.0</text>
+<text transform='translate(41.76,189.45) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>3.5</text>
+<text transform='translate(41.76,123.98) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>4.0</text>
 <polygon points='59.04,398.41 473.76,398.41 473.76,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -235,8 +235,8 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw0NzEuODU=)'>
-<text x='266.40' y='453.13' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='70.73px' lengthAdjust='spacingAndGlyphs'>Sepal.Length</text>
-<text transform='translate(12.96,228.73) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "TeX Gyre Heros";' textLength='64.70px' lengthAdjust='spacingAndGlyphs'>Sepal.Width</text>
+<text x='266.40' y='453.13' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='70.73px' lengthAdjust='spacingAndGlyphs'>Sepal.Length</text>
+<text transform='translate(12.96,228.73) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-weight: 0; font-family: "Nimbus Sans";' textLength='64.70px' lengthAdjust='spacingAndGlyphs'>Sepal.Width</text>
 </g>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDM5OC40MQ==)'>
 <polygon points='255.73,248.61 261.19,258.06 250.28,258.06 ' style='stroke-width: 0.75; stroke: none; fill: #FF69B4;' />

@@ -180,6 +180,7 @@ plot2.default = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
+    mfrow = NULL,
     ...) {
   
   if (is.null(y)) {
@@ -191,8 +192,20 @@ plot2.default = function(
   if (is.null(ylab)) ylab = deparse(substitute(y))
   if (is.null(legend.args$title)) ltitle = deparse(substitute(by))
     
-  if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
-  if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
+  if (is.null(xlim)) xlim = if (is.factor(y)) {
+    c(0, 1)
+  } else {
+    if(is.factor(x)) {
+      NULL
+    } else {
+      range(x, na.rm = TRUE)
+    }
+  }
+  if (is.null(ylim)) ylim = if (is.factor(y)) {
+    c(0, 1)
+  } else {
+    range(y, na.rm = TRUE)
+  }
   
   if (!is.null(by)) {
     split_data = lapply(list(x=x, y=y), split, by)
@@ -202,7 +215,7 @@ plot2.default = function(
   }
   
   ngrps = length(split_data)
-    
+
   pch = by_pch(ngrps = ngrps, pch = pch)
   
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
@@ -217,6 +230,37 @@ plot2.default = function(
   opar = par(no.readonly = TRUE)
   reset_par = FALSE
   
+  ## handle facets via mfrow, especially for plots involving factor variables
+  if (!is.null(mfrow) && is.numeric(mfrow)) {
+    mfrow = floor(mfrow)
+    if (length(mfrow) != 2L || ngrps > mfrow[1L] * mfrow[2L]) {
+      warning("mfrow is not a numeric vector of suitable number of rows and columns, using default instead")
+      mfrow = TRUE
+    }
+  }
+  if (is.null(mfrow)) {
+    mfrow = is.factor(x) || is.factor(y) || (is.null(by) && ngrps > 1L)
+  }
+  if (identical(mfrow, TRUE)) {
+    mfrow = grDevices::n2mfrow(ngrps)
+    if (any(mfrow == 1L)) {
+      mfrow = rev(mfrow)
+    }
+  }
+  if (!identical(mfrow, FALSE)) {
+    par(mfrow = mfrow)
+    for (i in seq_along(split_data)) {
+      mainlab = if(ngrps > 1L) {
+        paste0(if (is.null(legend.args[["title"]])) "" else paste0(legend.args[["title"]], " = "), names(split_data)[i])
+      } else {
+        ""
+      }
+      graphics::plot(y ~ x, data = split_data[[i]], main = mainlab,
+        xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab, ...)
+    }
+    return(invisible())
+  }
+    
   # legend
   
   bty = ifelse(!is.null(legend.args[["bty"]]), legend.args[["bty"]], "o")

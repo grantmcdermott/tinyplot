@@ -1,5 +1,4 @@
-#' @title Lightweight extension of the base R plotting function that supports
-#'   automatic grouping and legend printing, and a several other enhancements.
+#' @title Lightweight extension of the base R plotting function
 #'   
 #' @description `plot2` extends the functionality of base R's
 #'   default (2D) `plot` function, particularly as it applies to scatter and

@@ -4,8 +4,7 @@
 \alias{plot2}
 \alias{plot2.default}
 \alias{plot2.formula}
-\title{Lightweight extension of the base R plotting function that supports
-  automatic grouping and legend printing, and a several other enhancements.}
+\title{Lightweight extension of the base R plotting function}
 \usage{
 plot2(x, ...)
 

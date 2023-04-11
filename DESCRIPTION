@@ -1,7 +1,7 @@
 Package: plot2
 Type: Package
 Title: Lightweight extension of base R plot
-Version: 0.0.1.9006
+Version: 0.0.2
 Authors@R: 
   c(
     person(

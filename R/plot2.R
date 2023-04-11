@@ -173,7 +173,7 @@ plot2.default = function(
     type = "p",
     xlim = NULL,
     ylim = NULL,
-    # log = "",
+    log = "",
     main = NULL, 
     sub = NULL,
     xlab = NULL,
@@ -334,7 +334,7 @@ plot2.default = function(
   # plot window
   plot.window(
     xlim = xlim, ylim = ylim, 
-    asp = asp,
+    asp = asp, log = log,
     ...
   )
   

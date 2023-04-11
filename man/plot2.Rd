@@ -16,6 +16,7 @@ plot2(x, ...)
   type = "p",
   xlim = NULL,
   ylim = NULL,
+  log = "",
   main = NULL,
   sub = NULL,
   xlab = NULL,
@@ -93,6 +94,10 @@ and leads to a ‘reversed axis’. The default value, NULL, indicates that
 the range of the `finite` values to be plotted should be used.}
 
 \item{ylim}{the y limits of the plot.}
+
+\item{log}{a character string which contains "x" if the x axis is to be
+logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if 
+both axes are to be logarithmic.}
 
 \item{main}{a main title for the plot, see also `title`.}
 

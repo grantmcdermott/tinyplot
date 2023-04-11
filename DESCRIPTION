@@ -43,7 +43,7 @@ Suggests:
   tinysnapshot,
   tinytest
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.2.3.9000
 URL: https://grantmcdermott.com/plot2/,
     http://grantmcdermott.com/plot2/
 BugReports: https://github.com/grantmcdermott/plot2/issues

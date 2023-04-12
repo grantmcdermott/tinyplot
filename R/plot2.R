@@ -510,6 +510,8 @@ plot2.formula = function(
 
 }
 
+#' @importFrom methods as
+#' @importFrom stats update
 #' @rdname plot2
 #' @export
 plot2.density = function(

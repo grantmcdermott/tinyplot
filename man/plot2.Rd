@@ -4,6 +4,7 @@
 \alias{plot2}
 \alias{plot2.default}
 \alias{plot2.formula}
+\alias{plot2.density}
 \title{Lightweight extension of the base R plotting function}
 \usage{
 plot2(x, ...)
@@ -64,6 +65,32 @@ plot2(x, ...)
   subset = NULL,
   na.action = NULL,
   drop.unused.levels = TRUE,
+  ...
+)
+
+\method{plot2}{density}(
+  x = NULL,
+  by = NULL,
+  type = "l",
+  xlim = NULL,
+  ylim = NULL,
+  main = NULL,
+  sub = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  ann = par("ann"),
+  axes = TRUE,
+  frame.plot = axes,
+  asp = NA,
+  grid = NULL,
+  palette = NULL,
+  palette.args = list(),
+  legend.position = NULL,
+  legend.args = list(),
+  pch = NULL,
+  col = NULL,
+  lty = NULL,
+  par_restore = FALSE,
   ...
 )
 }

@@ -1,5 +1,9 @@
 # plot2 0.0.2.9000 (development version)
 
+New features:
+
+- Add support for the argument `log` (#15, @etiennebacher).
+
 # plot2 0.0.2
 
 Breaking changes:

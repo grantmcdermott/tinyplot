@@ -32,7 +32,9 @@
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
 #' @param ylim the y limits of the plot.
-# #' @param log Not supported yet,
+#' @param log a character string which contains "x" if the x axis is to be
+#'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if 
+#'   both axes are to be logarithmic.
 #' @param main a main title for the plot, see also `title`.
 #' @param sub a subtitle for the plot.
 #' @param xlab a label for the x axis, defaults to a description of x.
@@ -173,7 +175,7 @@ plot2.default = function(
     type = "p",
     xlim = NULL,
     ylim = NULL,
-    # log = "",
+    log = "",
     main = NULL, 
     sub = NULL,
     xlab = NULL,
@@ -334,7 +336,7 @@ plot2.default = function(
   # plot window
   plot.window(
     xlim = xlim, ylim = ylim, 
-    asp = asp,
+    asp = asp, log = log,
     ...
   )
   

@@ -507,3 +507,110 @@ plot2.formula = function(
     )
 
 }
+
+#' @rdname plot2
+#' @export
+plot2.density = function(
+    x = NULL,
+    by = NULL,
+    type = "l",
+    xlim = NULL,
+    ylim = NULL,
+    # log = "",
+    main = NULL,
+    sub = NULL,
+    xlab = NULL,
+    ylab = NULL,
+    ann = par("ann"),
+    axes = TRUE,
+    frame.plot = axes,
+    asp = NA,
+    grid = NULL,
+    palette = NULL,
+    palette.args = list(),
+    legend.position = NULL,
+    legend.args = list(),
+    pch = NULL,
+    col = NULL,
+    lty = NULL,
+    par_restore = FALSE,
+    ...
+    ) {
+  
+  object = x
+  
+  if (is.null(by)) {
+    x = object$x
+    y = object$y
+  } else {
+    if (!exists("title", where = legend.args)) legend.args$title = deparse(substitute(by))
+    x = eval(str2lang(object$data.name))
+    split_x = split(x, f = by)
+    split_object = lapply(split_x, function(xx) update(object, x = xx))
+    by_names = names(split_object)
+    by_names = tryCatch(as(by_names, class(by)), error = function(e) by_names)
+    split_object = lapply(seq_along(split_object), function(ii) {
+      lst = list(
+        x = split_object[[ii]]$x,
+        y = split_object[[ii]]$y,
+        n = split_object[[ii]]$n,
+        bw = split_object[[ii]]$bw
+      )
+      lst$by = rep_len(by_names[ii], length.out = length(lst$x))
+      return(lst)
+    })
+    ## combine element by element
+    res = do.call(Map, c(c, split_object))
+    ## now pull out the individual vectors
+    x = res[["x"]]
+    y = res[["y"]]
+    by = res[["by"]]
+    bw = sprintf("%.4g", res[["bw"]])
+    n = res[["n"]]
+    if (is.null(xlab)) {
+      if (length(by_names) > 3) {
+        bw = c(bw[1:3], "...")
+        n = c(n[1:3], "...")
+      }
+      bw = paste0("[", paste(bw, collapse = ", "), "]")
+      n = paste0("[", paste(n, collapse = ", "), "]")
+      xlab = paste0("N = ", n, "   Bandwidth = ", bw)
+    }
+  }
+  
+  ## axes range
+  if (is.null(xlim)) xlim = range(x)
+  if (is.null(ylim)) ylim = range(y)
+
+  ## nice labels and titles
+  if (is.null(ylab)) ylab = "Density"
+  if (is.null(xlab)) xlab = paste0("N = ", object$n, "   Bandwidth = ", sprintf("%.4g", object$bw))
+  if (is.null(main)) main = paste0(paste(object$call, collapse = "(x = "), ")")
+
+  plot2.default(
+    x = x, y = y, by = by,
+    type = type,
+    xlim = xlim,
+    ylim = ylim,
+    # log = "",
+    main = main,
+    sub = sub,
+    xlab = xlab,
+    ylab = ylab,
+    ann = ann,
+    axes = axes,
+    frame.plot = frame.plot,
+    asp = asp,
+    grid = grid,
+    palette = palette,
+    palette.args = palette.args,
+    legend.position = legend.position,
+    legend.args = legend.args,
+    pch = pch,
+    col = col,
+    lty = lty,
+    par_restore = par_restore,
+    ...
+    )
+
+}

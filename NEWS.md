@@ -1,9 +1,13 @@
-# plot2 0.0.2.9000 (development version)
+# plot2 0.0.2.9003 (development version)
 
 New features:
 
 - Add support for the argument `log` (#15, @etiennebacher).
-- Add support for grouped density plots
+- Add support for grouped density plots (#18, @grantmcdermott).
+
+Bug fixes:
+
+- Setting `par(pch=X)` globally is now respected (#20, @grantmcdermott).
 
 # plot2 0.0.2
 

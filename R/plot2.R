@@ -580,7 +580,7 @@ plot2.density = function(
     y = object$y
   } else {
     if (!exists("title", where = legend.args)) legend.args$title = deparse(substitute(by))
-    x = eval(str2lang(object$data.name))
+    x = eval(str2lang(object$data.name), envir = parent.frame())
     split_x = split(x, f = by)
     # joint bandwidth
     bw_type = as.list(object$call[-1])[["bw"]]

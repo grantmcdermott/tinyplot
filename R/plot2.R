@@ -226,6 +226,7 @@ plot2.default = function(
     lty = NULL,
     restore_par = FALSE,
     mfrow = NULL,
+    par_restore = FALSE,
     ...) {
   
   if (is.null(y)) {

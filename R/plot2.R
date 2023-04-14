@@ -582,15 +582,21 @@ plot2.density = function(
     if (!exists("title", where = legend.args)) legend.args$title = deparse(substitute(by))
     x = eval(str2lang(object$data.name))
     split_x = split(x, f = by)
-    split_object = lapply(split_x, function(xx) update(object, x = xx))
+    # joint bandwidth
+    bw_type = as.list(object$call[-1])[["bw"]]
+    if (is.null(bw_type)) bw_type = bw.nrd0 else bw_type = str2lang(paste0("bw.", bw))
+    xs_mask = vapply(split_x, length, numeric(1)) > 1
+    bws = vapply(split_x[xs_mask], bw_type, numeric(1))
+    bw = mean(bws, na.rm = TRUE)
+    #
+    split_object = lapply(split_x, function(xx) update(object, x = xx, bw = bw))
     by_names = names(split_object)
     by_names = tryCatch(as(by_names, class(by)), error = function(e) by_names)
     split_object = lapply(seq_along(split_object), function(ii) {
       lst = list(
         x = split_object[[ii]]$x,
         y = split_object[[ii]]$y,
-        n = split_object[[ii]]$n,
-        bw = split_object[[ii]]$bw
+        n = split_object[[ii]]$n
       )
       lst$by = rep_len(by_names[ii], length.out = length(lst$x))
       return(lst)
@@ -601,16 +607,14 @@ plot2.density = function(
     x = res[["x"]]
     y = res[["y"]]
     by = res[["by"]]
-    bw = sprintf("%.4g", res[["bw"]])
+    bw = sprintf("%.4g", bw)
     n = res[["n"]]
     if (is.null(xlab)) {
       if (length(by_names) > 3) {
-        bw = c(bw[1:3], "...")
         n = c(n[1:3], "...")
       }
-      bw = paste0("[", paste(bw, collapse = ", "), "]")
       n = paste0("[", paste(n, collapse = ", "), "]")
-      xlab = paste0("N = ", n, "   Bandwidth = ", bw)
+      xlab = paste0("N = ", n, "   Joint Bandwidth = ", bw)
     }
   }
   

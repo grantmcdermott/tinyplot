@@ -40,8 +40,8 @@ Suggests:
   fontquiver,
   rsvg,
   svglite,
-  tinysnapshot,
-  tinytest (>= 0.0.3)
+  tinytest,
+  tinysnapshot (>= 0.0.3)
 Encoding: UTF-8
 RoxygenNote: 7.2.3
 URL: https://grantmcdermott.com/plot2/,

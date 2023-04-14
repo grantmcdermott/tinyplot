@@ -163,6 +163,21 @@ plot2(
 
 <img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
+Note that legend position keywords without the exclamation point (i.e.,
+for inside the plot area) should still as per normal. Grouped density
+plot example:
+
+``` r
+plot2(
+  density(airquality$Temp),
+  by = airquality$Month, 
+  legend.position = "topright",
+  legend.args = list(title = "Month", bty="o")
+)
+```
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
 Colour palettes can be customized easily via the `palette` argument. The
 default group colours are inherited from either the “Okabe-Ito” or
 “Viridis” palettes, depending on the number of groups. However, all
@@ -178,7 +193,7 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 Customizing your plots further is straightforward. Here’s a quick
 penultimate example, where we change our font family, add some
@@ -198,7 +213,7 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
 
 The use of `par` (to set the font family) in the above example again
 underscores the correspondence with the base graphics system. Because
@@ -222,7 +237,7 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
 ``` r
 

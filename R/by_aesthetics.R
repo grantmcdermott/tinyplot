@@ -64,7 +64,7 @@ by_pch = function(ngrps, type, pch) {
     no_pch = TRUE
     pch = NULL
   } else if (is.null(pch)) {
-    pch = 1
+    pch = par("pch")
   }
 
   if (!no_pch) {

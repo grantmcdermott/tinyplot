@@ -195,18 +195,22 @@ plot2(
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
-Customizing your plots further is straightforward. Here’s a quick
-penultimate example, where we change our font family, add some
-transparency to our colour palette, and use Tufte-style floating axes
-with a background panel grid.
+Customizing your plots further is straightforward, whether that is done
+by changing global parameters or invoking `plot2` arguments. Here’s a
+quick penultimate example, where we change our point character and font
+family globally, add some transparency to our colour palette, and use
+Tufte-style floating axes with a background panel grid.
 
 ``` r
-par(family = "HersheySans") # Use one of R's built-in Hershey fonts instead of Arial default
+par(
+  pch    = 16,           # Filled points as default 
+  family = "HersheySans" # Use a (built-in) Hershey font instead of Arial default
+)
 
 plot2(
   Temp ~ Day | Month,
   data = airquality,
-  type = "b", pch = 16,
+  type = "b",
   palette = "Tableau 10", palette.args = list(alpha = 0.5),
   main = "Daily temperatures by month",
   frame.plot = FALSE, grid = grid()
@@ -215,15 +219,15 @@ plot2(
 
 <img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
 
-The use of `par` (to set the font family) in the above example again
-underscores the correspondence with the base graphics system. Because
-`plot2` is effectively a convenience wrapper around base `plot`, any
-global elements that you have set for the latter should carry over to
-the former. For nice out-of-the-box themes, we recommend the
-**basetheme** package.
+The use of `par` in the above example again underscores the
+correspondence with the base graphics system. Because `plot2` is
+effectively a convenience wrapper around base `plot`, any global
+elements that you have set for the latter should carry over to the
+former. For nice out-of-the-box themes, we recommend the **basetheme**
+package.
 
 ``` r
-par(family = "") # revert global font change from above
+par(family = "", pch = 1) # revert global changes from above
 
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
@@ -242,6 +246,9 @@ plot2(
 ``` r
 
 basetheme(NULL)  # back to default theme
+dev.off()
+#> null device 
+#>           1
 ```
 
 In summary, consider the **plot2** package if you are looking for base R

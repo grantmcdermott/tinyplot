@@ -89,12 +89,12 @@ f = function() {
 expect_snapshot_plot(f, label = "readme_palette_tableau")
 
 f = function() {
-  par(family = "HersheySans") # Use one of R's built-in Hershey fonts instead of Arial default
+  par(pch = 16, family = "HersheySans")
   
   plot2(
     Temp ~ Day | Month,
     data = airquality,
-    type = "b", pch = 16,
+    type = "b",
     palette = "Tableau 10", palette.args = list(alpha = 0.5),
     main = "Daily temperatures by month",
     frame.plot = FALSE, grid = grid()

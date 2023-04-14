@@ -3,6 +3,7 @@
 New features:
 
 - Add support for the argument `log` (#15, @etiennebacher).
+- Add support for grouped density plots
 
 # plot2 0.0.2
 

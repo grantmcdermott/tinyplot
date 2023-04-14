@@ -161,6 +161,18 @@ plot2(
 )
 ```
 
+Note that legend position keywords without the exclamation point (i.e., for
+inside the plot area) should still as per normal. Grouped density plot example:
+
+```{r}
+plot2(
+  density(airquality$Temp),
+  by = airquality$Month, 
+  legend.position = "topright",
+  legend.args = list(title = "Month", bty="o")
+)
+```
+
 Colour palettes can be customized easily via the `palette` argument. The default
 group colours are inherited from either the "Okabe-Ito" or "Viridis" palettes,
 depending on the number of groups. However, all palettes listed by

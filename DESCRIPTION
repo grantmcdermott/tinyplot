@@ -1,7 +1,7 @@
 Package: plot2
 Type: Package
-Title: Easier base twoway plots
-Version: 0.0.1.9004
+Title: Lightweight extension of base R plot
+Version: 0.0.2
 Authors@R: 
   c(
     person(
@@ -13,18 +13,19 @@ Authors@R:
     person(
       given = "Vincent",
       family = "Arel-Bundock",
-      role = "ctb",
+      role = "aut",
       email = "vincent.arel-bundock@umontreal.ca",
       comment = c(ORCID = "0000-0003-1995-6531", Twitter = "@vincentab")
     ),
     person(
       given = "Achim",
       family = "Zeileis",
-      role = "ctb",
+      role = "aut",
       email = "Achim.Zeileis@R-project.org",
       comment = c(ORCID = "0000-0003-0918-3766")
      )
   )
+Remotes: vincentarelbundock/tinysnapshot
 Description: Lightweight extension of the base R plot function, with support for
       automatic grouping and legend printing, and several other enhancements.
 License: GPL (>= 2) 
@@ -33,13 +34,15 @@ Depends:
 Imports: 
   graphics,
   grDevices,
+  methods,
   stats
 Suggests:
+  basetheme,
+  fontquiver,
   rsvg,
   svglite,
   tinysnapshot,
-  tinytest,
-  basetheme
+  tinytest
 Encoding: UTF-8
 RoxygenNote: 7.2.3
 URL: https://grantmcdermott.com/plot2/,

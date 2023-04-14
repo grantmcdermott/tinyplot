@@ -1,16 +1,36 @@
-# plot2 0.0.1.9002 (development version)
+# plot2 0.0.2.9000 (development version)
 
-Enhancements
+New features:
 
-- Allow users to specify different `pch`, `lty`, and `col` types per group (#5 @vincentarelbundock).
+- Add support for the argument `log` (#15, @etiennebacher).
+- Add support for grouped density plots
 
-Bug fixes
+# plot2 0.0.2
 
-- Adding further elements to `plot2` now work (#6, thanks @karoliskoncevicius for reporting)
+Breaking changes:
 
-Internals
+- Legend defaults have been changed. The default position is now "right!" and
+drawn without a border, i.e. bty = "n" (#14 by @grantmcdermott).
 
-- Better formula parsing for `plot2.formula` (#8 @zeileis). 
+New features:
+
+- Allow users to specify different `pch`, `lty`, and `col` types per group (#5
+and #11 by @vincentarelbundock).
+
+Bug fixes:
+
+- Adding further elements to `plot2` now works (#13 by @grantmcdermott, thanks
+@karoliskoncevicius for reporting).
+
+Internals:
+
+- Better formula parsing for `plot2.formula` (#8 by @zeileis).
+- Unit testing scaffolding based on **tinysnaphot** (#11 by @vincent).
+
+Project:
+
+- @vincentarelbundock and @zeileis have joined the project as core contributors.
+🎉
 
 # plot2 0.0.1
 

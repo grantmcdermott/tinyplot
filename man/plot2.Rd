@@ -4,8 +4,8 @@
 \alias{plot2}
 \alias{plot2.default}
 \alias{plot2.formula}
-\title{Lightweight extension of the base R plotting function that supports
-  automatic grouping and legend printing, and a several other enhancements.}
+\alias{plot2.density}
+\title{Lightweight extension of the base R plotting function}
 \usage{
 plot2(x, ...)
 
@@ -17,6 +17,7 @@ plot2(x, ...)
   type = "p",
   xlim = NULL,
   ylim = NULL,
+  log = "",
   main = NULL,
   sub = NULL,
   xlab = NULL,
@@ -33,6 +34,7 @@ plot2(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
+  par_restore = FALSE,
   ...
 )
 
@@ -58,10 +60,37 @@ plot2(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
+  par_restore = FALSE,
   formula = NULL,
   subset = NULL,
   na.action = NULL,
   drop.unused.levels = TRUE,
+  ...
+)
+
+\method{plot2}{density}(
+  x = NULL,
+  by = NULL,
+  type = "l",
+  xlim = NULL,
+  ylim = NULL,
+  main = NULL,
+  sub = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  ann = par("ann"),
+  axes = TRUE,
+  frame.plot = axes,
+  asp = NA,
+  grid = NULL,
+  palette = NULL,
+  palette.args = list(),
+  legend.position = NULL,
+  legend.args = list(),
+  pch = NULL,
+  col = NULL,
+  lty = NULL,
+  par_restore = FALSE,
   ...
 )
 }
@@ -92,6 +121,10 @@ and leads to a ‘reversed axis’. The default value, NULL, indicates that
 the range of the `finite` values to be plotted should be used.}
 
 \item{ylim}{the y limits of the plot.}
+
+\item{log}{a character string which contains "x" if the x axis is to be
+logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if 
+both axes are to be logarithmic.}
 
 \item{main}{a main title for the plot, see also `title`.}
 
@@ -134,11 +167,23 @@ legend is desired, then the user can also specify "none".}
 \item{legend.args}{list of additional arguments passed on to `legend`. At
 the moment, only "bty", "horiz", "xpd", and "title" are supported.}
 
-\item{pch}{plotting "character", i.e., symbol to use. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `pch`.}
+\item{pch}{plotting "character", i.e., symbol to use. Character, integer, or
+vector of length equal to the number of categories in the `by` variable.
+See `pch`.}
 
-\item{col}{plotting color. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `col`.}
+\item{col}{plotting color. Character, integer, or vector of length equal to
+the number of categories in the `by` variable. See `col`.}
 
-\item{lty}{line type. Character, integer, or vector of length equal to the number of categories in the `by` variable. See `lty`.}
+\item{lty}{line type. Character, integer, or vector of length equal to the
+number of categories in the `by` variable. See `lty`.}
+
+\item{par_restore}{a logical value indicating whether the `par` settings
+prior to calling `plot2` should be restored on exit. Defaults to FALSE,
+which makes it possible to add elements to the plot after it has been
+drawn. However, note the the outer margins of the graphics device may have
+been altered to make space for the `plot2` legend. Users can opt out of
+this persistent behaviour by setting to TRUE instead. (Another option would
+be calling `dev.off()` to reset all `par` settings to their defaults.)}
 
 \item{formula}{a `formula` that may also include a grouping variable after a
 "|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should
@@ -164,14 +209,17 @@ when extracting the data from `formula` and `data`.}
 # plot2 should be a drop-in replacement for (most) regular plot calls. For
 # example:
 
-plot(0:10)
-plot2(0:10)
+par(mfrow = c(1, 2))
+plot(0:10, main = "plot")
+plot2(0:10, main = "plot2")
 
-plot(airquality$Day, airquality$Temp)
-plot2(airquality$Day, airquality$Temp) # same
+par(mfrow = c(2, 2))
+plot(airquality$Day, airquality$Temp, main = "plot")
+plot(Temp ~ Day, data = airquality, main = "plot (formula)")
+#' plot2(airquality$Day, airquality$Temp, main = "plot2")
+plot2(Temp ~ Day, data = airquality, main = "plot2 (formula)")
 
-plot(Temp ~ Day, data = airquality) # base formula method
-plot2(Temp ~ Day, data = airquality) # same
+dev.off() # reset to default layout
 
 # Unlike vanilla plot, however, plot2 allows you to characterize groups 
 # (using either the `by` argument or equivalent `|` formula syntax).
@@ -180,56 +228,85 @@ plot2(Temp ~ Day, data = airquality) # same
 plot2(airquality$Day, airquality$Temp, by = airquality$Month)
 plot2(Temp ~ Day | Month, airquality)
 
-# The legend can be customized and automatically responds to plot element
-# changes. Note the use of "!" in the `legend.position` argument to place
-# the legend outside the plot area.
-
-plot2( 
-  Temp ~ Day | Month, airquality,
-  type = "l",
-  legend.position = "right!"
-)
-
-# The default group colours are either "Okabe-Ito" or "Viridis", depending
-# on the number of groups. But this is easily changed with the palette
-# argument. Note that all palettes supported by `palette.pals()` and 
-# `hcl.pals()` are supported out-of-the-box. Just pass any of the string
-# values generated by either of these functions.
+# Use standard base plotting arguments to adjust features of your plot.
+# For example, change `pch` (plot character) to get filled points.
 
 plot2(
-  Temp ~ Day | Month, airquality,
-  type = "l",
-  legend.position = "right!",
-  palette = "Tropic"
+  Temp ~ Day | Month,
+  data = airquality,
+  pch = 16
 )
 
-# Its possible to add a lot more customization to your plots using the
-# accompanying legend.args and palette.args arguments. Here's a quick
-# example, where we also show off the enhanced `grid` argument.
+# Converting to a grouped line plot is a simple matter of adjusting the
+# `type` argument.
 
 plot2(
-  Temp ~ Day | Month, airquality,
+  Temp ~ Day | Month,
+  data = airquality,
+  type = "l"
+)
+
+# The (automatic) legend position and look can be customized using
+# appropriate arguments. Note the trailing "!" in the `legend.position`
+# argument below. This tells `plot2` to place the legend _outside_ the plot
+# area.
+
+plot2(
+  Temp ~ Day | Month,
+  data = airquality,
+  type = "l",
+  legend.position = "bottom!", # "right!" (default), "none", or "topleft", etc.
+  legend.args = list(title = "Month of the year", bty = "o")
+)
+
+# Regular legend position keywords without the exclamation point (i.e., for
+# inside the plot area) should still work. Grouped density plot example:
+
+plot2(
+  density(airquality$Temp),
+  by = airquality$Month, 
+  legend.position = "topright", legend.args = list(bty="o", title = "Month")
+)
+
+# The default group colours are inherited from either the "Okabe-Ito" or
+# "Viridis" palettes, depending on the number of groups. However, all
+# palettes listed by `palette.pals()` and `hcl.pals()` are supported.
+
+plot2(
+  Temp ~ Day | Month,
+  data = airquality,
+  type = "l",
+  palette = "Tableau 10"
+)
+
+# It's possible to further customize the look of you plots using familiar
+# arguments and base plotting theme settings (e.g., via `par`).
+
+par(family = "HersheySans")
+plot2(
+  Temp ~ Day | Month,
+  data = airquality,
   type = "b", pch = 16,
-  grid = grid(), frame.plot = FALSE,
-  legend.position = "right!", legend.args = list(bty = "n", title = NULL),
-  palette = "Tableau 10", palette.args = list(alpha = 0.5)
+  palette = "Tableau 10", palette.args = list(alpha = 0.5),
+  main = "Daily temperatures by month",
+  frame.plot = FALSE, grid = grid()
 )
 
-# Because plot2 is ultimately just a wrapper around regular plot, any
-# theming elements set by `par` etc. should carry over. For nice
-# out-of-the-box themes, I recommend the `basetheme` package.
+# For nice out-of-the-box themes, we recommend the `basetheme` package.
+
+par(family = "") # revert global font change from above
 
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
 
 plot2(
-  Temp ~ Day | Month, airquality,
-  type = "b", pch = 17,
-  grid = grid(), frame.plot = FALSE,
-  legend.position = "right!", legend.args = list(bty = "n", title = NULL),
-  palette = "Tropic", palette.args = list(alpha = 0.8)
+  Temp ~ Day | Month,
+  data = airquality,
+  type = "b", pch = 15:19,
+  palette = "Tropic",
+  main = "Daily temperatures by month"
 )
 
-basetheme(NULL) # back to default
+basetheme(NULL)  # back to default theme
 
 }

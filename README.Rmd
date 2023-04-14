@@ -107,7 +107,7 @@ Second, the base `plot` formula method doesn't specify the grouping within the
 formula itself (not a deal-breaker, but not particularly consistent in my view).
 Third, and perhaps most importantly, this grouping doesn't carry over to line
 plots (i.e., type="l"). Instead, you have to transpose your data and use
-`mplot`. See
+`matplot`. See
 [this](https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops)
 old StackOverflow thread for a longer discussion.]
 
@@ -115,62 +115,95 @@ old StackOverflow thread for a longer discussion.]
 plot2(airquality$Day, airquality$Temp, by = airquality$Month)
 ```
 
-Notice that we also get an automatic legend. We'll return to legend
-customization shortly.
-
 An even more convenient approach is to use the equivalent formula syntax. Just
 place the grouping variable after a vertical bar (i.e., `|`).
 
 ```{r}
-plot2(Temp ~ Day | Month, airquality)
+plot2(Temp ~ Day | Month, data = airquality)
 ```
 
-Converting to a grouped line plot is a simple matter of adjusting the `type`
-argument. I'll also use this as an opportunity to highlight that the legend
-responds to these plot element changes accordingly and can be further
-customized. Note the use of the "!" in the `legend.position` argument to place
-the legend _outside_ the plot area.
-
-```{r}
-plot2( 
-  Temp ~ Day | Month, airquality,
-  type = "l",
-  legend.position = "right!"
-)
-```
-
-Let's discuss colour palettes briefly. The default group colours in `plot2` are
-either "Okabe-Ito" or "Viridis", depending on the number of groups. But this is
-easily changed via the `palette` argument. Note that all palettes listed by
-`palette.pals()` and `hcl.pals()` are supported out-of-the-box.^[See the
-accompanying help pages of those functions for more details, or read the
-[article](https://arxiv.org/pdf/2303.04918.pdf) by Achim Zeileis and Paul
-Murrell.] Just pass on an appropriate palette name as a string.
+You can use standard base plotting arguments to adjust features of your plot.
+For example, change `pch` (plot character) to get filled points.
 
 ```{r}
 plot2(
-  Temp ~ Day | Month, airquality,
+  Temp ~ Day | Month,
+  data = airquality,
+  pch = 16
+)
+```
+
+Similarly, converting to a grouped line plot is a simple matter of adjusting the
+`type` argument.
+
+```{r}
+plot2(
+  Temp ~ Day | Month,
+  data = airquality,
+  type = "l"
+)
+```
+
+In all of the above cases, you will have noticed that we get an automatic
+legend. The legend position and look can be customized using appropriate
+arguments. You can change (or turn off) the legend title and bounding box,
+switch the direction of the legend text, etc. Below, we particularly draw your
+attention to the trailing "!" in the `legend.position` argument. This tells
+`plot2` to place the legend _outside_ the plot area.
+
+```{r}
+plot2(
+  Temp ~ Day | Month,
+  data = airquality,
   type = "l",
-  legend.position = "right!",
+  legend.position = "bottom!", # "right!" (default), "none", or "topleft", etc.
+  legend.args = list(title = "Month of the year", bty = "o")
+)
+```
+
+Note that legend position keywords without the exclamation point (i.e., for
+inside the plot area) should still as per normal. Grouped density plot example:
+
+```{r}
+plot2(
+  density(airquality$Temp),
+  by = airquality$Month, 
+  legend.position = "topright",
+  legend.args = list(title = "Month", bty="o")
+)
+```
+
+Colour palettes can be customized easily via the `palette` argument. The default
+group colours are inherited from either the "Okabe-Ito" or "Viridis" palettes,
+depending on the number of groups. However, all palettes listed by
+`palette.pals()` and `hcl.pals()` are supported.^[See the accompanying help
+pages of those two functions for more details, or read the
+[article](https://arxiv.org/pdf/2303.04918.pdf) by Achim Zeileis and Paul
+Murrell.] Simply pass on an appropriate palette name as a string.
+
+```{r}
+plot2(
+  Temp ~ Day | Month,
+  data = airquality,
+  type = "l",
   palette = "Tableau 10"
 )
 ```
 
-Customizing your plots further is fairly straightforward. For example, the
-accompanying `legend.args` and `palette.args` arguments allow you to turn off 
-the legend title and bounding box, switch the direction of the text, add 
-transparency to your colour palette, etc. etc. Here's a quick penultimate
-example, where we also show off `plot2`'s enhanced `grid` argument.
+Customizing your plots further is straightforward. Here's a quick penultimate
+example, where we change our font family, add some transparency to our colour
+palette, and use Tufte-style floating axes with a background panel grid. 
 
 ```{r}
 par(family = "HersheySans") # Use one of R's built-in Hershey fonts instead of Arial default
 
 plot2(
-  Temp ~ Day | Month, airquality,
+  Temp ~ Day | Month,
+  data = airquality,
   type = "b", pch = 16,
-  grid = grid(), frame.plot = FALSE,
-  legend.position = "right!", legend.args = list(bty = "n"),
-  palette = "Tableau 10", palette.args = list(alpha = 0.5)
+  palette = "Tableau 10", palette.args = list(alpha = 0.5),
+  main = "Daily temperatures by month",
+  frame.plot = FALSE, grid = grid()
 )
 ```
 
@@ -178,7 +211,7 @@ The use of `par` (to set the font family) in the above example again underscores
 the correspondence with the base graphics system. Because `plot2` is effectively
 a convenience wrapper around base `plot`, any global elements that you have set
 for the latter should carry over to the former. For nice out-of-the-box themes,
-I recommend the **basetheme** package.
+we recommend the **basetheme** package.
 
 ```{r}
 par(family = "") # revert global font change from above
@@ -187,18 +220,19 @@ library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
 
 plot2(
-  Temp ~ Day | Month, airquality,
+  Temp ~ Day | Month,
+  data = airquality,
   type = "b", pch = 15:19,
-  legend.position = "right!", legend.args = list(bty = "n"),
-  palette = "Tropic"
+  palette = "Tropic",
+  main = "Daily temperatures by month"
 )
 
 basetheme(NULL)  # back to default theme
 ```
 
 In summary, consider the **plot2** package if you are looking for base R `plot`
-functionality with some additional convenience features. You can use pretty much
-the same syntax and all of your theming elements should carry over too. It has
-no dependencies other than base R itself and this makes it an attractive option
-for situations where dependency management is expensive (e.g., an R application 
-running in a browser via [WebAssembly](https://docs.r-wasm.org/webr/latest/).)
+functionality with some added convenience features. You can use pretty much the
+same syntax and all of your theming elements should carry over too. It has no
+dependencies other than base R itself and this makes it an attractive option for
+situations where dependency management is expensive (e.g., an R application
+running in a browser via [WebAssembly](https://docs.r-wasm.org/webr/latest/)).

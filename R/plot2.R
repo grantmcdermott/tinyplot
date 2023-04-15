@@ -399,7 +399,7 @@ plot2.default = function(
       )
     )
   }
-  if (type %in% c("l", "o", "b")) {
+  if (type %in% c("l", "o", "b", "c", "h", "s", "S")) {
     invisible(
       lapply(
         seq_along(split_data),

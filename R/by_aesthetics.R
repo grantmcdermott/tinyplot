@@ -85,7 +85,7 @@ by_pch = function(ngrps, type, pch) {
 by_lty = function(ngrps, type, lty) {
 
   # don't care about line type, return NULL
-  if (!type %in% c("l", "b", "o")) {
+  if (!type %in% c("l", "b", "o", "c", "h", "s", "S")) {
     out = NULL
 
   # NULL -> solid line

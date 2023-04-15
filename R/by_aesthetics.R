@@ -90,7 +90,7 @@ by_lty = function(ngrps, type, lty) {
 
   # NULL -> solid line
   } else if (is.null(lty)) {
-    out = rep(1, ngrps)
+    out = rep(par("lty"), ngrps)
   
   # atomic vector: sanity check length
   } else if (is.atomic(lty) && is.vector(lty)) {

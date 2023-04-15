@@ -21,6 +21,14 @@ automatic grouping and legend handling, and several other enhancements.
 install.packages("plot2", repos = "https://grantmcdermott.r-universe.dev")
 ```
 
+Our goal is to submit to CRAN by the end of April or May 2023, once we
+have settled on some remaining design choices and features support. You
+can take a look at the [open
+issues](https://github.com/grantmcdermott/plot2/issues) to see what’s
+currently under consideration. Please feel free to weigh on these if you
+have opinions. We want end users to have a say in determining the final
+product.
+
 ## Motivation
 
 R users are spoiled for choice when it comes to visualization

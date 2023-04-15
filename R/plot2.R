@@ -585,7 +585,7 @@ plot2.density = function(
     split_x = split(x, f = by)
     # joint bandwidth
     bw_type = as.list(object$call[-1])[["bw"]]
-    if (is.null(bw_type)) bw_type = bw.nrd0 else bw_type = str2lang(paste0("bw.", bw))
+    if (is.null(bw_type)) bw_type = stats::bw.nrd0 else bw_type = str2lang(paste0("bw.", bw))
     xs_mask = vapply(split_x, length, numeric(1)) > 1
     bws = vapply(split_x[xs_mask], bw_type, numeric(1))
     bw = mean(bws, na.rm = TRUE)

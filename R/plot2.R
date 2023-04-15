@@ -229,6 +229,7 @@ plot2.default = function(
   
   if (is.null(y)) {
     y = x
+    x = seq_along(x)
     xlab = "Index"
     }
   

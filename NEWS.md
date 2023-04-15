@@ -4,6 +4,8 @@ New features:
 
 - Add support for the argument `log` (#15, @etiennebacher).
 - Add support for grouped density plots (#18, @grantmcdermott).
+- Add support for (both grouped and non-grouped) "c", "h", "s", and "S" types
+(#26, @grantmcdermott)
 
 Bug fixes:
 

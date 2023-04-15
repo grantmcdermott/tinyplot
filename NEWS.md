@@ -1,4 +1,4 @@
-# plot2 0.0.2.9003 (development version)
+# plot2 0.0.2.9004 (development version)
 
 New features:
 
@@ -8,6 +8,7 @@ New features:
 Bug fixes:
 
 - Setting `par(pch=X)` globally is now respected (#20, @grantmcdermott).
+- Fix x-axis scale/index when y is NULL (#24, @grantmcdermott)
 
 # plot2 0.0.2
 

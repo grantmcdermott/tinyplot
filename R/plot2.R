@@ -65,11 +65,18 @@
 #'   the moment, only "bty", "horiz", "xpd", and "title" are supported.
 #' @param pch plotting "character", i.e., symbol to use. Character, integer, or
 #'   vector of length equal to the number of categories in the `by` variable.
-#'   See `pch`.
+#'   See `pch`. In addition, users can supply a special `pch = "by"` convenience
+#'   argument, in which case the characters will automatically loop over the
+#'   number groups. This automatic looping will begin at the global character
+#'   value (i.e., `par("pch")`) and recycle as necessary.
 #' @param col plotting color. Character, integer, or vector of length equal to
 #'   the number of categories in the `by` variable. See `col`.
 #' @param lty line type. Character, integer, or vector of length equal to the
-#'   number of categories in the `by` variable. See `lty`.
+#'   number of categories in the `by` variable. See `lty`. In addition, users
+#'   can supply a special `lty = "by"` convenience argument, in which case the
+#'   line type will automatically loop over the number groups. This automatic
+#'   looping will begin at the global line type value (i.e., `par("lty")`) and
+#'   recycle as necessary.
 #' @param par_restore a logical value indicating whether the `par` settings
 #'   prior to calling `plot2` should be restored on exit. Defaults to FALSE,
 #'   which makes it possible to add elements to the plot after it has been

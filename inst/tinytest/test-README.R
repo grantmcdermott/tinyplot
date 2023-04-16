@@ -61,6 +61,17 @@ f = function() {
     Temp ~ Day | Month,
     data = airquality,
     type = "l",
+    col = "black", # override automatic group colours
+    lty = "by"     # change line type by group instead
+  )
+} 
+expect_snapshot_plot(f, label = "readme_by_lty")
+
+f = function() {
+  plot2(
+    Temp ~ Day | Month,
+    data = airquality,
+    type = "l",
     legend.position = "bottom!", # "right!" (default), "none", or "topleft", etc.
     legend.args = list(title = "Month of the year", bty = "o")
   )

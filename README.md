@@ -82,7 +82,7 @@ plot(0:10, main = "plot")
 plot2(0:10, main = "plot2")
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-base_1-1.png" width="100%" />
 
 Similarly, we can plot elements from a data frame using either the
 atomic or formula methods.
@@ -96,7 +96,7 @@ plot2(airquality$Day, airquality$Temp, main = "plot2")
 plot2(Temp ~ Day, data = airquality, main = "plot2 (formula)")
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-base_2-1.png" width="100%" />
 
 ``` r
 
@@ -113,7 +113,7 @@ allows you to characterize groups using the `by` argument.[^1]
 plot2(airquality$Day, airquality$Temp, by = airquality$Month)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-by-1.png" width="100%" />
 
 An even more convenient approach is to use the equivalent formula
 syntax. Just place the grouping variable after a vertical bar (i.e.,
@@ -123,7 +123,7 @@ syntax. Just place the grouping variable after a vertical bar (i.e.,
 plot2(Temp ~ Day | Month, data = airquality)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-formula-1.png" width="100%" />
 
 You can use standard base plotting arguments to adjust features of your
 plot. For example, change `pch` (plot character) to get filled points.
@@ -136,7 +136,7 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-pch_16-1.png" width="100%" />
 
 Similarly, converting to a grouped line plot is a simple matter of
 adjusting the `type` argument.
@@ -149,7 +149,25 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-type_l-1.png" width="100%" />
+
+Note that we can automatically adjust both `pch` and `lty` by groups
+using the `"by"` convenience keyword. This can be used in conjunction
+with the default group colouring. Or, as a replacement for group
+colouring—an option that may be particularly useful for contexts where
+colour is expensive or prohibited (e.g., certain academic journals).
+
+``` r
+plot2(
+  Temp ~ Day | Month,
+  data = airquality,
+  type = "l",
+  col = "black", # override automatic group colours
+  lty = "by"     # change line type by group instead
+)
+```
+
+<img src="man/figures/README-by_lty-1.png" width="100%" />
 
 In all of the above cases, you will have noticed that we get an
 automatic legend. The legend position and look can be customized using
@@ -169,7 +187,7 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-legend_bottom-1.png" width="100%" />
 
 Note that legend position keywords without the exclamation point (i.e.,
 for inside the plot area) should still as per normal. Grouped density
@@ -184,7 +202,7 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+<img src="man/figures/README-desnity_topright-1.png" width="100%" />
 
 Colour palettes can be customized easily via the `palette` argument. The
 default group colours are inherited from either the “Okabe-Ito” or
@@ -201,7 +219,7 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-palette_tableau-1.png" width="100%" />
 
 Customizing your plots further is straightforward, whether that is done
 by changing global parameters or invoking `plot2` arguments. Here’s a
@@ -225,7 +243,7 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-hershey_plus-1.png" width="100%" />
 
 The use of `par` in the above example again underscores the
 correspondence with the base graphics system. Because `plot2` is
@@ -235,7 +253,7 @@ former. For nice out-of-the-box themes, we recommend the **basetheme**
 package.
 
 ``` r
-par(family = "", pch = 1) # revert global changes from above
+par(family = "", pch = 15) # revert/change global changes from above
 
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
@@ -243,13 +261,14 @@ basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
 plot2(
   Temp ~ Day | Month,
   data = airquality,
-  type = "b", pch = 15:19,
+  type = "b",
+  pch = "by",
   palette = "Tropic",
   main = "Daily temperatures by month"
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
+<img src="man/figures/README-basethme_royal-1.png" width="100%" />
 
 ``` r
 

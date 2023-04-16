@@ -1,11 +1,14 @@
-# plot2 0.0.2.9004 (development version)
+# plot2 0.0.2.9005 (development version)
 
 New features:
 
 - Add support for the argument `log` (#15, @etiennebacher).
 - Add support for grouped density plots (#18, @grantmcdermott).
 - Add support for (both grouped and non-grouped) "c", "h", "s", and "S" types
-(#26, @grantmcdermott)
+(#26, @grantmcdermott).
+- Both the `pch` and `lty` arguments now accept a "by" convenience keyword for
+automatically adjusting plot characters and line types by groups (#28,
+@grantmcdermott).
 
 Bug fixes:
 

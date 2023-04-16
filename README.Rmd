@@ -82,7 +82,7 @@ library(plot2)
 As far as possible, `plot2` tries to be a drop-in replacement for regular `plot`
 calls.
 
-```{r}
+```{r base_1}
 par(mfrow = c(1, 2))
 
 plot(0:10, main = "plot")
@@ -92,7 +92,7 @@ plot2(0:10, main = "plot2")
 Similarly, we can plot elements from a data frame using either the atomic or
 formula methods.
 
-```{r}
+```{r base_2}
 par(mfrow = c(2, 2))
 
 plot(airquality$Day, airquality$Temp, main = "plot")
@@ -117,21 +117,21 @@ plots (i.e., type="l"). Instead, you have to transpose your data and use
 [this](https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops)
 old StackOverflow thread for a longer discussion.]
 
-```{r}
+```{r by}
 plot2(airquality$Day, airquality$Temp, by = airquality$Month)
 ```
 
 An even more convenient approach is to use the equivalent formula syntax. Just
 place the grouping variable after a vertical bar (i.e., `|`).
 
-```{r}
+```{r formula}
 plot2(Temp ~ Day | Month, data = airquality)
 ```
 
 You can use standard base plotting arguments to adjust features of your plot.
 For example, change `pch` (plot character) to get filled points.
 
-```{r}
+```{r pch_16}
 plot2(
   Temp ~ Day | Month,
   data = airquality,
@@ -142,11 +142,27 @@ plot2(
 Similarly, converting to a grouped line plot is a simple matter of adjusting the
 `type` argument.
 
-```{r}
+```{r type_l}
 plot2(
   Temp ~ Day | Month,
   data = airquality,
   type = "l"
+)
+```
+
+Note that we can automatically adjust both `pch` and `lty` by groups using the
+`"by"` convenience keyword. This can be used in conjunction with the default
+group colouring. Or, as a replacement for group colouring---an option that may
+be particularly useful for contexts where colour is expensive or prohibited
+(e.g., certain academic journals).
+
+```{r by_lty}
+plot2(
+  Temp ~ Day | Month,
+  data = airquality,
+  type = "l",
+  col = "black", # override automatic group colours
+  lty = "by"     # change line type by group instead
 )
 ```
 
@@ -157,7 +173,7 @@ switch the direction of the legend text, etc. Below, we particularly draw your
 attention to the trailing "!" in the `legend.position` argument. This tells
 `plot2` to place the legend _outside_ the plot area.
 
-```{r}
+```{r legend_bottom}
 plot2(
   Temp ~ Day | Month,
   data = airquality,
@@ -170,7 +186,7 @@ plot2(
 Note that legend position keywords without the exclamation point (i.e., for
 inside the plot area) should still as per normal. Grouped density plot example:
 
-```{r}
+```{r desnity_topright}
 plot2(
   density(airquality$Temp),
   by = airquality$Month, 
@@ -187,7 +203,7 @@ pages of those two functions for more details, or read the
 [article](https://arxiv.org/pdf/2303.04918.pdf) by Achim Zeileis and Paul
 Murrell.] Simply pass on an appropriate palette name as a string.
 
-```{r}
+```{r palette_tableau}
 plot2(
   Temp ~ Day | Month,
   data = airquality,
@@ -202,7 +218,7 @@ penultimate example, where we change our point character and font family
 globally, add some transparency to our colour palette, and use Tufte-style
 floating axes with a background panel grid.
 
-```{r}
+```{r hershey_plus}
 par(
   pch    = 16,           # Filled points as default 
   family = "HersheySans" # Use a (built-in) Hershey font instead of Arial default
@@ -224,8 +240,8 @@ around base `plot`, any global elements that you have set for the latter should
 carry over to the former. For nice out-of-the-box themes, we recommend the
 **basetheme** package.
 
-```{r}
-par(family = "", pch = 1) # revert global changes from above
+```{r basethme_royal}
+par(family = "", pch = 15) # revert/change global changes from above
 
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
@@ -233,7 +249,8 @@ basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
 plot2(
   Temp ~ Day | Month,
   data = airquality,
-  type = "b", pch = 15:19,
+  type = "b",
+  pch = "by",
   palette = "Tropic",
   main = "Daily temperatures by month"
 )

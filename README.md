@@ -237,7 +237,7 @@ plot2(
   Temp ~ Day | Month,
   data = airquality,
   type = "b",
-  palette = "Tableau 10", palette.args = list(alpha = 0.5),
+  palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
   main = "Daily temperatures by month",
   frame.plot = FALSE, grid = grid()
 )

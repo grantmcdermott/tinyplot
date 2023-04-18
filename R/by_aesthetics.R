@@ -30,7 +30,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
     
   } else {
     
-    if (class(palette)=="character") {
+    if (is.character(palette)) {
       if (tolower(palette) %in% tolower(palette.pals())) {
         palette_fun = palette.colors
       } else if (tolower(palette) %in% tolower(hcl.pals())) {

@@ -1,4 +1,11 @@
-# plot2 0.0.2.9005 (development version)
+# plot2 0.0.2.9006 (development version)
+
+Breaking changes:
+
+- The grouped colour palette functionality has been unified into a single
+`palette` argument, with the former `palette.args` argument being deprecated
+(#30, @grantmcdermott). In addition, the default palette for small groups has
+been changed from "Okabe-Ito" to "R4" (#32 @grantmcdermott). 
 
 New features:
 

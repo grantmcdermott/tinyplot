@@ -146,10 +146,13 @@ replaces the `panel.first` and `panel.last` arguments from base `plot()`
 and tries to make the process more seemless with better default behaviour.}
 
 \item{palette}{one of the following options:
-- NULL (default), in which case R's default colour palette will be used.
-- A string corresponding to one of the palettes in either `palette.pals()`
-`hcl.pals()`. These can be case-insensitive (e.g., "viridis" and "Viridis"
-are both valid).
+- NULL (default), in which case the palette will be determined by the
+number of groups. If this number is equal to 8 or less, then R's default
+("R4") colour palette will be used. For larger group numbers, the
+"Viridis" palette will be used instead.
+- A convenience string corresponding to one of the many palettes listed by
+either `palette.pals()` or `hcl.pals()`. Note that the string can be
+case-insensitive (e.g., "Okabe-Ito" and "okabe-ito" are both valid).
 - A palette-generating function. This can be "bare" (e.g.,
 `palette.colors`) or "closed" with a set of named arguments (e.g.,
 `palette.colors(palette = "Okabe-Ito", alpha = 0.5)`). Note that any
@@ -274,9 +277,11 @@ plot2(
   legend.position = "topright", legend.args = list(bty="o", title = "Month")
 )
 
-# The default group colours are inherited from either the "Okabe-Ito" or
-# "Viridis" palettes, depending on the number of groups. However, all
-# palettes listed by `palette.pals()` and `hcl.pals()` are supported.
+# The default group colours are inherited from either the "R4" or "Viridis"
+# palettes, depending on the number of groups. However, all palettes listed
+# by `palette.pals()` and `hcl.pals()` are supported as convenience strings,
+# or users can supply a valid palette-generating function for finer control
+# over transparency etc.
 
 plot2(
   Temp ~ Day | Month,

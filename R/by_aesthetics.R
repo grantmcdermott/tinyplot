@@ -20,7 +20,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
   if (is.null(palette)) {
     
     if (ngrps<=8) {
-      palette = "Okabe-Ito" #"R4"
+      palette = "R4"
       palette_fun = palette.colors
     } else {
       palette = "Viridis"

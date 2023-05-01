@@ -110,7 +110,8 @@ counterpart is with respect to grouped data. In particular, `plot2`
 allows you to characterize groups using the `by` argument.[^1]
 
 ``` r
-plot2(airquality$Day, airquality$Temp, by = airquality$Month)
+# plot2(airquality$Day, airquality$Temp, by = airquality$Month) # same as below
+with(airquality, plot2(Day, Temp, by = Month))
 ```
 
 <img src="man/figures/README-by-1.png" width="100%" />
@@ -169,7 +170,28 @@ plot2(
 
 <img src="man/figures/README-by_lty-1.png" width="100%" />
 
-In all of the above cases, you will have noticed that we get an
+On the subject of group colours, these are easily customized via the
+`palette` argument. The default group colours are inherited from either
+the “R4” or “Viridis” palettes, depending on the number of groups.
+However, all of the many palettes listed by `palette.pals()` and
+`hcl.pals()` are supported as convenience strings.[^2] For example:
+
+``` r
+plot2(
+  Temp ~ Day | Month,
+  data = airquality,
+  type = "l",
+  palette = "Tableau 10" # or "ggplot2", "Okabe-Ito", "Set 2", "Harmonic", etc.
+)
+```
+
+<img src="man/figures/README-palette_tableau-1.png" width="100%" />
+
+Beyond these convenience strings, users can also supply a valid
+palette-generating function for finer control over transparency, colour
+order, and so forth. We’ll see a demonstration of this further below.
+
+In all of the preceding plots, you will have noticed that we get an
 automatic legend. The legend position and look can be customized using
 appropriate arguments. You can change (or turn off) the legend title and
 bounding box, switch the direction of the legend text, etc. Below, we
@@ -194,32 +216,15 @@ for inside the plot area) should still as per normal. Grouped density
 plot example:
 
 ``` r
-plot2(
-  density(airquality$Temp),
-  by = airquality$Month, 
+with(airquality, plot2(
+  density(Temp),
+  by = Month,
   legend.position = "topright",
   legend.args = list(title = "Month", bty="o")
-)
+))
 ```
 
 <img src="man/figures/README-desnity_topright-1.png" width="100%" />
-
-Colour palettes can be customized easily via the `palette` argument. The
-default group colours are inherited from either the “Okabe-Ito” or
-“Viridis” palettes, depending on the number of groups. However, all
-palettes listed by `palette.pals()` and `hcl.pals()` are supported.[^2]
-Simply pass on an appropriate palette name as a string.
-
-``` r
-plot2(
-  Temp ~ Day | Month,
-  data = airquality,
-  type = "l",
-  palette = "Tableau 10"
-)
-```
-
-<img src="man/figures/README-palette_tableau-1.png" width="100%" />
 
 Customizing your plots further is straightforward, whether that is done
 by changing global parameters or invoking `plot2` arguments. Here’s a
@@ -288,17 +293,18 @@ is expensive (e.g., an R application running in a browser via
 
 [^1]: At this point, experienced base plot users might protest that you
     *can* colour by groups using the `col` argument, e.g.
-    `plot(airquality$Day, airquality$Temp, col = airquality$Month)`.
-    This is true, but there are several limitations. First, you don’t
-    get an automatic legend. Second, the base `plot` formula method
-    doesn’t specify the grouping within the formula itself (not a
-    deal-breaker, but not particularly consistent in my view). Third,
-    and perhaps most importantly, this grouping doesn’t carry over to
-    line plots (i.e., type=“l”). Instead, you have to transpose your
-    data and use `matplot`. See
+    `with(airquality, plot(Day, Temp, col = Month))`. This is true, but
+    there are several limitations. First, you don’t get an automatic
+    legend. Second, the base `plot.formula` method doesn’t specify the
+    grouping within the formula itself (not a deal-breaker, but not
+    particularly consistent either). Third, and perhaps most
+    importantly, this grouping doesn’t carry over to line plots (i.e.,
+    type=“l”). Instead, you have to transpose your data and use
+    `matplot`. See
     [this](https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops)
     old StackOverflow thread for a longer discussion.
 
 [^2]: See the accompanying help pages of those two functions for more
-    details, or read the [article](https://arxiv.org/pdf/2303.04918.pdf)
-    by Achim Zeileis and Paul Murrell.
+    details on the available palettes, or read the
+    [article](https://arxiv.org/pdf/2303.04918.pdf) by Achim Zeileis and
+    Paul Murrell.

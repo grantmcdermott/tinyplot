@@ -28,7 +28,6 @@ plot2(x, ...)
   asp = NA,
   grid = NULL,
   palette = NULL,
-  palette.args = list(),
   legend.position = NULL,
   legend.args = list(),
   pch = NULL,
@@ -53,8 +52,6 @@ plot2(x, ...)
   frame.plot = axes,
   asp = NA,
   grid = NULL,
-  palette = NULL,
-  palette.args = list(),
   legend.position = NULL,
   legend.args = list(),
   pch = NULL,
@@ -83,8 +80,6 @@ plot2(x, ...)
   frame.plot = axes,
   asp = NA,
   grid = NULL,
-  palette = NULL,
-  palette.args = list(),
   legend.position = NULL,
   legend.args = list(),
   pch = NULL,
@@ -150,13 +145,17 @@ the plot.}
 replaces the `panel.first` and `panel.last` arguments from base `plot()`
 and tries to make the process more seemless with better default behaviour.}
 
-\item{palette}{a string corresponding to one of the supported palettes
-listed by either `palette.pals()` or `hcl.pals()`.}
-
-\item{palette.args}{list of additional arguments passed to either
-`palette.colors()` or `hcl.colors`, depending on which string was passed
-to the `palette` argument. For example, you might have "recycle = TRUE"
-if using a `palette.colors` palette.}
+\item{palette}{one of the following options:
+- NULL (default), in which case R's default colour palette will be used.
+- A string corresponding to one of the palettes in either `palette.pals()`
+`hcl.pals()`. These can be case-insensitive (e.g., "viridis" and "Viridis"
+are both valid).
+- A palette-generating function. This can be "bare" (e.g.,
+`palette.colors`) or "closed" with a set of named arguments (e.g.,
+`palette.colors(palette = "Okabe-Ito", alpha = 0.5)`). Note that any
+unnamed arguments will be ignored and the key `n` argument, denoting the
+number of colours, will automatically be spliced in as the number of
+groups.}
 
 \item{legend.position}{one of the position keywords supported by `legend`.
 In addition, `plot2` supports adding an exclamation point to two keywords
@@ -294,7 +293,7 @@ plot2(
   Temp ~ Day | Month,
   data = airquality,
   type = "b", pch = 16,
-  palette = "Tableau 10", palette.args = list(alpha = 0.5),
+  palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
   main = "Daily temperatures by month",
   frame.plot = FALSE, grid = grid()
 )

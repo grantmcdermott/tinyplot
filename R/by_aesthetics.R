@@ -1,58 +1,70 @@
-by_col = function(ngrps, col = NULL, palette = NULL, palette.args = NULL) {
+by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
   
-  if (is.null(col)) {
+  # palette = substitute(palette, env = parent.env(environment()))
+  
+  if (is.null(col) && is.null(palette)) {
     col = seq_len(ngrps)
   }
-
+  
   if (is.atomic(col) && is.vector(col)) {
     if (length(col) == 1) {
-        col = rep(col, ngrps)
+      col = rep(col, ngrps)
     } else if (length(col) != ngrps) {
-        stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
+      stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
     }
-    if (is.character(col)) return(col)
-  }
-
-  if (is.null(palette)) {
-    if (ngrps<=9) {
-      palette = "Okabe-Ito"
-      palette_fun = palette.colors
-    } else {
-      palette = "Viridis"
-      palette_fun = hcl.colors
-    }
-  } else if (palette %in% palette.pals()) {
-    palette_fun = palette.colors
-  } else if (palette %in% hcl.pals()) {
-    palette_fun = hcl.colors
-  } else {
-    warning(
-      "\nPalette string not recogized. Must be a value produced by either",
-      "`palette.pals()` or `hcl.pals()`.",
-      "\nUsing default option instead.\n",
-      call. = FALSE
-      )
-    if (ngrps <= 9) {
-      palette = "Okabe-Ito"
-      palette_fun = palette.colors
-    } else {
-      palette = "Viridis"
-      palette_fun = hcl.colors
+    if (is.character(col)) {
+      return(col)
     }
   }
-
-  # n is a required argument for viridis and other palettes
-  if (!"n" %in% names(palette.args)) palette.args[["n"]] = max(col)
-
-  out = do.call(
-    function(...) Map(palette_fun, palette = palette, ...), 
-    args = palette.args
-    )[[1]]
   
-  out = out[col]
- 
-  return(out)
-
+  if (is.null(palette)) {
+    
+    if (ngrps<=8) {
+      palette = "Okabe-Ito" #"R4"
+      palette_fun = palette.colors
+    } else {
+      palette = "Viridis"
+      palette_fun = hcl.colors
+    }
+    args = list(n = ngrps, palette = palette)
+    
+  } else {
+    
+    if (is.character(palette)) {
+      if (tolower(palette) %in% tolower(palette.pals())) {
+        palette_fun = palette.colors
+      } else if (tolower(palette) %in% tolower(hcl.pals())) {
+        palette_fun = hcl.colors
+      } else {
+        stop(
+          "\nPalette string not recogized. Must be a value produced by either",
+          "`palette.pals()` or `hcl.pals()`.\n",
+          call. = FALSE
+        )
+      }
+      args = list(n = ngrps, palette = palette)
+    } else if (class(palette) %in% c("call", "name")) {
+      args = as.list(palette)
+      palette_fun = paste(args[[1]])
+      args[[1]] = NULL
+      args[["n"]] = ngrps
+      # remove unnamed arguments to prevent unintentional argument sliding
+      if (any(names(args)=="")) args[[which(names(args)=="")]] = NULL
+    } else {
+      stop(
+        "\nInvalid palette argument. Must be a recognized keyword, or a",
+        "palette-generating function with named arguments.\n"
+        )
+    }
+  }
+  
+  cols = tryCatch(
+    do.call(palette_fun, args),
+    error = function(e) do.call(eval(palette), args) # catch for bespoke palette generating funcs
+  )
+  
+  return(cols)
+  
 }
 
 

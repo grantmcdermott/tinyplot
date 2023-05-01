@@ -50,12 +50,17 @@
 #'   replaces the `panel.first` and `panel.last` arguments from base `plot()`
 #'   and tries to make the process more seemless with better default behaviour.
 #' @param asp the y/xy/x aspect ratio, see `plot.window`.
-#' @param palette a string corresponding to one of the supported palettes
-#'   listed by either `palette.pals()` or `hcl.pals()`.
-#' @param palette.args list of additional arguments passed to either
-#'   `palette.colors()` or `hcl.colors`, depending on which string was passed
-#'   to the `palette` argument. For example, you might have "recycle = TRUE"
-#'   if using a `palette.colors` palette.
+#' @param palette one of the following options:
+#'    - NULL (default), in which case R's default colour palette will be used.
+#'    - A string corresponding to one of the palettes in either `palette.pals()`
+#'    `hcl.pals()`. These can be case-insensitive (e.g., "viridis" and "Viridis"
+#'    are both valid).
+#'    - A palette-generating function. This can be "bare" (e.g.,
+#'    `palette.colors`) or "closed" with a set of named arguments (e.g.,
+#'    `palette.colors(palette = "Okabe-Ito", alpha = 0.5)`). Note that any
+#'    unnamed arguments will be ignored and the key `n` argument, denoting the
+#'    number of colours, will automatically be spliced in as the number of
+#'    groups.
 #' @param legend.position one of the position keywords supported by `legend`.
 #'   In addition, `plot2` supports adding an exclamation point to two keywords
 #'   in particular: "bottom!" and "right!". These will place the legend outside
@@ -175,7 +180,7 @@
 #'   Temp ~ Day | Month,
 #'   data = airquality,
 #'   type = "b", pch = 16,
-#'   palette = "Tableau 10", palette.args = list(alpha = 0.5),
+#'   palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
 #'   main = "Daily temperatures by month",
 #'   frame.plot = FALSE, grid = grid()
 #' )
@@ -225,7 +230,6 @@ plot2.default = function(
     asp = NA,
     grid = NULL,
     palette = NULL,
-    palette.args = list(),
     legend.position = NULL,
     legend.args = list(),
     pch = NULL,
@@ -260,11 +264,12 @@ plot2.default = function(
   
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
 
+  # palette = substitute(palette)
   col = by_col(
     ngrps = ngrps,
     col = col,
-    palette = palette,
-    palette.args = palette.args)
+    palette = substitute(palette)
+    )
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
@@ -456,8 +461,7 @@ plot2.formula = function(
     frame.plot = axes,
     asp = NA,
     grid = NULL,
-    palette = NULL,
-    palette.args = list(),
+    # palette = NULL,
     legend.position = NULL,
     legend.args = list(),
     pch = NULL,
@@ -537,8 +541,7 @@ plot2.formula = function(
     frame.plot = frame.plot,
     asp = asp,
     grid = grid,
-    palette = palette,
-    palette.args = palette.args,
+    # palette = palette,
     legend.position = legend.position,
     legend.args = legend.args,
     pch = pch,
@@ -570,8 +573,7 @@ plot2.density = function(
     frame.plot = axes,
     asp = NA,
     grid = NULL,
-    palette = NULL,
-    palette.args = list(),
+    # palette = NULL,
     legend.position = NULL,
     legend.args = list(),
     pch = NULL,
@@ -650,8 +652,7 @@ plot2.density = function(
     frame.plot = frame.plot,
     asp = asp,
     grid = grid,
-    palette = palette,
-    palette.args = palette.args,
+    # palette = palette,
     legend.position = legend.position,
     legend.args = legend.args,
     pch = pch,

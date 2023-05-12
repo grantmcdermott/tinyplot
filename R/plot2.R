@@ -235,8 +235,9 @@ plot2.default = function(
     asp = NA,
     grid = NULL,
     palette = NULL,
-    legend.position = NULL,
-    legend.args = list(),
+    legend = NULL,
+    # legend.position = NULL,
+    # legend.args = list(),
     pch = NULL,
     col = NULL,
     lty = NULL,
@@ -251,7 +252,7 @@ plot2.default = function(
   
   if (is.null(xlab)) xlab = deparse(substitute(x))
   if (is.null(ylab)) ylab = deparse(substitute(y))
-  if (is.null(legend.args$title)) ltitle = deparse(substitute(by))
+  # if (is.null(legend.args$title)) ltitle = deparse(substitute(by))
     
   if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
   if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
@@ -282,32 +283,86 @@ plot2.default = function(
   
   # legend
   
-  bty = ifelse(!is.null(legend.args[["bty"]]), legend.args[["bty"]], "n")
-  horiz = ifelse(!is.null(legend.args[["horiz"]]), legend.args[["horiz"]], FALSE)
-  xpd = ifelse(!is.null(legend.args[["xpd"]]), legend.args[["xpd"]], NA)
+  # NEW LEGEND ----
   
-  ltitle = w = h = NULL
-  if(!is.null(legend.args[["title"]])) ltitle = legend.args[["title"]]
-
-  if (is.null(legend.position)) {
-    legend.position = ifelse(length(split_data)>1, "right!", "none")
+  legend.args = ltitle = w = h = NULL
+  legend = substitute(legend)
+  
+  if (is.null(by)) {
+  # if (length(split_data) == 1) {
+    if (is.null(legend)) {
+      legend = "none"
+      legend.args = list(x = "none")
+    }
   }
   
-  if (legend.position!="none") {
-    
-    if (exists("title", where = legend.args)) {
-      ltitle = legend.args[["title"]]
-    } else if (!is.null(by)) {
-      ltitle = deparse(substitute(by))
+  if (is.null(legend)) {
+    legend.args = list(
+      x = "right!",
+      # title = ltitle,
+      title = deparse(substitute(by)),
+      pch = pch,
+      lty = lty,
+      col = col,
+      bty = "n",
+      horiz = FALSE,
+      xpd = NA
+    )
+  } else if (is.character(legend)) {
+    legend.args = list(x = legend)
+  } else if (class(legend) %in% c("call", "name")) {
+    legend.args = as.list(legend)
+    if (is.null(legend.args[["x"]])) {
+      lnms = names(legend.args)
+      # check second position b/c first will be a symbol 
+      if (is.null(lnms)) {
+        legend.args = setNames(legend.args, c("", "x"))
+      } else if (length(legend.args)>=2 && lnms[2] == "") {
+        lnms[2] = "x"
+        legend.args = setNames(legend.args, lnms)
+      } else {
+        legend.args[["x"]] = "right!"
+      }
     }
+    
+  }
+  # if (is.null(legend.args[["title"]])) legend.args[["title"]] = ltitle
+  if (is.null(legend.args[["title"]])) legend.args[["title"]] = deparse(substitute(by))
+  if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = pch
+  if (is.null(legend.args[["lty"]])) legend.args[["lty"]] = lty
+  if (is.null(legend.args[["col"]])) legend.args[["col"]] = col
+  if (is.null(legend.args[["bty"]])) legend.args[["bty"]] = "n"
+  if (is.null(legend.args[["horiz"]])) legend.args[["horiz"]] = FALSE
+  if (is.null(legend.args[["xpd"]])) legend.args[["xpd"]] = NA
+  
+  # END NEW LEGEND ----
+  
+  # bty = ifelse(!is.null(legend.args[["bty"]]), legend.args[["bty"]], "n")
+  # horiz = ifelse(!is.null(legend.args[["horiz"]]), legend.args[["horiz"]], FALSE)
+  # xpd = ifelse(!is.null(legend.args[["xpd"]]), legend.args[["xpd"]], NA)
+  
+  # ltitle = w = h = NULL
+  # if(!is.null(legend.args[["title"]])) ltitle = legend.args[["title"]]
+
+  # if (is.null(legend.args[["x"]])) {
+  #   legend = ifelse(length(split_data)>1, "right!", "none")
+  # }
+  
+  if (legend.args[["x"]] != "none") {
+    
+    # if (exists("title", where = legend.args)) {
+    #   ltitle = legend.args[["title"]]
+    # } else if (!is.null(by)) {
+    #   ltitle = deparse(substitute(by))
+    # }
     
     if (ngrps>1) {
-      legend = names(split_data)
+      legend.args[["legend"]] = names(split_data)
     } else {
-      legend = ylab
+      legend.args[["legend"]] = ylab
     }
     
-    if (legend.position=="right!") {
+    if (legend.args[["x"]]=="right!") {
       
       # par_restore = TRUE
       # Margins of the plot (the first is the bottom margin)
@@ -315,69 +370,81 @@ plot2.default = function(
     
       plot.new()
       
-      pos_anchor = "left"
-      horiz = FALSE
+      # pos_anchor = "left"
+      legend.args[["x"]] = "left"
+      legend.args[["horiz"]] = FALSE
       
       lgnd = legend(
-        0, 0, bty = "n", legend = legend,
-        col = col,
-        pch = pch,
-        lty = lty,
-        title = ltitle,
-        plot = FALSE
+        0, 0, 
+        bty    = legend.args[["bty"]],
+        legend = legend.args[["legend"]],
+        pch    = legend.args[["pch"]],
+        lty    = legend.args[["lty"]],
+        col    = legend.args[["col"]],
+        title  = legend.args[["title"]],
+        xpd    = legend.args[["xpd"]],
+        plot   = FALSE
       )
       # calculate right margin width in ndc
       w = grconvertX(lgnd$rect$w, to="ndc") - grconvertX(0, to="ndc")
       w = w*1.5
-      inset = c(1.025, 0)
+      legend.args[["inset"]] = c(1.025, 0)
       par(omd = c(0, 1-w, 0, 1))
       
-    } else if (legend.position=="bottom!") {
+    } else if (legend.args[["x"]] == "bottom!") {
       
-      # par_restore = TRUE
       # Catch to reset right margin if previous legend position was "right!"
       if (par("mar")[4]== 0.1) par(mar=c(par("mar")[1:3], par("mar")[2]-2)) 
       
       plot.new()
       
-      pos_anchor = "top"
-      horiz = TRUE
+      # pos_anchor = "top"
+      legend.args[["x"]] = "top"
+      legend.args[["horiz"]] = TRUE
       
       lgnd = legend(
-        0, 0, bty = "n", legend = legend,
-        horiz = horiz,
-        pch = pch,
-        lty = lty,
-        col = col,
-        # title = ltitle,
-        plot = FALSE
+        0, 0,
+        bty    = legend.args[["n"]],
+        legend = legend.args[["legend"]],
+        horiz  = legend.args[["horiz"]],
+        pch    = legend.args[["pch"]],
+        lty    = legend.args[["lty"]],
+        col    = legend.args[["col"]],
+        # xpd    = legend.args[["xpd"]],
+        title  = legend.args[["title"]],
+        plot   = FALSE
       )
       # calculate bottom margin height in ndc
       h = grconvertX(lgnd$rect$h, to="ndc") - grconvertX(0, to="ndc")
-      inset = c(0, 1+2.5*h)
+      # legend.args[["inset"]] = c(0, 1+2.5*h) ## uncomment if rm title from lgnd above
+      legend.args[["inset"]] = c(0, 1+2*h)
       par(omd = c(0,1,0+h,1))
       
     } else {
-      pos_anchor = legend.position
-      inset = 0
-      horiz = horiz
+      # Catch to reset right margin if previous legend position was "right!"
+      if (par("mar")[4] == 0.1) par(mar=c(par("mar")[1:3], par("mar")[2]-2)) 
+      # pos_anchor = legend[["x"]]
+      legend.args[["inset"]] = 0
+      # horiz = horiz
       plot.new()
     }
     
-    legend(
-      x = pos_anchor, 
-      inset = inset,
-      legend = legend,
-      bty = bty,
-      horiz = horiz,
-      pch = pch,
-      lty = lty,
-      col = col,
-      xpd = xpd,
-      title = ltitle
-    )
+    # legend(
+    #   # x = pos_anchor, 
+    #   x = legend[["x"]], 
+    #   inset = inset,
+    #   legend = legend[legend],
+    #   bty = bty,
+    #   horiz = horiz,
+    #   pch = pch,
+    #   lty = lty,
+    #   col = col,
+    #   xpd = xpd,
+    #   title = ltitle
+    # )
+    do.call("legend", legend.args)
     
-  } else if(legend.position=="none") {
+  } else if(legend.args[["x"]]=="none") {
     
     plot.new()
     
@@ -467,8 +534,8 @@ plot2.formula = function(
     asp = NA,
     grid = NULL,
     # palette = NULL,
-    legend.position = NULL,
-    legend.args = list(),
+    # legend.position = NULL,
+    # legend.args = list(),
     pch = NULL,
     col = NULL,
     lty = NULL,
@@ -513,7 +580,7 @@ plot2.formula = function(
   } 
   y = mf[,1L]
   x = mf[,2L]
-  by = NULL
+  by = bylab = NULL
   if (NCOL(mf) == 3L) {
     by = mf[,3L]
     bylab = names(mf)[3L]
@@ -528,7 +595,7 @@ plot2.formula = function(
   ## nice axis and legend labels
   if (is.null(ylab)) ylab = names(mf)[1L]
   if (is.null(xlab)) xlab = names(mf)[2L]
-  if (!is.null(by) && !exists("title", where = legend.args)) legend.args$title = bylab
+  # if (!is.null(by) && !exists("title", where = legend.args)) legend.args$title = bylab
   
   plot2.default(
     x = x, y = y, by = by, 
@@ -547,8 +614,8 @@ plot2.formula = function(
     asp = asp,
     grid = grid,
     # palette = palette,
-    legend.position = legend.position,
-    legend.args = legend.args,
+    # legend.position = legend.position,
+    # legend.args = legend.args,
     pch = pch,
     col = col,
     lty = lty,
@@ -579,8 +646,8 @@ plot2.density = function(
     asp = NA,
     grid = NULL,
     # palette = NULL,
-    legend.position = NULL,
-    legend.args = list(),
+    # legend.position = NULL,
+    # legend.args = list(),
     pch = NULL,
     col = NULL,
     lty = NULL,
@@ -594,7 +661,7 @@ plot2.density = function(
     x = object$x
     y = object$y
   } else {
-    if (!exists("title", where = legend.args)) legend.args$title = deparse(substitute(by))
+    # if (!exists("title", where = legend.args)) legend.args$title = deparse(substitute(by))
     x = eval(str2lang(object$data.name), envir = parent.frame())
     split_x = split(x, f = by)
     # joint bandwidth
@@ -658,8 +725,8 @@ plot2.density = function(
     asp = asp,
     grid = grid,
     # palette = palette,
-    legend.position = legend.position,
-    legend.args = legend.args,
+    # legend.position = legend.position,
+    # legend.args = legend.args,
     pch = pch,
     col = col,
     lty = lty,

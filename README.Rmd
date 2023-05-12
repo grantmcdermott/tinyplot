@@ -202,8 +202,7 @@ plot2(
   Temp ~ Day | Month,
   data = airquality,
   type = "l",
-  legend.position = "bottom!", # "right!" (default), "none", or "topleft", etc.
-  legend.args = list(title = "Month of the year", bty = "o")
+  legend = legend("bottom!", title = "Month of the year", bty = "o")
 )
 ```
 
@@ -214,8 +213,7 @@ inside the plot area) should still as per normal. Grouped density plot example:
 with(airquality, plot2(
   density(Temp),
   by = Month,
-  legend.position = "topright",
-  legend.args = list(title = "Month", bty="o")
+  legend = legend("topright", title = "Month", bty = "o")
 ))
 ```
 

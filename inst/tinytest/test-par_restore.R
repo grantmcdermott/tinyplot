@@ -7,7 +7,7 @@ f1 = function() {
   plot2(
     Sepal.Width ~ Sepal.Length | Species, iris,
     grid = grid(),
-    legend.position = "bottom!", legend.args = list(bty = "o")
+    legend = legend("bottom!", bty = "o")
   )
   points(6,3, pch = 17, col = "hotpink", cex = 1.5)
 }
@@ -18,7 +18,7 @@ f2 = function() {
     mpg ~ wt | cyl, mtcars,
     pch = 19,
     grid = grid(),
-    legend.position = "right!", legend.args = list(title = "How many cylnders do you have?")
+    legend = legend("right!", title = "How many cylnders do you have?")
   )
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
   plot(1:10)
@@ -33,7 +33,7 @@ f3 = function() {
     mpg ~ wt | cyl, mtcars,
     pch = 19,
     grid = grid(),
-    legend.position = "right!", legend.args = list(title = "How many cylnders do you have?"),
+    legend = legend("right!", title = "How many cylnders do you have?"),
     par_restore = TRUE
   )
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))

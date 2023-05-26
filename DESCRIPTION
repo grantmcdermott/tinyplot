@@ -34,7 +34,8 @@ Imports:
   graphics,
   grDevices,
   methods,
-  stats
+  stats,
+  utils
 Suggests:
   basetheme,
   fontquiver,

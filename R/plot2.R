@@ -314,16 +314,16 @@ plot2.default = function(
       lnms = names(largs)
       # check second position b/c first will be a symbol 
       if (is.null(lnms)) {
-        largs = setNames(largs, c("", "x"))
+        largs = stats::setNames(largs, c("", "x"))
       } else if (length(largs)>=2 && lnms[2] == "") {
         lnms[2] = "x"
-        largs = setNames(largs, lnms)
+        largs = stats::setNames(largs, lnms)
       } else {
         largs[["x"]] = "right!"
       }
     }
     # Finally, combine with any pre-exisiting legend args (e.g., title from the by label)
-    legend.args = modifyList(legend.args, largs)
+    legend.args = utils::modifyList(legend.args, largs)
   }
   if (is.null(legend.args[["title"]])) legend.args[["title"]] = deparse(substitute(by))
   if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = pch
@@ -425,7 +425,7 @@ plot2.default = function(
   # )
   ## Solution: Only pass on relevant args using name checking and do.call.
   ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
-  pdots = dots[names(dots) %in% names(formals(plot.default))]
+  pdots = dots[names(dots) %in% names(formals(graphics::plot.default))]
   do.call(
     "plot.window",
     c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)

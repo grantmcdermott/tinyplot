@@ -194,7 +194,7 @@ In all of the preceding plots, you will have noticed that we get an automatic
 legend. The legend position and look can be customized using appropriate
 arguments. You can change (or turn off) the legend title and bounding box,
 switch the direction of the legend text, etc. Below, we particularly draw your
-attention to the trailing "!" in the `legend.position` argument. This tells
+attention to the trailing "!" in the `legend` position argument. This tells
 `plot2` to place the legend _outside_ the plot area.
 
 ```{r legend_bottom}
@@ -213,7 +213,7 @@ inside the plot area) should still as per normal. Grouped density plot example:
 with(airquality, plot2(
   density(Temp),
   by = Month,
-  legend = legend("topright", title = "Month", bty = "o")
+  legend = legend("topright", bty = "o")
 ))
 ```
 

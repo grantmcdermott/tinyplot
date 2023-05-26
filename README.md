@@ -195,17 +195,16 @@ In all of the preceding plots, you will have noticed that we get an
 automatic legend. The legend position and look can be customized using
 appropriate arguments. You can change (or turn off) the legend title and
 bounding box, switch the direction of the legend text, etc. Below, we
-particularly draw your attention to the trailing “!” in the
-`legend.position` argument. This tells `plot2` to place the legend
-*outside* the plot area.
+particularly draw your attention to the trailing “!” in the `legend`
+position argument. This tells `plot2` to place the legend *outside* the
+plot area.
 
 ``` r
 plot2(
   Temp ~ Day | Month,
   data = airquality,
   type = "l",
-  legend.position = "bottom!", # "right!" (default), "none", or "topleft", etc.
-  legend.args = list(title = "Month of the year", bty = "o")
+  legend = legend("bottom!", title = "Month of the year", bty = "o")
 )
 ```
 
@@ -219,8 +218,7 @@ plot example:
 with(airquality, plot2(
   density(Temp),
   by = Month,
-  legend.position = "topright",
-  legend.args = list(title = "Month", bty="o")
+  legend = legend("topright", bty = "o")
 ))
 ```
 

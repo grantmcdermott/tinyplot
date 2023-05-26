@@ -64,13 +64,22 @@
 #'    unnamed arguments will be ignored and the key `n` argument, denoting the
 #'    number of colours, will automatically be spliced in as the number of
 #'    groups.
-#' @param legend.position one of the position keywords supported by `legend`.
-#'   In addition, `plot2` supports adding an exclamation point to two keywords
-#'   in particular: "bottom!" and "right!". These will place the legend outside
-#'   of the plotting area and adjust the margins of the plot accordingly. If no
-#'   legend is desired, then the user can also specify "none".
-#' @param legend.args list of additional arguments passed on to `legend`. At
-#'   the moment, only "bty", "horiz", "xpd", and "title" are supported.
+#' @param legend one of the following options:
+#'    - NULL (default), in which case the legend will be determined by the
+#'    grouping variable. If there is no group variable (i.e., `by` is NULL) then
+#'    no legend is drawn. If a grouping variable is detected, then an automatic
+#'    legend is drawn outside and to the right of the plotting area. Note that
+#'    the legend title and categories will automatically be inferred from the
+#'    `by` argument and underlying data.
+#'    - A convenience string indicating the legend position. The string should
+#'    correspond to one of the position keywords supported by the base `legend`
+#'    function, e.g. "left", "topleft", "right", etc. In addition, `plot2`
+#'    supports adding an exclamation point to two keywords in particular:
+#'    "bottom!" and "right!". These will place the legend _outside_ of the
+#'    plotting area and adjust the margins of the plot accordingly. Finally,
+#'    users can also turn off any legend printing by specifying "none".
+#'    - A `legend()` function with supported arguments, e.g. "bty", "horiz", and
+#'    so forth.
 #' @param pch plotting "character", i.e., symbol to use. Character, integer, or
 #'   vector of length equal to the number of categories in the `by` variable.
 #'   See `pch`. In addition, users can supply a special `pch = "by"` convenience
@@ -143,7 +152,7 @@
 #' )
 #' 
 #' # The (automatic) legend position and look can be customized using
-#' # appropriate arguments. Note the trailing "!" in the `legend.position`
+#' # appropriate arguments. Note the trailing "!" in the `legend` position
 #' # argument below. This tells `plot2` to place the legend _outside_ the plot
 #' # area.
 #' 
@@ -151,8 +160,7 @@
 #'   Temp ~ Day | Month,
 #'   data = airquality,
 #'   type = "l",
-#'   legend.position = "bottom!", # "right!" (default), "none", or "topleft", etc.
-#'   legend.args = list(title = "Month of the year", bty = "o")
+#'   legend = legend("bottom!", title = "Month of the year", bty = "o")
 #' )
 #' 
 #' # Regular legend position keywords without the exclamation point (i.e., for
@@ -161,7 +169,7 @@
 #' plot2(
 #'   density(airquality$Temp),
 #'   by = airquality$Month, 
-#'   legend.position = "topright", legend.args = list(bty="o", title = "Month")
+#'   legend = legend("topright", bty="o", title = "Month")
 #' )
 #' 
 #' # The default group colours are inherited from either the "R4" or "Viridis"
@@ -244,6 +252,8 @@ plot2.default = function(
     par_restore = FALSE,
     ...) {
   
+  dots = list(...)
+  
   if (is.null(y)) {
     y = x
     x = seq_along(x)
@@ -279,54 +289,42 @@ plot2.default = function(
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
-  # par_restore = FALSE
   
   # legend
   
-  # NEW LEGEND ----
-  
-  legend.args = ltitle = w = h = NULL
+  w = h = NULL
+  legend.args = dots[["legend.args"]]
+  if (is.null(legend.args)) legend.args = list(x = NULL)
   legend = substitute(legend)
   
   if (is.null(by)) {
-  # if (length(split_data) == 1) {
     if (is.null(legend)) {
       legend = "none"
-      legend.args = list(x = "none")
+      legend.args[["x"]] = "none"
     }
   }
   
   if (is.null(legend)) {
-    legend.args = list(
-      x = "right!",
-      # title = ltitle,
-      title = deparse(substitute(by)),
-      pch = pch,
-      lty = lty,
-      col = col,
-      bty = "n",
-      horiz = FALSE,
-      xpd = NA
-    )
+    legend.args[["x"]] = "right!"
   } else if (is.character(legend)) {
     legend.args = list(x = legend)
   } else if (class(legend) %in% c("call", "name")) {
-    legend.args = as.list(legend)
-    if (is.null(legend.args[["x"]])) {
-      lnms = names(legend.args)
+    largs = as.list(legend)
+    if (is.null(largs[["x"]])) {
+      lnms = names(largs)
       # check second position b/c first will be a symbol 
       if (is.null(lnms)) {
-        legend.args = setNames(legend.args, c("", "x"))
-      } else if (length(legend.args)>=2 && lnms[2] == "") {
+        largs = setNames(largs, c("", "x"))
+      } else if (length(largs)>=2 && lnms[2] == "") {
         lnms[2] = "x"
-        legend.args = setNames(legend.args, lnms)
+        largs = setNames(largs, lnms)
       } else {
-        legend.args[["x"]] = "right!"
+        largs[["x"]] = "right!"
       }
     }
-    
+    # Finally, combine with any pre-exisiting legend args (e.g., title from the by label)
+    legend.args = modifyList(legend.args, largs)
   }
-  # if (is.null(legend.args[["title"]])) legend.args[["title"]] = ltitle
   if (is.null(legend.args[["title"]])) legend.args[["title"]] = deparse(substitute(by))
   if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = pch
   if (is.null(legend.args[["lty"]])) legend.args[["lty"]] = lty
@@ -335,32 +333,17 @@ plot2.default = function(
   if (is.null(legend.args[["horiz"]])) legend.args[["horiz"]] = FALSE
   if (is.null(legend.args[["xpd"]])) legend.args[["xpd"]] = NA
   
-  # END NEW LEGEND ----
-  
-  # bty = ifelse(!is.null(legend.args[["bty"]]), legend.args[["bty"]], "n")
-  # horiz = ifelse(!is.null(legend.args[["horiz"]]), legend.args[["horiz"]], FALSE)
-  # xpd = ifelse(!is.null(legend.args[["xpd"]]), legend.args[["xpd"]], NA)
-  
-  # ltitle = w = h = NULL
-  # if(!is.null(legend.args[["title"]])) ltitle = legend.args[["title"]]
-
-  # if (is.null(legend.args[["x"]])) {
-  #   legend = ifelse(length(split_data)>1, "right!", "none")
-  # }
-  
   if (legend.args[["x"]] != "none") {
-    
-    # if (exists("title", where = legend.args)) {
-    #   ltitle = legend.args[["title"]]
-    # } else if (!is.null(by)) {
-    #   ltitle = deparse(substitute(by))
-    # }
     
     if (ngrps>1) {
       legend.args[["legend"]] = names(split_data)
     } else {
       legend.args[["legend"]] = ylab
     }
+    
+    # Catch to avoid recursive offsets, e.g., repeated plot2 calls with
+    # "bottom!" legend position.
+    par(omd = c(0,1,0,1))
     
     if (legend.args[["x"]]=="right!") {
       
@@ -370,7 +353,6 @@ plot2.default = function(
     
       plot.new()
       
-      # pos_anchor = "left"
       legend.args[["x"]] = "left"
       legend.args[["horiz"]] = FALSE
       
@@ -394,11 +376,10 @@ plot2.default = function(
     } else if (legend.args[["x"]] == "bottom!") {
       
       # Catch to reset right margin if previous legend position was "right!"
-      if (par("mar")[4]== 0.1) par(mar=c(par("mar")[1:3], par("mar")[2]-2)) 
+      if (par("mar")[4]== 0.1) par(mar=c(par("mar")[1:3], 2.1)) 
       
       plot.new()
       
-      # pos_anchor = "top"
       legend.args[["x"]] = "top"
       legend.args[["horiz"]] = TRUE
       
@@ -410,7 +391,6 @@ plot2.default = function(
         pch    = legend.args[["pch"]],
         lty    = legend.args[["lty"]],
         col    = legend.args[["col"]],
-        # xpd    = legend.args[["xpd"]],
         title  = legend.args[["title"]],
         plot   = FALSE
       )
@@ -423,25 +403,10 @@ plot2.default = function(
     } else {
       # Catch to reset right margin if previous legend position was "right!"
       if (par("mar")[4] == 0.1) par(mar=c(par("mar")[1:3], par("mar")[2]-2)) 
-      # pos_anchor = legend[["x"]]
       legend.args[["inset"]] = 0
-      # horiz = horiz
       plot.new()
     }
     
-    # legend(
-    #   # x = pos_anchor, 
-    #   x = legend[["x"]], 
-    #   inset = inset,
-    #   legend = legend[legend],
-    #   bty = bty,
-    #   horiz = horiz,
-    #   pch = pch,
-    #   lty = lty,
-    #   col = col,
-    #   xpd = xpd,
-    #   title = ltitle
-    # )
     do.call("legend", legend.args)
     
   } else if(legend.args[["x"]]=="none") {
@@ -450,11 +415,20 @@ plot2.default = function(
     
   }
   
+  ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
+  ## triggers an annoying warning about unrecognized graphical params.
   # plot window
-  plot.window(
-    xlim = xlim, ylim = ylim, 
-    asp = asp, log = log,
-    ...
+  # plot.window(
+  #   xlim = xlim, ylim = ylim, 
+  #   asp = asp, log = log,
+  #   # ...
+  # )
+  ## Solution: Only pass on relevant args using name checking and do.call.
+  ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
+  pdots = dots[names(dots) %in% names(formals(plot.default))]
+  do.call(
+    "plot.window",
+    c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
   )
   
   # axes, plot.frame and grid
@@ -533,9 +507,6 @@ plot2.formula = function(
     frame.plot = axes,
     asp = NA,
     grid = NULL,
-    # palette = NULL,
-    # legend.position = NULL,
-    # legend.args = list(),
     pch = NULL,
     col = NULL,
     lty = NULL,
@@ -567,6 +538,9 @@ plot2.formula = function(
       formula[[3L]][[1L]] = as.name("+")
     }
   }
+  
+  # placeholder for legend title
+  legend.args = list(x = NULL)
 
   ## extract x, y, by (if any) from formula
   m = match.call(expand.dots = FALSE)
@@ -584,12 +558,14 @@ plot2.formula = function(
   if (NCOL(mf) == 3L) {
     by = mf[,3L]
     bylab = names(mf)[3L]
+    legend.args[["title"]] = bylab
     if (!inherits(by, "factor")) {
       by = as.factor(by)
     }
   } else if (NCOL(mf) > 3L) {
     by = do.call("interaction", mf[, -(1L:2L)])
     bylab = sprintf("interaction(%s)", paste(names(mf)[-(1L:2L)], collapse = ", "))
+    legend.args[["title"]] = bylab
   }
 
   ## nice axis and legend labels
@@ -613,9 +589,7 @@ plot2.formula = function(
     frame.plot = frame.plot,
     asp = asp,
     grid = grid,
-    # palette = palette,
-    # legend.position = legend.position,
-    # legend.args = legend.args,
+    legend.args = legend.args,
     pch = pch,
     col = col,
     lty = lty,
@@ -645,9 +619,6 @@ plot2.density = function(
     frame.plot = axes,
     asp = NA,
     grid = NULL,
-    # palette = NULL,
-    # legend.position = NULL,
-    # legend.args = list(),
     pch = NULL,
     col = NULL,
     lty = NULL,
@@ -656,12 +627,14 @@ plot2.density = function(
     ) {
   
   object = x
+  legend.args = list(x = NULL)
+  # Grab by label to pass on legend title to plot2.default
+  legend.args[["title"]] = deparse(substitute(by))
   
   if (is.null(by)) {
     x = object$x
     y = object$y
   } else {
-    # if (!exists("title", where = legend.args)) legend.args$title = deparse(substitute(by))
     x = eval(str2lang(object$data.name), envir = parent.frame())
     split_x = split(x, f = by)
     # joint bandwidth
@@ -724,9 +697,7 @@ plot2.density = function(
     frame.plot = frame.plot,
     asp = asp,
     grid = grid,
-    # palette = palette,
-    # legend.position = legend.position,
-    # legend.args = legend.args,
+    legend.args = legend.args,
     pch = pch,
     col = col,
     lty = lty,

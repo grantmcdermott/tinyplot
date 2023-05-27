@@ -307,7 +307,8 @@ plot2.default = function(
   if (is.null(legend)) {
     legend.args[["x"]] = "right!"
   } else if (is.character(legend)) {
-    legend.args = list(x = legend)
+    # legend.args = list(x = legend)
+    legend.args = utils::modifyList(legend.args, list(x = legend))
   } else if (class(legend) %in% c("call", "name")) {
     largs = as.list(legend)
     if (is.null(largs[["x"]])) {

@@ -244,8 +244,6 @@ plot2.default = function(
     grid = NULL,
     palette = NULL,
     legend = NULL,
-    # legend.position = NULL,
-    # legend.args = list(),
     pch = NULL,
     col = NULL,
     lty = NULL,
@@ -262,7 +260,6 @@ plot2.default = function(
   
   if (is.null(xlab)) xlab = deparse(substitute(x))
   if (is.null(ylab)) ylab = deparse(substitute(y))
-  # if (is.null(legend.args$title)) ltitle = deparse(substitute(by))
     
   if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
   if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
@@ -307,7 +304,6 @@ plot2.default = function(
   if (is.null(legend)) {
     legend.args[["x"]] = "right!"
   } else if (is.character(legend)) {
-    # legend.args = list(x = legend)
     legend.args = utils::modifyList(legend.args, list(x = legend))
   } else if (class(legend) %in% c("call", "name")) {
     largs = as.list(legend)
@@ -323,7 +319,7 @@ plot2.default = function(
         largs[["x"]] = "right!"
       }
     }
-    # Finally, combine with any pre-exisiting legend args (e.g., title from the by label)
+    # Finally, combine with any pre-existing legend args (e.g., title from the by label)
     legend.args = utils::modifyList(legend.args, largs)
   }
   if (is.null(legend.args[["title"]])) legend.args[["title"]] = deparse(substitute(by))
@@ -572,7 +568,6 @@ plot2.formula = function(
   ## nice axis and legend labels
   if (is.null(ylab)) ylab = names(mf)[1L]
   if (is.null(xlab)) xlab = names(mf)[2L]
-  # if (!is.null(by) && !exists("title", where = legend.args)) legend.args$title = bylab
   
   plot2.default(
     x = x, y = y, by = by, 

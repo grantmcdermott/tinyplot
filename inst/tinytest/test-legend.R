@@ -2,6 +2,17 @@ source("helpers.R")
 using("tinysnapshot")
 if (Sys.info()["sysname"] != "Linux") exit_file("Linux snapshots")
 
+op = par(no.readonly = TRUE)
+
+
+# logical legend example
+
+f = function() plot2(Temp ~ Day | Month, data = airquality, legend = FALSE)
+expect_snapshot_plot(f, label = "legend_false")
+
+f = function() plot2(Temp ~ Day | Month, data = airquality, legend = TRUE)
+expect_snapshot_plot(f, label = "legend_true")
+
 # position keyword examples 
 
 f = function() with(airquality, plot2(x = Day, y = Temp, by = Month, legend = "bottom!"))
@@ -45,3 +56,7 @@ f = function() plot2(
   legend = legend(title = NULL)
   )
 expect_snapshot_plot(f, label = "legend_title_null")
+
+
+# reset par
+par(op)

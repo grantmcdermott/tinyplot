@@ -78,6 +78,9 @@
 #'    "bottom!" and "right!". These will place the legend _outside_ of the
 #'    plotting area and adjust the margins of the plot accordingly. Finally,
 #'    users can also turn off any legend printing by specifying "none".
+#'    - Logical value, where TRUE corresponds to the default case above (same 
+#'    effect as specifying NULL) and FALSE turns the legend off (same effect as
+#'    specifying "none").
 #'    - A `legend()` function with supported arguments, e.g. "bty", "horiz", and
 #'    so forth.
 #' @param pch plotting "character", i.e., symbol to use. Character, integer, or
@@ -293,6 +296,14 @@ plot2.default = function(
   legend.args = dots[["legend.args"]]
   if (is.null(legend.args)) legend.args = list(x = NULL)
   legend = substitute(legend)
+  
+  if (isFALSE(legend)) {
+    legend = "none"
+    legend.args[["x"]] = "none"
+  }
+  if (isTRUE(legend)) {
+    legend = NULL
+  }
   
   if (is.null(by)) {
     if (is.null(legend)) {

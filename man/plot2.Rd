@@ -169,6 +169,9 @@ supports adding an exclamation point to two keywords in particular:
 "bottom!" and "right!". These will place the legend _outside_ of the
 plotting area and adjust the margins of the plot accordingly. Finally,
 users can also turn off any legend printing by specifying "none".
+- Logical value, where TRUE corresponds to the default case above (same 
+effect as specifying NULL) and FALSE turns the legend off (same effect as
+specifying "none").
 - A `legend()` function with supported arguments, e.g. "bty", "horiz", and
 so forth.}
 

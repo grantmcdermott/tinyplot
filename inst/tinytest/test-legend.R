@@ -39,3 +39,9 @@ f = function() plot2(
   legend = legend("bottom!", title = "Month of the year", bty = "o")
   )
 expect_snapshot_plot(f, label = "legend_formula_legend")
+
+f = function() plot2(
+  Temp ~ Day | Month, data = airquality,
+  legend = legend(title = NULL)
+  )
+expect_snapshot_plot(f, label = "legend_title_null")

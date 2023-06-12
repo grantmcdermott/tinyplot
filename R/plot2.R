@@ -320,9 +320,10 @@ plot2.default = function(
       }
     }
     # Finally, combine with any pre-existing legend args (e.g., title from the by label)
-    legend.args = utils::modifyList(legend.args, largs)
+    legend.args = utils::modifyList(legend.args, largs, keep.null = TRUE)
   }
-  if (is.null(legend.args[["title"]])) legend.args[["title"]] = deparse(substitute(by))
+  ## Use `!exists` rather than `is.null` for title in case user specified no title
+  if (!exists("title", where = legend.args)) legend.args[["title"]] = deparse(substitute(by))
   if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = pch
   if (is.null(legend.args[["lty"]])) legend.args[["lty"]] = lty
   if (is.null(legend.args[["col"]])) legend.args[["col"]] = col

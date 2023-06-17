@@ -16,13 +16,26 @@ expect_snapshot_plot(f, label = "legend_true")
 # position keyword examples 
 
 f = function() with(airquality, plot2(x = Day, y = Temp, by = Month, legend = "bottom!"))
-expect_snapshot_plot(f, label = "legend_default_keyword")
+expect_snapshot_plot(f, label = "legend_keyword_default")
 
 f = function() with(airquality, plot2(x = density(Temp), by = Month, legend = "bottom!"))
-expect_snapshot_plot(f, label = "legend_density_keyword")
+expect_snapshot_plot(f, label = "legend_keyword_density")
 
 f = function() plot2(Temp ~ Day | Month, data = airquality, legend = "bottom!")
-expect_snapshot_plot(f, label = "legend_formula_keyword")
+expect_snapshot_plot(f, label = "legend_keyword_formula")
+
+# test other outer keywords
+
+f = function() plot2(Temp ~ Day | Month, data = airquality, legend = "left!")
+expect_snapshot_plot(f, label = "legend_keyword_outerleft")
+f = function() plot2(Temp ~ Day | Month, data = airquality, legend = "bottom!")
+expect_snapshot_plot(f, label = "legend_keyword_outerbottom")
+f = function() plot2(Temp ~ Day | Month, data = airquality, legend = "top!")
+expect_snapshot_plot(f, label = "legend_keyword_outertop")
+f = function() plot2(Temp ~ Day | Month, data = airquality, legend = "topright!")
+expect_snapshot_plot(f, label = "legend_keyword_outertopright")
+f = function() plot2(Temp ~ Day | Month, data = airquality, legend = "bottomleft!")
+expect_snapshot_plot(f, label = "legend_keyword_outerbottomleft")
 
 
 # legend function examples

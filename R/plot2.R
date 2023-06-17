@@ -68,15 +68,15 @@
 #'    - NULL (default), in which case the legend will be determined by the
 #'    grouping variable. If there is no group variable (i.e., `by` is NULL) then
 #'    no legend is drawn. If a grouping variable is detected, then an automatic
-#'    legend is drawn outside and to the right of the plotting area. Note that
-#'    the legend title and categories will automatically be inferred from the
-#'    `by` argument and underlying data.
+#'    legend is drawn to the _outer_ right of the plotting area. Note that the
+#'    legend title and categories will automatically be inferred from the `by`
+#'    argument and underlying data.
 #'    - A convenience string indicating the legend position. The string should
 #'    correspond to one of the position keywords supported by the base `legend`
-#'    function, e.g. "left", "topleft", "right", etc. In addition, `plot2`
-#'    supports adding an exclamation point to two keywords in particular:
-#'    "bottom!" and "right!". These will place the legend _outside_ of the
-#'    plotting area and adjust the margins of the plot accordingly. Finally,
+#'    function, e.g. "right", "topleft", "bottom", etc. In addition, `plot2`
+#'    supports adding a trailing exclamation point to these keywords, e.g.
+#'    "right!", "topleft!", or "bottom!". This will place the legend _outside_
+#'    the plotting area and adjust the margins of the plot accordingly. Finally,
 #'    users can also turn off any legend printing by specifying "none".
 #'    - Logical value, where TRUE corresponds to the default case above (same 
 #'    effect as specifying NULL) and FALSE turns the legend off (same effect as
@@ -292,7 +292,7 @@ plot2.default = function(
   
   # legend
   
-  w = h = NULL
+  w = h = outer_right = outer_bottom = NULL
   legend.args = dots[["legend.args"]]
   if (is.null(legend.args)) legend.args = list(x = NULL)
   legend = substitute(legend)
@@ -354,15 +354,25 @@ plot2.default = function(
     # "bottom!" legend position.
     par(omd = c(0,1,0,1))
     
-    if (legend.args[["x"]]=="right!") {
+    ## Legend to outer side of plot
+    if (grepl("right!$|left!$", legend.args[["x"]])) {
       
-      # par_restore = TRUE
+      outer_right = grepl("right!$", legend.args[["x"]])
+      
       # Margins of the plot (the first is the bottom margin)
-      par(mar=c(par("mar")[1:3], 0.1)) # remove right inner margin space
-    
+      if (outer_right) {
+        par(mar=c(par("mar")[1:3], 0.1)) # remove right inner margin space
+      } else if (par("mar")[4]==0.1) {
+        par(mar=c(par("mar")[1:3], 2.1)) # revert right margin if outer left
+      }
+      
       plot.new()
       
-      legend.args[["x"]] = "left"
+      # legend.args[["x"]] = "left"
+      ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
+      if (outer_right) legend.args[["x"]] = gsub("right!$", "left", legend.args[["x"]])
+      if (!outer_right) legend.args[["x"]] = gsub("left!$", "right", legend.args[["x"]])
+      
       legend.args[["horiz"]] = FALSE
       
       lgnd = legend(
@@ -376,20 +386,33 @@ plot2.default = function(
         xpd    = legend.args[["xpd"]],
         plot   = FALSE
       )
-      # calculate right margin width in ndc
+      # calculate side margin width in ndc
       w = grconvertX(lgnd$rect$w, to="ndc") - grconvertX(0, to="ndc")
-      w = w*1.5
-      legend.args[["inset"]] = c(1.025, 0)
-      par(omd = c(0, 1-w, 0, 1))
+      ## differing adjustments depending on side
+      if (outer_right) {
+        w = w*1.5
+        par(omd = c(0, 1-w, 0, 1))
+        legend.args[["inset"]] = c(1.025, 0)
+      } else {
+        w = w + grconvertX(par("mgp")[1], from = "lines", to = "ndc") # extra space for y-axis title
+        par(omd = c(w, 1, 0, 1))
+        legend.args[["inset"]] = c(1+w, 0)
+      }
       
-    } else if (legend.args[["x"]] == "bottom!") {
+    ## Legend at the outer top or bottom of plot
+    } else if (grepl("bottom!$|top!$", legend.args[["x"]])) {
+      
+      outer_bottom = grepl("bottom!$", legend.args[["x"]])
       
       # Catch to reset right margin if previous legend position was "right!"
       if (par("mar")[4]== 0.1) par(mar=c(par("mar")[1:3], 2.1)) 
       
       plot.new()
       
-      legend.args[["x"]] = "top"
+      ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
+      if (outer_bottom) legend.args[["x"]] = gsub("bottom!$", "top", legend.args[["x"]])
+      if (!outer_bottom) legend.args[["x"]] = gsub("top!$", "bottom", legend.args[["x"]])
+      
       legend.args[["horiz"]] = TRUE
       
       lgnd = legend(
@@ -405,9 +428,14 @@ plot2.default = function(
       )
       # calculate bottom margin height in ndc
       h = grconvertX(lgnd$rect$h, to="ndc") - grconvertX(0, to="ndc")
-      # legend.args[["inset"]] = c(0, 1+2.5*h) ## uncomment if rm title from lgnd above
-      legend.args[["inset"]] = c(0, 1+2*h)
-      par(omd = c(0,1,0+h,1))
+      ## differing adjustments depending on side
+      if (outer_bottom) {
+        legend.args[["inset"]] = c(0, 1+2*h)
+        par(omd = c(0,1,0+h,1))
+      } else {
+        legend.args[["inset"]] = c(0, 1)
+        par(omd = c(0,1,0,1-h))
+      }
       
     } else {
       # Catch to reset right margin if previous legend position was "right!"
@@ -424,9 +452,9 @@ plot2.default = function(
     
   }
   
+  ## Set the plot window
   ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
   ## triggers an annoying warning about unrecognized graphical params.
-  # plot window
   # plot.window(
   #   xlim = xlim, ylim = ylim, 
   #   asp = asp, log = log,
@@ -484,12 +512,25 @@ plot2.default = function(
     )
   }
 
-  title(
-    xlab = xlab,
-    ylab = ylab,
-    main = main,
-    sub = sub
+  # Titles. Note that we include a special catch for the main title if legend is
+  # "top!" (and main is specified in the first place).
+  if (is.null(main) || is.null(outer_bottom) || isTRUE(outer_bottom)) {
+    title(
+      xlab = xlab,
+      ylab = ylab,
+      main = main,
+      sub = sub
     )
+  } else {
+    title(
+      xlab = xlab,
+      ylab = ylab,
+      sub = sub
+    )
+    # Bump main up to make space for the legend beneath it
+    title(main = main, line = 5, xpd = NA)
+  }
+  
   
   if (par_restore) {
     on.exit(par(opar), add = TRUE)

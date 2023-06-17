@@ -159,15 +159,15 @@ groups.}
 - NULL (default), in which case the legend will be determined by the
 grouping variable. If there is no group variable (i.e., `by` is NULL) then
 no legend is drawn. If a grouping variable is detected, then an automatic
-legend is drawn outside and to the right of the plotting area. Note that
-the legend title and categories will automatically be inferred from the
-`by` argument and underlying data.
+legend is drawn to the _outer_ right of the plotting area. Note that the
+legend title and categories will automatically be inferred from the `by`
+argument and underlying data.
 - A convenience string indicating the legend position. The string should
 correspond to one of the position keywords supported by the base `legend`
-function, e.g. "left", "topleft", "right", etc. In addition, `plot2`
-supports adding an exclamation point to two keywords in particular:
-"bottom!" and "right!". These will place the legend _outside_ of the
-plotting area and adjust the margins of the plot accordingly. Finally,
+function, e.g. "right", "topleft", "bottom", etc. In addition, `plot2`
+supports adding a trailing exclamation point to these keywords, e.g.
+"right!", "topleft!", or "bottom!". This will place the legend _outside_
+the plotting area and adjust the margins of the plot accordingly. Finally,
 users can also turn off any legend printing by specifying "none".
 - Logical value, where TRUE corresponds to the default case above (same 
 effect as specifying NULL) and FALSE turns the legend off (same effect as

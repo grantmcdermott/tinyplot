@@ -72,6 +72,8 @@ Let’s load the package then walk through some examples.
 library(plot2)
 ```
 
+### Similarity to `plot()`
+
 As far as possible, `plot2` tries to be a drop-in replacement for
 regular `plot` calls.
 
@@ -105,9 +107,11 @@ dev.off() # reset to default (single) plot window
 #>           1
 ```
 
+### Grouped data
+
 So far, so good. But where `plot2` starts to diverge from its base
 counterpart is with respect to grouped data. In particular, `plot2`
-allows you to characterize groups using the `by` argument.[^1]
+allows you to characterize groups using the `by` argument.\[1\]
 
 ``` r
 # plot2(airquality$Day, airquality$Temp, by = airquality$Month) # same as below
@@ -170,11 +174,13 @@ plot2(
 
 <img src="man/figures/README-by_lty-1.png" width="100%" />
 
+### Colors
+
 On the subject of group colours, these are easily customized via the
 `palette` argument. The default group colours are inherited from either
 the “R4” or “Viridis” palettes, depending on the number of groups.
 However, all of the many palettes listed by `palette.pals()` and
-`hcl.pals()` are supported as convenience strings.[^2] For example:
+`hcl.pals()` are supported as convenience strings.\[2\] For example:
 
 ``` r
 plot2(
@@ -191,11 +197,13 @@ Beyond these convenience strings, users can also supply a valid
 palette-generating function for finer control over transparency, colour
 order, and so forth. We’ll see a demonstration of this further below.
 
+### Legend
+
 In all of the preceding plots, you will have noticed that we get an
 automatic legend. The legend position and look can be customized using
 appropriate arguments. You can change (or turn off) the legend title and
 bounding box, switch the direction of the legend text, etc. Below, we
-particularly draw your attention to the trailing “!” in the
+particularly draw your attention to the trailing “\!” in the
 `legend.position` argument. This tells `plot2` to place the legend
 *outside* the plot area.
 
@@ -225,6 +233,29 @@ with(airquality, plot2(
 ```
 
 <img src="man/figures/README-desnity_topright-1.png" width="100%" />
+
+### Point-range
+
+`plot2` adds a new `type="pr"` option to draw point-ranges plots:
+
+``` r
+mod = lm(mpg ~ hp + factor(cyl), mtcars)
+coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
+coefs = setNames(coefs, c("x", "y", "ymin", "ymax"))
+with(coefs,
+  plot2(pch = 17,
+        x = 1:4,
+        y = y,
+        ymin = ymin,
+        ymax = ymax,
+        type = "pr"
+  )
+)
+```
+
+<img src="man/figures/README-pointrange-1.png" width="100%" />
+
+### Customization
 
 Customizing your plots further is straightforward, whether that is done
 by changing global parameters or invoking `plot2` arguments. Here’s a
@@ -283,6 +314,8 @@ dev.off()
 #>           1
 ```
 
+## Conclusion
+
 In summary, consider the **plot2** package if you are looking for base R
 `plot` functionality with some added convenience features. You can use
 pretty much the same syntax and all of your theming elements should
@@ -291,7 +324,7 @@ makes it an attractive option for situations where dependency management
 is expensive (e.g., an R application running in a browser via
 [WebAssembly](https://docs.r-wasm.org/webr/latest/)).
 
-[^1]: At this point, experienced base plot users might protest that you
+1.  At this point, experienced base plot users might protest that you
     *can* colour by groups using the `col` argument, e.g.
     `with(airquality, plot(Day, Temp, col = Month))`. This is true, but
     there are several limitations. First, you don’t get an automatic
@@ -304,7 +337,7 @@ is expensive (e.g., an R application running in a browser via
     [this](https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops)
     old StackOverflow thread for a longer discussion.
 
-[^2]: See the accompanying help pages of those two functions for more
+2.  See the accompanying help pages of those two functions for more
     details on the available palettes, or read the
     [article](https://arxiv.org/pdf/2303.04918.pdf) by Achim Zeileis and
     Paul Murrell.

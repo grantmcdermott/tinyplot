@@ -94,6 +94,7 @@
 #'   be calling `dev.off()` to reset all `par` settings to their defaults.)
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
+#' @param ymin,ymax minimum and maximum coordinates of the point range. Only used when `type="pr"`.
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).
 #'   
@@ -241,6 +242,8 @@ plot2.default = function(
     col = NULL,
     lty = NULL,
     par_restore = FALSE,
+    ymin = NULL,
+    ymax = NULL,
     ...) {
   
   if (is.null(y)) {
@@ -255,12 +258,18 @@ plot2.default = function(
     
   if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
   if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
-  
+
+  if (!is.null(ymin)) ylim[1] <- min(c(ylim, ymin))
+  if (!is.null(ymax)) ylim[2] <- max(c(ylim, ymax))
+
   if (!is.null(by)) {
-    split_data = lapply(list(x=x, y=y), split, by)
+    l = list(x=x, y=y)
+    l[["ymin"]] = ymin
+    l[["ymax"]] = ymax
+    split_data = lapply(l, split, by)
     split_data = do.call(function(...) Map("list", ...), split_data)
   } else {
-    split_data = list(list(x=x, y=y))
+    split_data = list(list(x=x, y=y, ymin = ymin, ymax = ymax))
   }
   
   ngrps = length(split_data)
@@ -399,7 +408,7 @@ plot2.default = function(
   if (!is.null(grid)) grid
   
   # draw the points/lines
-  if (type == "p") {
+  if (type %in% "p") {
     invisible(
       lapply(
         seq_along(split_data),
@@ -415,8 +424,7 @@ plot2.default = function(
         }
       )
     )
-  }
-  if (type %in% c("l", "o", "b", "c", "h", "s", "S")) {
+  } else if (type %in% c("l", "o", "b", "c", "h", "s", "S")) {
     invisible(
       lapply(
         seq_along(split_data),
@@ -432,6 +440,30 @@ plot2.default = function(
         }
       )
     )
+  } else if (type %in% "pr") {
+    invisible(
+      lapply(
+        seq_along(split_data),
+        function(i) {
+          segments(
+            x0 = seq_along(split_data[[i]]$x),
+            y0 = split_data[[i]]$ymin,
+            x1 = seq_along(split_data[[i]]$x),
+            y1 = split_data[[i]]$ymax
+          )
+          points(
+            x = split_data[[i]]$x,
+            y = split_data[[i]]$y,
+            col = col[i],
+            type = "p",,
+            pch = pch[i],
+            lty = lty[i]
+          )
+        }
+      )
+    )
+  } else {
+    stop("`type` argument not supported.", call. = FALSE)
   }
 
   title(

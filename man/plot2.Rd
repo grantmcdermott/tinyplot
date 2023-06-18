@@ -34,6 +34,8 @@ plot2(x, ...)
   col = NULL,
   lty = NULL,
   par_restore = FALSE,
+  ymin = NULL,
+  ymax = NULL,
   ...
 )
 
@@ -193,6 +195,8 @@ drawn. However, note the the outer margins of the graphics device may have
 been altered to make space for the `plot2` legend. Users can opt out of
 this persistent behaviour by setting to TRUE instead. (Another option would
 be calling `dev.off()` to reset all `par` settings to their defaults.)}
+
+\item{ymin, ymax}{minimum and maximum coordinates of the point range. Only used when `type="pr"`.}
 
 \item{formula}{a `formula` that may also include a grouping variable after a
 "|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should

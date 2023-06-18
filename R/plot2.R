@@ -345,9 +345,18 @@ plot2.default = function(
   if (legend.args[["x"]] != "none") {
     
     if (ngrps>1) {
-      legend.args[["legend"]] = names(split_data)
+      lgnd_labs = names(split_data)
     } else {
-      legend.args[["legend"]] = ylab
+      lgnd_labs = ylab
+    }
+    if (is.null(legend.args[["legend"]])) {
+      legend.args[["legend"]] = lgnd_labs
+    } else if (length(lgnd_labs) != length(eval(legend.args[["legend"]]))) {
+      warning(
+        "\nUser-supplied legend labels do not match the number of groups.\n",
+        "Defaulting to automatic labels determined by the group splits in `by`,\n"
+        )
+      legend.args[["legend"]] = lgnd_labs
     }
     
     # Catch to avoid recursive offsets, e.g., repeated plot2 calls with

@@ -70,6 +70,18 @@ f = function() plot2(
   )
 expect_snapshot_plot(f, label = "legend_title_null")
 
+f = function() plot2(
+  Temp ~ Day | Month, data = airquality,
+  legend = legend(legend = month.abb[5:9])
+  )
+expect_snapshot_plot(f, label = "legend_user_labs")
+
+f = function() plot2(
+  Temp ~ Day | Month, data = airquality,
+  legend = legend(legend = month.abb[5:10])
+  )
+expect_warning(expect_snapshot_plot(f, label = "legend_user_labs_override"))
+
 
 # reset par
 par(op)

@@ -81,8 +81,8 @@
 #'    - Logical value, where TRUE corresponds to the default case above (same 
 #'    effect as specifying NULL) and FALSE turns the legend off (same effect as
 #'    specifying "none").
-#'    - A `legend()` function with supported arguments, e.g. "bty", "horiz", and
-#'    so forth.
+#'    - A list or, equivalently, a dedicated `legend()` function with supported
+#'    legend arguments, e.g. "bty", "horiz", and so forth.
 #' @param pch plotting "character", i.e., symbol to use. Character, integer, or
 #'   vector of length equal to the number of categories in the `by` variable.
 #'   See `pch`. In addition, users can supply a special `pch = "by"` convenience

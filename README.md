@@ -111,7 +111,7 @@ dev.off() # reset to default (single) plot window
 
 So far, so good. But where `plot2` starts to diverge from its base
 counterpart is with respect to grouped data. In particular, `plot2`
-allows you to characterize groups using the `by` argument.\[1\]
+allows you to characterize groups using the `by` argument.[^1]
 
 ``` r
 # plot2(airquality$Day, airquality$Temp, by = airquality$Month) # same as below

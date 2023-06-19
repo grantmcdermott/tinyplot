@@ -110,8 +110,8 @@ should be taken. A matrix is converted to a data frame.}
 following values are possible, for details, see plot: "p" for points, "l"
 for lines, "b" for both points and lines, "c" for empty points joined by
 lines, "o" for overplotted points and lines, "s" and "S" for stair steps
-and "h" for histogram-like vertical lines. Finally, "n" does not produce
-any points or lines.}
+and "h" for histogram-like vertical lines. "n" does not produce
+any points or lines. "pointrange" draws point-range plots.}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 and leads to a ‘reversed axis’. The default value, NULL, indicates that
@@ -196,7 +196,7 @@ been altered to make space for the `plot2` legend. Users can opt out of
 this persistent behaviour by setting to TRUE instead. (Another option would
 be calling `dev.off()` to reset all `par` settings to their defaults.)}
 
-\item{ymin, ymax}{minimum and maximum coordinates of the point range. Only used when `type="pr"`.}
+\item{ymin, ymax}{minimum and maximum coordinates of the point range. Only used when `type="pointrange"`.}
 
 \item{formula}{a `formula` that may also include a grouping variable after a
 "|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should

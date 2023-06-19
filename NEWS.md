@@ -16,7 +16,7 @@ New features:
 - Both the `pch` and `lty` arguments now accept a "by" convenience keyword for
 automatically adjusting plot characters and line types by groups (#28,
 @grantmcdermott).
-- Point-range plots with `type="pr"` (#35 @vincentarelbundock)
+- Point-range plots with `type="pointrange"` (#35 @vincentarelbundock)
 
 Bug fixes:
 

@@ -71,7 +71,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
 by_pch = function(ngrps, type, pch=NULL) {
   
   no_pch = FALSE
-  if (!type %in% c("p", "b", "o", "pr")) {
+  if (!type %in% c("p", "b", "o", "pointrange")) {
     no_pch = TRUE
     pch = NULL
     

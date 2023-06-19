@@ -14,6 +14,6 @@ fun = function() {
             y = y,
             ymin = ymin,
             ymax = ymax,
-            type = "pr"))
+            type = "pointrange"))
 }
 expect_snapshot_plot(fun, label = "pointrange_triangle")

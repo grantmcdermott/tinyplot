@@ -432,7 +432,8 @@ plot2.default = function(
             x = split_data[[i]]$x,
             y = split_data[[i]]$y,
             col = col[i],
-            type = type,
+            # type = type, ## rather hardcode "p" to avoid warning message about "pointrange"
+            type = "p",
             pch = pch[i],
             lty = lty[i]
           )

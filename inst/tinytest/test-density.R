@@ -10,18 +10,18 @@ if ((getRversion() > "4.3.1")) {
   f = function() plot2(density(mtcars$mpg, old.coords=TRUE), by = mtcars$am)
   expect_snapshot_plot(f, label = "density_numeric")
   
-  f = function() plot2(density(iris$Sepal.Width, old.coords=TRUE, by = iris$Species)
+  f = function() plot2(density(iris$Sepal.Width, old.coords=TRUE), by = iris$Species)
   expect_snapshot_plot(f, label = "density_factor")
   
 } else {
 
-  f = function() plot2(density(mtcars$mpg)
+  f = function() plot2(density(mtcars$mpg))
   expect_snapshot_plot(f, label = "density_nogroups")
   
   f = function() plot2(density(mtcars$mpg), by = mtcars$am)
   expect_snapshot_plot(f, label = "density_numeric")
   
-  f = function() plot2(density(iris$Sepal.Width, by = iris$Species)
+  f = function() plot2(density(iris$Sepal.Width), by = iris$Species)
   expect_snapshot_plot(f, label = "density_factor")
 
 }

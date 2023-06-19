@@ -79,6 +79,8 @@ Let's load the package then walk through some examples.
 library(plot2)
 ```
 
+### Similarity to `plot()`
+
 As far as possible, `plot2` tries to be a drop-in replacement for regular `plot`
 calls.
 
@@ -102,6 +104,8 @@ plot2(Temp ~ Day, data = airquality, main = "plot2 (formula)")
 
 dev.off() # reset to default (single) plot window
 ```
+
+### Grouped data
 
 So far, so good. But where `plot2` starts to diverge from its base counterpart is
 with respect to grouped data. In particular, `plot2` allows you to characterize
@@ -168,6 +172,8 @@ plot2(
 )
 ```
 
+### Colors
+
 On the subject of group colours, these are easily customized via the `palette`
 argument. The default group colours are inherited from either the "R4" or
 "Viridis" palettes, depending on the number of groups. However, all of the many
@@ -189,6 +195,8 @@ plot2(
 Beyond these convenience strings, users can also supply a valid
 palette-generating function for finer control over transparency, colour order,
 and so forth. We'll see a demonstration of this further below.
+
+### Legend
 
 In all of the preceding plots, you will have noticed that we get an automatic
 legend. The legend position and look can be customized using appropriate
@@ -218,6 +226,27 @@ with(airquality, plot2(
   legend.args = list(title = "Month", bty="o")
 ))
 ```
+
+### Point-range
+
+`plot2` adds a new `type="pointrange"` option to draw point-ranges plots:
+
+```{r pointrange, warning = FALSE}
+mod = lm(mpg ~ hp + factor(cyl), mtcars)
+coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
+coefs = setNames(coefs, c("x", "y", "ymin", "ymax"))
+with(coefs,
+  plot2(pch = 17,
+        x = 1:4,
+        y = y,
+        ymin = ymin,
+        ymax = ymax,
+        type = "pointrange"
+  )
+)
+```
+
+### Customization
 
 Customizing your plots further is straightforward, whether that is done by
 changing global parameters or invoking `plot2` arguments. Here's a quick
@@ -265,6 +294,8 @@ plot2(
 basetheme(NULL)  # back to default theme
 dev.off()
 ```
+
+## Conclusion
 
 In summary, consider the **plot2** package if you are looking for base R `plot`
 functionality with some added convenience features. You can use pretty much the

@@ -180,7 +180,7 @@ On the subject of group colours, these are easily customized via the
 `palette` argument. The default group colours are inherited from either
 the “R4” or “Viridis” palettes, depending on the number of groups.
 However, all of the many palettes listed by `palette.pals()` and
-`hcl.pals()` are supported as convenience strings.\[2\] For example:
+`hcl.pals()` are supported as convenience strings.[^2] For example:
 
 ``` r
 plot2(
@@ -203,7 +203,7 @@ In all of the preceding plots, you will have noticed that we get an
 automatic legend. The legend position and look can be customized using
 appropriate arguments. You can change (or turn off) the legend title and
 bounding box, switch the direction of the legend text, etc. Below, we
-particularly draw your attention to the trailing “\!” in the
+particularly draw your attention to the trailing “!” in the
 `legend.position` argument. This tells `plot2` to place the legend
 *outside* the plot area.
 
@@ -236,7 +236,8 @@ with(airquality, plot2(
 
 ### Point-range
 
-`plot2` adds a new `type="pr"` option to draw point-ranges plots:
+`plot2` adds a new `type="pointrange"` option to draw point-ranges
+plots:
 
 ``` r
 mod = lm(mpg ~ hp + factor(cyl), mtcars)
@@ -248,7 +249,7 @@ with(coefs,
         y = y,
         ymin = ymin,
         ymax = ymax,
-        type = "pr"
+        type = "pointrange"
   )
 )
 ```
@@ -324,7 +325,7 @@ makes it an attractive option for situations where dependency management
 is expensive (e.g., an R application running in a browser via
 [WebAssembly](https://docs.r-wasm.org/webr/latest/)).
 
-1.  At this point, experienced base plot users might protest that you
+[^1]: At this point, experienced base plot users might protest that you
     *can* colour by groups using the `col` argument, e.g.
     `with(airquality, plot(Day, Temp, col = Month))`. This is true, but
     there are several limitations. First, you don’t get an automatic
@@ -337,7 +338,7 @@ is expensive (e.g., an R application running in a browser via
     [this](https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops)
     old StackOverflow thread for a longer discussion.
 
-2.  See the accompanying help pages of those two functions for more
+[^2]: See the accompanying help pages of those two functions for more
     details on the available palettes, or read the
     [article](https://arxiv.org/pdf/2303.04918.pdf) by Achim Zeileis and
     Paul Murrell.

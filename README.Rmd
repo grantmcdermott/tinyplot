@@ -229,9 +229,9 @@ with(airquality, plot2(
 
 ### Point-range
 
-`plot2` adds a new `type="pr"` option to draw point-ranges plots:
+`plot2` adds a new `type="pointrange"` option to draw point-ranges plots:
 
-```{r pointrange}
+```{r pointrange, warning = FALSE}
 mod = lm(mpg ~ hp + factor(cyl), mtcars)
 coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
 coefs = setNames(coefs, c("x", "y", "ymin", "ymax"))
@@ -241,7 +241,7 @@ with(coefs,
         y = y,
         ymin = ymin,
         ymax = ymax,
-        type = "pr"
+        type = "pointrange"
   )
 )
 ```

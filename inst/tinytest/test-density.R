@@ -2,7 +2,7 @@ source("helpers.R")
 using("tinysnapshot")
 if (Sys.info()["sysname"] != "Linux") exit_file("Linux snapshots")
 
-if ((getRversion() > "4.3.1") {
+if ((getRversion() > "4.3.1")) {
 
   f = function() plot2(density(mtcars$mpg, old.coords=TRUE))
   expect_snapshot_plot(f, label = "density_nogroups")

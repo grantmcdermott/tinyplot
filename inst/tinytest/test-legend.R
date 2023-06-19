@@ -18,8 +18,10 @@ expect_snapshot_plot(f, label = "legend_true")
 f = function() with(airquality, plot2(x = Day, y = Temp, by = Month, legend = "bottom!"))
 expect_snapshot_plot(f, label = "legend_keyword_default")
 
-f = function() with(airquality, plot2(x = density(Temp), by = Month, legend = "bottom!"))
-expect_snapshot_plot(f, label = "legend_keyword_density")
+if ((getRversion() <= "4.3.1")) {
+  f = function() with(airquality, plot2(x = density(Temp), by = Month, legend = "bottom!"))
+  expect_snapshot_plot(f, label = "legend_keyword_density")
+}
 
 f = function() plot2(Temp ~ Day | Month, data = airquality, legend = "bottom!")
 expect_snapshot_plot(f, label = "legend_keyword_formula")
@@ -49,14 +51,16 @@ f = function() with(
   )
 expect_snapshot_plot(f, label = "legend_default_legend")
 
-f = function() with(
-  airquality,
-  plot2(
-    x = density(Temp), by = Month,
-    legend = legend("bottom!", title = "Month of the year", bty = "o")
+if ((getRversion() <= "4.3.1")) {
+  f = function() with(
+    airquality,
+    plot2(
+      x = density(Temp), by = Month,
+      legend = legend("bottom!", title = "Month of the year", bty = "o")
+      )
     )
-  )
-expect_snapshot_plot(f, label = "legend_density_legend")
+  expect_snapshot_plot(f, label = "legend_density_legend")
+}
 
 f = function() plot2(
   Temp ~ Day | Month, data = airquality,

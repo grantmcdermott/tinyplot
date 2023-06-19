@@ -78,7 +78,7 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "readme_legend_bottom")
 
-if ((getRversion() > "4.3.1")) {
+if ((getRversion() <= "4.3.1")) {
   f = function() {
     plot2(
       density(airquality$Temp),

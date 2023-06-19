@@ -78,15 +78,17 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "readme_legend_bottom")
 
-f = function() {
-  plot2(
-    density(airquality$Temp),
-    by = airquality$Month, 
-    legend.position = "topright",
-    legend.args = list(title = "Month", bty="o")
-  )
+if ((getRversion() > "4.3.1")) {
+  f = function() {
+    plot2(
+      density(airquality$Temp),
+      by = airquality$Month, 
+      legend.position = "topright",
+      legend.args = list(title = "Month", bty="o")
+    )
+  }
+  expect_snapshot_plot(f, label = "readme_density_topright")
 }
-expect_snapshot_plot(f, label = "readme_density_topright")
 
 f = function() {
   plot2(

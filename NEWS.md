@@ -1,4 +1,4 @@
-# plot2 0.0.2.9006 (development version)
+# plot2 0.0.2.9007 (development version)
 
 Breaking changes:
 
@@ -16,7 +16,8 @@ New features:
 - Both the `pch` and `lty` arguments now accept a "by" convenience keyword for
 automatically adjusting plot characters and line types by groups (#28,
 @grantmcdermott).
-- Point-range plots with `type="pointrange"` (#35 @vincentarelbundock)
+- Add support for `type="pointrange"` and `type="errobar"` plots (#35
+@vincentarelbundock and #40 @grantmcdermott)
 
 Bug fixes:
 

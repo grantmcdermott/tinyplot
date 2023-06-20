@@ -234,22 +234,25 @@ with(airquality, plot2(
 
 <img src="man/figures/README-desnity_topright-1.png" width="100%" />
 
-### Point-range
+### Point range and error bar plots
 
-`plot2` adds a new `type="pointrange"` option to draw point-ranges
-plots:
+`plot2` adds supports for point range and error bar plots via the
+`"pointrange"` and `"errorbar"` type arguments. An obvious use-case is
+for regression coefficient plots.
 
 ``` r
-mod = lm(mpg ~ hp + factor(cyl), mtcars)
+mod = lm(Temp ~ 0 + factor(Month), airquality)
 coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
-coefs = setNames(coefs, c("x", "y", "ymin", "ymax"))
-with(coefs,
-  plot2(pch = 17,
-        x = 1:4,
-        y = y,
-        ymin = ymin,
-        ymax = ymax,
-        type = "pointrange"
+coefs = setNames(coefs, c("term", "estimate", "ci_low", "ci_high"))
+
+with(
+  coefs,
+  plot2(
+    x = term, y = estimate,
+    ymin = ci_low, ymax = ci_high,
+    type = "pointrange",
+    pch = 19,
+    main = "Effect on Temperature"
   )
 )
 ```

@@ -7,13 +7,29 @@ coefs = setNames(coefs, c("x", "y", "ymin", "ymax"))
 
 fun = function() {
     with(
-        coefs,
-        plot2(
-            pch = 17,
-            x = 1:4,
-            y = y,
-            ymin = ymin,
-            ymax = ymax,
-            type = "pointrange"))
+      coefs,
+      plot2(
+        pch = 17,
+        x = 1:4,
+        y = y,
+        ymin = ymin,
+        ymax = ymax,
+        type = "pointrange"
+      )
+    )
 }
 expect_snapshot_plot(fun, label = "pointrange_triangle")
+
+fun = function() {
+    with(
+        coefs,
+        plot2(
+          x = x,
+          y = y,
+          ymin = ymin,
+          ymax = ymax,
+          type = "errorbar"
+        )
+      )
+}
+expect_snapshot_plot(fun, label = "pointrange_errorbar")

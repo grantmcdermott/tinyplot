@@ -22,12 +22,14 @@
 #'   not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
-#' @param type 1-character string giving the type of plot desired. The
-#'   following values are possible, for details, see plot: "p" for points, "l"
+#' @param type character string giving the type of plot desired. Options are:
+#'    - The same set of 1-character values supported by plot: "p" for points, "l"
 #'   for lines, "b" for both points and lines, "c" for empty points joined by
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 #'   and "h" for histogram-like vertical lines. "n" does not produce
-#'   any points or lines. "pointrange" draws point-range plots.
+#'   any points or lines.
+#'   - Additional plot2 types: "pointrange" draws point range plots and
+#'   "errorbar" draws error bar plots.
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -267,11 +269,26 @@ plot2.default = function(
   if (is.null(xlab)) xlab = deparse(substitute(x))
   if (is.null(ylab)) ylab = deparse(substitute(y))
     
+  xlabs = NULL  
+  if (type %in% c("pointrange", "errorbar")) {
+    if (is.character(x)) x = as.factor(x)
+    if (is.factor(x)) {
+      ## Need to maintain order that was observed in the original data
+      ## (i.e., no new sorting by factor)
+      xlvls = unique(x)
+      x = factor(x, levels = xlvls)
+      xlabs = seq_along(xlvls)
+      names(xlabs) = xlvls
+      x = as.integer(x)
+    }
+  }
+  
   if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
   if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
 
   if (!is.null(ymin)) ylim[1] = min(c(ylim, ymin))
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
+
 
   if (!is.null(by)) {
     l = list(x=x, y=y)
@@ -488,14 +505,18 @@ plot2.default = function(
   
   # axes, plot.frame and grid
   if (axes) {
-    axis(1)
+    if (type %in% c("pointrange", "errorbar") && !is.null(xlabs)) {
+      axis(1, at = xlabs, labels = names(xlabs)) 
+    } else {
+      axis(1)  
+    }
     axis(2)
   }
   if (frame.plot) box()
   if (!is.null(grid)) grid
   
-  # draw the points/lines
-  if (type %in% "pointrange") { # segments before point
+  ## segments/arrows before points
+  if (type == "pointrange") { 
     invisible(
       lapply(
         seq_along(split_data),
@@ -504,13 +525,37 @@ plot2.default = function(
             x0 = seq_along(split_data[[i]]$x),
             y0 = split_data[[i]]$ymin,
             x1 = seq_along(split_data[[i]]$x),
-            y1 = split_data[[i]]$ymax
+            y1 = split_data[[i]]$ymax,
+            col = col[i],
+            lty = lty[i]
           )
         }
       )
     )
   } 
-  if (type %in% c("p", "pointrange")) {
+  if (type == "errorbar") { 
+    invisible(
+      lapply(
+        seq_along(split_data),
+        function(i) {
+          graphics::arrows(
+            x0 = seq_along(split_data[[i]]$x),
+            y0 = split_data[[i]]$ymin,
+            x1 = seq_along(split_data[[i]]$x),
+            y1 = split_data[[i]]$ymax,
+            col = col[i],
+            lty = lty[i],
+            length = 0.05,
+            angle = 90,
+            code = 3
+          )
+        }
+      )
+    )
+  } 
+  
+  ## now draw the points/lines
+  if (type %in% c("p", "pointrange", "errorbar")) {
     invisible(
       lapply(
         seq_along(split_data),
@@ -519,7 +564,8 @@ plot2.default = function(
             x = split_data[[i]]$x,
             y = split_data[[i]]$y,
             col = col[i],
-            type = type,
+            # type = type, ## rather hardcode "p" to avoid warning message about "pointrange"
+            type = "p",
             pch = pch[i],
             lty = lty[i]
           )

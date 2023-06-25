@@ -98,6 +98,23 @@ f = function() {
 expect_snapshot_plot(f, label = "readme_palette_tableau")
 
 f = function() {
+  mod = lm(Temp ~ 0 + factor(Month), airquality)
+  coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
+  coefs = setNames(coefs, c("term", "estimate", "ci_low", "ci_high"))
+  with(
+    coefs,
+    plot2(
+      x = term, y = estimate,
+      ymin = ci_low, ymax = ci_high,
+      type = "pointrange",
+      pch = 19,
+      main = "Effect on Temperature"
+    )
+  )
+}
+expect_snapshot_plot(f, label = "readme_pointrange")
+
+f = function() {
   par(pch = 16, family = "HersheySans")
   
   plot2(

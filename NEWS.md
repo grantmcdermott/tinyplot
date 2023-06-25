@@ -24,7 +24,8 @@ automatically adjusting plot characters and line types by groups. (#28
 "top!", "left!", "topright!", etc. Users also gain finer control over many other
 aspects of the legend via the new unified `legend` argument, including changing
 labels, turning of the legend title, and so on. (#34 @grantmcdermott) 
-- Point-range plots with `type="pointrange"`. (#35 @vincentarelbundock)
+- Add support for `type="pointrange"` and `type="errobar"` plots (#35
+@vincentarelbundock and #40 @grantmcdermott)
 
 Bug fixes:
 

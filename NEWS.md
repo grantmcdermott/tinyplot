@@ -1,28 +1,36 @@
-# plot2 0.0.2.9007 (development version)
+# plot2 0.0.2.9008 (development version)
 
 Breaking changes:
 
-- The grouped colour palette functionality has been unified into a single
-`palette` argument, with the former `palette.args` argument being deprecated
-(#30, @grantmcdermott). In addition, the default palette for small groups has
-been changed from "Okabe-Ito" to "R4" (#32 @grantmcdermott). 
+- Colour palettes are now controlled via a single `palette` argument that
+unifies the old `palette` and (deprecated) `palette.args` arguments. In
+addition, the default palette for small groups has been changed from "Okabe-Ito"
+to "R4". (#31 and #32 @grantmcdermott)
+- Legends are now controlled via a single `legend` argument that unifies the
+previous (deprecated) `legend.position` and `legend.args` arguments.  This
+change also enables several enhancements over the old legend behaviour; see
+below. (#34 @grantmcdermott)
 
 New features:
 
-- Add support for the argument `log` (#15, @etiennebacher).
-- Add support for grouped density plots (#18, @grantmcdermott).
-- Add support for (both grouped and non-grouped) "c", "h", "s", and "S" types
-(#26, @grantmcdermott).
+- Add support for the argument `log`. (#15 @etiennebacher)
+- Add support for grouped density plots. (#18 @grantmcdermott)
+- Add support for (both grouped and non-grouped) "c", "h", "s", and "S" types.
+(#26 @grantmcdermott)
 - Both the `pch` and `lty` arguments now accept a "by" convenience keyword for
-automatically adjusting plot characters and line types by groups (#28,
-@grantmcdermott).
+automatically adjusting plot characters and line types by groups. (#28
+@grantmcdermott)
+- Add outside ("!") placement support for remaining legend keywords, e.g.
+"top!", "left!", "topright!", etc. Users also gain finer control over many other
+aspects of the legend via the new unified `legend` argument, including changing
+labels, turning of the legend title, and so on. (#34 @grantmcdermott) 
 - Add support for `type="pointrange"` and `type="errobar"` plots (#35
 @vincentarelbundock and #40 @grantmcdermott)
 
 Bug fixes:
 
-- Setting `par(pch=X)` globally is now respected (#20, @grantmcdermott).
-- Fix x-axis scale/index when y is NULL (#24, @grantmcdermott)
+- Setting `par(pch=X)` globally is now respected. (#20 @grantmcdermott)
+- Fix x-axis scale/index when y is NULL. (#24 @grantmcdermott)
 
 # plot2 0.0.2
 

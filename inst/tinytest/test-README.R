@@ -72,19 +72,16 @@ f = function() {
     Temp ~ Day | Month,
     data = airquality,
     type = "l",
-    legend.position = "bottom!", # "right!" (default), "none", or "topleft", etc.
-    legend.args = list(title = "Month of the year", bty = "o")
+    legend = legend("bottom!", title = "Month of the year", bty = "o")
   )
 }
 expect_snapshot_plot(f, label = "readme_legend_bottom")
 
 if ((getRversion() <= "4.3.1")) {
   f = function() {
-    plot2(
-      density(airquality$Temp),
-      by = airquality$Month, 
-      legend.position = "topright",
-      legend.args = list(title = "Month", bty="o")
+    with(
+      airquality,
+      plot2(density(Temp), by = Month, legend = legend("topright", bty="o"))
     )
   }
   expect_snapshot_plot(f, label = "readme_density_topright")

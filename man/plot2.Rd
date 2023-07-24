@@ -28,8 +28,7 @@ plot2(x, ...)
   asp = NA,
   grid = NULL,
   palette = NULL,
-  legend.position = NULL,
-  legend.args = list(),
+  legend = NULL,
   pch = NULL,
   col = NULL,
   lty = NULL,
@@ -54,8 +53,6 @@ plot2(x, ...)
   frame.plot = axes,
   asp = NA,
   grid = NULL,
-  legend.position = NULL,
-  legend.args = list(),
   pch = NULL,
   col = NULL,
   lty = NULL,
@@ -82,8 +79,6 @@ plot2(x, ...)
   frame.plot = axes,
   asp = NA,
   grid = NULL,
-  legend.position = NULL,
-  legend.args = list(),
   pch = NULL,
   col = NULL,
   lty = NULL,
@@ -164,14 +159,25 @@ unnamed arguments will be ignored and the key `n` argument, denoting the
 number of colours, will automatically be spliced in as the number of
 groups.}
 
-\item{legend.position}{one of the position keywords supported by `legend`.
-In addition, `plot2` supports adding an exclamation point to two keywords
-in particular: "bottom!" and "right!". These will place the legend outside
-of the plotting area and adjust the margins of the plot accordingly. If no
-legend is desired, then the user can also specify "none".}
-
-\item{legend.args}{list of additional arguments passed on to `legend`. At
-the moment, only "bty", "horiz", "xpd", and "title" are supported.}
+\item{legend}{one of the following options:
+- NULL (default), in which case the legend will be determined by the
+grouping variable. If there is no group variable (i.e., `by` is NULL) then
+no legend is drawn. If a grouping variable is detected, then an automatic
+legend is drawn to the _outer_ right of the plotting area. Note that the
+legend title and categories will automatically be inferred from the `by`
+argument and underlying data.
+- A convenience string indicating the legend position. The string should
+correspond to one of the position keywords supported by the base `legend`
+function, e.g. "right", "topleft", "bottom", etc. In addition, `plot2`
+supports adding a trailing exclamation point to these keywords, e.g.
+"right!", "topleft!", or "bottom!". This will place the legend _outside_
+the plotting area and adjust the margins of the plot accordingly. Finally,
+users can also turn off any legend printing by specifying "none".
+- Logical value, where TRUE corresponds to the default case above (same 
+effect as specifying NULL) and FALSE turns the legend off (same effect as
+specifying "none").
+- A list or, equivalently, a dedicated `legend()` function with supported
+legend arguments, e.g. "bty", "horiz", and so forth.}
 
 \item{pch}{plotting "character", i.e., symbol to use. Character, integer, or
 vector of length equal to the number of categories in the `by` variable.
@@ -262,7 +268,7 @@ plot2(
 )
 
 # The (automatic) legend position and look can be customized using
-# appropriate arguments. Note the trailing "!" in the `legend.position`
+# appropriate arguments. Note the trailing "!" in the `legend` position
 # argument below. This tells `plot2` to place the legend _outside_ the plot
 # area.
 
@@ -270,8 +276,7 @@ plot2(
   Temp ~ Day | Month,
   data = airquality,
   type = "l",
-  legend.position = "bottom!", # "right!" (default), "none", or "topleft", etc.
-  legend.args = list(title = "Month of the year", bty = "o")
+  legend = legend("bottom!", title = "Month of the year", bty = "o")
 )
 
 # Regular legend position keywords without the exclamation point (i.e., for
@@ -280,7 +285,7 @@ plot2(
 plot2(
   density(airquality$Temp),
   by = airquality$Month, 
-  legend.position = "topright", legend.args = list(bty="o", title = "Month")
+  legend = legend("topright", bty="o", title = "Month")
 )
 
 # The default group colours are inherited from either the "R4" or "Viridis"

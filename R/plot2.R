@@ -29,8 +29,8 @@
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 #'   and "h" for histogram-like vertical lines. "n" does not produce
 #'   any points or lines.
-#'   - Additional plot2 types: "pointrange" draws point range plots and
-#'   "errorbar" draws error bar plots.
+#'   - Additional plot2 types: "pointrange", "errorbar", and "ribbon" for
+#'   drawing these respective plot types.
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -117,7 +117,7 @@
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).
 #'   
-#' @importFrom grDevices palette palette.colors palette.pals hcl.colors hcl.pals
+#' @importFrom grDevices adjustcolor palette palette.colors palette.pals hcl.colors hcl.pals
 #' @importFrom graphics axis box grconvertX lines par plot.new plot.window points title
 #' 
 #' @examples
@@ -274,8 +274,8 @@ plot2.default = function(
   if (is.null(xlab)) xlab = deparse(substitute(x))
   if (is.null(ylab)) ylab = deparse(substitute(y))
     
-  xlabs = NULL  
-  if (type %in% c("pointrange", "errorbar")) {
+  xlabs = NULL
+  if (type %in% c("pointrange", "errorbar", "ribbon")) {
     if (is.character(x)) x = as.factor(x)
     if (is.factor(x)) {
       ## Need to maintain order that was observed in the original data
@@ -510,10 +510,10 @@ plot2.default = function(
   
   # axes, plot.frame and grid
   if (axes) {
-    if (type %in% c("pointrange", "errorbar") && !is.null(xlabs)) {
-      axis(1, at = xlabs, labels = names(xlabs)) 
+    if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+      axis(1, at = xlabs, labels = names(xlabs))
     } else {
-      axis(1)  
+      axis(1)
     }
     axis(2)
   }
@@ -526,6 +526,22 @@ plot2.default = function(
     }
   }
 
+  # polygons before lines
+  if (type == "ribbon") {
+    invisible(
+      lapply(
+        seq_along(split_data),
+        function(i) {
+          graphics::polygon(
+            x = c(split_data[[i]]$x, rev(split_data[[i]]$x)),
+            y = c(split_data[[i]]$ymin, rev(split_data[[i]]$ymax)),
+            col = adjustcolor(col[i], 0.2),
+            border = FALSE
+          )
+        }
+      )
+    )
+  } 
   ## segments/arrows before points
   if (type == "pointrange") { 
     invisible(
@@ -533,9 +549,9 @@ plot2.default = function(
         seq_along(split_data),
         function(i) {
           graphics::segments(
-            x0 = seq_along(split_data[[i]]$x),
+            x0 = split_data[[i]]$x,
             y0 = split_data[[i]]$ymin,
-            x1 = seq_along(split_data[[i]]$x),
+            x1 = split_data[[i]]$x,
             y1 = split_data[[i]]$ymax,
             col = col[i],
             lty = lty[i]
@@ -544,15 +560,15 @@ plot2.default = function(
       )
     )
   } 
-  if (type == "errorbar") { 
+  if (type == "errorbar") {
     invisible(
       lapply(
         seq_along(split_data),
         function(i) {
           graphics::arrows(
-            x0 = seq_along(split_data[[i]]$x),
+            x0 = split_data[[i]]$x,
             y0 = split_data[[i]]$ymin,
-            x1 = seq_along(split_data[[i]]$x),
+            x1 = split_data[[i]]$x,
             y1 = split_data[[i]]$ymax,
             col = col[i],
             lty = lty[i],
@@ -583,7 +599,8 @@ plot2.default = function(
         }
       )
     )
-  } else if (type %in% c("l", "o", "b", "c", "h", "s", "S")) {
+  } else if (type %in% c("l", "o", "b", "c", "h", "s", "S", "ribbon")) {
+    if (type=="ribbon") type = "l"
     invisible(
       lapply(
         seq_along(split_data),

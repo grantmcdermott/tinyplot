@@ -1,4 +1,4 @@
-# plot2 0.0.2.9009 (development version)
+# plot2 0.0.2.9010 (development version)
 
 Breaking changes:
 
@@ -33,6 +33,8 @@ Bug fixes:
 
 - Setting `par(pch=X)` globally is now respected. (#20 @grantmcdermott)
 - Fix x-axis scale/index when y is NULL. (#24 @grantmcdermott)
+- Setting a global palette, e.g. `palette("ggplot2")` is now respected. (#44
+@grantmcdermott)
 
 # plot2 0.0.2
 

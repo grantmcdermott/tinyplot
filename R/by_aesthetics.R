@@ -16,20 +16,25 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
       return(col)
     }
   }
-  
+
   if (is.null(palette)) {
-    
-    if (ngrps<=8) {
-      palette = "R4"
-      palette_fun = palette.colors
+
+    if (ngrps <= length(palette())) {
+      palette_fun = function() palette() # must be function to avoid arg ambiguity
+      args = list()
     } else {
-      palette = "Viridis"
-      palette_fun = hcl.colors
+      if (ngrps <= 8) {
+        palette = "R4"
+        palette_fun = palette.colors
+      } else {
+        palette = "Viridis"
+        palette_fun = hcl.colors
+      }
+      args = list(n = ngrps, palette = palette)
     }
-    args = list(n = ngrps, palette = palette)
-    
+
   } else {
-    
+
     if (is.character(palette)) {
       if (tolower(palette) %in% tolower(palette.pals())) {
         palette_fun = palette.colors

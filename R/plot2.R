@@ -1,7 +1,7 @@
 #' @title Lightweight extension of the base R plotting function
 #'   
-#' @description `plot2` extends the functionality of base R's
-#'   default (2D) `plot` function, particularly as it applies to scatter and
+#' @description Extends base R's
+#'   default plotting function, particularly as it applies to scatter and
 #'   line plots with grouped data. For example, `plot2` makes it easy to plot
 #'   different categories of a dataset in a single function call and highlight
 #'   these categories (groups) using modern colour palettes. Coincident with
@@ -11,6 +11,7 @@
 #'   for the equivalent base plot function. Users should generally be able to
 #'   swap a valid `plot` call with `plot2` without any changes to the output.
 #' 
+#' @md
 #' @param x,y the x and y arguments provide the x and y coordinates for the
 #'   plot. Any reasonable way of defining the coordinates is acceptable. See
 #'   the function xy.coords for details. If supplied separately, they must be
@@ -23,7 +24,7 @@
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
 #' @param type character string giving the type of plot desired. Options are:
-#'    - The same set of 1-character values supported by plot: "p" for points, "l"
+#'   - The same set of 1-character values supported by plot: "p" for points, "l"
 #'   for lines, "b" for both points and lines, "c" for empty points joined by
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 #'   and "h" for histogram-like vertical lines. "n" does not produce

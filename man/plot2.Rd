@@ -92,8 +92,8 @@ plot. Any reasonable way of defining the coordinates is acceptable. See
 the function xy.coords for details. If supplied separately, they must be
 of the same length.}
 
-\item{...}{other `graphical` parameters (see `par` and also the "Details"
-section of `plot`).}
+\item{...}{other \code{graphical} parameters (see \code{par} and also the "Details"
+section of \code{plot}).}
 
 \item{by}{the grouping variable that you want to categorize (i.e., colour)
 the plot by.}
@@ -102,25 +102,27 @@ the plot by.}
 should be taken. A matrix is converted to a data frame.}
 
 \item{type}{character string giving the type of plot desired. Options are:
- - The same set of 1-character values supported by plot: "p" for points, "l"
+\itemize{
+\item The same set of 1-character values supported by plot: "p" for points, "l"
 for lines, "b" for both points and lines, "c" for empty points joined by
 lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 and "h" for histogram-like vertical lines. "n" does not produce
 any points or lines.
-- Additional plot2 types: "pointrange" draws point range plots and
-"errorbar" draws error bar plots.}
+\item Additional plot2 types: "pointrange" draws point range plots and
+"errorbar" draws error bar plots.
+}}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 and leads to a ‘reversed axis’. The default value, NULL, indicates that
-the range of the `finite` values to be plotted should be used.}
+the range of the \code{finite} values to be plotted should be used.}
 
 \item{ylim}{the y limits of the plot.}
 
 \item{log}{a character string which contains "x" if the x axis is to be
-logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if 
+logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
 both axes are to be logarithmic.}
 
-\item{main}{a main title for the plot, see also `title`.}
+\item{main}{a main title for the plot, see also \code{title}.}
 
 \item{sub}{a subtitle for the plot.}
 
@@ -132,102 +134,108 @@ both axes are to be logarithmic.}
 and x and y axis labels) should appear on the plot.}
 
 \item{axes}{a logical value indicating whether both axes should be drawn on
-the plot. Use `graphical parameter` "xaxt" or "yaxt" to suppress just one of
+the plot. Use \verb{graphical parameter} "xaxt" or "yaxt" to suppress just one of
 the axes.}
 
 \item{frame.plot}{a logical indicating whether a box should be drawn around
-the plot. Can also use `frame` as an acceptable argument alias.}
+the plot. Can also use \code{frame} as an acceptable argument alias.}
 
-\item{asp}{the y/xy/x aspect ratio, see `plot.window`.}
+\item{asp}{the y/xy/x aspect ratio, see \code{plot.window}.}
 
 \item{grid}{argument for plotting a background panel grid, one of either:
- - a logical (i.e., `TRUE` to draw the grid), or
- - a panel grid plotting function like `grid()`.
-Note that this argument replaces the `panel.first` and `panel.last`
-arguments from base `plot()` and tries to make the process more seemless
-with better default behaviour. Default is not to draw a grid.}
+\itemize{
+\item a logical (i.e., \code{TRUE} to draw the grid), or
+\item a panel grid plotting function like \code{grid()}.
+Note that this argument replaces the \code{panel.first} and \code{panel.last}
+arguments from base \code{plot()} and tries to make the process more seemless
+with better default behaviour. Default is not to draw a grid.
+}}
 
 \item{palette}{one of the following options:
-- NULL (default), in which case the palette will be determined by the
-the user's default graphics palette, e.g. "R4". See `?palette()`. Note
+\itemize{
+\item NULL (default), in which case the palette will be determined by the
+the user's default graphics palette, e.g. "R4". See \code{?palette()}. Note
 that some internal checking is done to make sure that resulting colours
 match the number of groups. For larger group numbers, the "viridis"
 palette will be used instead.
-- A convenience string corresponding to one of the many palettes listed by
-either `palette.pals()` or `hcl.pals()`. Note that the string can be
+\item A convenience string corresponding to one of the many palettes listed by
+either \code{palette.pals()} or \code{hcl.pals()}. Note that the string can be
 case-insensitive (e.g., "Okabe-Ito" and "okabe-ito" are both valid).
-- A palette-generating function. This can be "bare" (e.g.,
-`palette.colors`) or "closed" with a set of named arguments (e.g.,
-`palette.colors(palette = "Okabe-Ito", alpha = 0.5)`). Note that any
-unnamed arguments will be ignored and the key `n` argument, denoting the
+\item A palette-generating function. This can be "bare" (e.g.,
+\code{palette.colors}) or "closed" with a set of named arguments (e.g.,
+\code{palette.colors(palette = "Okabe-Ito", alpha = 0.5)}). Note that any
+unnamed arguments will be ignored and the key \code{n} argument, denoting the
 number of colours, will automatically be spliced in as the number of
-groups.}
+groups.
+}}
 
 \item{legend}{one of the following options:
-- NULL (default), in which case the legend will be determined by the
-grouping variable. If there is no group variable (i.e., `by` is NULL) then
+\itemize{
+\item NULL (default), in which case the legend will be determined by the
+grouping variable. If there is no group variable (i.e., \code{by} is NULL) then
 no legend is drawn. If a grouping variable is detected, then an automatic
-legend is drawn to the _outer_ right of the plotting area. Note that the
-legend title and categories will automatically be inferred from the `by`
+legend is drawn to the \emph{outer} right of the plotting area. Note that the
+legend title and categories will automatically be inferred from the \code{by}
 argument and underlying data.
-- A convenience string indicating the legend position. The string should
-correspond to one of the position keywords supported by the base `legend`
-function, e.g. "right", "topleft", "bottom", etc. In addition, `plot2`
+\item A convenience string indicating the legend position. The string should
+correspond to one of the position keywords supported by the base \code{legend}
+function, e.g. "right", "topleft", "bottom", etc. In addition, \code{plot2}
 supports adding a trailing exclamation point to these keywords, e.g.
-"right!", "topleft!", or "bottom!". This will place the legend _outside_
+"right!", "topleft!", or "bottom!". This will place the legend \emph{outside}
 the plotting area and adjust the margins of the plot accordingly. Finally,
 users can also turn off any legend printing by specifying "none".
-- Logical value, where TRUE corresponds to the default case above (same 
+\item Logical value, where TRUE corresponds to the default case above (same
 effect as specifying NULL) and FALSE turns the legend off (same effect as
 specifying "none").
-- A list or, equivalently, a dedicated `legend()` function with supported
-legend arguments, e.g. "bty", "horiz", and so forth.}
+\item A list or, equivalently, a dedicated \code{legend()} function with supported
+legend arguments, e.g. "bty", "horiz", and so forth.
+}}
 
 \item{pch}{plotting "character", i.e., symbol to use. Character, integer, or
-vector of length equal to the number of categories in the `by` variable.
-See `pch`. In addition, users can supply a special `pch = "by"` convenience
+vector of length equal to the number of categories in the \code{by} variable.
+See \code{pch}. In addition, users can supply a special \code{pch = "by"} convenience
 argument, in which case the characters will automatically loop over the
 number groups. This automatic looping will begin at the global character
-value (i.e., `par("pch")`) and recycle as necessary.}
+value (i.e., \code{par("pch")}) and recycle as necessary.}
 
 \item{col}{plotting color. Character, integer, or vector of length equal to
-the number of categories in the `by` variable. See `col`.}
+the number of categories in the \code{by} variable. See \code{col}.}
 
 \item{lty}{line type. Character, integer, or vector of length equal to the
-number of categories in the `by` variable. See `lty`. In addition, users
-can supply a special `lty = "by"` convenience argument, in which case the
+number of categories in the \code{by} variable. See \code{lty}. In addition, users
+can supply a special \code{lty = "by"} convenience argument, in which case the
 line type will automatically loop over the number groups. This automatic
-looping will begin at the global line type value (i.e., `par("lty")`) and
+looping will begin at the global line type value (i.e., \code{par("lty")}) and
 recycle as necessary.}
 
-\item{par_restore}{a logical value indicating whether the `par` settings
-prior to calling `plot2` should be restored on exit. Defaults to FALSE,
+\item{par_restore}{a logical value indicating whether the \code{par} settings
+prior to calling \code{plot2} should be restored on exit. Defaults to FALSE,
 which makes it possible to add elements to the plot after it has been
 drawn. However, note the the outer margins of the graphics device may have
-been altered to make space for the `plot2` legend. Users can opt out of
+been altered to make space for the \code{plot2} legend. Users can opt out of
 this persistent behaviour by setting to TRUE instead. (Another option would
-be calling `dev.off()` to reset all `par` settings to their defaults.)}
+be calling \code{dev.off()} to reset all \code{par} settings to their defaults.)}
 
-\item{ymin, ymax}{minimum and maximum coordinates of the point range. Only used when `type="pointrange"`.}
+\item{ymin, ymax}{minimum and maximum coordinates of the point range. Only used when \code{type="pointrange"}.}
 
-\item{formula}{a `formula` that may also include a grouping variable after a
-"|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should
+\item{formula}{a \code{formula} that may also include a grouping variable after a
+"|", such as \code{y ~ x | z}. Note that the \code{formula} and \code{x} arguments should
 not be specified in the same call.}
 
-\item{subset, na.action, drop.unused.levels}{arguments passed to `model.frame`
-when extracting the data from `formula` and `data`.}
+\item{subset, na.action, drop.unused.levels}{arguments passed to \code{model.frame}
+when extracting the data from \code{formula} and \code{data}.}
 }
 \description{
-`plot2` extends the functionality of base R's
-  default (2D) `plot` function, particularly as it applies to scatter and
-  line plots with grouped data. For example, `plot2` makes it easy to plot
-  different categories of a dataset in a single function call and highlight
-  these categories (groups) using modern colour palettes. Coincident with
-  this grouping support, `plot2` also produces automatic legends with scope
-  for further customization. While the package also offers several other
-  minor enhancements, it tries as far as possible to be a drop-in replacement
-  for the equivalent base plot function. Users should generally be able to
-  swap a valid `plot` call with `plot2` without any changes to the output.
+Extends base R's
+default plotting function, particularly as it applies to scatter and
+line plots with grouped data. For example, \code{plot2} makes it easy to plot
+different categories of a dataset in a single function call and highlight
+these categories (groups) using modern colour palettes. Coincident with
+this grouping support, \code{plot2} also produces automatic legends with scope
+for further customization. While the package also offers several other
+minor enhancements, it tries as far as possible to be a drop-in replacement
+for the equivalent base plot function. Users should generally be able to
+swap a valid \code{plot} call with \code{plot2} without any changes to the output.
 }
 \examples{
 

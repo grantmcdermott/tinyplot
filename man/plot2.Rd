@@ -149,9 +149,10 @@ with better default behaviour. Default is not to draw a grid.}
 
 \item{palette}{one of the following options:
 - NULL (default), in which case the palette will be determined by the
-number of groups. If this number is equal to 8 or less, then R's default
-("R4") colour palette will be used. For larger group numbers, the
-"Viridis" palette will be used instead.
+the user's default graphics palette, e.g. "R4". See `?palette()`. Note
+that some internal checking is done to make sure that resulting colours
+match the number of groups. For larger group numbers, the "viridis"
+palette will be used instead.
 - A convenience string corresponding to one of the many palettes listed by
 either `palette.pals()` or `hcl.pals()`. Note that the string can be
 case-insensitive (e.g., "Okabe-Ito" and "okabe-ito" are both valid).

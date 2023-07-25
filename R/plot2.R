@@ -47,10 +47,13 @@
 #'   the plot. Use `graphical parameter` "xaxt" or "yaxt" to suppress just one of
 #'   the axes.
 #' @param frame.plot a logical indicating whether a box should be drawn around
-#'   the plot.
-#' @param grid a panel grid plotting function like `grid()`. This argument
-#'   replaces the `panel.first` and `panel.last` arguments from base `plot()`
-#'   and tries to make the process more seemless with better default behaviour.
+#'   the plot. Can also use `frame` as an acceptable argument alias.
+#' @param grid argument for plotting a background panel grid, one of either:
+#'    - a logical (i.e., `TRUE` to draw the grid), or
+#'    - a panel grid plotting function like `grid()`.
+#'   Note that this argument replaces the `panel.first` and `panel.last`
+#'   arguments from base `plot()` and tries to make the process more seemless
+#'   with better default behaviour. Default is not to draw a grid.
 #' @param asp the y/xy/x aspect ratio, see `plot.window`.
 #' @param palette one of the following options:
 #'    - NULL (default), in which case the palette will be determined by the
@@ -201,7 +204,7 @@
 #'   type = "b", pch = 16,
 #'   palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
 #'   main = "Daily temperatures by month",
-#'   frame.plot = FALSE, grid = grid()
+#'   frame = FALSE, grid = TRUE
 #' )
 #' 
 #' # For nice out-of-the-box themes, we recommend the `basetheme` package.
@@ -513,8 +516,14 @@ plot2.default = function(
     axis(2)
   }
   if (frame.plot) box()
-  if (!is.null(grid)) grid
-  
+  if (!is.null(grid)) {
+    if (is.logical(grid)) {
+      if (isTRUE(grid)) grid()
+    } else {
+      grid
+    }
+  }
+
   ## segments/arrows before points
   if (type == "pointrange") { 
     invisible(

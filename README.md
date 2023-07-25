@@ -235,11 +235,11 @@ with(
 
 <img src="man/figures/README-density_topright-1.png" width="100%" />
 
-### Point range and error bar plots
+### Point ranges, error bars, and ribbon plots
 
-`plot2` adds supports for point range and error bar plots via the
-`"pointrange"` and `"errorbar"` type arguments. An obvious use-case is
-for regression coefficient plots.
+`plot2` adds supports for uncertainty intervals via the `"pointrange"`,
+`"errorbar"`, `"ribbon"` type arguments. An obvious use-case is for
+regression coefficient plots.
 
 ``` r
 aq = airquality
@@ -257,7 +257,7 @@ with(
   plot2(
     x = term, y = estimate,
     ymin = ci_low, ymax = ci_high,
-    type = "pointrange",
+    type = "pointrange", # or: "errobar", "ribbon"
     pch = 19, col = "dodgerblue",
     grid = TRUE,
     main = "Effect on Temperature"

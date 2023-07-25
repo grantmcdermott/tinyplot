@@ -1,4 +1,4 @@
-# plot2 0.0.2.9008 (development version)
+# plot2 0.0.2.9009 (development version)
 
 Breaking changes:
 
@@ -26,6 +26,8 @@ aspects of the legend via the new unified `legend` argument, including changing
 labels, turning of the legend title, and so on. (#34 @grantmcdermott) 
 - Add support for `type="pointrange"` and `type="errobar"` plots (#35
 @vincentarelbundock and #40 @grantmcdermott)
+- Support `grid = TRUE` as an alternative to `grid = grid()`. (#43
+@grantmcdermott)
 
 Bug fixes:
 

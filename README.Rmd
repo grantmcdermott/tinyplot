@@ -68,7 +68,7 @@ using modern colour palettes. Coincident with this grouping support, `plot2()`
 also produces automatic legends with scope for further customization. While the
 package offers several other enhancements, it tries as far as possible to be a
 drop-in replacement for the equivalent base plot function. Users should
-(generally) be able to swap a valid `plot()` call with `plot2()` without any
+generally be able to swap a valid `plot()` call with `plot2()` without any
 changes to the expected output.
 
 ## Examples
@@ -124,7 +124,6 @@ old StackOverflow thread for a longer discussion.]
 ```{r by}
 # plot2(airquality$Day, airquality$Temp, by = airquality$Month) # same as below
 with(airquality, plot2(Day, Temp, by = Month))
-
 ```
 
 An even more convenient approach is to use the equivalent formula syntax. Just
@@ -217,12 +216,15 @@ plot2(
 Note that legend position keywords without the exclamation point (i.e., for
 inside the plot area) should still as per normal. Grouped density plot example:
 
-```{r desnity_topright}
-with(airquality, plot2(
-  density(Temp),
-  by = Month,
-  legend = legend("topright", bty = "o")
-))
+```{r density_topright}
+with(
+  airquality,
+  plot2(
+    density(Temp),
+    by = Month,
+    legend = legend("topright", bty = "o")
+  )
+)
 ```
 
 ### Point range and error bar plots
@@ -232,17 +234,24 @@ and `"errorbar"` type arguments. An obvious use-case is for regression
 coefficient plots.
 
 ```{r pointrange, warning = FALSE}
-mod = lm(Temp ~ 0 + factor(Month), airquality)
-coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
-coefs = setNames(coefs, c("term", "estimate", "ci_low", "ci_high"))
+aq = airquality
+aq$mnth = factor(month.abb[aq$Month], levels = month.abb)
+mod = lm(Temp ~ 0 + mnth, aq)
+coeftab = data.frame(
+  gsub("mnth", "", names(coef(mod))),
+  coef(mod),
+  confint(mod)
+  ) |>
+  setNames(c("term", "estimate", "ci_low", "ci_high"))
 
 with(
-  coefs,
+  coeftab,
   plot2(
     x = term, y = estimate,
     ymin = ci_low, ymax = ci_high,
     type = "pointrange",
-    pch = 19,
+    pch = 19, col = "dodgerblue",
+    grid = TRUE,
     main = "Effect on Temperature"
   )
 )
@@ -251,14 +260,15 @@ with(
 ### Customization
 
 Customizing your plots further is straightforward, whether that is done by
-changing global parameters or invoking `plot2` arguments. Here's a quick
-penultimate example, where we change our point character and font family
-globally, add some transparency to our colour palette, and use Tufte-style
-floating axes with a background panel grid.
+changing global parameters (via `par`) or invoking `plot2` arguments. Here's a
+quick penultimate example, where we change our point character, tick labels, and
+font family globally, before adding some transparency to our colour palette, and
+use Tufte-style floating axes with a background panel grid.
 
 ```{r hershey_plus}
 par(
-  pch    = 16,           # Filled points as default 
+  pch    = 16,           # Filled points as default
+  las    = 1,            # Horizontal axis tick labels
   family = "HersheySans" # Use a (built-in) Hershey font instead of Arial default
 )
 
@@ -268,18 +278,18 @@ plot2(
   type = "b",
   palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
   main = "Daily temperatures by month",
-  frame.plot = FALSE, grid = grid()
+  frame = FALSE, grid = TRUE
 )
 ```
 
-The use of `par` in the above example again underscores the correspondence with
-the base graphics system. Because `plot2` is effectively a convenience wrapper
-around base `plot`, any global elements that you have set for the latter should
-carry over to the former. For nice out-of-the-box themes, we recommend the
-**basetheme** package.
+At the risk of repeating ourselves, the use of `par` in the previous example
+again underscores the correspondence with the base graphics system. Because
+`plot2` is effectively a convenience wrapper around base `plot`, any global
+elements that you have set for the latter should carry over to the former. For
+nice out-of-the-box themes, we recommend the **basetheme** package.
 
 ```{r basethme_royal}
-par(family = "", pch = 15) # revert/change global changes from above
+par(pch = 15, las = 0, family = "") # change/revert global changes from above
 
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.

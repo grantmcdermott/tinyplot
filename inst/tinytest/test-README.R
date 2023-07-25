@@ -115,7 +115,7 @@ f = function() {
 expect_snapshot_plot(f, label = "readme_pointrange")
 
 f = function() {
-  par(pch = 16, las = 1, family = "HersheySans")
+  par(pch = 16, family = "HersheySans")
   
   plot2(
     Temp ~ Day | Month,
@@ -130,7 +130,7 @@ expect_snapshot_plot(f, label = "readme_hershey_plus")
 
 # as above but using frame = FALSE and grid = TRUE
 f = function() {
-  par(pch = 16, las = 1, family = "HersheySans")
+  par(pch = 16, family = "HersheySans")
   
   plot2(
     Temp ~ Day | Month,

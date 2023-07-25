@@ -1,4 +1,6 @@
-# plot2 0.0.2.9011 (development version)
+# plot2 0.0.3.9000 (development version)
+
+# plot2 0.0.3
 
 Breaking changes:
 

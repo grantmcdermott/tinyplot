@@ -61,7 +61,7 @@ Coincident with this grouping support, `plot2()` also produces automatic
 legends with scope for further customization. While the package offers
 several other enhancements, it tries as far as possible to be a drop-in
 replacement for the equivalent base plot function. Users should
-(generally) be able to swap a valid `plot()` call with `plot2()` without
+generally be able to swap a valid `plot()` call with `plot2()` without
 any changes to the expected output.
 
 ## Examples
@@ -223,14 +223,17 @@ for inside the plot area) should still as per normal. Grouped density
 plot example:
 
 ``` r
-with(airquality, plot2(
-  density(Temp),
-  by = Month,
-  legend = legend("topright", bty = "o")
-))
+with(
+  airquality,
+  plot2(
+    density(Temp),
+    by = Month,
+    legend = legend("topright", bty = "o")
+  )
+)
 ```
 
-<img src="man/figures/README-desnity_topright-1.png" width="100%" />
+<img src="man/figures/README-density_topright-1.png" width="100%" />
 
 ### Point range and error bar plots
 
@@ -239,17 +242,24 @@ with(airquality, plot2(
 for regression coefficient plots.
 
 ``` r
-mod = lm(Temp ~ 0 + factor(Month), airquality)
-coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
-coefs = setNames(coefs, c("term", "estimate", "ci_low", "ci_high"))
+aq = airquality
+aq$mnth = factor(month.abb[aq$Month], levels = month.abb)
+mod = lm(Temp ~ 0 + mnth, aq)
+coeftab = data.frame(
+  gsub("mnth", "", names(coef(mod))),
+  coef(mod),
+  confint(mod)
+  ) |>
+  setNames(c("term", "estimate", "ci_low", "ci_high"))
 
 with(
-  coefs,
+  coeftab,
   plot2(
     x = term, y = estimate,
     ymin = ci_low, ymax = ci_high,
     type = "pointrange",
-    pch = 19,
+    pch = 19, col = "dodgerblue",
+    grid = TRUE,
     main = "Effect on Temperature"
   )
 )
@@ -260,14 +270,16 @@ with(
 ### Customization
 
 Customizing your plots further is straightforward, whether that is done
-by changing global parameters or invoking `plot2` arguments. Here’s a
-quick penultimate example, where we change our point character and font
-family globally, add some transparency to our colour palette, and use
-Tufte-style floating axes with a background panel grid.
+by changing global parameters (via `par`) or invoking `plot2` arguments.
+Here’s a quick penultimate example, where we change our point character,
+tick labels, and font family globally, before adding some transparency
+to our colour palette, and use Tufte-style floating axes with a
+background panel grid.
 
 ``` r
 par(
-  pch    = 16,           # Filled points as default 
+  pch    = 16,           # Filled points as default
+  las    = 1,            # Horizontal axis tick labels
   family = "HersheySans" # Use a (built-in) Hershey font instead of Arial default
 )
 
@@ -277,21 +289,21 @@ plot2(
   type = "b",
   palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
   main = "Daily temperatures by month",
-  frame.plot = FALSE, grid = grid()
+  frame = FALSE, grid = TRUE
 )
 ```
 
 <img src="man/figures/README-hershey_plus-1.png" width="100%" />
 
-The use of `par` in the above example again underscores the
-correspondence with the base graphics system. Because `plot2` is
-effectively a convenience wrapper around base `plot`, any global
-elements that you have set for the latter should carry over to the
-former. For nice out-of-the-box themes, we recommend the **basetheme**
-package.
+At the risk of repeating ourselves, the use of `par` in the previous
+example again underscores the correspondence with the base graphics
+system. Because `plot2` is effectively a convenience wrapper around base
+`plot`, any global elements that you have set for the latter should
+carry over to the former. For nice out-of-the-box themes, we recommend
+the **basetheme** package.
 
 ``` r
-par(family = "", pch = 15) # revert/change global changes from above
+par(pch = 15, las = 0, family = "") # change/revert global changes from above
 
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.

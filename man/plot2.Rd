@@ -108,8 +108,8 @@ for lines, "b" for both points and lines, "c" for empty points joined by
 lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 and "h" for histogram-like vertical lines. "n" does not produce
 any points or lines.
-\item Additional plot2 types: "pointrange" draws point range plots and
-"errorbar" draws error bar plots.
+\item Additional plot2 types: "pointrange", "errorbar", and "ribbon" for
+drawing these respective plot types.
 }}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed

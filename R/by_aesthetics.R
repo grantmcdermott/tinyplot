@@ -76,7 +76,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
 by_pch = function(ngrps, type, pch=NULL) {
   
   no_pch = FALSE
-  if (!type %in% c("p", "b", "o", "pointrange")) {
+  if (!type %in% c("p", "b", "o", "pointrange", "errorbar")) {
     no_pch = TRUE
     pch = NULL
     
@@ -116,7 +116,7 @@ by_pch = function(ngrps, type, pch=NULL) {
 by_lty = function(ngrps, type, lty=NULL) {
 
   # don't care about line type, return NULL
-  if (!type %in% c("l", "b", "o", "c", "h", "s", "S")) {
+  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon")) {
     out = NULL
     
     # special "by" convenience keyword

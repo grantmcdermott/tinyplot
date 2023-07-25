@@ -1,4 +1,4 @@
-# plot2 0.0.2.9010 (development version)
+# plot2 0.0.2.9011 (development version)
 
 Breaking changes:
 
@@ -24,8 +24,8 @@ automatically adjusting plot characters and line types by groups. (#28
 "top!", "left!", "topright!", etc. Users also gain finer control over many other
 aspects of the legend via the new unified `legend` argument, including changing
 labels, turning of the legend title, and so on. (#34 @grantmcdermott) 
-- Add support for `type="pointrange"` and `type="errobar"` plots (#35
-@vincentarelbundock and #40 @grantmcdermott)
+- Add support for `"pointrange"`, `"errobar"`, and `"ribbon"` plot types. (#35
+@vincentarelbundock, #40 and #46 @grantmcdermott)
 - Support `grid = TRUE` as an alternative to `grid = grid()`. (#43
 @grantmcdermott)
 

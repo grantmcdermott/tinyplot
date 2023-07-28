@@ -338,7 +338,6 @@ plot2.default = function(
   } else {
     bg = rep(bg, ngrps)
   }
-  cat("\n", bg, "\n")
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)

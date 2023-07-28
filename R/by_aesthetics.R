@@ -62,14 +62,16 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
         )
     }
   }
-  
+
   cols = tryCatch(
     do.call(palette_fun, args),
     error = function(e) do.call(eval(palette), args) # catch for bespoke palette generating funcs
   )
-  
+
+  if (length(cols) > ngrps) cols = cols[1:ngrps]
+
   return(cols)
-  
+
 }
 
 

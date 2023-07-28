@@ -1,4 +1,11 @@
-# plot2 0.0.3.9000 (development version)
+# plot2 0.0.3.9001 (development version)
+
+New features:
+
+- Support for `cex` and `bg` arguments. The latter also permits the "by"
+convenience keyword similar to `lty` and `pch`. This is useful for plotting
+filled point characters (e.g., pch = 21), where you want a different colour for
+the fill and border. (#50 @grantmcdermott)
 
 # plot2 0.0.3
 

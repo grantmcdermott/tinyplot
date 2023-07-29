@@ -2,6 +2,9 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
   
   # palette = substitute(palette, env = parent.env(environment()))
   
+  # special "by" convenience keyword (will treat as NULL & handle grouping below)
+  if (!is.null(col) && length(col)==1 && col=="by") col = NULL
+
   if (is.null(col) && is.null(palette)) {
     col = seq_len(ngrps)
   }
@@ -62,14 +65,16 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
         )
     }
   }
-  
+
   cols = tryCatch(
     do.call(palette_fun, args),
     error = function(e) do.call(eval(palette), args) # catch for bespoke palette generating funcs
   )
-  
+
+  if (length(cols) > ngrps) cols = cols[1:ngrps]
+
   return(cols)
-  
+
 }
 
 

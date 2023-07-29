@@ -30,8 +30,10 @@ plot2(x, ...)
   palette = NULL,
   legend = NULL,
   pch = NULL,
-  col = NULL,
   lty = NULL,
+  col = NULL,
+  bg = NULL,
+  cex = 1,
   par_restore = FALSE,
   ymin = NULL,
   ymax = NULL,
@@ -198,15 +200,31 @@ argument, in which case the characters will automatically loop over the
 number groups. This automatic looping will begin at the global character
 value (i.e., \code{par("pch")}) and recycle as necessary.}
 
-\item{col}{plotting color. Character, integer, or vector of length equal to
-the number of categories in the \code{by} variable. See \code{col}.}
-
 \item{lty}{line type. Character, integer, or vector of length equal to the
 number of categories in the \code{by} variable. See \code{lty}. In addition, users
 can supply a special \code{lty = "by"} convenience argument, in which case the
 line type will automatically loop over the number groups. This automatic
 looping will begin at the global line type value (i.e., \code{par("lty")}) and
 recycle as necessary.}
+
+\item{col}{plotting color. Character, integer, or vector of length equal to
+the number of categories in the \code{by} variable. See \code{col}. Note that the
+default behaviour in \code{plot2} is to vary group colors along any variables
+declared in the \code{by} argument. Thus, specifying colors manually should not
+be necessary unless users wish to override the automatic colors produced by
+this grouping process. Typically, this would only be done if grouping
+features are deferred to some other graphical parameter (i.e., passing the
+"by" keyword to one of \code{pch}, \code{lty}, or \code{bg}; see below.)}
+
+\item{bg}{background (fill) color for the open plot symbols 21:25: see
+\code{points.default}. In addition, users can supply a special \code{bg = "by"}
+convenience argument, in which case the background color will inherit the
+automatic group coloring intended for the \code{col} parameter.}
+
+\item{cex}{character expansion. A numerical vector (can be a single value)
+giving the amount by which plotting characters and symbols should be scaled
+relative to the default. Note that NULL is equivalent to 1.0, while NA
+renders the characters invisible.}
 
 \item{par_restore}{a logical value indicating whether the \code{par} settings
 prior to calling \code{plot2} should be restored on exit. Defaults to FALSE,

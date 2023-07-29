@@ -30,7 +30,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Grant McDermott \email{grantmcd@uoregon.edu}
+\strong{Maintainer}: Grant McDermott \email{gmcd@amazon.com}
 
 Authors:
 \itemize{

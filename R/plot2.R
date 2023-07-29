@@ -90,20 +90,34 @@
 #'    specifying "none").
 #'    - A list or, equivalently, a dedicated `legend()` function with supported
 #'    legend arguments, e.g. "bty", "horiz", and so forth.
+#' @param col plotting color. Character, integer, or vector of length equal to
+#'   the number of categories in the `by` variable. See `col`. Note that the
+#'   default behaviour in `plot2` is to vary group colors along any variables
+#'   declared in the `by` argument. Thus, specifying colors manually should not
+#'   be necessary unless users wish to override the automatic colors produced by
+#'   this grouping process. Typically, this would only be done if grouping
+#'   features are deferred to some other graphical parameter (i.e., passing the
+#'   "by" keyword to one of `pch`, `lty`, or `bg`; see below.)
 #' @param pch plotting "character", i.e., symbol to use. Character, integer, or
 #'   vector of length equal to the number of categories in the `by` variable.
 #'   See `pch`. In addition, users can supply a special `pch = "by"` convenience
 #'   argument, in which case the characters will automatically loop over the
 #'   number groups. This automatic looping will begin at the global character
 #'   value (i.e., `par("pch")`) and recycle as necessary.
-#' @param col plotting color. Character, integer, or vector of length equal to
-#'   the number of categories in the `by` variable. See `col`.
 #' @param lty line type. Character, integer, or vector of length equal to the
 #'   number of categories in the `by` variable. See `lty`. In addition, users
 #'   can supply a special `lty = "by"` convenience argument, in which case the
 #'   line type will automatically loop over the number groups. This automatic
 #'   looping will begin at the global line type value (i.e., `par("lty")`) and
 #'   recycle as necessary.
+#' @param bg background (fill) color for the open plot symbols 21:25: see
+#'   `points.default`. In addition, users can supply a special `bg = "by"`
+#'   convenience argument, in which case the background color will inherit the
+#'   automatic group coloring intended for the `col` parameter.
+#' @param cex character expansion. A numerical vector (can be a single value)
+#'   giving the amount by which plotting characters and symbols should be scaled
+#'   relative to the default. Note that NULL is equivalent to 1.0, while NA
+#'   renders the characters invisible.
 #' @param par_restore a logical value indicating whether the `par` settings
 #'   prior to calling `plot2` should be restored on exit. Defaults to FALSE,
 #'   which makes it possible to add elements to the plot after it has been
@@ -256,8 +270,10 @@ plot2.default = function(
     palette = NULL,
     legend = NULL,
     pch = NULL,
-    col = NULL,
     lty = NULL,
+    col = NULL,
+    bg = NULL,
+    cex = 1,
     par_restore = FALSE,
     ymin = NULL,
     ymax = NULL,
@@ -316,7 +332,16 @@ plot2.default = function(
     ngrps = ngrps,
     col = col,
     palette = substitute(palette)
+  )
+  if (!is.null(bg) && bg == "by") {
+    bg = by_col(
+      ngrps = ngrps,
+      col = NULL,
+      palette = substitute(palette)
     )
+  } else {
+    bg = rep(bg, ngrps)
+  }
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
@@ -372,6 +397,14 @@ plot2.default = function(
   if (is.null(legend.args[["bty"]])) legend.args[["bty"]] = "n"
   if (is.null(legend.args[["horiz"]])) legend.args[["horiz"]] = FALSE
   if (is.null(legend.args[["xpd"]])) legend.args[["xpd"]] = NA
+  if (is.null(legend.args[["pt.bg"]])) legend.args[["pt.bg"]] = bg
+  if (
+    type %in% c("p", "pointrange", "errorbar") &&
+      (length(col) == 1 || length(cex) == 1) &&
+      is.null(legend.args[["pt.cex"]])
+  ) {
+    legend.args[["pt.cex"]] = cex
+  }
   
   if (legend.args[["x"]] != "none") {
     
@@ -591,10 +624,12 @@ plot2.default = function(
             x = split_data[[i]]$x,
             y = split_data[[i]]$y,
             col = col[i],
+            bg = bg[i],
             # type = type, ## rather hardcode "p" to avoid warning message about "pointrange"
             type = "p",
             pch = pch[i],
-            lty = lty[i]
+            lty = lty[i],
+            cex = cex
           )
         }
       )

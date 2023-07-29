@@ -91,12 +91,13 @@
 #'    - A list or, equivalently, a dedicated `legend()` function with supported
 #'    legend arguments, e.g. "bty", "horiz", and so forth.
 #' @param col plotting color. Character, integer, or vector of length equal to
-#'   the number of categories in the `by` variable. See `col`. Specifying colors
-#'   manually in `plot2` should not be necessary unless users wish to override
-#'   the automatic colors produced by the grouping process. Typically, this
-#'   would only be done if grouping characterists are deferred to some other
-#'   graphical parameter (i.e., passing the "by" keyword to one of `pch`, `lty`,
-#'   or `bg`; see below.)
+#'   the number of categories in the `by` variable. See `col`. Note that the
+#'   default behaviour in `plot2` is to vary group colors along any variables
+#'   declared in the `by` argument. Thus, specifying colors manually should not
+#'   be necessary unless users wish to override the automatic colors produced by
+#'   this grouping process. Typically, this would only be done if grouping
+#'   features are deferred to some other graphical parameter (i.e., passing the
+#'   "by" keyword to one of `pch`, `lty`, or `bg`; see below.)
 #' @param pch plotting "character", i.e., symbol to use. Character, integer, or
 #'   vector of length equal to the number of categories in the `by` variable.
 #'   See `pch`. In addition, users can supply a special `pch = "by"` convenience
@@ -113,7 +114,10 @@
 #'   `points.default`. In addition, users can supply a special `bg = "by"`
 #'   convenience argument, in which case the background color will inherit the
 #'   automatic group coloring intended for the `col` parameter.
-#' @param cex character expansion.
+#' @param cex character expansion. A numerical vector (can be a single value)
+#'   giving the amount by which plotting characters and symbols should be scaled
+#'   relative to the default. Note that NULL is equivalent to 1.0, while NA
+#'   renders the characters invisible.
 #' @param par_restore a logical value indicating whether the `par` settings
 #'   prior to calling `plot2` should be restored on exit. Defaults to FALSE,
 #'   which makes it possible to add elements to the plot after it has been
@@ -268,7 +272,7 @@ plot2.default = function(
     pch = NULL,
     lty = NULL,
     col = NULL,
-    bg = NA,
+    bg = NULL,
     cex = 1,
     par_restore = FALSE,
     ymin = NULL,
@@ -329,7 +333,7 @@ plot2.default = function(
     col = col,
     palette = substitute(palette)
   )
-  if (!is.na(bg) && bg == "by") {
+  if (!is.null(bg) && bg == "by") {
     bg = by_col(
       ngrps = ngrps,
       col = NULL,

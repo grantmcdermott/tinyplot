@@ -2,6 +2,9 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
   
   # palette = substitute(palette, env = parent.env(environment()))
   
+  # special "by" convenience keyword (will treat as NULL & handle grouping below)
+  if (!is.null(col) && length(col)==1 && col=="by") col = NULL
+
   if (is.null(col) && is.null(palette)) {
     col = seq_len(ngrps)
   }

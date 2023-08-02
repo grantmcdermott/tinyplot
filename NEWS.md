@@ -1,4 +1,4 @@
-# plot2 0.0.3.9001 (development version)
+# plot2 0.0.3.9002 (development version)
 
 New features:
 
@@ -6,6 +6,11 @@ New features:
 convenience keyword similar to `lty` and `pch`. This is useful for plotting
 filled point characters (e.g., pch = 21), where you want a different colour for
 the fill and border. (#50 @grantmcdermott)
+
+Bug fixes:
+
+- Y-label correctly prints if a function was used for the atomic plot method,
+e.g. `plot2(rnorm(100)`. (#52 etiennebacher)
 
 # plot2 0.0.3
 

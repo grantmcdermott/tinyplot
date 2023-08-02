@@ -281,14 +281,22 @@ plot2.default = function(
   
   dots = list(...)
   
+  # Captured deparsed expressions early, before x and y are evaluated
+  x_dep = deparse(substitute(x))
+  y_dep = if (is.null(y)) {
+    deparse(substitute(x))
+  } else {
+    deparse(substitute(y))
+  }
+  
   if (is.null(y)) {
     y = x
     x = seq_along(x)
     xlab = "Index"
-    }
+  }
   
-  if (is.null(xlab)) xlab = deparse(substitute(x))
-  if (is.null(ylab)) ylab = deparse(substitute(y))
+  if (is.null(xlab)) xlab = x_dep
+  if (is.null(ylab)) ylab = y_dep
     
   xlabs = NULL
   if (type %in% c("pointrange", "errorbar", "ribbon")) {

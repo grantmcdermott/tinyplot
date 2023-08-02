@@ -281,7 +281,7 @@ plot2.default = function(
   
   dots = list(...)
   
-  # Captured deparsed expressions early, before x and y are evaluated
+  # Capture deparsed expressions early, before x and y are evaluated
   x_dep = deparse(substitute(x))
   y_dep = if (is.null(y)) {
     deparse(substitute(x))

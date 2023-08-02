@@ -23,9 +23,15 @@ Authors@R:
       role = "aut",
       email = "Achim.Zeileis@R-project.org",
       comment = c(ORCID = "0000-0003-0918-3766")
-     )
+     ),
+    person(
+      given = "Etienne",
+      family = "Bacher",
+      role = "ctb",
+      email = "etienne.bacher@protonmail.com"
+    )
   )
-Description: Lightweight extension of the base R plot function, with support for
+Description: Lightweight extension of the base R plot system, with support for
       automatic grouping and legend printing, and several other enhancements.
 License: GPL (>= 2) 
 Depends:

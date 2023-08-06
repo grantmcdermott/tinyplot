@@ -40,3 +40,5 @@ f3 = function() {
   plot(1:10)
 }
 expect_snapshot_plot(f3, label = "par_restore_TRUE")
+
+dev.off()

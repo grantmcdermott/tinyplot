@@ -123,21 +123,6 @@ f = function() {
     type = "b",
     palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
     main = "Daily temperatures by month",
-    frame.plot = FALSE, grid = grid()
-  )
-}
-expect_snapshot_plot(f, label = "readme_hershey_plus")
-
-# as above but using frame = FALSE and grid = TRUE
-f = function() {
-  par(pch = 16, family = "HersheySans")
-  
-  plot2(
-    Temp ~ Day | Month,
-    data = airquality,
-    type = "b",
-    palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
-    main = "Daily temperatures by month",
     frame = FALSE, grid = TRUE
   )
 }

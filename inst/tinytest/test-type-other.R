@@ -25,5 +25,3 @@ expect_snapshot_plot(f, label = "type_s_group")
 
 f = function() plot2(Temp ~ Day | Month, airquality, type = "S")
 expect_snapshot_plot(f, label = "type_cap_s_group")
-
-dev.off()

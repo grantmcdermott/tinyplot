@@ -1,4 +1,4 @@
-# plot2 0.0.3.9002 (development version)
+# plot2 0.0.3.9003 (development version)
 
 New features:
 
@@ -11,6 +11,10 @@ Bug fixes:
 
 - Y-label correctly prints if a function was used for the atomic plot method,
 e.g. `plot2(rnorm(100)`. (#52 etiennebacher)
+- Ribbon plot types are now automatically ordered by the x variable (#54
+@grantmcdermott).
+- Interval plots like ribbons, errorbars, and pointranges are now correctly
+plotted even if a y variable isn't specified (#54 @grantmcdermott).
 
 # plot2 0.0.3
 

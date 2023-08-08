@@ -290,9 +290,18 @@ plot2.default = function(
   }
   
   if (is.null(y)) {
-    y = x
-    x = seq_along(x)
-    xlab = "Index"
+    ## Special catch for interval plots without a specified y-var
+    if (type %in% c("pointrange", "errorbar", "ribbon")) {
+      ymin_dep = deparse(substitute(ymin)) 
+      ymax_dep = deparse(substitute(ymax))
+      y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
+      y = rep(NA, length(x))
+      if (is.null(ylim)) ylim = range(c(ymin, ymax))
+    } else {
+      y = x
+      x = seq_along(x)
+      xlab = "Index"
+    }
   }
   
   if (is.null(xlab)) xlab = x_dep

@@ -310,6 +310,14 @@ plot2.default = function(
       names(xlabs) = xlvls
       x = as.integer(x)
     }
+    if (type == "ribbon") {
+      xord = order(x) 
+      x = x[xord]
+      y = y[xord]
+      ymin = ymin[xord]
+      ymax = ymax[xord]
+      rm(xord)
+    }
   }
   
   if (is.null(xlim)) xlim = range(x, na.rm = TRUE)

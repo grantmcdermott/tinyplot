@@ -281,13 +281,14 @@ plot2.default = function(
   
   dots = list(...)
   
-  # Capture deparsed expressions early, before x and y are evaluated
+  # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = deparse(substitute(x))
   y_dep = if (is.null(y)) {
     deparse(substitute(x))
   } else {
     deparse(substitute(y))
   }
+  by_dep = deparse(substitute(by))
   
   if (is.null(y)) {
     ## Special catch for interval plots without a specified y-var
@@ -320,7 +321,12 @@ plot2.default = function(
       x = as.integer(x)
     }
     if (type == "ribbon") {
-      xord = order(x) 
+      if (is.null(by)) {
+        xord = order(x) 
+      } else {
+        xord = order(by, x)
+        by = by[xord]
+      }
       x = x[xord]
       y = y[xord]
       ymin = ymin[xord]
@@ -415,7 +421,7 @@ plot2.default = function(
     legend.args = utils::modifyList(legend.args, largs, keep.null = TRUE)
   }
   ## Use `!exists` rather than `is.null` for title in case user specified no title
-  if (!exists("title", where = legend.args)) legend.args[["title"]] = deparse(substitute(by))
+  if (!exists("title", where = legend.args)) legend.args[["title"]] = by_dep
   if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = pch
   if (is.null(legend.args[["lty"]])) legend.args[["lty"]] = lty
   if (is.null(legend.args[["col"]])) legend.args[["col"]] = col

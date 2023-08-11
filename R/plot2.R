@@ -129,7 +129,12 @@
 #'   be calling `dev.off()` to reset all `par` settings to their defaults.)
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
-#' @param ymin,ymax minimum and maximum coordinates of the point range. Only used when `type="pointrange"`.
+#' @param ymin,ymax minimum and maximum coordinates of interval plot types. Only
+#'   used when the `type` argument is one of "pointrange", "errorbar", or
+#'   "ribbon".
+#' @param ribbon_alpha numeric factor modifying the opacity alpha of any ribbon
+#'   shading; typically in [0, 1]. Default value is 0.2. Only used when
+#'   `type = "ribbon"`.
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).
 #'   
@@ -279,6 +284,7 @@ plot2.default = function(
     par_restore = FALSE,
     ymin = NULL,
     ymax = NULL,
+    ribbon_alpha = 0.2,
     ...) {
   
   dots = list(...)
@@ -601,7 +607,7 @@ plot2.default = function(
           graphics::polygon(
             x = c(split_data[[i]]$x, rev(split_data[[i]]$x)),
             y = c(split_data[[i]]$ymin, rev(split_data[[i]]$ymax)),
-            col = adjustcolor(col[i], 0.2),
+            col = adjustcolor(col[i], ribbon_alpha),
             border = FALSE
           )
         }

@@ -37,6 +37,7 @@ plot2(x, ...)
   par_restore = FALSE,
   ymin = NULL,
   ymax = NULL,
+  ribbon_alpha = 0.2,
   ...
 )
 
@@ -69,7 +70,7 @@ plot2(x, ...)
 \method{plot2}{density}(
   x = NULL,
   by = NULL,
-  type = "l",
+  type = c("l", "ribbon"),
   xlim = NULL,
   ylim = NULL,
   main = NULL,
@@ -111,7 +112,9 @@ lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 and "h" for histogram-like vertical lines. "n" does not produce
 any points or lines.
 \item Additional plot2 types: "pointrange", "errorbar", and "ribbon" for
-drawing these respective plot types.
+drawing these interval plot types. (Note that specifying "ribbon" for
+objects of class \code{density} will yield a density plot with a shaded
+interior.)
 }}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
@@ -234,7 +237,13 @@ been altered to make space for the \code{plot2} legend. Users can opt out of
 this persistent behaviour by setting to TRUE instead. (Another option would
 be calling \code{dev.off()} to reset all \code{par} settings to their defaults.)}
 
-\item{ymin, ymax}{minimum and maximum coordinates of the point range. Only used when \code{type="pointrange"}.}
+\item{ymin, ymax}{minimum and maximum coordinates of interval plot types. Only
+used when the \code{type} argument is one of "pointrange", "errorbar", or
+"ribbon".}
+
+\item{ribbon_alpha}{numeric factor modifying the opacity alpha of any ribbon
+shading; typically in \link{0, 1}. Default value is 0.2. Only used when
+\code{type = "ribbon"}.}
 
 \item{formula}{a \code{formula} that may also include a grouping variable after a
 "|", such as \code{y ~ x | z}. Note that the \code{formula} and \code{x} arguments should

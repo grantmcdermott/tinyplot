@@ -30,7 +30,9 @@
 #'   and "h" for histogram-like vertical lines. "n" does not produce
 #'   any points or lines.
 #'   - Additional plot2 types: "pointrange", "errorbar", and "ribbon" for
-#'   drawing these respective plot types.
+#'   drawing these interval plot types. (Note that specifying "ribbon" for
+#'   objects of class `density` will yield a density plot with a shaded
+#'   interior.)
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -829,7 +831,7 @@ plot2.formula = function(
 plot2.density = function(
     x = NULL,
     by = NULL,
-    type = "l",
+    type = c("l", "ribbon"),
     xlim = NULL,
     ylim = NULL,
     # log = "",
@@ -848,6 +850,8 @@ plot2.density = function(
     par_restore = FALSE,
     ...
     ) {
+  
+  type = match.arg(type)
   
   object = x
   legend.args = list(x = NULL)
@@ -895,6 +899,12 @@ plot2.density = function(
       xlab = paste0("N = ", n, "   Joint Bandwidth = ", bw)
     }
   }
+  if (type=="ribbon") {
+    ymin = rep(0, length(y))
+    ymax = y
+  } else {
+    ymin = ymax = NULL
+  }
   
   ## axes range
   if (is.null(xlim)) xlim = range(x)
@@ -925,6 +935,8 @@ plot2.density = function(
     col = col,
     lty = lty,
     par_restore = par_restore,
+    ymin = ymin,
+    ymax = ymax,
     ...
     )
 

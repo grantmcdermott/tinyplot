@@ -444,6 +444,21 @@ plot2.default = function(
   ) {
     legend.args[["pt.cex"]] = cex
   }
+  if (type=="ribbon") {
+    if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = 22
+    if (is.null(legend.args[["pt.cex"]])) legend.args[["pt.cex"]] = 3.5
+    if (is.null(legend.args[["pt.lwd"]])) legend.args[["pt.lwd"]] = 0
+    if (is.null(legend.args[["pt.bg"]])) legend.args[["pt.bg"]] = adjustcolor(col, alpha = 0.2)
+    if (is.null(legend.args[["x.intersp"]])) {
+      if (isTRUE(legend.args[["horiz"]])) {
+        legend.args[["x.intersp"]] = 1
+      } else {
+        legend.args[["x.intersp"]] = 1.25
+      }
+    }
+    if (is.null(legend.args[["y.intersp"]])) legend.args[["y.intersp"]] = 1.25
+    if (is.null(legend.args[["seg.len"]])) legend.args[["seg.len"]] = 1.25
+  }
   
   if (legend.args[["x"]] != "none") {
     
@@ -526,6 +541,9 @@ plot2.default = function(
       if (!outer_bottom) legend.args[["x"]] = gsub("top!$", "bottom", legend.args[["x"]])
       
       legend.args[["horiz"]] = TRUE
+      
+      # Catch for horizontal ribbon legend that we might have missed above 
+      if (type=="ribbon" && isTRUE(legend.args[["horiz"]])) legend.args[["x.intersp"]] = .5
       
       lgnd = legend(
         0, 0,

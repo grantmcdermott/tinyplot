@@ -937,6 +937,11 @@ plot2.density = function(
   if (type=="ribbon") {
     ymin = rep(0, length(y))
     ymax = y
+    # set extra legend params to get bordered boxes with fill
+    legend.args[["x.intersp"]] = 1.25
+    legend.args[["lty"]] = 0
+    legend.args[["pt.lwd"]] = 1
+    # legend.args[["seg.len"]] = 2
   } else {
     ymin = ymax = NULL
   }

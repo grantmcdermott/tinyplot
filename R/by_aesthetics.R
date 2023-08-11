@@ -3,7 +3,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
   # palette = substitute(palette, env = parent.env(environment()))
   
   # special "by" convenience keyword (will treat as NULL & handle grouping below)
-  if (!is.null(col) && length(col)==1 && col=="by") col = NULL
+  if (!anyNA(col) && !is.null(col) && length(col)==1 && col=="by") col = NULL
 
   if (is.null(col) && is.null(palette)) {
     col = seq_len(ngrps)
@@ -15,7 +15,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
     } else if (length(col) != ngrps) {
       stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
     }
-    if (is.character(col)) {
+    if (anyNA(col) || is.character(col)) {
       return(col)
     }
   }

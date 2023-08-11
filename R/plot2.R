@@ -381,6 +381,13 @@ plot2.default = function(
   } else {
     bg = rep(bg, ngrps)
   }
+  if (type == "ribbon") {
+    if (!is.null(bg)) {
+      bg = adjustcolor(bg, ribbon_alpha)
+    } else if (!is.null(col)) {
+      bg = adjustcolor(col, ribbon_alpha)
+    }
+  }
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
@@ -448,7 +455,7 @@ plot2.default = function(
     if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = 22
     if (is.null(legend.args[["pt.cex"]])) legend.args[["pt.cex"]] = 3.5
     if (is.null(legend.args[["pt.lwd"]])) legend.args[["pt.lwd"]] = 0
-    if (is.null(legend.args[["pt.bg"]])) legend.args[["pt.bg"]] = adjustcolor(col, alpha = 0.2)
+    # if (is.null(legend.args[["pt.bg"]])) legend.args[["pt.bg"]] = adjustcolor(col, alpha = 0.2)
     if (is.null(legend.args[["x.intersp"]])) {
       if (isTRUE(legend.args[["horiz"]])) {
         legend.args[["x.intersp"]] = 1
@@ -625,7 +632,8 @@ plot2.default = function(
           graphics::polygon(
             x = c(split_data[[i]]$x, rev(split_data[[i]]$x)),
             y = c(split_data[[i]]$ymin, rev(split_data[[i]]$ymax)),
-            col = adjustcolor(col[i], ribbon_alpha),
+            # col = adjustcolor(col[i], ribbon_alpha),
+            col = bg[i],
             border = FALSE
           )
         }
@@ -871,11 +879,14 @@ plot2.density = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
+    bg = NULL,
     par_restore = FALSE,
     ...
     ) {
   
   type = match.arg(type)
+  ## override if bg = "by"
+  if (!is.null(bg)) type = "ribbon"
   
   object = x
   legend.args = list(x = NULL)
@@ -957,6 +968,7 @@ plot2.density = function(
     legend.args = legend.args,
     pch = pch,
     col = col,
+    bg = bg,
     lty = lty,
     par_restore = par_restore,
     ymin = ymin,

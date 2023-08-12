@@ -455,14 +455,6 @@ plot2.default = function(
     if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = 22
     if (is.null(legend.args[["pt.cex"]])) legend.args[["pt.cex"]] = 3.5
     if (is.null(legend.args[["pt.lwd"]])) legend.args[["pt.lwd"]] = 0
-    # if (is.null(legend.args[["pt.bg"]])) legend.args[["pt.bg"]] = adjustcolor(col, alpha = 0.2)
-    if (is.null(legend.args[["x.intersp"]])) {
-      if (isTRUE(legend.args[["horiz"]])) {
-        legend.args[["x.intersp"]] = 1
-      } else {
-        legend.args[["x.intersp"]] = 1.25
-      }
-    }
     if (is.null(legend.args[["y.intersp"]])) legend.args[["y.intersp"]] = 1.25
     if (is.null(legend.args[["seg.len"]])) legend.args[["seg.len"]] = 1.25
   }
@@ -549,8 +541,14 @@ plot2.default = function(
       
       legend.args[["horiz"]] = TRUE
       
-      # Catch for horizontal ribbon legend that we might have missed above 
-      if (type=="ribbon" && isTRUE(legend.args[["horiz"]])) legend.args[["x.intersp"]] = .5
+      # Catch for horizontal ribbon legend spacing
+      if (type=="ribbon" && isTRUE(legend.args[["horiz"]])) {
+        if (legend.args[["pt.lwd"]] == 1) {
+          legend.args[["x.intersp"]] = 1
+        } else {
+          legend.args[["x.intersp"]] = 0.5
+        }
+      }
       
       lgnd = legend(
         0, 0,
@@ -941,7 +939,6 @@ plot2.density = function(
     legend.args[["x.intersp"]] = 1.25
     legend.args[["lty"]] = 0
     legend.args[["pt.lwd"]] = 1
-    # legend.args[["seg.len"]] = 2
   } else {
     ymin = ymax = NULL
   }

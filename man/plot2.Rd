@@ -85,6 +85,7 @@ plot2(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
+  bg = NULL,
   par_restore = FALSE,
   ...
 )

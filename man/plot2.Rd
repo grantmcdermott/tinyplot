@@ -243,7 +243,7 @@ used when the \code{type} argument is one of "pointrange", "errorbar", or
 "ribbon".}
 
 \item{ribbon_alpha}{numeric factor modifying the opacity alpha of any ribbon
-shading; typically in \link{0, 1}. Default value is 0.2. Only used when
+shading; typically in \verb{[0, 1]}. Default value is 0.2. Only used when
 \code{type = "ribbon"}.}
 
 \item{formula}{a \code{formula} that may also include a grouping variable after a

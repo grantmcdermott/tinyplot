@@ -133,7 +133,7 @@
 #'   used when the `type` argument is one of "pointrange", "errorbar", or
 #'   "ribbon".
 #' @param ribbon_alpha numeric factor modifying the opacity alpha of any ribbon
-#'   shading; typically in [0, 1]. Default value is 0.2. Only used when
+#'   shading; typically in `[0, 1]`. Default value is 0.2. Only used when
 #'   `type = "ribbon"`.
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).

@@ -1,4 +1,4 @@
-# plot2 0.0.3.9003 (development version)
+# plot2 0.0.3.9004 (development version)
 
 New features:
 
@@ -6,6 +6,8 @@ New features:
 convenience keyword similar to `lty` and `pch`. This is useful for plotting
 filled point characters (e.g., pch = 21), where you want a different colour for
 the fill and border. (#50 @grantmcdermott)
+
+- Support for filled density plots. (#58 @grantmcdermott)
 
 Bug fixes:
 

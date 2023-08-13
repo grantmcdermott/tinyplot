@@ -30,7 +30,9 @@
 #'   and "h" for histogram-like vertical lines. "n" does not produce
 #'   any points or lines.
 #'   - Additional plot2 types: "pointrange", "errorbar", and "ribbon" for
-#'   drawing these respective plot types.
+#'   drawing these interval plot types. (Note that specifying "ribbon" for
+#'   objects of class `density` will yield a density plot with a shaded
+#'   interior.)
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -127,7 +129,12 @@
 #'   be calling `dev.off()` to reset all `par` settings to their defaults.)
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
-#' @param ymin,ymax minimum and maximum coordinates of the point range. Only used when `type="pointrange"`.
+#' @param ymin,ymax minimum and maximum coordinates of interval plot types. Only
+#'   used when the `type` argument is one of "pointrange", "errorbar", or
+#'   "ribbon".
+#' @param ribbon_alpha numeric factor modifying the opacity alpha of any ribbon
+#'   shading; typically in `[0, 1]`. Default value is 0.2. Only used when
+#'   `type = "ribbon"`.
 #' @param ... 	other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).
 #'   
@@ -277,6 +284,7 @@ plot2.default = function(
     par_restore = FALSE,
     ymin = NULL,
     ymax = NULL,
+    ribbon_alpha = 0.2,
     ...) {
   
   dots = list(...)
@@ -373,6 +381,13 @@ plot2.default = function(
   } else {
     bg = rep(bg, ngrps)
   }
+  if (type == "ribbon") {
+    if (!is.null(bg)) {
+      bg = adjustcolor(bg, ribbon_alpha)
+    } else if (!is.null(col)) {
+      bg = adjustcolor(col, ribbon_alpha)
+    }
+  }
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
@@ -435,6 +450,13 @@ plot2.default = function(
       is.null(legend.args[["pt.cex"]])
   ) {
     legend.args[["pt.cex"]] = cex
+  }
+  if (type=="ribbon") {
+    if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = 22
+    if (is.null(legend.args[["pt.cex"]])) legend.args[["pt.cex"]] = 3.5
+    if (is.null(legend.args[["pt.lwd"]])) legend.args[["pt.lwd"]] = 0
+    if (is.null(legend.args[["y.intersp"]])) legend.args[["y.intersp"]] = 1.25
+    if (is.null(legend.args[["seg.len"]])) legend.args[["seg.len"]] = 1.25
   }
   
   if (legend.args[["x"]] != "none") {
@@ -519,6 +541,15 @@ plot2.default = function(
       
       legend.args[["horiz"]] = TRUE
       
+      # Catch for horizontal ribbon legend spacing
+      if (type=="ribbon" && isTRUE(legend.args[["horiz"]])) {
+        if (legend.args[["pt.lwd"]] == 1) {
+          legend.args[["x.intersp"]] = 1
+        } else {
+          legend.args[["x.intersp"]] = 0.5
+        }
+      }
+      
       lgnd = legend(
         0, 0,
         bty    = legend.args[["n"]],
@@ -599,7 +630,8 @@ plot2.default = function(
           graphics::polygon(
             x = c(split_data[[i]]$x, rev(split_data[[i]]$x)),
             y = c(split_data[[i]]$ymin, rev(split_data[[i]]$ymax)),
-            col = adjustcolor(col[i], 0.2),
+            # col = adjustcolor(col[i], ribbon_alpha),
+            col = bg[i],
             border = FALSE
           )
         }
@@ -829,7 +861,7 @@ plot2.formula = function(
 plot2.density = function(
     x = NULL,
     by = NULL,
-    type = "l",
+    type = c("l", "ribbon"),
     xlim = NULL,
     ylim = NULL,
     # log = "",
@@ -845,9 +877,14 @@ plot2.density = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
+    bg = NULL,
     par_restore = FALSE,
     ...
     ) {
+  
+  type = match.arg(type)
+  ## override if bg = "by"
+  if (!is.null(bg)) type = "ribbon"
   
   object = x
   legend.args = list(x = NULL)
@@ -895,6 +932,16 @@ plot2.density = function(
       xlab = paste0("N = ", n, "   Joint Bandwidth = ", bw)
     }
   }
+  if (type=="ribbon") {
+    ymin = rep(0, length(y))
+    ymax = y
+    # set extra legend params to get bordered boxes with fill
+    legend.args[["x.intersp"]] = 1.25
+    legend.args[["lty"]] = 0
+    legend.args[["pt.lwd"]] = 1
+  } else {
+    ymin = ymax = NULL
+  }
   
   ## axes range
   if (is.null(xlim)) xlim = range(x)
@@ -923,8 +970,11 @@ plot2.density = function(
     legend.args = legend.args,
     pch = pch,
     col = col,
+    bg = bg,
     lty = lty,
     par_restore = par_restore,
+    ymin = ymin,
+    ymax = ymax,
     ...
     )
 

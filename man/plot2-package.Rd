@@ -38,5 +38,10 @@ Authors:
   \item Achim Zeileis \email{Achim.Zeileis@R-project.org} (\href{https://orcid.org/0000-0003-0918-3766}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item Etienne Bacher \email{etienne.bacher@protonmail.com} [contributor]
+}
+
 }
 \keyword{internal}

@@ -38,6 +38,7 @@ plot2(x, ...)
   ymin = NULL,
   ymax = NULL,
   ribbon_alpha = 0.2,
+  add = FALSE,
   ...
 )
 
@@ -252,6 +253,10 @@ not be specified in the same call.}
 
 \item{subset, na.action, drop.unused.levels}{arguments passed to \code{model.frame}
 when extracting the data from \code{formula} and \code{data}.}
+
+\item{logical.}{If TRUE, then elements are added to the current plot rather
+than drawing a new plot window. Note that the automatic legend for the
+added elements will be turned off.}
 }
 \description{
 Extends base R's

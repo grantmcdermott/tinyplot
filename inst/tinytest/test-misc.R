@@ -28,3 +28,18 @@ f = function() {
   plot2(Temp ~ Day, data = airquality, log = "yx")
 } 
 expect_snapshot_plot(f, label = "arg_log_yx")
+
+f = function() {
+  par(mfrow = c(1, 1))
+  pred = predict(lm(mpg~wt+factor(cyl),mtcars), interval = "confidence")
+  m = cbind(mtcars, pred)
+  with(
+    m,
+    plot2(wt, fit, ymin = lwr, ymax = upr, by = cyl, type = "ribbon")
+  )
+  with(
+    m,
+    plot2(wt, mpg, by = cyl, pch = 19, add = TRUE)
+  )
+}
+expect_snapshot_plot(f, label = "addTRUE")

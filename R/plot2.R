@@ -135,10 +135,10 @@
 #' @param ribbon_alpha numeric factor modifying the opacity alpha of any ribbon
 #'   shading; typically in `[0, 1]`. Default value is 0.2. Only used when
 #'   `type = "ribbon"`.
-#' @param logical. If TRUE, then elements are added to the current plot rather
+#' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
-#' @param ... 	other `graphical` parameters (see `par` and also the "Details"
+#' @param ... other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).
 #'   
 #' @importFrom grDevices adjustcolor palette palette.colors palette.pals hcl.colors hcl.pals

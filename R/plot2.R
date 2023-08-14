@@ -135,7 +135,10 @@
 #' @param ribbon_alpha numeric factor modifying the opacity alpha of any ribbon
 #'   shading; typically in `[0, 1]`. Default value is 0.2. Only used when
 #'   `type = "ribbon"`.
-#' @param ... 	other `graphical` parameters (see `par` and also the "Details"
+#' @param add logical. If TRUE, then elements are added to the current plot rather
+#'   than drawing a new plot window. Note that the automatic legend for the
+#'   added elements will be turned off.
+#' @param ... other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).
 #'   
 #' @importFrom grDevices adjustcolor palette palette.colors palette.pals hcl.colors hcl.pals
@@ -285,9 +288,12 @@ plot2.default = function(
     ymin = NULL,
     ymax = NULL,
     ribbon_alpha = 0.2,
+    add = FALSE,
     ...) {
   
   dots = list(...)
+  
+  if (isTRUE(add)) legend = FALSE
   
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = deparse(substitute(x))
@@ -581,7 +587,7 @@ plot2.default = function(
     
     do.call("legend", legend.args)
     
-  } else if(legend.args[["x"]]=="none") {
+  } else if(legend.args[["x"]]=="none" && isFALSE(add)) {
     
     plot.new()
     
@@ -597,28 +603,51 @@ plot2.default = function(
   # )
   ## Solution: Only pass on relevant args using name checking and do.call.
   ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
-  pdots = dots[names(dots) %in% names(formals(graphics::plot.default))]
-  do.call(
-    "plot.window",
-    c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
-  )
-  
-  # axes, plot.frame and grid
-  if (axes) {
-    if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
-      axis(1, at = xlabs, labels = names(xlabs))
-    } else {
-      axis(1)
+  if (isFALSE(add)) {
+    pdots = dots[names(dots) %in% names(formals(graphics::plot.default))]
+    do.call(
+      "plot.window",
+      c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
+    )
+    
+    # axes, plot.frame and grid
+    if (isTRUE(axes)) {
+      if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+        axis(1, at = xlabs, labels = names(xlabs))
+      } else {
+        axis(1)
+      }
+      axis(2)
     }
-    axis(2)
-  }
-  if (frame.plot) box()
-  if (!is.null(grid)) {
-    if (is.logical(grid)) {
-      if (isTRUE(grid)) grid()
-    } else {
-      grid
+    if (frame.plot) box()
+    if (!is.null(grid)) {
+      if (is.logical(grid)) {
+        if (isTRUE(grid)) grid()
+      } else {
+        grid
+      }
     }
+    
+    
+    # Titles. Note that we include a special catch for the main title if legend is
+    # "top!" (and main is specified in the first place).
+    if (is.null(main) || is.null(outer_bottom) || isTRUE(outer_bottom)) {
+      title(
+        xlab = xlab,
+        ylab = ylab,
+        main = main,
+        sub = sub
+      )
+    } else {
+      title(
+        xlab = xlab,
+        ylab = ylab,
+        sub = sub
+      )
+      # Bump main up to make space for the legend beneath it
+      title(main = main, line = 5, xpd = NA)
+    }
+      
   }
 
   # polygons before lines
@@ -718,24 +747,6 @@ plot2.default = function(
     stop("`type` argument not supported.", call. = FALSE)
   }
 
-  # Titles. Note that we include a special catch for the main title if legend is
-  # "top!" (and main is specified in the first place).
-  if (is.null(main) || is.null(outer_bottom) || isTRUE(outer_bottom)) {
-    title(
-      xlab = xlab,
-      ylab = ylab,
-      main = main,
-      sub = sub
-    )
-  } else {
-    title(
-      xlab = xlab,
-      ylab = ylab,
-      sub = sub
-    )
-    # Bump main up to make space for the legend beneath it
-    title(main = main, line = 5, xpd = NA)
-  }
   
   
   if (par_restore) {

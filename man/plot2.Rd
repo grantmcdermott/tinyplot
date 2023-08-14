@@ -38,6 +38,7 @@ plot2(x, ...)
   ymin = NULL,
   ymax = NULL,
   ribbon_alpha = 0.2,
+  add = FALSE,
   ...
 )
 
@@ -245,6 +246,10 @@ used when the \code{type} argument is one of "pointrange", "errorbar", or
 \item{ribbon_alpha}{numeric factor modifying the opacity alpha of any ribbon
 shading; typically in \verb{[0, 1]}. Default value is 0.2. Only used when
 \code{type = "ribbon"}.}
+
+\item{add}{logical. If TRUE, then elements are added to the current plot rather
+than drawing a new plot window. Note that the automatic legend for the
+added elements will be turned off.}
 
 \item{formula}{a \code{formula} that may also include a grouping variable after a
 "|", such as \code{y ~ x | z}. Note that the \code{formula} and \code{x} arguments should

@@ -800,12 +800,14 @@ plot2.formula = function(
 
   ## convert y ~ x | z to y ~ x + z for standard formula parsing
   if (!inherits(formula, "formula")) formula = as.formula(formula)
-  if (length(formula[[3L]]) == 3L) {
-    if (formula[[3L]][[1L]] == as.name("|")) {
-      formula[[3L]][[1L]] = as.name("+")
+  ## catch for one-side formula
+  if (length(formula) == 2L) fml_rhs = 2L else fml_rhs = 3L
+  if (length(formula[[fml_rhs]]) == 3L) {
+    if (formula[[fml_rhs]][[1L]] == as.name("|")) {
+      formula[[fml_rhs]][[1L]] = as.name("+")
     }
   }
-  
+
   # placeholder for legend title
   legend.args = list(x = NULL)
 
@@ -816,37 +818,58 @@ plot2.formula = function(
   ## need stats:: for non-standard evaluation
   m[[1L]] = quote(stats::model.frame)
   mf = eval.parent(m)
-  if (NCOL(mf) < 2L) {
-    stop("plot formula should specify exactly at least two variables")
+  
+  if (fml_rhs == 2L) {
+    min_cols = 1L
+    min_col_string = "one-sided plot formula should specify at least one variable"
+    yloc = NULL
+    xloc = 1L
+    yxloc = 1L
+    byloc = 2L
+  } else {
+    min_cols = 2L
+    min_col_string = "plot formula should specify at least two variables"
+    yloc = 1L
+    xloc = 2L
+    yxloc = 1L:2L
+    byloc = 3L
+  }
+  if (NCOL(mf) < min_cols) {
+    stop(min_col_string)
   } 
-  y = mf[,1L]
-  x = mf[,2L]
+  if (!is.null(yloc)) y = mf[, 1L] else y = NULL
+  x = mf[, xloc]
   by = bylab = NULL
-  if (NCOL(mf) == 3L) {
-    by = mf[,3L]
-    bylab = names(mf)[3L]
+  if (NCOL(mf) == byloc) {
+    by = mf[,byloc]
+    bylab = names(mf)[byloc]
     legend.args[["title"]] = bylab
     if (!inherits(by, "factor")) {
       by = as.factor(by)
     }
-  } else if (NCOL(mf) > 3L) {
-    by = do.call("interaction", mf[, -(1L:2L)])
+  } else if (NCOL(mf) > byloc) {
+    by = do.call("interaction", mf[, -yxloc])
     bylab = sprintf("interaction(%s)", paste(names(mf)[-(1L:2L)], collapse = ", "))
     legend.args[["title"]] = bylab
   }
 
   ## nice axis and legend labels
-  if (is.null(ylab)) ylab = names(mf)[1L]
-  if (is.null(xlab)) xlab = names(mf)[2L]
+  if (fml_rhs == 2L) {
+    if (is.null(ylab)) ylab = names(mf)[xloc]
+    if (is.null(xlab)) xlab = "Index"
+  } else {
+    if (is.null(ylab)) ylab = names(mf)[yloc]
+    if (is.null(xlab)) xlab = names(mf)[xloc]
+  }
   
   plot2.default(
-    x = x, y = y, by = by, 
+    x = x, y = y, by = by,
     data = data,
     type = type,
     xlim = xlim,
     ylim = ylim,
     # log = "",
-    main = main, 
+    main = main,
     sub = sub,
     xlab = xlab,
     ylab = ylab,

@@ -1,0 +1,28 @@
+
+### Basic information
+site_name: plot2
+
+### Repo information
+repo_url: https://github.com/grantmcdermott/plot2
+repo_name: plot2
+
+### Navigation tree
+nav:
+  - Home: README.md
+  - Changelog: NEWS.md
+  - Reference: reference.md
+
+theme:
+  name: material
+  font:
+    text: Roboto
+  palette:
+    - media: '(prefers-color-scheme: light)'
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode

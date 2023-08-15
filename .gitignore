@@ -34,10 +34,11 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
-docs
 
 README.html
 
 # tinysnapshot extras
 inst/tinytest/_tinysnapshot_OLD/
 inst/tinytest/_tinysnapshot_review/
+
+docs/site

@@ -798,10 +798,12 @@ plot2.formula = function(
     }
   }
 
-  ## convert y ~ x | z to y ~ x + z for standard formula parsing
+  ## catch one-sided formula ~ x or ~ x | z with no "y" variable
   if (!inherits(formula, "formula")) formula = as.formula(formula)
-  ## catch for one-side formula
-  if (length(formula) == 2L) fml_rhs = 2L else fml_rhs = 3L
+  no_y = length(formula) == 2L
+  fml_rhs = if (no_y) 2L else 3L
+
+  ## convert y ~ x | z to y ~ x + z for standard formula parsing
   if (length(formula[[fml_rhs]]) == 3L) {
     if (formula[[fml_rhs]][[1L]] == as.name("|")) {
       formula[[fml_rhs]][[1L]] = as.name("+")
@@ -811,7 +813,7 @@ plot2.formula = function(
   # placeholder for legend title
   legend.args = list(x = NULL)
 
-  ## extract x, y, by (if any) from formula
+  ## set up model frame
   m = match.call(expand.dots = FALSE)
   m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
   m$formula = formula
@@ -819,47 +821,38 @@ plot2.formula = function(
   m[[1L]] = quote(stats::model.frame)
   mf = eval.parent(m)
   
-  if (fml_rhs == 2L) {
-    min_cols = 1L
-    min_col_string = "one-sided plot formula should specify at least one variable"
-    yloc = NULL
-    xloc = 1L
-    yxloc = 1L
-    byloc = 2L
+  ## extract variables: x, y (if any), by (if any)
+  if (no_y) {
+    y_loc = NULL
+    x_loc = 1L
   } else {
-    min_cols = 2L
-    min_col_string = "plot formula should specify at least two variables"
-    yloc = 1L
-    xloc = 2L
-    yxloc = 1L:2L
-    byloc = 3L
+    y_loc = 1L
+    x_loc = 2L
   }
-  if (NCOL(mf) < min_cols) {
-    stop(min_col_string)
-  } 
-  if (!is.null(yloc)) y = mf[, 1L] else y = NULL
-  x = mf[, xloc]
-  by = bylab = NULL
-  if (NCOL(mf) == byloc) {
-    by = mf[,byloc]
-    bylab = names(mf)[byloc]
+  if (NCOL(mf) < x_loc) stop("formula should specify at least one variable on the right-hand side")
+  y = if (no_y) NULL else mf[, y_loc]
+  x = mf[, x_loc]
+  by_loc <- x_loc + 1L
+  if (NCOL(mf) < by_loc) {
+    by = bylab = NULL  
+  } else if (NCOL(mf) == by_loc) {
+    by = mf[, by_loc]
+    bylab = names(mf)[by_loc]
     legend.args[["title"]] = bylab
-    if (!inherits(by, "factor")) {
-      by = as.factor(by)
-    }
-  } else if (NCOL(mf) > byloc) {
-    by = do.call("interaction", mf[, -yxloc])
-    bylab = sprintf("interaction(%s)", paste(names(mf)[-(1L:2L)], collapse = ", "))
+    if (!inherits(by, "factor")) by = as.factor(by)
+  } else if (NCOL(mf) > by_loc) {
+    by = do.call("interaction", mf[, -c(y_loc, x_loc)])
+    bylab = sprintf("interaction(%s)", paste(names(mf)[-c(y_loc, x_loc)], collapse = ", "))
     legend.args[["title"]] = bylab
   }
 
   ## nice axis and legend labels
-  if (fml_rhs == 2L) {
-    if (is.null(ylab)) ylab = names(mf)[xloc]
+  if (no_y) {
+    if (is.null(ylab)) ylab = names(mf)[x_loc]
     if (is.null(xlab)) xlab = "Index"
   } else {
-    if (is.null(ylab)) ylab = names(mf)[yloc]
-    if (is.null(xlab)) xlab = names(mf)[xloc]
+    if (is.null(ylab)) ylab = names(mf)[y_loc]
+    if (is.null(xlab)) xlab = names(mf)[x_loc]
   }
   
   plot2.default(

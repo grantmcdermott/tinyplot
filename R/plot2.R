@@ -303,7 +303,27 @@ plot2.default = function(
     deparse(substitute(y))
   }
   by_dep = deparse(substitute(by))
-  
+
+  ## Catch for density type: recycle through plot.density
+  if (type == "density") {
+    fargs = mget(ls(environment(), sorted = FALSE))
+    fargs = modifyList(fargs, dots)
+    fargs$type = "l"
+    if (is.null(main) && is.null(y)) {
+      if (!is.null(ylab)) {
+        fargs$main = paste0("density.default(x = ", ylab, ")")
+      } else {
+        fargs$main = paste0("density.default(x = ", y_dep, ")")
+      }
+    }
+    ## Catch for atomic density type to avoid "by" as legend title
+    if (is.null(fargs[["legend.args"]][["title"]])) {
+      fargs[["legend.args"]][["title"]] = by_dep
+    }
+    fargs$y = fargs$ymin = fargs$ymax = fargs$ylab  = fargs$xlab = NULL
+    return(do.call(plot2.density, args = fargs))
+  }
+
   if (is.null(y)) {
     ## Special catch for interval plots without a specified y-var
     if (type %in% c("pointrange", "errorbar", "ribbon")) {
@@ -907,17 +927,24 @@ plot2.density = function(
     bg = NULL,
     par_restore = FALSE,
     ...
-    ) {
-  
+  ) {
+
   type = match.arg(type)
   ## override if bg = "by"
   if (!is.null(bg)) type = "ribbon"
-  
-  object = x
-  legend.args = list(x = NULL)
-  # Grab by label to pass on legend title to plot2.default
-  legend.args[["title"]] = deparse(substitute(by))
-  
+
+  if (inherits(x, "density")) {
+    object = x
+    legend.args = list(x = NULL)
+    # Grab by label to pass on legend title to plot2.default
+    legend.args[["title"]] = deparse(substitute(by))
+  } else {
+    ## An internal catch for non-density objects that were forcibly
+    ## passed to plot2.density (e.g., via a one-side formula)
+    object = density(x)
+    legend.args = list(...)[["legend.args"]]
+  }
+
   if (is.null(by)) {
     x = object$x
     y = object$y

@@ -112,7 +112,7 @@
 #'   looping will begin at the global line type value (i.e., `par("lty")`) and
 #'   recycle as necessary.
 #' @param bg background fill color for the open plot symbols 21:25 (see
-#'   `points.default`), as well as ribbon plots types. For the latter
+#'   `points.default`), as well as ribbon plot types. For the latter
 #'   group---including filled density plots---an automatic alpha transparency
 #'   adjustment will be applied (see the `ribbon_alpha` argument further below).
 #'   Users can also supply a special `bg = "by"` convenience argument, in which

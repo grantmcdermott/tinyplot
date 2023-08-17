@@ -315,13 +315,9 @@ plot2.default = function(
     fargs = mget(ls(environment(), sorted = FALSE))
     fargs = modifyList(fargs, dots)
     fargs$type = "l"
-    if (is.null(main) && is.null(y)) {
-      if (!is.null(ylab)) {
-        fargs$main = paste0("density.default(x = ", ylab, ")")
-      } else {
-        fargs$main = paste0("density.default(x = ", y_dep, ")")
-      }
-    }
+    # explicitly turn off `default.density(x = ...)` title for
+    # type = "density" plots (to make consistent with regular plot)
+    if (is.null(fargs$main)) fargs$main = NA
     ## Catch for atomic density type to avoid "by" as legend title
     if (is.null(fargs[["legend.args"]][["title"]])) {
       fargs[["legend.args"]][["title"]] = by_dep

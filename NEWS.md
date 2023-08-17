@@ -1,4 +1,4 @@
-# plot2 0.0.3.9006 (development version)
+# plot2 0.0.3.9007 (development version)
 
 New features:
 
@@ -11,6 +11,9 @@ the fill and border. (#50 @grantmcdermott)
 existing plot window. (#60 @grantmcdermott)
 - Support for one-sided formulas, e.g. `plot2(~ Temp | Month, airquality)`. (#62
 @grantmcdermott and @zeileis)
+- Support for `plot2(x, type = "density")` as an alternative to
+`plot2(density(x))`. Works for both the atomic and one-sided formula methods.
+(#66 @grantmcdermott)
 
 Bug fixes:
 

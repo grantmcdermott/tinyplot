@@ -988,7 +988,7 @@ plot2.density = function(
       xlab = paste0("N = ", n, "   Joint Bandwidth = ", bw)
     }
   }
-  if (type=="ribbon") {
+  if (type == "ribbon") {
     ymin = rep(0, length(y))
     ymax = y
     # set extra legend params to get bordered boxes with fill

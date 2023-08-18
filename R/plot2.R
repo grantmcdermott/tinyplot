@@ -350,6 +350,12 @@ plot2.default = function(
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
     
+  if (type == "area") {
+    ymax = y
+    ymin = rep.int(0, length(y))
+    type = "ribbon"
+  }
+
   xlabs = NULL
   if (type %in% c("pointrange", "errorbar", "ribbon")) {
     if (is.character(x)) x = as.factor(x)
@@ -375,12 +381,6 @@ plot2.default = function(
       ymax = ymax[xord]
       rm(xord)
     }
-  }
-
-  if (type == "area") {
-    ymax = y
-    ymin = rep.int(0, length(y))
-    type = "ribbon"
   }
 
   if (is.null(xlim)) xlim = range(x, na.rm = TRUE)

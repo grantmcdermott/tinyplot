@@ -314,6 +314,10 @@ plot2.default = function(
   if (type == "density") {
     fargs = mget(ls(environment(), sorted = FALSE))
     fargs = modifyList(fargs, dots)
+    if (!is.null(fargs[["y"]])) {
+      fargs[["y"]] = NULL
+      message("\nNote: A `y` argument has been supplied, but will be ignored for density plots.\n")
+    }
     fargs$type = "l"
     # explicitly turn off `default.density(x = ...)` title for
     # type = "density" plots (to make consistent with regular plot)

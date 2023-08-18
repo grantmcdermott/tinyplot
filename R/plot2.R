@@ -328,6 +328,12 @@ plot2.default = function(
     if (is.null(fargs[["legend.args"]][["title"]])) {
       fargs[["legend.args"]][["title"]] = by_dep
     }
+    ## Another catch for bespoke legend position (if originally passed via the formula method)
+    if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend.args"]])) {
+      if (names(fargs[["legend"]])[1] == "") names(fargs[["legend"]])[1] = "x"
+      fargs[["legend.args"]] = modifyList(fargs[["legend"]], fargs[["legend.args"]])
+      fargs[["legend"]] = NULL
+    }
     fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
     return(do.call(plot2.density, args = fargs))
   }
@@ -335,7 +341,7 @@ plot2.default = function(
   if (is.null(y)) {
     ## Special catch for interval plots without a specified y-var
     if (type %in% c("pointrange", "errorbar", "ribbon")) {
-      ymin_dep = deparse(substitute(ymin)) 
+      ymin_dep = deparse(substitute(ymin))
       ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))

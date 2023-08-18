@@ -100,7 +100,7 @@ of the same length.}
 \item{...}{other \code{graphical} parameters (see \code{par} and also the "Details"
 section of \code{plot}).}
 
-\item{by}{the grouping variable that you want to categorize (i.e., colour)
+\item{by}{the grouping variable(s) that you want to categorize (i.e., colour)
 the plot by.}
 
 \item{data}{a data.frame (or list) from which the variables in formula
@@ -113,10 +113,8 @@ for lines, "b" for both points and lines, "c" for empty points joined by
 lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 and "h" for histogram-like vertical lines. "n" does not produce
 any points or lines.
-\item Additional plot2 types: "pointrange", "errorbar", and "ribbon" for
-drawing these interval plot types. (Note that specifying "ribbon" for
-objects of class \code{density} will yield a density plot with a shaded
-interior.)
+\item Additional plot2 types: "density" for drawing density plots, and
+"pointrange", "errorbar" or "ribbon" for drawing interval plots.
 }}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
@@ -221,10 +219,16 @@ this grouping process. Typically, this would only be done if grouping
 features are deferred to some other graphical parameter (i.e., passing the
 "by" keyword to one of \code{pch}, \code{lty}, or \code{bg}; see below.)}
 
-\item{bg}{background (fill) color for the open plot symbols 21:25: see
-\code{points.default}. In addition, users can supply a special \code{bg = "by"}
-convenience argument, in which case the background color will inherit the
-automatic group coloring intended for the \code{col} parameter.}
+\item{bg}{background fill color for the open plot symbols 21:25 (see
+\code{points.default}), as well as ribbon plots types. For the latter
+group---including filled density plots---an automatic alpha transparency
+adjustment will be applied (see the \code{ribbon_alpha} argument further below).
+Users can also supply a special \code{bg = "by"} convenience argument, in which
+case the background fill will inherit the automatic group coloring
+intended for the \code{col} argument. Note that this grouped inheritance will
+persist even if the \code{col} defaults are themselves overridden. For example,
+\code{plot2(y ~ x | z, data = fakedata, pch = 22, col = "blue", bg = "by")}
+will yield filled squares with a blue border.}
 
 \item{cex}{character expansion. A numerical vector (can be a single value)
 giving the amount by which plotting characters and symbols should be scaled
@@ -245,15 +249,17 @@ used when the \code{type} argument is one of "pointrange", "errorbar", or
 
 \item{ribbon_alpha}{numeric factor modifying the opacity alpha of any ribbon
 shading; typically in \verb{[0, 1]}. Default value is 0.2. Only used when
-\code{type = "ribbon"}.}
+\code{type = "ribbon"}, or when the \code{bg} fill argument is specified in a density
+plot (since filled density plots are converted to ribbon plots internally).}
 
 \item{add}{logical. If TRUE, then elements are added to the current plot rather
 than drawing a new plot window. Note that the automatic legend for the
 added elements will be turned off.}
 
-\item{formula}{a \code{formula} that may also include a grouping variable after a
-"|", such as \code{y ~ x | z}. Note that the \code{formula} and \code{x} arguments should
-not be specified in the same call.}
+\item{formula}{a \code{formula} that optionally includes grouping variable(s)
+after a vertical bar, e.g. \code{y ~ x | z}. One-sided formulae are also
+permitted, e.g. \code{~ y | z}. Note that the \code{formula} and \code{x} arguments
+should not be specified in the same call.}
 
 \item{subset, na.action, drop.unused.levels}{arguments passed to \code{model.frame}
 when extracting the data from \code{formula} and \code{data}.}
@@ -266,7 +272,7 @@ different categories of a dataset in a single function call and highlight
 these categories (groups) using modern colour palettes. Coincident with
 this grouping support, \code{plot2} also produces automatic legends with scope
 for further customization. While the package also offers several other
-minor enhancements, it tries as far as possible to be a drop-in replacement
+enhancements, it tries as far as possible to be a drop-in replacement
 for the equivalent base plot function. Users should generally be able to
 swap a valid \code{plot} call with \code{plot2} without any changes to the output.
 }

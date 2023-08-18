@@ -7,7 +7,7 @@
 #'   these categories (groups) using modern colour palettes. Coincident with
 #'   this grouping support, `plot2` also produces automatic legends with scope
 #'   for further customization. While the package also offers several other
-#'   minor enhancements, it tries as far as possible to be a drop-in replacement
+#'   enhancements, it tries as far as possible to be a drop-in replacement
 #'   for the equivalent base plot function. Users should generally be able to
 #'   swap a valid `plot` call with `plot2` without any changes to the output.
 #' 
@@ -16,11 +16,12 @@
 #'   plot. Any reasonable way of defining the coordinates is acceptable. See
 #'   the function xy.coords for details. If supplied separately, they must be
 #'   of the same length.
-#' @param by the grouping variable that you want to categorize (i.e., colour)
+#' @param by the grouping variable(s) that you want to categorize (i.e., colour)
 #'   the plot by.
-#' @param formula a `formula` that may also include a grouping variable after a
-#'   "|", such as `y ~ x | z`. Note that the `formula` and `x` arguments should
-#'   not be specified in the same call.
+#' @param formula a `formula` that optionally includes grouping variable(s)
+#'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
+#'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
+#'   should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
 #' @param type character string giving the type of plot desired. Options are:
@@ -29,10 +30,8 @@
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 #'   and "h" for histogram-like vertical lines. "n" does not produce
 #'   any points or lines.
-#'   - Additional plot2 types: "pointrange", "errorbar", and "ribbon" for
-#'   drawing these interval plot types. (Note that specifying "ribbon" for
-#'   objects of class `density` will yield a density plot with a shaded
-#'   interior.)
+#'   - Additional plot2 types: "density" for drawing density plots, and
+#'   "pointrange", "errorbar" or "ribbon" for drawing interval plots.
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -112,10 +111,16 @@
 #'   line type will automatically loop over the number groups. This automatic
 #'   looping will begin at the global line type value (i.e., `par("lty")`) and
 #'   recycle as necessary.
-#' @param bg background (fill) color for the open plot symbols 21:25: see
-#'   `points.default`. In addition, users can supply a special `bg = "by"`
-#'   convenience argument, in which case the background color will inherit the
-#'   automatic group coloring intended for the `col` parameter.
+#' @param bg background fill color for the open plot symbols 21:25 (see
+#'   `points.default`), as well as ribbon plot types. For the latter
+#'   group---including filled density plots---an automatic alpha transparency
+#'   adjustment will be applied (see the `ribbon_alpha` argument further below).
+#'   Users can also supply a special `bg = "by"` convenience argument, in which
+#'   case the background fill will inherit the automatic group coloring
+#'   intended for the `col` argument. Note that this grouped inheritance will
+#'   persist even if the `col` defaults are themselves overridden. For example,
+#'   `plot2(y ~ x | z, data = fakedata, pch = 22, col = "blue", bg = "by")`
+#'   will yield filled squares with a blue border.
 #' @param cex character expansion. A numerical vector (can be a single value)
 #'   giving the amount by which plotting characters and symbols should be scaled
 #'   relative to the default. Note that NULL is equivalent to 1.0, while NA
@@ -134,7 +139,8 @@
 #'   "ribbon".
 #' @param ribbon_alpha numeric factor modifying the opacity alpha of any ribbon
 #'   shading; typically in `[0, 1]`. Default value is 0.2. Only used when
-#'   `type = "ribbon"`.
+#'   `type = "ribbon"`, or when the `bg` fill argument is specified in a density
+#'   plot (since filled density plots are converted to ribbon plots internally).
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
@@ -303,7 +309,27 @@ plot2.default = function(
     deparse(substitute(y))
   }
   by_dep = deparse(substitute(by))
-  
+
+  ## Catch for density type: recycle through plot.density
+  if (type == "density") {
+    fargs = mget(ls(environment(), sorted = FALSE))
+    fargs = modifyList(fargs, dots)
+    if (!is.null(fargs[["y"]])) {
+      fargs[["y"]] = NULL
+      message("\nNote: A `y` argument has been supplied, but will be ignored for density plots.\n")
+    }
+    fargs$type = "l"
+    # explicitly turn off `default.density(x = ...)` title for
+    # type = "density" plots (to make consistent with regular plot)
+    if (is.null(fargs$main)) fargs$main = NA
+    ## Catch for atomic density type to avoid "by" as legend title
+    if (is.null(fargs[["legend.args"]][["title"]])) {
+      fargs[["legend.args"]][["title"]] = by_dep
+    }
+    fargs$y = fargs$ymin = fargs$ymax = fargs$ylab  = fargs$xlab = NULL
+    return(do.call(plot2.density, args = fargs))
+  }
+
   if (is.null(y)) {
     ## Special catch for interval plots without a specified y-var
     if (type %in% c("pointrange", "errorbar", "ribbon")) {
@@ -907,17 +933,24 @@ plot2.density = function(
     bg = NULL,
     par_restore = FALSE,
     ...
-    ) {
-  
+  ) {
+
   type = match.arg(type)
   ## override if bg = "by"
   if (!is.null(bg)) type = "ribbon"
-  
-  object = x
-  legend.args = list(x = NULL)
-  # Grab by label to pass on legend title to plot2.default
-  legend.args[["title"]] = deparse(substitute(by))
-  
+
+  if (inherits(x, "density")) {
+    object = x
+    legend.args = list(x = NULL)
+    # Grab by label to pass on legend title to plot2.default
+    legend.args[["title"]] = deparse(substitute(by))
+  } else {
+    ## An internal catch for non-density objects that were forcibly
+    ## passed to plot2.density (e.g., via a one-side formula)
+    object = density(x)
+    legend.args = list(...)[["legend.args"]]
+  }
+
   if (is.null(by)) {
     x = object$x
     y = object$y
@@ -959,7 +992,7 @@ plot2.density = function(
       xlab = paste0("N = ", n, "   Joint Bandwidth = ", bw)
     }
   }
-  if (type=="ribbon") {
+  if (type == "ribbon") {
     ymin = rep(0, length(y))
     ymax = y
     # set extra legend params to get bordered boxes with fill

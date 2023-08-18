@@ -30,8 +30,10 @@
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 #'   and "h" for histogram-like vertical lines. "n" does not produce
 #'   any points or lines.
-#'   - Additional plot2 types: "density" for drawing density plots, and
-#'   "pointrange", "errorbar" or "ribbon" for drawing interval plots.
+#'   - Additional plot2 types: "density" for densities, "pointrange" or
+#'   "errorbar" for segement intervals, and "ribbon" or "area" for polygon
+#'   intervals (where area plots are a special case of ribbon plots with `ymin`
+#'   set to 0 and `ymax` set to `y`; see below).
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -112,7 +114,7 @@
 #'   looping will begin at the global line type value (i.e., `par("lty")`) and
 #'   recycle as necessary.
 #' @param bg background fill color for the open plot symbols 21:25 (see
-#'   `points.default`), as well as ribbon plot types. For the latter
+#'   `points.default`), as well as ribbon and area plot types. For the latter
 #'   group---including filled density plots---an automatic alpha transparency
 #'   adjustment will be applied (see the `ribbon_alpha` argument further below).
 #'   Users can also supply a special `bg = "by"` convenience argument, in which
@@ -326,14 +328,20 @@ plot2.default = function(
     if (is.null(fargs[["legend.args"]][["title"]])) {
       fargs[["legend.args"]][["title"]] = by_dep
     }
-    fargs$y = fargs$ymin = fargs$ymax = fargs$ylab  = fargs$xlab = NULL
+    ## Another catch for bespoke legend position (if originally passed via the formula method)
+    if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend.args"]])) {
+      if (names(fargs[["legend"]])[1] == "") names(fargs[["legend"]])[1] = "x"
+      fargs[["legend.args"]] = modifyList(fargs[["legend"]], fargs[["legend.args"]])
+      fargs[["legend"]] = NULL
+    }
+    fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
     return(do.call(plot2.density, args = fargs))
   }
-
+  
   if (is.null(y)) {
     ## Special catch for interval plots without a specified y-var
     if (type %in% c("pointrange", "errorbar", "ribbon")) {
-      ymin_dep = deparse(substitute(ymin)) 
+      ymin_dep = deparse(substitute(ymin))
       ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
@@ -348,6 +356,12 @@ plot2.default = function(
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
     
+  if (type == "area") {
+    ymax = y
+    ymin = rep.int(0, length(y))
+    type = "ribbon"
+  }
+
   xlabs = NULL
   if (type %in% c("pointrange", "errorbar", "ribbon")) {
     if (is.character(x)) x = as.factor(x)
@@ -374,7 +388,7 @@ plot2.default = function(
       rm(xord)
     }
   }
-  
+
   if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
   if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
 
@@ -914,7 +928,7 @@ plot2.formula = function(
 plot2.density = function(
     x = NULL,
     by = NULL,
-    type = c("l", "ribbon"),
+    type = c("l", "area"),
     xlim = NULL,
     ylim = NULL,
     # log = "",
@@ -937,7 +951,7 @@ plot2.density = function(
 
   type = match.arg(type)
   ## override if bg = "by"
-  if (!is.null(bg)) type = "ribbon"
+  if (!is.null(bg)) type = "area"
 
   if (inherits(x, "density")) {
     object = x
@@ -992,17 +1006,16 @@ plot2.density = function(
       xlab = paste0("N = ", n, "   Joint Bandwidth = ", bw)
     }
   }
-  if (type == "ribbon") {
+  # if (type == "ribbon") {
+  if (type == "area") {
     ymin = rep(0, length(y))
     ymax = y
     # set extra legend params to get bordered boxes with fill
     legend.args[["x.intersp"]] = 1.25
     legend.args[["lty"]] = 0
     legend.args[["pt.lwd"]] = 1
-  } else {
-    ymin = ymax = NULL
   }
-  
+
   ## axes range
   if (is.null(xlim)) xlim = range(x)
   if (is.null(ylim)) ylim = range(y)
@@ -1033,8 +1046,6 @@ plot2.density = function(
     bg = bg,
     lty = lty,
     par_restore = par_restore,
-    ymin = ymin,
-    ymax = ymax,
     ...
     )
 

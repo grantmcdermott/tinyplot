@@ -71,7 +71,7 @@ plot2(x, ...)
 \method{plot2}{density}(
   x = NULL,
   by = NULL,
-  type = c("l", "ribbon"),
+  type = c("l", "area"),
   xlim = NULL,
   ylim = NULL,
   main = NULL,
@@ -113,8 +113,10 @@ for lines, "b" for both points and lines, "c" for empty points joined by
 lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 and "h" for histogram-like vertical lines. "n" does not produce
 any points or lines.
-\item Additional plot2 types: "density" for drawing density plots, and
-"pointrange", "errorbar" or "ribbon" for drawing interval plots.
+\item Additional plot2 types: "density" for densities, "pointrange" or
+"errorbar" for segement intervals, and "ribbon" or "area" for polygon
+intervals (where area plots are a special case of ribbon plots with \code{ymin}
+set to 0 and \code{ymax} set to \code{y}; see below).
 }}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
@@ -220,7 +222,7 @@ features are deferred to some other graphical parameter (i.e., passing the
 "by" keyword to one of \code{pch}, \code{lty}, or \code{bg}; see below.)}
 
 \item{bg}{background fill color for the open plot symbols 21:25 (see
-\code{points.default}), as well as ribbon plots types. For the latter
+\code{points.default}), as well as ribbon and area plot types. For the latter
 group---including filled density plots---an automatic alpha transparency
 adjustment will be applied (see the \code{ribbon_alpha} argument further below).
 Users can also supply a special \code{bg = "by"} convenience argument, in which

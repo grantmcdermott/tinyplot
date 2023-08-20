@@ -9,11 +9,37 @@ exit_if_not(getRversion()  <= "4.3.1")
 ## test with something like:
 # f = function() plot2(density(mtcars$mpg, old.coords=TRUE))
 
-f = function() plot2(density(mtcars$mpg))
+f = function() with(mtcars, plot2(density(mpg)))
 expect_snapshot_plot(f, label = "density_nogroups")
 
-f = function() plot2(density(mtcars$mpg), by = mtcars$am)
+f = function() with(mtcars, plot2(density(mpg), by = am))
 expect_snapshot_plot(f, label = "density_numeric")
 
-f = function() plot2(density(iris$Sepal.Width), by = iris$Species)
+f = function() with(iris, plot2(density(Sepal.Width), by = Species))
 expect_snapshot_plot(f, label = "density_factor")
+
+f = function() with(iris, plot2(density(Sepal.Width), by = Species, bg = "by"))
+expect_snapshot_plot(f, label = "density_fill")
+
+f = function() with(iris, plot2(density(Sepal.Width), by = Species, type = "area"))
+expect_snapshot_plot(f, label = "density_fill")
+
+## Now test `type = "density"` versions (both atomic and formula)
+## Should be the same as above, modulo missing titles
+
+f1 = function() with(mtcars, plot2(mpg, type = "density"))
+f2 = function() plot2(~ mpg, mtcars, type = "density")
+expect_snapshot_plot(f1, label = "density_type_nogroups")
+expect_snapshot_plot(f2, label = "density_type_nogroups")
+
+f1 = function() with(mtcars, plot2(mpg, by = am, type = "density"))
+f2 = function() plot2(~ mpg | am, mtcars, type = "density")
+expect_snapshot_plot(f, label = "density_type_numeric")
+
+f1 = function() with(iris, plot2(Sepal.Width, by = Species, type = "density"))
+f2 = function() plot2(~ Sepal.Width | Species, iris, type = "density")
+expect_snapshot_plot(f, label = "density_type_factor")
+
+f1 = function() with(iris, plot2(Sepal.Width, by = Species, bg = "by", type = "density"))
+f2 = function() plot2(~ Sepal.Width | Species, iris, bg = "by", type = "density")
+expect_snapshot_plot(f, label = "density_type_fill")

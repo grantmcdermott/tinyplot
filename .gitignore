@@ -41,3 +41,6 @@ README.html
 # tinysnapshot extras
 inst/tinytest/_tinysnapshot_OLD/
 inst/tinytest/_tinysnapshot_review/
+
+# MacOS cruft
+.DS_Store

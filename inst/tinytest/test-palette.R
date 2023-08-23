@@ -47,7 +47,7 @@ f = function() {
     plot2(
         Temp ~ Day | Month, airquality,
         type = "b", pch = 16,
-        palette = "set" # set1, set2, etc.
+        palette = "set" # set1, set2, set3, etc.
     )
 }
 expect_error(f())

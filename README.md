@@ -177,13 +177,14 @@ On the subject of group colours, these are easily customized via the
 user’s default palette. (Most likely the “R4” set of colors; see
 `?palette`). However, all of the various palettes listed by
 `palette.pals()` and `hcl.pals()` are supported as convenience
-strings.[^2] For example:
+strings.[^2] Note that case-insensitive, partial matching for these
+convenience string is allowed. For example:
 
 ``` r
 plot2(
   Temp ~ Day | Month, data = aq,
   type = "l",
-  palette = "Tableau 10" # or "ggplot2", "Okabe-Ito", "Set 2", "Harmonic", etc.
+  palette = "tableau" # or "ggplot2", "okabe-ito", "set2", "harmonic", etc.
 )
 ```
 
@@ -200,7 +201,7 @@ default palette for the remainder of the plots that follow.
 
 ``` r
 # Set the default palette globally via the generic palette function
-palette("Tableau 10")
+palette("tableau")
 ```
 
 ### Legend
@@ -318,7 +319,7 @@ par(
 plot2(
   Temp ~ Day | Month, data = aq,
   type = "b",
-  palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
+  palette = palette.colors(palette = "tableau", alpha = 0.5),
   frame = FALSE, grid = TRUE,
   main = "Daily temperatures by month"
 )
@@ -343,7 +344,7 @@ plot2(
   Temp ~ Day | Month, data = aq,
   type = "b",
   pch = "by",
-  palette = "Tropic",
+  palette = "tropic",
   main = "Daily temperatures by month"
 )
 ```

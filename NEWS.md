@@ -1,4 +1,4 @@
-# plot2 0.0.3.9008 (development version)
+# plot2 0.0.3.9009 (development version)
 
 New features:
 
@@ -14,8 +14,9 @@ existing plot window. (#60 @grantmcdermott)
 - Support for `plot2(x, type = "density")` as an alternative to
 `plot2(density(x))`. Works for both the atomic and one-sided formula methods.
 (#66 @grantmcdermott)
-- Support for "area" type plots as a special case of ribbon plots (#68
+- Support for "area" type plots as a special case of ribbon plots. (#68
 @grantmcdermott)
+- Partial matching for palette keywords. (#74 @grantmcdermott)
 
 Bug fixes:
 

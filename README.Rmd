@@ -179,13 +179,14 @@ the various palettes listed by `palette.pals()` and `hcl.pals()` are supported
 as convenience strings.^[See the accompanying help pages of those two functions
 for more details on the available palettes, or read the
 [article](https://arxiv.org/pdf/2303.04918.pdf) by Achim Zeileis and Paul
-Murrell.] For example:
+Murrell.] Note that case-insensitive, partial matching for these convenience
+string is allowed. For example:
 
 ```{r palette_tableau}
 plot2(
   Temp ~ Day | Month, data = aq,
   type = "l",
-  palette = "Tableau 10" # or "ggplot2", "Okabe-Ito", "Set 2", "Harmonic", etc.
+  palette = "tableau" # or "ggplot2", "okabe-ito", "set2", "harmonic", etc.
 )
 ```
 
@@ -200,7 +201,7 @@ remainder of the plots that follow.
 
 ```{r global_palette}
 # Set the default palette globally via the generic palette function
-palette("Tableau 10")
+palette("tableau")
 ```
 
 ### Legend
@@ -306,7 +307,7 @@ par(
 plot2(
   Temp ~ Day | Month, data = aq,
   type = "b",
-  palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
+  palette = palette.colors(palette = "tableau", alpha = 0.5),
   frame = FALSE, grid = TRUE,
   main = "Daily temperatures by month"
 )
@@ -328,7 +329,7 @@ plot2(
   Temp ~ Day | Month, data = aq,
   type = "b",
   pch = "by",
-  palette = "Tropic",
+  palette = "tropic",
   main = "Daily temperatures by month"
 )
 

@@ -39,30 +39,43 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
   } else {
 
     if (is.character(palette)) {
-      if (tolower(palette) %in% tolower(palette.pals())) {
+
+      fx = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
+      pal_match = charmatch(fx(palette), fx(palette.pals()))
+      if (!is.na(pal_match)) {
+        if (pal_match < 1L) stop("'palette' is ambiguous")
         palette_fun = palette.colors
-      } else if (tolower(palette) %in% tolower(hcl.pals())) {
-        palette_fun = hcl.colors
       } else {
-        stop(
-          "\nPalette string not recogized. Must be a value produced by either",
-          "`palette.pals()` or `hcl.pals()`.\n",
-          call. = FALSE
-        )
+        pal_match = charmatch(fx(palette), fx(hcl.pals()))
+        if (!is.na(pal_match)) {
+          if (pal_match < 1L) stop("'palette' is ambiguous")
+          palette_fun = hcl.colors
+        } else {
+          stop(
+            "\nPalette string not recogized. Must be a value produced by either",
+            "`palette.pals()` or `hcl.pals()`.\n",
+            call. = FALSE
+          )
+        }
       }
       args = list(n = ngrps, palette = palette)
+
     } else if (class(palette) %in% c("call", "name")) {
+
       args = as.list(palette)
       palette_fun = paste(args[[1]])
       args[[1]] = NULL
       args[["n"]] = ngrps
       # remove unnamed arguments to prevent unintentional argument sliding
-      if (any(names(args)=="")) args[[which(names(args)=="")]] = NULL
+      if (any(names(args) == "")) args[[which(names(args) == "")]] = NULL
+
     } else {
+
       stop(
         "\nInvalid palette argument. Must be a recognized keyword, or a",
         "palette-generating function with named arguments.\n"
-        )
+      )
+
     }
   }
 

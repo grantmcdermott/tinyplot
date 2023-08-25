@@ -33,6 +33,7 @@ plot2(x, ...)
   lty = NULL,
   col = NULL,
   bg = NULL,
+  fill = NULL,
   cex = 1,
   par_restore = FALSE,
   ymin = NULL,
@@ -87,6 +88,7 @@ plot2(x, ...)
   col = NULL,
   lty = NULL,
   bg = NULL,
+  fill = NULL,
   par_restore = FALSE,
   ...
 )
@@ -231,6 +233,9 @@ intended for the \code{col} argument. Note that this grouped inheritance will
 persist even if the \code{col} defaults are themselves overridden. For example,
 \code{plot2(y ~ x | z, data = fakedata, pch = 22, col = "blue", bg = "by")}
 will yield filled squares with a blue border.}
+
+\item{fill}{alias for \code{bg}. If non-NULL values for both \code{bg} and \code{fill} are
+provided, then the latter will be ignored in favour of the former.}
 
 \item{cex}{character expansion. A numerical vector (can be a single value)
 giving the amount by which plotting characters and symbols should be scaled

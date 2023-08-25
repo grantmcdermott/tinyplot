@@ -123,6 +123,8 @@
 #'   persist even if the `col` defaults are themselves overridden. For example,
 #'   `plot2(y ~ x | z, data = fakedata, pch = 22, col = "blue", bg = "by")`
 #'   will yield filled squares with a blue border.
+#' @param fill alias for `bg`. If non-NULL values for both `bg` and `fill` are
+#'   provided, then the latter will be ignored in favour of the former.
 #' @param cex character expansion. A numerical vector (can be a single value)
 #'   giving the amount by which plotting characters and symbols should be scaled
 #'   relative to the default. Note that NULL is equivalent to 1.0, while NA
@@ -291,6 +293,7 @@ plot2.default = function(
     lty = NULL,
     col = NULL,
     bg = NULL,
+    fill = NULL,
     cex = 1,
     par_restore = FALSE,
     ymin = NULL,
@@ -418,6 +421,7 @@ plot2.default = function(
     col = col,
     palette = substitute(palette)
   )
+  if (is.null(bg) && !is.null(fill)) bg = fill
   if (!is.null(bg) && bg == "by") {
     bg = by_col(
       ngrps = ngrps,
@@ -945,13 +949,14 @@ plot2.density = function(
     col = NULL,
     lty = NULL,
     bg = NULL,
+    fill = NULL,
     par_restore = FALSE,
     ...
   ) {
 
   type = match.arg(type)
   ## override if bg = "by"
-  if (!is.null(bg)) type = "area"
+  if (!is.null(bg) || !is.null(fill)) type = "area"
 
   if (inherits(x, "density")) {
     object = x
@@ -1044,6 +1049,7 @@ plot2.density = function(
     pch = pch,
     col = col,
     bg = bg,
+    fill = fill,
     lty = lty,
     par_restore = par_restore,
     ...

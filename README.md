@@ -241,7 +241,7 @@ with(
   plot2(
     density(Temp),
     by = Month,
-    bg = "by",                           # add background fill by groups
+    fill = "by",                         # add background fill by groups
     grid = TRUE,                         # add background grid
     legend = list("topright", bty = "o") # change legend features
   )

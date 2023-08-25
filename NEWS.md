@@ -1,11 +1,11 @@
-# plot2 0.0.3.9009 (development version)
+# plot2 0.0.3.9010 (development version)
 
 New features:
 
-- Support for `cex` and `bg` arguments. The latter also permits the "by"
-convenience keyword similar to `lty` and `pch`. This is useful for plotting
-filled point characters (e.g., pch = 21), where you want a different colour for
-the fill and border. (#50 @grantmcdermott)
+- Support for `cex` and `bg` (alias `fill`) arguments. The latter also permit
+the "by" convenience keyword similar to `lty` and `pch`. This is useful for
+plotting filled point characters (e.g., pch = 21), where you want a different
+colour for the fill and border. (#50, #75 @grantmcdermott)
 - Support for filled density plots. (#58 @grantmcdermott)
 - The new `add` argument allows new plot2 objects to be added to / on top of the
 existing plot window. (#60 @grantmcdermott)

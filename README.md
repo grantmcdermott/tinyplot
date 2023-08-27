@@ -95,7 +95,7 @@ base R.
 aq = airquality
 aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
 
-# with(aq,  plot2(Temp ~ Day)) # atomic method (same as below)
+# with(aq,  plot2(Day, Temp)) # atomic method (same as below)
 plot2(Temp ~ Day, data = aq) # formula method
 ```
 
@@ -111,7 +111,7 @@ respect to grouped data. In particular, `plot2` allows you to
 characterize groups using the `by` argument.[^1]
 
 ``` r
-# plot2($Day, aq$Temp, by = aq$Month) # same as below
+# plot2(aq$Day, aq$Temp, by = aq$Month) # same as below
 with(aq, plot2(Day, Temp, by = Month))
 ```
 

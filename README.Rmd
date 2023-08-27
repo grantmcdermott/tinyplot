@@ -99,7 +99,7 @@ the `airquality` dataset that comes bundled with base R.
 aq = airquality
 aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
 
-# with(aq,  plot2(Temp ~ Day)) # atomic method (same as below)
+# with(aq,  plot2(Day, Temp)) # atomic method (same as below)
 plot2(Temp ~ Day, data = aq) # formula method
 ```
 
@@ -123,7 +123,7 @@ plots (i.e., type="l"). Instead, you have to transpose your data and use
 old StackOverflow thread for a longer discussion.]
 
 ```{r by}
-# plot2($Day, aq$Temp, by = aq$Month) # same as below
+# plot2(aq$Day, aq$Temp, by = aq$Month) # same as below
 with(aq, plot2(Day, Temp, by = Month))
 ```
 

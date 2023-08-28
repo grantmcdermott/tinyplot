@@ -35,11 +35,11 @@ f = function() {
   m = cbind(mtcars, pred)
   with(
     m,
-    plot2(wt, fit, ymin = lwr, ymax = upr, by = cyl, type = "ribbon")
+    plot2(wt, fit, ymin = lwr, ymax = upr, by = cyl, type = "ribbon", grid = TRUE)
   )
   with(
     m,
-    plot2(wt, mpg, by = cyl, pch = 19, add = TRUE)
+    plot2(wt, mpg, by = cyl, pch = 16, add = TRUE)
   )
 }
 expect_snapshot_plot(f, label = "addTRUE")

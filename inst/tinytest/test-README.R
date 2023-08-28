@@ -162,4 +162,4 @@ expect_snapshot_plot(f, label = "readme_basetheme_royal")
 
 # back to default theme
 basetheme(NULL)
-dev.off()
+# dev.off()

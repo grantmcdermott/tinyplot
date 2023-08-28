@@ -66,7 +66,6 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHwzODYuNDZ8MC4wMHw1MDQuMDA=)'>
-<text x='222.03' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='216.72px' lengthAdjust='spacingAndGlyphs'>density.default(x = Sepal.Width)</text>
 <text x='222.03' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='227.51px' lengthAdjust='spacingAndGlyphs'>N = [50, 50, 50]   Joint Bandwidth = 0.1301</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='40.02px' lengthAdjust='spacingAndGlyphs'>Density</text>
 </g>

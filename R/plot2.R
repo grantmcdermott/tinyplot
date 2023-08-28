@@ -529,7 +529,7 @@ plot2.default = function(
     
     # Titles. Note that we include a special catch for the main title if legend is
     # "top!" (and main is specified in the first place).
-    adj_title = !is.null(legend) && (legend == "top!" || legend.args[["x"]]=="top!")
+    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!"))
     if (is.null(main) || isFALSE(adj_title)) {
       title(
         xlab = xlab,

@@ -99,19 +99,15 @@ draw_legend = function(
     
     legend.args[["horiz"]] = FALSE
     
-    lgnd = legend(
-      0, 0, 
-      bty    = legend.args[["bty"]],
-      legend = legend.args[["legend"]],
-      pch    = legend.args[["pch"]],
-      lty    = legend.args[["lty"]],
-      col    = legend.args[["col"]],
-      title  = legend.args[["title"]],
-      xpd    = legend.args[["xpd"]],
-      plot   = FALSE
+    # "draw" fake legend
+    fklgnd.args = utils::modifyList(
+      legend.args,
+      list(x = 0, y = 0, plot = FALSE),
+      keep.null = TRUE
     )
+    fklgnd = do.call("legend", fklgnd.args)
     # calculate side margin width in ndc
-    w = grconvertX(lgnd$rect$w, to="ndc") - grconvertX(0, to="ndc")
+    w = grconvertX(fklgnd$rect$w, to="ndc") - grconvertX(0, to="ndc")
     ## differing adjustments depending on side
     if (outer_right) {
       w = w*1.5
@@ -148,19 +144,15 @@ draw_legend = function(
       }
     }
     
-    lgnd = legend(
-      0, 0,
-      bty    = legend.args[["n"]],
-      legend = legend.args[["legend"]],
-      horiz  = legend.args[["horiz"]],
-      pch    = legend.args[["pch"]],
-      lty    = legend.args[["lty"]],
-      col    = legend.args[["col"]],
-      title  = legend.args[["title"]],
-      plot   = FALSE
+    # "draw" fake legend
+    fklgnd.args = utils::modifyList(
+      legend.args,
+      list(x = 0, y = 0, plot = FALSE),
+      keep.null = TRUE
     )
+    fklgnd = do.call("legend", fklgnd.args)
     # calculate bottom margin height in ndc
-    h = grconvertX(lgnd$rect$h, to="ndc") - grconvertX(0, to="ndc")
+    h = grconvertX(fklgnd$rect$h, to="ndc") - grconvertX(0, to="ndc")
     ## differing adjustments depending on side
     if (outer_bottom) {
       legend.args[["inset"]] = c(0, 1+2*h)

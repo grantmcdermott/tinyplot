@@ -442,7 +442,7 @@ plot2.default = function(
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
   
-  # place and draw the legend
+  ## place and draw the legend
   
   legend.args = dots[["legend.args"]]
   if (is.null(legend.args)) legend.args = list(x = NULL)

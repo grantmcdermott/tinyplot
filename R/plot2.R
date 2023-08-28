@@ -442,9 +442,8 @@ plot2.default = function(
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
   
-  # legend
+  # place and draw the legend
   
-  # w = h = outer_right = outer_bottom = NULL
   legend.args = dots[["legend.args"]]
   if (is.null(legend.args)) legend.args = list(x = NULL)
   legend = substitute(legend)

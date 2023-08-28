@@ -318,7 +318,7 @@ plot2.default = function(
   ## Catch for density type: recycle through plot.density
   if (type == "density") {
     fargs = mget(ls(environment(), sorted = FALSE))
-    fargs = modifyList(fargs, dots)
+    fargs = utils::modifyList(fargs, dots)
     if (!is.null(fargs[["y"]])) {
       fargs[["y"]] = NULL
       message("\nNote: A `y` argument has been supplied, but will be ignored for density plots.\n")
@@ -334,7 +334,7 @@ plot2.default = function(
     ## Another catch for bespoke legend position (if originally passed via the formula method)
     if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend.args"]])) {
       if (names(fargs[["legend"]])[1] == "") names(fargs[["legend"]])[1] = "x"
-      fargs[["legend.args"]] = modifyList(fargs[["legend"]], fargs[["legend.args"]])
+      fargs[["legend.args"]] = utils::modifyList(fargs[["legend"]], fargs[["legend.args"]])
       fargs[["legend"]] = NULL
     }
     fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
@@ -820,7 +820,7 @@ plot2.density = function(
   } else {
     ## An internal catch for non-density objects that were forcibly
     ## passed to plot2.density (e.g., via a one-side formula)
-    object = density(x)
+    object = stats::density(x)
     legend.args = list(...)[["legend.args"]]
   }
 

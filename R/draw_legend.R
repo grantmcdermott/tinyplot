@@ -2,7 +2,18 @@
 #'   
 #' @description Internal function used to calculate the placement of (including
 #'   outside the plotting area) and drawing of legend.
-
+#'   
+#' @md
+#' @param legend Legend placement keyword or list, passed down from `plot2`.
+#' @param legend.args Additional legend arguments to be passed to `legend()`.
+#' @param by_dep The (deparsed) "by" grouping variable name.
+#' @param lgnd_labs The labels passed to `legend(legend = ...)`.
+#' @param type Plotting type(s), passed down from `plot2`.
+#' @param pch Plotting character(s), passed down from `plot2`.
+#' @param lty Plotting linetype(s), passed down from `plot2`.
+#' @param col Plotting colour(s), passed down from `plot2`.
+#' @param bg Plotting character background fill colour(s), passed down from `plot2`.
+#' @param cex Plotting character expansion(s), passed down from `plot2`.
 draw_legend = function(
     legend = NULL,
     legend.args = NULL,

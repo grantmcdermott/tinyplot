@@ -17,7 +17,28 @@ draw_legend(
   cex = NULL
 )
 }
+\arguments{
+\item{legend}{Legend placement keyword or list, passed down from \code{plot2}.}
+
+\item{legend.args}{Additional legend arguments to be passed to \code{legend()}.}
+
+\item{by_dep}{The (deparsed) "by" grouping variable name.}
+
+\item{lgnd_labs}{The labels passed to \code{legend(legend = ...)}.}
+
+\item{type}{Plotting type(s), passed down from \code{plot2}.}
+
+\item{pch}{Plotting character(s), passed down from \code{plot2}.}
+
+\item{lty}{Plotting linetype(s), passed down from \code{plot2}.}
+
+\item{col}{Plotting colour(s), passed down from \code{plot2}.}
+
+\item{bg}{Plotting character background fill colour(s), passed down from \code{plot2}.}
+
+\item{cex}{Plotting character expansion(s), passed down from \code{plot2}.}
+}
 \description{
 Internal function used to calculate the placement of (including
-  outside the plotting area) and drawing of legend.
+outside the plotting area) and drawing of legend.
 }

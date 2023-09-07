@@ -307,13 +307,13 @@ plot2.default = function(
   if (isTRUE(add)) legend = FALSE
   
   # Capture deparsed expressions early, before x, y and by are evaluated
-  x_dep = deparse(substitute(x))
+  x_dep = deparse1(substitute(x))
   y_dep = if (is.null(y)) {
-    deparse(substitute(x))
+    deparse1(substitute(x))
   } else {
-    deparse(substitute(y))
+    deparse1(substitute(y))
   }
-  by_dep = deparse(substitute(by))
+  by_dep = deparse1(substitute(by))
 
   ## Catch for density type: recycle through plot.density
   if (type == "density") {
@@ -392,8 +392,9 @@ plot2.default = function(
     }
   }
 
-  if (is.null(xlim)) xlim = range(x, na.rm = TRUE)
-  if (is.null(ylim)) ylim = range(y, na.rm = TRUE)
+  xy = grDevices::xy.coords(x = x, y = y)
+  if (is.null(xlim)) xlim = range(xy$x[is.finite(xy$x)])
+  if (is.null(ylim)) ylim = range(xy$y[is.finite(xy$y)])
 
   if (!is.null(ymin)) ylim[1] = min(c(ylim, ymin))
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
@@ -657,16 +658,27 @@ plot2.default = function(
     # axes, plot.frame and grid
     if (isTRUE(axes)) {
       if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
-        axis(1, at = xlabs, labels = names(xlabs))
+        graphics::Axis(x, side = 1, at = xlabs, labels = names(xlabs))
       } else {
-        axis(1)
+        graphics::Axis(x, side = 1)
       }
-      axis(2)
+      graphics::Axis(y, side = 2)
     }
     if (frame.plot) box()
     if (!is.null(grid)) {
       if (is.logical(grid)) {
-        if (isTRUE(grid)) grid()
+        if (isTRUE(grid)) {
+          gnx = gny = NULL
+          if (inherits(x, c("Date", "POSIXlt", "POSIXct"))) {
+            graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted")
+            gnx = NA
+          }
+          if (inherits(y, c("Date", "POSIXlt", "POSIXct"))) {
+            graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted")
+            gny = NA
+          }
+          grid(nx = gnx, ny = gny)
+        }
       } else {
         grid
       }

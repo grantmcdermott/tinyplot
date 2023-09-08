@@ -667,14 +667,18 @@ plot2.default = function(
     if (frame.plot) box()
     if (!is.null(grid)) {
       if (is.logical(grid)) {
+        ## If grid is TRUE create a default grid. Rather than just calling the default grid()
+        ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
+        ## and works better for axes based on date/time classes. Exception: For axes in logs,
+        ## resort to using grid() which is like handled better there.
         if (isTRUE(grid)) {
           gnx = gny = NULL
-          if (inherits(x, c("Date", "POSIXlt", "POSIXct"))) {
-            graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted")
+          if (!par("xlog")) {
+            graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
             gnx = NA
           }
-          if (inherits(y, c("Date", "POSIXlt", "POSIXct"))) {
-            graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted")
+          if (!par("ylog")) {
+            graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
             gny = NA
           }
           grid(nx = gnx, ny = gny)

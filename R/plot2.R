@@ -670,11 +670,11 @@ plot2.default = function(
         if (isTRUE(grid)) {
           gnx = gny = NULL
           if (!par("xlog")) {
-            graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted")
+            graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
             gnx = NA
           }
           if (!par("ylog")) {
-            graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted")
+            graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
             gny = NA
           }
           grid(nx = gnx, ny = gny)

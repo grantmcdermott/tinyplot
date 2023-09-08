@@ -669,11 +669,11 @@ plot2.default = function(
       if (is.logical(grid)) {
         if (isTRUE(grid)) {
           gnx = gny = NULL
-          if (inherits(x, c("Date", "POSIXlt", "POSIXct"))) {
+          if (!par("xlog")) {
             graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted")
             gnx = NA
           }
-          if (inherits(y, c("Date", "POSIXlt", "POSIXct"))) {
+          if (!par("ylog")) {
             graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted")
             gny = NA
           }

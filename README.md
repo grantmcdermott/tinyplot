@@ -11,7 +11,21 @@ badge](https://grantmcdermott.r-universe.dev/badges/plot2)](https://grantmcdermo
 <!-- badges: end -->
 
 A lightweight extension of the base R `plot` system, with support for
-automatic grouping and legend handling, and several other enhancements.
+automatic grouping and legend handling, and various other enhancements.
+
+We provide a tutorial with numerous examples below. But here is a
+quickstart example of the package in action.
+
+``` r
+plot2::plot2(
+  Sepal.Length ~ Petal.Length | Species, data = iris,
+  # The remaining arguments are optional aesthetic tweaks
+  palette = "accent", pch  = 16,
+  grid = TRUE, frame = FALSE
+)
+```
+
+<img src="man/figures/README-quickstart-1.png" width="100%" />
 
 ## Installation
 
@@ -66,10 +80,19 @@ any changes to the expected output.
 
 ## Examples
 
-Let’s load the package then walk through some examples.
+Start by loading the package.
 
 ``` r
 library(plot2)
+```
+
+For most of the examples that follow, we’ll use a slightly modified
+version of the `airquality` dataset that comes bundled with base R.
+Let’s go ahead and create it now.
+
+``` r
+aq = airquality
+aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
 ```
 
 ### Similarity to `plot()`
@@ -87,22 +110,15 @@ plot2(0:10, main = "plot2")
 <img src="man/figures/README-base_1-1.png" width="100%" />
 
 Similarly, we can plot elements from a data frame using either the
-atomic or formula methods. Here’s a simple example using a slightly
-modified version of the `airquality` dataset that comes bundled with
-base R.
+atomic or formula methods. Here’s a simple example using the `aq`
+dataset that we created earlier.
 
 ``` r
-aq = airquality
-aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
-
 # with(aq,  plot2(Day, Temp)) # atomic method (same as below)
 plot2(Temp ~ Day, data = aq) # formula method
 ```
 
 <img src="man/figures/README-plot2_simple-1.png" width="100%" />
-
-For the remaining examples below, we’ll continue with this modified `aq`
-dataset to demonstrate some of additional features that `plot2` enables.
 
 ### Grouped data
 
@@ -365,9 +381,9 @@ In summary, consider the **plot2** package if you are looking for base R
 `plot` functionality with some added convenience features. You can use
 pretty much the same syntax and all of your theming elements should
 carry over too. It has no dependencies other than base R itself and this
-makes it an attractive option for situations where dependency management
-is expensive (e.g., an R application running in a browser via
-[WebAssembly](https://docs.r-wasm.org/webr/latest/)).
+makes it an attractive option for package developers or situations where
+dependency management is expensive (e.g., an R application running in a
+browser via [WebAssembly](https://docs.r-wasm.org/webr/latest/)).
 
 [^1]: At this point, experienced base plot users might protest that you
     *can* colour by groups using the `col` argument, e.g.

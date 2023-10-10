@@ -152,7 +152,8 @@
 #'   section of `plot`).
 #'   
 #' @importFrom grDevices adjustcolor palette palette.colors palette.pals hcl.colors hcl.pals
-#' @importFrom graphics axis box grconvertX lines par plot.new plot.window points title
+#' @importFrom graphics arrows axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title
+#' @importFrom utils modifyList
 #' 
 #' @examples
 #' 
@@ -318,7 +319,7 @@ plot2.default = function(
   ## Catch for density type: recycle through plot.density
   if (type == "density") {
     fargs = mget(ls(environment(), sorted = FALSE))
-    fargs = utils::modifyList(fargs, dots)
+    fargs = modifyList(fargs, dots)
     if (!is.null(fargs[["y"]])) {
       fargs[["y"]] = NULL
       message("\nNote: A `y` argument has been supplied, but will be ignored for density plots.\n")
@@ -334,7 +335,7 @@ plot2.default = function(
     ## Another catch for bespoke legend position (if originally passed via the formula method)
     if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend.args"]])) {
       if (names(fargs[["legend"]])[1] == "") names(fargs[["legend"]])[1] = "x"
-      fargs[["legend.args"]] = utils::modifyList(fargs[["legend"]], fargs[["legend.args"]])
+      fargs[["legend.args"]] = modifyList(fargs[["legend"]], fargs[["legend.args"]])
       fargs[["legend"]] = NULL
     }
     fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
@@ -501,7 +502,7 @@ plot2.default = function(
   ## Solution: Only pass on relevant args using name checking and do.call.
   ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
   if (isFALSE(add)) {
-    pdots = dots[names(dots) %in% names(formals(graphics::plot.default))]
+    pdots = dots[names(dots) %in% names(formals(plot.default))]
     do.call(
       "plot.window",
       c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
@@ -554,7 +555,7 @@ plot2.default = function(
       lapply(
         seq_along(split_data),
         function(i) {
-          graphics::polygon(
+          polygon(
             x = c(split_data[[i]]$x, rev(split_data[[i]]$x)),
             y = c(split_data[[i]]$ymin, rev(split_data[[i]]$ymax)),
             # col = adjustcolor(col[i], ribbon_alpha),
@@ -571,7 +572,7 @@ plot2.default = function(
       lapply(
         seq_along(split_data),
         function(i) {
-          graphics::segments(
+          segments(
             x0 = split_data[[i]]$x,
             y0 = split_data[[i]]$ymin,
             x1 = split_data[[i]]$x,
@@ -588,7 +589,7 @@ plot2.default = function(
       lapply(
         seq_along(split_data),
         function(i) {
-          graphics::arrows(
+          arrows(
             x0 = split_data[[i]]$x,
             y0 = split_data[[i]]$ymin,
             x1 = split_data[[i]]$x,

@@ -14,7 +14,8 @@ draw_legend(
   lty = NULL,
   col = NULL,
   bg = NULL,
-  cex = NULL
+  cex = NULL,
+  new_plot = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ draw_legend(
 \item{bg}{Plotting character background fill colour(s), passed down from \code{plot2}.}
 
 \item{cex}{Plotting character expansion(s), passed down from \code{plot2}.}
+
+\item{new_plot}{Should we be calling plot.new internally?}
 }
 \description{
 Internal function used to calculate the placement of (including

@@ -14,6 +14,7 @@
 #' @param col Plotting colour(s), passed down from `plot2`.
 #' @param bg Plotting character background fill colour(s), passed down from `plot2`.
 #' @param cex Plotting character expansion(s), passed down from `plot2`.
+#' @param new_plot Should we be calling plot.new internally? 
 draw_legend = function(
     legend = NULL,
     legend.args = NULL,
@@ -24,7 +25,8 @@ draw_legend = function(
     lty = NULL,
     col = NULL,
     bg = NULL,
-    cex = NULL
+    cex = NULL,
+    new_plot = TRUE
 ) {
   
   w = h = outer_right = outer_bottom = NULL
@@ -102,7 +104,7 @@ draw_legend = function(
       par(mar=c(par("mar")[1:3], 2.1)) # revert right margin if outer left
     }
     
-    plot.new()
+    if (isTRUE(new_plot)) plot.new()
     
     ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
     if (outer_right) legend.args[["x"]] = gsub("right!$", "left", legend.args[["x"]])
@@ -138,7 +140,7 @@ draw_legend = function(
     # Catch to reset right margin if previous legend position was "right!"
     if (par("mar")[4]== 0.1) par(mar=c(par("mar")[1:3], 2.1)) 
     
-    plot.new()
+    if (isTRUE(new_plot)) plot.new()
     
     ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
     if (outer_bottom) legend.args[["x"]] = gsub("bottom!$", "top", legend.args[["x"]])
@@ -177,7 +179,7 @@ draw_legend = function(
     # Catch to reset right margin if previous legend position was "right!"
     if (par("mar")[4] == 0.1) par(mar=c(par("mar")[1:3], par("mar")[2]-2)) 
     legend.args[["inset"]] = 0
-    plot.new()
+    if (isTRUE(new_plot)) plot.new()
   }
   
   do.call("legend", legend.args)

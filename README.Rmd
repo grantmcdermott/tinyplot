@@ -24,7 +24,20 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 A lightweight extension of the base R `plot` system, with support for
-automatic grouping and legend handling, and several other enhancements.
+automatic grouping and legend handling, and various other enhancements.
+
+We provide a tutorial with numerous examples below. But here is a quickstart
+example of the package in action.
+
+```{r quickstart}
+plot2::plot2(
+  Sepal.Length ~ Petal.Length | Species, data = iris,
+  # The remaining arguments are optional aesthetic tweaks
+  palette = "accent", pch  = 16,
+  grid = TRUE, frame = FALSE
+)
+```
+
 
 ## Installation
 
@@ -34,7 +47,7 @@ automatic grouping and legend handling, and several other enhancements.
 install.packages("plot2", repos = "https://grantmcdermott.r-universe.dev")
 ```
 
-Our goal is to submit to CRAN by the end of July/August 2023, once we have
+Our goal is to submit to CRAN towards the end of 2023, once we have
 settled on some remaining design choices and features support. You can take a 
 look at the [open issues](https://github.com/grantmcdermott/plot2/issues) to see
 what's currently under consideration. Please feel free to weigh on these if you
@@ -73,10 +86,19 @@ changes to the expected output.
 
 ## Examples
 
-Let's load the package then walk through some examples.
+Start by loading the package.
 
 ```{r}
 library(plot2)
+```
+
+For most of the examples that follow, we'll use a slightly modified version of
+the `airquality` dataset that comes bundled with base R. Let's go ahead and
+create it now.
+
+```{r}
+aq = airquality
+aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
 ```
 
 ### Similarity to `plot()`
@@ -92,19 +114,13 @@ plot2(0:10, main = "plot2")
 ```
 
 Similarly, we can plot elements from a data frame using either the atomic or
-formula methods. Here's a simple example using a slightly modified version of
-the `airquality` dataset that comes bundled with base R.
+formula methods. Here's a simple example using the `aq` dataset that we created
+earlier.
 
 ```{r plot2_simple}
-aq = airquality
-aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
-
 # with(aq,  plot2(Day, Temp)) # atomic method (same as below)
 plot2(Temp ~ Day, data = aq) # formula method
 ```
-
-For the remaining examples below, we'll continue with this modified `aq`
-dataset to demonstrate some of additional features that `plot2` enables.
 
 ### Grouped data
 
@@ -343,5 +359,6 @@ In summary, consider the **plot2** package if you are looking for base R `plot`
 functionality with some added convenience features. You can use pretty much the
 same syntax and all of your theming elements should carry over too. It has no
 dependencies other than base R itself and this makes it an attractive option for
-situations where dependency management is expensive (e.g., an R application
-running in a browser via [WebAssembly](https://docs.r-wasm.org/webr/latest/)).
+package developers or situations where dependency management is expensive (e.g.,
+an R application running in a browser via
+[WebAssembly](https://docs.r-wasm.org/webr/latest/)).

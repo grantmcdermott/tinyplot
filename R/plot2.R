@@ -18,6 +18,9 @@
 #'   of the same length.
 #' @param by the grouping variable(s) that you want to categorize (i.e., colour)
 #'   the plot by.
+#' @param facet the faceting variable that you want arrange separate plot
+#'   windows by. Also accepts the special "by" convenience keyword, in which
+#'   case facets will match the grouping variable(s) above.
 #' @param formula a `formula` that optionally includes grouping variable(s)
 #'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
 #'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
@@ -274,6 +277,7 @@ plot2.default = function(
     x,
     y = NULL,
     by = NULL,
+    facet = NULL,
     data = NULL,
     type = "p",
     xlim = NULL,
@@ -315,6 +319,7 @@ plot2.default = function(
     deparse1(substitute(y))
   }
   by_dep = deparse1(substitute(by))
+  facet_dep = deparse1(substitute(facet))
 
   ## Catch for density type: recycle through plot.density
   if (type == "density") {
@@ -402,13 +407,14 @@ plot2.default = function(
 
 
   if (!is.null(by)) {
-    l = list(x=x, y=y)
-    l[["ymin"]] = ymin
-    l[["ymax"]] = ymax
-    split_data = lapply(l, split, by)
+    split_data = list(x=x, y=y)
+    split_data[["ymin"]] = ymin
+    split_data[["ymax"]] = ymax
+    split_data[["facet"]] = facet
+    split_data = lapply(split_data, split, by)
     split_data = do.call(function(...) Map("list", ...), split_data)
   } else {
-    split_data = list(list(x=x, y=y, ymin = ymin, ymax = ymax))
+    split_data = list(list(x=x, y=y, ymin=ymin, ymax=ymax, facet=facet))
   }
   
   ngrps = length(split_data)
@@ -492,179 +498,205 @@ plot2.default = function(
     
   }
   
-  ## Set the plot window
-  ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
-  ## triggers an annoying warning about unrecognized graphical params.
-  # plot.window(
-  #   xlim = xlim, ylim = ylim, 
-  #   asp = asp, log = log,
-  #   # ...
-  # )
-  ## Solution: Only pass on relevant args using name checking and do.call.
-  ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
-  if (isFALSE(add)) {
-    pdots = dots[names(dots) %in% names(formals(plot.default))]
-    do.call(
-      "plot.window",
-      c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
+  # Titles. Note that we include a special catch for the main title if legend is
+  # "top!" (and main is specified in the first place).
+  adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!"))
+  if (is.null(main) || isFALSE(adj_title)) {
+    title(
+      main = main,
+      sub = sub
     )
-    
-    # axes, plot.frame and grid
-    if (isTRUE(axes)) {
-      if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
-        graphics::Axis(x, side = 1, at = xlabs, labels = names(xlabs))
-      } else {
-        graphics::Axis(x, side = 1)
-      }
-      graphics::Axis(y, side = 2)
-    }
-    if (frame.plot) box()
-    if (!is.null(grid)) {
-      if (is.logical(grid)) {
-        ## If grid is TRUE create a default grid. Rather than just calling the default grid()
-        ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
-        ## and works better for axes based on date/time classes. Exception: For axes in logs,
-        ## resort to using grid() which is like handled better there.
-        if (isTRUE(grid)) {
-          gnx = gny = NULL
-          if (!par("xlog")) {
-            graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
-            gnx = NA
-          }
-          if (!par("ylog")) {
-            graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
-            gny = NA
-          }
-          grid(nx = gnx, ny = gny)
-        }
-      } else {
-        grid
-      }
-    }
-    
-    
-    # Titles. Note that we include a special catch for the main title if legend is
-    # "top!" (and main is specified in the first place).
-    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!"))
-    if (is.null(main) || isFALSE(adj_title)) {
-      title(
-        xlab = xlab,
-        ylab = ylab,
-        main = main,
-        sub = sub
-      )
+  } else {
+    # Bump main up to make space for the legend beneath it
+    title(main = main, line = 5, xpd = NA)
+  }
+  
+  # if (!is.null(facet_dep)) {
+  if (!is.null(facet)) {
+    if (length(facet) == 1 && facet == "by") {
+      facets = names(split_data)
     } else {
-      title(
-        xlab = xlab,
-        ylab = ylab,
-        sub = sub
-      )
-      # Bump main up to make space for the legend beneath it
-      title(main = main, line = 5, xpd = NA)
+      facets = unique(facet)
     }
+    par(mfrow = c(1, length(facets)))
+    ifacet = seq_along(facets)
+    # Bump extra space for top facet margins if a main title is also present
+    if (!is.null(main)) {
+      omar = par("mar")
+      omar[3] = omar[3] + 2
+      par(mar = omar) 
+    }
+    
+  } else {
+    facets = ifacet = 1
+  }
+  
+  # Facets, axes, etc.
+  for (ii in ifacet) {
+    
+    # See: https://github.com/grantmcdermott/plot2/issues/65
+    par(mfg = c(1, ii))
+    
+    ## Set the plot window
+    ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
+    ## triggers an annoying warning about unrecognized graphical params.
+    # plot.window(
+    #   xlim = xlim, ylim = ylim, 
+    #   asp = asp, log = log,
+    #   # ...
+    # )
+    ## Solution: Only pass on relevant args using name checking and do.call.
+    ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
+    if (isFALSE(add)) {
+      pdots = dots[names(dots) %in% names(formals(plot.default))]
+      do.call(
+        "plot.window",
+        c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
+      )
+      
+      # axes, plot.frame and grid
+      if (isTRUE(axes)) {
+        if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+          graphics::Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+        } else {
+          graphics::Axis(x, side = 1)
+        }
+        graphics::Axis(y, side = 2)
+      }
+      if (frame.plot) box()
+      if (!is.null(grid)) {
+        if (is.logical(grid)) {
+          ## If grid is TRUE create a default grid. Rather than just calling the default grid()
+          ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
+          ## and works better for axes based on date/time classes. Exception: For axes in logs,
+          ## resort to using grid() which is like handled better there.
+          if (isTRUE(grid)) {
+            gnx = gny = NULL
+            if (!par("xlog")) {
+              graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              gnx = NA
+            }
+            if (!par("ylog")) {
+              graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              gny = NA
+            }
+            grid(nx = gnx, ny = gny)
+          }
+        } else {
+          grid
+        }
+      }
+      
+      # facet titles
+      if (!is.null(facet)) {
+        mtext(paste(facets[[ii]]), side = 3)
+      }
+    
+  }
+    
+    title(xlab = xlab, ylab = ylab)
       
   }
 
-  # polygons before lines
-  if (type == "ribbon") {
-    invisible(
-      lapply(
-        seq_along(split_data),
-        function(i) {
-          polygon(
-            x = c(split_data[[i]]$x, rev(split_data[[i]]$x)),
-            y = c(split_data[[i]]$ymin, rev(split_data[[i]]$ymax)),
-            # col = adjustcolor(col[i], ribbon_alpha),
-            col = bg[i],
-            border = FALSE
-          )
-        }
-      )
-    )
-  } 
-  ## segments/arrows before points
-  if (type == "pointrange") { 
-    invisible(
-      lapply(
-        seq_along(split_data),
-        function(i) {
-          segments(
-            x0 = split_data[[i]]$x,
-            y0 = split_data[[i]]$ymin,
-            x1 = split_data[[i]]$x,
-            y1 = split_data[[i]]$ymax,
-            col = col[i],
-            lty = lty[i]
-          )
-        }
-      )
-    )
-  } 
-  if (type == "errorbar") {
-    invisible(
-      lapply(
-        seq_along(split_data),
-        function(i) {
-          arrows(
-            x0 = split_data[[i]]$x,
-            y0 = split_data[[i]]$ymin,
-            x1 = split_data[[i]]$x,
-            y1 = split_data[[i]]$ymax,
-            col = col[i],
-            lty = lty[i],
-            length = 0.05,
-            angle = 90,
-            code = 3
-          )
-        }
-      )
-    )
-  } 
   
-  ## now draw the points/lines
-  if (type %in% c("p", "pointrange", "errorbar")) {
-    invisible(
-      lapply(
-        seq_along(split_data),
-        function(i) {
-          points(
-            x = split_data[[i]]$x,
-            y = split_data[[i]]$y,
-            col = col[i],
-            bg = bg[i],
-            # type = type, ## rather hardcode "p" to avoid warning message about "pointrange"
-            type = "p",
-            pch = pch[i],
-            lty = lty[i],
-            cex = cex
-          )
-        }
-      )
-    )
-  } else if (type %in% c("l", "o", "b", "c", "h", "s", "S", "ribbon")) {
-    if (type=="ribbon") type = "l"
-    invisible(
-      lapply(
-        seq_along(split_data),
-        function(i) {
-          lines(
-            x = split_data[[i]]$x,
-            y = split_data[[i]]$y,
-            col = col[i],
-            type = type,
-            pch = pch[i],
-            lty = lty[i]
-          )
-        }
-      )
-    )
-  } else {
-    stop("`type` argument not supported.", call. = FALSE)
+  for (i in seq_along(split_data)) {
+    
+    idata = split_data[[i]]
+    ifacet = idata[["facet"]]
+    if (!is.null(ifacet)) {
+      idata[["facet"]] = NULL
+      ## Need extra catch for non-groupby data that also doesn't have ymin or
+      ## ymax vars
+      if (is.null(by)) {
+        if (is.null(idata[["ymin"]])) idata[["ymin"]] = NULL
+        if (is.null(idata[["ymax"]])) idata[["ymax"]] = NULL
+      }
+      idata = lapply(idata, split, ifacet)
+      idata = do.call(function(...) Map("list", ...), idata)
+    } else {
+      idata = list(idata)
+    }
+    
+    for (ii in seq_along(idata)) {
+      xx = idata[[ii]]$x
+      yy = idata[[ii]]$y
+      yymin = idata[[ii]]$ymin
+      yymax = idata[[ii]]$ymax
+      
+      # See: https://github.com/grantmcdermott/plot2/issues/65
+      par(mfg = c(1, ii))
+      
+      
+      ## polygons before lines
+      if (type == "ribbon") {
+        polygon(
+          x = c(xx, rev(xx)),
+          y = c(yymin, rev(yymax)),
+          col = bg[i],
+          border = FALSE
+        )
+      }
+      
+      ## segments/arrows before points
+      if (type == "pointrange") {
+        segments(
+          x0 = xx,
+          y0 = yymin,
+          x1 = xx,
+          y1 = yymax,
+          col = col[i],
+          lty = lty[i]
+        )
+      }
+      if (type == "errorbar") {
+        arrows(
+          x0 = xx,
+          y0 = yymin,
+          x1 = xx,
+          y1 = yymax,
+          col = col[i],
+          lty = lty[i],
+          length = 0.05,
+          angle = 90,
+          code = 3
+        )
+      }
+      
+      ## now draw the points/lines
+      if (type %in% c("p", "pointrange", "errorbar")) {
+        points(
+          x = xx,
+          y = yy,
+          col = col[i],
+          bg = bg[i],
+          # type = type, ## rather hardcode "p" to avoid warning message about "pointrange"
+          type = "p",
+          pch = pch[i],
+          lty = lty[i],
+          cex = cex
+        )
+      } else if (type %in% c("l", "o", "b", "c", "h", "s", "S", "ribbon")) {
+        rtype = type == "ribbon"
+        if (rtype) type = "l"
+        lines(
+          x = xx,
+          y = yy,
+          col = col[i],
+          type = type,
+          pch = pch[i],
+          lty = lty[i]
+        )
+        if (rtype) type = "ribbon"
+      } else {
+        stop("`type` argument not supported.", call. = FALSE)
+      }
+      
+    }
+    
   }
-
   
   
-  if (par_restore) {
+  if (par_restore || !is.null(facet)) {
     on.exit(par(opar), add = TRUE)
   }
   
@@ -926,3 +958,4 @@ plot2.density = function(
     )
 
 }
+

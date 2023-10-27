@@ -13,6 +13,7 @@ plot2(x, ...)
   x,
   y = NULL,
   by = NULL,
+  facet = NULL,
   data = NULL,
   type = "p",
   xlim = NULL,
@@ -104,6 +105,10 @@ section of \code{plot}).}
 
 \item{by}{the grouping variable(s) that you want to categorize (i.e., colour)
 the plot by.}
+
+\item{facet}{the faceting variable that you want arrange separate plot
+windows by. Also accepts the special "by" convenience keyword, in which
+case facets will match the grouping variable(s) above.}
 
 \item{data}{a data.frame (or list) from which the variables in formula
 should be taken. A matrix is converted to a data frame.}

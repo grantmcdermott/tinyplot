@@ -1,6 +1,5 @@
 * [Home](/)
-* Articles: $ALTDOC_VIGNETTE_BLOCK
-* Reference: $ALTDOC_MAN_BLOCK
+* [Get Started](vignettes/get_started.md)
 * [News]($ALTDOC_NEWS)
 * [Changelog]($ALTDOC_CHANGELOG)
 * [Code of Conduct]($ALTDOC_CODE_OF_CONDUCT)

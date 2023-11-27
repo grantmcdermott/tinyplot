@@ -9,3 +9,4 @@
 ^pkgdown$
 ^\.github$
 ^altdoc$
+vignettes/get_started.Rmd

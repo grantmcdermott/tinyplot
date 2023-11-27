@@ -1,6 +1,4 @@
 * [Home](/)
-* Reference: 
-  - [draw_legend](man/draw_legend)
-  - [plot2](man/plot2)
+* [Get Started](vignettes/get_started.md)
 * [News](NEWS.md)
 * [Citation](CITATION.md)

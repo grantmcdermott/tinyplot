@@ -157,6 +157,10 @@
 #' 
 #' @examples
 #' 
+#' # save graphics paramaters to restore them later
+#' op <- par()
+#' 
+#' 
 #' # plot2 should be a drop-in replacement for (most) regular plot calls. For
 #' # example:
 #' 
@@ -167,10 +171,13 @@
 #' par(mfrow = c(2, 2))
 #' plot(airquality$Day, airquality$Temp, main = "plot")
 #' plot(Temp ~ Day, data = airquality, main = "plot (formula)")
-#' #' plot2(airquality$Day, airquality$Temp, main = "plot2")
+#' plot2(airquality$Day, airquality$Temp, main = "plot2")
 #' plot2(Temp ~ Day, data = airquality, main = "plot2 (formula)")
 #' 
-#' dev.off() # reset to default layout
+#' 
+#' # restore graphics parameters
+#' par(op)  
+#' 
 #' 
 #' # Unlike vanilla plot, however, plot2 allows you to characterize groups 
 #' # (using either the `by` argument or equivalent `|` formula syntax).

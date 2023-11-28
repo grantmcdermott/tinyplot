@@ -1,5 +1,8 @@
 * [Home](/)
 * [Get Started](vignettes/get_started.md)
+* Functions: 
+  - [`plot2`](man/plot2.md)
+  - [`draw_legend`](man/draw_legend.md)
 * [News]($ALTDOC_NEWS)
 * [Changelog]($ALTDOC_CHANGELOG)
 * [Code of Conduct]($ALTDOC_CODE_OF_CONDUCT)

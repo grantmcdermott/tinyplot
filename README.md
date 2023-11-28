@@ -26,7 +26,7 @@ plot2::plot2(
 ```
 
 <img
-src="README.markdown_strict_files/figure-markdown_strict/quickstart-1.png"
+src="man/figures/README/figure-markdown_strict/quickstart-1.png"
 style="width:70.0%" />
 
 ## Installation

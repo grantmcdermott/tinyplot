@@ -8,26 +8,11 @@
 [![R-universe status
 badge](https://grantmcdermott.r-universe.dev/badges/plot2.png)](https://grantmcdermott.r-universe.dev)
 [![R-CMD-check](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml)
+[![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/plot2/index.html)
 <!-- badges: end -->
 
 A lightweight extension of the base R `plot` system, with support for
 automatic grouping and legend handling, and various other enhancements.
-
-We provide a tutorial with numerous examples below. But here is a
-quickstart example of the package in action.
-
-``` r
-plot2::plot2(
-  Sepal.Length ~ Petal.Length | Species, data = iris,
-  # The remaining arguments are optional aesthetic tweaks
-  palette = "accent", pch  = 16,
-  grid = TRUE, frame = FALSE
-)
-```
-
-<img
-src="man/figures/README/figure-markdown_strict/quickstart-1.png"
-style="width:70.0%" />
 
 ## Installation
 
@@ -80,12 +65,55 @@ replacement for the equivalent base plot function. Users should
 generally be able to swap a valid `plot()` call with `plot2()` without
 any changes to the expected output.
 
-## Conclusion
+## Examples
 
-In summary, consider the **plot2** package if you are looking for base R
-`plot` functionality with some added convenience features. You can use
-pretty much the same syntax and all of your theming elements should
-carry over too. It has no dependencies other than base R itself and this
-makes it an attractive option for package developers or situations where
-dependency management is expensive (e.g., an R application running in a
-browser via [WebAssembly](https://docs.r-wasm.org/webr/latest/)).
+We provide a “[Get
+Started](https://grantmcdermott.com/plot2/index.html#/vignettes/get_started)”
+tutorial with numerous examples on the package homepage. But here are
+some quickstart examples of the package in action.
+
+``` r
+library(plot2)
+
+# Grouped scatterplot with automatic legend
+plot2(
+  Sepal.Length ~ Petal.Length | Species,
+  data = iris
+)
+```
+
+<img
+src="man/figures/README/figure-markdown_strict/quickstart-1.png"
+style="width:70.0%" />
+
+``` r
+ 
+# Same plot with a few extra aesthetic tweaks
+plot2(
+  Sepal.Length ~ Petal.Length | Species, 
+  data = iris,
+  palette = "accent", pch  = 16,
+  grid = TRUE, frame = FALSE
+)
+```
+
+<img
+src="man/figures/README/figure-markdown_strict/quickstart-2.png"
+style="width:70.0%" />
+
+``` r
+
+# Grouped density plot with automatic legend (and some aesthetic tweaks)
+plot2(
+  ~ weight | feed,
+  data = chickwts,
+  type = "density",
+  main = "Distribution of chick weights by feed",
+  palette = "classic", fill = "by",
+  grid = TRUE
+)
+```
+
+<img
+src="man/figures/README/figure-markdown_strict/quickstart-3.png"
+style="width:70.0%" />

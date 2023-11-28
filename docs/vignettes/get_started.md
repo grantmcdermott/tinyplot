@@ -1,6 +1,8 @@
 
 # Get Started
 
+## Preliminaries
+
 Start by loading the package.
 
 ``` r
@@ -295,7 +297,8 @@ example again underscores the correspondence with the base graphics
 system. Because `plot2` is effectively a convenience wrapper around base
 `plot`, any global elements that you have set for the latter should
 carry over to the former. For nice out-of-the-box themes, we recommend
-the **basetheme** package.
+the **basetheme** package
+([link](https://github.com/karoliskoncevicius/basetheme)).
 
 ``` r
 par(pch = 15, las = 0, family = "") # change/revert global changes from above
@@ -323,6 +326,20 @@ dev.off()
 #> null device 
 #>           1
 ```
+
+Similarly, for access to a wider array of fonts, you might consider the
+**showtext** package
+([link](https://cran.r-project.org/web/packages/showtext/vignettes/introduction.html)).
+
+## Conclusion
+
+In summary, consider the **plot2** package if you are looking for base R
+`plot` functionality with some added convenience features. You can use
+pretty much the same syntax and all of your theme elements should carry
+over too. It has no dependencies other than base R itself and this makes
+it an attractive option for package developers or situations where
+dependency management is expensive (e.g., an R application running in a
+browser via [WebAssembly](https://docs.r-wasm.org/webr/latest/)).
 
 [1] At this point, experienced base plot users might protest that you
 *can* colour by groups using the `col` argument, e.g.

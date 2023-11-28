@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Preliminaries
+
 Start by loading the package.
 
 ```{r}
@@ -22,7 +24,7 @@ For most of the examples that follow, we'll use a slightly modified version of
 the `airquality` dataset that comes bundled with base R. Let's go ahead and
 create it now.
 
-```{r}
+```{r aq}
 aq = airquality
 aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
 ```
@@ -259,7 +261,8 @@ At the risk of repeating ourselves, the use of `par` in the previous example
 again underscores the correspondence with the base graphics system. Because
 `plot2` is effectively a convenience wrapper around base `plot`, any global
 elements that you have set for the latter should carry over to the former. For
-nice out-of-the-box themes, we recommend the **basetheme** package.
+nice out-of-the-box themes, we recommend the **basetheme** package
+([link](https://github.com/karoliskoncevicius/basetheme)).
 
 ```{r basethme_royal}
 par(pch = 15, las = 0, family = "") # change/revert global changes from above
@@ -278,4 +281,18 @@ plot2(
 basetheme(NULL)  # back to default theme
 dev.off()
 ```
+
+Similarly, for access to a wider array of fonts, you might consider the
+**showtext** package
+([link](https://cran.r-project.org/web/packages/showtext/vignettes/introduction.html)).
+
+## Conclusion
+
+In summary, consider the **plot2** package if you are looking for base R `plot`
+functionality with some added convenience features. You can use pretty much the
+same syntax and all of your theme elements should carry over too. It has no
+dependencies other than base R itself and this makes it an attractive option for
+package developers or situations where dependency management is expensive (e.g.,
+an R application running in a browser via
+[WebAssembly](https://docs.r-wasm.org/webr/latest/)).
 

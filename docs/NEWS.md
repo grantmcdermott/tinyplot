@@ -1,6 +1,10 @@
 # News
 
-##  0.0.3.911 (development version)
+##  0.0.3.912 (development version)
+
+Website:
+
+We now have a dedicated website! ([#80](https://github.com/grantmcdermott/plot2/issues/80) [[@vincent](https://github.com/vincent)arelbundock](https://github.com/vincentarelbundock))
 
 New features:
 

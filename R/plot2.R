@@ -320,6 +320,7 @@ plot2.default = function(
   }
   by_dep = deparse1(substitute(by))
   facet_dep = deparse1(substitute(facet))
+  if (!is.null(facet) && length(facet)==1 && facet=="by") facet = by
 
   ## Catch for density type: recycle through plot.density
   if (type == "density") {
@@ -511,13 +512,8 @@ plot2.default = function(
     title(main = main, line = 5, xpd = NA)
   }
   
-  # if (!is.null(facet_dep)) {
   if (!is.null(facet)) {
-    if (length(facet) == 1 && facet == "by") {
-      facets = names(split_data)
-    } else {
-      facets = unique(facet)
-    }
+    facets = unique(facet)
     par(mfrow = c(1, length(facets)))
     ifacet = seq_along(facets)
     # Bump extra space for top facet margins if a main title is also present
@@ -561,7 +557,7 @@ plot2.default = function(
         } else {
           graphics::Axis(x, side = 1)
         }
-        graphics::Axis(y, side = 2)
+        if (isTRUE(frame.plot) || ii == 1) graphics::Axis(y, side = 2)
       }
       if (frame.plot) box()
       if (!is.null(grid)) {
@@ -594,7 +590,9 @@ plot2.default = function(
     
   }
     
-    title(xlab = xlab, ylab = ylab)
+    # title(xlab = xlab, ylab = ylab)
+    title(xlab = xlab)
+    if (isTRUE(frame.plot) || ii == 1) title(ylab = ylab)
       
   }
 
@@ -835,6 +833,7 @@ plot2.formula = function(
 plot2.density = function(
     x = NULL,
     by = NULL,
+    facet = NULL,
     type = c("l", "area"),
     xlim = NULL,
     ylim = NULL,
@@ -873,12 +872,19 @@ plot2.density = function(
     legend.args = list(...)[["legend.args"]]
   }
 
-  if (is.null(by)) {
+  by_names = facet_names = NULL
+  if (is.null(by) && is.null(facet)) {
     x = object$x
     y = object$y
   } else {
     x = eval(str2lang(object$data.name), envir = parent.frame())
-    split_x = split(x, f = by)
+    if (is.null(facet) || identical(by, facet)) {
+      split_x = split(x, f = by) 
+    } else if (is.null(by)) {
+      split_x = split(x, f = facet)
+    } else {
+      split_x = split(x, f = list(by, facet), sep = "::")
+    }
     # joint bandwidth
     bw_type = as.list(object$call[-1])[["bw"]]
     if (is.null(bw_type)) bw_type = stats::bw.nrd0 else bw_type = str2lang(paste0("bw.", bw))
@@ -888,14 +894,34 @@ plot2.density = function(
     #
     split_object = lapply(split_x, function(xx) update(object, x = xx, bw = bw))
     by_names = names(split_object)
+    if (all(grepl("::", by_names))) {
+      by_names = strsplit(by_names, "::")
+      facet_names = sapply(by_names, `[[`, 2)
+      facet_names = tryCatch(as(facet_names, class(facet)), error = function(e) facet_names)
+      by_names = sapply(by_names, `[[`, 1)
+    } else if (identical(by, facet)) {
+      facet_names = by_names ## yuck
+    } else if (is.null(by) && !is.null(facet)) {
+      facet_names = names(split_object)
+    }
     by_names = tryCatch(as(by_names, class(by)), error = function(e) by_names)
+    facet_names = tryCatch(as(facet_names_names, class(facet)), error = function(e) facet_names)
     split_object = lapply(seq_along(split_object), function(ii) {
       lst = list(
         x = split_object[[ii]]$x,
         y = split_object[[ii]]$y,
         n = split_object[[ii]]$n
       )
-      lst$by = rep_len(by_names[ii], length.out = length(lst$x))
+      if (!is.null(by)) {
+        lst$by = rep_len(by_names[ii], length.out = length(lst$x))
+      } else {
+        lst$by = NULL
+      }
+      if (!is.null(facet)) {
+        lst$facet = rep_len(facet_names[ii], length.out = length(lst$x))
+      } else {
+        lst$facet = NULL
+      }
       return(lst)
     })
     ## combine element by element
@@ -904,6 +930,7 @@ plot2.density = function(
     x = res[["x"]]
     y = res[["y"]]
     by = res[["by"]]
+    facet = res[["facet"]]
     bw = sprintf("%.4g", bw)
     n = res[["n"]]
     if (is.null(xlab)) {
@@ -933,7 +960,7 @@ plot2.density = function(
   if (is.null(main)) main = paste0(paste(object$call, collapse = "(x = "), ")")
 
   plot2.default(
-    x = x, y = y, by = by,
+    x = x, y = y, by = by, facet = facet,
     type = type,
     xlim = xlim,
     ylim = ylim,

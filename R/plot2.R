@@ -602,7 +602,7 @@ plot2.default = function(
     idata = split_data[[i]]
     ifacet = idata[["facet"]]
     if (!is.null(ifacet)) {
-      idata[["facet"]] = NULL
+      idata[["facet"]] = NULL ## GM: Why are we doing this again?
       ## Need extra catch for non-groupby data that also doesn't have ymin or
       ## ymax vars
       if (is.null(by)) {

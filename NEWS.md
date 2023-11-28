@@ -1,6 +1,10 @@
 # News
 
-##  0.0.3.911 (development version)
+##  0.0.3.912 (development version)
+
+Website:
+
+We now have a dedicated website! (#80 @vincentarelbundock)
 
 New features:
 

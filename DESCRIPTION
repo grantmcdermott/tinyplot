@@ -1,7 +1,7 @@
 Package: plot2
 Type: Package
 Title: Lightweight extension of base R plot
-Version: 0.0.3.9011
+Version: 0.0.3.9012
 Authors@R: 
   c(
     person(
@@ -50,7 +50,7 @@ Suggests:
   tinytest,
   tinysnapshot (>= 0.0.3)
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.2.3.9000
 URL: https://grantmcdermott.com/plot2/,
     http://grantmcdermott.com/plot2/
 BugReports: https://github.com/grantmcdermott/plot2/issues

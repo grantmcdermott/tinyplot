@@ -44,3 +44,4 @@ inst/tinytest/_tinysnapshot_review/
 
 # MacOS cruft
 .DS_Store
+altdoc/freeze.rds

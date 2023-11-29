@@ -1,4 +1,10 @@
-# plot2 0.0.3.911 (development version)
+# News
+
+##  0.0.3.912 (development version)
+
+Website:
+
+We now have a dedicated website! (#80 @vincentarelbundock)
 
 New features:
 
@@ -28,7 +34,7 @@ e.g. `plot2(rnorm(100)`. (#52 etiennebacher)
 plotted even if a y variable isn't specified. (#54 @grantmcdermott)
 - Correctly label date-time axes. (#77 @grantmcdermott and @zeileis)
 
-# plot2 0.0.3
+##  0.0.3
 
 Breaking changes:
 
@@ -66,7 +72,7 @@ Bug fixes:
 - Setting a global palette, e.g. `palette("ggplot2")` is now respected. (#44
 @grantmcdermott)
 
-# plot2 0.0.2
+##  0.0.2
 
 Breaking changes:
 
@@ -93,6 +99,6 @@ Project:
 - @vincentarelbundock and @zeileis have joined the project as core contributors.
 🎉
 
-# plot2 0.0.1
+##  0.0.1
 
 * Initial release on GitHub.

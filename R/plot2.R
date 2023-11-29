@@ -316,7 +316,10 @@ plot2.default = function(
   
   dots = list(...)
   
-  if (isTRUE(add)) legend = FALSE
+  if (isTRUE(add)) {
+    legend = FALSE
+    # main = sub = NULL
+  }
   
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = deparse1(substitute(x))
@@ -527,9 +530,9 @@ plot2.default = function(
   }
   
   if (!is.null(facet)) {
-    facets = unique(facet)
-    par(mfrow = c(1, length(facets)))
-    ifacet = seq_along(facets)
+    nfacets = unique(facet)
+    par(mfrow = c(1, length(nfacets)))
+    ifacet = seq_along(nfacets)
     # Bump extra space for top facet margins if a main title is also present
     if (!is.null(main)) {
       omar = par("mar")
@@ -538,7 +541,7 @@ plot2.default = function(
     }
     
   } else {
-    facets = ifacet = 1
+    nfacets = ifacet = 1
   }
   
   # Facets, axes, etc.
@@ -599,14 +602,17 @@ plot2.default = function(
       
       # facet titles
       if (!is.null(facet)) {
-        mtext(paste(facets[[ii]]), side = 3)
+        mtext(paste(nfacets[[ii]]), side = 3)
       }
+      # title(xlab = xlab, ylab = ylab)
+      title(xlab = xlab)
+      if (isTRUE(frame.plot) || ii == 1) title(ylab = ylab)
     
   }
     
-    # title(xlab = xlab, ylab = ylab)
-    title(xlab = xlab)
-    if (isTRUE(frame.plot) || ii == 1) title(ylab = ylab)
+    # # title(xlab = xlab, ylab = ylab)
+    # title(xlab = xlab)
+    # if (isTRUE(frame.plot) || ii == 1) title(ylab = ylab)
       
   }
 
@@ -918,8 +924,10 @@ plot2.density = function(
     } else if (is.null(by) && !is.null(facet)) {
       facet_names = names(split_object)
     }
-    by_names = tryCatch(as(by_names, class(by)), error = function(e) by_names)
-    facet_names = tryCatch(as(facet_names_names, class(facet)), error = function(e) facet_names)
+    by_names = tryCatch(as(by_names, class(by)), error = function(e) if (class(by)=="factor") as.factor(by_names) else by_names)
+    # need to coerce facet variables to factors for faceting to work properly later on
+    facet_names = tryCatch(as.factor(facet_names), error = function(e) facet_names)
+    
     split_object = lapply(seq_along(split_object), function(ii) {
       lst = list(
         x = split_object[[ii]]$x,

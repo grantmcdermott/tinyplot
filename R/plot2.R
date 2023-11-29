@@ -392,11 +392,18 @@ plot2.default = function(
       x = as.integer(x)
     }
     if (type == "ribbon") {
-      if (is.null(by)) {
+      if (is.null(by) && is.null(facet)) {
         xord = order(x) 
-      } else {
+      } else if (is.null(facet)) {
         xord = order(by, x)
         by = by[xord]
+      } else if (is.null(by)) {
+        xord = order(facet, x)
+        facet = facet[xord]
+      } else {
+        xord = order(by, facet, x)
+        by = by[xord]
+        facet = facet[xord]
       }
       x = x[xord]
       y = y[xord]

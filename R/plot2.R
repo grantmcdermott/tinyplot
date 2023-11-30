@@ -16,8 +16,10 @@
 #'   plot. Any reasonable way of defining the coordinates is acceptable. See
 #'   the function xy.coords for details. If supplied separately, they must be
 #'   of the same length.
-#' @param by the grouping variable(s) that you want to categorize (i.e., colour)
-#'   the plot by.
+#' @param by grouping variable(s). By default, groups will be represented
+#'   through colouring of the plot elements. However, this can be turned off
+#'   and other plot parameters (e.g., line types) can also take on grouping
+#'   behaviour via the special "by" keyword. See Examples.
 #' @param facet the faceting variable that you want arrange separate plot
 #'   windows by. Also accepts the special "by" convenience keyword, in which
 #'   case facets will match the grouping variable(s) above.

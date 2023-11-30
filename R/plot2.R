@@ -617,14 +617,20 @@ plot2.default = function(
     # if (isTRUE(frame.plot) || ii == 1) title(ylab = ylab)
       
   }
-
   
+  ## Now, we can finally draw all of the plot elements (points, lines, etc.)
+  ## We'll do this via two nested loops:
+  ##  1) Outer loop over groups, and 
+  ##  2) Inner loop over facets
+
+  ## Outer loop over the "by" groups
   for (i in seq_along(split_data)) {
     
+    # Split group-level data again to grab any facets
     idata = split_data[[i]]
     ifacet = idata[["facet"]]
     if (!is.null(ifacet)) {
-      idata[["facet"]] = NULL ## GM: Why are we doing this again?
+      idata[["facet"]] = NULL ## Don't need this anymore since we'll be splitting by ifacet
       ## Need extra catch for non-groupby data that also doesn't have ymin or
       ## ymax vars
       if (is.null(by)) {
@@ -637,15 +643,19 @@ plot2.default = function(
       idata = list(idata)
     }
     
+    ## Inner loop over the "facet" variables
     for (ii in seq_along(idata)) {
       xx = idata[[ii]]$x
       yy = idata[[ii]]$y
       yymin = idata[[ii]]$ymin
       yymax = idata[[ii]]$ymax
       
+      # Set the facet "window" manually
       # See: https://github.com/grantmcdermott/plot2/issues/65
       par(mfg = c(1, ii))
       
+      
+      # Draw the individual plot elements...
       
       ## polygons before lines
       if (type == "ribbon") {

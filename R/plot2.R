@@ -320,7 +320,7 @@ plot2.default = function(
   
   if (isTRUE(add)) {
     legend = FALSE
-    # main = sub = NULL
+    # main = sub = xlab = ylab = NULL ## Rather do this later
   }
   
   # Capture deparsed expressions early, before x, y and by are evaluated
@@ -470,7 +470,12 @@ plot2.default = function(
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
   
-  ## place and draw the legend
+  
+  #
+  ## Global plot elements (legend and titles)
+  #
+  
+  # place and draw the legend
   
   legend.args = dots[["legend.args"]]
   if (is.null(legend.args)) legend.args = list(x = NULL)
@@ -518,19 +523,31 @@ plot2.default = function(
     
   }
   
-  # Titles. Note that we include a special catch for the main title if legend is
-  # "top!" (and main is specified in the first place).
-  adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!"))
-  if (is.null(main) || isFALSE(adj_title)) {
-    title(
-      main = main,
-      sub = sub
-    )
-  } else {
-    # Bump main up to make space for the legend beneath it
-    title(main = main, line = 5, xpd = NA)
+  # Titles. Only draw these if add = FALSE
+  if (isFALSE(add)) {
+    # main title
+    # Note that we include a special catch for the main title if legend is
+    # "top!" (and main is specified in the first place).
+    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!"))
+    if (is.null(main) || isFALSE(adj_title)) {
+      title(
+        main = main,
+        sub = sub
+      )
+    } else {
+      # Bump main up to make space for the legend beneath it
+      title(main = main, line = 5, xpd = NA)
+    }
+    # Axis titles
+    title(xlab = xlab, ylab = ylab)
   }
   
+  
+  #
+  ## Facet windows
+  #
+  
+  # First determine and set the number of facets
   if (!is.null(facet)) {
     nfacets = unique(facet)
     par(mfrow = c(1, length(nfacets)))
@@ -546,7 +563,7 @@ plot2.default = function(
     nfacets = ifacet = 1
   }
   
-  # Facets, axes, etc.
+  # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
   for (ii in ifacet) {
     
     # See: https://github.com/grantmcdermott/plot2/issues/65
@@ -606,22 +623,19 @@ plot2.default = function(
       if (!is.null(facet)) {
         mtext(paste(nfacets[[ii]]), side = 3)
       }
-      # title(xlab = xlab, ylab = ylab)
-      title(xlab = xlab)
-      if (isTRUE(frame.plot) || ii == 1) title(ylab = ylab)
+    }
     
-  }
-    
-    # # title(xlab = xlab, ylab = ylab)
-    # title(xlab = xlab)
-    # if (isTRUE(frame.plot) || ii == 1) title(ylab = ylab)
-      
   }
   
-  ## Now, we can finally draw all of the plot elements (points, lines, etc.)
-  ## We'll do this via two nested loops:
-  ##  1) Outer loop over groups, and 
-  ##  2) Inner loop over facets
+  
+  #
+  ## Interior plot elements
+  #
+  
+  # Finally, we can draw all of the plot elements (points, lines, etc.)
+  # We'll do this via a nested loops:
+  #  1) Outer loop over groups 
+  #  2) Inner loop over facets
 
   ## Outer loop over the "by" groups
   for (i in seq_along(split_data)) {
@@ -653,7 +667,6 @@ plot2.default = function(
       # Set the facet "window" manually
       # See: https://github.com/grantmcdermott/plot2/issues/65
       par(mfg = c(1, ii))
-      
       
       # Draw the individual plot elements...
       

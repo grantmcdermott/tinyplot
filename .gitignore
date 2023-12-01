@@ -37,6 +37,7 @@ vignettes/*.pdf
 docs
 
 README.html
+README_files/
 
 # tinysnapshot extras
 inst/tinytest/_tinysnapshot_OLD/

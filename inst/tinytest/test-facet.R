@@ -61,67 +61,6 @@ if (getRversion()  <= "4.3.2") {
 }
 
 #
-## Density plot versions
-
-f = function() {
-  with(
-    mtcars,
-    plot2(
-      x = mpg,
-      type = "density",
-      facet = cyl
-    )
-  )
-}
-expect_snapshot_plot(f, label = "facet_density")
-
-f = function() {
-  with(
-    mtcars,
-    plot2(
-      x = mpg,
-      type = "density",
-      by = cyl, facet = "by"
-    )
-  )
-}
-expect_snapshot_plot(f, label = "facet_density_by_equal")
-
-f = function() {
-  with(
-    mtcars,
-    plot2(
-      x = mpg,
-      type = "density",
-      by = am, facet = cyl
-    )
-  )
-}
-expect_snapshot_plot(f, label = "facet_density_by")
-
-## Skip failing test in R devel due to some minor esoteric difference coming up 
-## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion()  <= "4.3.2") {
-  f = function() {
-    with(
-      mtcars,
-      plot2(
-        x = mpg,
-        type = "density",
-        by = am, facet = cyl,
-        fill = "by", palette = "dark2",
-        grid = TRUE, frame = FALSE,
-        main = "Car efficiency",
-        # xlab = "Weight", ylab = "MPG",
-        legend = list(title = "Transmission"),
-        sub = "Notes: Broken out by cylinder and transmission"
-      )
-    )
-  }
-  expect_snapshot_plot(f, label = "facet_density_fancy")
-}
-
-#
 ## Ribbon plot versions
 
 mod1 = lm(mpg ~ wt * factor(cyl), mtcars)
@@ -225,6 +164,76 @@ if (getRversion()  <= "4.3.2") {
 }
 
 
+#
+## Density plot versions
+
+# restore original par settings
+par(op)
+
+## Sidestep test fails due to new (R 4.4.0) density grid value calculations.
+## https://bugs.r-project.org/show_bug.cgi?id=18337
+exit_if_not(getRversion()  <= "4.3.2")
+## Note: Once 4.4.0 is released we can either generate some new plots or
+## test with something like:
+# f = function() plot2(density(mtcars$mpg, old.coords=TRUE))
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = mpg,
+      type = "density",
+      facet = cyl
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_density")
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = mpg,
+      type = "density",
+      by = cyl, facet = "by"
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_density_by_equal")
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = mpg,
+      type = "density",
+      by = am, facet = cyl
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_density_by")
+
+## Skip failing test in R devel due to some minor esoteric difference coming up 
+## in R 4.4.0. Can revert once it reaches release for local testing.
+if (getRversion()  <= "4.3.2") {
+  f = function() {
+    with(
+      mtcars,
+      plot2(
+        x = mpg,
+        type = "density",
+        by = am, facet = cyl,
+        fill = "by", palette = "dark2",
+        grid = TRUE, frame = FALSE,
+        main = "Car efficiency",
+        # xlab = "Weight", ylab = "MPG",
+        legend = list(title = "Transmission"),
+        sub = "Notes: Broken out by cylinder and transmission"
+      )
+    )
+  }
+  expect_snapshot_plot(f, label = "facet_density_fancy")
+}
 
 
 #

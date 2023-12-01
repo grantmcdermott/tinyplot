@@ -116,7 +116,7 @@ expect_snapshot_plot(f, label = "readme_pointrange")
 
 ## Skip failing test in R devel due to some minor esoteric difference coming up 
 ## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion()  <= "4.3.1") {
+if (getRversion()  <= "4.3.2") {
   f = function() {
     par(pch = 16, family = "HersheySans")
     

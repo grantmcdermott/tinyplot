@@ -1,10 +1,10 @@
 # Citation
 
 ```verbatim
-To cite package ‘plot2’ in publications use:
+To cite package 'plot2' in publications use:
 
-  McDermott G, Arel-Bundock V, Zeileis A (????). _plot2: Lightweight extension of base R
-  plot_. R package version 0.0.3.9012, http://grantmcdermott.com/plot2/,
+  McDermott G, Arel-Bundock V, Zeileis A (????). _plot2: Lightweight extension of
+  base R plot_. R package version 0.0.3.9012, http://grantmcdermott.com/plot2/,
   <https://grantmcdermott.com/plot2/>.
 
 A BibTeX entry for LaTeX users is

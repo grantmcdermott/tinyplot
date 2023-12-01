@@ -470,6 +470,9 @@ plot2.default = function(
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
   
+  # catch for adding to existing facet plot
+  # if (!is.null(facet) && isTRUE(add)) par(get_par2("last_facet_par"))
+  if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par")[[1]])
   
   #
   ## Global plot elements (legend and titles)
@@ -549,9 +552,10 @@ plot2.default = function(
   
   # First determine and set the number of facets
   if (!is.null(facet)) {
-    nfacets = unique(facet)
-    par(mfrow = c(1, length(nfacets)))
-    ifacet = seq_along(nfacets)
+    facets = unique(facet)
+    ifacet = seq_along(facets)
+    nfacets = length(facets)
+    par(mfrow = c(1, nfacets))
     # Bump extra space for top facet margins if a main title is also present
     if (!is.null(main)) {
       omar = par("mar")
@@ -560,14 +564,14 @@ plot2.default = function(
     }
     
   } else {
-    nfacets = ifacet = 1
+    facets = ifacet = nfacets = 1
   }
   
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
   for (ii in ifacet) {
     
     # See: https://github.com/grantmcdermott/plot2/issues/65
-    par(mfg = c(1, ii))
+    if (nfacets > 1) par(mfg = c(1, ii))
     
     ## Set the plot window
     ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
@@ -621,7 +625,7 @@ plot2.default = function(
       
       # facet titles
       if (!is.null(facet)) {
-        mtext(paste(nfacets[[ii]]), side = 3)
+        mtext(paste(facets[[ii]]), side = 3)
       }
     }
     
@@ -666,7 +670,7 @@ plot2.default = function(
       
       # Set the facet "window" manually
       # See: https://github.com/grantmcdermott/plot2/issues/65
-      par(mfg = c(1, ii))
+      if (nfacets > 1) par(mfg = c(1, ii))
       
       # Draw the individual plot elements...
       
@@ -738,12 +742,20 @@ plot2.default = function(
     
   }
   
+  # tidy up before exit
+  if (!is.null(facet)) {
+    par2(last_facet_par = par(no.readonly = TRUE))
+  }
+  
   
   if (par_restore || !is.null(facet)) {
     on.exit(par(opar), add = TRUE)
   }
   
 }
+
+
+
 
 #' @rdname plot2
 #' @importFrom stats as.formula model.frame

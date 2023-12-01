@@ -157,7 +157,7 @@
 #'   section of `plot`).
 #'   
 #' @importFrom grDevices adjustcolor palette palette.colors palette.pals hcl.colors hcl.pals
-#' @importFrom graphics arrows axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title
+#' @importFrom graphics arrows axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title mtext
 #' @importFrom utils modifyList
 #' 
 #' @examples
@@ -964,7 +964,7 @@ plot2.density = function(
     } else if (is.null(by) && !is.null(facet)) {
       facet_names = names(split_object)
     }
-    by_names = tryCatch(as(by_names, class(by)), error = function(e) if (class(by)=="factor") as.factor(by_names) else by_names)
+    by_names = tryCatch(as(by_names, class(by)), error = function(e) if (inherits(by, "factor")) as.factor(by_names) else by_names)
     # need to coerce facet variables to factors for faceting to work properly later on
     facet_names = tryCatch(as.factor(facet_names), error = function(e) facet_names)
     

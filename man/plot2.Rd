@@ -73,6 +73,7 @@ plot2(x, ...)
 \method{plot2}{density}(
   x = NULL,
   by = NULL,
+  facet = NULL,
   type = c("l", "area"),
   xlim = NULL,
   ylim = NULL,
@@ -103,8 +104,10 @@ of the same length.}
 \item{...}{other \code{graphical} parameters (see \code{par} and also the "Details"
 section of \code{plot}).}
 
-\item{by}{the grouping variable(s) that you want to categorize (i.e., colour)
-the plot by.}
+\item{by}{grouping variable(s). By default, groups will be represented
+through colouring of the plot elements. However, this can be turned off
+and other plot parameters (e.g., line types) can also take on grouping
+behaviour via the special "by" keyword. See Examples.}
 
 \item{facet}{the faceting variable that you want arrange separate plot
 windows by. Also accepts the special "by" convenience keyword, in which

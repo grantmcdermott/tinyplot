@@ -332,7 +332,10 @@ plot2.default = function(
   }
   by_dep = deparse1(substitute(by))
   facet_dep = deparse1(substitute(facet))
-  if (!is.null(facet) && length(facet)==1 && facet=="by") facet = by
+  if (!is.null(facet) && length(facet)==1 && facet=="by") {
+    by = as.factor(by) ## if by==facet, then both need to be factors
+    facet = by
+  }
 
   ## Catch for density type: recycle through plot.density
   if (type == "density") {

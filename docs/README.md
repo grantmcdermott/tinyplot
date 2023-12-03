@@ -82,9 +82,7 @@ plot2(
 )
 ```
 
-<img
-src="man/figures/README/figure-markdown_strict/quickstart-1.png"
-style="width:70.0%" />
+<img src="man/figures/README-quickstart-1.png" style="width:70.0%" />
 
 ``` r
  
@@ -97,9 +95,7 @@ plot2(
 )
 ```
 
-<img
-src="man/figures/README/figure-markdown_strict/quickstart-2.png"
-style="width:70.0%" />
+<img src="man/figures/README-quickstart-2.png" style="width:70.0%" />
 
 ``` r
 
@@ -114,6 +110,4 @@ plot2(
 )
 ```
 
-<img
-src="man/figures/README/figure-markdown_strict/quickstart-3.png"
-style="width:70.0%" />
+<img src="man/figures/README-quickstart-3.png" style="width:70.0%" />

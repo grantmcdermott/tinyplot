@@ -43,9 +43,8 @@ jobs:
 
       - name: Build site
         run: |
-          future::plan(future::multicore)
           install.packages(".", repos = NULL, type = "source")
-          altdoc::render_docs(parallel = TRUE, freeze = FALSE)
+          altdoc::render_docs(freeze = FALSE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀

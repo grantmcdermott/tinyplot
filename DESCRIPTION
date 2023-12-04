@@ -46,7 +46,6 @@ Suggests:
   altdoc,
   basetheme,
   fontquiver,
-  future.apply,
   rsvg,
   svglite,
   tinytest,

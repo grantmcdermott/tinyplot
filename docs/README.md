@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![R-universe status
-badge](https://grantmcdermott.r-universe.dev/badges/plot2.png)](https://grantmcdermott.r-universe.dev)
+badge](https://grantmcdermott.r-universe.dev/badges/plot2)](https://grantmcdermott.r-universe.dev)
 [![R-CMD-check](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml)
 [![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/plot2/index.html)
 <!-- badges: end -->

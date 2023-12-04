@@ -1,6 +1,6 @@
 # News
 
-##  0.0.3.912 (development version)
+##  0.0.3.913 (development version)
 
 Website:
 
@@ -23,6 +23,8 @@ existing plot window. (#60 @grantmcdermott)
 - Support for "area" type plots as a special case of ribbon plots. (#68
 @grantmcdermott)
 - Partial matching for palette keywords. (#74 @grantmcdermott)
+- Support for basic plot facets via the `facet` argument. Facets can be combined
+with `by` grouping or used on their own. (#83 @grantmcdermott)
 
 Bug fixes:
 

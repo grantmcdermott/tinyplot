@@ -37,6 +37,7 @@ vignettes/*.pdf
 docs
 
 README.html
+README_files/
 
 # tinysnapshot extras
 inst/tinytest/_tinysnapshot_OLD/
@@ -48,3 +49,6 @@ inst/tinytest/_tinysnapshot_review/
 # altdoc (ignore local files since GHA workflow will take care of website build)
 ^docs$
 altdoc/freeze.rds
+
+# SCRATCH testing folder
+SCRATCH

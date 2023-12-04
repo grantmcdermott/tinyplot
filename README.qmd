@@ -107,5 +107,17 @@ plot2(
   palette = "classic", fill = "by",
   grid = TRUE
 )
+
+# Facet plots are supported too (combined with "by" grouping, or on their own)
+with(
+  Orange, 
+  plot2(
+    x = age, y = circumference, 
+    facet = Tree, 
+    type = "area",
+    main = "Growth rates of five different orange trees",
+    grid = TRUE, frame = FALSE
+    )
+)
 ```
 

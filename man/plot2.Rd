@@ -13,6 +13,7 @@ plot2(x, ...)
   x,
   y = NULL,
   by = NULL,
+  facet = NULL,
   data = NULL,
   type = "p",
   xlim = NULL,
@@ -72,6 +73,7 @@ plot2(x, ...)
 \method{plot2}{density}(
   x = NULL,
   by = NULL,
+  facet = NULL,
   type = c("l", "area"),
   xlim = NULL,
   ylim = NULL,
@@ -102,8 +104,14 @@ of the same length.}
 \item{...}{other \code{graphical} parameters (see \code{par} and also the "Details"
 section of \code{plot}).}
 
-\item{by}{the grouping variable(s) that you want to categorize (i.e., colour)
-the plot by.}
+\item{by}{grouping variable(s). By default, groups will be represented
+through colouring of the plot elements. However, this can be turned off
+and other plot parameters (e.g., line types) can also take on grouping
+behaviour via the special "by" keyword. See Examples.}
+
+\item{facet}{the faceting variable that you want arrange separate plot
+windows by. Also accepts the special "by" convenience keyword, in which
+case facets will match the grouping variable(s) above.}
 
 \item{data}{a data.frame (or list) from which the variables in formula
 should be taken. A matrix is converted to a data frame.}
@@ -285,8 +293,8 @@ swap a valid \code{plot} call with \code{plot2} without any changes to the outpu
 }
 \examples{
 
-# save graphics paramaters to restore them later
-op <- par()
+# save graphics parameters to restore them later
+op = par()
 
 
 # plot2 should be a drop-in replacement for (most) regular plot calls. For
@@ -296,16 +304,8 @@ par(mfrow = c(1, 2))
 plot(0:10, main = "plot")
 plot2(0:10, main = "plot2")
 
-par(mfrow = c(2, 2))
-plot(airquality$Day, airquality$Temp, main = "plot")
-plot(Temp ~ Day, data = airquality, main = "plot (formula)")
-plot2(airquality$Day, airquality$Temp, main = "plot2")
-plot2(Temp ~ Day, data = airquality, main = "plot2 (formula)")
-
-
 # restore graphics parameters
 par(op)  
-
 
 # Unlike vanilla plot, however, plot2 allows you to characterize groups 
 # (using either the `by` argument or equivalent `|` formula syntax).
@@ -332,6 +332,46 @@ plot2(
   type = "l"
 )
 
+# Similarly for other plot types, including some additional ones provided
+# directly by plot2, e.g. density plots or internal plots (ribbons, 
+# pointranges, etc.)
+
+plot2(
+  ~ Temp | Month,
+  data = airquality,
+  type = "density",
+  fill = "by"
+)
+
+# Facet plots are supported too. Facets can be drawn on their own...
+
+with(
+  airquality,
+  plot2(
+  x = Day, y = Temp,
+  facet = factor(Month, labels = month.abb[unique(Month)]),
+  type = "area",
+  frame = FALSE,
+  main = "Temperatures by month"
+  )
+)
+
+# ... or combined/contrasted with the by (colour) grouping.
+
+airquality2 = transform(airquality, Summer = Month \%in\% 6:8)
+with(
+  airquality2,
+  plot2(
+  x = Day, y = Temp,
+  by = Summer,
+  facet = factor(Month, labels = month.abb[unique(Month)]),
+  type = "area",
+  palette = "dark2",
+  frame = FALSE,
+  main = "Temperatures by month and season"
+  )
+)
+
 # The (automatic) legend position and look can be customized using
 # appropriate arguments. Note the trailing "!" in the `legend` position
 # argument below. This tells `plot2` to place the legend _outside_ the plot
@@ -344,15 +384,6 @@ plot2(
   legend = legend("bottom!", title = "Month of the year", bty = "o")
 )
 
-# Regular legend position keywords without the exclamation point (i.e., for
-# inside the plot area) should still work. Grouped density plot example:
-
-plot2(
-  density(airquality$Temp),
-  by = airquality$Month, 
-  legend = legend("topright", bty="o", title = "Month")
-)
-
 # The default group colours are inherited from either the "R4" or "Viridis"
 # palettes, depending on the number of groups. However, all palettes listed
 # by `palette.pals()` and `hcl.pals()` are supported as convenience strings,
@@ -363,37 +394,22 @@ plot2(
   Temp ~ Day | Month,
   data = airquality,
   type = "l",
-  palette = "Tableau 10"
+  palette = "tableau"
 )
 
 # It's possible to further customize the look of you plots using familiar
 # arguments and base plotting theme settings (e.g., via `par`).
 
-par(family = "HersheySans")
+par(family = "HersheySans", las = 1)
 plot2(
   Temp ~ Day | Month,
   data = airquality,
   type = "b", pch = 16,
-  palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
+  palette = palette.colors(palette = "tableau", alpha = 0.5),
   main = "Daily temperatures by month",
   frame = FALSE, grid = TRUE
 )
 
-# For nice out-of-the-box themes, we recommend the `basetheme` package.
-
 par(family = "") # revert global font change from above
-
-library(basetheme)
-basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
-
-plot2(
-  Temp ~ Day | Month,
-  data = airquality,
-  type = "b", pch = 15:19,
-  palette = "Tropic",
-  main = "Daily temperatures by month"
-)
-
-basetheme(NULL)  # back to default theme
 
 }

@@ -45,6 +45,9 @@ inst/tinytest/_tinysnapshot_review/
 
 # MacOS cruft
 .DS_Store
+
+# altdoc (ignore local files since GHA workflow will take care of website build)
+^docs$
 altdoc/freeze.rds
 
 # SCRATCH testing folder

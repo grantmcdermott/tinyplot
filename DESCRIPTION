@@ -43,12 +43,15 @@ Imports:
   stats,
   utils
 Suggests:
+  altdoc,
   basetheme,
   fontquiver,
   rsvg,
   svglite,
   tinytest,
   tinysnapshot (>= 0.0.3)
+Remotes: 
+  etiennebacher/altdoc
 Encoding: UTF-8
 RoxygenNote: 7.2.3.9000
 URL: https://grantmcdermott.com/plot2/,

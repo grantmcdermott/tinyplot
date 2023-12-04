@@ -2,4 +2,5 @@
 format:
   md:
     prefer_html: true
+default-image-extension: ""
 ---

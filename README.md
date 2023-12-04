@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![R-universe status
-badge](https://grantmcdermott.r-universe.dev/badges/plot2.png)](https://grantmcdermott.r-universe.dev)
+badge](https://grantmcdermott.r-universe.dev/badges/plot2)](https://grantmcdermott.r-universe.dev)
 [![R-CMD-check](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml)
 [![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/plot2/index.html)
 <!-- badges: end -->
@@ -82,9 +82,7 @@ plot2(
 )
 ```
 
-<img
-src="man/figures/README/figure-markdown_strict/quickstart-1.png"
-style="width:70.0%" />
+<img src="man/figures/README-quickstart-1.png" style="width:70.0%" />
 
 ``` r
  
@@ -97,9 +95,7 @@ plot2(
 )
 ```
 
-<img
-src="man/figures/README/figure-markdown_strict/quickstart-2.png"
-style="width:70.0%" />
+<img src="man/figures/README-quickstart-2.png" style="width:70.0%" />
 
 ``` r
 
@@ -114,9 +110,7 @@ plot2(
 )
 ```
 
-<img
-src="man/figures/README/figure-markdown_strict/quickstart-3.png"
-style="width:70.0%" />
+<img src="man/figures/README-quickstart-3.png" style="width:70.0%" />
 
 ``` r
 
@@ -133,6 +127,4 @@ with(
 )
 ```
 
-<img
-src="man/figures/README/figure-markdown_strict/quickstart-4.png"
-style="width:70.0%" />
+<img src="man/figures/README-quickstart-4.png" style="width:70.0%" />

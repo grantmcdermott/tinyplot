@@ -1,14 +1,16 @@
 ---
-output: github_document
+format:
+  md:
+    prefer_html: true
+default-image-extension: ""
 ---
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  # fig.path = "man/figures/README-",
+  fig.path = "man/figures/README-",
   out.width = "70%",
   fig.width = 8,
   dpi = 300,

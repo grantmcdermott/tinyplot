@@ -111,3 +111,20 @@ plot2(
 ```
 
 <img src="man/figures/README-quickstart-3.png" style="width:70.0%" />
+
+``` r
+
+# Facet plots are supported too (combined with "by" grouping, or on their own)
+with(
+  Orange, 
+  plot2(
+    x = age, y = circumference, 
+    facet = Tree, 
+    type = "area",
+    main = "Growth rates of five different orange trees",
+    grid = TRUE, frame = FALSE
+    )
+)
+```
+
+<img src="man/figures/README-quickstart-4.png" style="width:70.0%" />

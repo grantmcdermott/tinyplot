@@ -1,6 +1,6 @@
 # News
 
-##  0.0.3.912 (development version)
+##  0.0.3.913 (development version)
 
 Website:
 
@@ -21,6 +21,8 @@ existing plot window. ([#60](https://github.com/grantmcdermott/plot2/issues/60) 
 ([#66](https://github.com/grantmcdermott/plot2/issues/66) [@grantmcdermott](https://github.com/grantmcdermott))
 - Support for "area" type plots as a special case of ribbon plots. ([#68](https://github.com/grantmcdermott/plot2/issues/68) [@grantmcdermott](https://github.com/grantmcdermott))
 - Partial matching for palette keywords. ([#74](https://github.com/grantmcdermott/plot2/issues/74) [@grantmcdermott](https://github.com/grantmcdermott))
+- Support for basic plot facets via the `facet` argument. Facets can be combined
+with `by` grouping or used on their own. ([#83](https://github.com/grantmcdermott/plot2/issues/83) [@grantmcdermott](https://github.com/grantmcdermott))
 
 Bug fixes:
 

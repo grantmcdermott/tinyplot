@@ -222,8 +222,9 @@ aq = cbind(aq, predict(mod, interval = "confidence"))
 with(
   aq,
   plot2(
-    x = Day, y = fit, by = Month,
+    x = Day, y = fit,
     ymin = lwr, ymax = upr,
+    by = Month,
     type = "ribbon",
     grid = TRUE,
     main = "Model predictions"
@@ -263,6 +264,65 @@ with(
 src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/pointrange-1.png"
 style="width:70.0%" />
 
+## Facets
+
+Alongside the standard “by” grouping approach that we have seen thus
+far, **plot2** also supports faceted plots.
+
+``` r
+with(
+  aq,
+  plot2(
+    x = Day, y = fit,
+    ymin = lwr, ymax = upr,
+    facet = Month, ## <- facet, not by
+    type = "ribbon",
+    grid = TRUE
+  )
+)
+```
+
+<img
+src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_simple-1.png"
+style="width:70.0%" />
+
+Here’s a slightly fancier version where we combine facets with (by)
+colour grouping, and also add the original values to our model
+predictions. Note that for this particular example, we’ll use the
+`facet = "by"` convenience shorthand to facet along the same month
+variable as the colour grouping. But you can easily specify different
+`by` and `facet` variables if that’s what your data support.
+
+``` r
+# Plot the original points 
+with(
+  aq,
+  plot2(
+    x = Day, y = Temp,
+    by = Month, facet = "by",
+    palette = "dark2",
+    grid = TRUE, frame = FALSE, ylim = c(50, 100),
+    main = "Air temperatures and model predictions"
+  )
+)
+# Add the model predictions to the same plot 
+with(
+  aq,
+  plot2(
+    x = Day, y = fit,
+    ymin = lwr, ymax = upr,
+    by = Month, facet = "by",
+    type = "ribbon",
+    palette = "dark2",
+    add = TRUE
+  )
+)
+```
+
+<img
+src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_fancy-1.png"
+style="width:70.0%" />
+
 ## Customization
 
 Customizing your plots further is straightforward, whether that is done
@@ -291,6 +351,10 @@ plot2(
 <img
 src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/hershey_plus-1.png"
 style="width:70.0%" />
+
+(For access to a wider array of fonts, you might consider the
+**showtext** package
+([link](https://cran.r-project.org/web/packages/showtext/vignettes/introduction.html)).)
 
 At the risk of repeating ourselves, the use of `par` in the previous
 example again underscores the correspondence with the base graphics
@@ -326,10 +390,6 @@ dev.off()
 #> null device 
 #>           1
 ```
-
-Similarly, for access to a wider array of fonts, you might consider the
-**showtext** package
-([link](https://cran.r-project.org/web/packages/showtext/vignettes/introduction.html)).
 
 ## Conclusion
 

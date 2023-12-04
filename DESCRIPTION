@@ -44,7 +44,9 @@ Imports:
   utils
 Suggests:
   basetheme,
+  etiennebacher/altdoc,
   fontquiver,
+  future.apply,
   rsvg,
   svglite,
   tinytest,

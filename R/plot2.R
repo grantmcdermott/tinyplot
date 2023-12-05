@@ -577,14 +577,12 @@ plot2.default = function(
       nfacet_rows = omfrow[1]
       nfacet_cols = omfrow[2]
     } else {
-      if (!is.null(facet.args)) {
-        if (!is.null(facet.args[["nrow"]])) {
+      if (!is.null(facet.args[["nrow"]])) {
           nfacet_rows = facet.args[["nrow"]]
           nfacet_cols = ceiling(nfacets/nfacet_rows)
-        } else if (!is.null(facet.args[["ncol"]])) {
+      } else if (!is.null(facet.args[["ncol"]])) {
           nfacet_cols = facet.args[["ncol"]]
           nfacet_rows = ceiling(nfacets/nfacet_cols)
-        }
       } else {
         # default is a square arrangement for nfacets > 3
         if (nfacets > 3) {

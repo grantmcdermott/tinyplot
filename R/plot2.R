@@ -61,7 +61,7 @@
 #'    - a logical (i.e., `TRUE` to draw the grid), or
 #'    - a panel grid plotting function like `grid()`.
 #'   Note that this argument replaces the `panel.first` and `panel.last`
-#'   arguments from base `plot()` and tries to make the process more seemless
+#'   arguments from base `plot()` and tries to make the process more seamless
 #'   with better default behaviour. Default is not to draw a grid.
 #' @param asp the y/xy/x aspect ratio, see `plot.window`.
 #' @param palette one of the following options:

@@ -164,7 +164,7 @@ the plot. Can also use \code{frame} as an acceptable argument alias.}
 \item a logical (i.e., \code{TRUE} to draw the grid), or
 \item a panel grid plotting function like \code{grid()}.
 Note that this argument replaces the \code{panel.first} and \code{panel.last}
-arguments from base \code{plot()} and tries to make the process more seemless
+arguments from base \code{plot()} and tries to make the process more seamless
 with better default behaviour. Default is not to draw a grid.
 }}
 

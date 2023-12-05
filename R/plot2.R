@@ -23,6 +23,9 @@
 #' @param facet the faceting variable that you want arrange separate plot
 #'   windows by. Also accepts the special "by" convenience keyword, in which
 #'   case facets will match the grouping variable(s) above.
+#' @param facet.args a list of arguments for controlling faceting behaviour.
+#'   Currently only `nrow` and `ncol` are supported, with the former superseding
+#'   the latter. Ignored if `facet` is NULL.
 #' @param formula a `formula` that optionally includes grouping variable(s)
 #'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
 #'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
@@ -295,6 +298,7 @@ plot2.default = function(
     y = NULL,
     by = NULL,
     facet = NULL,
+    facet.args = NULL,
     data = NULL,
     type = "p",
     xlim = NULL,
@@ -563,38 +567,82 @@ plot2.default = function(
   
   # First determine and set the number of facets
   if (!is.null(facet)) {
+    
     facets = unique(facet)
     ifacet = seq_along(facets)
     nfacets = length(facets)
-    par(mfrow = c(1, nfacets))
-    # Bump extra space for top facet margins if a main title is also present
-    if (!is.null(main)) {
-      omar = par("mar")
-      omar[3] = omar[3] + 2
-      par(mar = omar) 
+    
+    if (isTRUE(add)) {
+      omfrow = par("mfrow")
+      nfacet_rows = omfrow[1]
+      nfacet_cols = omfrow[2]
+    } else {
+      if (!is.null(facet.args)) {
+        if (!is.null(facet.args[["nrows"]])) {
+          nfacet_rows = facet.args[["nrows"]]
+          nfacet_cols = ceiling(nfacets/nfacet_rows)
+        } else if (!is.null(facet.args[["ncols"]])) {
+          nfacet_cols = facet.args[["ncols"]]
+          nfacet_rows = ceiling(nfacets/nfacet_cols)
+        }
+      } else {
+        # default is a square arrangement for nfacets > 3
+        if (nfacets > 3) {
+          nfacet_cols = ceiling(sqrt(nfacets))
+          nfacet_rows = ceiling(nfacets/nfacet_cols)
+        } else {
+          nfacet_rows = 1L
+          nfacet_cols = nfacets
+        }
+      }
+      par(mfrow = c(nfacet_rows, nfacet_cols))
+      # Bump extra space for titles if present
+      ooma = par("oma")
+      if (!is.null(main)) ooma[3] = ooma[3] + 4
+      if (!is.null(xlab)) ooma[1] = ooma[1] + 4
+      if (!is.null(ylab)) ooma[2] = ooma[2] + 4
+      par(oma = ooma)
     }
     
   } else {
+    # no facet case
     facets = ifacet = nfacets = 1
+    
   }
   
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
-  for (ii in ifacet) {
+  # Skip if adding to an existing plot
+  
+  if (isFALSE(add)) {
     
-    # See: https://github.com/grantmcdermott/plot2/issues/65
-    if (nfacets > 1) par(mfg = c(1, ii))
+    # We want to reduce the space between the individual facet plots
+    # (except the rhs margin, which we'll preserve for y-label space)
+    if (nfacets > 1) {
+      omar = par("mar")
+      omar[c(1,2,3)] = omar[c(1,2,3)]/2
+      par(mar = omar)
+    }
     
-    ## Set the plot window
-    ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
-    ## triggers an annoying warning about unrecognized graphical params.
-    # plot.window(
-    #   xlim = xlim, ylim = ylim, 
-    #   asp = asp, log = log,
-    #   # ...
-    # )
-    ## Solution: Only pass on relevant args using name checking and do.call.
-    ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
-    if (isFALSE(add)) {
+    for (ii in ifacet) {
+      
+      # See: https://github.com/grantmcdermott/plot2/issues/65
+      if (nfacets > 1) {
+        mfgi = ceiling(ii/nfacet_cols)
+        mfgj = ii %% nfacet_cols
+        if (mfgj==0) mfgj = nfacet_cols
+        par(mfg = c(mfgi, mfgj)) 
+      }
+      
+      ## Set the plot window
+      ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
+      ## triggers an annoying warning about unrecognized graphical params.
+      # plot.window(
+      #   xlim = xlim, ylim = ylim, 
+      #   asp = asp, log = log,
+      #   # ...
+      # )
+      ## Solution: Only pass on relevant args using name checking and do.call.
+      ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
       pdots = dots[names(dots) %in% names(formals(plot.default))]
       do.call(
         "plot.window",
@@ -610,7 +658,11 @@ plot2.default = function(
         }
         if (isTRUE(frame.plot) || ii == 1) graphics::Axis(y, side = 2)
       }
+      
+      # plot frame
       if (frame.plot) box()
+      
+      # panel grid lines
       if (!is.null(grid)) {
         if (is.logical(grid)) {
           ## If grid is TRUE create a default grid. Rather than just calling the default grid()
@@ -638,10 +690,11 @@ plot2.default = function(
       if (!is.null(facet)) {
         mtext(paste(facets[[ii]]), side = 3)
       }
-    }
+      
+    } # end of ii facet loop
     
-  }
-  
+  } # end of add check
+
   
   #
   ## Interior plot elements
@@ -681,7 +734,13 @@ plot2.default = function(
       
       # Set the facet "window" manually
       # See: https://github.com/grantmcdermott/plot2/issues/65
-      if (nfacets > 1) par(mfg = c(1, ii))
+      # if (nfacets > 1) par(mfg = c(1, ii))
+      if (nfacets > 1) {
+        mfgi = ceiling(ii/nfacet_cols)
+        mfgj = ii %% nfacet_cols
+        if (mfgj==0) mfgj = nfacet_cols
+        par(mfg = c(mfgi, mfgj)) 
+      }
       
       # Draw the individual plot elements...
       
@@ -974,6 +1033,7 @@ plot2.density = function(
     }
     by_names = tryCatch(as(by_names, class(by)), error = function(e) if (inherits(by, "factor")) as.factor(by_names) else by_names)
     # need to coerce facet variables to factors for faceting to work properly later on
+    facet_names = tryCatch(as(facet_names, class(facet)), error = function(e) facet_names)
     facet_names = tryCatch(as.factor(facet_names), error = function(e) facet_names)
     
     split_object = lapply(seq_along(split_object), function(ii) {
@@ -1004,7 +1064,7 @@ plot2.density = function(
     bw = sprintf("%.4g", bw)
     n = res[["n"]]
     if (is.null(xlab)) {
-      if (length(by_names) > 3) {
+      if (length(by_names) > 3 || length(facet_names) > 3) {
         n = c(n[1:3], "...")
       }
       n = paste0("[", paste(n, collapse = ", "), "]")

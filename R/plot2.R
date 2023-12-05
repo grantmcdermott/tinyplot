@@ -604,9 +604,13 @@ plot2.default = function(
       par(oma = ooma)
     }
     
+    # determine "outside" facets for selected axis printing if frame = FALSE
+    oxaxis = tail(ifacet, nfacet_cols)
+    oyaxis = seq(1, nfacets, by = nfacet_cols)
+    
   } else {
     # no facet case
-    facets = ifacet = nfacets = 1
+    facets = ifacet = nfacets = oxaxis = oyaxis = 1
     
   }
   
@@ -619,7 +623,7 @@ plot2.default = function(
     # (except the rhs margin, which we'll preserve for y-label space)
     if (nfacets > 1) {
       omar = par("mar")
-      omar[c(1,2,3)] = omar[c(1,2,3)]/2
+      omar[c(1,2,3)] = omar[c(1,2,3)] / 2
       par(mar = omar)
     }
     
@@ -651,12 +655,33 @@ plot2.default = function(
       
       # axes, plot.frame and grid
       if (isTRUE(axes)) {
-        if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
-          Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+        if (isTRUE(frame.plot)) {
+          # if plot frame is true then print axes per normal...
+          if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+            Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+          } else {
+            Axis(x, side = 1)
+          }
+          Axis(y, side = 2)
         } else {
-          Axis(x, side = 1)
+          # ... else only print the "outside" axes.
+          if (ii %in% oxaxis) {
+            if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+              Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+            } else {
+              Axis(x, side = 1)
+            }
+          }
+          if (ii %in% oyaxis) {
+            Axis(y, side = 2)
+          }
         }
-        if (isTRUE(frame.plot) || ii == 1) Axis(y, side = 2)
+        # if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+        #   Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+        # } else {
+        #   Axis(x, side = 1)
+        # }
+        # if (isTRUE(frame.plot) || ii == 1) Axis(y, side = 2)
       }
       
       # plot frame

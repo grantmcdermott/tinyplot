@@ -14,6 +14,7 @@ plot2(x, ...)
   y = NULL,
   by = NULL,
   facet = NULL,
+  facet.args = NULL,
   data = NULL,
   type = "p",
   xlim = NULL,
@@ -112,6 +113,10 @@ behaviour via the special "by" keyword. See Examples.}
 \item{facet}{the faceting variable that you want arrange separate plot
 windows by. Also accepts the special "by" convenience keyword, in which
 case facets will match the grouping variable(s) above.}
+
+\item{facet.args}{a list of arguments for controlling faceting behaviour.
+Currently only \code{nrow} and \code{ncol} are supported, with the former superseding
+the latter. Ignored if \code{facet} is NULL.}
 
 \item{data}{a data.frame (or list) from which the variables in formula
 should be taken. A matrix is converted to a data frame.}

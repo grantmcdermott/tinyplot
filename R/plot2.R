@@ -159,8 +159,8 @@
 #' @param ... other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).
 #'   
-#' @importFrom grDevices adjustcolor palette palette.colors palette.pals hcl.colors hcl.pals
-#' @importFrom graphics arrows axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title mtext
+#' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
+#' @importFrom graphics abline arrows axis Axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title mtext
 #' @importFrom utils modifyList
 #' 
 #' @examples
@@ -433,7 +433,7 @@ plot2.default = function(
     }
   }
 
-  xy = grDevices::xy.coords(x = x, y = y)
+  xy = xy.coords(x = x, y = y)
   if (is.null(xlim)) xlim = range(xy$x[is.finite(xy$x)])
   if (is.null(ylim)) ylim = range(xy$y[is.finite(xy$y)])
 
@@ -630,7 +630,7 @@ plot2.default = function(
         mfgi = ceiling(ii/nfacet_cols)
         mfgj = ii %% nfacet_cols
         if (mfgj==0) mfgj = nfacet_cols
-        par(mfg = c(mfgi, mfgj)) 
+        par(mfg = c(mfgi, mfgj))
       }
       
       ## Set the plot window
@@ -652,11 +652,11 @@ plot2.default = function(
       # axes, plot.frame and grid
       if (isTRUE(axes)) {
         if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
-          graphics::Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+          Axis(x, side = 1, at = xlabs, labels = names(xlabs))
         } else {
-          graphics::Axis(x, side = 1)
+          Axis(x, side = 1)
         }
-        if (isTRUE(frame.plot) || ii == 1) graphics::Axis(y, side = 2)
+        if (isTRUE(frame.plot) || ii == 1) Axis(y, side = 2)
       }
       
       # plot frame
@@ -672,11 +672,11 @@ plot2.default = function(
           if (isTRUE(grid)) {
             gnx = gny = NULL
             if (!par("xlog")) {
-              graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               gnx = NA
             }
             if (!par("ylog")) {
-              graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              abline(h = pretty(extendrange(y)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               gny = NA
             }
             grid(nx = gnx, ny = gny)

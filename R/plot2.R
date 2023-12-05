@@ -578,11 +578,11 @@ plot2.default = function(
       nfacet_cols = omfrow[2]
     } else {
       if (!is.null(facet.args)) {
-        if (!is.null(facet.args[["nrows"]])) {
-          nfacet_rows = facet.args[["nrows"]]
+        if (!is.null(facet.args[["nrow"]])) {
+          nfacet_rows = facet.args[["nrow"]]
           nfacet_cols = ceiling(nfacets/nfacet_rows)
-        } else if (!is.null(facet.args[["ncols"]])) {
-          nfacet_cols = facet.args[["ncols"]]
+        } else if (!is.null(facet.args[["ncol"]])) {
+          nfacet_cols = facet.args[["ncol"]]
           nfacet_rows = ceiling(nfacets/nfacet_cols)
         }
       } else {

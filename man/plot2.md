@@ -311,7 +311,7 @@ a logical (i.e., <code>TRUE</code> to draw the grid), or
 a panel grid plotting function like <code>grid()</code>. Note that this
 argument replaces the <code>panel.first</code> and
 <code>panel.last</code> arguments from base <code>plot()</code> and
-tries to make the process more seemless with better default behaviour.
+tries to make the process more seamless with better default behaviour.
 Default is not to draw a grid.
 
 </li>

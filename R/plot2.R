@@ -596,9 +596,14 @@ plot2.default = function(
       par(mfrow = c(nfacet_rows, nfacet_cols))
       # Bump extra space for titles if present
       ooma = par("oma")
-      if (!is.null(main)) ooma[3] = ooma[3] + 4
-      if (!is.null(xlab)) ooma[1] = ooma[1] + 4
-      if (!is.null(ylab)) ooma[2] = ooma[2] + 4
+      # Default margin bump
+      mar_bump = 4
+      # Need extra adjustment to top margin if facet titles have "\n" newline separator
+      facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
+      mar_bump_top = if (length(facet_newlines)==0) mar_bump else mar_bump + 1.5*max(facet_newlines)
+      if (!is.null(main)) ooma[3] = ooma[3] + mar_bump_top
+      if (!is.null(xlab)) ooma[1] = ooma[1] + mar_bump
+      if (!is.null(ylab)) ooma[2] = ooma[2] + mar_bump
       par(oma = ooma)
     }
     

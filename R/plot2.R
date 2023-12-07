@@ -486,7 +486,6 @@ plot2.default = function(
   opar = par(no.readonly = TRUE)
   
   # catch for adding to existing facet plot
-  # if (!is.null(facet) && isTRUE(add)) par(get_par2("last_facet_par"))
   if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par")[[1]])
   
   #
@@ -494,6 +493,7 @@ plot2.default = function(
   #
   
   # place and draw the legend
+  has_legend = FALSE # simple indicator variable for later use
   
   legend.args = dots[["legend.args"]]
   if (is.null(legend.args)) legend.args = list(x = NULL)
@@ -535,6 +535,8 @@ plot2.default = function(
       cex = cex
       )
     
+    has_legend = TRUE
+    
   } else if (legend.args[["x"]]=="none" && isFALSE(add)) {
     
     plot.new()
@@ -560,10 +562,11 @@ plot2.default = function(
     title(xlab = xlab, ylab = ylab)
   }
   
-  
   #
   ## Facet windows
   #
+  
+  omar = NULL # Placeholder variable for now, which we re-assign as part of facet margins
   
   # First determine and set the number of facets
   if (!is.null(facet)) {
@@ -573,10 +576,13 @@ plot2.default = function(
     nfacets = length(facets)
     
     if (isTRUE(add)) {
+      
       omfrow = par("mfrow")
       nfacet_rows = omfrow[1]
       nfacet_cols = omfrow[2]
+      
     } else {
+      
       if (!is.null(facet.args[["nrow"]])) {
           nfacet_rows = facet.args[["nrow"]]
           nfacet_cols = ceiling(nfacets/nfacet_rows)
@@ -593,17 +599,25 @@ plot2.default = function(
           nfacet_cols = nfacets
         }
       }
+      
       par(mfrow = c(nfacet_rows, nfacet_cols))
+      
       # Bump extra space for titles if present
+      
       ooma = par("oma")
-      # Default margin bump
-      mar_bump = 4
+      if (!is.null(xlab)) ooma[1] = ooma[1] + 3
+      if (!is.null(ylab)) ooma[2] = ooma[2] + 3
+      if (!is.null(main)) ooma[3] = ooma[3] + 5 # extra bump b/c also need to a/c for facet titles
+      
       # Need extra adjustment to top margin if facet titles have "\n" newline separator
       facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
-      mar_bump_top = if (length(facet_newlines)==0) mar_bump else mar_bump + 1.5*max(facet_newlines)
-      if (!is.null(main)) ooma[3] = ooma[3] + mar_bump_top
-      if (!is.null(xlab)) ooma[1] = ooma[1] + mar_bump
-      if (!is.null(ylab)) ooma[2] = ooma[2] + mar_bump
+      if (length(facet_newlines)==0) facet_newlines = 0
+      # Side note: Rather use original mar in case of already-reduced space (due
+      #   to "right!" legend correction above)
+      if (is.null(omar)) omar = opar[["mar"]]
+      omar[3] = omar[3] + 1.5*max(facet_newlines)
+      
+      # apply the changes
       par(oma = ooma)
     }
     
@@ -622,11 +636,28 @@ plot2.default = function(
   
   if (isFALSE(add)) {
     
-    # We want to reduce the space between the individual facet plots
-    # (except the rhs margin, which we'll preserve for y-label space)
     if (nfacets > 1) {
-      omar = par("mar")
-      omar[c(1,2,3)] = omar[c(1,2,3)] / 2
+      # Reduce the margins between the individual facets, to avoid excess
+      # whitespace.
+      # Note: Rather use original in case of already-reduced space (due to
+      #   "right!" legend correction above.)
+      if (is.null(omar)) omar = opar[["mar"]] 
+      omar[c(1,2,3)] = omar[c(1,2,3)] - 2
+      # extra reductions if plot isn't framed
+      if (isFALSE(frame.plot)) {
+        # Tricksy, but simultaneously adjust outer and inner margins (in
+        # different directions) to preserve figure centroids
+        ooma = par("oma")
+        ooma[c(1,2,3)] = ooma[c(1,2,3)] + 1
+        par(oma = ooma)
+        omar[c(1,2,3)] = omar[c(1,2,3)] - 1
+        omar[4] = 1.1 # no space to RHS
+      } else if (has_legend) {
+        ## Avoid double correction in case of RHS legend
+        ooma = par("oma")
+        ooma[4] = max(0, ooma[4] - 2)
+        par(oma = ooma)
+      }
       par(mar = omar)
     }
     
@@ -679,12 +710,6 @@ plot2.default = function(
             Axis(y, side = 2)
           }
         }
-        # if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
-        #   Axis(x, side = 1, at = xlabs, labels = names(xlabs))
-        # } else {
-        #   Axis(x, side = 1)
-        # }
-        # if (isTRUE(frame.plot) || ii == 1) Axis(y, side = 2)
       }
       
       # plot frame

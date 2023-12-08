@@ -608,6 +608,8 @@ plot2.default = function(
       if (!is.null(xlab)) ooma[1] = ooma[1] + 3
       if (!is.null(ylab)) ooma[2] = ooma[2] + 3
       if (!is.null(main)) ooma[3] = ooma[3] + 5 # extra bump b/c also need to a/c for facet titles
+      # apply the changes
+      par(oma = ooma)
       
       # Need extra adjustment to top margin if facet titles have "\n" newline separator
       facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
@@ -616,9 +618,9 @@ plot2.default = function(
       #   to "right!" legend correction above)
       if (is.null(omar)) omar = opar[["mar"]]
       omar[3] = omar[3] + 1.5*max(facet_newlines)
-      
       # apply the changes
-      par(oma = ooma)
+      par(mar = omar)
+      
     }
     
     # determine "outside" facets for selected axis printing if frame = FALSE

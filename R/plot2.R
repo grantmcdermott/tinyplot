@@ -644,7 +644,8 @@ plot2.default = function(
       # Note: Rather use original in case of already-reduced space (due to
       #   "right!" legend correction above.)
       if (is.null(omar)) omar = opar[["mar"]] 
-      omar[c(1,2,3)] = omar[c(1,2,3)] - 2
+      omar[c(1,2)] = omar[c(1,2)] - 2
+      if (!is.null(main)) omar[3] = omar[3] - 2
       # extra reductions if plot isn't framed
       if (isFALSE(frame.plot)) {
         # Tricksy, but simultaneously adjust outer and inner margins (in

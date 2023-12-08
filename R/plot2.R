@@ -637,7 +637,18 @@ plot2.default = function(
     ooma = par("oma")
     if (!is.null(xlab)) ooma[1] = ooma[1] + 3
     if (!is.null(ylab)) ooma[2] = ooma[2] + 3
-    if (!is.null(main)) ooma[3] = ooma[3] + 5 # extra bump b/c also need to a/c for facet titles
+    ooma[3] = ooma[3] + 3
+    # extra bump b/c also need to a/c for facet titles
+    if (!is.null(main)) {
+      if (nfacets >= 3) {
+        ## exception for 2x2 case
+        if (nfacet_rows == 2 && nfacet_cols == 2) {
+          ooma[3] = ooma[3] + 0
+        } else {
+          ooma[3] = ooma[3] + 2
+        }
+      }
+    }
     # apply the changes
     par(oma = ooma)
     

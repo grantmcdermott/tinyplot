@@ -488,6 +488,64 @@ plot2.default = function(
   # catch for adding to existing facet plot
   if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par")[[1]])
   
+  # Determine the number and arrangement of facets.
+  # Note: We're do this up front, so we can make some adjustments to legend cex
+  #   next (if there are facets). But the actual drawing of the facets will only
+  #   come later.
+  if (!is.null(facet)) {
+    
+    facets = unique(facet)
+    ifacet = seq_along(facets)
+    nfacets = length(facets)
+    
+    if (isTRUE(add)) {
+      
+      omfrow = par("mfrow")
+      nfacet_rows = omfrow[1]
+      nfacet_cols = omfrow[2]
+      
+    } else {
+      
+      if (!is.null(facet.args[["nrow"]])) {
+        nfacet_rows = facet.args[["nrow"]]
+        nfacet_cols = ceiling(nfacets/nfacet_rows)
+      } else if (!is.null(facet.args[["ncol"]])) {
+        nfacet_cols = facet.args[["ncol"]]
+        nfacet_rows = ceiling(nfacets/nfacet_cols)
+      } else {
+        # default is a square arrangement for nfacets > 3
+        if (nfacets > 3) {
+          nfacet_cols = ceiling(sqrt(nfacets))
+          nfacet_rows = ceiling(nfacets/nfacet_cols)
+        } else {
+          nfacet_rows = 1L
+          nfacet_cols = nfacets
+        }
+      }
+      
+    }
+    
+    # determine "outside" facets for selected axis printing if frame = FALSE
+    oxaxis = tail(ifacet, nfacet_cols)
+    oyaxis = seq(1, nfacets, by = nfacet_cols)
+    
+    # legend cex adjustment for facet plots
+    # see: https://stat.ethz.ch/pipermail/r-help/2017-August/448431.html
+    if (nfacet_rows >= 3 || nfacet_cols >= 3) {
+      cex_lgnd_adj = 0.66
+    } else if (nfacet_rows == 2 && nfacet_cols == 2) {
+      cex_lgnd_adj = 0.83
+    } else {
+      cex_lgnd_adj = 1
+    }
+    
+  } else {
+    # no facet case
+    facets = ifacet = nfacets = oxaxis = oyaxis = cex_lgnd_adj = 1
+    
+  }
+  
+  
   #
   ## Global plot elements (legend and titles)
   #
@@ -532,7 +590,7 @@ plot2.default = function(
       lty = lty,
       col = col,
       bg = bg,
-      cex = cex
+      cex = cex * cex_lgnd_adj
       )
     
     has_legend = TRUE
@@ -568,69 +626,31 @@ plot2.default = function(
   
   omar = NULL # Placeholder variable for now, which we re-assign as part of facet margins
   
-  # First determine and set the number of facets
-  if (!is.null(facet)) {
+  if (!is.null(facet) && isFALSE(add)) {
     
-    facets = unique(facet)
-    ifacet = seq_along(facets)
-    nfacets = length(facets)
+    # Arrange facets based on the calculations we did earlier
+    par(mfrow = c(nfacet_rows, nfacet_cols))
     
-    if (isTRUE(add)) {
-      
-      omfrow = par("mfrow")
-      nfacet_rows = omfrow[1]
-      nfacet_cols = omfrow[2]
-      
-    } else {
-      
-      if (!is.null(facet.args[["nrow"]])) {
-          nfacet_rows = facet.args[["nrow"]]
-          nfacet_cols = ceiling(nfacets/nfacet_rows)
-      } else if (!is.null(facet.args[["ncol"]])) {
-          nfacet_cols = facet.args[["ncol"]]
-          nfacet_rows = ceiling(nfacets/nfacet_cols)
-      } else {
-        # default is a square arrangement for nfacets > 3
-        if (nfacets > 3) {
-          nfacet_cols = ceiling(sqrt(nfacets))
-          nfacet_rows = ceiling(nfacets/nfacet_cols)
-        } else {
-          nfacet_rows = 1L
-          nfacet_cols = nfacets
-        }
-      }
-      
-      par(mfrow = c(nfacet_rows, nfacet_cols))
-      
-      # Bump extra space for titles if present
-      
-      ooma = par("oma")
-      if (!is.null(xlab)) ooma[1] = ooma[1] + 3
-      if (!is.null(ylab)) ooma[2] = ooma[2] + 3
-      if (!is.null(main)) ooma[3] = ooma[3] + 5 # extra bump b/c also need to a/c for facet titles
-      # apply the changes
-      par(oma = ooma)
-      
-      # Need extra adjustment to top margin if facet titles have "\n" newline separator
-      facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
-      if (length(facet_newlines)==0) facet_newlines = 0
-      # Side note: Rather use original mar in case of already-reduced space (due
-      #   to "right!" legend correction above)
-      if (is.null(omar)) omar = opar[["mar"]]
-      omar[3] = omar[3] + 1.5*max(facet_newlines)
-      # apply the changes
-      par(mar = omar)
-      
-    }
+    # Also adjust spacing between facets to avoid excess whitespace
     
-    # determine "outside" facets for selected axis printing if frame = FALSE
-    oxaxis = tail(ifacet, nfacet_cols)
-    oyaxis = seq(1, nfacets, by = nfacet_cols)
+    # Bump extra space for titles if present
+    ooma = par("oma")
+    if (!is.null(xlab)) ooma[1] = ooma[1] + 3
+    if (!is.null(ylab)) ooma[2] = ooma[2] + 3
+    if (!is.null(main)) ooma[3] = ooma[3] + 5 # extra bump b/c also need to a/c for facet titles
+    # apply the changes
+    par(oma = ooma)
     
-  } else {
-    # no facet case
-    facets = ifacet = nfacets = oxaxis = oyaxis = 1
-    
+    # Need extra adjustment to top margin if facet titles have "\n" newline separator
+    facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
+    if (length(facet_newlines)==0) facet_newlines = 0
+    # Side note: Rather use original mar in case of already-reduced space (due
+    #   to "right!" legend correction above)
+    if (is.null(omar)) omar = opar[["mar"]]
+    omar[3] = omar[3] + 1.5*max(facet_newlines)
+    # apply the changes
+    par(mar = omar)
+
   }
   
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)

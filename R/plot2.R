@@ -633,11 +633,19 @@ plot2.default = function(
     
     # Also adjust spacing between facets to avoid excess whitespace
     
+    # Side note: Rather use original mar in case of already-reduced space (due
+    #   to "right!" legend correction above)
+    if (is.null(omar)) omar = opar[["mar"]]
+    
     # Bump extra space for titles if present
     ooma = par("oma")
     if (!is.null(xlab)) ooma[1] = ooma[1] + 3
     if (!is.null(ylab)) ooma[2] = ooma[2] + 3
-    ooma[3] = ooma[3] + 3
+    # Bump top margin down so facet titles don't overlap with main title space
+    ooma[3] = ooma[3] + 2.1
+    # Adjustment if inheriting tight RHS margin
+    # if (isTRUE(frame.plot) && ooma[4]==0.1) ooma[4] = ooma[4] + 2
+    if (omar[4]==0.1) ooma[4] = ooma[4] + 2
     # extra bump b/c also need to a/c for facet titles
     if (!is.null(main)) {
       if (nfacets >= 3) {
@@ -655,9 +663,9 @@ plot2.default = function(
     # Need extra adjustment to top margin if facet titles have "\n" newline separator
     facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
     if (length(facet_newlines)==0) facet_newlines = 0
-    # Side note: Rather use original mar in case of already-reduced space (due
-    #   to "right!" legend correction above)
-    if (is.null(omar)) omar = opar[["mar"]]
+    # # Side note: Rather use original mar in case of already-reduced space (due
+    # #   to "right!" legend correction above)
+    # if (is.null(omar)) omar = opar[["mar"]]
     omar[3] = omar[3] + 1.5*max(facet_newlines)
     # apply the changes
     par(mar = omar)
@@ -685,7 +693,7 @@ plot2.default = function(
         ooma[c(1,2,3)] = ooma[c(1,2,3)] + 1
         par(oma = ooma)
         omar[c(1,2,3)] = omar[c(1,2,3)] - 1
-        omar[4] = 1.1 # no space to RHS
+        if (has_legend) omar[4] = 0.1 # no space to RHS if legend present
       } else if (has_legend) {
         ## Avoid double correction in case of RHS legend
         ooma = par("oma")

@@ -76,10 +76,11 @@ some quickstart examples of the package in action.
 library(plot2)
 
 # Grouped scatterplot with automatic legend
-plot2(
-  Sepal.Length ~ Petal.Length | Species,
-  data = iris
-)
+
+# Like plot(), we can use either an atomic or formula interface...
+
+# with(iris, plot2(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic
+plot2(Sepal.Length ~ Petal.Length | Species, data = iris) # formula (same)
 ```
 
 <img src="man/figures/README-quickstart-1.png" style="width:70.0%" />
@@ -87,10 +88,11 @@ plot2(
 ``` r
  
 # Same plot with a few extra aesthetic tweaks
+
 plot2(
   Sepal.Length ~ Petal.Length | Species, 
   data = iris,
-  palette = "accent", pch  = 16,
+  palette = "dark", pch  = 16,
   grid = TRUE, frame = FALSE
 )
 ```
@@ -100,13 +102,14 @@ plot2(
 ``` r
 
 # Grouped density plot with automatic legend (and some aesthetic tweaks)
+
 plot2(
-  ~ weight | feed,
-  data = chickwts,
+  ~ Petal.Length | Species,
+  data = iris,
   type = "density",
-  main = "Distribution of chick weights by feed",
-  palette = "classic", fill = "by",
-  grid = TRUE
+  palette = "dark", fill = "by",
+  grid = TRUE,
+  main = "Distribution of petal lengths by species"
 )
 ```
 
@@ -115,13 +118,16 @@ plot2(
 ``` r
 
 # Facet plots are supported too (combined with "by" grouping, or on their own)
+
+iris2 = transform(iris, Sepals = ifelse(Sepal.Length>6, "Long", "Short"))
 with(
-  Orange, 
+  iris2,
   plot2(
-    x = age, y = circumference, 
-    facet = Tree, 
-    type = "area",
-    main = "Growth rates of five different orange trees",
+    x = Petal.Length, y = Sepal.Length,
+    by = Sepals,
+    facet = Species,
+    palette = "classic",
+    main = "Faceted Sepals!",
     grid = TRUE, frame = FALSE
     )
 )

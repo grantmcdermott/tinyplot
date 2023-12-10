@@ -21,8 +21,13 @@
 #'   and other plot parameters (e.g., line types) can also take on grouping
 #'   behaviour via the special "by" keyword. See Examples.
 #' @param facet the faceting variable that you want arrange separate plot
-#'   windows by. Also accepts the special "by" convenience keyword, in which
-#'   case facets will match the grouping variable(s) above.
+#'   windows by. To facet by multiple variables, simply interact them, e.g.
+#'   with `interaction(facet_var1, facet_var2)`. Also accepts the special "by"
+#'   convenience keyword, in which case facets will match the grouping
+#'   variable(s) above.
+#' @param facet.args a list of arguments for controlling faceting behaviour.
+#'   Currently only `nrow` and `ncol` are supported, with the former superseding
+#'   the latter. Ignored if `facet` is NULL.
 #' @param formula a `formula` that optionally includes grouping variable(s)
 #'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
 #'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
@@ -156,9 +161,9 @@
 #' @param ... other `graphical` parameters (see `par` and also the "Details"
 #'   section of `plot`).
 #'   
-#' @importFrom grDevices adjustcolor palette palette.colors palette.pals hcl.colors hcl.pals
-#' @importFrom graphics arrows axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title mtext
-#' @importFrom utils modifyList
+#' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
+#' @importFrom graphics abline arrows axis Axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title mtext
+#' @importFrom utils modifyList tail
 #' 
 #' @examples
 #' 
@@ -220,7 +225,6 @@
 #'   x = Day, y = Temp,
 #'   facet = factor(Month, labels = month.abb[unique(Month)]),
 #'   type = "area",
-#'   frame = FALSE,
 #'   main = "Temperatures by month"
 #'   )
 #' )
@@ -236,7 +240,25 @@
 #'   facet = factor(Month, labels = month.abb[unique(Month)]),
 #'   type = "area",
 #'   palette = "dark2",
+#'   main = "Temperatures by month and season"
+#'   )
+#' )
+#' 
+#' # Users can override the default square window arrangement by passing `nrow`
+#' # or `ncol` to the helper facet.args argument. Note that we can also reduce
+#' # axis label repetition across facets by turning the plot frame off.
+#' 
+#' airquality2 = transform(airquality, Summer = Month %in% 6:8)
+#' with(
+#'   airquality2,
+#'   plot2(
+#'   x = Day, y = Temp,
+#'   by = Summer,
+#'   facet = factor(Month, labels = month.abb[unique(Month)]),
+#'   facet.args = list(nrow = 1),
 #'   frame = FALSE,
+#'   type = "area",
+#'   palette = "dark2",
 #'   main = "Temperatures by month and season"
 #'   )
 #' )
@@ -295,6 +317,7 @@ plot2.default = function(
     y = NULL,
     by = NULL,
     facet = NULL,
+    facet.args = NULL,
     data = NULL,
     type = "p",
     xlim = NULL,
@@ -429,7 +452,7 @@ plot2.default = function(
     }
   }
 
-  xy = grDevices::xy.coords(x = x, y = y)
+  xy = xy.coords(x = x, y = y)
   if (is.null(xlim)) xlim = range(xy$x[is.finite(xy$x)])
   if (is.null(ylim)) ylim = range(xy$y[is.finite(xy$y)])
 
@@ -482,14 +505,72 @@ plot2.default = function(
   opar = par(no.readonly = TRUE)
   
   # catch for adding to existing facet plot
-  # if (!is.null(facet) && isTRUE(add)) par(get_par2("last_facet_par"))
   if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par")[[1]])
+  
+  # Determine the number and arrangement of facets.
+  # Note: We're do this up front, so we can make some adjustments to legend cex
+  #   next (if there are facets). But the actual drawing of the facets will only
+  #   come later.
+  if (!is.null(facet)) {
+    
+    facets = unique(facet)
+    ifacet = seq_along(facets)
+    nfacets = length(facets)
+    
+    if (isTRUE(add)) {
+      
+      omfrow = par("mfrow")
+      nfacet_rows = omfrow[1]
+      nfacet_cols = omfrow[2]
+      
+    } else {
+      
+      if (!is.null(facet.args[["nrow"]])) {
+        nfacet_rows = facet.args[["nrow"]]
+        nfacet_cols = ceiling(nfacets/nfacet_rows)
+      } else if (!is.null(facet.args[["ncol"]])) {
+        nfacet_cols = facet.args[["ncol"]]
+        nfacet_rows = ceiling(nfacets/nfacet_cols)
+      } else {
+        # default is a square arrangement for nfacets > 3
+        if (nfacets > 3) {
+          nfacet_cols = ceiling(sqrt(nfacets))
+          nfacet_rows = ceiling(nfacets/nfacet_cols)
+        } else {
+          nfacet_rows = 1L
+          nfacet_cols = nfacets
+        }
+      }
+      
+    }
+    
+    # determine "outside" facets for selected axis printing if frame = FALSE
+    oxaxis = tail(ifacet, nfacet_cols)
+    oyaxis = seq(1, nfacets, by = nfacet_cols)
+    
+    # legend cex adjustment for facet plots
+    # see: https://stat.ethz.ch/pipermail/r-help/2017-August/448431.html
+    if (nfacet_rows >= 3 || nfacet_cols >= 3) {
+      cex_lgnd_adj = 0.66
+    } else if (nfacet_rows == 2 && nfacet_cols == 2) {
+      cex_lgnd_adj = 0.83
+    } else {
+      cex_lgnd_adj = 1
+    }
+    
+  } else {
+    # no facet case
+    facets = ifacet = nfacets = oxaxis = oyaxis = cex_lgnd_adj = 1
+    
+  }
+  
   
   #
   ## Global plot elements (legend and titles)
   #
   
   # place and draw the legend
+  has_legend = FALSE # simple indicator variable for later use
   
   legend.args = dots[["legend.args"]]
   if (is.null(legend.args)) legend.args = list(x = NULL)
@@ -528,8 +609,10 @@ plot2.default = function(
       lty = lty,
       col = col,
       bg = bg,
-      cex = cex
+      cex = cex * cex_lgnd_adj
       )
+    
+    has_legend = TRUE
     
   } else if (legend.args[["x"]]=="none" && isFALSE(add)) {
     
@@ -556,45 +639,109 @@ plot2.default = function(
     title(xlab = xlab, ylab = ylab)
   }
   
-  
   #
   ## Facet windows
   #
   
-  # First determine and set the number of facets
-  if (!is.null(facet)) {
-    facets = unique(facet)
-    ifacet = seq_along(facets)
-    nfacets = length(facets)
-    par(mfrow = c(1, nfacets))
-    # Bump extra space for top facet margins if a main title is also present
-    if (!is.null(main)) {
-      omar = par("mar")
-      omar[3] = omar[3] + 2
-      par(mar = omar) 
-    }
+  omar = NULL # Placeholder variable for now, which we re-assign as part of facet margins
+  
+  if (!is.null(facet) && isFALSE(add)) {
     
-  } else {
-    facets = ifacet = nfacets = 1
+    # Arrange facets based on the calculations we did earlier
+    par(mfrow = c(nfacet_rows, nfacet_cols))
+    
+    # Also adjust spacing between facets to avoid excess whitespace
+    
+    # Side note: Rather use original mar in case of already-reduced space (due
+    #   to "right!" legend correction above)
+    if (is.null(omar)) omar = opar[["mar"]]
+    
+    # Bump extra space for titles if present
+    ooma = par("oma")
+    if (!is.null(xlab)) ooma[1] = ooma[1] + 3
+    if (!is.null(ylab)) ooma[2] = ooma[2] + 3
+    # Bump top margin down so facet titles don't overlap with main title space
+    ooma[3] = ooma[3] + 2.1
+    # Adjustment if inheriting tight RHS margin
+    # if (isTRUE(frame.plot) && ooma[4]==0.1) ooma[4] = ooma[4] + 2
+    if (omar[4]==0.1) ooma[4] = ooma[4] + 2
+    # extra bump b/c also need to a/c for facet titles
+    if (!is.null(main)) {
+      if (nfacets >= 3) {
+        ## exception for 2x2 case
+        if (nfacet_rows == 2 && nfacet_cols == 2) {
+          ooma[3] = ooma[3] + 0
+        } else {
+          ooma[3] = ooma[3] + 2
+        }
+      }
+    }
+    # apply the changes
+    par(oma = ooma)
+    
+    # Need extra adjustment to top margin if facet titles have "\n" newline separator
+    facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
+    if (length(facet_newlines)==0) facet_newlines = 0
+    # # Side note: Rather use original mar in case of already-reduced space (due
+    # #   to "right!" legend correction above)
+    # if (is.null(omar)) omar = opar[["mar"]]
+    omar[3] = omar[3] + 1.5*max(facet_newlines)
+    # apply the changes
+    par(mar = omar)
+
   }
   
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
-  for (ii in ifacet) {
+  # Skip if adding to an existing plot
+  
+  if (isFALSE(add)) {
     
-    # See: https://github.com/grantmcdermott/plot2/issues/65
-    if (nfacets > 1) par(mfg = c(1, ii))
+    if (nfacets > 1) {
+      # Reduce the margins between the individual facets, to avoid excess
+      # whitespace.
+      # Note: Rather use original in case of already-reduced space (due to
+      #   "right!" legend correction above.)
+      if (is.null(omar)) omar = opar[["mar"]] 
+      omar[c(1,2)] = omar[c(1,2)] - 2
+      if (!is.null(main)) omar[3] = omar[3] - 2
+      # extra reductions if plot isn't framed
+      if (isFALSE(frame.plot)) {
+        # Tricksy, but simultaneously adjust outer and inner margins (in
+        # different directions) to preserve figure centroids
+        ooma = par("oma")
+        ooma[c(1,2,3)] = ooma[c(1,2,3)] + 1
+        par(oma = ooma)
+        omar[c(1,2,3)] = omar[c(1,2,3)] - 1
+        if (has_legend) omar[4] = 0.1 # no space to RHS if legend present
+      } else if (has_legend) {
+        ## Avoid double correction in case of RHS legend
+        ooma = par("oma")
+        ooma[4] = max(0, ooma[4] - 2)
+        par(oma = ooma)
+      }
+      par(mar = omar)
+    }
     
-    ## Set the plot window
-    ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
-    ## triggers an annoying warning about unrecognized graphical params.
-    # plot.window(
-    #   xlim = xlim, ylim = ylim, 
-    #   asp = asp, log = log,
-    #   # ...
-    # )
-    ## Solution: Only pass on relevant args using name checking and do.call.
-    ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
-    if (isFALSE(add)) {
+    for (ii in ifacet) {
+      
+      # See: https://github.com/grantmcdermott/plot2/issues/65
+      if (nfacets > 1) {
+        mfgi = ceiling(ii/nfacet_cols)
+        mfgj = ii %% nfacet_cols
+        if (mfgj==0) mfgj = nfacet_cols
+        par(mfg = c(mfgi, mfgj))
+      }
+      
+      ## Set the plot window
+      ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
+      ## triggers an annoying warning about unrecognized graphical params.
+      # plot.window(
+      #   xlim = xlim, ylim = ylim, 
+      #   asp = asp, log = log,
+      #   # ...
+      # )
+      ## Solution: Only pass on relevant args using name checking and do.call.
+      ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
       pdots = dots[names(dots) %in% names(formals(plot.default))]
       do.call(
         "plot.window",
@@ -603,14 +750,33 @@ plot2.default = function(
       
       # axes, plot.frame and grid
       if (isTRUE(axes)) {
-        if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
-          graphics::Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+        if (isTRUE(frame.plot)) {
+          # if plot frame is true then print axes per normal...
+          if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+            Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+          } else {
+            Axis(x, side = 1)
+          }
+          Axis(y, side = 2)
         } else {
-          graphics::Axis(x, side = 1)
+          # ... else only print the "outside" axes.
+          if (ii %in% oxaxis) {
+            if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+              Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+            } else {
+              Axis(x, side = 1)
+            }
+          }
+          if (ii %in% oyaxis) {
+            Axis(y, side = 2)
+          }
         }
-        if (isTRUE(frame.plot) || ii == 1) graphics::Axis(y, side = 2)
       }
+      
+      # plot frame
       if (frame.plot) box()
+      
+      # panel grid lines
       if (!is.null(grid)) {
         if (is.logical(grid)) {
           ## If grid is TRUE create a default grid. Rather than just calling the default grid()
@@ -620,11 +786,11 @@ plot2.default = function(
           if (isTRUE(grid)) {
             gnx = gny = NULL
             if (!par("xlog")) {
-              graphics::abline(v = pretty(grDevices::extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               gnx = NA
             }
             if (!par("ylog")) {
-              graphics::abline(h = pretty(grDevices::extendrange(y)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              abline(h = pretty(extendrange(y)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               gny = NA
             }
             grid(nx = gnx, ny = gny)
@@ -638,10 +804,11 @@ plot2.default = function(
       if (!is.null(facet)) {
         mtext(paste(facets[[ii]]), side = 3)
       }
-    }
+      
+    } # end of ii facet loop
     
-  }
-  
+  } # end of add check
+
   
   #
   ## Interior plot elements
@@ -681,7 +848,13 @@ plot2.default = function(
       
       # Set the facet "window" manually
       # See: https://github.com/grantmcdermott/plot2/issues/65
-      if (nfacets > 1) par(mfg = c(1, ii))
+      # if (nfacets > 1) par(mfg = c(1, ii))
+      if (nfacets > 1) {
+        mfgi = ceiling(ii/nfacet_cols)
+        mfgj = ii %% nfacet_cols
+        if (mfgj==0) mfgj = nfacet_cols
+        par(mfg = c(mfgi, mfgj)) 
+      }
       
       # Draw the individual plot elements...
       
@@ -974,6 +1147,7 @@ plot2.density = function(
     }
     by_names = tryCatch(as(by_names, class(by)), error = function(e) if (inherits(by, "factor")) as.factor(by_names) else by_names)
     # need to coerce facet variables to factors for faceting to work properly later on
+    facet_names = tryCatch(as(facet_names, class(facet)), error = function(e) facet_names)
     facet_names = tryCatch(as.factor(facet_names), error = function(e) facet_names)
     
     split_object = lapply(seq_along(split_object), function(ii) {
@@ -1004,7 +1178,7 @@ plot2.density = function(
     bw = sprintf("%.4g", bw)
     n = res[["n"]]
     if (is.null(xlab)) {
-      if (length(by_names) > 3) {
+      if (length(by_names) > 3 || length(facet_names) > 3) {
         n = c(n[1:3], "...")
       }
       n = paste0("[", paste(n, collapse = ", "), "]")

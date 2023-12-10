@@ -22,6 +22,43 @@ f = function() {
     mtcars,
     plot2(
       x = wt, y = mpg,
+      facet = interaction(cyl, am),
+      main = "Facet with interaction"
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_interaction")
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = wt, y = mpg,
+      facet = interaction(cyl, am, sep = "\n"),
+      main = "Facet with interaction"
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_interaction_newline")
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = wt, y = mpg,
+      facet = interaction(cyl, am),
+      facet.args = list(ncol = 2),
+      main = "Facet with user-defined ncol"
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_args_ncol")
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = wt, y = mpg,
       by = cyl, facet = "by"
     )
   )
@@ -59,6 +96,9 @@ if (getRversion()  <= "4.3.2") {
   }
   expect_snapshot_plot(f, label = "facet_fancy")
 }
+
+
+
 
 #
 ## Ribbon plot versions

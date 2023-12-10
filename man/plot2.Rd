@@ -14,6 +14,7 @@ plot2(x, ...)
   y = NULL,
   by = NULL,
   facet = NULL,
+  facet.args = NULL,
   data = NULL,
   type = "p",
   xlim = NULL,
@@ -110,8 +111,14 @@ and other plot parameters (e.g., line types) can also take on grouping
 behaviour via the special "by" keyword. See Examples.}
 
 \item{facet}{the faceting variable that you want arrange separate plot
-windows by. Also accepts the special "by" convenience keyword, in which
-case facets will match the grouping variable(s) above.}
+windows by. To facet by multiple variables, simply interact them, e.g.
+with \code{interaction(facet_var1, facet_var2)}. Also accepts the special "by"
+convenience keyword, in which case facets will match the grouping
+variable(s) above.}
+
+\item{facet.args}{a list of arguments for controlling faceting behaviour.
+Currently only \code{nrow} and \code{ncol} are supported, with the former superseding
+the latter. Ignored if \code{facet} is NULL.}
 
 \item{data}{a data.frame (or list) from which the variables in formula
 should be taken. A matrix is converted to a data frame.}
@@ -351,7 +358,6 @@ with(
   x = Day, y = Temp,
   facet = factor(Month, labels = month.abb[unique(Month)]),
   type = "area",
-  frame = FALSE,
   main = "Temperatures by month"
   )
 )
@@ -367,7 +373,25 @@ with(
   facet = factor(Month, labels = month.abb[unique(Month)]),
   type = "area",
   palette = "dark2",
+  main = "Temperatures by month and season"
+  )
+)
+
+# Users can override the default square window arrangement by passing `nrow`
+# or `ncol` to the helper facet.args argument. Note that we can also reduce
+# axis label repetition across facets by turning the plot frame off.
+
+airquality2 = transform(airquality, Summer = Month \%in\% 6:8)
+with(
+  airquality2,
+  plot2(
+  x = Day, y = Temp,
+  by = Summer,
+  facet = factor(Month, labels = month.abb[unique(Month)]),
+  facet.args = list(nrow = 1),
   frame = FALSE,
+  type = "area",
+  palette = "dark2",
   main = "Temperatures by month and season"
   )
 )

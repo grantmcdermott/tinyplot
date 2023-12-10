@@ -1,6 +1,6 @@
 # News
 
-##  0.0.3.913 (development version)
+##  0.0.3.914 (development version)
 
 Website:
 
@@ -23,8 +23,10 @@ existing plot window. (#60 @grantmcdermott)
 - Support for "area" type plots as a special case of ribbon plots. (#68
 @grantmcdermott)
 - Partial matching for palette keywords. (#74 @grantmcdermott)
-- Support for basic plot facets via the `facet` argument. Facets can be combined
-with `by` grouping or used on their own. (#83 @grantmcdermott)
+- `plot2` gains a new `facet` argument for drawing faceted plots. Users can
+override the default square arrangement by passing the desired number of facet
+rows or columns to the companion `facet.args` helper function. Facets can be
+combined with `by` grouping, or used on their own. (#83, #91 @grantmcdermott)
 
 Bug fixes:
 

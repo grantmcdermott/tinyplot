@@ -21,8 +21,10 @@
 #'   and other plot parameters (e.g., line types) can also take on grouping
 #'   behaviour via the special "by" keyword. See Examples.
 #' @param facet the faceting variable that you want arrange separate plot
-#'   windows by. Also accepts the special "by" convenience keyword, in which
-#'   case facets will match the grouping variable(s) above.
+#'   windows by. To facet by multiple variables, simply interact them, e.g.
+#'   with `interaction(facet_var1, facet_var2)`. Also accepts the special "by"
+#'   convenience keyword, in which case facets will match the grouping
+#'   variable(s) above.
 #' @param facet.args a list of arguments for controlling faceting behaviour.
 #'   Currently only `nrow` and `ncol` are supported, with the former superseding
 #'   the latter. Ignored if `facet` is NULL.
@@ -161,7 +163,7 @@
 #'   
 #' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
 #' @importFrom graphics abline arrows axis Axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title mtext
-#' @importFrom utils modifyList
+#' @importFrom utils modifyList tail
 #' 
 #' @examples
 #' 
@@ -223,7 +225,6 @@
 #'   x = Day, y = Temp,
 #'   facet = factor(Month, labels = month.abb[unique(Month)]),
 #'   type = "area",
-#'   frame = FALSE,
 #'   main = "Temperatures by month"
 #'   )
 #' )
@@ -239,7 +240,25 @@
 #'   facet = factor(Month, labels = month.abb[unique(Month)]),
 #'   type = "area",
 #'   palette = "dark2",
+#'   main = "Temperatures by month and season"
+#'   )
+#' )
+#' 
+#' # Users can override the default square window arrangement by passing `nrow`
+#' # or `ncol` to the helper facet.args argument. Note that we can also reduce
+#' # axis label repetition across facets by turning the plot frame off.
+#' 
+#' airquality2 = transform(airquality, Summer = Month %in% 6:8)
+#' with(
+#'   airquality2,
+#'   plot2(
+#'   x = Day, y = Temp,
+#'   by = Summer,
+#'   facet = factor(Month, labels = month.abb[unique(Month)]),
+#'   facet.args = list(nrow = 1),
 #'   frame = FALSE,
+#'   type = "area",
+#'   palette = "dark2",
 #'   main = "Temperatures by month and season"
 #'   )
 #' )

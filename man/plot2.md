@@ -1,9 +1,7 @@
 
-# plot2
+# Lightweight extension of the base R plotting function
 
 [**Source code**](https://github.com/grantmcdermott/plot2/tree/main/R/#L)
-
-Lightweight extension of the base R plotting function
 
 ## Description
 
@@ -29,6 +27,7 @@ plot2(
   y = NULL,
   by = NULL,
   facet = NULL,
+  facet.args = NULL,
   data = NULL,
   type = "p",
   xlim = NULL,
@@ -152,9 +151,21 @@ behaviour via the special "by" keyword. See Examples.
 <code id="plot2_:_facet">facet</code>
 </td>
 <td>
-the faceting variable that you want arrange separate plot windows by.
-Also accepts the special "by" convenience keyword, in which case facets
-will match the grouping variable(s) above.
+the faceting variable that you want arrange separate plot windows by. To
+facet by multiple variables, simply interact them, e.g. with
+<code>interaction(facet_var1, facet_var2)</code>. Also accepts the
+special "by" convenience keyword, in which case facets will match the
+grouping variable(s) above.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="plot2_:_facet.args">facet.args</code>
+</td>
+<td>
+a list of arguments for controlling faceting behaviour. Currently only
+<code>nrow</code> and <code>ncol</code> are supported, with the former
+superseding the latter. Ignored if <code>facet</code> is NULL.
 </td>
 </tr>
 <tr>
@@ -649,7 +660,6 @@ with(
   x = Day, y = Temp,
   facet = factor(Month, labels = month.abb[unique(Month)]),
   type = "area",
-  frame = FALSE,
   main = "Temperatures by month"
   )
 )
@@ -669,13 +679,35 @@ with(
   facet = factor(Month, labels = month.abb[unique(Month)]),
   type = "area",
   palette = "dark2",
-  frame = FALSE,
   main = "Temperatures by month and season"
   )
 )
 ```
 
 ![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-8.png)
+
+``` r
+# Users can override the default square window arrangement by passing `nrow`
+# or `ncol` to the helper facet.args argument. Note that we can also reduce
+# axis label repetition across facets by turning the plot frame off.
+
+airquality2 = transform(airquality, Summer = Month %in% 6:8)
+with(
+  airquality2,
+  plot2(
+  x = Day, y = Temp,
+  by = Summer,
+  facet = factor(Month, labels = month.abb[unique(Month)]),
+  facet.args = list(nrow = 1),
+  frame = FALSE,
+  type = "area",
+  palette = "dark2",
+  main = "Temperatures by month and season"
+  )
+)
+```
+
+![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-9.png)
 
 ``` r
 # The (automatic) legend position and look can be customized using
@@ -691,7 +723,7 @@ plot2(
 )
 ```
 
-![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-9.png)
+![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-10.png)
 
 ``` r
 # The default group colours are inherited from either the "R4" or "Viridis"
@@ -708,7 +740,7 @@ plot2(
 )
 ```
 
-![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-10.png)
+![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-11.png)
 
 ``` r
 # It's possible to further customize the look of you plots using familiar
@@ -725,7 +757,7 @@ plot2(
 )
 ```
 
-![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-11.png)
+![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-12.png)
 
 ``` r
 par(family = "") # revert global font change from above

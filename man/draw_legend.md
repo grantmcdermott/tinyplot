@@ -1,9 +1,7 @@
 
-# draw_legend
+# Calculate placement of legend and and draw it
 
 [**Source code**](https://github.com/grantmcdermott/plot2/tree/main/R/#L)
-
-Calculate placement of legend and and draw it
 
 ## Description
 

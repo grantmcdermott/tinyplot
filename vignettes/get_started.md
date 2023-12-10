@@ -275,9 +275,10 @@ with(
   plot2(
     x = Day, y = fit,
     ymin = lwr, ymax = upr,
-    facet = Month, ## <- facet, not by
     type = "ribbon",
-    grid = TRUE
+    facet = Month, ## <- facet, not by
+    grid = TRUE,
+    main = "Predicted air temperatures"
   )
 )
 ```
@@ -286,12 +287,37 @@ with(
 src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_simple-1.png"
 style="width:70.0%" />
 
+By default, facets will be arranged in a square configuration (if more
+than three facets are detected). Users can override this behaviour by
+supplying `nrow` or `ncol` in the “facet.args” helper function. Note
+that we can also reduce axis label redundancy by turning off the plot
+frame.
+
+``` r
+with(
+  aq,
+  plot2(
+    x = Day, y = fit,
+    ymin = lwr, ymax = upr,
+    type = "ribbon",
+    facet = Month,
+    facet.args = list(nrow = 1),
+    grid = TRUE, frame = FALSE,
+    main = "Predicted air temperatures"
+  )
+)
+```
+
+<img
+src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_nrow-1.png"
+style="width:70.0%" />
+
 Here’s a slightly fancier version where we combine facets with (by)
 colour grouping, and also add the original values to our model
-predictions. Note that for this particular example, we’ll use the
-`facet = "by"` convenience shorthand to facet along the same month
-variable as the colour grouping. But you can easily specify different
-`by` and `facet` variables if that’s what your data support.
+predictions. For this particular example, we’ll use the `facet = "by"`
+convenience shorthand to facet along the same month variable as the
+colour grouping. But you can easily specify different `by` and `facet`
+variables if that’s what your data support.
 
 ``` r
 # Plot the original points 
@@ -302,7 +328,7 @@ with(
     by = Month, facet = "by",
     palette = "dark2",
     grid = TRUE, frame = FALSE, ylim = c(50, 100),
-    main = "Air temperatures and model predictions"
+    main = "Actual and predicted air temperatures"
   )
 )
 # Add the model predictions to the same plot 

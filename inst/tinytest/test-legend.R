@@ -18,7 +18,7 @@ expect_snapshot_plot(f, label = "legend_true")
 f = function() with(airquality, plot2(x = Day, y = Temp, by = Month, legend = "bottom!"))
 expect_snapshot_plot(f, label = "legend_keyword_default")
 
-if ((getRversion() <= "4.3.1")) {
+if ((getRversion() <= "4.3.2")) {
   f = function() with(airquality, plot2(x = density(Temp), by = Month, legend = "bottom!"))
   expect_snapshot_plot(f, label = "legend_keyword_density")
 }

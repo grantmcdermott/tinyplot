@@ -505,7 +505,7 @@ plot2.default = function(
   opar = par(no.readonly = TRUE)
   
   # catch for adding to existing facet plot
-  if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par")[[1]])
+  if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par"))
   
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex

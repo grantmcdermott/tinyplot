@@ -133,16 +133,32 @@ draw_legend = function(
     )
     fklgnd = do.call("legend", fklgnd.args)
     
+    # # calculate outer side margin width in ndc
+    # w = grconvertX(fklgnd$rect$w, to="ndc") - grconvertX(0, to="ndc")
+    # # Add another additional space to the side (i.e. as part of the outer margin)
+    # w = w + grconvertX(lmar[2], from="lines", to="ndc") 
+    # # cat(w, "\n")
+    
+    ## Line version
     # calculate outer side margin width in ndc
-    w = grconvertX(fklgnd$rect$w, to="ndc") - grconvertX(0, to="ndc")
+    w = grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines")
     # Add another additional space to the side (i.e. as part of the outer margin)
-    w = w + grconvertX(lmar[2], from = "lines", to="ndc") 
+    w = w + lmar[2] 
     # cat(w, "\n")
     
     ## differing adjustments depending on side
     if (outer_right) {
       par(mar=c(par("mar")[1:3], lmar[1]))
-      par(oma = c(par("oma")[1:3], grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines") + lmar[2]))
+      wbump = grconvertX(lmar[1], from="lines", to="nic") ## nic since omd has changed?
+      # par(omd = c(0, 1-w, 0, 1))
+      ## lines version
+      par(oma = c(par("oma")[1:3], w))
+      
+      # old code
+      # legend.args[["inset"]] = c(1.025, 0)
+      legend.args[["inset"]] = c(1+wbump, 0)
+      # cat(1+wbump)
+      
     } else {
       # avoid recursive indentation
       if (par("mar")[2] != lmar[1] + sum(par("mgp"))) {
@@ -161,9 +177,8 @@ draw_legend = function(
       par(omd = c(w, 1, 0, 1))
       # legend.args[["inset"]] = c(1.125, 0)
     }
-    # box("figure") ## TEST
-    wbump = grconvertX(lmar[1], from="lines", to="nic") ## nic since omd has changed
-    legend.args[["inset"]] = c(1+wbump, 0)
+    # # legend.args[["inset"]] = c(1+wbump, 0)
+    # cat(legend.args[["inset"]])
     
     ## Legend at the outer top or bottom of plot
   } else if (grepl("bottom!$|top!$", legend.args[["x"]])) {
@@ -224,11 +239,8 @@ draw_legend = function(
     if (isTRUE(new_plot)) plot.new()
   }
   
-  # cat(par("mar"), "\n")
-  # cat(par("oma"), "\n")
   do.call("legend", legend.args)
-  # cat(par("mar"), "\n")
-  # cat(par("oma"), "\n")
+  # TEST
   # box("figure")
   
   # if (outer_bottom) {

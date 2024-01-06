@@ -19,7 +19,7 @@
 #'   legend and the plot, and the second number represents the "outer" margin
 #'   between the legend and edge of the graphics device. If no explicit value is
 #'   provided by the user, then reverts back to `par2("lmar")` for which the
-#'   default values are c(1.1, 0.1).
+#'   default values are c(0.6, 0.5).
 #' @param new_plot Should we be calling plot.new internally?
 draw_legend = function(
     legend = NULL,

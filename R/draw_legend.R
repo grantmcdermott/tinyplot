@@ -135,7 +135,6 @@ draw_legend = function(
     )
     fklgnd = do.call("legend", fklgnd.args)
     
-    ## Line version
     # calculate outer (side) margin width in lines
     soma = grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines")
     # Add additional space to the side (i.e. as part of the outer margin)
@@ -148,7 +147,7 @@ draw_legend = function(
       ooma[4] = soma
     } else {
       # extra space needed for outer_left b/c of y-axis title and axis labels
-      # GM: Need a further ~0.6 line bump for correct spacing... Not sure why...
+      # GM: Need a further 1 line bump for correct spacing... Not sure why...
       ytisp = grconvertX(sum(par("mgp")) + 0.6, from = "lines", to = "nic")
       winset = winset + ytisp
       ooma[2] = soma
@@ -161,14 +160,26 @@ draw_legend = function(
     
     outer_bottom = grepl("bottom!$", legend.args[["x"]])
     
-    # Catch to reset right margin if previous legend position was "right!"
-    if (par("mar")[4]== 0.1) par(mar=c(par("mar")[1:3], 2.1)) 
-    
-    if (isTRUE(new_plot)) plot.new()
+    # Catch to reset right margin if previous legend position was "right!" or "left!"
+    # GM: do we still want this here?
+    if (par("mar")[4]== lmar[2]) par(mar=c(par("mar")[1:3], 2.1)) 
+    if (par("mar")[2]== lmar[2]) par(mar=c(par("mar")[1], 4.1), par("mar")[3:4]) 
     
     ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
     if (outer_bottom) legend.args[["x"]] = gsub("bottom!$", "top", legend.args[["x"]])
     if (!outer_bottom) legend.args[["x"]] = gsub("top!$", "bottom", legend.args[["x"]])
+    
+    ## We have to set the inner margins of the plot before the (fake) legend is
+    ## drawn, otherwise the inset calculation---which is based in the legend
+    ## width---will be off the first time.
+    if (outer_bottom) {
+      # par(mar=c(lmar[1], par("mar")[2:4])) 
+      par(mar=c(lmar[1] + sum(par("mgp")), par("mar")[2:4]))
+    } else {
+      par(mar=c(par("mar")[1:2], lmar[1] + sum(par("mgp")), par("mar")[4]))
+    }
+    
+    if (isTRUE(new_plot)) plot.new()
     
     legend.args[["horiz"]] = TRUE
     
@@ -188,43 +199,44 @@ draw_legend = function(
       keep.null = TRUE
     )
     fklgnd = do.call("legend", fklgnd.args)
-    # calculate bottom margin height in ndc
-    h = grconvertY(fklgnd$rect$h, to="ndc") - grconvertY(0, to="ndc")
+    
+    # calculate outer (side) margin width in lines
+    soma = grconvertY(fklgnd$rect$h, to="lines") - grconvertY(0, to="lines")
+    # Add additional space to the side (i.e. as part of the outer margin)
+    soma = soma + lmar[2] 
+    
+    hinset = grconvertY(lmar[1], from="lines", to="nic") ## nic since omd has changed?
+    ooma = par("oma")
+    
     ## differing adjustments depending on side
     if (outer_bottom) {
-      ## We need extra adjustment to account for the x axis title, so that it
-      ## doesn't overlap the legend. We'll also add an extra 3.1 lines worth of
-      ## spacing between them.
-      xtra_gap = 3.1
-      hbump = sum(par("mgp")[1], xtra_gap)
-      hbump = grconvertY(hbump, from="lines", to="ndc")
-      legend.args[["inset"]] = c(0, 1+hbump)
-      ## Bump external margin (this is where the legend will be printed)
-      h = h + grconvertY(0.1, from="lines", to="ndc")
-      par(omd = c(0, 1, 0+h, 1))
-      # box("figure")
+      # extra space needed for outer_left b/c of x-axis title and axis labels
+      # GM: Need a further 2 line bump for correct spacing... Not sure why...
+      xtisp = grconvertY(sum(par("mgp")) + 1.6, from = "lines", to = "nic")
+      hinset = hinset + xtisp
+      ooma[1] = soma
     } else {
-      legend.args[["inset"]] = c(0, 1)
-      par(omd = c(0,1,0,1-h))
+      # extra space needed for outer_left b/c of x-axis title and axis labels
+      # GM: Need a further 2 line bump for correct spacing... Not sure why...
+      xtisp = grconvertY(sum(par("mgp")) + 1.6, from = "lines", to = "nic")
+      hinset = hinset + xtisp
+      ooma[3] = soma
     }
+    par(oma = ooma)
+    legend.args[["inset"]] = c(0, 1+hinset)
     
   } else {
-    # Catch to reset right margin if previous legend position was "right!"
-    if (par("mar")[4] == 0.1) par(mar=c(par("mar")[1:3], par("mar")[2]-2)) 
+    # Catch to reset margins if previous legend position were "!" outside
+    if (par("mar")[1] == lmar[2]) par(mar=c(5.1, par("mar")[2:4])) 
+    if (par("mar")[2] == lmar[2]) par(mar=c(par("mar")[1], 4.1, par("mar")[3:4])) 
+    if (par("mar")[3] == lmar[2]) par(mar=c(par("mar")[1:2], 4.1, par("mar")[4])) 
+    if (par("mar")[4] == lmar[2]) par(mar=c(par("mar")[1:3], 2.1)) 
     legend.args[["inset"]] = 0
     if (isTRUE(new_plot)) plot.new()
   }
   
   do.call("legend", legend.args)
   
-  # if (outer_bottom) {
-  #   # omar = par("mar")
-  #   # par(mar = c(0.1, omar[2:4]))
-  #   hl = grconvertY(h, to="lines", from="ndc")
-  #   cat(hl)
-  #   par(oma = c(hl, par("oma")[2:4]))
-  #   # par(mar=omar)
-  # }
 }
 
 

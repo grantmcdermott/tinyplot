@@ -117,11 +117,23 @@ draw_legend = function(
     #   par(mar=c(par("mar")[1:3], 2.1)) # revert right margin if outer left
     # }
     
-    if (isTRUE(new_plot)) plot.new()
-    
     ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
     if (outer_right) legend.args[["x"]] = gsub("right!$", "left", legend.args[["x"]])
     if (!outer_right) legend.args[["x"]] = gsub("left!$", "right", legend.args[["x"]])
+    
+    ## We have to set the inner margins of the plot before the (fake) legend is
+    ## drawn, otherwise the inset calculation---which is based in the legend
+    ## width---will be off the first time.
+    if (outer_right) {
+      par(mar=c(par("mar")[1:3], lmar[1])) 
+    } else {
+      # avoid recursive indentation
+      if (par("mar")[2] != lmar[1] + sum(par("mgp"))) {
+        par(mar=c(par("mar")[1], lmar[1] + sum(par("mgp")), par("mar")[3:4]))
+      }
+    }
+    
+    if (isTRUE(new_plot)) plot.new()
     
     legend.args[["horiz"]] = FALSE
     
@@ -129,56 +141,34 @@ draw_legend = function(
     fklgnd.args = utils::modifyList(
       legend.args,
       list(x = 0, y = 0, plot = FALSE),
+      # list(plot = FALSE),
       keep.null = TRUE
     )
     fklgnd = do.call("legend", fklgnd.args)
     
-    # # calculate outer side margin width in ndc
-    # w = grconvertX(fklgnd$rect$w, to="ndc") - grconvertX(0, to="ndc")
-    # # Add another additional space to the side (i.e. as part of the outer margin)
-    # w = w + grconvertX(lmar[2], from="lines", to="ndc") 
-    # # cat(w, "\n")
-    
     ## Line version
-    # calculate outer side margin width in ndc
+    # calculate outer side margin width in lines
     w = grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines")
-    # Add another additional space to the side (i.e. as part of the outer margin)
+    # Add additional space to the side (i.e. as part of the outer margin)
     w = w + lmar[2] 
-    # cat(w, "\n")
     
+    wbump = grconvertX(lmar[1], from="lines", to="nic") ## nic since omd has changed?
+    ooma = par("oma")
     ## differing adjustments depending on side
     if (outer_right) {
-      par(mar=c(par("mar")[1:3], lmar[1]))
-      wbump = grconvertX(lmar[1], from="lines", to="nic") ## nic since omd has changed?
       # par(omd = c(0, 1-w, 0, 1))
       ## lines version
-      par(oma = c(par("oma")[1:3], w))
-      
-      # old code
-      # legend.args[["inset"]] = c(1.025, 0)
-      legend.args[["inset"]] = c(1+wbump, 0)
-      # cat(1+wbump)
-      
+      ooma[4] = w
     } else {
-      # avoid recursive indentation
-      if (par("mar")[2] != lmar[1] + sum(par("mgp"))) {
-        par(mar=c(par("mar")[1], lmar[1] + sum(par("mgp")), par("mar")[3:4]))
-      }
       # extra space for y-axis title and axis labels
-      ytisp = grconvertX(sum(par("mgp")), from = "lines", to = "ndc")
-      # extra space for y-axis title
-      # w = w + grconvertX(par("mgp")[1], from = "lines", to = "ndc")
-      # wbump = grconvertX(lmar[1], from="lines", to="nic") ## nic same as ndc?
-      # wbump = wbump + ytisp
-      wbump = ytisp
-      wbump = wbump + grconvertX(lmar[1], from="lines", to="ndc") 
-      legend.args[["inset"]] = c(1+wbump, 0)
-      # wbump = grconvertX(4, from = "lines", to = "ndc")
-      par(omd = c(w, 1, 0, 1))
-      # legend.args[["inset"]] = c(1.125, 0)
+      ytisp = grconvertX(sum(par("mgp")) + 1, from = "lines", to = "nic")
+      wbump = wbump + ytisp
+      # par(omd = c(w, 1, 0, 1))
+      ## lines version
+      ooma[2] = w
     }
-    # # legend.args[["inset"]] = c(1+wbump, 0)
-    # cat(legend.args[["inset"]])
+    par(oma = ooma)
+    legend.args[["inset"]] = c(1+wbump, 0)
     
     ## Legend at the outer top or bottom of plot
   } else if (grepl("bottom!$|top!$", legend.args[["x"]])) {
@@ -239,6 +229,9 @@ draw_legend = function(
     if (isTRUE(new_plot)) plot.new()
   }
   
+  oopar1 <<- par()
+  olargs1 <<- legend.args 
+  
   do.call("legend", legend.args)
   # TEST
   # box("figure")
@@ -251,7 +244,8 @@ draw_legend = function(
   #   par(oma = c(hl, par("oma")[2:4]))
   #   # par(mar=omar)
   # }
-  
+  oopar2 <<- par()
+  olargs2 <<- legend.args 
 }
 
 

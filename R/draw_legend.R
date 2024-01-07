@@ -110,13 +110,6 @@ draw_legend = function(
     
     outer_right = grepl("right!$", legend.args[["x"]])
     
-    # # Margins of the plot (the first is the bottom margin)
-    # if (outer_right) {
-    #   par(mar=c(par("mar")[1:3], 0.1)) # remove right inner margin space
-    # } else if (par("mar")[4]==0.1) {
-    #   par(mar=c(par("mar")[1:3], 2.1)) # revert right margin if outer left
-    # }
-    
     ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
     if (outer_right) legend.args[["x"]] = gsub("right!$", "left", legend.args[["x"]])
     if (!outer_right) legend.args[["x"]] = gsub("left!$", "right", legend.args[["x"]])
@@ -127,10 +120,7 @@ draw_legend = function(
     if (outer_right) {
       par(mar=c(par("mar")[1:3], lmar[1])) 
     } else {
-      # avoid recursive indentation
-      if (par("mar")[2] != lmar[1] + sum(par("mgp"))) {
-        par(mar=c(par("mar")[1], lmar[1] + sum(par("mgp")), par("mar")[3:4]))
-      }
+      par(mar=c(par("mar")[1], lmar[1] + sum(par("mgp")), par("mar")[3:4]))
     }
     
     if (isTRUE(new_plot)) plot.new()
@@ -141,34 +131,30 @@ draw_legend = function(
     fklgnd.args = utils::modifyList(
       legend.args,
       list(x = 0, y = 0, plot = FALSE),
-      # list(plot = FALSE),
       keep.null = TRUE
     )
     fklgnd = do.call("legend", fklgnd.args)
     
     ## Line version
-    # calculate outer side margin width in lines
-    w = grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines")
+    # calculate outer (side) margin width in lines
+    soma = grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines")
     # Add additional space to the side (i.e. as part of the outer margin)
-    w = w + lmar[2] 
+    soma = soma + lmar[2] 
     
-    wbump = grconvertX(lmar[1], from="lines", to="nic") ## nic since omd has changed?
+    winset = grconvertX(lmar[1], from="lines", to="nic") ## nic since omd has changed?
     ooma = par("oma")
     ## differing adjustments depending on side
     if (outer_right) {
-      # par(omd = c(0, 1-w, 0, 1))
-      ## lines version
-      ooma[4] = w
+      ooma[4] = soma
     } else {
-      # extra space for y-axis title and axis labels
-      ytisp = grconvertX(sum(par("mgp")) + 1, from = "lines", to = "nic")
-      wbump = wbump + ytisp
-      # par(omd = c(w, 1, 0, 1))
-      ## lines version
-      ooma[2] = w
+      # extra space needed for outer_left b/c of y-axis title and axis labels
+      # GM: Need a further ~0.6 line bump for correct spacing... Not sure why...
+      ytisp = grconvertX(sum(par("mgp")) + 0.6, from = "lines", to = "nic")
+      winset = winset + ytisp
+      ooma[2] = soma
     }
     par(oma = ooma)
-    legend.args[["inset"]] = c(1+wbump, 0)
+    legend.args[["inset"]] = c(1+winset, 0)
     
     ## Legend at the outer top or bottom of plot
   } else if (grepl("bottom!$|top!$", legend.args[["x"]])) {
@@ -229,12 +215,7 @@ draw_legend = function(
     if (isTRUE(new_plot)) plot.new()
   }
   
-  oopar1 <<- par()
-  olargs1 <<- legend.args 
-  
   do.call("legend", legend.args)
-  # TEST
-  # box("figure")
   
   # if (outer_bottom) {
   #   # omar = par("mar")
@@ -244,8 +225,6 @@ draw_legend = function(
   #   par(oma = c(hl, par("oma")[2:4]))
   #   # par(mar=omar)
   # }
-  oopar2 <<- par()
-  olargs2 <<- legend.args 
 }
 
 

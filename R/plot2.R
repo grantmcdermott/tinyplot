@@ -599,6 +599,8 @@ plot2.default = function(
       lgnd_labs = ylab
     }
     
+    has_sub = !is.null(sub)
+    
     draw_legend(
       legend = legend,
       legend.args = legend.args,
@@ -609,7 +611,8 @@ plot2.default = function(
       lty = lty,
       col = col,
       bg = bg,
-      cex = cex * cex_lgnd_adj
+      cex = cex * cex_lgnd_adj,
+      has_sub = has_sub
       )
     
     has_legend = TRUE

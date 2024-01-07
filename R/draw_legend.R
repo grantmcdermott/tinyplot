@@ -20,6 +20,9 @@
 #'   between the legend and edge of the graphics device. If no explicit value is
 #'   provided by the user, then reverts back to `par2("lmar")` for which the
 #'   default values are c(0.6, 0.5).
+#' @param has_sub Logical. Does the plot have a sub-caption. Only used if
+#'   keyword position is "bottom!", in which case we need to bump the legend
+#'   margin a bit further.
 #' @param new_plot Should we be calling plot.new internally?
 draw_legend = function(
     legend = NULL,
@@ -33,6 +36,7 @@ draw_legend = function(
     bg = NULL,
     cex = NULL,
     lmar = NULL,
+    has_sub = FALSE,
     new_plot = TRUE
 ) {
   
@@ -147,8 +151,7 @@ draw_legend = function(
       ooma[4] = soma
     } else {
       # extra space needed for outer_left b/c of y-axis title and axis labels
-      # GM: Need a further 1 line bump for correct spacing... Not sure why...
-      ytisp = grconvertX(sum(par("mgp")) + 0.6, from = "lines", to = "nic")
+      ytisp = grconvertX(sum(par("mgp")) + lmar[1], from = "lines", to = "nic")
       winset = winset + ytisp
       ooma[2] = soma
     }
@@ -173,10 +176,14 @@ draw_legend = function(
     ## drawn, otherwise the inset calculation---which is based in the legend
     ## width---will be off the first time.
     if (outer_bottom) {
-      # par(mar=c(lmar[1], par("mar")[2:4])) 
-      par(mar=c(lmar[1] + sum(par("mgp")), par("mar")[2:4]))
+      par(mar=c(lmar[1], par("mar")[2:4]))
+      if (isTRUE(has_sub)) {
+        par(mar = c(lmar[1] + sum(par("mgp")) + 1, par("mar")[2:4]))
+      } else {
+        par(mar = c(lmar[1] + sum(par("mgp")), par("mar")[2:4]))
+      }
     } else {
-      par(mar=c(par("mar")[1:2], lmar[1] + sum(par("mgp")), par("mar")[4]))
+      par(mar = c(par("mar")[1:2], lmar[1] + sum(par("mgp")), par("mar")[4]))
     }
     
     if (isTRUE(new_plot)) plot.new()
@@ -210,15 +217,15 @@ draw_legend = function(
     
     ## differing adjustments depending on side
     if (outer_bottom) {
-      # extra space needed for outer_left b/c of x-axis title and axis labels
-      # GM: Need a further 2 line bump for correct spacing... Not sure why...
-      xtisp = grconvertY(sum(par("mgp")) + 1.6, from = "lines", to = "nic")
+      # extra space needed for outer_bottom b/c of x-axis title and axis labels
+      xtisp = grconvertY(sum(par("mgp")) + 1 + lmar[1], from = "lines", to = "nic")
       hinset = hinset + xtisp
+      if (has_sub) hinset = hinset + grconvertY(1 + 0.5, from = "lines", to = "nic")
       ooma[1] = soma
     } else {
-      # extra space needed for outer_left b/c of x-axis title and axis labels
-      # GM: Need a further 2 line bump for correct spacing... Not sure why...
-      xtisp = grconvertY(sum(par("mgp")) + 1.6, from = "lines", to = "nic")
+      # extra space needed for outer_top b/c of x-axis title and axis labels
+      # ## GM: FLAG TO CHANGE
+      xtisp = grconvertY(sum(par("mgp")) + 1 + lmar[1], from = "lines", to = "nic")
       hinset = hinset + xtisp
       ooma[3] = soma
     }

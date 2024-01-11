@@ -354,6 +354,15 @@ plot2.default = function(
     # main = sub = xlab = ylab = NULL ## Rather do this later
   }
   
+  # Save current graphical parameters
+  opar = par(no.readonly = TRUE)
+  if (par_restore || !is.null(facet)) {
+    on.exit(par(opar), add = TRUE)
+  }
+  
+  # catch for adding to existing facet plot
+  if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par"))
+  
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = deparse1(substitute(x))
   y_dep = if (is.null(y)) {
@@ -501,12 +510,6 @@ plot2.default = function(
     }
   }
   
-  # Save current graphical parameters
-  opar = par(no.readonly = TRUE)
-  
-  # catch for adding to existing facet plot
-  if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par"))
-  
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
@@ -563,7 +566,6 @@ plot2.default = function(
     facets = ifacet = nfacets = oxaxis = oyaxis = cex_lgnd_adj = 1
     
   }
-  
   
   #
   ## Global plot elements (legend and titles)
@@ -628,7 +630,8 @@ plot2.default = function(
     # main title
     # Note that we include a special catch for the main title if legend is
     # "top!" (and main is specified in the first place).
-    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!"))
+    legend_eval = eval(legend)
+    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!") || (is.list(legend_eval) && legend_eval[[1]]=="top!") )
     if (is.null(main) || isFALSE(adj_title)) {
       title(
         main = main,
@@ -636,7 +639,8 @@ plot2.default = function(
       )
     } else {
       # Bump main up to make space for the legend beneath it
-      title(main = main, line = 5, xpd = NA)
+      # title(main = main, line = opar[["mar"]][1] + par2("lmar")[1] + 0.1, xpd = NA)
+      title(main = main, line = opar[["mar"]][1] + par2("lmar")[1] - diff(par2("lmar")), xpd = NA)
     }
     # Axis titles
     title(xlab = xlab, ylab = ylab)
@@ -650,8 +654,9 @@ plot2.default = function(
   
   if (!is.null(facet) && isFALSE(add)) {
     
-    # Arrange facets based on the calculations we did earlier
-    par(mfrow = c(nfacet_rows, nfacet_cols))
+    # # Arrange facets based on the calculations we did earlier
+    # # GM: Rather do this after the omaa adjustments
+    # par(mfrow = c(nfacet_rows, nfacet_cols))
     
     # Also adjust spacing between facets to avoid excess whitespace
     
@@ -665,9 +670,9 @@ plot2.default = function(
     if (!is.null(ylab)) ooma[2] = ooma[2] + 3
     # Bump top margin down so facet titles don't overlap with main title space
     ooma[3] = ooma[3] + 2.1
-    # Adjustment if inheriting tight RHS margin
-    # if (isTRUE(frame.plot) && ooma[4]==0.1) ooma[4] = ooma[4] + 2
-    if (omar[4]==0.1) ooma[4] = ooma[4] + 2
+    # # Adjustment if inheriting tight RHS margin
+    # # if (isTRUE(frame.plot) && ooma[4]==0.1) ooma[4] = ooma[4] + 2
+    # if (omar[4]==0.1) ooma[4] = ooma[4] + 2
     # extra bump b/c also need to a/c for facet titles
     if (!is.null(main)) {
       if (nfacets >= 3) {
@@ -681,6 +686,9 @@ plot2.default = function(
     }
     # apply the changes
     par(oma = ooma)
+    
+    # Arrange facets based on the calculations we did earlier
+    par(mfrow = c(nfacet_rows, nfacet_cols))
     
     # Need extra adjustment to top margin if facet titles have "\n" newline separator
     facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
@@ -705,22 +713,27 @@ plot2.default = function(
       # Note: Rather use original in case of already-reduced space (due to
       #   "right!" legend correction above.)
       if (is.null(omar)) omar = opar[["mar"]] 
-      omar[c(1,2)] = omar[c(1,2)] - 2
-      if (!is.null(main)) omar[3] = omar[3] - 2
+      omar[c(1,2)] = sapply(omar[c(1,2)] - 2, max, 0.1)
+      if (!is.null(main)) omar[3] = max(omar[3] - 2, 0.1)
       # extra reductions if plot isn't framed
       if (isFALSE(frame.plot)) {
-        # Tricksy, but simultaneously adjust outer and inner margins (in
+        # Tricksy, but simultaneously adjust inner and outer margins (in
         # different directions) to preserve figure centroids
         ooma = par("oma")
-        ooma[c(1,2,3)] = ooma[c(1,2,3)] + 1
+        # omar[c(1,2,3,4)] = omar[c(1,2,3,4)] - 1
+        # ooma[c(1,2,3,4)] = ooma[c(1,2,3,4)] + 1
+        omar2 = omar - 1.5
+        omar2 = sapply(omar2, max, 0.1)
+        mar_diff = omar-omar2
+        omar = omar - mar_diff
+        ooma = ooma + mar_diff
         par(oma = ooma)
-        omar[c(1,2,3)] = omar[c(1,2,3)] - 1
-        if (has_legend) omar[4] = 0.1 # no space to RHS if legend present
-      } else if (has_legend) {
-        ## Avoid double correction in case of RHS legend
-        ooma = par("oma")
-        ooma[4] = max(0, ooma[4] - 2)
-        par(oma = ooma)
+        # if (has_legend) omar[4] = 0.1 # no space to RHS if legend present
+      # } else if (has_legend) {
+      #   ## Avoid double correction in case of RHS legend
+      #   ooma = par("oma")
+      #   ooma[4] = max(0, ooma[4] - 2)
+      #   par(oma = ooma)
       }
       par(mar = omar)
     }
@@ -929,14 +942,10 @@ plot2.default = function(
     
   }
   
+  # box("figure") ## TEST
   # tidy up before exit
   if (!is.null(facet)) {
     par2(last_facet_par = par(no.readonly = TRUE))
-  }
-  
-  
-  if (par_restore || !is.null(facet)) {
-    on.exit(par(opar), add = TRUE)
   }
   
 }

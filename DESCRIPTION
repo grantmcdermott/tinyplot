@@ -53,7 +53,7 @@ Suggests:
 Remotes: 
   etiennebacher/altdoc
 Encoding: UTF-8
-RoxygenNote: 7.2.3.9000
+RoxygenNote: 7.3.0
 URL: https://grantmcdermott.com/plot2/,
     http://grantmcdermott.com/plot2/
 BugReports: https://github.com/grantmcdermott/plot2/issues

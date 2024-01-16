@@ -14,16 +14,64 @@
 #' @param col Plotting colour(s), passed down from `plot2`.
 #' @param bg Plotting character background fill colour(s), passed down from `plot2`.
 #' @param cex Plotting character expansion(s), passed down from `plot2`.
-#' @param lmar Legend margins (in lines). Should be a numeric vector of length
-#'   two, where the first number represents the "inner" margin between the
-#'   legend and the plot, and the second number represents the "outer" margin
-#'   between the legend and edge of the graphics device. If no explicit value is
-#'   provided by the user, then reverts back to `par2("lmar")` for which the
-#'   default values are c(0.6, 0.5).
+#' @param lmar Legend margins (in lines). Should be a numeric vector of the form
+#'   `c(inner, outer)`, where the first number represents the "inner" margin
+#'   between the legend and the plot, and the second number represents the
+#'   "outer" margin between the legend and edge of the graphics device. If no
+#'   explicit value is provided by the user, then reverts back to `par2("lmar")`
+#'   for which the default values are `c(1.0, 0.1)`.
 #' @param has_sub Logical. Does the plot have a sub-caption. Only used if
 #'   keyword position is "bottom!", in which case we need to bump the legend
 #'   margin a bit further.
 #' @param new_plot Should we be calling plot.new internally?
+#' @examples
+#' 
+#' oldmar = par("mar")
+#' 
+#' draw_legend(
+#'   legend = "right!", ## default (other options incl, "left(!)", ""bottom(!)", etc.)
+#'   legend.args = list(title = "Key", bty = "o"),
+#'   lgnd_labs = c("foo", "bar"),
+#'   type = "p",
+#'   pch = 21:22,
+#'   col = 1:2
+#' )
+#' 
+#' # The legend is placed in the outer margin...
+#' box("figure", col = "cyan", lty = 4)
+#' # ... and the plot is proportionally adjusted against the edge of this
+#' # margin.
+#' box("plot")
+#' # You can add regular plot objects per normal now
+#' plot.window(xlim = c(1,10), ylim = c(1,10))
+#' points(1:10)
+#' points(10:1, pch = 22, col = "red")
+#' axis(1); axis(2)
+#' # etc.
+#' 
+#' # Important: A side effect of draw_legend is that the inner margins have been
+#' # adjusted. (Here: The right margin, since we called "right!" above.)
+#' par("mar")
+#' 
+#' # To reset you should call `dev.off()` or just reset manually.
+#' par(mar = oldmar)
+#' 
+#' # Note that the inner and outer margin of the legend itself can be set via
+#' # the `lmar` argument. (This can also be set globally via
+#' # `par2(lmar = c(inner, outer))`.)
+#' draw_legend(
+#'   legend.args = list(title = "Key", bty = "o"),
+#'   lgnd_labs = c("foo", "bar"),
+#'   type = "p",
+#'   pch = 21:22,
+#'   col = 1:2,
+#'   lmar = c(0, 0.1) ## set inner margin to zero
+#' )
+#' box("figure", col = "cyan", lty = 4)
+#' 
+#' par(mar = oldmar)
+#' 
+#' 
 draw_legend = function(
     legend = NULL,
     legend.args = NULL,
@@ -46,7 +94,10 @@ draw_legend = function(
     if (!is.numeric(lmar) || length(lmar)!=2) stop ("lmar must be a numeric of length 2.")
   }
   
-  w = h = outer_right = outer_bottom = NULL
+  soma = outer_right = outer_bottom = NULL
+  
+  #
+  ## legend args ----
   
   if (is.null(legend)) {
     legend.args[["x"]] = "right!"
@@ -105,11 +156,14 @@ draw_legend = function(
     legend.args[["legend"]] = lgnd_labs
   }
   
-  # Catch to avoid recursive offsets, e.g., repeated plot2 calls with
+  #
+  ## legend placement ----
+  
+  # Catch to avoid recursive offsets, e.g. repeated plot2 calls with
   # "bottom!" legend position.
   par(omd = c(0,1,0,1))
   
-  ## Legend to outer side of plot
+  ## Legend to outer side (either right or left) of plot
   if (grepl("right!$|left!$", legend.args[["x"]])) {
     
     outer_right = grepl("right!$", legend.args[["x"]])
@@ -122,9 +176,18 @@ draw_legend = function(
     ## drawn, otherwise the inset calculation---which is based in the legend
     ## width---will be off the first time.
     if (outer_right) {
-      par(mar=c(par("mar")[1:3], lmar[1])) 
+      # par(mar=c(par("mar")[1:3], lmar[1]))
+      par(mar=c(par("mar")[1:3], 0)) ## EXPERIMENT
     } else {
-      par(mar=c(par("mar")[1], lmar[1] + sum(par("mgp")), par("mar")[3:4]))
+      # For outer left we have to account for the y-axis label too, which
+      # requires additional space
+      par(mar=c(
+        par("mar")[1],
+        # lmar[1] + (par("mgp")[1] + 1) * par("cex.lab"),
+        (par("mgp")[1] + 1) * par("cex.lab"), ## EXPERIMENT
+        # lmar[1] + ((par("mgp")[1]+1) * 1.1) * par("cex.lab"),
+        par("mar")[3:4]
+        ))
     }
     
     if (isTRUE(new_plot)) plot.new()
@@ -142,7 +205,8 @@ draw_legend = function(
     # calculate outer (side) margin width in lines
     soma = grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines")
     # Add additional space to the side (i.e. as part of the outer margin)
-    soma = soma + lmar[2] 
+    # soma = soma + lmar[2]
+    soma = soma + sum(lmar)  ## EXPERIMENT
     
     winset = grconvertX(lmar[1], from="lines", to="nic") ## nic since omd has changed?
     ooma = par("oma")
@@ -150,9 +214,14 @@ draw_legend = function(
     if (outer_right) {
       ooma[4] = soma
     } else {
-      # extra space needed for outer_left b/c of y-axis title and axis labels
-      ytisp = grconvertX(sum(par("mgp")) + lmar[1], from = "lines", to = "nic")
+      # extra space needed for "left!" b/c of y-axis title
+      ## GM: Works for default case, but not for adjusted par2 cases...
+      ytisp = grconvertX((par("mgp")[1]+ 1.1)*par("cex.lab") + lmar[1], from = "lines", to = "nic")
+      # ytisp = grconvertX(((par("mgp")[1]+1) * 1.1)*par("cex.lab") + lmar[1], from = "lines", to = "nic")
+      # ytisp = grconvertX((par("mgp")[1])*par("cex.lab") + 1 + lmar[1] - diff(lmar), from = "lines", to = "nic")
+      # ytisp = grconvertX((par("mgp")[1])*par("cex.lab") + 1 + lmar[1] - abs(diff(lmar)), from = "lines", to = "nic")
       winset = winset + ytisp
+    #   winset = ytisp ## test
       ooma[2] = soma
     }
     par(oma = ooma)
@@ -176,14 +245,19 @@ draw_legend = function(
     ## drawn, otherwise the inset calculation---which is based in the legend
     ## width---will be off the first time.
     if (outer_bottom) {
-      par(mar=c(lmar[1], par("mar")[2:4]))
+      par(mar=c(0, par("mar")[2:4]))
       if (isTRUE(has_sub)) {
-        par(mar = c(lmar[1] + sum(par("mgp")) + 1, par("mar")[2:4]))
+        # par(mar = c(lmar[1] + sum(par("mgp")) + 1*par("cex.sub"), par("mar")[2:4]))
+        par(mar = c(sum(par("mgp")) + 1*par("cex.sub"), par("mar")[2:4])) ## EXPERIMENT
       } else {
-        par(mar = c(lmar[1] + sum(par("mgp")), par("mar")[2:4]))
+        # par(mar = c(lmar[1] + sum(par("mgp")), par("mar")[2:4]))
+        par(mar = c(sum(par("mgp")), par("mar")[2:4])) ## EXPERIMENT
       }
     } else {
-      par(mar = c(par("mar")[1:2], lmar[1] + sum(par("mgp")), par("mar")[4]))
+      ## For "top!", the logic is slightly different: We don't expand the outer
+      ## margin b/c we need the legend to come underneath the main title. So
+      ## we rather expand the existing inner margin.
+      par(mar = c(par("mar")[1:2], par("mar")[3] + sum(lmar), par("mar")[4]))
     }
     
     if (isTRUE(new_plot)) plot.new()
@@ -207,10 +281,11 @@ draw_legend = function(
     )
     fklgnd = do.call("legend", fklgnd.args)
     
-    # calculate outer (side) margin width in lines
+    # calculate outer margin width in lines
     soma = grconvertY(fklgnd$rect$h, to="lines") - grconvertY(0, to="lines")
     # Add additional space to the side (i.e. as part of the outer margin)
-    soma = soma + lmar[2] 
+    # soma = soma + lmar[2]
+    soma = soma + sum(lmar) ## EXPERIMENT
     
     hinset = grconvertY(lmar[1], from="lines", to="nic") ## nic since omd has changed?
     ooma = par("oma")
@@ -218,16 +293,17 @@ draw_legend = function(
     ## differing adjustments depending on side
     if (outer_bottom) {
       # extra space needed for outer_bottom b/c of x-axis title and axis labels
-      xtisp = grconvertY(sum(par("mgp")) + 1 + lmar[1], from = "lines", to = "nic")
+      # xtisp = grconvertY(sum(par("mgp")) + 1 + lmar[1], from = "lines", to = "nic")
+      xtisp = grconvertY(sum(par("mgp")) + 1, from = "lines", to = "nic") ## EXPERIMENT
       hinset = hinset + xtisp
       if (has_sub) hinset = hinset + grconvertY(1 + 0.5, from = "lines", to = "nic")
       ooma[1] = soma
     } else {
-      # extra space needed for outer_top b/c of x-axis title and axis labels
-      # ## GM: FLAG TO CHANGE
-      xtisp = grconvertY(sum(par("mgp")) + 1 + lmar[1], from = "lines", to = "nic")
-      hinset = hinset + xtisp
-      ooma[3] = soma
+      soma = grconvertY(fklgnd$rect$h, to="lines") - grconvertY(0, to="lines")
+      oopar = par("mar")
+      oopar[3] = oopar[3] + soma
+      par(mar = oopar)
+      hinset = -grconvertY(soma + lmar[2], from = "lines", to = "nic")
     }
     par(oma = ooma)
     legend.args[["inset"]] = c(0, 1+hinset)
@@ -243,6 +319,7 @@ draw_legend = function(
   }
   
   do.call("legend", legend.args)
+  # box("figure") # TEST
   
 }
 

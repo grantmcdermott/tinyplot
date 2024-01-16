@@ -665,54 +665,14 @@ plot2.default = function(
   
   if (!is.null(facet) && isFALSE(add)) {
     
-    # # Arrange facets based on the calculations we did earlier
-    # # GM: Rather do this after the omaa adjustments
-    # par(mfrow = c(nfacet_rows, nfacet_cols))
+    if (is.null(omar)) omar = par("mar")
     
-    # Also adjust spacing between facets to avoid excess whitespace
-    
-    # Side note: Rather use original mar in case of already-reduced space (due
-    #   to "right!" legend correction above)
-    # if (is.null(omar)) omar = opar[["mar"]]
-    if (is.null(omar)) omar = par("mar") ## EXPERIMENT
-    
-    # # Bump extra space for titles if present
-    # # ooma = par("oma")
-    # ooma = par("oma")/cex_fct_adj ## EXPERIMENT
-    # if (!is.null(xlab)) ooma[1] = ooma[1] + 3
-    # if (!is.null(ylab)) ooma[2] = ooma[2] + 3
-    # # Bump top margin down so facet titles don't overlap with main title space
-    # ooma[3] = ooma[3] + 2.1
-    # # # Adjustment if inheriting tight RHS margin
-    # # # if (isTRUE(frame.plot) && ooma[4]==0.1) ooma[4] = ooma[4] + 2
-    # # if (omar[4]==0.1) ooma[4] = ooma[4] + 2
-    # # extra bump b/c also need to a/c for facet titles
-    # if (!is.null(main)) {
-    #   if (nfacets >= 3) {
-    #     ## exception for 2x2 case
-    #     if (nfacet_rows == 2 && nfacet_cols == 2) {
-    #       # ooma[3] = ooma[3] + 0
-    #       ooma[3] = ooma[3] + 0.75 ## EXPERIMENT
-    #     } else {
-    #       ooma[3] = ooma[3] + 2
-    #       # ooma[3] = ooma[3] + 1/cex_fct_adj  ## EXPERIMENT (not great for main case)
-    #     }
-    #   }
-    # }
-    # apply the changes
-    # par(oma = ooma)
-    
-    # # Arrange facets based on the calculations we did earlier
-    # par(mfrow = c(nfacet_rows, nfacet_cols))
-    
-    # Need extra adjustment to top margin if facet titles have "\n" newline separator
+    # Need extra adjustment to top margin if facet titles have "\n" newline
+    # separator. (Note that we'll also need to take account for this in the
+    # individual facet margins / gaps further below.)
     facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
     if (length(facet_newlines)==0) facet_newlines = 0
-    # # Side note: Rather use original mar in case of already-reduced space (due
-    # #   to "right!" legend correction above)
-    # if (is.null(omar)) omar = opar[["mar"]]
-    # omar[3] = omar[3] + 1.5*max(facet_newlines)
-    omar[3] = omar[3] + max(facet_newlines)#/cex_fct_adj## EXPERIMENTAL
+    omar[3] = omar[3] + max(facet_newlines)
     # apply the changes
     par(mar = omar)
 
@@ -724,55 +684,7 @@ plot2.default = function(
   if (isFALSE(add)) {
     
     if (nfacets > 1) {
-    #   # Reduce the margins between the individual facets, to avoid excess
-    #   # whitespace.
-    #   # Note: Rather use original in case of already-reduced space (due to
-    #   #   "right!" legend correction above.)
-    #   # if (is.null(omar)) omar = opar[["mar"]] 
-    #   if (is.null(omar)) omar = par("mar") ## EXPERIMENT
-    #   # omar[c(1,2)] = sapply(omar[c(1,2)] - 2, max, 0.1)
-    #   # cat(cex_fct_adj)
-    #   # omar[c(1,2)] = sapply(omar[c(1,2)] - 1.5, max, 0.1) ## EXPERIMENT
-    #   omar[c(1,2)] = sapply(omar[c(1,2)] - (1/cex_fct_adj), max, 0.1) ## EXPERIMENT
-    #   if (nfacet_rows == 2 && nfacet_cols == 2) { ## EXPERIMENT
-    #     omar[1] = max(omar[1] - 0.75, 0.1) ## EXPERIMENT
-    #     omar[2] = max(omar[2] - 1, 0.1) ## EXPERIMENT
-    #   }
-    #   if (nfacets==2) { ## EXPERIMENT
-    #     omar[1] = max(omar[1] - 2, 0.1) ## EXPERIMENT
-    #     if (nfacet_rows==2) omar[2] = max(omar[2] - 2, 0.1) ## EXPERIMENT
-    #     if (nfacet_cols==2) omar[2] = max(omar[2] - 2, 0.1) ## EXPERIMENT
-    #     # if (nfacet_cols==2) omar[4] = omar[4] + 1 ## EXPERIMENT
-    #     # if (nfacet_cols==2) omar[4] = 0.1 ## EXPERIMENT
-    #   }
-    #   if (!is.null(main)) omar[3] = max(omar[3] - 2, 0.1)
-    #   # extra reductions if plot isn't framed
-    #   if (isFALSE(frame.plot)) {
-    #     # Tricksy, but simultaneously adjust inner and outer margins (in
-    #     # different directions) to preserve figure centroids
-    #     ooma = par("oma")
-    #     # omar[c(1,2,3,4)] = omar[c(1,2,3,4)] - 1
-    #     # ooma[c(1,2,3,4)] = ooma[c(1,2,3,4)] + 1
-    #     # omar2 = omar - 1.5
-    #     omar2 = omar - (1/cex_fct_adj) ## EXPERIMENT
-    #     omar2 = sapply(omar2, max, 0.1)
-    #     mar_diff = omar - omar2
-    #     omar = omar - mar_diff
-    #     ooma = ooma + mar_diff
-    #     par(oma = ooma)
-    #     # if (has_legend) omar[4] = 0.1 # no space to RHS if legend present
-    #   # } else if (has_legend) {
-    #   #   ## Avoid double correction in case of RHS legend
-    #   #   ooma = par("oma")
-    #   #   ooma[4] = max(0, ooma[4] - 2)
-    #   #   par(oma = ooma)
-    #   }
-    #   par(mar = omar)
-    #   
-    #   # Arrange facets based on the calculations we did earlier
-      # box("figure", lty = 2)
-      
-      ## EXPERIMENTAL
+      # Set facet margins (i.e., gaps between facets)
       if (is.null(facet.args[["fmar"]])) {
         fmar = c(1,1,1,1)
       } else {
@@ -794,40 +706,42 @@ plot2.default = function(
         if (nfacet_rows == 2) fmar[c(1,3)] = 1
         if (nfacet_cols == 2) fmar[c(2,4)] = 1
       }
-      # if (nfacets==2) {
-      #   fmar = c(1,1,1,1)
-      # } else if (nfacets >= 3) {
-      #   fmar = c(0.75,0.75,0.75, 0.75)
-      #   if (nfacet_rows == 2) fmar[c(1,3)] = 1
-      #   if (nfacet_cols == 2) fmar[c(2,4)] = 1
-      # }
+      # Extra reduction if no plot frame to reduce whitespace
       if (isFALSE(frame.plot)) {
         fmar = fmar - 0.5
       }
+      
       ooma = par("oma")
-    # Bump top margin down for facet titles
+      
+      # Bump top margin down for facet titles
       fmar[3] = fmar[3] + 1
-    # Need extra adjustment to top margin if facet titles have "\n" newline separator
-    facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
-    if (length(facet_newlines)==0) facet_newlines = 0
-    fmar[3] = fmar[3] + max(facet_newlines)
+      # Need extra adjustment to top margin if facet titles have "\n" newline separator
+      facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
+      if (length(facet_newlines)==0) facet_newlines = 0
+      fmar[3] = fmar[3] + max(facet_newlines)
+      
       omar = par("mar")
-      # nmar = (rep(fmar, 4)+.1)/cex_fct_adj
+      
+      # Now we set the margins. The trick here is that we simultaneously adjust
+      # inner (mar) and outer (oma) margins by the same amount, but in opposite
+      # directions, to preserve the overall facet and plot centroids. 
       nmar = (fmar+.1)/cex_fct_adj
       noma = (ooma+omar-fmar-.1)/cex_fct_adj
-      # catch in case of negative oma values
-      # (should only occur with some user-supplied par2(lmar) values)
+      # Catch in case of negative oma values. (Probably only occurs with some
+      # user-supplied par2(lmar) values and a "left!" positioned legend.)
       if (any(noma<0)) {
-        cat(noma)
         noma_orig = noma
         noma[noma<0] = 0
         # noma_diff = noma-noma_orig
         # nmar = nmar + noma_diff
       }
+      # apply changes
       par(oma = noma)
       par(mar = nmar)
+      
+      # Now that the margins have been set, arrange facet rows and columns based
+      # on our earlier calculations.
       par(mfrow = c(nfacet_rows, nfacet_cols))
-      ## END EXPERIMENTAL
     }
     
     for (ii in ifacet) {
@@ -913,7 +827,6 @@ plot2.default = function(
         mtext(paste(facets[[ii]]), side = 3, line = 0.1)
       }
       
-      # box("figure", col = "red", lty = 3) ## EXPERIMENT
     } # end of ii facet loop
     
   } # end of add check
@@ -1035,7 +948,6 @@ plot2.default = function(
     
   }
   
-  # box("figure") ## TEST
   # tidy up before exit
   if (!is.null(facet)) {
     par2(last_facet_par = par(no.readonly = TRUE))

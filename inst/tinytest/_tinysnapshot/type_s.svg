@@ -21,6 +21,8 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.36px' lengthAdjust='spacingAndGlyphs'>Index</text>
+<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.36px' lengthAdjust='spacingAndGlyphs'>0:10</text>
 <line x1='112.80' y1='430.56' x2='420.00' y2='430.56' style='stroke-width: 0.75;' />
 <line x1='112.80' y1='430.56' x2='112.80' y2='437.76' style='stroke-width: 0.75;' />
 <line x1='189.60' y1='430.56' x2='189.60' y2='437.76' style='stroke-width: 0.75;' />
@@ -54,9 +56,5 @@
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
 <polyline points='74.40,416.80 112.80,416.80 112.80,382.40 151.20,382.40 151.20,348.00 189.60,348.00 189.60,313.60 228.00,313.60 228.00,279.20 266.40,279.20 266.40,244.80 304.80,244.80 304.80,210.40 343.20,210.40 343.20,176.00 381.60,176.00 381.60,141.60 420.00,141.60 420.00,107.20 458.40,107.20 458.40,72.80 ' style='stroke-width: 0.75;' />
-</g>
-<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.36px' lengthAdjust='spacingAndGlyphs'>Index</text>
-<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.36px' lengthAdjust='spacingAndGlyphs'>0:10</text>
 </g>
 </svg>

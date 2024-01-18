@@ -21,6 +21,8 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.36px' lengthAdjust='spacingAndGlyphs'>Index</text>
+<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.36px' lengthAdjust='spacingAndGlyphs'>0:10</text>
 <line x1='112.80' y1='430.56' x2='420.00' y2='430.56' style='stroke-width: 0.75;' />
 <line x1='112.80' y1='430.56' x2='112.80' y2='437.76' style='stroke-width: 0.75;' />
 <line x1='189.60' y1='430.56' x2='189.60' y2='437.76' style='stroke-width: 0.75;' />
@@ -63,9 +65,5 @@
 <line x1='348.56' y1='171.20' x2='376.24' y2='146.40' style='stroke-width: 0.75;' />
 <line x1='386.96' y1='136.80' x2='414.64' y2='112.00' style='stroke-width: 0.75;' />
 <line x1='425.36' y1='102.40' x2='453.04' y2='77.60' style='stroke-width: 0.75;' />
-</g>
-<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.36px' lengthAdjust='spacingAndGlyphs'>Index</text>
-<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.36px' lengthAdjust='spacingAndGlyphs'>0:10</text>
 </g>
 </svg>

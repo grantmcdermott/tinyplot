@@ -423,6 +423,16 @@
 </defs>
 <g clip-path='url(#cpNDkuMDB8MjI2LjkwfDMwMS4wMHw0NDMuMDQ=)'>
 </g>
+<defs>
+  <clipPath id='cpMC4wMHwyNTIuMDB8MjUyLjAwfDUwNC4wMA=='>
+    <rect x='0.00' y='252.00' width='252.00' height='252.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHwyNTIuMDB8MjUyLjAwfDUwNC4wMA==)'>
+<text x='137.95' y='280.61' text-anchor='middle' style='font-size: 11.95px; font-weight: bold; font-family: "Liberation Sans";' textLength='28.52px' lengthAdjust='spacingAndGlyphs'>plot2</text>
+<text x='137.95' y='488.46' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='63.06px' lengthAdjust='spacingAndGlyphs'>airquality$Day</text>
+<text transform='translate(10.76,372.02) rotate(-90)' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='69.70px' lengthAdjust='spacingAndGlyphs'>airquality$Temp</text>
+</g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <line x1='50.10' y1='443.04' x2='214.82' y2='443.04' style='stroke-width: 0.75;' />
 <line x1='50.10' y1='443.04' x2='50.10' y2='449.02' style='stroke-width: 0.75;' />
@@ -606,21 +616,21 @@
 <circle cx='214.82' cy='399.29' r='2.24' style='stroke-width: 0.75;' />
 </g>
 <defs>
-  <clipPath id='cpMC4wMHwyNTIuMDB8MjUyLjAwfDUwNC4wMA=='>
-    <rect x='0.00' y='252.00' width='252.00' height='252.00' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMC4wMHwyNTIuMDB8MjUyLjAwfDUwNC4wMA==)'>
-<text x='137.95' y='280.61' text-anchor='middle' style='font-size: 11.95px; font-weight: bold; font-family: "Liberation Sans";' textLength='28.52px' lengthAdjust='spacingAndGlyphs'>plot2</text>
-<text x='137.95' y='488.46' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='63.06px' lengthAdjust='spacingAndGlyphs'>airquality$Day</text>
-<text transform='translate(10.76,372.02) rotate(-90)' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='69.70px' lengthAdjust='spacingAndGlyphs'>airquality$Temp</text>
-</g>
-<defs>
   <clipPath id='cpMzAxLjAwfDQ3OC45MHwzMDEuMDB8NDQzLjA0'>
     <rect x='301.00' y='301.00' width='177.90' height='142.04' />
   </clipPath>
 </defs>
 <g clip-path='url(#cpMzAxLjAwfDQ3OC45MHwzMDEuMDB8NDQzLjA0)'>
+</g>
+<defs>
+  <clipPath id='cpMjUyLjAwfDUwNC4wMHwyNTIuMDB8NTA0LjAw'>
+    <rect x='252.00' y='252.00' width='252.00' height='252.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMjUyLjAwfDUwNC4wMHwyNTIuMDB8NTA0LjAw)'>
+<text x='389.95' y='280.61' text-anchor='middle' style='font-size: 11.95px; font-weight: bold; font-family: "Liberation Sans";' textLength='83.56px' lengthAdjust='spacingAndGlyphs'>plot2 (formula)</text>
+<text x='389.95' y='488.46' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='17.70px' lengthAdjust='spacingAndGlyphs'>Day</text>
+<text transform='translate(262.76,372.02) rotate(-90)' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='24.34px' lengthAdjust='spacingAndGlyphs'>Temp</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <line x1='302.10' y1='443.04' x2='466.82' y2='443.04' style='stroke-width: 0.75;' />
@@ -803,15 +813,5 @@
 <circle cx='455.84' cy='376.84' r='2.24' style='stroke-width: 0.75;' />
 <circle cx='461.33' cy='373.63' r='2.24' style='stroke-width: 0.75;' />
 <circle cx='466.82' cy='399.29' r='2.24' style='stroke-width: 0.75;' />
-</g>
-<defs>
-  <clipPath id='cpMjUyLjAwfDUwNC4wMHwyNTIuMDB8NTA0LjAw'>
-    <rect x='252.00' y='252.00' width='252.00' height='252.00' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMjUyLjAwfDUwNC4wMHwyNTIuMDB8NTA0LjAw)'>
-<text x='389.95' y='280.61' text-anchor='middle' style='font-size: 11.95px; font-weight: bold; font-family: "Liberation Sans";' textLength='83.56px' lengthAdjust='spacingAndGlyphs'>plot2 (formula)</text>
-<text x='389.95' y='488.46' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='17.70px' lengthAdjust='spacingAndGlyphs'>Day</text>
-<text transform='translate(262.76,372.02) rotate(-90)' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='24.34px' lengthAdjust='spacingAndGlyphs'>Temp</text>
 </g>
 </svg>

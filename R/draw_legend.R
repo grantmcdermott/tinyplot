@@ -232,25 +232,7 @@ draw_legend = function(
     par(oma = ooma)
     
     # determine legend inset
-    # if (outer_right) {
-    #   # inset = grconvertX(lmar[1], from="lines", to="ndc")
-    #   inset = grconvertX(lmar[1], from="lines", to="npc") - grconvertX(0, from = "lines", to = "npc")
-    #   par(new = TRUE)
-    #   plot.new()
-    #   par(new = FALSE)
-    # } else {
-    #   inset = grconvertX(lmar[1], from="lines", to="npc") - grconvertX(0, from = "lines", to = "npc")
-    #   # extra space needed for "left!" b/c of lhs inner margin
-    #   inset_bump = grconvertX(par("mar")[2], from = "lines", to = "npc") - grconvertX(0, from = "lines", to = "npc")
-    #   inset = inset + inset_bump
-    #   # GM: The legend inset spacing only works _exactly_ if we refresh the plot
-    #   # area. I'm not sure why (and it works properly if we use the same
-    #   # parameters manually while debugging), but this hack seems to work.
-    #   par(new = TRUE)
-    #   plot.new()
-    #   par(new = FALSE)
-    # }
-      inset = grconvertX(lmar[1], from="lines", to="npc") - grconvertX(0, from = "lines", to = "npc")
+    inset = grconvertX(lmar[1], from="lines", to="npc") - grconvertX(0, from = "lines", to = "npc")
     if (isFALSE(outer_right)) {
       # extra space needed for "left!" b/c of lhs inner margin
       inset_bump = grconvertX(par("mar")[2], from = "lines", to = "npc") - grconvertX(0, from = "lines", to = "npc")
@@ -270,11 +252,6 @@ draw_legend = function(
     
     outer_bottom = grepl("bottom!$", legend.args[["x"]])
     
-    # # Catch to reset right margin if previous legend position was "right!" or "left!"
-    # # GM: do we still want this here?
-    # if (par("mar")[4]== lmar[2]) par(mar=c(par("mar")[1:3], 2.1)) 
-    # if (par("mar")[2]== lmar[2]) par(mar=c(par("mar")[1], 4.1), par("mar")[3:4]) 
-    
     ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
     if (outer_bottom) legend.args[["x"]] = gsub("bottom!$", "top", legend.args[["x"]])
     if (!outer_bottom) legend.args[["x"]] = gsub("top!$", "bottom", legend.args[["x"]])
@@ -283,22 +260,14 @@ draw_legend = function(
     ## drawn, otherwise the inset calculation---which is based in the legend
     ## width---will be off the first time.
     if (outer_bottom) {
-      # par(mar=c(0, par("mar")[2:4]))
-      # if (isTRUE(has_sub)) {
-      #   # par(mar = c(lmar[1] + sum(par("mgp")) + 1*par("cex.sub"), par("mar")[2:4]))
-      #   par(mar = c(sum(par("mgp")) + 1*par("cex.sub"), par("mar")[2:4])) ## EXPERIMENT
-      # } else {
-      #   # par(mar = c(lmar[1] + sum(par("mgp")), par("mar")[2:4]))
-      #   par(mar = c(sum(par("mgp")), par("mar")[2:4])) ## EXPERIMENT
-      # }
       omar[1] = par("mgp")[1] + 1*par("cex.lab") ## TEST
-      if (isTRUE(has_sub)) omar[1] = omar3 + 1*par("cex.sub") ## TEST 
+      if (isTRUE(has_sub)) omar[1] = omar[1] + 1*par("cex.sub") ## TEST 
     } else {
       ## For "top!", the logic is slightly different: We don't expand the outer
       ## margin b/c we need the legend to come underneath the main title. So
       ## we rather expand the existing inner margin.
       # par(mar = c(par("mar")[1:2], par("mar")[3] + sum(lmar), par("mar")[4]))
-      omar[3] = omar[3] + sum(lmar) ## TEST
+      # omar[3] = omar[3] + sum(lmar) ## TEST
     }
     par(mar = omar) ## TEST
     
@@ -328,26 +297,56 @@ draw_legend = function(
     soma = grconvertY(fklgnd$rect$h, to="lines") - grconvertY(0, to="lines")
     # Add legend margins to outer margin
     soma = soma + sum(lmar)
-    
-    inset = grconvertY(lmar[1], from="lines", to="ndc") ## nic since omd has changed?
-    ooma = par("oma")
-    
-    ## differing adjustments depending on side
+    ## differing outer margin adjustments depending on side
     if (outer_bottom) {
-      # extra space needed for outer_bottom b/c of x-axis title and axis labels
-      # xtisp = grconvertY(sum(par("mgp")) + 1 + lmar[1], from = "lines", to = "ndc")
-      xtisp = grconvertY(sum(par("mgp")) + 1, from = "lines", to = "ndc") ## EXPERIMENT
-      inset = inset + xtisp
-      if (has_sub) inset = inset + grconvertY(1 + 0.5, from = "lines", to = "ndc")
       ooma[1] = soma
     } else {
-      soma = grconvertY(fklgnd$rect$h, to="lines") - grconvertY(0, to="lines")
-      oopar = par("mar")
-      oopar[3] = oopar[3] + soma
-      par(mar = oopar)
-      inset = -grconvertY(soma + lmar[2], from = "lines", to = "ndc")
+      cat(omar[3], "\n")
+      cat(soma, "\n")
+      # ooma[3] = soma ## REVISIT
+      omar[3] = omar[3] + soma
+      # omar[3] = soma + par("cex.main")
+      # omar[3] = omar[3] + (omar[3] - soma)
+      par(mar = omar)
     }
     par(oma = ooma)
+    
+    # inset = grconvertY(lmar[1], from="lines", to="ndc") ## nic since omd has changed?
+    # ooma = par("oma")
+    # 
+    # ## differing adjustments depending on side
+    # if (outer_bottom) {
+    #   # extra space needed for outer_bottom b/c of x-axis title and axis labels
+    #   # xtisp = grconvertY(sum(par("mgp")) + 1 + lmar[1], from = "lines", to = "ndc")
+    #   xtisp = grconvertY(sum(par("mgp")) + 1, from = "lines", to = "ndc") ## EXPERIMENT
+    #   inset = inset + xtisp
+    #   if (has_sub) inset = inset + grconvertY(1 + 0.5, from = "lines", to = "ndc")
+    #   ooma[1] = soma
+    # } else {
+    #   soma = grconvertY(fklgnd$rect$h, to="lines") - grconvertY(0, to="lines")
+    #   oopar = par("mar")
+    #   oopar[3] = oopar[3] + soma
+    #   par(mar = oopar)
+    #   inset = -grconvertY(soma + lmar[2], from = "lines", to = "ndc")
+    # }
+    # par(oma = ooma)
+    # legend.args[["inset"]] = c(0, 1+inset)
+    # 
+    
+    # determine legend inset
+    inset = grconvertY(lmar[1], from="lines", to="npc") - grconvertY(0, from = "lines", to = "npc")
+    if (isTRUE(outer_bottom)) {
+      # extra space needed for "bottom!" b/c of lhs inner margin
+      inset_bump = grconvertY(par("mar")[1], from = "lines", to = "npc") - grconvertY(0, from = "lines", to = "npc")
+      inset = inset + inset_bump
+    }
+    # GM: The legend inset spacing only works _exactly_ if we refresh the plot
+    # area. I'm not sure why (and it works properly if we use the same
+    # parameters manually while debugging), but this hack seems to work.
+    par(new = TRUE)
+    plot.new()
+    par(new = FALSE)
+    # Finally, set the inset as part of the legend args.
     legend.args[["inset"]] = c(0, 1+inset)
     
   } else {

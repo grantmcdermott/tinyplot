@@ -651,7 +651,11 @@ plot2.default = function(
     } else {
       # Bump main up to make space for the legend beneath it
       # title(main = main, line = opar[["mar"]][1] + par2("lmar")[1] + 0.1, xpd = NA)
-      title(main = main, line = opar[["mar"]][1] + par2("lmar")[1] - diff(par2("lmar")), xpd = NA)
+      # title(main = main, line = opar[["mar"]][1] + par2("lmar")[1] - diff(par2("lmar")), xpd = NA)
+      # Take the normal main title line gap (i.e., 1.7 lines) and add the
+      # difference between original top margin and new one (i.e., which should
+      # equal the height of the new legend).
+      title(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7, xpd = NA)
     }
     # Axis titles
     title(xlab = xlab, ylab = ylab)

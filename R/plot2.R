@@ -627,6 +627,15 @@ plot2.default = function(
     
   } else if (legend.args[["x"]]=="none" && isFALSE(add)) {
     
+    # extra catch for top margin reset if previous plot2 call included a "top!
+    # outer legend
+    if (all(opar[["oma"]] == c(0,0,0.1,0))) {
+      oomar = par("mar")
+      oomar[3] = 4.1
+      par(mar = oomar)
+      par(oma = c(0,0,0,0))
+    }
+  
     plot.new()
     
   }
@@ -649,13 +658,14 @@ plot2.default = function(
         sub = sub
       )
     } else {
-      # Bump main up to make space for the legend beneath it
-      # title(main = main, line = opar[["mar"]][1] + par2("lmar")[1] + 0.1, xpd = NA)
-      # title(main = main, line = opar[["mar"]][1] + par2("lmar")[1] - diff(par2("lmar")), xpd = NA)
-      # Take the normal main title line gap (i.e., 1.7 lines) and add the
-      # difference between original top margin and new one (i.e., which should
-      # equal the height of the new legend).
-      title(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7, xpd = NA)
+      # For the "top!" legend case, bump main title up to make space for the
+      # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
+      # and add the difference between original top margin and new one (i.e.,
+      # which should equal the height of the new legend). Note that we also
+      # include a 0.1 epsilon bump, which we're using to reset the plot2
+      # window in case of recursive "top!" calls. (See draw_legend code.)
+      title(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1)
+      title(sub = sub)
     }
     # Axis titles
     title(xlab = xlab, ylab = ylab)

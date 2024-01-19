@@ -16,10 +16,6 @@
 #'   `fmar` \tab\tab A numeric vector of form `c(b,l,t,r)` for controlling the margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to `c(1,1,1,1)`, i.e. a single line between each facet.\cr
 #'   \tab\tab\cr
 #'   \tab\tab\cr
-#'   `grid` \tab\tab Logical value indicating whether plots should automatically include
-#' a grid. Defaults to `FALSE`.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
 #'   `last_facet_par` \tab\tab Full list of graphical parameters used to constructed the most recent faceted `plot2` plot during the current session. Unlike other `par2` parameters, this parameter is intended for internal use (specifically, to enable adding further elements on top of an existing faceted plot) and should _not_ be set by the user.\cr
 #'   \tab\tab\cr
 #'   \tab\tab\cr
@@ -40,11 +36,11 @@ par2 = function(...) {
     .par2$fmar = fmar
   }
   
-  if (length(opts$grid)) {
-    grid = as.logical(opts$grid)
-    if(!is.logical(grid)) stop("grid needs to be logical")
-    .par2$grid = grid
-  }
+  # if (length(opts$grid)) {
+  #   grid = as.logical(opts$grid)
+  #   if(!is.logical(grid)) stop("grid needs to be logical")
+  #   .par2$grid = grid
+  # }
   
   if (length(opts$last_facet_par)) {
     last_facet_par = opts$last_facet_par

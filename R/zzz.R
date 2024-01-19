@@ -6,6 +6,9 @@
   assign(".plot2_env", new.env(), envir = plt2ptns)
   .par2 <- new.env()
   
+  # Facet margin, i.e. gap between the individual facet windows
+  .par2$fmar <- if(is.null(getOption("plot2_fmar"))) c(1,1,1,1) else as.numeric(getOption("plot2_fmar"))
+  
   .par2$grid <- if(is.null(getOption("plot2_grid"))) FALSE else as.logical(getOption("plot2_grid"))
   
   .par2$last_facet_par <- if(is.null(getOption("plot2_last_facet_par"))) NULL else getOption("plot2_last_facet_par")

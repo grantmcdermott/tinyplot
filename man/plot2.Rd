@@ -123,9 +123,11 @@ supported:
 \item \code{nrow}, \code{ncol} for overriding the default "square" facet window
 arrangement. Only one of these should be specified; if not then the former
 will supersede the latter.
-\item \code{fmar} a vector of form \code{c(b,l,t,r)} for controlling the margin (gap) in
-lines between facets. Defaults to \code{c(1,1,1,1)}, i.e. a single line between
-each facet.
+\item \code{fmar} a vector of form \code{c(b,l,t,r)} for controlling the margin (gap)
+between facets in terms of lines. Defaults to the value of \code{par2("fmar")},
+which should be \code{c(1,1,1,1)}, i.e. a single line between each facet,
+assuming it hasn't been overridden by the user as part their global \code{par2}
+settings.
 }}
 
 \item{data}{a data.frame (or list) from which the variables in formula

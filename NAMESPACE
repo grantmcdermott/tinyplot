@@ -3,6 +3,7 @@
 S3method(plot2,default)
 S3method(plot2,density)
 S3method(plot2,formula)
+export(par2)
 export(plot2)
 importFrom(grDevices,adjustcolor)
 importFrom(grDevices,extendrange)

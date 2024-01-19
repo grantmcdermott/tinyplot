@@ -31,9 +31,11 @@
 #'   - `nrow`, `ncol` for overriding the default "square" facet window
 #'   arrangement. Only one of these should be specified; if not then the former
 #'   will supersede the latter.
-#'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the margin (gap) in
-#'   lines between facets. Defaults to `c(1,1,1,1)`, i.e. a single line between
-#'   each facet. 
+#'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the margin (gap)
+#'   between facets in terms of lines. Defaults to the value of `par2("fmar")`,
+#'   which should be `c(1,1,1,1)`, i.e. a single line between each facet,
+#'   assuming it hasn't been overridden by the user as part their global `par2`
+#'   settings.
 #' @param formula a `formula` that optionally includes grouping variable(s)
 #'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
 #'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
@@ -700,7 +702,7 @@ plot2.default = function(
     if (nfacets > 1) {
       # Set facet margins (i.e., gaps between facets)
       if (is.null(facet.args[["fmar"]])) {
-        fmar = c(1,1,1,1)
+        fmar = par2("fmar")
       } else {
         if (length(facet.args[["fmar"]]) != 4) {
           warning(
@@ -710,15 +712,15 @@ plot2.default = function(
             "Resetting to fmar = c(1,1,1,1) default.",
             "\n"
           )
-          fmar = c(1,1,1,1)
+          fmar = par2("fmar")
         }
       }
       # We need to adjust for n>=3 facet cases for correct spacing...
       if (nfacets >= 3) {
         fmar = fmar*.75
         ## ... exception for 2x2 cases
-        if (nfacet_rows == 2) fmar[c(1,3)] = 1
-        if (nfacet_cols == 2) fmar[c(2,4)] = 1
+        if (nfacet_rows == 2) fmar[c(1,3)] = par2("fmar")[c(1,3)]
+        if (nfacet_cols == 2) fmar[c(2,4)] = par2("fmar")[c(2,4)]
       }
       # Extra reduction if no plot frame to reduce whitespace
       if (isFALSE(frame.plot)) {

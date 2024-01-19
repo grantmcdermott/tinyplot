@@ -1,8 +1,44 @@
+#' @title Set or query plot2 parameters  
+#'   
+#' @description `par2` can be used to set or query the additional set of
+#'   graphical parameters provided by `plot2` (i.e., beyond the base set
+#'   provided by  \code{\link[graphics]{par}}). Similar to its base counterpart, parameters can be set
+#'   by passing the appropriate tag-value argument pairs to `par2`. Multiple
+#'   parameters can be set or queried at the same time, as a list.
+#'   
+#' @md
+#' @param ... arguments of the form `tag = value`. Supported `plot2` parameters
+#'   are described in the 'Graphical Parameters' section below.
+#'
+#' @section Graphical Parameters:
+#' 
+#' \tabular{lll}{
+#'   `fmar` \tab\tab A numeric vector of form `c(b,l,t,r)` for controlling the margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to `c(1,1,1,1)`, i.e. a single line between each facet.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
+#'   `grid` \tab\tab Logical value indicating whether plots should automatically include
+#' a grid. Defaults to `FALSE`.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
+#'   `last_facet_par` \tab\tab Full list of graphical parameters used to constructed the most recent faceted `plot2` plot during the current session. Unlike other `par2` parameters, this parameter is intended for internal use (specifically, to enable adding further elements on top of an existing faceted plot) and should _not_ be set by the user.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
+#'   `lmar` \tab\tab A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `plot2` legend. Defaults to `c(1.0, 0.1)`, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is `"top!"`, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by `par("mar")[3]`.)\cr
+#' }
+#' 
+#' @export
 par2 = function(...) {
   
   opts = list(...)
   par2_old = as.list(.par2)
   nam = names(opts)
+  
+  if (length(opts$fmar)) {
+    fmar = as.numeric(opts$fmar)
+    if(!is.numeric(fmar)) stop("fmar needs to be numeric")
+    if(length(fmar)!=4) stop("fmar needs to be of length 4, i.e. c(b,l,t,r)")
+    .par2$fmar = fmar
+  }
   
   if (length(opts$grid)) {
     grid = as.logical(opts$grid)
@@ -11,7 +47,6 @@ par2 = function(...) {
   }
   
   if (length(opts$last_facet_par)) {
-    # last_facet_par = as.list(opts$last_facet_par)
     last_facet_par = opts$last_facet_par
     if(!(is.null(last_facet_par) || is.list(last_facet_par))) stop("last_facet_par needs to be NULL or a list")
     .par2$last_facet_par = last_facet_par

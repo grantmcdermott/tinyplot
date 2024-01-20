@@ -729,14 +729,17 @@ plot2.default = function(
             "\n"
           )
           fmar = par2("fmar")
+        } else {
+          fmar = facet.args[["fmar"]]
         }
       }
       # We need to adjust for n>=3 facet cases for correct spacing...
       if (nfacets >= 3) {
+        ofmar = fmar
         fmar = fmar*.75
         ## ... exception for 2x2 cases
-        if (nfacet_rows == 2) fmar[c(1,3)] = par2("fmar")[c(1,3)]
-        if (nfacet_cols == 2) fmar[c(2,4)] = par2("fmar")[c(2,4)]
+        if (nfacet_rows == 2) fmar[c(1,3)] = ofmar[c(1,3)]
+        if (nfacet_cols == 2) fmar[c(2,4)] = ofmar[c(2,4)]
       }
       # Extra reduction if no plot frame to reduce whitespace
       if (isFALSE(frame.plot)) {

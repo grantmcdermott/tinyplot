@@ -22,6 +22,40 @@ f = function() {
     mtcars,
     plot2(
       x = wt, y = mpg,
+      facet = am
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_1x2")
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = wt, y = mpg,
+      facet = am,
+      facet.args = list(ncol = 1)
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_2x1")
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = wt, y = mpg,
+      facet = interaction(am, vs)
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_2x2")
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = wt, y = mpg,
       facet = interaction(cyl, am),
       main = "Facet with interaction"
     )

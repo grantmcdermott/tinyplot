@@ -132,7 +132,34 @@ if (getRversion()  <= "4.3.2") {
 }
 
 
+#
+## facet margins (fmar)
 
+f = function() {
+  ofmar = par2("fmar")
+  par2(fmar = c(1,1,0.5,2))
+  with(
+    mtcars,
+    plot2(
+      x = wt, y = mpg,
+      facet = interaction(cyl, am)
+    )
+  )
+  par2(fmar = ofmar)
+}
+expect_snapshot_plot(f, label = "facet_fmar_par2")
+
+f = function() {
+  with(
+    mtcars,
+    plot2(
+      x = wt, y = mpg,
+      facet = interaction(cyl, am),
+      facet.args = list(fmar = c(1,1,0.5,2))
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_fmar_args")
 
 #
 ## Ribbon plot versions

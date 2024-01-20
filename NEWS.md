@@ -49,12 +49,11 @@ legend margin is `par2(lmar = c(1,0, 0.1)`, which means that there is 1.0 line
 of padding between the legend and the plot region (inside margin) and 0.1 line 
 of padding between the legend and edge of the graphics device (outer margin).
 Similarly, the default facet padding is `par2(fmar = c(1,1,1,1)`, which means
-that there is a single line of padding between each of the individual facets
-(the same across all facet sides). Users can override these defaults by passing
-numeric vectors of the appropriate length to `par2()`. For example,
-`par2(lmar = c(0,0.1)` would shrink the inner gap between the legend and plot
-region to zero, but leave the small outer gap to outside of the graphics device
-unchanged. (#94 @grantmcdermott)
+that there is a single line of padding around each side of the individual
+facets. Users can override these defaults by passing numeric vectors of the
+appropriate length to `par2()`. For example, `par2(lmar = c(0,0.1)` would shrink
+the inner gap between the legend and plot region to zero, but leave the small
+outer gap to outside of the graphics device unchanged. (#94 @grantmcdermott)
 
 ##  0.0.3
 

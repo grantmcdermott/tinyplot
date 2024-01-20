@@ -74,8 +74,8 @@ f = function() with(
   plot2(
     x = Day, y = Temp, by = Month,
     legend = legend("bottom!", title = "Month of the year", bty = "o")
-    )
   )
+)
 expect_snapshot_plot(f, label = "legend_default_legend")
 
 if ((getRversion() <= "4.3.1")) {
@@ -84,33 +84,33 @@ if ((getRversion() <= "4.3.1")) {
     plot2(
       x = density(Temp), by = Month,
       legend = legend("bottom!", title = "Month of the year", bty = "o")
-      )
     )
+  )
   expect_snapshot_plot(f, label = "legend_density_legend")
 }
 
 f = function() plot2(
   Temp ~ Day | Month, data = airquality,
   legend = legend("bottom!", title = "Month of the year", bty = "o")
-  )
+)
 expect_snapshot_plot(f, label = "legend_formula_legend")
 
 f = function() plot2(
   Temp ~ Day | Month, data = airquality,
   legend = legend(title = NULL)
-  )
+)
 expect_snapshot_plot(f, label = "legend_title_null")
 
 f = function() plot2(
   Temp ~ Day | Month, data = airquality,
   legend = legend(legend = month.abb[5:9])
-  )
+)
 expect_snapshot_plot(f, label = "legend_user_labs")
 
 f = function() plot2(
   Temp ~ Day | Month, data = airquality,
   legend = legend(legend = month.abb[5:10])
-  )
+)
 expect_warning(expect_snapshot_plot(f, label = "legend_user_labs_override"))
 
 

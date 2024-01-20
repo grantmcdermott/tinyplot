@@ -114,5 +114,41 @@ f = function() plot2(
 expect_warning(expect_snapshot_plot(f, label = "legend_user_labs_override"))
 
 
+# override default legend margins with par2("lmar")
+
+f = function() {
+  olmar = par2("lmar")
+  par2(lmar = c(1.5, 0.5))
+  plot2(Temp ~ Day | Month, data = airquality, legend = list("right!", bty = "o"))
+  box("figure", lty = 2, col = "blue")
+  par2(lmar = olmar)
+}
+expect_snapshot_plot(f, label = "legend_lmar_right")
+f = function() {
+  olmar = par2("lmar")
+  par2(lmar = c(1.5, 0.5))
+  plot2(Temp ~ Day | Month, data = airquality, legend = list("left!", bty = "o"))
+  box("figure", lty = 2, col = "blue")
+  par2(lmar = olmar)
+}
+expect_snapshot_plot(f, label = "legend_lmar_left")
+f = function() {
+  olmar = par2("lmar")
+  par2(lmar = c(1.5, 0.5))
+  plot2(Temp ~ Day | Month, data = airquality, legend = list("bottom!", bty = "o"))
+  box("figure", lty = 2, col = "blue")
+  par2(lmar = olmar)
+}
+expect_snapshot_plot(f, label = "legend_lmar_bottom")
+f = function() {
+  olmar = par2("lmar")
+  par2(lmar = c(1.5, 0.5))
+  plot2(Temp ~ Day | Month, data = airquality, legend = list("top!", bty = "o"))
+  box("figure", lty = 2, col = "blue")
+  par2(lmar = olmar)
+}
+expect_snapshot_plot(f, label = "legend_lmar_top")
+
+
 # reset par
 par(op)

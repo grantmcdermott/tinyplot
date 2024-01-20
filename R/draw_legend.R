@@ -71,7 +71,7 @@
 #' 
 #' par(mar = oldmar)
 #' 
-#' 
+#' @export
 draw_legend = function(
     legend = NULL,
     legend.args = NULL,

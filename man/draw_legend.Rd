@@ -105,5 +105,4 @@ box("figure", col = "cyan", lty = 4)
 
 par(mar = oldmar)
 
-
 }

@@ -170,7 +170,7 @@
 #'   section of `plot`).
 #'   
 #' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
-#' @importFrom graphics abline arrows axis Axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title mtext
+#' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext
 #' @importFrom utils modifyList tail
 #' 
 #' @examples

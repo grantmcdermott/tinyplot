@@ -21,7 +21,7 @@ parameters can be set or queried at the same time, as a list.
 
 
 \tabular{lll}{
-\code{fmar} \tab\tab A numeric vector of form \code{c(b,l,t,r)} for controlling the margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to \code{c(1,1,1,1)}, i.e. a single line between each facet.\cr
+\code{fmar} \tab\tab A numeric vector of form \code{c(b,l,t,r)} for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to \code{c(1,1,1,1)}, i.e. a single line of padding around each facet. If more that three facets are detected, the \code{fmar} parameter is scaled by 0.75 (i.e., three-quarters) to reduce the excess whitespace that would otherwise arise due to the absent axes lines and labels. (An exception is made for 2x2 plots to better match the \code{cex} expansion logic of the base graphics system under this particular layout.) Similarly, note that an extra 0.5 lines is subtracted from each side of the facet padding for plots that aren't framed, to reduce excess whitespace.\cr
 \tab\tab\cr
 \tab\tab\cr
 \code{last_facet_par} \tab\tab Full list of graphical parameters used to constructed the most recent faceted \code{plot2} plot during the current session. Unlike other \code{par2} parameters, this parameter is intended for internal use (specifically, to enable adding further elements on top of an existing faceted plot) and should \emph{not} be set by the user.\cr

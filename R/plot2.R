@@ -31,11 +31,13 @@
 #'   - `nrow`, `ncol` for overriding the default "square" facet window
 #'   arrangement. Only one of these should be specified; if not then the former
 #'   will supersede the latter.
-#'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the margin (gap)
+#'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
 #'   between facets in terms of lines. Defaults to the value of `par2("fmar")`,
-#'   which should be `c(1,1,1,1)`, i.e. a single line around each individual
-#'   facet, assuming it hasn't been overridden by the user as part their global
-#'   `par2` settings.
+#'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each
+#'   individual facet, assuming it hasn't been overridden by the user as part
+#'   their global `par2` settings. Note some automatic adjustments are made for
+#'   certain layouts, and depending on whether the plot is framed or not, to
+#'   reduce excess whitespace. See \code{\link[plot2]{par2}} for more details. 
 #' @param formula a `formula` that optionally includes grouping variable(s)
 #'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
 #'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments

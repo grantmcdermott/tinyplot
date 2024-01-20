@@ -39,6 +39,33 @@ expect_snapshot_plot(f, label = "legend_keyword_outertopright")
 f = function() plot2(Temp ~ Day | Month, data = airquality, legend = "bottomleft!")
 expect_snapshot_plot(f, label = "legend_keyword_outerbottomleft")
 
+# Long legend titles
+
+f = function() plot2(
+  Temp ~ Day | Month, data = airquality, main = "Long title",
+  legend = list("right!", title = "What month of the year is it?", bty = "o")
+)
+expect_snapshot_plot(f, label = "legend_long_right")
+
+f = function() plot2(
+  Temp ~ Day | Month, data = airquality, main = "Multiline title",
+  legend = list("left!", title = "What month of the year is it?", bty = "o")
+)
+expect_snapshot_plot(f, label = "legend_long_left")
+
+# multi-line legend titles
+
+f = function() plot2(
+  Temp ~ Day | Month, data = airquality, main = "Multiline title",
+  legend = list("top!", title = "Month\nof\nthe\nyear", bty = "o")
+)
+expect_snapshot_plot(f, label = "legend_multiline_top")
+
+f = function() plot2(
+  Temp ~ Day | Month, data = airquality, main = "Multiline title",
+  legend = list("bottom!", title = "Month\nof\nthe\nyear", bty = "o")
+)
+expect_snapshot_plot(f, label = "legend_multiline_bottom")
 
 # legend function examples
 

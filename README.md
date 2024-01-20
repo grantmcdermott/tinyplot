@@ -11,8 +11,8 @@ badge](https://grantmcdermott.r-universe.dev/badges/plot2)](https://grantmcdermo
 [![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/plot2/index.html)
 <!-- badges: end -->
 
-A lightweight extension of the base R `plot` system, with support for
-automatic grouping and legend handling, and various other enhancements.
+A lightweight extension of the base R graphics system, with support for
+automatic grouping, legends, facets and various other enhancements.
 
 ## Installation
 
@@ -22,9 +22,9 @@ automatic grouping and legend handling, and various other enhancements.
 install.packages("plot2", repos = "https://grantmcdermott.r-universe.dev")
 ```
 
-Our goal is to submit to CRAN towards the end of 2023, once we have
-settled on some remaining design choices and features support. You can
-take a look at the [open
+Our goal is to submit to CRAN within the few months of 2024, once we
+have settled on some remaining design choices and features support. You
+can take a look at the [open
 issues](https://github.com/grantmcdermott/plot2/issues) to see what’s
 currently under consideration. Please feel free to weigh on these if you
 have opinions. We want end users to have a say in determining the final

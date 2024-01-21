@@ -838,7 +838,7 @@ plot2.default = function(
           ## If grid is TRUE create a default grid. Rather than just calling the default grid()
           ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
           ## and works better for axes based on date/time classes. Exception: For axes in logs,
-          ## resort to using grid() which is like handled better there.
+          ## resort to using grid() which is likely better handled there.
           if (isTRUE(grid)) {
             gnx = gny = NULL
             if (!par("xlog")) {
@@ -846,7 +846,7 @@ plot2.default = function(
               gnx = NA
             }
             if (!par("ylog")) {
-              abline(h = pretty(extendrange(y)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               gny = NA
             }
             grid(nx = gnx, ny = gny)

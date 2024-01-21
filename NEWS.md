@@ -1,6 +1,6 @@
 # News
 
-##  0.0.3.915 (development version)
+##  0.0.3.916 (development version)
 
 Website:
 
@@ -50,6 +50,7 @@ facets. Users can override these defaults by passing numeric vectors of the
 appropriate length to `par2()`. For example, `par2(lmar = c(0,0.1)` would shrink
 the inner gap between the legend and plot region to zero, but leave the small
 outer gap to outside of the graphics device unchanged. ([#94](https://github.com/grantmcdermott/plot2/issues/94) [@grantmcdermott](https://github.com/grantmcdermott))
+- Fix bug where grid wasn't auto-expanding correctly for area plots. ([#92](https://github.com/grantmcdermott/plot2/issues/92) [@grantmcdermott](https://github.com/grantmcdermott))
 
 ##  0.0.3
 

@@ -21,6 +21,8 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>1:4</text>
+<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.00px' lengthAdjust='spacingAndGlyphs'>y</text>
 <line x1='74.40' y1='430.56' x2='458.40' y2='430.56' style='stroke-width: 0.75;' />
 <line x1='74.40' y1='430.56' x2='74.40' y2='437.76' style='stroke-width: 0.75;' />
 <line x1='138.40' y1='430.56' x2='138.40' y2='437.76' style='stroke-width: 0.75;' />
@@ -63,9 +65,5 @@
 <polygon points='202.40,311.65 206.04,317.94 198.76,317.94 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 <polygon points='330.40,356.89 334.04,363.19 326.76,363.19 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 <polygon points='458.40,376.33 462.04,382.63 454.76,382.63 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
-</g>
-<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>1:4</text>
-<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.00px' lengthAdjust='spacingAndGlyphs'>y</text>
 </g>
 </svg>

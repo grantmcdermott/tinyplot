@@ -39,6 +39,8 @@ par(mfrow = c(1, 2))
 
 plot(0:10, main = "plot")
 plot2(0:10, main = "plot2")
+
+par(mfrow = c(1, 1)) # reset layout
 ```
 
 Similarly, we can plot elements from a data frame using either the atomic or
@@ -47,7 +49,7 @@ earlier.
 
 ```{r plot2_simple}
 # with(aq,  plot2(Day, Temp)) # atomic method (same as below)
-plot2(Temp ~ Day, data = aq) # formula method
+plot2(Temp ~ Day, data = aq)  # formula method
 ```
 
 ## Grouped data
@@ -153,11 +155,11 @@ palette("tableau")
 In all of the preceding plots, you will have noticed that we get an automatic
 legend. The legend position and look can be customized with the `legend`
 argument. At a minimum, you can pass the familiar legend position keywords as a
-convenience string ("topright", "left", etc.). Moreover, a key feature of
-`plot2` is that we can easily and elegantly place the legend _outside_ the plot
-area by adding a trailing "!" to these keywords. (As you may have realised, the
-default legend position is "right!".) Let's demonstrate by moving the legend to
-the left of the plot:
+convenience string ("topright", "bottom", "left", etc.). Moreover, a key feature
+of `plot2` is that we can easily and elegantly place the legend _outside_ the
+plot area by adding a trailing "!" to these keywords. (As you may have realised,
+the default legend position is "right!".) Let's demonstrate by moving the legend
+to the left of the plot:
 
 ```{r legend_bottom}
 plot2(
@@ -253,10 +255,11 @@ with(
 )
 ```
 
-By default, facets will be arranged in a square configuration (if more than
-three facets are detected). Users can override this behaviour by supplying
-`nrow` or `ncol` in the "facet.args" helper function. Note that we can also
-reduce axis label redundancy by turning off the plot frame.
+By default, facets will be arranged in a square configuration if more than
+three facets are detected. Users can override this behaviour by supplying
+`nrow` or `ncol` in the "facet.args" helper function. (The margin padding
+between individual facets can also be adjusted via the `fmar` argument.) Note
+that we can also reduce axis label redundancy by turning off the plot frame.
 
 ```{r facet_nrow}
 with(

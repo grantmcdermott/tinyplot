@@ -116,9 +116,21 @@ with \code{interaction(facet_var1, facet_var2)}. Also accepts the special "by"
 convenience keyword, in which case facets will match the grouping
 variable(s) above.}
 
-\item{facet.args}{a list of arguments for controlling faceting behaviour.
-Currently only \code{nrow} and \code{ncol} are supported, with the former superseding
-the latter. Ignored if \code{facet} is NULL.}
+\item{facet.args}{an optional list of arguments for controlling faceting
+behaviour. (Ignored if \code{facet} is NULL.) Currently only the following are
+supported:
+\itemize{
+\item \code{nrow}, \code{ncol} for overriding the default "square" facet window
+arrangement. Only one of these should be specified; if not then the former
+will supersede the latter.
+\item \code{fmar} a vector of form \code{c(b,l,t,r)} for controlling the base margin
+between facets in terms of lines. Defaults to the value of \code{par2("fmar")},
+which should be \code{c(1,1,1,1)}, i.e. a single line of padding around each
+individual facet, assuming it hasn't been overridden by the user as part
+their global \code{par2} settings. Note some automatic adjustments are made for
+certain layouts, and depending on whether the plot is framed or not, to
+reduce excess whitespace. See \code{\link[plot2]{par2}} for more details.
+}}
 
 \item{data}{a data.frame (or list) from which the variables in formula
 should be taken. A matrix is converted to a data frame.}

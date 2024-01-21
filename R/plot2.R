@@ -25,9 +25,19 @@
 #'   with `interaction(facet_var1, facet_var2)`. Also accepts the special "by"
 #'   convenience keyword, in which case facets will match the grouping
 #'   variable(s) above.
-#' @param facet.args a list of arguments for controlling faceting behaviour.
-#'   Currently only `nrow` and `ncol` are supported, with the former superseding
-#'   the latter. Ignored if `facet` is NULL.
+#' @param facet.args an optional list of arguments for controlling faceting
+#'   behaviour. (Ignored if `facet` is NULL.) Currently only the following are
+#'   supported:
+#'   - `nrow`, `ncol` for overriding the default "square" facet window
+#'   arrangement. Only one of these should be specified; if not then the former
+#'   will supersede the latter.
+#'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
+#'   between facets in terms of lines. Defaults to the value of `par2("fmar")`,
+#'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each
+#'   individual facet, assuming it hasn't been overridden by the user as part
+#'   their global `par2` settings. Note some automatic adjustments are made for
+#'   certain layouts, and depending on whether the plot is framed or not, to
+#'   reduce excess whitespace. See \code{\link[plot2]{par2}} for more details. 
 #' @param formula a `formula` that optionally includes grouping variable(s)
 #'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
 #'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
@@ -162,7 +172,7 @@
 #'   section of `plot`).
 #'   
 #' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
-#' @importFrom graphics abline arrows axis Axis box grconvertX lines par plot.default plot.new plot.window points polygon segments title mtext
+#' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext
 #' @importFrom utils modifyList tail
 #' 
 #' @examples
@@ -354,6 +364,15 @@ plot2.default = function(
     # main = sub = xlab = ylab = NULL ## Rather do this later
   }
   
+  # Save current graphical parameters
+  opar = par(no.readonly = TRUE)
+  if (par_restore || !is.null(facet)) {
+    on.exit(par(opar), add = TRUE)
+  }
+  
+  # catch for adding to existing facet plot
+  if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par"))
+  
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = deparse1(substitute(x))
   y_dep = if (is.null(y)) {
@@ -501,12 +520,6 @@ plot2.default = function(
     }
   }
   
-  # Save current graphical parameters
-  opar = par(no.readonly = TRUE)
-  
-  # catch for adding to existing facet plot
-  if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par")[[1]])
-  
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
@@ -551,19 +564,18 @@ plot2.default = function(
     # legend cex adjustment for facet plots
     # see: https://stat.ethz.ch/pipermail/r-help/2017-August/448431.html
     if (nfacet_rows >= 3 || nfacet_cols >= 3) {
-      cex_lgnd_adj = 0.66
+      cex_fct_adj = 0.66
     } else if (nfacet_rows == 2 && nfacet_cols == 2) {
-      cex_lgnd_adj = 0.83
+      cex_fct_adj = 0.83
     } else {
-      cex_lgnd_adj = 1
+      cex_fct_adj = 1
     }
     
   } else {
     # no facet case
-    facets = ifacet = nfacets = oxaxis = oyaxis = cex_lgnd_adj = 1
+    facets = ifacet = nfacets = oxaxis = oyaxis = cex_fct_adj = 1
     
   }
-  
   
   #
   ## Global plot elements (legend and titles)
@@ -599,6 +611,8 @@ plot2.default = function(
       lgnd_labs = ylab
     }
     
+    has_sub = !is.null(sub)
+    
     draw_legend(
       legend = legend,
       legend.args = legend.args,
@@ -609,13 +623,39 @@ plot2.default = function(
       lty = lty,
       col = col,
       bg = bg,
-      cex = cex * cex_lgnd_adj
+      cex = cex * cex_fct_adj,
+      has_sub = has_sub
       )
     
     has_legend = TRUE
     
   } else if (legend.args[["x"]]=="none" && isFALSE(add)) {
     
+    omar = par("mar")
+    ooma = par("oma")
+    topmar_epsilon = 0.1
+    
+    # Catch to avoid recursive offsets, e.g. repeated plot2 calls with
+    # "bottom!" legend position.
+    
+    ## restore inner margin defaults
+    ## (in case the plot region/margins were affected by the preceding plot2 call)
+    if (any(ooma != 0)) {
+      if ( ooma[1] != 0 & omar[1] == par("mgp")[1] + 1*par("cex.lab") ) omar[1] = 5.1
+      if ( ooma[2] != 0 & omar[2] == par("mgp")[1] + 1*par("cex.lab") ) omar[2] = 4.1
+      if ( ooma[3] == topmar_epsilon & omar[3] != 4.1 ) omar[3] = 4.1
+      if ( ooma[4] != 0 & omar[4] == 0 ) omar[4] = 2.1
+      par(mar = omar)
+    }
+    ## restore outer margin defaults (with a catch for custom mfrow plots)
+    if (all(par("mfrow") == c(1, 1))) {
+      par(omd = c(0,1,0,1))
+    }
+     
+    # clean up for now
+    rm(omar, ooma, topmar_epsilon)
+    
+    # Draw new plot 
     plot.new()
     
   }
@@ -625,15 +665,27 @@ plot2.default = function(
     # main title
     # Note that we include a special catch for the main title if legend is
     # "top!" (and main is specified in the first place).
-    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!"))
+    legend_eval = tryCatch(eval(legend), error = function(e) NULL)
+    # Extra bit of footwork if user passed legend = legend(...) instead of
+    # legend = list(...), since the call environment is tricky
+    if (is.null(legend_eval)) {
+      legend_eval = tryCatch(paste0(legend)[[2]], error = function(e) NULL)
+    }
+    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!") || (is.list(legend_eval) && legend_eval[[1]]=="top!") )
     if (is.null(main) || isFALSE(adj_title)) {
       title(
         main = main,
         sub = sub
       )
     } else {
-      # Bump main up to make space for the legend beneath it
-      title(main = main, line = 5, xpd = NA)
+      # For the "top!" legend case, bump main title up to make space for the
+      # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
+      # and add the difference between original top margin and new one (i.e.,
+      # which should equal the height of the new legend). Note that we also
+      # include a 0.1 epsilon bump, which we're using to reset the plot2
+      # window in case of recursive "top!" calls. (See draw_legend code.)
+      title(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1)
+      title(sub = sub)
     }
     # Axis titles
     title(xlab = xlab, ylab = ylab)
@@ -647,45 +699,14 @@ plot2.default = function(
   
   if (!is.null(facet) && isFALSE(add)) {
     
-    # Arrange facets based on the calculations we did earlier
-    par(mfrow = c(nfacet_rows, nfacet_cols))
+    if (is.null(omar)) omar = par("mar")
     
-    # Also adjust spacing between facets to avoid excess whitespace
-    
-    # Side note: Rather use original mar in case of already-reduced space (due
-    #   to "right!" legend correction above)
-    if (is.null(omar)) omar = opar[["mar"]]
-    
-    # Bump extra space for titles if present
-    ooma = par("oma")
-    if (!is.null(xlab)) ooma[1] = ooma[1] + 3
-    if (!is.null(ylab)) ooma[2] = ooma[2] + 3
-    # Bump top margin down so facet titles don't overlap with main title space
-    ooma[3] = ooma[3] + 2.1
-    # Adjustment if inheriting tight RHS margin
-    # if (isTRUE(frame.plot) && ooma[4]==0.1) ooma[4] = ooma[4] + 2
-    if (omar[4]==0.1) ooma[4] = ooma[4] + 2
-    # extra bump b/c also need to a/c for facet titles
-    if (!is.null(main)) {
-      if (nfacets >= 3) {
-        ## exception for 2x2 case
-        if (nfacet_rows == 2 && nfacet_cols == 2) {
-          ooma[3] = ooma[3] + 0
-        } else {
-          ooma[3] = ooma[3] + 2
-        }
-      }
-    }
-    # apply the changes
-    par(oma = ooma)
-    
-    # Need extra adjustment to top margin if facet titles have "\n" newline separator
+    # Need extra adjustment to top margin if facet titles have "\n" newline
+    # separator. (Note that we'll also need to take account for this in the
+    # individual facet margins / gaps further below.)
     facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
     if (length(facet_newlines)==0) facet_newlines = 0
-    # # Side note: Rather use original mar in case of already-reduced space (due
-    # #   to "right!" legend correction above)
-    # if (is.null(omar)) omar = opar[["mar"]]
-    omar[3] = omar[3] + 1.5*max(facet_newlines)
+    omar[3] = omar[3] + max(facet_newlines)
     # apply the changes
     par(mar = omar)
 
@@ -697,33 +718,68 @@ plot2.default = function(
   if (isFALSE(add)) {
     
     if (nfacets > 1) {
-      # Reduce the margins between the individual facets, to avoid excess
-      # whitespace.
-      # Note: Rather use original in case of already-reduced space (due to
-      #   "right!" legend correction above.)
-      if (is.null(omar)) omar = opar[["mar"]] 
-      omar[c(1,2)] = omar[c(1,2)] - 2
-      if (!is.null(main)) omar[3] = omar[3] - 2
-      # extra reductions if plot isn't framed
-      if (isFALSE(frame.plot)) {
-        # Tricksy, but simultaneously adjust outer and inner margins (in
-        # different directions) to preserve figure centroids
-        ooma = par("oma")
-        ooma[c(1,2,3)] = ooma[c(1,2,3)] + 1
-        par(oma = ooma)
-        omar[c(1,2,3)] = omar[c(1,2,3)] - 1
-        if (has_legend) omar[4] = 0.1 # no space to RHS if legend present
-      } else if (has_legend) {
-        ## Avoid double correction in case of RHS legend
-        ooma = par("oma")
-        ooma[4] = max(0, ooma[4] - 2)
-        par(oma = ooma)
+      # Set facet margins (i.e., gaps between facets)
+      if (is.null(facet.args[["fmar"]])) {
+        fmar = par2("fmar")
+      } else {
+        if (length(facet.args[["fmar"]]) != 4) {
+          warning(
+            "`fmar` has to be a vector of length four, e.g.",
+            "`facet.args = list(fmar = c(b,l,t,r))`.",
+            "\n",
+            "Resetting to fmar = c(1,1,1,1) default.",
+            "\n"
+          )
+          fmar = par2("fmar")
+        } else {
+          fmar = facet.args[["fmar"]]
+        }
       }
-      par(mar = omar)
+      # We need to adjust for n>=3 facet cases for correct spacing...
+      if (nfacets >= 3) {
+        ## ... exception for 2x2 cases
+        if (!(nfacet_rows==2 && nfacet_cols==2)) fmar = fmar*.75
+      }
+      # Extra reduction if no plot frame to reduce whitespace
+      if (isFALSE(frame.plot)) {
+        fmar = fmar - 0.5
+      }
+      
+      ooma = par("oma")
+      
+      # Bump top margin down for facet titles
+      fmar[3] = fmar[3] + 1
+      # Need extra adjustment to top margin if facet titles have "\n" newline separator
+      facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
+      if (length(facet_newlines)==0) facet_newlines = 0
+      fmar[3] = fmar[3] + max(facet_newlines)
+      
+      omar = par("mar")
+      
+      # Now we set the margins. The trick here is that we simultaneously adjust
+      # inner (mar) and outer (oma) margins by the same amount, but in opposite
+      # directions, to preserve the overall facet and plot centroids. 
+      nmar = (fmar+.1)/cex_fct_adj
+      noma = (ooma+omar-fmar-.1)/cex_fct_adj
+      # Catch in case of negative oma values. (Probably only occurs with some
+      # user-supplied par2(lmar) values and a "left!" positioned legend.)
+      if (any(noma<0)) {
+        noma_orig = noma
+        noma[noma<0] = 0
+        # noma_diff = noma-noma_orig
+        # nmar = nmar + noma_diff
+      }
+      # apply changes
+      par(oma = noma)
+      par(mar = nmar)
+      
+      # Now that the margins have been set, arrange facet rows and columns based
+      # on our earlier calculations.
+      par(mfrow = c(nfacet_rows, nfacet_cols))
     }
     
     for (ii in ifacet) {
-      
+    
       # See: https://github.com/grantmcdermott/plot2/issues/65
       if (nfacets > 1) {
         mfgi = ceiling(ii/nfacet_cols)
@@ -802,7 +858,7 @@ plot2.default = function(
       
       # facet titles
       if (!is.null(facet)) {
-        mtext(paste(facets[[ii]]), side = 3)
+        mtext(paste(facets[[ii]]), side = 3, line = 0.1)
       }
       
     } # end of ii facet loop
@@ -929,11 +985,6 @@ plot2.default = function(
   # tidy up before exit
   if (!is.null(facet)) {
     par2(last_facet_par = par(no.readonly = TRUE))
-  }
-  
-  
-  if (par_restore || !is.null(facet)) {
-    on.exit(par(opar), add = TRUE)
   }
   
 }

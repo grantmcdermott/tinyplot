@@ -1,6 +1,6 @@
 # News
 
-##  0.0.3.916 (development version)
+##  0.0.3.917 (development version)
 
 Website:
 
@@ -26,7 +26,7 @@ existing plot window. (#60 @grantmcdermott)
 - `plot2` gains a new `facet` argument for drawing faceted plots. Users can
 override the default square arrangement by passing the desired number of facet
 rows or columns to the companion `facet.args` helper function. Facets can be
-combined with `by` grouping, or used on their own. (#83, #91, #94
+combined with `by` grouping, or used on their own. (#83, #91, #94, #96
 @grantmcdermott)
 - Users can now control `plot2`-specific graphical parameters globally via
 the new `par2()` function (which is modeled on the base `par()` function). At

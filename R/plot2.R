@@ -526,7 +526,7 @@ plot2.default = function(
   #   come later.
   if (!is.null(facet)) {
     
-    facets = unique(facet)
+    facets = sort(unique(facet))
     ifacet = seq_along(facets)
     nfacets = length(facets)
     

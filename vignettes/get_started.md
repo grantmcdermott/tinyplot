@@ -34,13 +34,18 @@ plot2(0:10, main = "plot2")
 src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/base_1-1.png"
 style="width:70.0%" />
 
+``` r
+
+par(mfrow = c(1, 1)) # reset layout
+```
+
 Similarly, we can plot elements from a data frame using either the
 atomic or formula methods. Here’s a simple example using the `aq`
 dataset that we created earlier.
 
 ``` r
 # with(aq,  plot2(Day, Temp)) # atomic method (same as below)
-plot2(Temp ~ Day, data = aq) # formula method
+plot2(Temp ~ Day, data = aq)  # formula method
 ```
 
 <img
@@ -164,12 +169,12 @@ palette("tableau")
 In all of the preceding plots, you will have noticed that we get an
 automatic legend. The legend position and look can be customized with
 the `legend` argument. At a minimum, you can pass the familiar legend
-position keywords as a convenience string (“topright”, “left”, etc.).
-Moreover, a key feature of `plot2` is that we can easily and elegantly
-place the legend *outside* the plot area by adding a trailing “!” to
-these keywords. (As you may have realised, the default legend position
-is “right!”.) Let’s demonstrate by moving the legend to the left of the
-plot:
+position keywords as a convenience string (“topright”, “bottom”, “left”,
+etc.). Moreover, a key feature of `plot2` is that we can easily and
+elegantly place the legend *outside* the plot area by adding a trailing
+“!” to these keywords. (As you may have realised, the default legend
+position is “right!”.) Let’s demonstrate by moving the legend to the
+left of the plot:
 
 ``` r
 plot2(
@@ -287,11 +292,12 @@ with(
 src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_simple-1.png"
 style="width:70.0%" />
 
-By default, facets will be arranged in a square configuration (if more
-than three facets are detected). Users can override this behaviour by
-supplying `nrow` or `ncol` in the “facet.args” helper function. Note
-that we can also reduce axis label redundancy by turning off the plot
-frame.
+By default, facets will be arranged in a square configuration if more
+than three facets are detected. Users can override this behaviour by
+supplying `nrow` or `ncol` in the “facet.args” helper function. (The
+margin padding between individual facets can also be adjusted via the
+`fmar` argument.) Note that we can also reduce axis label redundancy by
+turning off the plot frame.
 
 ``` r
 with(

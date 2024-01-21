@@ -1,6 +1,6 @@
 # News
 
-##  0.0.3.914 (development version)
+##  0.0.3.915 (development version)
 
 Website:
 
@@ -24,7 +24,12 @@ existing plot window. ([#60](https://github.com/grantmcdermott/plot2/issues/60) 
 - `plot2` gains a new `facet` argument for drawing faceted plots. Users can
 override the default square arrangement by passing the desired number of facet
 rows or columns to the companion `facet.args` helper function. Facets can be
-combined with `by` grouping, or used on their own. ([#83](https://github.com/grantmcdermott/plot2/issues/83), [#91](https://github.com/grantmcdermott/plot2/issues/91) [@grantmcdermott](https://github.com/grantmcdermott))
+combined with `by` grouping, or used on their own. ([#83](https://github.com/grantmcdermott/plot2/issues/83), [#91](https://github.com/grantmcdermott/plot2/issues/91), [#94](https://github.com/grantmcdermott/plot2/issues/94) [@grantmcdermott](https://github.com/grantmcdermott))
+- Users can now control `plot2`-specific graphical parameters globally via
+the new `par2()` function (which is modeled on the base `par()` function). At
+the moment only a subset of global parameters, mostly related to legend and
+facet behaviour, are exposed in `par2`. But users can expect that more will be
+added in future releases. ([#33](https://github.com/grantmcdermott/plot2/issues/33), [#94](https://github.com/grantmcdermott/plot2/issues/94) [@grantmcdermott](https://github.com/grantmcdermott))
 
 Bug fixes:
 
@@ -34,6 +39,17 @@ e.g. `plot2(rnorm(100)`. ([#52](https://github.com/grantmcdermott/plot2/issues/5
 - Interval plots like ribbons, errorbars, and pointranges are now correctly
 plotted even if a y variable isn't specified. ([#54](https://github.com/grantmcdermott/plot2/issues/54) [@grantmcdermott](https://github.com/grantmcdermott))
 - Correctly label date-time axes. ([#77](https://github.com/grantmcdermott/plot2/issues/77) [@grantmcdermott](https://github.com/grantmcdermott) and [@zeileis](https://github.com/zeileis))
+- Improved consistency of legend and facet margins across different plot types
+and placement, via the new `lmar` and `fmar` arguments of `par2()`. The default
+legend margin is `par2(lmar = c(1,0, 0.1)`, which means that there is 1.0 line
+of padding between the legend and the plot region (inside margin) and 0.1 line 
+of padding between the legend and edge of the graphics device (outer margin).
+Similarly, the default facet padding is `par2(fmar = c(1,1,1,1)`, which means
+that there is a single line of padding around each side of the individual
+facets. Users can override these defaults by passing numeric vectors of the
+appropriate length to `par2()`. For example, `par2(lmar = c(0,0.1)` would shrink
+the inner gap between the legend and plot region to zero, but leave the small
+outer gap to outside of the graphics device unchanged. ([#94](https://github.com/grantmcdermott/plot2/issues/94) [@grantmcdermott](https://github.com/grantmcdermott))
 
 ##  0.0.3
 

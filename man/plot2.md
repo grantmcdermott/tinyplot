@@ -163,9 +163,33 @@ grouping variable(s) above.
 <code id="plot2_:_facet.args">facet.args</code>
 </td>
 <td>
-a list of arguments for controlling faceting behaviour. Currently only
-<code>nrow</code> and <code>ncol</code> are supported, with the former
-superseding the latter. Ignored if <code>facet</code> is NULL.
+
+an optional list of arguments for controlling faceting behaviour.
+(Ignored if <code>facet</code> is NULL.) Currently only the following
+are supported:
+
+<ul>
+<li>
+
+<code>nrow</code>, <code>ncol</code> for overriding the default "square"
+facet window arrangement. Only one of these should be specified; if not
+then the former will supersede the latter.
+
+</li>
+<li>
+
+<code>fmar</code> a vector of form <code>c(b,l,t,r)</code> for
+controlling the base margin between facets in terms of lines. Defaults
+to the value of <code>par2(“fmar”)</code>, which should be
+<code>c(1,1,1,1)</code>, i.e. a single line of padding around each
+individual facet, assuming it hasn’t been overridden by the user as part
+their global <code>par2</code> settings. Note some automatic adjustments
+are made for certain layouts, and depending on whether the plot is
+framed or not, to reduce excess whitespace. See <code>par2</code> for
+more details.
+
+</li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -282,8 +306,8 @@ and y axis labels) should appear on the plot.
 </td>
 <td>
 a logical value indicating whether both axes should be drawn on the
-plot. Use `graphical parameter` "xaxt" or "yaxt" to suppress just one of
-the axes.
+plot. Use <code style="white-space: pre;">graphical parameter</code>
+"xaxt" or "yaxt" to suppress just one of the axes.
 </td>
 </tr>
 <tr>
@@ -530,10 +554,10 @@ the <code>type</code> argument is one of "pointrange", "errorbar", or
 </td>
 <td>
 numeric factor modifying the opacity alpha of any ribbon shading;
-typically in `[0, 1]`. Default value is 0.2. Only used when <code>type =
-“ribbon”</code>, or when the <code>bg</code> fill argument is specified
-in a density plot (since filled density plots are converted to ribbon
-plots internally).
+typically in <code style="white-space: pre;">\[0, 1\]</code>. Default
+value is 0.2. Only used when <code>type = “ribbon”</code>, or when the
+<code>bg</code> fill argument is specified in a density plot (since
+filled density plots are converted to ribbon plots internally).
 </td>
 </tr>
 <tr>

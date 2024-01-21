@@ -53,7 +53,7 @@
 <text transform='translate(47.64,124.57) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(47.64,91.27) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>30</text>
 <polygon points='59.04,228.06 173.76,228.06 173.76,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
-<text x='116.40' y='56.19' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>6.1</text>
+<text x='116.40' y='56.19' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>4.0</text>
 </g>
 <defs>
   <clipPath id='cpMjA5LjA0fDMyMy43Nnw1OS4wNHwyMjguMDY='>
@@ -84,7 +84,7 @@
 <text transform='translate(197.64,124.57) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(197.64,91.27) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>30</text>
 <polygon points='209.04,228.06 323.76,228.06 323.76,59.04 209.04,59.04 ' style='stroke-width: 0.75;' />
-<text x='266.40' y='56.19' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>4.1</text>
+<text x='266.40' y='56.19' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>6.0</text>
 </g>
 <defs>
   <clipPath id='cpMzU5LjA0fDQ3My43Nnw1OS4wNHwyMjguMDY='>
@@ -115,7 +115,7 @@
 <text transform='translate(347.64,124.57) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(347.64,91.27) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>30</text>
 <polygon points='359.04,228.06 473.76,228.06 473.76,59.04 359.04,59.04 ' style='stroke-width: 0.75;' />
-<text x='416.40' y='56.19' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>6.0</text>
+<text x='416.40' y='56.19' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>8.0</text>
 </g>
 <defs>
   <clipPath id='cpNTkuMDR8MTczLjc2fDI2MS41NHw0MzAuNTY='>
@@ -146,7 +146,7 @@
 <text transform='translate(47.64,327.07) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(47.64,293.77) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>30</text>
 <polygon points='59.04,430.56 173.76,430.56 173.76,261.54 59.04,261.54 ' style='stroke-width: 0.75;' />
-<text x='116.40' y='258.69' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>8.0</text>
+<text x='116.40' y='258.69' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>4.1</text>
 </g>
 <defs>
   <clipPath id='cpMjA5LjA0fDMyMy43NnwyNjEuNTR8NDMwLjU2'>
@@ -177,7 +177,7 @@
 <text transform='translate(197.64,327.07) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(197.64,293.77) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>30</text>
 <polygon points='209.04,430.56 323.76,430.56 323.76,261.54 209.04,261.54 ' style='stroke-width: 0.75;' />
-<text x='266.40' y='258.69' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>4.0</text>
+<text x='266.40' y='258.69' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>6.1</text>
 </g>
 <defs>
   <clipPath id='cpMzU5LjA0fDQ3My43NnwyNjEuNTR8NDMwLjU2'>

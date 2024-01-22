@@ -387,6 +387,9 @@ plot2.default = function(
     facet = by
   } else if (!is.null(facet) && inherits(facet, "formula")) {
     facet = get_facet_fml(facet, data = data)
+    if (isTRUE(attr(facet, "facet_grid"))) {
+      facet.args[["nrow"]] = attr(facet, "facet_nrow")
+    }
   }
 
   ## Catch for density type: recycle through plot.density
@@ -751,6 +754,10 @@ plot2.default = function(
       
       # Bump top margin down for facet titles
       fmar[3] = fmar[3] + 1
+      if (isTRUE(attr(facet, "facet_grid"))) {
+        fmar[3] = max(0, fmar[3] - 1)
+        # ooma[4] = ooma[4] + 1
+      }
       # Need extra adjustment to top margin if facet titles have "\n" newline separator
       facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
       if (length(facet_newlines)==0) facet_newlines = 0
@@ -860,7 +867,18 @@ plot2.default = function(
       
       # facet titles
       if (!is.null(facet)) {
-        mtext(paste(facets[[ii]]), side = 3, line = 0.1)
+        ## special logic for facet grids 
+        if (isTRUE(attr(facet, "facet_grid"))) {
+          if (ii %in% 1:nfacet_cols) {
+            mtext(paste(gsub("~.*", "", facets[[ii]])), side = 3, line = 0.1)
+          }
+          if (ii %% nfacet_cols == 0 || ii == nfacets) {
+            mtext_line = ifelse(nfacets < 3 || nfacets == 4, 0.1, 0.4)
+            mtext(paste(sub("*.~", "", facets[[ii]])), side = 4, line = mtext_line)
+          }
+        } else {
+          mtext(paste(facets[[ii]]), side = 3, line = 0.1)
+        }
       }
       
     } # end of ii facet loop
@@ -1321,10 +1339,13 @@ get_facet_fml = function(formula, data = NULL) {
   xfacet = mf[, xfacet_loc:NCOL(mf)]
   
   ## return object
+  xfacet = interaction(xfacet, sep = ":")
   if (no_yfacet) {
-    ret = interaction(xfacet, sep = ":")
+    ret = xfacet
   } else {
-    ret = interaction(yfacet, interaction(xfacet, sep = ":"), sep = "~")
+    ret = interaction(yfacet, xfacet, sep = "~")
+    attr(ret, "facet_grid") = TRUE
+    attr(ret, "facet_nrow") = length(unique(xfacet))
   }
   
   return(ret)

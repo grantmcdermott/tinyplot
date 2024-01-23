@@ -893,7 +893,7 @@ plot2.default = function(
           }
           if (ii %% nfacet_cols == 0 || ii == nfacets) {
             mtext_line = ifelse(nfacets < 3 || nfacets == 4, 0.1, 0.4)
-            mtext(paste(sub("*.~", "", facets[[ii]])), side = 4, line = mtext_line)
+            mtext(paste(sub(".*~", "", facets[[ii]])), side = 4, line = mtext_line)
           }
         } else {
           mtext(paste(facets[[ii]]), side = 3, line = 0.1)
@@ -1363,9 +1363,10 @@ get_facet_fml = function(formula, data = NULL) {
     ret = xfacet
   } else {
     # yfacet = interaction(yfacet, sep = ":")
-    ret = interaction(yfacet, xfacet, sep = "~")
+    ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
+    ret = interaction(xfacet, yfacet, sep = "~")
     attr(ret, "facet_grid") = TRUE
-    attr(ret, "facet_nrow") = length(unique(xfacet))
+    attr(ret, "facet_nrow") = length(unique(yfacet))
   }
   
   return(ret)

@@ -13,24 +13,42 @@
 #' 
 #' @md
 #' @param x,y the x and y arguments provide the x and y coordinates for the
-#'   plot. Any reasonable way of defining the coordinates is acceptable. See
-#'   the function xy.coords for details. If supplied separately, they must be
-#'   of the same length.
+#'   plot. Any reasonable way of defining the coordinates is acceptable; most
+#'   likely the names of existing vectors or columns of data frames. See the
+#'   'Examples' section below, or the function \code{\link[graphics]{xy.coords}}
+#'   for details. If supplied separately, `x` and `y` must be of the same
+#'   length.
 #' @param by grouping variable(s). By default, groups will be represented
 #'   through colouring of the plot elements. However, this can be turned off
 #'   and other plot parameters (e.g., line types) can also take on grouping
 #'   behaviour via the special "by" keyword. See Examples.
-#' @param facet the faceting variable that you want arrange separate plot
-#'   windows by. To facet by multiple variables, simply interact them, e.g.
-#'   with `interaction(facet_var1, facet_var2)`. Also accepts the special "by"
-#'   convenience keyword, in which case facets will match the grouping
-#'   variable(s) above.
+#' @param facet the faceting variable(s) that you want arrange separate plot
+#'   windows by. Can be specified in various ways:
+#'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in 
+#'   atomic form, simply interact them, e.g.
+#'   `interaction(fvar1, fvar2)` or `factor(fvar1):factor(fvar2)`.
+#'   - As a one-sided formula, e.g. `facet = ~fvar`. Multiple variables can be
+#'   specified in the formula RHS, e.g. `~fvar1 + fvar2` or `~fvar1:fvar2`. Note
+#'   that these multi-variable cases are _all_ treated equivalently and
+#'   converted to `interaction(fvar1, fvar2, ...)` internally. (No distinction
+#'   is made between different types of binary operators, for example, and so
+#'   `f1+f2` is treated the same as `f1:f2`, is treated the same as `f1*f2`,
+#'   etc.)
+#'   - As a two-side formula, e.g. `facet = fvar1 ~ fvar2`. In this case, the
+#'   facet windows are arranged in a fixed grid layout, with the formula LHS
+#'   defining the facet rows and the RHS defining the facet columns. At present
+#'   only single variables on each side of the formula are well supported. (We
+#'   don't recommend trying to use multiple variables on either the LHS or RHS
+#'   of the two-sided formula case.)
+#'   - As a special `"by"` convenience keyword, in which case facets will match
+#'   the grouping variable(s) passed to `by` above.
 #' @param facet.args an optional list of arguments for controlling faceting
 #'   behaviour. (Ignored if `facet` is NULL.) Currently only the following are
 #'   supported:
 #'   - `nrow`, `ncol` for overriding the default "square" facet window
 #'   arrangement. Only one of these should be specified; if not then the former
-#'   will supersede the latter.
+#'   will supersede the latter. Ignored if a two-sided formula is passed to the
+#'   main `facet` argument, since the layout takes the form a fixed grid.
 #'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
 #'   between facets in terms of lines. Defaults to the value of `par2("fmar")`,
 #'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each
@@ -168,8 +186,8 @@
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
-#' @param ... other `graphical` parameters (see `par` and also the "Details"
-#'   section of `plot`).
+#' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
+#'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
 #' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
 #' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext
@@ -1344,6 +1362,7 @@ get_facet_fml = function(formula, data = NULL) {
   if (no_yfacet) {
     ret = xfacet
   } else {
+    # yfacet = interaction(yfacet, sep = ":")
     ret = interaction(yfacet, xfacet, sep = "~")
     attr(ret, "facet_grid") = TRUE
     attr(ret, "facet_nrow") = length(unique(xfacet))

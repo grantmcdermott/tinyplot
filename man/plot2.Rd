@@ -98,23 +98,42 @@ plot2(x, ...)
 }
 \arguments{
 \item{x, y}{the x and y arguments provide the x and y coordinates for the
-plot. Any reasonable way of defining the coordinates is acceptable. See
-the function xy.coords for details. If supplied separately, they must be
-of the same length.}
+plot. Any reasonable way of defining the coordinates is acceptable; most
+likely the names of existing vectors or columns of data frames. See the
+'Examples' section below, or the function \code{\link[graphics]{xy.coords}}
+for details. If supplied separately, \code{x} and \code{y} must be of the same
+length.}
 
-\item{...}{other \code{graphical} parameters (see \code{par} and also the "Details"
-section of \code{plot}).}
+\item{...}{other graphical parameters. See \code{\link[graphics]{par}} or
+the "Details" section of \code{\link[graphics]{plot}}.}
 
 \item{by}{grouping variable(s). By default, groups will be represented
 through colouring of the plot elements. However, this can be turned off
 and other plot parameters (e.g., line types) can also take on grouping
 behaviour via the special "by" keyword. See Examples.}
 
-\item{facet}{the faceting variable that you want arrange separate plot
-windows by. To facet by multiple variables, simply interact them, e.g.
-with \code{interaction(facet_var1, facet_var2)}. Also accepts the special "by"
-convenience keyword, in which case facets will match the grouping
-variable(s) above.}
+\item{facet}{the faceting variable(s) that you want arrange separate plot
+windows by. Can be specified in various ways:
+\itemize{
+\item In "atomic" form, e.g. \code{facet = fvar}. To facet by multiple variables in
+atomic form, simply interact them, e.g.
+\code{interaction(fvar1, fvar2)} or \code{factor(fvar1):factor(fvar2)}.
+\item As a one-sided formula, e.g. \code{facet = ~fvar}. Multiple variables can be
+specified in the formula RHS, e.g. \code{~fvar1 + fvar2} or \code{~fvar1:fvar2}. Note
+that these multi-variable cases are \emph{all} treated equivalently and
+converted to \code{interaction(fvar1, fvar2, ...)} internally. (No distinction
+is made between different types of binary operators, for example, and so
+\code{f1+f2} is treated the same as \code{f1:f2}, is treated the same as \code{f1*f2},
+etc.)
+\item As a two-side formula, e.g. \code{facet = fvar1 ~ fvar2}. In this case, the
+facet windows are arranged in a fixed grid layout, with the formula LHS
+defining the facet rows and the RHS defining the facet columns. At present
+only single variables on each side of the formula are well supported. (We
+don't recommend trying to use multiple variables on either the LHS or RHS
+of the two-sided formula case.)
+\item As a special \code{"by"} convenience keyword, in which case facets will match
+the grouping variable(s) passed to \code{by} above.
+}}
 
 \item{facet.args}{an optional list of arguments for controlling faceting
 behaviour. (Ignored if \code{facet} is NULL.) Currently only the following are
@@ -122,7 +141,8 @@ supported:
 \itemize{
 \item \code{nrow}, \code{ncol} for overriding the default "square" facet window
 arrangement. Only one of these should be specified; if not then the former
-will supersede the latter.
+will supersede the latter. Ignored if a two-sided formula is passed to the
+main \code{facet} argument, since the layout takes the form a fixed grid.
 \item \code{fmar} a vector of form \code{c(b,l,t,r)} for controlling the base margin
 between facets in terms of lines. Defaults to the value of \code{par2("fmar")},
 which should be \code{c(1,1,1,1)}, i.e. a single line of padding around each

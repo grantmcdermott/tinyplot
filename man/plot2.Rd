@@ -100,9 +100,9 @@ plot2(x, ...)
 \item{x, y}{the x and y arguments provide the x and y coordinates for the
 plot. Any reasonable way of defining the coordinates is acceptable; most
 likely the names of existing vectors or columns of data frames. See the
-'Examples' section below, or the function \code{\link[graphics]{xy.coords}}
-for details. If supplied separately, \code{x} and \code{y} must be of the same
-length.}
+'Examples' section below, or the function
+\code{\link[grDevices]{xy.coords}} for details. If supplied separately, \code{x}
+and \code{y} must be of the same length.}
 
 \item{...}{other graphical parameters. See \code{\link[graphics]{par}} or
 the "Details" section of \code{\link[graphics]{plot}}.}
@@ -319,8 +319,8 @@ should not be specified in the same call.}
 when extracting the data from \code{formula} and \code{data}.}
 }
 \description{
-Extends base R's
-default plotting function, particularly as it applies to scatter and
+Extends base R's graphics system,
+particularly as it applies to scatter and
 line plots with grouped data. For example, \code{plot2} makes it easy to plot
 different categories of a dataset in a single function call and highlight
 these categories (groups) using modern colour palettes. Coincident with
@@ -328,7 +328,8 @@ this grouping support, \code{plot2} also produces automatic legends with scope
 for further customization. While the package also offers several other
 enhancements, it tries as far as possible to be a drop-in replacement
 for the equivalent base plot function. Users should generally be able to
-swap a valid \code{plot} call with \code{plot2} without any changes to the output.
+swap a valid \code{\link[graphics]{plot}} call with \code{plot2} without any
+changes to the output.
 }
 \examples{
 
@@ -348,17 +349,20 @@ par(op)
 
 # Unlike vanilla plot, however, plot2 allows you to characterize groups 
 # (using either the `by` argument or equivalent `|` formula syntax).
-# Notice that we also get an automatic legend.
 
-plot2(airquality$Day, airquality$Temp, by = airquality$Month)
-plot2(Temp ~ Day | Month, airquality)
+aq = transform(airquality, factor(Month, labels = month.abb[unique(Month)]))
+
+with(aq, plot2(Day, Temp, by = Month))
+plot2(Temp ~ Day | Month, aq)
+
+# Notice that we also get an automatic legend.
 
 # Use standard base plotting arguments to adjust features of your plot.
 # For example, change `pch` (plot character) to get filled points.
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   pch = 16
 )
 
@@ -367,7 +371,7 @@ plot2(
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "l"
 )
 
@@ -377,7 +381,7 @@ plot2(
 
 plot2(
   ~ Temp | Month,
-  data = airquality,
+  data = aq,
   type = "density",
   fill = "by"
 )
@@ -385,10 +389,10 @@ plot2(
 # Facet plots are supported too. Facets can be drawn on their own...
 
 with(
-  airquality,
+  aq,
   plot2(
   x = Day, y = Temp,
-  facet = factor(Month, labels = month.abb[unique(Month)]),
+  facet = Month,
   type = "area",
   main = "Temperatures by month"
   )
@@ -396,13 +400,13 @@ with(
 
 # ... or combined/contrasted with the by (colour) grouping.
 
-airquality2 = transform(airquality, Summer = Month \%in\% 6:8)
+aq = transform(aq, Summer = Month \%in\% 6:8)
 with(
-  airquality2,
+  aq,
   plot2(
   x = Day, y = Temp,
   by = Summer,
-  facet = factor(Month, labels = month.abb[unique(Month)]),
+  facet = Month,
   type = "area",
   palette = "dark2",
   main = "Temperatures by month and season"
@@ -413,13 +417,12 @@ with(
 # or `ncol` to the helper facet.args argument. Note that we can also reduce
 # axis label repetition across facets by turning the plot frame off.
 
-airquality2 = transform(airquality, Summer = Month \%in\% 6:8)
 with(
-  airquality2,
+  aq,
   plot2(
   x = Day, y = Temp,
   by = Summer,
-  facet = factor(Month, labels = month.abb[unique(Month)]),
+  facet = Month,
   facet.args = list(nrow = 1),
   frame = FALSE,
   type = "area",
@@ -435,7 +438,7 @@ with(
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "l",
   legend = legend("bottom!", title = "Month of the year", bty = "o")
 )
@@ -448,7 +451,7 @@ plot2(
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "l",
   palette = "tableau"
 )
@@ -459,7 +462,7 @@ plot2(
 par(family = "HersheySans", las = 1)
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "b", pch = 16,
   palette = palette.colors(palette = "tableau", alpha = 0.5),
   main = "Daily temperatures by month",

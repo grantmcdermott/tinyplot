@@ -355,8 +355,8 @@ aq = transform(
   Month = factor(Month, labels = month.abb[unique(Month)])
 )
 
-with(aq, plot2(Day, Temp, by = Month))
-plot2(Temp ~ Day | Month, aq)
+with(aq, plot2(Day, Temp, by = Month)) ## atomic method
+plot2(Temp ~ Day | Month, data = aq)   ## formula method
 
 # Notice that we also get an automatic legend.
 
@@ -391,47 +391,49 @@ plot2(
 
 # Facet plots are supported too. Facets can be drawn on their own...
 
-with(
-  aq,
-  plot2(
-  x = Day, y = Temp,
-  facet = Month,
+plot2(
+  Temp ~ Day,
+  facet = ~ Month, 
+  data = aq,
   type = "area",
   main = "Temperatures by month"
-  )
 )
 
 # ... or combined/contrasted with the by (colour) grouping.
 
 aq = transform(aq, Summer = Month \%in\% c("Jun", "Jul", "Aug"))
-with(
-  aq,
-  plot2(
-  x = Day, y = Temp,
-  by = Summer,
-  facet = Month,
+plot2(
+  Temp ~ Day | Summer,
+  facet = ~ Month, 
+  data = aq,
   type = "area",
   palette = "dark2",
   main = "Temperatures by month and season"
-  )
 )
 
 # Users can override the default square window arrangement by passing `nrow`
 # or `ncol` to the helper facet.args argument. Note that we can also reduce
 # axis label repetition across facets by turning the plot frame off.
 
-with(
-  aq,
-  plot2(
-  x = Day, y = Temp,
-  by = Summer,
-  facet = Month,
-  facet.args = list(nrow = 1),
-  frame = FALSE,
+plot2(
+  Temp ~ Day | Summer,
+  facet = ~ Month, facet.args = list(nrow = 1),
+  data = aq,
   type = "area",
   palette = "dark2",
+  frame = FALSE,
   main = "Temperatures by month and season"
-  )
+)
+
+# Use a two-sided formula to arrange the facet windows in a fixed grid.
+# LHS -> facet rows; RHS -> facet columns
+
+aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
+aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+plot2(
+ Temp ~ Day,
+ facet = windy ~ hot,
+ data = aq
 )
 
 # The (automatic) legend position and look can be customized using

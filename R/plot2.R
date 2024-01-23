@@ -756,7 +756,8 @@ plot2.default = function(
       fmar[3] = fmar[3] + 1
       if (isTRUE(attr(facet, "facet_grid"))) {
         fmar[3] = max(0, fmar[3] - 1)
-        # ooma[4] = ooma[4] + 1
+        # Indent for RHS facet_grid title strip if "right!" legend
+        if (has_legend && ooma[4]>0) ooma[4] = ooma[4] + 1
       }
       # Need extra adjustment to top margin if facet titles have "\n" newline separator
       facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
@@ -867,7 +868,7 @@ plot2.default = function(
       
       # facet titles
       if (!is.null(facet)) {
-        ## special logic for facet grids 
+        ## special logic for facet grids
         if (isTRUE(attr(facet, "facet_grid"))) {
           if (ii %in% 1:nfacet_cols) {
             mtext(paste(gsub("~.*", "", facets[[ii]])), side = 3, line = 0.1)

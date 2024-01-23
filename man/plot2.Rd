@@ -350,7 +350,10 @@ par(op)
 # Unlike vanilla plot, however, plot2 allows you to characterize groups 
 # (using either the `by` argument or equivalent `|` formula syntax).
 
-aq = transform(airquality, factor(Month, labels = month.abb[unique(Month)]))
+aq = transform(
+  airquality,
+  Month = factor(Month, labels = month.abb[unique(Month)])
+)
 
 with(aq, plot2(Day, Temp, by = Month))
 plot2(Temp ~ Day | Month, aq)
@@ -400,7 +403,7 @@ with(
 
 # ... or combined/contrasted with the by (colour) grouping.
 
-aq = transform(aq, Summer = Month \%in\% 6:8)
+aq = transform(aq, Summer = Month \%in\% c("Jun", "Jul", "Aug"))
 with(
   aq,
   plot2(

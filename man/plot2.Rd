@@ -136,20 +136,27 @@ the grouping variable(s) passed to \code{by} above.
 }}
 
 \item{facet.args}{an optional list of arguments for controlling faceting
-behaviour. (Ignored if \code{facet} is NULL.) Currently only the following are
-supported:
+behaviour. (Ignored if \code{facet} is NULL.) Supported arguments are as
+follows:
 \itemize{
 \item \code{nrow}, \code{ncol} for overriding the default "square" facet window
-arrangement. Only one of these should be specified; if not then the former
-will supersede the latter. Ignored if a two-sided formula is passed to the
-main \code{facet} argument, since the layout takes the form a fixed grid.
+arrangement. Only one of these should be specified, but \code{nrow} will take
+precedence if both are specified together. Ignored if a two-sided formula
+is passed to the main \code{facet} argument, since the layout is arranged in a
+fixed grid.
 \item \code{fmar} a vector of form \code{c(b,l,t,r)} for controlling the base margin
 between facets in terms of lines. Defaults to the value of \code{par2("fmar")},
 which should be \code{c(1,1,1,1)}, i.e. a single line of padding around each
 individual facet, assuming it hasn't been overridden by the user as part
-their global \code{par2} settings. Note some automatic adjustments are made for
-certain layouts, and depending on whether the plot is framed or not, to
-reduce excess whitespace. See \code{\link[plot2]{par2}} for more details.
+their global \code{\link[plot2]{par2}} settings. Note some automatic
+adjustments are made for certain layouts, and depending on whether the plot
+is framed or not, to reduce excess whitespace. See
+\code{\link[plot2]{par2}} for more details.
+\item \code{cex}, \code{font}, \code{col}, \code{bg}, \code{border} for adjusting the facet title text
+and background. Default values for these arguments are inherited from
+\code{\link[plot2]{par2}} (where they take a "facet." prefix, e.g.
+\code{par2("facet.cex")}). The latter function can also be used to set these
+features globally for all \code{plot2} plots.
 }}
 
 \item{data}{a data.frame (or list) from which the variables in formula

@@ -1,21 +1,22 @@
 
+
 # Lightweight extension of the base R plotting function
 
 [**Source code**](https://github.com/grantmcdermott/plot2/tree/main/R/#L)
 
 ## Description
 
-Extends base R’s default plotting function, particularly as it applies
-to scatter and line plots with grouped data. For example,
-<code>plot2</code> makes it easy to plot different categories of a
-dataset in a single function call and highlight these categories
-(groups) using modern colour palettes. Coincident with this grouping
-support, <code>plot2</code> also produces automatic legends with scope
-for further customization. While the package also offers several other
-enhancements, it tries as far as possible to be a drop-in replacement
-for the equivalent base plot function. Users should generally be able to
-swap a valid <code>plot</code> call with <code>plot2</code> without any
-changes to the output.
+Extends base R’s graphics system, particularly as it applies to scatter
+and line plots with grouped data. For example, <code>plot2</code> makes
+it easy to plot different categories of a dataset in a single function
+call and highlight these categories (groups) using modern colour
+palettes. Coincident with this grouping support, <code>plot2</code> also
+produces automatic legends with scope for further customization. While
+the package also offers several other enhancements, it tries as far as
+possible to be a drop-in replacement for the equivalent base plot
+function. Users should generally be able to swap a valid
+<code>plot</code> call with <code>plot2</code> without any changes to
+the output.
 
 ## Usage
 
@@ -121,9 +122,11 @@ plot2(
 </td>
 <td>
 the x and y arguments provide the x and y coordinates for the plot. Any
-reasonable way of defining the coordinates is acceptable. See the
-function xy.coords for details. If supplied separately, they must be of
-the same length.
+reasonable way of defining the coordinates is acceptable; most likely
+the names of existing vectors or columns of data frames. See the
+‘Examples’ section below, or the function <code>xy.coords</code> for
+details. If supplied separately, <code>x</code> and <code>y</code> must
+be of the same length.
 </td>
 </tr>
 <tr>
@@ -131,8 +134,8 @@ the same length.
 <code id="plot2_:_...">…</code>
 </td>
 <td>
-other <code>graphical</code> parameters (see <code>par</code> and also
-the "Details" section of <code>plot</code>).
+other graphical parameters. See <code>par</code> or the "Details"
+section of <code>plot</code>.
 </td>
 </tr>
 <tr>
@@ -151,11 +154,48 @@ behaviour via the special "by" keyword. See Examples.
 <code id="plot2_:_facet">facet</code>
 </td>
 <td>
-the faceting variable that you want arrange separate plot windows by. To
-facet by multiple variables, simply interact them, e.g. with
-<code>interaction(facet_var1, facet_var2)</code>. Also accepts the
-special "by" convenience keyword, in which case facets will match the
-grouping variable(s) above.
+
+the faceting variable(s) that you want arrange separate plot windows by.
+Can be specified in various ways:
+
+<ul>
+<li>
+
+In "atomic" form, e.g. <code>facet = fvar</code>. To facet by multiple
+variables in atomic form, simply interact them, e.g.
+<code>interaction(fvar1, fvar2)</code> or
+<code>factor(fvar1):factor(fvar2)</code>.
+
+</li>
+<li>
+
+As a one-sided formula, e.g. <code>facet = ~fvar</code>. Multiple
+variables can be specified in the formula RHS, e.g. <code>~fvar1 +
+fvar2</code> or <code>~fvar1:fvar2</code>. Note that these
+multi-variable cases are <em>all</em> treated equivalently and converted
+to <code>interaction(fvar1, fvar2, …)</code> internally. (No distinction
+is made between different types of binary operators, for example, and so
+<code>f1+f2</code> is treated the same as <code>f1:f2</code>, is treated
+the same as <code>f1\*f2</code>, etc.)
+
+</li>
+<li>
+
+As a two-side formula, e.g. <code>facet = fvar1 ~ fvar2</code>. In this
+case, the facet windows are arranged in a fixed grid layout, with the
+formula LHS defining the facet rows and the RHS defining the facet
+columns. At present only single variables on each side of the formula
+are well supported. (We don’t recommend trying to use multiple variables
+on either the LHS or RHS of the two-sided formula case.)
+
+</li>
+<li>
+
+As a special <code>“by”</code> convenience keyword, in which case facets
+will match the grouping variable(s) passed to <code>by</code> above.
+
+</li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -165,15 +205,17 @@ grouping variable(s) above.
 <td>
 
 an optional list of arguments for controlling faceting behaviour.
-(Ignored if <code>facet</code> is NULL.) Currently only the following
-are supported:
+(Ignored if <code>facet</code> is NULL.) Supported arguments are as
+follows:
 
 <ul>
 <li>
 
 <code>nrow</code>, <code>ncol</code> for overriding the default "square"
-facet window arrangement. Only one of these should be specified; if not
-then the former will supersede the latter.
+facet window arrangement. Only one of these should be specified, but
+<code>nrow</code> will take precedence if both are specified together.
+Ignored if a two-sided formula is passed to the main <code>facet</code>
+argument, since the layout is arranged in a fixed grid.
 
 </li>
 <li>
@@ -187,6 +229,16 @@ their global <code>par2</code> settings. Note some automatic adjustments
 are made for certain layouts, and depending on whether the plot is
 framed or not, to reduce excess whitespace. See <code>par2</code> for
 more details.
+
+</li>
+<li>
+
+<code>cex</code>, <code>font</code>, <code>col</code>, <code>bg</code>,
+<code>border</code> for adjusting the facet title text and background.
+Default values for these arguments are inherited from <code>par2</code>
+(where they take a "facet." prefix, e.g.
+<code>par2(“facet.cex”)</code>). The latter function can also be used to
+set these features globally for all <code>plot2</code> plots.
 
 </li>
 </ul>
@@ -621,31 +673,32 @@ par(op)
 
 # Unlike vanilla plot, however, plot2 allows you to characterize groups 
 # (using either the `by` argument or equivalent `|` formula syntax).
-# Notice that we also get an automatic legend.
 
-plot2(airquality$Day, airquality$Temp, by = airquality$Month)
+aq = transform(
+  airquality,
+  Month = factor(Month, labels = month.abb[unique(Month)])
+)
+
+with(aq, plot2(Day, Temp, by = Month)) ## atomic method
+plot2(Temp ~ Day | Month, data = aq)   ## formula method
 ```
 
 ![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-2.png)
 
 ``` r
-plot2(Temp ~ Day | Month, airquality)
-```
+# Notice that we also get an automatic legend.
 
-![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-3.png)
-
-``` r
 # Use standard base plotting arguments to adjust features of your plot.
 # For example, change `pch` (plot character) to get filled points.
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   pch = 16
 )
 ```
 
-![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-4.png)
+![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-3.png)
 
 ``` r
 # Converting to a grouped line plot is a simple matter of adjusting the
@@ -653,12 +706,12 @@ plot2(
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "l"
 )
 ```
 
-![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-5.png)
+![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-4.png)
 
 ``` r
 # Similarly for other plot types, including some additional ones provided
@@ -667,67 +720,72 @@ plot2(
 
 plot2(
   ~ Temp | Month,
-  data = airquality,
+  data = aq,
   type = "density",
   fill = "by"
+)
+```
+
+![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-5.png)
+
+``` r
+# Facet plots are supported too. Facets can be drawn on their own...
+
+plot2(
+  Temp ~ Day,
+  facet = ~ Month, 
+  data = aq,
+  type = "area",
+  main = "Temperatures by month"
 )
 ```
 
 ![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-6.png)
 
 ``` r
-# Facet plots are supported too. Facets can be drawn on their own...
+# ... or combined/contrasted with the by (colour) grouping.
 
-with(
-  airquality,
-  plot2(
-  x = Day, y = Temp,
-  facet = factor(Month, labels = month.abb[unique(Month)]),
+aq = transform(aq, Summer = Month %in% c("Jun", "Jul", "Aug"))
+plot2(
+  Temp ~ Day | Summer,
+  facet = ~ Month, 
+  data = aq,
   type = "area",
-  main = "Temperatures by month"
-  )
+  palette = "dark2",
+  main = "Temperatures by month and season"
 )
 ```
 
 ![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-7.png)
 
 ``` r
-# ... or combined/contrasted with the by (colour) grouping.
+# Users can override the default square window arrangement by passing `nrow`
+# or `ncol` to the helper facet.args argument. Note that we can also reduce
+# axis label repetition across facets by turning the plot frame off.
 
-airquality2 = transform(airquality, Summer = Month %in% 6:8)
-with(
-  airquality2,
-  plot2(
-  x = Day, y = Temp,
-  by = Summer,
-  facet = factor(Month, labels = month.abb[unique(Month)]),
+plot2(
+  Temp ~ Day | Summer,
+  facet = ~ Month, facet.args = list(nrow = 1),
+  data = aq,
   type = "area",
   palette = "dark2",
+  frame = FALSE,
   main = "Temperatures by month and season"
-  )
 )
 ```
 
 ![](plot2.markdown_strict_files/figure-markdown_strict/unnamed-chunk-1-8.png)
 
 ``` r
-# Users can override the default square window arrangement by passing `nrow`
-# or `ncol` to the helper facet.args argument. Note that we can also reduce
-# axis label repetition across facets by turning the plot frame off.
+# Use a two-sided formula to arrange the facet windows in a fixed grid.
+# LHS -> facet rows; RHS -> facet columns
 
-airquality2 = transform(airquality, Summer = Month %in% 6:8)
-with(
-  airquality2,
-  plot2(
-  x = Day, y = Temp,
-  by = Summer,
-  facet = factor(Month, labels = month.abb[unique(Month)]),
-  facet.args = list(nrow = 1),
-  frame = FALSE,
-  type = "area",
-  palette = "dark2",
-  main = "Temperatures by month and season"
-  )
+aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
+aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+plot2(
+ Temp ~ Day,
+ facet = windy ~ hot,
+ data = aq
 )
 ```
 
@@ -741,7 +799,7 @@ with(
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "l",
   legend = legend("bottom!", title = "Month of the year", bty = "o")
 )
@@ -758,7 +816,7 @@ plot2(
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "l",
   palette = "tableau"
 )
@@ -773,7 +831,7 @@ plot2(
 par(family = "HersheySans", las = 1)
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "b", pch = 16,
   palette = palette.colors(palette = "tableau", alpha = 0.5),
   main = "Daily temperatures by month",

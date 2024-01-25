@@ -1,4 +1,5 @@
 
+
 # Get Started
 
 ## Preliminaries
@@ -272,7 +273,8 @@ style="width:70.0%" />
 ## Facets
 
 Alongside the standard “by” grouping approach that we have seen thus
-far, **plot2** also supports faceted plots.
+far, **plot2** also supports faceted plots. Mirroring the main `plot2`
+function, the `facet` argument accepts both atomic and formula methods.
 
 ``` r
 with(
@@ -319,11 +321,12 @@ src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_nr
 style="width:70.0%" />
 
 Here’s a slightly fancier version where we combine facets with (by)
-colour grouping, and also add the original values to our model
-predictions. For this particular example, we’ll use the `facet = "by"`
-convenience shorthand to facet along the same month variable as the
-colour grouping. But you can easily specify different `by` and `facet`
-variables if that’s what your data support.
+colour grouping, add a background fill to the facet text, and also add
+back the original values to our model predictions. For this particular
+example, we’ll use the `facet = "by"` convenience shorthand to facet
+along the same month variable as the colour grouping. But you can easily
+specify different `by` and `facet` variables if that’s what your data
+support.
 
 ``` r
 # Plot the original points 
@@ -331,7 +334,8 @@ with(
   aq,
   plot2(
     x = Day, y = Temp,
-    by = Month, facet = "by",
+    by = Month,
+    facet = "by", facet.args = list(bg = "grey90"),
     palette = "dark2",
     grid = TRUE, frame = FALSE, ylim = c(50, 100),
     main = "Actual and predicted air temperatures"
@@ -353,6 +357,30 @@ with(
 
 <img
 src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_fancy-1.png"
+style="width:70.0%" />
+
+Again, the `facet` argument also accepts a formula interface. One
+particular use case is for two-sided formulas, which arranges the facet
+layout in a fixed grid arrangement. Here’s a simple (if contrived)
+example.
+
+``` r
+aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
+aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+
+plot2(
+ Temp ~ Day, data = aq,
+ facet = windy ~ hot,
+ # the rest of these arguments are optional...
+ facet.args = list(col = "white", bg = "black"),
+ pch = 16, col = "dodgerblue",
+ grid = TRUE, frame = FALSE, ylim = c(50, 100),
+ main = "Daily temperatures vs. wind"
+)
+```
+
+<img
+src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_grid-1.png"
 style="width:70.0%" />
 
 ## Customization

@@ -1,4 +1,5 @@
 
+
 # Set or query plot2 parameters
 
 [**Source code**](https://github.com/grantmcdermott/plot2/tree/main/R/#L)
@@ -35,6 +36,150 @@ Parameters’ section below.
 ## Graphical Parameters
 
 <table>
+<tr>
+<td style="text-align: left;">
+<code>facet.cex</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Expansion factor for facet titles. Defaults to <code>1</code>.
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>facet.font</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+An integer corresponding to the desired font face for facet titles. For
+most font families and graphics devices, one of four possible values:
+<code>1</code> (regular), <code>2</code> (bold), <code>3</code>
+(italic), or <code>4</code> (bold italic). Defaults to
+<code>NULL</code>, which is equivalent to <code>1</code> (i.e.,
+regular).
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>facet.col</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Character or integer specifying the facet text colour. If an integer,
+will correspond to the user’s default global colour palette (see
+<code>palette</code>). Defaults to <code>NULL</code>, which is
+equivalent to “black”.
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>facet.bg</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Character or integer specifying the facet background colour. If an
+integer, will correspond to the user’s default colour palette (see
+<code>palette</code>). Passed <code>rect</code>. Defaults to
+<code>NULL</code> (none).
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>facet.border</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Character or integer specifying the facet border colour. If an integer,
+will correspond to the users default colour palette (see
+<code>palette</code>). Passed <code>rect</code>. Defaults to
+<code>NA</code> (none).
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
 <tr>
 <td style="text-align: left;">
 <code>fmar</code>

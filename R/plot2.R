@@ -44,19 +44,26 @@
 #'   - As a special `"by"` convenience keyword, in which case facets will match
 #'   the grouping variable(s) passed to `by` above.
 #' @param facet.args an optional list of arguments for controlling faceting
-#'   behaviour. (Ignored if `facet` is NULL.) Currently only the following are
-#'   supported:
+#'   behaviour. (Ignored if `facet` is NULL.) Supported arguments are as
+#'   follows:
 #'   - `nrow`, `ncol` for overriding the default "square" facet window
-#'   arrangement. Only one of these should be specified; if not then the former
-#'   will supersede the latter. Ignored if a two-sided formula is passed to the
-#'   main `facet` argument, since the layout takes the form a fixed grid.
+#'   arrangement. Only one of these should be specified, but `nrow` will take
+#'   precedence if both are specified together. Ignored if a two-sided formula
+#'   is passed to the main `facet` argument, since the layout is arranged in a
+#'   fixed grid.
 #'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
 #'   between facets in terms of lines. Defaults to the value of `par2("fmar")`,
 #'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each
 #'   individual facet, assuming it hasn't been overridden by the user as part
-#'   their global `par2` settings. Note some automatic adjustments are made for
-#'   certain layouts, and depending on whether the plot is framed or not, to
-#'   reduce excess whitespace. See \code{\link[plot2]{par2}} for more details. 
+#'   their global \code{\link[plot2]{par2}} settings. Note some automatic
+#'   adjustments are made for certain layouts, and depending on whether the plot
+#'   is framed or not, to reduce excess whitespace. See
+#'   \code{\link[plot2]{par2}} for more details.
+#'   - `cex`, `font`, `col`, `bg`, `border` for adjusting the facet title text
+#'   and background. Default values for these arguments are inherited from
+#'   \code{\link[plot2]{par2}} (where they take a "facet." prefix, e.g. 
+#'   `par2("facet.cex")`). The latter function can also be used to set these
+#'   features globally for all `plot2` plots.
 #' @param formula a `formula` that optionally includes grouping variable(s)
 #'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
 #'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
@@ -736,12 +743,30 @@ plot2.default = function(
     
     if (is.null(omar)) omar = par("mar")
     
+    # Grab some of the customizable facet args that we'll be using later
+    facet_rect = FALSE
+    facet_text = .par2[["facet.cex"]]
+    facet_font = .par2[["facet.font"]]
+    facet_col = .par2[["facet.col"]]
+    facet_bg = .par2[["facet.bg"]]
+    facet_border = .par2[["facet.border"]]
+    if (!is.null(facet.args)) {
+      if (!is.null(facet.args[["cex"]])) facet_text = facet.args[["cex"]]
+      if (!is.null(facet.args[["col"]])) facet_col = facet.args[["col"]]
+      if (!is.null(facet.args[["font"]])) facet_font = facet.args[["font"]]
+      if (!is.null(facet.args[["bg"]])) facet_bg = facet.args[["bg"]]
+      if (!is.null(facet.args[["border"]])) facet_border = facet.args[["border"]]
+    }
+    if (!is.null(facet_bg) || !is.null(facet_border)) facet_rect = TRUE
+    
     # Need extra adjustment to top margin if facet titles have "\n" newline
     # separator. (Note that we'll also need to take account for this in the
     # individual facet margins / gaps further below.)
     facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
-    if (length(facet_newlines)==0) facet_newlines = 0
-    omar[3] = omar[3] + max(facet_newlines)
+    # if (length(facet_newlines)==0) facet_newlines = 0
+    # omar[3] = omar[3] + max(facet_newlines)
+    facet_newlines = ifelse(length(facet_newlines)==0, 0, max(facet_newlines))
+    omar[3] = omar[3] + facet_newlines * facet_text / cex_fct_adj
     # apply the changes
     par(mar = omar)
 
@@ -789,10 +814,7 @@ plot2.default = function(
         # Indent for RHS facet_grid title strip if "right!" legend
         if (has_legend && ooma[4]>0) ooma[4] = ooma[4] + 1
       }
-      # Need extra adjustment to top margin if facet titles have "\n" newline separator
-      facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
-      if (length(facet_newlines)==0) facet_newlines = 0
-      fmar[3] = fmar[3] + max(facet_newlines)
+      fmar[3] = fmar[3] + facet_newlines * facet_text/cex_fct_adj
       
       omar = par("mar")
       
@@ -818,6 +840,8 @@ plot2.default = function(
       par(mfrow = c(nfacet_rows, nfacet_cols))
     }
     
+    ## Loop over the individual facet windows and draw the plot region
+    ## components (axes, titles, box, grid, etc.)
     for (ii in ifacet) {
     
       # See: https://github.com/grantmcdermott/plot2/issues/65
@@ -869,6 +893,90 @@ plot2.default = function(
         }
       }
       
+      # facet titles
+      ## Note: facet titles could be done more simply with mtext... but then we
+      ## couldn't adjust background features (e.g., fill), or rotate the rhs
+      ## facet grid text. So we're rolling our own "manual" versions with text
+      ## and rect.
+      if (!is.null(facet)) {
+        # Get the four corners of plot area (x1, x2, y1, y2)
+        corners = par("usr")
+        # special logic for facet grids
+        if (is.null(facet_newlines) || facet_newlines==0) {
+          facet_title_lines = 1 
+        } else {
+          facet_title_lines = 1 + facet_newlines
+        }
+        # different logic for facet grids versus regular facets
+        if (isTRUE(attr(facet, "facet_grid"))) {
+          ## top facet strips
+          if (ii %in% 1:nfacet_cols) {
+            if (isTRUE(facet_rect)) {
+              line_height = grconvertY(facet_title_lines + .1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
+              line_height = line_height * facet_text / cex_fct_adj
+              rect(
+                corners[1], corners[4], corners[2], corners[4] + line_height,
+                col = facet_bg, border = facet_border,
+                xpd = NA
+              )
+            }
+            text(
+              x = mean(corners[1:2]),
+              y = corners[4] + grconvertY(0.4, from="lines", to="user") - grconvertY(0, from="lines", to="user"),
+              labels = sub("^(.*?)~.*", "\\1", facets[[ii]]),
+              adj = c(0.5, 0),
+              cex = facet_text/cex_fct_adj,
+              col = facet_col,
+              font = facet_font,
+              xpd = NA, 
+            )
+          }
+          ## right facet strips
+          if (ii %% nfacet_cols == 0 || ii == nfacets) {
+            if (isTRUE(facet_rect)) {
+              line_height = grconvertX(facet_title_lines + .1, from="lines", to="user") - grconvertX(0, from="lines", to="user")
+              line_height = line_height * facet_text / cex_fct_adj
+              rect(
+                corners[2], corners[3], corners[2] + line_height, corners[4],
+                col = facet_bg, border = facet_border,
+                xpd = NA
+              )
+            }
+            text(
+              x = corners[2] + grconvertX(0.4, from="lines", to="user") - grconvertX(0, from="lines", to="user"),
+              y = mean(corners[3:4]),
+              labels = sub("^.*?~(.*)", "\\1", facets[[ii]]),
+              srt = 270,
+              adj = c(0.5, 0),
+              cex = facet_text/cex_fct_adj,
+              col = facet_col,
+              font = facet_font,
+              xpd = NA
+            )
+          }
+        } else {
+          if (isTRUE(facet_rect)) {
+            line_height = grconvertY(facet_title_lines + .1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
+            line_height = line_height * facet_text / cex_fct_adj
+            rect(
+              corners[1], corners[4], corners[2], corners[4] + line_height,
+              col = facet_bg, border = facet_border,
+              xpd = NA
+            )
+          }
+          text(
+            x = mean(corners[1:2]),
+            y = corners[4] + grconvertY(0.4, from="lines", to="user") - grconvertY(0, from="lines", to="user"),
+            labels = paste(facets[[ii]]),
+            adj = c(0.5, 0),
+            cex = facet_text/cex_fct_adj,
+            col = facet_col,
+            font = facet_font,
+            xpd = NA
+          )
+        }
+      }
+      
       # plot frame
       if (frame.plot) box()
       
@@ -893,22 +1001,6 @@ plot2.default = function(
           }
         } else {
           grid
-        }
-      }
-      
-      # facet titles
-      if (!is.null(facet)) {
-        ## special logic for facet grids
-        if (isTRUE(attr(facet, "facet_grid"))) {
-          if (ii %in% 1:nfacet_cols) {
-            mtext(paste(gsub("~.*", "", facets[[ii]])), side = 3, line = 0.1)
-          }
-          if (ii %% nfacet_cols == 0 || ii == nfacets) {
-            mtext_line = ifelse(nfacets < 3 || nfacets == 4, 0.1, 0.4)
-            mtext(paste(sub(".*~", "", facets[[ii]])), side = 4, line = mtext_line)
-          }
-        } else {
-          mtext(paste(facets[[ii]]), side = 3, line = 0.1)
         }
       }
       

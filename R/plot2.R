@@ -1,7 +1,7 @@
 #' @title Lightweight extension of the base R plotting function
 #'   
-#' @description Extends base R's
-#'   default plotting function, particularly as it applies to scatter and
+#' @description Extends base R's graphics system,
+#'   particularly as it applies to scatter and
 #'   line plots with grouped data. For example, `plot2` makes it easy to plot
 #'   different categories of a dataset in a single function call and highlight
 #'   these categories (groups) using modern colour palettes. Coincident with
@@ -9,35 +9,61 @@
 #'   for further customization. While the package also offers several other
 #'   enhancements, it tries as far as possible to be a drop-in replacement
 #'   for the equivalent base plot function. Users should generally be able to
-#'   swap a valid `plot` call with `plot2` without any changes to the output.
+#'   swap a valid \code{\link[graphics]{plot}} call with `plot2` without any
+#'   changes to the output.
 #' 
 #' @md
 #' @param x,y the x and y arguments provide the x and y coordinates for the
-#'   plot. Any reasonable way of defining the coordinates is acceptable. See
-#'   the function xy.coords for details. If supplied separately, they must be
-#'   of the same length.
+#'   plot. Any reasonable way of defining the coordinates is acceptable; most
+#'   likely the names of existing vectors or columns of data frames. See the
+#'   'Examples' section below, or the function
+#'   \code{\link[grDevices]{xy.coords}} for details. If supplied separately, `x`
+#'   and `y` must be of the same length.
 #' @param by grouping variable(s). By default, groups will be represented
 #'   through colouring of the plot elements. However, this can be turned off
 #'   and other plot parameters (e.g., line types) can also take on grouping
 #'   behaviour via the special "by" keyword. See Examples.
-#' @param facet the faceting variable that you want arrange separate plot
-#'   windows by. To facet by multiple variables, simply interact them, e.g.
-#'   with `interaction(facet_var1, facet_var2)`. Also accepts the special "by"
-#'   convenience keyword, in which case facets will match the grouping
-#'   variable(s) above.
+#' @param facet the faceting variable(s) that you want arrange separate plot
+#'   windows by. Can be specified in various ways:
+#'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in 
+#'   atomic form, simply interact them, e.g.
+#'   `interaction(fvar1, fvar2)` or `factor(fvar1):factor(fvar2)`.
+#'   - As a one-sided formula, e.g. `facet = ~fvar`. Multiple variables can be
+#'   specified in the formula RHS, e.g. `~fvar1 + fvar2` or `~fvar1:fvar2`. Note
+#'   that these multi-variable cases are _all_ treated equivalently and
+#'   converted to `interaction(fvar1, fvar2, ...)` internally. (No distinction
+#'   is made between different types of binary operators, for example, and so
+#'   `f1+f2` is treated the same as `f1:f2`, is treated the same as `f1*f2`,
+#'   etc.)
+#'   - As a two-side formula, e.g. `facet = fvar1 ~ fvar2`. In this case, the
+#'   facet windows are arranged in a fixed grid layout, with the formula LHS
+#'   defining the facet rows and the RHS defining the facet columns. At present
+#'   only single variables on each side of the formula are well supported. (We
+#'   don't recommend trying to use multiple variables on either the LHS or RHS
+#'   of the two-sided formula case.)
+#'   - As a special `"by"` convenience keyword, in which case facets will match
+#'   the grouping variable(s) passed to `by` above.
 #' @param facet.args an optional list of arguments for controlling faceting
-#'   behaviour. (Ignored if `facet` is NULL.) Currently only the following are
-#'   supported:
+#'   behaviour. (Ignored if `facet` is NULL.) Supported arguments are as
+#'   follows:
 #'   - `nrow`, `ncol` for overriding the default "square" facet window
-#'   arrangement. Only one of these should be specified; if not then the former
-#'   will supersede the latter.
+#'   arrangement. Only one of these should be specified, but `nrow` will take
+#'   precedence if both are specified together. Ignored if a two-sided formula
+#'   is passed to the main `facet` argument, since the layout is arranged in a
+#'   fixed grid.
 #'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
 #'   between facets in terms of lines. Defaults to the value of `par2("fmar")`,
 #'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each
 #'   individual facet, assuming it hasn't been overridden by the user as part
-#'   their global `par2` settings. Note some automatic adjustments are made for
-#'   certain layouts, and depending on whether the plot is framed or not, to
-#'   reduce excess whitespace. See \code{\link[plot2]{par2}} for more details. 
+#'   their global \code{\link[plot2]{par2}} settings. Note some automatic
+#'   adjustments are made for certain layouts, and depending on whether the plot
+#'   is framed or not, to reduce excess whitespace. See
+#'   \code{\link[plot2]{par2}} for more details.
+#'   - `cex`, `font`, `col`, `bg`, `border` for adjusting the facet title text
+#'   and background. Default values for these arguments are inherited from
+#'   \code{\link[plot2]{par2}} (where they take a "facet." prefix, e.g. 
+#'   `par2("facet.cex")`). The latter function can also be used to set these
+#'   features globally for all `plot2` plots.
 #' @param formula a `formula` that optionally includes grouping variable(s)
 #'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
 #'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
@@ -168,8 +194,8 @@
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
-#' @param ... other `graphical` parameters (see `par` and also the "Details"
-#'   section of `plot`).
+#' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
+#'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
 #' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
 #' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext
@@ -193,17 +219,23 @@
 #' 
 #' # Unlike vanilla plot, however, plot2 allows you to characterize groups 
 #' # (using either the `by` argument or equivalent `|` formula syntax).
-#' # Notice that we also get an automatic legend.
 #' 
-#' plot2(airquality$Day, airquality$Temp, by = airquality$Month)
-#' plot2(Temp ~ Day | Month, airquality)
+#' aq = transform(
+#'   airquality,
+#'   Month = factor(Month, labels = month.abb[unique(Month)])
+#' )
+#' 
+#' with(aq, plot2(Day, Temp, by = Month)) ## atomic method
+#' plot2(Temp ~ Day | Month, data = aq)   ## formula method
+#' 
+#' # Notice that we also get an automatic legend.
 #'
 #' # Use standard base plotting arguments to adjust features of your plot.
 #' # For example, change `pch` (plot character) to get filled points.
 #' 
 #' plot2(
 #'   Temp ~ Day | Month,
-#'   data = airquality,
+#'   data = aq,
 #'   pch = 16
 #' )
 #' 
@@ -212,7 +244,7 @@
 #' 
 #' plot2(
 #'   Temp ~ Day | Month,
-#'   data = airquality,
+#'   data = aq,
 #'   type = "l"
 #' )
 #' 
@@ -222,55 +254,56 @@
 #' 
 #' plot2(
 #'   ~ Temp | Month,
-#'   data = airquality,
+#'   data = aq,
 #'   type = "density",
 #'   fill = "by"
 #' )
 #' 
 #' # Facet plots are supported too. Facets can be drawn on their own...
 #' 
-#' with(
-#'   airquality,
-#'   plot2(
-#'   x = Day, y = Temp,
-#'   facet = factor(Month, labels = month.abb[unique(Month)]),
+#' plot2(
+#'   Temp ~ Day,
+#'   facet = ~ Month, 
+#'   data = aq,
 #'   type = "area",
 #'   main = "Temperatures by month"
-#'   )
 #' )
 #' 
 #' # ... or combined/contrasted with the by (colour) grouping.
 #' 
-#' airquality2 = transform(airquality, Summer = Month %in% 6:8)
-#' with(
-#'   airquality2,
-#'   plot2(
-#'   x = Day, y = Temp,
-#'   by = Summer,
-#'   facet = factor(Month, labels = month.abb[unique(Month)]),
+#' aq = transform(aq, Summer = Month %in% c("Jun", "Jul", "Aug"))
+#' plot2(
+#'   Temp ~ Day | Summer,
+#'   facet = ~ Month, 
+#'   data = aq,
 #'   type = "area",
 #'   palette = "dark2",
 #'   main = "Temperatures by month and season"
-#'   )
 #' )
 #' 
 #' # Users can override the default square window arrangement by passing `nrow`
 #' # or `ncol` to the helper facet.args argument. Note that we can also reduce
 #' # axis label repetition across facets by turning the plot frame off.
 #' 
-#' airquality2 = transform(airquality, Summer = Month %in% 6:8)
-#' with(
-#'   airquality2,
-#'   plot2(
-#'   x = Day, y = Temp,
-#'   by = Summer,
-#'   facet = factor(Month, labels = month.abb[unique(Month)]),
-#'   facet.args = list(nrow = 1),
-#'   frame = FALSE,
+#' plot2(
+#'   Temp ~ Day | Summer,
+#'   facet = ~ Month, facet.args = list(nrow = 1),
+#'   data = aq,
 #'   type = "area",
 #'   palette = "dark2",
+#'   frame = FALSE,
 #'   main = "Temperatures by month and season"
-#'   )
+#' )
+#' 
+#' # Use a two-sided formula to arrange the facet windows in a fixed grid.
+#' # LHS -> facet rows; RHS -> facet columns
+#' 
+#' aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
+#' aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+#' plot2(
+#'  Temp ~ Day,
+#'  facet = windy ~ hot,
+#'  data = aq
 #' )
 #' 
 #' # The (automatic) legend position and look can be customized using
@@ -280,7 +313,7 @@
 #' 
 #' plot2(
 #'   Temp ~ Day | Month,
-#'   data = airquality,
+#'   data = aq,
 #'   type = "l",
 #'   legend = legend("bottom!", title = "Month of the year", bty = "o")
 #' )
@@ -293,7 +326,7 @@
 #' 
 #' plot2(
 #'   Temp ~ Day | Month,
-#'   data = airquality,
+#'   data = aq,
 #'   type = "l",
 #'   palette = "tableau"
 #' )
@@ -304,7 +337,7 @@
 #' par(family = "HersheySans", las = 1)
 #' plot2(
 #'   Temp ~ Day | Month,
-#'   data = airquality,
+#'   data = aq,
 #'   type = "b", pch = 16,
 #'   palette = palette.colors(palette = "tableau", alpha = 0.5),
 #'   main = "Daily temperatures by month",
@@ -385,6 +418,11 @@ plot2.default = function(
   if (!is.null(facet) && length(facet)==1 && facet=="by") {
     by = as.factor(by) ## if by==facet, then both need to be factors
     facet = by
+  } else if (!is.null(facet) && inherits(facet, "formula")) {
+    facet = get_facet_fml(facet, data = data)
+    if (isTRUE(attr(facet, "facet_grid"))) {
+      facet.args[["nrow"]] = attr(facet, "facet_nrow")
+    }
   }
 
   ## Catch for density type: recycle through plot.density
@@ -456,12 +494,16 @@ plot2.default = function(
         xord = order(by, x)
         by = by[xord]
       } else if (is.null(by)) {
+        facet_grid = attr(facet, "facet_grid")
         xord = order(facet, x)
         facet = facet[xord]
+        attr(facet, "facet_grid") = facet_grid
       } else {
+        facet_grid = attr(facet, "facet_grid")
         xord = order(by, facet, x)
         by = by[xord]
         facet = facet[xord]
+        attr(facet, "facet_grid") = facet_grid
       }
       x = x[xord]
       y = y[xord]
@@ -701,12 +743,30 @@ plot2.default = function(
     
     if (is.null(omar)) omar = par("mar")
     
+    # Grab some of the customizable facet args that we'll be using later
+    facet_rect = FALSE
+    facet_text = .par2[["facet.cex"]]
+    facet_font = .par2[["facet.font"]]
+    facet_col = .par2[["facet.col"]]
+    facet_bg = .par2[["facet.bg"]]
+    facet_border = .par2[["facet.border"]]
+    if (!is.null(facet.args)) {
+      if (!is.null(facet.args[["cex"]])) facet_text = facet.args[["cex"]]
+      if (!is.null(facet.args[["col"]])) facet_col = facet.args[["col"]]
+      if (!is.null(facet.args[["font"]])) facet_font = facet.args[["font"]]
+      if (!is.null(facet.args[["bg"]])) facet_bg = facet.args[["bg"]]
+      if (!is.null(facet.args[["border"]])) facet_border = facet.args[["border"]]
+    }
+    if (!is.null(facet_bg) || !is.null(facet_border)) facet_rect = TRUE
+    
     # Need extra adjustment to top margin if facet titles have "\n" newline
     # separator. (Note that we'll also need to take account for this in the
     # individual facet margins / gaps further below.)
     facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
-    if (length(facet_newlines)==0) facet_newlines = 0
-    omar[3] = omar[3] + max(facet_newlines)
+    # if (length(facet_newlines)==0) facet_newlines = 0
+    # omar[3] = omar[3] + max(facet_newlines)
+    facet_newlines = ifelse(length(facet_newlines)==0, 0, max(facet_newlines))
+    omar[3] = omar[3] + facet_newlines * facet_text / cex_fct_adj
     # apply the changes
     par(mar = omar)
 
@@ -749,10 +809,12 @@ plot2.default = function(
       
       # Bump top margin down for facet titles
       fmar[3] = fmar[3] + 1
-      # Need extra adjustment to top margin if facet titles have "\n" newline separator
-      facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
-      if (length(facet_newlines)==0) facet_newlines = 0
-      fmar[3] = fmar[3] + max(facet_newlines)
+      if (isTRUE(attr(facet, "facet_grid"))) {
+        fmar[3] = max(0, fmar[3] - 1)
+        # Indent for RHS facet_grid title strip if "right!" legend
+        if (has_legend && ooma[4]>0) ooma[4] = ooma[4] + 1
+      }
+      fmar[3] = fmar[3] + facet_newlines * facet_text/cex_fct_adj
       
       omar = par("mar")
       
@@ -778,6 +840,8 @@ plot2.default = function(
       par(mfrow = c(nfacet_rows, nfacet_cols))
     }
     
+    ## Loop over the individual facet windows and draw the plot region
+    ## components (axes, titles, box, grid, etc.)
     for (ii in ifacet) {
     
       # See: https://github.com/grantmcdermott/plot2/issues/65
@@ -829,6 +893,90 @@ plot2.default = function(
         }
       }
       
+      # facet titles
+      ## Note: facet titles could be done more simply with mtext... but then we
+      ## couldn't adjust background features (e.g., fill), or rotate the rhs
+      ## facet grid text. So we're rolling our own "manual" versions with text
+      ## and rect.
+      if (!is.null(facet)) {
+        # Get the four corners of plot area (x1, x2, y1, y2)
+        corners = par("usr")
+        # special logic for facet grids
+        if (is.null(facet_newlines) || facet_newlines==0) {
+          facet_title_lines = 1 
+        } else {
+          facet_title_lines = 1 + facet_newlines
+        }
+        # different logic for facet grids versus regular facets
+        if (isTRUE(attr(facet, "facet_grid"))) {
+          ## top facet strips
+          if (ii %in% 1:nfacet_cols) {
+            if (isTRUE(facet_rect)) {
+              line_height = grconvertY(facet_title_lines + .1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
+              line_height = line_height * facet_text / cex_fct_adj
+              rect(
+                corners[1], corners[4], corners[2], corners[4] + line_height,
+                col = facet_bg, border = facet_border,
+                xpd = NA
+              )
+            }
+            text(
+              x = mean(corners[1:2]),
+              y = corners[4] + grconvertY(0.4, from="lines", to="user") - grconvertY(0, from="lines", to="user"),
+              labels = sub("^(.*?)~.*", "\\1", facets[[ii]]),
+              adj = c(0.5, 0),
+              cex = facet_text/cex_fct_adj,
+              col = facet_col,
+              font = facet_font,
+              xpd = NA, 
+            )
+          }
+          ## right facet strips
+          if (ii %% nfacet_cols == 0 || ii == nfacets) {
+            if (isTRUE(facet_rect)) {
+              line_height = grconvertX(facet_title_lines + .1, from="lines", to="user") - grconvertX(0, from="lines", to="user")
+              line_height = line_height * facet_text / cex_fct_adj
+              rect(
+                corners[2], corners[3], corners[2] + line_height, corners[4],
+                col = facet_bg, border = facet_border,
+                xpd = NA
+              )
+            }
+            text(
+              x = corners[2] + grconvertX(0.4, from="lines", to="user") - grconvertX(0, from="lines", to="user"),
+              y = mean(corners[3:4]),
+              labels = sub("^.*?~(.*)", "\\1", facets[[ii]]),
+              srt = 270,
+              adj = c(0.5, 0),
+              cex = facet_text/cex_fct_adj,
+              col = facet_col,
+              font = facet_font,
+              xpd = NA
+            )
+          }
+        } else {
+          if (isTRUE(facet_rect)) {
+            line_height = grconvertY(facet_title_lines + .1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
+            line_height = line_height * facet_text / cex_fct_adj
+            rect(
+              corners[1], corners[4], corners[2], corners[4] + line_height,
+              col = facet_bg, border = facet_border,
+              xpd = NA
+            )
+          }
+          text(
+            x = mean(corners[1:2]),
+            y = corners[4] + grconvertY(0.4, from="lines", to="user") - grconvertY(0, from="lines", to="user"),
+            labels = paste(facets[[ii]]),
+            adj = c(0.5, 0),
+            cex = facet_text/cex_fct_adj,
+            col = facet_col,
+            font = facet_font,
+            xpd = NA
+          )
+        }
+      }
+      
       # plot frame
       if (frame.plot) box()
       
@@ -854,11 +1002,6 @@ plot2.default = function(
         } else {
           grid
         }
-      }
-      
-      # facet titles
-      if (!is.null(facet)) {
-        mtext(paste(facets[[ii]]), side = 3, line = 0.1)
       }
       
     } # end of ii facet loop
@@ -1281,3 +1424,54 @@ plot2.density = function(
 
 }
 
+
+
+# utility function for converting facet formulas into variables
+
+get_facet_fml = function(formula, data = NULL) {
+  
+  xfacet = yfacet = NULL
+  
+  ## catch one-sided formula ~ x or ~ x | z with no "y" variable
+  if (!inherits(formula, "formula")) formula = as.formula(formula)
+  no_yfacet = length(formula) == 2L
+  fml_rhs = if (no_yfacet) 2L else 3L
+  
+  ## set up model frame
+  m = match.call(expand.dots = FALSE)
+  
+  if (!is.null(data)) {
+    m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
+  }
+  
+  m$formula = formula
+  ## need stats:: for non-standard evaluation
+  m[[1L]] = quote(stats::model.frame)
+  mf = eval.parent(m)
+  
+  ## extract variables: x, y (if any)
+  if (no_yfacet) {
+    yfacet_loc = NULL
+    xfacet_loc = 1L
+  } else {
+    yfacet_loc = 1L
+    xfacet_loc = 2L
+  }
+  if (NCOL(mf) < xfacet_loc) stop("formula should specify at least one variable on the right-hand side")
+  yfacet = if (no_yfacet) NULL else mf[, yfacet_loc]
+  xfacet = mf[, xfacet_loc:NCOL(mf)]
+  
+  ## return object
+  xfacet = interaction(xfacet, sep = ":")
+  if (no_yfacet) {
+    ret = xfacet
+  } else {
+    # yfacet = interaction(yfacet, sep = ":")
+    ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
+    ret = interaction(xfacet, yfacet, sep = "~")
+    attr(ret, "facet_grid") = TRUE
+    attr(ret, "facet_nrow") = length(unique(yfacet))
+  }
+  
+  return(ret)
+}

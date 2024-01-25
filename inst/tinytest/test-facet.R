@@ -118,7 +118,8 @@ if (getRversion()  <= "4.3.2") {
       mtcars,
       plot2(
         x = wt, y = mpg,
-        by = am, facet = cyl,
+        by = am,
+        facet = cyl, facet.args = list(bg = "grey90"),
         pch = 19, palette = "dark2",
         grid = TRUE, frame = FALSE,
         main = "Car efficiency",
@@ -323,11 +324,11 @@ if (getRversion()  <= "4.3.2") {
       plot2(
         x = mpg,
         type = "density",
-        by = am, facet = cyl,
+        by = am,
+        facet = cyl, facet.args = list(bg = "grey90"),
         fill = "by", palette = "dark2",
         grid = TRUE, frame = FALSE,
         main = "Car efficiency",
-        # xlab = "Weight", ylab = "MPG",
         legend = list(title = "Transmission"),
         sub = "Notes: Broken out by cylinder and transmission"
       )
@@ -335,6 +336,96 @@ if (getRversion()  <= "4.3.2") {
   }
   expect_snapshot_plot(f, label = "facet_density_fancy")
 }
+
+
+#
+## facet (one-sided) formula versions
+
+f = function() {
+  plot2(
+    mpg ~ wt, data = mtcars,
+    facet = ~cyl
+  )
+}
+expect_snapshot_plot(f, label = "facet_formula")
+
+f = function() {
+  plot2(
+    mpg ~ wt, data = mtcars,
+    facet = ~am
+  )
+}
+expect_snapshot_plot(f, label = "facet_1x2_formula")
+
+f = function() {
+  plot2(
+    mpg ~ wt, data = mtcars,
+    facet = ~am,
+    facet.args = list(ncol = 1)
+  )
+}
+expect_snapshot_plot(f, label = "facet_2x1_formula")
+
+f = function() {
+  plot2(
+    mpg ~ wt, data = mtcars,
+    facet = ~am:vs
+  )
+}
+expect_snapshot_plot(f, label = "facet_2x2_formula")
+
+## Skip failing test in R devel due to some minor esoteric difference coming up 
+## in R 4.4.0. Can revert once it reaches release for local testing.
+if (getRversion()  <= "4.3.2") {
+  f = function() {
+    plot2(
+      ~ mpg | am, mtcars,
+      type = "density",
+      facet = ~cyl,
+      fill = "by", palette = "dark2",
+      grid = TRUE, frame = FALSE,
+      main = "Car efficiency",
+      legend = list(title = "Transmission"),
+      sub = "Notes: Broken out by cylinder and transmission"
+    )
+  }
+  expect_snapshot_plot(f, label = "facet_density_fancy_formula")
+}
+
+
+#
+## facet grid (two-sided formula)
+
+f = function() {
+  plot2(
+    mpg ~ wt, data = mtcars,
+    facet = am ~ cyl,
+    main = "facet grid",
+    sub = "Notes: Transmission (rows) vs Cylinders (cols)"
+  )
+}
+expect_snapshot_plot(f, label = "facet_grid")
+
+
+## Skip failing test in R devel due to some minor esoteric difference coming up 
+## in R 4.4.0. Can revert once it reaches release for local testing.
+if (getRversion()  <= "4.3.2") {
+  f = function() {
+    plot2(
+      mpg ~ wt | factor(gear), data = mtcars,
+      facet = am ~ cyl,
+      facet.args = list(bg = "grey90"),
+      pch  = 19, palette = "classic",
+      legend = list(title = "Gears"),
+      main = "facet grid (fancy)",
+      sub = "Notes: Transmission (rows) vs Cylinders (cols)",
+      grid = TRUE, frame = FALSE,
+      xlim = c(1,6), ylim = c(10,35)
+    )
+  }
+  expect_snapshot_plot(f, label = "facet_grid_fancy")
+}
+
 
 
 #

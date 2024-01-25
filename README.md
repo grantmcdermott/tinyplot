@@ -120,16 +120,13 @@ plot2(
 # Facet plots are supported too (combined with "by" grouping, or on their own)
 
 iris2 = transform(iris, Sepals = ifelse(Sepal.Length>6, "Long", "Short"))
-with(
-  iris2,
-  plot2(
-    x = Petal.Length, y = Sepal.Length,
-    by = Sepals,
-    facet = Species,
-    palette = "classic",
-    main = "Faceted Sepals!",
-    grid = TRUE, frame = FALSE
-    )
+plot2(
+  Sepal.Length ~ Petal.Length | Sepals, data = iris2,
+  facet = ~Species,
+  facet.args = list(bg = "grey90"),
+  palette = "classic",
+  main = "Faceted Sepals!",
+  grid = TRUE, frame = FALSE
 )
 ```
 

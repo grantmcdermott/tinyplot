@@ -98,38 +98,65 @@ plot2(x, ...)
 }
 \arguments{
 \item{x, y}{the x and y arguments provide the x and y coordinates for the
-plot. Any reasonable way of defining the coordinates is acceptable. See
-the function xy.coords for details. If supplied separately, they must be
-of the same length.}
+plot. Any reasonable way of defining the coordinates is acceptable; most
+likely the names of existing vectors or columns of data frames. See the
+'Examples' section below, or the function
+\code{\link[grDevices]{xy.coords}} for details. If supplied separately, \code{x}
+and \code{y} must be of the same length.}
 
-\item{...}{other \code{graphical} parameters (see \code{par} and also the "Details"
-section of \code{plot}).}
+\item{...}{other graphical parameters. See \code{\link[graphics]{par}} or
+the "Details" section of \code{\link[graphics]{plot}}.}
 
 \item{by}{grouping variable(s). By default, groups will be represented
 through colouring of the plot elements. However, this can be turned off
 and other plot parameters (e.g., line types) can also take on grouping
 behaviour via the special "by" keyword. See Examples.}
 
-\item{facet}{the faceting variable that you want arrange separate plot
-windows by. To facet by multiple variables, simply interact them, e.g.
-with \code{interaction(facet_var1, facet_var2)}. Also accepts the special "by"
-convenience keyword, in which case facets will match the grouping
-variable(s) above.}
+\item{facet}{the faceting variable(s) that you want arrange separate plot
+windows by. Can be specified in various ways:
+\itemize{
+\item In "atomic" form, e.g. \code{facet = fvar}. To facet by multiple variables in
+atomic form, simply interact them, e.g.
+\code{interaction(fvar1, fvar2)} or \code{factor(fvar1):factor(fvar2)}.
+\item As a one-sided formula, e.g. \code{facet = ~fvar}. Multiple variables can be
+specified in the formula RHS, e.g. \code{~fvar1 + fvar2} or \code{~fvar1:fvar2}. Note
+that these multi-variable cases are \emph{all} treated equivalently and
+converted to \code{interaction(fvar1, fvar2, ...)} internally. (No distinction
+is made between different types of binary operators, for example, and so
+\code{f1+f2} is treated the same as \code{f1:f2}, is treated the same as \code{f1*f2},
+etc.)
+\item As a two-side formula, e.g. \code{facet = fvar1 ~ fvar2}. In this case, the
+facet windows are arranged in a fixed grid layout, with the formula LHS
+defining the facet rows and the RHS defining the facet columns. At present
+only single variables on each side of the formula are well supported. (We
+don't recommend trying to use multiple variables on either the LHS or RHS
+of the two-sided formula case.)
+\item As a special \code{"by"} convenience keyword, in which case facets will match
+the grouping variable(s) passed to \code{by} above.
+}}
 
 \item{facet.args}{an optional list of arguments for controlling faceting
-behaviour. (Ignored if \code{facet} is NULL.) Currently only the following are
-supported:
+behaviour. (Ignored if \code{facet} is NULL.) Supported arguments are as
+follows:
 \itemize{
 \item \code{nrow}, \code{ncol} for overriding the default "square" facet window
-arrangement. Only one of these should be specified; if not then the former
-will supersede the latter.
+arrangement. Only one of these should be specified, but \code{nrow} will take
+precedence if both are specified together. Ignored if a two-sided formula
+is passed to the main \code{facet} argument, since the layout is arranged in a
+fixed grid.
 \item \code{fmar} a vector of form \code{c(b,l,t,r)} for controlling the base margin
 between facets in terms of lines. Defaults to the value of \code{par2("fmar")},
 which should be \code{c(1,1,1,1)}, i.e. a single line of padding around each
 individual facet, assuming it hasn't been overridden by the user as part
-their global \code{par2} settings. Note some automatic adjustments are made for
-certain layouts, and depending on whether the plot is framed or not, to
-reduce excess whitespace. See \code{\link[plot2]{par2}} for more details.
+their global \code{\link[plot2]{par2}} settings. Note some automatic
+adjustments are made for certain layouts, and depending on whether the plot
+is framed or not, to reduce excess whitespace. See
+\code{\link[plot2]{par2}} for more details.
+\item \code{cex}, \code{font}, \code{col}, \code{bg}, \code{border} for adjusting the facet title text
+and background. Default values for these arguments are inherited from
+\code{\link[plot2]{par2}} (where they take a "facet." prefix, e.g.
+\code{par2("facet.cex")}). The latter function can also be used to set these
+features globally for all \code{plot2} plots.
 }}
 
 \item{data}{a data.frame (or list) from which the variables in formula
@@ -299,8 +326,8 @@ should not be specified in the same call.}
 when extracting the data from \code{formula} and \code{data}.}
 }
 \description{
-Extends base R's
-default plotting function, particularly as it applies to scatter and
+Extends base R's graphics system,
+particularly as it applies to scatter and
 line plots with grouped data. For example, \code{plot2} makes it easy to plot
 different categories of a dataset in a single function call and highlight
 these categories (groups) using modern colour palettes. Coincident with
@@ -308,7 +335,8 @@ this grouping support, \code{plot2} also produces automatic legends with scope
 for further customization. While the package also offers several other
 enhancements, it tries as far as possible to be a drop-in replacement
 for the equivalent base plot function. Users should generally be able to
-swap a valid \code{plot} call with \code{plot2} without any changes to the output.
+swap a valid \code{\link[graphics]{plot}} call with \code{plot2} without any
+changes to the output.
 }
 \examples{
 
@@ -328,17 +356,23 @@ par(op)
 
 # Unlike vanilla plot, however, plot2 allows you to characterize groups 
 # (using either the `by` argument or equivalent `|` formula syntax).
-# Notice that we also get an automatic legend.
 
-plot2(airquality$Day, airquality$Temp, by = airquality$Month)
-plot2(Temp ~ Day | Month, airquality)
+aq = transform(
+  airquality,
+  Month = factor(Month, labels = month.abb[unique(Month)])
+)
+
+with(aq, plot2(Day, Temp, by = Month)) ## atomic method
+plot2(Temp ~ Day | Month, data = aq)   ## formula method
+
+# Notice that we also get an automatic legend.
 
 # Use standard base plotting arguments to adjust features of your plot.
 # For example, change `pch` (plot character) to get filled points.
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   pch = 16
 )
 
@@ -347,7 +381,7 @@ plot2(
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "l"
 )
 
@@ -357,55 +391,56 @@ plot2(
 
 plot2(
   ~ Temp | Month,
-  data = airquality,
+  data = aq,
   type = "density",
   fill = "by"
 )
 
 # Facet plots are supported too. Facets can be drawn on their own...
 
-with(
-  airquality,
-  plot2(
-  x = Day, y = Temp,
-  facet = factor(Month, labels = month.abb[unique(Month)]),
+plot2(
+  Temp ~ Day,
+  facet = ~ Month, 
+  data = aq,
   type = "area",
   main = "Temperatures by month"
-  )
 )
 
 # ... or combined/contrasted with the by (colour) grouping.
 
-airquality2 = transform(airquality, Summer = Month \%in\% 6:8)
-with(
-  airquality2,
-  plot2(
-  x = Day, y = Temp,
-  by = Summer,
-  facet = factor(Month, labels = month.abb[unique(Month)]),
+aq = transform(aq, Summer = Month \%in\% c("Jun", "Jul", "Aug"))
+plot2(
+  Temp ~ Day | Summer,
+  facet = ~ Month, 
+  data = aq,
   type = "area",
   palette = "dark2",
   main = "Temperatures by month and season"
-  )
 )
 
 # Users can override the default square window arrangement by passing `nrow`
 # or `ncol` to the helper facet.args argument. Note that we can also reduce
 # axis label repetition across facets by turning the plot frame off.
 
-airquality2 = transform(airquality, Summer = Month \%in\% 6:8)
-with(
-  airquality2,
-  plot2(
-  x = Day, y = Temp,
-  by = Summer,
-  facet = factor(Month, labels = month.abb[unique(Month)]),
-  facet.args = list(nrow = 1),
-  frame = FALSE,
+plot2(
+  Temp ~ Day | Summer,
+  facet = ~ Month, facet.args = list(nrow = 1),
+  data = aq,
   type = "area",
   palette = "dark2",
+  frame = FALSE,
   main = "Temperatures by month and season"
-  )
+)
+
+# Use a two-sided formula to arrange the facet windows in a fixed grid.
+# LHS -> facet rows; RHS -> facet columns
+
+aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
+aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+plot2(
+ Temp ~ Day,
+ facet = windy ~ hot,
+ data = aq
 )
 
 # The (automatic) legend position and look can be customized using
@@ -415,7 +450,7 @@ with(
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "l",
   legend = legend("bottom!", title = "Month of the year", bty = "o")
 )
@@ -428,7 +463,7 @@ plot2(
 
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "l",
   palette = "tableau"
 )
@@ -439,7 +474,7 @@ plot2(
 par(family = "HersheySans", las = 1)
 plot2(
   Temp ~ Day | Month,
-  data = airquality,
+  data = aq,
   type = "b", pch = 16,
   palette = palette.colors(palette = "tableau", alpha = 0.5),
   main = "Daily temperatures by month",

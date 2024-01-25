@@ -69,8 +69,9 @@
 <text transform='translate(47.64,263.64) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>20</text>
 <text transform='translate(47.64,193.82) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(47.64,124.00) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>30</text>
+<rect x='59.04' y='43.20' width='113.52' height='15.84' style='stroke-width: 0.75; stroke: none;' />
+<text x='115.80' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
 <polygon points='59.04,430.56 172.56,430.56 172.56,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
-<text x='115.80' y='56.19' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
 </g>
 <defs>
   <clipPath id='cpMTk3LjA0fDMxMC41NXw1OS4wNHw0MzAuNTY='>
@@ -100,8 +101,9 @@
 <text transform='translate(185.63,263.64) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>20</text>
 <text transform='translate(185.63,193.82) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(185.63,124.00) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>30</text>
+<rect x='197.04' y='43.20' width='113.52' height='15.84' style='stroke-width: 0.75; stroke: none;' />
+<text x='253.79' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
 <polygon points='197.04,430.56 310.55,430.56 310.55,59.04 197.04,59.04 ' style='stroke-width: 0.75;' />
-<text x='253.79' y='56.19' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
 </g>
 <defs>
   <clipPath id='cpMzM1LjAzfDQ0OC41NXw1OS4wNHw0MzAuNTY='>
@@ -131,8 +133,9 @@
 <text transform='translate(323.63,263.64) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>20</text>
 <text transform='translate(323.63,193.82) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(323.63,124.00) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.80px' lengthAdjust='spacingAndGlyphs'>30</text>
+<rect x='335.03' y='43.20' width='113.52' height='15.84' style='stroke-width: 0.75; stroke: none;' />
+<text x='391.79' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
 <polygon points='335.03,430.56 448.55,430.56 448.55,59.04 335.03,59.04 ' style='stroke-width: 0.75;' />
-<text x='391.79' y='56.19' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
 </g>
 <g clip-path='url(#cpNTkuMDR8MTcyLjU2fDU5LjA0fDQzMC41Ng==)'>
 <polygon points='63.24,146.51 65.99,151.38 71.90,162.59 74.59,168.16 80.09,181.04 81.71,185.28 84.93,194.53 88.83,207.04 97.29,238.22 107.24,278.57 108.31,283.06 108.31,200.73 107.24,198.91 97.29,180.91 88.83,162.41 84.93,152.06 81.71,142.38 80.09,137.16 74.59,117.71 71.90,107.51 65.99,84.02 63.24,72.80 ' style='stroke-width: 0.75; stroke: none; fill: #000000; fill-opacity: 0.20;' />

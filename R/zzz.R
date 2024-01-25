@@ -9,6 +9,13 @@
   # Facet margin, i.e. gap between the individual facet windows
   .par2$fmar <- if(is.null(getOption("plot2_fmar"))) c(1,1,1,1) else as.numeric(getOption("plot2_fmar"))
   
+  # Other facet options
+  .par2$facet.cex <- if(is.null(getOption("plot2_facet.cex"))) 1 else as.numeric(getOption("plot2_facet.cex"))
+  .par2$facet.font <- if(is.null(getOption("plot2_facet.font"))) NULL else as.numeric(getOption("plot2_facet.font"))
+  .par2$facet.col <- if(is.null(getOption("plot2_facet.col"))) NULL else getOption("plot2_facet.col")
+  .par2$facet.bg <- if(is.null(getOption("plot2_facet.bg"))) NULL else getOption("plot2_facet.bg")
+  .par2$facet.border <- if(is.null(getOption("plot2_facet.border"))) NA else getOption("plot2_facet.border")
+  
   # .par2$grid <- if(is.null(getOption("plot2_grid"))) FALSE else as.logical(getOption("plot2_grid"))
   
   .par2$last_facet_par <- if(is.null(getOption("plot2_last_facet_par"))) NULL else getOption("plot2_last_facet_par")

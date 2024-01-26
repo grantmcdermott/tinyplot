@@ -1,5 +1,5 @@
 * [Home](/)
-* [Get Started](vignettes/get_started.md)
+* [Tutorial](vignettes/intro_tutorial.md)
 * Functions: $ALTDOC_MAN_BLOCK
 * [News]($ALTDOC_NEWS)
 * [Changelog]($ALTDOC_CHANGELOG)

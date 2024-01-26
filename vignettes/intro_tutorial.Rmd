@@ -1,4 +1,4 @@
-# Get Started
+# Tutorial
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -12,19 +12,20 @@ knitr::opts_chunk$set(
 )
 ```
 
+The goal of this intro tutorial is to give you a sense of the main features and
+syntax of **plot2**, a lightweight extension of the base R graphics system. We
+don't try to cover everything, but you should come away with a good sense of how
+the package works and how it can integrate with your own projects.
+
 ## Preliminaries
 
-Start by loading the package.
-
-```{r}
-library(plot2)
-```
-
-For most of the examples that follow, we'll use a slightly modified version of
-the `airquality` dataset that comes bundled with base R. Let's go ahead and
-create it now.
+Start by loading the package. For this the examples in this tutorial, we'll be
+using a slightly modified version of the `airquality` dataset that comes bundled
+with base R. So we'll go ahead and create it now too.
 
 ```{r aq}
+library(plot2)
+
 aq = airquality
 aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
 ```

@@ -2,7 +2,7 @@
 
 # Calculate placement of legend and and draw it
 
-[**Source code**](https://github.com/grantmcdermott/plot2/tree/main/R/#L)
+[**Source code**](https://github.com/grantmcdermott/plot2/tree/324f47e33f375443379c8948bc5870ce9f6143b5/R/#L)
 
 ## Description
 

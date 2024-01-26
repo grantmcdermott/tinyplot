@@ -65,30 +65,32 @@ replacement for the equivalent base plot function. Users should
 generally be able to swap a valid `plot()` call with `plot2()` without
 any changes to the expected output.
 
-## Examples
+## Quickstart
 
-We provide a “[Get
-Started](https://grantmcdermott.com/plot2/index.html#/vignettes/get_started)”
-tutorial with numerous examples on the package homepage. But here are
-some quickstart examples of the package in action.
+The **plot2** website includes a detailed [introductory
+tutorial](https://grantmcdermott.com/plot2/index.html#/vignettes/intro_tutorial),
+with numerous examples. But here are some quickstart examples of the
+package in action.
 
 ``` r
 library(plot2)
-
-# Grouped scatterplot with automatic legend
-
-# Like plot(), we can use either an atomic or formula interface...
-
-# with(iris, plot2(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic
-plot2(Sepal.Length ~ Petal.Length | Species, data = iris) # formula (same)
 ```
 
-<img src="man/figures/README-quickstart-1.png" style="width:70.0%" />
+A canonical use-case for **plot2** is producing grouped scatterplots
+with automatic legends. Note that, like vanilla `plot()`, we can use
+either an atomic or formula interface.
 
 ``` r
- 
-# Same plot with a few extra aesthetic tweaks
+# with(iris, plot2(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic
+plot2(Sepal.Length ~ Petal.Length | Species, data = iris)             # formula
+```
 
+<img src="man/figures/README-quickstart2-1.png" style="width:70.0%" />
+
+**plot2** also makes it easy to improve the visual presentation of your
+plots. Here’s the same plot with a few extra aesthetic tweaks.
+
+``` r
 plot2(
   Sepal.Length ~ Petal.Length | Species, 
   data = iris,
@@ -97,12 +99,13 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-quickstart-2.png" style="width:70.0%" />
+<img src="man/figures/README-quickstart3-1.png" style="width:70.0%" />
+
+Want something other than a scatterplot? Just specify a different plot
+type. Here’s a grouped density plot with automatic legend (and some
+aesthetic tweaks)
 
 ``` r
-
-# Grouped density plot with automatic legend (and some aesthetic tweaks)
-
 plot2(
   ~ Petal.Length | Species,
   data = iris,
@@ -113,12 +116,12 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-quickstart-3.png" style="width:70.0%" />
+<img src="man/figures/README-quickstart4-1.png" style="width:70.0%" />
+
+Beyond automatic legends and colour styling, the package also supports
+facet plots (combined with “by” grouping, or on their own).
 
 ``` r
-
-# Facet plots are supported too (combined with "by" grouping, or on their own)
-
 iris2 = transform(iris, Sepals = ifelse(Sepal.Length>6, "Long", "Short"))
 plot2(
   Sepal.Length ~ Petal.Length | Sepals, data = iris2,
@@ -130,4 +133,4 @@ plot2(
 )
 ```
 
-<img src="man/figures/README-quickstart-4.png" style="width:70.0%" />
+<img src="man/figures/README-quickstart5-1.png" style="width:70.0%" />

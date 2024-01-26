@@ -1141,6 +1141,8 @@ plot2.default = function(
 plot2.formula = function(
     x = NULL,
     data = parent.frame(),
+    facet = NULL,
+    facet.args = NULL,
     type = "p",
     xlim = NULL,
     ylim = NULL,
@@ -1199,7 +1201,54 @@ plot2.formula = function(
   m$formula = formula
   ## need stats:: for non-standard evaluation
   m[[1L]] = quote(stats::model.frame)
+  # catch for facets (need to na.omit etc. at same level)
+  has_facet_fml = !is.null(facet) && inherits(facet, "formula")
+  if (has_facet_fml) {
+    facet_fml = facet
+    facet_fml[[1]] = as.name("+")
+    if (no_y) {
+      m$formula = eval(substitute(
+        update(formula,  ~  . + facet_fml), list(facet_fml = facet_fml)
+      ))
+    } else {
+      m$formula = eval(substitute(
+        update(formula, .  ~ . + facet_fml), list(facet_fml = facet_fml)
+      ))
+    }
+  }
   mf = eval.parent(m)
+  
+  if (has_facet_fml) {
+    facet_n_cols = length(all.vars(facet_fml))
+    fmf = mf[, tail(seq_along(mf), facet_n_cols), drop = FALSE]
+    mf = mf[, head(seq_along(mf), -facet_n_cols), drop = FALSE]
+    no_yfacet = length(facet) == 2L
+    facet_fml_rhs = if (no_yfacet) 2L else 3L
+    ## extract variables: x, y (if any)
+    if (no_yfacet) {
+      yfacet_loc = NULL
+      xfacet_loc = 1L
+    } else {
+      yfacet_loc = 1L
+      xfacet_loc = 2L
+    }
+    if (NCOL(fmf) < xfacet_loc) stop("formula should specify at least one variable on the right-hand side")
+    yfacet = if (no_yfacet) NULL else fmf[, yfacet_loc]
+    xfacet = fmf[, xfacet_loc:NCOL(fmf)]
+    
+    ## return object
+    xfacet = interaction(xfacet, sep = ":")
+    if (no_yfacet) {
+      facet = xfacet
+    } else {
+      # yfacet = interaction(yfacet, sep = ":")
+      ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
+      facet = interaction(xfacet, yfacet, sep = "~")
+      attr(facet, "facet_grid") = TRUE
+      attr(facet, "facet_nrow") = length(unique(yfacet))
+    }
+    
+  }
   
   ## extract variables: x, y (if any), by (if any)
   if (no_y) {
@@ -1237,6 +1286,7 @@ plot2.formula = function(
   
   plot2.default(
     x = x, y = y, by = by,
+    facet = facet, facet.args = facet.args,
     data = data,
     type = type,
     xlim = xlim,
@@ -1269,6 +1319,7 @@ plot2.density = function(
     x = NULL,
     by = NULL,
     facet = NULL,
+    facet.args = NULL,
     type = c("l", "area"),
     xlim = NULL,
     ylim = NULL,
@@ -1294,6 +1345,12 @@ plot2.density = function(
   type = match.arg(type)
   ## override if bg = "by"
   if (!is.null(bg) || !is.null(fill)) type = "area"
+  
+  # catch for facet_grid
+  if (!is.null(facet)) {
+    facet_attributes = attributes(facet)
+    # facet_grid = attr(facet, "facet_grid")
+  }
 
   if (inherits(x, "density")) {
     object = x
@@ -1303,6 +1360,12 @@ plot2.density = function(
   } else {
     ## An internal catch for non-density objects that were forcibly
     ## passed to plot2.density (e.g., via a one-side formula)
+    if (anyNA(x)) {
+      x = na.omit(x)
+      if (!is.null(by)) by = by[-attr(x, "na.action")]
+      if (!is.null(facet)) facet = facet[-attr(x, "na.action")]
+      x = as.numeric(x)
+    }
     object = stats::density(x)
     legend.args = list(...)[["legend.args"]]
   }
@@ -1313,6 +1376,12 @@ plot2.density = function(
     y = object$y
   } else {
     x = eval(str2lang(object$data.name), envir = parent.frame())
+    if (anyNA(x)) {
+      x = na.omit(x)
+      if (!is.null(by) && length(by) != length(x)) by = by[-attr(x, "na.action")]
+      if (!is.null(facet) && length(facet) != length(x)) facet = facet[-attr(x, "na.action")]
+      x = as.numeric(x)
+    }
     if (is.null(facet) || identical(by, facet)) {
       split_x = split(x, f = by) 
     } else if (is.null(by)) {
@@ -1341,8 +1410,20 @@ plot2.density = function(
     }
     by_names = tryCatch(as(by_names, class(by)), error = function(e) if (inherits(by, "factor")) as.factor(by_names) else by_names)
     # need to coerce facet variables to factors for faceting to work properly later on
-    facet_names = tryCatch(as(facet_names, class(facet)), error = function(e) facet_names)
-    facet_names = tryCatch(as.factor(facet_names), error = function(e) facet_names)
+    # if we originally passed a factor, try to preserve this order for grid arrangement
+    if (inherits(facet, "factor")) {
+      orig_len = length(levels(facet))
+      new_len = length(facet_names)
+      if (orig_len == new_len) {
+        facet_names = levels(facet)
+      } else {
+        ## need to recycle names if nested in multiple by splits
+        facet_names = rep(levels(facet), each = new_len/orig_len)
+      }
+    } else {
+      facet_names = tryCatch(as(facet_names, class(facet)), error = function(e) facet_names)
+      facet_names = tryCatch(as.factor(facet_names), error = function(e) facet_names)
+    }
     
     split_object = lapply(seq_along(split_object), function(ii) {
       lst = list(
@@ -1397,8 +1478,18 @@ plot2.density = function(
   if (is.null(xlab)) xlab = paste0("N = ", object$n, "   Bandwidth = ", sprintf("%.4g", object$bw))
   if (is.null(main)) main = paste0(paste(object$call, collapse = "(x = "), ")")
 
+  # if (!is.null(facet)) attr(facet, "facet_grid") = facet_grid
+  if (!is.null(facet)) {
+    if (!is.null(facet_attributes[["levels"]])) {
+      facet = factor(facet, levels = facet_attributes[["levels"]])
+    } else {
+      facet = factor(facet)
+    }
+    attr(facet, "facet_grid") = facet_attributes[["facet_grid"]]
+  }
+  
   plot2.default(
-    x = x, y = y, by = by, facet = facet,
+    x = x, y = y, by = by, facet = facet, facet.args = facet.args,
     type = type,
     xlim = xlim,
     ylim = ylim,

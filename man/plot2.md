@@ -63,6 +63,8 @@ plot2(
 plot2(
   x = NULL,
   data = parent.frame(),
+  facet = NULL,
+  facet.args = NULL,
   type = "p",
   xlim = NULL,
   ylim = NULL,
@@ -91,6 +93,7 @@ plot2(
   x = NULL,
   by = NULL,
   facet = NULL,
+  facet.args = NULL,
   type = c("l", "area"),
   xlim = NULL,
   ylim = NULL,

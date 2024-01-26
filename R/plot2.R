@@ -1201,7 +1201,8 @@ plot2.formula = function(
   m$formula = formula
   ## need stats:: for non-standard evaluation
   m[[1L]] = quote(stats::model.frame)
-  # catch for facets (need to na.omit etc. at same level)
+  # catch for facets (need to ensure that na.omit, na.action, etc. are at done
+  # at the same level to avoid mismatches if there any missing variables)
   has_facet_fml = !is.null(facet) && inherits(facet, "formula")
   if (has_facet_fml) {
     facet_fml = facet
@@ -1218,13 +1219,17 @@ plot2.formula = function(
   }
   mf = eval.parent(m)
   
+  ## We need to do some extra work if we included facet variables in the model
+  ## frame above
   if (has_facet_fml) {
+    # separate the facet columns from the rest of the model frame
     facet_n_cols = length(all.vars(facet_fml))
     fmf = mf[, tail(seq_along(mf), facet_n_cols), drop = FALSE]
     mf = mf[, head(seq_along(mf), -facet_n_cols), drop = FALSE]
+    # now do some prep work on the facets themselves for nicer plotting (e.g,
+    # grid arrangement for two-sided facet formula)
     no_yfacet = length(facet) == 2L
     facet_fml_rhs = if (no_yfacet) 2L else 3L
-    ## extract variables: x, y (if any)
     if (no_yfacet) {
       yfacet_loc = NULL
       xfacet_loc = 1L

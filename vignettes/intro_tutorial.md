@@ -1,6 +1,5 @@
-
-
 # Tutorial
+
 
 The goal of this intro tutorial is to give you a sense of the main
 features and syntax of **plot2**, a lightweight extension of the base R

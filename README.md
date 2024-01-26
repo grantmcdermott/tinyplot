@@ -13,10 +13,10 @@ badge](https://grantmcdermott.r-universe.dev/badges/plot2)](https://grantmcdermo
 [![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/plot2/index.html)
 <!-- badges: end -->
 
+## What
+
 A lightweight extension of the base R graphics system, with support for
 automatic grouping, legends, facets and various other enhancements.
-
-## Installation
 
 **plot2** is not yet on CRAN, but can be installed from R-universe.
 
@@ -24,25 +24,25 @@ automatic grouping, legends, facets and various other enhancements.
 install.packages("plot2", repos = "https://grantmcdermott.r-universe.dev")
 ```
 
-Our goal is to submit to CRAN within the few months of 2024, once we
-have settled on some remaining design choices and features support. You
-can take a look at the [open
+Our goal is to submit to CRAN within the first few months of 2024, once
+we have settled on some remaining design choices and features support.
+You can take a look at the [open
 issues](https://github.com/grantmcdermott/plot2/issues) to see what’s
 currently under consideration. Please feel free to weigh on these if you
 have opinions. We want end users to have a say in determining the final
 product.
 
-## Motivation
+## Why
 
 R users are spoiled for choice when it comes to visualization
-frameworks. The options of course include **ggplot2** (arguably the most
-important graphics system of the last decade) and **lattice**, not to
-mention a bewildering array of extensions built around, on top of, and
-in between these amazing packages.
+frameworks. The options include **ggplot2** (arguably the most important
+graphics system of the last decade) and **lattice**, not to mention a
+bewildering array of extensions built around, on top of, and in between
+these amazing packages.
 
-It is perhaps not surprising, then, that the base R graphics system
-sometimes gets short shrift. This is unfortunate, because base R offers
-very powerful and flexible plotting facilities. Just type
+As a result, it is perhaps not surprising that the base R graphics
+system sometimes gets short shrift. This is unfortunate, because base R
+offers very powerful and flexible plotting facilities. Just type
 `demo(graphics)` or `demo(persp)` into your R console to get an idea.
 Or, take a look at
 [these](https://github.com/karoliskoncevicius/tutorial_r_introduction/blob/main/baseplotting.md)
@@ -55,17 +55,17 @@ loop, fiddling with your plot regions, and then generating the legend
 manually.
 
 The **plot2** package aims to remove this overhead. It provides a
-lightweight extension of the base R plot system with various convenience
-features, particularly for creating (2D) scatter and line plots using
-grouped data. For example, the core `plot2()` function makes it easy to
-plot different categories of a dataset in a single function call and
+lightweight (zero dependency) extension of the base R graphics system
+with various convenience features, particularly for representing groups
+with your data. For example, the core `plot2()` function makes it easy
+to plot different categories of a dataset in a single function call and
 highlight these categories (groups) using modern colour palettes.
 Coincident with this grouping support, `plot2()` also produces automatic
 legends with scope for further customization. While the package offers
-several other enhancements, it tries as far as possible to be a drop-in
-replacement for the equivalent base plot function. Users should
-generally be able to swap a valid `plot()` call with `plot2()` without
-any changes to the expected output.
+several other enhancements like facets, it tries as far as possible to
+be a drop-in replacement for the equivalent base plot function. Users
+should generally be able to swap a valid `plot()` call with `plot2()`
+without any changes to the expected output.
 
 ## Quickstart
 
@@ -78,9 +78,7 @@ package in action.
 library(plot2)
 ```
 
-A canonical use-case for **plot2** is producing grouped scatterplots
-with automatic legends. Note that, like vanilla `plot()`, we can use
-either an atomic or formula interface.
+Grouped scatterplot with automatic legend:
 
 ``` r
 # with(iris, plot2(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic
@@ -89,8 +87,7 @@ plot2(Sepal.Length ~ Petal.Length | Species, data = iris)             # formula
 
 <img src="man/figures/README-quickstart2-1.png" style="width:70.0%" />
 
-**plot2** also makes it easy to improve the visual presentation of your
-plots. Here’s the same plot with a few extra aesthetic tweaks.
+Same plot with a few extra aesthetic tweaks:
 
 ``` r
 plot2(
@@ -103,9 +100,7 @@ plot2(
 
 <img src="man/figures/README-quickstart3-1.png" style="width:70.0%" />
 
-Want something other than a scatterplot? Just specify a different plot
-type. Here’s a grouped density plot with automatic legend (and some
-aesthetic tweaks)
+Grouped grouped density plot with automatic legend:
 
 ``` r
 plot2(
@@ -120,8 +115,7 @@ plot2(
 
 <img src="man/figures/README-quickstart4-1.png" style="width:70.0%" />
 
-Beyond automatic legends and colour styling, the package also supports
-facet plots (combined with “by” grouping, or on their own).
+Grouped scatterplot, combined with facet layout:
 
 ``` r
 iris2 = transform(iris, Sepals = ifelse(Sepal.Length>6, "Long", "Short"))
@@ -136,3 +130,7 @@ plot2(
 ```
 
 <img src="man/figures/README-quickstart5-1.png" style="width:70.0%" />
+
+Head over to the [intro
+tutorial](https://grantmcdermott.com/plot2/index.html#/vignettes/intro_tutorial)
+for more examples, including range plots and customization.

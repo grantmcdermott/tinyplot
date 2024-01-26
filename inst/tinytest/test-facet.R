@@ -426,6 +426,10 @@ if (getRversion()  <= "4.3.2") {
   expect_snapshot_plot(f, label = "facet_grid_fancy")
 }
 
+aq = airquality
+aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
+aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+
 f = function() {
   plot2(
     ~ Ozone, aq, 

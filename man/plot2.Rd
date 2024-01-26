@@ -48,6 +48,8 @@ plot2(x, ...)
 \method{plot2}{formula}(
   x = NULL,
   data = parent.frame(),
+  facet = NULL,
+  facet.args = NULL,
   type = "p",
   xlim = NULL,
   ylim = NULL,
@@ -75,6 +77,7 @@ plot2(x, ...)
   x = NULL,
   by = NULL,
   facet = NULL,
+  facet.args = NULL,
   type = c("l", "area"),
   xlim = NULL,
   ylim = NULL,

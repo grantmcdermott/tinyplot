@@ -198,8 +198,9 @@
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
 #' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
-#' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext
-#' @importFrom utils modifyList tail
+#' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext text rect
+#' @importFrom utils modifyList head tail
+#' @importFrom stats na.omit
 #' 
 #' @examples
 #' 

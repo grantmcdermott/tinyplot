@@ -40,6 +40,8 @@
 #' @export
 par2 = function(...) {
   
+  facet.col = facet.bg = facet.border = NULL
+  
   opts = list(...)
   par2_old = as.list(.par2)
   nam = names(opts)

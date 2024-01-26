@@ -426,7 +426,25 @@ if (getRversion()  <= "4.3.2") {
   expect_snapshot_plot(f, label = "facet_grid_fancy")
 }
 
+f = function() {
+  plot2(
+    ~ Ozone, aq, 
+    type = "density",
+    facet = ~hot:windy, 
+    main = "Ozone pollution is worse on hot, calm days"
+  )
+}
+expect_snapshot_plot(f, label = "facet_density_formula")
 
+f = function() {
+  plot2(
+    ~ Ozone, aq, 
+    type = "density",
+    facet = windy ~ hot, 
+    main = "Ozone pollution is worse on hot, calm days"
+  )
+}
+expect_snapshot_plot(f, label = "facet_density_grid")
 
 #
 # restore original par settings

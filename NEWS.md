@@ -1,6 +1,6 @@
 # News
 
-##  0.0.3.919 (development version)
+##  0.0.4
 
 Website:
 

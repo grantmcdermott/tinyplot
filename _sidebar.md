@@ -1,7 +1,8 @@
 * [Home](/)
-* [Get Started](vignettes/get_started.md)
+* [Tutorial](vignettes/intro_tutorial.md)
 * Functions: 
-  - [`plot2`](man/plot2.md)
-  - [`draw_legend`](man/draw_legend.md)
+  - [draw_legend](man/draw_legend)
+  - [par2](man/par2)
+  - [plot2](man/plot2)
 * [News](NEWS.md)
 * [Citation](CITATION.md)

@@ -52,3 +52,6 @@ altdoc/freeze.rds
 
 # SCRATCH testing folder
 SCRATCH
+^_quarto$
+
+_quarto

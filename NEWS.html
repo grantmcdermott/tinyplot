@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -137,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./NEWS.html">News</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -151,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
@@ -198,7 +164,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./NEWS.html" class="sidebar-item-text sidebar-link">
+  <a href="./NEWS.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">News</span></a>
   </div>
 </li>
@@ -220,95 +186,87 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="plot2" class="level1">
-<h1>plot2</h1>
-<!-- badges: start -->
-<p><a href="https://CRAN.R-project.org/package=plot2"><img src="https://www.r-pkg.org/badges/version/plot2.png" class="img-fluid" alt="CRAN version"></a> <a href="https://grantmcdermott.r-universe.dev"><img src="https://grantmcdermott.r-universe.dev/badges/plot2.png" class="img-fluid" alt="R-universe status badge"></a> <a href="https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="R-CMD-check"></a> <a href="https://grantmcdermott.com/plot2/index.html"><img src="https://img.shields.io/badge/docs-homepage-blue.svg" class="img-fluid" alt="Docs"></a> <!-- badges: end --></p>
-<section id="what" class="level2">
-<h2 class="anchored" data-anchor-id="what">What</h2>
-<p>A lightweight extension of the base R graphics system, with support for automatic grouping, legends, facets and various other enhancements.</p>
-<p><strong>plot2</strong> is not yet on CRAN, but can be installed from R-universe.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"plot2"</span>, <span class="at">repos =</span> <span class="st">"https://grantmcdermott.r-universe.dev"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Our goal is to submit to CRAN within the first few months of 2024, once we have settled on some remaining design choices and features support. You can take a look at the <a href="https://github.com/grantmcdermott/plot2/issues">open issues</a> to see what’s currently under consideration. Please feel free to weigh on these if you have opinions. We want end users to have a say in determining the final product.</p>
+<section id="news" class="level1">
+<h1>News</h1>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section">0.0.4</h2>
+<p>Website:</p>
+<p>We now have a dedicated website! (<a href="https://github.com/grantmcdermott/plot2/issues/80">#80</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</p>
+<p>New features:</p>
+<ul>
+<li>Support for <code>cex</code> and <code>bg</code> (alias <code>fill</code>) arguments. The latter also permit the “by” convenience keyword similar to <code>lty</code> and <code>pch</code>. This is useful for plotting filled point characters (e.g., pch = 21), where you want a different colour for the fill and border. (<a href="https://github.com/grantmcdermott/plot2/issues/50">#50</a>, <a href="https://github.com/grantmcdermott/plot2/issues/75">#75</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support for filled density plots. (<a href="https://github.com/grantmcdermott/plot2/issues/58">#58</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>The new <code>add</code> argument allows new plot2 objects to be added to / on top of the existing plot window. (<a href="https://github.com/grantmcdermott/plot2/issues/60">#60</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support for one-sided formulas, e.g.&nbsp;<code>plot2(~ Temp | Month, airquality)</code>. (<a href="https://github.com/grantmcdermott/plot2/issues/62">#62</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Support for <code>plot2(x, type = "density")</code> as an alternative to <code>plot2(density(x))</code>. Works for both the atomic and one-sided formula methods. (<a href="https://github.com/grantmcdermott/plot2/issues/66">#66</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support for “area” type plots as a special case of ribbon plots. (<a href="https://github.com/grantmcdermott/plot2/issues/68">#68</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Partial matching for palette keywords. (<a href="https://github.com/grantmcdermott/plot2/issues/74">#74</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>plot2</code> gains a new <code>facet</code> argument for drawing faceted plots. Users can override the default square arrangement by passing the desired number of facet rows or columns to the companion <code>facet.args</code> helper function. Facets can be combined with <code>by</code> grouping, or used on their own. (<a href="https://github.com/grantmcdermott/plot2/issues/83">#83</a>, <a href="https://github.com/grantmcdermott/plot2/issues/91">#91</a>, <a href="https://github.com/grantmcdermott/plot2/issues/94">#94</a>, <a href="https://github.com/grantmcdermott/plot2/issues/96">#96</a>, <a href="https://github.com/grantmcdermott/plot2/issues/101">#101</a>, <a href="https://github.com/grantmcdermott/plot2/issues/103">#103</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Users can now control <code>plot2</code>-specific graphical parameters globally via the new <code>par2()</code> function (which is modeled on the base <code>par()</code> function). At the moment only a subset of global parameters, mostly related to legend and facet behaviour, are exposed in <code>par2</code>. But users can expect that more will be added in future releases. (<a href="https://github.com/grantmcdermott/plot2/issues/33">#33</a>, <a href="https://github.com/grantmcdermott/plot2/issues/94">#94</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Y-label correctly prints if a function was used for the atomic plot method, e.g.&nbsp;<code>plot2(rnorm(100)</code>. (<a href="https://github.com/grantmcdermott/plot2/issues/52">#52</a> etiennebacher)</li>
+<li>Ribbon plot types are now automatically ordered by the x variable. (<a href="https://github.com/grantmcdermott/plot2/issues/54">#54</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Interval plots like ribbons, errorbars, and pointranges are now correctly plotted even if a y variable isn’t specified. (<a href="https://github.com/grantmcdermott/plot2/issues/54">#54</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Correctly label date-time axes. (<a href="https://github.com/grantmcdermott/plot2/issues/77">#77</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Improved consistency of legend and facet margins across different plot types and placement, via the new <code>lmar</code> and <code>fmar</code> arguments of <code>par2()</code>. The default legend margin is <code>par2(lmar = c(1,0, 0.1)</code>, which means that there is 1.0 line of padding between the legend and the plot region (inside margin) and 0.1 line of padding between the legend and edge of the graphics device (outer margin). Similarly, the default facet padding is <code>par2(fmar = c(1,1,1,1)</code>, which means that there is a single line of padding around each side of the individual facets. Users can override these defaults by passing numeric vectors of the appropriate length to <code>par2()</code>. For example, <code>par2(lmar = c(0,0.1)</code> would shrink the inner gap between the legend and plot region to zero, but leave the small outer gap to outside of the graphics device unchanged. (<a href="https://github.com/grantmcdermott/plot2/issues/94">#94</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Fix bug where grid wasn’t auto-expanding correctly for area plots. (<a href="https://github.com/grantmcdermott/plot2/issues/92">#92</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
 </section>
-<section id="why" class="level2">
-<h2 class="anchored" data-anchor-id="why">Why</h2>
-<p>R users are spoiled for choice when it comes to visualization frameworks. The options include <strong>ggplot2</strong> (arguably the most important graphics system of the last decade) and <strong>lattice</strong>, not to mention a bewildering array of extensions built around, on top of, and in between these amazing packages.</p>
-<p>As a result, it is perhaps not surprising that the base R graphics system sometimes gets short shrift. This is unfortunate, because base R offers very powerful and flexible plotting facilities. Just type <code>demo(graphics)</code> or <code>demo(persp)</code> into your R console to get an idea. Or, take a look at <a href="https://github.com/karoliskoncevicius/tutorial_r_introduction/blob/main/baseplotting.md">these</a> <a href="https://quizzical-engelbart-d15a44.netlify.app/2021-2022_m2-data-2_visu-2_practice#1">two</a> excellent tutorials. The downside of this power and flexibility is that base R plotting can require a fair bit of manual tinkering. A case in point is plotting grouped data with an appropriate legend. Doing so with the generic <code>plot()</code> function can require several function calls or a loop, fiddling with your plot regions, and then generating the legend manually.</p>
-<p>The <strong>plot2</strong> package aims to remove this overhead. It provides a lightweight (zero dependency) extension of the base R graphics system with various convenience features, particularly for representing groups with your data. For example, the core <code>plot2()</code> function makes it easy to plot different categories of a dataset in a single function call and highlight these categories (groups) using modern colour palettes. Coincident with this grouping support, <code>plot2()</code> also produces automatic legends with scope for further customization. While the package offers several other enhancements like facets, it tries as far as possible to be a drop-in replacement for the equivalent base plot function. Users should generally be able to swap a valid <code>plot()</code> call with <code>plot2()</code> without any changes to the expected output.</p>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1">0.0.3</h2>
+<p>Breaking changes:</p>
+<ul>
+<li>Colour palettes are now controlled via a single <code>palette</code> argument that unifies the old <code>palette</code> and (deprecated) <code>palette.args</code> arguments. In addition, the default palette for small groups has been changed from “Okabe-Ito” to “R4”. (<a href="https://github.com/grantmcdermott/plot2/issues/31">#31</a> and <a href="https://github.com/grantmcdermott/plot2/issues/32">#32</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Legends are now controlled via a single <code>legend</code> argument that unifies the previous (deprecated) <code>legend.position</code> and <code>legend.args</code> arguments. This change also enables several enhancements over the old legend behaviour; see below. (<a href="https://github.com/grantmcdermott/plot2/issues/34">#34</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>Add support for the argument <code>log</code>. (<a href="https://github.com/grantmcdermott/plot2/issues/15">#15</a> <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a>)</li>
+<li>Add support for grouped density plots. (<a href="https://github.com/grantmcdermott/plot2/issues/18">#18</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Add support for (both grouped and non-grouped) “c”, “h”, “s”, and “S” types. (<a href="https://github.com/grantmcdermott/plot2/issues/26">#26</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Both the <code>pch</code> and <code>lty</code> arguments now accept a “by” convenience keyword for automatically adjusting plot characters and line types by groups. (<a href="https://github.com/grantmcdermott/plot2/issues/28">#28</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Add outside (“!”) placement support for remaining legend keywords, e.g. “top!”, “left!”, “topright!”, etc. Users also gain finer control over many other aspects of the legend via the new unified <code>legend</code> argument, including changing labels, turning of the legend title, and so on. (<a href="https://github.com/grantmcdermott/plot2/issues/34">#34</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Add support for <code>"pointrange"</code>, <code>"errobar"</code>, and <code>"ribbon"</code> plot types. (<a href="https://github.com/grantmcdermott/plot2/issues/35">#35</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>, <a href="https://github.com/grantmcdermott/plot2/issues/40">#40</a> and <a href="https://github.com/grantmcdermott/plot2/issues/46">#46</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support <code>grid = TRUE</code> as an alternative to <code>grid = grid()</code>. (<a href="https://github.com/grantmcdermott/plot2/issues/43">#43</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Setting <code>par(pch=X)</code> globally is now respected. (<a href="https://github.com/grantmcdermott/plot2/issues/20">#20</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Fix x-axis scale/index when y is NULL. (<a href="https://github.com/grantmcdermott/plot2/issues/24">#24</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Setting a global palette, e.g.&nbsp;<code>palette("ggplot2")</code> is now respected. (<a href="https://github.com/grantmcdermott/plot2/issues/44">#44</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
 </section>
-<section id="quickstart" class="level2">
-<h2 class="anchored" data-anchor-id="quickstart">Quickstart</h2>
-<p>The <strong>plot2</strong> website includes a detailed <a href="https://grantmcdermott.com/plot2/index.html#/vignettes/intro_tutorial">introductory tutorial</a>, with numerous examples. But here are some quickstart examples of the package in action.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Grouped scatterplot with automatic legend:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># with(iris, plot2(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris)             <span class="co"># formula</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="man/figures/README-quickstart2-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Same plot with a few extra aesthetic tweaks:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> iris,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"dark"</span>, <span class="at">pch  =</span> <span class="dv">16</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="man/figures/README-quickstart3-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Grouped grouped density plot with automatic legend:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> iris,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"density"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"dark"</span>, <span class="at">fill =</span> <span class="st">"by"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Distribution of petal lengths by species"</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="man/figures/README-quickstart4-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Grouped scatterplot, combined with facet layout:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>iris2 <span class="ot">=</span> <span class="fu">transform</span>(iris, <span class="at">Sepals =</span> <span class="fu">ifelse</span>(Sepal.Length<span class="sc">&gt;</span><span class="dv">6</span>, <span class="st">"Long"</span>, <span class="st">"Short"</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Sepals, <span class="at">data =</span> iris2,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span>Species,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">bg =</span> <span class="st">"grey90"</span>),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"classic"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Faceted Sepals!"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="man/figures/README-quickstart5-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Head over to the <a href="https://grantmcdermott.com/plot2/index.html#/vignettes/intro_tutorial">intro tutorial</a> for more examples, including range plots and customization.</p>
+<section id="section-2" class="level2">
+<h2 class="anchored" data-anchor-id="section-2">0.0.2</h2>
+<p>Breaking changes:</p>
+<ul>
+<li>Legend defaults have been changed. The default position is now “right!” and drawn without a border, i.e.&nbsp;bty = “n” (<a href="https://github.com/grantmcdermott/plot2/issues/14">#14</a> by <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>).</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>Allow users to specify different <code>pch</code>, <code>lty</code>, and <code>col</code> types per group (<a href="https://github.com/grantmcdermott/plot2/issues/5">#5</a> and <a href="https://github.com/grantmcdermott/plot2/issues/11">#11</a> by <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>).</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Adding further elements to <code>plot2</code> now works (<a href="https://github.com/grantmcdermott/plot2/issues/13">#13</a> by <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>, thanks <a href="https://github.com/karoliskoncevicius"><span class="citation" data-cites="karoliskoncevicius">@karoliskoncevicius</span></a> for reporting).</li>
+</ul>
+<p>Internals:</p>
+<ul>
+<li>Better formula parsing for <code>plot2.formula</code> (<a href="https://github.com/grantmcdermott/plot2/issues/8">#8</a> by <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>).</li>
+<li>Unit testing scaffolding based on <strong>tinysnaphot</strong> (<a href="https://github.com/grantmcdermott/plot2/issues/11">#11</a> by <a href="https://github.com/vincent"><span class="citation" data-cites="vincent">@vincent</span></a>).</li>
+</ul>
+<p>Project:</p>
+<ul>
+<li><a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> have joined the project as core contributors. 🎉</li>
+</ul>
+</section>
+<section id="section-3" class="level2">
+<h2 class="anchored" data-anchor-id="section-3">0.0.1</h2>
+<ul>
+<li>Initial release on GitHub.</li>
+</ul>
 
 
 </section>

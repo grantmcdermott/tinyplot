@@ -1,0 +1,16 @@
+---
+title: Gallery
+filters:
+  - lightbox
+lightbox: auto
+---
+
+
+::: {layout-ncol=2}
+![](../fig/gallery_01.png){group="elsewhere"}
+
+![](../fig/gallery_02.png){group="elsewhere"}
+
+![](../fig/gallery_03.png){group="elsewhere"}
+:::
+

@@ -1,5 +1,4 @@
 
-
 # plot2
 
 <!-- badges: start -->
@@ -69,7 +68,7 @@ without any changes to the expected output.
 ## Quickstart
 
 The **plot2** website includes a detailed [introductory
-tutorial](https://grantmcdermott.com/plot2/index.html#/vignettes/intro_tutorial),
+tutorial](https://grantmcdermott.com/plot2/vignettes/intro_tutorial.html),
 with numerous examples. But here are some quickstart examples of the
 package in action.
 
@@ -130,6 +129,7 @@ plot2(
 
 <img src="man/figures/README-quickstart5-1.png" style="width:70.0%" />
 
-Head over to the [intro
-tutorial](https://grantmcdermott.com/plot2/index.html#/vignettes/intro_tutorial)
-for more examples, including range plots and customization.
+Hopefully, these have been enough to pique your interest. Head over to
+the [intro
+tutorial](https://grantmcdermott.com/plot2/vignettes/intro_tutorial.html)
+for many more examples, including range plots and customization.

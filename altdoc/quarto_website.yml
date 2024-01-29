@@ -3,7 +3,6 @@ project:
 
 website:
   title: "$ALTDOC_PACKAGE_NAME"
-  page-navigation: true
   navbar:
     search: true
     right:
@@ -33,7 +32,6 @@ website:
       - text: Citation
         file: $ALTDOC_CITATION
 
-# format:
-#   html:
-#     theme: cosmo
-#     number-sections: false
+format:
+  html:
+    toc: true

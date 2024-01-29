@@ -3,6 +3,7 @@ project:
 
 website:
   title: "$ALTDOC_PACKAGE_NAME"
+  page-navigation: true
   navbar:
     search: true
     right:

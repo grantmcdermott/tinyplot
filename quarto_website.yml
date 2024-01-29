@@ -32,7 +32,6 @@ website:
       - text: Citation
         file: $ALTDOC_CITATION
 
-# format:
-#   html:
-#     theme: cosmo
-#     number-sections: false
+format:
+  html:
+    toc: true

@@ -132,9 +132,9 @@ argument. The default group colours are inherited from the user's default
 palette. (Most likely the "R4" set of colors; see `?palette`). However, all of
 the various palettes listed by `palette.pals()` and `hcl.pals()` are supported
 as convenience strings.^[See the accompanying help pages of those two functions
-for more details on the available palettes, or read the
-[article](https://arxiv.org/pdf/2303.04918.pdf) by Achim Zeileis and Paul
-Murrell.] Note that case-insensitive, partial matching for these convenience
+for more details on the available palettes, or read Zeileis & Murrell
+(2023, The R Journal, [doi:10.32614/RJ-2023-071](https://doi.org/10.32614/RJ-2023-071)).]
+Note that case-insensitive, partial matching for these convenience
 string is allowed. For example:
 
 ```{r palette_tableau}

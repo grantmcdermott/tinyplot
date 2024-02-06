@@ -1,4 +1,4 @@
-#' @title Calculate placement of legend and and draw it
+#' @title Calculate placement of legend and draw it
 #'   
 #' @description Internal function used to calculate the placement of (including
 #'   outside the plotting area) and drawing of legend.

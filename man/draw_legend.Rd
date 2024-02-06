@@ -2,7 +2,7 @@
 % Please edit documentation in R/draw_legend.R
 \name{draw_legend}
 \alias{draw_legend}
-\title{Calculate placement of legend and and draw it}
+\title{Calculate placement of legend and draw it}
 \usage{
 draw_legend(
   legend = NULL,

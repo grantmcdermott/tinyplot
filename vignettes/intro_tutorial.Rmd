@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 ```
 
 The goal of this intro tutorial is to give you a sense of the main features and
-syntax of **plot2**, a lightweight extension of the base R graphics system. We
+syntax of **tinyplot**, a lightweight extension of the base R graphics system. We
 don't try to cover everything, but you should come away with a good
 understanding of how the package works and how it can integrate with your own
 projects.
@@ -32,7 +32,7 @@ a slightly modified version of the `airquality` dataset that comes bundled with
 base R. So let's go ahead and create that now too.
 
 ```{r aq}
-library(plot2)
+library(tinyplot)
 
 aq = airquality
 aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
@@ -40,14 +40,14 @@ aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
 
 ## Similarity to `plot()`
 
-As far as possible, `plot2` tries to be a drop-in replacement for regular `plot`
+As far as possible, `tinyplot` tries to be a drop-in replacement for regular `plot`
 calls.
 
 ```{r base_1}
 par(mfrow = c(1, 2))
 
 plot(0:10, main = "plot")
-plot2(0:10, main = "plot2")
+tinyplot(0:10, main = "tinyplot")
 
 par(mfrow = c(1, 1)) # reset layout
 ```
@@ -56,15 +56,25 @@ Similarly, we can plot elements from a data frame using either the atomic or
 formula methods. Here's a simple example using the `aq` dataset that we created
 earlier.
 
-```{r plot2_simple}
-# with(aq,  plot2(Day, Temp)) # atomic method (same as below)
-plot2(Temp ~ Day, data = aq)  # formula method
+```{r tinyplot_simple}
+# with(aq,  tinyplot(Day, Temp)) # atomic method (same as below)
+tinyplot(Temp ~ Day, data = aq)  # formula method
 ```
+
+If you'd prefer to save on a few keystrokes, you can use the shorthand `plt`
+alias instead.
+
+```{r plt_simple}
+plt(Temp ~ Day, data = aq) # `plt` = shorthand alias for `tinyplot`
+```
+
+(Note that the `plt` shorthand would work for all of the remaining plotting
+calls below. But we'll stick to `tinyplot` to keep things simple.)
 
 ## Grouped data
 
-Where `plot2` starts to diverge from its base counterpart is
-with respect to grouped data. In particular, `plot2` allows you to characterize
+Where `tinyplot` starts to diverge from its base counterpart is
+with respect to grouped data. In particular, `tinyplot` allows you to characterize
 groups using the `by` argument.^[At this point, experienced base plot users 
 might protest that you _can_ colour by groups using the `col` argument, e.g.
 `with(aq, plot(Day, Temp, col = Month))`. This is true,
@@ -78,22 +88,22 @@ plots (i.e., type="l"). Instead, you have to transpose your data and use
 old StackOverflow thread for a longer discussion.]
 
 ```{r by}
-# plot2(aq$Day, aq$Temp, by = aq$Month) # same as below
-with(aq, plot2(Day, Temp, by = Month))
+# tinyplot(aq$Day, aq$Temp, by = aq$Month) # same as below
+with(aq, tinyplot(Day, Temp, by = Month))
 ```
 
 An arguably more convenient approach is to use the equivalent formula syntax.
 Just place the grouping variable after a vertical bar (i.e., `|`).
 
 ```{r formula}
-plot2(Temp ~ Day | Month, data = aq)
+tinyplot(Temp ~ Day | Month, data = aq)
 ```
 
 You can use standard base plotting arguments to adjust features of your plot.
 For example, change `pch` (plot character) to get filled points.
 
 ```{r pch_16}
-plot2(
+tinyplot(
   Temp ~ Day | Month, data = aq,
   pch = 16
 )
@@ -103,13 +113,13 @@ Similarly, converting to a grouped line plot is a simple matter of adjusting the
 `type` argument.
 
 ```{r type_l}
-plot2(
+tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "l"
 )
 ```
 
-The default behaviour of `plot2` is to represent groups through colour. However,
+The default behaviour of `tinyplot` is to represent groups through colour. However,
 note that we can automatically adjust `pch` and `lty` by groups too by passing
 the `"by"` convenience keyword. This can be used in conjunction with the default
 group colouring. Or, as a replacement for group colouring---an option that may
@@ -117,7 +127,7 @@ be particularly useful for contexts where colour is expensive or prohibited
 (e.g., certain academic journals).
 
 ```{r by_lty}
-plot2(
+tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "l",
   col = "black", # override automatic group colours
@@ -138,10 +148,10 @@ Murrell.] Note that case-insensitive, partial matching for these convenience
 string is allowed. For example:
 
 ```{r palette_tableau}
-plot2(
+tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "l",
-  palette = "tableau" # or "ggplot2", "okabe-ito", "set2", "harmonic", etc.
+  palette = "tableau" # or "ggtinyplot", "okabe-ito", "set2", "harmonic", etc.
 )
 ```
 
@@ -165,13 +175,13 @@ In all of the preceding plots, you will have noticed that we get an automatic
 legend. The legend position and look can be customized with the `legend`
 argument. At a minimum, you can pass the familiar legend position keywords as a
 convenience string ("topright", "bottom", "left", etc.). Moreover, a key feature
-of `plot2` is that we can easily and elegantly place the legend _outside_ the
+of `tinyplot` is that we can easily and elegantly place the legend _outside_ the
 plot area by adding a trailing "!" to these keywords. (As you may have realised,
 the default legend position is "right!".) Let's demonstrate by moving the legend
 to the left of the plot:
 
 ```{r legend_bottom}
-plot2(
+tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "l",
   legend = "left!"
@@ -189,7 +199,7 @@ the background colour should vary by groups too.
 ```{r density_topright}
 with(
   aq,
-  plot2(
+  tinyplot(
     density(Temp),
     by = Month,
     fill = "by",                         # add fill by groups
@@ -201,7 +211,7 @@ with(
 
 ## Interval plots
 
-`plot2` adds supports for interval plots via the `"pointrange"`, `"errorbar"`,
+`tinyplot` adds supports for interval plots via the `"pointrange"`, `"errorbar"`,
 `"ribbon"` type arguments. An obvious use-case is for regression analysis and
 prediction.
 
@@ -211,7 +221,7 @@ aq = cbind(aq, predict(mod, interval = "confidence"))
 
 with(
   aq,
-  plot2(
+  tinyplot(
     x = Day, y = fit,
     ymin = lwr, ymax = upr,
     by = Month,
@@ -234,7 +244,7 @@ coeftab = data.frame(
 
 with(
   subset(coeftab, !grepl("Day", term)),
-  plot2(
+  tinyplot(
     x = term, y = estimate,
     ymin = ci_low, ymax = ci_high,
     type = "pointrange", # or: "errobar", "ribbon"
@@ -248,13 +258,13 @@ with(
 ## Facets
 
 Alongside the standard "by" grouping approach that we have seen thus far,
-**plot2** also supports faceted plots. Mirroring the main `plot2` function, the
+**tinyplot** also supports faceted plots. Mirroring the main `tinyplot` function, the
 `facet` argument accepts both atomic and formula methods.
 
 ```{r facet_simple}
 with(
   aq,
-  plot2(
+  tinyplot(
     x = Day, y = fit,
     ymin = lwr, ymax = upr,
     type = "ribbon",
@@ -274,7 +284,7 @@ that we can also reduce axis label redundancy by turning off the plot frame.
 ```{r facet_nrow}
 with(
   aq,
-  plot2(
+  tinyplot(
     x = Day, y = fit,
     ymin = lwr, ymax = upr,
     type = "ribbon",
@@ -297,7 +307,7 @@ variables if that's what your data support.
 # Plot the original points 
 with(
   aq,
-  plot2(
+  tinyplot(
     x = Day, y = Temp,
     by = Month,
     facet = "by", facet.args = list(bg = "grey90"),
@@ -309,7 +319,7 @@ with(
 # Add the model predictions to the same plot 
 with(
   aq,
-  plot2(
+  tinyplot(
     x = Day, y = fit,
     ymin = lwr, ymax = upr,
     by = Month, facet = "by",
@@ -328,7 +338,7 @@ arrangement. Here's a simple (if contrived) example.
 aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
 aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
 
-plot2(
+tinyplot(
  Temp ~ Day, data = aq,
  facet = windy ~ hot,
  # the rest of these arguments are optional...
@@ -342,7 +352,7 @@ plot2(
 ## Customization
 
 Customizing your plots further is straightforward, whether that is done by
-changing global parameters (via `par`) or invoking `plot2` arguments. Here's a
+changing global parameters (via `par`) or invoking `tinyplot` arguments. Here's a
 quick penultimate example, where we change our point character, tick labels, and
 font family globally, before adding some transparency to our colour palette, and
 use Tufte-style floating axes with a background panel grid.
@@ -354,7 +364,7 @@ par(
   family = "HersheySans" # Use a (built-in) Hershey font instead of Arial default
 )
 
-plot2(
+tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "b",
   palette = palette.colors(palette = "tableau", alpha = 0.5),
@@ -369,7 +379,7 @@ plot2(
 
 At the risk of repeating ourselves, the use of `par` in the previous example
 again underscores the correspondence with the base graphics system. Because
-`plot2` is effectively a convenience wrapper around base `plot`, any global
+`tinyplot` is effectively a convenience wrapper around base `plot`, any global
 elements that you have set for the latter should carry over to the former. For
 nice out-of-the-box themes, we recommend the **basetheme** package
 ([link](https://github.com/karoliskoncevicius/basetheme)).
@@ -380,7 +390,7 @@ par(pch = 15, las = 0, family = "") # change/revert global changes from above
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
 
-plot2(
+tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "b",
   pch = "by",
@@ -394,7 +404,7 @@ dev.off()
 
 ## Conclusion
 
-In summary, consider the **plot2** package if you are looking for base R `plot`
+In summary, consider the **tinyplot** package if you are looking for base R `plot`
 functionality with some added convenience features. You can use pretty much the
 same syntax and all of your theme elements should carry over too. It has no
 dependencies other than base R itself and this makes it an attractive option for

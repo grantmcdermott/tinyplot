@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -137,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/draw_legend.html">Reference</a></li><li class="breadcrumb-item"><a href="../man/draw_legend.html">draw_legend</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/draw_legend.html">Reference</a></li><li class="breadcrumb-item"><a href="../man/tpar.html">tpar</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -178,7 +144,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/draw_legend.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/draw_legend.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">draw_legend</span></a>
   </div>
 </li>
@@ -190,7 +156,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/tpar.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/tpar.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">tpar</span></a>
   </div>
 </li>
@@ -218,12 +184,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#calculate-placement-of-legend-and-draw-it" id="toc-calculate-placement-of-legend-and-draw-it" class="nav-link active" data-scroll-target="#calculate-placement-of-legend-and-draw-it">Calculate placement of legend and draw it</a>
+  <li><a href="#set-or-query-tinyplot-parameters" id="toc-set-or-query-tinyplot-parameters" class="nav-link active" data-scroll-target="#set-or-query-tinyplot-parameters">Set or query tinyplot parameters</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  <li><a href="#graphical-parameters" id="toc-graphical-parameters" class="nav-link" data-scroll-target="#graphical-parameters">Graphical Parameters</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -234,29 +200,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="calculate-placement-of-legend-and-draw-it" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="calculate-placement-of-legend-and-draw-it">Calculate placement of legend and draw it</h2>
+<section id="set-or-query-tinyplot-parameters" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="set-or-query-tinyplot-parameters">Set or query tinyplot parameters</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Internal function used to calculate the placement of (including outside the plotting area) and drawing of legend.</p>
+<p><code>tpar</code> can be used to set or query the additional set of graphical parameters provided by <code>tinyplot</code> (i.e., beyond the base set provided by <code>par</code>). Similar to its base counterpart, parameters can be set by passing the appropriate tag-value argument pairs to <code>tpar</code>. Multiple parameters can be set or queried at the same time, as a list.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">draw_legend(
-  legend = NULL,
-  legend.args = NULL,
-  by_dep = NULL,
-  lgnd_labs = NULL,
-  type = NULL,
-  pch = NULL,
-  lty = NULL,
-  col = NULL,
-  bg = NULL,
-  cex = NULL,
-  lmar = NULL,
-  has_sub = FALSE,
-  new_plot = TRUE
-)
+<pre><code class="language-R">tpar(...)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -264,176 +216,214 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table>
 <tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_legend">legend</code>
+<code id="tpar_:_...">…</code>
 </td>
 <td>
-Legend placement keyword or list, passed down from <code>tinyplot</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_legend.args">legend.args</code>
-</td>
-<td>
-Additional legend arguments to be passed to <code>legend()</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_by_dep">by_dep</code>
-</td>
-<td>
-The (deparsed) "by" grouping variable name.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_lgnd_labs">lgnd_labs</code>
-</td>
-<td>
-The labels passed to <code>legend(legend = …)</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_type">type</code>
-</td>
-<td>
-Plotting type(s), passed down from <code>tinyplot</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_pch">pch</code>
-</td>
-<td>
-Plotting character(s), passed down from <code>tinyplot</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_lty">lty</code>
-</td>
-<td>
-Plotting linetype(s), passed down from <code>tinyplot</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_col">col</code>
-</td>
-<td>
-Plotting colour(s), passed down from <code>tinyplot</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_bg">bg</code>
-</td>
-<td>
-Plotting character background fill colour(s), passed down from <code>tinyplot</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_cex">cex</code>
-</td>
-<td>
-Plotting character expansion(s), passed down from <code>tinyplot</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_lmar">lmar</code>
-</td>
-<td>
-Legend margins (in lines). Should be a numeric vector of the form <code>c(inner, outer)</code>, where the first number represents the "inner" margin between the legend and the plot, and the second number represents the "outer" margin between the legend and edge of the graphics device. If no explicit value is provided by the user, then reverts back to <code>tpar(“lmar”)</code> for which the default values are <code>c(1.0, 0.1)</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_has_sub">has_sub</code>
-</td>
-<td>
-Logical. Does the plot have a sub-caption. Only used if keyword position is "bottom!", in which case we need to bump the legend margin a bit further.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_new_plot">new_plot</code>
-</td>
-<td>
-Should we be calling plot.new internally?
+arguments of the form <code>tag = value</code>. Supported <code>tinyplot</code> parameters are described in the ‘Graphical Parameters’ section below.
 </td>
 </tr>
 </tbody></table>
 </section>
-<section id="examples" class="level3">
-<h3 class="anchored" data-anchor-id="examples">Examples</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>oldmar <span class="ot">=</span> <span class="fu">par</span>(<span class="st">"mar"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_legend</span>(</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="st">"right!"</span>, <span class="do">## default (other options incl, "left(!)", ""bottom(!)", etc.)</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.args =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Key"</span>, <span class="at">bty =</span> <span class="st">"o"</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lgnd_labs =</span> <span class="fu">c</span>(<span class="st">"foo"</span>, <span class="st">"bar"</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"p"</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">22</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># The legend is placed in the outer margin...</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>(<span class="st">"figure"</span>, <span class="at">col =</span> <span class="st">"cyan"</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># ... and the plot is proportionally adjusted against the edge of this</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># margin.</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>(<span class="st">"plot"</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># You can add regular plot objects per normal now</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.window</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">10</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">10</span>))</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="dv">10</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">22</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>); <span class="fu">axis</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="draw_legend_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># etc.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Important: A side effect of draw_legend is that the inner margins have been</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># adjusted. (Here: The right margin, since we called "right!" above.)</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="st">"mar"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5.1 4.1 4.1 0.0</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To reset you should call `dev.off()` or just reset manually.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> oldmar)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that the inner and outer margin of the legend itself can be set via</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the `lmar` argument. (This can also be set globally via</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># `tpar(lmar = c(inner, outer))`.)</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_legend</span>(</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.args =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Key"</span>, <span class="at">bty =</span> <span class="st">"o"</span>),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lgnd_labs =</span> <span class="fu">c</span>(<span class="st">"foo"</span>, <span class="st">"bar"</span>),</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"p"</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">22</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">lmar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>) <span class="do">## set inner margin to zero</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>(<span class="st">"figure"</span>, <span class="at">col =</span> <span class="st">"cyan"</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="draw_legend_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> oldmar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<section id="graphical-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="graphical-parameters">Graphical Parameters</h3>
+<table>
+<tbody><tr>
+<td style="text-align: left;">
+<code>facet.cex</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Expansion factor for facet titles. Defaults to <code>1</code>.
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>facet.font</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+An integer corresponding to the desired font face for facet titles. For most font families and graphics devices, one of four possible values: <code>1</code> (regular), <code>2</code> (bold), <code>3</code> (italic), or <code>4</code> (bold italic). Defaults to <code>NULL</code>, which is equivalent to <code>1</code> (i.e., regular).
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>facet.col</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Character or integer specifying the facet text colour. If an integer, will correspond to the user’s default global colour palette (see <code>palette</code>). Defaults to <code>NULL</code>, which is equivalent to “black”.
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>facet.bg</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Character or integer specifying the facet background colour. If an integer, will correspond to the user’s default colour palette (see <code>palette</code>). Passed <code>rect</code>. Defaults to <code>NULL</code> (none).
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>facet.border</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Character or integer specifying the facet border colour. If an integer, will correspond to the users default colour palette (see <code>palette</code>). Passed <code>rect</code>. Defaults to <code>NA</code> (none).
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>fmar</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+A numeric vector of form <code>c(b,l,t,r)</code> for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to <code>c(1,1,1,1)</code>, i.e.&nbsp;a single line of padding around each facet. If more that three facets are detected, the <code>fmar</code> parameter is scaled by 0.75 (i.e., three-quarters) to reduce the excess whitespace that would otherwise arise due to the absent axes lines and labels. (An exception is made for 2x2 plots to better match the <code>cex</code> expansion logic of the base graphics system under this particular layout.) Similarly, note that an extra 0.5 lines is subtracted from each side of the facet padding for plots that aren’t framed, to reduce excess whitespace.
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>last_facet_par</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Full list of graphical parameters used to constructed the most recent faceted <code>tinyplot</code> plot during the current session. Unlike other <code>tpar</code> parameters, this parameter is intended for internal use (specifically, to enable adding further elements on top of an existing faceted plot) and should <em>not</em> be set by the user.
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>lmar</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+A numeric vector of form <code>c(inner, outer)</code> that gives the margin padding, in terms of lines, around the automatic <code>tinyplot</code> legend. Defaults to <code>c(1.0, 0.1)</code>, where the first number represents the “inner” margin between the legend and the plot region, and the second number represents the “outer” margin between the legend and edge of the graphics device. (Note that an exception for the definition of the “outer” legend margin occurs when the legend placement is <code>“top!”</code>, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by <code>par(“mar”)[3]</code>.)
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</tbody></table>
 
 
 </section>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plot2</title>
+<title>tinyplot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -78,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plot2</span>
+    <span class="navbar-title">tinyplot</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -88,7 +122,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/grantmcdermott/plot2"> <i class="bi bi-github" role="img" aria-label="plot2 GitHub">
+    <a class="nav-link" href="https://github.com/grantmcdermott/tinyplot"> <i class="bi bi-github" role="img" aria-label="tinyplot GitHub">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -150,14 +184,14 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/par2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">par2</span></a>
+  <a href="./man/tinyplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tinyplot</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/plot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">plot2</span></a>
+  <a href="./man/tpar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tpar</span></a>
   </div>
 </li>
       </ul>
@@ -186,10 +220,11 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#news" id="toc-news" class="nav-link active" data-scroll-target="#news">News</a>
   <ul class="collapse">
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.0.4</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.0.3</a></li>
-  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.0.2</a></li>
-  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">0.0.1</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.0.5</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.0.4</a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.0.3</a></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">0.0.2</a></li>
+  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">0.0.1</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -203,81 +238,108 @@ ul.task-list li input[type="checkbox"] {
 <section id="news" class="level1">
 <h1>News</h1>
 <section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">0.0.4</h2>
-<p>Website:</p>
-<p>We now have a dedicated website! (<a href="https://github.com/grantmcdermott/plot2/issues/80">#80</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</p>
-<p>New features:</p>
+<h2 class="anchored" data-anchor-id="section">0.0.5</h2>
+<p><strong>IMPORTANT BREAKING CHANGE:</strong></p>
+<p>The package has been renamed to <strong>tinyplot</strong>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/22">#22</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p>
+<p>This package renaming also incorporates the following function changes:</p>
 <ul>
-<li>Support for <code>cex</code> and <code>bg</code> (alias <code>fill</code>) arguments. The latter also permit the “by” convenience keyword similar to <code>lty</code> and <code>pch</code>. This is useful for plotting filled point characters (e.g., pch = 21), where you want a different colour for the fill and border. (<a href="https://github.com/grantmcdermott/plot2/issues/50">#50</a>, <a href="https://github.com/grantmcdermott/plot2/issues/75">#75</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Support for filled density plots. (<a href="https://github.com/grantmcdermott/plot2/issues/58">#58</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>The new <code>add</code> argument allows new plot2 objects to be added to / on top of the existing plot window. (<a href="https://github.com/grantmcdermott/plot2/issues/60">#60</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Support for one-sided formulas, e.g.&nbsp;<code>plot2(~ Temp | Month, airquality)</code>. (<a href="https://github.com/grantmcdermott/plot2/issues/62">#62</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
-<li>Support for <code>plot2(x, type = "density")</code> as an alternative to <code>plot2(density(x))</code>. Works for both the atomic and one-sided formula methods. (<a href="https://github.com/grantmcdermott/plot2/issues/66">#66</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Support for “area” type plots as a special case of ribbon plots. (<a href="https://github.com/grantmcdermott/plot2/issues/68">#68</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Partial matching for palette keywords. (<a href="https://github.com/grantmcdermott/plot2/issues/74">#74</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li><code>plot2</code> gains a new <code>facet</code> argument for drawing faceted plots. Users can override the default square arrangement by passing the desired number of facet rows or columns to the companion <code>facet.args</code> helper function. Facets can be combined with <code>by</code> grouping, or used on their own. (<a href="https://github.com/grantmcdermott/plot2/issues/83">#83</a>, <a href="https://github.com/grantmcdermott/plot2/issues/91">#91</a>, <a href="https://github.com/grantmcdermott/plot2/issues/94">#94</a>, <a href="https://github.com/grantmcdermott/plot2/issues/96">#96</a>, <a href="https://github.com/grantmcdermott/plot2/issues/101">#101</a>, <a href="https://github.com/grantmcdermott/plot2/issues/103">#103</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Users can now control <code>plot2</code>-specific graphical parameters globally via the new <code>par2()</code> function (which is modeled on the base <code>par()</code> function). At the moment only a subset of global parameters, mostly related to legend and facet behaviour, are exposed in <code>par2</code>. But users can expect that more will be added in future releases. (<a href="https://github.com/grantmcdermott/plot2/issues/33">#33</a>, <a href="https://github.com/grantmcdermott/plot2/issues/94">#94</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>plot2()</code> is replaced by <code>tinyplot()</code> (or its shorthand alias <code>plt()</code>).</li>
+<li><code>par2()</code> is replaced by <code>tpar()</code>.</li>
 </ul>
-<p>Bug fixes:</p>
+<p>So, where you used to write…</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>… you should now write:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Or, use the equivalent shorthand `plt` alias</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The package URLs have been updated accordingly:</p>
 <ul>
-<li>Y-label correctly prints if a function was used for the atomic plot method, e.g.&nbsp;<code>plot2(rnorm(100)</code>. (<a href="https://github.com/grantmcdermott/plot2/issues/52">#52</a> etiennebacher)</li>
-<li>Ribbon plot types are now automatically ordered by the x variable. (<a href="https://github.com/grantmcdermott/plot2/issues/54">#54</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Interval plots like ribbons, errorbars, and pointranges are now correctly plotted even if a y variable isn’t specified. (<a href="https://github.com/grantmcdermott/plot2/issues/54">#54</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Correctly label date-time axes. (<a href="https://github.com/grantmcdermott/plot2/issues/77">#77</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
-<li>Improved consistency of legend and facet margins across different plot types and placement, via the new <code>lmar</code> and <code>fmar</code> arguments of <code>par2()</code>. The default legend margin is <code>par2(lmar = c(1,0, 0.1)</code>, which means that there is 1.0 line of padding between the legend and the plot region (inside margin) and 0.1 line of padding between the legend and edge of the graphics device (outer margin). Similarly, the default facet padding is <code>par2(fmar = c(1,1,1,1)</code>, which means that there is a single line of padding around each side of the individual facets. Users can override these defaults by passing numeric vectors of the appropriate length to <code>par2()</code>. For example, <code>par2(lmar = c(0,0.1)</code> would shrink the inner gap between the legend and plot region to zero, but leave the small outer gap to outside of the graphics device unchanged. (<a href="https://github.com/grantmcdermott/plot2/issues/94">#94</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Fix bug where grid wasn’t auto-expanding correctly for area plots. (<a href="https://github.com/grantmcdermott/plot2/issues/92">#92</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>GitHub: https://github.com/grantmcdermott/tinyplot</li>
+<li>Website: https://grantmcdermott.com/tinyplot</li>
+<li>R-universe: https://grantmcdermott.r-universe.dev/tinyplot</li>
 </ul>
+<p>Many thanks to everyone who provided thoughtful feedback about this prospective name change, especially <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> and <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> for kicking off the discussion, as well as the 100+ participants who voted in the social media poll.</p>
+<p>For more details about the rational underlying this renaming decision, please see the following GitHub comment, as well as the discussion that preceded it: https://github.com/grantmcdermott/plot2/issues/22#issuecomment-1928472754</p>
 </section>
 <section id="section-1" class="level2">
-<h2 class="anchored" data-anchor-id="section-1">0.0.3</h2>
-<p>Breaking changes:</p>
-<ul>
-<li>Colour palettes are now controlled via a single <code>palette</code> argument that unifies the old <code>palette</code> and (deprecated) <code>palette.args</code> arguments. In addition, the default palette for small groups has been changed from “Okabe-Ito” to “R4”. (<a href="https://github.com/grantmcdermott/plot2/issues/31">#31</a> and <a href="https://github.com/grantmcdermott/plot2/issues/32">#32</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Legends are now controlled via a single <code>legend</code> argument that unifies the previous (deprecated) <code>legend.position</code> and <code>legend.args</code> arguments. This change also enables several enhancements over the old legend behaviour; see below. (<a href="https://github.com/grantmcdermott/plot2/issues/34">#34</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-</ul>
+<h2 class="anchored" data-anchor-id="section-1">0.0.4</h2>
+<p>Website:</p>
+<p>We now have a dedicated website! (<a href="https://github.com/grantmcdermott/tinyplot/issues/80">#80</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</p>
 <p>New features:</p>
 <ul>
-<li>Add support for the argument <code>log</code>. (<a href="https://github.com/grantmcdermott/plot2/issues/15">#15</a> <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a>)</li>
-<li>Add support for grouped density plots. (<a href="https://github.com/grantmcdermott/plot2/issues/18">#18</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Add support for (both grouped and non-grouped) “c”, “h”, “s”, and “S” types. (<a href="https://github.com/grantmcdermott/plot2/issues/26">#26</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Both the <code>pch</code> and <code>lty</code> arguments now accept a “by” convenience keyword for automatically adjusting plot characters and line types by groups. (<a href="https://github.com/grantmcdermott/plot2/issues/28">#28</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Add outside (“!”) placement support for remaining legend keywords, e.g. “top!”, “left!”, “topright!”, etc. Users also gain finer control over many other aspects of the legend via the new unified <code>legend</code> argument, including changing labels, turning of the legend title, and so on. (<a href="https://github.com/grantmcdermott/plot2/issues/34">#34</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Add support for <code>"pointrange"</code>, <code>"errobar"</code>, and <code>"ribbon"</code> plot types. (<a href="https://github.com/grantmcdermott/plot2/issues/35">#35</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>, <a href="https://github.com/grantmcdermott/plot2/issues/40">#40</a> and <a href="https://github.com/grantmcdermott/plot2/issues/46">#46</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Support <code>grid = TRUE</code> as an alternative to <code>grid = grid()</code>. (<a href="https://github.com/grantmcdermott/plot2/issues/43">#43</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support for <code>cex</code> and <code>bg</code> (alias <code>fill</code>) arguments. The latter also permit the “by” convenience keyword similar to <code>lty</code> and <code>pch</code>. This is useful for plotting filled point characters (e.g., pch = 21), where you want a different colour for the fill and border. (<a href="https://github.com/grantmcdermott/tinyplot/issues/50">#50</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/75">#75</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support for filled density plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/58">#58</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>The new <code>add</code> argument allows new plot2 objects to be added to / on top of the existing plot window. (<a href="https://github.com/grantmcdermott/tinyplot/issues/60">#60</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support for one-sided formulas, e.g.&nbsp;<code>plot2(~ Temp | Month, airquality)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/62">#62</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Support for <code>plot2(x, type = "density")</code> as an alternative to <code>plot2(density(x))</code>. Works for both the atomic and one-sided formula methods. (<a href="https://github.com/grantmcdermott/tinyplot/issues/66">#66</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support for “area” type plots as a special case of ribbon plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/68">#68</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Partial matching for palette keywords. (<a href="https://github.com/grantmcdermott/tinyplot/issues/74">#74</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>plot2</code> gains a new <code>facet</code> argument for drawing faceted plots. Users can override the default square arrangement by passing the desired number of facet rows or columns to the companion <code>facet.args</code> helper function. Facets can be combined with <code>by</code> grouping, or used on their own. (<a href="https://github.com/grantmcdermott/tinyplot/issues/83">#83</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/91">#91</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/94">#94</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/96">#96</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/101">#101</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/103">#103</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Users can now control <code>plot2</code>-specific graphical parameters globally via the new <code>par2()</code> function (which is modeled on the base <code>par()</code> function). At the moment only a subset of global parameters, mostly related to legend and facet behaviour, are exposed in <code>par2</code>. But users can expect that more will be added in future releases. (<a href="https://github.com/grantmcdermott/tinyplot/issues/33">#33</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/94">#94</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Bug fixes:</p>
 <ul>
-<li>Setting <code>par(pch=X)</code> globally is now respected. (<a href="https://github.com/grantmcdermott/plot2/issues/20">#20</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Fix x-axis scale/index when y is NULL. (<a href="https://github.com/grantmcdermott/plot2/issues/24">#24</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Setting a global palette, e.g.&nbsp;<code>palette("ggplot2")</code> is now respected. (<a href="https://github.com/grantmcdermott/plot2/issues/44">#44</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Y-label correctly prints if a function was used for the atomic plot method, e.g.&nbsp;<code>plot2(rnorm(100)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/52">#52</a> etiennebacher)</li>
+<li>Ribbon plot types are now automatically ordered by the x variable. (<a href="https://github.com/grantmcdermott/tinyplot/issues/54">#54</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Interval plots like ribbons, errorbars, and pointranges are now correctly plotted even if a y variable isn’t specified. (<a href="https://github.com/grantmcdermott/tinyplot/issues/54">#54</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Correctly label date-time axes. (<a href="https://github.com/grantmcdermott/tinyplot/issues/77">#77</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Improved consistency of legend and facet margins across different plot types and placement, via the new <code>lmar</code> and <code>fmar</code> arguments of <code>par2()</code>. The default legend margin is <code>par2(lmar = c(1,0, 0.1)</code>, which means that there is 1.0 line of padding between the legend and the plot region (inside margin) and 0.1 line of padding between the legend and edge of the graphics device (outer margin). Similarly, the default facet padding is <code>par2(fmar = c(1,1,1,1)</code>, which means that there is a single line of padding around each side of the individual facets. Users can override these defaults by passing numeric vectors of the appropriate length to <code>par2()</code>. For example, <code>par2(lmar = c(0,0.1)</code> would shrink the inner gap between the legend and plot region to zero, but leave the small outer gap to outside of the graphics device unchanged. (<a href="https://github.com/grantmcdermott/tinyplot/issues/94">#94</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Fix bug where grid wasn’t auto-expanding correctly for area plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/92">#92</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 <section id="section-2" class="level2">
-<h2 class="anchored" data-anchor-id="section-2">0.0.2</h2>
+<h2 class="anchored" data-anchor-id="section-2">0.0.3</h2>
 <p>Breaking changes:</p>
 <ul>
-<li>Legend defaults have been changed. The default position is now “right!” and drawn without a border, i.e.&nbsp;bty = “n” (<a href="https://github.com/grantmcdermott/plot2/issues/14">#14</a> by <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>).</li>
+<li>Colour palettes are now controlled via a single <code>palette</code> argument that unifies the old <code>palette</code> and (deprecated) <code>palette.args</code> arguments. In addition, the default palette for small groups has been changed from “Okabe-Ito” to “R4”. (<a href="https://github.com/grantmcdermott/tinyplot/issues/31">#31</a> and <a href="https://github.com/grantmcdermott/tinyplot/issues/32">#32</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Legends are now controlled via a single <code>legend</code> argument that unifies the previous (deprecated) <code>legend.position</code> and <code>legend.args</code> arguments. This change also enables several enhancements over the old legend behaviour; see below. (<a href="https://github.com/grantmcdermott/tinyplot/issues/34">#34</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>New features:</p>
 <ul>
-<li>Allow users to specify different <code>pch</code>, <code>lty</code>, and <code>col</code> types per group (<a href="https://github.com/grantmcdermott/plot2/issues/5">#5</a> and <a href="https://github.com/grantmcdermott/plot2/issues/11">#11</a> by <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>).</li>
+<li>Add support for the argument <code>log</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/15">#15</a> <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a>)</li>
+<li>Add support for grouped density plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/18">#18</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Add support for (both grouped and non-grouped) “c”, “h”, “s”, and “S” types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/26">#26</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Both the <code>pch</code> and <code>lty</code> arguments now accept a “by” convenience keyword for automatically adjusting plot characters and line types by groups. (<a href="https://github.com/grantmcdermott/tinyplot/issues/28">#28</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Add outside (“!”) placement support for remaining legend keywords, e.g. “top!”, “left!”, “topright!”, etc. Users also gain finer control over many other aspects of the legend via the new unified <code>legend</code> argument, including changing labels, turning of the legend title, and so on. (<a href="https://github.com/grantmcdermott/tinyplot/issues/34">#34</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Add support for <code>"pointrange"</code>, <code>"errobar"</code>, and <code>"ribbon"</code> plot types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/35">#35</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/40">#40</a> and <a href="https://github.com/grantmcdermott/tinyplot/issues/46">#46</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support <code>grid = TRUE</code> as an alternative to <code>grid = grid()</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/43">#43</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Bug fixes:</p>
 <ul>
-<li>Adding further elements to <code>plot2</code> now works (<a href="https://github.com/grantmcdermott/plot2/issues/13">#13</a> by <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>, thanks <a href="https://github.com/karoliskoncevicius"><span class="citation" data-cites="karoliskoncevicius">@karoliskoncevicius</span></a> for reporting).</li>
+<li>Setting <code>par(pch=X)</code> globally is now respected. (<a href="https://github.com/grantmcdermott/tinyplot/issues/20">#20</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Fix x-axis scale/index when y is NULL. (<a href="https://github.com/grantmcdermott/tinyplot/issues/24">#24</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Setting a global palette, e.g.&nbsp;<code>palette("ggplot2")</code> is now respected. (<a href="https://github.com/grantmcdermott/tinyplot/issues/44">#44</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+</section>
+<section id="section-3" class="level2">
+<h2 class="anchored" data-anchor-id="section-3">0.0.2</h2>
+<p>Breaking changes:</p>
+<ul>
+<li>Legend defaults have been changed. The default position is now “right!” and drawn without a border, i.e.&nbsp;bty = “n” (<a href="https://github.com/grantmcdermott/tinyplot/issues/14">#14</a> by <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>).</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>Allow users to specify different <code>pch</code>, <code>lty</code>, and <code>col</code> types per group (<a href="https://github.com/grantmcdermott/tinyplot/issues/5">#5</a> and <a href="https://github.com/grantmcdermott/tinyplot/issues/11">#11</a> by <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>).</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Adding further elements to <code>plot2</code> now works (<a href="https://github.com/grantmcdermott/tinyplot/issues/13">#13</a> by <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>, thanks <a href="https://github.com/karoliskoncevicius"><span class="citation" data-cites="karoliskoncevicius">@karoliskoncevicius</span></a> for reporting).</li>
 </ul>
 <p>Internals:</p>
 <ul>
-<li>Better formula parsing for <code>plot2.formula</code> (<a href="https://github.com/grantmcdermott/plot2/issues/8">#8</a> by <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>).</li>
-<li>Unit testing scaffolding based on <strong>tinysnaphot</strong> (<a href="https://github.com/grantmcdermott/plot2/issues/11">#11</a> by <a href="https://github.com/vincent"><span class="citation" data-cites="vincent">@vincent</span></a>).</li>
+<li>Better formula parsing for <code>plot2.formula</code> (<a href="https://github.com/grantmcdermott/tinyplot/issues/8">#8</a> by <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>).</li>
+<li>Unit testing scaffolding based on <strong>tinysnaphot</strong> (<a href="https://github.com/grantmcdermott/tinyplot/issues/11">#11</a> by <a href="https://github.com/vincent"><span class="citation" data-cites="vincent">@vincent</span></a>).</li>
 </ul>
 <p>Project:</p>
 <ul>
 <li><a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> have joined the project as core contributors. 🎉</li>
 </ul>
 </section>
-<section id="section-3" class="level2">
-<h2 class="anchored" data-anchor-id="section-3">0.0.1</h2>
+<section id="section-4" class="level2">
+<h2 class="anchored" data-anchor-id="section-4">0.0.1</h2>
 <ul>
 <li>Initial release on GitHub.</li>
 </ul>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plot2</title>
+<title>tinyplot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -112,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plot2</span>
+    <span class="navbar-title">tinyplot</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/grantmcdermott/plot2"> <i class="bi bi-github" role="img" aria-label="plot2 GitHub">
+    <a class="nav-link" href="https://github.com/grantmcdermott/tinyplot"> <i class="bi bi-github" role="img" aria-label="tinyplot GitHub">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -184,14 +184,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/par2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">par2</span></a>
+  <a href="./man/tinyplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tinyplot</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/plot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">plot2</span></a>
+  <a href="./man/tpar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tpar</span></a>
   </div>
 </li>
       </ul>
@@ -218,7 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plot2" id="toc-plot2" class="nav-link active" data-scroll-target="#plot2">plot2</a>
+  <li><a href="#tinyplot" id="toc-tinyplot" class="nav-link active" data-scroll-target="#tinyplot">tinyplot</a>
   <ul class="collapse">
   <li><a href="#what" id="toc-what" class="nav-link" data-scroll-target="#what">What</a></li>
   <li><a href="#why" id="toc-why" class="nav-link" data-scroll-target="#why">Why</a></li>
@@ -233,33 +233,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="plot2" class="level1">
-<h1>plot2</h1>
+<section id="tinyplot" class="level1">
+<h1>tinyplot</h1>
 <!-- badges: start -->
-<p><a href="https://CRAN.R-project.org/package=plot2"><img src="https://www.r-pkg.org/badges/version/plot2.png" class="img-fluid" alt="CRAN version"></a> <a href="https://grantmcdermott.r-universe.dev"><img src="https://grantmcdermott.r-universe.dev/badges/plot2.png" class="img-fluid" alt="R-universe status badge"></a> <a href="https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="R-CMD-check"></a> <a href="https://grantmcdermott.com/plot2/index.html"><img src="https://img.shields.io/badge/docs-homepage-blue.svg" class="img-fluid" alt="Docs"></a> <!-- badges: end --></p>
+<p><a href="https://CRAN.R-project.org/package=tinyplot"><img src="https://www.r-pkg.org/badges/version/tinyplot.png" class="img-fluid" alt="CRAN version"></a> <a href="https://grantmcdermott.r-universe.dev"><img src="https://grantmcdermott.r-universe.dev/badges/tinyplot.png" class="img-fluid" alt="R-universe status badge"></a> <a href="https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="R-CMD-check"></a> <a href="https://grantmcdermott.com/tinyplot/index.html"><img src="https://img.shields.io/badge/docs-homepage-blue.svg" class="img-fluid" alt="Docs"></a> <!-- badges: end --></p>
 <section id="what" class="level2">
 <h2 class="anchored" data-anchor-id="what">What</h2>
-<p>A lightweight extension of the base R graphics system, with support for automatic grouping, legends, facets and various other enhancements.</p>
-<p><strong>plot2</strong> is not yet on CRAN, but can be installed from R-universe.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"plot2"</span>, <span class="at">repos =</span> <span class="st">"https://grantmcdermott.r-universe.dev"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Our goal is to submit to CRAN within the first few months of 2024, once we have settled on some remaining design choices and features support. You can take a look at the <a href="https://github.com/grantmcdermott/plot2/issues">open issues</a> to see what’s currently under consideration. Please feel free to weigh on these if you have opinions. We want end users to have a say in determining the final product.</p>
+<p>A lightweight extension of the base R graphics system, with support for automatic grouping, legends, facets, and various other enhancements.</p>
+<p><strong>tinyplot</strong> is not yet on CRAN, but can be installed from R-universe.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tinyplot"</span>, <span class="at">repos =</span> <span class="st">"https://grantmcdermott.r-universe.dev"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Our goal is to submit to CRAN within the first few months of 2024, once we have settled on some remaining design choices and features support. You can take a look at the <a href="https://github.com/grantmcdermott/tinyplot/issues">open issues</a> to see what’s currently under consideration. Please feel free to weigh on these if you have opinions. We want end users to have a say in determining the final product.</p>
 </section>
 <section id="why" class="level2">
 <h2 class="anchored" data-anchor-id="why">Why</h2>
-<p>R users are spoiled for choice when it comes to visualization frameworks. The options include <strong>ggplot2</strong> (arguably the most important graphics system of the last decade) and <strong>lattice</strong>, not to mention a bewildering array of extensions built around, on top of, and in between these amazing packages.</p>
+<p>R users are spoiled for choice when it comes to visualization frameworks. The options include <strong>ggplot2</strong> (arguably the most important graphics system of the last decade) and <strong>lattice</strong>, not to mention a bewildering array of extensions built on top of, around, and in between these amazing packages.</p>
 <p>As a result, it is perhaps not surprising that the base R graphics system sometimes gets short shrift. This is unfortunate, because base R offers very powerful and flexible plotting facilities. Just type <code>demo(graphics)</code> or <code>demo(persp)</code> into your R console to get an idea. Or, take a look at <a href="https://github.com/karoliskoncevicius/tutorial_r_introduction/blob/main/baseplotting.md">these</a> <a href="https://quizzical-engelbart-d15a44.netlify.app/2021-2022_m2-data-2_visu-2_practice#1">two</a> excellent tutorials. The downside of this power and flexibility is that base R plotting can require a fair bit of manual tinkering. A case in point is plotting grouped data with an appropriate legend. Doing so with the generic <code>plot()</code> function can require several function calls or a loop, fiddling with your plot regions, and then generating the legend manually.</p>
-<p>The <strong>plot2</strong> package aims to remove this overhead. It provides a lightweight (zero dependency) extension of the base R graphics system with various convenience features, particularly for representing groups with your data. For example, the core <code>plot2()</code> function makes it easy to plot different categories of a dataset in a single function call and highlight these categories (groups) using modern colour palettes. Coincident with this grouping support, <code>plot2()</code> also produces automatic legends with scope for further customization. While the package offers several other enhancements like facets, it tries as far as possible to be a drop-in replacement for the equivalent base plot function. Users should generally be able to swap a valid <code>plot()</code> call with <code>plot2()</code> without any changes to the expected output.</p>
+<p>The <strong>tinyplot</strong> package aims to remove this overhead. It provides a lightweight (zero dependency) extension of the base R graphics system with various convenience features, particularly for representing grouped data. For example, the core <code>tinyplot()</code> function—or its shorthand <code>plt()</code> alias—makes it easy to plot different groups of a dataset in a single function call and highlight these groups using modern colour palettes. Coincident with this grouping support, <strong>tinyplot</strong> also produces automatic legends with scope for further customization. While the package offers several other enhancements like facets, it tries as far as possible to be a drop-in replacement for the equivalent base plotting function. Users should generally be able to swap a valid <code>plot()</code> call for <code>tinyplot()</code> without any changes to the expected output.</p>
 </section>
 <section id="quickstart" class="level2">
 <h2 class="anchored" data-anchor-id="quickstart">Quickstart</h2>
-<p>The <strong>plot2</strong> website includes a detailed <a href="https://grantmcdermott.com/plot2/vignettes/intro_tutorial.html">introductory tutorial</a>, with numerous examples. But here are some quickstart examples of the package in action.</p>
+<p>The <strong>tinyplot</strong> website includes a detailed <a href="https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html">introductory tutorial</a>, with numerous examples. But here are some quickstart examples of the package in action.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Grouped scatterplot with automatic legend:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># with(iris, plot2(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris)             <span class="co"># formula</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># with(iris, tinyplot(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris)             <span class="co"># formula</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -270,7 +270,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Same plot with a few extra aesthetic tweaks:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> iris,</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"dark"</span>, <span class="at">pch  =</span> <span class="dv">16</span>,</span>
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Grouped grouped density plot with automatic legend:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> iris,</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"density"</span>,</span>
@@ -305,7 +305,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Grouped scatterplot, combined with facet layout:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>iris2 <span class="ot">=</span> <span class="fu">transform</span>(iris, <span class="at">Sepals =</span> <span class="fu">ifelse</span>(Sepal.Length<span class="sc">&gt;</span><span class="dv">6</span>, <span class="st">"Long"</span>, <span class="st">"Short"</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Sepals, <span class="at">data =</span> iris2,</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span>Species,</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">bg =</span> <span class="st">"grey90"</span>),</span>
@@ -321,7 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Hopefully, these have been enough to pique your interest. Head over to the <a href="https://grantmcdermott.com/plot2/vignettes/intro_tutorial.html">intro tutorial</a> for many more examples, including range plots and customization.</p>
+<p>Hopefully, these have been enough to pique your interest. Head over to the <a href="https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html">intro tutorial</a> for many more examples, including range plots and customization.</p>
 
 
 </section>

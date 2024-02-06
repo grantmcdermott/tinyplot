@@ -2,27 +2,27 @@
   
   # https://stackoverflow.com/questions/12598242/global-variables-in-packages-in-r
   # https://stackoverflow.com/questions/49056642/r-how-to-make-variable-available-to-namespace-at-loading-time?noredirect=1&lq=1
-  plt2ptns <- parent.env(environment())
-  assign(".plot2_env", new.env(), envir = plt2ptns)
-  .par2 <- new.env()
+  tnypltptns <- parent.env(environment())
+  assign(".tinyplot_env", new.env(), envir = tnypltptns)
+  .tpar <- new.env()
   
   # Facet margin, i.e. gap between the individual facet windows
-  .par2$fmar <- if(is.null(getOption("plot2_fmar"))) c(1,1,1,1) else as.numeric(getOption("plot2_fmar"))
+  .tpar$fmar <- if(is.null(getOption("tinyplot_fmar"))) c(1,1,1,1) else as.numeric(getOption("tinyplot_fmar"))
   
   # Other facet options
-  .par2$facet.cex <- if(is.null(getOption("plot2_facet.cex"))) 1 else as.numeric(getOption("plot2_facet.cex"))
-  .par2$facet.font <- if(is.null(getOption("plot2_facet.font"))) NULL else as.numeric(getOption("plot2_facet.font"))
-  .par2$facet.col <- if(is.null(getOption("plot2_facet.col"))) NULL else getOption("plot2_facet.col")
-  .par2$facet.bg <- if(is.null(getOption("plot2_facet.bg"))) NULL else getOption("plot2_facet.bg")
-  .par2$facet.border <- if(is.null(getOption("plot2_facet.border"))) NA else getOption("plot2_facet.border")
+  .tpar$facet.cex <- if(is.null(getOption("tinyplot_facet.cex"))) 1 else as.numeric(getOption("tinyplot_facet.cex"))
+  .tpar$facet.font <- if(is.null(getOption("tinyplot_facet.font"))) NULL else as.numeric(getOption("tinyplot_facet.font"))
+  .tpar$facet.col <- if(is.null(getOption("tinyplot_facet.col"))) NULL else getOption("tinyplot_facet.col")
+  .tpar$facet.bg <- if(is.null(getOption("tinyplot_facet.bg"))) NULL else getOption("tinyplot_facet.bg")
+  .tpar$facet.border <- if(is.null(getOption("tinyplot_facet.border"))) NA else getOption("tinyplot_facet.border")
   
-  # .par2$grid <- if(is.null(getOption("plot2_grid"))) FALSE else as.logical(getOption("plot2_grid"))
+  # .tpar$grid <- if(is.null(getOption("tinyplot_grid"))) FALSE else as.logical(getOption("tinyplot_grid"))
   
-  .par2$last_facet_par <- if(is.null(getOption("plot2_last_facet_par"))) NULL else getOption("plot2_last_facet_par")
+  .tpar$last_facet_par <- if(is.null(getOption("tinyplot_last_facet_par"))) NULL else getOption("tinyplot_last_facet_par")
   
   # Legend margin, i.e. gap between the legend and the plot elements
-  .par2$lmar <- if(is.null(getOption("plot2_lmar"))) c(1.0, 0.1) else as.numeric(getOption("plot2_lmar"))
+  .tpar$lmar <- if(is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))
   
-  assign(".par2", .par2, envir = plt2ptns)
+  assign(".tpar", .tpar, envir = tnypltptns)
   
 }

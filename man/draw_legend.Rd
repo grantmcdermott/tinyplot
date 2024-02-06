@@ -2,7 +2,7 @@
 % Please edit documentation in R/draw_legend.R
 \name{draw_legend}
 \alias{draw_legend}
-\title{Calculate placement of legend and and draw it}
+\title{Calculate placement of legend and draw it}
 \usage{
 draw_legend(
   legend = NULL,
@@ -21,7 +21,7 @@ draw_legend(
 )
 }
 \arguments{
-\item{legend}{Legend placement keyword or list, passed down from \code{plot2}.}
+\item{legend}{Legend placement keyword or list, passed down from \code{tinyplot}.}
 
 \item{legend.args}{Additional legend arguments to be passed to \code{legend()}.}
 
@@ -29,23 +29,23 @@ draw_legend(
 
 \item{lgnd_labs}{The labels passed to \code{legend(legend = ...)}.}
 
-\item{type}{Plotting type(s), passed down from \code{plot2}.}
+\item{type}{Plotting type(s), passed down from \code{tinyplot}.}
 
-\item{pch}{Plotting character(s), passed down from \code{plot2}.}
+\item{pch}{Plotting character(s), passed down from \code{tinyplot}.}
 
-\item{lty}{Plotting linetype(s), passed down from \code{plot2}.}
+\item{lty}{Plotting linetype(s), passed down from \code{tinyplot}.}
 
-\item{col}{Plotting colour(s), passed down from \code{plot2}.}
+\item{col}{Plotting colour(s), passed down from \code{tinyplot}.}
 
-\item{bg}{Plotting character background fill colour(s), passed down from \code{plot2}.}
+\item{bg}{Plotting character background fill colour(s), passed down from \code{tinyplot}.}
 
-\item{cex}{Plotting character expansion(s), passed down from \code{plot2}.}
+\item{cex}{Plotting character expansion(s), passed down from \code{tinyplot}.}
 
 \item{lmar}{Legend margins (in lines). Should be a numeric vector of the form
 \code{c(inner, outer)}, where the first number represents the "inner" margin
 between the legend and the plot, and the second number represents the
 "outer" margin between the legend and edge of the graphics device. If no
-explicit value is provided by the user, then reverts back to \code{par2("lmar")}
+explicit value is provided by the user, then reverts back to \code{tpar("lmar")}
 for which the default values are \code{c(1.0, 0.1)}.}
 
 \item{has_sub}{Logical. Does the plot have a sub-caption. Only used if
@@ -92,7 +92,7 @@ par(mar = oldmar)
 
 # Note that the inner and outer margin of the legend itself can be set via
 # the `lmar` argument. (This can also be set globally via
-# `par2(lmar = c(inner, outer))`.)
+# `tpar(lmar = c(inner, outer))`.)
 draw_legend(
   legend.args = list(title = "Key", bty = "o"),
   lgnd_labs = c("foo", "bar"),

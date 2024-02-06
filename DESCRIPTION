@@ -1,7 +1,7 @@
-Package: plot2
+Package: tinyplot
 Type: Package
-Title: Lightweight extension of base R plot
-Version: 0.0.4
+Title: Lightweight Extension of the Base R Graphics System
+Version: 0.0.5
 Authors@R: 
   c(
     person(
@@ -31,8 +31,8 @@ Authors@R:
       email = "etienne.bacher@protonmail.com"
     )
   )
-Description: Lightweight extension of the base R plot system, with support for
-      automatic grouping and legend printing, and several other enhancements.
+Description: Lightweight extension of the base R graphics system, with support
+      for automatic legends, facetting, and several other enhancements.
 License: GPL (>= 2) 
 Depends:
   R (>= 4.0)
@@ -54,9 +54,9 @@ Suggests:
 Remotes: 
   etiennebacher/altdoc
 Encoding: UTF-8
-RoxygenNote: 7.3.0
-URL: https://grantmcdermott.com/plot2/,
-    http://grantmcdermott.com/plot2/
-BugReports: https://github.com/grantmcdermott/plot2/issues
+RoxygenNote: 7.3.1
+URL: https://grantmcdermott.com/tinyplot/,
+    http://grantmcdermott.com/tinyplot/
+BugReports: https://github.com/grantmcdermott/tinyplot/issues
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

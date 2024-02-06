@@ -1,24 +1,24 @@
-#' @title Calculate placement of legend and and draw it
+#' @title Calculate placement of legend and draw it
 #'   
 #' @description Internal function used to calculate the placement of (including
 #'   outside the plotting area) and drawing of legend.
 #'   
 #' @md
-#' @param legend Legend placement keyword or list, passed down from `plot2`.
+#' @param legend Legend placement keyword or list, passed down from `tinyplot`.
 #' @param legend.args Additional legend arguments to be passed to `legend()`.
 #' @param by_dep The (deparsed) "by" grouping variable name.
 #' @param lgnd_labs The labels passed to `legend(legend = ...)`.
-#' @param type Plotting type(s), passed down from `plot2`.
-#' @param pch Plotting character(s), passed down from `plot2`.
-#' @param lty Plotting linetype(s), passed down from `plot2`.
-#' @param col Plotting colour(s), passed down from `plot2`.
-#' @param bg Plotting character background fill colour(s), passed down from `plot2`.
-#' @param cex Plotting character expansion(s), passed down from `plot2`.
+#' @param type Plotting type(s), passed down from `tinyplot`.
+#' @param pch Plotting character(s), passed down from `tinyplot`.
+#' @param lty Plotting linetype(s), passed down from `tinyplot`.
+#' @param col Plotting colour(s), passed down from `tinyplot`.
+#' @param bg Plotting character background fill colour(s), passed down from `tinyplot`.
+#' @param cex Plotting character expansion(s), passed down from `tinyplot`.
 #' @param lmar Legend margins (in lines). Should be a numeric vector of the form
 #'   `c(inner, outer)`, where the first number represents the "inner" margin
 #'   between the legend and the plot, and the second number represents the
 #'   "outer" margin between the legend and edge of the graphics device. If no
-#'   explicit value is provided by the user, then reverts back to `par2("lmar")`
+#'   explicit value is provided by the user, then reverts back to `tpar("lmar")`
 #'   for which the default values are `c(1.0, 0.1)`.
 #' @param has_sub Logical. Does the plot have a sub-caption. Only used if
 #'   keyword position is "bottom!", in which case we need to bump the legend
@@ -58,7 +58,7 @@
 #' 
 #' # Note that the inner and outer margin of the legend itself can be set via
 #' # the `lmar` argument. (This can also be set globally via
-#' # `par2(lmar = c(inner, outer))`.)
+#' # `tpar(lmar = c(inner, outer))`.)
 #' draw_legend(
 #'   legend.args = list(title = "Key", bty = "o"),
 #'   lgnd_labs = c("foo", "bar"),
@@ -89,7 +89,7 @@ draw_legend = function(
 ) {
   
   if (is.null(lmar)) {
-    lmar = par2("lmar")
+    lmar = tpar("lmar")
   } else {
     if (!is.numeric(lmar) || length(lmar)!=2) stop ("lmar must be a numeric of length 2.")
   }
@@ -163,11 +163,11 @@ draw_legend = function(
   omar = par("mar")
   topmar_epsilon = 0.1
   
-  # Catch to avoid recursive offsets, e.g. repeated plot2 calls with
+  # Catch to avoid recursive offsets, e.g. repeated tinyplot calls with
   # "bottom!" legend position.
   
   ## restore inner margin defaults
-  ## (in case the plot region/margins were affected by the preceding plot2 call)
+  ## (in case the plot region/margins were affected by the preceding tinyplot call)
   if (any(ooma != 0)) {
     if ( ooma[1] != 0 & omar[1] == par("mgp")[1] + 1*par("cex.lab") ) omar[1] = 5.1
     if ( ooma[2] != 0 & omar[2] == par("mgp")[1] + 1*par("cex.lab") ) omar[2] = 4.1

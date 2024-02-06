@@ -1,16 +1,10 @@
 #' @title Lightweight extension of the base R plotting function
-#'   
-#' @description Extends base R's graphics system,
-#'   particularly as it applies to scatter and
-#'   line plots with grouped data. For example, `plot2` makes it easy to plot
-#'   different categories of a dataset in a single function call and highlight
-#'   these categories (groups) using modern colour palettes. Coincident with
-#'   this grouping support, `plot2` also produces automatic legends with scope
-#'   for further customization. While the package also offers several other
-#'   enhancements, it tries as far as possible to be a drop-in replacement
-#'   for the equivalent base plot function. Users should generally be able to
-#'   swap a valid \code{\link[graphics]{plot}} call with `plot2` without any
-#'   changes to the output.
+#'  
+#' @description
+#' Enhances the base \code{\link[graphics]{plot}} function. Supported features
+#' include automatic legends and facets for grouped data, additional plot types,
+#' theme customization, and so on. Users can call either `tinyplot()`, or its
+#' shorthand alias `plt()`.
 #' 
 #' @md
 #' @param x,y the x and y arguments provide the x and y coordinates for the
@@ -52,18 +46,18 @@
 #'   is passed to the main `facet` argument, since the layout is arranged in a
 #'   fixed grid.
 #'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
-#'   between facets in terms of lines. Defaults to the value of `par2("fmar")`,
+#'   between facets in terms of lines. Defaults to the value of `tpar("fmar")`,
 #'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each
 #'   individual facet, assuming it hasn't been overridden by the user as part
-#'   their global \code{\link[plot2]{par2}} settings. Note some automatic
+#'   their global \code{\link[tinyplot]{tpar}} settings. Note some automatic
 #'   adjustments are made for certain layouts, and depending on whether the plot
 #'   is framed or not, to reduce excess whitespace. See
-#'   \code{\link[plot2]{par2}} for more details.
+#'   \code{\link[tinyplot]{tpar}} for more details.
 #'   - `cex`, `font`, `col`, `bg`, `border` for adjusting the facet title text
 #'   and background. Default values for these arguments are inherited from
-#'   \code{\link[plot2]{par2}} (where they take a "facet." prefix, e.g. 
-#'   `par2("facet.cex")`). The latter function can also be used to set these
-#'   features globally for all `plot2` plots.
+#'   \code{\link[tinyplot]{tpar}} (where they take a "facet." prefix, e.g. 
+#'   `tpar("facet.cex")`). The latter function can also be used to set these
+#'   features globally for all `tinyplot` plots.
 #' @param formula a `formula` that optionally includes grouping variable(s)
 #'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
 #'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
@@ -76,7 +70,7 @@
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 #'   and "h" for histogram-like vertical lines. "n" does not produce
 #'   any points or lines.
-#'   - Additional plot2 types: "density" for densities, "pointrange" or
+#'   - Additional tinyplot types: "density" for densities, "pointrange" or
 #'   "errorbar" for segement intervals, and "ribbon" or "area" for polygon
 #'   intervals (where area plots are a special case of ribbon plots with `ymin`
 #'   set to 0 and `ymax` set to `y`; see below).
@@ -129,7 +123,7 @@
 #'    argument and underlying data.
 #'    - A convenience string indicating the legend position. The string should
 #'    correspond to one of the position keywords supported by the base `legend`
-#'    function, e.g. "right", "topleft", "bottom", etc. In addition, `plot2`
+#'    function, e.g. "right", "topleft", "bottom", etc. In addition, `tinyplot`
 #'    supports adding a trailing exclamation point to these keywords, e.g.
 #'    "right!", "topleft!", or "bottom!". This will place the legend _outside_
 #'    the plotting area and adjust the margins of the plot accordingly. Finally,
@@ -141,7 +135,7 @@
 #'    legend arguments, e.g. "bty", "horiz", and so forth.
 #' @param col plotting color. Character, integer, or vector of length equal to
 #'   the number of categories in the `by` variable. See `col`. Note that the
-#'   default behaviour in `plot2` is to vary group colors along any variables
+#'   default behaviour in `tinyplot` is to vary group colors along any variables
 #'   declared in the `by` argument. Thus, specifying colors manually should not
 #'   be necessary unless users wish to override the automatic colors produced by
 #'   this grouping process. Typically, this would only be done if grouping
@@ -167,7 +161,7 @@
 #'   case the background fill will inherit the automatic group coloring
 #'   intended for the `col` argument. Note that this grouped inheritance will
 #'   persist even if the `col` defaults are themselves overridden. For example,
-#'   `plot2(y ~ x | z, data = fakedata, pch = 22, col = "blue", bg = "by")`
+#'   `tinyplot(y ~ x | z, data = fakedata, pch = 22, col = "blue", bg = "by")`
 #'   will yield filled squares with a blue border.
 #' @param fill alias for `bg`. If non-NULL values for both `bg` and `fill` are
 #'   provided, then the latter will be ignored in favour of the former.
@@ -176,10 +170,10 @@
 #'   relative to the default. Note that NULL is equivalent to 1.0, while NA
 #'   renders the characters invisible.
 #' @param par_restore a logical value indicating whether the `par` settings
-#'   prior to calling `plot2` should be restored on exit. Defaults to FALSE,
+#'   prior to calling `tinyplot` should be restored on exit. Defaults to FALSE,
 #'   which makes it possible to add elements to the plot after it has been
 #'   drawn. However, note the the outer margins of the graphics device may have
-#'   been altered to make space for the `plot2` legend. Users can opt out of
+#'   been altered to make space for the `tinyplot` legend. Users can opt out of
 #'   this persistent behaviour by setting to TRUE instead. (Another option would
 #'   be calling `dev.off()` to reset all `par` settings to their defaults.)
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
@@ -197,6 +191,13 @@
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
+#' @details
+#' Disregarding the enhancements that it supports, `tinyplot` tries as far as
+#' possible to mimic the behaviour and syntax logic of the original base
+#' \code{\link[graphics]{plot}} function. Users should therefore be able to swap
+#' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
+#' without causing unexpected changes to the output.
+#'   
 #' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
 #' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext text rect
 #' @importFrom utils modifyList head tail
@@ -208,33 +209,38 @@
 #' op = par()
 #' 
 #' 
-#' # plot2 should be a drop-in replacement for (most) regular plot calls. For
-#' # example:
-#' 
-#' par(mfrow = c(1, 2))
-#' plot(0:10, main = "plot")
-#' plot2(0:10, main = "plot2")
-#' 
-#' # restore graphics parameters
-#' par(op)  
-#' 
-#' # Unlike vanilla plot, however, plot2 allows you to characterize groups 
-#' # (using either the `by` argument or equivalent `|` formula syntax).
-#' 
 #' aq = transform(
 #'   airquality,
 #'   Month = factor(Month, labels = month.abb[unique(Month)])
 #' )
 #' 
-#' with(aq, plot2(Day, Temp, by = Month)) ## atomic method
-#' plot2(Temp ~ Day | Month, data = aq)   ## formula method
+#' # tinyplot should be a drop-in replacement for (most) regular plot calls. For
+#' # example:
 #' 
-#' # Notice that we also get an automatic legend.
+#' par(mfrow = c(1, 2))
+#' plot(0:10, main = "plot")
+#' tinyplot(0:10, main = "tinyplot")
+#' 
+#' # restore graphics parameters
+#' par(op)  
+#' 
+#' # Unlike vanilla plot, however, tinyplot allows you to characterize groups 
+#' # using either the `by` argument or equivalent `|` formula syntax.
+#' 
+#' with(aq, tinyplot(Day, Temp, by = Month)) ## atomic method
+#' tinyplot(Temp ~ Day | Month, data = aq)   ## formula method
+#' 
+#' # (Notice that we also get an automatic legend.)
+#' 
+#' # You can also use the equivalent shorthand `plt` alias if you'd like to save
+#' # on a few keystrokes
+#' 
+#' plt(Temp ~ Day | Month, data = aq) ## shorthand alias
 #'
 #' # Use standard base plotting arguments to adjust features of your plot.
 #' # For example, change `pch` (plot character) to get filled points.
 #' 
-#' plot2(
+#' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   pch = 16
@@ -243,17 +249,17 @@
 #' # Converting to a grouped line plot is a simple matter of adjusting the
 #' # `type` argument.
 #' 
-#' plot2(
+#' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "l"
 #' )
 #' 
 #' # Similarly for other plot types, including some additional ones provided
-#' # directly by plot2, e.g. density plots or internal plots (ribbons, 
+#' # directly by tinyplot, e.g. density plots or internal plots (ribbons, 
 #' # pointranges, etc.)
 #' 
-#' plot2(
+#' tinyplot(
 #'   ~ Temp | Month,
 #'   data = aq,
 #'   type = "density",
@@ -262,7 +268,7 @@
 #' 
 #' # Facet plots are supported too. Facets can be drawn on their own...
 #' 
-#' plot2(
+#' tinyplot(
 #'   Temp ~ Day,
 #'   facet = ~ Month, 
 #'   data = aq,
@@ -273,7 +279,7 @@
 #' # ... or combined/contrasted with the by (colour) grouping.
 #' 
 #' aq = transform(aq, Summer = Month %in% c("Jun", "Jul", "Aug"))
-#' plot2(
+#' tinyplot(
 #'   Temp ~ Day | Summer,
 #'   facet = ~ Month, 
 #'   data = aq,
@@ -286,7 +292,7 @@
 #' # or `ncol` to the helper facet.args argument. Note that we can also reduce
 #' # axis label repetition across facets by turning the plot frame off.
 #' 
-#' plot2(
+#' tinyplot(
 #'   Temp ~ Day | Summer,
 #'   facet = ~ Month, facet.args = list(nrow = 1),
 #'   data = aq,
@@ -301,7 +307,7 @@
 #' 
 #' aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
 #' aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
-#' plot2(
+#' tinyplot(
 #'  Temp ~ Day,
 #'  facet = windy ~ hot,
 #'  data = aq
@@ -309,10 +315,10 @@
 #' 
 #' # The (automatic) legend position and look can be customized using
 #' # appropriate arguments. Note the trailing "!" in the `legend` position
-#' # argument below. This tells `plot2` to place the legend _outside_ the plot
+#' # argument below. This tells `tinyplot` to place the legend _outside_ the plot
 #' # area.
 #' 
-#' plot2(
+#' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "l",
@@ -325,7 +331,7 @@
 #' # or users can supply a valid palette-generating function for finer control
 #' # over transparency etc.
 #' 
-#' plot2(
+#' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "l",
@@ -336,7 +342,7 @@
 #' # arguments and base plotting theme settings (e.g., via `par`).
 #'
 #' par(family = "HersheySans", las = 1)
-#' plot2(
+#' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "b", pch = 16,
@@ -345,18 +351,18 @@
 #'   frame = FALSE, grid = TRUE
 #' )
 #' 
-#' par(family = "") # revert global font change from above
+#' par(op) # revert original graphics parameters
 #' 
-#' @rdname plot2
+#' @rdname tinyplot
 #' @export
-plot2 =
+tinyplot =
   function(x, ...) {
-    UseMethod("plot2")
+    UseMethod("tinyplot")
   }
 
-#' @rdname plot2
+#' @rdname tinyplot
 #' @export
-plot2.default = function(
+tinyplot.default = function(
     x,
     y = NULL,
     by = NULL,
@@ -405,7 +411,7 @@ plot2.default = function(
   }
   
   # catch for adding to existing facet plot
-  if (!is.null(facet) && isTRUE(add)) par(par2("last_facet_par"))
+  if (!is.null(facet) && isTRUE(add)) par(tpar("last_facet_par"))
   
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = deparse1(substitute(x))
@@ -449,7 +455,7 @@ plot2.default = function(
       fargs[["legend"]] = NULL
     }
     fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
-    return(do.call(plot2.density, args = fargs))
+    return(do.call(tinyplot.density, args = fargs))
   }
   
   if (is.null(y)) {
@@ -678,11 +684,11 @@ plot2.default = function(
     ooma = par("oma")
     topmar_epsilon = 0.1
     
-    # Catch to avoid recursive offsets, e.g. repeated plot2 calls with
+    # Catch to avoid recursive offsets, e.g. repeated tinyplot calls with
     # "bottom!" legend position.
     
     ## restore inner margin defaults
-    ## (in case the plot region/margins were affected by the preceding plot2 call)
+    ## (in case the plot region/margins were affected by the preceding tinyplot call)
     if (any(ooma != 0)) {
       if ( ooma[1] != 0 & omar[1] == par("mgp")[1] + 1*par("cex.lab") ) omar[1] = 5.1
       if ( ooma[2] != 0 & omar[2] == par("mgp")[1] + 1*par("cex.lab") ) omar[2] = 4.1
@@ -725,7 +731,7 @@ plot2.default = function(
       # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
       # and add the difference between original top margin and new one (i.e.,
       # which should equal the height of the new legend). Note that we also
-      # include a 0.1 epsilon bump, which we're using to reset the plot2
+      # include a 0.1 epsilon bump, which we're using to reset the tinyplot
       # window in case of recursive "top!" calls. (See draw_legend code.)
       title(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1)
       title(sub = sub)
@@ -746,11 +752,11 @@ plot2.default = function(
     
     # Grab some of the customizable facet args that we'll be using later
     facet_rect = FALSE
-    facet_text = .par2[["facet.cex"]]
-    facet_font = .par2[["facet.font"]]
-    facet_col = .par2[["facet.col"]]
-    facet_bg = .par2[["facet.bg"]]
-    facet_border = .par2[["facet.border"]]
+    facet_text = .tpar[["facet.cex"]]
+    facet_font = .tpar[["facet.font"]]
+    facet_col = .tpar[["facet.col"]]
+    facet_bg = .tpar[["facet.bg"]]
+    facet_border = .tpar[["facet.border"]]
     if (!is.null(facet.args)) {
       if (!is.null(facet.args[["cex"]])) facet_text = facet.args[["cex"]]
       if (!is.null(facet.args[["col"]])) facet_col = facet.args[["col"]]
@@ -781,7 +787,7 @@ plot2.default = function(
     if (nfacets > 1) {
       # Set facet margins (i.e., gaps between facets)
       if (is.null(facet.args[["fmar"]])) {
-        fmar = par2("fmar")
+        fmar = tpar("fmar")
       } else {
         if (length(facet.args[["fmar"]]) != 4) {
           warning(
@@ -791,7 +797,7 @@ plot2.default = function(
             "Resetting to fmar = c(1,1,1,1) default.",
             "\n"
           )
-          fmar = par2("fmar")
+          fmar = tpar("fmar")
         } else {
           fmar = facet.args[["fmar"]]
         }
@@ -825,7 +831,7 @@ plot2.default = function(
       nmar = (fmar+.1)/cex_fct_adj
       noma = (ooma+omar-fmar-.1)/cex_fct_adj
       # Catch in case of negative oma values. (Probably only occurs with some
-      # user-supplied par2(lmar) values and a "left!" positioned legend.)
+      # user-supplied tpar(lmar) values and a "left!" positioned legend.)
       if (any(noma<0)) {
         noma_orig = noma
         noma[noma<0] = 0
@@ -845,7 +851,7 @@ plot2.default = function(
     ## components (axes, titles, box, grid, etc.)
     for (ii in ifacet) {
     
-      # See: https://github.com/grantmcdermott/plot2/issues/65
+      # See: https://github.com/grantmcdermott/tinyplot/issues/65
       if (nfacets > 1) {
         mfgi = ceiling(ii/nfacet_cols)
         mfgj = ii %% nfacet_cols
@@ -1047,7 +1053,7 @@ plot2.default = function(
       yymax = idata[[ii]]$ymax
       
       # Set the facet "window" manually
-      # See: https://github.com/grantmcdermott/plot2/issues/65
+      # See: https://github.com/grantmcdermott/tinyplot/issues/65
       # if (nfacets > 1) par(mfg = c(1, ii))
       if (nfacets > 1) {
         mfgi = ceiling(ii/nfacet_cols)
@@ -1128,7 +1134,7 @@ plot2.default = function(
   
   # tidy up before exit
   if (!is.null(facet)) {
-    par2(last_facet_par = par(no.readonly = TRUE))
+    tpar(last_facet_par = par(no.readonly = TRUE))
   }
   
 }
@@ -1136,10 +1142,10 @@ plot2.default = function(
 
 
 
-#' @rdname plot2
+#' @rdname tinyplot
 #' @importFrom stats as.formula model.frame
 #' @export
-plot2.formula = function(
+tinyplot.formula = function(
     x = NULL,
     data = parent.frame(),
     facet = NULL,
@@ -1290,7 +1296,7 @@ plot2.formula = function(
     if (is.null(xlab)) xlab = names(mf)[x_loc]
   }
   
-  plot2.default(
+  tinyplot.default(
     x = x, y = y, by = by,
     facet = facet, facet.args = facet.args,
     data = data,
@@ -1319,9 +1325,9 @@ plot2.formula = function(
 
 #' @importFrom methods as
 #' @importFrom stats update
-#' @rdname plot2
+#' @rdname tinyplot
 #' @export
-plot2.density = function(
+tinyplot.density = function(
     x = NULL,
     by = NULL,
     facet = NULL,
@@ -1361,11 +1367,11 @@ plot2.density = function(
   if (inherits(x, "density")) {
     object = x
     legend.args = list(x = NULL)
-    # Grab by label to pass on legend title to plot2.default
+    # Grab by label to pass on legend title to tinyplot.default
     legend.args[["title"]] = deparse(substitute(by))
   } else {
     ## An internal catch for non-density objects that were forcibly
-    ## passed to plot2.density (e.g., via a one-side formula)
+    ## passed to tinyplot.density (e.g., via a one-side formula)
     if (anyNA(x)) {
       x = na.omit(x)
       if (!is.null(by)) by = by[-attr(x, "na.action")]
@@ -1494,7 +1500,7 @@ plot2.density = function(
     attr(facet, "facet_grid") = facet_attributes[["facet_grid"]]
   }
   
-  plot2.default(
+  tinyplot.default(
     x = x, y = y, by = by, facet = facet, facet.args = facet.args,
     type = type,
     xlim = xlim,
@@ -1521,6 +1527,10 @@ plot2.density = function(
 
 }
 
+#' @export
+#' @name plt
+#' @rdname tinyplot
+plt = tinyplot
 
 
 # utility function for converting facet formulas into variables

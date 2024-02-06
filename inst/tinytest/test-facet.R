@@ -9,7 +9,7 @@ op = par(no.readonly = TRUE)
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = cyl
     )
@@ -20,7 +20,7 @@ expect_snapshot_plot(f, label = "facet")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = am
     )
@@ -31,7 +31,7 @@ expect_snapshot_plot(f, label = "facet_1x2")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = am,
       facet.args = list(ncol = 1)
@@ -43,7 +43,7 @@ expect_snapshot_plot(f, label = "facet_2x1")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = interaction(am, vs)
     )
@@ -54,7 +54,7 @@ expect_snapshot_plot(f, label = "facet_2x2")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = interaction(cyl, am),
       main = "Facet with interaction"
@@ -66,7 +66,7 @@ expect_snapshot_plot(f, label = "facet_interaction")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = interaction(cyl, am, sep = "\n"),
       main = "Facet with interaction"
@@ -78,7 +78,7 @@ expect_snapshot_plot(f, label = "facet_interaction_newline")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = interaction(cyl, am),
       facet.args = list(ncol = 2),
@@ -91,7 +91,7 @@ expect_snapshot_plot(f, label = "facet_args_ncol")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       by = cyl, facet = "by"
     )
@@ -102,7 +102,7 @@ expect_snapshot_plot(f, label = "facet_by_equal")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       by = am, facet = cyl
     )
@@ -116,7 +116,7 @@ if (getRversion()  <= "4.3.2") {
   f = function() {
     with(
       mtcars,
-      plot2(
+      tinyplot(
         x = wt, y = mpg,
         by = am,
         facet = cyl, facet.args = list(bg = "grey90"),
@@ -137,23 +137,23 @@ if (getRversion()  <= "4.3.2") {
 ## facet margins (fmar)
 
 f = function() {
-  ofmar = par2("fmar")
-  par2(fmar = c(1,1,0.5,2))
+  ofmar = tpar("fmar")
+  tpar(fmar = c(1,1,0.5,2))
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = interaction(cyl, am)
     )
   )
-  par2(fmar = ofmar)
+  tpar(fmar = ofmar)
 }
 expect_snapshot_plot(f, label = "facet_fmar_par2")
 
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = interaction(cyl, am),
       facet.args = list(fmar = c(1,1,0.5,2))
@@ -173,7 +173,7 @@ mtcars2 = cbind(mtcars, predict(mod2, newdata = mtcars, interval = "confidence")
 f = function() {
   with(
     mtcars1,
-    plot2(
+    tinyplot(
       x = wt, y = fit,
       ymin = lwr, ymax = upr,
       type = "ribbon",
@@ -187,14 +187,14 @@ f = function() {
   
   with(
     mtcars1,
-    plot2(
+    tinyplot(
       x = wt, y = mpg,
       facet = cyl
     )
   )
   with(
     mtcars1,
-    plot2(
+    tinyplot(
       x = wt, y = fit,
       ymin = lwr, ymax = upr,
       type = "ribbon",
@@ -209,7 +209,7 @@ expect_snapshot_plot(f, label = "facet_ribbon_add")
 f = function() {
   with(
     mtcars1,
-    plot2(
+    tinyplot(
       x = wt, y = fit,
       ymin = lwr, ymax = upr,
       type = "ribbon",
@@ -222,7 +222,7 @@ expect_snapshot_plot(f, label = "facet_ribbon_by_equal")
 f = function() {
   with(
     mtcars2,
-    plot2(
+    tinyplot(
       x = wt, y = fit,
       ymin = lwr, ymax = upr,
       type = "ribbon",
@@ -239,7 +239,7 @@ if (getRversion()  <= "4.3.2") {
   f = function() {
     with(
       mtcars2,
-      plot2(
+      tinyplot(
         x = wt, y = mpg,
         by = am, facet = cyl,
         palette = "dark2",
@@ -252,7 +252,7 @@ if (getRversion()  <= "4.3.2") {
     )
     with(
       mtcars2,
-      plot2(
+      tinyplot(
         x = wt, y = fit,
         ymin = lwr, ymax = upr,
         type = "ribbon",
@@ -277,12 +277,12 @@ par(op)
 exit_if_not(getRversion()  <= "4.3.2")
 ## Note: Once 4.4.0 is released we can either generate some new plots or
 ## test with something like:
-# f = function() plot2(density(mtcars$mpg, old.coords=TRUE))
+# f = function() tinyplot(density(mtcars$mpg, old.coords=TRUE))
 
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = mpg,
       type = "density",
       facet = cyl
@@ -294,7 +294,7 @@ expect_snapshot_plot(f, label = "facet_density")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = mpg,
       type = "density",
       by = cyl, facet = "by"
@@ -306,7 +306,7 @@ expect_snapshot_plot(f, label = "facet_density_by_equal")
 f = function() {
   with(
     mtcars,
-    plot2(
+    tinyplot(
       x = mpg,
       type = "density",
       by = am, facet = cyl
@@ -321,7 +321,7 @@ if (getRversion()  <= "4.3.2") {
   f = function() {
     with(
       mtcars,
-      plot2(
+      tinyplot(
         x = mpg,
         type = "density",
         by = am,
@@ -342,7 +342,7 @@ if (getRversion()  <= "4.3.2") {
 ## facet (one-sided) formula versions
 
 f = function() {
-  plot2(
+  tinyplot(
     mpg ~ wt, data = mtcars,
     facet = ~cyl
   )
@@ -350,7 +350,7 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_formula")
 
 f = function() {
-  plot2(
+  tinyplot(
     mpg ~ wt, data = mtcars,
     facet = ~am
   )
@@ -358,7 +358,7 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_1x2_formula")
 
 f = function() {
-  plot2(
+  tinyplot(
     mpg ~ wt, data = mtcars,
     facet = ~am,
     facet.args = list(ncol = 1)
@@ -367,7 +367,7 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_2x1_formula")
 
 f = function() {
-  plot2(
+  tinyplot(
     mpg ~ wt, data = mtcars,
     facet = ~am:vs
   )
@@ -378,7 +378,7 @@ expect_snapshot_plot(f, label = "facet_2x2_formula")
 ## in R 4.4.0. Can revert once it reaches release for local testing.
 if (getRversion()  <= "4.3.2") {
   f = function() {
-    plot2(
+    tinyplot(
       ~ mpg | am, mtcars,
       type = "density",
       facet = ~cyl,
@@ -397,7 +397,7 @@ if (getRversion()  <= "4.3.2") {
 ## facet grid (two-sided formula)
 
 f = function() {
-  plot2(
+  tinyplot(
     mpg ~ wt, data = mtcars,
     facet = am ~ cyl,
     main = "facet grid",
@@ -411,7 +411,7 @@ expect_snapshot_plot(f, label = "facet_grid")
 ## in R 4.4.0. Can revert once it reaches release for local testing.
 if (getRversion()  <= "4.3.2") {
   f = function() {
-    plot2(
+    tinyplot(
       mpg ~ wt | factor(gear), data = mtcars,
       facet = am ~ cyl,
       facet.args = list(bg = "grey90"),
@@ -431,7 +431,7 @@ aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
 aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
 
 f = function() {
-  plot2(
+  tinyplot(
     ~ Ozone, aq, 
     type = "density",
     facet = ~hot:windy, 
@@ -441,7 +441,7 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_density_formula")
 
 f = function() {
-  plot2(
+  tinyplot(
     ~ Ozone, aq, 
     type = "density",
     facet = windy ~ hot, 

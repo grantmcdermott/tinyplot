@@ -1,31 +1,32 @@
 
-# plot2
+
+# tinyplot
 
 <!-- badges: start -->
 
 [![CRAN
-version](https://www.r-pkg.org/badges/version/plot2.png)](https://CRAN.R-project.org/package=plot2)
+version](https://www.r-pkg.org/badges/version/tinyplot.png)](https://CRAN.R-project.org/package=tinyplot)
 [![R-universe status
-badge](https://grantmcdermott.r-universe.dev/badges/plot2.png)](https://grantmcdermott.r-universe.dev)
-[![R-CMD-check](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/plot2/actions/workflows/R-CMD-check.yaml)
-[![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/plot2/index.html)
+badge](https://grantmcdermott.r-universe.dev/badges/tinyplot.png)](https://grantmcdermott.r-universe.dev)
+[![R-CMD-check](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml)
+[![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/tinyplot/index.html)
 <!-- badges: end -->
 
 ## What
 
 A lightweight extension of the base R graphics system, with support for
-automatic grouping, legends, facets and various other enhancements.
+automatic grouping, legends, facets, and various other enhancements.
 
-**plot2** is not yet on CRAN, but can be installed from R-universe.
+**tinyplot** is not yet on CRAN, but can be installed from R-universe.
 
 ``` r
-install.packages("plot2", repos = "https://grantmcdermott.r-universe.dev")
+install.packages("tinyplot", repos = "https://grantmcdermott.r-universe.dev")
 ```
 
 Our goal is to submit to CRAN within the first few months of 2024, once
 we have settled on some remaining design choices and features support.
 You can take a look at the [open
-issues](https://github.com/grantmcdermott/plot2/issues) to see what’s
+issues](https://github.com/grantmcdermott/tinyplot/issues) to see what’s
 currently under consideration. Please feel free to weigh on these if you
 have opinions. We want end users to have a say in determining the final
 product.
@@ -35,7 +36,7 @@ product.
 R users are spoiled for choice when it comes to visualization
 frameworks. The options include **ggplot2** (arguably the most important
 graphics system of the last decade) and **lattice**, not to mention a
-bewildering array of extensions built around, on top of, and in between
+bewildering array of extensions built on top of, around, and in between
 these amazing packages.
 
 As a result, it is perhaps not surprising that the base R graphics
@@ -52,35 +53,36 @@ the generic `plot()` function can require several function calls or a
 loop, fiddling with your plot regions, and then generating the legend
 manually.
 
-The **plot2** package aims to remove this overhead. It provides a
+The **tinyplot** package aims to remove this overhead. It provides a
 lightweight (zero dependency) extension of the base R graphics system
-with various convenience features, particularly for representing groups
-with your data. For example, the core `plot2()` function makes it easy
-to plot different categories of a dataset in a single function call and
-highlight these categories (groups) using modern colour palettes.
-Coincident with this grouping support, `plot2()` also produces automatic
-legends with scope for further customization. While the package offers
-several other enhancements like facets, it tries as far as possible to
-be a drop-in replacement for the equivalent base plot function. Users
-should generally be able to swap a valid `plot()` call with `plot2()`
-without any changes to the expected output.
+with various convenience features, particularly for representing grouped
+data. For example, the core `tinyplot()` function—or its shorthand
+`plt()` alias—makes it easy to plot different groups of a dataset in a
+single function call and highlight these groups using modern colour
+palettes. Coincident with this grouping support, **tinyplot** also
+produces automatic legends with scope for further customization. While
+the package offers several other enhancements like facets, it tries as
+far as possible to be a drop-in replacement for the equivalent base
+plotting function. Users should generally be able to swap a valid
+`plot()` call for `tinyplot()` without any changes to the expected
+output.
 
 ## Quickstart
 
-The **plot2** website includes a detailed [introductory
-tutorial](https://grantmcdermott.com/plot2/vignettes/intro_tutorial.html),
+The **tinyplot** website includes a detailed [introductory
+tutorial](https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html),
 with numerous examples. But here are some quickstart examples of the
 package in action.
 
 ``` r
-library(plot2)
+library(tinyplot)
 ```
 
 Grouped scatterplot with automatic legend:
 
 ``` r
-# with(iris, plot2(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic
-plot2(Sepal.Length ~ Petal.Length | Species, data = iris)             # formula
+# with(iris, tinyplot(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic
+tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)             # formula
 ```
 
 <img src="man/figures/README-quickstart2-1.png" style="width:70.0%" />
@@ -88,7 +90,7 @@ plot2(Sepal.Length ~ Petal.Length | Species, data = iris)             # formula
 Same plot with a few extra aesthetic tweaks:
 
 ``` r
-plot2(
+tinyplot(
   Sepal.Length ~ Petal.Length | Species, 
   data = iris,
   palette = "dark", pch  = 16,
@@ -101,7 +103,7 @@ plot2(
 Grouped grouped density plot with automatic legend:
 
 ``` r
-plot2(
+tinyplot(
   ~ Petal.Length | Species,
   data = iris,
   type = "density",
@@ -117,7 +119,7 @@ Grouped scatterplot, combined with facet layout:
 
 ``` r
 iris2 = transform(iris, Sepals = ifelse(Sepal.Length>6, "Long", "Short"))
-plot2(
+tinyplot(
   Sepal.Length ~ Petal.Length | Sepals, data = iris2,
   facet = ~Species,
   facet.args = list(bg = "grey90"),
@@ -131,5 +133,5 @@ plot2(
 
 Hopefully, these have been enough to pique your interest. Head over to
 the [intro
-tutorial](https://grantmcdermott.com/plot2/vignettes/intro_tutorial.html)
+tutorial](https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html)
 for many more examples, including range plots and customization.

@@ -1,5 +1,5 @@
 
 if ( requireNamespace("tinytest", quietly=TRUE) ){
-  tinytest::test_package("plot2")
+  tinytest::test_package("tinyplot")
 }
 

@@ -7,7 +7,7 @@ f = function() {
   par(mfrow = c(1, 2))
   
   plot(0:10, main = "plot")
-  plot2(0:10, main = "plot2")
+  tinyplot(0:10, main = "tinyplot")
 }
 expect_snapshot_plot(f, label = "readme_base_1")
 
@@ -16,8 +16,8 @@ f = function() {
   
   plot(airquality$Day, airquality$Temp, main = "plot")
   plot(Temp ~ Day, data = airquality, main = "plot (formula)")
-  plot2(airquality$Day, airquality$Temp, main = "plot2")
-  plot2(Temp ~ Day, data = airquality, main = "plot2 (formula)")
+  tinyplot(airquality$Day, airquality$Temp, main = "tinyplot")
+  tinyplot(Temp ~ Day, data = airquality, main = "tinyplot (formula)")
   
 }
 expect_snapshot_plot(f, label = "readme_base_2")
@@ -32,14 +32,14 @@ par(op)
 # continue with tests
 #
 
-f = function() plot2(airquality$Day, airquality$Temp, by = airquality$Month)
+f = function() tinyplot(airquality$Day, airquality$Temp, by = airquality$Month)
 expect_snapshot_plot(f, label = "readme_by")
 
-f = function() plot2(Temp ~ Day | Month, data = airquality)
+f = function() tinyplot(Temp ~ Day | Month, data = airquality)
 expect_snapshot_plot(f, label = "readme_formula")
 
 f = function() {
-  plot2(
+  tinyplot(
     Temp ~ Day | Month,
     data = airquality,
     pch = 16
@@ -48,7 +48,7 @@ f = function() {
 expect_snapshot_plot(f, label = "readme_pch_16")
 
 f = function() {
-  plot2(
+  tinyplot(
     Temp ~ Day | Month,
     data = airquality,
     type = "l"
@@ -57,7 +57,7 @@ f = function() {
 expect_snapshot_plot(f, label = "readme_type_l")
 
 f = function() {
-  plot2(
+  tinyplot(
     Temp ~ Day | Month,
     data = airquality,
     type = "l",
@@ -68,7 +68,7 @@ f = function() {
 expect_snapshot_plot(f, label = "readme_by_lty")
 
 f = function() {
-  plot2(
+  tinyplot(
     Temp ~ Day | Month,
     data = airquality,
     type = "l",
@@ -81,14 +81,14 @@ if ((getRversion() <= "4.3.1")) {
   f = function() {
     with(
       airquality,
-      plot2(density(Temp), by = Month, legend = legend("topright", bty="o"))
+      tinyplot(density(Temp), by = Month, legend = legend("topright", bty="o"))
     )
   }
   expect_snapshot_plot(f, label = "readme_density_topright")
 }
 
 f = function() {
-  plot2(
+  tinyplot(
     Temp ~ Day | Month,
     data = airquality,
     type = "l",
@@ -103,7 +103,7 @@ f = function() {
   coefs = setNames(coefs, c("term", "estimate", "ci_low", "ci_high"))
   with(
     coefs,
-    plot2(
+    tinyplot(
       x = term, y = estimate,
       ymin = ci_low, ymax = ci_high,
       type = "pointrange",
@@ -120,7 +120,7 @@ if (getRversion()  <= "4.3.2") {
   f = function() {
     par(pch = 16, family = "HersheySans")
     
-    plot2(
+    tinyplot(
       Temp ~ Day | Month,
       data = airquality,
       type = "b",
@@ -149,7 +149,7 @@ basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
 
 f = function() {
   
-  plot2(
+  tinyplot(
     Temp ~ Day | Month,
     data = airquality,
     type = "b", pch = 15:19,

@@ -9,7 +9,7 @@ exit_if_not(getRversion()  <= "4.3.2")
 op = par(no.readonly = TRUE)
 
 f1 = function() {
-  plot2(
+  tinyplot(
     Sepal.Width ~ Sepal.Length | Species, iris,
     grid = grid(),
     legend = legend("bottom!", bty = "o")
@@ -19,7 +19,7 @@ f1 = function() {
 expect_snapshot_plot(f1, label = "par_restore_bottom")
 
 f2 = function() {
-  plot2(
+  tinyplot(
     mpg ~ wt | cyl, mtcars,
     pch = 19,
     grid = grid(),
@@ -34,7 +34,7 @@ expect_snapshot_plot(f2, label = "par_restore_FALSE")
 par(op)
 
 f3 = function() {
-  plot2(
+  tinyplot(
     mpg ~ wt | cyl, mtcars,
     pch = 19,
     grid = grid(),

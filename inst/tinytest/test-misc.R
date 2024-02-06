@@ -4,28 +4,28 @@ using("tinysnapshot")
 f = function() {
   par(mfrow = c(1, 2))
   plot(Temp ~ Day, data = airquality, log = "x")
-  plot2(Temp ~ Day, data = airquality, log = "x")
+  tinyplot(Temp ~ Day, data = airquality, log = "x")
 } 
 expect_snapshot_plot(f, label = "arg_log_x")
 
 f = function() {
   par(mfrow = c(1, 2))
   plot(Temp ~ Day, data = airquality, log = "y")
-  plot2(Temp ~ Day, data = airquality, log = "y")
+  tinyplot(Temp ~ Day, data = airquality, log = "y")
 } 
 expect_snapshot_plot(f, label = "arg_log_y")
 
 f = function() {
   par(mfrow = c(1, 2))
   plot(Temp ~ Day, data = airquality, log = "xy")
-  plot2(Temp ~ Day, data = airquality, log = "xy")
+  tinyplot(Temp ~ Day, data = airquality, log = "xy")
 } 
 expect_snapshot_plot(f, label = "arg_log_xy")
 
 f = function() {
   par(mfrow = c(1, 2))
   plot(Temp ~ Day, data = airquality, log = "yx")
-  plot2(Temp ~ Day, data = airquality, log = "yx")
+  tinyplot(Temp ~ Day, data = airquality, log = "yx")
 } 
 expect_snapshot_plot(f, label = "arg_log_yx")
 
@@ -34,7 +34,7 @@ expect_snapshot_plot(f, label = "arg_log_yx")
 exit_if_not(getRversion()  <= "4.3.2")
 ## Note: Once 4.4.0 is released we can either generate some new plots or
 ## test with something like:
-# f = function() plot2(..., old.coords=TRUE))
+# f = function() tinyplot(..., old.coords=TRUE))
 
 f = function() {
   par(mfrow = c(1, 1))
@@ -42,11 +42,11 @@ f = function() {
   m = cbind(mtcars, pred)
   with(
     m,
-    plot2(wt, fit, ymin = lwr, ymax = upr, by = cyl, type = "ribbon", grid = TRUE)
+    tinyplot(wt, fit, ymin = lwr, ymax = upr, by = cyl, type = "ribbon", grid = TRUE)
   )
   with(
     m,
-    plot2(wt, mpg, by = cyl, pch = 16, add = TRUE)
+    tinyplot(wt, mpg, by = cyl, pch = 16, add = TRUE)
   )
 }
 expect_snapshot_plot(f, label = "addTRUE")

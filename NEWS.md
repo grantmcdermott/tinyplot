@@ -1,5 +1,49 @@
 # News
 
+## 0.0.5
+
+**IMPORTANT BREAKING CHANGE:**
+
+The package has been renamed to **tinyplot**. (#22 @grantmcdermott)
+
+This package renaming also incorporates the following function changes:
+
+- `plot2()` is replaced by `tinyplot()` (or its shorthand alias `plt()`).
+- `par2()` is replaced by `tpar()`.
+
+So, where you used to write...
+
+```r
+library(plot2)
+plot2(Sepal.Length ~ Petal.Length | Species, iris)
+```
+
+... you should now write:
+
+```r
+library(tinyplot)
+tinyplot(Sepal.Length ~ Petal.Length | Species, iris)
+
+# Or, use the equivalent shorthand `plt` alias
+plt(Sepal.Length ~ Petal.Length | Species, iris)
+```
+
+The package URLs have been updated accordingly:
+
+- GitHub: https://github.com/grantmcdermott/tinyplot
+- Website: https://grantmcdermott.com/tinyplot
+- R-universe: https://grantmcdermott.r-universe.dev/tinyplot
+
+Many thanks to everyone who provided thoughtful feedback about this prospective
+name change, especially @zeileis and @vincentarelbundock for kicking off the
+discussion, as well as the 100+ participants who voted in the social media
+poll.
+
+For more details about the rational underlying this renaming decision, please
+see the following GitHub comment, as well as the discussion that preceded it:
+https://github.com/grantmcdermott/plot2/issues/22#issuecomment-1928472754
+
+
 ##  0.0.4
 
 Website:

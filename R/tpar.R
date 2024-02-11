@@ -34,6 +34,9 @@
 #'   `last_facet_par` \tab\tab Full list of graphical parameters used to constructed the most recent faceted `tinyplot` plot during the current session. Unlike other `tpar` parameters, this parameter is intended for internal use (specifically, to enable adding further elements on top of an existing faceted plot) and should _not_ be set by the user.\cr
 #'   \tab\tab\cr
 #'   \tab\tab\cr
+#'   `legend.ugc` \tab\tab Integer denoting the threshold of unique groups required for a continuous (i.e., gradient) `tinyplot` color legend. Only applicable if the supplied "by" grouping variable is a numeric or integer. Defaults to `5L`, which means that a continuous (gradient) color legend will only be used if _more than_ five unique groups are detected. Conversely, if five or less unique groups are detected, then a discrete color legend will be used even if "by" is a numeric or integer. Set to `0` if you would like continuous (gradient) legends to be used whenever a numeric or integer variable is passed to "by", regardless of how many unique groups are detected.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
 #'   `lmar` \tab\tab A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is `"top!"`, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by `par("mar")[3]`.)\cr
 #' }
 #' 
@@ -95,6 +98,12 @@ tpar = function(...) {
     last_facet_par = opts$last_facet_par
     if(!(is.null(last_facet_par) || is.list(last_facet_par))) stop("last_facet_par needs to be NULL or a list")
     .tpar$last_facet_par = last_facet_par
+  }
+  
+  if (length(opts$legend.ugc)) {
+    legend.ugc = as.integer(opts$legend.ugc)
+    if(!is.integer(legend.ugc)) stop("legend.ugc needs to be an integer")
+    .tpar$legend.ugc = legend.ugc
   }
   
   if (length(opts$lmar)) {

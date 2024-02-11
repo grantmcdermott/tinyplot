@@ -13,10 +13,15 @@
 #'   'Examples' section below, or the function
 #'   \code{\link[grDevices]{xy.coords}} for details. If supplied separately, `x`
 #'   and `y` must be of the same length.
-#' @param by grouping variable(s). By default, groups will be represented
-#'   through colouring of the plot elements. However, this can be turned off
-#'   and other plot parameters (e.g., line types) can also take on grouping
-#'   behaviour via the special "by" keyword. See Examples.
+#' @param by grouping variable(s). The default behaviour is for groups to be
+#'   represented in the form of distinct colours, which will also trigger an
+#'   automatic legend. (See `legend` below for customization options.) However,
+#'   groups can also be presented through other plot parameters (e.g., `pch` or
+#'   `lty`) by passing an appropriate "by" keyword; see Examples. Note that
+#'   continuous (i.e., gradient) colour legends are also supported if the user
+#'   passes a numeric or integer to `by`. The exact behaviour depends on how
+#'   many unique groups are detected; see the `"legend.ugc"` parameter in
+#'   \code{\link[tinyplot]{tpar}}.
 #' @param facet the faceting variable(s) that you want arrange separate plot
 #'   windows by. Can be specified in various ways:
 #'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in 
@@ -528,7 +533,7 @@ tinyplot.default = function(
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
 
 
-  by_cont = !is.null(by) && (inherits(by, c("numeric", "integer")) && more_than_n_unique(by, 5L))
+  by_cont = !is.null(by) && (inherits(by, c("numeric", "integer")) && more_than_n_unique(by, .tpar[["legend.ugc"]]))
   # manual overrides with warning
   if (isTRUE(by_cont) && type %in% c("l", "b", "o", "ribbon")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")

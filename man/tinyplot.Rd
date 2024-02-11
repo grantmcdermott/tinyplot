@@ -113,10 +113,15 @@ and \code{y} must be of the same length.}
 \item{...}{other graphical parameters. See \code{\link[graphics]{par}} or
 the "Details" section of \code{\link[graphics]{plot}}.}
 
-\item{by}{grouping variable(s). By default, groups will be represented
-through colouring of the plot elements. However, this can be turned off
-and other plot parameters (e.g., line types) can also take on grouping
-behaviour via the special "by" keyword. See Examples.}
+\item{by}{grouping variable(s). The default behaviour is for groups to be
+represented in the form of distinct colours, which will also trigger an
+automatic legend. (See \code{legend} below for customization options.) However,
+groups can also be presented through other plot parameters (e.g., \code{pch} or
+\code{lty}) by passing an appropriate "by" keyword; see Examples. Note that
+continuous (i.e., gradient) colour legends are also supported if the user
+passes a numeric or integer to \code{by}. The exact behaviour depends on how
+many unique groups are detected; see the \code{"legend.ugc"} parameter in
+\code{\link[tinyplot]{tpar}}.}
 
 \item{facet}{the faceting variable(s) that you want arrange separate plot
 windows by. Can be specified in various ways:

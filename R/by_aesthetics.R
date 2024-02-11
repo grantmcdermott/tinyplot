@@ -1,4 +1,15 @@
-by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
+by_col = function(ngrps = 1L, col = NULL, palette = NULL, by_cont = NULL) {
+  
+  if (is.null(by_cont)) by_cont = FALSE
+  if (isTRUE(by_cont)) {
+    ngrps = 100L
+    # # nlabs = 5L
+    # pal = hcl.colors(ncolors, "inferno", alpha = 1)
+    # palramp = colorRampPalette(pal, alpha = TRUE)
+    # 
+    # # generate 'ncolors' (here: 100) distinct color categories for the plot
+    # cols = palramp(ncolors)
+  }
   
   # palette = substitute(palette, env = parent.env(environment()))
   

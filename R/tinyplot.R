@@ -528,7 +528,14 @@ tinyplot.default = function(
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
 
 
-  if (!is.null(by)) {
+  by_cont = !is.null(by) && (inherits(by, c("numeric", "integer")) && more_than_n_unique(by, 5L))
+  # manual overrides with warning
+  if (isTRUE(by_cont) && type %in% c("l", "b", "o", "ribbon")) {
+    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    by_cont = FALSE
+  }
+  
+  if (!is.null(by) && !by_cont) {
     split_data = list(x=x, y=y)
     split_data[["ymin"]] = ymin
     split_data[["ymax"]] = ymax
@@ -549,14 +556,16 @@ tinyplot.default = function(
   col = by_col(
     ngrps = ngrps,
     col = col,
-    palette = substitute(palette)
+    palette = substitute(palette),
+    by_cont = by_cont
   )
   if (is.null(bg) && !is.null(fill)) bg = fill
   if (!is.null(bg) && bg == "by") {
     bg = by_col(
       ngrps = ngrps,
       col = NULL,
-      palette = substitute(palette)
+      palette = substitute(palette),
+      by_cont = by_cont
     )
   } else {
     bg = rep(bg, ngrps)
@@ -568,6 +577,43 @@ tinyplot.default = function(
       bg = adjustcolor(col, ribbon_alpha)
     }
   }
+  
+  
+  ## TESTING FOR CONTINUOUS LEGEND
+  if (isTRUE(by_cont)) {
+    ## Identify the pretty break points for our labels
+    nlabs = 5
+    ncolors = length(col)
+    ubyvar = unique(by)
+    byvar_range = range(ubyvar)
+    pbyvar = pretty(byvar_range, n = nlabs)
+    pbyvar = pbyvar[pbyvar >= byvar_range[1] & pbyvar <= byvar_range[2]]
+    # optional thinning
+    if (length(ubyvar)==2 && all(ubyvar %in% pbyvar)) {
+      pbyvar = ubyvar
+    } else if (length(pbyvar)>nlabs) {
+      pbyvar = pbyvar[seq_along(pbyvar) %% 2 == 0]
+    }
+    
+    ## Find the (approximate) location of our pretty labels
+    pidx = rescale_num(c(byvar_range, pbyvar), to = c(1, ncolors))[-c(1:2)]
+    pidx = round(pidx)
+    lgnd_labs = rep(NA, times = ncolors)
+    lgnd_labs[pidx] = pbyvar
+    # We have to reverse the order since the legends are in decreasing sequence
+    lgnd_labs = rev(lgnd_labs)
+    lgnd_cols = rev(col)
+    
+    # Add "padding" on either side, otherwise the y.intersp adjustment
+    # below will cause the labels to look funny
+    lgnd_labs = c(NA, lgnd_labs, NA)
+    lgnd_cols = c(NA, lgnd_cols, NA)
+    
+    intersp_adj = rep(1 / ncolors * nlabs, times = length(lgnd_cols))
+    intersp_adj[1] = 1
+    intersp_adj[length(intersp_adj)] = 1
+  }
+  ## END TESTING
   
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex
@@ -654,27 +700,49 @@ tinyplot.default = function(
   
   if ((is.null(legend) || legend != "none") && isFALSE(add)) {
     
-    if (ngrps>1) {
-      lgnd_labs = names(split_data)
-    } else {
-      lgnd_labs = ylab
-    }
+    if (isFALSE(by_cont)) { ## TESTING
+      if (ngrps>1) {
+        lgnd_labs = names(split_data)
+      } else {
+        lgnd_labs = ylab
+      }
+    }  ## END TESTING
     
     has_sub = !is.null(sub)
     
-    draw_legend(
-      legend = legend,
-      legend.args = legend.args,
-      by_dep = by_dep,
-      lgnd_labs = lgnd_labs,
-      type = type,
-      pch = pch,
-      lty = lty,
-      col = col,
-      bg = bg,
-      cex = cex * cex_fct_adj,
-      has_sub = has_sub
+    if (isTRUE(by_cont)) {
+      ## TESTING continuous legend
+      legend.args[["y.intersp"]] = intersp_adj
+      legend.args[["adj"]] = c(0,0)
+      legend.args[["pt.cex"]] = 3.5
+      draw_legend(
+        legend = legend,
+        legend.args = legend.args,
+        by_dep = by_dep,
+        lgnd_labs = lgnd_labs,
+        type = "p",
+        pch = 22,
+        col = NA,
+        bg = lgnd_cols,
+        cex = cex * cex_fct_adj,
+        has_sub = has_sub
       )
+      ## END TESTING
+    } else {
+      draw_legend(
+        legend = legend,
+        legend.args = legend.args,
+        by_dep = by_dep,
+        lgnd_labs = lgnd_labs,
+        type = type,
+        pch = pch,
+        lty = lty,
+        col = col,
+        bg = bg,
+        cex = cex * cex_fct_adj,
+        has_sub = has_sub
+      )
+    }
     
     has_legend = TRUE
     
@@ -1035,15 +1103,33 @@ tinyplot.default = function(
       idata[["facet"]] = NULL ## Don't need this anymore since we'll be splitting by ifacet
       ## Need extra catch for non-groupby data that also doesn't have ymin or
       ## ymax vars
-      if (is.null(by)) {
+      # if (is.null(by)) { ## TESTING FOR CONTINUOUS LEGEND
+      if (is.null(by) || isTRUE(by_cont)) {
         if (is.null(idata[["ymin"]])) idata[["ymin"]] = NULL
         if (is.null(idata[["ymax"]])) idata[["ymax"]] = NULL
       }
+      ## TEST FOR CONTINUOUS LEGEND
+      if (isTRUE(by_cont)) {
+        idata[["col"]] = col[round(rescale_num(by, to = c(1,100)))]
+        idata[["bg"]] = col[round(rescale_num(by, to = c(1,100)))]
+      }
+      ## END TEST
       idata = lapply(idata, split, ifacet)
       idata = do.call(function(...) Map("list", ...), idata)
     } else {
       idata = list(idata)
+      ## TEST FOR CONTINUOUS LEGEND
+      if (isTRUE(by_cont)) {
+        idata[[1]][["col"]] = col[round(rescale_num(by, to = c(1,100)))]
+        idata[[1]][["bg"]] = col[round(rescale_num(by, to = c(1,100)))]
+      }
     }
+    
+    ## TEST FOR CONTINUOUS LEGEND
+    icol = col[i]
+    ibg = bg[i]
+    ipch = pch[i]
+    ilty = lty[i]
     
     ## Inner loop over the "facet" variables
     for (ii in seq_along(idata)) {
@@ -1051,6 +1137,13 @@ tinyplot.default = function(
       yy = idata[[ii]]$y
       yymin = idata[[ii]]$ymin
       yymax = idata[[ii]]$ymax
+      
+      ## TEST FOR CONTINUOUS LEGEND
+      # if (is.null(ifacet) && isTRUE(by_cont)) {
+      if (isTRUE(by_cont)) {
+        icol = idata[[ii]]$col
+        ibg = idata[[ii]]$by
+      }
       
       # Set the facet "window" manually
       # See: https://github.com/grantmcdermott/tinyplot/issues/65
@@ -1081,8 +1174,8 @@ tinyplot.default = function(
           y0 = yymin,
           x1 = xx,
           y1 = yymax,
-          col = col[i],
-          lty = lty[i]
+          col = icol,#col[i],
+          lty = ilty#lty[i]
         )
       }
       if (type == "errorbar") {
@@ -1091,8 +1184,8 @@ tinyplot.default = function(
           y0 = yymin,
           x1 = xx,
           y1 = yymax,
-          col = col[i],
-          lty = lty[i],
+          col = icol,#col[i],
+          lty = ilty,#lty[i],
           length = 0.05,
           angle = 90,
           code = 3
@@ -1104,12 +1197,12 @@ tinyplot.default = function(
         points(
           x = xx,
           y = yy,
-          col = col[i],
-          bg = bg[i],
+          col = icol, #col[i],
+          bg = ibg, #bg[i],
           # type = type, ## rather hardcode "p" to avoid warning message about "pointrange"
           type = "p",
-          pch = pch[i],
-          lty = lty[i],
+          pch = ipch, #pch[i],
+          lty = ilty, #lty[i],
           cex = cex
         )
       } else if (type %in% c("l", "o", "b", "c", "h", "s", "S", "ribbon")) {
@@ -1118,10 +1211,10 @@ tinyplot.default = function(
         lines(
           x = xx,
           y = yy,
-          col = col[i],
+          col = icol,#col[i],
           type = type,
-          pch = pch[i],
-          lty = lty[i]
+          pch = ipch,#pch[i],
+          lty = ilty#lty[i]
         )
         if (rtype) type = "ribbon"
       } else {
@@ -1143,7 +1236,7 @@ tinyplot.default = function(
 
 
 #' @rdname tinyplot
-#' @importFrom stats as.formula model.frame
+#' @importFrom stats as.formula model.frame terms
 #' @export
 tinyplot.formula = function(
     x = NULL,
@@ -1275,12 +1368,38 @@ tinyplot.formula = function(
   x = mf[, x_loc]
   by_loc <- x_loc + 1L
   if (NCOL(mf) < by_loc) {
-    by = bylab = NULL  
+    # special catch if by is the same as x or y (normally for continuous legend)
+    by_same_y = by_same_x = FALSE
+    fml_all_vars = all.vars(m$formula, unique = FALSE)
+    if (any(duplicated(fml_all_vars))) {
+      if (isTRUE(no_y)) {
+        by_same_x = TRUE ## i.e., if there is duplication and no y var, assume by must be the same as x
+      } else {
+        fml_lhs_vars = paste(attr(terms(m$formula), "variables")[[2]])
+        fml_rhs_vars = fml_all_vars[!(fml_all_vars %in% fml_lhs_vars)]
+        if (any(duplicated(fml_rhs_vars))) {
+          by_same_x = TRUE
+        } else {
+          by_same_y = TRUE
+        }
+      }
+    }
+    if (isTRUE(by_same_y)) {
+      by = y
+      bylab = names(mf)[y_loc]
+      legend.args[["title"]] = bylab
+    } else if (isTRUE(by_same_x)) {
+      by = x
+      bylab = names(mf)[x_loc]
+      legend.args[["title"]] = bylab
+    } else {
+      by = bylab = NULL
+    }
   } else if (NCOL(mf) == by_loc) {
     by = mf[, by_loc]
     bylab = names(mf)[by_loc]
     legend.args[["title"]] = bylab
-    if (!inherits(by, "factor")) by = as.factor(by)
+    # if (!inherits(by, "factor")) by = as.factor(by)
   } else if (NCOL(mf) > by_loc) {
     by = do.call("interaction", mf[, -c(y_loc, x_loc)])
     bylab = sprintf("interaction(%s)", paste(names(mf)[-c(y_loc, x_loc)], collapse = ", "))

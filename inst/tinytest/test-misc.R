@@ -38,8 +38,9 @@ exit_if_not(getRversion()  <= "4.3.2")
 
 f = function() {
   par(mfrow = c(1, 1))
-  pred = predict(lm(mpg~wt+factor(cyl),mtcars), interval = "confidence")
-  m = cbind(mtcars, pred)
+  m = transform(mtcars, cyl = factor(cyl))
+  pred = predict(lm(mpg ~ wt + cyl, m), interval = "confidence")
+  m = cbind(m, pred)
   with(
     m,
     tinyplot(wt, fit, ymin = lwr, ymax = upr, by = cyl, type = "ribbon", grid = TRUE)

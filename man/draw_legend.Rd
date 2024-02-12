@@ -15,6 +15,7 @@ draw_legend(
   col = NULL,
   bg = NULL,
   cex = NULL,
+  gradient = FALSE,
   lmar = NULL,
   has_sub = FALSE,
   new_plot = TRUE
@@ -40,6 +41,9 @@ draw_legend(
 \item{bg}{Plotting character background fill colour(s), passed down from \code{tinyplot}.}
 
 \item{cex}{Plotting character expansion(s), passed down from \code{tinyplot}.}
+
+\item{gradient}{Logical indicating whether a continuous gradient swatch
+should be used to represent the colors.}
 
 \item{lmar}{Legend margins (in lines). Should be a numeric vector of the form
 \code{c(inner, outer)}, where the first number represents the "inner" margin

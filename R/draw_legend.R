@@ -14,6 +14,8 @@
 #' @param col Plotting colour(s), passed down from `tinyplot`.
 #' @param bg Plotting character background fill colour(s), passed down from `tinyplot`.
 #' @param cex Plotting character expansion(s), passed down from `tinyplot`.
+#' @param gradient Logical indicating whether a continuous gradient swatch
+#'   should be used to represent the colors.
 #' @param lmar Legend margins (in lines). Should be a numeric vector of the form
 #'   `c(inner, outer)`, where the first number represents the "inner" margin
 #'   between the legend and the plot, and the second number represents the
@@ -24,6 +26,9 @@
 #'   keyword position is "bottom!", in which case we need to bump the legend
 #'   margin a bit further.
 #' @param new_plot Should we be calling plot.new internally?
+#' @importFrom graphics grconvertX grconvertY rasterImage
+#' @importFrom grDevices as.raster
+#' @importFrom utils modifyList
 #' @examples
 #' 
 #' oldmar = par("mar")
@@ -83,6 +88,7 @@ draw_legend = function(
     col = NULL,
     bg = NULL,
     cex = NULL,
+    gradient = FALSE,
     lmar = NULL,
     has_sub = FALSE,
     new_plot = TRUE
@@ -137,7 +143,7 @@ draw_legend = function(
   ) {
     legend.args[["pt.cex"]] = cex
   }
-  if (type=="ribbon") {
+  if (type=="ribbon" || isTRUE(gradient)) {
     if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = 22
     if (is.null(legend.args[["pt.cex"]])) legend.args[["pt.cex"]] = 3.5
     if (is.null(legend.args[["pt.lwd"]])) legend.args[["pt.lwd"]] = 0
@@ -198,12 +204,7 @@ draw_legend = function(
     } else {
       # For outer left we have to account for the y-axis label too, which
       # requires additional space
-      # par(mar=c(
-      #   par("mar")[1],
-      #   par("mgp")[1] + 1*par("cex.lab"),
-      #   par("mar")[3:4]
-      #   ))
-      omar[2] = par("mgp")[1] + 1*par("cex.lab") ## TEST
+      omar[2] = par("mgp")[1] + 1*par("cex.lab")
     }
     par(mar = omar) ## TEST
     
@@ -212,11 +213,23 @@ draw_legend = function(
     legend.args[["horiz"]] = FALSE
     
     # "draw" fake legend
-    fklgnd.args = utils::modifyList(
+    fklgnd.args = modifyList(
       legend.args,
       list(x = 0, y = 0, plot = FALSE),
       keep.null = TRUE
     )
+    if (isTRUE(gradient)) {
+      lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
+      if (length(lgnd_labs_tmp) < 5L) {
+        nmore = 5L - length(lgnd_labs_tmp)
+        lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
+        }
+      fklgnd.args = modifyList(
+        fklgnd.args,
+        list(legend = lgnd_labs_tmp),
+        keep.null = TRUE
+      )
+    }
     fklgnd = do.call("legend", fklgnd.args)
     
     # calculate outer margin width in lines
@@ -283,15 +296,28 @@ draw_legend = function(
       } else {
         legend.args[["x.intersp"]] = 0.5
       }
+    } else if (isTRUE(gradient) && isTRUE(legend.args[["horiz"]])) {
+      legend.args[["x.intersp"]] = 0.5
     }
     
     # "draw" fake legend
-    fklgnd.args = utils::modifyList(
+    fklgnd.args = modifyList(
       legend.args,
-      # list(x = 0, y = 0, plot = FALSE),
       list(plot = FALSE),
       keep.null = TRUE
     )
+    if (isTRUE(gradient)) {
+      lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
+      if (length(lgnd_labs_tmp) < 5L) {
+        nmore = 5L - length(lgnd_labs_tmp)
+        lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
+      }
+      fklgnd.args = modifyList(
+        fklgnd.args,
+        list(legend = lgnd_labs_tmp, title = NULL),
+        keep.null = TRUE
+      )
+    }
     fklgnd = do.call("legend", fklgnd.args)
     
     # calculate outer margin width in lines
@@ -331,12 +357,159 @@ draw_legend = function(
     if (isTRUE(new_plot)) plot.new()
   }
   
-  do.call("legend", legend.args)
+  if (isTRUE(gradient)) {
+    gradient_legend(legend.args = legend.args, lmar = lmar, outer_right = outer_right, outer_bottom = outer_bottom)
+  } else {
+    do.call("legend", legend.args)
+  }
   
 }
 
 
 
 
+
+# For gradient (i.e., continuous color) legends, we'll role our own bespoke
+# legend function based on grDevices::as.raster
+gradient_legend = function(legend.args, lmar = NULL, outer_right = NULL, outer_bottom = NULL) {
+  if (is.null(lmar)) lmar = .tpar[["lmar"]]
+  pal = legend.args[["col"]]
+  lgnd_labs = legend.args[["legend"]]
+  if (!is.null(legend.args[["horiz"]])) horiz = legend.args[["horiz"]] else horiz = FALSE
+  if (isTRUE(horiz)) {
+    rasterlgd = as.raster(matrix(pal, nrow = 1))
+  } else {
+    rasterlgd = as.raster(matrix(rev(pal), ncol = 1))
+  }
+  
+  corners = par("usr")
+  rasterbox = rep(NA_real_, 4)
+  
+  if (!is.null(outer_right)) {
+  # if ((!is.null(outer_right) && is.null(outer_bottom)) || (!is.null(legend.args[["x"]]) && grepl("right|left", legend.args[["x"]]))) {
+    
+    rb1_adj = grconvertX(lmar[1] + 0.2, from="lines", to="user") - grconvertX(0, from="lines", to="user")
+    rb3_adj = grconvertX(1.25, from="lines", to="user") - grconvertX(0, from="lines", to="user")
+    rb2_adj = (corners[4] - corners[3] - (grconvertY(5+1 + 2.5, from="lines", to="user") - grconvertY(0, from="lines", to="user"))) / 2
+    # override if top or bottom
+    if (!is.null(legend.args[["x"]])) {
+      if (grepl("^bottom", legend.args[["x"]])) {
+        rb2_adj = corners[3]
+      }
+      if (grepl("^top", legend.args[["x"]])) {
+        rb2_adj = corners[4] - (grconvertY(5+1 + 2.5, from="lines", to="user") - grconvertY(0, from="lines", to="user"))
+      }
+    }
+    rb4_adj = grconvertY(5+1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
+    
+    if (isTRUE(outer_right)) {
+      rasterbox[1] = corners[2] + rb1_adj
+      rasterbox[2] = rb2_adj 
+      rasterbox[3] = rasterbox[1] + rb3_adj
+      rasterbox[4] = rasterbox[2] + rb4_adj
+    } else {
+      rb1_adj = rb1_adj + grconvertX(par("mar")[2] + 1, from="lines", to="user") - grconvertX(0, from="lines", to="user")
+      rasterbox[1] = corners[1] - rb1_adj
+      rasterbox[2] = rb2_adj 
+      rasterbox[3] = rasterbox[1] - rb3_adj
+      rasterbox[4] = rasterbox[2] + rb4_adj
+    }
+    
+  } else if (!is.null(outer_bottom)) {
+    
+    rb1_adj = (corners[2] - corners[1] - (grconvertX(5+1, from="lines", to="user") - grconvertX(0, from="lines", to="user"))) / 2
+    rb3_adj = grconvertX(5+1, from="lines", to="user") - grconvertX(0, from="lines", to="user")
+    rb2_adj = grconvertY(lmar[1], from="lines", to="user") - grconvertY(0, from="lines", to="user")
+    rb4_adj = grconvertY(1.25, from="lines", to="user") - grconvertY(0, from="lines", to="user")
+    
+    if (isTRUE(outer_bottom)) {
+      rb2_adj = rb2_adj + grconvertY(par("mar")[2], from="lines", to="user") - grconvertY(0, from="lines", to="user")
+      rasterbox[1] = rb1_adj
+      rasterbox[2] = corners[3] - rb2_adj 
+      rasterbox[3] = rasterbox[1] + rb3_adj
+      rasterbox[4] = rasterbox[2] - rb4_adj
+    } else {
+      rb2_adj = rb2_adj + grconvertY(1.25 + 1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
+      rasterbox[1] = rb1_adj
+      rasterbox[2] = corners[4] + rb2_adj 
+      rasterbox[3] = rasterbox[1] + rb3_adj
+      rasterbox[4] = rasterbox[2] - rb4_adj
+    }
+    
+  }
+  
+  rasterImage(
+    rasterlgd,
+    rasterbox[1], #x1
+    rasterbox[2], #y1
+    rasterbox[3], #x2
+    rasterbox[4], #y2
+    xpd = NA
+  ) 
+  
+  if (isFALSE(horiz)) {
+    lbl_x_anchor = rasterbox[3]
+    ttl_x_anchor = rasterbox[1]
+    lbl_adj = c(-0.25, 0.5)
+    tck_adj = c(0, 0.5)
+    ttl_adj = c(0, 0)
+    if (isFALSE(outer_right)) {
+      lbl_x_anchor = rasterbox[1]
+      ttl_x_anchor = rasterbox[3]
+    }
+    # legend labs
+    text(
+      x = lbl_x_anchor,
+      y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
+      labels = lgnd_labs,
+      xpd = NA, adj = lbl_adj
+    )
+    # legend tick marks
+    lgnd_ticks = lgnd_labs
+    lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
+    text(
+      x = lbl_x_anchor,
+      y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
+      labels = lgnd_ticks, col = "white",
+      xpd = NA, adj = tck_adj
+    )
+    # legend title
+    text(
+      x = ttl_x_anchor,
+      y = rasterbox[4] + grconvertY(1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user"),
+      labels = legend.args[["title"]],
+      xpd = NA, adj = ttl_adj
+    )
+  } else {
+    lbl_y_anchor = rasterbox[4]
+    ttl_y_anchor = rasterbox[4]
+    lbl_adj = c(0.5, 1.25)
+    tck_adj = c(0, 0.5)
+    ttl_adj = c(1, -0.5)
+    # legend labs
+    text(
+      x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
+      y = lbl_y_anchor,
+      labels = lgnd_labs,
+      xpd = NA, adj = lbl_adj
+    )
+    # legend tick marks
+    lgnd_ticks = lgnd_labs
+    lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
+    text(
+      x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
+      y = lbl_y_anchor,
+      labels = lgnd_ticks, col = "white",
+      xpd = NA, adj = tck_adj, srt = 90
+    )
+    # legend title
+    text(
+      x = rasterbox[1],
+      y = ttl_y_anchor,
+      labels = paste0(legend.args[["title"]], " "),
+      xpd = NA, adj = ttl_adj
+    )
+  }
+}
 
 

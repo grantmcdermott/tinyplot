@@ -203,7 +203,7 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'   
-#' @importFrom grDevices adjustcolor extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
+#' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
 #' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext text rect
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit
@@ -533,14 +533,14 @@ tinyplot.default = function(
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
 
 
-  by_cont = !is.null(by) && (inherits(by, c("numeric", "integer")) && more_than_n_unique(by, .tpar[["legend.ugc"]]))
+  by_continuous = !is.null(by) && (inherits(by, c("numeric", "integer")) && more_than_n_unique(by, .tpar[["legend.ugc"]]))
   # manual overrides with warning
-  if (isTRUE(by_cont) && type %in% c("l", "b", "o", "ribbon")) {
+  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
-    by_cont = FALSE
+    by_continuous = FALSE
   }
   
-  if (!is.null(by) && !by_cont) {
+  if (!is.null(by) && !by_continuous) {
     split_data = list(x=x, y=y)
     split_data[["ymin"]] = ymin
     split_data[["ymax"]] = ymax
@@ -562,7 +562,7 @@ tinyplot.default = function(
     ngrps = ngrps,
     col = col,
     palette = substitute(palette),
-    by_cont = by_cont
+    gradient = by_continuous
   )
   if (is.null(bg) && !is.null(fill)) bg = fill
   if (!is.null(bg) && bg == "by") {
@@ -570,7 +570,7 @@ tinyplot.default = function(
       ngrps = ngrps,
       col = NULL,
       palette = substitute(palette),
-      by_cont = by_cont
+      gradient = by_continuous
     )
   } else {
     bg = rep(bg, ngrps)
@@ -585,7 +585,7 @@ tinyplot.default = function(
   
   
   ## TESTING FOR CONTINUOUS LEGEND
-  if (isTRUE(by_cont)) {
+  if (isTRUE(by_continuous)) {
     ## Identify the pretty break points for our labels
     nlabs = 5
     ncolors = length(col)
@@ -605,18 +605,18 @@ tinyplot.default = function(
     pidx = round(pidx)
     lgnd_labs = rep(NA, times = ncolors)
     lgnd_labs[pidx] = pbyvar
-    # We have to reverse the order since the legends are in decreasing sequence
-    lgnd_labs = rev(lgnd_labs)
-    lgnd_cols = rev(col)
-    
-    # Add "padding" on either side, otherwise the y.intersp adjustment
-    # below will cause the labels to look funny
-    lgnd_labs = c(NA, lgnd_labs, NA)
-    lgnd_cols = c(NA, lgnd_cols, NA)
-    
-    intersp_adj = rep(1 / ncolors * nlabs, times = length(lgnd_cols))
-    intersp_adj[1] = 1
-    intersp_adj[length(intersp_adj)] = 1
+    # # We have to reverse the order since the legends are in decreasing sequence
+    # lgnd_labs = rev(lgnd_labs)
+    # lgnd_cols = rev(col)
+    # 
+    # # Add "padding" on either side, otherwise the y.intersp adjustment
+    # # below will cause the labels to look funny
+    # lgnd_labs = c(NA, lgnd_labs, NA)
+    # lgnd_cols = c(NA, lgnd_cols, NA)
+    # 
+    # intersp_adj = rep(1 / ncolors * nlabs, times = length(lgnd_cols))
+    # intersp_adj[1] = 1
+    # intersp_adj[length(intersp_adj)] = 1
   }
   ## END TESTING
   
@@ -705,7 +705,7 @@ tinyplot.default = function(
   
   if ((is.null(legend) || legend != "none") && isFALSE(add)) {
     
-    if (isFALSE(by_cont)) { ## TESTING
+    if (isFALSE(by_continuous)) { ## TESTING
       if (ngrps>1) {
         lgnd_labs = names(split_data)
       } else {
@@ -715,39 +715,53 @@ tinyplot.default = function(
     
     has_sub = !is.null(sub)
     
-    if (isTRUE(by_cont)) {
-      ## TESTING continuous legend
-      legend.args[["y.intersp"]] = intersp_adj
-      legend.args[["adj"]] = c(0,0)
-      legend.args[["pt.cex"]] = 3.5
-      draw_legend(
-        legend = legend,
-        legend.args = legend.args,
-        by_dep = by_dep,
-        lgnd_labs = lgnd_labs,
-        type = "p",
-        pch = 22,
-        col = NA,
-        bg = lgnd_cols,
-        cex = cex * cex_fct_adj,
-        has_sub = has_sub
-      )
-      ## END TESTING
-    } else {
-      draw_legend(
-        legend = legend,
-        legend.args = legend.args,
-        by_dep = by_dep,
-        lgnd_labs = lgnd_labs,
-        type = type,
-        pch = pch,
-        lty = lty,
-        col = col,
-        bg = bg,
-        cex = cex * cex_fct_adj,
-        has_sub = has_sub
-      )
-    }
+    draw_legend(
+      legend = legend,
+      legend.args = legend.args,
+      by_dep = by_dep,
+      lgnd_labs = lgnd_labs,
+      type = type,
+      pch = pch,
+      lty = lty,
+      col = col,
+      bg = bg,
+      gradient = by_continuous,
+      cex = cex * cex_fct_adj,
+      has_sub = has_sub
+    )
+    # if (isTRUE(by_continuous)) {
+    #   ## TESTING continuous legend
+    #   legend.args[["y.intersp"]] = intersp_adj
+    #   legend.args[["adj"]] = c(0,0)
+    #   legend.args[["pt.cex"]] = 3.5
+    #   draw_legend(
+    #     legend = legend,
+    #     legend.args = legend.args,
+    #     by_dep = by_dep,
+    #     lgnd_labs = lgnd_labs,
+    #     type = "p",
+    #     pch = 22,
+    #     col = NA,
+    #     bg = lgnd_cols,
+    #     cex = cex * cex_fct_adj,
+    #     has_sub = has_sub
+    #   )
+    #   ## END TESTING
+    # } else {
+    #   draw_legend(
+    #     legend = legend,
+    #     legend.args = legend.args,
+    #     by_dep = by_dep,
+    #     lgnd_labs = lgnd_labs,
+    #     type = type,
+    #     pch = pch,
+    #     lty = lty,
+    #     col = col,
+    #     bg = bg,
+    #     cex = cex * cex_fct_adj,
+    #     has_sub = has_sub
+    #   )
+    # }
     
     has_legend = TRUE
     
@@ -1109,12 +1123,12 @@ tinyplot.default = function(
       ## Need extra catch for non-groupby data that also doesn't have ymin or
       ## ymax vars
       # if (is.null(by)) { ## TESTING FOR CONTINUOUS LEGEND
-      if (is.null(by) || isTRUE(by_cont)) {
+      if (is.null(by) || isTRUE(by_continuous)) {
         if (is.null(idata[["ymin"]])) idata[["ymin"]] = NULL
         if (is.null(idata[["ymax"]])) idata[["ymax"]] = NULL
       }
       ## TEST FOR CONTINUOUS LEGEND
-      if (isTRUE(by_cont)) {
+      if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(by, to = c(1,100)))]
         idata[["bg"]] = col[round(rescale_num(by, to = c(1,100)))]
       }
@@ -1124,7 +1138,7 @@ tinyplot.default = function(
     } else {
       idata = list(idata)
       ## TEST FOR CONTINUOUS LEGEND
-      if (isTRUE(by_cont)) {
+      if (isTRUE(by_continuous)) {
         idata[[1]][["col"]] = col[round(rescale_num(by, to = c(1,100)))]
         idata[[1]][["bg"]] = col[round(rescale_num(by, to = c(1,100)))]
       }
@@ -1144,8 +1158,8 @@ tinyplot.default = function(
       yymax = idata[[ii]]$ymax
       
       ## TEST FOR CONTINUOUS LEGEND
-      # if (is.null(ifacet) && isTRUE(by_cont)) {
-      if (isTRUE(by_cont)) {
+      # if (is.null(ifacet) && isTRUE(by_continuous)) {
+      if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
         ibg = idata[[ii]]$by
       }

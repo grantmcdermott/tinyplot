@@ -1,14 +1,8 @@
-by_col = function(ngrps = 1L, col = NULL, palette = NULL, by_cont = NULL) {
+by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL) {
   
-  if (is.null(by_cont)) by_cont = FALSE
-  if (isTRUE(by_cont)) {
+  if (is.null(gradient)) gradient = FALSE
+  if (isTRUE(gradient)) {
     ngrps = 100L
-    # # nlabs = 5L
-    # pal = hcl.colors(ncolors, "inferno", alpha = 1)
-    # palramp = colorRampPalette(pal, alpha = TRUE)
-    # 
-    # # generate 'ncolors' (here: 100) distinct color categories for the plot
-    # cols = palramp(ncolors)
   }
   
   # palette = substitute(palette, env = parent.env(environment()))
@@ -56,6 +50,10 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, by_cont = NULL) {
       if (!is.na(pal_match)) {
         if (pal_match < 1L) stop("'palette' is ambiguous")
         palette_fun = palette.colors
+        if (isTRUE(gradient)) {
+          palette_fun2 = function(n, palette) colorRampPalette(palette.colors(palette = palette))(n)
+          palette_fun = palette_fun2
+        }
       } else {
         pal_match = charmatch(fx(palette), fx(hcl.pals()))
         if (!is.na(pal_match)) {

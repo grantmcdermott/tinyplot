@@ -451,7 +451,7 @@ gradient_legend = function(legend.args, lmar = NULL, outer_right = NULL, outer_b
     lbl_x_anchor = rasterbox[3]
     ttl_x_anchor = rasterbox[1]
     lbl_adj = c(-0.25, 0.5)
-    tck_adj = c(0, 0.5)
+    tck_adj = c(1, 0.5)
     ttl_adj = c(0, 0)
     if (isFALSE(outer_right)) {
       lbl_x_anchor = rasterbox[1]

@@ -475,11 +475,13 @@ tinyplot.default = function(
   
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
-    
+  
+  was_area_type = FALSE # flag to keep track for some legend adjustments below  
   if (type == "area") {
     ymax = y
     ymin = rep.int(0, length(y))
     type = "ribbon"
+    was_area_type = TRUE 
   }
 
   xlabs = NULL
@@ -633,7 +635,9 @@ tinyplot.default = function(
   # place and draw the legend
   has_legend = FALSE # simple indicator variable for later use
   
-  legend.args = dots[["legend.args"]]
+  if (!exists("legend.args")) {
+    legend.args = dots[["legend.args"]]
+  }
   if (is.null(legend.args)) legend.args = list(x = NULL)
   legend = substitute(legend)
   
@@ -661,6 +665,11 @@ tinyplot.default = function(
     }
     
     has_sub = !is.null(sub)
+    
+    if (isTRUE(was_area_type)) {
+      legend.args[["pt.lwd"]] = par("lwd")
+      legend.args[["lty"]] = 0
+    }
     
     draw_legend(
       legend = legend,

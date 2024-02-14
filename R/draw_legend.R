@@ -27,7 +27,7 @@
 #'   margin a bit further.
 #' @param new_plot Should we be calling plot.new internally?
 #' @importFrom graphics grconvertX grconvertY rasterImage
-#' @importFrom grDevices as.raster
+#' @importFrom grDevices as.raster recordGraphics
 #' @importFrom utils modifyList
 #' @examples
 #' 
@@ -357,10 +357,20 @@ draw_legend = function(
     if (isTRUE(new_plot)) plot.new()
   }
   
+  # Finally, plot the legend. Note that we use recordGraphics to preserve the
+  # legend spacing if the plot is resized.
   if (isTRUE(gradient)) {
-    gradient_legend(legend.args = legend.args, lmar = lmar, outer_right = outer_right, outer_bottom = outer_bottom)
+    recordGraphics(
+      gradient_legend(legend.args = legend.args, lmar = lmar, outer_right = outer_right, outer_bottom = outer_bottom),
+      list(legend.args = legend.args, lmar = lmar, outer_right = outer_right, outer_bottom = outer_bottom),
+      getNamespace("tinyplot")
+    )
   } else {
-    do.call("legend", legend.args)
+    recordGraphics(
+      do.call("legend", legend.args),
+      list(legend.args = legend.args),
+      getNamespace("tinyplot")
+    )
   }
   
 }

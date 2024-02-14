@@ -154,10 +154,10 @@ draw_legend = function(
   ) {
     legend.args[["pt.cex"]] = cex
   }
-  if (type=="ribbon" || isTRUE(gradient)) {
+  if (type %in% c("ribbon", "polygon") || isTRUE(gradient)) {
     if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = 22
     if (is.null(legend.args[["pt.cex"]])) legend.args[["pt.cex"]] = 3.5
-    if (is.null(legend.args[["pt.lwd"]])) legend.args[["pt.lwd"]] = 0
+    if (is.null(legend.args[["pt.lwd"]]) && type != "polygon") legend.args[["pt.lwd"]] = 0
     if (is.null(legend.args[["y.intersp"]])) legend.args[["y.intersp"]] = 1.25
     if (is.null(legend.args[["seg.len"]])) legend.args[["seg.len"]] = 1.25
   }

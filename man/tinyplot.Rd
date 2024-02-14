@@ -180,10 +180,10 @@ for lines, "b" for both points and lines, "c" for empty points joined by
 lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 and "h" for histogram-like vertical lines. "n" does not produce
 any points or lines.
-\item Additional tinyplot types: "density" for densities, "pointrange" or
-"errorbar" for segement intervals, and "ribbon" or "area" for polygon
-intervals (where area plots are a special case of ribbon plots with \code{ymin}
-set to 0 and \code{ymax} set to \code{y}; see below).
+\item Additional tinyplot types: "density" for densities, "polygon" for
+polygons,  "pointrange" or "errorbar" for segment intervals, and "polygon",
+"ribbon" or "area" for polygon intervals (where area plots are a special
+case of ribbon plots with \code{ymin} set to 0 and \code{ymax} set to \code{y}; see below).
 }}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed

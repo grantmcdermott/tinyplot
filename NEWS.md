@@ -1,5 +1,9 @@
 # News
 
+## 0.0.5.9000 (development version)
+
+- Support user-supplied polygons. (#127 @grantmcdermott)
+
 ## 0.0.5
 
 **IMPORTANT BREAKING CHANGE:**

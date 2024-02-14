@@ -1249,9 +1249,9 @@ tinyplot.default = function(
         polygon(
           x = xx,
           y = yy,
-          border = col[i],
-          col = bg[i],
-          lty = lty[i]
+          border = icol,#col[i],
+          col = ibg,#bg[i],
+          lty = ilty,#lty[i]
         )
       } else {
         stop("`type` argument not supported.", call. = FALSE)

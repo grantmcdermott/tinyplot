@@ -31,7 +31,7 @@
 #' @importFrom utils modifyList
 #' @examples
 #' 
-#' op = par()
+#' oldmar = par("mar")
 #' 
 #' draw_legend(
 #'   legend = "right!", ## default (other options incl, "left(!)", ""bottom(!)", etc.)
@@ -59,7 +59,7 @@
 #' par("mar")
 #' 
 #' # To reset you should call `dev.off()` or just reset manually.
-#' par(op)
+#' par(mar = oldmar)
 #' 
 #' # Note that the inner and outer margin of the legend itself can be set via
 #' # the `lmar` argument. (This can also be set globally via
@@ -74,7 +74,7 @@
 #' )
 #' box("figure", col = "cyan", lty = 4)
 #' 
-#' par(op)
+#' par(mar = oldmar)
 #' 
 #' # Continuous (gradient) legends are also supported
 #' draw_legend(
@@ -85,7 +85,7 @@
 #'   gradient = TRUE ## enable gradient legend
 #' )
 #' 
-#' par(op)
+#' par(mar = oldmar)
 #' 
 #' @export
 draw_legend = function(
@@ -157,7 +157,9 @@ draw_legend = function(
   if (type %in% c("ribbon", "polygon") || isTRUE(gradient)) {
     if (is.null(legend.args[["pch"]])) legend.args[["pch"]] = 22
     if (is.null(legend.args[["pt.cex"]])) legend.args[["pt.cex"]] = 3.5
-    if (is.null(legend.args[["pt.lwd"]]) && type != "polygon") legend.args[["pt.lwd"]] = 0
+    if (is.null(legend.args[["pt.lwd"]]) && (!is.null(type) && type != "polygon")) {
+      legend.args[["pt.lwd"]] = 0
+    }
     if (is.null(legend.args[["y.intersp"]])) legend.args[["y.intersp"]] = 1.25
     if (is.null(legend.args[["seg.len"]])) legend.args[["seg.len"]] = 1.25
   }

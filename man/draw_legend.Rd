@@ -64,7 +64,7 @@ outside the plotting area) and drawing of legend.
 }
 \examples{
 
-op = par()
+oldmar = par("mar")
 
 draw_legend(
   legend = "right!", ## default (other options incl, "left(!)", ""bottom(!)", etc.)
@@ -92,7 +92,7 @@ axis(1); axis(2)
 par("mar")
 
 # To reset you should call `dev.off()` or just reset manually.
-par(op)
+par(mar = oldmar)
 
 # Note that the inner and outer margin of the legend itself can be set via
 # the `lmar` argument. (This can also be set globally via
@@ -107,7 +107,7 @@ draw_legend(
 )
 box("figure", col = "cyan", lty = 4)
 
-par(op)
+par(mar = oldmar)
 
 # Continuous (gradient) legends are also supported
 draw_legend(
@@ -118,6 +118,6 @@ draw_legend(
   gradient = TRUE ## enable gradient legend
 )
 
-par(op)
+par(mar = oldmar)
 
 }

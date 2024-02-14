@@ -395,35 +395,47 @@ gradient_legend = function(legend.args, lmar = NULL, outer_right = NULL, outer_b
   corners = par("usr")
   rasterbox = rep(NA_real_, 4)
   
-  if (!is.null(outer_right)) {
-  # if ((!is.null(outer_right) && is.null(outer_bottom)) || (!is.null(legend.args[["x"]]) && grepl("right|left", legend.args[["x"]]))) {
-    
-    rb1_adj = grconvertX(lmar[1] + 0.2, from="lines", to="user") - grconvertX(0, from="lines", to="user")
-    rb3_adj = grconvertX(1.25, from="lines", to="user") - grconvertX(0, from="lines", to="user")
-    rb2_adj = (corners[4] - corners[3] - (grconvertY(5+1 + 2.5, from="lines", to="user") - grconvertY(0, from="lines", to="user"))) / 2
-    # override if top or bottom
-    if (!is.null(legend.args[["x"]])) {
-      if (grepl("^bottom", legend.args[["x"]])) {
-        rb2_adj = corners[3]
-      }
-      if (grepl("^top", legend.args[["x"]])) {
-        rb2_adj = corners[4] - (grconvertY(5+1 + 2.5, from="lines", to="user") - grconvertY(0, from="lines", to="user"))
-      }
+  # catch for "inner" legends
+  inner = FALSE
+  inner_right = inner_bottom = NULL
+  if (is.null(outer_right) && is.null(outer_bottom)) {
+    inner = TRUE
+    if (!is.null(legend.args[["x"]]) && grepl("left$|right$", legend.args[["x"]])) {
+      inner_right = grepl("right$", legend.args[["x"]])
     }
-    rb4_adj = grconvertY(5+1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
-    
-    if (isTRUE(outer_right)) {
-      rasterbox[1] = corners[2] + rb1_adj
-      rasterbox[2] = rb2_adj 
-      rasterbox[3] = rasterbox[1] + rb3_adj
-      rasterbox[4] = rasterbox[2] + rb4_adj
-    } else {
-      rb1_adj = rb1_adj + grconvertX(par("mar")[2] + 1, from="lines", to="user") - grconvertX(0, from="lines", to="user")
-      rasterbox[1] = corners[1] - rb1_adj
-      rasterbox[2] = rb2_adj 
-      rasterbox[3] = rasterbox[1] - rb3_adj
-      rasterbox[4] = rasterbox[2] + rb4_adj
+    if (!is.null(legend.args[["x"]]) && grepl("^bottoml|^top", legend.args[["x"]])) {
+      inner_bottom = grepl("^bottom", legend.args[["x"]])
     }
+  }
+ 
+ if (!is.null(outer_right)) {
+   
+   rb1_adj = grconvertX(lmar[1] + 0.2, from="lines", to="user") - grconvertX(0, from="lines", to="user")
+   rb3_adj = grconvertX(1.25, from="lines", to="user") - grconvertX(0, from="lines", to="user")
+   rb2_adj = (corners[4] - corners[3] - (grconvertY(5+1 + 2.5, from="lines", to="user") - grconvertY(0, from="lines", to="user"))) / 2
+   # override if top or bottom
+   if (!is.null(legend.args[["x"]])) {
+     if (grepl("^bottom", legend.args[["x"]])) {
+       rb2_adj = corners[3]
+     }
+     if (grepl("^top", legend.args[["x"]])) {
+       rb2_adj = corners[4] - (grconvertY(5+1 + 2.5, from="lines", to="user") - grconvertY(0, from="lines", to="user"))
+     }
+   }
+   rb4_adj = grconvertY(5+1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
+   
+   if (isTRUE(outer_right)) {
+     rasterbox[1] = corners[2] + rb1_adj
+     rasterbox[2] = rb2_adj 
+     rasterbox[3] = rasterbox[1] + rb3_adj
+     rasterbox[4] = rasterbox[2] + rb4_adj
+   } else if (isFALSE(outer_right)) {
+     rb1_adj = rb1_adj + grconvertX(par("mar")[2] + 1, from="lines", to="user") - grconvertX(0, from="lines", to="user")
+     rasterbox[1] = corners[1] - rb1_adj
+     rasterbox[2] = rb2_adj 
+     rasterbox[3] = rasterbox[1] - rb3_adj
+     rasterbox[4] = rasterbox[2] + rb4_adj
+   }
     
   } else if (!is.null(outer_bottom)) {
     
@@ -445,6 +457,28 @@ gradient_legend = function(legend.args, lmar = NULL, outer_right = NULL, outer_b
       rasterbox[3] = rasterbox[1] + rb3_adj
       rasterbox[4] = rasterbox[2] - rb4_adj
     }
+    
+  } else if (isTRUE(inner)) {
+    
+    # "draw" fake legend
+    lgnd_labs_tmp = na.omit(legend.args[["legend"]])
+    if (length(lgnd_labs_tmp) < 5L) {
+      nmore = 5L - length(lgnd_labs_tmp)
+      lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
+    }
+    fklgnd.args = modifyList(
+      legend.args,
+      list(plot = FALSE, legend = lgnd_labs_tmp),
+      keep.null = TRUE
+    )
+    fklgnd = do.call("legend", fklgnd.args)
+    fklgnd$rect$h = fklgnd$rect$h - (grconvertY(1.5 + 0.4, from="lines", to="user") - grconvertY(0, from="lines", to="user"))
+    
+    rasterbox[1] = fklgnd$rect$left
+    if (isFALSE(inner_right)) rasterbox[1] = rasterbox[1] + (grconvertX(0.2, from="lines", to="user") - grconvertX(0, from="lines", to="user"))
+    rasterbox[2] = fklgnd$rect$top - fklgnd$rect$h - (grconvertY(1.5 + 0.2, from="lines", to="user") - grconvertY(0, from="lines", to="user"))
+    rasterbox[3] = rasterbox[1] + (grconvertX(1.25, from="lines", to="user") - grconvertX(0, from="lines", to="user"))
+    rasterbox[4] = rasterbox[2] + fklgnd$rect$h
     
   }
   

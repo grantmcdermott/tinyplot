@@ -70,10 +70,10 @@
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps
 #'   and "h" for histogram-like vertical lines. "n" does not produce
 #'   any points or lines.
-#'   - Additional tinyplot types: "density" for densities, "pointrange" or
-#'   "errorbar" for segement intervals, and "ribbon" or "area" for polygon
-#'   intervals (where area plots are a special case of ribbon plots with `ymin`
-#'   set to 0 and `ymax` set to `y`; see below).
+#'   - Additional tinyplot types: "density" for densities, "polygon" for
+#'   polygons,  "pointrange" or "errorbar" for segment intervals, and "polygon",
+#'   "ribbon" or "area" for polygon intervals (where area plots are a special
+#'   case of ribbon plots with `ymin` set to 0 and `ymax` set to `y`; see below).
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -1124,6 +1124,14 @@ tinyplot.default = function(
           lty = lty[i]
         )
         if (rtype) type = "ribbon"
+      } else if (type == "polygon") {
+        polygon(
+          x = xx,
+          y = yy,
+          border = col[i],
+          col = bg[i],
+          lty = lty[i]
+        )
       } else {
         stop("`type` argument not supported.", call. = FALSE)
       }

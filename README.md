@@ -7,7 +7,7 @@
 [![CRAN
 version](https://www.r-pkg.org/badges/version/tinyplot.png)](https://CRAN.R-project.org/package=tinyplot)
 [![R-universe status
-badge](https://grantmcdermott.r-universe.dev/badges/tinyplot.png)](https://grantmcdermott.r-universe.dev)
+badge](https://grantmcdermott.r-universe.dev/badges/tinyplot)](https://grantmcdermott.r-universe.dev)
 [![R-CMD-check](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml)
 [![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/tinyplot/index.html)
 <!-- badges: end -->

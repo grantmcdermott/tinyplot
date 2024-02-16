@@ -373,6 +373,11 @@ draw_legend = function(
   # Finally, plot the legend. Note that we use recordGraphics to preserve the
   # legend spacing if the plot is resized.
   if (isTRUE(gradient)) {
+    if (!more_than_n_unique(legend.args[["col"]], 1)) {
+      if (!is.null(legend.args[["pt.bg"]]) && length(legend.args[["pt.bg"]])==100) {
+        legend.args[["col"]] = legend.args[["pt.bg"]]
+      }
+    }
     recordGraphics(
       gradient_legend(legend.args = legend.args, lmar = lmar, outer_right = outer_right, outer_bottom = outer_bottom),
       list(legend.args = legend.args, lmar = lmar, outer_right = outer_right, outer_bottom = outer_bottom),

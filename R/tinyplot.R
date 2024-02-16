@@ -537,7 +537,7 @@ tinyplot.default = function(
 
   by_continuous = !is.null(by) && (inherits(by, c("numeric", "integer")) && more_than_n_unique(by, .tpar[["legend.ugc"]]))
   # manual overrides with warning
-  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon")) {
+  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
     by_continuous = FALSE
   }
@@ -1139,7 +1139,7 @@ tinyplot.default = function(
       ## TEST FOR CONTINUOUS LEGEND
       if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(by, to = c(1,100)))]
-        idata[["bg"]] = col[round(rescale_num(by, to = c(1,100)))]
+        idata[["bg"]] = bg[round(rescale_num(by, to = c(1,100)))]
       }
       ## END TEST
       idata = lapply(idata, split, ifacet)
@@ -1148,8 +1148,13 @@ tinyplot.default = function(
       idata = list(idata)
       ## TEST FOR CONTINUOUS LEGEND
       if (isTRUE(by_continuous)) {
-        idata[[1]][["col"]] = col[round(rescale_num(by, to = c(1,100)))]
-        idata[[1]][["bg"]] = col[round(rescale_num(by, to = c(1,100)))]
+        if (length(col)!=1) {
+          idata[[1]][["col"]] = col[round(rescale_num(by, to = c(1,100)))]
+        }
+        if (length(by)!=1) {
+          idata[[1]][["bg"]] = bg[round(rescale_num(by, to = c(1,100)))]
+        }
+        
       }
     }
     
@@ -1170,7 +1175,7 @@ tinyplot.default = function(
       # if (is.null(ifacet) && isTRUE(by_continuous)) {
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
-        ibg = idata[[ii]]$by
+        ibg = idata[[ii]]$bg
       }
       
       # Set the facet "window" manually

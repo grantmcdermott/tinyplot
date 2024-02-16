@@ -212,8 +212,7 @@ draw_legend = function(
     ## drawn, otherwise the inset calculation---which is based in the legend
     ## width---will be off the first time.
     if (outer_right) {
-      # par(mar=c(par("mar")[1:3], 0)) ## Set rhs inner mar to zero
-      omar[4] = 0 ## TEST
+      omar[4] = 0
     } else {
       # For outer left we have to account for the y-axis label too, which
       # requires additional space
@@ -249,7 +248,6 @@ draw_legend = function(
     soma = grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines")
     # Add legend margins to the outer margin
     soma = soma + sum(lmar)
-    # ooma = par("oma")  ## TEST (comment)
     ## differing outer margin adjustments depending on side
     if (outer_right) {
       ooma[4] = soma

@@ -585,8 +585,6 @@ tinyplot.default = function(
     }
   }
   
-  
-  ## TESTING FOR CONTINUOUS LEGEND
   if (isTRUE(by_continuous)) {
     ## Identify the pretty break points for our labels
     nlabs = 5
@@ -601,26 +599,12 @@ tinyplot.default = function(
     } else if (length(pbyvar)>nlabs) {
       pbyvar = pbyvar[seq_along(pbyvar) %% 2 == 0]
     }
-    
     ## Find the (approximate) location of our pretty labels
     pidx = rescale_num(c(byvar_range, pbyvar), to = c(1, ncolors))[-c(1:2)]
     pidx = round(pidx)
     lgnd_labs = rep(NA, times = ncolors)
     lgnd_labs[pidx] = pbyvar
-    # # We have to reverse the order since the legends are in decreasing sequence
-    # lgnd_labs = rev(lgnd_labs)
-    # lgnd_cols = rev(col)
-    # 
-    # # Add "padding" on either side, otherwise the y.intersp adjustment
-    # # below will cause the labels to look funny
-    # lgnd_labs = c(NA, lgnd_labs, NA)
-    # lgnd_cols = c(NA, lgnd_cols, NA)
-    # 
-    # intersp_adj = rep(1 / ncolors * nlabs, times = length(lgnd_cols))
-    # intersp_adj[1] = 1
-    # intersp_adj[length(intersp_adj)] = 1
   }
-  ## END TESTING
   
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex
@@ -709,13 +693,13 @@ tinyplot.default = function(
   
   if ((is.null(legend) || legend != "none") && isFALSE(add)) {
     
-    if (isFALSE(by_continuous)) { ## TESTING
+    if (isFALSE(by_continuous)) {
       if (ngrps>1) {
         lgnd_labs = names(split_data)
       } else {
         lgnd_labs = ylab
       }
-    }  ## END TESTING
+    }
     
     has_sub = !is.null(sub)
     
@@ -738,39 +722,6 @@ tinyplot.default = function(
       cex = cex * cex_fct_adj,
       has_sub = has_sub
     )
-    # if (isTRUE(by_continuous)) {
-    #   ## TESTING continuous legend
-    #   legend.args[["y.intersp"]] = intersp_adj
-    #   legend.args[["adj"]] = c(0,0)
-    #   legend.args[["pt.cex"]] = 3.5
-    #   draw_legend(
-    #     legend = legend,
-    #     legend.args = legend.args,
-    #     by_dep = by_dep,
-    #     lgnd_labs = lgnd_labs,
-    #     type = "p",
-    #     pch = 22,
-    #     col = NA,
-    #     bg = lgnd_cols,
-    #     cex = cex * cex_fct_adj,
-    #     has_sub = has_sub
-    #   )
-    #   ## END TESTING
-    # } else {
-    #   draw_legend(
-    #     legend = legend,
-    #     legend.args = legend.args,
-    #     by_dep = by_dep,
-    #     lgnd_labs = lgnd_labs,
-    #     type = type,
-    #     pch = pch,
-    #     lty = lty,
-    #     col = col,
-    #     bg = bg,
-    #     cex = cex * cex_fct_adj,
-    #     has_sub = has_sub
-    #   )
-    # }
     
     has_legend = TRUE
     
@@ -1131,22 +1082,18 @@ tinyplot.default = function(
       idata[["facet"]] = NULL ## Don't need this anymore since we'll be splitting by ifacet
       ## Need extra catch for non-groupby data that also doesn't have ymin or
       ## ymax vars
-      # if (is.null(by)) { ## TESTING FOR CONTINUOUS LEGEND
       if (is.null(by) || isTRUE(by_continuous)) {
         if (is.null(idata[["ymin"]])) idata[["ymin"]] = NULL
         if (is.null(idata[["ymax"]])) idata[["ymax"]] = NULL
       }
-      ## TEST FOR CONTINUOUS LEGEND
       if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(by, to = c(1,100)))]
         idata[["bg"]] = bg[round(rescale_num(by, to = c(1,100)))]
       }
-      ## END TEST
       idata = lapply(idata, split, ifacet)
       idata = do.call(function(...) Map("list", ...), idata)
     } else {
       idata = list(idata)
-      ## TEST FOR CONTINUOUS LEGEND
       if (isTRUE(by_continuous)) {
         if (length(col)!=1) {
           idata[[1]][["col"]] = col[round(rescale_num(by, to = c(1,100)))]
@@ -1154,11 +1101,9 @@ tinyplot.default = function(
         if (length(by)!=1) {
           idata[[1]][["bg"]] = bg[round(rescale_num(by, to = c(1,100)))]
         }
-        
       }
     }
     
-    ## TEST FOR CONTINUOUS LEGEND
     icol = col[i]
     ibg = bg[i]
     ipch = pch[i]
@@ -1171,8 +1116,6 @@ tinyplot.default = function(
       yymin = idata[[ii]]$ymin
       yymax = idata[[ii]]$ymax
       
-      ## TEST FOR CONTINUOUS LEGEND
-      # if (is.null(ifacet) && isTRUE(by_continuous)) {
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
         ibg = idata[[ii]]$bg
@@ -1207,8 +1150,8 @@ tinyplot.default = function(
           y0 = yymin,
           x1 = xx,
           y1 = yymax,
-          col = icol,#col[i],
-          lty = ilty#lty[i]
+          col = icol,
+          lty = ilty
         )
       }
       if (type == "errorbar") {
@@ -1217,8 +1160,8 @@ tinyplot.default = function(
           y0 = yymin,
           x1 = xx,
           y1 = yymax,
-          col = icol,#col[i],
-          lty = ilty,#lty[i],
+          col = icol,
+          lty = ilty,
           length = 0.05,
           angle = 90,
           code = 3
@@ -1230,12 +1173,12 @@ tinyplot.default = function(
         points(
           x = xx,
           y = yy,
-          col = icol, #col[i],
-          bg = ibg, #bg[i],
-          # type = type, ## rather hardcode "p" to avoid warning message about "pointrange"
+          col = icol,
+          bg = ibg,
+          ## rather hardcode "p" to avoid warning message about "pointrange"
           type = "p",
-          pch = ipch, #pch[i],
-          lty = ilty, #lty[i],
+          pch = ipch,
+          lty = ilty,
           cex = cex
         )
       } else if (type %in% c("l", "o", "b", "c", "h", "s", "S", "ribbon")) {
@@ -1244,19 +1187,19 @@ tinyplot.default = function(
         lines(
           x = xx,
           y = yy,
-          col = icol,#col[i],
+          col = icol,
           type = type,
-          pch = ipch,#pch[i],
-          lty = ilty#lty[i]
+          pch = ipch,
+          lty = ilty
         )
         if (rtype) type = "ribbon"
       } else if (type == "polygon") {
         polygon(
           x = xx,
           y = yy,
-          border = icol,#col[i],
-          col = ibg,#bg[i],
-          lty = ilty,#lty[i]
+          border = icol,
+          col = ibg,
+          lty = ilty,
         )
       } else {
         stop("`type` argument not supported.", call. = FALSE)

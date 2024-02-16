@@ -6,7 +6,7 @@
 \usage{
 draw_legend(
   legend = NULL,
-  legend.args = NULL,
+  legend_args = NULL,
   by_dep = NULL,
   lgnd_labs = NULL,
   type = NULL,
@@ -24,7 +24,7 @@ draw_legend(
 \arguments{
 \item{legend}{Legend placement keyword or list, passed down from \code{tinyplot}.}
 
-\item{legend.args}{Additional legend arguments to be passed to \code{legend()}.}
+\item{legend_args}{Additional legend arguments to be passed to \code{legend()}.}
 
 \item{by_dep}{The (deparsed) "by" grouping variable name.}
 
@@ -68,7 +68,7 @@ oldmar = par("mar")
 
 draw_legend(
   legend = "right!", ## default (other options incl, "left(!)", ""bottom(!)", etc.)
-  legend.args = list(title = "Key", bty = "o"),
+  legend_args = list(title = "Key", bty = "o"),
   lgnd_labs = c("foo", "bar"),
   type = "p",
   pch = 21:22,
@@ -98,7 +98,7 @@ par(mar = oldmar)
 # the `lmar` argument. (This can also be set globally via
 # `tpar(lmar = c(inner, outer))`.)
 draw_legend(
-  legend.args = list(title = "Key", bty = "o"),
+  legend_args = list(title = "Key", bty = "o"),
   lgnd_labs = c("foo", "bar"),
   type = "p",
   pch = 21:22,
@@ -112,7 +112,7 @@ par(mar = oldmar)
 # Continuous (gradient) legends are also supported
 draw_legend(
   legend = "right!",
-  legend.args = list(title = "Key"),
+  legend_args = list(title = "Key"),
   lgnd_labs = LETTERS[1:5],
   col = hcl.colors(5),
   gradient = TRUE ## enable gradient legend

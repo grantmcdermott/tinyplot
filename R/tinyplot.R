@@ -450,13 +450,13 @@ tinyplot.default = function(
     # type = "density" plots (to make consistent with regular plot)
     if (is.null(fargs$main)) fargs$main = NA
     ## Catch for atomic density type to avoid "by" as legend title
-    if (is.null(fargs[["legend.args"]][["title"]])) {
-      fargs[["legend.args"]][["title"]] = by_dep
+    if (is.null(fargs[["legend_args"]][["title"]])) {
+      fargs[["legend_args"]][["title"]] = by_dep
     }
     ## Another catch for bespoke legend position (if originally passed via the formula method)
-    if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend.args"]])) {
+    if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend_args"]])) {
       if (names(fargs[["legend"]])[1] == "") names(fargs[["legend"]])[1] = "x"
-      fargs[["legend.args"]] = utils::modifyList(fargs[["legend"]], fargs[["legend.args"]])
+      fargs[["legend_args"]] = utils::modifyList(fargs[["legend"]], fargs[["legend_args"]])
       fargs[["legend"]] = NULL
     }
     fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
@@ -670,15 +670,15 @@ tinyplot.default = function(
   # place and draw the legend
   has_legend = FALSE # simple indicator variable for later use
   
-  if (!exists("legend.args")) {
-    legend.args = dots[["legend.args"]]
+  if (!exists("legend_args")) {
+    legend_args = dots[["legend_args"]]
   }
-  if (is.null(legend.args)) legend.args = list(x = NULL)
+  if (is.null(legend_args)) legend_args = list(x = NULL)
   legend = substitute(legend)
   
   if (isFALSE(legend)) {
     legend = "none"
-    legend.args[["x"]] = "none"
+    legend_args[["x"]] = "none"
   }
   if (isTRUE(legend)) {
     legend = NULL
@@ -687,7 +687,7 @@ tinyplot.default = function(
   if (is.null(by)) {
     if (is.null(legend)) {
       legend = "none"
-      legend.args[["x"]] = "none"
+      legend_args[["x"]] = "none"
     }
   }
   
@@ -704,13 +704,13 @@ tinyplot.default = function(
     has_sub = !is.null(sub)
     
     if (isTRUE(was_area_type)) {
-      legend.args[["pt.lwd"]] = par("lwd")
-      legend.args[["lty"]] = 0
+      legend_args[["pt.lwd"]] = par("lwd")
+      legend_args[["lty"]] = 0
     }
     
     draw_legend(
       legend = legend,
-      legend.args = legend.args,
+      legend_args = legend_args,
       by_dep = by_dep,
       lgnd_labs = lgnd_labs,
       type = type,
@@ -725,7 +725,7 @@ tinyplot.default = function(
     
     has_legend = TRUE
     
-  } else if (legend.args[["x"]]=="none" && isFALSE(add)) {
+  } else if (legend_args[["x"]]=="none" && isFALSE(add)) {
     
     omar = par("mar")
     ooma = par("oma")
@@ -767,7 +767,7 @@ tinyplot.default = function(
     if (is.null(legend_eval)) {
       legend_eval = tryCatch(paste0(legend)[[2]], error = function(e) NULL)
     }
-    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend.args[["x"]]) && legend.args[["x"]]=="top!") || (is.list(legend_eval) && legend_eval[[1]]=="top!") )
+    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend_args[["x"]]) && legend_args[["x"]]=="top!") || (is.list(legend_eval) && legend_eval[[1]]=="top!") )
     if (is.null(main) || isFALSE(adj_title)) {
       title(
         main = main,
@@ -907,7 +907,7 @@ tinyplot.default = function(
       }
       
       ## Set the plot window
-      ## Problem: Passing extra args through ... (e.g., legend.args) to plot.window
+      ## Problem: Passing extra args through ... (e.g., legend_args) to plot.window
       ## triggers an annoying warning about unrecognized graphical params.
       # plot.window(
       #   xlim = xlim, ylim = ylim, 
@@ -1277,7 +1277,7 @@ tinyplot.formula = function(
   }
 
   # placeholder for legend title
-  legend.args = list(x = NULL)
+  legend_args = list(x = NULL)
 
   ## set up model frame
   m = match.call(expand.dots = FALSE)
@@ -1371,23 +1371,23 @@ tinyplot.formula = function(
     if (isTRUE(by_same_y)) {
       by = y
       bylab = names(mf)[y_loc]
-      legend.args[["title"]] = bylab
+      legend_args[["title"]] = bylab
     } else if (isTRUE(by_same_x)) {
       by = x
       bylab = names(mf)[x_loc]
-      legend.args[["title"]] = bylab
+      legend_args[["title"]] = bylab
     } else {
       by = bylab = NULL
     }
   } else if (NCOL(mf) == by_loc) {
     by = mf[, by_loc]
     bylab = names(mf)[by_loc]
-    legend.args[["title"]] = bylab
+    legend_args[["title"]] = bylab
     # if (!inherits(by, "factor")) by = as.factor(by)
   } else if (NCOL(mf) > by_loc) {
     by = do.call("interaction", mf[, -c(y_loc, x_loc)])
     bylab = sprintf("interaction(%s)", paste(names(mf)[-c(y_loc, x_loc)], collapse = ", "))
-    legend.args[["title"]] = bylab
+    legend_args[["title"]] = bylab
   }
 
   ## nice axis and legend labels
@@ -1416,7 +1416,7 @@ tinyplot.formula = function(
     frame.plot = frame.plot,
     asp = asp,
     grid = grid,
-    legend.args = legend.args,
+    legend_args = legend_args,
     pch = pch,
     col = col,
     lty = lty,
@@ -1469,9 +1469,9 @@ tinyplot.density = function(
 
   if (inherits(x, "density")) {
     object = x
-    legend.args = list(x = NULL)
+    legend_args = list(x = NULL)
     # Grab by label to pass on legend title to tinyplot.default
-    legend.args[["title"]] = deparse(substitute(by))
+    legend_args[["title"]] = deparse(substitute(by))
   } else {
     ## An internal catch for non-density objects that were forcibly
     ## passed to tinyplot.density (e.g., via a one-side formula)
@@ -1482,7 +1482,7 @@ tinyplot.density = function(
       x = as.numeric(x)
     }
     object = stats::density(x)
-    legend.args = list(...)[["legend.args"]]
+    legend_args = list(...)[["legend_args"]]
   }
 
   by_names = facet_names = NULL
@@ -1579,9 +1579,9 @@ tinyplot.density = function(
     ymin = rep(0, length(y))
     ymax = y
     # set extra legend params to get bordered boxes with fill
-    legend.args[["x.intersp"]] = 1.25
-    legend.args[["lty"]] = 0
-    legend.args[["pt.lwd"]] = 1
+    legend_args[["x.intersp"]] = 1.25
+    legend_args[["lty"]] = 0
+    legend_args[["pt.lwd"]] = 1
   }
 
   ## axes range
@@ -1618,7 +1618,7 @@ tinyplot.density = function(
     frame.plot = frame.plot,
     asp = asp,
     grid = grid,
-    legend.args = legend.args,
+    legend_args = legend_args,
     pch = pch,
     col = col,
     bg = bg,

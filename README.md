@@ -7,7 +7,7 @@
 [![CRAN
 version](https://www.r-pkg.org/badges/version/tinyplot.png)](https://CRAN.R-project.org/package=tinyplot)
 [![R-universe status
-badge](https://grantmcdermott.r-universe.dev/badges/tinyplot)](https://grantmcdermott.r-universe.dev)
+badge](https://grantmcdermott.r-universe.dev/badges/tinyplot.png)](https://grantmcdermott.r-universe.dev)
 [![R-CMD-check](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml)
 [![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/tinyplot/index.html)
 <!-- badges: end -->
@@ -56,16 +56,15 @@ manually.
 The **tinyplot** package aims to remove this overhead. It provides a
 lightweight (zero dependency) extension of the base R graphics system
 with various convenience features, particularly for representing grouped
-data. For example, the core `tinyplot()` function—or its shorthand
-`plt()` alias—makes it easy to plot different groups of a dataset in a
-single function call and highlight these groups using modern colour
-palettes. Coincident with this grouping support, **tinyplot** also
-produces automatic legends with scope for further customization. While
-the package offers several other enhancements like facets, it tries as
-far as possible to be a drop-in replacement for the equivalent base
-plotting function. Users should generally be able to swap a valid
-`plot()` call for `tinyplot()` without any changes to the expected
-output.
+data. For example, the core `tinyplot()` function—or its shorthand alias
+`plt()`—makes it easy to plot different groups of a dataset in a single
+function call and highlight these groups using modern colour palettes.
+Coincident with this grouping support, **tinyplot** also produces
+automatic legends with scope for further customization. While the
+package offers several other enhancements like facets, it tries as far
+as possible to be a drop-in replacement for the equivalent base plotting
+function. Users should generally be able to swap a valid `plot()` call
+for `tinyplot()` without any changes to the expected output.
 
 ## Quickstart
 
@@ -87,10 +86,13 @@ tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)             # formu
 
 <img src="man/figures/README-quickstart2-1.png" style="width:70.0%" />
 
-Same plot with a few extra aesthetic tweaks:
+If you would prefer to save on a few keystrokes, you can use the
+shorthand `plt()` alias instead instead of typing out `tinyplot()` in
+full. Here’s the same plot with this shorthand alias, plus a few
+aesthetic tweaks:
 
 ``` r
-tinyplot(
+plt(
   Sepal.Length ~ Petal.Length | Species, 
   data = iris,
   palette = "dark", pch  = 16,
@@ -103,7 +105,7 @@ tinyplot(
 Grouped grouped density plot with automatic legend:
 
 ``` r
-tinyplot(
+plt(
   ~ Petal.Length | Species,
   data = iris,
   type = "density",
@@ -115,16 +117,16 @@ tinyplot(
 
 <img src="man/figures/README-quickstart4-1.png" style="width:70.0%" />
 
-Grouped scatterplot, combined with facet layout:
+Grouped scatterplot with (continuous) gradient legend, combined with
+facet layout:
 
 ``` r
-iris2 = transform(iris, Sepals = ifelse(Sepal.Length>6, "Long", "Short"))
-tinyplot(
-  Sepal.Length ~ Petal.Length | Sepals, data = iris2,
+plt(
+  Sepal.Length ~ Petal.Length | Sepal.Length, data = iris,
   facet = ~Species,
   facet.args = list(bg = "grey90"),
-  palette = "classic",
-  main = "Faceted Sepals!",
+  palette = "inferno", pch = 19,
+  main = "Faceted Species!",
   grid = TRUE, frame = FALSE
 )
 ```

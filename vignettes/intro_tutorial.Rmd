@@ -93,7 +93,7 @@ with(aq, tinyplot(Day, Temp, by = Month))
 ```
 
 An arguably more convenient approach is to use the equivalent formula syntax.
-Just place the grouping variable after a vertical bar (i.e., `|`).
+Just place the "by" grouping variable after a vertical bar (i.e., `|`).
 
 ```{r formula}
 tinyplot(Temp ~ Day | Month, data = aq)
@@ -151,7 +151,7 @@ string is allowed. For example:
 tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "l",
-  palette = "tableau" # or "ggtinyplot", "okabe-ito", "set2", "harmonic", etc.
+  palette = "tableau" # or "ggplot", "okabe", "set2", "harmonic", etc.
 )
 ```
 
@@ -207,6 +207,16 @@ with(
     legend = list("topright", bty = "o") # change legend features
   )
 )
+```
+
+Finally, note that gradient legends are also supported for continuous grouping
+variables. The exact behaviour depends on how many unique groups are detected; 
+see `?tpar(legend.ugc)`. But it should generally do what you expect, and can be
+further customized in a similar vein to the discrete legends that we have seen
+so far (keyword positioning, alpha transparency, etc.)
+
+```{r legend_gradient}
+tinyplot(Temp ~ Day | Temp, data = aq, palette = "inferno")
 ```
 
 ## Interval plots

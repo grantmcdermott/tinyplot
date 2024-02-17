@@ -1,6 +1,7 @@
 source("helpers.R")
 using("tinysnapshot")
-if (Sys.info()["sysname"] != "Linux") exit_file("Linux snapshots")
+if (ON_CRAN) exit_file("CRAN")
+if (!ON_LINUX) exit_file("Linux snapshots")
 
 op = par(no.readonly = TRUE)
 

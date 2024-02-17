@@ -1,5 +1,6 @@
 source("helpers.R")
 using("tinysnapshot")
+if (ON_CRAN) exit_file("CRAN")
 
 f = function() {
   par(mfrow = c(1, 2))

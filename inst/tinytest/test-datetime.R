@@ -1,5 +1,6 @@
 source("helpers.R")
 using("tinysnapshot")
+if (ON_CRAN) exit_file("CRAN")
 
 
 x_dtt = strptime(20010101:20010110, format="%Y%m%d", tz = "UTC")

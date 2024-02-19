@@ -517,12 +517,11 @@ gradient_legend = function(legend_args, lmar = NULL, outer_right = NULL, outer_b
       lbl_x_anchor = rasterbox[1]
       ttl_x_anchor = rasterbox[3]
     }
-    # legend labs
     text(
       x = lbl_x_anchor,
       y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
       labels = lgnd_labs,
-      xpd = NA, adj = lbl_adj
+      xpd = NA, pos = 4, offset = 0.25
     )
     # legend tick marks
     lgnd_ticks = lgnd_labs

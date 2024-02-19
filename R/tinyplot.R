@@ -567,14 +567,14 @@ tinyplot.default = function(
     gradient = by_continuous
   )
   if (is.null(bg) && !is.null(fill)) bg = fill
-  if (!is.null(bg) && bg == "by") {
+  if (!is.null(bg) && length(bg)==1 && bg == "by") {
     bg = by_col(
       ngrps = ngrps,
       col = NULL,
       palette = substitute(palette),
       gradient = by_continuous
     )
-  } else {
+  } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)
   }
   if (type == "ribbon") {

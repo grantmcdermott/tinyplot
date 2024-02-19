@@ -508,24 +508,28 @@ gradient_legend = function(legend_args, lmar = NULL, outer_right = NULL, outer_b
   ) 
   
   if (isFALSE(horiz)) {
+    labs_idx = !is.na(lgnd_labs)
+    lgnd_labs[labs_idx] = paste0(" ", lgnd_labs[labs_idx])
     lbl_x_anchor = rasterbox[3]
     ttl_x_anchor = rasterbox[1]
-    lbl_adj = c(-0.25, 0.5)
+    lbl_adj = c(0, 0.5)
     tck_adj = c(1, 0.5)
     ttl_adj = c(0, 0)
     if (isFALSE(outer_right)) {
       lbl_x_anchor = rasterbox[1]
-      ttl_x_anchor = rasterbox[3]
+      ttl_x_anchor = ttl_x_anchor + max(strwidth(lgnd_labs[labs_idx]))
+      ttl_adj = c(1, 0)
     }
     text(
       x = lbl_x_anchor,
       y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
       labels = lgnd_labs,
-      xpd = NA, pos = 4, offset = 0.25
+      xpd = NA, 
+      adj = lbl_adj
     )
     # legend tick marks
     lgnd_ticks = lgnd_labs
-    lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
+    lgnd_ticks[labs_idx] = "-   -"
     text(
       x = lbl_x_anchor,
       y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),

@@ -1097,9 +1097,13 @@ tinyplot.default = function(
       if (isTRUE(by_continuous)) {
         if (length(col)!=1) {
           idata[[1]][["col"]] = col[round(rescale_num(by, to = c(1,100)))]
+        } else {
+          idata[[1]][["col"]] = col
         }
-        if (length(by)!=1) {
+        if (length(bg)!=1) {
           idata[[1]][["bg"]] = bg[round(rescale_num(by, to = c(1,100)))]
+        } else {
+          idata[[1]][["bg"]] = bg
         }
       }
     }

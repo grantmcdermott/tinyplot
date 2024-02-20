@@ -42,6 +42,13 @@ f = function() tinyplot(
 )
 expect_snapshot_plot(f, label = "legend_gradient_bg")
 
+f = function() tinyplot(
+  lat ~ long | depth, quakes,
+  pch = 21,
+  bg = "grey", cex = 1.5,
+  main = "Gradient legend (bg scalar)"
+)
+expect_snapshot_plot(f, label = "legend_gradient_bg_scalar")
 
 # check overrides ----
 

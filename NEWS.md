@@ -3,12 +3,9 @@
 ## 0.0.5.9001 (development version)
 
 - Gradient legends are now supported if a continuous variable is passed to
-`by`. The exact behaviour depends on how many unique groups are detected within
-the "by" variable. Specifically, a gradient legend will only be printed if more
-than 5 unique groups are detected. But this behaviour can be fine-tuned by the user
-via the `tpar("legend.ugc")` parameter. Thanks to StackOverflow user mnel, whose
-answer [here](https://stackoverflow.com/a/13355440) provided the inspiration for
-the final implementation. (#122 @grantmcdermott)
+`by`. Thanks to StackOverflow user mnel, whose answer
+[here](https://stackoverflow.com/a/13355440) provided the inspiration for the
+final implementation. (#122 @grantmcdermott)
 - Support user-supplied polygons. (#127 @grantmcdermott)
 
 ## 0.0.5

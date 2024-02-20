@@ -216,8 +216,8 @@
 </defs>
 <g clip-path='url(#cpMC4wMHwyNTIuMDB8MC4wMHwyNTIuMDA=)'>
 <text x='137.95' y='28.61' text-anchor='middle' style='font-size: 11.95px; font-weight: bold; font-family: "Liberation Sans";' textLength='21.88px' lengthAdjust='spacingAndGlyphs'>plot</text>
-<text x='137.95' y='236.46' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='63.06px' lengthAdjust='spacingAndGlyphs'>airquality$Day</text>
-<text transform='translate(10.76,120.02) rotate(-90)' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='69.70px' lengthAdjust='spacingAndGlyphs'>airquality$Temp</text>
+<text x='137.95' y='236.46' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='17.70px' lengthAdjust='spacingAndGlyphs'>Day</text>
+<text transform='translate(10.76,120.02) rotate(-90)' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='24.34px' lengthAdjust='spacingAndGlyphs'>Temp</text>
 </g>
 <defs>
   <clipPath id='cpMzAxLjAwfDQ3OC45MHw0OS4wMHwxOTEuMDQ='>
@@ -430,8 +430,8 @@
 </defs>
 <g clip-path='url(#cpMC4wMHwyNTIuMDB8MjUyLjAwfDUwNC4wMA==)'>
 <text x='137.95' y='280.61' text-anchor='middle' style='font-size: 11.95px; font-weight: bold; font-family: "Liberation Sans";' textLength='43.11px' lengthAdjust='spacingAndGlyphs'>tinyplot</text>
-<text x='137.95' y='488.46' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='63.06px' lengthAdjust='spacingAndGlyphs'>airquality$Day</text>
-<text transform='translate(10.76,372.02) rotate(-90)' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='69.70px' lengthAdjust='spacingAndGlyphs'>airquality$Temp</text>
+<text x='137.95' y='488.46' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='17.70px' lengthAdjust='spacingAndGlyphs'>Day</text>
+<text transform='translate(10.76,372.02) rotate(-90)' text-anchor='middle' style='font-size: 9.96px; font-family: "Liberation Sans";' textLength='24.34px' lengthAdjust='spacingAndGlyphs'>Temp</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <line x1='50.10' y1='443.04' x2='214.82' y2='443.04' style='stroke-width: 0.75;' />

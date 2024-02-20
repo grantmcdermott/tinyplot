@@ -535,7 +535,7 @@ tinyplot.default = function(
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
 
   by_ordered = FALSE
-  by_continuous = !is.null(by) && (inherits(by, c("numeric", "integer")) && more_than_n_unique(by, .tpar[["legend.ugc"]]))
+  by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
   # manual overrides with warning
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")

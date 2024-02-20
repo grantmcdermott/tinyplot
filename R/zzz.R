@@ -20,8 +20,6 @@
   
   .tpar$last_facet_par <- if(is.null(getOption("tinyplot_last_facet_par"))) NULL else getOption("tinyplot_last_facet_par")
   
-  # Continuous legend unique values threshold
-  .tpar$legend.ugc <- if(is.null(getOption("legend.ugc"))) 5L else as.integer(getOption("tinyplot_legend.ugc"))
   # Legend margin, i.e. gap between the legend and the plot elements
   .tpar$lmar <- if(is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))
   

@@ -52,10 +52,5 @@ expect_snapshot_plot(f, label = "legend_gradient_bg_scalar")
 
 # check overrides ----
 
-# small n groups
-# 
-f = function() tinyplot(mpg ~ wt | am, mtcars)
-expect_snapshot_plot(f, label = "legend_gradient_override_small_n")
-
 # discrete override with warning for certain types (e.g. "l")
 expect_warning(tinyplot(mpg ~ wt | disp, mtcars, type = "l"))

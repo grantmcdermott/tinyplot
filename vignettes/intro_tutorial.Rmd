@@ -210,10 +210,9 @@ with(
 ```
 
 Finally, note that gradient legends are also supported for continuous grouping
-variables. The exact behaviour depends on how many unique groups are detected; 
-see `?tpar(legend.ugc)`. But it should generally do what you expect, and can be
-further customized in a similar vein to the discrete legends that we have seen
-so far (keyword positioning, alpha transparency, etc.)
+variables. These gradient legends can be customized in a similar vein to the
+discrete legends that we have seen so far (keyword positioning, alpha
+transparency, etc.)
 
 ```{r legend_gradient}
 tinyplot(Temp ~ Day | Temp, data = aq, palette = "inferno")

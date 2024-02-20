@@ -534,12 +534,14 @@ tinyplot.default = function(
   if (!is.null(ymin)) ylim[1] = min(c(ylim, ymin))
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
 
-
+  by_ordered = FALSE
   by_continuous = !is.null(by) && (inherits(by, c("numeric", "integer")) && more_than_n_unique(by, .tpar[["legend.ugc"]]))
   # manual overrides with warning
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
     by_continuous = FALSE
+  } else if (!is.null(by)){
+    by_ordered = is.ordered(by)
   }
   
   if (!is.null(by) && !by_continuous) {
@@ -564,7 +566,8 @@ tinyplot.default = function(
     ngrps = ngrps,
     col = col,
     palette = substitute(palette),
-    gradient = by_continuous
+    gradient = by_continuous,
+    ordered = by_ordered
   )
   if (is.null(bg) && !is.null(fill)) bg = fill
   if (!is.null(bg) && length(bg)==1 && bg == "by") {
@@ -572,7 +575,8 @@ tinyplot.default = function(
       ngrps = ngrps,
       col = NULL,
       palette = substitute(palette),
-      gradient = by_continuous
+      gradient = by_continuous,
+      ordered = by_ordered
     )
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)

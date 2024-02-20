@@ -1,5 +1,6 @@
-by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL) {
+by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL) {
   
+  if (is.null(ordered)) ordered = FALSE
   if (is.null(gradient)) gradient = FALSE
   if (isTRUE(gradient)) {
     ngrps = 100L
@@ -27,11 +28,11 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL) {
 
   if (is.null(palette)) {
 
-    if (ngrps <= length(palette())) {
+    if (ngrps <= length(palette()) && isFALSE(ordered)) {
       palette_fun = function() palette() # must be function to avoid arg ambiguity
       args = list()
     } else {
-      if (ngrps <= 8) {
+      if (ngrps <= 8 && isFALSE(ordered)) {
         palette = "R4"
         palette_fun = palette.colors
       } else {

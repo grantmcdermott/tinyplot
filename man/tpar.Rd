@@ -42,9 +42,6 @@ parameters can be set or queried at the same time, as a list.
 \code{last_facet_par} \tab\tab Full list of graphical parameters used to constructed the most recent faceted \code{tinyplot} plot during the current session. Unlike other \code{tpar} parameters, this parameter is intended for internal use (specifically, to enable adding further elements on top of an existing faceted plot) and should \emph{not} be set by the user.\cr
 \tab\tab\cr
 \tab\tab\cr
-\code{legend.ugc} \tab\tab Integer denoting the threshold of unique groups required for a continuous (i.e., gradient) \code{tinyplot} color legend. Only applicable if the supplied "by" grouping variable is a numeric or integer. Defaults to \code{5L}, which means that a continuous (gradient) color legend will only be used if \emph{more than} five unique groups are detected. Conversely, if five or less unique groups are detected, then a discrete color legend will be used even if "by" is a numeric or integer. Set to \code{0} if you would like continuous (gradient) legends to be used whenever a numeric or integer variable is passed to "by", regardless of how many unique groups are detected.\cr
-\tab\tab\cr
-\tab\tab\cr
 \code{lmar} \tab\tab A numeric vector of form \code{c(inner, outer)} that gives the margin padding, in terms of lines, around the automatic \code{tinyplot} legend. Defaults to \code{c(1.0, 0.1)}, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is \code{"top!"}, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by \code{par("mar")[3]}.)\cr
 }
 }

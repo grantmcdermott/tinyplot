@@ -119,9 +119,7 @@ automatic legend. (See \code{legend} below for customization options.) However,
 groups can also be presented through other plot parameters (e.g., \code{pch} or
 \code{lty}) by passing an appropriate "by" keyword; see Examples. Note that
 continuous (i.e., gradient) colour legends are also supported if the user
-passes a numeric or integer to \code{by}. The exact behaviour depends on how
-many unique groups are detected; see the \code{"legend.ugc"} parameter in
-\code{\link[tinyplot]{tpar}}.}
+passes a numeric or integer to \code{by}.}
 
 \item{facet}{the faceting variable(s) that you want arrange separate plot
 windows by. Can be specified in various ways:
@@ -227,11 +225,15 @@ with better default behaviour. Default is not to draw a grid.
 
 \item{palette}{one of the following options:
 \itemize{
-\item NULL (default), in which case the palette will be determined by the
-the user's default graphics palette, e.g. "R4". See \code{?palette()}. Note
-that some internal checking is done to make sure that resulting colours
-match the number of groups. For larger group numbers, the "viridis"
-palette will be used instead.
+\item NULL (default), in which case the palette will be chosen according to
+the class and cardinality of the "by" grouping variable. For non-ordered
+factors or strings with a reasonable number of groups, this will inherit
+directly from the user's default \code{\link[grDevices]{palette}} (e.g.,
+"R4"). In other cases, including ordered factors and high cardinality, the
+"Viridis" palette will be used instead. Note that a slightly restricted
+version of the "Viridis" palette will be used in the particular case of
+continuous variables---which will also yield a gradient legend
+swatch---where the extreme color values have be trimmed.
 \item A convenience string corresponding to one of the many palettes listed by
 either \code{palette.pals()} or \code{hcl.pals()}. Note that the string can be
 case-insensitive (e.g., "Okabe-Ito" and "okabe-ito" are both valid).

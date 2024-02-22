@@ -19,9 +19,7 @@
 #'   groups can also be presented through other plot parameters (e.g., `pch` or
 #'   `lty`) by passing an appropriate "by" keyword; see Examples. Note that
 #'   continuous (i.e., gradient) colour legends are also supported if the user
-#'   passes a numeric or integer to `by`. The exact behaviour depends on how
-#'   many unique groups are detected; see the `"legend.ugc"` parameter in
-#'   \code{\link[tinyplot]{tpar}}.
+#'   passes a numeric or integer to `by`.
 #' @param facet the faceting variable(s) that you want arrange separate plot
 #'   windows by. Can be specified in various ways:
 #'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in 
@@ -105,11 +103,15 @@
 #'   with better default behaviour. Default is not to draw a grid.
 #' @param asp the y/xy/x aspect ratio, see `plot.window`.
 #' @param palette one of the following options:
-#'    - NULL (default), in which case the palette will be determined by the
-#'    the user's default graphics palette, e.g. "R4". See `?palette()`. Note
-#'    that some internal checking is done to make sure that resulting colours
-#'    match the number of groups. For larger group numbers, the "viridis"
-#'    palette will be used instead.
+#'    - NULL (default), in which case the palette will be chosen according to
+#'    the class and cardinality of the "by" grouping variable. For non-ordered
+#'    factors or strings with a reasonable number of groups, this will inherit
+#'    directly from the user's default \code{\link[grDevices]{palette}} (e.g.,
+#'    "R4"). In other cases, including ordered factors and high cardinality, the
+#'    "Viridis" palette will be used instead. Note that a slightly restricted
+#'    version of the "Viridis" palette will be used in the particular case of 
+#'    continuous variables---which will also yield a gradient legend
+#'    swatch---where the extreme color values have be trimmed. 
 #'    - A convenience string corresponding to one of the many palettes listed by
 #'    either `palette.pals()` or `hcl.pals()`. Note that the string can be
 #'    case-insensitive (e.g., "Okabe-Ito" and "okabe-ito" are both valid).

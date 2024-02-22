@@ -26,7 +26,7 @@
 #'   keyword position is "bottom!", in which case we need to bump the legend
 #'   margin a bit further.
 #' @param new_plot Should we be calling plot.new internally?
-#' @importFrom graphics grconvertX grconvertY rasterImage
+#' @importFrom graphics grconvertX grconvertY rasterImage strwidth
 #' @importFrom grDevices as.raster recordGraphics
 #' @importFrom utils modifyList
 #' @examples

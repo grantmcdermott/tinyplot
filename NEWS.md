@@ -9,6 +9,8 @@ New features:
 choices, as well as StackOverflow user mnel, whose answer
 [here](https://stackoverflow.com/a/13355440) provided the inspiration for the
 final implementation. (#122 @grantmcdermott)
+- Ordered factors now inherit a discrete sequential color palette ("viridis") by
+default. Thanks to @zeileis for the suggestion. (#130 @grantmcdermott)
 - Support user-supplied polygons. (#127 @grantmcdermott)
 
 ## 0.0.5

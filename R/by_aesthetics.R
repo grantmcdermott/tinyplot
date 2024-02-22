@@ -19,7 +19,13 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
     if (length(col) == 1) {
       col = rep(col, ngrps)
     } else if (length(col) != ngrps) {
-      stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
+      if (isFALSE(gradient)) {
+        stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
+      } else {
+        # interpolate gradient colors
+        col = colorRampPalette(colors = col)(ngrps)
+        col = rev(col)
+      }
     }
     if (anyNA(col) || is.character(col)) {
       return(col)

@@ -123,9 +123,8 @@ facet layout:
 ``` r
 plt(
   Sepal.Length ~ Petal.Length | Sepal.Length, data = iris,
-  facet = ~Species,
-  facet.args = list(bg = "grey90"),
-  palette = "inferno", pch = 19,
+  facet = ~Species, facet.args = list(bg = "grey90"),
+  pch = 19,
   main = "Faceted Species!",
   grid = TRUE, frame = FALSE
 )

@@ -28,17 +28,28 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
 
   if (is.null(palette)) {
 
-    if (ngrps <= length(palette()) && isFALSE(ordered)) {
+    if (ngrps <= length(palette()) && isFALSE(ordered) && isFALSE(gradient)) {
       palette_fun = function() palette() # must be function to avoid arg ambiguity
       args = list()
     } else {
-      if (ngrps <= 8 && isFALSE(ordered)) {
+      if (ngrps <= 8 && isFALSE(ordered)) { # ngrps < 100 so we know gradient is FALSE too
         palette = "R4"
         palette_fun = palette.colors
       } else {
         palette = "Viridis"
-        palette_fun = hcl.colors
-      }
+        if (isFALSE(gradient)) {
+          palette_fun = hcl.colors
+        } else {
+          palette_fun2 = function(n, palette, from = 0.1, to = 0.9, alpha = 1)  {
+            colorRampPalette(
+              hcl.colors(n = n, palette = palette, alpha = alpha)[(n * from + 1):(n * to)],
+              alpha = TRUE
+            )(n)
+          }
+          palette_fun = palette_fun2
+        }
+        
+      } 
       args = list(n = ngrps, palette = palette)
     }
 
@@ -95,6 +106,9 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
   )
 
   if (length(cols) > ngrps) cols = cols[1:ngrps]
+  
+  # For gradient colors, we'll run high to low
+  if (isTRUE(gradient)) cols = rev(cols)
 
   return(cols)
 

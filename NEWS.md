@@ -2,8 +2,11 @@
 
 ## 0.0.5.9001 (development version)
 
+New features:
+
 - Gradient legends are now supported if a continuous variable is passed to
-`by`. Thanks to StackOverflow user mnel, whose answer
+`by`. Thanks to @zeileis for detailed feedback and advice around default palette
+choices, as well as StackOverflow user mnel, whose answer
 [here](https://stackoverflow.com/a/13355440) provided the inspiration for the
 final implementation. (#122 @grantmcdermott)
 - Support user-supplied polygons. (#127 @grantmcdermott)

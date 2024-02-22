@@ -40,13 +40,13 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         if (isFALSE(gradient)) {
           palette_fun = hcl.colors
         } else {
-          palette_fun2 = function(n, palette, from = 0.1, to = 0.9, alpha = 1)  {
+          palette_fun_gradient = function(n, palette, from = 0.1, to = 0.9, alpha = 1)  {
             colorRampPalette(
               hcl.colors(n = n, palette = palette, alpha = alpha)[(n * from + 1):(n * to)],
               alpha = TRUE
             )(n)
           }
-          palette_fun = palette_fun2
+          palette_fun = palette_fun_gradient
         }
         
       } 

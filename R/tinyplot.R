@@ -239,8 +239,8 @@
 #' 
 #' # (Notice that we also get an automatic legend.)
 #' 
-#' # You can also use the equivalent shorthand `plt` alias if you'd like to save
-#' # on a few keystrokes
+#' # You can also use the equivalent shorthand `plt()` alias if you'd like to
+#' # save on a few keystrokes
 #' 
 #' plt(Temp ~ Day | Month, data = aq) ## shorthand alias
 #'

@@ -36,7 +36,6 @@ expect_snapshot_plot(f, label = "legend_gradient_alpha")
 f = function() tinyplot(
   lat ~ long | depth, quakes,
   pch = 21,
-  palette = hcl.colors(palette = "rocket", alpha = 0.5),
   col = "white", bg = "by", cex = 1.5,
   main = "Gradient legend (bg)"
 )

@@ -24,8 +24,10 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
       } else {
         # interpolate gradient colors
         col = colorRampPalette(colors = col)(ngrps)
-        col = rev(col)
       }
+    } 
+    if (isTRUE(gradient)) {
+      col = rev(col)
     }
     if (anyNA(col) || is.character(col)) {
       return(col)

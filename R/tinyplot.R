@@ -109,9 +109,10 @@
 #'    directly from the user's default \code{\link[grDevices]{palette}} (e.g.,
 #'    "R4"). In other cases, including ordered factors and high cardinality, the
 #'    "Viridis" palette will be used instead. Note that a slightly restricted
-#'    version of the "Viridis" palette will be used in the particular case of 
-#'    continuous variables---which will also yield a gradient legend
-#'    swatch---where the extreme color values have be trimmed. 
+#'    version of the "Viridis" palette---where extreme color values have been
+#'    trimmed to improve visual perception---will be used for ordered factors
+#'    and continuous variables. In the latter case of a continuous grouping
+#'    variable, we also generate a gradient legend swatch.
 #'    - A convenience string corresponding to one of the many palettes listed by
 #'    either `palette.pals()` or `hcl.pals()`. Note that the string can be
 #'    case-insensitive (e.g., "Okabe-Ito" and "okabe-ito" are both valid).

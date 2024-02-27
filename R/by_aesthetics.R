@@ -45,12 +45,12 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         palette_fun = palette.colors
       } else {
         palette = "Viridis"
-        if (isFALSE(gradient)) {
+        if (isFALSE(gradient) && isFALSE(ordered)) {
           palette_fun = hcl.colors
         } else {
           palette_fun_gradient = function(n, palette, from = 0.1, to = 0.9, alpha = 1)  {
             colorRampPalette(
-              hcl.colors(n = n, palette = palette, alpha = alpha)[(n * from + 1):(n * to)],
+              hcl.colors(n = 100, palette = palette, alpha = alpha)[(100 * from + 1):(100 * to)],
               alpha = TRUE
             )(n)
           }
@@ -115,8 +115,8 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
 
   if (length(cols) > ngrps) cols = cols[1:ngrps]
   
-  # For gradient colors, we'll run high to low
-  if (isTRUE(gradient)) cols = rev(cols)
+  # For gradient and ordered colors, we'll run high to low
+  if (isTRUE(gradient) || isTRUE(ordered)) cols = rev(cols)
 
   return(cols)
 

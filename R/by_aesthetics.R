@@ -23,7 +23,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
       } else {
         # interpolate gradient colors
-        col = colorRampPalette(colors = col)(ngrps)
+        col = colorRampPalette(colors = col, alpha = TRUE)(ngrps)
       }
     } 
     if (isTRUE(gradient)) {

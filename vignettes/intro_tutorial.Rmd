@@ -93,7 +93,7 @@ with(aq, tinyplot(Day, Temp, by = Month))
 ```
 
 An arguably more convenient approach is to use the equivalent formula syntax.
-Just place the grouping variable after a vertical bar (i.e., `|`).
+Just place the "by" grouping variable after a vertical bar (i.e., `|`).
 
 ```{r formula}
 tinyplot(Temp ~ Day | Month, data = aq)
@@ -137,8 +137,19 @@ tinyplot(
 
 ## Colours
 
-On the subject of group colours, these are easily customized via the `palette`
-argument. The default group colours are inherited from the user's default
+On the subject of group colours, the default palette should adjust automatically
+depending on the class and cardinality of the grouping variable. For example, a
+sequential ("viridis") palette will be used if an ordered factor is detected.
+
+```{r palette_ordered}
+tinyplot(
+  Temp ~ Day | ordered(Month), data = aq,
+  pch = 16
+)
+```
+
+However, this behaviour is easily customized via the `palette` argument.
+The default set of discrete colours are inherited from the user's current global
 palette. (Most likely the "R4" set of colors; see `?palette`). However, all of
 the various palettes listed by `palette.pals()` and `hcl.pals()` are supported
 as convenience strings.^[See the accompanying help pages of those two functions
@@ -151,16 +162,16 @@ string is allowed. For example:
 tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "l",
-  palette = "tableau" # or "ggtinyplot", "okabe-ito", "set2", "harmonic", etc.
+  palette = "tableau" # or "ggplot", "okabe", "set2", "harmonic", etc.
 )
 ```
 
 Beyond these convenience strings, users can also supply a valid
-palette-generating function for finer control over transparency, colour order,
-and so forth. We'll see a demonstration of this further below.
+palette-generating function for finer control over alpha transparency, colour
+order, and so forth. We'll see a demonstration of this further below.
 
 To underscore what we said earlier, colours are inherited from the user's
-default palette. So these can also be set globally, just as they can for the
+current palette. So these can also be set globally, just as they can for the
 base `plot` function. The next code chunk will set a new default palette for the
 remainder of the plots that follow.
 
@@ -207,6 +218,16 @@ with(
     legend = list("topright", bty = "o") # change legend features
   )
 )
+```
+
+Finally, note that gradient legends are also supported for continuous grouping
+variables. Gradient legends can be customized in a similar vein to the discrete
+legends that we have seen so far (keyword positioning, palette choice, alpha
+transparency, etc.) But here is a simple example that demonstrates the default
+behaviour.
+
+```{r legend_gradient}
+tinyplot(Temp ~ Wind | Ozone, data = aq)
 ```
 
 ## Interval plots

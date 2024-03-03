@@ -6,7 +6,7 @@
 \usage{
 draw_legend(
   legend = NULL,
-  legend.args = NULL,
+  legend_args = NULL,
   by_dep = NULL,
   lgnd_labs = NULL,
   type = NULL,
@@ -15,6 +15,7 @@ draw_legend(
   col = NULL,
   bg = NULL,
   cex = NULL,
+  gradient = FALSE,
   lmar = NULL,
   has_sub = FALSE,
   new_plot = TRUE
@@ -23,7 +24,7 @@ draw_legend(
 \arguments{
 \item{legend}{Legend placement keyword or list, passed down from \code{tinyplot}.}
 
-\item{legend.args}{Additional legend arguments to be passed to \code{legend()}.}
+\item{legend_args}{Additional legend arguments to be passed to \code{legend()}.}
 
 \item{by_dep}{The (deparsed) "by" grouping variable name.}
 
@@ -40,6 +41,9 @@ draw_legend(
 \item{bg}{Plotting character background fill colour(s), passed down from \code{tinyplot}.}
 
 \item{cex}{Plotting character expansion(s), passed down from \code{tinyplot}.}
+
+\item{gradient}{Logical indicating whether a continuous gradient swatch
+should be used to represent the colors.}
 
 \item{lmar}{Legend margins (in lines). Should be a numeric vector of the form
 \code{c(inner, outer)}, where the first number represents the "inner" margin
@@ -64,7 +68,7 @@ oldmar = par("mar")
 
 draw_legend(
   legend = "right!", ## default (other options incl, "left(!)", ""bottom(!)", etc.)
-  legend.args = list(title = "Key", bty = "o"),
+  legend_args = list(title = "Key", bty = "o"),
   lgnd_labs = c("foo", "bar"),
   type = "p",
   pch = 21:22,
@@ -94,7 +98,7 @@ par(mar = oldmar)
 # the `lmar` argument. (This can also be set globally via
 # `tpar(lmar = c(inner, outer))`.)
 draw_legend(
-  legend.args = list(title = "Key", bty = "o"),
+  legend_args = list(title = "Key", bty = "o"),
   lgnd_labs = c("foo", "bar"),
   type = "p",
   pch = 21:22,
@@ -102,6 +106,17 @@ draw_legend(
   lmar = c(0, 0.1) ## set inner margin to zero
 )
 box("figure", col = "cyan", lty = 4)
+
+par(mar = oldmar)
+
+# Continuous (gradient) legends are also supported
+draw_legend(
+  legend = "right!",
+  legend_args = list(title = "Key"),
+  lgnd_labs = LETTERS[1:5],
+  col = hcl.colors(5),
+  gradient = TRUE ## enable gradient legend
+)
 
 par(mar = oldmar)
 

@@ -1,4 +1,10 @@
-by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
+by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL) {
+  
+  if (is.null(ordered)) ordered = FALSE
+  if (is.null(gradient)) gradient = FALSE
+  if (isTRUE(gradient)) {
+    ngrps = 100L
+  }
   
   # palette = substitute(palette, env = parent.env(environment()))
   
@@ -13,7 +19,15 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
     if (length(col) == 1) {
       col = rep(col, ngrps)
     } else if (length(col) != ngrps) {
-      stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
+      if (isFALSE(gradient)) {
+        stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
+      } else {
+        # interpolate gradient colors
+        col = colorRampPalette(colors = col, alpha = TRUE)(ngrps)
+      }
+    } 
+    if (isTRUE(gradient)) {
+      col = rev(col)
     }
     if (anyNA(col) || is.character(col)) {
       return(col)
@@ -22,17 +36,28 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
 
   if (is.null(palette)) {
 
-    if (ngrps <= length(palette())) {
+    if (ngrps <= length(palette()) && isFALSE(ordered) && isFALSE(gradient)) {
       palette_fun = function() palette() # must be function to avoid arg ambiguity
       args = list()
     } else {
-      if (ngrps <= 8) {
+      if (ngrps <= 8 && isFALSE(ordered)) { # ngrps < 100 so we know gradient is FALSE too
         palette = "R4"
         palette_fun = palette.colors
       } else {
         palette = "Viridis"
-        palette_fun = hcl.colors
-      }
+        if (isFALSE(gradient) && isFALSE(ordered)) {
+          palette_fun = hcl.colors
+        } else {
+          palette_fun_gradient = function(n, palette, from = 0.1, to = 0.9, alpha = 1)  {
+            colorRampPalette(
+              hcl.colors(n = 100, palette = palette, alpha = alpha)[(100 * from + 1):(100 * to)],
+              alpha = TRUE
+            )(n)
+          }
+          palette_fun = palette_fun_gradient
+        }
+        
+      } 
       args = list(n = ngrps, palette = palette)
     }
 
@@ -45,6 +70,10 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
       if (!is.na(pal_match)) {
         if (pal_match < 1L) stop("'palette' is ambiguous")
         palette_fun = palette.colors
+        if (isTRUE(gradient)) {
+          palette_fun2 = function(n, palette) colorRampPalette(palette.colors(palette = palette))(n)
+          palette_fun = palette_fun2
+        }
       } else {
         pal_match = charmatch(fx(palette), fx(hcl.pals()))
         if (!is.na(pal_match)) {
@@ -85,6 +114,9 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL) {
   )
 
   if (length(cols) > ngrps) cols = cols[1:ngrps]
+  
+  # For gradient and ordered colors, we'll run high to low
+  if (isTRUE(gradient) || isTRUE(ordered)) cols = rev(cols)
 
   return(cols)
 

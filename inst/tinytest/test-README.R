@@ -1,6 +1,9 @@
 source("helpers.R")
 using("tinysnapshot")
 
+aq = airquality
+aq$Month = as.factor(aq$Month)
+
 op = par(no.readonly = TRUE)
 
 f = function() {
@@ -14,10 +17,10 @@ expect_snapshot_plot(f, label = "readme_base_1")
 f = function() {
   par(mfrow = c(2, 2))
   
-  plot(airquality$Day, airquality$Temp, main = "plot")
-  plot(Temp ~ Day, data = airquality, main = "plot (formula)")
-  tinyplot(airquality$Day, airquality$Temp, main = "tinyplot")
-  tinyplot(Temp ~ Day, data = airquality, main = "tinyplot (formula)")
+  with(aq, plot(Day, Temp, main = "plot"))
+  plot(Temp ~ Day, data = aq, main = "plot (formula)")
+  with(aq, tinyplot(Day, Temp, main = "tinyplot"))
+  tinyplot(Temp ~ Day, data = aq, main = "tinyplot (formula)")
   
 }
 expect_snapshot_plot(f, label = "readme_base_2")
@@ -32,16 +35,16 @@ par(op)
 # continue with tests
 #
 
-f = function() tinyplot(airquality$Day, airquality$Temp, by = airquality$Month)
+f = function() with(aq, tinyplot(Day, Temp, by = Month))
 expect_snapshot_plot(f, label = "readme_by")
 
-f = function() tinyplot(Temp ~ Day | Month, data = airquality)
+f = function() tinyplot(Temp ~ Day | Month, data = aq)
 expect_snapshot_plot(f, label = "readme_formula")
 
 f = function() {
   tinyplot(
     Temp ~ Day | Month,
-    data = airquality,
+    data = aq,
     pch = 16
   )
 }
@@ -50,7 +53,7 @@ expect_snapshot_plot(f, label = "readme_pch_16")
 f = function() {
   tinyplot(
     Temp ~ Day | Month,
-    data = airquality,
+    data = aq,
     type = "l"
   )
 }
@@ -59,7 +62,7 @@ expect_snapshot_plot(f, label = "readme_type_l")
 f = function() {
   tinyplot(
     Temp ~ Day | Month,
-    data = airquality,
+    data = aq,
     type = "l",
     col = "black", # override automatic group colours
     lty = "by"     # change line type by group instead
@@ -70,7 +73,7 @@ expect_snapshot_plot(f, label = "readme_by_lty")
 f = function() {
   tinyplot(
     Temp ~ Day | Month,
-    data = airquality,
+    data = aq,
     type = "l",
     legend = legend("bottom!", title = "Month of the year", bty = "o")
   )
@@ -80,7 +83,7 @@ expect_snapshot_plot(f, label = "readme_legend_bottom")
 if ((getRversion() <= "4.3.1")) {
   f = function() {
     with(
-      airquality,
+      aq,
       tinyplot(density(Temp), by = Month, legend = legend("topright", bty="o"))
     )
   }
@@ -90,7 +93,7 @@ if ((getRversion() <= "4.3.1")) {
 f = function() {
   tinyplot(
     Temp ~ Day | Month,
-    data = airquality,
+    data = aq,
     type = "l",
     palette = "Tableau 10"
   )
@@ -98,7 +101,7 @@ f = function() {
 expect_snapshot_plot(f, label = "readme_palette_tableau")
 
 f = function() {
-  mod = lm(Temp ~ 0 + factor(Month), airquality)
+  mod = lm(Temp ~ 0 + factor(Month), aq)
   coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
   coefs = setNames(coefs, c("term", "estimate", "ci_low", "ci_high"))
   with(
@@ -122,7 +125,7 @@ if (getRversion()  <= "4.3.2") {
     
     tinyplot(
       Temp ~ Day | Month,
-      data = airquality,
+      data = aq,
       type = "b",
       palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
       main = "Daily temperatures by month",
@@ -151,7 +154,7 @@ f = function() {
   
   tinyplot(
     Temp ~ Day | Month,
-    data = airquality,
+    data = aq,
     type = "b", pch = 15:19,
     palette = "Tropic",
     main = "Daily temperatures by month"

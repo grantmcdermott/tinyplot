@@ -113,10 +113,13 @@ and \code{y} must be of the same length.}
 \item{...}{other graphical parameters. See \code{\link[graphics]{par}} or
 the "Details" section of \code{\link[graphics]{plot}}.}
 
-\item{by}{grouping variable(s). By default, groups will be represented
-through colouring of the plot elements. However, this can be turned off
-and other plot parameters (e.g., line types) can also take on grouping
-behaviour via the special "by" keyword. See Examples.}
+\item{by}{grouping variable(s). The default behaviour is for groups to be
+represented in the form of distinct colours, which will also trigger an
+automatic legend. (See \code{legend} below for customization options.) However,
+groups can also be presented through other plot parameters (e.g., \code{pch} or
+\code{lty}) by passing an appropriate "by" keyword; see Examples. Note that
+continuous (i.e., gradient) colour legends are also supported if the user
+passes a numeric or integer to \code{by}.}
 
 \item{facet}{the faceting variable(s) that you want arrange separate plot
 windows by. Can be specified in various ways:
@@ -222,11 +225,16 @@ with better default behaviour. Default is not to draw a grid.
 
 \item{palette}{one of the following options:
 \itemize{
-\item NULL (default), in which case the palette will be determined by the
-the user's default graphics palette, e.g. "R4". See \code{?palette()}. Note
-that some internal checking is done to make sure that resulting colours
-match the number of groups. For larger group numbers, the "viridis"
-palette will be used instead.
+\item NULL (default), in which case the palette will be chosen according to
+the class and cardinality of the "by" grouping variable. For non-ordered
+factors or strings with a reasonable number of groups, this will inherit
+directly from the user's default \code{\link[grDevices]{palette}} (e.g.,
+"R4"). In other cases, including ordered factors and high cardinality, the
+"Viridis" palette will be used instead. Note that a slightly restricted
+version of the "Viridis" palette---where extreme color values have been
+trimmed to improve visual perception---will be used for ordered factors
+and continuous variables. In the latter case of a continuous grouping
+variable, we also generate a gradient legend swatch.
 \item A convenience string corresponding to one of the many palettes listed by
 either \code{palette.pals()} or \code{hcl.pals()}. Note that the string can be
 case-insensitive (e.g., "Okabe-Ito" and "okabe-ito" are both valid).
@@ -373,8 +381,8 @@ tinyplot(Temp ~ Day | Month, data = aq)   ## formula method
 
 # (Notice that we also get an automatic legend.)
 
-# You can also use the equivalent shorthand `plt` alias if you'd like to save
-# on a few keystrokes
+# You can also use the equivalent shorthand `plt()` alias if you'd like to
+# save on a few keystrokes
 
 plt(Temp ~ Day | Month, data = aq) ## shorthand alias
 

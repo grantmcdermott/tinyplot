@@ -9,6 +9,8 @@ exit_if_not(getRversion()  <= "4.3.2")
 ## test with something like:
 # f = function() tinyplot(density(mtcars$mpg, old.coords=TRUE))
 
+mtcars$am = as.factor(mtcars$am)
+
 f = function() with(mtcars, tinyplot(density(mpg)))
 expect_snapshot_plot(f, label = "density_nogroups")
 

@@ -59,7 +59,7 @@ your plot regions, and then generating the legend manually.
 The **tinyplot** package aims to remove this overhead. It provides a lightweight
 (zero dependency) extension of the base R graphics system with various
 convenience features, particularly for representing grouped data. For example,
-the core `tinyplot()` function&mdash;or its shorthand `plt()` alias&mdash;makes
+the core `tinyplot()` function&mdash;or its shorthand alias `plt()`&mdash;makes
 it easy to plot different groups of a dataset in a single function call and
 highlight these groups using modern colour palettes. Coincident with this
 grouping support, **tinyplot** also produces automatic legends with scope for
@@ -87,10 +87,12 @@ Grouped scatterplot with automatic legend:
 tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)             # formula
 ```
 
-Same plot with a few extra aesthetic tweaks:
+If you would prefer to save on a few keystrokes, you can use the shorthand
+`plt()` alias instead instead of typing out `tinyplot()` in full. Here's the
+same plot with this shorthand alias, plus a few aesthetic tweaks:
 
 ```{r quickstart3}
-tinyplot(
+plt(
   Sepal.Length ~ Petal.Length | Species, 
   data = iris,
   palette = "dark", pch  = 16,
@@ -101,7 +103,7 @@ tinyplot(
 Grouped grouped density plot with automatic legend:
 
 ```{r quickstart4}
-tinyplot(
+plt(
   ~ Petal.Length | Species,
   data = iris,
   type = "density",
@@ -111,16 +113,15 @@ tinyplot(
 )
 ```
 
-Grouped scatterplot, combined with facet layout:
+Grouped scatterplot with (continuous) gradient legend, combined with facet
+layout:
 
 ```{r quickstart5}
-iris2 = transform(iris, Sepals = ifelse(Sepal.Length>6, "Long", "Short"))
-tinyplot(
-  Sepal.Length ~ Petal.Length | Sepals, data = iris2,
-  facet = ~Species,
-  facet.args = list(bg = "grey90"),
-  palette = "classic",
-  main = "Faceted Sepals!",
+plt(
+  Sepal.Length ~ Petal.Length | Sepal.Length, data = iris,
+  facet = ~Species, facet.args = list(bg = "grey90"),
+  pch = 19,
+  main = "Faceted Species!",
   grid = TRUE, frame = FALSE
 )
 ```

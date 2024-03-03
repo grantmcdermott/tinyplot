@@ -1,6 +1,8 @@
 source("helpers.R")
 using("tinysnapshot")
 
+mtcars$am = as.factor(mtcars$am)
+
 op = par(no.readonly = TRUE)
 
 #

@@ -45,8 +45,8 @@ expect_snapshot_plot(f, label = "palette_keyword2")
 # Partial match should fail if ambiguous
 f = function() {
     tinyplot(
-        Temp ~ Day | Month, airquality,
-        type = "b", pch = 16,
+        Sepal.Length ~ Petal.Length | Species, iris,
+        type = "p", pch = 16,
         palette = "set" # set1, set2, set3, etc.
     )
 }

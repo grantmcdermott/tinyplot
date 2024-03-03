@@ -453,7 +453,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Finally, note that gradient legends are also supported for continuous grouping variables. Gradient legends can be customized in a similar vein to the discrete legends that we have seen so far (keyword positioning, palette choice, alpha transparency, etc.) But here is a simple example that demonstrates the default behaviour.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Temp <span class="sc">~</span> Wind <span class="sc">|</span> Ozone, <span class="at">data =</span> aq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Temp <span class="sc">~</span> Wind <span class="sc">|</span> Ozone, <span class="at">data =</span> aq, <span class="at">pch =</span> <span class="dv">19</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

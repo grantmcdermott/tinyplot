@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -248,7 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="why">Why</h2>
 <p>R users are spoiled for choice when it comes to visualization frameworks. The options include <strong>ggplot2</strong> (arguably the most important graphics system of the last decade) and <strong>lattice</strong>, not to mention a bewildering array of extensions built on top of, around, and in between these amazing packages.</p>
 <p>As a result, it is perhaps not surprising that the base R graphics system sometimes gets short shrift. This is unfortunate, because base R offers very powerful and flexible plotting facilities. Just type <code>demo(graphics)</code> or <code>demo(persp)</code> into your R console to get an idea. Or, take a look at <a href="https://github.com/karoliskoncevicius/tutorial_r_introduction/blob/main/baseplotting.md">these</a> <a href="https://quizzical-engelbart-d15a44.netlify.app/2021-2022_m2-data-2_visu-2_practice#1">two</a> excellent tutorials. The downside of this power and flexibility is that base R plotting can require a fair bit of manual tinkering. A case in point is plotting grouped data with an appropriate legend. Doing so with the generic <code>plot()</code> function can require several function calls or a loop, fiddling with your plot regions, and then generating the legend manually.</p>
-<p>The <strong>tinyplot</strong> package aims to remove this overhead. It provides a lightweight (zero dependency) extension of the base R graphics system with various convenience features, particularly for representing grouped data. For example, the core <code>tinyplot()</code> function—or its shorthand <code>plt()</code> alias—makes it easy to plot different groups of a dataset in a single function call and highlight these groups using modern colour palettes. Coincident with this grouping support, <strong>tinyplot</strong> also produces automatic legends with scope for further customization. While the package offers several other enhancements like facets, it tries as far as possible to be a drop-in replacement for the equivalent base plotting function. Users should generally be able to swap a valid <code>plot()</code> call for <code>tinyplot()</code> without any changes to the expected output.</p>
+<p>The <strong>tinyplot</strong> package aims to remove this overhead. It provides a lightweight (zero dependency) extension of the base R graphics system with various convenience features, particularly for representing grouped data. For example, the core <code>tinyplot()</code> function—or its shorthand alias <code>plt()</code>—makes it easy to plot different groups of a dataset in a single function call and highlight these groups using modern colour palettes. Coincident with this grouping support, <strong>tinyplot</strong> also produces automatic legends with scope for further customization. While the package offers several other enhancements like facets, it tries as far as possible to be a drop-in replacement for the equivalent base plotting function. Users should generally be able to swap a valid <code>plot()</code> call for <code>tinyplot()</code> without any changes to the expected output.</p>
 </section>
 <section id="quickstart" class="level2">
 <h2 class="anchored" data-anchor-id="quickstart">Quickstart</h2>
@@ -268,9 +268,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Same plot with a few extra aesthetic tweaks:</p>
+<p>If you would prefer to save on a few keystrokes, you can use the shorthand <code>plt()</code> alias instead instead of typing out <code>tinyplot()</code> in full. Here’s the same plot with this shorthand alias, plus a few aesthetic tweaks:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> iris,</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"dark"</span>, <span class="at">pch  =</span> <span class="dv">16</span>,</span>
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Grouped grouped density plot with automatic legend:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> iris,</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"density"</span>,</span>
@@ -302,17 +302,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Grouped scatterplot, combined with facet layout:</p>
+<p>Grouped scatterplot with (continuous) gradient legend, combined with facet layout:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>iris2 <span class="ot">=</span> <span class="fu">transform</span>(iris, <span class="at">Sepals =</span> <span class="fu">ifelse</span>(Sepal.Length<span class="sc">&gt;</span><span class="dv">6</span>, <span class="st">"Long"</span>, <span class="st">"Short"</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Sepals, <span class="at">data =</span> iris2,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span>Species,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">bg =</span> <span class="st">"grey90"</span>),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"classic"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Faceted Sepals!"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Sepal.Length, <span class="at">data =</span> iris,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span>Species, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">bg =</span> <span class="st">"grey90"</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Faceted Species!"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

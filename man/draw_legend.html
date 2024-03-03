@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -244,7 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">draw_legend(
   legend = NULL,
-  legend.args = NULL,
+  legend_args = NULL,
   by_dep = NULL,
   lgnd_labs = NULL,
   type = NULL,
@@ -253,6 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   col = NULL,
   bg = NULL,
   cex = NULL,
+  gradient = FALSE,
   lmar = NULL,
   has_sub = FALSE,
   new_plot = TRUE
@@ -272,7 +273,7 @@ Legend placement keyword or list, passed down from <code>tinyplot</code>.
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_legend.args">legend.args</code>
+<code id="draw_legend_:_legend_args">legend_args</code>
 </td>
 <td>
 Additional legend arguments to be passed to <code>legend()</code>.
@@ -344,6 +345,14 @@ Plotting character expansion(s), passed down from <code>tinyplot</code>.
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="draw_legend_:_gradient">gradient</code>
+</td>
+<td>
+Logical indicating whether a continuous gradient swatch should be used to represent the colors.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="draw_legend_:_lmar">lmar</code>
 </td>
 <td>
@@ -378,7 +387,7 @@ Should we be calling plot.new internally?
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_legend</span>(</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="st">"right!"</span>, <span class="do">## default (other options incl, "left(!)", ""bottom(!)", etc.)</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.args =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Key"</span>, <span class="at">bty =</span> <span class="st">"o"</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend_args =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Key"</span>, <span class="at">bty =</span> <span class="st">"o"</span>),</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lgnd_labs =</span> <span class="fu">c</span>(<span class="st">"foo"</span>, <span class="st">"bar"</span>),</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"p"</span>,</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">22</span>,</span>
@@ -417,7 +426,7 @@ Should we be calling plot.new internally?
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the `lmar` argument. (This can also be set globally via</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># `tpar(lmar = c(inner, outer))`.)</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_legend</span>(</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.args =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Key"</span>, <span class="at">bty =</span> <span class="st">"o"</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend_args =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Key"</span>, <span class="at">bty =</span> <span class="st">"o"</span>),</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lgnd_labs =</span> <span class="fu">c</span>(<span class="st">"foo"</span>, <span class="st">"bar"</span>),</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"p"</span>,</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">22</span>,</span>
@@ -432,7 +441,25 @@ Should we be calling plot.new internally?
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> oldmar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> oldmar)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Continuous (gradient) legends are also supported</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_legend</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="st">"right!"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend_args =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Key"</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">lgnd_labs =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>],</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">hcl.colors</span>(<span class="dv">5</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">gradient =</span> <span class="cn">TRUE</span> <span class="do">## enable gradient legend</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> oldmar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="draw_legend_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 
 

@@ -227,7 +227,7 @@ transparency, etc.) But here is a simple example that demonstrates the default
 behaviour.
 
 ```{r legend_gradient}
-tinyplot(Temp ~ Wind | Ozone, data = aq)
+tinyplot(Temp ~ Wind | Ozone, data = aq, pch = 19)
 ```
 
 ## Interval plots

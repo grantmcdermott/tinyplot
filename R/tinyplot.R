@@ -161,6 +161,12 @@
 #'   line type will automatically loop over the number groups. This automatic
 #'   looping will begin at the global line type value (i.e., `par("lty")`) and
 #'   recycle as necessary.
+#' @param lwd line width. Numeric scalar or vector of length equal to the
+#'   number of categories in the `by` variable. See `lwd`. In addition, users
+#'   can supply a special `lwd = "by"` convenience argument, in which case the
+#'   line width will automatically loop over the number groups. This automatic
+#'   looping will be centered at the global line width value (i.e.,
+#`   par("lwd")`) and pad on either side of that.
 #' @param bg background fill color for the open plot symbols 21:25 (see
 #'   `points.default`), as well as ribbon and area plot types. For the latter
 #'   group---including filled density plots---an automatic alpha transparency
@@ -394,6 +400,7 @@ tinyplot.default = function(
     legend = NULL,
     pch = NULL,
     lty = NULL,
+    lwd = NULL,
     col = NULL,
     bg = NULL,
     fill = NULL,
@@ -563,6 +570,8 @@ tinyplot.default = function(
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
+  
+  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
 
   # palette = substitute(palette)
   col = by_col(
@@ -723,6 +732,7 @@ tinyplot.default = function(
       type = type,
       pch = pch,
       lty = lty,
+      lwd = lwd,
       col = col,
       bg = bg,
       gradient = by_continuous,
@@ -1119,6 +1129,7 @@ tinyplot.default = function(
     ibg = bg[i]
     ipch = pch[i]
     ilty = lty[i]
+    ilwd = lwd[i]
     
     ## Inner loop over the "facet" variables
     for (ii in seq_along(idata)) {
@@ -1162,7 +1173,8 @@ tinyplot.default = function(
           x1 = xx,
           y1 = yymax,
           col = icol,
-          lty = ilty
+          # lty = ilty,
+          lwd = ilwd
         )
       }
       if (type == "errorbar") {
@@ -1172,7 +1184,8 @@ tinyplot.default = function(
           x1 = xx,
           y1 = yymax,
           col = icol,
-          lty = ilty,
+          # lty = ilty,
+          lwd = ilwd,
           length = 0.05,
           angle = 90,
           code = 3
@@ -1189,7 +1202,8 @@ tinyplot.default = function(
           ## rather hardcode "p" to avoid warning message about "pointrange"
           type = "p",
           pch = ipch,
-          lty = ilty,
+          # lty = ilty,
+          lwd = ilwd,
           cex = cex
         )
       } else if (type %in% c("l", "o", "b", "c", "h", "s", "S", "ribbon")) {
@@ -1201,7 +1215,8 @@ tinyplot.default = function(
           col = icol,
           type = type,
           pch = ipch,
-          lty = ilty
+          lty = ilty,
+          lwd = ilwd
         )
         if (rtype) type = "ribbon"
       } else if (type == "polygon") {
@@ -1211,6 +1226,7 @@ tinyplot.default = function(
           border = icol,
           col = ibg,
           lty = ilty,
+          lwd = ilwd
         )
       } else {
         stop("`type` argument not supported.", call. = FALSE)
@@ -1254,6 +1270,7 @@ tinyplot.formula = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
+    lwd = NULL,
     par_restore = FALSE,
     formula = NULL,
     subset = NULL,
@@ -1431,6 +1448,7 @@ tinyplot.formula = function(
     pch = pch,
     col = col,
     lty = lty,
+    lwd = lwd,
     par_restore = par_restore,
     ...
     )
@@ -1462,6 +1480,7 @@ tinyplot.density = function(
     pch = NULL,
     col = NULL,
     lty = NULL,
+    lwd = NULL,
     bg = NULL,
     fill = NULL,
     par_restore = FALSE,
@@ -1635,6 +1654,7 @@ tinyplot.density = function(
     bg = bg,
     fill = fill,
     lty = lty,
+    lwd = lwd,
     par_restore = par_restore,
     ...
     )

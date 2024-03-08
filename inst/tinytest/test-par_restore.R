@@ -3,7 +3,7 @@ using("tinysnapshot")
 
 ## Skip failing test in R devel due to some minor esoteric difference coming up 
 ## in R 4.4.0. Can revert once it reaches release for local testing.
-exit_if_not(getRversion()  <= "4.3.2")
+exit_if_not(getRversion() <= "4.3.3")
 
 
 op = par(no.readonly = TRUE)

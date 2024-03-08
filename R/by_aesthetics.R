@@ -167,7 +167,7 @@ by_lty = function(ngrps, type, lty=NULL) {
 
   # We only care about line types, otherwise return NULL
   if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon")) {
-    if (type == "p") out = NA else out = NULL
+    if (type == "p") out = NULL
     
     # special "by" convenience keyword
   } else if (!is.null(lty) && length(lty)==1 && lty=="by") {
@@ -218,8 +218,8 @@ by_lty = function(ngrps, type, lty=NULL) {
 by_lwd = function(ngrps, type, lwd=NULL) {
 
   lwd_base = par("lwd")
-  lwd_floor = lwd_base/5
-  lwd_ceiling = lwd_base*5
+  lwd_floor = lwd_base / min(5, ngrps)
+  lwd_ceiling = lwd_base * min(5, ngrps)
   
   no_lwd = FALSE
   # special "by" convenience keyword

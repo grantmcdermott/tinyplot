@@ -43,8 +43,20 @@ tpar = function(...) {
   facet.col = facet.bg = facet.border = NULL
   
   opts = list(...)
+  
   tpar_old = as.list(.tpar)
   nam = names(opts)
+  
+  known_par = names(par(no.readonly = TRUE))
+  if (!is.null(nam)) {
+    used_par = intersect(nam, known_par)
+  } else {
+    used_par = intersect(opts, known_par)
+  }
+  if (length(used_par)) {
+    if (!is.null(nam)) used_par = opts[used_par]
+    par(used_par)
+  }
   
   if (length(opts$facet.cex)) {
     facet.cex = as.numeric(opts$facet.cex)

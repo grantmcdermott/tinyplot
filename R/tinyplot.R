@@ -694,9 +694,6 @@ tinyplot.default = function(
   
   if (isFALSE(legend)) {
     legend = "none"
-    legend_args[["x"]] = "none"
-  }
-  if (isTRUE(legend)) {
   } else if (isTRUE(legend)) {
     legend = NULL
   }

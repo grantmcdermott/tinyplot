@@ -167,7 +167,7 @@ by_lty = function(ngrps, type, lty=NULL) {
 
   # We only care about line types, otherwise return NULL
   if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon")) {
-    if (type == "p") out = NULL
+    out = NULL
     
     # special "by" convenience keyword
   } else if (!is.null(lty) && length(lty)==1 && lty=="by") {

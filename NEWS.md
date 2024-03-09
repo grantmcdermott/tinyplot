@@ -1,6 +1,6 @@
 # News
 
-## 0.0.5.9001 (development version)
+## 0.0.5.9002 (development version)
 
 New features:
 
@@ -13,6 +13,10 @@ final implementation. (#122 @grantmcdermott)
 - Ordered factors now inherit a discrete sequential color palette ("viridis") by
 default. Thanks to @zeileis for the suggestion. (#130 @grantmcdermott)
 - Support user-supplied polygons. (#127 @grantmcdermott)
+- Support for the `lwd` argument for adjusting line widths. Similar to `pch`,
+`lty`, `cex`, etc. this arguments also accepts a "by" convenience keyword to
+automatically vary line widths by group. (#134 @grantmcdermott)
+
 
 ## 0.0.5
 

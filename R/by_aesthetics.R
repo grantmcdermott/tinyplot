@@ -218,16 +218,17 @@ by_lty = function(ngrps, type, lty=NULL) {
 by_lwd = function(ngrps, type, lwd=NULL) {
 
   lwd_base = par("lwd")
-  lwd_floor = lwd_base / min(5, ngrps)
+  lwd_floor = lwd_base / min(5, max((ngrps-1), 1))
   lwd_ceiling = lwd_base * min(5, ngrps)
   
   no_lwd = FALSE
   # special "by" convenience keyword
   if (!is.null(lwd) && length(lwd)==1 && lwd=="by") {
     no_lwd = TRUE # skip checks below
-    lwd = seq(lwd_base, lwd_ceiling, length.out = ngrps)
+    lwd = seq(lwd_floor, lwd_ceiling, length.out = ngrps)
   } else if (is.null(lwd)) {
-    lwd = lwd_base
+    no_lwd = TRUE
+    lwd = NULL
   }
 
   if (!no_lwd) {

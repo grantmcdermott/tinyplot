@@ -144,7 +144,7 @@ draw_legend = function(
   if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
   if (is.null(legend_args[["pch"]])) legend_args[["pch"]] = pch
   if (is.null(legend_args[["lty"]])) legend_args[["lty"]] = lty
-  if (!(type %in% c("p", "ribbon", "polygon"))) {
+  if (!is.null(type) && !(type %in% c("p", "ribbon", "polygon"))) {
     if (is.null(legend_args[["lwd"]])) legend_args[["lwd"]] = lwd
   }
   if (is.null(legend_args[["col"]])) legend_args[["col"]] = col

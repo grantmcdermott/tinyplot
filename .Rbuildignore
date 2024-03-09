@@ -15,5 +15,4 @@ vignettes/gallery.qmd
 SCRATCH
 README_files/
 ^_quarto$
-vignettes/_extensions/
-vignettes/_extensions
+vignettes/

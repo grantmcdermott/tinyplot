@@ -270,6 +270,7 @@ tinyplot(
   legend = NULL,
   pch = NULL,
   lty = NULL,
+  lwd = NULL,
   col = NULL,
   bg = NULL,
   fill = NULL,
@@ -303,6 +304,7 @@ tinyplot(
   pch = NULL,
   col = NULL,
   lty = NULL,
+  lwd = NULL,
   par_restore = FALSE,
   formula = NULL,
   subset = NULL,
@@ -332,6 +334,7 @@ tinyplot(
   pch = NULL,
   col = NULL,
   lty = NULL,
+  lwd = NULL,
   bg = NULL,
   fill = NULL,
   par_restore = FALSE,
@@ -596,10 +599,18 @@ line type. Character, integer, or vector of length equal to the number of catego
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="tinyplot_:_lwd">lwd</code>
+</td>
+<td>
+line width. Numeric scalar or vector of length equal to the number of categories in the <code>by</code> variable. See <code>lwd</code>. In addition, users can supply a special <code>lwd = “by”</code> convenience argument, in which case the line width will automatically loop over the number of groups. This automatic looping will be centered at the global line width value (i.e.,
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="tinyplot_:_col">col</code>
 </td>
 <td>
-plotting color. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>col</code>. Note that the default behaviour in <code>tinyplot</code> is to vary group colors along any variables declared in the <code>by</code> argument. Thus, specifying colors manually should not be necessary unless users wish to override the automatic colors produced by this grouping process. Typically, this would only be done if grouping features are deferred to some other graphical parameter (i.e., passing the "by" keyword to one of <code>pch</code>, <code>lty</code>, or <code>bg</code>; see below.)
+plotting color. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>col</code>. Note that the default behaviour in <code>tinyplot</code> is to vary group colors along any variables declared in the <code>by</code> argument. Thus, specifying colors manually should not be necessary unless users wish to override the automatic colors produced by this grouping process. Typically, this would only be done if grouping features are deferred to some other graphical parameter (i.e., passing the "by" keyword to one of <code>pch</code>, <code>lty</code>, <code>lwd</code>, or <code>bg</code>; see below.)
 </td>
 </tr>
 <tr>

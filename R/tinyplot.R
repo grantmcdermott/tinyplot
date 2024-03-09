@@ -148,7 +148,7 @@
 #'   be necessary unless users wish to override the automatic colors produced by
 #'   this grouping process. Typically, this would only be done if grouping
 #'   features are deferred to some other graphical parameter (i.e., passing the
-#'   "by" keyword to one of `pch`, `lty`, or `bg`; see below.)
+#'   "by" keyword to one of `pch`, `lty`, `lwd`, or `bg`; see below.)
 #' @param pch plotting "character", i.e., symbol to use. Character, integer, or
 #'   vector of length equal to the number of categories in the `by` variable.
 #'   See `pch`. In addition, users can supply a special `pch = "by"` convenience
@@ -164,8 +164,8 @@
 #' @param lwd line width. Numeric scalar or vector of length equal to the
 #'   number of categories in the `by` variable. See `lwd`. In addition, users
 #'   can supply a special `lwd = "by"` convenience argument, in which case the
-#'   line width will automatically loop over the number groups. This automatic
-#'   looping will be centered at the global line width value (i.e.,
+#'   line width will automatically loop over the number of groups. This
+#'   automatic looping will be centered at the global line width value (i.e.,
 #`   par("lwd")`) and pad on either side of that.
 #' @param bg background fill color for the open plot symbols 21:25 (see
 #'   `points.default`), as well as ribbon and area plot types. For the latter

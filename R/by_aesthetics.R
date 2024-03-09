@@ -165,7 +165,7 @@ by_pch = function(ngrps, type, pch=NULL) {
 
 by_lty = function(ngrps, type, lty=NULL) {
 
-  # don't care about line type, return NULL
+  # We only care about line types, otherwise return NULL
   if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon")) {
     out = NULL
     
@@ -212,4 +212,33 @@ by_lty = function(ngrps, type, lty=NULL) {
   }
 
   return(out)
+}
+
+
+by_lwd = function(ngrps, type, lwd=NULL) {
+
+  lwd_base = par("lwd")
+  lwd_floor = lwd_base / min(5, max((ngrps-1), 1))
+  lwd_ceiling = lwd_base * min(5, ngrps)
+  
+  no_lwd = FALSE
+  # special "by" convenience keyword
+  if (!is.null(lwd) && length(lwd)==1 && lwd=="by") {
+    no_lwd = TRUE # skip checks below
+    lwd = seq(lwd_floor, lwd_ceiling, length.out = ngrps)
+  } else if (is.null(lwd)) {
+    no_lwd = TRUE
+    lwd = NULL
+  }
+
+  if (!no_lwd) {
+    if (!is.atomic(lwd) || !is.vector(lwd) || !is.numeric(lwd) || (length(lwd) != 1 && length(lwd) != ngrps)) {
+      stop(sprintf("`lwd` must be `NULL` or a numeric vector of length 1 or %s.", ngrps), call. = FALSE)
+    }
+    if (length(lwd) == 1) {
+      lwd = rep(lwd, ngrps)
+    }
+  }
+  
+  return(lwd)
 }

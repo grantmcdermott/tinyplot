@@ -127,6 +127,10 @@ tpar = function(...) {
     if (!is.null(opts) && length(opts)!=0) {
       # specific values requested
       ret = (`names<-`(lapply(opts, function(x) .tpar[[x]]), opts))
+      if (length(used_par)) {
+        ret_par = par(used_par)
+        ret = utils::modifyList(ret, ret_par)
+      }
       if (length(ret)==1) ret = ret[[1]]
       return(ret)
     } else {

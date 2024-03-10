@@ -1240,9 +1240,6 @@ tinyplot.default = function(
   # tidy up before exit
   if (!is.null(facet)) {
     tpar(last_facet_par = par(no.readonly = TRUE))
-    grDevices::recordPlot()
-  } else {
-    grDevices::recordPlot()
   }
   
 }

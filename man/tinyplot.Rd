@@ -34,6 +34,7 @@ tinyplot(x, ...)
   legend = NULL,
   pch = NULL,
   lty = NULL,
+  lwd = NULL,
   col = NULL,
   bg = NULL,
   fill = NULL,
@@ -66,6 +67,7 @@ tinyplot(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
+  lwd = NULL,
   par_restore = FALSE,
   formula = NULL,
   subset = NULL,
@@ -94,6 +96,7 @@ tinyplot(x, ...)
   pch = NULL,
   col = NULL,
   lty = NULL,
+  lwd = NULL,
   bg = NULL,
   fill = NULL,
   par_restore = FALSE,
@@ -282,6 +285,12 @@ line type will automatically loop over the number groups. This automatic
 looping will begin at the global line type value (i.e., \code{par("lty")}) and
 recycle as necessary.}
 
+\item{lwd}{line width. Numeric scalar or vector of length equal to the
+number of categories in the \code{by} variable. See \code{lwd}. In addition, users
+can supply a special \code{lwd = "by"} convenience argument, in which case the
+line width will automatically loop over the number of groups. This
+automatic looping will be centered at the global line width value (i.e.,}
+
 \item{col}{plotting color. Character, integer, or vector of length equal to
 the number of categories in the \code{by} variable. See \code{col}. Note that the
 default behaviour in \code{tinyplot} is to vary group colors along any variables
@@ -289,7 +298,7 @@ declared in the \code{by} argument. Thus, specifying colors manually should not
 be necessary unless users wish to override the automatic colors produced by
 this grouping process. Typically, this would only be done if grouping
 features are deferred to some other graphical parameter (i.e., passing the
-"by" keyword to one of \code{pch}, \code{lty}, or \code{bg}; see below.)}
+"by" keyword to one of \code{pch}, \code{lty}, \code{lwd}, or \code{bg}; see below.)}
 
 \item{bg}{background fill color for the open plot symbols 21:25 (see
 \code{points.default}), as well as ribbon and area plot types. For the latter

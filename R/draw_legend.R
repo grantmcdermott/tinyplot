@@ -11,6 +11,7 @@
 #' @param type Plotting type(s), passed down from `tinyplot`.
 #' @param pch Plotting character(s), passed down from `tinyplot`.
 #' @param lty Plotting linetype(s), passed down from `tinyplot`.
+#' @param lwd Plotting line width(s), passed down from `tinyplot`.
 #' @param col Plotting colour(s), passed down from `tinyplot`.
 #' @param bg Plotting character background fill colour(s), passed down from `tinyplot`.
 #' @param cex Plotting character expansion(s), passed down from `tinyplot`.
@@ -96,6 +97,7 @@ draw_legend = function(
     type = NULL,
     pch = NULL,
     lty = NULL,
+    lwd = NULL,
     col = NULL,
     bg = NULL,
     cex = NULL,
@@ -142,6 +144,9 @@ draw_legend = function(
   if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
   if (is.null(legend_args[["pch"]])) legend_args[["pch"]] = pch
   if (is.null(legend_args[["lty"]])) legend_args[["lty"]] = lty
+  if (!is.null(type) && !(type %in% c("p", "ribbon", "polygon"))) {
+    if (is.null(legend_args[["lwd"]])) legend_args[["lwd"]] = lwd
+  }
   if (is.null(legend_args[["col"]])) legend_args[["col"]] = col
   if (is.null(legend_args[["bty"]])) legend_args[["bty"]] = "n"
   if (is.null(legend_args[["horiz"]])) legend_args[["horiz"]] = FALSE

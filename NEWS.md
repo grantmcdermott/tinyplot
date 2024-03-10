@@ -1,6 +1,6 @@
 # News
 
-## 0.0.5.9001 (development version)
+## 0.0.5.9003 (development version)
 
 New features:
 
@@ -13,6 +13,24 @@ final implementation. (#122 @grantmcdermott)
 - Ordered factors now inherit a discrete sequential color palette ("viridis") by
 default. Thanks to @zeileis for the suggestion. (#130 @grantmcdermott)
 - Support user-supplied polygons. (#127 @grantmcdermott)
+- Support for the `lwd` argument for adjusting line widths. Similar to `pch`,
+`lty`, etc. this arguments also accepts a "by" convenience keyword to
+automatically vary line widths by group. (#134 @grantmcdermott)
+
+Bug fixes:
+
+- Fixed bug that prevented `tpar(facet.x = ...)` args from being passed forward
+and set correctly. (#137 @grantmcdermott)
+
+Internals:
+
+- We no longer ship the vignette(s) with the built package. This helps to reduce
+the size of the installation tarball and also avoids some redundancy with the
+actual help documentation (since many of the examples are the same). Note that
+the vignettes are all still rendered and available online at the `tinyplot`
+[website](https://grantmcdermott.com/tinyplot/).
+(#135 @grantmcdermott)
+
 
 ## 0.0.5
 

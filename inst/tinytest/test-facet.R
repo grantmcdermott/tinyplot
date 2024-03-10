@@ -114,7 +114,7 @@ expect_snapshot_plot(f, label = "facet_by")
 
 ## Skip failing test in R devel due to some minor esoteric difference coming up 
 ## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion()  <= "4.3.2") {
+if (getRversion() <= "4.3.3") {
   f = function() {
     with(
       mtcars,
@@ -237,7 +237,7 @@ expect_snapshot_plot(f, label = "facet_ribbon_by")
 
 ## Skip failing test in R devel due to some minor esoteric difference coming up 
 ## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion()  <= "4.3.2") {
+if (getRversion() <= "4.3.3") {
   f = function() {
     with(
       mtcars2,
@@ -276,7 +276,7 @@ par(op)
 
 ## Sidestep test fails due to new (R 4.4.0) density grid value calculations.
 ## https://bugs.r-project.org/show_bug.cgi?id=18337
-exit_if_not(getRversion()  <= "4.3.2")
+exit_if_not(getRversion() <= "4.3.3")
 ## Note: Once 4.4.0 is released we can either generate some new plots or
 ## test with something like:
 # f = function() tinyplot(density(mtcars$mpg, old.coords=TRUE))
@@ -411,7 +411,7 @@ expect_snapshot_plot(f, label = "facet_grid")
 
 ## Skip failing test in R devel due to some minor esoteric difference coming up 
 ## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion()  <= "4.3.2") {
+if (getRversion() <= "4.3.3") {
   f = function() {
     tinyplot(
       mpg ~ wt | factor(gear), data = mtcars,

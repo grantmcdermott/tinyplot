@@ -12,6 +12,7 @@ draw_legend(
   type = NULL,
   pch = NULL,
   lty = NULL,
+  lwd = NULL,
   col = NULL,
   bg = NULL,
   cex = NULL,
@@ -35,6 +36,8 @@ draw_legend(
 \item{pch}{Plotting character(s), passed down from \code{tinyplot}.}
 
 \item{lty}{Plotting linetype(s), passed down from \code{tinyplot}.}
+
+\item{lwd}{Plotting line width(s), passed down from \code{tinyplot}.}
 
 \item{col}{Plotting colour(s), passed down from \code{tinyplot}.}
 

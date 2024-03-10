@@ -1,7 +1,7 @@
 Package: tinyplot
 Type: Package
 Title: Lightweight Extension of the Base R Graphics System
-Version: 0.0.5.9001
+Version: 0.0.5.9003
 Authors@R: 
   c(
     person(
@@ -43,7 +43,7 @@ Imports:
   stats,
   utils
 Suggests:
-  altdoc,
+  altdoc (>= 0.3.0),
   basetheme,
   fontquiver,
   rsvg,
@@ -51,8 +51,6 @@ Suggests:
   tinytest,
   tinysnapshot (>= 0.0.3),
   knitr
-Remotes: 
-  etiennebacher/altdoc
 Encoding: UTF-8
 RoxygenNote: 7.3.1
 URL: https://grantmcdermott.com/tinyplot/,

@@ -246,7 +246,7 @@
     "href": "CITATION.html",
     "title": "Citation",
     "section": "",
-    "text": "Citation\nTo cite package ‘tinyplot’ in publications use:\n\n  McDermott G, Arel-Bundock V, Zeileis A (????). _tinyplot: Lightweight\n  Extension of the Base R Graphics System_. R package version\n  0.0.5.9002, http://grantmcdermott.com/tinyplot/,\n  &lt;https://grantmcdermott.com/tinyplot/&gt;.\n\nA BibTeX entry for LaTeX users is\n\n  @Manual{,\n    title = {tinyplot: Lightweight Extension of the Base R Graphics System},\n    author = {Grant McDermott and Vincent Arel-Bundock and Achim Zeileis},\n    note = {R package version 0.0.5.9002, \nhttp://grantmcdermott.com/tinyplot/},\n    url = {https://grantmcdermott.com/tinyplot/},\n  }",
+    "text": "Citation\nTo cite package ‘tinyplot’ in publications use:\n\n  McDermott G, Arel-Bundock V, Zeileis A (????). _tinyplot: Lightweight\n  Extension of the Base R Graphics System_. R package version\n  0.0.5.9003, http://grantmcdermott.com/tinyplot/,\n  &lt;https://grantmcdermott.com/tinyplot/&gt;.\n\nA BibTeX entry for LaTeX users is\n\n  @Manual{,\n    title = {tinyplot: Lightweight Extension of the Base R Graphics System},\n    author = {Grant McDermott and Vincent Arel-Bundock and Achim Zeileis},\n    note = {R package version 0.0.5.9003, \nhttp://grantmcdermott.com/tinyplot/},\n    url = {https://grantmcdermott.com/tinyplot/},\n  }",
     "crumbs": [
       "Citation"
     ]

@@ -1,6 +1,6 @@
 # News
 
-## 0.0.5.9002 (development version)
+## 0.0.5.9003 (development version)
 
 New features:
 

@@ -17,7 +17,12 @@ default. Thanks to @zeileis for the suggestion. (#130 @grantmcdermott)
 `lty`, etc. this arguments also accepts a "by" convenience keyword to
 automatically vary line widths by group. (#134 @grantmcdermott)
 
-Internals
+Bug fixes:
+
+- Fixed bug that prevented `tpar(facet.x = ...)` args from being passed forward
+and set correctly. (#137 @grantmcdermott)
+
+Internals:
 
 - We no longer ship the vignette(s) with the built package. This helps to reduce
 the size of the installation tarball and also avoids some redundancy with the

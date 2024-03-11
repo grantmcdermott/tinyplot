@@ -2,22 +2,25 @@
 % Please edit documentation in R/tpar.R
 \name{tpar}
 \alias{tpar}
-\title{Set or query tinyplot parameters}
+\title{Set or query graphical parameters}
 \usage{
 tpar(...)
 }
 \arguments{
-\item{...}{arguments of the form \code{tag = value}. Supported \code{tinyplot} parameters
-are described in the 'Graphical Parameters' section below.}
+\item{...}{arguments of the form \code{key = value}. This includes all of the
+parameters typically supported by \code{\link[graphics]{par}}, as well as
+the \code{tinyplot}-specific ones described in the 'Graphical Parameters'
+section below.}
 }
 \description{
-\code{tpar} can be used to set or query the additional set of
-graphical parameters provided by \code{tinyplot} (i.e., beyond the base set
-provided by  \code{\link[graphics]{par}}). Similar to its base counterpart, parameters can be set
-by passing the appropriate tag-value argument pairs to \code{tpar}. Multiple
-parameters can be set or queried at the same time, as a list.
+\code{tpar} extends \code{\link[graphics]{par}}, allowing you to set
+or query the standard group of graphical parameters (i.e., provided by the
+latter function), as well as the additional graphical parameters provided
+by \code{tinyplot}. Similar to \code{\link[graphics]{par}}, parameters are set
+by passing appropriate \code{key = value} argument pairs. Multiple parameters
+can be set or queried at the same time.
 }
-\section{Graphical Parameters}{
+\section{Additional Graphical Parameters}{
 
 
 \tabular{lll}{
@@ -46,3 +49,21 @@ parameters can be set or queried at the same time, as a list.
 }
 }
 
+\examples{
+# Return a list of existing base and tinyplot graphic params
+tpar("las", "pch", "facet.bg", "facet.cex")
+
+# Simple facet plot with these default values
+tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
+
+# Set params to something new. Similar to graphics::par(), note that we save
+# the existing values at the same time by assigning to an object.
+op = tpar(las = 1, pch = 2, facet.bg = "grey90", facet.cex = 2)
+
+# Re-plot with these new params
+tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
+
+# Reset back to original values
+tpar(op)
+
+}

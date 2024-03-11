@@ -41,14 +41,17 @@
 #' }
 #' 
 #' @examples
-#' # See a mix of (base and tinyplot) graphic params
-#' tpar("las", "pch", "facet.bg")
+#' # Return a list of existing base and tinyplot graphic params
+#' tpar("las", "pch", "facet.bg", "facet.cex")
 #' 
 #' # Simple facet plot with these default values
 #' tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
 #' 
-#' # Set params to something new and re-plot
-#' op = tpar(las = 1, pch = 2, facet.bg = "grey90")
+#' # Set params to something new. Similar to graphics::par(), note that we save
+#' # the existing values at the same time by assigning to an object.
+#' op = tpar(las = 1, pch = 2, facet.bg = "grey90", facet.cex = 2)
+#' 
+#' # Re-plot with these new params
 #' tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
 #' 
 #' # Reset back to original values
@@ -96,16 +99,16 @@ tpar = function(...) {
     .tpar$facet.font = facet.font
   }
   
-  if (length(opts$facet.col)) {
+  if (length(opts$facet.col) || ("facet.col" %in% nam && is.null(opts$facet.col))) {
     facet.col = opts$facet.col
     if(!is.null(facet.col) && !is.numeric(facet.col) && !is.character(facet.col)) stop("facet.col needs to be NULL, or a numeric or character")
     if(!is.null(facet.col) && length(facet.col)!=1) stop("facet.col needs to be of length 1")
     .tpar$facet.col = facet.col
   }
   
-  if (length(opts$facet.bg)) {
+  if (length(opts$facet.bg) || ("facet.bg" %in% nam && is.null(opts$facet.bg))) {
     facet.bg = opts$facet.bg
-    if(!is.numeric(facet.bg) && !is.character(facet.bg)) stop("facet.bg needs to be NULL, or a numeric or character")
+    if(!is.null(facet.bg) && !is.numeric(facet.bg) && !is.character(facet.bg)) stop("facet.bg needs to be NULL, or a numeric or character")
     if(!is.null(facet.bg) && length(facet.bg)!=1) stop("facet.bg needs to be of length 1")
     .tpar$facet.bg = facet.bg
   }

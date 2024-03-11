@@ -43,20 +43,21 @@
 #' @examples
 #' # See a mix of (base and tinyplot) graphic params
 #' tpar("las", "pch", "facet.bg")
+#' 
 #' # Simple facet plot with these default values
 #' tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
 #' 
 #' # Set params to something new and re-plot
-#' tpar(las = 1, pch = 2, facet.bg = "grey90")
+#' op = tpar(las = 1, pch = 2, facet.bg = "grey90")
 #' tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
 #' 
-#' # Confirm our new defaults
-#' tpar("las", "pch", "facet.bg")
+#' # Reset back to original values
+#' tpar(op)
 #' 
 #' @export
 tpar = function(...) {
   
-  facet.col = facet.bg = facet.border = NULL
+  facet.col = facet.bg = facet.border = used_par_old = NULL
   
   opts = list(...)
   if (length(opts)==1) {
@@ -76,7 +77,9 @@ tpar = function(...) {
   }
   if (length(used_par)) {
     if (!is.null(nam)) used_par = opts[used_par]
-    par(used_par)
+    # par(used_par)
+    used_par_old = par(used_par)
+    tpar_old = utils::modifyList(tpar_old, used_par_old, keep.null = TRUE)
   }
   
   if (length(opts$facet.cex)) {
@@ -150,7 +153,7 @@ tpar = function(...) {
       ret = (`names<-`(lapply(opts, function(x) .tpar[[x]]), opts))
       if (length(used_par)) {
         ret_par = par(used_par)
-        ret = utils::modifyList(ret, ret_par)
+        ret = utils::modifyList(ret, ret_par, keep.null = TRUE)
       }
       if (length(ret)==1) ret = ret[[1]]
       return(ret)

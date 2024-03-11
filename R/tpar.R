@@ -1,16 +1,19 @@
-#' @title Set or query tinyplot parameters  
+#' @title Set or query graphical parameters  
 #'   
-#' @description `tpar` can be used to set or query the additional set of
-#'   graphical parameters provided by `tinyplot` (i.e., beyond the base set
-#'   provided by  \code{\link[graphics]{par}}). Similar to its base counterpart, parameters can be set
-#'   by passing the appropriate tag-value argument pairs to `tpar`. Multiple
-#'   parameters can be set or queried at the same time, as a list.
+#' @description `tpar` extends \code{\link[graphics]{par}}, allowing you to set
+#'   or query the standard group of graphical parameters (i.e., provided by the
+#'   latter function), as well as the additional graphical parameters provided
+#'   by `tinyplot`. Similar to \code{\link[graphics]{par}}, parameters are set
+#'   by passing appropriate `key = value` argument pairs. Multiple parameters
+#'   can be set or queried at the same time.
 #'   
 #' @md
-#' @param ... arguments of the form `tag = value`. Supported `tinyplot` parameters
-#'   are described in the 'Graphical Parameters' section below.
+#' @param ... arguments of the form `key = value`. This includes all of the
+#'   parameters typically supported by \code{\link[graphics]{par}}, as well as
+#'   the `tinyplot`-specific ones described in the 'Graphical Parameters'
+#'   section below.
 #'
-#' @section Graphical Parameters:
+#' @section Additional Graphical Parameters:
 #' 
 #' \tabular{lll}{
 #'   `facet.cex` \tab\tab Expansion factor for facet titles. Defaults to `1`.\cr
@@ -37,12 +40,30 @@
 #'   `lmar` \tab\tab A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is `"top!"`, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by `par("mar")[3]`.)\cr
 #' }
 #' 
+#' @examples
+#' # See a mix of (base and tinyplot) graphic params
+#' tpar("las", "pch", "facet.bg")
+#' # Simple facet plot with these default values
+#' tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
+#' 
+#' # Set params to something new and re-plot
+#' tpar(las = 1, pch = 2, facet.bg = "grey90")
+#' tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
+#' 
+#' # Confirm our new defaults
+#' tpar("las", "pch", "facet.bg")
+#' 
 #' @export
 tpar = function(...) {
   
   facet.col = facet.bg = facet.border = NULL
   
   opts = list(...)
+  if (length(opts)==1) {
+    if (inherits(opts[[1]], "list") && !is.null(names(opts[[1]]))) {
+      opts = opts[[1]]
+    }
+  }
   
   tpar_old = as.list(.tpar)
   nam = names(opts)
@@ -74,21 +95,21 @@ tpar = function(...) {
   
   if (length(opts$facet.col)) {
     facet.col = opts$facet.col
-    if(!is.null(facet.col) && !is.numeric(facet.col) && !is.character(facet.col)) stop("facet.col needs to be NULL, a numeric, or character")
+    if(!is.null(facet.col) && !is.numeric(facet.col) && !is.character(facet.col)) stop("facet.col needs to be NULL, or a numeric or character")
     if(!is.null(facet.col) && length(facet.col)!=1) stop("facet.col needs to be of length 1")
     .tpar$facet.col = facet.col
   }
   
   if (length(opts$facet.bg)) {
     facet.bg = opts$facet.bg
-    if(!is.numeric(facet.bg) && !is.character(facet.bg)) stop("facet.bg needs to be NULL, a numeric, or character")
+    if(!is.numeric(facet.bg) && !is.character(facet.bg)) stop("facet.bg needs to be NULL, or a numeric or character")
     if(!is.null(facet.bg) && length(facet.bg)!=1) stop("facet.bg needs to be of length 1")
     .tpar$facet.bg = facet.bg
   }
   
   if (length(opts$facet.border)) {
     facet.border = opts$facet.border
-    if(!is.numeric(facet.border) && !is.character(facet.border)) stop("facet.border needs to be a numeric or character")
+    if(!is.na(facet.border) && !is.numeric(facet.border) && !is.character(facet.border)) stop("facet.border needs to be NA, or a numeric or character")
     if(length(facet.border)!=1) stop("facet.border needs to be of length 1")
     .tpar$facet.border = facet.border
   }
@@ -138,7 +159,7 @@ tpar = function(...) {
       return(invisible(tpar_old))
     }
   # assign new values, but still return old values for saving existing settings
-  # a la opar = par(param = new_value)
+  # a la `oldpar = par(param = new_value)`
   } else {
     `names<-`(lapply(nam, function(x) .tpar[[x]]), nam)
     return(invisible(tpar_old))

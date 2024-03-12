@@ -426,7 +426,10 @@ tinyplot.default = function(
   }
   
   # catch for adding to existing facet plot
-  if (!is.null(facet) && isTRUE(add)) par(tpar("last_facet_par"))
+  # if (!is.null(facet) && isTRUE(add)) par(tpar("last_facet_par"))
+  if (!is.null(facet) && isTRUE(add)) (
+    par(get_last_facet_par())
+  )
   
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = deparse1(substitute(x))
@@ -1239,7 +1242,10 @@ tinyplot.default = function(
   
   # tidy up before exit
   if (!is.null(facet)) {
-    tpar(last_facet_par = par(no.readonly = TRUE))
+    last_facet_par = par(no.readonly = TRUE)
+    # tpar(last_facet_par = last_facet_par)
+    # .last_facet_par = last_facet_par
+    set_last_facet_par(last_facet_par)
   }
   
 }

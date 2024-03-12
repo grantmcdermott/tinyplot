@@ -63,7 +63,8 @@ tpar = function(...) {
   facet.col = facet.bg = facet.border = used_par_old = NULL
   
   opts = list(...)
-  if (length(opts)==1) {
+  # if (length(opts)==1 && (!is.null(names(opts)) && names(opts) != "last_facet_par")) {
+  if (length(opts)==1 && is.null(names(opts))) {
     if (inherits(opts[[1]], "list") && !is.null(names(opts[[1]]))) {
       opts = opts[[1]]
     }
@@ -133,11 +134,11 @@ tpar = function(...) {
   #   .tpar$grid = grid
   # }
   
-  if (length(opts$last_facet_par)) {
-    last_facet_par = opts$last_facet_par
-    if(!(is.null(last_facet_par) || is.list(last_facet_par))) stop("last_facet_par needs to be NULL or a list")
-    .tpar$last_facet_par = last_facet_par
-  }
+  # if (length(opts$last_facet_par)) {
+  #   last_facet_par = opts$last_facet_par
+  #   if(!(is.null(last_facet_par) || is.list(last_facet_par))) stop("last_facet_par needs to be NULL or a list")
+  #   .tpar$last_facet_par = last_facet_par
+  # }
   
   if (length(opts$lmar)) {
     lmar = as.numeric(opts$lmar)
@@ -174,4 +175,11 @@ tpar = function(...) {
 }
 
 
+# separate setter and getter functions for .last_facet_par
+set_last_facet_par <- function(value) {
+  assign(".last_facet_par", value, envir = get(".tinyplot_env", envir = parent.env(environment())))
+}
+get_last_facet_par <- function() {
+  return(get(".last_facet_par", envir = get(".tinyplot_env", envir = parent.env(environment()))))
+}
 

@@ -18,11 +18,18 @@
   
   # .tpar$grid <- if(is.null(getOption("tinyplot_grid"))) FALSE else as.logical(getOption("tinyplot_grid"))
   
-  .tpar$last_facet_par <- if(is.null(getOption("tinyplot_last_facet_par"))) NULL else getOption("tinyplot_last_facet_par")
+  # .tpar$last_facet_par <- if(is.null(getOption("tinyplot_last_facet_par"))) NULL else getOption("tinyplot_last_facet_par")
   
   # Legend margin, i.e. gap between the legend and the plot elements
   .tpar$lmar <- if(is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))
   
   assign(".tpar", .tpar, envir = tnypltptns)
+  
+  
+  
+  # .last_facet_par <- new.env()
+  # .last_facet_par <- if(is.null(getOption("tinyplot_last_facet_par"))) NULL else getOption("tinyplot_last_facet_par")
+  # assign(".last_facet_par", .last_facet_par, envir = tnypltptns)
+  # .last_facet_par_env <- new.env(en = tnypltptns)
   
 }

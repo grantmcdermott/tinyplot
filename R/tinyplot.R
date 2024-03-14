@@ -1243,8 +1243,6 @@ tinyplot.default = function(
   # tidy up before exit
   if (!is.null(facet)) {
     last_facet_par = par(no.readonly = TRUE)
-    # tpar(last_facet_par = last_facet_par)
-    # .last_facet_par = last_facet_par
     set_last_facet_par(last_facet_par)
   }
   

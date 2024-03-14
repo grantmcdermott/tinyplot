@@ -37,6 +37,9 @@
 #'   `lmar` \tab\tab A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is `"top!"`, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by `par("mar")[3]`.)\cr
 #' }
 #' 
+#' @importFrom graphics par
+#' @importFrom utils modifyList
+#' 
 #' @examples
 #' # Return a list of existing base and tinyplot graphic params
 #' tpar("las", "pch", "facet.bg", "facet.cex")
@@ -80,7 +83,7 @@ tpar = function(...) {
     if (!is.null(nam)) used_par = opts[used_par]
     # par(used_par)
     used_par_old = par(used_par)
-    tpar_old = utils::modifyList(tpar_old, used_par_old, keep.null = TRUE)
+    tpar_old = modifyList(tpar_old, used_par_old, keep.null = TRUE)
   }
   
   if (length(opts$facet.cex)) {
@@ -131,12 +134,6 @@ tpar = function(...) {
   #   .tpar$grid = grid
   # }
   
-  # if (length(opts$last_facet_par)) {
-  #   last_facet_par = opts$last_facet_par
-  #   if(!(is.null(last_facet_par) || is.list(last_facet_par))) stop("last_facet_par needs to be NULL or a list")
-  #   .tpar$last_facet_par = last_facet_par
-  # }
-  
   if (length(opts$lmar)) {
     lmar = as.numeric(opts$lmar)
     if(!is.numeric(lmar)) stop("lmar needs to be numeric")
@@ -154,7 +151,7 @@ tpar = function(...) {
       ret = (`names<-`(lapply(opts, function(x) .tpar[[x]]), opts))
       if (length(used_par)) {
         ret_par = par(used_par)
-        ret = utils::modifyList(ret, ret_par, keep.null = TRUE)
+        ret = modifyList(ret, ret_par, keep.null = TRUE)
       }
       if (length(ret)==1) ret = ret[[1]]
       return(ret)

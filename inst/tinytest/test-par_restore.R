@@ -6,7 +6,7 @@ using("tinysnapshot")
 exit_if_not(getRversion() <= "4.3.3")
 
 
-op = par(no.readonly = TRUE)
+op = tpar()
 
 f1 = function() {
   tinyplot(
@@ -31,7 +31,7 @@ f2 = function() {
 expect_snapshot_plot(f2, label = "par_restore_FALSE")
 
 # restore original par settings and then rerun with par_restore=TRUE
-par(op)
+tpar(op)
 
 f3 = function() {
   tinyplot(

@@ -45,17 +45,25 @@
 #' 
 #' @examples
 #' # Return a list of existing base and tinyplot graphic params
-#' tpar("las", "pch", "facet.bg", "facet.cex")
+#' tpar("las", "pch", "facet.bg", "facet.cex", "grid")
 #' 
 #' # Simple facet plot with these default values
-#' tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
+#' tinyplot(mpg ~ wt, data = mtcars, facet = ~am)
 #' 
 #' # Set params to something new. Similar to graphics::par(), note that we save
 #' # the existing values at the same time by assigning to an object.
-#' op = tpar(las = 1, pch = 2, facet.bg = "grey90", facet.cex = 2)
+#' op = tpar(
+#'    # some base params
+#'    las       = 1,
+#'    pch       = 2,
+#'    # some tinyplot params
+#'    facet.bg  = "grey90",
+#'    facet.cex = 2,
+#'    grid      = TRUE
+#' )
 #' 
 #' # Re-plot with these new params
-#' tinyplot(mpg ~ wt, data = mtcars, facet = ~am, grid = TRUE)
+#' tinyplot(mpg ~ wt, data = mtcars, facet = ~am)
 #' 
 #' # Reset back to original values
 #' tpar(op)

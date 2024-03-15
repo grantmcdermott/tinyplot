@@ -391,11 +391,11 @@ a background panel grid.
 
 ```{r hershey_plus}
 op = tpar(
-  bty    = "n",          # No box (frame) around the plot 
-  family = "HersheySans" # Use R's Hershey font instead of Arial default
-  grid   = TRUE,         # Add a background grid
-  las    = 1,            # Horizontal axis tick labels
-  pch    = 16            # Filled points as default
+  bty    = "n",           # No box (frame) around the plot 
+  family = "HersheySans", # Use R's Hershey font instead of Arial default
+  grid   = TRUE,          # Add a background grid
+  las    = 1,             # Horizontal axis tick labels
+  pch    = 16             # Filled points as default
 )
 
 tinyplot(

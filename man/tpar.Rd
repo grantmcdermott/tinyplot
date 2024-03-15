@@ -42,6 +42,9 @@ can be set or queried at the same time.
 \code{fmar} \tab\tab A numeric vector of form \code{c(b,l,t,r)} for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to \code{c(1,1,1,1)}, i.e. a single line of padding around each facet. If more that three facets are detected, the \code{fmar} parameter is scaled by 0.75 (i.e., three-quarters) to reduce the excess whitespace that would otherwise arise due to the absent axes lines and labels. (An exception is made for 2x2 plots to better match the \code{cex} expansion logic of the base graphics system under this particular layout.) Similarly, note that an extra 0.5 lines is subtracted from each side of the facet padding for plots that aren't framed, to reduce excess whitespace.\cr
 \tab\tab\cr
 \tab\tab\cr
+\code{grid} \tab\tab Logical indicating whether a background panel grid should be added to plots automatically. Defaults to NULL, which is equivalent to \code{FALSE}.\cr
+\tab\tab\cr
+\tab\tab\cr
 \code{lmar} \tab\tab A numeric vector of form \code{c(inner, outer)} that gives the margin padding, in terms of lines, around the automatic \code{tinyplot} legend. Defaults to \code{c(1.0, 0.1)}, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is \code{"top!"}, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by \code{par("mar")[3]}.)\cr
 }
 }

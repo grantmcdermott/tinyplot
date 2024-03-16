@@ -1,17 +1,30 @@
 #' @title Set or query graphical parameters  
 #'   
-#' @description `tpar` extends \code{\link[graphics]{par}}, allowing you to set
-#'   or query the standard group of graphical parameters (i.e., provided by the
-#'   latter function), as well as the additional graphical parameters provided
-#'   by `tinyplot`. Similar to \code{\link[graphics]{par}}, parameters are set
-#'   by passing appropriate `key = value` argument pairs. Multiple parameters
-#'   can be set or queried at the same time.
+#' @description `tpar` extends \code{\link[graphics]{par}}, serving as a drop-in
+#'   replacement for setting or querying graphical parameters. The key
+#'   difference is that, beyond supporting the standard group of R graphical
+#'   parameters, `tpar` also supports additional graphical parameters that are
+#'   provided by `tinyplot`. Similar to \code{\link[graphics]{par}}, parameters
+#'   are set by passing appropriate `key = value` argument pairs, and multiple
+#'   parameters can be set or queried at the same time.
 #'   
 #' @md
 #' @param ... arguments of the form `key = value`. This includes all of the
 #'   parameters typically supported by \code{\link[graphics]{par}}, as well as
 #'   the `tinyplot`-specific ones described in the 'Graphical Parameters'
 #'   section below.
+#' 
+#' @details The `tinyplot`-specfic parameters are saved in an internal
+#'   environment called `.tpar` for performance and safety reasons. However,
+#'   they can also be set at package load time via \code{\link[base]{options}},
+#'   which may prove convenient for users that want to enable different default
+#'   behaviour at startup (e.g., through an `.Rprofile` file). These options all
+#'   take a `tinyplot_*` prefix, e.g.
+#'   `options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")`.
+#' 
+#' For their part, any "base" graphical parameters are caught dynamically and
+#'   passed on to \code{\link[graphics]{par}} as appropriate. Technically, only
+#'   parameters that satisify `par(..., no.readonly = TRUE)` are evaluated.
 #'
 #' @section Additional Graphical Parameters:
 #' 
@@ -53,10 +66,8 @@
 #' # Set params to something new. Similar to graphics::par(), note that we save
 #' # the existing values at the same time by assigning to an object.
 #' op = tpar(
-#'    # some base params
 #'    las       = 1,
 #'    pch       = 2,
-#'    # some tinyplot params
 #'    facet.bg  = "grey90",
 #'    facet.cex = 2,
 #'    grid      = TRUE
@@ -67,6 +78,12 @@
 #' 
 #' # Reset back to original values
 #' tpar(op)
+#' 
+#' # Note: The tinyplot-specific parameters can also be be set via `options`
+#' #   with a `tinyplot_*` prefix, which can be convenient for enabling
+#' #   different default behaviour at startup time (e.g., via an .Rprofile
+#' #   file). Example:
+#' # options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")
 #' 
 #' @export
 tpar = function(...) {

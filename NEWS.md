@@ -1,6 +1,6 @@
 # News
 
-## 0.0.5.9003 (development version)
+## 0.0.5.9004 (development version)
 
 New features:
 
@@ -16,6 +16,9 @@ default. Thanks to @zeileis for the suggestion. (#130 @grantmcdermott)
 - Support for the `lwd` argument for adjusting line widths. Similar to `pch`,
 `lty`, etc. this arguments also accepts a "by" convenience keyword to
 automatically vary line widths by group. (#134 @grantmcdermott)
+- `tpar()` now accepts standard `par()` arguments in addition to the
+`tinyplot`-specific ones. This allows users to set or query graphical parameters
+via a single convenience function, instead having to invoke `tpar` and `par` separately.
 
 Bug fixes:
 

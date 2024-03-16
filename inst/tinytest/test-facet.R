@@ -3,7 +3,7 @@ using("tinysnapshot")
 
 mtcars$am = as.factor(mtcars$am)
 
-op = par(no.readonly = TRUE)
+op = tpar()
 
 #
 ## simple scatterplot cases first
@@ -272,7 +272,7 @@ if (getRversion() <= "4.3.3") {
 ## Density plot versions
 
 # restore original par settings
-par(op)
+tpar(op)
 
 ## Sidestep test fails due to new (R 4.4.0) density grid value calculations.
 ## https://bugs.r-project.org/show_bug.cgi?id=18337
@@ -456,4 +456,4 @@ expect_snapshot_plot(f, label = "facet_density_grid")
 # restore original par settings
 #
 
-par(op)
+tpar(op)

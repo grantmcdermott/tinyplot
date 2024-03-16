@@ -2,22 +2,39 @@
 % Please edit documentation in R/tpar.R
 \name{tpar}
 \alias{tpar}
-\title{Set or query tinyplot parameters}
+\title{Set or query graphical parameters}
 \usage{
 tpar(...)
 }
 \arguments{
-\item{...}{arguments of the form \code{tag = value}. Supported \code{tinyplot} parameters
-are described in the 'Graphical Parameters' section below.}
+\item{...}{arguments of the form \code{key = value}. This includes all of the
+parameters typically supported by \code{\link[graphics]{par}}, as well as
+the \code{tinyplot}-specific ones described in the 'Graphical Parameters'
+section below.}
 }
 \description{
-\code{tpar} can be used to set or query the additional set of
-graphical parameters provided by \code{tinyplot} (i.e., beyond the base set
-provided by  \code{\link[graphics]{par}}). Similar to its base counterpart, parameters can be set
-by passing the appropriate tag-value argument pairs to \code{tpar}. Multiple
-parameters can be set or queried at the same time, as a list.
+\code{tpar} extends \code{\link[graphics]{par}}, serving as a drop-in
+replacement for setting or querying graphical parameters. The key
+difference is that, beyond supporting the standard group of R graphical
+parameters, \code{tpar} also supports additional graphical parameters that are
+provided by \code{tinyplot}. Similar to \code{\link[graphics]{par}}, parameters
+are set by passing appropriate \code{key = value} argument pairs, and multiple
+parameters can be set or queried at the same time.
 }
-\section{Graphical Parameters}{
+\details{
+The \code{tinyplot}-specfic parameters are saved in an internal
+environment called \code{.tpar} for performance and safety reasons. However,
+they can also be set at package load time via \code{\link[base]{options}},
+which may prove convenient for users that want to enable different default
+behaviour at startup (e.g., through an \code{.Rprofile} file). These options all
+take a \verb{tinyplot_*} prefix, e.g.
+\code{options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")}.
+
+For their part, any "base" graphical parameters are caught dynamically and
+passed on to \code{\link[graphics]{par}} as appropriate. Technically, only
+parameters that satisify \code{par(..., no.readonly = TRUE)} are evaluated.
+}
+\section{Additional Graphical Parameters}{
 
 
 \tabular{lll}{
@@ -39,10 +56,40 @@ parameters can be set or queried at the same time, as a list.
 \code{fmar} \tab\tab A numeric vector of form \code{c(b,l,t,r)} for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to \code{c(1,1,1,1)}, i.e. a single line of padding around each facet. If more that three facets are detected, the \code{fmar} parameter is scaled by 0.75 (i.e., three-quarters) to reduce the excess whitespace that would otherwise arise due to the absent axes lines and labels. (An exception is made for 2x2 plots to better match the \code{cex} expansion logic of the base graphics system under this particular layout.) Similarly, note that an extra 0.5 lines is subtracted from each side of the facet padding for plots that aren't framed, to reduce excess whitespace.\cr
 \tab\tab\cr
 \tab\tab\cr
-\code{last_facet_par} \tab\tab Full list of graphical parameters used to constructed the most recent faceted \code{tinyplot} plot during the current session. Unlike other \code{tpar} parameters, this parameter is intended for internal use (specifically, to enable adding further elements on top of an existing faceted plot) and should \emph{not} be set by the user.\cr
+\code{grid} \tab\tab Logical indicating whether a background panel grid should be added to plots automatically. Defaults to NULL, which is equivalent to \code{FALSE}.\cr
 \tab\tab\cr
 \tab\tab\cr
 \code{lmar} \tab\tab A numeric vector of form \code{c(inner, outer)} that gives the margin padding, in terms of lines, around the automatic \code{tinyplot} legend. Defaults to \code{c(1.0, 0.1)}, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is \code{"top!"}, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by \code{par("mar")[3]}.)\cr
 }
 }
 
+\examples{
+# Return a list of existing base and tinyplot graphic params
+tpar("las", "pch", "facet.bg", "facet.cex", "grid")
+
+# Simple facet plot with these default values
+tinyplot(mpg ~ wt, data = mtcars, facet = ~am)
+
+# Set params to something new. Similar to graphics::par(), note that we save
+# the existing values at the same time by assigning to an object.
+op = tpar(
+   las       = 1,
+   pch       = 2,
+   facet.bg  = "grey90",
+   facet.cex = 2,
+   grid      = TRUE
+)
+
+# Re-plot with these new params
+tinyplot(mpg ~ wt, data = mtcars, facet = ~am)
+
+# Reset back to original values
+tpar(op)
+
+# Note: The tinyplot-specific parameters can also be be set via `options`
+#   with a `tinyplot_*` prefix, which can be convenient for enabling
+#   different default behaviour at startup time (e.g., via an .Rprofile
+#   file). Example:
+# options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")
+
+}

@@ -2,28 +2,28 @@ source("helpers.R")
 using("tinysnapshot")
 
 f = function() {
-  par(mfrow = c(1, 2))
+  tpar(mfrow = c(1, 2))
   plot(Temp ~ Day, data = airquality, log = "x")
   tinyplot(Temp ~ Day, data = airquality, log = "x")
 } 
 expect_snapshot_plot(f, label = "arg_log_x")
 
 f = function() {
-  par(mfrow = c(1, 2))
+  tpar(mfrow = c(1, 2))
   plot(Temp ~ Day, data = airquality, log = "y")
   tinyplot(Temp ~ Day, data = airquality, log = "y")
 } 
 expect_snapshot_plot(f, label = "arg_log_y")
 
 f = function() {
-  par(mfrow = c(1, 2))
+  tpar(mfrow = c(1, 2))
   plot(Temp ~ Day, data = airquality, log = "xy")
   tinyplot(Temp ~ Day, data = airquality, log = "xy")
 } 
 expect_snapshot_plot(f, label = "arg_log_xy")
 
 f = function() {
-  par(mfrow = c(1, 2))
+  tpar(mfrow = c(1, 2))
   plot(Temp ~ Day, data = airquality, log = "yx")
   tinyplot(Temp ~ Day, data = airquality, log = "yx")
 } 
@@ -37,7 +37,7 @@ exit_if_not(getRversion() <= "4.3.3")
 # f = function() tinyplot(..., old.coords=TRUE))
 
 f = function() {
-  par(mfrow = c(1, 1))
+  tpar(mfrow = c(1, 1))
   m = transform(mtcars, cyl = factor(cyl))
   pred = predict(lm(mpg ~ wt + cyl, m), interval = "confidence")
   m = cbind(m, pred)

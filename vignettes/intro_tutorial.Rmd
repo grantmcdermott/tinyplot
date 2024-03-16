@@ -289,7 +289,7 @@ with(
     x = Day, y = fit,
     ymin = lwr, ymax = upr,
     type = "ribbon",
-    facet = Month, ## <- facet, not by
+    facet = Month, ## <= facet, not by
     grid = TRUE,
     main = "Predicted air temperatures"
   )
@@ -370,26 +370,38 @@ tinyplot(
 )
 ```
 
+The `facet.args` customizations can also be set globally via the `tpar()`
+function, which provides a nice segue to our final section.
+
 ## Customization
 
-Customizing your plots further is straightforward, whether that is done by
-changing global parameters (via `par`) or invoking `tinyplot` arguments. Here's a
-quick penultimate example, where we change our point character, tick labels, and
-font family globally, before adding some transparency to our colour palette, and
-use Tufte-style floating axes with a background panel grid.
+Customizing your plots further is straightforward, whether that is done directly
+by changing `tinyplot` arguments for a single plot, or by setting global
+parameters. For setting global parameters, users can invoke the standard `par()`
+arguments. But for improved convenience and integration with the rest of the
+package, we recommend that users instead go via
+[`tpar()`](https://grantmcdermott.com/tinyplot/man/tpar.html), which is an
+extended version of `par()` that supports all of the latter's parameters plus
+some `tinyplot`-specific ones. Here's a quick penultimate example, where we
+impose several global changes (e.g., rotated axis labels, removed plot frame to
+get Tufte-style floating axes, etc.) before drawing the plot. 
+change our point character, tick labels, and font family globally, before adding
+some transparency to our colour palette, and use Tufte-style floating axes with
+a background panel grid.
 
 ```{r hershey_plus}
-par(
-  pch    = 16,           # Filled points as default
-  las    = 1,            # Horizontal axis tick labels
-  family = "HersheySans" # Use a (built-in) Hershey font instead of Arial default
+op = tpar(
+  bty    = "n",           # No box (frame) around the plot 
+  family = "HersheySans", # Use R's Hershey font instead of Arial default
+  grid   = TRUE,          # Add a background grid
+  las    = 1,             # Horizontal axis tick labels
+  pch    = 16             # Filled points as default
 )
 
 tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "b",
   palette = palette.colors(palette = "tableau", alpha = 0.5),
-  frame = FALSE, grid = TRUE,
   main = "Daily temperatures by month"
 )
 ```
@@ -398,7 +410,7 @@ tinyplot(
 **showtext** package
 ([link](https://cran.r-project.org/web/packages/showtext/vignettes/introduction.html)).)
 
-At the risk of repeating ourselves, the use of `par` in the previous example
+At the risk of repeating ourselves, the use of `(t)par` in the previous example
 again underscores the correspondence with the base graphics system. Because
 `tinyplot` is effectively a convenience wrapper around base `plot`, any global
 elements that you have set for the latter should carry over to the former. For
@@ -406,10 +418,12 @@ nice out-of-the-box themes, we recommend the **basetheme** package
 ([link](https://github.com/karoliskoncevicius/basetheme)).
 
 ```{r basethme_royal}
-par(pch = 15, las = 0, family = "") # change/revert global changes from above
+tpar(op) # revert global changes from above
 
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
+
+tpar(pch = 15) # filled squares as first pch type
 
 tinyplot(
   Temp ~ Day | Month, data = aq,

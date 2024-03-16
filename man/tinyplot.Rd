@@ -223,7 +223,8 @@ the plot. Can also use \code{frame} as an acceptable argument alias.}
 \item a panel grid plotting function like \code{grid()}.
 Note that this argument replaces the \code{panel.first} and \code{panel.last}
 arguments from base \code{plot()} and tries to make the process more seamless
-with better default behaviour. Default is not to draw a grid.
+with better default behaviour. The default behaviour is determined by (and
+can be set globally through) the value of \code{tpar("grid")}.
 }}
 
 \item{palette}{one of the following options:

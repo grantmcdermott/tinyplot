@@ -4,10 +4,10 @@ using("tinysnapshot")
 aq = airquality
 aq$Month = as.factor(aq$Month)
 
-op = par(no.readonly = TRUE)
+op = tpar()
 
 f = function() {
-  par(mfrow = c(1, 2))
+  tpar(mfrow = c(1, 2))
   
   plot(0:10, main = "plot")
   tinyplot(0:10, main = "tinyplot")
@@ -15,7 +15,7 @@ f = function() {
 expect_snapshot_plot(f, label = "readme_base_1")
 
 f = function() {
-  par(mfrow = c(2, 2))
+  tpar(mfrow = c(2, 2))
   
   with(aq, plot(Day, Temp, main = "plot"))
   plot(Temp ~ Day, data = aq, main = "plot (formula)")
@@ -29,7 +29,7 @@ expect_snapshot_plot(f, label = "readme_base_2")
 # restore original par settings (NB)
 #
 
-par(op)
+tpar(op)
 
 #
 # continue with tests
@@ -121,7 +121,7 @@ expect_snapshot_plot(f, label = "readme_pointrange")
 ## in R 4.4.0. Can revert once it reaches release for local testing.
 if (getRversion()  <= "4.3.2") {
   f = function() {
-    par(pch = 16, family = "HersheySans")
+    tpar(pch = 16, family = "HersheySans")
     
     tinyplot(
       Temp ~ Day | Month,
@@ -140,7 +140,7 @@ if (getRversion()  <= "4.3.2") {
 # restore original par settings (NB)
 #
 
-par(op)
+tpar(op)
 
 #
 # continue with tests

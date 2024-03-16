@@ -100,7 +100,8 @@
 #'    - a panel grid plotting function like `grid()`.
 #'   Note that this argument replaces the `panel.first` and `panel.last`
 #'   arguments from base `plot()` and tries to make the process more seamless
-#'   with better default behaviour. Default is not to draw a grid.
+#'   with better default behaviour. The default behaviour is determined by (and
+#'   can be set globally through) the value of `tpar("grid")`.
 #' @param asp the y/xy/x aspect ratio, see `plot.window`.
 #' @param palette one of the following options:
 #'    - NULL (default), in which case the palette will be chosen according to
@@ -426,7 +427,10 @@ tinyplot.default = function(
   }
   
   # catch for adding to existing facet plot
-  if (!is.null(facet) && isTRUE(add)) par(tpar("last_facet_par"))
+  # if (!is.null(facet) && isTRUE(add)) par(tpar("last_facet_par"))
+  if (!is.null(facet) && isTRUE(add)) (
+    par(get_last_facet_par())
+  )
   
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = deparse1(substitute(x))
@@ -1053,6 +1057,7 @@ tinyplot.default = function(
       if (frame.plot) box()
       
       # panel grid lines
+      if (is.null(grid)) grid = .tpar[["grid"]]
       if (!is.null(grid)) {
         if (is.logical(grid)) {
           ## If grid is TRUE create a default grid. Rather than just calling the default grid()
@@ -1239,7 +1244,8 @@ tinyplot.default = function(
   
   # tidy up before exit
   if (!is.null(facet)) {
-    tpar(last_facet_par = par(no.readonly = TRUE))
+    last_facet_par = par(no.readonly = TRUE)
+    set_last_facet_par(last_facet_par)
   }
   
 }

@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#news" id="toc-news" class="nav-link active" data-scroll-target="#news">News</a>
   <ul class="collapse">
-  <li><a href="#development-version" id="toc-development-version" class="nav-link" data-scroll-target="#development-version">0.0.5.9003 (development version)</a></li>
+  <li><a href="#development-version" id="toc-development-version" class="nav-link" data-scroll-target="#development-version">0.0.5.9004 (development version)</a></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.0.5</a></li>
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.0.4</a></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.0.3</a></li>
@@ -239,13 +239,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="news" class="level1">
 <h1>News</h1>
 <section id="development-version" class="level2">
-<h2 class="anchored" data-anchor-id="development-version">0.0.5.9003 (development version)</h2>
+<h2 class="anchored" data-anchor-id="development-version">0.0.5.9004 (development version)</h2>
 <p>New features:</p>
 <ul>
 <li>Gradient legends are now supported if a continuous variable is passed to <code>by</code>. Thanks to <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> for detailed feedback and advice around the default palette choice (a restricted version of the “viridis” palette), as well as StackOverflow user mnel, whose answer <a href="https://stackoverflow.com/a/13355440">here</a> provided the inspiration for the final implementation. (<a href="https://github.com/grantmcdermott/tinyplot/issues/122">#122</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Ordered factors now inherit a discrete sequential color palette (“viridis”) by default. Thanks to <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> for the suggestion. (<a href="https://github.com/grantmcdermott/tinyplot/issues/130">#130</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Support user-supplied polygons. (<a href="https://github.com/grantmcdermott/tinyplot/issues/127">#127</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Support for the <code>lwd</code> argument for adjusting line widths. Similar to <code>pch</code>, <code>lty</code>, etc. this arguments also accepts a “by” convenience keyword to automatically vary line widths by group. (<a href="https://github.com/grantmcdermott/tinyplot/issues/134">#134</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>tpar()</code> now accepts standard <code>par()</code> arguments in addition to the <code>tinyplot</code>-specific ones. This allows users to set or query graphical parameters via a single convenience function, instead having to invoke <code>tpar</code> and <code>par</code> separately.</li>
 </ul>
 <p>Bug fixes:</p>
 <ul>

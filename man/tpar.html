@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -184,12 +218,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#set-or-query-tinyplot-parameters" id="toc-set-or-query-tinyplot-parameters" class="nav-link active" data-scroll-target="#set-or-query-tinyplot-parameters">Set or query tinyplot parameters</a>
+  <li><a href="#set-or-query-graphical-parameters" id="toc-set-or-query-graphical-parameters" class="nav-link active" data-scroll-target="#set-or-query-graphical-parameters">Set or query graphical parameters</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#graphical-parameters" id="toc-graphical-parameters" class="nav-link" data-scroll-target="#graphical-parameters">Graphical Parameters</a></li>
+  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
+  <li><a href="#additional-graphical-parameters" id="toc-additional-graphical-parameters" class="nav-link" data-scroll-target="#additional-graphical-parameters">Additional Graphical Parameters</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -200,11 +236,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="set-or-query-tinyplot-parameters" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="set-or-query-tinyplot-parameters">Set or query tinyplot parameters</h2>
+<section id="set-or-query-graphical-parameters" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="set-or-query-graphical-parameters">Set or query graphical parameters</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p><code>tpar</code> can be used to set or query the additional set of graphical parameters provided by <code>tinyplot</code> (i.e., beyond the base set provided by <code>par</code>). Similar to its base counterpart, parameters can be set by passing the appropriate tag-value argument pairs to <code>tpar</code>. Multiple parameters can be set or queried at the same time, as a list.</p>
+<p><code>tpar</code> extends <code>par</code>, serving as a drop-in replacement for setting or querying graphical parameters. The key difference is that, beyond supporting the standard group of R graphical parameters, <code>tpar</code> also supports additional graphical parameters that are provided by <code>tinyplot</code>. Similar to <code>par</code>, parameters are set by passing appropriate <code>key = value</code> argument pairs, and multiple parameters can be set or queried at the same time.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -219,13 +255,18 @@ ul.task-list li input[type="checkbox"] {
 <code id="tpar_:_...">…</code>
 </td>
 <td>
-arguments of the form <code>tag = value</code>. Supported <code>tinyplot</code> parameters are described in the ‘Graphical Parameters’ section below.
+arguments of the form <code>key = value</code>. This includes all of the parameters typically supported by <code>par</code>, as well as the <code>tinyplot</code>-specific ones described in the ‘Graphical Parameters’ section below.
 </td>
 </tr>
 </tbody></table>
 </section>
-<section id="graphical-parameters" class="level3">
-<h3 class="anchored" data-anchor-id="graphical-parameters">Graphical Parameters</h3>
+<section id="details" class="level3">
+<h3 class="anchored" data-anchor-id="details">Details</h3>
+<p>The <code>tinyplot</code>-specfic parameters are saved in an internal environment called <code>.tpar</code> for performance and safety reasons. However, they can also be set at package load time via <code>options</code>, which may prove convenient for users that want to enable different default behaviour at startup (e.g., through an <code>.Rprofile</code> file). These options all take a <code style="white-space: pre;">tinyplot_*</code> prefix, e.g. <code>options(tinyplot_grid = TRUE, tinyplot_facet.bg = “grey90”)</code>.</p>
+<p>For their part, any "base" graphical parameters are caught dynamically and passed on to <code>par</code> as appropriate. Technically, only parameters that satisify <code>par(…, no.readonly = TRUE)</code> are evaluated.</p>
+</section>
+<section id="additional-graphical-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="additional-graphical-parameters">Additional Graphical Parameters</h3>
 <table>
 <tbody><tr>
 <td style="text-align: left;">
@@ -385,12 +426,12 @@ A numeric vector of form <code>c(b,l,t,r)</code> for controlling the (base) marg
 </tr>
 <tr>
 <td style="text-align: left;">
-<code>last_facet_par</code>
+<code>grid</code>
 </td>
 <td style="text-align: left;">
 </td>
 <td style="text-align: left;">
-Full list of graphical parameters used to constructed the most recent faceted <code>tinyplot</code> plot during the current session. Unlike other <code>tpar</code> parameters, this parameter is intended for internal use (specifically, to enable adding further elements on top of an existing faceted plot) and should <em>not</em> be set by the user.
+Logical indicating whether a background panel grid should be added to plots automatically. Defaults to NULL, which is equivalent to <code>FALSE</code>.
 </td>
 </tr>
 <tr>
@@ -424,6 +465,67 @@ A numeric vector of form <code>c(inner, outer)</code> that gives the margin padd
 </td>
 </tr>
 </tbody></table>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a list of existing base and tinyplot graphic params</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tpar</span>(<span class="st">"las"</span>, <span class="st">"pch"</span>, <span class="st">"facet.bg"</span>, <span class="st">"facet.cex"</span>, <span class="st">"grid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$las
+[1] 0
+
+$pch
+[1] 1
+
+$facet.bg
+NULL
+
+$facet.cex
+[1] 1
+
+$grid
+[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple facet plot with these default values</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars, <span class="at">facet =</span> <span class="sc">~</span>am)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tpar_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set params to something new. Similar to graphics::par(), note that we save</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the existing values at the same time by assigning to an object.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>op <span class="ot">=</span> <span class="fu">tpar</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">las       =</span> <span class="dv">1</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">pch       =</span> <span class="dv">2</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">facet.bg  =</span> <span class="st">"grey90"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">facet.cex =</span> <span class="dv">2</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">grid      =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Re-plot with these new params</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars, <span class="at">facet =</span> <span class="sc">~</span>am)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tpar_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset back to original values</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tpar</span>(op)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: The tinyplot-specific parameters can also be be set via `options`</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   with a `tinyplot_*` prefix, which can be convenient for enabling</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   different default behaviour at startup time (e.g., via an .Rprofile</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   file). Example:</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>

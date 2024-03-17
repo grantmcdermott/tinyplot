@@ -1,7 +1,7 @@
 Package: tinyplot
 Type: Package
 Title: Lightweight Extension of the Base R Graphics System
-Version: 0.0.5.9004
+Version: 0.0.5.9005
 Authors@R: 
   c(
     person(
@@ -33,7 +33,7 @@ Authors@R:
   )
 Description: Lightweight extension of the base R graphics system, with support
       for automatic legends, facetting, and several other enhancements.
-License: GPL (>= 2) 
+License: Apache License (>= 2)
 Depends:
   R (>= 4.0)
 Imports: 

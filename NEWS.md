@@ -1,6 +1,10 @@
 # News
 
-## 0.0.5.9004 (development version)
+## 0.0.5.9005 (development version)
+
+License:
+
+- Formally switch to Apache License 2.0. (#141 @grantmcdermott)
 
 New features:
 

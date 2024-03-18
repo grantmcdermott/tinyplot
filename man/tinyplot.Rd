@@ -365,7 +365,7 @@ without causing unexpected changes to the output.
 \examples{
 
 # save graphics parameters to restore them later
-op = par()
+op = tpar()
 
 
 aq = transform(
@@ -500,7 +500,7 @@ tinyplot(
 # It's possible to further customize the look of you plots using familiar
 # arguments and base plotting theme settings (e.g., via `par`).
 
-par(family = "HersheySans", las = 1)
+tpar(family = "HersheySans", las = 1)
 tinyplot(
   Temp ~ Day | Month,
   data = aq,

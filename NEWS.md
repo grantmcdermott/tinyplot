@@ -4,7 +4,7 @@
 
 License:
 
-- Formally switch to Apache 2.0 License. (#141 @grantmcdermott)
+- Formally switch to Apache 2.0 license. (#141 @grantmcdermott)
 
 New features:
 

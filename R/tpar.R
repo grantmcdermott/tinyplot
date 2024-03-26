@@ -44,6 +44,15 @@
 #'   `facet.border` \tab\tab Character or integer specifying the facet border colour. If an integer, will correspond to the users default colour palette (see \code{\link[grDevices]{palette}}). Passed \code{\link[graphics]{rect}}. Defaults to `NA` (none).\cr
 #'   \tab\tab\cr
 #'   \tab\tab\cr
+#'   `file.height` \tab\tab Numeric specifying the height (in inches) of any plot that is written to disk using the `tinyplot(..., file(name) = X)` argument. Defaults to 8.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
+#'   `file.width` \tab\tab Numeric specifying the width (in inches) of any plot that is written to disk using the `tinyplot(..., file(name) = X)` argument. Defaults to 5.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
+#'   `file.res` \tab\tab Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk as a PNG file using the `tinyplot(..., file(name) = "*.png")` argument. Defaults to 300.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
 #'   `fmar` \tab\tab A numeric vector of form `c(b,l,t,r)` for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to `c(1,1,1,1)`, i.e. a single line of padding around each facet. If more that three facets are detected, the `fmar` parameter is scaled by 0.75 (i.e., three-quarters) to reduce the excess whitespace that would otherwise arise due to the absent axes lines and labels. (An exception is made for 2x2 plots to better match the `cex` expansion logic of the base graphics system under this particular layout.) Similarly, note that an extra 0.5 lines is subtracted from each side of the facet padding for plots that aren't framed, to reduce excess whitespace.\cr
 #'   \tab\tab\cr
 #'   \tab\tab\cr
@@ -147,6 +156,24 @@ tpar = function(...) {
     if(!is.na(facet.border) && !is.numeric(facet.border) && !is.character(facet.border)) stop("facet.border needs to be NA, or a numeric or character")
     if(length(facet.border)!=1) stop("facet.border needs to be of length 1")
     .tpar$facet.border = facet.border
+  }
+  
+  if (length(opts$file.width)) {
+    file.width = as.numeric(opts$file.width)
+    if(!is.numeric(file.width)) stop("file.width needs to be numeric")
+    .tpar$file.width = file.width
+  }
+  
+  if (length(opts$file.height)) {
+    file.height = as.numeric(opts$file.height)
+    if(!is.numeric(file.height)) stop("file.height needs to be numeric")
+    .tpar$file.height = file.height
+  }
+  
+  if (length(opts$file.res)) {
+    file.res = as.numeric(opts$file.res)
+    if(!is.numeric(file.res)) stop("file.res needs to be numeric")
+    .tpar$file.res = file.res
   }
   
   if (length(opts$fmar)) {

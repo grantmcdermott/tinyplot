@@ -203,6 +203,17 @@
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
+#' @param filename the output file path for writing (saving) a plot to disk. This
+#'   is a convenience argument that opens the appropriate external graphics
+#'   device (e.g., \code{\link[grDevices]{png}}, \code{\link[grDevices]{pdf}},
+#'   \code{\link[grDevices]{svg}})
+#'   at the start of the `tinyplot` call and then closes it before the function
+#'   exits. The device type is determined by the file extension and must be one
+#'   of ".png", ".pdf", or ".svg". More file types might be added in the future,
+#'   but only these three are supported at present. For additional output options
+#'   (e.g., file width and height) see \code{\link[tinyplot]{tpar}}.
+#' @param file alias for the `filename` argument. Only used if `filename` is
+#'   NULL. 
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
@@ -213,10 +224,11 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'   
-#' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
+#' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords pdf png svg dev.off
 #' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext text rect
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit
+#' @importFrom tools file_ext
 #' 
 #' @examples
 #' 
@@ -411,9 +423,28 @@ tinyplot.default = function(
     ymax = NULL,
     ribbon_alpha = 0.2,
     add = FALSE,
+    filename = NULL,
+    file = NULL,
     ...) {
   
   dots = list(...)
+
+  if (!is.null(filename) || !is.null(file)) {
+    if (is.null(filename)) filename = file
+    exttype = file_ext(filename)
+    fwidth = .tpar[["file.width"]]
+    fheight = .tpar[["file.height"]]
+    fres = .tpar[["file.res"]]
+    dop = par(no.readonly = TRUE)
+    switch(exttype,
+      png = png(filename, width = fwidth * fres, height = fheight * fres, res = fres),
+      pdf = pdf(filename, width = fwidth, height = fheight),
+      svg = svg(filename, width = fwidth, height = fheight),
+      stop("Unsupported file extension. Only '.png', '.pdf', and '.svg' are allowed.")
+    )
+    par(dop)
+    on.exit(dev.off(), add = TRUE)
+  }
   
   if (isTRUE(add)) {
     legend = FALSE
@@ -1247,6 +1278,7 @@ tinyplot.default = function(
     last_facet_par = par(no.readonly = TRUE)
     set_last_facet_par(last_facet_par)
   }
+
   
 }
 

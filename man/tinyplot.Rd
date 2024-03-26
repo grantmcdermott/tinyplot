@@ -44,6 +44,8 @@ tinyplot(x, ...)
   ymax = NULL,
   ribbon_alpha = 0.2,
   add = FALSE,
+  filename = NULL,
+  file = NULL,
   ...
 )
 
@@ -340,6 +342,19 @@ plot (since filled density plots are converted to ribbon plots internally).}
 \item{add}{logical. If TRUE, then elements are added to the current plot rather
 than drawing a new plot window. Note that the automatic legend for the
 added elements will be turned off.}
+
+\item{filename}{the output file path for writing (saving) a plot to disk. This
+is a convenience argument that opens the appropriate external graphics
+device (e.g., \code{\link[grDevices]{png}}, \code{\link[grDevices]{pdf}},
+\code{\link[grDevices]{svg}})
+at the start of the \code{tinyplot} call and then closes it before the function
+exits. The device type is determined by the file extension and must be one
+of ".png", ".pdf", or ".svg". More file types might be added in the future,
+but only these three are supported at present. For additional output options
+(e.g., file width and height) see \code{\link[tinyplot]{tpar}}.}
+
+\item{file}{alias for the \code{filename} argument. Only used if \code{filename} is
+NULL.}
 
 \item{formula}{a \code{formula} that optionally includes grouping variable(s)
 after a vertical bar, e.g. \code{y ~ x | z}. One-sided formulae are also

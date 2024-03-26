@@ -6,6 +6,11 @@
   assign(".tinyplot_env", new.env(), envir = tnypltptns)
   .tpar <- new.env()
   
+  # Figure output options if written to file
+  .tpar$file.width  <- if(is.null(getOption("tinyplot_file.width"))) 8 else as.numeric(getOption("tinyplot_file.width"))
+  .tpar$file.height <- if(is.null(getOption("tinyplot_file.height"))) 5 else as.numeric(getOption("tinyplot_file.height"))
+  .tpar$file.res    <- if(is.null(getOption("tinyplot_file.res"))) 300 else as.numeric(getOption("tinyplot_file.res"))
+  
   # Facet margin, i.e. gap between the individual facet windows
   .tpar$fmar <- if(is.null(getOption("tinyplot_fmar"))) c(1,1,1,1) else as.numeric(getOption("tinyplot_fmar"))
   

@@ -1,5 +1,6 @@
 source("helpers.R")
 using("tinysnapshot")
+if (ON_CRAN) exit_file("CRAN")
 
 mtcars$am = as.factor(mtcars$am)
 

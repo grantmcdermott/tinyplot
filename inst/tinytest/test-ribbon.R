@@ -1,5 +1,6 @@
 source("helpers.R")
 using("tinysnapshot")
+if (ON_CRAN) exit_file("CRAN")
 
 mod = lm(mpg ~ wt, mtcars)
 pred = predict(mod, interval = "confidence")

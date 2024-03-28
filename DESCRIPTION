@@ -41,6 +41,7 @@ Imports:
   grDevices,
   methods,
   stats,
+  tools,
   utils
 Suggests:
   altdoc (>= 0.3.0),

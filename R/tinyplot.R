@@ -452,7 +452,9 @@ tinyplot.default = function(
     if (is.null(filewidth)) filewidth = .tpar[["file.width"]]
     if (is.null(fileheight)) fileheight = .tpar[["file.height"]]
     fileres = .tpar[["file.res"]]
+    fkdev = is.null(dev.list()) ## catch to close interactive device if one isn't already open
     dop = par(no.readonly = TRUE)
+    if (isTRUE(fkdev)) dev.off() ## close interactive device if not already open
     exttype = file_ext(filepath)
     switch(exttype,
       png = png(filepath, width = filewidth * fileres, height = fileheight * fileres, res = fileres),

@@ -342,15 +342,23 @@ plot (since filled density plots are converted to ribbon plots internally).}
 than drawing a new plot window. Note that the automatic legend for the
 added elements will be turned off.}
 
-\item{file}{the output file path for writing (saving) a plot to disk. This is
-a convenience argument that opens the appropriate external graphics device
+\item{file}{the output file for writing (saving) a plot to disk. This is a
+convenience argument that opens the appropriate external graphics device
 (e.g., \code{\link[grDevices]{png}}, \code{\link[grDevices]{pdf}},
 \code{\link[grDevices]{svg}})
 at the start of the \code{tinyplot} call and then closes it before the function
 exits. The device type is determined by the file extension and must be one
 of ".png", ".pdf", or ".svg". More file types might be added in the future,
-but only these three are supported at present. For additional output options
-(e.g., file width and height) see \code{\link[tinyplot]{tpar}}.}
+but only these three are supported at present. For default output options
+(i.e., file width, height, and resolution) see the \verb{file.*} parameters in
+\code{\link[tinyplot]{tpar}}. Can be either:
+\itemize{
+\item A character string denoting a valid file path, e.g. \code{"myplot.png"}, or
+\item A list comprising three "path", "width", and "height" arguments, where the
+latter two must be specified in inches, e.g \code{list(path = "myplot.png", width = 8, height = 5)}. If no width or height arguments are detected, then these
+are inherited from the default values held in
+\verb{tpar("file.width", "file.height").}
+}}
 
 \item{formula}{a \code{formula} that optionally includes grouping variable(s)
 after a vertical bar, e.g. \code{y ~ x | z}. One-sided formulae are also

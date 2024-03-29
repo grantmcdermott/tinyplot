@@ -203,15 +203,23 @@
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
-#' @param file the output file path for writing (saving) a plot to disk. This is
-#'   a convenience argument that opens the appropriate external graphics device
+#' @param file the output file for writing (saving) a plot to disk. This is a
+#'   convenience argument that opens the appropriate external graphics device
 #'   (e.g., \code{\link[grDevices]{png}}, \code{\link[grDevices]{pdf}},
 #'   \code{\link[grDevices]{svg}})
 #'   at the start of the `tinyplot` call and then closes it before the function
 #'   exits. The device type is determined by the file extension and must be one
 #'   of ".png", ".pdf", or ".svg". More file types might be added in the future,
-#'   but only these three are supported at present. For additional output options
-#'   (e.g., file width and height) see \code{\link[tinyplot]{tpar}}.
+#'   but only these three are supported at present. For default output options
+#'   (i.e., file width, height, and resolution) see the `file.*` parameters in
+#'   \code{\link[tinyplot]{tpar}}. Can be either:
+#' - A character string denoting a valid file path, e.g. `"myplot.png"`, or
+#' - A list comprising three "path", "width", and "height" arguments, where the
+#' latter two must be specified in inches, e.g `list(path = "myplot.png", width
+#' = 8, height = 5)`. If no width or height arguments are detected, then these
+#' are inherited from the default values held in
+#' `tpar("file.width", "file.height").`
+#' 
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
@@ -427,17 +435,30 @@ tinyplot.default = function(
   dots = list(...)
 
   if (!is.null(file)) {
-    filepath = file
-    exttype = file_ext(filepath)
-    fwidth = .tpar[["file.width"]]
-    fheight = .tpar[["file.height"]]
-    fres = .tpar[["file.res"]]
+    filepath = filewidth = fileheight = NULL
+    if (is.character(file)) {
+      filepath = file
+    } else if (is.list(file)) {
+      filepath = file[["path"]]
+      if (is.null(filepath)) {
+        filepath = file[[1]]
+        if (!is.character(filepath)) stop("\nFile path could not be resolved. It must be a character.\n")
+      }
+      filewidth = file[["width"]]
+      fileheight = file[["height"]]
+    } else {
+      stop("\nThe `file` argument must either be a character string or a list.\n")
+    }
+    if (is.null(filewidth)) filewidth = .tpar[["file.width"]]
+    if (is.null(fileheight)) fileheight = .tpar[["file.height"]]
+    fileres = .tpar[["file.res"]]
     dop = par(no.readonly = TRUE)
+    exttype = file_ext(filepath)
     switch(exttype,
-      png = png(filepath, width = fwidth * fres, height = fheight * fres, res = fres),
-      pdf = pdf(filepath, width = fwidth, height = fheight),
-      svg = svg(filepath, width = fwidth, height = fheight),
-      stop("Unsupported file extension. Only '.png', '.pdf', or '.svg' are allowed.")
+      png = png(filepath, width = filewidth * fileres, height = fileheight * fileres, res = fileres),
+      pdf = pdf(filepath, width = filewidth, height = fileheight),
+      svg = svg(filepath, width = filewidth, height = fileheight),
+      stop("\nUnsupported file extension. Only '.png', '.pdf', or '.svg' are allowed.\n")
     )
     par(dop)
     on.exit(dev.off(), add = TRUE)

@@ -203,17 +203,15 @@
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
-#' @param filename the output file path for writing (saving) a plot to disk. This
-#'   is a convenience argument that opens the appropriate external graphics
-#'   device (e.g., \code{\link[grDevices]{png}}, \code{\link[grDevices]{pdf}},
+#' @param file the output file path for writing (saving) a plot to disk. This is
+#'   a convenience argument that opens the appropriate external graphics device
+#'   (e.g., \code{\link[grDevices]{png}}, \code{\link[grDevices]{pdf}},
 #'   \code{\link[grDevices]{svg}})
 #'   at the start of the `tinyplot` call and then closes it before the function
 #'   exits. The device type is determined by the file extension and must be one
 #'   of ".png", ".pdf", or ".svg". More file types might be added in the future,
 #'   but only these three are supported at present. For additional output options
 #'   (e.g., file width and height) see \code{\link[tinyplot]{tpar}}.
-#' @param file alias for the `filename` argument. Only used if `filename` is
-#'   NULL. 
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
@@ -423,23 +421,22 @@ tinyplot.default = function(
     ymax = NULL,
     ribbon_alpha = 0.2,
     add = FALSE,
-    filename = NULL,
     file = NULL,
     ...) {
   
   dots = list(...)
 
-  if (!is.null(filename) || !is.null(file)) {
-    if (is.null(filename)) filename = file
-    exttype = file_ext(filename)
+  if (!is.null(file)) {
+    filepath = file
+    exttype = file_ext(filepath)
     fwidth = .tpar[["file.width"]]
     fheight = .tpar[["file.height"]]
     fres = .tpar[["file.res"]]
     dop = par(no.readonly = TRUE)
     switch(exttype,
-      png = png(filename, width = fwidth * fres, height = fheight * fres, res = fres),
-      pdf = pdf(filename, width = fwidth, height = fheight),
-      svg = svg(filename, width = fwidth, height = fheight),
+      png = png(filepath, width = fwidth * fres, height = fheight * fres, res = fres),
+      pdf = pdf(filepath, width = fwidth, height = fheight),
+      svg = svg(filepath, width = fwidth, height = fheight),
       stop("Unsupported file extension. Only '.png', '.pdf', and '.svg' are allowed.")
     )
     par(dop)

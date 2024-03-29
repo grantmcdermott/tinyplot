@@ -437,7 +437,7 @@ tinyplot.default = function(
       png = png(filepath, width = fwidth * fres, height = fheight * fres, res = fres),
       pdf = pdf(filepath, width = fwidth, height = fheight),
       svg = svg(filepath, width = fwidth, height = fheight),
-      stop("Unsupported file extension. Only '.png', '.pdf', and '.svg' are allowed.")
+      stop("Unsupported file extension. Only '.png', '.pdf', or '.svg' are allowed.")
     )
     par(dop)
     on.exit(dev.off(), add = TRUE)

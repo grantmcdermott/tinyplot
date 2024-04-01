@@ -53,10 +53,10 @@ parameters that satisify \code{par(..., no.readonly = TRUE)} are evaluated.
 \code{facet.border} \tab\tab Character or integer specifying the facet border colour. If an integer, will correspond to the users default colour palette (see \code{\link[grDevices]{palette}}). Passed \code{\link[graphics]{rect}}. Defaults to \code{NA} (none).\cr
 \tab\tab\cr
 \tab\tab\cr
-\code{file.height} \tab\tab Numeric specifying the height (in inches) of any plot that is written to disk using the \code{tinyplot(..., file = X)} argument. Defaults to 8.\cr
+\code{file.height} \tab\tab Numeric specifying the height (in inches) of any plot that is written to disk using the \code{tinyplot(..., file = X)} argument. Defaults to 7.\cr
 \tab\tab\cr
 \tab\tab\cr
-\code{file.width} \tab\tab Numeric specifying the width (in inches) of any plot that is written to disk using the \code{tinyplot(..., file = X)} argument. Defaults to 5.\cr
+\code{file.width} \tab\tab Numeric specifying the width (in inches) of any plot that is written to disk using the \code{tinyplot(..., file = X)} argument. Defaults to 7.\cr
 \tab\tab\cr
 \tab\tab\cr
 \code{file.res} \tab\tab Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the \code{tinyplot(..., file = X)} argument. Defaults to 300.\cr

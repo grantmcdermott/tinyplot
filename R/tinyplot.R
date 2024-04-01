@@ -205,14 +205,14 @@
 #'   added elements will be turned off.
 #' @param file the output file for writing (saving) a plot to disk. This is a
 #'   convenience argument that opens the appropriate external graphics device
-#'   (e.g., \code{\link[grDevices]{png}}, \code{\link[grDevices]{pdf}},
-#'   \code{\link[grDevices]{svg}})
+#'   (e.g., \code{\link[grDevices]{png}},
+#'   \code{\link[grDevices]{pdf}}, \code{\link[grDevices]{svg}})
 #'   at the start of the `tinyplot` call and then closes it before the function
 #'   exits. The device type is determined by the file extension and must be one
-#'   of ".png", ".pdf", or ".svg". More file types might be added in the future,
-#'   but only these three are supported at present. For default output options
-#'   (i.e., file width, height, and resolution) see the `file.*` parameters in
-#'   \code{\link[tinyplot]{tpar}}. Can be either:
+#'   of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg". More file types might be
+#'   added in the future, but only these four are supported at present. For
+#'   default output options (i.e., file width, height, and resolution) see the
+#'   `file.*` parameters in \code{\link[tinyplot]{tpar}}. Can be either:
 #' - A character string denoting a valid file path, e.g. `"myplot.png"`, or
 #' - A list comprising three "path", "width", and "height" arguments, where the
 #' latter two must be specified in inches, e.g `list(path = "myplot.png", width
@@ -434,6 +434,7 @@ tinyplot.default = function(
   
   dots = list(...)
 
+  # Write plot to output file (if requested)
   if (!is.null(file)) {
     filepath = filewidth = fileheight = NULL
     if (is.character(file)) {
@@ -456,8 +457,10 @@ tinyplot.default = function(
     dop = par(no.readonly = TRUE)
     if (isTRUE(fkdev)) dev.off() ## close interactive device if not already open
     exttype = file_ext(filepath)
+    if (exttype == "jpg") exttype = "jpeg"
     switch(exttype,
       png = png(filepath, width = filewidth, height = fileheight, units = "in", res = fileres),
+      jpeg = jpeg(filepath, width = filewidth, height = fileheight, units = "in", res = fileres),
       pdf = pdf(filepath, width = filewidth, height = fileheight),
       svg = svg(filepath, width = filewidth, height = fileheight),
       stop("\nUnsupported file extension. Only '.png', '.pdf', or '.svg' are allowed.\n")
@@ -466,6 +469,7 @@ tinyplot.default = function(
     on.exit(dev.off(), add = TRUE)
   }
   
+  # Adding to the previous plot?
   if (isTRUE(add)) {
     legend = FALSE
     # main = sub = xlab = ylab = NULL ## Rather do this later

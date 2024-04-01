@@ -457,7 +457,7 @@ tinyplot.default = function(
     if (isTRUE(fkdev)) dev.off() ## close interactive device if not already open
     exttype = file_ext(filepath)
     switch(exttype,
-      png = png(filepath, width = filewidth * fileres, height = fileheight * fileres, res = fileres),
+      png = png(filepath, width = filewidth, height = fileheight, units = "in", res = fileres),
       pdf = pdf(filepath, width = filewidth, height = fileheight),
       svg = svg(filepath, width = filewidth, height = fileheight),
       stop("\nUnsupported file extension. Only '.png', '.pdf', or '.svg' are allowed.\n")

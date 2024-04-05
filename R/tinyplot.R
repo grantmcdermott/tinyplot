@@ -203,23 +203,31 @@
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
-#' @param file the output file for writing (saving) a plot to disk. This is a
-#'   convenience argument that opens the appropriate external graphics device
-#'   (e.g., \code{\link[grDevices]{png}},
-#'   \code{\link[grDevices]{pdf}}, \code{\link[grDevices]{svg}})
-#'   at the start of the `tinyplot` call and then closes it before the function
-#'   exits. The device type is determined by the file extension and must be one
-#'   of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg". More file types might be
-#'   added in the future, but only these four are supported at present. For
-#'   default output options (i.e., file width, height, and resolution) see the
-#'   `file.*` parameters in \code{\link[tinyplot]{tpar}}. Can be either:
-#' - A character string denoting a valid file path, e.g. `"myplot.png"`, or
-#' - A list comprising three "path", "width", and "height" arguments, where the
-#' latter two must be specified in inches, e.g `list(path = "myplot.png", width
-#' = 8, height = 5)`. If no width or height arguments are detected, then these
-#' are inherited from the default values held in
-#' `tpar("file.width", "file.height").`
-#' 
+#' @param file character string giving the file path for writing a plot to disk.
+#'   If specified, the plot will not be displayed interactively, but rather sent
+#'   to the appropriate external graphics device (i.e.,
+#'   \code{\link[grDevices]{png}}, \code{\link[grDevices]{jpeg}},
+#'   \code{\link[grDevices]{pdf}}, or \code{\link[grDevices]{svg}}). As a point
+#'   of convenience, note that any global parameters held in `(t)par` are
+#'   automatically carried over to the external device and don't need to be
+#'   reset (in contrast to the conventional base R approach that requires
+#'   manually opening and closing the device). The device type is determined by
+#'   the file extension at the end of the provided path, and must be one of
+#'   ".png", ".jpg" (".jpeg"), ".pdf", or ".svg". (Other file types may be
+#'   supported in the future.) The file dimensions can be controlled by the
+#'   corresponding `width` and `height` arguments below, otherwise will fall
+#'   back to the `"file.width"` and `"file.height"` values held in
+#'   \code{\link[tinyplot]{tpar}} (i.e., both defaulting to 7 inches, and where
+#'   the default resolution for bitmap files is also specified as 300
+#'   DPI).
+#' @param width, height numeric(s) giving the plot dimension in inches. These
+#'  two arguments would typically be used in conjunction with the `file`
+#'  argument above, overriding the default values held in
+#'  `tpar("file.width", "file.height")`. If either `width` or `height` is
+#'  specified, but a corresponding `file` argument is not provided as well, then
+#'  a new interactive graphics device dimensions will be opened along the given
+#'  dimensions. Note that this interactive resizing may not work consistently
+#'  from within an IDE like RStudio that has an integrated graphics windows.
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
@@ -430,32 +438,26 @@ tinyplot.default = function(
     ribbon_alpha = 0.2,
     add = FALSE,
     file = NULL,
+    width = NULL,
+    height = NULL,
     ...) {
   
   dots = list(...)
 
   # Write plot to output file (if requested)
   if (!is.null(file)) {
-    filepath = filewidth = fileheight = NULL
-    if (is.character(file)) {
-      filepath = file
-    } else if (is.list(file)) {
-      filepath = file[["path"]]
-      if (is.null(filepath)) {
-        filepath = file[[1]]
-        if (!is.character(filepath)) stop("\nFile path could not be resolved. It must be a character.\n")
-      }
-      filewidth = file[["width"]]
-      fileheight = file[["height"]]
-    } else {
-      stop("\nThe `file` argument must either be a character string or a list.\n")
-    }
+    filepath = file
+    filewidth = width
+    fileheight = height
     if (is.null(filewidth)) filewidth = .tpar[["file.width"]]
     if (is.null(fileheight)) fileheight = .tpar[["file.height"]]
     fileres = .tpar[["file.res"]]
-    fkdev = is.null(dev.list()) ## catch to close interactive device if one isn't already open
+    # catch to close interactive device if one isn't already open
+    fkdev = is.null(dev.list())
+    # grab existing device pars to pass on to next one
     dop = par(no.readonly = TRUE)
-    if (isTRUE(fkdev)) dev.off() ## close interactive device if not already open
+    # close interactive device if not already open
+    if (isTRUE(fkdev)) dev.off()
     exttype = file_ext(filepath)
     if (exttype == "jpg") exttype = "jpeg"
     switch(exttype,
@@ -463,10 +465,25 @@ tinyplot.default = function(
       jpeg = jpeg(filepath, width = filewidth, height = fileheight, units = "in", res = fileres),
       pdf = pdf(filepath, width = filewidth, height = fileheight),
       svg = svg(filepath, width = filewidth, height = fileheight),
-      stop("\nUnsupported file extension. Only '.png', '.pdf', or '.svg' are allowed.\n")
+      stop("\nUnsupported file extension. Only '.png', '.jpg', '.pdf', or '.svg' are allowed.\n")
     )
     par(dop)
     on.exit(dev.off(), add = TRUE)
+    # else statement below for interactive plot with user-specified width/height
+  } else if (!is.null(width) || !is.null(height)) {
+    devwidth = width
+    devheight = height
+    # if one of width or height is missing, set equal to the other
+    if (is.null(devwidth)) devwidth = devheight
+    if (is.null(devheight)) devheight = devwidth
+    # catch to close interactive device if one isn't already open
+    fkdev = is.null(dev.list())
+    # grab existing device pars to pass on to next one
+    dop = par(no.readonly = TRUE)
+    # close interactive device if not already open
+    if (isTRUE(fkdev)) dev.off()
+    dev.new(width = devwidth, height = devheight)
+    par(dop)
   }
   
   # Adding to the previous plot?

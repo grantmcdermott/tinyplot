@@ -23,14 +23,17 @@ automatically vary line widths by group. (#134 @grantmcdermott)
 - `tpar()` now accepts standard `par()` arguments in addition to the
 `tinyplot`-specific ones. This allows users to set or query graphical parameters
 via a single convenience function, instead having to invoke `tpar` and `par` separately.
-- Users can write plots directly to disk using the new
-`tinyplot(..., file = path/to/file)` argument. This implementation relies on a
-simple internal wrapper around the traditional R external graphics devices like
-`png()`, `pdf()`, etc. But it may prove more convenient, since the current
-global graphics parameters held in `(t)par()` are carried over to the external
-device too and don't need to be reset. Note that the appropriate device type is
-determined automatically by the file extension, which must be one of ".png",
-".jpg" (".jpeg"), ".pdf", or ".svg". (#143 @grantmcdermott)
+- Users can write plots directly to disk using the new `file` argument,
+alongside corresponding `width` and `height` arguments for output customization
+(both of which are defined in inches). For example,
+`tinyplot(..., file = "~/myplot.png", width = 8, height = 5)`. This
+implementation relies on a simple internal wrapper around the traditional R
+external graphics devices like `png()`, `pdf()`, etc. But it may prove more
+convenient, since the current global graphics parameters held in `(t)par()` are
+carried over to the external device too and don't need to be reset. Note that
+the appropriate device type is determined automatically by the file extension,
+which must be one of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg". (#143
+@grantmcdermott)
 
 Bug fixes:
 

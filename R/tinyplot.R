@@ -220,14 +220,17 @@
 #'   \code{\link[tinyplot]{tpar}} (i.e., both defaulting to 7 inches, and where
 #'   the default resolution for bitmap files is also specified as 300
 #'   DPI).
-#' @param width, height numeric(s) giving the plot dimension in inches. These
-#'  two arguments would typically be used in conjunction with the `file`
-#'  argument above, overriding the default values held in
-#'  `tpar("file.width", "file.height")`. If either `width` or `height` is
-#'  specified, but a corresponding `file` argument is not provided as well, then
-#'  a new interactive graphics device dimensions will be opened along the given
-#'  dimensions. Note that this interactive resizing may not work consistently
-#'  from within an IDE like RStudio that has an integrated graphics windows.
+#' @param width numeric giving the plot width in inches. Together with `height`,
+#'  typically used in conjunction with the `file` argument above, overriding the
+#'  default values held in `tpar("file.width", "file.height")`. If either `width`
+#'  or `height` is specified, but a corresponding `file` argument is not
+#'  provided as well, then a new interactive graphics device dimensions will be
+#'  opened along the given dimensions. Note that this interactive resizing may
+#'  not work consistently from within an IDE like RStudio that has an integrated
+#'  graphics windows.
+#' @param height numeric giving the plot height in inches. Same considerations as
+#'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
+#'  specified. 
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
@@ -238,7 +241,7 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'   
-#' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords pdf png svg dev.off
+#' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
 #' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext text rect
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit

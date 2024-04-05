@@ -362,14 +362,18 @@ back to the \code{"file.width"} and \code{"file.height"} values held in
 the default resolution for bitmap files is also specified as 300
 DPI).}
 
-\item{width, }{height numeric(s) giving the plot dimension in inches. These
-two arguments would typically be used in conjunction with the \code{file}
-argument above, overriding the default values held in
-\code{tpar("file.width", "file.height")}. If either \code{width} or \code{height} is
-specified, but a corresponding \code{file} argument is not provided as well, then
-a new interactive graphics device dimensions will be opened along the given
-dimensions. Note that this interactive resizing may not work consistently
-from within an IDE like RStudio that has an integrated graphics windows.}
+\item{width}{numeric giving the plot width in inches. Together with \code{height},
+typically used in conjunction with the \code{file} argument above, overriding the
+default values held in \code{tpar("file.width", "file.height")}. If either \code{width}
+or \code{height} is specified, but a corresponding \code{file} argument is not
+provided as well, then a new interactive graphics device dimensions will be
+opened along the given dimensions. Note that this interactive resizing may
+not work consistently from within an IDE like RStudio that has an integrated
+graphics windows.}
+
+\item{height}{numeric giving the plot height in inches. Same considerations as
+\code{width} (above) apply, e.g. will default to \code{tpar("file.height")} if not
+specified.}
 
 \item{formula}{a \code{formula} that optionally includes grouping variable(s)
 after a vertical bar, e.g. \code{y ~ x | z}. One-sided formulae are also

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -286,6 +286,9 @@ tinyplot(
   ymax = NULL,
   ribbon_alpha = 0.2,
   add = FALSE,
+  file = NULL,
+  width = NULL,
+  height = NULL,
   ...
 )
 
@@ -673,6 +676,30 @@ numeric factor modifying the opacity alpha of any ribbon shading; typically in <
 </td>
 <td>
 logical. If TRUE, then elements are added to the current plot rather than drawing a new plot window. Note that the automatic legend for the added elements will be turned off.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="tinyplot_:_file">file</code>
+</td>
+<td>
+character string giving the file path for writing a plot to disk. If specified, the plot will not be displayed interactively, but rather sent to the appropriate external graphics device (i.e., <code>png</code>, <code>jpeg</code>, <code>pdf</code>, or <code>svg</code>). As a point of convenience, note that any global parameters held in <code style="white-space: pre;">(t)par</code> are automatically carried over to the external device and don’t need to be reset (in contrast to the conventional base R approach that requires manually opening and closing the device). The device type is determined by the file extension at the end of the provided path, and must be one of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg". (Other file types may be supported in the future.) The file dimensions can be controlled by the corresponding <code>width</code> and <code>height</code> arguments below, otherwise will fall back to the <code>“file.width”</code> and <code>“file.height”</code> values held in <code>tpar</code> (i.e., both defaulting to 7 inches, and where the default resolution for bitmap files is also specified as 300 DPI).
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="tinyplot_:_width">width</code>
+</td>
+<td>
+numeric giving the plot width in inches. Together with <code>height</code>, typically used in conjunction with the <code>file</code> argument above, overriding the default values held in <code>tpar(“file.width”, “file.height”)</code>. If either <code>width</code> or <code>height</code> is specified, but a corresponding <code>file</code> argument is not provided as well, then a new interactive graphics device dimensions will be opened along the given dimensions. Note that this interactive resizing may not work consistently from within an IDE like RStudio that has an integrated graphics windows.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="tinyplot_:_height">height</code>
+</td>
+<td>
+numeric giving the plot height in inches. Same considerations as <code>width</code> (above) apply, e.g.&nbsp;will default to <code>tpar(“file.height”)</code> if not specified.
 </td>
 </tr>
 <tr>

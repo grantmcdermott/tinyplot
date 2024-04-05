@@ -1,7 +1,7 @@
 Package: tinyplot
 Type: Package
 Title: Lightweight Extension of the Base R Graphics System
-Version: 0.0.5.9005
+Version: 0.0.5.9006
 Authors@R: 
   c(
     person(
@@ -41,6 +41,7 @@ Imports:
   grDevices,
   methods,
   stats,
+  tools,
   utils
 Suggests:
   altdoc (>= 0.3.0),

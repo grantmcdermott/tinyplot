@@ -53,6 +53,15 @@ parameters that satisify \code{par(..., no.readonly = TRUE)} are evaluated.
 \code{facet.border} \tab\tab Character or integer specifying the facet border colour. If an integer, will correspond to the users default colour palette (see \code{\link[grDevices]{palette}}). Passed \code{\link[graphics]{rect}}. Defaults to \code{NA} (none).\cr
 \tab\tab\cr
 \tab\tab\cr
+\code{file.height} \tab\tab Numeric specifying the height (in inches) of any plot that is written to disk using the \code{tinyplot(..., file = X)} argument. Defaults to 7.\cr
+\tab\tab\cr
+\tab\tab\cr
+\code{file.width} \tab\tab Numeric specifying the width (in inches) of any plot that is written to disk using the \code{tinyplot(..., file = X)} argument. Defaults to 7.\cr
+\tab\tab\cr
+\tab\tab\cr
+\code{file.res} \tab\tab Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the \code{tinyplot(..., file = X)} argument. Defaults to 300.\cr
+\tab\tab\cr
+\tab\tab\cr
 \code{fmar} \tab\tab A numeric vector of form \code{c(b,l,t,r)} for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to \code{c(1,1,1,1)}, i.e. a single line of padding around each facet. If more that three facets are detected, the \code{fmar} parameter is scaled by 0.75 (i.e., three-quarters) to reduce the excess whitespace that would otherwise arise due to the absent axes lines and labels. (An exception is made for 2x2 plots to better match the \code{cex} expansion logic of the base graphics system under this particular layout.) Similarly, note that an extra 0.5 lines is subtracted from each side of the facet padding for plots that aren't framed, to reduce excess whitespace.\cr
 \tab\tab\cr
 \tab\tab\cr

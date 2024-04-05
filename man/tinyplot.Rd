@@ -44,6 +44,9 @@ tinyplot(x, ...)
   ymax = NULL,
   ribbon_alpha = 0.2,
   add = FALSE,
+  file = NULL,
+  width = NULL,
+  height = NULL,
   ...
 )
 
@@ -340,6 +343,37 @@ plot (since filled density plots are converted to ribbon plots internally).}
 \item{add}{logical. If TRUE, then elements are added to the current plot rather
 than drawing a new plot window. Note that the automatic legend for the
 added elements will be turned off.}
+
+\item{file}{character string giving the file path for writing a plot to disk.
+If specified, the plot will not be displayed interactively, but rather sent
+to the appropriate external graphics device (i.e.,
+\code{\link[grDevices]{png}}, \code{\link[grDevices]{jpeg}},
+\code{\link[grDevices]{pdf}}, or \code{\link[grDevices]{svg}}). As a point
+of convenience, note that any global parameters held in \verb{(t)par} are
+automatically carried over to the external device and don't need to be
+reset (in contrast to the conventional base R approach that requires
+manually opening and closing the device). The device type is determined by
+the file extension at the end of the provided path, and must be one of
+".png", ".jpg" (".jpeg"), ".pdf", or ".svg". (Other file types may be
+supported in the future.) The file dimensions can be controlled by the
+corresponding \code{width} and \code{height} arguments below, otherwise will fall
+back to the \code{"file.width"} and \code{"file.height"} values held in
+\code{\link[tinyplot]{tpar}} (i.e., both defaulting to 7 inches, and where
+the default resolution for bitmap files is also specified as 300
+DPI).}
+
+\item{width}{numeric giving the plot width in inches. Together with \code{height},
+typically used in conjunction with the \code{file} argument above, overriding the
+default values held in \code{tpar("file.width", "file.height")}. If either \code{width}
+or \code{height} is specified, but a corresponding \code{file} argument is not
+provided as well, then a new interactive graphics device dimensions will be
+opened along the given dimensions. Note that this interactive resizing may
+not work consistently from within an IDE like RStudio that has an integrated
+graphics windows.}
+
+\item{height}{numeric giving the plot height in inches. Same considerations as
+\code{width} (above) apply, e.g. will default to \code{tpar("file.height")} if not
+specified.}
 
 \item{formula}{a \code{formula} that optionally includes grouping variable(s)
 after a vertical bar, e.g. \code{y ~ x | z}. One-sided formulae are also

@@ -203,6 +203,34 @@
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
+#' @param file character string giving the file path for writing a plot to disk.
+#'   If specified, the plot will not be displayed interactively, but rather sent
+#'   to the appropriate external graphics device (i.e.,
+#'   \code{\link[grDevices]{png}}, \code{\link[grDevices]{jpeg}},
+#'   \code{\link[grDevices]{pdf}}, or \code{\link[grDevices]{svg}}). As a point
+#'   of convenience, note that any global parameters held in `(t)par` are
+#'   automatically carried over to the external device and don't need to be
+#'   reset (in contrast to the conventional base R approach that requires
+#'   manually opening and closing the device). The device type is determined by
+#'   the file extension at the end of the provided path, and must be one of
+#'   ".png", ".jpg" (".jpeg"), ".pdf", or ".svg". (Other file types may be
+#'   supported in the future.) The file dimensions can be controlled by the
+#'   corresponding `width` and `height` arguments below, otherwise will fall
+#'   back to the `"file.width"` and `"file.height"` values held in
+#'   \code{\link[tinyplot]{tpar}} (i.e., both defaulting to 7 inches, and where
+#'   the default resolution for bitmap files is also specified as 300
+#'   DPI).
+#' @param width numeric giving the plot width in inches. Together with `height`,
+#'  typically used in conjunction with the `file` argument above, overriding the
+#'  default values held in `tpar("file.width", "file.height")`. If either `width`
+#'  or `height` is specified, but a corresponding `file` argument is not
+#'  provided as well, then a new interactive graphics device dimensions will be
+#'  opened along the given dimensions. Note that this interactive resizing may
+#'  not work consistently from within an IDE like RStudio that has an integrated
+#'  graphics windows.
+#' @param height numeric giving the plot height in inches. Same considerations as
+#'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
+#'  specified. 
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'   
@@ -213,10 +241,11 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'   
-#' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords
+#' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
 #' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext text rect
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit
+#' @importFrom tools file_ext
 #' 
 #' @examples
 #' 
@@ -411,10 +440,58 @@ tinyplot.default = function(
     ymax = NULL,
     ribbon_alpha = 0.2,
     add = FALSE,
+    file = NULL,
+    width = NULL,
+    height = NULL,
     ...) {
   
   dots = list(...)
+
+  # Write plot to output file (if requested)
+  if (!is.null(file)) {
+    filepath = file
+    filewidth = width
+    fileheight = height
+    if (is.null(filewidth)) filewidth = .tpar[["file.width"]]
+    if (is.null(fileheight)) fileheight = .tpar[["file.height"]]
+    fileres = .tpar[["file.res"]]
+    # catch to close interactive device if one isn't already open
+    fkdev = is.null(dev.list())
+    # grab existing device pars to pass on to next one
+    dop = par(no.readonly = TRUE)
+    # close interactive device if not already open
+    if (isTRUE(fkdev)) dev.off()
+    exttype = file_ext(filepath)
+    if (exttype == "jpg") exttype = "jpeg"
+    switch(exttype,
+      png = png(filepath, width = filewidth, height = fileheight, units = "in", res = fileres),
+      jpeg = jpeg(filepath, width = filewidth, height = fileheight, units = "in", res = fileres),
+      pdf = pdf(filepath, width = filewidth, height = fileheight),
+      svg = svg(filepath, width = filewidth, height = fileheight),
+      stop("\nUnsupported file extension. Only '.png', '.jpg', '.pdf', or '.svg' are allowed.\n")
+    )
+    dop$new = FALSE # catch for some interfaces
+    par(dop)
+    on.exit(dev.off(), add = TRUE)
+    # else statement below for interactive plot with user-specified width/height
+  } else if (!is.null(width) || !is.null(height)) {
+    devwidth = width
+    devheight = height
+    # if one of width or height is missing, set equal to the other
+    if (is.null(devwidth)) devwidth = devheight
+    if (is.null(devheight)) devheight = devwidth
+    # catch to close interactive device if one isn't already open
+    fkdev = is.null(dev.list())
+    # grab existing device pars to pass on to next one
+    dop = par(no.readonly = TRUE)
+    # close interactive device if not already open
+    if (isTRUE(fkdev)) dev.off()
+    dev.new(width = devwidth, height = devheight)
+    dop$new = FALSE # catch for some interfaces
+    par(dop)
+  }
   
+  # Adding to the previous plot?
   if (isTRUE(add)) {
     legend = FALSE
     # main = sub = xlab = ylab = NULL ## Rather do this later
@@ -423,6 +500,9 @@ tinyplot.default = function(
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
   if (par_restore || !is.null(facet)) {
+    if (!is.null(file) || !is.null(width) || !is.null(height)) {
+      opar$new = FALSE # catch for some interfaces
+    }
     on.exit(par(opar), add = TRUE)
   }
   
@@ -1247,6 +1327,7 @@ tinyplot.default = function(
     last_facet_par = par(no.readonly = TRUE)
     set_last_facet_par(last_facet_par)
   }
+
   
 }
 

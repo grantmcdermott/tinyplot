@@ -470,6 +470,7 @@ tinyplot.default = function(
       svg = svg(filepath, width = filewidth, height = fileheight),
       stop("\nUnsupported file extension. Only '.png', '.jpg', '.pdf', or '.svg' are allowed.\n")
     )
+    dop$new = FALSE # catch for some interfaces
     par(dop)
     on.exit(dev.off(), add = TRUE)
     # else statement below for interactive plot with user-specified width/height
@@ -486,6 +487,7 @@ tinyplot.default = function(
     # close interactive device if not already open
     if (isTRUE(fkdev)) dev.off()
     dev.new(width = devwidth, height = devheight)
+    dop$new = FALSE # catch for some interfaces
     par(dop)
   }
   
@@ -498,6 +500,9 @@ tinyplot.default = function(
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
   if (par_restore || !is.null(facet)) {
+    if (!is.null(file) || !is.null(width) || !is.null(height)) {
+      opar$new = FALSE # catch for some interfaces
+    }
     on.exit(par(opar), add = TRUE)
   }
   

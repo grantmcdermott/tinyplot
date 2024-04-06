@@ -226,7 +226,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#news" id="toc-news" class="nav-link active" data-scroll-target="#news">News</a>
   <ul class="collapse">
-  <li><a href="#development-version" id="toc-development-version" class="nav-link" data-scroll-target="#development-version">0.0.5.9006 (development version)</a></li>
+  <li><a href="#development-version" id="toc-development-version" class="nav-link" data-scroll-target="#development-version">0.0.5.9007 (development version)</a></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.0.5</a></li>
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.0.4</a></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.0.3</a></li>
@@ -245,7 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="news" class="level1">
 <h1>News</h1>
 <section id="development-version" class="level2">
-<h2 class="anchored" data-anchor-id="development-version">0.0.5.9006 (development version)</h2>
+<h2 class="anchored" data-anchor-id="development-version">0.0.5.9007 (development version)</h2>
 <p>License:</p>
 <ul>
 <li>Formally switch to Apache 2.0 license. (<a href="https://github.com/grantmcdermott/tinyplot/issues/141">#141</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
@@ -266,6 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Internals:</p>
 <ul>
 <li>We no longer ship the vignette(s) with the built package. This helps to reduce the size of the installation tarball and also avoids some redundancy with the actual help documentation (since many of the examples are the same). Note that the vignettes are all still rendered and available online at the <code>tinyplot</code> <a href="https://grantmcdermott.com/tinyplot/">website</a>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/135">#135</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Similarly, we anticipate skipping tests on CRAN since the large suite of test snapshots (images) held in <code>inst/tinytest</code> is pushing the install tarball over CRAN’s recommended 5 MB limit. Please note that local testing of the package requires adding the <code>NOT_CRAN=TRUE</code> environment variable to your .Renviron file (or, exporting it in your .bashrc/.zshrc/etc. dotfile if you prefer that approach). (<a href="https://github.com/grantmcdermott/tinyplot/issues/145">#145</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> &amp; <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 <section id="section" class="level2">

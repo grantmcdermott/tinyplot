@@ -1,6 +1,6 @@
 # News
 
-## 0.0.5.9006 (development version)
+## 0.0.5.9007 (development version)
 
 License:
 
@@ -48,6 +48,12 @@ actual help documentation (since many of the examples are the same). Note that
 the vignettes are all still rendered and available online at the `tinyplot`
 [website](https://grantmcdermott.com/tinyplot/).
 (#135 @grantmcdermott)
+- Similarly, we anticipate skipping tests on CRAN since the large suite of test
+snapshots (images) held in `inst/tinytest` is pushing the install tarball over
+CRAN's recommended 5 MB limit. Please note that local testing of the package
+requires adding the `NOT_CRAN=TRUE` environment variable to your .Renviron file
+(or, exporting it in your .bashrc/.zshrc/etc. dotfile if you prefer that
+approach). (#145 @vincentarelbundock & @grantmcdermott)
 
 
 ## 0.0.5

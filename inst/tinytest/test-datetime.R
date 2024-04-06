@@ -1,7 +1,6 @@
 source("helpers.R")
 using("tinysnapshot")
 
-
 x_dtt = strptime(20010101:20010110, format="%Y%m%d", tz = "UTC")
 x_dt = as.Date(x_dtt, tz = "UTC")
 y = 1:10

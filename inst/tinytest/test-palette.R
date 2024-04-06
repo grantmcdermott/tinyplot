@@ -1,6 +1,5 @@
 source("helpers.R")
 using("tinysnapshot")
-if (Sys.info()["sysname"] != "Linux") exit_file("Linux snapshots")
 
 # Test keyword(s)
 ## from palette.colors

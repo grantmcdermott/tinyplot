@@ -1,7 +1,5 @@
 source("helpers.R")
 using("tinysnapshot")
-if (ON_CRAN) exit_file("CRAN")
-if (!ON_LINUX) exit_file("Linux snapshots")
 
 op = par(no.readonly = TRUE)
 

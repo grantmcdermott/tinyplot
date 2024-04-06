@@ -1,6 +1,5 @@
 source("helpers.R")
 using("tinysnapshot")
-if (ON_CRAN) exit_file("CRAN")
 
 ## Skip failing test in R devel due to some minor esoteric difference coming up 
 ## in R 4.4.0. Can revert once it reaches release for local testing.

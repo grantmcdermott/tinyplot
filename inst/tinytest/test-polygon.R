@@ -1,6 +1,5 @@
 source("helpers.R")
 using("tinysnapshot")
-if (ON_CRAN) exit_file("CRAN")
 
 i = seq(0, 2*pi, by = 0.01)
 x = 16*sin(i)^3

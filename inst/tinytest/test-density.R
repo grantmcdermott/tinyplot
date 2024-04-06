@@ -1,7 +1,5 @@
 source("helpers.R")
 using("tinysnapshot")
-if (ON_CRAN) exit_file("CRAN")
-if (!ON_LINUX) exit_file("Linux snapshots")
 
 ## Sidestep test fails due to new (R 4.4.0) density grid value calculations.
 ## https://bugs.r-project.org/show_bug.cgi?id=18337

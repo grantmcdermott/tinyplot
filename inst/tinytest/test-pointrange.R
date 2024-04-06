@@ -1,6 +1,5 @@
 source("helpers.R")
 using("tinysnapshot")
-if (ON_CRAN) exit_file("CRAN")
 
 mod = lm(mpg ~ hp + factor(cyl), mtcars)
 coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))

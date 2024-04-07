@@ -554,7 +554,7 @@ tinyplot.default = function(
       } else if (!is.list(fargs[["legend"]])) {
         fargs[["legend"]] = as.list(fargs[["legend"]])
       }
-      if (isTRUE(names(fargs[["legend"]])[1] == "")) {
+      if (is.null(names(fargs[["legend"]])[1]) || names(fargs[["legend"]])[1] == "") {
         names(fargs[["legend"]])[1] = "x"
       }
       fargs[["legend_args"]] = modifyList(fargs[["legend"]], fargs[["legend_args"]])

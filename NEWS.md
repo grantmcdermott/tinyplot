@@ -34,6 +34,7 @@ carried over to the external device too and don't need to be reset. Note that
 the appropriate device type is determined automatically by the file extension,
 which must be one of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg". (#143
 @grantmcdermott)
+- We have a shiny new `tinyplot` logo. (#148 @grantmcdermott)
 
 Bug fixes:
 

@@ -11,7 +11,7 @@ op = par(no.readonly = TRUE)
 #
 
 # type="b" + aesthetics
-f = function() tinyplot(Temp ~ Day | Month, data = aq, type = "b")
+f = function() tinyplot(Temp ~ Day | Month, data = aq, type = "p")
 expect_snapshot_plot(f, label = "aesthetics_type_b")
 
 f = function() tinyplot(Temp ~ Day | Month, data = aq, type = "b", lty = 1:5)

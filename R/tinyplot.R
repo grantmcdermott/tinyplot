@@ -549,8 +549,15 @@ tinyplot.default = function(
     }
     ## Another catch for bespoke legend position (if originally passed via the formula method)
     if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend_args"]])) {
-      if (names(fargs[["legend"]])[1] == "") names(fargs[["legend"]])[1] = "x"
-      fargs[["legend_args"]] = utils::modifyList(fargs[["legend"]], fargs[["legend_args"]])
+      if (is.atomic(fargs[["legend"]])) {
+        fargs[["legend"]] = list(x = fargs[["legend"]])
+      } else if (!is.list(fargs[["legend"]])) {
+        fargs[["legend"]] = as.list(fargs[["legend"]])
+      }
+      if (isTRUE(names(fargs[["legend"]])[1] == "")) {
+        names(fargs[["legend"]])[1] = "x"
+      }
+      fargs[["legend_args"]] = modifyList(fargs[["legend"]], fargs[["legend_args"]])
       fargs[["legend"]] = NULL
     }
     fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL

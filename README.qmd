@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tinyplot
+# tinyplot <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/tinyplot)](https://CRAN.R-project.org/package=tinyplot)
@@ -45,8 +45,8 @@ options include **ggplot2** (arguably the most important graphics
 system of the last decade) and **lattice**, not to mention a bewildering array
 of extensions built on top of, around, and in between these amazing packages.
 
-As a result, it is perhaps not surprising that the base R graphics system
-sometimes gets short shrift. This is unfortunate, because base R offers very
+As a result, it is not surprising that the base R graphics system can
+sometimes get short shrift. This is unfortunate, because base R offers very
 powerful and flexible plotting facilities. Just type `demo(graphics)` or
 `demo(persp)` into your R console to get an idea. Or, take a look at
 [these](https://github.com/karoliskoncevicius/tutorial_r_introduction/blob/main/baseplotting.md)
@@ -58,17 +58,15 @@ plotting grouped data with an appropriate legend. Doing so with the generic
 your plot regions, and then generating the legend manually.
 
 The **tinyplot** package aims to remove this overhead. It provides a lightweight
-(zero dependency) extension of the base R graphics system with various
-convenience features, particularly for representing grouped data. For example,
-the core `tinyplot()` function&mdash;or its shorthand alias `plt()`&mdash;makes
-it easy to plot different groups of a dataset in a single function call and
-highlight these groups using modern colour palettes. Coincident with this
-grouping support, **tinyplot** also produces automatic legends with scope for
-further customization. While the package offers several other enhancements like
-facets, it tries as far as possible to be a drop-in replacement for the
-equivalent base plotting function. Users should generally be able to swap a
-valid `plot()` call for `tinyplot()` without any changes to the expected
-output.
+extension of the base R graphics system that comes with various convenience
+features, yet relies on no additional dependencies beyond base R itself. For
+example, the core `tinyplot()` function&mdash;or its shorthand alias
+`plt()`&mdash;makes it easy to plot different groups of a dataset and generate
+an automatic legend in a single function call. While **tinyplot** offers various
+other enhancements like facets, additional plot types, etc. it tries as far as
+possible to be a drop-in replacement for the equivalent base plotting function.
+Users should generally be able to swap a valid `plot()` call for `tinyplot()`
+without any changes to the expected output.
 
 ## Quickstart
 

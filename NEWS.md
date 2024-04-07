@@ -1,6 +1,6 @@
 # News
 
-## 0.0.5.9007 (development version)
+## 0.0.5.9008 (development version)
 
 License:
 
@@ -39,6 +39,8 @@ Bug fixes:
 
 - Fixed bug that prevented `tpar(facet.x = ...)` args from being passed forward
 and set correctly. (#137 @grantmcdermott)
+- Fixed bug where custom legends weren't working with `type = "density"`. (#147
+@grantmcdermott)
 
 Internals:
 

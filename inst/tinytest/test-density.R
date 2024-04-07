@@ -54,3 +54,10 @@ expect_snapshot_plot(f1a, label = "density_type_fill")
 expect_snapshot_plot(f1b, label = "density_type_fill")
 expect_snapshot_plot(f2a, label = "density_type_fill")
 expect_snapshot_plot(f2b, label = "density_type_fill")
+
+# Some extra tests for bespoke legend placement
+f1 = function() with(mtcars, tinyplot(mpg, by = am, type = "density", legend = "bottom!"))
+f2 = function() with(mtcars, tinyplot(mpg, by = am, type = "density", legend = list(x = "bottom!")))
+expect_snapshot_plot(f1, label = "density_legend_bottom")
+expect_snapshot_plot(f2, label = "density_legend_bottom")
+

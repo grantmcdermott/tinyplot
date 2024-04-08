@@ -17,3 +17,6 @@ README_files/
 ^_quarto$
 vignettes/
 ^LICENSE\.md$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+#inst/tinytest/

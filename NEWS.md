@@ -1,6 +1,9 @@
 # News
 
-## 0.0.5.9008 (development version)
+## 0.1.0
+
+Our first CRAN submission! This v0.1.0 release includes the following new
+features:
 
 License:
 

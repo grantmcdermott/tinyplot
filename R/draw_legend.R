@@ -27,9 +27,14 @@
 #'   keyword position is "bottom!", in which case we need to bump the legend
 #'   margin a bit further.
 #' @param new_plot Should we be calling plot.new internally?
+#' 
+#' @returns No return value, called for side effect of producing a(n empty) plot
+#'   with a legend in the margin.
+#' 
 #' @importFrom graphics grconvertX grconvertY rasterImage strwidth
 #' @importFrom grDevices as.raster recordGraphics
 #' @importFrom utils modifyList
+#' 
 #' @examples
 #' 
 #' oldmar = par("mar")

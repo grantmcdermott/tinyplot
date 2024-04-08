@@ -233,6 +233,8 @@
 #'  specified. 
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
+#'
+#' @returns No return value, called for side effect of producing a plot.
 #'   
 #' @details
 #' Disregarding the enhancements that it supports, `tinyplot` tries as far as
@@ -249,10 +251,6 @@
 #' 
 #' @examples
 #' 
-#' # save graphics parameters to restore them later
-#' op = tpar()
-#' 
-#' 
 #' aq = transform(
 #'   airquality,
 #'   Month = factor(Month, labels = month.abb[unique(Month)])
@@ -261,12 +259,12 @@
 #' # tinyplot should be a drop-in replacement for (most) regular plot calls. For
 #' # example:
 #' 
-#' par(mfrow = c(1, 2))
+#' op = tpar(mfrow = c(1, 2))
 #' plot(0:10, main = "plot")
 #' tinyplot(0:10, main = "tinyplot")
+#' tpar(op) # restore original layout
 #' 
-#' # restore graphics parameters
-#' par(op)  
+#' # Aside: tinyplot::tpar is a (near) drop-in replacement for par()
 #' 
 #' # Unlike vanilla plot, however, tinyplot allows you to characterize groups 
 #' # using either the `by` argument or equivalent `|` formula syntax.
@@ -394,8 +392,6 @@
 #'   main = "Daily temperatures by month",
 #'   frame = FALSE, grid = TRUE
 #' )
-#' 
-#' par(op) # revert original graphics parameters
 #' 
 #' @rdname tinyplot
 #' @export

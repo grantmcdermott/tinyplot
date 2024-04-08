@@ -61,6 +61,10 @@ margin a bit further.}
 
 \item{new_plot}{Should we be calling plot.new internally?}
 }
+\value{
+No return value, called for side effect of producing a(n empty) plot
+with a legend in the margin.
+}
 \description{
 Internal function used to calculate the placement of (including
 outside the plotting area) and drawing of legend.

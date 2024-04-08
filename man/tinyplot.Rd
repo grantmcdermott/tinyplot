@@ -383,6 +383,9 @@ should not be specified in the same call.}
 \item{subset, na.action, drop.unused.levels}{arguments passed to \code{model.frame}
 when extracting the data from \code{formula} and \code{data}.}
 }
+\value{
+No return value, called for side effect of producing a plot.
+}
 \description{
 Enhances the base \code{\link[graphics]{plot}} function. Supported features
 include automatic legends and facets for grouped data, additional plot types,
@@ -398,10 +401,6 @@ without causing unexpected changes to the output.
 }
 \examples{
 
-# save graphics parameters to restore them later
-op = tpar()
-
-
 aq = transform(
   airquality,
   Month = factor(Month, labels = month.abb[unique(Month)])
@@ -410,12 +409,12 @@ aq = transform(
 # tinyplot should be a drop-in replacement for (most) regular plot calls. For
 # example:
 
-par(mfrow = c(1, 2))
+op = tpar(mfrow = c(1, 2))
 plot(0:10, main = "plot")
 tinyplot(0:10, main = "tinyplot")
+tpar(op) # restore original layout
 
-# restore graphics parameters
-par(op)  
+# Aside: tinyplot::tpar is a (near) drop-in replacement for par()
 
 # Unlike vanilla plot, however, tinyplot allows you to characterize groups 
 # using either the `by` argument or equivalent `|` formula syntax.
@@ -543,7 +542,5 @@ tinyplot(
   main = "Daily temperatures by month",
   frame = FALSE, grid = TRUE
 )
-
-par(op) # revert original graphics parameters
 
 }

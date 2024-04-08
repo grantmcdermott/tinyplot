@@ -12,17 +12,30 @@ parameters typically supported by \code{\link[graphics]{par}}, as well as
 the \code{tinyplot}-specific ones described in the 'Graphical Parameters'
 section below.}
 }
+\value{
+When parameters are set, their previous values are returned in an
+invisible named list. Such a list can be passed as an argument to \code{tpar} to
+restore the parameter values.
+
+When just one parameter is queried, the value of that parameter is returned
+as (atomic) vector. When two or more parameters are queried, their values
+are returned in a list, with the list names giving the parameters.
+
+Note the inconsistency: setting one parameter returns a list, but querying
+one parameter returns a vector.
+}
 \description{
-\code{tpar} extends \code{\link[graphics]{par}}, serving as a drop-in
+Extends \code{\link[graphics]{par}}, serving as a (near) drop-in
 replacement for setting or querying graphical parameters. The key
-difference is that, beyond supporting the standard group of R graphical
-parameters, \code{tpar} also supports additional graphical parameters that are
-provided by \code{tinyplot}. Similar to \code{\link[graphics]{par}}, parameters
-are set by passing appropriate \code{key = value} argument pairs, and multiple
-parameters can be set or queried at the same time.
+differences is that, beyond supporting the standard group of R graphical
+parameters in \code{\link[graphics]{par}}, \code{tpar} also supports additional
+graphical parameters that are provided by \code{tinyplot}. Similar to
+\code{\link[graphics]{par}}, parameters are set by passing appropriate
+\code{key = value} argument pairs, and multiple parameters can be set or queried
+at the same time.
 }
 \details{
-The \code{tinyplot}-specfic parameters are saved in an internal
+The \code{tinyplot}-specific parameters are saved in an internal
 environment called \code{.tpar} for performance and safety reasons. However,
 they can also be set at package load time via \code{\link[base]{options}},
 which may prove convenient for users that want to enable different default
@@ -32,7 +45,14 @@ take a \verb{tinyplot_*} prefix, e.g.
 
 For their part, any "base" graphical parameters are caught dynamically and
 passed on to \code{\link[graphics]{par}} as appropriate. Technically, only
-parameters that satisify \code{par(..., no.readonly = TRUE)} are evaluated.
+parameters that satisfy \code{par(..., no.readonly = TRUE)} are evaluated.
+
+However, note the important distinction: \code{tpar} only evaluates parameters
+from \code{\link[graphics]{par}} if they are passed \emph{explicitly} by the
+user. This means that \code{tpar} should not be used to capture the (invisible)
+state of a user's entire set of graphics parameters, i.e. \code{tpar()} !=
+\code{par()}. If you want to capture the \emph{all} existing graphics settings, then
+you should rather use \code{par()} instead.
 }
 \section{Additional Graphical Parameters}{
 
@@ -94,6 +114,10 @@ tinyplot(mpg ~ wt, data = mtcars, facet = ~am)
 
 # Reset back to original values
 tpar(op)
+
+# Important: tpar() only evalutes parameters that have been passed explicitly
+#   by the user. So it it should not be used to query and set (restore)
+#   parameters that weren't explicitly requested, i.e. tpar() != par().
 
 # Note: The tinyplot-specific parameters can also be be set via `options`
 #   with a `tinyplot_*` prefix, which can be convenient for enabling

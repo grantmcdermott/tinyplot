@@ -6,7 +6,7 @@ using("tinysnapshot")
 exit_if_not(getRversion() <= "4.3.3")
 
 
-op = tpar()
+op = par(no.readonly = TRUE)
 
 f1 = function() {
   tinyplot(
@@ -16,7 +16,7 @@ f1 = function() {
   )
   points(6,3, pch = 17, col = "hotpink", cex = 1.5)
 }
-expect_snapshot_plot(f1, label = "par_restore_bottom")
+expect_snapshot_plot(f1, label = "restore_par_bottom")
 
 f2 = function() {
   tinyplot(
@@ -28,10 +28,10 @@ f2 = function() {
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
   plot(1:10)
 }
-expect_snapshot_plot(f2, label = "par_restore_FALSE")
+expect_snapshot_plot(f2, label = "restore_par_FALSE")
 
-# restore original par settings and then rerun with par_restore=TRUE
-tpar(op)
+# restore original par settings and then rerun with restore.par=TRUE
+par(op)
 
 f3 = function() {
   tinyplot(
@@ -39,9 +39,9 @@ f3 = function() {
     pch = 19,
     grid = grid(),
     legend = legend("right!", title = "How many cylnders do you have?"),
-    par_restore = TRUE
+    restore.par = TRUE
   )
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
   plot(1:10)
 }
-expect_snapshot_plot(f3, label = "par_restore_TRUE")
+expect_snapshot_plot(f3, label = "restore_par_TRUE")

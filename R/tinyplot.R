@@ -171,7 +171,7 @@
 #' @param bg background fill color for the open plot symbols 21:25 (see
 #'   `points.default`), as well as ribbon and area plot types. For the latter
 #'   group---including filled density plots---an automatic alpha transparency
-#'   adjustment will be applied (see the `ribbon_alpha` argument further below).
+#'   adjustment will be applied (see the `ribbon.alpha` argument further below).
 #'   Users can also supply a special `bg = "by"` convenience argument, in which
 #'   case the background fill will inherit the automatic group coloring
 #'   intended for the `col` argument. Note that this grouped inheritance will
@@ -184,7 +184,7 @@
 #'   giving the amount by which plotting characters and symbols should be scaled
 #'   relative to the default. Note that NULL is equivalent to 1.0, while NA
 #'   renders the characters invisible.
-#' @param par_restore a logical value indicating whether the `par` settings
+#' @param restore.par a logical value indicating whether the `par` settings
 #'   prior to calling `tinyplot` should be restored on exit. Defaults to FALSE,
 #'   which makes it possible to add elements to the plot after it has been
 #'   drawn. However, note the the outer margins of the graphics device may have
@@ -196,7 +196,7 @@
 #' @param ymin,ymax minimum and maximum coordinates of interval plot types. Only
 #'   used when the `type` argument is one of "pointrange", "errorbar", or
 #'   "ribbon".
-#' @param ribbon_alpha numeric factor modifying the opacity alpha of any ribbon
+#' @param ribbon.alpha numeric factor modifying the opacity alpha of any ribbon
 #'   shading; typically in `[0, 1]`. Default value is 0.2. Only used when
 #'   `type = "ribbon"`, or when the `bg` fill argument is specified in a density
 #'   plot (since filled density plots are converted to ribbon plots internally).
@@ -431,10 +431,10 @@ tinyplot.default = function(
     bg = NULL,
     fill = NULL,
     cex = 1,
-    par_restore = FALSE,
+    restore.par = FALSE,
     ymin = NULL,
     ymax = NULL,
-    ribbon_alpha = 0.2,
+    ribbon.alpha = 0.2,
     add = FALSE,
     file = NULL,
     width = NULL,
@@ -495,7 +495,7 @@ tinyplot.default = function(
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
-  if (par_restore || !is.null(facet)) {
+  if (restore.par || !is.null(facet)) {
     if (!is.null(file) || !is.null(width) || !is.null(height)) {
       opar$new = FALSE # catch for some interfaces
     }
@@ -682,9 +682,9 @@ tinyplot.default = function(
   }
   if (type == "ribbon") {
     if (!is.null(bg)) {
-      bg = adjustcolor(bg, ribbon_alpha)
+      bg = adjustcolor(bg, ribbon.alpha)
     } else if (!is.null(col)) {
-      bg = adjustcolor(col, ribbon_alpha)
+      bg = adjustcolor(col, ribbon.alpha)
     }
   }
   
@@ -1362,7 +1362,7 @@ tinyplot.formula = function(
     col = NULL,
     lty = NULL,
     lwd = NULL,
-    par_restore = FALSE,
+    restore.par = FALSE,
     formula = NULL,
     subset = NULL,
     na.action = NULL,
@@ -1540,7 +1540,7 @@ tinyplot.formula = function(
     col = col,
     lty = lty,
     lwd = lwd,
-    par_restore = par_restore,
+    restore.par = restore.par,
     ...
     )
 
@@ -1574,7 +1574,7 @@ tinyplot.density = function(
     lwd = NULL,
     bg = NULL,
     fill = NULL,
-    par_restore = FALSE,
+    restore.par = FALSE,
     ...
   ) {
 
@@ -1746,7 +1746,7 @@ tinyplot.density = function(
     fill = fill,
     lty = lty,
     lwd = lwd,
-    par_restore = par_restore,
+    restore.par = restore.par,
     ...
     )
 

@@ -59,7 +59,7 @@ for which the default values are \code{c(1.0, 0.1)}.}
 keyword position is "bottom!", in which case we need to bump the legend
 margin a bit further.}
 
-\item{new_plot}{Should we be calling plot.new internally?}
+\item{new_plot}{Logical. Should we be calling plot.new internally?}
 }
 \value{
 No return value, called for side effect of producing a(n empty) plot

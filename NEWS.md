@@ -3,11 +3,19 @@
 ## 0.1.0
 
 Our first CRAN submission! This v0.1.0 release includes the following new
-features:
+features and updates:
 
 License:
 
 - Formally switch to Apache 2.0 license. (#141 @grantmcdermott)
+
+Breaking changes:
+
+- To ensure consistent "dot.case" style for all `tinyplot()` function arguments,
+the following arguments have been renamed: `par_restore` => `restore.par` (note
+the word order change too!) and `ribbon_alpha` => `ribbon.alpha`. These two
+particular arguments are not commonly used and will hopefully not upset much
+existing code. But it is a breaking change. (#149 @grantmcdermott)
 
 New features:
 

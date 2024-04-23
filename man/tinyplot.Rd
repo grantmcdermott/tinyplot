@@ -39,10 +39,10 @@ tinyplot(x, ...)
   bg = NULL,
   fill = NULL,
   cex = 1,
-  par_restore = FALSE,
+  restore.par = FALSE,
   ymin = NULL,
   ymax = NULL,
-  ribbon_alpha = 0.2,
+  ribbon.alpha = 0.2,
   add = FALSE,
   file = NULL,
   width = NULL,
@@ -71,7 +71,7 @@ tinyplot(x, ...)
   col = NULL,
   lty = NULL,
   lwd = NULL,
-  par_restore = FALSE,
+  restore.par = FALSE,
   formula = NULL,
   subset = NULL,
   na.action = NULL,
@@ -102,7 +102,7 @@ tinyplot(x, ...)
   lwd = NULL,
   bg = NULL,
   fill = NULL,
-  par_restore = FALSE,
+  restore.par = FALSE,
   ...
 )
 
@@ -307,7 +307,7 @@ features are deferred to some other graphical parameter (i.e., passing the
 \item{bg}{background fill color for the open plot symbols 21:25 (see
 \code{points.default}), as well as ribbon and area plot types. For the latter
 group---including filled density plots---an automatic alpha transparency
-adjustment will be applied (see the \code{ribbon_alpha} argument further below).
+adjustment will be applied (see the \code{ribbon.alpha} argument further below).
 Users can also supply a special \code{bg = "by"} convenience argument, in which
 case the background fill will inherit the automatic group coloring
 intended for the \code{col} argument. Note that this grouped inheritance will
@@ -323,7 +323,7 @@ giving the amount by which plotting characters and symbols should be scaled
 relative to the default. Note that NULL is equivalent to 1.0, while NA
 renders the characters invisible.}
 
-\item{par_restore}{a logical value indicating whether the \code{par} settings
+\item{restore.par}{a logical value indicating whether the \code{par} settings
 prior to calling \code{tinyplot} should be restored on exit. Defaults to FALSE,
 which makes it possible to add elements to the plot after it has been
 drawn. However, note the the outer margins of the graphics device may have
@@ -335,7 +335,7 @@ be calling \code{dev.off()} to reset all \code{par} settings to their defaults.)
 used when the \code{type} argument is one of "pointrange", "errorbar", or
 "ribbon".}
 
-\item{ribbon_alpha}{numeric factor modifying the opacity alpha of any ribbon
+\item{ribbon.alpha}{numeric factor modifying the opacity alpha of any ribbon
 shading; typically in \verb{[0, 1]}. Default value is 0.2. Only used when
 \code{type = "ribbon"}, or when the \code{bg} fill argument is specified in a density
 plot (since filled density plots are converted to ribbon plots internally).}

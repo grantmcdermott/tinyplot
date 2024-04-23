@@ -256,15 +256,15 @@
 #'   Month = factor(Month, labels = month.abb[unique(Month)])
 #' )
 #' 
-#' # tinyplot should be a drop-in replacement for (most) regular plot calls. For
-#' # example:
+#' # In most cases, `tinyplot` should be a drop-in replacement for regular
+#' # `plot` calls. For example:
 #' 
 #' op = tpar(mfrow = c(1, 2))
 #' plot(0:10, main = "plot")
 #' tinyplot(0:10, main = "tinyplot")
 #' tpar(op) # restore original layout
 #' 
-#' # Aside: tinyplot::tpar is a (near) drop-in replacement for par()
+#' # Aside: `tinyplot::tpar()` is a (near) drop-in replacement for `par()`
 #' 
 #' # Unlike vanilla plot, however, tinyplot allows you to characterize groups 
 #' # using either the `by` argument or equivalent `|` formula syntax.

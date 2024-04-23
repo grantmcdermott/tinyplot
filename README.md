@@ -32,23 +32,19 @@ install.packages("tinyplot", repos = "https://grantmcdermott.r-universe.dev")
 ## Why
 
 R users are spoiled for choice when it comes to visualization
-frameworks. The options include **ggplot2** (arguably the most important
-graphics system of the last decade) and **lattice**, not to mention a
-bewildering array of extensions built on top of, around, and in between
-these amazing packages.
+frameworks. The options include **lattice** and **ggplot2**—arguably the
+most influential graphics system across any language over the last two
+decades—not to mention a bewildering array of extensions built on top
+of, around, and in between these amazing packages.
 
-As a result, it is not surprising that the base R graphics system can
-sometimes get short shrift. This is unfortunate, because base R offers
-very powerful and flexible plotting facilities. Just type
-`demo(graphics)` or `demo(persp)` into your R console to get an idea.
-Or, take a look at
-[these](https://github.com/karoliskoncevicius/r_notes/blob/main/baseplotting.md)
-[two](https://quizzical-engelbart-d15a44.netlify.app/2021-2022_m2-data-2_visu-2_practice#1)
-excellent tutorials. The downside of this power and flexibility is that
-base R plotting can require a fair bit of manual tinkering. A case in
-point is plotting grouped data with an appropriate legend. Doing so with
-the generic `plot()` function can require several function calls or a
-loop, fiddling with your plot regions, and then generating the legend
+Given the wealth of options, it is perhaps understandable that even avid
+R users can overlook the base R graphics system. This is unfortunate,
+because base R offers very powerful and flexible plotting
+facilities.[^1] The downside of this power and flexibility is that base
+R plotting can require a fair bit of manual tinkering. A case in point
+is plotting grouped data with an appropriate legend. Doing so with the
+generic `plot()` function can require several function calls or a loop,
+fiddling with your plot regions, and then generating the legend
 manually.
 
 The **tinyplot** package aims to remove this overhead. It provides a
@@ -133,3 +129,9 @@ Hopefully, these have been enough to pique your interest. Head over to
 the [intro
 tutorial](https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html)
 for many more examples, including range plots and customization.
+
+[^1]: Just type `demo(graphics)` or `demo(persp)` into your R console to
+    get an idea. Or, take a look at
+    [these](https://github.com/karoliskoncevicius/r_notes/blob/main/baseplotting.md)
+    [two](https://quizzical-engelbart-d15a44.netlify.app/2021-2022_m2-data-2_visu-2_practice#1)
+    excellent tutorials.

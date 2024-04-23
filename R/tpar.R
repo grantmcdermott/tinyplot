@@ -123,7 +123,6 @@ tpar = function(...) {
   facet.col = facet.bg = facet.border = used_par_old = NULL
   
   opts = list(...)
-  # if (length(opts)==1 && (!is.null(names(opts)) && names(opts) != "last_facet_par")) {
   if (length(opts)==1 && is.null(names(opts))) {
     if (inherits(opts[[1]], "list") && !is.null(names(opts[[1]]))) {
       opts = opts[[1]]

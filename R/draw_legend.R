@@ -26,7 +26,7 @@
 #' @param has_sub Logical. Does the plot have a sub-caption. Only used if
 #'   keyword position is "bottom!", in which case we need to bump the legend
 #'   margin a bit further.
-#' @param new_plot Should we be calling plot.new internally?
+#' @param new_plot Logical. Should we be calling plot.new internally?
 #' 
 #' @returns No return value, called for side effect of producing a(n empty) plot
 #'   with a legend in the margin.
@@ -230,7 +230,7 @@ draw_legend = function(
       # requires additional space
       omar[2] = par("mgp")[1] + 1*par("cex.lab")
     }
-    par(mar = omar) ## TEST
+    par(mar = omar)
     
     if (isTRUE(new_plot)) plot.new()
     
@@ -297,13 +297,13 @@ draw_legend = function(
     ## drawn, otherwise the inset calculation---which is based in the legend
     ## width---will be off the first time.
     if (outer_bottom) {
-      omar[1] = par("mgp")[1] + 1*par("cex.lab") ## TEST
-      if (isTRUE(has_sub)) omar[1] = omar[1] + 1*par("cex.sub") ## TEST 
+      omar[1] = par("mgp")[1] + 1*par("cex.lab")
+      if (isTRUE(has_sub)) omar[1] = omar[1] + 1*par("cex.sub")
     } else {
       ## For "top!", the logic is slightly different: We don't expand the outer
       ## margin b/c we need the legend to come underneath the main title. So
       ## we rather expand the existing inner margin.
-      ooma[3] = ooma[3] + topmar_epsilon ## TESTING
+      ooma[3] = ooma[3] + topmar_epsilon
       par(oma = ooma)
     }
     par(mar = omar)

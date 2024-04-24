@@ -197,9 +197,12 @@
 #'   used when the `type` argument is one of "pointrange", "errorbar", or
 #'   "ribbon".
 #' @param ribbon.alpha numeric factor modifying the opacity alpha of any ribbon
-#'   shading; typically in `[0, 1]`. Default value is 0.2. Only used when
-#'   `type = "ribbon"`, or when the `bg` fill argument is specified in a density
-#'   plot (since filled density plots are converted to ribbon plots internally).
+#'   shading; typically in `[0, 1]`. Only used when `type = "ribbon"`, or when
+#'   the `bg` fill argument is specified in a density plot (since filled density
+#'   plots are converted to ribbon plots internally). If an an applicable plot
+#'   type is called but no explicit value is provided, then will default to
+#'   `tpar("ribbon.alpha")` (i.e., probably `0.2` unless this has been
+#'   overridden by the user in their global settings.)
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
@@ -434,7 +437,7 @@ tinyplot.default = function(
     restore.par = FALSE,
     ymin = NULL,
     ymax = NULL,
-    ribbon.alpha = 0.2,
+    ribbon.alpha = NULL,
     add = FALSE,
     file = NULL,
     width = NULL,
@@ -681,6 +684,7 @@ tinyplot.default = function(
     bg = rep(bg, ngrps)
   }
   if (type == "ribbon") {
+    if (is.null(ribbon.alpha)) ribbon.alpha = .tpar[["ribbon.alpha"]]
     if (!is.null(bg)) {
       bg = adjustcolor(bg, ribbon.alpha)
     } else if (!is.null(col)) {

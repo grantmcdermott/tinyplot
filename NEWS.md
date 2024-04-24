@@ -33,7 +33,11 @@ default. Thanks to @zeileis for the suggestion. (#130 @grantmcdermott)
 automatically vary line widths by group. (#134 @grantmcdermott)
 - `tpar()` now accepts standard `par()` arguments in addition to the
 `tinyplot`-specific ones. This allows users to set or query graphical parameters
-via a single convenience function, instead having to invoke `tpar` and `par` separately.
+via a single convenience function, instead having to invoke `tpar` and `par`
+separately. (#140 @grantmcdermott)
+  - As an aside, `tpar()` has gained some additional parameters for fine-grained
+  control of global plot defaults, including `grid`, `ribbon.alpha`, and various
+  `file.*` parameters (see next bullet point).
 - Users can write plots directly to disk using the new `file` argument,
 alongside corresponding `width` and `height` arguments for output customization
 (both of which are defined in inches). For example,

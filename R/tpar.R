@@ -79,6 +79,9 @@
 #'   \tab\tab\cr
 #'   \tab\tab\cr
 #'   `lmar` \tab\tab A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is `"top!"`, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by `par("mar")[3]`.)\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
+#'   `ribbon.alpha` \tab\tab Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" (and alike) type plots. Default value is `0.2`.\cr
 #' }
 #' 
 #' @importFrom graphics par
@@ -216,6 +219,12 @@ tpar = function(...) {
     if(!is.numeric(lmar)) stop("lmar needs to be numeric")
     if(length(lmar)!=2) stop("lmar needs to be of length 2, i.e. c(inner, outer)")
     .tpar$lmar = lmar
+  }
+  
+  if (length(opts$ribbon.alpha)) {
+    ribbon.alpha = as.numeric(opts$ribbon.alpha)
+    if (!is.numeric(ribbon.alpha) || ribbon.alpha<0 || ribbon.alpha>1) stop("ribbon.alpha needs to be a numeric in the range [0,1]")
+    .tpar$ribbon.alpha = ribbon.alpha
   }
   
   ## Like par(), we want the return object to be dependent on inputs...

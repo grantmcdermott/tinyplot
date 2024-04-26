@@ -184,13 +184,15 @@
 #'   giving the amount by which plotting characters and symbols should be scaled
 #'   relative to the default. Note that NULL is equivalent to 1.0, while NA
 #'   renders the characters invisible.
-#' @param restore.par a logical value indicating whether the `par` settings
-#'   prior to calling `tinyplot` should be restored on exit. Defaults to FALSE,
-#'   which makes it possible to add elements to the plot after it has been
-#'   drawn. However, note the the outer margins of the graphics device may have
-#'   been altered to make space for the `tinyplot` legend. Users can opt out of
-#'   this persistent behaviour by setting to TRUE instead. (Another option would
-#'   be calling `dev.off()` to reset all `par` settings to their defaults.)
+#' @param restore.par a logical value indicating whether the
+#'   \code{\link[graphics]{par}} settings prior to calling `tinyplot` should be
+#'   restored on exit. Defaults to FALSE, which makes it possible to add
+#'   elements to the plot after it has been drawn. However, note the the outer
+#'   margins of the graphics device may have been altered to make space for the
+#'   `tinyplot` legend. Users can opt out of this persistent behaviour by
+#'   setting to TRUE instead. See also [get_orig_par] for another option to
+#'   recover the original \code{\link[graphics]{par}} settings, as well as
+#'   longer discussion about the trade-offs involved.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param ymin,ymax minimum and maximum coordinates of interval plot types. Only
@@ -504,6 +506,7 @@ tinyplot.default = function(
     }
     on.exit(par(opar), add = TRUE)
   }
+  set_orig_par(opar)
   
   # catch for adding to existing facet plot
   # if (!is.null(facet) && isTRUE(add)) par(tpar("last_facet_par"))

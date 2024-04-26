@@ -4,17 +4,17 @@
 #'   outside the plotting area) and drawing of legend.
 #'   
 #' @md
-#' @param legend Legend placement keyword or list, passed down from `tinyplot`.
+#' @param legend Legend placement keyword or list, passed down from [tinyplot].
 #' @param legend_args Additional legend arguments to be passed to `legend()`.
 #' @param by_dep The (deparsed) "by" grouping variable name.
 #' @param lgnd_labs The labels passed to `legend(legend = ...)`.
-#' @param type Plotting type(s), passed down from `tinyplot`.
-#' @param pch Plotting character(s), passed down from `tinyplot`.
-#' @param lty Plotting linetype(s), passed down from `tinyplot`.
-#' @param lwd Plotting line width(s), passed down from `tinyplot`.
-#' @param col Plotting colour(s), passed down from `tinyplot`.
-#' @param bg Plotting character background fill colour(s), passed down from `tinyplot`.
-#' @param cex Plotting character expansion(s), passed down from `tinyplot`.
+#' @param type Plotting type(s), passed down from [tinyplot].
+#' @param pch Plotting character(s), passed down from [tinyplot].
+#' @param lty Plotting linetype(s), passed down from [tinyplot].
+#' @param lwd Plotting line width(s), passed down from [tinyplot].
+#' @param col Plotting colour(s), passed down from [tinyplot].
+#' @param bg Plotting character background fill colour(s), passed down from [tinyplot].
+#' @param cex Plotting character expansion(s), passed down from [tinyplot].
 #' @param gradient Logical indicating whether a continuous gradient swatch
 #'   should be used to represent the colors.
 #' @param lmar Legend margins (in lines). Should be a numeric vector of the form

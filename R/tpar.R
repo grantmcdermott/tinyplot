@@ -1,4 +1,4 @@
-#' @title Set or query graphical parameters  
+#' @title Set or query graphical parameters
 #'   
 #' @description Extends \code{\link[graphics]{par}}, serving as a (near) drop-in
 #'   replacement for setting or querying graphical parameters. The key
@@ -143,7 +143,6 @@ tpar = function(...) {
   }
   if (length(used_par)) {
     if (!is.null(nam)) used_par = opts[used_par]
-    # par(used_par)
     used_par_old = par(used_par)
     tpar_old = modifyList(tpar_old, used_par_old, keep.null = TRUE)
   }
@@ -252,14 +251,5 @@ tpar = function(...) {
     return(invisible(tpar_old))
   }
   
-}
-
-
-# separate setter and getter functions for .last_facet_par
-set_last_facet_par <- function(value) {
-  assign(".last_facet_par", value, envir = get(".tinyplot_env", envir = parent.env(environment())))
-}
-get_last_facet_par <- function() {
-  return(get(".last_facet_par", envir = get(".tinyplot_env", envir = parent.env(environment()))))
 }
 

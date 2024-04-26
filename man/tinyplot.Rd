@@ -42,7 +42,7 @@ tinyplot(x, ...)
   restore.par = FALSE,
   ymin = NULL,
   ymax = NULL,
-  ribbon.alpha = 0.2,
+  ribbon.alpha = NULL,
   add = FALSE,
   file = NULL,
   width = NULL,
@@ -323,22 +323,27 @@ giving the amount by which plotting characters and symbols should be scaled
 relative to the default. Note that NULL is equivalent to 1.0, while NA
 renders the characters invisible.}
 
-\item{restore.par}{a logical value indicating whether the \code{par} settings
-prior to calling \code{tinyplot} should be restored on exit. Defaults to FALSE,
-which makes it possible to add elements to the plot after it has been
-drawn. However, note the the outer margins of the graphics device may have
-been altered to make space for the \code{tinyplot} legend. Users can opt out of
-this persistent behaviour by setting to TRUE instead. (Another option would
-be calling \code{dev.off()} to reset all \code{par} settings to their defaults.)}
+\item{restore.par}{a logical value indicating whether the
+\code{\link[graphics]{par}} settings prior to calling \code{tinyplot} should be
+restored on exit. Defaults to FALSE, which makes it possible to add
+elements to the plot after it has been drawn. However, note the the outer
+margins of the graphics device may have been altered to make space for the
+\code{tinyplot} legend. Users can opt out of this persistent behaviour by
+setting to TRUE instead. See also \link{get_orig_par} for another option to
+recover the original \code{\link[graphics]{par}} settings, as well as
+longer discussion about the trade-offs involved.}
 
 \item{ymin, ymax}{minimum and maximum coordinates of interval plot types. Only
 used when the \code{type} argument is one of "pointrange", "errorbar", or
 "ribbon".}
 
 \item{ribbon.alpha}{numeric factor modifying the opacity alpha of any ribbon
-shading; typically in \verb{[0, 1]}. Default value is 0.2. Only used when
-\code{type = "ribbon"}, or when the \code{bg} fill argument is specified in a density
-plot (since filled density plots are converted to ribbon plots internally).}
+shading; typically in \verb{[0, 1]}. Only used when \code{type = "ribbon"}, or when
+the \code{bg} fill argument is specified in a density plot (since filled density
+plots are converted to ribbon plots internally). If an an applicable plot
+type is called but no explicit value is provided, then will default to
+\code{tpar("ribbon.alpha")} (i.e., probably \code{0.2} unless this has been
+overridden by the user in their global settings.)}
 
 \item{add}{logical. If TRUE, then elements are added to the current plot rather
 than drawing a new plot window. Note that the automatic legend for the

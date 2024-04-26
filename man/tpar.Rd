@@ -89,6 +89,9 @@ you should rather use \code{par()} instead.
 \tab\tab\cr
 \tab\tab\cr
 \code{lmar} \tab\tab A numeric vector of form \code{c(inner, outer)} that gives the margin padding, in terms of lines, around the automatic \code{tinyplot} legend. Defaults to \code{c(1.0, 0.1)}, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is \code{"top!"}, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by \code{par("mar")[3]}.)\cr
+\tab\tab\cr
+\tab\tab\cr
+\code{ribbon.alpha} \tab\tab Numeric factor in the range \verb{[0,1]} for modifying the opacity alpha of "ribbon" and "area" (and alike) type plots. Default value is \code{0.2}.\cr
 }
 }
 

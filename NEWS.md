@@ -72,6 +72,8 @@ CRAN's recommended 5 MB limit. Please note that local testing of the package
 requires adding the `NOT_CRAN=TRUE` environment variable to your .Renviron file
 (or, exporting it in your .bashrc/.zshrc/etc. dotfile if you prefer that
 approach). (#145 @vincentarelbundock & @grantmcdermott)
+- Update some test snapshots to match slight changes in the way that R 4.4.0
+calculates `density` grid coords. (#150 @grantmcdermott)
 
 
 ## 0.0.5

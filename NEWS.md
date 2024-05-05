@@ -12,10 +12,13 @@ License:
 Breaking changes:
 
 - To ensure consistent "dot.case" style for all `tinyplot()` function arguments,
-the following arguments have been renamed: `par_restore` => `restore.par` (note
-the word order change too!) and `ribbon_alpha` => `ribbon.alpha`. These two
-particular arguments are not commonly used and will hopefully not upset much
-existing code. But it is a breaking change. (#149 @grantmcdermott)
+the following two arguments have been renamed (`old` => `new`):
+  - `par_restore` => `restore.par` (note the change in word order too!)
+  - `ribbon_alpha` => `ribbon.alpha`
+  
+  We don't believe that these two arguments are much used in practice. So
+  hopefully it will only have a negligible effect on existing `tinyplot` code in
+  the wild, even though it is a breaking change. (#149 @grantmcdermott)
 
 New features:
 
@@ -47,8 +50,8 @@ external graphics devices like `png()`, `pdf()`, etc. But it may prove more
 convenient, since the current global graphics parameters held in `(t)par()` are
 carried over to the external device too and don't need to be reset. Note that
 the appropriate device type is determined automatically by the file extension,
-which must be one of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg". (#143
-@grantmcdermott)
+which must be one of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg".
+(#143 @grantmcdermott)
 - We have a shiny new `tinyplot` logo. (#148 @grantmcdermott)
 
 Bug fixes:

@@ -58,7 +58,17 @@ from immediately before or immediately after the preceding `tinyplot` call.
 This function replaces some older (non-exported) internal functions that
 `tinyplot` was using to restore and control `par` environments. But it could
 also prove help to end users who are looking for additional ways to restore
-`par` settings after the fact. See `?get_saved_par` for some examples.
+`par` settings after the fact. See `?get_saved_par` for some examples. (#152
+@grantmcdermott)
+- `tinyplot`/`plt` gaina a new `alpha = <numeric[0,1]>` convenience argument for
+adding transparency to plot elements and colours. Example use:
+`plt(rnorm(1e3), pch = 19, alpha = 0.3)`. (#129 @grantmcdermott)
+- Similar to the preceding news item, transparency can be added to (grouped)
+background fill by passing `bg` (or its alias, `fill`) a numeric in the range
+`[0,1]`. This feature has the same effect as `bg = "by"` except for the added
+transparency. Example use:
+`plt(lat ~ long | depth, data = quakes, pch = 21, cex = 2, bg = 0.2)`. (#129
+@grantmcdermott)
 
 
 Bug fixes:

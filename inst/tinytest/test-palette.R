@@ -51,6 +51,17 @@ f = function() {
 }
 expect_error(f())
 
+# Test alpha transparency arg
+f = function() {
+    tinyplot(
+        Sepal.Length ~ Petal.Length | Species, iris,
+        pch = 19,
+        palette = "tableau",
+        alpha = 0.5
+    )
+}
+expect_snapshot_plot(f, label = "palette_alpha")
+
 # Test function
 f = function() {
     tinyplot(

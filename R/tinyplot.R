@@ -172,14 +172,26 @@
 #'   `points.default`), as well as ribbon and area plot types. For the latter
 #'   group---including filled density plots---an automatic alpha transparency
 #'   adjustment will be applied (see the `ribbon.alpha` argument further below).
-#'   Users can also supply a special `bg = "by"` convenience argument, in which
-#'   case the background fill will inherit the automatic group coloring
-#'   intended for the `col` argument. Note that this grouped inheritance will
-#'   persist even if the `col` defaults are themselves overridden. For example,
-#'   `tinyplot(y ~ x | z, data = fakedata, pch = 22, col = "blue", bg = "by")`
-#'   will yield filled squares with a blue border.
+#'   Users can also supply either one of two special convenience arguments that
+#'   will cause the background fill to inherit the automatic grouped coloring
+#'   behaviour of `col`:
+#'   
+#'   - `bg = "by"` will insert a background fill that inherits the main color
+#'   mappings from `col`.
+#'   - `by = <numeric[0,1]>` (i.e., a numeric in the range `[0,1]`) will insert
+#'   a background fill that inherits the main color mapping(s) from `col`, but
+#'   with added alpha-transparency.
+#'   
+#'   For both of these convenience arguments, note that the (grouped) `bg`
+#'   mappings will persist even if the (grouped) `col` defaults are themselves
+#'   overridden. This can be useful if you want to preserve the grouped palette
+#'   mappings by background fill but not boundary color, e.g. filled points. See
+#'   examples. 
 #' @param fill alias for `bg`. If non-NULL values for both `bg` and `fill` are
 #'   provided, then the latter will be ignored in favour of the former.
+#' @param alpha a numeric in the range `[0,1]` for adjusting the alpha channel
+#'   of the color palette, where 0 means transparent and 1 means opaque. Use
+#'   fractional values, e.g. `0.5` for semi-transparency.
 #' @param cex character expansion. A numerical vector (can be a single value)
 #'   giving the amount by which plotting characters and symbols should be scaled
 #'   relative to the default. Note that NULL is equivalent to 1.0, while NA
@@ -255,7 +267,7 @@
 #' @importFrom tools file_ext
 #' 
 #' @examples
-#' 
+#' #' 
 #' aq = transform(
 #'   airquality,
 #'   Month = factor(Month, labels = month.abb[unique(Month)])
@@ -285,12 +297,36 @@
 #' plt(Temp ~ Day | Month, data = aq) ## shorthand alias
 #'
 #' # Use standard base plotting arguments to adjust features of your plot.
-#' # For example, change `pch` (plot character) to get filled points.
+#' # For example, change `pch` (plot character) to get filled points and `cex`
+#' # (character expansion) to increase their size.
 #' 
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
-#'   pch = 16
+#'   pch = 16,
+#'   cex = 2
+#' )
+#' 
+#' # We can add alpha transparency for overlapping points
+#' 
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = 16,
+#'   cex = 2,
+#'   alpha = 0.3
+#' )
+#' 
+#' # To get filled points with a common solid background color, use an 
+#' # appropriate plotting character (21:25) and combine with one of the special
+#' # `bg` convenience arguments.
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = 21,     # use filled circles
+#'   cex = 2,
+#'   bg = 0.3,     # numeric in [0,1] adds a grouped background fill with transparency
+#'   col = "black" # override default color mapping; give all points a black border
 #' )
 #' 
 #' # Converting to a grouped line plot is a simple matter of adjusting the
@@ -376,7 +412,6 @@
 #' # palettes, depending on the number of groups. However, all palettes listed
 #' # by `palette.pals()` and `hcl.pals()` are supported as convenience strings,
 #' # or users can supply a valid palette-generating function for finer control
-#' # over transparency etc.
 #' 
 #' tinyplot(
 #'   Temp ~ Day | Month,
@@ -386,17 +421,21 @@
 #' )
 #'
 #' # It's possible to further customize the look of you plots using familiar
-#' # arguments and base plotting theme settings (e.g., via `par`).
+#' # arguments and base plotting theme settings (e.g., via `(t)par`).
 #'
 #' tpar(family = "HersheySans", las = 1)
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "b", pch = 16,
-#'   palette = palette.colors(palette = "tableau", alpha = 0.5),
+#'   palette = "tableau", alpha = 0.5,
 #'   main = "Daily temperatures by month",
 #'   frame = FALSE, grid = TRUE
 #' )
+#' 
+#' # Note: For more examples and detailed walkthrough, please see the
+#' # introductory tinyplot tutorial available online:
+#' # https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html
 #' 
 #' @rdname tinyplot
 #' @export
@@ -435,6 +474,7 @@ tinyplot.default = function(
     col = NULL,
     bg = NULL,
     fill = NULL,
+    alpha = NULL,
     cex = 1,
     restore.par = FALSE,
     ymin = NULL,
@@ -674,16 +714,22 @@ tinyplot.default = function(
     col = col,
     palette = substitute(palette),
     gradient = by_continuous,
-    ordered = by_ordered
+    ordered = by_ordered,
+    alpha = alpha
   )
   if (is.null(bg) && !is.null(fill)) bg = fill
+  if (!is.null(bg) && length(bg)==1 && is.numeric(bg) && bg>=0 && bg <=1) {
+    alpha = bg
+    bg = "by"
+  }
   if (!is.null(bg) && length(bg)==1 && bg == "by") {
     bg = by_col(
       ngrps = ngrps,
       col = NULL,
       palette = substitute(palette),
       gradient = by_continuous,
-      ordered = by_ordered
+      ordered = by_ordered,
+      alpha = alpha
     )
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)

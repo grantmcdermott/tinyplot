@@ -42,6 +42,14 @@ expect_snapshot_plot(f, label = "aesthetics_by_type_l")
 f = function() tinyplot(Temp ~ Day | Month, data = aq, type = "b", pch = "by", lty = "by", lwd = "by", col = "black")
 expect_snapshot_plot(f, label = "aesthetics_by_nocol")
 
+# fill = "by" (with border colour override)
+f = function() tinyplot(Temp ~ Day | Month, data = aq, pch = 21, cex = 2, fill = "by", col = "black")
+expect_snapshot_plot(f, label = "aesthetics_by_fill")
+
+# fill = "<numeric[0,1]>" (with border colour override)
+f = function() tinyplot(Temp ~ Day | Month, data = aq, pch = 21, cex = 2, fill = 0.5, col = "black")
+expect_snapshot_plot(f, label = "aesthetics_by_fill_alpha")
+
 # inherit global par
 f = function() {
   par(pch = 16)

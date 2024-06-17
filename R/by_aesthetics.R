@@ -1,6 +1,7 @@
-by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL) {
+by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL, alpha = NULL) {
   
   if (is.null(ordered)) ordered = FALSE
+  if (is.null(alpha)) alpha = 1
   if (is.null(gradient)) gradient = FALSE
   if (isTRUE(gradient)) {
     ngrps = 100L
@@ -37,8 +38,8 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
   if (is.null(palette)) {
 
     if (ngrps <= length(palette()) && isFALSE(ordered) && isFALSE(gradient)) {
-      palette_fun = function() palette() # must be function to avoid arg ambiguity
-      args = list()
+      palette_fun = function(alpha) adjustcolor(palette(), alpha) # must be function to avoid arg ambiguity
+      args = list(alpha = alpha)
     } else {
       if (ngrps <= 8 && isFALSE(ordered)) { # ngrps < 100 so we know gradient is FALSE too
         palette = "R4"
@@ -58,7 +59,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         }
         
       } 
-      args = list(n = ngrps, palette = palette)
+      args = list(n = ngrps, palette = palette, alpha = alpha)
     }
 
   } else {
@@ -71,7 +72,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         if (pal_match < 1L) stop("'palette' is ambiguous")
         palette_fun = palette.colors
         if (isTRUE(gradient)) {
-          palette_fun2 = function(n, palette) colorRampPalette(palette.colors(palette = palette))(n)
+          palette_fun2 = function(n, palette, alpha) colorRampPalette(palette.colors(palette = palette, alpha = alpha))(n)
           palette_fun = palette_fun2
         }
       } else {
@@ -87,7 +88,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
           )
         }
       }
-      args = list(n = ngrps, palette = palette)
+      args = list(n = ngrps, palette = palette, alpha = alpha)
 
     } else if (class(palette) %in% c("call", "name")) {
 

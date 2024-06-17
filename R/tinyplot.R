@@ -190,7 +190,7 @@
 #'   elements to the plot after it has been drawn. However, note the the outer
 #'   margins of the graphics device may have been altered to make space for the
 #'   `tinyplot` legend. Users can opt out of this persistent behaviour by
-#'   setting to TRUE instead. See also [get_orig_par] for another option to
+#'   setting to TRUE instead. See also [get_saved_par] for another option to
 #'   recover the original \code{\link[graphics]{par}} settings, as well as
 #'   longer discussion about the trade-offs involved.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
@@ -506,12 +506,14 @@ tinyplot.default = function(
     }
     on.exit(par(opar), add = TRUE)
   }
-  set_orig_par(opar)
+  # set_orig_par(opar)
+  set_saved_par(when = "before", opar)
   
   # catch for adding to existing facet plot
   # if (!is.null(facet) && isTRUE(add)) par(tpar("last_facet_par"))
   if (!is.null(facet) && isTRUE(add)) (
-    par(get_last_facet_par())
+    # par(get_last_facet_par())
+    par(get_saved_par(when = "after"))
   )
   
   # Capture deparsed expressions early, before x, y and by are evaluated
@@ -1332,11 +1334,9 @@ tinyplot.default = function(
     
   }
   
-  # tidy up before exit
-  if (!is.null(facet)) {
-    last_facet_par = par(no.readonly = TRUE)
-    set_last_facet_par(last_facet_par)
-  }
+  # save end pars for possible recall later
+  apar = par(no.readonly = TRUE)
+  set_saved_par(when = "after", apar)
 
   
 }

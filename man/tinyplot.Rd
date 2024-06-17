@@ -329,7 +329,7 @@ restored on exit. Defaults to FALSE, which makes it possible to add
 elements to the plot after it has been drawn. However, note the the outer
 margins of the graphics device may have been altered to make space for the
 \code{tinyplot} legend. Users can opt out of this persistent behaviour by
-setting to TRUE instead. See also \link{get_orig_par} for another option to
+setting to TRUE instead. See also \link{get_saved_par} for another option to
 recover the original \code{\link[graphics]{par}} settings, as well as
 longer discussion about the trade-offs involved.}
 

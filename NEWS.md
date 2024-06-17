@@ -53,6 +53,13 @@ the appropriate device type is determined automatically by the file extension,
 which must be one of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg".
 (#143 @grantmcdermott)
 - We have a shiny new `tinyplot` logo. (#148 @grantmcdermott)
+- The new `get_saved_par()` function can be used to retrieve the `par` settings
+from immediately before or immediately after the preceding `tinyplot` call.
+This function replaces some older (non-exported) internal functions that
+`tinyplot` was using to restore and control `par` environments. But it could
+also prove help to end users who are looking for additional ways to restore
+`par` settings after the fact. See `?get_saved_par` for some examples.
+
 
 Bug fixes:
 

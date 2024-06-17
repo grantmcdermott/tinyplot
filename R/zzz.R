@@ -32,4 +32,8 @@
   
   assign(".tpar", .tpar, envir = tnypltptns)
   
+  
+  assign(".saved_par_before", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
+  assign(".saved_par_after", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
+  
 }

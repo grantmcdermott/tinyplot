@@ -586,7 +586,7 @@ tinyplot(
   frame = FALSE, grid = TRUE
 )
 
-# Note: For more examples and detailed walkthrough, please see the
+# Note: For more examples and a detailed walkthrough, please see the
 # introductory tinyplot tutorial available online:
 # https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html
 

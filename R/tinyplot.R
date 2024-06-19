@@ -1097,7 +1097,7 @@ tinyplot.default = function(
       if (isTRUE(axes)) {
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
-          if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+          if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
             Axis(x, side = 1, at = xlabs, labels = names(xlabs))
           } else {
             Axis(x, side = 1)

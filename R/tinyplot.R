@@ -635,7 +635,8 @@ tinyplot.default = function(
   }
 
   xlabs = NULL
-  if (type %in% c("pointrange", "errorbar", "ribbon")) {
+  if (type == "boxplot") x = as.factor(x)
+  if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
     if (is.character(x)) x = as.factor(x)
     if (is.factor(x)) {
       ## Need to maintain order that was observed in the original data
@@ -678,6 +679,16 @@ tinyplot.default = function(
 
   if (!is.null(ymin)) ylim[1] = min(c(ylim, ymin))
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
+
+  if (type=="boxplot") {
+    xlim = xlim + c(-0.5, 0.5)
+    if (is.null(by) && is.null(palette)) {
+      if (is.null(col)) col = par("fg")
+      if (is.null(bg) && is.null(fill)) bg = "lightgray"
+    } else {
+      fill = bg = "by"
+    }
+  }
 
   by_ordered = FALSE
   by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
@@ -734,7 +745,7 @@ tinyplot.default = function(
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)
   }
-  if (type == "ribbon") {
+  if (type == "ribbon" || (type == "boxplot" && !is.null(by)) ) {
     if (is.null(ribbon.alpha)) ribbon.alpha = .tpar[["ribbon.alpha"]]
     if (!is.null(bg)) {
       bg = adjustcolor(bg, ribbon.alpha)
@@ -1095,7 +1106,7 @@ tinyplot.default = function(
         } else {
           # ... else only print the "outside" axes.
           if (ii %in% oxaxis) {
-            if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
+            if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
               Axis(x, side = 1, at = xlabs, labels = names(xlabs))
             } else {
               Axis(x, side = 1)
@@ -1371,6 +1382,14 @@ tinyplot.default = function(
           col = ibg,
           lty = ilty,
           lwd = ilwd
+        )
+      } else if (type == "boxplot") {
+        boxplot(
+          formula = yy ~ xx,
+          border = icol,
+          col =  ibg,
+          axes = FALSE,
+          add = TRUE
         )
       } else {
         stop("`type` argument not supported.", call. = FALSE)

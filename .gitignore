@@ -55,3 +55,5 @@ SCRATCH
 ^_quarto$
 
 _quarto
+
+/.quarto/

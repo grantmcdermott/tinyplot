@@ -286,5 +286,55 @@
       "Reference",
       "tinyplot"
     ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "tinyplot ",
+    "section": "",
+    "text": "A lightweight extension of the base R graphics system, with support for automatic grouping, legends, facets, and various other enhancements.\nThe stable version of tinyplot is available on CRAN.\ninstall.packages(\"tinyplot\")\nOr, you can grab the latest development version from R-universe.\ninstall.packages(\"tinyplot\", repos = \"https://grantmcdermott.r-universe.dev\")\n\n\n\nR users are spoiled for choice when it comes to visualization frameworks. The options, of course, include lattice and ggplot2; say nothing of the bewildering array of extensions built around, on top of, and in between these amazing packages.1\nGiven the wealth of options, it is perhaps understandable that even avid R users can overlook the base R graphics system. This is unfortunate, because base R offers very powerful and flexible plotting facilities.2 The downside of this power and flexibility is that base R plotting can require a lot of manual tinkering. A case in point is plotting grouped data with an appropriate legend. Doing so with the generic plot() function can require several function calls or a loop, fiddling with your plot regions, and then generating the legend manually.\nThe tinyplot package aims to remove this overhead. It provides a lightweight extension of the base R graphics system that preserves the same core logic and syntax, but with numerous convenience features to make base R plotting a more user-friendly experience. For example, the core tinyplot() function—or its shorthand alias plt()—makes it easy to plot grouped datasets and generate automatic legends in a single function call. Or, you can display groups in separate facets without having to worry about manually setting plot regions. While tinyplot offers these and various other enhancements, it tries as far as possible to be a drop-in replacement for the equivalent base plotting function. Users should generally be able to swap out a valid plot() call for tinyplot()/plt() without any changes to the expected output.\nIt is worth highlighting that tinyplot depends solely on base R and that care has been taken to keep its installation size to a minimum. It may thus provide an attractive and lightweight option for package developers (and regular R users) who would like to produce convenient and sophisticated plots, but without incurring any recursive dependencies.\n\n\n\nThe tinyplot website includes a detailed introductory tutorial, with numerous examples. But here are some quickstart examples of the package in action.\n\nlibrary(tinyplot)\n\nGrouped scatterplot with automatic legend:\n\n# with(iris, tinyplot(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic\ntinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)             # formula\n\n\n\n\n\n\n\n\nIf you would prefer to save on a few keystrokes, you can use the shorthand plt() alias instead instead of typing out tinyplot() in full. Here’s the same plot with this shorthand alias, plus a few aesthetic tweaks:\n\nplt(\n  Sepal.Length ~ Petal.Length | Species, \n  data = iris,\n  palette = \"dark\", pch = 16,\n  grid = TRUE, frame = FALSE\n)\n\n\n\n\n\n\n\n\nGrouped grouped density plot with automatic legend:\n\nplt(\n  ~ Petal.Length | Species,\n  data = iris,\n  type = \"density\",\n  palette = \"dark\", fill = \"by\",\n  grid = TRUE,\n  main = \"Distribution of petal lengths by species\"\n)\n\n\n\n\n\n\n\n\nGrouped scatterplot with (continuous) gradient legend, combined with facet layout:\n\nplt(\n  Sepal.Length ~ Petal.Length | Sepal.Length, data = iris,\n  facet = ~Species, facet.args = list(bg = \"grey90\"),\n  pch = 19,\n  main = \"Faceted Species!\",\n  grid = TRUE, frame = FALSE\n)\n\n\n\n\n\n\n\n\nHopefully, these have been enough to pique your interest. Head over to the intro tutorial for many more examples, including range plots and customization.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#what",
+    "href": "index.html#what",
+    "title": "tinyplot ",
+    "section": "",
+    "text": "A lightweight extension of the base R graphics system, with support for automatic grouping, legends, facets, and various other enhancements.\nThe stable version of tinyplot is available on CRAN.\ninstall.packages(\"tinyplot\")\nOr, you can grab the latest development version from R-universe.\ninstall.packages(\"tinyplot\", repos = \"https://grantmcdermott.r-universe.dev\")",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#why",
+    "href": "index.html#why",
+    "title": "tinyplot ",
+    "section": "",
+    "text": "R users are spoiled for choice when it comes to visualization frameworks. The options, of course, include lattice and ggplot2; say nothing of the bewildering array of extensions built around, on top of, and in between these amazing packages.1\nGiven the wealth of options, it is perhaps understandable that even avid R users can overlook the base R graphics system. This is unfortunate, because base R offers very powerful and flexible plotting facilities.2 The downside of this power and flexibility is that base R plotting can require a lot of manual tinkering. A case in point is plotting grouped data with an appropriate legend. Doing so with the generic plot() function can require several function calls or a loop, fiddling with your plot regions, and then generating the legend manually.\nThe tinyplot package aims to remove this overhead. It provides a lightweight extension of the base R graphics system that preserves the same core logic and syntax, but with numerous convenience features to make base R plotting a more user-friendly experience. For example, the core tinyplot() function—or its shorthand alias plt()—makes it easy to plot grouped datasets and generate automatic legends in a single function call. Or, you can display groups in separate facets without having to worry about manually setting plot regions. While tinyplot offers these and various other enhancements, it tries as far as possible to be a drop-in replacement for the equivalent base plotting function. Users should generally be able to swap out a valid plot() call for tinyplot()/plt() without any changes to the expected output.\nIt is worth highlighting that tinyplot depends solely on base R and that care has been taken to keep its installation size to a minimum. It may thus provide an attractive and lightweight option for package developers (and regular R users) who would like to produce convenient and sophisticated plots, but without incurring any recursive dependencies.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#quickstart",
+    "href": "index.html#quickstart",
+    "title": "tinyplot ",
+    "section": "",
+    "text": "The tinyplot website includes a detailed introductory tutorial, with numerous examples. But here are some quickstart examples of the package in action.\n\nlibrary(tinyplot)\n\nGrouped scatterplot with automatic legend:\n\n# with(iris, tinyplot(x = Petal.Length, y = Sepal.Length, by = Species)) # atomic\ntinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)             # formula\n\n\n\n\n\n\n\n\nIf you would prefer to save on a few keystrokes, you can use the shorthand plt() alias instead instead of typing out tinyplot() in full. Here’s the same plot with this shorthand alias, plus a few aesthetic tweaks:\n\nplt(\n  Sepal.Length ~ Petal.Length | Species, \n  data = iris,\n  palette = \"dark\", pch = 16,\n  grid = TRUE, frame = FALSE\n)\n\n\n\n\n\n\n\n\nGrouped grouped density plot with automatic legend:\n\nplt(\n  ~ Petal.Length | Species,\n  data = iris,\n  type = \"density\",\n  palette = \"dark\", fill = \"by\",\n  grid = TRUE,\n  main = \"Distribution of petal lengths by species\"\n)\n\n\n\n\n\n\n\n\nGrouped scatterplot with (continuous) gradient legend, combined with facet layout:\n\nplt(\n  Sepal.Length ~ Petal.Length | Sepal.Length, data = iris,\n  facet = ~Species, facet.args = list(bg = \"grey90\"),\n  pch = 19,\n  main = \"Faceted Species!\",\n  grid = TRUE, frame = FALSE\n)\n\n\n\n\n\n\n\n\nHopefully, these have been enough to pique your interest. Head over to the intro tutorial for many more examples, including range plots and customization.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#footnotes",
+    "href": "index.html#footnotes",
+    "title": "tinyplot ",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nBoth lattice and ggplot2 are build on top of the grid package, which was incoporated into the base R distribution way back in R 2.0.0. ggplot2, in particular, is arguably the most important and influential (high-level) graphics library of the last two decades, across any programming language.↩︎\nJust type demo(graphics) or demo(persp) into your R console to get an idea. Or, take a look at these two excellent tutorials.↩︎",
+    "crumbs": [
+      "Home"
+    ]
   }
 ]

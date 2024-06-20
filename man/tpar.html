@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -151,7 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../index.md" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
@@ -180,6 +180,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/draw_legend.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">draw_legend</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/get_saved_par.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">get_saved_par</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -230,6 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
+  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
   <li><a href="#additional-graphical-parameters" id="toc-additional-graphical-parameters" class="nav-link" data-scroll-target="#additional-graphical-parameters">Additional Graphical Parameters</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
@@ -246,7 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="unnumbered anchored" data-anchor-id="set-or-query-graphical-parameters">Set or query graphical parameters</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p><code>tpar</code> extends <code>par</code>, serving as a drop-in replacement for setting or querying graphical parameters. The key difference is that, beyond supporting the standard group of R graphical parameters, <code>tpar</code> also supports additional graphical parameters that are provided by <code>tinyplot</code>. Similar to <code>par</code>, parameters are set by passing appropriate <code>key = value</code> argument pairs, and multiple parameters can be set or queried at the same time.</p>
+<p>Extends <code>par</code>, serving as a (near) drop-in replacement for setting or querying graphical parameters. The key differences is that, beyond supporting the standard group of R graphical parameters in <code>par</code>, <code>tpar</code> also supports additional graphical parameters that are provided by <code>tinyplot</code>. Similar to <code>par</code>, parameters are set by passing appropriate <code>key = value</code> argument pairs, and multiple parameters can be set or queried at the same time.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -258,7 +265,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table>
 <tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tpar_:_...">…</code>
+<code id="...">…</code>
 </td>
 <td>
 arguments of the form <code>key = value</code>. This includes all of the parameters typically supported by <code>par</code>, as well as the <code>tinyplot</code>-specific ones described in the ‘Graphical Parameters’ section below.
@@ -268,8 +275,15 @@ arguments of the form <code>key = value</code>. This includes all of the paramet
 </section>
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>The <code>tinyplot</code>-specfic parameters are saved in an internal environment called <code>.tpar</code> for performance and safety reasons. However, they can also be set at package load time via <code>options</code>, which may prove convenient for users that want to enable different default behaviour at startup (e.g., through an <code>.Rprofile</code> file). These options all take a <code style="white-space: pre;">tinyplot_*</code> prefix, e.g. <code>options(tinyplot_grid = TRUE, tinyplot_facet.bg = “grey90”)</code>.</p>
-<p>For their part, any "base" graphical parameters are caught dynamically and passed on to <code>par</code> as appropriate. Technically, only parameters that satisify <code>par(…, no.readonly = TRUE)</code> are evaluated.</p>
+<p>The <code>tinyplot</code>-specific parameters are saved in an internal environment called <code>.tpar</code> for performance and safety reasons. However, they can also be set at package load time via <code>options</code>, which may prove convenient for users that want to enable different default behaviour at startup (e.g., through an <code>.Rprofile</code> file). These options all take a <code style="white-space: pre;">tinyplot_*</code> prefix, e.g. <code>options(tinyplot_grid = TRUE, tinyplot_facet.bg = “grey90”)</code>.</p>
+<p>For their part, any "base" graphical parameters are caught dynamically and passed on to <code>par</code> as appropriate. Technically, only parameters that satisfy <code>par(…, no.readonly = TRUE)</code> are evaluated.</p>
+<p>However, note the important distinction: <code>tpar</code> only evaluates parameters from <code>par</code> if they are passed <em>explicitly</em> by the user. This means that <code>tpar</code> should not be used to capture the (invisible) state of a user’s entire set of graphics parameters, i.e.&nbsp;<code>tpar()</code> != <code>par()</code>. If you want to capture the <em>all</em> existing graphics settings, then you should rather use <code>par()</code> instead.</p>
+</section>
+<section id="value" class="level3">
+<h3 class="anchored" data-anchor-id="value">Value</h3>
+<p>When parameters are set, their previous values are returned in an invisible named list. Such a list can be passed as an argument to <code>tpar</code> to restore the parameter values.</p>
+<p>When just one parameter is queried, the value of that parameter is returned as (atomic) vector. When two or more parameters are queried, their values are returned in a list, with the list names giving the parameters.</p>
+<p>Note the inconsistency: setting one parameter returns a list, but querying one parameter returns a vector.</p>
 </section>
 <section id="additional-graphical-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="additional-graphical-parameters">Additional Graphical Parameters</h3>
@@ -547,6 +561,32 @@ A numeric vector of form <code>c(inner, outer)</code> that gives the margin padd
 <tr>
 <td style="text-align: left;">
 </td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>ribbon.alpha</code>
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Numeric factor in the range <code style="white-space: pre;">[0,1]</code> for modifying the opacity alpha of “ribbon” and “area” (and alike) type plots. Default value is <code>0.2</code>.
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
 </tr>
 </tbody></table>
 </section>
@@ -604,11 +644,15 @@ $grid
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset back to original values</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tpar</span>(op)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: The tinyplot-specific parameters can also be be set via `options`</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   with a `tinyplot_*` prefix, which can be convenient for enabling</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   different default behaviour at startup time (e.g., via an .Rprofile</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   file). Example:</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Important: tpar() only evalutes parameters that have been passed explicitly</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   by the user. So it it should not be used to query and set (restore)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   parameters that weren't explicitly requested, i.e. tpar() != par().</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: The tinyplot-specific parameters can also be be set via `options`</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   with a `tinyplot_*` prefix, which can be convenient for enabling</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   different default behaviour at startup time (e.g., via an .Rprofile</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   file). Example:</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

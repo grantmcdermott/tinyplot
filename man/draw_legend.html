@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -151,7 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../index.md" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
@@ -180,6 +180,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/draw_legend.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">draw_legend</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/get_saved_par.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">get_saved_par</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -229,6 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
@@ -272,15 +279,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table>
 <tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_legend">legend</code>
+<code id="legend">legend</code>
 </td>
 <td>
-Legend placement keyword or list, passed down from <code>tinyplot</code>.
+Legend placement keyword or list, passed down from tinyplot.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_legend_args">legend_args</code>
+<code id="legend_args">legend_args</code>
 </td>
 <td>
 Additional legend arguments to be passed to <code>legend()</code>.
@@ -288,7 +295,7 @@ Additional legend arguments to be passed to <code>legend()</code>.
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_by_dep">by_dep</code>
+<code id="by_dep">by_dep</code>
 </td>
 <td>
 The (deparsed) "by" grouping variable name.
@@ -296,7 +303,7 @@ The (deparsed) "by" grouping variable name.
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_lgnd_labs">lgnd_labs</code>
+<code id="lgnd_labs">lgnd_labs</code>
 </td>
 <td>
 The labels passed to <code>legend(legend = …)</code>.
@@ -304,63 +311,63 @@ The labels passed to <code>legend(legend = …)</code>.
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_type">type</code>
+<code id="type">type</code>
 </td>
 <td>
-Plotting type(s), passed down from <code>tinyplot</code>.
+Plotting type(s), passed down from tinyplot.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_pch">pch</code>
+<code id="pch">pch</code>
 </td>
 <td>
-Plotting character(s), passed down from <code>tinyplot</code>.
+Plotting character(s), passed down from tinyplot.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_lty">lty</code>
+<code id="lty">lty</code>
 </td>
 <td>
-Plotting linetype(s), passed down from <code>tinyplot</code>.
+Plotting linetype(s), passed down from tinyplot.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_lwd">lwd</code>
+<code id="lwd">lwd</code>
 </td>
 <td>
-Plotting line width(s), passed down from <code>tinyplot</code>.
+Plotting line width(s), passed down from tinyplot.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_col">col</code>
+<code id="col">col</code>
 </td>
 <td>
-Plotting colour(s), passed down from <code>tinyplot</code>.
+Plotting colour(s), passed down from tinyplot.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_bg">bg</code>
+<code id="bg">bg</code>
 </td>
 <td>
-Plotting character background fill colour(s), passed down from <code>tinyplot</code>.
+Plotting character background fill colour(s), passed down from tinyplot.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_cex">cex</code>
+<code id="cex">cex</code>
 </td>
 <td>
-Plotting character expansion(s), passed down from <code>tinyplot</code>.
+Plotting character expansion(s), passed down from tinyplot.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_gradient">gradient</code>
+<code id="gradient">gradient</code>
 </td>
 <td>
 Logical indicating whether a continuous gradient swatch should be used to represent the colors.
@@ -368,7 +375,7 @@ Logical indicating whether a continuous gradient swatch should be used to repres
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_lmar">lmar</code>
+<code id="lmar">lmar</code>
 </td>
 <td>
 Legend margins (in lines). Should be a numeric vector of the form <code>c(inner, outer)</code>, where the first number represents the "inner" margin between the legend and the plot, and the second number represents the "outer" margin between the legend and edge of the graphics device. If no explicit value is provided by the user, then reverts back to <code>tpar(“lmar”)</code> for which the default values are <code>c(1.0, 0.1)</code>.
@@ -376,7 +383,7 @@ Legend margins (in lines). Should be a numeric vector of the form <code>c(inner,
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_has_sub">has_sub</code>
+<code id="has_sub">has_sub</code>
 </td>
 <td>
 Logical. Does the plot have a sub-caption. Only used if keyword position is "bottom!", in which case we need to bump the legend margin a bit further.
@@ -384,13 +391,17 @@ Logical. Does the plot have a sub-caption. Only used if keyword position is "bot
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="draw_legend_:_new_plot">new_plot</code>
+<code id="new_plot">new_plot</code>
 </td>
 <td>
-Should we be calling plot.new internally?
+Logical. Should we be calling plot.new internally?
 </td>
 </tr>
 </tbody></table>
+</section>
+<section id="value" class="level3">
+<h3 class="anchored" data-anchor-id="value">Value</h3>
+<p>No return value, called for side effect of producing a(n empty) plot with a legend in the margin.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>

@@ -100,7 +100,8 @@ tinyplot(Temp ~ Day | Month, data = aq)
 ```
 
 You can use standard base plotting arguments to adjust features of your plot.
-For example, change `pch` (plot character) to get filled points.
+For example, change `pch` (plot character) to get filled points and `cex`
+(character expansion) to change their size.
 
 ```{r pch_16}
 tinyplot(

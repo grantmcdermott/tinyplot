@@ -117,23 +117,20 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "readme_pointrange")
 
-## Skip failing test in R devel due to some minor esoteric difference coming up 
-## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion()  <= "4.3.2") {
-  f = function() {
-    tpar(pch = 16, family = "HersheySans")
-    
-    tinyplot(
-      Temp ~ Day | Month,
-      data = aq,
-      type = "b",
-      palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
-      main = "Daily temperatures by month",
-      frame = FALSE, grid = TRUE
-    )
-  }
-  expect_snapshot_plot(f, label = "readme_hershey_plus")
+f = function() {
+  tpar(pch = 16, family = "HersheySans")
+  
+  tinyplot(
+    Temp ~ Day | Month,
+    data = aq,
+    type = "b",
+    # palette = palette.colors(palette = "Tableau 10", alpha = 0.5),
+    palette = "Tableau 10", alpha = 0.5,
+    main = "Daily temperatures by month",
+    frame = FALSE, grid = TRUE
+  )
 }
+expect_snapshot_plot(f, label = "readme_hershey_plus")
 
 
 #

@@ -3,36 +3,22 @@
 \docType{package}
 \name{tinyplot-package}
 \alias{tinyplot-package}
-\title{tinyplot: Lightweight extension of the base R graphics system, with
-support for automatic legends, facetting, and several other enhancements.}
+\title{tinyplot: Lightweight Extension of the Base R Graphics System}
 \description{
-The goal of \strong{tinyplot} is to provides a lightweight extension
-of the base R graphics system with various convenience features,
-particularly for representing groups with your data. For example, the core
-\code{tinyplot()} function (alias: \code{plt()} with no vowels) makes it easy to plot
-different categories of a dataset in a single function call and highlight
-these categories (groups) using modern colour palettes. Coincident with
-this grouping support, \code{tinyplot()} also produces automatic legends with
-scope for further customization. While the package offers several other
-enhancements like facets, it tries as far as possible to be a drop-in
-replacement for the equivalent base plotting calls. Users should generally
-be able to swap a valid \code{plot()} call with \code{tinyplot()} without any changes
-to the expected output.
-}
-\details{
-\code{tinyplot-package}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
+Lightweight extension of the base R graphics system, with support for automatic legends, facets, and various other enhancements.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://grantmcdermott.com/tinyplot/}
-  \item \url{http://grantmcdermott.com/tinyplot/}
   \item Report bugs at \url{https://github.com/grantmcdermott/tinyplot/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Grant McDermott \email{gmcd@amazon.com}
+\strong{Maintainer}: Grant McDermott \email{gmcd@amazon.com} (\href{https://orcid.org/0000-0001-7883-8573}{ORCID})
 
 Authors:
 \itemize{

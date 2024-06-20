@@ -105,7 +105,8 @@ For example, change `pch` (plot character) to get filled points.
 ```{r pch_16}
 tinyplot(
   Temp ~ Day | Month, data = aq,
-  pch = 16
+  pch = 16,
+  cex = 2
 )
 ```
 
@@ -132,6 +133,20 @@ tinyplot(
   type = "l",
   col = "black", # override automatic group colours
   lty = "by"     # change line type by group instead
+)
+```
+
+The `"by"` convenience argument is also available for mapping group colours to
+background fill `bg` (alias `fill`). One use case is to override the grouped
+border colours for filled plot characters and instead pass them through the
+background fill.
+
+```{r}
+tinyplot(
+  Temp ~ Day | Month, data = aq,
+  pch = 21,      # use filled circles
+  col = "black", # override automatic group (border) colours of points
+  fill = "by"    # use background fill by group instead
 )
 ```
 
@@ -167,8 +182,21 @@ tinyplot(
 ```
 
 Beyond these convenience strings, users can also supply a valid
-palette-generating function for finer control over alpha transparency, colour
-order, and so forth. We'll see a demonstration of this further below.
+palette-generating function for finer control and additional options.^[For
+example, if you have installed the **ggsci** package
+([link][https://nanx.me/ggsci/index.html]) then you could use
+`palette = ggsci::pal_npg()` to generate a palette consistent with those used by
+the Nature Publishing Group.] You can also use the `alpha` argument to adjust
+the (alpha) transparency of your colours:
+
+```{r}
+tinyplot(
+  Temp ~ Day | Month, data = aq,
+  pch = 19, cex = 2,
+  palette = "tableau",
+  alpha = 0.3
+)
+```
 
 To underscore what we said earlier, colours are inherited from the user's
 current palette. So these can also be set globally, just as they can for the
@@ -220,15 +248,31 @@ with(
 )
 ```
 
-Finally, note that gradient legends are also supported for continuous grouping
-variables. Gradient legends can be customized in a similar vein to the discrete
-legends that we have seen so far (keyword positioning, palette choice, alpha
-transparency, etc.) But here is a simple example that demonstrates the default
-behaviour.
+The examples that we have seen thus far are all based on discrete grouping
+variables. However, please note that **tinyplot** also supports continuous
+grouping variables, which automatically yield gradient legends.
 
 ```{r legend_gradient}
 tinyplot(Temp ~ Wind | Ozone, data = aq, pch = 19)
 ```
+
+Gradient legends (and plots) can be customized in an identical manner to
+discrete legends by adjusting the keyword positioning, palette choice, alpha
+transparency etc. Here is a quick adaptation of the previous plot to
+demonstrate. Note that here we pass a special convenience argument to
+`bg`/`fill`; if it detects a numeric in the range of `[0, 1]`, then it
+automatically inherits the grouped colour mappings but with added transparency.
+
+```{r legend_gradient2}
+tinyplot(
+  Temp ~ Wind | Ozone, data = aq,
+  pch  = 21,      # use filled plot character
+  cex  = 2,
+  col  = "black", # override automatic (grouped) border colour of points
+  fill = 0.5,     # use background fill instead with added alpha transparency 
+)
+```
+
 
 ## Interval plots
 
@@ -401,14 +445,14 @@ op = tpar(
 tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "b",
-  palette = palette.colors(palette = "tableau", alpha = 0.5),
+  alpha = 0.5,
   main = "Daily temperatures by month"
 )
 ```
 
-(For access to a wider array of fonts, you might consider the
+_Note: For access to a much wider variety of fonts, you might consider the
 **showtext** package
-([link](https://cran.r-project.org/web/packages/showtext/vignettes/introduction.html)).)
+([link](https://cran.r-project.org/web/packages/showtext/vignettes/introduction.html))._
 
 At the risk of repeating ourselves, the use of `(t)par` in the previous example
 again underscores the correspondence with the base graphics system. Because

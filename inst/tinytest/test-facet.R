@@ -3,7 +3,7 @@ using("tinysnapshot")
 
 mtcars$am = as.factor(mtcars$am)
 
-op = tpar()
+op = par()
 
 #
 ## simple scatterplot cases first
@@ -112,9 +112,7 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_by")
 
-## Skip failing test in R devel due to some minor esoteric difference coming up 
-## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion() <= "4.3.3") {
+if (getRversion() >= "4.4.0") {
   f = function() {
     with(
       mtcars,
@@ -235,9 +233,7 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_ribbon_by")
 
 
-## Skip failing test in R devel due to some minor esoteric difference coming up 
-## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion() <= "4.3.3") {
+if (getRversion() <= "4.4.0") {
   f = function() {
     with(
       mtcars2,
@@ -274,12 +270,10 @@ if (getRversion() <= "4.3.3") {
 # restore original par settings
 tpar(op)
 
-## Sidestep test fails due to new (R 4.4.0) density grid value calculations.
+## Avoid test fails on older R versions (pre 4.4.0) due to slight change in
+## density grid value calculations.
 ## https://bugs.r-project.org/show_bug.cgi?id=18337
-exit_if_not(getRversion() <= "4.3.3")
-## Note: Once 4.4.0 is released we can either generate some new plots or
-## test with something like:
-# f = function() tinyplot(density(mtcars$mpg, old.coords=TRUE))
+exit_if_not(getRversion() >= "4.4.0")
 
 f = function() {
   with(
@@ -317,9 +311,8 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_density_by")
 
-## Skip failing test in R devel due to some minor esoteric difference coming up 
-## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion()  <= "4.3.2") {
+
+if (getRversion()  >= "4.4.0") {
   f = function() {
     with(
       mtcars,
@@ -376,9 +369,8 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_2x2_formula")
 
-## Skip failing test in R devel due to some minor esoteric difference coming up 
-## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion()  <= "4.3.2") {
+
+if (getRversion()  <= "4.4.0") {
   f = function() {
     tinyplot(
       ~ mpg | am, mtcars,
@@ -409,9 +401,7 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_grid")
 
 
-## Skip failing test in R devel due to some minor esoteric difference coming up 
-## in R 4.4.0. Can revert once it reaches release for local testing.
-if (getRversion() <= "4.3.3") {
+if (getRversion() <= "4.4.0") {
   f = function() {
     tinyplot(
       mpg ~ wt | factor(gear), data = mtcars,

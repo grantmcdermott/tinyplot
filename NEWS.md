@@ -1,10 +1,24 @@
 # News
 
-## 0.0.5.9008 (development version)
+## 0.1.0
+
+Our first CRAN submission! This v0.1.0 release includes the following new
+features and updates:
 
 License:
 
 - Formally switch to Apache 2.0 license. (#141 @grantmcdermott)
+
+Breaking changes:
+
+- To ensure consistent "dot.case" style for all `tinyplot()` function arguments,
+the following two arguments have been renamed (`old` => `new`):
+  - `par_restore` => `restore.par` (note the change in word order too!)
+  - `ribbon_alpha` => `ribbon.alpha`
+  
+  We don't believe that these two arguments are much used in practice. So
+  hopefully it will only have a negligible effect on existing `tinyplot` code in
+  the wild, even though it is a breaking change. (#149 @grantmcdermott)
 
 New features:
 
@@ -22,7 +36,11 @@ default. Thanks to @zeileis for the suggestion. (#130 @grantmcdermott)
 automatically vary line widths by group. (#134 @grantmcdermott)
 - `tpar()` now accepts standard `par()` arguments in addition to the
 `tinyplot`-specific ones. This allows users to set or query graphical parameters
-via a single convenience function, instead having to invoke `tpar` and `par` separately.
+via a single convenience function, instead having to invoke `tpar` and `par`
+separately. (#140 @grantmcdermott)
+  - As an aside, `tpar()` has gained some additional parameters for fine-grained
+  control of global plot defaults, including `grid`, `ribbon.alpha`, and various
+  `file.*` parameters (see next bullet point).
 - Users can write plots directly to disk using the new `file` argument,
 alongside corresponding `width` and `height` arguments for output customization
 (both of which are defined in inches). For example,
@@ -32,8 +50,26 @@ external graphics devices like `png()`, `pdf()`, etc. But it may prove more
 convenient, since the current global graphics parameters held in `(t)par()` are
 carried over to the external device too and don't need to be reset. Note that
 the appropriate device type is determined automatically by the file extension,
-which must be one of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg". (#143
+which must be one of ".png", ".jpg" (".jpeg"), ".pdf", or ".svg".
+(#143 @grantmcdermott)
+- We have a shiny new `tinyplot` logo. (#148 @grantmcdermott)
+- The new `get_saved_par()` function can be used to retrieve the `par` settings
+from immediately before or immediately after the preceding `tinyplot` call.
+This function replaces some older (non-exported) internal functions that
+`tinyplot` was using to restore and control `par` environments. But it could
+also prove help to end users who are looking for additional ways to restore
+`par` settings after the fact. See `?get_saved_par` for some examples. (#152
 @grantmcdermott)
+- `tinyplot`/`plt` gaina a new `alpha = <numeric[0,1]>` convenience argument for
+adding transparency to plot elements and colours. Example use:
+`plt(rnorm(1e3), pch = 19, alpha = 0.3)`. (#129 @grantmcdermott)
+- Similar to the preceding news item, transparency can be added to (grouped)
+background fill by passing `bg` (or its alias, `fill`) a numeric in the range
+`[0,1]`. This feature has the same effect as `bg = "by"` except for the added
+transparency. Example use:
+`plt(lat ~ long | depth, data = quakes, pch = 21, cex = 2, bg = 0.2)`. (#129
+@grantmcdermott)
+
 
 Bug fixes:
 
@@ -56,6 +92,8 @@ CRAN's recommended 5 MB limit. Please note that local testing of the package
 requires adding the `NOT_CRAN=TRUE` environment variable to your .Renviron file
 (or, exporting it in your .bashrc/.zshrc/etc. dotfile if you prefer that
 approach). (#145 @vincentarelbundock & @grantmcdermott)
+- Update some test snapshots to match slight changes in the way that R 4.4.0
+calculates `density` grid coords. (#150 @grantmcdermott)
 
 
 ## 0.0.5

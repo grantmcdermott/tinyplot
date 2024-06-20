@@ -23,7 +23,7 @@ draw_legend(
 )
 }
 \arguments{
-\item{legend}{Legend placement keyword or list, passed down from \code{tinyplot}.}
+\item{legend}{Legend placement keyword or list, passed down from \link{tinyplot}.}
 
 \item{legend_args}{Additional legend arguments to be passed to \code{legend()}.}
 
@@ -31,19 +31,19 @@ draw_legend(
 
 \item{lgnd_labs}{The labels passed to \code{legend(legend = ...)}.}
 
-\item{type}{Plotting type(s), passed down from \code{tinyplot}.}
+\item{type}{Plotting type(s), passed down from \link{tinyplot}.}
 
-\item{pch}{Plotting character(s), passed down from \code{tinyplot}.}
+\item{pch}{Plotting character(s), passed down from \link{tinyplot}.}
 
-\item{lty}{Plotting linetype(s), passed down from \code{tinyplot}.}
+\item{lty}{Plotting linetype(s), passed down from \link{tinyplot}.}
 
-\item{lwd}{Plotting line width(s), passed down from \code{tinyplot}.}
+\item{lwd}{Plotting line width(s), passed down from \link{tinyplot}.}
 
-\item{col}{Plotting colour(s), passed down from \code{tinyplot}.}
+\item{col}{Plotting colour(s), passed down from \link{tinyplot}.}
 
-\item{bg}{Plotting character background fill colour(s), passed down from \code{tinyplot}.}
+\item{bg}{Plotting character background fill colour(s), passed down from \link{tinyplot}.}
 
-\item{cex}{Plotting character expansion(s), passed down from \code{tinyplot}.}
+\item{cex}{Plotting character expansion(s), passed down from \link{tinyplot}.}
 
 \item{gradient}{Logical indicating whether a continuous gradient swatch
 should be used to represent the colors.}
@@ -59,7 +59,11 @@ for which the default values are \code{c(1.0, 0.1)}.}
 keyword position is "bottom!", in which case we need to bump the legend
 margin a bit further.}
 
-\item{new_plot}{Should we be calling plot.new internally?}
+\item{new_plot}{Logical. Should we be calling plot.new internally?}
+}
+\value{
+No return value, called for side effect of producing a(n empty) plot
+with a legend in the margin.
 }
 \description{
 Internal function used to calculate the placement of (including

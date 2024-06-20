@@ -171,35 +171,52 @@
 #' @param bg background fill color for the open plot symbols 21:25 (see
 #'   `points.default`), as well as ribbon and area plot types. For the latter
 #'   group---including filled density plots---an automatic alpha transparency
-#'   adjustment will be applied (see the `ribbon_alpha` argument further below).
-#'   Users can also supply a special `bg = "by"` convenience argument, in which
-#'   case the background fill will inherit the automatic group coloring
-#'   intended for the `col` argument. Note that this grouped inheritance will
-#'   persist even if the `col` defaults are themselves overridden. For example,
-#'   `tinyplot(y ~ x | z, data = fakedata, pch = 22, col = "blue", bg = "by")`
-#'   will yield filled squares with a blue border.
+#'   adjustment will be applied (see the `ribbon.alpha` argument further below).
+#'   Users can also supply either one of two special convenience arguments that
+#'   will cause the background fill to inherit the automatic grouped coloring
+#'   behaviour of `col`:
+#'   
+#'   - `bg = "by"` will insert a background fill that inherits the main color
+#'   mappings from `col`.
+#'   - `by = <numeric[0,1]>` (i.e., a numeric in the range `[0,1]`) will insert
+#'   a background fill that inherits the main color mapping(s) from `col`, but
+#'   with added alpha-transparency.
+#'   
+#'   For both of these convenience arguments, note that the (grouped) `bg`
+#'   mappings will persist even if the (grouped) `col` defaults are themselves
+#'   overridden. This can be useful if you want to preserve the grouped palette
+#'   mappings by background fill but not boundary color, e.g. filled points. See
+#'   examples. 
 #' @param fill alias for `bg`. If non-NULL values for both `bg` and `fill` are
 #'   provided, then the latter will be ignored in favour of the former.
+#' @param alpha a numeric in the range `[0,1]` for adjusting the alpha channel
+#'   of the color palette, where 0 means transparent and 1 means opaque. Use
+#'   fractional values, e.g. `0.5` for semi-transparency.
 #' @param cex character expansion. A numerical vector (can be a single value)
 #'   giving the amount by which plotting characters and symbols should be scaled
 #'   relative to the default. Note that NULL is equivalent to 1.0, while NA
 #'   renders the characters invisible.
-#' @param par_restore a logical value indicating whether the `par` settings
-#'   prior to calling `tinyplot` should be restored on exit. Defaults to FALSE,
-#'   which makes it possible to add elements to the plot after it has been
-#'   drawn. However, note the the outer margins of the graphics device may have
-#'   been altered to make space for the `tinyplot` legend. Users can opt out of
-#'   this persistent behaviour by setting to TRUE instead. (Another option would
-#'   be calling `dev.off()` to reset all `par` settings to their defaults.)
+#' @param restore.par a logical value indicating whether the
+#'   \code{\link[graphics]{par}} settings prior to calling `tinyplot` should be
+#'   restored on exit. Defaults to FALSE, which makes it possible to add
+#'   elements to the plot after it has been drawn. However, note the the outer
+#'   margins of the graphics device may have been altered to make space for the
+#'   `tinyplot` legend. Users can opt out of this persistent behaviour by
+#'   setting to TRUE instead. See also [get_saved_par] for another option to
+#'   recover the original \code{\link[graphics]{par}} settings, as well as
+#'   longer discussion about the trade-offs involved.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param ymin,ymax minimum and maximum coordinates of interval plot types. Only
 #'   used when the `type` argument is one of "pointrange", "errorbar", or
 #'   "ribbon".
-#' @param ribbon_alpha numeric factor modifying the opacity alpha of any ribbon
-#'   shading; typically in `[0, 1]`. Default value is 0.2. Only used when
-#'   `type = "ribbon"`, or when the `bg` fill argument is specified in a density
-#'   plot (since filled density plots are converted to ribbon plots internally).
+#' @param ribbon.alpha numeric factor modifying the opacity alpha of any ribbon
+#'   shading; typically in `[0, 1]`. Only used when `type = "ribbon"`, or when
+#'   the `bg` fill argument is specified in a density plot (since filled density
+#'   plots are converted to ribbon plots internally). If an an applicable plot
+#'   type is called but no explicit value is provided, then will default to
+#'   `tpar("ribbon.alpha")` (i.e., probably `0.2` unless this has been
+#'   overridden by the user in their global settings.)
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
@@ -233,6 +250,8 @@
 #'  specified. 
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
+#'
+#' @returns No return value, called for side effect of producing a plot.
 #'   
 #' @details
 #' Disregarding the enhancements that it supports, `tinyplot` tries as far as
@@ -248,25 +267,21 @@
 #' @importFrom tools file_ext
 #' 
 #' @examples
-#' 
-#' # save graphics parameters to restore them later
-#' op = tpar()
-#' 
-#' 
+#' #' 
 #' aq = transform(
 #'   airquality,
 #'   Month = factor(Month, labels = month.abb[unique(Month)])
 #' )
 #' 
-#' # tinyplot should be a drop-in replacement for (most) regular plot calls. For
-#' # example:
+#' # In most cases, `tinyplot` should be a drop-in replacement for regular
+#' # `plot` calls. For example:
 #' 
-#' par(mfrow = c(1, 2))
+#' op = tpar(mfrow = c(1, 2))
 #' plot(0:10, main = "plot")
 #' tinyplot(0:10, main = "tinyplot")
+#' tpar(op) # restore original layout
 #' 
-#' # restore graphics parameters
-#' par(op)  
+#' # Aside: `tinyplot::tpar()` is a (near) drop-in replacement for `par()`
 #' 
 #' # Unlike vanilla plot, however, tinyplot allows you to characterize groups 
 #' # using either the `by` argument or equivalent `|` formula syntax.
@@ -282,12 +297,36 @@
 #' plt(Temp ~ Day | Month, data = aq) ## shorthand alias
 #'
 #' # Use standard base plotting arguments to adjust features of your plot.
-#' # For example, change `pch` (plot character) to get filled points.
+#' # For example, change `pch` (plot character) to get filled points and `cex`
+#' # (character expansion) to increase their size.
 #' 
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
-#'   pch = 16
+#'   pch = 16,
+#'   cex = 2
+#' )
+#' 
+#' # We can add alpha transparency for overlapping points
+#' 
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = 16,
+#'   cex = 2,
+#'   alpha = 0.3
+#' )
+#' 
+#' # To get filled points with a common solid background color, use an 
+#' # appropriate plotting character (21:25) and combine with one of the special
+#' # `bg` convenience arguments.
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = 21,     # use filled circles
+#'   cex = 2,
+#'   bg = 0.3,     # numeric in [0,1] adds a grouped background fill with transparency
+#'   col = "black" # override default color mapping; give all points a black border
 #' )
 #' 
 #' # Converting to a grouped line plot is a simple matter of adjusting the
@@ -373,7 +412,6 @@
 #' # palettes, depending on the number of groups. However, all palettes listed
 #' # by `palette.pals()` and `hcl.pals()` are supported as convenience strings,
 #' # or users can supply a valid palette-generating function for finer control
-#' # over transparency etc.
 #' 
 #' tinyplot(
 #'   Temp ~ Day | Month,
@@ -383,19 +421,21 @@
 #' )
 #'
 #' # It's possible to further customize the look of you plots using familiar
-#' # arguments and base plotting theme settings (e.g., via `par`).
+#' # arguments and base plotting theme settings (e.g., via `(t)par`).
 #'
 #' tpar(family = "HersheySans", las = 1)
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "b", pch = 16,
-#'   palette = palette.colors(palette = "tableau", alpha = 0.5),
+#'   palette = "tableau", alpha = 0.5,
 #'   main = "Daily temperatures by month",
 #'   frame = FALSE, grid = TRUE
 #' )
 #' 
-#' par(op) # revert original graphics parameters
+#' # Note: For more examples and a detailed walkthrough, please see the
+#' # introductory tinyplot tutorial available online:
+#' # https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html
 #' 
 #' @rdname tinyplot
 #' @export
@@ -434,11 +474,12 @@ tinyplot.default = function(
     col = NULL,
     bg = NULL,
     fill = NULL,
+    alpha = NULL,
     cex = 1,
-    par_restore = FALSE,
+    restore.par = FALSE,
     ymin = NULL,
     ymax = NULL,
-    ribbon_alpha = 0.2,
+    ribbon.alpha = NULL,
     add = FALSE,
     file = NULL,
     width = NULL,
@@ -499,17 +540,20 @@ tinyplot.default = function(
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
-  if (par_restore || !is.null(facet)) {
+  if (restore.par || !is.null(facet)) {
     if (!is.null(file) || !is.null(width) || !is.null(height)) {
       opar$new = FALSE # catch for some interfaces
     }
     on.exit(par(opar), add = TRUE)
   }
+  # set_orig_par(opar)
+  set_saved_par(when = "before", opar)
   
   # catch for adding to existing facet plot
   # if (!is.null(facet) && isTRUE(add)) par(tpar("last_facet_par"))
   if (!is.null(facet) && isTRUE(add)) (
-    par(get_last_facet_par())
+    # par(get_last_facet_par())
+    par(get_saved_par(when = "after"))
   )
   
   # Capture deparsed expressions early, before x, y and by are evaluated
@@ -670,25 +714,32 @@ tinyplot.default = function(
     col = col,
     palette = substitute(palette),
     gradient = by_continuous,
-    ordered = by_ordered
+    ordered = by_ordered,
+    alpha = alpha
   )
   if (is.null(bg) && !is.null(fill)) bg = fill
+  if (!is.null(bg) && length(bg)==1 && is.numeric(bg) && bg>=0 && bg <=1) {
+    alpha = bg
+    bg = "by"
+  }
   if (!is.null(bg) && length(bg)==1 && bg == "by") {
     bg = by_col(
       ngrps = ngrps,
       col = NULL,
       palette = substitute(palette),
       gradient = by_continuous,
-      ordered = by_ordered
+      ordered = by_ordered,
+      alpha = alpha
     )
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)
   }
   if (type == "ribbon") {
+    if (is.null(ribbon.alpha)) ribbon.alpha = .tpar[["ribbon.alpha"]]
     if (!is.null(bg)) {
-      bg = adjustcolor(bg, ribbon_alpha)
+      bg = adjustcolor(bg, ribbon.alpha)
     } else if (!is.null(col)) {
-      bg = adjustcolor(col, ribbon_alpha)
+      bg = adjustcolor(col, ribbon.alpha)
     }
   }
   
@@ -1329,11 +1380,9 @@ tinyplot.default = function(
     
   }
   
-  # tidy up before exit
-  if (!is.null(facet)) {
-    last_facet_par = par(no.readonly = TRUE)
-    set_last_facet_par(last_facet_par)
-  }
+  # save end pars for possible recall later
+  apar = par(no.readonly = TRUE)
+  set_saved_par(when = "after", apar)
 
   
 }
@@ -1366,7 +1415,7 @@ tinyplot.formula = function(
     col = NULL,
     lty = NULL,
     lwd = NULL,
-    par_restore = FALSE,
+    restore.par = FALSE,
     formula = NULL,
     subset = NULL,
     na.action = NULL,
@@ -1544,7 +1593,7 @@ tinyplot.formula = function(
     col = col,
     lty = lty,
     lwd = lwd,
-    par_restore = par_restore,
+    restore.par = restore.par,
     ...
     )
 
@@ -1578,7 +1627,7 @@ tinyplot.density = function(
     lwd = NULL,
     bg = NULL,
     fill = NULL,
-    par_restore = FALSE,
+    restore.par = FALSE,
     ...
   ) {
 
@@ -1750,7 +1799,7 @@ tinyplot.density = function(
     fill = fill,
     lty = lty,
     lwd = lwd,
-    par_restore = par_restore,
+    restore.par = restore.par,
     ...
     )
 

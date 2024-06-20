@@ -1,12 +1,10 @@
 source("helpers.R")
 using("tinysnapshot")
 
-## Sidestep test fails due to new (R 4.4.0) density grid value calculations.
+## Avoid test fails on older R versions (pre 4.4.0) due to slight change in
+## density grid value calculations.
 ## https://bugs.r-project.org/show_bug.cgi?id=18337
-exit_if_not(getRversion() <= "4.3.3")
-## Note: Once 4.4.0 is released we can either generate some new plots or
-## test with something like:
-# f = function() tinyplot(density(mtcars$mpg, old.coords=TRUE))
+exit_if_not(getRversion() >= "4.4.0")
 
 mtcars$am = as.factor(mtcars$am)
 

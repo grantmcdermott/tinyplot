@@ -1,12 +1,13 @@
 source("helpers.R")
 using("tinysnapshot")
 
-## Skip failing test in R devel due to some minor esoteric difference coming up 
-## in R 4.4.0. Can revert once it reaches release for local testing.
-exit_if_not(getRversion() <= "4.3.3")
+# ## Avoid test fails on older R versions (pre 4.4.0) due to slight change in
+# ## density grid value calculations.
+# ## https://bugs.r-project.org/show_bug.cgi?id=18337
+# exit_if_not(getRversion() >= "4.4.0")
 
 
-op = tpar()
+op = par(no.readonly = TRUE)
 
 f1 = function() {
   tinyplot(
@@ -16,7 +17,7 @@ f1 = function() {
   )
   points(6,3, pch = 17, col = "hotpink", cex = 1.5)
 }
-expect_snapshot_plot(f1, label = "par_restore_bottom")
+expect_snapshot_plot(f1, label = "restore_par_bottom")
 
 f2 = function() {
   tinyplot(
@@ -28,10 +29,10 @@ f2 = function() {
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
   plot(1:10)
 }
-expect_snapshot_plot(f2, label = "par_restore_FALSE")
+expect_snapshot_plot(f2, label = "restore_par_FALSE")
 
-# restore original par settings and then rerun with par_restore=TRUE
-tpar(op)
+# restore original par settings and then rerun with restore.par=TRUE
+par(op)
 
 f3 = function() {
   tinyplot(
@@ -39,9 +40,9 @@ f3 = function() {
     pch = 19,
     grid = grid(),
     legend = legend("right!", title = "How many cylnders do you have?"),
-    par_restore = TRUE
+    restore.par = TRUE
   )
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
   plot(1:10)
 }
-expect_snapshot_plot(f3, label = "par_restore_TRUE")
+expect_snapshot_plot(f3, label = "restore_par_TRUE")

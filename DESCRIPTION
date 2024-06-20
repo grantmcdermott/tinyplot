@@ -1,14 +1,16 @@
 Package: tinyplot
 Type: Package
 Title: Lightweight Extension of the Base R Graphics System
-Version: 0.0.5.9008
+Version: 0.1.0
+Date: 2024-06-19
 Authors@R: 
   c(
     person(
       given = "Grant",
       family = "McDermott",
       role = c("aut", "cre"),
-      email = "gmcd@amazon.com"
+      email = "gmcd@amazon.com",
+      comment = c(ORCID = "0000-0001-7883-8573")
     ),
     person(
       given = "Vincent",
@@ -32,7 +34,7 @@ Authors@R:
     )
   )
 Description: Lightweight extension of the base R graphics system, with support
-      for automatic legends, facetting, and several other enhancements.
+      for automatic legends, facets, and various other enhancements.
 License: Apache License (>= 2)
 Depends:
   R (>= 4.0)
@@ -54,8 +56,6 @@ Suggests:
   knitr
 Encoding: UTF-8
 RoxygenNote: 7.3.1
-URL: https://grantmcdermott.com/tinyplot/,
-    http://grantmcdermott.com/tinyplot/
+URL: https://grantmcdermott.com/tinyplot/
 BugReports: https://github.com/grantmcdermott/tinyplot/issues
-VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

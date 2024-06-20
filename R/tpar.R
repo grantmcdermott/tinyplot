@@ -1,12 +1,13 @@
-#' @title Set or query graphical parameters  
+#' @title Set or query graphical parameters
 #'   
-#' @description `tpar` extends \code{\link[graphics]{par}}, serving as a drop-in
+#' @description Extends \code{\link[graphics]{par}}, serving as a (near) drop-in
 #'   replacement for setting or querying graphical parameters. The key
-#'   difference is that, beyond supporting the standard group of R graphical
-#'   parameters, `tpar` also supports additional graphical parameters that are
-#'   provided by `tinyplot`. Similar to \code{\link[graphics]{par}}, parameters
-#'   are set by passing appropriate `key = value` argument pairs, and multiple
-#'   parameters can be set or queried at the same time.
+#'   differences is that, beyond supporting the standard group of R graphical
+#'   parameters in \code{\link[graphics]{par}}, `tpar` also supports additional
+#'   graphical parameters that are provided by `tinyplot`. Similar to
+#'   \code{\link[graphics]{par}}, parameters are set by passing appropriate
+#'   `key = value` argument pairs, and multiple parameters can be set or queried
+#'   at the same time.
 #'   
 #' @md
 #' @param ... arguments of the form `key = value`. This includes all of the
@@ -14,7 +15,7 @@
 #'   the `tinyplot`-specific ones described in the 'Graphical Parameters'
 #'   section below.
 #' 
-#' @details The `tinyplot`-specfic parameters are saved in an internal
+#' @details The `tinyplot`-specific parameters are saved in an internal
 #'   environment called `.tpar` for performance and safety reasons. However,
 #'   they can also be set at package load time via \code{\link[base]{options}},
 #'   which may prove convenient for users that want to enable different default
@@ -24,7 +25,25 @@
 #' 
 #' For their part, any "base" graphical parameters are caught dynamically and
 #'   passed on to \code{\link[graphics]{par}} as appropriate. Technically, only
-#'   parameters that satisify `par(..., no.readonly = TRUE)` are evaluated.
+#'   parameters that satisfy `par(..., no.readonly = TRUE)` are evaluated.
+#'   
+#' However, note the important distinction: `tpar` only evaluates parameters
+#'   from \code{\link[graphics]{par}} if they are passed _explicitly_ by the
+#'   user. This means that `tpar` should not be used to capture the (invisible)
+#'   state of a user's entire set of graphics parameters, i.e. `tpar()` !=
+#'   `par()`. If you want to capture the _all_ existing graphics settings, then
+#'   you should rather use `par()` instead. 
+#'   
+#' @returns When parameters are set, their previous values are returned in an
+#'   invisible named list. Such a list can be passed as an argument to `tpar` to
+#'   restore the parameter values.
+#'   
+#'   When just one parameter is queried, the value of that parameter is returned
+#'   as (atomic) vector. When two or more parameters are queried, their values
+#'   are returned in a list, with the list names giving the parameters.
+#'   
+#'   Note the inconsistency: setting one parameter returns a list, but querying
+#'   one parameter returns a vector.
 #'
 #' @section Additional Graphical Parameters:
 #' 
@@ -60,6 +79,9 @@
 #'   \tab\tab\cr
 #'   \tab\tab\cr
 #'   `lmar` \tab\tab A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is `"top!"`, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by `par("mar")[3]`.)\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
+#'   `ribbon.alpha` \tab\tab Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" (and alike) type plots. Default value is `0.2`.\cr
 #' }
 #' 
 #' @importFrom graphics par
@@ -88,6 +110,10 @@
 #' # Reset back to original values
 #' tpar(op)
 #' 
+#' # Important: tpar() only evalutes parameters that have been passed explicitly
+#' #   by the user. So it it should not be used to query and set (restore)
+#' #   parameters that weren't explicitly requested, i.e. tpar() != par().
+#' 
 #' # Note: The tinyplot-specific parameters can also be be set via `options`
 #' #   with a `tinyplot_*` prefix, which can be convenient for enabling
 #' #   different default behaviour at startup time (e.g., via an .Rprofile
@@ -100,7 +126,6 @@ tpar = function(...) {
   facet.col = facet.bg = facet.border = used_par_old = NULL
   
   opts = list(...)
-  # if (length(opts)==1 && (!is.null(names(opts)) && names(opts) != "last_facet_par")) {
   if (length(opts)==1 && is.null(names(opts))) {
     if (inherits(opts[[1]], "list") && !is.null(names(opts[[1]]))) {
       opts = opts[[1]]
@@ -118,7 +143,6 @@ tpar = function(...) {
   }
   if (length(used_par)) {
     if (!is.null(nam)) used_par = opts[used_par]
-    # par(used_par)
     used_par_old = par(used_par)
     tpar_old = modifyList(tpar_old, used_par_old, keep.null = TRUE)
   }
@@ -196,6 +220,12 @@ tpar = function(...) {
     .tpar$lmar = lmar
   }
   
+  if (length(opts$ribbon.alpha)) {
+    ribbon.alpha = as.numeric(opts$ribbon.alpha)
+    if (!is.numeric(ribbon.alpha) || ribbon.alpha<0 || ribbon.alpha>1) stop("ribbon.alpha needs to be a numeric in the range [0,1]")
+    .tpar$ribbon.alpha = ribbon.alpha
+  }
+  
   ## Like par(), we want the return object to be dependent on inputs...
   
   # User didn't assign any new values, but may have requested explicit (print
@@ -221,14 +251,5 @@ tpar = function(...) {
     return(invisible(tpar_old))
   }
   
-}
-
-
-# separate setter and getter functions for .last_facet_par
-set_last_facet_par <- function(value) {
-  assign(".last_facet_par", value, envir = get(".tinyplot_env", envir = parent.env(environment())))
-}
-get_last_facet_par <- function() {
-  return(get(".last_facet_par", envir = get(".tinyplot_env", envir = parent.env(environment()))))
 }
 

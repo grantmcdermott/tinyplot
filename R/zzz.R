@@ -21,11 +21,19 @@
   .tpar$facet.bg <- if(is.null(getOption("tinyplot_facet.bg"))) NULL else getOption("tinyplot_facet.bg")
   .tpar$facet.border <- if(is.null(getOption("tinyplot_facet.border"))) NA else getOption("tinyplot_facet.border")
   
+  # Plot grid
   .tpar$grid <- if(is.null(getOption("tinyplot_grid"))) FALSE else as.logical(getOption("tinyplot_grid"))
   
   # Legend margin, i.e. gap between the legend and the plot elements
   .tpar$lmar <- if(is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))
   
+  # Alpha fill (transparency) default for ribbon and area plots
+  .tpar$ribbon.alpha <- if(is.null(getOption("tinyplot_ribbon.alpha"))) 0.2 else as.numeric(getOption("tinyplot_ribbon.alpha"))
+  
   assign(".tpar", .tpar, envir = tnypltptns)
+  
+  
+  assign(".saved_par_before", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
+  assign(".saved_par_after", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
   
 }

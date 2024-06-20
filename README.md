@@ -137,7 +137,7 @@ the [intro
 tutorial](https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html)
 for many more examples, including range plots and customization.
 
-[^1]: Both **lattice** and **ggplot2** are build on top of the **grid**
+[^1]: Both **lattice** and **ggplot2** are built on top of the **grid**
     package, which was incoporated into the base R distribution way back
     in R 2.0.0. **ggplot2**, in particular, is arguably the most
     important and influential (high-level) graphics library of the last

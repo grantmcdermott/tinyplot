@@ -42,7 +42,7 @@ install.packages("tinyplot", repos = "https://grantmcdermott.r-universe.dev")
 R users are spoiled for choice when it comes to visualization frameworks. The
 options, of course, include **lattice** and **ggplot2**; say nothing of the
 bewildering array of extensions built around, on top of, and in between these
-amazing packages.^[Both **lattice** and **ggplot2** are build on top of the
+amazing packages.^[Both **lattice** and **ggplot2** are built on top of the
 **grid** package, which was incoporated into the base R distribution way back in
 R 2.0.0.  **ggplot2**, in particular, is arguably the most important and
 influential (high-level) graphics library of the last two decades, across any

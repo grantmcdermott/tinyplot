@@ -6,9 +6,10 @@
 
 <a href="https://CRAN.R-project.org/package=tinyplot"><img src="https://www.r-pkg.org/badges/version/tinyplot" class="img-fluid" alt="CRAN version"></a>
 <a href="https://grantmcdermott.r-universe.dev"><img src="https://grantmcdermott.r-universe.dev/badges/tinyplot" class="img-fluid" alt="R-universe status badge"></a>
-[![R-CMD-check](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml)
+<a href="https://CRAN.R-project.org/package=tinyplot"><img src="https://tinyverse.netlify.app/badge/tinyplot" class="img-fluid" alt="Dependencies"></a>
+<a href="https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="ci"></a>
 <a href = "https://github.com/grantmcdermott/tinyplot/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-Apache2.0-blue"></a>
-[![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/tinyplot/index.html)
+<a href="https://grantmcdermott.com/tinyplot/index.html"><img src="https://img.shields.io/badge/docs-homepage-blue.svg" class="img-fluid" alt="Docs"></a>
 <!-- badges: end -->
 
 ## What

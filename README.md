@@ -4,8 +4,7 @@
 
 <!-- badges: start -->
 
-[![CRAN
-version](https://www.r-pkg.org/badges/version/tinyplot.png)](https://CRAN.R-project.org/package=tinyplot)
+<a href="https://CRAN.R-project.org/package=tinyplot"><img src="https://www.r-pkg.org/badges/version/tinyplot" class="img-fluid" alt="CRAN version"></a>
 <a href="https://grantmcdermott.r-universe.dev"><img src="https://grantmcdermott.r-universe.dev/badges/tinyplot" class="img-fluid" alt="R-universe status badge"></a>
 [![R-CMD-check](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml)
 <a href = "https://github.com/grantmcdermott/tinyplot/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-Apache2.0-blue"></a>

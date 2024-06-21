@@ -506,7 +506,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Gradient legends (and plots) can be customized in an identical manner to discrete legends by adjusting the keyword positioning, palette choice, alpha transparency etc. Here is a quick adaptation of the previous plot to demonstrate. Note that here we pass a special convenience argument to <code>bg</code>/<code>fill</code>; if it detects a numeric in the range of <code>[0, 1]</code>, then it automatically inherits the grouped colour mappings but with added transparency.</p>
+<p>Gradient legends (and plots) can be customized in an identical manner to discrete legends by adjusting the keyword positioning, palette choice, alpha transparency etc. Here is a quick adaptation of the previous plot to demonstrate. Note that here we pass a special convenience argument to <code>bg</code>/<code>fill</code>; if it detects a numeric in the range of <code>[0,1]</code>, then it automatically inherits the grouped colour mappings but with added transparency.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Wind <span class="sc">|</span> Ozone, <span class="at">data =</span> aq,</span>
@@ -526,7 +526,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="interval-plots" class="level2">
 <h2 class="anchored" data-anchor-id="interval-plots">Interval plots</h2>
-<p><code>tinyplot</code> adds supports for interval plots via the <code>"pointrange"</code>, <code>"errorbar"</code>, <code>"ribbon"</code> type arguments. An obvious use-case is for regression analysis and prediction.</p>
+<p><code>tinyplot</code> adds supports for interval plots via the <code>"pointrange"</code>, <code>"errorbar"</code>, <code>"ribbon"</code> type arguments. An canonical use-case is regression analysis and prediction.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(Temp <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Month <span class="sc">/</span> Day, <span class="at">data =</span> aq)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>aq <span class="ot">=</span> <span class="fu">cbind</span>(aq, <span class="fu">predict</span>(mod, <span class="at">interval =</span> <span class="st">"confidence"</span>))</span>
@@ -741,7 +741,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>In summary, consider the <strong>tinyplot</strong> package if you are looking for base R <code>plot</code> functionality with some added convenience features. You can use pretty much the same syntax and all of your theme elements should carry over too. It has no dependencies other than base R itself and this makes it an attractive option for package developers or situations where dependency management is expensive (e.g., an R application running in a browser via <a href="https://docs.r-wasm.org/webr/latest/">WebAssembly</a>).</p>
+<p>In summary, consider the <strong>tinyplot</strong> package if you are looking for base R <code>plot</code> functionality with added convenience features. You can use (nearly) the exact same syntax and all of your theme elements should carry over too. It has no dependencies other than base R itself and this should make it an attractive option for package developers, as well as situations where dependency management is expensive (e.g., propoduction piplines, continuous integration or an R application running in a browser via <a href="https://docs.r-wasm.org/webr/latest/">WebAssembly</a>).</p>
 
 
 </section>
@@ -752,7 +752,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol>
 <li id="fn1"><p>At this point, experienced base plot users might protest that you <em>can</em> colour by groups using the <code>col</code> argument, e.g. <code>with(aq, plot(Day, Temp, col = Month))</code>. This is true, but there are several limitations. First, you don’t get an automatic legend. Second, the base <code>plot.formula</code> method doesn’t specify the grouping within the formula itself (not a deal-breaker, but not particularly consistent either). Third, and perhaps most importantly, this grouping doesn’t carry over to line plots (i.e., type=“l”). Instead, you have to transpose your data and use <code>matplot</code>. See <a href="https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops">this</a> old StackOverflow thread for a longer discussion.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>See the accompanying help pages of those two functions for more details on the available palettes, or read Zeileis &amp; Murrell (2023, The R Journal, <a href="https://doi.org/10.32614/RJ-2023-071">doi:10.32614/RJ-2023-071</a>).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>For example, if you have installed the <strong>ggsci</strong> package ([link][https://nanx.me/ggsci/index.html]) then you could use <code>palette = ggsci::pal_npg()</code> to generate a palette consistent with those used by the Nature Publishing Group.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>For example, if you have installed the <strong>ggsci</strong> package (<a href="https://nanx.me/ggsci/index.html">link</a>) then you could use <code>palette = ggsci::pal_npg()</code> to generate a palette consistent with those used by the Nature Publishing Group.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

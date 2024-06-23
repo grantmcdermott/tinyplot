@@ -231,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#preliminaries" id="toc-preliminaries" class="nav-link active" data-scroll-target="#preliminaries">Preliminaries</a></li>
-  <li><a href="#similarity-to-plot" id="toc-similarity-to-plot" class="nav-link" data-scroll-target="#similarity-to-plot">Similarity to <code>plot()</code></a></li>
+  <li><a href="#equivalence-with-plot" id="toc-equivalence-with-plot" class="nav-link" data-scroll-target="#equivalence-with-plot">Equivalence with <code>plot()</code></a></li>
   <li><a href="#grouped-data" id="toc-grouped-data" class="nav-link" data-scroll-target="#grouped-data">Grouped data</a></li>
   <li><a href="#colours" id="toc-colours" class="nav-link" data-scroll-target="#colours">Colours</a></li>
   <li><a href="#legend" id="toc-legend" class="nav-link" data-scroll-target="#legend">Legend</a></li>
@@ -275,8 +275,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>Month <span class="ot">=</span> <span class="fu">factor</span>(month.abb[aq<span class="sc">$</span>Month], <span class="at">levels =</span> month.abb[<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="similarity-to-plot" class="level2">
-<h2 class="anchored" data-anchor-id="similarity-to-plot">Similarity to <code>plot()</code></h2>
+<section id="equivalence-with-plot" class="level2">
+<h2 class="anchored" data-anchor-id="equivalence-with-plot">Equivalence with <code>plot()</code></h2>
 <p>As far as possible, <code>tinyplot</code> tries to be a drop-in replacement for regular <code>plot</code> calls.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
@@ -495,7 +495,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The examples that we have seen thus far are all based on discrete grouping variables. However, please note that <strong>tinyplot</strong> also supports continuous grouping variables, which automatically yield gradient legends.</p>
+<p>All of the legend examples that we have seen thus far are representations of discrete groups. However, please note that <strong>tinyplot</strong> also supports grouping by continuous variables, which automatically yield gradient legends.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Temp <span class="sc">~</span> Wind <span class="sc">|</span> Ozone, <span class="at">data =</span> aq, <span class="at">pch =</span> <span class="dv">19</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -526,7 +526,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="interval-plots" class="level2">
 <h2 class="anchored" data-anchor-id="interval-plots">Interval plots</h2>
-<p><code>tinyplot</code> adds supports for interval plots via the <code>"pointrange"</code>, <code>"errorbar"</code>, <code>"ribbon"</code> type arguments. An canonical use-case is regression analysis and prediction.</p>
+<p><code>tinyplot</code> adds supports for interval plots via the <code>"pointrange"</code>, <code>"errorbar"</code>, <code>"ribbon"</code> type arguments. A canonical use-case is regression analysis and prediction.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(Temp <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Month <span class="sc">/</span> Day, <span class="at">data =</span> aq)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>aq <span class="ot">=</span> <span class="fu">cbind</span>(aq, <span class="fu">predict</span>(mod, <span class="at">interval =</span> <span class="st">"confidence"</span>))</span>

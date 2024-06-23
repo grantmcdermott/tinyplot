@@ -70,9 +70,9 @@
 #' @param type character string giving the type of plot desired. Options are:
 #'   - The same set of 1-character values supported by plot: "p" for points, "l"
 #'   for lines, "b" for both points and lines, "c" for empty points joined by
-#'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps
-#'   and "h" for histogram-like vertical lines. "n" does not produce
-#'   any points or lines.
+#'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps,
+#'   and "h" for histogram-like vertical lines. Specifying "n" produces an empty
+#'   plot over the extent of the data, but with no internal elements.
 #'   - Additional tinyplot types: "density" for densities, "polygon" for
 #'   polygons,  "pointrange" or "errorbar" for segment intervals, and "polygon",
 #'   "ribbon" or "area" for polygon intervals (where area plots are a special
@@ -1372,6 +1372,8 @@ tinyplot.default = function(
           lty = ilty,
           lwd = ilwd
         )
+      } else if (type == "n") {
+        # Blank plot
       } else {
         stop("`type` argument not supported.", call. = FALSE)
       }

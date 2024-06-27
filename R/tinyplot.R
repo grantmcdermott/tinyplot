@@ -1389,7 +1389,8 @@ tinyplot.default = function(
           border = icol,
           col =  ibg,
           axes = FALSE,
-          add = TRUE
+          add = TRUE,
+          at = unique(xx)
         )
       } else if (type == "n") {
         # Blank plot

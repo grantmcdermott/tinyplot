@@ -1,6 +1,18 @@
 source("helpers.R")
 using("tinysnapshot")
 
+# empty plot(s)
+f = function () {
+  tinyplot(Sepal.Length ~ Petal.Length, data = iris, type = "n")
+}
+expect_snapshot_plot(f, label = "type_n")
+# empty plot(s)
+f = function () {
+  tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris, type = "n")
+}
+expect_snapshot_plot(f, label = "type_n_by")
+
+# log axes
 f = function() {
   op = tpar(mfrow = c(1, 2))
   plot(Temp ~ Day, data = airquality, log = "x")
@@ -32,9 +44,6 @@ f = function() {
   tpar(op)
 } 
 expect_snapshot_plot(f, label = "arg_log_yx")
-
-## https://bugs.r-project.org/show_bug.cgi?id=18337
-# exit_if_not(getRversion() >= "4.4.0")
 
 f = function() {
   op = tpar(mfrow = c(1, 1))

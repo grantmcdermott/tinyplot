@@ -38,7 +38,7 @@ aq = airquality
 aq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])
 ```
 
-## Similarity to `plot()`
+## Equivalence with `plot()`
 
 As far as possible, `tinyplot` tries to be a drop-in replacement for regular `plot`
 calls.
@@ -249,9 +249,9 @@ with(
 )
 ```
 
-The examples that we have seen thus far are all based on discrete grouping
-variables. However, please note that **tinyplot** also supports continuous
-grouping variables, which automatically yield gradient legends.
+All of the legend examples that we have seen thus far are representations of
+discrete groups. However, please note that **tinyplot** also supports grouping
+by continuous variables, which automatically yield gradient legends.
 
 ```{r legend_gradient}
 tinyplot(Temp ~ Wind | Ozone, data = aq, pch = 19)
@@ -278,7 +278,7 @@ tinyplot(
 ## Interval plots
 
 `tinyplot` adds supports for interval plots via the `"pointrange"`, `"errorbar"`,
-`"ribbon"` type arguments. An canonical use-case is regression analysis and
+`"ribbon"` type arguments. A canonical use-case is regression analysis and
 prediction.
 
 ```{r ribbon_pred}

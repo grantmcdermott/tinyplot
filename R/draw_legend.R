@@ -175,6 +175,9 @@ draw_legend = function(
     if (is.null(legend_args[["y.intersp"]])) legend_args[["y.intersp"]] = 1.25
     if (is.null(legend_args[["seg.len"]])) legend_args[["seg.len"]] = 1.25
   }
+  if (type == "n" && isFALSE(gradient)) {
+    if (is.null(legend_args[["pch"]])) legend_args[["pch"]] = par("pch")
+  }
   
   
   if (is.null(legend_args[["legend"]])) {

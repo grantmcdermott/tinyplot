@@ -4,12 +4,12 @@
 
 <!-- badges: start -->
 
-[![CRAN
-version](https://www.r-pkg.org/badges/version/tinyplot.png)](https://CRAN.R-project.org/package=tinyplot)
+<a href="https://CRAN.R-project.org/package=tinyplot"><img src="https://www.r-pkg.org/badges/version/tinyplot" class="img-fluid" alt="CRAN version"></a>
 <a href="https://grantmcdermott.r-universe.dev"><img src="https://grantmcdermott.r-universe.dev/badges/tinyplot" class="img-fluid" alt="R-universe status badge"></a>
-[![R-CMD-check](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml)
+<a href="https://CRAN.R-project.org/package=tinyplot"><img src="https://tinyverse.netlify.app/badge/tinyplot" class="img-fluid" alt="Dependencies"></a>
+<a href="https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/grantmcdermott/tinyplot/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="ci"></a>
 <a href = "https://github.com/grantmcdermott/tinyplot/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-Apache2.0-blue"></a>
-[![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/tinyplot/index.html)
+<a href="https://grantmcdermott.com/tinyplot/index.html"><img src="https://img.shields.io/badge/docs-homepage-blue.svg" class="img-fluid" alt="Docs"></a>
 <!-- badges: end -->
 
 ## What
@@ -37,8 +37,8 @@ say nothing of the bewildering array of extensions built around, on top
 of, and in between these amazing packages.[^1]
 
 Given the wealth of options, it is perhaps understandable that even avid
-R users can overlook the base R graphics system. This is unfortunate,
-because base R offers very powerful and flexible plotting
+R users can overlook the base R **graphics** system. This is
+unfortunate, because base R offers very powerful and flexible plotting
 facilities.[^2] The downside of this power and flexibility is that base
 R plotting can require a lot of manual tinkering. A case in point is
 plotting grouped data with an appropriate legend. Doing so with the
@@ -59,12 +59,12 @@ to be a drop-in replacement for the equivalent base plotting function.
 Users should generally be able to swap out a valid `plot()` call for
 `tinyplot()`/`plt()` without any changes to the expected output.
 
-It is worth highlighting that **tinyplot** depends solely on base R and
-that care has been taken to keep its installation size to a minimum. It
-may thus provide an attractive and lightweight option for package
-developers (and regular R users) who would like to produce convenient
-and sophisticated plots, but without incurring any recursive
-dependencies.
+It is worth emphasizing that **tinyplot** requires *only* base R. It has
+zero recursive dependencies and we have been careful to keep its
+installation size down to a minimum. **tinyplot** should thus provide an
+attractive and lightweight option for package developers (or regular R
+users!) who would like to produce convenient and sophisticated plots,
+combined with a minimal footprint.
 
 ## Quickstart
 
@@ -137,7 +137,7 @@ the [intro
 tutorial](https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html)
 for many more examples, including range plots and customization.
 
-[^1]: Both **lattice** and **ggplot2** are build on top of the **grid**
+[^1]: Both **lattice** and **ggplot2** are built on top of the **grid**
     package, which was incoporated into the base R distribution way back
     in R 2.0.0. **ggplot2**, in particular, is arguably the most
     important and influential (high-level) graphics library of the last

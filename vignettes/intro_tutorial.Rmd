@@ -100,7 +100,8 @@ tinyplot(Temp ~ Day | Month, data = aq)
 ```
 
 You can use standard base plotting arguments to adjust features of your plot.
-For example, change `pch` (plot character) to get filled points.
+For example, change `pch` (plot character) to get filled points and `cex`
+(character expansion) to change their size.
 
 ```{r pch_16}
 tinyplot(
@@ -184,7 +185,7 @@ tinyplot(
 Beyond these convenience strings, users can also supply a valid
 palette-generating function for finer control and additional options.^[For
 example, if you have installed the **ggsci** package
-([link][https://nanx.me/ggsci/index.html]) then you could use
+([link](https://nanx.me/ggsci/index.html)) then you could use
 `palette = ggsci::pal_npg()` to generate a palette consistent with those used by
 the Nature Publishing Group.] You can also use the `alpha` argument to adjust
 the (alpha) transparency of your colours:
@@ -260,7 +261,7 @@ Gradient legends (and plots) can be customized in an identical manner to
 discrete legends by adjusting the keyword positioning, palette choice, alpha
 transparency etc. Here is a quick adaptation of the previous plot to
 demonstrate. Note that here we pass a special convenience argument to
-`bg`/`fill`; if it detects a numeric in the range of `[0, 1]`, then it
+`bg`/`fill`; if it detects a numeric in the range of `[0,1]`, then it
 automatically inherits the grouped colour mappings but with added transparency.
 
 ```{r legend_gradient2}
@@ -277,7 +278,7 @@ tinyplot(
 ## Interval plots
 
 `tinyplot` adds supports for interval plots via the `"pointrange"`, `"errorbar"`,
-`"ribbon"` type arguments. An obvious use-case is for regression analysis and
+`"ribbon"` type arguments. An canonical use-case is regression analysis and
 prediction.
 
 ```{r ribbon_pred}
@@ -484,10 +485,11 @@ dev.off()
 ## Conclusion
 
 In summary, consider the **tinyplot** package if you are looking for base R `plot`
-functionality with some added convenience features. You can use pretty much the
+functionality with added convenience features. You can use (nearly) the exact
 same syntax and all of your theme elements should carry over too. It has no
-dependencies other than base R itself and this makes it an attractive option for
-package developers or situations where dependency management is expensive (e.g.,
-an R application running in a browser via
+dependencies other than base R itself and this should make it an attractive
+option for package developers, as well as situations where dependency management
+is expensive (e.g., propoduction piplines, continuous integration or an R
+application running in a browser via
 [WebAssembly](https://docs.r-wasm.org/webr/latest/)).
 

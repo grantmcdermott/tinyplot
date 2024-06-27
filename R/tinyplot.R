@@ -1384,21 +1384,25 @@ tinyplot.default = function(
           lwd = ilwd
         )
       } else if (type == "boxplot") {
+        boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
+        staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
         at_xx = unique(xx)
-        boxwex_xx = 0.8
         if (!is.null(by) && length(split_data)>1) {
+          boxwex_xx_orig = boxwex_xx
           boxwex_xx = boxwex_xx / length(split_data) - 0.01
-          at_xx = at_xx + seq(-(0.4-boxwex_xx/2), (0.4-boxwex_xx/2), length.out = length(split_data))[i]
+          at_xx = at_xx + seq(-((boxwex_xx_orig-boxwex_xx)/2), ((boxwex_xx_orig-boxwex_xx)/2), length.out = length(split_data))[i]
         }
         boxplot(
           formula = yy ~ xx,
           pch = ipch,
+          lty = ilty,
           border = icol,
           col =  ibg,
           axes = FALSE,
           add = TRUE,
           at = at_xx,
-          boxwex = boxwex_xx
+          boxwex = boxwex_xx,
+          staplewex = staplewex_xx
         )
       } else if (type == "n") {
         # Blank plot

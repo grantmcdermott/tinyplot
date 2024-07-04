@@ -73,10 +73,11 @@
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps,
 #'   and "h" for histogram-like vertical lines. Specifying "n" produces an empty
 #'   plot over the extent of the data, but with no internal elements.
-#'   - Additional tinyplot types: "density" for densities, "polygon" for
-#'   polygons,  "pointrange" or "errorbar" for segment intervals, and "polygon",
-#'   "ribbon" or "area" for polygon intervals (where area plots are a special
-#'   case of ribbon plots with `ymin` set to 0 and `ymax` set to `y`; see below).
+#'   - Additional tinyplot types: "boxplot" for boxplots, "density" for
+#'   densities,  "pointrange" or "errorbar" for segment intervals, and
+#'   "polygon", "ribbon" or "area" for polygon intervals (where area plots are a
+#'   special case of ribbon plots with `ymin` set to 0 and `ymax` set to `y`;
+#'   see below).
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -574,6 +575,11 @@ tinyplot.default = function(
       facet.args[["nrow"]] = attr(facet, "facet_nrow")
     }
   }
+  
+  # enforce boxplot type for y ~ factor(x)
+  if (is.factor(x) && !is.factor(y)) {
+    type = "boxplot"
+  }
 
   ## Catch for density type: recycle through plot.density
   if (type == "density") {
@@ -639,10 +645,14 @@ tinyplot.default = function(
   if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
     if (is.character(x)) x = as.factor(x)
     if (is.factor(x)) {
-      ## Need to maintain order that was observed in the original data
-      ## (i.e., no new sorting by factor)
-      xlvls = unique(x)
-      x = factor(x, levels = xlvls)
+      ## For non-boxplots... Need to maintain order that was observed in the
+      ## original data (i.e., no new sorting by factor)
+      if (type != "boxplot") {
+        xlvls = unique(x)
+        x = factor(x, levels = xlvls)
+      } else {
+        xlvls = levels(x)
+      }
       xlabs = seq_along(xlvls)
       names(xlabs) = xlvls
       x = as.integer(x)

@@ -1396,6 +1396,7 @@ tinyplot.default = function(
       } else if (type == "boxplot") {
         boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
         staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
+        outwex_xx = ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
         at_xx = unique(xx)
         if (!is.null(by) && length(split_data)>1) {
           boxwex_xx_orig = boxwex_xx
@@ -1412,7 +1413,8 @@ tinyplot.default = function(
           add = TRUE,
           at = at_xx,
           boxwex = boxwex_xx,
-          staplewex = staplewex_xx
+          staplewex = staplewex_xx,
+          outwex = outwex_xx
         )
       } else if (type == "n") {
         # Blank plot

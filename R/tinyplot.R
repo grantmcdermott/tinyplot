@@ -566,9 +566,11 @@ tinyplot.default = function(
   }
   by_dep = deparse1(substitute(by))
   facet_dep = deparse1(substitute(facet))
+  facet_by = FALSE
   if (!is.null(facet) && length(facet)==1 && facet=="by") {
     by = as.factor(by) ## if by==facet, then both need to be factors
     facet = by
+    facet_by = TRUE
   } else if (!is.null(facet) && inherits(facet, "formula")) {
     facet = get_facet_fml(facet, data = data)
     if (isTRUE(attr(facet, "facet_grid"))) {
@@ -703,7 +705,7 @@ tinyplot.default = function(
   by_ordered = FALSE
   by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
   # manual overrides with warning
-  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon")) {
+  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "boxplot")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
     by_continuous = FALSE
   } else if (!is.null(by)){
@@ -1336,20 +1338,25 @@ tinyplot.default = function(
         par(mfg = c(mfgi, mfgj)) 
       }
       
+      # empty plot flag
+      empty_plot = FALSE
+      if (type=="n" || length(xx)==0) {
+        empty_plot = TRUE
+      }
+      
       # Draw the individual plot elements...
       
-      ## polygons before lines
-      if (type == "ribbon") {
+      ## polygons before lines, segments/arrows before points, etc.
+      if (isTRUE(empty_plot)) {
+        
+      } else if (type == "ribbon") {
         polygon(
           x = c(xx, rev(xx)),
           y = c(yymin, rev(yymax)),
           col = bg[i],
           border = FALSE
         )
-      }
-      
-      ## segments/arrows before points
-      if (type == "pointrange") {
+      } else if (type == "pointrange") {
         segments(
           x0 = xx,
           y0 = yymin,
@@ -1359,8 +1366,7 @@ tinyplot.default = function(
           # lty = ilty,
           lwd = ilwd
         )
-      }
-      if (type == "errorbar") {
+      } else if (type == "errorbar") {
         arrows(
           x0 = xx,
           y0 = yymin,
@@ -1375,8 +1381,10 @@ tinyplot.default = function(
         )
       }
       
-      ## now draw the points/lines
-      if (type %in% c("p", "pointrange", "errorbar")) {
+      ## now draw the points/lines/polygons/etc
+      if (isTRUE(empty_plot)) {
+        # empty plot
+      } else if (type %in% c("p", "pointrange", "errorbar")) {
         points(
           x = xx,
           y = yy,
@@ -1417,7 +1425,7 @@ tinyplot.default = function(
         staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
         outwex_xx = ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
         at_xx = unique(xx)
-        if (!is.null(by) && length(split_data)>1) {
+        if (!is.null(by) && isFALSE(facet_by) && length(split_data)>1) {
           boxwex_xx_orig = boxwex_xx
           boxwex_xx = boxwex_xx / length(split_data) - 0.01
           at_xx = at_xx + seq(-((boxwex_xx_orig-boxwex_xx)/2), ((boxwex_xx_orig-boxwex_xx)/2), length.out = length(split_data))[i]
@@ -1435,8 +1443,6 @@ tinyplot.default = function(
           staplewex = staplewex_xx,
           outwex = outwex_xx
         )
-      } else if (type == "n") {
-        # Blank plot
       } else {
         stop("`type` argument not supported.", call. = FALSE)
       }

@@ -699,7 +699,7 @@ tinyplot.default = function(
       fill = bg = "by"
     }
   }
-
+  
   by_ordered = FALSE
   by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
   # manual overrides with warning
@@ -1098,32 +1098,50 @@ tinyplot.default = function(
       ## Solution: Only pass on relevant args using name checking and do.call.
       ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
       pdots = dots[names(dots) %in% names(formals(plot.default))]
-      do.call(
-        "plot.window",
-        c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
-      )
+      ## catch for flipped boxplots...
+      if (type=="boxplot" && isTRUE(dots[["horizontal"]])) { 
+        log_flip = log
+        if (!is.null(log)) {
+          if (log=="x") log_flip = "y"
+          if (log=="y") log_flip = "x"
+        }
+        do.call(
+          "plot.window",
+          c(list(xlim = ylim, ylim = xlim, asp = asp, log = log_flip), pdots)
+        )
+        xside = 2
+        yside = 1
+      } else {
+        ## ... standard plot window for all other cases
+        do.call(
+          "plot.window",
+          c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
+        )
+        xside = 1
+        yside = 2
+      }
       
       # axes, plot.frame and grid
       if (isTRUE(axes)) {
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
           if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
-            Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+            Axis(x, side = xside, at = xlabs, labels = names(xlabs))
           } else {
-            Axis(x, side = 1)
+            Axis(x, side = xside)
           }
-          Axis(y, side = 2)
+          Axis(y, side = yside)
         } else {
           # ... else only print the "outside" axes.
           if (ii %in% oxaxis) {
             if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
-              Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+              Axis(x, side = xside, at = xlabs, labels = names(xlabs))
             } else {
-              Axis(x, side = 1)
+              Axis(x, side = xside)
             }
           }
           if (ii %in% oyaxis) {
-            Axis(y, side = 2)
+            Axis(y, side = yside)
           }
         }
       }
@@ -1394,6 +1412,7 @@ tinyplot.default = function(
           lwd = ilwd
         )
       } else if (type == "boxplot") {
+        horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
         boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
         staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
         outwex_xx = ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
@@ -1409,8 +1428,8 @@ tinyplot.default = function(
           lty = ilty,
           border = icol,
           col =  ibg,
-          axes = FALSE,
-          add = TRUE,
+          add = TRUE, axes = FALSE,
+          horizontal = horizontal,
           at = at_xx,
           boxwex = boxwex_xx,
           staplewex = staplewex_xx,

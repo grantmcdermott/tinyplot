@@ -657,7 +657,7 @@ tinyplot.default = function(
       names(xlabs) = xlvls
       x = as.integer(x)
     }
-    if (type == "ribbon") {
+    if (type %in% c("ribbon", "boxplot")) {
       if (is.null(by) && is.null(facet)) {
         xord = order(x) 
       } else if (is.null(facet)) {

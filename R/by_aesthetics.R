@@ -127,7 +127,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
 by_pch = function(ngrps, type, pch=NULL) {
   
   no_pch = FALSE
-  if (!type %in% c("p", "b", "o", "pointrange", "errorbar")) {
+  if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot")) {
     no_pch = TRUE
     pch = NULL
     
@@ -167,7 +167,7 @@ by_pch = function(ngrps, type, pch=NULL) {
 by_lty = function(ngrps, type, lty=NULL) {
 
   # We only care about line types, otherwise return NULL
-  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon")) {
+  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon", "boxplot")) {
     out = NULL
     
     # special "by" convenience keyword
@@ -198,7 +198,11 @@ by_lty = function(ngrps, type, lty=NULL) {
     
     # NULL -> solid (or default) line
   } else if (is.null(lty)) {
-    out = rep(par("lty"), ngrps)
+    if (type == "boxplot") {
+      out = NULL
+    } else {
+      out = rep(par("lty"), ngrps)
+    }
   
   # atomic vector: sanity check length
   } else if (is.atomic(lty) && is.vector(lty)) {

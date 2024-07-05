@@ -73,10 +73,11 @@
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps,
 #'   and "h" for histogram-like vertical lines. Specifying "n" produces an empty
 #'   plot over the extent of the data, but with no internal elements.
-#'   - Additional tinyplot types: "density" for densities, "polygon" for
-#'   polygons,  "pointrange" or "errorbar" for segment intervals, and "polygon",
-#'   "ribbon" or "area" for polygon intervals (where area plots are a special
-#'   case of ribbon plots with `ymin` set to 0 and `ymax` set to `y`; see below).
+#'   - Additional tinyplot types: "boxplot" for boxplots, "density" for
+#'   densities,  "pointrange" or "errorbar" for segment intervals, and
+#'   "polygon", "ribbon" or "area" for polygon intervals (where area plots are a
+#'   special case of ribbon plots with `ymin` set to 0 and `ymax` set to `y`;
+#'   see below).
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -565,14 +566,21 @@ tinyplot.default = function(
   }
   by_dep = deparse1(substitute(by))
   facet_dep = deparse1(substitute(facet))
+  facet_by = FALSE
   if (!is.null(facet) && length(facet)==1 && facet=="by") {
     by = as.factor(by) ## if by==facet, then both need to be factors
     facet = by
+    facet_by = TRUE
   } else if (!is.null(facet) && inherits(facet, "formula")) {
     facet = get_facet_fml(facet, data = data)
     if (isTRUE(attr(facet, "facet_grid"))) {
       facet.args[["nrow"]] = attr(facet, "facet_nrow")
     }
+  }
+  
+  # enforce boxplot type for y ~ factor(x)
+  if (is.factor(x) && !is.factor(y)) {
+    type = "boxplot"
   }
 
   ## Catch for density type: recycle through plot.density
@@ -635,18 +643,23 @@ tinyplot.default = function(
   }
 
   xlabs = NULL
-  if (type %in% c("pointrange", "errorbar", "ribbon")) {
+  if (type == "boxplot") x = as.factor(x)
+  if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
     if (is.character(x)) x = as.factor(x)
     if (is.factor(x)) {
-      ## Need to maintain order that was observed in the original data
-      ## (i.e., no new sorting by factor)
-      xlvls = unique(x)
-      x = factor(x, levels = xlvls)
+      ## For non-boxplots... Need to maintain order that was observed in the
+      ## original data (i.e., no new sorting by factor)
+      if (type != "boxplot") {
+        xlvls = unique(x)
+        x = factor(x, levels = xlvls)
+      } else {
+        xlvls = levels(x)
+      }
       xlabs = seq_along(xlvls)
       names(xlabs) = xlvls
       x = as.integer(x)
     }
-    if (type == "ribbon") {
+    if (type %in% c("ribbon", "boxplot")) {
       if (is.null(by) && is.null(facet)) {
         xord = order(x) 
       } else if (is.null(facet)) {
@@ -679,10 +692,20 @@ tinyplot.default = function(
   if (!is.null(ymin)) ylim[1] = min(c(ylim, ymin))
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
 
+  if (type=="boxplot") {
+    xlim = xlim + c(-0.5, 0.5)
+    if (is.null(by) && is.null(palette)) {
+      if (is.null(col)) col = par("fg")
+      if (is.null(bg) && is.null(fill)) bg = "lightgray"
+    } else {
+      fill = bg = "by"
+    }
+  }
+  
   by_ordered = FALSE
   by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
   # manual overrides with warning
-  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon")) {
+  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "boxplot")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
     by_continuous = FALSE
   } else if (!is.null(by)){
@@ -734,7 +757,7 @@ tinyplot.default = function(
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)
   }
-  if (type == "ribbon") {
+  if (type == "ribbon" || (type == "boxplot" && !is.null(by)) ) {
     if (is.null(ribbon.alpha)) ribbon.alpha = .tpar[["ribbon.alpha"]]
     if (!is.null(bg)) {
       bg = adjustcolor(bg, ribbon.alpha)
@@ -1077,32 +1100,50 @@ tinyplot.default = function(
       ## Solution: Only pass on relevant args using name checking and do.call.
       ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
       pdots = dots[names(dots) %in% names(formals(plot.default))]
-      do.call(
-        "plot.window",
-        c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
-      )
+      ## catch for flipped boxplots...
+      if (type=="boxplot" && isTRUE(dots[["horizontal"]])) { 
+        log_flip = log
+        if (!is.null(log)) {
+          if (log=="x") log_flip = "y"
+          if (log=="y") log_flip = "x"
+        }
+        do.call(
+          "plot.window",
+          c(list(xlim = ylim, ylim = xlim, asp = asp, log = log_flip), pdots)
+        )
+        xside = 2
+        yside = 1
+      } else {
+        ## ... standard plot window for all other cases
+        do.call(
+          "plot.window",
+          c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
+        )
+        xside = 1
+        yside = 2
+      }
       
       # axes, plot.frame and grid
       if (isTRUE(axes)) {
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
-          if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
-            Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+          if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
+            Axis(x, side = xside, at = xlabs, labels = names(xlabs))
           } else {
-            Axis(x, side = 1)
+            Axis(x, side = xside)
           }
-          Axis(y, side = 2)
+          Axis(y, side = yside)
         } else {
           # ... else only print the "outside" axes.
           if (ii %in% oxaxis) {
-            if (type %in% c("pointrange", "errorbar", "ribbon") && !is.null(xlabs)) {
-              Axis(x, side = 1, at = xlabs, labels = names(xlabs))
+            if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
+              Axis(x, side = xside, at = xlabs, labels = names(xlabs))
             } else {
-              Axis(x, side = 1)
+              Axis(x, side = xside)
             }
           }
           if (ii %in% oyaxis) {
-            Axis(y, side = 2)
+            Axis(y, side = yside)
           }
         }
       }
@@ -1297,20 +1338,25 @@ tinyplot.default = function(
         par(mfg = c(mfgi, mfgj)) 
       }
       
+      # empty plot flag
+      empty_plot = FALSE
+      if (type=="n" || length(xx)==0) {
+        empty_plot = TRUE
+      }
+      
       # Draw the individual plot elements...
       
-      ## polygons before lines
-      if (type == "ribbon") {
+      ## polygons before lines, segments/arrows before points, etc.
+      if (isTRUE(empty_plot)) {
+        
+      } else if (type == "ribbon") {
         polygon(
           x = c(xx, rev(xx)),
           y = c(yymin, rev(yymax)),
           col = bg[i],
           border = FALSE
         )
-      }
-      
-      ## segments/arrows before points
-      if (type == "pointrange") {
+      } else if (type == "pointrange") {
         segments(
           x0 = xx,
           y0 = yymin,
@@ -1320,8 +1366,7 @@ tinyplot.default = function(
           # lty = ilty,
           lwd = ilwd
         )
-      }
-      if (type == "errorbar") {
+      } else if (type == "errorbar") {
         arrows(
           x0 = xx,
           y0 = yymin,
@@ -1336,8 +1381,10 @@ tinyplot.default = function(
         )
       }
       
-      ## now draw the points/lines
-      if (type %in% c("p", "pointrange", "errorbar")) {
+      ## now draw the points/lines/polygons/etc
+      if (isTRUE(empty_plot)) {
+        # empty plot
+      } else if (type %in% c("p", "pointrange", "errorbar")) {
         points(
           x = xx,
           y = yy,
@@ -1372,8 +1419,30 @@ tinyplot.default = function(
           lty = ilty,
           lwd = ilwd
         )
-      } else if (type == "n") {
-        # Blank plot
+      } else if (type == "boxplot") {
+        horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
+        boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
+        staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
+        outwex_xx = ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
+        at_xx = unique(xx)
+        if (!is.null(by) && isFALSE(facet_by) && length(split_data)>1) {
+          boxwex_xx_orig = boxwex_xx
+          boxwex_xx = boxwex_xx / length(split_data) - 0.01
+          at_xx = at_xx + seq(-((boxwex_xx_orig-boxwex_xx)/2), ((boxwex_xx_orig-boxwex_xx)/2), length.out = length(split_data))[i]
+        }
+        boxplot(
+          formula = yy ~ xx,
+          pch = ipch,
+          lty = ilty,
+          border = icol,
+          col =  ibg,
+          add = TRUE, axes = FALSE,
+          horizontal = horizontal,
+          at = at_xx,
+          boxwex = boxwex_xx,
+          staplewex = staplewex_xx,
+          outwex = outwex_xx
+        )
       } else {
         stop("`type` argument not supported.", call. = FALSE)
       }

@@ -8,7 +8,11 @@ where the formatting is also better._
 
 New features:
 
-- Support for `type = "n"` (empty) plots. (#157 @grantmcdermott)
+- Support for additional plot types:
+  - `type = "n"`, i.e. empty plot. (#157 @grantmcdermott)
+  - `type = "boxplot"`. Simultaneously enables `plt(numeric ~ factor)`
+  support, first raised in #2, so that a boxplot is automatically plotted if a
+  numeric is plotted against a factor. (#154 @grantmcdermott)
 
 Misc:
 

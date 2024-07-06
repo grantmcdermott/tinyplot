@@ -583,7 +583,7 @@ tinyplot.default = function(
     type = "boxplot"
   }
 
-  ## Catch for density type: recycle through plot.density
+  ## Catch for density type: recycle through tinyplot.density
   if (type == "density") {
     fargs = mget(ls(environment(), sorted = FALSE))
     fargs = utils::modifyList(fargs, dots)
@@ -615,6 +615,21 @@ tinyplot.default = function(
     fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
     return(do.call(tinyplot.density, args = fargs))
   }
+  
+  # TEST: histogram
+  if (type == "histogram") {
+    hist_list = hist(x, plot = FALSE)
+    xmin = hist_list$breaks[-1]
+    xmax = hist_list$mids+(hist_list$mids-hist_list$breaks[-1])
+    ymin = hist_list$counts
+    ymax = rep(0, length(ymin))
+    x = c(xmin, xmax)
+    y = c(ymin, ymax)
+    if (is.null(ylab)) ylab = "Frequency"
+    if (is.null(main)) main = paste("Histogram of", x_dep)
+    type = "rect"
+  }
+  # END TEST: histogram
   
   if (is.null(y)) {
     ## Special catch for interval plots without a specified y-var
@@ -1453,6 +1468,13 @@ tinyplot.default = function(
           boxwex = boxwex_xx,
           staplewex = staplewex_xx,
           outwex = outwex_xx
+        )
+      } else if (type == "rect") {
+        rect(
+          xleft = xmin, ybottom = ymin, xright = xmax, ytop = ymax,
+          lty = ilty,
+          border = icol,
+          col =  ibg
         )
       } else {
         stop("`type` argument not supported.", call. = FALSE)

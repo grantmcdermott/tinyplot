@@ -262,7 +262,7 @@
 #' without causing unexpected changes to the output.
 #'   
 #' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
-#' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon polypath segments title mtext text rect
+#' @importFrom graphics abline arrows axis Axis box boxplot grconvertX grconvertY lines par plot.default plot.new plot.window points polygon polypath segments title mtext text rect
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit
 #' @importFrom tools file_ext

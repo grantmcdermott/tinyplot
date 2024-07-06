@@ -13,6 +13,7 @@ New features:
   - `type = "boxplot"`. Simultaneously enables `plt(numeric ~ factor)`
   support, first raised in #2, so that a boxplot is automatically plotted if a
   numeric is plotted against a factor. (#154 @grantmcdermott)
+  - `type = "polypath`. (#159 @grantmcdermott)
 
 Misc:
 

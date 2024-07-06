@@ -186,10 +186,10 @@ lines, "o" for overplotted points and lines, "s" and "S" for stair steps,
 and "h" for histogram-like vertical lines. Specifying "n" produces an empty
 plot over the extent of the data, but with no internal elements.
 \item Additional tinyplot types: "boxplot" for boxplots, "density" for
-densities,  "pointrange" or "errorbar" for segment intervals, and
-"polygon", "ribbon" or "area" for polygon intervals (where area plots are a
-special case of ribbon plots with \code{ymin} set to 0 and \code{ymax} set to \code{y};
-see below).
+densities, "polygon" or "polypath" for polygons,  "pointrange" or"errorbar"
+for segment intervals, and "ribbon" or "area" for polygon intervals (where
+area plots are a special case of ribbon plots with \code{ymin} set to 0 and
+\code{ymax} set to \code{y}; see below).
 }}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed

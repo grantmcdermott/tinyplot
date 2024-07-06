@@ -74,10 +74,10 @@
 #'   and "h" for histogram-like vertical lines. Specifying "n" produces an empty
 #'   plot over the extent of the data, but with no internal elements.
 #'   - Additional tinyplot types: "boxplot" for boxplots, "density" for
-#'   densities,  "pointrange" or "errorbar" for segment intervals, and
-#'   "polygon", "ribbon" or "area" for polygon intervals (where area plots are a
-#'   special case of ribbon plots with `ymin` set to 0 and `ymax` set to `y`;
-#'   see below).
+#'   densities, "polygon" or "polypath" for polygons,  "pointrange" or"errorbar"
+#'   for segment intervals, and "ribbon" or "area" for polygon intervals (where
+#'   area plots are a special case of ribbon plots with `ymin` set to 0 and
+#'   `ymax` set to `y`; see below).
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -262,7 +262,7 @@
 #' without causing unexpected changes to the output.
 #'   
 #' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
-#' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon segments title mtext text rect
+#' @importFrom graphics abline arrows axis Axis box grconvertX grconvertY lines par plot.default plot.new plot.window points polygon polypath segments title mtext text rect
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit
 #' @importFrom tools file_ext
@@ -705,7 +705,7 @@ tinyplot.default = function(
   by_ordered = FALSE
   by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
   # manual overrides with warning
-  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "boxplot")) {
+  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
     by_continuous = FALSE
   } else if (!is.null(by)){
@@ -1418,6 +1418,17 @@ tinyplot.default = function(
           col = ibg,
           lty = ilty,
           lwd = ilwd
+        )
+      } else if (type == "polypath") {
+        irule = ifelse(!is.null(dots[["rule"]]), dots[["rule"]], "winding")
+        polypath(
+          x = xx,
+          y = yy,
+          border = icol,
+          col = ibg,
+          lty = ilty,
+          lwd = ilwd,
+          rule = irule
         )
       } else if (type == "boxplot") {
         horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)

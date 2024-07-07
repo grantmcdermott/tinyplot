@@ -15,6 +15,7 @@ New features:
   numeric is plotted against a factor. (#154 @grantmcdermott)
   - `type = "polypath`. (#159 @grantmcdermott)
   - `type = "rect"`. (#161 @grantmcdermott)
+  - `type = "segments"`. (#163 @grantmcdermott)
 
 Misc:
 

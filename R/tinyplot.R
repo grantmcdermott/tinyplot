@@ -78,6 +78,11 @@
 #'   for segment intervals, and "ribbon" or "area" for polygon intervals (where
 #'   area plots are a special case of ribbon plots with `ymin` set to 0 and
 #'   `ymax` set to `y`; see below).
+#' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
+#'   or interval plot types. Only used when the `type` argument is one of
+#'   "rect" or "segments" (where all four min-max coordinates are required), or
+#'   "pointrange", "errorbar", or "ribbon" (where only `ymin` and `ymax`
+#'   required alongside `x`).
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -208,9 +213,6 @@
 #'   longer discussion about the trade-offs involved.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
-#' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
-#'   or interval plot types. Only used when the `type` argument is one of
-#'   "pointrange", "errorbar", "ribbon", or "rect".
 #' @param ribbon.alpha numeric factor modifying the opacity alpha of any ribbon
 #'   shading; typically in `[0, 1]`. Only used when `type = "ribbon"`, or when
 #'   the `bg` fill argument is specified in a density plot (since filled density

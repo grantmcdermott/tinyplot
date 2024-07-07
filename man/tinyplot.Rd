@@ -353,7 +353,9 @@ longer discussion about the trade-offs involved.}
 
 \item{xmin, xmax, ymin, ymax}{minimum and maximum coordinates of relevant area
 or interval plot types. Only used when the \code{type} argument is one of
-"pointrange", "errorbar", "ribbon", or "rect".}
+"rect" or "segments" (where all four min-max coordinates are required), or
+"pointrange", "errorbar", or "ribbon" (where only \code{ymin} and \code{ymax}
+required alongside \code{x}).}
 
 \item{ribbon.alpha}{numeric factor modifying the opacity alpha of any ribbon
 shading; typically in \verb{[0, 1]}. Only used when \code{type = "ribbon"}, or when

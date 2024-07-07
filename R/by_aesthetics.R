@@ -167,7 +167,7 @@ by_pch = function(ngrps, type, pch=NULL) {
 by_lty = function(ngrps, type, lty=NULL) {
 
   # We only care about line types, otherwise return NULL
-  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon", "boxplot")) {
+  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon", "boxplot", "rect", "segments")) {
     out = NULL
     
     # special "by" convenience keyword

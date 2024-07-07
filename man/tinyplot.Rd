@@ -41,6 +41,8 @@ tinyplot(x, ...)
   alpha = NULL,
   cex = 1,
   restore.par = FALSE,
+  xmin = NULL,
+  xmax = NULL,
   ymin = NULL,
   ymax = NULL,
   ribbon.alpha = NULL,
@@ -349,9 +351,9 @@ setting to TRUE instead. See also \link{get_saved_par} for another option to
 recover the original \code{\link[graphics]{par}} settings, as well as
 longer discussion about the trade-offs involved.}
 
-\item{ymin, ymax}{minimum and maximum coordinates of interval plot types. Only
-used when the \code{type} argument is one of "pointrange", "errorbar", or
-"ribbon".}
+\item{xmin, xmax, ymin, ymax}{minimum and maximum coordinates of relevant area
+or interval plot types. Only used when the \code{type} argument is one of
+"pointrange", "errorbar", "ribbon", or "rect".}
 
 \item{ribbon.alpha}{numeric factor modifying the opacity alpha of any ribbon
 shading; typically in \verb{[0, 1]}. Only used when \code{type = "ribbon"}, or when

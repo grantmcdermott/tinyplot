@@ -290,6 +290,8 @@ tinyplot(
   alpha = NULL,
   cex = 1,
   restore.par = FALSE,
+  xmin = NULL,
+  xmax = NULL,
   ymin = NULL,
   ymax = NULL,
   ribbon.alpha = NULL,
@@ -681,10 +683,10 @@ a logical value indicating whether the <code>par</code> settings prior to callin
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="ymin">ymin</code>, <code id="ymax">ymax</code>
+<code id="xmin">xmin</code>, <code id="xmax">xmax</code>, <code id="ymin">ymin</code>, <code id="ymax">ymax</code>
 </td>
 <td>
-minimum and maximum coordinates of interval plot types. Only used when the <code>type</code> argument is one of "pointrange", "errorbar", or "ribbon".
+minimum and maximum coordinates of relevant area or interval plot types. Only used when the <code>type</code> argument is one of "pointrange", "errorbar", "ribbon", or "rect".
 </td>
 </tr>
 <tr>

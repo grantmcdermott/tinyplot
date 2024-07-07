@@ -562,7 +562,7 @@ tinyplot.default = function(
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = if (!missing(x)) {
     deparse1(substitute(x)) 
-  } else if (type == "rect") {
+  } else if (type %in% c("rect", "segments")) {
     x = NULL
     NULL
   }
@@ -624,8 +624,8 @@ tinyplot.default = function(
   }
   
   if (is.null(x)) {
-    ## Special catch for area plots without a specified y-var
-    if (type %in% c("rect")) {
+    ## Special catch for rect and segment plots without a specified y-var
+    if (type %in% c("rect", "segments")) {
       xmin_dep = deparse(substitute(xmin))
       xmax_dep = deparse(substitute(xmax))
       x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")
@@ -635,7 +635,7 @@ tinyplot.default = function(
   } 
   if (is.null(y)) {
     ## Special catch for area and interval plots without a specified y-var
-    if (type %in% c("rect", "pointrange", "errorbar", "ribbon")) {
+    if (type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")) {
       ymin_dep = deparse(substitute(ymin))
       ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
@@ -1370,7 +1370,7 @@ tinyplot.default = function(
       
       # empty plot flag
       empty_plot = FALSE
-      if (type=="n" || ((length(xx)==0) && type!="rect")) {
+      if (type=="n" || ((length(xx)==0) && !(type %in% c("rect","segments")))) {
         empty_plot = TRUE
       }
       
@@ -1488,8 +1488,16 @@ tinyplot.default = function(
         rect(
           xleft = xxmin, ybottom = yymin, xright = xxmax, ytop = yymax,
           lty = ilty,
+          lwd = ilwd,
           border = icol,
           col =  ibg
+        )
+      } else if (type == "segments") {
+        segments(
+          x0 = xxmin, y0 = yymin, x1 = xxmax, y1 = yymax,
+          lty = ilty,
+          lwd = ilwd,
+          col = icol
         )
       } else {
         stop("`type` argument not supported.", call. = FALSE)

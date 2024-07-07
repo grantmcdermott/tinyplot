@@ -1370,7 +1370,7 @@ tinyplot.default = function(
       
       # empty plot flag
       empty_plot = FALSE
-      if (type=="n" || (length(xx)==0) && type!="rect") {
+      if (type=="n" || ((length(xx)==0) && type!="rect")) {
         empty_plot = TRUE
       }
       

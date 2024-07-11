@@ -1765,7 +1765,11 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (no_y) {
+  if (type %in% c("hist", "histogram")) {
+    if (is.null(ylab)) ylab = "Frequency"
+    if (is.null(xlab)) xlab = names(mf)[x_loc]
+    if (is.null(main)) main = paste("Histogram of", xlab) 
+  } else if (no_y) {
     if (is.null(ylab)) ylab = names(mf)[x_loc]
     if (is.null(xlab)) xlab = "Index"
   } else {

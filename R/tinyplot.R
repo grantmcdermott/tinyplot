@@ -78,6 +78,11 @@
 #'   for segment intervals, and "ribbon" or "area" for polygon intervals (where
 #'   area plots are a special case of ribbon plots with `ymin` set to 0 and
 #'   `ymax` set to `y`; see below).
+#' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
+#'   or interval plot types. Only used when the `type` argument is one of
+#'   "rect" or "segments" (where all four min-max coordinates are required), or
+#'   "pointrange", "errorbar", or "ribbon" (where only `ymin` and `ymax`
+#'   required alongside `x`).
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -208,9 +213,6 @@
 #'   longer discussion about the trade-offs involved.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
-#' @param ymin,ymax minimum and maximum coordinates of interval plot types. Only
-#'   used when the `type` argument is one of "pointrange", "errorbar", or
-#'   "ribbon".
 #' @param ribbon.alpha numeric factor modifying the opacity alpha of any ribbon
 #'   shading; typically in `[0, 1]`. Only used when `type = "ribbon"`, or when
 #'   the `bg` fill argument is specified in a density plot (since filled density
@@ -478,6 +480,8 @@ tinyplot.default = function(
     alpha = NULL,
     cex = 1,
     restore.par = FALSE,
+    xmin = NULL,
+    xmax = NULL,
     ymin = NULL,
     ymax = NULL,
     ribbon.alpha = NULL,
@@ -558,7 +562,12 @@ tinyplot.default = function(
   )
   
   # Capture deparsed expressions early, before x, y and by are evaluated
-  x_dep = deparse1(substitute(x))
+  x_dep = if (!missing(x)) {
+    deparse1(substitute(x)) 
+  } else if (type %in% c("rect", "segments")) {
+    x = NULL
+    NULL
+  }
   y_dep = if (is.null(y)) {
     deparse1(substitute(x))
   } else {
@@ -579,7 +588,7 @@ tinyplot.default = function(
   }
   
   # enforce boxplot type for y ~ factor(x)
-  if (is.factor(x) && !is.factor(y)) {
+  if (!is.null(x) && is.factor(x) && !is.factor(y)) {
     type = "boxplot"
   }
 
@@ -631,9 +640,19 @@ tinyplot.default = function(
   }
   # END TEST: histogram
   
+  if (is.null(x)) {
+    ## Special catch for rect and segment plots without a specified y-var
+    if (type %in% c("rect", "segments")) {
+      xmin_dep = deparse(substitute(xmin))
+      xmax_dep = deparse(substitute(xmax))
+      x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")
+      x = rep(NA, length(x))
+      if (is.null(xlim)) xlim = range(c(xmin, xmax))
+    }
+  } 
   if (is.null(y)) {
-    ## Special catch for interval plots without a specified y-var
-    if (type %in% c("pointrange", "errorbar", "ribbon")) {
+    ## Special catch for area and interval plots without a specified y-var
+    if (type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")) {
       ymin_dep = deparse(substitute(ymin))
       ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
@@ -704,6 +723,8 @@ tinyplot.default = function(
   if (is.null(xlim)) xlim = range(xy$x[is.finite(xy$x)])
   if (is.null(ylim)) ylim = range(xy$y[is.finite(xy$y)])
 
+  if (!is.null(xmin)) xlim[1] = min(c(xlim, xmin))
+  if (!is.null(xmax)) xlim[2] = max(c(xlim, xmax))
   if (!is.null(ymin)) ylim[1] = min(c(ylim, ymin))
   if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
 
@@ -729,13 +750,20 @@ tinyplot.default = function(
   
   if (!is.null(by) && !by_continuous) {
     split_data = list(x=x, y=y)
+    split_data[["xmin"]] = xmin
+    split_data[["xmax"]] = xmax
     split_data[["ymin"]] = ymin
     split_data[["ymax"]] = ymax
     split_data[["facet"]] = facet
     split_data = lapply(split_data, split, by)
     split_data = do.call(function(...) Map("list", ...), split_data)
   } else {
-    split_data = list(list(x=x, y=y, ymin=ymin, ymax=ymax, facet=facet))
+    split_data = list(list(
+      x = x, y = y,
+      xmin = xmin, xmax = xmax,
+      ymin = ymin, ymax = ymax,
+      facet = facet
+    ))
   }
   
   ngrps = length(split_data)
@@ -1300,6 +1328,8 @@ tinyplot.default = function(
       ## Need extra catch for non-groupby data that also doesn't have ymin or
       ## ymax vars
       if (is.null(by) || isTRUE(by_continuous)) {
+        if (is.null(idata[["xmin"]])) idata[["xmin"]] = NULL
+        if (is.null(idata[["xmax"]])) idata[["xmax"]] = NULL
         if (is.null(idata[["ymin"]])) idata[["ymin"]] = NULL
         if (is.null(idata[["ymax"]])) idata[["ymax"]] = NULL
       }
@@ -1335,6 +1365,8 @@ tinyplot.default = function(
     for (ii in seq_along(idata)) {
       xx = idata[[ii]]$x
       yy = idata[[ii]]$y
+      xxmin = idata[[ii]]$xmin
+      xxmax = idata[[ii]]$xmax
       yymin = idata[[ii]]$ymin
       yymax = idata[[ii]]$ymax
       
@@ -1355,7 +1387,7 @@ tinyplot.default = function(
       
       # empty plot flag
       empty_plot = FALSE
-      if (type=="n" || length(xx)==0) {
+      if (type=="n" || ((length(xx)==0) && !(type %in% c("rect","segments")))) {
         empty_plot = TRUE
       }
       
@@ -1471,10 +1503,18 @@ tinyplot.default = function(
         )
       } else if (type == "rect") {
         rect(
-          xleft = xmin, ybottom = ymin, xright = xmax, ytop = ymax,
+          xleft = xxmin, ybottom = yymin, xright = xxmax, ytop = yymax,
           lty = ilty,
+          lwd = ilwd,
           border = icol,
           col =  ibg
+        )
+      } else if (type == "segments") {
+        segments(
+          x0 = xxmin, y0 = yymin, x1 = xxmax, y1 = yymax,
+          lty = ilty,
+          lwd = ilwd,
+          col = icol
         )
       } else {
         stop("`type` argument not supported.", call. = FALSE)

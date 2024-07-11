@@ -14,6 +14,8 @@ New features:
   support, first raised in #2, so that a boxplot is automatically plotted if a
   numeric is plotted against a factor. (#154 @grantmcdermott)
   - `type = "polypath`. (#159 @grantmcdermott)
+  - `type = "rect"`. (#161 @grantmcdermott)
+  - `type = "segments"`. (#163 @grantmcdermott)
 
 Misc:
 

@@ -73,11 +73,12 @@
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps,
 #'   and "h" for histogram-like vertical lines. Specifying "n" produces an empty
 #'   plot over the extent of the data, but with no internal elements.
-#'   - Additional tinyplot types: "boxplot" for boxplots, "density" for
-#'   densities, "polygon" or "polypath" for polygons,  "pointrange" or"errorbar"
-#'   for segment intervals, and "ribbon" or "area" for polygon intervals (where
-#'   area plots are a special case of ribbon plots with `ymin` set to 0 and
-#'   `ymax` set to `y`; see below).
+#'   - Additional tinyplot types: "boxplot" for boxplots, "histogram" (alias
+#'   "hist") for histograms, "density" for densities, "polygon" or "polypath"
+#'   for polygons,  "pointrange" or"errorbar" for segment intervals, and
+#'   "ribbon" or "area" for polygon intervals (where area plots are a special
+#'   case of ribbon plots with `ymin` set to 0 and `ymax` set to `y`; see
+#'   below).
 #' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   "rect" or "segments" (where all four min-max coordinates are required), or
@@ -625,20 +626,53 @@ tinyplot.default = function(
     return(do.call(tinyplot.density, args = fargs))
   }
   
-  # TEST: histogram
-  if (type == "histogram") {
-    hist_list = hist(x, plot = FALSE)
-    xmin = hist_list$breaks[-1]
-    xmax = hist_list$mids+(hist_list$mids-hist_list$breaks[-1])
+  if (type %in% c("hist", "histogram")) {
+    hbreaks = ifelse(!is.null(dots[["breaks"]]), dots[["breaks"]], "Sturges")
+    hist_list = hist(x, breaks = hbreaks, plot = FALSE)
+    if (!is.null(by)) {
+      split_x = split(x, by)
+      hist_split = lapply(
+        seq_along(split_x),
+        function(s) {
+          h = hist(split_x[[s]], breaks = hist_list$breaks, plot = FALSE)
+          h$breaks = h$breaks[-1]
+          h$by = rep(names(split_x)[[s]], length(h$breaks))
+          return(h)
+        }
+      )
+      hist_list = do.call(Map, c(c, hist_split))
+      xmin = hist_list$breaks
+      xmax = hist_list$mids+(hist_list$mids-hist_list$breaks)
+      by = hist_list$by
+    } else {
+      xmin = hist_list$breaks[-1]
+      xmax = hist_list$mids+(hist_list$mids-hist_list$breaks[-1])
+    }
     ymin = hist_list$counts
+    # optional: remove zero count cases
+    if (!is.null(by)) {
+      hidx = which(ymin!=0)
+      xmin = xmin[hidx]
+      xmax = xmax[hidx]
+      ymin = ymin[hidx]
+      by = by[hidx]
+    }
     ymax = rep(0, length(ymin))
     x = c(xmin, xmax)
     y = c(ymin, ymax)
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(main)) main = paste("Histogram of", x_dep)
+    if (is.null(by) && is.null(palette)) {
+      if (is.null(col)) col = par("fg")
+      if (is.null(bg) && is.null(fill)) bg = "lightgray"
+    } else {
+      if (is.null(bg) && !is.null(fill)) bg = fill
+      if (is.null(bg)) {
+        bg = "by"
+      }
+    }
     type = "rect"
   }
-  # END TEST: histogram
   
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
@@ -928,7 +962,7 @@ tinyplot.default = function(
     
     has_sub = !is.null(sub)
     
-    if (isTRUE(was_area_type)) {
+    if (isTRUE(was_area_type) || type == "rect") {
       legend_args[["pt.lwd"]] = par("lwd")
       legend_args[["lty"]] = 0
     }

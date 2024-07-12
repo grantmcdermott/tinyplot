@@ -1,0 +1,5 @@
+## Don't copy across large test suite of SVG snapshots to end user's
+## installed version of the package
+#tinytest/_tinysnapshot/.*[.]svg$ 
+#tinytest/_tinysnapshot_review/.*[.]svg$ 
+tinytest/*

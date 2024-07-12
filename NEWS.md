@@ -16,6 +16,7 @@ New features:
   - `type = "polypath`. (#159 @grantmcdermott)
   - `type = "rect"`. (#161 @grantmcdermott)
   - `type = "segments"`. (#163 @grantmcdermott)
+  - `type = "histogram"` (alias `type = "hist"`). (#164 @grantmcdermott)
 
 Misc:
 

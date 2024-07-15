@@ -1656,13 +1656,13 @@ tinyplot.formula = function(
     # special catch if by is the same as x or y (normally for continuous legend)
     by_same_y = by_same_x = FALSE
     fml_all_vars = all.vars(m$formula, unique = FALSE)
-    if (any(duplicated(fml_all_vars))) {
+    if (anyDuplicated(fml_all_vars) > 0) {
       if (isTRUE(no_y)) {
         by_same_x = TRUE ## i.e., if there is duplication and no y var, assume by must be the same as x
       } else {
         fml_lhs_vars = paste(attr(terms(m$formula), "variables")[[2]])
         fml_rhs_vars = fml_all_vars[!(fml_all_vars %in% fml_lhs_vars)]
-        if (any(duplicated(fml_rhs_vars))) {
+        if (anyDuplicated(fml_rhs_vars) > 0) {
           by_same_x = TRUE
         } else {
           by_same_y = TRUE
@@ -1810,7 +1810,7 @@ tinyplot.density = function(
     # joint bandwidth
     bw_type = as.list(object$call[-1])[["bw"]]
     if (is.null(bw_type)) bw_type = stats::bw.nrd0 else bw_type = str2lang(paste0("bw.", bw))
-    xs_mask = vapply(split_x, length, numeric(1)) > 1
+    xs_mask = lengths(split_x) > 1
     bws = vapply(split_x[xs_mask], bw_type, numeric(1))
     bw = mean(bws, na.rm = TRUE)
     #
@@ -1830,7 +1830,7 @@ tinyplot.density = function(
     # need to coerce facet variables to factors for faceting to work properly later on
     # if we originally passed a factor, try to preserve this order for grid arrangement
     if (inherits(facet, "factor")) {
-      orig_len = length(levels(facet))
+      orig_len = nlevels(facet)
       new_len = length(facet_names)
       if (orig_len == new_len) {
         facet_names = levels(facet)

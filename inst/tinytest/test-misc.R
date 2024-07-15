@@ -6,11 +6,15 @@ f = function () {
   tinyplot(Sepal.Length ~ Petal.Length, data = iris, type = "n")
 }
 expect_snapshot_plot(f, label = "type_n")
-# empty plot(s)
 f = function () {
   tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris, type = "n")
 }
 expect_snapshot_plot(f, label = "type_n_by")
+f = function () {
+  tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris, type = "l", empty = TRUE)
+}
+expect_snapshot_plot(f, label = "type_l_empty")
+
 
 # log axes
 f = function() {

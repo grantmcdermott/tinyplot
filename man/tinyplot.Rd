@@ -50,6 +50,7 @@ tinyplot(x, ...)
   file = NULL,
   width = NULL,
   height = NULL,
+  empty = FALSE,
   ...
 )
 
@@ -186,13 +187,13 @@ should be taken. A matrix is converted to a data frame.}
 for lines, "b" for both points and lines, "c" for empty points joined by
 lines, "o" for overplotted points and lines, "s" and "S" for stair steps,
 and "h" for histogram-like vertical lines. Specifying "n" produces an empty
-plot over the extent of the data, but with no internal elements.
-\item Additional tinyplot types: "boxplot" for boxplots, "histogram" (alias
-"hist") for histograms, "density" for densities, "polygon" or "polypath"
-for polygons,  "pointrange" or"errorbar" for segment intervals, and
-"ribbon" or "area" for polygon intervals (where area plots are a special
-case of ribbon plots with \code{ymin} set to 0 and \code{ymax} set to \code{y}; see
-below).
+plot over the extent of the data, but with no internal elements (see also
+the \code{empty} argument below).
+\item Additional tinyplot types: "boxplot" for boxplots, "density" for
+densities, "polygon" or "polypath" for polygons,  "pointrange" or"errorbar"
+for segment intervals, and "ribbon" or "area" for polygon intervals (where
+area plots are a special case of ribbon plots with \code{ymin} set to 0 and
+\code{ymax} set to \code{y}; see below).
 }}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
@@ -400,6 +401,14 @@ graphics windows.}
 \item{height}{numeric giving the plot height in inches. Same considerations as
 \code{width} (above) apply, e.g. will default to \code{tpar("file.height")} if not
 specified.}
+
+\item{empty}{logical indicating whether the interior plot region should be
+left empty. The default is \code{FALSE}. Setting to \code{TRUE} has a similar effect
+to invoking \code{type = "n"} above, except that any legend artifacts owing to a
+particular plot type (e.g., lines for \code{type = "l"} or squares for
+\code{type = "area"}) will still be drawn correctly alongside the empty plot. In
+contrast,\code{type = "n"} implicitly assumes a scatterplot and so any legend
+will only depict points.}
 
 \item{formula}{a \code{formula} that optionally includes grouping variable(s)
 after a vertical bar, e.g. \code{y ~ x | z}. One-sided formulae are also

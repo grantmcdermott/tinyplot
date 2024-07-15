@@ -9,7 +9,10 @@ where the formatting is also better._
 New features:
 
 - Support for additional plot types:
-  - `type = "n"`, i.e. empty plot. (#157 @grantmcdermott)
+  - `type = "n"`, i.e. empty plot. Since `type = "n"` implicitly assumes points,
+  which limits the type of legend that can be drawn alongside the empty plot, we
+  have also added a companion `empty` argument that can be used alongside any
+  plot type. (#157, #167 @grantmcdermott)
   - `type = "boxplot"`. Simultaneously enables `plt(numeric ~ factor)`
   support, first raised in #2, so that a boxplot is automatically plotted if a
   numeric is plotted against a factor. (#154 @grantmcdermott)

@@ -72,13 +72,20 @@
 #'   for lines, "b" for both points and lines, "c" for empty points joined by
 #'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps,
 #'   and "h" for histogram-like vertical lines. Specifying "n" produces an empty
-#'   plot over the extent of the data, but with no internal elements.
-#'   - Additional tinyplot types: "boxplot" for boxplots, "histogram" (alias
-#'   "hist") for histograms, "density" for densities, "polygon" or "polypath"
-#'   for polygons,  "pointrange" or"errorbar" for segment intervals, and
-#'   "ribbon" or "area" for polygon intervals (where area plots are a special
-#'   case of ribbon plots with `ymin` set to 0 and `ymax` set to `y`; see
-#'   below).
+#'   plot over the extent of the data, but with no internal elements (see also
+#'   the `empty` argument below).
+#'   - Additional tinyplot types: "boxplot" for boxplots, "density" for
+#'   densities, "polygon" or "polypath" for polygons,  "pointrange" or"errorbar"
+#'   for segment intervals, and "ribbon" or "area" for polygon intervals (where
+#'   area plots are a special case of ribbon plots with `ymin` set to 0 and
+#'   `ymax` set to `y`; see below).
+#' @param empty logical indicating whether the interior plot region should be
+#'  left empty. The default is `FALSE`. Setting to `TRUE` has a similar effect
+#'  to invoking `type = "n"` above, except that any legend artifacts owing to a
+#'  particular plot type (e.g., lines for `type = "l"` or squares for
+#'  `type = "area"`) will still be drawn correctly alongside the empty plot. In
+#'  contrast,`type = "n"` implicitly assumes a scatterplot and so any legend
+#'  will only depict points.
 #' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   "rect" or "segments" (where all four min-max coordinates are required), or
@@ -251,7 +258,7 @@
 #'  graphics windows.
 #' @param height numeric giving the plot height in inches. Same considerations as
 #'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
-#'  specified. 
+#'  specified.
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'
@@ -490,6 +497,7 @@ tinyplot.default = function(
     file = NULL,
     width = NULL,
     height = NULL,
+    empty = FALSE,
     ...) {
   
   dots = list(...)
@@ -1445,7 +1453,7 @@ tinyplot.default = function(
       
       # empty plot flag
       empty_plot = FALSE
-      if (type=="n" || ((length(xx)==0) && !(type %in% c("rect","segments")))) {
+      if (isTRUE(empty) || type=="n" || ((length(xx)==0) && !(type %in% c("rect","segments")))) {
         empty_plot = TRUE
       }
       
@@ -1729,13 +1737,13 @@ tinyplot.formula = function(
     # special catch if by is the same as x or y (normally for continuous legend)
     by_same_y = by_same_x = FALSE
     fml_all_vars = all.vars(m$formula, unique = FALSE)
-    if (any(duplicated(fml_all_vars))) {
+    if (anyDuplicated(fml_all_vars) > 0) {
       if (isTRUE(no_y)) {
         by_same_x = TRUE ## i.e., if there is duplication and no y var, assume by must be the same as x
       } else {
         fml_lhs_vars = paste(attr(terms(m$formula), "variables")[[2]])
         fml_rhs_vars = fml_all_vars[!(fml_all_vars %in% fml_lhs_vars)]
-        if (any(duplicated(fml_rhs_vars))) {
+        if (anyDuplicated(fml_rhs_vars) > 0) {
           by_same_x = TRUE
         } else {
           by_same_y = TRUE
@@ -1887,7 +1895,7 @@ tinyplot.density = function(
     # joint bandwidth
     bw_type = as.list(object$call[-1])[["bw"]]
     if (is.null(bw_type)) bw_type = stats::bw.nrd0 else bw_type = str2lang(paste0("bw.", bw))
-    xs_mask = vapply(split_x, length, numeric(1)) > 1
+    xs_mask = lengths(split_x) > 1
     bws = vapply(split_x[xs_mask], bw_type, numeric(1))
     bw = mean(bws, na.rm = TRUE)
     #
@@ -1907,7 +1915,7 @@ tinyplot.density = function(
     # need to coerce facet variables to factors for faceting to work properly later on
     # if we originally passed a factor, try to preserve this order for grid arrangement
     if (inherits(facet, "factor")) {
-      orig_len = length(levels(facet))
+      orig_len = nlevels(facet)
       new_len = length(facet_names)
       if (orig_len == new_len) {
         facet_names = levels(facet)

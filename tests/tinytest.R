@@ -10,3 +10,6 @@ if ( NOT_CRAN && ON_LINUX && requireNamespace("tinytest", quietly=TRUE) ){
   tinytest::test_package("tinyplot")
 }
 
+# Clean up
+rm(ON_LINUX, NOT_CRAN)
+

@@ -1,0 +1,8 @@
+## Don't copy across large test suite of SVG snapshots to end user's
+## installed version of the package
+## UPDATE: This causes all tests to be skipped in R CMD check, so reverting
+## back. Another option might be to set up a dedicated tinytest::test_all()
+## GitHub CI action. But we'll leave that for a possible future date and just
+## comment out for now.
+# tinytest/
+# !tinytest/helpers.R

@@ -299,6 +299,7 @@ tinyplot(
   file = NULL,
   width = NULL,
   height = NULL,
+  empty = FALSE,
   ...
 )
 
@@ -447,7 +448,7 @@ a data.frame (or list) from which the variables in formula should be taken. A ma
 <p>character string giving the type of plot desired. Options are:</p>
 <ul>
 <li>
-<p>The same set of 1-character values supported by plot: "p" for points, "l" for lines, "b" for both points and lines, "c" for empty points joined by lines, "o" for overplotted points and lines, "s" and "S" for stair steps, and "h" for histogram-like vertical lines. Specifying "n" produces an empty plot over the extent of the data, but with no internal elements.</p>
+<p>The same set of 1-character values supported by plot: "p" for points, "l" for lines, "b" for both points and lines, "c" for empty points joined by lines, "o" for overplotted points and lines, "s" and "S" for stair steps, and "h" for histogram-like vertical lines. Specifying "n" produces an empty plot over the extent of the data, but with no internal elements (see also the <code>empty</code> argument below).</p>
 </li>
 <li>
 <p>Additional tinyplot types: "boxplot" for boxplots, "density" for densities, "polygon" or "polypath" for polygons, "pointrange" or"errorbar" for segment intervals, and "ribbon" or "area" for polygon intervals (where area plots are a special case of ribbon plots with <code>ymin</code> set to 0 and <code>ymax</code> set to <code>y</code>; see below).</p>
@@ -727,6 +728,14 @@ numeric giving the plot width in inches. Together with <code>height</code>, typi
 </td>
 <td>
 numeric giving the plot height in inches. Same considerations as <code>width</code> (above) apply, e.g.&nbsp;will default to <code>tpar(“file.height”)</code> if not specified.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="empty">empty</code>
+</td>
+<td>
+logical indicating whether the interior plot region should be left empty. The default is <code>FALSE</code>. Setting to <code>TRUE</code> has a similar effect to invoking <code>type = “n”</code> above, except that any legend artifacts owing to a particular plot type (e.g., lines for <code>type = “l”</code> or squares for <code>type = “area”</code>) will still be drawn correctly alongside the empty plot. In contrast,<code>type = “n”</code> implicitly assumes a scatterplot and so any legend will only depict points.
 </td>
 </tr>
 <tr>

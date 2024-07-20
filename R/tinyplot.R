@@ -502,6 +502,13 @@ tinyplot.default = function(
   
   dots = list(...)
 
+  if (is.function(type)) {
+    type_fun = type
+    type <- "l" # avoid breaking == string comparisons
+  } else {
+    type_fun = NULL
+  }
+
   # Write plot to output file (if requested)
   if (!is.null(file)) {
     filepath = file
@@ -1435,6 +1442,13 @@ tinyplot.default = function(
       xxmax = idata[[ii]]$xmax
       yymin = idata[[ii]]$ymin
       yymax = idata[[ii]]$ymax
+
+      if (is.function(type_fun)) {
+        tmp = type_fun(x = xx, y = yy, ...)
+        xx = tmp$x
+        yy = tmp$y
+        type = tmp$type
+      }
       
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
@@ -1773,7 +1787,7 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (type %in% c("hist", "histogram")) {
+  if (is.character(type) && type %in% c("hist", "histogram")) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = names(mf)[x_loc]
   } else if (no_y) {

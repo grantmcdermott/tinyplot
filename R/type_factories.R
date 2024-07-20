@@ -19,6 +19,7 @@ assert_dependency <- function(library_name) {
 #'
 #' @examples
 #' plt(Sepal.Length ~ Petal.Length, type = type_spline(), data = iris)
+#' @export
 type_spline = function(x, y, se = TRUE, k = -1, fx = FALSE, bs = "tp", ...) {
     assert_dependency("mgcv")
     assert_dependency("marginaleffects")
@@ -55,6 +56,7 @@ type_spline = function(x, y, se = TRUE, k = -1, fx = FALSE, bs = "tp", ...) {
 #'
 #' @examples
 #' plt(Sepal.Length ~ Petal.Length, type = type_spline(), data = iris)
+#' @export
 type_loess = function(x, y, ...) {
     fun = function(x, y, ...) {
         if (missing(x) || missing(y)) return("l")
@@ -80,6 +82,7 @@ type_loess = function(x, y, ...) {
 #'
 #' @examples
 #' plt(vs ~ mpg, type = type_glm(family = binomial), data = mtcars)
+#' @export
 type_glm = function(x, y, family = gaussian(), se = TRUE) {
     assert_dependency("marginaleffects")
     fun = function(x, y, ...) {
@@ -115,6 +118,7 @@ type_glm = function(x, y, family = gaussian(), se = TRUE) {
 #'
 #' @examples
 #' plt(hp ~ mpg, type = type_lm(), data = mtcars)
+#' @export
 type_lm = function(x, y, se = TRUE) {
     assert_dependency("marginaleffects")
     fun = function(x, y, ...) {

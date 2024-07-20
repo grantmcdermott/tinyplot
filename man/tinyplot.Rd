@@ -181,7 +181,7 @@ features globally for all \code{tinyplot} plots.
 \item{data}{a data.frame (or list) from which the variables in formula
 should be taken. A matrix is converted to a data frame.}
 
-\item{type}{character string giving the type of plot desired. Options are:
+\item{type}{character string or function giving the type of plot desired. For functions, see the "Type functions" section below. For strings, options are:
 \itemize{
 \item The same set of 1-character values supported by plot: "p" for points, "l"
 for lines, "b" for both points and lines, "c" for empty points joined by
@@ -434,6 +434,20 @@ possible to mimic the behaviour and syntax logic of the original base
 out existing \code{plot} calls for \code{tinyplot} (or its shorthand alias \code{plt}),
 without causing unexpected changes to the output.
 }
+\section{Type functions}{
+
+The \code{type} argument accepts functions which can apply statistical transformations to \code{x} and \code{y} (ex: smooths, splines, fitted models).
+
+\code{tinyplot} supplies a few "function factories," such as \link{type_spline}. When called, these function factories return another function, which is appropriate to use in the \code{type} argument.
+
+Users who wish to define their own types/transforms must define a function with these characteristics:
+\itemize{
+\item Accepts \code{x}, \code{y}, and \code{...} as input arguments, with no default value.
+\item When \code{x} or \code{y} are missing, return a string compatibile with the \code{type} argument, to identify the proper visual representation, ex: "l" for line, "p" for points, "ribbon" for ribbon.
+\item When \code{x} and \code{y} are defined, process the data, and return a named list of equal-length vectors. Valid entries in this output list are: "x", "y", "xmin", "xmax", "ymin", "ymax".
+}
+}
+
 \examples{
 #' 
 aq = transform(
@@ -585,6 +599,14 @@ tinyplot(
   Temp ~ Day | Month,
   data = aq,
   type = "l",
+  palette = "tableau"
+)
+
+# Type factory: Spline
+tinyplot(
+  Temp ~ Day | Month,
+  data = aq,
+  type = type_spline(),
   palette = "tableau"
 )
 

@@ -570,6 +570,8 @@ tinyplot.default = function(
     par(get_saved_par(when = "after"))
   )
   
+  if (is.null(ribbon.alpha)) ribbon.alpha = .tpar[["ribbon.alpha"]]
+  
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = if (!missing(x)) {
     deparse1(substitute(x)) 
@@ -693,14 +695,13 @@ tinyplot.default = function(
     x = c(xmin, xmax)
     y = c(ymin, ymax)
     if (is.null(ylab)) ylab = "Frequency"
-    if (is.null(main)) main = paste("Histogram of", x_dep)
     if (is.null(by) && is.null(palette)) {
       if (is.null(col)) col = par("fg")
       if (is.null(bg) && is.null(fill)) bg = "lightgray"
     } else {
       if (is.null(bg) && !is.null(fill)) bg = fill
       if (is.null(bg)) {
-        bg = "by"
+        bg = ribbon.alpha
       }
     }
     type = "rect"
@@ -867,7 +868,6 @@ tinyplot.default = function(
     bg = rep(bg, ngrps)
   }
   if (type == "ribbon" || (type == "boxplot" && !is.null(by)) ) {
-    if (is.null(ribbon.alpha)) ribbon.alpha = .tpar[["ribbon.alpha"]]
     if (!is.null(bg)) {
       bg = adjustcolor(bg, ribbon.alpha)
     } else if (!is.null(col)) {
@@ -1776,7 +1776,6 @@ tinyplot.formula = function(
   if (type %in% c("hist", "histogram")) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = names(mf)[x_loc]
-    if (is.null(main)) main = paste("Histogram of", xlab) 
   } else if (no_y) {
     if (is.null(ylab)) ylab = names(mf)[x_loc]
     if (is.null(xlab)) xlab = "Index"

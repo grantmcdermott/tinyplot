@@ -183,17 +183,25 @@ should be taken. A matrix is converted to a data frame.}
 
 \item{type}{character string or function giving the type of plot desired. For functions, see the "Type functions" section below. For strings, options are:
 \itemize{
-\item The same set of 1-character values supported by plot: "p" for points, "l"
-for lines, "b" for both points and lines, "c" for empty points joined by
-lines, "o" for overplotted points and lines, "s" and "S" for stair steps,
-and "h" for histogram-like vertical lines. Specifying "n" produces an empty
-plot over the extent of the data, but with no internal elements (see also
-the \code{empty} argument below).
-\item Additional tinyplot types: "boxplot" for boxplots, "density" for
-densities, "polygon" or "polypath" for polygons,  "pointrange" or"errorbar"
-for segment intervals, and "ribbon" or "area" for polygon intervals (where
-area plots are a special case of ribbon plots with \code{ymin} set to 0 and
-\code{ymax} set to \code{y}; see below).
+\item The same set of 1-character values supported by
+\code{\link[graphics]{plot}}: \code{"p"} for points, \code{"l"} for lines, \code{"b"} for
+both points and lines, \code{"c"} for empty points joined by lines, \code{"o"} for
+overplotted points and lines, \code{"s"} and \code{"S"} for stair steps, and \code{"h"}
+for histogram-like vertical lines. Specifying \code{"n"} produces an empty plot
+over the extent of the data, but with no internal elements (see also the
+\code{empty} argument below).
+\item Additional tinyplot types:
+\itemize{
+\item \code{"jitter"} (alias \code{"j"}) for jittered points.
+\item \code{"rect"}, \code{"segments"}, \code{"polygon"}, or \code{"polypath"}, which are all
+equivalent to their base counterparts, but don't require an existing
+plot window.
+\item \code{"boxplot"}, \code{"histogram"} (alias \code{"hist"}), or \code{"density"} for
+distribution plots.
+\item \code{"pointrange"} or \code{"errorbar"} for segment intervals, and \code{"ribbon"}
+or \code{"area"} for polygon intervals (where area plots are a special case
+of ribbon plots with \code{ymin} set to 0 and \code{ymax} set to \code{y}; see below).
+}
 }}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
@@ -355,9 +363,9 @@ longer discussion about the trade-offs involved.}
 
 \item{xmin, xmax, ymin, ymax}{minimum and maximum coordinates of relevant area
 or interval plot types. Only used when the \code{type} argument is one of
-"rect" or "segments" (where all four min-max coordinates are required), or
-"pointrange", "errorbar", or "ribbon" (where only \code{ymin} and \code{ymax}
-required alongside \code{x}).}
+\code{"rect"} or \code{"segments"} (where all four min-max coordinates are required),
+or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{ymin} and
+\code{ymax} required alongside \code{x}).}
 
 \item{ribbon.alpha}{numeric factor modifying the opacity alpha of any ribbon
 shading; typically in \verb{[0, 1]}. Only used when \code{type = "ribbon"}, or when

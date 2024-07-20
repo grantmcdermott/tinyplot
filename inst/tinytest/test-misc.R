@@ -16,6 +16,14 @@ f = function () {
 expect_snapshot_plot(f, label = "type_l_empty")
 
 
+# jittered points
+f = function() {
+  set.seed(42)
+  tinyplot(Temp ~ Month | ordered(Month), airquality, type = "j", pch = 16)
+}
+expect_snapshot_plot(f, label = "type_j")
+
+
 # log axes
 f = function() {
   op = tpar(mfrow = c(1, 2))

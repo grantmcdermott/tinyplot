@@ -20,6 +20,7 @@ New features:
   - `type = "rect"`. (#161 @grantmcdermott)
   - `type = "segments"`. (#163 @grantmcdermott)
   - `type = "histogram"` (alias `type = "hist"`). (#164 @grantmcdermott)
+  - `type = "jitter"` (alias `type = "j"`). (#170 @grantmcdermott)
 
 Misc:
 

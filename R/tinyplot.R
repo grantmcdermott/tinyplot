@@ -67,30 +67,30 @@
 #'   should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
-#' @param type character string or function giving the type of plot desired. For functions, see the "Type functions" section below. For strings, options are:
-#'   - The same set of 1-character values supported by plot: "p" for points, "l"
-#'   for lines, "b" for both points and lines, "c" for empty points joined by
-#'   lines, "o" for overplotted points and lines, "s" and "S" for stair steps,
-#'   and "h" for histogram-like vertical lines. Specifying "n" produces an empty
-#'   plot over the extent of the data, but with no internal elements (see also
-#'   the `empty` argument below).
-#'   - Additional tinyplot types: "boxplot" for boxplots, "density" for
-#'   densities, "polygon" or "polypath" for polygons,  "pointrange" or"errorbar"
-#'   for segment intervals, and "ribbon" or "area" for polygon intervals (where
-#'   area plots are a special case of ribbon plots with `ymin` set to 0 and
-#'   `ymax` set to `y`; see below).
-#' @param empty logical indicating whether the interior plot region should be
-#'  left empty. The default is `FALSE`. Setting to `TRUE` has a similar effect
-#'  to invoking `type = "n"` above, except that any legend artifacts owing to a
-#'  particular plot type (e.g., lines for `type = "l"` or squares for
-#'  `type = "area"`) will still be drawn correctly alongside the empty plot. In
-#'  contrast,`type = "n"` implicitly assumes a scatterplot and so any legend
-#'  will only depict points.
+#' @param type character string or function giving the type of plot desired. For functions, 
+#'   see the "Type functions" section below. For strings, options are:
+#'   - The same set of 1-character values supported by
+#'   \code{\link[graphics]{plot}}: `"p"` for points, `"l"` for lines, `"b"` for
+#'   both points and lines, `"c"` for empty points joined by lines, `"o"` for
+#'   overplotted points and lines, `"s"` and `"S"` for stair steps, and `"h"`
+#'   for histogram-like vertical lines. Specifying `"n"` produces an empty plot
+#'   over the extent of the data, but with no internal elements (see also the
+#'   `empty` argument below).
+#'   - Additional tinyplot types:
+#'      - `"jitter"` (alias `"j"`) for jittered points.
+#'      - `"rect"`, `"segments"`, `"polygon"`, or `"polypath"`, which are all
+#'      equivalent to their base counterparts, but don't require an existing
+#'      plot window.
+#'      - `"boxplot"`, `"histogram"` (alias `"hist"`), or `"density"` for
+#'      distribution plots.
+#'      - `"pointrange"` or `"errorbar"` for segment intervals, and `"ribbon"`
+#'      or `"area"` for polygon intervals (where area plots are a special case
+#'      of ribbon plots with `ymin` set to 0 and `ymax` set to `y`; see below).
 #' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
 #'   or interval plot types. Only used when the `type` argument is one of
-#'   "rect" or "segments" (where all four min-max coordinates are required), or
-#'   "pointrange", "errorbar", or "ribbon" (where only `ymin` and `ymax`
-#'   required alongside `x`).
+#'   `"rect"` or `"segments"` (where all four min-max coordinates are required),
+#'   or `"pointrange"`, `"errorbar"`, or `"ribbon"` (where only `ymin` and
+#'   `ymax` required alongside `x`).
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
@@ -98,6 +98,13 @@
 #' @param log a character string which contains "x" if the x axis is to be
 #'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if 
 #'   both axes are to be logarithmic.
+#' @param empty logical indicating whether the interior plot region should be
+#'  left empty. The default is `FALSE`. Setting to `TRUE` has a similar effect
+#'  to invoking `type = "n"` above, except that any legend artifacts owing to a
+#'  particular plot type (e.g., lines for `type = "l"` or squares for
+#'  `type = "area"`) will still be drawn correctly alongside the empty plot. In
+#'  contrast,`type = "n"` implicitly assumes a scatterplot and so any legend
+#'  will only depict points.
 #' @param main a main title for the plot, see also `title`.
 #' @param sub a subtitle for the plot.
 #' @param xlab a label for the x axis, defaults to a description of x.
@@ -809,6 +816,12 @@ tinyplot.default = function(
       ymax = ymax[xord]
       rm(xord)
     }
+  }
+  
+  if (type %in% c("j", "jitter")) {
+    x = jitter(x)
+    y = jitter(y)
+    type = "p"
   }
 
   xy = xy.coords(x = x, y = y)

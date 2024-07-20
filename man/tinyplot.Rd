@@ -181,7 +181,8 @@ features globally for all \code{tinyplot} plots.
 \item{data}{a data.frame (or list) from which the variables in formula
 should be taken. A matrix is converted to a data frame.}
 
-\item{type}{character string or function giving the type of plot desired. For functions, see the "Type functions" section below. For strings, options are:
+\item{type}{character string or function giving the type of plot desired. For functions,
+see the "Type functions" section below. For strings, options are:
 \itemize{
 \item The same set of 1-character values supported by
 \code{\link[graphics]{plot}}: \code{"p"} for points, \code{"l"} for lines, \code{"b"} for

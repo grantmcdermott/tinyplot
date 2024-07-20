@@ -272,7 +272,7 @@
 #' without causing unexpected changes to the output.
 #'   
 #' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
-#' @importFrom graphics abline arrows axis Axis box boxplot grconvertX grconvertY lines par plot.default plot.new plot.window points polygon polypath segments title mtext text rect
+#' @importFrom graphics abline arrows axis Axis box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit
 #' @importFrom tools file_ext
@@ -570,6 +570,8 @@ tinyplot.default = function(
     par(get_saved_par(when = "after"))
   )
   
+  if (is.null(ribbon.alpha)) ribbon.alpha = .tpar[["ribbon.alpha"]]
+  
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = if (!missing(x)) {
     deparse1(substitute(x)) 
@@ -601,7 +603,7 @@ tinyplot.default = function(
     type = "boxplot"
   }
 
-  ## Catch for density type: recycle through plot.density
+  ## Catch for density type: recycle through tinyplot.density
   if (type == "density") {
     fargs = mget(ls(environment(), sorted = FALSE))
     fargs = utils::modifyList(fargs, dots)
@@ -632,6 +634,77 @@ tinyplot.default = function(
     }
     fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
     return(do.call(tinyplot.density, args = fargs))
+  }
+  
+  ## Catch for histogram type 
+  if (type %in% c("hist", "histogram")) {
+    hbreaks = ifelse(!is.null(dots[["breaks"]]), dots[["breaks"]], "Sturges")
+    hist_list = hist(x, breaks = hbreaks, plot = FALSE)
+    if (!is.null(by) || !is.null(facet)) {
+      split_type = ifelse(is.null(facet) || isTRUE(facet_by),  "byonly", ifelse(is.null(by), "facetonly", "byandfacet"))
+      if (split_type=="byonly") {
+        split_x = split(x, by)
+      } else if (split_type=="facetonly") {
+        split_x = split(x, facet) 
+      } else {
+        split_x = split(x, interaction(by, facet, sep = "___"))
+      }
+      hist_split = lapply(
+        seq_along(split_x),
+        function(s) {
+          h = hist(split_x[[s]], breaks = hist_list$breaks, plot = FALSE)
+          h$breaks = h$breaks[-1]
+          if (split_type %in% c("byonly", "byandfacet")) {
+            h$by = rep(names(split_x)[[s]], length(h$breaks))
+          } else {
+            h$by = NULL
+          }
+          if (split_type %in% c("facetonly", "byandfacet")) {
+            h$facet = rep(names(split_x)[[s]], length(h$breaks))
+          } else if (isTRUE(facet_by)) {
+            h$facet = h$by
+          } else {
+            h$facet = NULL
+          }
+          return(h)
+        }
+      )
+      hist_list = do.call(Map, c(c, hist_split))
+      xmin = hist_list$breaks
+      xmax = hist_list$mids+(hist_list$mids-hist_list$breaks)
+      by = hist_list$by
+      if (split_type=="byandfacet") by = sub("___.*$", "", by)
+      facet = hist_list$facet
+      if (split_type=="byandfacet") facet = sub(".*___", "", facet)
+      if (!is.null(facet)) facet = as.factor(facet)
+    } else {
+      xmin = hist_list$breaks[-1]
+      xmax = hist_list$mids+(hist_list$mids-hist_list$breaks[-1])
+    }
+    ymin = hist_list$counts
+    # optional: remove zero count cases
+    if (!is.null(by) || !is.null(facet)) {
+      hidx = which(ymin!=0)
+      xmin = xmin[hidx]
+      xmax = xmax[hidx]
+      ymin = ymin[hidx]
+      by = by[hidx]
+      facet = facet[hidx]
+    }
+    ymax = rep(0, length(ymin))
+    x = c(xmin, xmax)
+    y = c(ymin, ymax)
+    if (is.null(ylab)) ylab = "Frequency"
+    if (is.null(by) && is.null(palette)) {
+      if (is.null(col)) col = par("fg")
+      if (is.null(bg) && is.null(fill)) bg = "lightgray"
+    } else {
+      if (is.null(bg) && !is.null(fill)) bg = fill
+      if (is.null(bg)) {
+        bg = ribbon.alpha
+      }
+    }
+    type = "rect"
   }
   
   if (is.null(x)) {
@@ -795,7 +868,6 @@ tinyplot.default = function(
     bg = rep(bg, ngrps)
   }
   if (type == "ribbon" || (type == "boxplot" && !is.null(by)) ) {
-    if (is.null(ribbon.alpha)) ribbon.alpha = .tpar[["ribbon.alpha"]]
     if (!is.null(bg)) {
       bg = adjustcolor(bg, ribbon.alpha)
     } else if (!is.null(col)) {
@@ -922,7 +994,7 @@ tinyplot.default = function(
     
     has_sub = !is.null(sub)
     
-    if (isTRUE(was_area_type)) {
+    if (isTRUE(was_area_type) || type == "rect") {
       legend_args[["pt.lwd"]] = par("lwd")
       legend_args[["lty"]] = 0
     }
@@ -1701,7 +1773,10 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (no_y) {
+  if (type %in% c("hist", "histogram")) {
+    if (is.null(ylab)) ylab = "Frequency"
+    if (is.null(xlab)) xlab = names(mf)[x_loc]
+  } else if (no_y) {
     if (is.null(ylab)) ylab = names(mf)[x_loc]
     if (is.null(xlab)) xlab = "Index"
   } else {

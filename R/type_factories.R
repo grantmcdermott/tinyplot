@@ -15,14 +15,16 @@ assert_dependency <- function(library_name) {
 #' @inheritParams tinyplot
 #' @inheritParams mgcv::s
 #' @inheritParams marginaleffects::predictions
-#' @param se logical TRUE to display a ribbon for the confidence interval.
+#' @param conf_level FALSE or a numeric value between 0 and 1 determining the size of confidence intervals to display as ribbons.
 #' @details
-#' First, we fit a model using the [mgcv::gam] and [mgcv:s] function. The predicted values of `y` are then obtained by calling [marginaleffects::predictions].
+#' First, we fit a model using the [mgcv::gam] and [mgcv::s] function. The predicted values of `y` are then obtained by calling [marginaleffects::predictions].
 #'
 #' @examples
 #' plt(Sepal.Length ~ Petal.Length, type = type_spline(), data = iris)
 #' @export
-type_spline = function(x, y, se = TRUE, conf_level = 0.95, k = -1, fx = FALSE, bs = "tp", ...) {
+type_spline = function(x, y, conf_level = 0.95, k = -1, fx = FALSE, bs = "tp", ...) {
+    se <- if (isFALSE(conf_level)) FALSE else TRUE
+    conf_level <- if (isFALSE(conf_level)) 0.95 else conf_level
     assert_dependency("mgcv")
     assert_dependency("marginaleffects")
     fun = function(x, y, ...) {
@@ -81,13 +83,16 @@ type_loess = function(x, y, ...) {
 #'
 #' @inheritParams tinyplot
 #' @inheritParams type_spline
+#' @inheritParams stats::glm
 #' @details
 #' First, we fit a model using the [stats::glm]. The predicted values of `y` are then obtained by calling [marginaleffects::predictions].
 #'
 #' @examples
 #' plt(vs ~ mpg, type = type_glm(family = binomial), data = mtcars)
 #' @export
-type_glm = function(x, y, family = stats::gaussian(), se = TRUE, conf_level = 0.95) {
+type_glm = function(x, y, family = stats::gaussian(), conf_level = 0.95) {
+    se <- if (isFALSE(conf_level)) FALSE else TRUE
+    conf_level <- if (isFALSE(conf_level)) 0.95 else conf_level
     assert_dependency("marginaleffects")
     fun = function(x, y, ...) {
         if (missing(x) || missing(y)) {
@@ -124,7 +129,9 @@ type_glm = function(x, y, family = stats::gaussian(), se = TRUE, conf_level = 0.
 #' @examples
 #' plt(hp ~ mpg, type = type_lm(), data = mtcars)
 #' @export
-type_lm = function(x, y, se = TRUE, conf_level = 0.95) {
+type_lm = function(x, y, conf_level = 0.95) {
+    se <- if (isFALSE(conf_level)) FALSE else TRUE
+    conf_level <- if (isFALSE(conf_level)) 0.95 else conf_level
     assert_dependency("marginaleffects")
     fun = function(x, y, ...) {
         if (missing(x) || missing(y)) {

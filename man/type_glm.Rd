@@ -4,7 +4,7 @@
 \alias{type_glm}
 \title{Type factory: GLM}
 \usage{
-type_glm(x, y, family = stats::gaussian(), se = TRUE, conf_level = 0.95)
+type_glm(x, y, family = stats::gaussian(), conf_level = 0.95)
 }
 \arguments{
 \item{x, y}{the x and y arguments provide the x and y coordinates for the
@@ -14,9 +14,14 @@ likely the names of existing vectors or columns of data frames. See the
 \code{\link[grDevices]{xy.coords}} for details. If supplied separately, \code{x}
 and \code{y} must be of the same length.}
 
-\item{se}{logical TRUE to display a ribbon for the confidence interval.}
+\item{family}{a description of the error distribution and link
+    function to be used in the model.  For \code{glm} this can be a
+    character string naming a family function, a family function or the
+    result of a call to a family function.  For \code{glm.fit} only the
+    third option is supported.  (See \code{\link[stats]{family}} for details of
+    family functions.)}
 
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
+\item{conf_level}{FALSE or a numeric value between 0 and 1 determining the size of confidence intervals to display as ribbons.}
 }
 \description{
 Call this function in the \code{type} argument of \code{tinyplot()} to display a

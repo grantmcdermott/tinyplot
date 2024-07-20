@@ -192,6 +192,7 @@ over the extent of the data, but with no internal elements (see also the
 \code{empty} argument below).
 \item Additional tinyplot types:
 \itemize{
+\item \code{"jitter"} (alias \code{"j"}) for jittered points.
 \item \code{"rect"}, \code{"segments"}, \code{"polygon"}, or \code{"polypath"}, which are all
 equivalent to their base counterparts, but don't require an existing
 plot window.

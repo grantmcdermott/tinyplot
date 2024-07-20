@@ -76,6 +76,7 @@
 #'   over the extent of the data, but with no internal elements (see also the
 #'   `empty` argument below).
 #'   - Additional tinyplot types:
+#'      - `"jitter"` (alias `"j"`) for jittered points.
 #'      - `"rect"`, `"segments"`, `"polygon"`, or `"polypath"`, which are all
 #'      equivalent to their base counterparts, but don't require an existing
 #'      plot window.

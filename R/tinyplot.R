@@ -504,7 +504,7 @@ tinyplot.default = function(
 
   if (is.function(type)) {
     type_fun = type
-    type <- "l" # avoid breaking == string comparisons
+    type <- type_fun() # avoid breaking == string comparisons
   } else {
     type_fun = NULL
   }
@@ -1444,17 +1444,21 @@ tinyplot.default = function(
       yymax = idata[[ii]]$ymax
 
       if (is.function(type_fun)) {
-        tmp = type_fun(x = xx, y = yy, ...)
-        xx = tmp$x
-        yy = tmp$y
-        type = tmp$type
+        type_fun_args = type_fun(x = xx, y = yy, ...)
+        if ("type" %in% names(type_fun_args)) type = type_fun_args[["type"]]
+        if ("x" %in% names(type_fun_args)) xx = type_fun_args[["x"]]
+        if ("y" %in% names(type_fun_args)) yy = type_fun_args[["y"]]
+        if ("xmin" %in% names(type_fun_args)) xxmin = type_fun_args[["xmin"]]
+        if ("xmax" %in% names(type_fun_args)) xxmax = type_fun_args[["xmax"]]
+        if ("ymin" %in% names(type_fun_args)) yymin = type_fun_args[["ymin"]]
+        if ("ymax" %in% names(type_fun_args)) yymax = type_fun_args[["ymax"]]
       }
-      
+
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
         ibg = idata[[ii]]$bg
       }
-      
+
       # Set the facet "window" manually
       # See: https://github.com/grantmcdermott/tinyplot/issues/65
       # if (nfacets > 1) par(mfg = c(1, ii))

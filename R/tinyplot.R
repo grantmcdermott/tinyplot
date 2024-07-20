@@ -785,6 +785,12 @@ tinyplot.default = function(
       rm(xord)
     }
   }
+  
+  if (type %in% c("j", "jitter")) {
+    x = jitter(x)
+    y = jitter(y)
+    type = "p"
+  }
 
   xy = xy.coords(x = x, y = y)
   if (is.null(xlim)) xlim = range(xy$x[is.finite(xy$x)])

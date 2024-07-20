@@ -4,7 +4,7 @@
 \alias{type_glm}
 \title{Type factory: GLM}
 \usage{
-type_glm(x, y, family = gaussian(), se = TRUE)
+type_glm(x, y, family = stats::gaussian(), se = TRUE, conf_level = 0.95)
 }
 \arguments{
 \item{x, y}{the x and y arguments provide the x and y coordinates for the
@@ -13,6 +13,10 @@ likely the names of existing vectors or columns of data frames. See the
 'Examples' section below, or the function
 \code{\link[grDevices]{xy.coords}} for details. If supplied separately, \code{x}
 and \code{y} must be of the same length.}
+
+\item{se}{logical TRUE to display a ribbon for the confidence interval.}
+
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 }
 \description{
 Call this function in the \code{type} argument of \code{tinyplot()} to display a

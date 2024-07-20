@@ -14,13 +14,15 @@ assert_dependency <- function(library_name) {
 #'
 #' @inheritParams tinyplot
 #' @inheritParams mgcv::s
+#' @inheritParams marginaleffects::predictions
+#' @param se logical TRUE to display a ribbon for the confidence interval.
 #' @details
 #' First, we fit a model using the [mgcv::gam] and [mgcv:s] function. The predicted values of `y` are then obtained by calling [marginaleffects::predictions].
 #'
 #' @examples
 #' plt(Sepal.Length ~ Petal.Length, type = type_spline(), data = iris)
 #' @export
-type_spline = function(x, y, se = TRUE, k = -1, fx = FALSE, bs = "tp", ...) {
+type_spline = function(x, y, se = TRUE, conf_level = 0.95, k = -1, fx = FALSE, bs = "tp", ...) {
     assert_dependency("mgcv")
     assert_dependency("marginaleffects")
     fun = function(x, y, ...) {
@@ -34,7 +36,7 @@ type_spline = function(x, y, se = TRUE, k = -1, fx = FALSE, bs = "tp", ...) {
         dat = data.frame(x, y)
         fit = mgcv::gam(y ~ s(x, k = k, fx = fx, bs = bs), data = dat)
         nd = data.frame(x = seq(min(x), max(x), length.out = 1000))
-        p = marginaleffects::predictions(fit, newdata = nd)
+        p = marginaleffects::predictions(fit, vcov = se, conf_level = conf_level, newdata = nd)
         out = list(x = p$x,
             y = p$estimate,
             ymin = p$conf.low,
@@ -51,6 +53,7 @@ type_spline = function(x, y, se = TRUE, k = -1, fx = FALSE, bs = "tp", ...) {
 #' LOESS-smoothed version of the relationship between `y` and `x`.
 #'
 #' @inheritParams tinyplot
+#' @inheritParams type_spline
 #' @details
 #' First, we fit a model using the [stats::loess]. The predicted values of `y` are then obtained by calling [stats::predict].
 #'
@@ -63,7 +66,7 @@ type_loess = function(x, y, ...) {
         dat = data.frame(x, y)
         fit = stats::loess(y ~ x, data = dat)
         nd = data.frame(x = seq(min(x), max(x), length.out = 1000))
-        y = predict(fit, newdata = nd)
+        y = stats::predict(fit, newdata = nd)
         out = list(y = y, x = nd$x)
         return(out)
     }
@@ -77,13 +80,14 @@ type_loess = function(x, y, ...) {
 #' GLM-fitted version of the relationship between `y` and `x`.
 #'
 #' @inheritParams tinyplot
+#' @inheritParams type_spline
 #' @details
 #' First, we fit a model using the [stats::glm]. The predicted values of `y` are then obtained by calling [marginaleffects::predictions].
 #'
 #' @examples
 #' plt(vs ~ mpg, type = type_glm(family = binomial), data = mtcars)
 #' @export
-type_glm = function(x, y, family = gaussian(), se = TRUE) {
+type_glm = function(x, y, family = stats::gaussian(), se = TRUE, conf_level = 0.95) {
     assert_dependency("marginaleffects")
     fun = function(x, y, ...) {
         if (missing(x) || missing(y)) {
@@ -96,7 +100,7 @@ type_glm = function(x, y, family = gaussian(), se = TRUE) {
         dat = data.frame(x, y)
         fit = stats::glm(y ~ x, family = family, data = dat)
         nd = data.frame(x = seq(min(x), max(x), length.out = 1000))
-        p = marginaleffects::predictions(fit, newdata = nd)
+        p = marginaleffects::predictions(fit, newdata = nd, vcov = se, conf_level = conf_level)
         out = list(x = p$x,
             y = p$estimate,
             ymin = p$conf.low,
@@ -113,13 +117,14 @@ type_glm = function(x, y, family = gaussian(), se = TRUE) {
 #' LM-fitted version of the relationship between `y` and `x`.
 #'
 #' @inheritParams tinyplot
+#' @inheritParams type_spline
 #' @details
 #' First, we fit a model using the [stats::lm]. The predicted values of `y` are then obtained by calling [marginaleffects::predictions].
 #'
 #' @examples
 #' plt(hp ~ mpg, type = type_lm(), data = mtcars)
 #' @export
-type_lm = function(x, y, se = TRUE) {
+type_lm = function(x, y, se = TRUE, conf_level = 0.95) {
     assert_dependency("marginaleffects")
     fun = function(x, y, ...) {
         if (missing(x) || missing(y)) {
@@ -132,7 +137,7 @@ type_lm = function(x, y, se = TRUE) {
         dat = data.frame(x, y)
         fit = stats::lm(y ~ x, data = dat)
         nd = data.frame(x = seq(min(x), max(x), length.out = 1000))
-        p = marginaleffects::predictions(fit, newdata = nd)
+        p = marginaleffects::predictions(fit, newdata = nd, vcov = se, conf_level = conf_level)
         out = list(x = p$x,
             y = p$estimate,
             ymin = p$conf.low,

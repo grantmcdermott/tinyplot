@@ -21,9 +21,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<rect x='426.63' y='227.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #000000;' />
-<rect x='426.63' y='245.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #DF536B;' />
-<rect x='426.63' y='263.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #61D04F;' />
+<rect x='426.63' y='227.43' width='16.75' height='16.75' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='426.63' y='245.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='426.63' y='263.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
 <text x='463.38' y='216.00' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <text x='445.80' y='239.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.37px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <text x='445.80' y='257.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
@@ -35,7 +35,6 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw0MDkuODB8MC4wMHw1MDQuMDA=)'>
-<text x='234.42' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='179.12px' lengthAdjust='spacingAndGlyphs'>Histogram of Petal.Length</text>
 <text x='234.42' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='67.39px' lengthAdjust='spacingAndGlyphs'>Petal.Length</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='56.71px' lengthAdjust='spacingAndGlyphs'>Frequency</text>
 </g>
@@ -148,8 +147,8 @@
 <polygon points='309.20,430.56 409.80,430.56 409.80,59.04 309.20,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpNTkuMDR8MTU5LjY0fDU5LjA0fDQzMC41Ng==)'>
-<rect x='62.77' y='72.80' width='7.76' height='344.00' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #000000;' />
-<rect x='70.53' y='295.94' width='7.76' height='120.86' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #000000;' />
+<rect x='62.77' y='72.80' width='7.76' height='344.00' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='70.53' y='295.94' width='7.76' height='120.86' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
 </g>
 <g clip-path='url(#cpMTg0LjEyfDI4NC43Mnw1OS4wNHw0MzAuNTY=)'>
 </g>
@@ -158,12 +157,12 @@
 <g clip-path='url(#cpNTkuMDR8MTU5LjY0fDU5LjA0fDQzMC41Ng==)'>
 </g>
 <g clip-path='url(#cpMTg0LjEyfDI4NC43Mnw1OS4wNHw0MzAuNTY=)'>
-<rect x='211.13' y='407.50' width='7.76' height='9.30' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #DF536B;' />
-<rect x='218.90' y='379.61' width='7.76' height='37.19' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #DF536B;' />
-<rect x='226.66' y='314.53' width='7.76' height='102.27' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #DF536B;' />
-<rect x='234.42' y='230.85' width='7.76' height='185.95' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #DF536B;' />
-<rect x='242.18' y='295.94' width='7.76' height='120.86' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #DF536B;' />
-<rect x='249.95' y='407.50' width='7.76' height='9.30' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #DF536B;' />
+<rect x='211.13' y='407.50' width='7.76' height='9.30' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='218.90' y='379.61' width='7.76' height='37.19' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='226.66' y='314.53' width='7.76' height='102.27' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='234.42' y='230.85' width='7.76' height='185.95' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='242.18' y='295.94' width='7.76' height='120.86' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='249.95' y='407.50' width='7.76' height='9.30' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
 </g>
 <g clip-path='url(#cpMzA5LjIwfDQwOS44MHw1OS4wNHw0MzAuNTY=)'>
 </g>
@@ -172,12 +171,12 @@
 <g clip-path='url(#cpMTg0LjEyfDI4NC43Mnw1OS4wNHw0MzAuNTY=)'>
 </g>
 <g clip-path='url(#cpMzA5LjIwfDQwOS44MHw1OS4wNHw0MzAuNTY=)'>
-<rect x='359.50' y='407.50' width='7.76' height='9.30' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #61D04F;' />
-<rect x='367.26' y='342.42' width='7.76' height='74.38' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #61D04F;' />
-<rect x='375.03' y='268.04' width='7.76' height='148.76' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #61D04F;' />
-<rect x='382.79' y='268.04' width='7.76' height='148.76' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #61D04F;' />
-<rect x='390.55' y='370.31' width='7.76' height='46.49' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #61D04F;' />
-<rect x='398.31' y='379.61' width='7.76' height='37.19' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #61D04F;' />
+<rect x='359.50' y='407.50' width='7.76' height='9.30' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='367.26' y='342.42' width='7.76' height='74.38' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='375.03' y='268.04' width='7.76' height='148.76' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='382.79' y='268.04' width='7.76' height='148.76' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='390.55' y='370.31' width='7.76' height='46.49' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='398.31' y='379.61' width='7.76' height='37.19' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
 </g>
 <defs>
   <clipPath id='cpMTI5Ljk1fDM0OS41OHwxMDguMTN8MzM3Ljgz'>

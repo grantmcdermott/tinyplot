@@ -21,9 +21,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<rect x='426.63' y='227.43' width='16.75' height='16.75' style='stroke-width: 0.75; fill: #000000;' />
-<rect x='426.63' y='245.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
-<rect x='426.63' y='263.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F;' />
+<rect x='426.63' y='227.43' width='16.75' height='16.75' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='426.63' y='245.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='426.63' y='263.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
 <text x='463.38' y='216.00' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <text x='445.80' y='239.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.37px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <text x='445.80' y='257.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
@@ -35,7 +35,6 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw0MDkuODB8MC4wMHw1MDQuMDA=)'>
-<text x='234.42' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='179.12px' lengthAdjust='spacingAndGlyphs'>Histogram of Petal.Length</text>
 <text x='234.42' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='67.39px' lengthAdjust='spacingAndGlyphs'>Petal.Length</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='56.71px' lengthAdjust='spacingAndGlyphs'>Frequency</text>
 </g>
@@ -72,19 +71,19 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDA5LjgwfDU5LjA0fDQzMC41Ng==)'>
-<rect x='72.03' y='72.80' width='27.06' height='344.00' style='stroke-width: 0.75; fill: #000000;' />
-<rect x='99.10' y='295.94' width='27.06' height='120.86' style='stroke-width: 0.75; fill: #000000;' />
-<rect x='153.23' y='407.50' width='27.06' height='9.30' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
-<rect x='180.29' y='379.61' width='27.07' height='37.19' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
-<rect x='207.36' y='314.53' width='27.06' height='102.27' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
-<rect x='234.42' y='230.85' width='27.07' height='185.95' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
-<rect x='261.49' y='295.94' width='27.06' height='120.86' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
-<rect x='288.55' y='407.50' width='27.07' height='9.30' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
-<rect x='234.42' y='407.50' width='27.07' height='9.30' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F;' />
-<rect x='261.49' y='342.42' width='27.06' height='74.38' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F;' />
-<rect x='288.55' y='268.04' width='27.07' height='148.76' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F;' />
-<rect x='315.62' y='268.04' width='27.06' height='148.76' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F;' />
-<rect x='342.68' y='370.31' width='27.06' height='46.49' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F;' />
-<rect x='369.75' y='379.61' width='27.07' height='37.19' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F;' />
+<rect x='72.03' y='72.80' width='27.06' height='344.00' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='99.10' y='295.94' width='27.06' height='120.86' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='153.23' y='407.50' width='27.06' height='9.30' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='180.29' y='379.61' width='27.07' height='37.19' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='207.36' y='314.53' width='27.06' height='102.27' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='234.42' y='230.85' width='27.07' height='185.95' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='261.49' y='295.94' width='27.06' height='120.86' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='288.55' y='407.50' width='27.07' height='9.30' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
+<rect x='234.42' y='407.50' width='27.07' height='9.30' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='261.49' y='342.42' width='27.06' height='74.38' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='288.55' y='268.04' width='27.07' height='148.76' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='315.62' y='268.04' width='27.06' height='148.76' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='342.68' y='370.31' width='27.06' height='46.49' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='369.75' y='379.61' width='27.07' height='37.19' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
 </g>
 </svg>

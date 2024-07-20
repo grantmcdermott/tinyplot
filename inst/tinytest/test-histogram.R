@@ -34,7 +34,7 @@ f = function() {
 expect_snapshot_plot(f, label = "hist_faceted")
 
 f = function() {
-  with(iris, plt(Petal.Length, by = Species, facet = "by", type = "hist", col = "white"))
+  with(iris, plt(Petal.Length, by = Species, facet = "by", type = "hist"))
 }
 expect_snapshot_plot(f, label = "hist_byfacet")
 

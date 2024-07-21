@@ -8,7 +8,7 @@ assert_dependency = function(library_name) {
 
 
 ci = function(estimate, std.error, conf.level, df, backtransform = identity) {
-  crit = qt(1 - (1-conf.level)/2, df)
+  crit = stats::qt(1 - (1-conf.level)/2, df)
   out = list(
     estimate = backtransform(estimate),
     conf.low = backtransform(estimate - crit * std.error),
@@ -26,8 +26,6 @@ ci = function(estimate, std.error, conf.level, df, backtransform = identity) {
 #' @inheritParams tinyplot
 #' @inheritParams mgcv::s
 #' @param conf.level FALSE or a numeric value between 0 and 1 determining the size of confidence intervals to display as ribbons.
-#' @details
-#'
 #' @examples
 #' plt(Sepal.Length ~ Petal.Length, type = type_spline(), data = iris)
 #' @export
@@ -69,9 +67,6 @@ type_spline = function(x, y, conf.level = 0.95, k = -1, fx = FALSE, bs = "tp", .
 #'
 #' @inheritParams tinyplot
 #' @inheritParams type_spline
-#' @details
-#' First, we fit a model using the [stats::loess]. The predicted values of `y` are then obtained by calling [stats::predict].
-#'
 #' @examples
 #' plt(Sepal.Length ~ Petal.Length, type = type_loess(), data = iris)
 #' @export
@@ -138,8 +133,6 @@ type_glm = function(x, y, family = stats::gaussian(), conf.level = 0.95) {
 #'
 #' @inheritParams tinyplot
 #' @inheritParams type_spline
-#' @details
-#'
 #' @examples
 #' plt(hp ~ mpg, type = type_lm(), data = mtcars)
 #' @export

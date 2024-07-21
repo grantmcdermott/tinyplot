@@ -4,7 +4,7 @@
 \alias{type_lm}
 \title{Type factory: LM}
 \usage{
-type_lm(x, y, conf_level = 0.95)
+type_lm(x, y, conf.level = 0.95)
 }
 \arguments{
 \item{x, y}{the x and y arguments provide the x and y coordinates for the
@@ -14,14 +14,11 @@ likely the names of existing vectors or columns of data frames. See the
 \code{\link[grDevices]{xy.coords}} for details. If supplied separately, \code{x}
 and \code{y} must be of the same length.}
 
-\item{conf_level}{FALSE or a numeric value between 0 and 1 determining the size of confidence intervals to display as ribbons.}
+\item{conf.level}{FALSE or a numeric value between 0 and 1 determining the size of confidence intervals to display as ribbons.}
 }
 \description{
 Call this function in the \code{type} argument of \code{tinyplot()} to display a
 LM-fitted version of the relationship between \code{y} and \code{x}.
-}
-\details{
-First, we fit a model using the \link[stats:lm]{stats::lm}. The predicted values of \code{y} are then obtained by calling \link[marginaleffects:predictions]{marginaleffects::predictions}.
 }
 \examples{
 plt(hp ~ mpg, type = type_lm(), data = mtcars)

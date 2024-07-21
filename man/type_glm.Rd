@@ -4,7 +4,7 @@
 \alias{type_glm}
 \title{Type factory: GLM}
 \usage{
-type_glm(x, y, family = stats::gaussian(), conf_level = 0.95)
+type_glm(x, y, family = stats::gaussian(), conf.level = 0.95)
 }
 \arguments{
 \item{x, y}{the x and y arguments provide the x and y coordinates for the
@@ -21,14 +21,11 @@ and \code{y} must be of the same length.}
     third option is supported.  (See \code{\link[stats]{family}} for details of
     family functions.)}
 
-\item{conf_level}{FALSE or a numeric value between 0 and 1 determining the size of confidence intervals to display as ribbons.}
+\item{conf.level}{FALSE or a numeric value between 0 and 1 determining the size of confidence intervals to display as ribbons.}
 }
 \description{
 Call this function in the \code{type} argument of \code{tinyplot()} to display a
 GLM-fitted version of the relationship between \code{y} and \code{x}.
-}
-\details{
-First, we fit a model using the \link[stats:glm]{stats::glm}. The predicted values of \code{y} are then obtained by calling \link[marginaleffects:predictions]{marginaleffects::predictions}.
 }
 \examples{
 plt(vs ~ mpg, type = type_glm(family = binomial), data = mtcars)

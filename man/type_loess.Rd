@@ -21,9 +21,6 @@ the "Details" section of \code{\link[graphics]{plot}}.}
 Call this function in the \code{type} argument of \code{tinyplot()} to display a
 LOESS-smoothed version of the relationship between \code{y} and \code{x}.
 }
-\details{
-First, we fit a model using the \link[stats:loess]{stats::loess}. The predicted values of \code{y} are then obtained by calling \link[stats:predict]{stats::predict}.
-}
 \examples{
-plt(Sepal.Length ~ Petal.Length, type = type_spline(), data = iris)
+plt(Sepal.Length ~ Petal.Length, type = type_loess(), data = iris)
 }

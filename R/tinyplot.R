@@ -67,7 +67,8 @@
 #'   should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
-#' @param type character string giving the type of plot desired. Options are:
+#' @param type character string or function giving the type of plot desired. For functions, 
+#'   see the "Type functions" section below. For strings, options are:
 #'   - The same set of 1-character values supported by
 #'   \code{\link[graphics]{plot}}: `"p"` for points, `"l"` for lines, `"b"` for
 #'   both points and lines, `"c"` for empty points joined by lines, `"o"` for
@@ -283,6 +284,16 @@
 #' @importFrom stats na.omit
 #' @importFrom tools file_ext
 #' 
+#' @section Type functions:
+#' The `type` argument accepts functions which can apply statistical transformations to `x` and `y` (ex: smooths, splines, fitted models). 
+#'
+#' `tinyplot` supplies a few "function factories," such as [tinyplot::type_spline]. When called, these function factories return another function, which is appropriate to use in the `type` argument. 
+#'
+#' Users who wish to define their own types/transforms must define a function with these characteristics:
+#' * Accepts `x`, `y`, and `...` as input arguments, with no default value.
+#' * When `x` or `y` are missing, return a string compatibile with the `type` argument, to identify the proper visual representation, ex: "l" for line, "p" for points, "ribbon" for ribbon.
+#' * When `x` and `y` are defined, process the data, and return a named list of equal-length vectors. Valid entries in this output list are: "x", "y", "xmin", "xmax", "ymin", "ymax".
+#'
 #' @examples
 #' #' 
 #' aq = transform(
@@ -437,6 +448,14 @@
 #'   palette = "tableau"
 #' )
 #'
+#' # Type factory: Spline
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = type_spline(),
+#'   palette = "tableau"
+#' )
+#'
 #' # It's possible to further customize the look of you plots using familiar
 #' # arguments and base plotting theme settings (e.g., via `(t)par`).
 #'
@@ -507,6 +526,13 @@ tinyplot.default = function(
     ...) {
   
   dots = list(...)
+
+  if (is.function(type)) {
+    type_fun = type
+    type <- type_fun() # avoid breaking == string comparisons
+  } else {
+    type_fun = NULL
+  }
 
   # Write plot to output file (if requested)
   if (!is.null(file)) {
@@ -1447,12 +1473,23 @@ tinyplot.default = function(
       xxmax = idata[[ii]]$xmax
       yymin = idata[[ii]]$ymin
       yymax = idata[[ii]]$ymax
-      
+
+      if (is.function(type_fun)) {
+        type_fun_args = type_fun(x = xx, y = yy, ...)
+        if ("type" %in% names(type_fun_args)) type = type_fun_args[["type"]]
+        if ("x" %in% names(type_fun_args)) xx = type_fun_args[["x"]]
+        if ("y" %in% names(type_fun_args)) yy = type_fun_args[["y"]]
+        if ("xmin" %in% names(type_fun_args)) xxmin = type_fun_args[["xmin"]]
+        if ("xmax" %in% names(type_fun_args)) xxmax = type_fun_args[["xmax"]]
+        if ("ymin" %in% names(type_fun_args)) yymin = type_fun_args[["ymin"]]
+        if ("ymax" %in% names(type_fun_args)) yymax = type_fun_args[["ymax"]]
+      }
+
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
         ibg = idata[[ii]]$bg
       }
-      
+
       # Set the facet "window" manually
       # See: https://github.com/grantmcdermott/tinyplot/issues/65
       # if (nfacets > 1) par(mfg = c(1, ii))
@@ -1785,7 +1822,7 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (type %in% c("hist", "histogram")) {
+  if (is.character(type) && type %in% c("hist", "histogram")) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = names(mf)[x_loc]
   } else if (no_y) {

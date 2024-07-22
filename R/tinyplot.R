@@ -508,15 +508,15 @@ tinyplot.default = function(
   
   dots = list(...)
 
+  if (missing(x)) x = NULL
+
+  ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
+  legend = sanitize_legend(substitute(legend), add)
+  type = sanitize_type(type, x, y)
+
   # Write plot to output file or window with fixed dimensions
   setup_device(file = file, width = width, height = height)
   if (!is.null(file)) on.exit(dev.off(), add = TRUE)
-  
-  # Adding to the previous plot?
-  if (isTRUE(add)) {
-    legend = FALSE
-    # main = sub = xlab = ylab = NULL ## Rather do this later
-  }
   
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
@@ -530,16 +530,12 @@ tinyplot.default = function(
   set_saved_par(when = "before", opar)
   
   # catch for adding to existing facet plot
-  # if (!is.null(facet) && isTRUE(add)) par(tpar("last_facet_par"))
   if (!is.null(facet) && isTRUE(add)) (
-    # par(get_last_facet_par())
     par(get_saved_par(when = "after"))
   )
   
-  if (is.null(ribbon.alpha)) ribbon.alpha = .tpar[["ribbon.alpha"]]
-  
   # Capture deparsed expressions early, before x, y and by are evaluated
-  x_dep = if (!missing(x)) {
+  x_dep = if (!is.null(x)) {
     deparse1(substitute(x)) 
   } else if (type %in% c("rect", "segments")) {
     x = NULL
@@ -563,42 +559,12 @@ tinyplot.default = function(
       facet.args[["nrow"]] = attr(facet, "facet_nrow")
     }
   }
-  
-  # enforce boxplot type for y ~ factor(x)
-  if (!is.null(x) && is.factor(x) && !is.factor(y)) {
-    type = "boxplot"
-  }
 
   ## Catch for density type: recycle through tinyplot.density
   if (type == "density") {
     fargs = mget(ls(environment(), sorted = FALSE))
-    fargs = utils::modifyList(fargs, dots)
-    if (!is.null(fargs[["y"]])) {
-      fargs[["y"]] = NULL
-      message("\nNote: A `y` argument has been supplied, but will be ignored for density plots.\n")
-    }
-    fargs$type = "l"
-    # explicitly turn off `default.density(x = ...)` title for
-    # type = "density" plots (to make consistent with regular plot)
-    if (is.null(fargs$main)) fargs$main = NA
-    ## Catch for atomic density type to avoid "by" as legend title
-    if (is.null(fargs[["legend_args"]][["title"]])) {
-      fargs[["legend_args"]][["title"]] = by_dep
-    }
-    ## Another catch for bespoke legend position (if originally passed via the formula method)
-    if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend_args"]])) {
-      if (is.atomic(fargs[["legend"]])) {
-        fargs[["legend"]] = list(x = fargs[["legend"]])
-      } else if (!is.list(fargs[["legend"]])) {
-        fargs[["legend"]] = as.list(fargs[["legend"]])
-      }
-      if (is.null(names(fargs[["legend"]])[1]) || names(fargs[["legend"]])[1] == "") {
-        names(fargs[["legend"]])[1] = "x"
-      }
-      fargs[["legend_args"]] = modifyList(fargs[["legend"]], fargs[["legend_args"]])
-      fargs[["legend"]] = NULL
-    }
-    fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
+    fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
+    do.call(tinyplot.density, args = fargs)
     return(do.call(tinyplot.density, args = fargs))
   }
   
@@ -1606,7 +1572,7 @@ tinyplot.formula = function(
     ) {
   
   ## formula for variables must be specified through 'x' or 'formula' but not both
-  if (missing(x)) {
+  if (is.null(x)) {
     if (missing(formula)) {
       stop("plot formula must be specified by either 'x' or 'formula' argument")
     }

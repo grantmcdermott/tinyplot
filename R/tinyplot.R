@@ -621,9 +621,7 @@ empty = FALSE,
     type = "p"
   }
 
-  if (type == "boxplot") {
-    x = as.factor(x)
-  }
+  if (type == "boxplot") x = as.factor(x)
   if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
     if (is.character(x)) x = as.factor(x)
     if (is.factor(x)) {
@@ -780,51 +778,8 @@ empty = FALSE,
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
   #   come later.
-  if (!is.null(facet)) {
-    facets = sort(unique(facet))
-    ifacet = seq_along(facets)
-    nfacets = length(facets)
-
-    if (isTRUE(add)) {
-      omfrow = par("mfrow")
-      nfacet_rows = omfrow[1]
-      nfacet_cols = omfrow[2]
-    } else {
-      if (!is.null(facet.args[["nrow"]])) {
-        nfacet_rows = facet.args[["nrow"]]
-        nfacet_cols = ceiling(nfacets / nfacet_rows)
-      } else if (!is.null(facet.args[["ncol"]])) {
-        nfacet_cols = facet.args[["ncol"]]
-        nfacet_rows = ceiling(nfacets / nfacet_cols)
-      } else {
-        # default is a square arrangement for nfacets > 3
-        if (nfacets > 3) {
-          nfacet_cols = ceiling(sqrt(nfacets))
-          nfacet_rows = ceiling(nfacets / nfacet_cols)
-        } else {
-          nfacet_rows = 1L
-          nfacet_cols = nfacets
-        }
-      }
-    }
-
-    # determine "outside" facets for selected axis printing if frame = FALSE
-    oxaxis = tail(ifacet, nfacet_cols)
-    oyaxis = seq(1, nfacets, by = nfacet_cols)
-
-    # legend cex adjustment for facet plots
-    # see: https://stat.ethz.ch/pipermail/r-help/2017-August/448431.html
-    if (nfacet_rows >= 3 || nfacet_cols >= 3) {
-      cex_fct_adj = 0.66
-    } else if (nfacet_rows == 2 && nfacet_cols == 2) {
-      cex_fct_adj = 0.83
-    } else {
-      cex_fct_adj = 1
-    }
-  } else {
-    # no facet case
-    facets = ifacet = nfacets = oxaxis = oyaxis = cex_fct_adj = 1
-  }
+  fargs <- facet_layout(facet = facet, facet.args = facet.args, add = add)
+  list2env(fargs, environment())
 
   #
   ## Global plot elements (legend and titles)

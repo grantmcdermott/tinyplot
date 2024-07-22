@@ -64,6 +64,6 @@ expect_snapshot_plot(f, label = "boxplot_groups_facets_with_missings")
 ## numeric ~ factor should auto-coerce to boxplot type
 
 f = function() {
-  plt(mpg ~ factor(am), data = mtcars)
+  plt(mpg ~ factor(am), data = mtcars, type = "boxplot")
 }
 expect_snapshot_plot(f, label = "boxplot_auto_factor")

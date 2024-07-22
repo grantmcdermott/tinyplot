@@ -133,24 +133,24 @@
 <polygon points='351.84,430.56 473.76,430.56 473.76,59.04 351.84,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpNTkuMDR8MTgwLjk2fDU5LjA0fDQzMC41Ng==)'>
-<rect x='63.56' y='72.80' width='9.41' height='344.00' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='72.96' y='295.94' width='9.41' height='120.86' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='63.56' y='72.80' width='9.41' height='344.00' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='72.96' y='295.94' width='9.41' height='120.86' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
 </g>
 <g clip-path='url(#cpMjA1LjQ0fDMyNy4zNnw1OS4wNHw0MzAuNTY=)'>
-<rect x='238.18' y='407.50' width='9.41' height='9.30' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='247.59' y='379.61' width='9.41' height='37.19' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='256.99' y='314.53' width='9.41' height='102.27' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='266.40' y='230.85' width='9.41' height='185.95' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='275.81' y='295.94' width='9.41' height='120.86' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='285.21' y='407.50' width='9.41' height='9.30' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='238.18' y='407.50' width='9.41' height='9.30' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='247.59' y='379.61' width='9.41' height='37.19' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='256.99' y='314.53' width='9.41' height='102.27' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='266.40' y='230.85' width='9.41' height='185.95' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='275.81' y='295.94' width='9.41' height='120.86' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='285.21' y='407.50' width='9.41' height='9.30' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
 </g>
 <g clip-path='url(#cpMzUxLjg0fDQ3My43Nnw1OS4wNHw0MzAuNTY=)'>
-<rect x='412.80' y='407.50' width='9.41' height='9.30' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='422.21' y='342.42' width='9.41' height='74.38' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='431.61' y='268.04' width='9.41' height='148.76' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='441.02' y='268.04' width='9.41' height='148.76' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='450.43' y='370.31' width='9.41' height='46.49' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='459.84' y='379.61' width='9.41' height='37.19' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='412.80' y='407.50' width='9.41' height='9.30' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='422.21' y='342.42' width='9.41' height='74.38' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='431.61' y='268.04' width='9.41' height='148.76' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='441.02' y='268.04' width='9.41' height='148.76' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='450.43' y='370.31' width='9.41' height='46.49' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='459.84' y='379.61' width='9.41' height='37.19' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
 </g>
 <defs>
   <clipPath id='cpMTI5Ljk1fDQ0Ni40OXwxMDguMTN8MzM3Ljgz'>

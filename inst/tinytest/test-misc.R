@@ -74,7 +74,7 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "addTRUE")
 
-if (requireNamespace("png", quitely = TRUE)) {
+if (suppressPackageStartupMessages(requireNamespace("png"))) {
   f = function() {
     tmp_path = tempfile(fileext = ".png")
     tinyplot(

@@ -19,7 +19,7 @@ sanitize_legend <- function(x, add = FALSE) {
 
 sanitize_type <- function(type, x, y) {
     # enforce boxplot type for y ~ factor(x)
-    if (!is.null(x) && is.factor(x) && !is.factor(y)) {
+    if (!is.null(x) && is.factor(x) && !is.factor(y) && !identical(type, "boxplot")) {
         type <- "boxplot"
         warning('The `type` argument was changed to "boxplot" automatically because `x` is a factor but not `y`.', call. = FALSE)
     }

@@ -457,999 +457,1002 @@
 #' @rdname tinyplot
 #' @export
 tinyplot =
-    function(x, ...) {
-        UseMethod("tinyplot")
-    }
+function(x, ...) {
+  UseMethod("tinyplot")
+}
 
 #' @rdname tinyplot
 #' @export
 tinyplot.default = function(
-    x = NULL,
-    y = NULL,
-    by = NULL,
-    facet = NULL,
-    facet.args = NULL,
-    data = NULL,
-    type = "p",
-    xlim = NULL,
-    ylim = NULL,
-    log = "",
-    main = NULL,
-    sub = NULL,
-    xlab = NULL,
-    ylab = NULL,
-    ann = par("ann"),
-    axes = TRUE,
-    frame.plot = axes,
-    asp = NA,
-    grid = NULL,
-    palette = NULL,
-    legend = NULL,
-    pch = NULL,
-    lty = NULL,
-    lwd = NULL,
-    col = NULL,
-    bg = NULL,
-    fill = NULL,
-    alpha = NULL,
-    cex = 1,
-    restore.par = FALSE,
-    xmin = NULL,
-    xmax = NULL,
-    ymin = NULL,
-    ymax = NULL,
-    ribbon.alpha = NULL,
-    add = FALSE,
-    file = NULL,
-    width = NULL,
-    height = NULL,
-    empty = FALSE,
-    ...) {
-    dots = list(...)
+x = NULL,
+y = NULL,
+by = NULL,
+facet = NULL,
+facet.args = NULL,
+data = NULL,
+type = "p",
+xlim = NULL,
+ylim = NULL,
+log = "",
+main = NULL,
+sub = NULL,
+xlab = NULL,
+ylab = NULL,
+ann = par("ann"),
+axes = TRUE,
+frame.plot = axes,
+asp = NA,
+grid = NULL,
+palette = NULL,
+legend = NULL,
+pch = NULL,
+lty = NULL,
+lwd = NULL,
+col = NULL,
+bg = NULL,
+fill = NULL,
+alpha = NULL,
+cex = 1,
+restore.par = FALSE,
+xmin = NULL,
+xmax = NULL,
+ymin = NULL,
+ymax = NULL,
+ribbon.alpha = NULL,
+add = FALSE,
+file = NULL,
+width = NULL,
+height = NULL,
+empty = FALSE,
+...) {
+  dots = list(...)
 
-    ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
-    legend = sanitize_legend(substitute(legend), add)
-    type = sanitize_type(type, x, y)
+  ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
+  legend = sanitize_legend(substitute(legend), add)
+  type = sanitize_type(type, x, y)
 
-    # Write plot to output file or window with fixed dimensions
-    setup_device(file = file, width = width, height = height)
-    if (!is.null(file)) on.exit(dev.off(), add = TRUE)
+  xlabs = NULL
 
-    # Save current graphical parameters
-    opar = par(no.readonly = TRUE)
-    if (restore.par || !is.null(facet)) {
-        if (!is.null(file) || !is.null(width) || !is.null(height)) {
-            opar$new = FALSE # catch for some interfaces
-        }
-        on.exit(par(opar), add = TRUE)
+  # Write plot to output file or window with fixed dimensions
+  setup_device(file = file, width = width, height = height)
+  if (!is.null(file)) on.exit(dev.off(), add = TRUE)
+
+  # Save current graphical parameters
+  opar = par(no.readonly = TRUE)
+  if (restore.par || !is.null(facet)) {
+    if (!is.null(file) || !is.null(width) || !is.null(height)) {
+      opar$new = FALSE # catch for some interfaces
     }
-    # set_orig_par(opar)
-    set_saved_par(when = "before", opar)
+    on.exit(par(opar), add = TRUE)
+  }
+  # set_orig_par(opar)
+  set_saved_par(when = "before", opar)
 
-    # catch for adding to existing facet plot
-    if (!is.null(facet) && isTRUE(add)) {
-        (
-            par(get_saved_par(when = "after"))
-        )
-    }
-
-    # Capture deparsed expressions early, before x, y and by are evaluated
-    x_dep = if (!is.null(x)) {
-        deparse1(substitute(x))
-    } else if (type %in% c("rect", "segments")) {
-        x = NULL
-        NULL
-    }
-    y_dep = if (is.null(y)) {
-        deparse1(substitute(x))
-    } else {
-        deparse1(substitute(y))
-    }
-    by_dep = deparse1(substitute(by))
-    facet_dep = deparse1(substitute(facet))
-    facet_by = FALSE
-    if (!is.null(facet) && length(facet) == 1 && facet == "by") {
-        by = as.factor(by) ## if by==facet, then both need to be factors
-        facet = by
-        facet_by = TRUE
-    } else if (!is.null(facet) && inherits(facet, "formula")) {
-        facet = get_facet_fml(facet, data = data)
-        if (isTRUE(attr(facet, "facet_grid"))) {
-            facet.args[["nrow"]] = attr(facet, "facet_nrow")
-        }
-    }
-
-    if (is.null(x)) {
-        ## Special catch for rect and segment plots without a specified y-var
-        if (type %in% c("rect", "segments")) {
-            xmin_dep = deparse(substitute(xmin))
-            xmax_dep = deparse(substitute(xmax))
-            x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")
-            x = rep(NA, length(x))
-            if (is.null(xlim)) xlim = range(c(xmin, xmax))
-        }
-    }
-    if (is.null(y)) {
-        ## Special catch for area and interval plots without a specified y-var
-        if (type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")) {
-            ymin_dep = deparse(substitute(ymin))
-            ymax_dep = deparse(substitute(ymax))
-            y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
-            y = rep(NA, length(x))
-            if (is.null(ylim)) ylim = range(c(ymin, ymax))
-        } else if (!type %in% c("density", "hist", "histogram")) {
-            y = x
-            x = seq_along(x)
-            xlab = "Index"
-        } else {
-            ylab = "Frequency"
-        }
-    }
-
-    if (is.null(xlab)) xlab = x_dep
-    if (is.null(ylab)) ylab = y_dep
-
-
-    ## Catch for density type: recycle through tinyplot.density
-    if (type == "density") {
-        fargs = mget(ls(environment(), sorted = FALSE))
-        fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
-        do.call(tinyplot.density, args = fargs)
-        return(do.call(tinyplot.density, args = fargs))
-    }
-
-    ## Catch for histogram type
-    if (type %in% c("hist", "histogram")) {
-        fargs = histogram_args(
-            x = x, by = by, facet = facet, facet_by = facet_by, dots = dots,
-            ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha)
-        list2env(fargs, environment())
-    }
-
-    was_area_type = FALSE # flag to keep track for some legend adjustments below
-    if (type == "area") {
-        ymax = y
-        ymin = rep.int(0, length(y))
-        type = "ribbon"
-        was_area_type = TRUE
-    }
-
-    xlabs = NULL
-    if (type == "boxplot") x = as.factor(x)
-    if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
-        if (is.character(x)) x = as.factor(x)
-        if (is.factor(x)) {
-            ## For non-boxplots... Need to maintain order that was observed in the
-            ## original data (i.e., no new sorting by factor)
-            if (type != "boxplot") {
-                xlvls = unique(x)
-                x = factor(x, levels = xlvls)
-            } else {
-                xlvls = levels(x)
-            }
-            xlabs = seq_along(xlvls)
-            names(xlabs) = xlvls
-            x = as.integer(x)
-        }
-        if (type %in% c("ribbon", "boxplot")) {
-            if (is.null(by) && is.null(facet)) {
-                xord = order(x)
-            } else if (is.null(facet)) {
-                xord = order(by, x)
-                by = by[xord]
-            } else if (is.null(by)) {
-                facet_grid = attr(facet, "facet_grid")
-                xord = order(facet, x)
-                facet = facet[xord]
-                attr(facet, "facet_grid") = facet_grid
-            } else {
-                facet_grid = attr(facet, "facet_grid")
-                xord = order(by, facet, x)
-                by = by[xord]
-                facet = facet[xord]
-                attr(facet, "facet_grid") = facet_grid
-            }
-            x = x[xord]
-            y = y[xord]
-            ymin = ymin[xord]
-            ymax = ymax[xord]
-            rm(xord)
-        }
-    }
-
-    if (type %in% c("j", "jitter")) {
-        x = jitter(x)
-        y = jitter(y)
-        type = "p"
-    }
-
-    xy = xy.coords(x = x, y = y)
-    if (is.null(xlim)) xlim = range(xy$x[is.finite(xy$x)])
-    if (is.null(ylim)) ylim = range(xy$y[is.finite(xy$y)])
-
-    if (!is.null(xmin)) xlim[1] = min(c(xlim, xmin))
-    if (!is.null(xmax)) xlim[2] = max(c(xlim, xmax))
-    if (!is.null(ymin)) ylim[1] = min(c(ylim, ymin))
-    if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
-
-    if (type == "boxplot") {
-        xlim = xlim + c(-0.5, 0.5)
-        if (is.null(by) && is.null(palette)) {
-            if (is.null(col)) col = par("fg")
-            if (is.null(bg) && is.null(fill)) bg = "lightgray"
-        } else {
-            fill = bg = "by"
-        }
-    }
-
-    by_ordered = FALSE
-    by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
-    # manual overrides with warning
-    if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
-        warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
-        by_continuous = FALSE
-    } else if (!is.null(by)) {
-        by_ordered = is.ordered(by)
-    }
-
-    if (!is.null(by) && !by_continuous) {
-        split_data = list(x = x, y = y)
-        split_data[["xmin"]] = xmin
-        split_data[["xmax"]] = xmax
-        split_data[["ymin"]] = ymin
-        split_data[["ymax"]] = ymax
-        split_data[["facet"]] = facet
-        split_data = lapply(split_data, split, by)
-        split_data = do.call(function(...) Map("list", ...), split_data)
-    } else {
-        split_data = list(list(
-            x = x, y = y,
-            xmin = xmin, xmax = xmax,
-            ymin = ymin, ymax = ymax,
-            facet = facet
-        ))
-    }
-
-    ngrps = length(split_data)
-
-    pch = by_pch(ngrps = ngrps, type = type, pch = pch)
-
-    lty = by_lty(ngrps = ngrps, type = type, lty = lty)
-
-    lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
-
-    # palette = substitute(palette)
-    col = by_col(
-        ngrps = ngrps,
-        col = col,
-        palette = substitute(palette),
-        gradient = by_continuous,
-        ordered = by_ordered,
-        alpha = alpha
+  # catch for adding to existing facet plot
+  if (!is.null(facet) && isTRUE(add)) {
+    (
+      par(get_saved_par(when = "after"))
     )
-    if (is.null(bg) && !is.null(fill)) bg = fill
-    if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
-        alpha = bg
-        bg = "by"
+  }
+
+  # Capture deparsed expressions early, before x, y and by are evaluated
+  x_dep = if (!is.null(x)) {
+    deparse1(substitute(x))
+  } else if (type %in% c("rect", "segments")) {
+    x = NULL
+    NULL
+  }
+  y_dep = if (is.null(y)) {
+    deparse1(substitute(x))
+  } else {
+    deparse1(substitute(y))
+  }
+  by_dep = deparse1(substitute(by))
+  facet_dep = deparse1(substitute(facet))
+  facet_by = FALSE
+  if (!is.null(facet) && length(facet) == 1 && facet == "by") {
+    by = as.factor(by) ## if by==facet, then both need to be factors
+    facet = by
+    facet_by = TRUE
+  } else if (!is.null(facet) && inherits(facet, "formula")) {
+    facet = get_facet_fml(facet, data = data)
+    if (isTRUE(attr(facet, "facet_grid"))) {
+      facet.args[["nrow"]] = attr(facet, "facet_nrow")
     }
-    if (!is.null(bg) && length(bg) == 1 && bg == "by") {
-        bg = by_col(
-            ngrps = ngrps,
-            col = NULL,
-            palette = substitute(palette),
-            gradient = by_continuous,
-            ordered = by_ordered,
-            alpha = alpha
-        )
-    } else if (length(bg) != ngrps) {
-        bg = rep(bg, ngrps)
+  }
+
+  if (is.null(x)) {
+    ## Special catch for rect and segment plots without a specified y-var
+    if (type %in% c("rect", "segments")) {
+      xmin_dep = deparse(substitute(xmin))
+      xmax_dep = deparse(substitute(xmax))
+      x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")
+      x = rep(NA, length(x))
+      if (is.null(xlim)) xlim = range(c(xmin, xmax))
     }
-    if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
-        if (!is.null(bg)) {
-            bg = adjustcolor(bg, ribbon.alpha)
-        } else if (!is.null(col)) {
-            bg = adjustcolor(col, ribbon.alpha)
-        }
-    }
-
-    if (isTRUE(by_continuous)) {
-        ## Identify the pretty break points for our labels
-        nlabs = 5
-        ncolors = length(col)
-        ubyvar = unique(by)
-        byvar_range = range(ubyvar)
-        pbyvar = pretty(byvar_range, n = nlabs)
-        pbyvar = pbyvar[pbyvar >= byvar_range[1] & pbyvar <= byvar_range[2]]
-        # optional thinning
-        if (length(ubyvar) == 2 && all(ubyvar %in% pbyvar)) {
-            pbyvar = ubyvar
-        } else if (length(pbyvar) > nlabs) {
-            pbyvar = pbyvar[seq_along(pbyvar) %% 2 == 0]
-        }
-        ## Find the (approximate) location of our pretty labels
-        pidx = rescale_num(c(byvar_range, pbyvar), to = c(1, ncolors))[-c(1:2)]
-        pidx = round(pidx)
-        lgnd_labs = rep(NA, times = ncolors)
-        lgnd_labs[pidx] = pbyvar
-    }
-
-    # Determine the number and arrangement of facets.
-    # Note: We're do this up front, so we can make some adjustments to legend cex
-    #   next (if there are facets). But the actual drawing of the facets will only
-    #   come later.
-    if (!is.null(facet)) {
-        facets = sort(unique(facet))
-        ifacet = seq_along(facets)
-        nfacets = length(facets)
-
-        if (isTRUE(add)) {
-            omfrow = par("mfrow")
-            nfacet_rows = omfrow[1]
-            nfacet_cols = omfrow[2]
-        } else {
-            if (!is.null(facet.args[["nrow"]])) {
-                nfacet_rows = facet.args[["nrow"]]
-                nfacet_cols = ceiling(nfacets / nfacet_rows)
-            } else if (!is.null(facet.args[["ncol"]])) {
-                nfacet_cols = facet.args[["ncol"]]
-                nfacet_rows = ceiling(nfacets / nfacet_cols)
-            } else {
-                # default is a square arrangement for nfacets > 3
-                if (nfacets > 3) {
-                    nfacet_cols = ceiling(sqrt(nfacets))
-                    nfacet_rows = ceiling(nfacets / nfacet_cols)
-                } else {
-                    nfacet_rows = 1L
-                    nfacet_cols = nfacets
-                }
-            }
-        }
-
-        # determine "outside" facets for selected axis printing if frame = FALSE
-        oxaxis = tail(ifacet, nfacet_cols)
-        oyaxis = seq(1, nfacets, by = nfacet_cols)
-
-        # legend cex adjustment for facet plots
-        # see: https://stat.ethz.ch/pipermail/r-help/2017-August/448431.html
-        if (nfacet_rows >= 3 || nfacet_cols >= 3) {
-            cex_fct_adj = 0.66
-        } else if (nfacet_rows == 2 && nfacet_cols == 2) {
-            cex_fct_adj = 0.83
-        } else {
-            cex_fct_adj = 1
-        }
+  }
+  if (is.null(y)) {
+    ## Special catch for area and interval plots without a specified y-var
+    if (type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")) {
+      ymin_dep = deparse(substitute(ymin))
+      ymax_dep = deparse(substitute(ymax))
+      y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
+      y = rep(NA, length(x))
+      if (is.null(ylim)) ylim = range(c(ymin, ymax))
+    } else if (!type %in% c("density", "hist", "histogram")) {
+      y = x
+      x = seq_along(x)
+      xlab = "Index"
     } else {
-        # no facet case
-        facets = ifacet = nfacets = oxaxis = oyaxis = cex_fct_adj = 1
+      ylab = "Frequency"
     }
+  }
 
-    #
-    ## Global plot elements (legend and titles)
-    #
+  if (is.null(xlab)) xlab = x_dep
+  if (is.null(ylab)) ylab = y_dep
 
-    # place and draw the legend
-    has_legend = FALSE # simple indicator variable for later use
 
-    if (!exists("legend_args")) {
-        legend_args = dots[["legend_args"]]
+  if (type == "density") {
+    fargs = mget(ls(environment(), sorted = FALSE))
+    fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
+    do.call(tinyplot.density, args = fargs)
+    return(do.call(tinyplot.density, args = fargs))
+  }
+
+  if (type %in% c("hist", "histogram")) {
+    fargs = histogram_args(
+      x = x, by = by, facet = facet, facet_by = facet_by, dots = dots,
+      ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha)
+    list2env(fargs, environment())
+  }
+
+  if (type == "area") {
+    ymax = y
+    ymin = rep.int(0, length(y))
+    type = "ribbon"
+    was_area_type = TRUE
+  } else {
+    was_area_type = FALSE # flag to keep track for some legend adjustments below
+  }
+
+  if (type %in% c("j", "jitter")) {
+    x = jitter(x)
+    y = jitter(y)
+    type = "p"
+  }
+
+  if (type == "boxplot") {
+    x = as.factor(x)
+  }
+  if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
+    if (is.character(x)) x = as.factor(x)
+    if (is.factor(x)) {
+      ## For non-boxplots... Need to maintain order that was observed in the
+      ## original data (i.e., no new sorting by factor)
+      if (type != "boxplot") {
+        xlvls = unique(x)
+        x = factor(x, levels = xlvls)
+      } else {
+        xlvls = levels(x)
+      }
+      xlabs = seq_along(xlvls)
+      names(xlabs) = xlvls
+      x = as.integer(x)
     }
-    if (is.null(legend_args)) legend_args = list(x = NULL)
-    legend = substitute(legend)
-
-    if (isFALSE(legend)) {
-        legend = "none"
-    } else if (isTRUE(legend)) {
-        legend = NULL
+    if (type %in% c("ribbon", "boxplot")) {
+      if (is.null(by) && is.null(facet)) {
+        xord = order(x)
+      } else if (is.null(facet)) {
+        xord = order(by, x)
+        by = by[xord]
+      } else if (is.null(by)) {
+        facet_grid = attr(facet, "facet_grid")
+        xord = order(facet, x)
+        facet = facet[xord]
+        attr(facet, "facet_grid") = facet_grid
+      } else {
+        facet_grid = attr(facet, "facet_grid")
+        xord = order(by, facet, x)
+        by = by[xord]
+        facet = facet[xord]
+        attr(facet, "facet_grid") = facet_grid
+      }
+      x = x[xord]
+      y = y[xord]
+      ymin = ymin[xord]
+      ymax = ymax[xord]
+      rm(xord)
     }
-    if (!is.null(legend) && legend == "none") {
-        legend_args[["x"]] = "none"
-    }
+  }
 
-    if (is.null(by)) {
-        if (is.null(legend)) {
-            legend = "none"
-            legend_args[["x"]] = "none"
+
+  xy = xy.coords(x = x, y = y)
+  if (is.null(xlim)) xlim = range(xy$x[is.finite(xy$x)])
+  if (is.null(ylim)) ylim = range(xy$y[is.finite(xy$y)])
+
+  if (!is.null(xmin)) xlim[1] = min(c(xlim, xmin))
+  if (!is.null(xmax)) xlim[2] = max(c(xlim, xmax))
+  if (!is.null(ymin)) ylim[1] = min(c(ylim, ymin))
+  if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
+
+  if (type == "boxplot") {
+    xlim = xlim + c(-0.5, 0.5)
+    if (is.null(by) && is.null(palette)) {
+      if (is.null(col)) col = par("fg")
+      if (is.null(bg) && is.null(fill)) bg = "lightgray"
+    } else {
+      fill = bg = "by"
+    }
+  }
+
+  by_ordered = FALSE
+  by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
+  # manual overrides with warning
+  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
+    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    by_continuous = FALSE
+  } else if (!is.null(by)) {
+    by_ordered = is.ordered(by)
+  }
+
+  if (!is.null(by) && !by_continuous) {
+    split_data = list(x = x, y = y)
+    split_data[["xmin"]] = xmin
+    split_data[["xmax"]] = xmax
+    split_data[["ymin"]] = ymin
+    split_data[["ymax"]] = ymax
+    split_data[["facet"]] = facet
+    split_data = lapply(split_data, split, by)
+    split_data = do.call(function(...) Map("list", ...), split_data)
+  } else {
+    split_data = list(list(
+      x = x, y = y,
+      xmin = xmin, xmax = xmax,
+      ymin = ymin, ymax = ymax,
+      facet = facet
+    ))
+  }
+
+  ngrps = length(split_data)
+
+  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
+
+  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
+
+  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+
+  # palette = substitute(palette)
+  col = by_col(
+    ngrps = ngrps,
+    col = col,
+    palette = substitute(palette),
+    gradient = by_continuous,
+    ordered = by_ordered,
+    alpha = alpha
+  )
+  if (is.null(bg) && !is.null(fill)) bg = fill
+  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
+    alpha = bg
+    bg = "by"
+  }
+  if (!is.null(bg) && length(bg) == 1 && bg == "by") {
+    bg = by_col(
+      ngrps = ngrps,
+      col = NULL,
+      palette = substitute(palette),
+      gradient = by_continuous,
+      ordered = by_ordered,
+      alpha = alpha
+    )
+  } else if (length(bg) != ngrps) {
+    bg = rep(bg, ngrps)
+  }
+  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
+    if (!is.null(bg)) {
+      bg = adjustcolor(bg, ribbon.alpha)
+    } else if (!is.null(col)) {
+      bg = adjustcolor(col, ribbon.alpha)
+    }
+  }
+
+  if (isTRUE(by_continuous)) {
+    ## Identify the pretty break points for our labels
+    nlabs = 5
+    ncolors = length(col)
+    ubyvar = unique(by)
+    byvar_range = range(ubyvar)
+    pbyvar = pretty(byvar_range, n = nlabs)
+    pbyvar = pbyvar[pbyvar >= byvar_range[1] & pbyvar <= byvar_range[2]]
+    # optional thinning
+    if (length(ubyvar) == 2 && all(ubyvar %in% pbyvar)) {
+      pbyvar = ubyvar
+    } else if (length(pbyvar) > nlabs) {
+      pbyvar = pbyvar[seq_along(pbyvar) %% 2 == 0]
+    }
+    ## Find the (approximate) location of our pretty labels
+    pidx = rescale_num(c(byvar_range, pbyvar), to = c(1, ncolors))[-c(1:2)]
+    pidx = round(pidx)
+    lgnd_labs = rep(NA, times = ncolors)
+    lgnd_labs[pidx] = pbyvar
+  }
+
+  # Determine the number and arrangement of facets.
+  # Note: We're do this up front, so we can make some adjustments to legend cex
+  #   next (if there are facets). But the actual drawing of the facets will only
+  #   come later.
+  if (!is.null(facet)) {
+    facets = sort(unique(facet))
+    ifacet = seq_along(facets)
+    nfacets = length(facets)
+
+    if (isTRUE(add)) {
+      omfrow = par("mfrow")
+      nfacet_rows = omfrow[1]
+      nfacet_cols = omfrow[2]
+    } else {
+      if (!is.null(facet.args[["nrow"]])) {
+        nfacet_rows = facet.args[["nrow"]]
+        nfacet_cols = ceiling(nfacets / nfacet_rows)
+      } else if (!is.null(facet.args[["ncol"]])) {
+        nfacet_cols = facet.args[["ncol"]]
+        nfacet_rows = ceiling(nfacets / nfacet_cols)
+      } else {
+        # default is a square arrangement for nfacets > 3
+        if (nfacets > 3) {
+          nfacet_cols = ceiling(sqrt(nfacets))
+          nfacet_rows = ceiling(nfacets / nfacet_cols)
+        } else {
+          nfacet_rows = 1L
+          nfacet_cols = nfacets
         }
+      }
     }
 
-    if ((is.null(legend) || legend != "none") && isFALSE(add)) {
-        if (isFALSE(by_continuous)) {
-            if (ngrps > 1) {
-                lgnd_labs = names(split_data)
-            } else {
-                lgnd_labs = ylab
-            }
+    # determine "outside" facets for selected axis printing if frame = FALSE
+    oxaxis = tail(ifacet, nfacet_cols)
+    oyaxis = seq(1, nfacets, by = nfacet_cols)
+
+    # legend cex adjustment for facet plots
+    # see: https://stat.ethz.ch/pipermail/r-help/2017-August/448431.html
+    if (nfacet_rows >= 3 || nfacet_cols >= 3) {
+      cex_fct_adj = 0.66
+    } else if (nfacet_rows == 2 && nfacet_cols == 2) {
+      cex_fct_adj = 0.83
+    } else {
+      cex_fct_adj = 1
+    }
+  } else {
+    # no facet case
+    facets = ifacet = nfacets = oxaxis = oyaxis = cex_fct_adj = 1
+  }
+
+  #
+  ## Global plot elements (legend and titles)
+  #
+
+  # place and draw the legend
+  has_legend = FALSE # simple indicator variable for later use
+
+  if (!exists("legend_args")) {
+    legend_args = dots[["legend_args"]]
+  }
+  if (is.null(legend_args)) legend_args = list(x = NULL)
+  legend = substitute(legend)
+
+  if (isFALSE(legend)) {
+    legend = "none"
+  } else if (isTRUE(legend)) {
+    legend = NULL
+  }
+  if (!is.null(legend) && legend == "none") {
+    legend_args[["x"]] = "none"
+  }
+
+  if (is.null(by)) {
+    if (is.null(legend)) {
+      legend = "none"
+      legend_args[["x"]] = "none"
+    }
+  }
+
+  if ((is.null(legend) || legend != "none") && isFALSE(add)) {
+    if (isFALSE(by_continuous)) {
+      if (ngrps > 1) {
+        lgnd_labs = names(split_data)
+      } else {
+        lgnd_labs = ylab
+      }
+    }
+
+    has_sub = !is.null(sub)
+
+    if (isTRUE(was_area_type) || type == "rect") {
+      legend_args[["pt.lwd"]] = par("lwd")
+      legend_args[["lty"]] = 0
+    }
+
+    draw_legend(
+      legend = legend,
+      legend_args = legend_args,
+      by_dep = by_dep,
+      lgnd_labs = lgnd_labs,
+      type = type,
+      pch = pch,
+      lty = lty,
+      lwd = lwd,
+      col = col,
+      bg = bg,
+      gradient = by_continuous,
+      cex = cex * cex_fct_adj,
+      has_sub = has_sub
+    )
+
+    has_legend = TRUE
+  } else if (legend_args[["x"]] == "none" && isFALSE(add)) {
+    omar = par("mar")
+    ooma = par("oma")
+    topmar_epsilon = 0.1
+
+    # Catch to avoid recursive offsets, e.g. repeated tinyplot calls with
+    # "bottom!" legend position.
+
+    ## restore inner margin defaults
+    ## (in case the plot region/margins were affected by the preceding tinyplot call)
+    if (any(ooma != 0)) {
+      if (ooma[1] != 0 & omar[1] == par("mgp")[1] + 1 * par("cex.lab")) omar[1] = 5.1
+      if (ooma[2] != 0 & omar[2] == par("mgp")[1] + 1 * par("cex.lab")) omar[2] = 4.1
+      if (ooma[3] == topmar_epsilon & omar[3] != 4.1) omar[3] = 4.1
+      if (ooma[4] != 0 & omar[4] == 0) omar[4] = 2.1
+      par(mar = omar)
+    }
+    ## restore outer margin defaults (with a catch for custom mfrow plots)
+    if (all(par("mfrow") == c(1, 1))) {
+      par(omd = c(0, 1, 0, 1))
+    }
+
+    # clean up for now
+    rm(omar, ooma, topmar_epsilon)
+
+    # Draw new plot
+    plot.new()
+  }
+
+  # Titles. Only draw these if add = FALSE
+  if (isFALSE(add)) {
+    # main title
+    # Note that we include a special catch for the main title if legend is
+    # "top!" (and main is specified in the first place).
+    legend_eval = tryCatch(eval(legend), error = function(e) NULL)
+    # Extra bit of footwork if user passed legend = legend(...) instead of
+    # legend = list(...), since the call environment is tricky
+    if (is.null(legend_eval)) {
+      legend_eval = tryCatch(paste0(legend)[[2]], error = function(e) NULL)
+    }
+    adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend_args[["x"]]) && legend_args[["x"]] == "top!") || (is.list(legend_eval) && legend_eval[[1]] == "top!"))
+    if (is.null(main) || isFALSE(adj_title)) {
+      title(
+        main = main,
+        sub = sub
+      )
+    } else {
+      # For the "top!" legend case, bump main title up to make space for the
+      # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
+      # and add the difference between original top margin and new one (i.e.,
+      # which should equal the height of the new legend). Note that we also
+      # include a 0.1 epsilon bump, which we're using to reset the tinyplot
+      # window in case of recursive "top!" calls. (See draw_legend code.)
+      title(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1)
+      title(sub = sub)
+    }
+    # Axis titles
+    title(xlab = xlab, ylab = ylab)
+  }
+
+  #
+  ## Facet windows
+  #
+
+  omar = NULL # Placeholder variable for now, which we re-assign as part of facet margins
+
+  if (!is.null(facet) && isFALSE(add)) {
+    if (is.null(omar)) omar = par("mar")
+
+    # Grab some of the customizable facet args that we'll be using later
+    facet_rect = FALSE
+    facet_text = .tpar[["facet.cex"]]
+    facet_font = .tpar[["facet.font"]]
+    facet_col = .tpar[["facet.col"]]
+    facet_bg = .tpar[["facet.bg"]]
+    facet_border = .tpar[["facet.border"]]
+    if (!is.null(facet.args)) {
+      if (!is.null(facet.args[["cex"]])) facet_text = facet.args[["cex"]]
+      if (!is.null(facet.args[["col"]])) facet_col = facet.args[["col"]]
+      if (!is.null(facet.args[["font"]])) facet_font = facet.args[["font"]]
+      if (!is.null(facet.args[["bg"]])) facet_bg = facet.args[["bg"]]
+      if (!is.null(facet.args[["border"]])) facet_border = facet.args[["border"]]
+    }
+    if (!is.null(facet_bg) || !is.null(facet_border)) facet_rect = TRUE
+
+    # Need extra adjustment to top margin if facet titles have "\n" newline
+    # separator. (Note that we'll also need to take account for this in the
+    # individual facet margins / gaps further below.)
+    facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
+    # if (length(facet_newlines)==0) facet_newlines = 0
+    # omar[3] = omar[3] + max(facet_newlines)
+    facet_newlines = ifelse(length(facet_newlines) == 0, 0, max(facet_newlines))
+    omar[3] = omar[3] + facet_newlines * facet_text / cex_fct_adj
+    # apply the changes
+    par(mar = omar)
+  }
+
+  # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
+  # Skip if adding to an existing plot
+
+  if (isFALSE(add)) {
+    if (nfacets > 1) {
+      # Set facet margins (i.e., gaps between facets)
+      if (is.null(facet.args[["fmar"]])) {
+        fmar = tpar("fmar")
+      } else {
+        if (length(facet.args[["fmar"]]) != 4) {
+          warning(
+            "`fmar` has to be a vector of length four, e.g.",
+            "`facet.args = list(fmar = c(b,l,t,r))`.",
+            "\n",
+            "Resetting to fmar = c(1,1,1,1) default.",
+            "\n"
+          )
+          fmar = tpar("fmar")
+        } else {
+          fmar = facet.args[["fmar"]]
         }
+      }
+      # We need to adjust for n>=3 facet cases for correct spacing...
+      if (nfacets >= 3) {
+        ## ... exception for 2x2 cases
+        if (!(nfacet_rows == 2 && nfacet_cols == 2)) fmar = fmar * .75
+      }
+      # Extra reduction if no plot frame to reduce whitespace
+      if (isFALSE(frame.plot)) {
+        fmar = fmar - 0.5
+      }
 
-        has_sub = !is.null(sub)
+      ooma = par("oma")
 
-        if (isTRUE(was_area_type) || type == "rect") {
-            legend_args[["pt.lwd"]] = par("lwd")
-            legend_args[["lty"]] = 0
+      # Bump top margin down for facet titles
+      fmar[3] = fmar[3] + 1
+      if (isTRUE(attr(facet, "facet_grid"))) {
+        fmar[3] = max(0, fmar[3] - 1)
+        # Indent for RHS facet_grid title strip if "right!" legend
+        if (has_legend && ooma[4] > 0) ooma[4] = ooma[4] + 1
+      }
+      fmar[3] = fmar[3] + facet_newlines * facet_text / cex_fct_adj
+
+      omar = par("mar")
+
+      # Now we set the margins. The trick here is that we simultaneously adjust
+      # inner (mar) and outer (oma) margins by the same amount, but in opposite
+      # directions, to preserve the overall facet and plot centroids.
+      nmar = (fmar + .1) / cex_fct_adj
+      noma = (ooma + omar - fmar - .1) / cex_fct_adj
+      # Catch in case of negative oma values. (Probably only occurs with some
+      # user-supplied tpar(lmar) values and a "left!" positioned legend.)
+      if (any(noma < 0)) {
+        noma_orig = noma
+        noma[noma < 0] = 0
+        # noma_diff = noma-noma_orig
+        # nmar = nmar + noma_diff
+      }
+      # apply changes
+      par(oma = noma)
+      par(mar = nmar)
+
+      # Now that the margins have been set, arrange facet rows and columns based
+      # on our earlier calculations.
+      par(mfrow = c(nfacet_rows, nfacet_cols))
+    }
+
+    ## Loop over the individual facet windows and draw the plot region
+    ## components (axes, titles, box, grid, etc.)
+    for (ii in ifacet) {
+      # See: https://github.com/grantmcdermott/tinyplot/issues/65
+      if (nfacets > 1) {
+        mfgi = ceiling(ii / nfacet_cols)
+        mfgj = ii %% nfacet_cols
+        if (mfgj == 0) mfgj = nfacet_cols
+        par(mfg = c(mfgi, mfgj))
+      }
+
+      ## Set the plot window
+      ## Problem: Passing extra args through ... (e.g., legend_args) to plot.window
+      ## triggers an annoying warning about unrecognized graphical params.
+      # plot.window(
+      #   xlim = xlim, ylim = ylim,
+      #   asp = asp, log = log,
+      #   # ...
+      # )
+      ## Solution: Only pass on relevant args using name checking and do.call.
+      ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
+      pdots = dots[names(dots) %in% names(formals(plot.default))]
+      ## catch for flipped boxplots...
+      if (type == "boxplot" && isTRUE(dots[["horizontal"]])) {
+        log_flip = log
+        if (!is.null(log)) {
+          if (log == "x") log_flip = "y"
+          if (log == "y") log_flip = "x"
         }
-
-        draw_legend(
-            legend = legend,
-            legend_args = legend_args,
-            by_dep = by_dep,
-            lgnd_labs = lgnd_labs,
-            type = type,
-            pch = pch,
-            lty = lty,
-            lwd = lwd,
-            col = col,
-            bg = bg,
-            gradient = by_continuous,
-            cex = cex * cex_fct_adj,
-            has_sub = has_sub
+        do.call(
+          "plot.window",
+          c(list(xlim = ylim, ylim = xlim, asp = asp, log = log_flip), pdots)
         )
+        xside = 2
+        yside = 1
+      } else {
+        ## ... standard plot window for all other cases
+        do.call(
+          "plot.window",
+          c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
+        )
+        xside = 1
+        yside = 2
+      }
 
-        has_legend = TRUE
-    } else if (legend_args[["x"]] == "none" && isFALSE(add)) {
-        omar = par("mar")
-        ooma = par("oma")
-        topmar_epsilon = 0.1
-
-        # Catch to avoid recursive offsets, e.g. repeated tinyplot calls with
-        # "bottom!" legend position.
-
-        ## restore inner margin defaults
-        ## (in case the plot region/margins were affected by the preceding tinyplot call)
-        if (any(ooma != 0)) {
-            if (ooma[1] != 0 & omar[1] == par("mgp")[1] + 1 * par("cex.lab")) omar[1] = 5.1
-            if (ooma[2] != 0 & omar[2] == par("mgp")[1] + 1 * par("cex.lab")) omar[2] = 4.1
-            if (ooma[3] == topmar_epsilon & omar[3] != 4.1) omar[3] = 4.1
-            if (ooma[4] != 0 & omar[4] == 0) omar[4] = 2.1
-            par(mar = omar)
+      # axes, plot.frame and grid
+      if (isTRUE(axes)) {
+        if (isTRUE(frame.plot)) {
+          # if plot frame is true then print axes per normal...
+          if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
+            Axis(x, side = xside, at = xlabs, labels = names(xlabs))
+          } else {
+            Axis(x, side = xside)
+          }
+          Axis(y, side = yside)
+        } else {
+          # ... else only print the "outside" axes.
+          if (ii %in% oxaxis) {
+            if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
+              Axis(x, side = xside, at = xlabs, labels = names(xlabs))
+            } else {
+              Axis(x, side = xside)
+            }
+          }
+          if (ii %in% oyaxis) {
+            Axis(y, side = yside)
+          }
         }
-        ## restore outer margin defaults (with a catch for custom mfrow plots)
-        if (all(par("mfrow") == c(1, 1))) {
-            par(omd = c(0, 1, 0, 1))
+      }
+
+      # facet titles
+      ## Note: facet titles could be done more simply with mtext... but then we
+      ## couldn't adjust background features (e.g., fill), or rotate the rhs
+      ## facet grid text. So we're rolling our own "manual" versions with text
+      ## and rect.
+      if (!is.null(facet)) {
+        # Get the four corners of plot area (x1, x2, y1, y2)
+        corners = par("usr")
+        # special logic for facet grids
+        if (is.null(facet_newlines) || facet_newlines == 0) {
+          facet_title_lines = 1
+        } else {
+          facet_title_lines = 1 + facet_newlines
         }
-
-        # clean up for now
-        rm(omar, ooma, topmar_epsilon)
-
-        # Draw new plot
-        plot.new()
-    }
-
-    # Titles. Only draw these if add = FALSE
-    if (isFALSE(add)) {
-        # main title
-        # Note that we include a special catch for the main title if legend is
-        # "top!" (and main is specified in the first place).
-        legend_eval = tryCatch(eval(legend), error = function(e) NULL)
-        # Extra bit of footwork if user passed legend = legend(...) instead of
-        # legend = list(...), since the call environment is tricky
-        if (is.null(legend_eval)) {
-            legend_eval = tryCatch(paste0(legend)[[2]], error = function(e) NULL)
-        }
-        adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend_args[["x"]]) && legend_args[["x"]] == "top!") || (is.list(legend_eval) && legend_eval[[1]] == "top!"))
-        if (is.null(main) || isFALSE(adj_title)) {
-            title(
-                main = main,
-                sub = sub
+        # different logic for facet grids versus regular facets
+        if (isTRUE(attr(facet, "facet_grid"))) {
+          ## top facet strips
+          if (ii %in% 1:nfacet_cols) {
+            if (isTRUE(facet_rect)) {
+              line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+              line_height = line_height * facet_text / cex_fct_adj
+              rect(
+                corners[1], corners[4], corners[2], corners[4] + line_height,
+                col = facet_bg, border = facet_border,
+                xpd = NA
+              )
+            }
+            text(
+              x = mean(corners[1:2]),
+              y = corners[4] + grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user"),
+              labels = sub("^(.*?)~.*", "\\1", facets[[ii]]),
+              adj = c(0.5, 0),
+              cex = facet_text / cex_fct_adj,
+              col = facet_col,
+              font = facet_font,
+              xpd = NA,
             )
+          }
+          ## right facet strips
+          if (ii %% nfacet_cols == 0 || ii == nfacets) {
+            if (isTRUE(facet_rect)) {
+              line_height = grconvertX(facet_title_lines + .1, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+              line_height = line_height * facet_text / cex_fct_adj
+              rect(
+                corners[2], corners[3], corners[2] + line_height, corners[4],
+                col = facet_bg, border = facet_border,
+                xpd = NA
+              )
+            }
+            text(
+              x = corners[2] + grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user"),
+              y = mean(corners[3:4]),
+              labels = sub("^.*?~(.*)", "\\1", facets[[ii]]),
+              srt = 270,
+              adj = c(0.5, 0),
+              cex = facet_text / cex_fct_adj,
+              col = facet_col,
+              font = facet_font,
+              xpd = NA
+            )
+          }
         } else {
-            # For the "top!" legend case, bump main title up to make space for the
-            # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
-            # and add the difference between original top margin and new one (i.e.,
-            # which should equal the height of the new legend). Note that we also
-            # include a 0.1 epsilon bump, which we're using to reset the tinyplot
-            # window in case of recursive "top!" calls. (See draw_legend code.)
-            title(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1)
-            title(sub = sub)
+          if (isTRUE(facet_rect)) {
+            line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+            line_height = line_height * facet_text / cex_fct_adj
+            rect(
+              corners[1], corners[4], corners[2], corners[4] + line_height,
+              col = facet_bg, border = facet_border,
+              xpd = NA
+            )
+          }
+          text(
+            x = mean(corners[1:2]),
+            y = corners[4] + grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user"),
+            labels = paste(facets[[ii]]),
+            adj = c(0.5, 0),
+            cex = facet_text / cex_fct_adj,
+            col = facet_col,
+            font = facet_font,
+            xpd = NA
+          )
         }
-        # Axis titles
-        title(xlab = xlab, ylab = ylab)
-    }
+      }
 
-    #
-    ## Facet windows
-    #
+      # plot frame
+      if (frame.plot) box()
 
-    omar = NULL # Placeholder variable for now, which we re-assign as part of facet margins
-
-    if (!is.null(facet) && isFALSE(add)) {
-        if (is.null(omar)) omar = par("mar")
-
-        # Grab some of the customizable facet args that we'll be using later
-        facet_rect = FALSE
-        facet_text = .tpar[["facet.cex"]]
-        facet_font = .tpar[["facet.font"]]
-        facet_col = .tpar[["facet.col"]]
-        facet_bg = .tpar[["facet.bg"]]
-        facet_border = .tpar[["facet.border"]]
-        if (!is.null(facet.args)) {
-            if (!is.null(facet.args[["cex"]])) facet_text = facet.args[["cex"]]
-            if (!is.null(facet.args[["col"]])) facet_col = facet.args[["col"]]
-            if (!is.null(facet.args[["font"]])) facet_font = facet.args[["font"]]
-            if (!is.null(facet.args[["bg"]])) facet_bg = facet.args[["bg"]]
-            if (!is.null(facet.args[["border"]])) facet_border = facet.args[["border"]]
-        }
-        if (!is.null(facet_bg) || !is.null(facet_border)) facet_rect = TRUE
-
-        # Need extra adjustment to top margin if facet titles have "\n" newline
-        # separator. (Note that we'll also need to take account for this in the
-        # individual facet margins / gaps further below.)
-        facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
-        # if (length(facet_newlines)==0) facet_newlines = 0
-        # omar[3] = omar[3] + max(facet_newlines)
-        facet_newlines = ifelse(length(facet_newlines) == 0, 0, max(facet_newlines))
-        omar[3] = omar[3] + facet_newlines * facet_text / cex_fct_adj
-        # apply the changes
-        par(mar = omar)
-    }
-
-    # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
-    # Skip if adding to an existing plot
-
-    if (isFALSE(add)) {
-        if (nfacets > 1) {
-            # Set facet margins (i.e., gaps between facets)
-            if (is.null(facet.args[["fmar"]])) {
-                fmar = tpar("fmar")
-            } else {
-                if (length(facet.args[["fmar"]]) != 4) {
-                    warning(
-                        "`fmar` has to be a vector of length four, e.g.",
-                        "`facet.args = list(fmar = c(b,l,t,r))`.",
-                        "\n",
-                        "Resetting to fmar = c(1,1,1,1) default.",
-                        "\n"
-                    )
-                    fmar = tpar("fmar")
-                } else {
-                    fmar = facet.args[["fmar"]]
-                }
+      # panel grid lines
+      if (is.null(grid)) grid = .tpar[["grid"]]
+      if (!is.null(grid)) {
+        if (is.logical(grid)) {
+          ## If grid is TRUE create a default grid. Rather than just calling the default grid()
+          ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
+          ## and works better for axes based on date/time classes. Exception: For axes in logs,
+          ## resort to using grid() which is likely better handled there.
+          if (isTRUE(grid)) {
+            gnx = gny = NULL
+            if (!par("xlog")) {
+              abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              gnx = NA
             }
-            # We need to adjust for n>=3 facet cases for correct spacing...
-            if (nfacets >= 3) {
-                ## ... exception for 2x2 cases
-                if (!(nfacet_rows == 2 && nfacet_cols == 2)) fmar = fmar * .75
+            if (!par("ylog")) {
+              abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              gny = NA
             }
-            # Extra reduction if no plot frame to reduce whitespace
-            if (isFALSE(frame.plot)) {
-                fmar = fmar - 0.5
-            }
-
-            ooma = par("oma")
-
-            # Bump top margin down for facet titles
-            fmar[3] = fmar[3] + 1
-            if (isTRUE(attr(facet, "facet_grid"))) {
-                fmar[3] = max(0, fmar[3] - 1)
-                # Indent for RHS facet_grid title strip if "right!" legend
-                if (has_legend && ooma[4] > 0) ooma[4] = ooma[4] + 1
-            }
-            fmar[3] = fmar[3] + facet_newlines * facet_text / cex_fct_adj
-
-            omar = par("mar")
-
-            # Now we set the margins. The trick here is that we simultaneously adjust
-            # inner (mar) and outer (oma) margins by the same amount, but in opposite
-            # directions, to preserve the overall facet and plot centroids.
-            nmar = (fmar + .1) / cex_fct_adj
-            noma = (ooma + omar - fmar - .1) / cex_fct_adj
-            # Catch in case of negative oma values. (Probably only occurs with some
-            # user-supplied tpar(lmar) values and a "left!" positioned legend.)
-            if (any(noma < 0)) {
-                noma_orig = noma
-                noma[noma < 0] = 0
-                # noma_diff = noma-noma_orig
-                # nmar = nmar + noma_diff
-            }
-            # apply changes
-            par(oma = noma)
-            par(mar = nmar)
-
-            # Now that the margins have been set, arrange facet rows and columns based
-            # on our earlier calculations.
-            par(mfrow = c(nfacet_rows, nfacet_cols))
-        }
-
-        ## Loop over the individual facet windows and draw the plot region
-        ## components (axes, titles, box, grid, etc.)
-        for (ii in ifacet) {
-            # See: https://github.com/grantmcdermott/tinyplot/issues/65
-            if (nfacets > 1) {
-                mfgi = ceiling(ii / nfacet_cols)
-                mfgj = ii %% nfacet_cols
-                if (mfgj == 0) mfgj = nfacet_cols
-                par(mfg = c(mfgi, mfgj))
-            }
-
-            ## Set the plot window
-            ## Problem: Passing extra args through ... (e.g., legend_args) to plot.window
-            ## triggers an annoying warning about unrecognized graphical params.
-            # plot.window(
-            #   xlim = xlim, ylim = ylim,
-            #   asp = asp, log = log,
-            #   # ...
-            # )
-            ## Solution: Only pass on relevant args using name checking and do.call.
-            ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
-            pdots = dots[names(dots) %in% names(formals(plot.default))]
-            ## catch for flipped boxplots...
-            if (type == "boxplot" && isTRUE(dots[["horizontal"]])) {
-                log_flip = log
-                if (!is.null(log)) {
-                    if (log == "x") log_flip = "y"
-                    if (log == "y") log_flip = "x"
-                }
-                do.call(
-                    "plot.window",
-                    c(list(xlim = ylim, ylim = xlim, asp = asp, log = log_flip), pdots)
-                )
-                xside = 2
-                yside = 1
-            } else {
-                ## ... standard plot window for all other cases
-                do.call(
-                    "plot.window",
-                    c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
-                )
-                xside = 1
-                yside = 2
-            }
-
-            # axes, plot.frame and grid
-            if (isTRUE(axes)) {
-                if (isTRUE(frame.plot)) {
-                    # if plot frame is true then print axes per normal...
-                    if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
-                        Axis(x, side = xside, at = xlabs, labels = names(xlabs))
-                    } else {
-                        Axis(x, side = xside)
-                    }
-                    Axis(y, side = yside)
-                } else {
-                    # ... else only print the "outside" axes.
-                    if (ii %in% oxaxis) {
-                        if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
-                            Axis(x, side = xside, at = xlabs, labels = names(xlabs))
-                        } else {
-                            Axis(x, side = xside)
-                        }
-                    }
-                    if (ii %in% oyaxis) {
-                        Axis(y, side = yside)
-                    }
-                }
-            }
-
-            # facet titles
-            ## Note: facet titles could be done more simply with mtext... but then we
-            ## couldn't adjust background features (e.g., fill), or rotate the rhs
-            ## facet grid text. So we're rolling our own "manual" versions with text
-            ## and rect.
-            if (!is.null(facet)) {
-                # Get the four corners of plot area (x1, x2, y1, y2)
-                corners = par("usr")
-                # special logic for facet grids
-                if (is.null(facet_newlines) || facet_newlines == 0) {
-                    facet_title_lines = 1
-                } else {
-                    facet_title_lines = 1 + facet_newlines
-                }
-                # different logic for facet grids versus regular facets
-                if (isTRUE(attr(facet, "facet_grid"))) {
-                    ## top facet strips
-                    if (ii %in% 1:nfacet_cols) {
-                        if (isTRUE(facet_rect)) {
-                            line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
-                            line_height = line_height * facet_text / cex_fct_adj
-                            rect(
-                                corners[1], corners[4], corners[2], corners[4] + line_height,
-                                col = facet_bg, border = facet_border,
-                                xpd = NA
-                            )
-                        }
-                        text(
-                            x = mean(corners[1:2]),
-                            y = corners[4] + grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user"),
-                            labels = sub("^(.*?)~.*", "\\1", facets[[ii]]),
-                            adj = c(0.5, 0),
-                            cex = facet_text / cex_fct_adj,
-                            col = facet_col,
-                            font = facet_font,
-                            xpd = NA,
-                        )
-                    }
-                    ## right facet strips
-                    if (ii %% nfacet_cols == 0 || ii == nfacets) {
-                        if (isTRUE(facet_rect)) {
-                            line_height = grconvertX(facet_title_lines + .1, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
-                            line_height = line_height * facet_text / cex_fct_adj
-                            rect(
-                                corners[2], corners[3], corners[2] + line_height, corners[4],
-                                col = facet_bg, border = facet_border,
-                                xpd = NA
-                            )
-                        }
-                        text(
-                            x = corners[2] + grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user"),
-                            y = mean(corners[3:4]),
-                            labels = sub("^.*?~(.*)", "\\1", facets[[ii]]),
-                            srt = 270,
-                            adj = c(0.5, 0),
-                            cex = facet_text / cex_fct_adj,
-                            col = facet_col,
-                            font = facet_font,
-                            xpd = NA
-                        )
-                    }
-                } else {
-                    if (isTRUE(facet_rect)) {
-                        line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
-                        line_height = line_height * facet_text / cex_fct_adj
-                        rect(
-                            corners[1], corners[4], corners[2], corners[4] + line_height,
-                            col = facet_bg, border = facet_border,
-                            xpd = NA
-                        )
-                    }
-                    text(
-                        x = mean(corners[1:2]),
-                        y = corners[4] + grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user"),
-                        labels = paste(facets[[ii]]),
-                        adj = c(0.5, 0),
-                        cex = facet_text / cex_fct_adj,
-                        col = facet_col,
-                        font = facet_font,
-                        xpd = NA
-                    )
-                }
-            }
-
-            # plot frame
-            if (frame.plot) box()
-
-            # panel grid lines
-            if (is.null(grid)) grid = .tpar[["grid"]]
-            if (!is.null(grid)) {
-                if (is.logical(grid)) {
-                    ## If grid is TRUE create a default grid. Rather than just calling the default grid()
-                    ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
-                    ## and works better for axes based on date/time classes. Exception: For axes in logs,
-                    ## resort to using grid() which is likely better handled there.
-                    if (isTRUE(grid)) {
-                        gnx = gny = NULL
-                        if (!par("xlog")) {
-                            abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
-                            gnx = NA
-                        }
-                        if (!par("ylog")) {
-                            abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
-                            gny = NA
-                        }
-                        grid(nx = gnx, ny = gny)
-                    }
-                } else {
-                    grid
-                }
-            }
-        } # end of ii facet loop
-    } # end of add check
-
-
-    #
-    ## Interior plot elements
-    #
-
-    # Finally, we can draw all of the plot elements (points, lines, etc.)
-    # We'll do this via a nested loops:
-    #  1) Outer loop over groups
-    #  2) Inner loop over facets
-
-    ## Outer loop over the "by" groups
-    for (i in seq_along(split_data)) {
-        # Split group-level data again to grab any facets
-        idata = split_data[[i]]
-        ifacet = idata[["facet"]]
-        if (!is.null(ifacet)) {
-            idata[["facet"]] = NULL ## Don't need this anymore since we'll be splitting by ifacet
-            ## Need extra catch for non-groupby data that also doesn't have ymin or
-            ## ymax vars
-            if (is.null(by) || isTRUE(by_continuous)) {
-                if (is.null(idata[["xmin"]])) idata[["xmin"]] = NULL
-                if (is.null(idata[["xmax"]])) idata[["xmax"]] = NULL
-                if (is.null(idata[["ymin"]])) idata[["ymin"]] = NULL
-                if (is.null(idata[["ymax"]])) idata[["ymax"]] = NULL
-            }
-            if (isTRUE(by_continuous)) {
-                idata[["col"]] = col[round(rescale_num(by, to = c(1, 100)))]
-                idata[["bg"]] = bg[round(rescale_num(by, to = c(1, 100)))]
-            }
-            idata = lapply(idata, split, ifacet)
-            idata = do.call(function(...) Map("list", ...), idata)
+            grid(nx = gnx, ny = gny)
+          }
         } else {
-            idata = list(idata)
-            if (isTRUE(by_continuous)) {
-                if (length(col) != 1) {
-                    idata[[1]][["col"]] = col[round(rescale_num(by, to = c(1, 100)))]
-                } else {
-                    idata[[1]][["col"]] = col
-                }
-                if (length(bg) != 1) {
-                    idata[[1]][["bg"]] = bg[round(rescale_num(by, to = c(1, 100)))]
-                } else {
-                    idata[[1]][["bg"]] = bg
-                }
-            }
+          grid
         }
+      }
+    } # end of ii facet loop
+  } # end of add check
 
-        icol = col[i]
-        ibg = bg[i]
-        ipch = pch[i]
-        ilty = lty[i]
-        ilwd = lwd[i]
 
-        ## Inner loop over the "facet" variables
-        for (ii in seq_along(idata)) {
-            xx = idata[[ii]]$x
-            yy = idata[[ii]]$y
-            xxmin = idata[[ii]]$xmin
-            xxmax = idata[[ii]]$xmax
-            yymin = idata[[ii]]$ymin
-            yymax = idata[[ii]]$ymax
+  #
+  ## Interior plot elements
+  #
 
-            if (isTRUE(by_continuous)) {
-                icol = idata[[ii]]$col
-                ibg = idata[[ii]]$bg
-            }
+  # Finally, we can draw all of the plot elements (points, lines, etc.)
+  # We'll do this via a nested loops:
+  #  1) Outer loop over groups
+  #  2) Inner loop over facets
 
-            # Set the facet "window" manually
-            # See: https://github.com/grantmcdermott/tinyplot/issues/65
-            # if (nfacets > 1) par(mfg = c(1, ii))
-            if (nfacets > 1) {
-                mfgi = ceiling(ii / nfacet_cols)
-                mfgj = ii %% nfacet_cols
-                if (mfgj == 0) mfgj = nfacet_cols
-                par(mfg = c(mfgi, mfgj))
-            }
-
-            # empty plot flag
-            empty_plot = FALSE
-            if (isTRUE(empty) || type == "n" || ((length(xx) == 0) && !(type %in% c("rect", "segments")))) {
-                empty_plot = TRUE
-            }
-
-            # Draw the individual plot elements...
-
-            ## polygons before lines, segments/arrows before points, etc.
-            if (isTRUE(empty_plot)) {
-
-            } else if (type == "ribbon") {
-                polygon(
-                    x = c(xx, rev(xx)),
-                    y = c(yymin, rev(yymax)),
-                    col = bg[i],
-                    border = FALSE
-                )
-            } else if (type == "pointrange") {
-                segments(
-                    x0 = xx,
-                    y0 = yymin,
-                    x1 = xx,
-                    y1 = yymax,
-                    col = icol,
-                    # lty = ilty,
-                    lwd = ilwd
-                )
-            } else if (type == "errorbar") {
-                arrows(
-                    x0 = xx,
-                    y0 = yymin,
-                    x1 = xx,
-                    y1 = yymax,
-                    col = icol,
-                    # lty = ilty,
-                    lwd = ilwd,
-                    length = 0.05,
-                    angle = 90,
-                    code = 3
-                )
-            }
-
-            ## now draw the points/lines/polygons/etc
-            if (isTRUE(empty_plot)) {
-                # empty plot
-            } else if (type %in% c("p", "pointrange", "errorbar")) {
-                points(
-                    x = xx,
-                    y = yy,
-                    col = icol,
-                    bg = ibg,
-                    ## rather hardcode "p" to avoid warning message about "pointrange"
-                    type = "p",
-                    pch = ipch,
-                    # lty = ilty,
-                    lwd = ilwd,
-                    cex = cex
-                )
-            } else if (type %in% c("l", "o", "b", "c", "h", "s", "S", "ribbon")) {
-                rtype = type == "ribbon"
-                if (rtype) type = "l"
-                lines(
-                    x = xx,
-                    y = yy,
-                    col = icol,
-                    type = type,
-                    pch = ipch,
-                    lty = ilty,
-                    lwd = ilwd
-                )
-                if (rtype) type = "ribbon"
-            } else if (type == "polygon") {
-                polygon(
-                    x = xx,
-                    y = yy,
-                    border = icol,
-                    col = ibg,
-                    lty = ilty,
-                    lwd = ilwd
-                )
-            } else if (type == "polypath") {
-                irule = ifelse(!is.null(dots[["rule"]]), dots[["rule"]], "winding")
-                polypath(
-                    x = xx,
-                    y = yy,
-                    border = icol,
-                    col = ibg,
-                    lty = ilty,
-                    lwd = ilwd,
-                    rule = irule
-                )
-            } else if (type == "boxplot") {
-                horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
-                boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
-                staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
-                outwex_xx = ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
-                at_xx = unique(xx)
-                if (!is.null(by) && isFALSE(facet_by) && length(split_data) > 1) {
-                    boxwex_xx_orig = boxwex_xx
-                    boxwex_xx = boxwex_xx / length(split_data) - 0.01
-                    at_xx = at_xx + seq(-((boxwex_xx_orig - boxwex_xx) / 2), ((boxwex_xx_orig - boxwex_xx) / 2), length.out = length(split_data))[i]
-                }
-                boxplot(
-                    formula = yy ~ xx,
-                    pch = ipch,
-                    lty = ilty,
-                    border = icol,
-                    col = ibg,
-                    add = TRUE, axes = FALSE,
-                    horizontal = horizontal,
-                    at = at_xx,
-                    boxwex = boxwex_xx,
-                    staplewex = staplewex_xx,
-                    outwex = outwex_xx
-                )
-            } else if (type == "rect") {
-                rect(
-                    xleft = xxmin, ybottom = yymin, xright = xxmax, ytop = yymax,
-                    lty = ilty,
-                    lwd = ilwd,
-                    border = icol,
-                    col = ibg
-                )
-            } else if (type == "segments") {
-                segments(
-                    x0 = xxmin, y0 = yymin, x1 = xxmax, y1 = yymax,
-                    lty = ilty,
-                    lwd = ilwd,
-                    col = icol
-                )
-            } else {
-                stop("`type` argument not supported.", call. = FALSE)
-            }
+  ## Outer loop over the "by" groups
+  for (i in seq_along(split_data)) {
+    # Split group-level data again to grab any facets
+    idata = split_data[[i]]
+    ifacet = idata[["facet"]]
+    if (!is.null(ifacet)) {
+      idata[["facet"]] = NULL ## Don't need this anymore since we'll be splitting by ifacet
+      ## Need extra catch for non-groupby data that also doesn't have ymin or
+      ## ymax vars
+      if (is.null(by) || isTRUE(by_continuous)) {
+        if (is.null(idata[["xmin"]])) idata[["xmin"]] = NULL
+        if (is.null(idata[["xmax"]])) idata[["xmax"]] = NULL
+        if (is.null(idata[["ymin"]])) idata[["ymin"]] = NULL
+        if (is.null(idata[["ymax"]])) idata[["ymax"]] = NULL
+      }
+      if (isTRUE(by_continuous)) {
+        idata[["col"]] = col[round(rescale_num(by, to = c(1, 100)))]
+        idata[["bg"]] = bg[round(rescale_num(by, to = c(1, 100)))]
+      }
+      idata = lapply(idata, split, ifacet)
+      idata = do.call(function(...) Map("list", ...), idata)
+    } else {
+      idata = list(idata)
+      if (isTRUE(by_continuous)) {
+        if (length(col) != 1) {
+          idata[[1]][["col"]] = col[round(rescale_num(by, to = c(1, 100)))]
+        } else {
+          idata[[1]][["col"]] = col
         }
+        if (length(bg) != 1) {
+          idata[[1]][["bg"]] = bg[round(rescale_num(by, to = c(1, 100)))]
+        } else {
+          idata[[1]][["bg"]] = bg
+        }
+      }
     }
 
-    # save end pars for possible recall later
-    apar = par(no.readonly = TRUE)
-    set_saved_par(when = "after", apar)
+    icol = col[i]
+    ibg = bg[i]
+    ipch = pch[i]
+    ilty = lty[i]
+    ilwd = lwd[i]
+
+    ## Inner loop over the "facet" variables
+    for (ii in seq_along(idata)) {
+      xx = idata[[ii]]$x
+      yy = idata[[ii]]$y
+      xxmin = idata[[ii]]$xmin
+      xxmax = idata[[ii]]$xmax
+      yymin = idata[[ii]]$ymin
+      yymax = idata[[ii]]$ymax
+
+      if (isTRUE(by_continuous)) {
+        icol = idata[[ii]]$col
+        ibg = idata[[ii]]$bg
+      }
+
+      # Set the facet "window" manually
+      # See: https://github.com/grantmcdermott/tinyplot/issues/65
+      # if (nfacets > 1) par(mfg = c(1, ii))
+      if (nfacets > 1) {
+        mfgi = ceiling(ii / nfacet_cols)
+        mfgj = ii %% nfacet_cols
+        if (mfgj == 0) mfgj = nfacet_cols
+        par(mfg = c(mfgi, mfgj))
+      }
+
+      # empty plot flag
+      empty_plot = FALSE
+      if (isTRUE(empty) || type == "n" || ((length(xx) == 0) && !(type %in% c("rect", "segments")))) {
+        empty_plot = TRUE
+      }
+
+      # Draw the individual plot elements...
+
+      ## polygons before lines, segments/arrows before points, etc.
+      if (isTRUE(empty_plot)) {
+
+      } else if (type == "ribbon") {
+        polygon(
+          x = c(xx, rev(xx)),
+          y = c(yymin, rev(yymax)),
+          col = bg[i],
+          border = FALSE
+        )
+      } else if (type == "pointrange") {
+        segments(
+          x0 = xx,
+          y0 = yymin,
+          x1 = xx,
+          y1 = yymax,
+          col = icol,
+          # lty = ilty,
+          lwd = ilwd
+        )
+      } else if (type == "errorbar") {
+        arrows(
+          x0 = xx,
+          y0 = yymin,
+          x1 = xx,
+          y1 = yymax,
+          col = icol,
+          # lty = ilty,
+          lwd = ilwd,
+          length = 0.05,
+          angle = 90,
+          code = 3
+        )
+      }
+
+      ## now draw the points/lines/polygons/etc
+      if (isTRUE(empty_plot)) {
+        # empty plot
+      } else if (type %in% c("p", "pointrange", "errorbar")) {
+        points(
+          x = xx,
+          y = yy,
+          col = icol,
+          bg = ibg,
+          ## rather hardcode "p" to avoid warning message about "pointrange"
+          type = "p",
+          pch = ipch,
+          # lty = ilty,
+          lwd = ilwd,
+          cex = cex
+        )
+      } else if (type %in% c("l", "o", "b", "c", "h", "s", "S", "ribbon")) {
+        rtype = type == "ribbon"
+        if (rtype) type = "l"
+        lines(
+          x = xx,
+          y = yy,
+          col = icol,
+          type = type,
+          pch = ipch,
+          lty = ilty,
+          lwd = ilwd
+        )
+        if (rtype) type = "ribbon"
+      } else if (type == "polygon") {
+        polygon(
+          x = xx,
+          y = yy,
+          border = icol,
+          col = ibg,
+          lty = ilty,
+          lwd = ilwd
+        )
+      } else if (type == "polypath") {
+        irule = ifelse(!is.null(dots[["rule"]]), dots[["rule"]], "winding")
+        polypath(
+          x = xx,
+          y = yy,
+          border = icol,
+          col = ibg,
+          lty = ilty,
+          lwd = ilwd,
+          rule = irule
+        )
+      } else if (type == "boxplot") {
+        horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
+        boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
+        staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
+        outwex_xx = ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
+        at_xx = unique(xx)
+        if (!is.null(by) && isFALSE(facet_by) && length(split_data) > 1) {
+          boxwex_xx_orig = boxwex_xx
+          boxwex_xx = boxwex_xx / length(split_data) - 0.01
+          at_xx = at_xx + seq(-((boxwex_xx_orig - boxwex_xx) / 2), ((boxwex_xx_orig - boxwex_xx) / 2), length.out = length(split_data))[i]
+        }
+        boxplot(
+          formula = yy ~ xx,
+          pch = ipch,
+          lty = ilty,
+          border = icol,
+          col = ibg,
+          add = TRUE, axes = FALSE,
+          horizontal = horizontal,
+          at = at_xx,
+          boxwex = boxwex_xx,
+          staplewex = staplewex_xx,
+          outwex = outwex_xx
+        )
+      } else if (type == "rect") {
+        rect(
+          xleft = xxmin, ybottom = yymin, xright = xxmax, ytop = yymax,
+          lty = ilty,
+          lwd = ilwd,
+          border = icol,
+          col = ibg
+        )
+      } else if (type == "segments") {
+        segments(
+          x0 = xxmin, y0 = yymin, x1 = xxmax, y1 = yymax,
+          lty = ilty,
+          lwd = ilwd,
+          col = icol
+        )
+      } else {
+        stop("`type` argument not supported.", call. = FALSE)
+      }
+    }
+  }
+
+  # save end pars for possible recall later
+  apar = par(no.readonly = TRUE)
+  set_saved_par(when = "after", apar)
 }
 
 
@@ -1459,208 +1462,208 @@ tinyplot.default = function(
 #' @importFrom stats as.formula model.frame terms
 #' @export
 tinyplot.formula = function(
-    x = NULL,
-    data = parent.frame(),
-    facet = NULL,
-    facet.args = NULL,
-    type = "p",
-    xlim = NULL,
-    ylim = NULL,
-    # log = "",
-    main = NULL,
-    sub = NULL,
-    xlab = NULL,
-    ylab = NULL,
-    ann = par("ann"),
-    axes = TRUE,
-    frame.plot = axes,
-    asp = NA,
-    grid = NULL,
-    pch = NULL,
-    col = NULL,
-    lty = NULL,
-    lwd = NULL,
-    restore.par = FALSE,
-    formula = NULL,
-    subset = NULL,
-    na.action = NULL,
-    drop.unused.levels = TRUE,
-    ...) {
-    ## formula for variables must be specified through 'x' or 'formula' but not both
-    if (is.null(x)) {
-        if (missing(formula)) {
-            stop("plot formula must be specified by either 'x' or 'formula' argument")
-        }
+x = NULL,
+data = parent.frame(),
+facet = NULL,
+facet.args = NULL,
+type = "p",
+xlim = NULL,
+ylim = NULL,
+# log = "",
+main = NULL,
+sub = NULL,
+xlab = NULL,
+ylab = NULL,
+ann = par("ann"),
+axes = TRUE,
+frame.plot = axes,
+asp = NA,
+grid = NULL,
+pch = NULL,
+col = NULL,
+lty = NULL,
+lwd = NULL,
+restore.par = FALSE,
+formula = NULL,
+subset = NULL,
+na.action = NULL,
+drop.unused.levels = TRUE,
+...) {
+  ## formula for variables must be specified through 'x' or 'formula' but not both
+  if (is.null(x)) {
+    if (missing(formula)) {
+      stop("plot formula must be specified by either 'x' or 'formula' argument")
+    }
+  } else {
+    if (missing(formula)) {
+      formula = x
     } else {
-        if (missing(formula)) {
-            formula = x
-        } else {
-            warning("only one of the arguments 'x' and 'formula' should be specified, defaulting to the 'formula' argument")
-        }
+      warning("only one of the arguments 'x' and 'formula' should be specified, defaulting to the 'formula' argument")
     }
+  }
 
-    ## catch one-sided formula ~ x or ~ x | z with no "y" variable
-    if (!inherits(formula, "formula")) formula = as.formula(formula)
-    no_y = length(formula) == 2L
-    fml_rhs = if (no_y) 2L else 3L
+  ## catch one-sided formula ~ x or ~ x | z with no "y" variable
+  if (!inherits(formula, "formula")) formula = as.formula(formula)
+  no_y = length(formula) == 2L
+  fml_rhs = if (no_y) 2L else 3L
 
-    ## convert y ~ x | z to y ~ x + z for standard formula parsing
-    if (length(formula[[fml_rhs]]) == 3L) {
-        if (formula[[fml_rhs]][[1L]] == as.name("|")) {
-            formula[[fml_rhs]][[1L]] = as.name("+")
-        }
+  ## convert y ~ x | z to y ~ x + z for standard formula parsing
+  if (length(formula[[fml_rhs]]) == 3L) {
+    if (formula[[fml_rhs]][[1L]] == as.name("|")) {
+      formula[[fml_rhs]][[1L]] = as.name("+")
     }
+  }
 
-    # placeholder for legend title
-    legend_args = list(x = NULL)
+  # placeholder for legend title
+  legend_args = list(x = NULL)
 
-    ## set up model frame
-    m = match.call(expand.dots = FALSE)
-    m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
-    m$formula = formula
-    ## need stats:: for non-standard evaluation
-    m[[1L]] = quote(stats::model.frame)
-    # catch for facets (need to ensure that na.omit, na.action, etc. are at done
-    # at the same level to avoid mismatches if there any missing variables)
-    has_facet_fml = !is.null(facet) && inherits(facet, "formula")
-    if (has_facet_fml) {
-        facet_fml = facet
-        facet_fml[[1]] = as.name("+")
-        if (no_y) {
-            m$formula = eval(substitute(
-                update(formula, ~ . + facet_fml), list(facet_fml = facet_fml)
-            ))
-        } else {
-            m$formula = eval(substitute(
-                update(formula, . ~ . + facet_fml), list(facet_fml = facet_fml)
-            ))
-        }
-    }
-    mf = eval.parent(m)
-
-    ## We need to do some extra work if we included facet variables in the model
-    ## frame above
-    if (has_facet_fml) {
-        # separate the facet columns from the rest of the model frame
-        facet_n_cols = length(all.vars(facet_fml))
-        fmf = mf[, tail(seq_along(mf), facet_n_cols), drop = FALSE]
-        mf = mf[, head(seq_along(mf), -facet_n_cols), drop = FALSE]
-        # now do some prep work on the facets themselves for nicer plotting (e.g,
-        # grid arrangement for two-sided facet formula)
-        no_yfacet = length(facet) == 2L
-        facet_fml_rhs = if (no_yfacet) 2L else 3L
-        if (no_yfacet) {
-            yfacet_loc = NULL
-            xfacet_loc = 1L
-        } else {
-            yfacet_loc = 1L
-            xfacet_loc = 2L
-        }
-        if (NCOL(fmf) < xfacet_loc) stop("formula should specify at least one variable on the right-hand side")
-        yfacet = if (no_yfacet) NULL else fmf[, yfacet_loc]
-        xfacet = fmf[, xfacet_loc:NCOL(fmf)]
-
-        ## return object
-        xfacet = interaction(xfacet, sep = ":")
-        if (no_yfacet) {
-            facet = xfacet
-        } else {
-            # yfacet = interaction(yfacet, sep = ":")
-            ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
-            facet = interaction(xfacet, yfacet, sep = "~")
-            attr(facet, "facet_grid") = TRUE
-            attr(facet, "facet_nrow") = length(unique(yfacet))
-        }
-    }
-
-    ## extract variables: x, y (if any), by (if any)
+  ## set up model frame
+  m = match.call(expand.dots = FALSE)
+  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
+  m$formula = formula
+  ## need stats:: for non-standard evaluation
+  m[[1L]] = quote(stats::model.frame)
+  # catch for facets (need to ensure that na.omit, na.action, etc. are at done
+  # at the same level to avoid mismatches if there any missing variables)
+  has_facet_fml = !is.null(facet) && inherits(facet, "formula")
+  if (has_facet_fml) {
+    facet_fml = facet
+    facet_fml[[1]] = as.name("+")
     if (no_y) {
-        y_loc = NULL
-        x_loc = 1L
+      m$formula = eval(substitute(
+        update(formula, ~ . + facet_fml), list(facet_fml = facet_fml)
+      ))
     } else {
-        y_loc = 1L
-        x_loc = 2L
+      m$formula = eval(substitute(
+        update(formula, . ~ . + facet_fml), list(facet_fml = facet_fml)
+      ))
     }
-    if (NCOL(mf) < x_loc) stop("formula should specify at least one variable on the right-hand side")
-    y = if (no_y) NULL else mf[, y_loc]
-    x = mf[, x_loc]
-    by_loc <- x_loc + 1L
-    if (NCOL(mf) < by_loc) {
-        # special catch if by is the same as x or y (normally for continuous legend)
-        by_same_y = by_same_x = FALSE
-        fml_all_vars = all.vars(m$formula, unique = FALSE)
-        if (anyDuplicated(fml_all_vars) > 0) {
-            if (isTRUE(no_y)) {
-                by_same_x = TRUE ## i.e., if there is duplication and no y var, assume by must be the same as x
-            } else {
-                fml_lhs_vars = paste(attr(terms(m$formula), "variables")[[2]])
-                fml_rhs_vars = fml_all_vars[!(fml_all_vars %in% fml_lhs_vars)]
-                if (anyDuplicated(fml_rhs_vars) > 0) {
-                    by_same_x = TRUE
-                } else {
-                    by_same_y = TRUE
-                }
-            }
-        }
-        if (isTRUE(by_same_y)) {
-            by = y
-            bylab = names(mf)[y_loc]
-            legend_args[["title"]] = bylab
-        } else if (isTRUE(by_same_x)) {
-            by = x
-            bylab = names(mf)[x_loc]
-            legend_args[["title"]] = bylab
+  }
+  mf = eval.parent(m)
+
+  ## We need to do some extra work if we included facet variables in the model
+  ## frame above
+  if (has_facet_fml) {
+    # separate the facet columns from the rest of the model frame
+    facet_n_cols = length(all.vars(facet_fml))
+    fmf = mf[, tail(seq_along(mf), facet_n_cols), drop = FALSE]
+    mf = mf[, head(seq_along(mf), -facet_n_cols), drop = FALSE]
+    # now do some prep work on the facets themselves for nicer plotting (e.g,
+    # grid arrangement for two-sided facet formula)
+    no_yfacet = length(facet) == 2L
+    facet_fml_rhs = if (no_yfacet) 2L else 3L
+    if (no_yfacet) {
+      yfacet_loc = NULL
+      xfacet_loc = 1L
+    } else {
+      yfacet_loc = 1L
+      xfacet_loc = 2L
+    }
+    if (NCOL(fmf) < xfacet_loc) stop("formula should specify at least one variable on the right-hand side")
+    yfacet = if (no_yfacet) NULL else fmf[, yfacet_loc]
+    xfacet = fmf[, xfacet_loc:NCOL(fmf)]
+
+    ## return object
+    xfacet = interaction(xfacet, sep = ":")
+    if (no_yfacet) {
+      facet = xfacet
+    } else {
+      # yfacet = interaction(yfacet, sep = ":")
+      ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
+      facet = interaction(xfacet, yfacet, sep = "~")
+      attr(facet, "facet_grid") = TRUE
+      attr(facet, "facet_nrow") = length(unique(yfacet))
+    }
+  }
+
+  ## extract variables: x, y (if any), by (if any)
+  if (no_y) {
+    y_loc = NULL
+    x_loc = 1L
+  } else {
+    y_loc = 1L
+    x_loc = 2L
+  }
+  if (NCOL(mf) < x_loc) stop("formula should specify at least one variable on the right-hand side")
+  y = if (no_y) NULL else mf[, y_loc]
+  x = mf[, x_loc]
+  by_loc <- x_loc + 1L
+  if (NCOL(mf) < by_loc) {
+    # special catch if by is the same as x or y (normally for continuous legend)
+    by_same_y = by_same_x = FALSE
+    fml_all_vars = all.vars(m$formula, unique = FALSE)
+    if (anyDuplicated(fml_all_vars) > 0) {
+      if (isTRUE(no_y)) {
+        by_same_x = TRUE ## i.e., if there is duplication and no y var, assume by must be the same as x
+      } else {
+        fml_lhs_vars = paste(attr(terms(m$formula), "variables")[[2]])
+        fml_rhs_vars = fml_all_vars[!(fml_all_vars %in% fml_lhs_vars)]
+        if (anyDuplicated(fml_rhs_vars) > 0) {
+          by_same_x = TRUE
         } else {
-            by = bylab = NULL
+          by_same_y = TRUE
         }
-    } else if (NCOL(mf) == by_loc) {
-        by = mf[, by_loc]
-        bylab = names(mf)[by_loc]
-        legend_args[["title"]] = bylab
-        # if (!inherits(by, "factor")) by = as.factor(by)
-    } else if (NCOL(mf) > by_loc) {
-        by = do.call("interaction", mf[, -c(y_loc, x_loc)])
-        bylab = sprintf("interaction(%s)", paste(names(mf)[-c(y_loc, x_loc)], collapse = ", "))
-        legend_args[["title"]] = bylab
+      }
     }
-
-    ## nice axis and legend labels
-    if (type %in% c("hist", "histogram")) {
-        if (is.null(ylab)) ylab = "Frequency"
-        if (is.null(xlab)) xlab = names(mf)[x_loc]
-    } else if (no_y) {
-        if (is.null(ylab)) ylab = names(mf)[x_loc]
-        if (is.null(xlab)) xlab = "Index"
+    if (isTRUE(by_same_y)) {
+      by = y
+      bylab = names(mf)[y_loc]
+      legend_args[["title"]] = bylab
+    } else if (isTRUE(by_same_x)) {
+      by = x
+      bylab = names(mf)[x_loc]
+      legend_args[["title"]] = bylab
     } else {
-        if (is.null(ylab)) ylab = names(mf)[y_loc]
-        if (is.null(xlab)) xlab = names(mf)[x_loc]
+      by = bylab = NULL
     }
+  } else if (NCOL(mf) == by_loc) {
+    by = mf[, by_loc]
+    bylab = names(mf)[by_loc]
+    legend_args[["title"]] = bylab
+    # if (!inherits(by, "factor")) by = as.factor(by)
+  } else if (NCOL(mf) > by_loc) {
+    by = do.call("interaction", mf[, -c(y_loc, x_loc)])
+    bylab = sprintf("interaction(%s)", paste(names(mf)[-c(y_loc, x_loc)], collapse = ", "))
+    legend_args[["title"]] = bylab
+  }
 
-    tinyplot.default(
-        x = x, y = y, by = by,
-        facet = facet, facet.args = facet.args,
-        data = data,
-        type = type,
-        xlim = xlim,
-        ylim = ylim,
-        # log = "",
-        main = main,
-        sub = sub,
-        xlab = xlab,
-        ylab = ylab,
-        ann = ann,
-        axes = axes,
-        frame.plot = frame.plot,
-        asp = asp,
-        grid = grid,
-        legend_args = legend_args,
-        pch = pch,
-        col = col,
-        lty = lty,
-        lwd = lwd,
-        restore.par = restore.par,
-        ...
-    )
+  ## nice axis and legend labels
+  if (type %in% c("hist", "histogram")) {
+    if (is.null(ylab)) ylab = "Frequency"
+    if (is.null(xlab)) xlab = names(mf)[x_loc]
+  } else if (no_y) {
+    if (is.null(ylab)) ylab = names(mf)[x_loc]
+    if (is.null(xlab)) xlab = "Index"
+  } else {
+    if (is.null(ylab)) ylab = names(mf)[y_loc]
+    if (is.null(xlab)) xlab = names(mf)[x_loc]
+  }
+
+  tinyplot.default(
+    x = x, y = y, by = by,
+    facet = facet, facet.args = facet.args,
+    data = data,
+    type = type,
+    xlim = xlim,
+    ylim = ylim,
+    # log = "",
+    main = main,
+    sub = sub,
+    xlab = xlab,
+    ylab = ylab,
+    ann = ann,
+    axes = axes,
+    frame.plot = frame.plot,
+    asp = asp,
+    grid = grid,
+    legend_args = legend_args,
+    pch = pch,
+    col = col,
+    lty = lty,
+    lwd = lwd,
+    restore.par = restore.par,
+    ...
+  )
 }
 
 
@@ -1673,48 +1676,48 @@ plt = tinyplot
 # utility function for converting facet formulas into variables
 
 get_facet_fml = function(formula, data = NULL) {
-    xfacet = yfacet = NULL
+  xfacet = yfacet = NULL
 
-    ## catch one-sided formula ~ x or ~ x | z with no "y" variable
-    if (!inherits(formula, "formula")) formula = as.formula(formula)
-    no_yfacet = length(formula) == 2L
-    fml_rhs = if (no_yfacet) 2L else 3L
+  ## catch one-sided formula ~ x or ~ x | z with no "y" variable
+  if (!inherits(formula, "formula")) formula = as.formula(formula)
+  no_yfacet = length(formula) == 2L
+  fml_rhs = if (no_yfacet) 2L else 3L
 
-    ## set up model frame
-    m = match.call(expand.dots = FALSE)
+  ## set up model frame
+  m = match.call(expand.dots = FALSE)
 
-    if (!is.null(data)) {
-        m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
-    }
+  if (!is.null(data)) {
+    m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
+  }
 
-    m$formula = formula
-    ## need stats:: for non-standard evaluation
-    m[[1L]] = quote(stats::model.frame)
-    mf = eval.parent(m)
+  m$formula = formula
+  ## need stats:: for non-standard evaluation
+  m[[1L]] = quote(stats::model.frame)
+  mf = eval.parent(m)
 
-    ## extract variables: x, y (if any)
-    if (no_yfacet) {
-        yfacet_loc = NULL
-        xfacet_loc = 1L
-    } else {
-        yfacet_loc = 1L
-        xfacet_loc = 2L
-    }
-    if (NCOL(mf) < xfacet_loc) stop("formula should specify at least one variable on the right-hand side")
-    yfacet = if (no_yfacet) NULL else mf[, yfacet_loc]
-    xfacet = mf[, xfacet_loc:NCOL(mf)]
+  ## extract variables: x, y (if any)
+  if (no_yfacet) {
+    yfacet_loc = NULL
+    xfacet_loc = 1L
+  } else {
+    yfacet_loc = 1L
+    xfacet_loc = 2L
+  }
+  if (NCOL(mf) < xfacet_loc) stop("formula should specify at least one variable on the right-hand side")
+  yfacet = if (no_yfacet) NULL else mf[, yfacet_loc]
+  xfacet = mf[, xfacet_loc:NCOL(mf)]
 
-    ## return object
-    xfacet = interaction(xfacet, sep = ":")
-    if (no_yfacet) {
-        ret = xfacet
-    } else {
-        # yfacet = interaction(yfacet, sep = ":")
-        ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
-        ret = interaction(xfacet, yfacet, sep = "~")
-        attr(ret, "facet_grid") = TRUE
-        attr(ret, "facet_nrow") = length(unique(yfacet))
-    }
+  ## return object
+  xfacet = interaction(xfacet, sep = ":")
+  if (no_yfacet) {
+    ret = xfacet
+  } else {
+    # yfacet = interaction(yfacet, sep = ":")
+    ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
+    ret = interaction(xfacet, yfacet, sep = "~")
+    attr(ret, "facet_grid") = TRUE
+    attr(ret, "facet_nrow") = length(unique(yfacet))
+  }
 
-    return(ret)
+  return(ret)
 }

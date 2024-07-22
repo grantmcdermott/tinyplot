@@ -49,6 +49,7 @@ Suggests:
   altdoc (>= 0.3.0),
   basetheme,
   fontquiver,
+  png,
   rsvg,
   svglite,
   tinytest,

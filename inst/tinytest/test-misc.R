@@ -73,3 +73,19 @@ f = function() {
   tpar(op)
 }
 expect_snapshot_plot(f, label = "addTRUE")
+
+if (requireNamespace("png", quitely = TRUE)) {
+  f = function() {
+    tmp_path = tempfile(fileext = ".png")
+    tinyplot(
+      Sepal.Length ~ Petal.Length, data = iris,
+      file = tmp_path, width = 4, height = 4
+    )
+    obj = png::readPNG(tmp_path, info = TRUE)
+    unlink(tmp_path)
+    dims = attr(obj, "dim")
+    return(dims)
+  }
+  expect_equal(f(), c(1200, 1200, 4), label = "png_size")
+}
+

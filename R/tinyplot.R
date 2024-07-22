@@ -286,8 +286,8 @@
 #' @examples
 #' #'
 #' aq = transform(
-#'     airquality,
-#'     Month = factor(Month, labels = month.abb[unique(Month)])
+#'   airquality,
+#'   Month = factor(Month, labels = month.abb[unique(Month)])
 #' )
 #'
 #' # In most cases, `tinyplot` should be a drop-in replacement for regular
@@ -318,41 +318,41 @@
 #' # (character expansion) to increase their size.
 #'
 #' tinyplot(
-#'     Temp ~ Day | Month,
-#'     data = aq,
-#'     pch = 16,
-#'     cex = 2
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = 16,
+#'   cex = 2
 #' )
 #'
 #' # We can add alpha transparency for overlapping points
 #'
 #' tinyplot(
-#'     Temp ~ Day | Month,
-#'     data = aq,
-#'     pch = 16,
-#'     cex = 2,
-#'     alpha = 0.3
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = 16,
+#'   cex = 2,
+#'   alpha = 0.3
 #' )
 #'
 #' # To get filled points with a common solid background color, use an
 #' # appropriate plotting character (21:25) and combine with one of the special
 #' # `bg` convenience arguments.
 #' tinyplot(
-#'     Temp ~ Day | Month,
-#'     data = aq,
-#'     pch = 21, # use filled circles
-#'     cex = 2,
-#'     bg = 0.3, # numeric in [0,1] adds a grouped background fill with transparency
-#'     col = "black" # override default color mapping; give all points a black border
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = 21, # use filled circles
+#'   cex = 2,
+#'   bg = 0.3, # numeric in [0,1] adds a grouped background fill with transparency
+#'   col = "black" # override default color mapping; give all points a black border
 #' )
 #'
 #' # Converting to a grouped line plot is a simple matter of adjusting the
 #' # `type` argument.
 #'
 #' tinyplot(
-#'     Temp ~ Day | Month,
-#'     data = aq,
-#'     type = "l"
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "l"
 #' )
 #'
 #' # Similarly for other plot types, including some additional ones provided
@@ -360,32 +360,32 @@
 #' # pointranges, etc.)
 #'
 #' tinyplot(
-#'     ~ Temp | Month,
-#'     data = aq,
-#'     type = "density",
-#'     fill = "by"
+#'   ~ Temp | Month,
+#'   data = aq,
+#'   type = "density",
+#'   fill = "by"
 #' )
 #'
 #' # Facet plots are supported too. Facets can be drawn on their own...
 #'
 #' tinyplot(
-#'     Temp ~ Day,
-#'     facet = ~Month,
-#'     data = aq,
-#'     type = "area",
-#'     main = "Temperatures by month"
+#'   Temp ~ Day,
+#'   facet = ~Month,
+#'   data = aq,
+#'   type = "area",
+#'   main = "Temperatures by month"
 #' )
 #'
 #' # ... or combined/contrasted with the by (colour) grouping.
 #'
 #' aq = transform(aq, Summer = Month %in% c("Jun", "Jul", "Aug"))
 #' tinyplot(
-#'     Temp ~ Day | Summer,
-#'     facet = ~Month,
-#'     data = aq,
-#'     type = "area",
-#'     palette = "dark2",
-#'     main = "Temperatures by month and season"
+#'   Temp ~ Day | Summer,
+#'   facet = ~Month,
+#'   data = aq,
+#'   type = "area",
+#'   palette = "dark2",
+#'   main = "Temperatures by month and season"
 #' )
 #'
 #' # Users can override the default square window arrangement by passing `nrow`
@@ -393,13 +393,13 @@
 #' # axis label repetition across facets by turning the plot frame off.
 #'
 #' tinyplot(
-#'     Temp ~ Day | Summer,
-#'     facet = ~Month, facet.args = list(nrow = 1),
-#'     data = aq,
-#'     type = "area",
-#'     palette = "dark2",
-#'     frame = FALSE,
-#'     main = "Temperatures by month and season"
+#'   Temp ~ Day | Summer,
+#'   facet = ~Month, facet.args = list(nrow = 1),
+#'   data = aq,
+#'   type = "area",
+#'   palette = "dark2",
+#'   frame = FALSE,
+#'   main = "Temperatures by month and season"
 #' )
 #'
 #' # Use a two-sided formula to arrange the facet windows in a fixed grid.
@@ -408,9 +408,9 @@
 #' aq$hot = ifelse(aq$Temp >= 75, "hot", "cold")
 #' aq$windy = ifelse(aq$Wind >= 15, "windy", "calm")
 #' tinyplot(
-#'     Temp ~ Day,
-#'     facet = windy ~ hot,
-#'     data = aq
+#'   Temp ~ Day,
+#'   facet = windy ~ hot,
+#'   data = aq
 #' )
 #'
 #' # The (automatic) legend position and look can be customized using
@@ -419,10 +419,10 @@
 #' # area.
 #'
 #' tinyplot(
-#'     Temp ~ Day | Month,
-#'     data = aq,
-#'     type = "l",
-#'     legend = legend("bottom!", title = "Month of the year", bty = "o")
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "l",
+#'   legend = legend("bottom!", title = "Month of the year", bty = "o")
 #' )
 #'
 #' # The default group colours are inherited from either the "R4" or "Viridis"
@@ -431,10 +431,10 @@
 #' # or users can supply a valid palette-generating function for finer control
 #'
 #' tinyplot(
-#'     Temp ~ Day | Month,
-#'     data = aq,
-#'     type = "l",
-#'     palette = "tableau"
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "l",
+#'   palette = "tableau"
 #' )
 #'
 #' # It's possible to further customize the look of you plots using familiar
@@ -442,12 +442,12 @@
 #'
 #' tpar(family = "HersheySans", las = 1)
 #' tinyplot(
-#'     Temp ~ Day | Month,
-#'     data = aq,
-#'     type = "b", pch = 16,
-#'     palette = "tableau", alpha = 0.5,
-#'     main = "Daily temperatures by month",
-#'     frame = FALSE, grid = TRUE
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "b", pch = 16,
+#'   palette = "tableau", alpha = 0.5,
+#'   main = "Daily temperatures by month",
+#'   frame = FALSE, grid = TRUE
 #' )
 #'
 #' # Note: For more examples and a detailed walkthrough, please see the
@@ -464,47 +464,47 @@ function(x, ...) {
 #' @rdname tinyplot
 #' @export
 tinyplot.default = function(
-x = NULL,
-y = NULL,
-by = NULL,
-facet = NULL,
-facet.args = NULL,
-data = NULL,
-type = "p",
-xlim = NULL,
-ylim = NULL,
-log = "",
-main = NULL,
-sub = NULL,
-xlab = NULL,
-ylab = NULL,
-ann = par("ann"),
-axes = TRUE,
-frame.plot = axes,
-asp = NA,
-grid = NULL,
-palette = NULL,
-legend = NULL,
-pch = NULL,
-lty = NULL,
-lwd = NULL,
-col = NULL,
-bg = NULL,
-fill = NULL,
-alpha = NULL,
-cex = 1,
-restore.par = FALSE,
-xmin = NULL,
-xmax = NULL,
-ymin = NULL,
-ymax = NULL,
-ribbon.alpha = NULL,
-add = FALSE,
-file = NULL,
-width = NULL,
-height = NULL,
-empty = FALSE,
-...) {
+    x = NULL,
+    y = NULL,
+    by = NULL,
+    facet = NULL,
+    facet.args = NULL,
+    data = NULL,
+    type = "p",
+    xlim = NULL,
+    ylim = NULL,
+    log = "",
+    main = NULL,
+    sub = NULL,
+    xlab = NULL,
+    ylab = NULL,
+    ann = par("ann"),
+    axes = TRUE,
+    frame.plot = axes,
+    asp = NA,
+    grid = NULL,
+    palette = NULL,
+    legend = NULL,
+    pch = NULL,
+    lty = NULL,
+    lwd = NULL,
+    col = NULL,
+    bg = NULL,
+    fill = NULL,
+    alpha = NULL,
+    cex = 1,
+    restore.par = FALSE,
+    xmin = NULL,
+    xmax = NULL,
+    ymin = NULL,
+    ymax = NULL,
+    ribbon.alpha = NULL,
+    add = FALSE,
+    file = NULL,
+    width = NULL,
+    height = NULL,
+    empty = FALSE,
+    ...) {
   dots = list(...)
 
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
@@ -592,6 +592,7 @@ empty = FALSE,
   if (is.null(ylab)) ylab = y_dep
 
 
+  # type-specific settings and arguments
   if (type == "density") {
     fargs = mget(ls(environment(), sorted = FALSE))
     fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
@@ -664,6 +665,7 @@ empty = FALSE,
   }
 
 
+  # plot limits
   xy = xy.coords(x = x, y = y)
   if (is.null(xlim)) xlim = range(xy$x[is.finite(xy$x)])
   if (is.null(ylim)) ylim = range(xy$y[is.finite(xy$y)])
@@ -683,9 +685,9 @@ empty = FALSE,
     }
   }
 
+  # split data
   by_ordered = FALSE
   by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
-  # manual overrides with warning
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
     by_continuous = FALSE
@@ -854,10 +856,10 @@ empty = FALSE,
     ## restore inner margin defaults
     ## (in case the plot region/margins were affected by the preceding tinyplot call)
     if (any(ooma != 0)) {
-      if (ooma[1] != 0 & omar[1] == par("mgp")[1] + 1 * par("cex.lab")) omar[1] = 5.1
-      if (ooma[2] != 0 & omar[2] == par("mgp")[1] + 1 * par("cex.lab")) omar[2] = 4.1
-      if (ooma[3] == topmar_epsilon & omar[3] != 4.1) omar[3] = 4.1
-      if (ooma[4] != 0 & omar[4] == 0) omar[4] = 2.1
+      if (ooma[1] != 0 && omar[1] == par("mgp")[1] + 1 * par("cex.lab")) omar[1] = 5.1
+      if (ooma[2] != 0 && omar[2] == par("mgp")[1] + 1 * par("cex.lab")) omar[2] = 4.1
+      if (ooma[3] == topmar_epsilon && omar[3] != 4.1) omar[3] = 4.1
+      if (ooma[4] != 0 && omar[4] == 0) omar[4] = 2.1
       par(mar = omar)
     }
     ## restore outer margin defaults (with a catch for custom mfrow plots)
@@ -1294,33 +1296,33 @@ empty = FALSE,
 #' @importFrom stats as.formula model.frame terms
 #' @export
 tinyplot.formula = function(
-x = NULL,
-data = parent.frame(),
-facet = NULL,
-facet.args = NULL,
-type = "p",
-xlim = NULL,
-ylim = NULL,
+    x = NULL,
+    data = parent.frame(),
+    facet = NULL,
+    facet.args = NULL,
+    type = "p",
+    xlim = NULL,
+    ylim = NULL,
 # log = "",
-main = NULL,
-sub = NULL,
-xlab = NULL,
-ylab = NULL,
-ann = par("ann"),
-axes = TRUE,
-frame.plot = axes,
-asp = NA,
-grid = NULL,
-pch = NULL,
-col = NULL,
-lty = NULL,
-lwd = NULL,
-restore.par = FALSE,
-formula = NULL,
-subset = NULL,
-na.action = NULL,
-drop.unused.levels = TRUE,
-...) {
+    main = NULL,
+    sub = NULL,
+    xlab = NULL,
+    ylab = NULL,
+    ann = par("ann"),
+    axes = TRUE,
+    frame.plot = axes,
+    asp = NA,
+    grid = NULL,
+    pch = NULL,
+    col = NULL,
+    lty = NULL,
+    lwd = NULL,
+    restore.par = FALSE,
+    formula = NULL,
+    subset = NULL,
+    na.action = NULL,
+    drop.unused.levels = TRUE,
+    ...) {
   ## formula for variables must be specified through 'x' or 'formula' but not both
   if (is.null(x)) {
     if (missing(formula)) {

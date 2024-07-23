@@ -74,13 +74,13 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "addTRUE")
 
-if (suppressPackageStartupMessages(requireNamespace("png"))) {
+if (requireNamespace("png", quietly = TRUE)) {
   f = function() {
     tmp_path = tempfile(fileext = ".png")
-    tinyplot(
+    suppressWarnings(tinyplot(
       Sepal.Length ~ Petal.Length, data = iris,
       file = tmp_path, width = 4, height = 4
-    )
+    ))
     obj = png::readPNG(tmp_path, info = TRUE)
     unlink(tmp_path)
     dims = attr(obj, "dim")

@@ -1,5 +1,115 @@
 [
   {
+    "objectID": "vignettes/intro_tutorial.html",
+    "href": "vignettes/intro_tutorial.html",
+    "title": "Tutorial",
+    "section": "",
+    "text": "The goal of this intro tutorial is to give you a sense of the main features and syntax of tinyplot, a lightweight extension of the base R graphics system. We don’t try to cover everything, but you should come away with a good understanding of how the package works and how it can integrate with your own projects.",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#preliminaries",
+    "href": "vignettes/intro_tutorial.html#preliminaries",
+    "title": "Tutorial",
+    "section": "Preliminaries",
+    "text": "Preliminaries\nStart by loading the package. For the examples in this tutorial, we’ll be using a slightly modified version of the airquality dataset that comes bundled with base R. So let’s go ahead and create that now too.\n\nlibrary(tinyplot)\n\naq = airquality\naq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#equivalence-with-plot",
+    "href": "vignettes/intro_tutorial.html#equivalence-with-plot",
+    "title": "Tutorial",
+    "section": "Equivalence with plot()",
+    "text": "Equivalence with plot()\nAs far as possible, tinyplot tries to be a drop-in replacement for regular plot calls.\n\npar(mfrow = c(1, 2))\n\nplot(0:10, main = \"plot\")\ntinyplot(0:10, main = \"tinyplot\")\n\n\n\n\n\n\n\n\npar(mfrow = c(1, 1)) # reset layout\n\nSimilarly, we can plot elements from a data frame using either the atomic or formula methods. Here’s a simple example using the aq dataset that we created earlier.\n\n# with(aq,  tinyplot(Day, Temp)) # atomic method (same as below)\ntinyplot(Temp ~ Day, data = aq)  # formula method\n\n\n\n\n\n\n\n\nIf you’d prefer to save on a few keystrokes, you can use the shorthand plt alias instead.\n\nplt(Temp ~ Day, data = aq) # `plt` = shorthand alias for `tinyplot`\n\n\n\n\n\n\n\n\n(Note that the plt shorthand would work for all of the remaining plotting calls below. But we’ll stick to tinyplot to keep things simple.)",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#grouped-data",
+    "href": "vignettes/intro_tutorial.html#grouped-data",
+    "title": "Tutorial",
+    "section": "Grouped data",
+    "text": "Grouped data\nWhere tinyplot starts to diverge from its base counterpart is with respect to grouped data. In particular, tinyplot allows you to characterize groups using the by argument.1\n\n# tinyplot(aq$Day, aq$Temp, by = aq$Month) # same as below\nwith(aq, tinyplot(Day, Temp, by = Month))\n\n\n\n\n\n\n\n\nAn arguably more convenient approach is to use the equivalent formula syntax. Just place the “by” grouping variable after a vertical bar (i.e., |).\n\ntinyplot(Temp ~ Day | Month, data = aq)\n\n\n\n\n\n\n\n\nYou can use standard base plotting arguments to adjust features of your plot. For example, change pch (plot character) to get filled points and cex (character expansion) to change their size.\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  pch = 16,\n  cex = 2\n)\n\n\n\n\n\n\n\n\nSimilarly, converting to a grouped line plot is a simple matter of adjusting the type argument.\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"l\"\n)\n\n\n\n\n\n\n\n\nThe default behaviour of tinyplot is to represent groups through colour. However, note that we can automatically adjust pch and lty by groups too by passing the \"by\" convenience keyword. This can be used in conjunction with the default group colouring. Or, as a replacement for group colouring—an option that may be particularly useful for contexts where colour is expensive or prohibited (e.g., certain academic journals).\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"l\",\n  col = \"black\", # override automatic group colours\n  lty = \"by\"     # change line type by group instead\n)\n\n\n\n\n\n\n\n\nThe \"by\" convenience argument is also available for mapping group colours to background fill bg (alias fill). One use case is to override the grouped border colours for filled plot characters and instead pass them through the background fill.\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  pch = 21,      # use filled circles\n  col = \"black\", # override automatic group (border) colours of points\n  fill = \"by\"    # use background fill by group instead\n)",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#colours",
+    "href": "vignettes/intro_tutorial.html#colours",
+    "title": "Tutorial",
+    "section": "Colours",
+    "text": "Colours\nOn the subject of group colours, the default palette should adjust automatically depending on the class and cardinality of the grouping variable. For example, a sequential (“viridis”) palette will be used if an ordered factor is detected.\n\ntinyplot(\n  Temp ~ Day | ordered(Month), data = aq,\n  pch = 16\n)\n\n\n\n\n\n\n\n\nHowever, this behaviour is easily customized via the palette argument. The default set of discrete colours are inherited from the user’s current global palette. (Most likely the “R4” set of colors; see ?palette). However, all of the various palettes listed by palette.pals() and hcl.pals() are supported as convenience strings.2 Note that case-insensitive, partial matching for these convenience string is allowed. For example:\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"l\",\n  palette = \"tableau\" # or \"ggplot\", \"okabe\", \"set2\", \"harmonic\", etc.\n)\n\n\n\n\n\n\n\n\nBeyond these convenience strings, users can also supply a valid palette-generating function for finer control and additional options.3 You can also use the alpha argument to adjust the (alpha) transparency of your colours:\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  pch = 19, cex = 2,\n  palette = \"tableau\",\n  alpha = 0.3\n)\n\n\n\n\n\n\n\n\nTo underscore what we said earlier, colours are inherited from the user’s current palette. So these can also be set globally, just as they can for the base plot function. The next code chunk will set a new default palette for the remainder of the plots that follow.\n\n# Set the default palette globally via the generic palette function\npalette(\"tableau\")",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#legend",
+    "href": "vignettes/intro_tutorial.html#legend",
+    "title": "Tutorial",
+    "section": "Legend",
+    "text": "Legend\nIn all of the preceding plots, you will have noticed that we get an automatic legend. The legend position and look can be customized with the legend argument. At a minimum, you can pass the familiar legend position keywords as a convenience string (“topright”, “bottom”, “left”, etc.). Moreover, a key feature of tinyplot is that we can easily and elegantly place the legend outside the plot area by adding a trailing “!” to these keywords. (As you may have realised, the default legend position is “right!”.) Let’s demonstrate by moving the legend to the left of the plot:\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"l\",\n  legend = \"left!\"\n)\n\n\n\n\n\n\n\n\nBeyond the convenience of these positional keywords, the legend argument also permits additional customization by passing an appropriate function (or, a list of arguments that will be passed on to the standard legend() function internally.) So you can change or turn off the legend title, remove the bounding box, switch the direction of the legend text to horizontal, etc. Here’s a grouped density plot example, where we also add some shading by specifying that the background colour should vary by groups too.\n\nwith(\n  aq,\n  tinyplot(\n    density(Temp),\n    by = Month,\n    fill = \"by\",                         # add fill by groups\n    grid = TRUE,                         # add background grid\n    legend = list(\"topright\", bty = \"o\") # change legend features\n  )\n)\n\n\n\n\n\n\n\n\nAll of the legend examples that we have seen thus far are representations of discrete groups. However, please note that tinyplot also supports grouping by continuous variables, which automatically yield gradient legends.\n\ntinyplot(Temp ~ Wind | Ozone, data = aq, pch = 19)\n\n\n\n\n\n\n\n\nGradient legends (and plots) can be customized in an identical manner to discrete legends by adjusting the keyword positioning, palette choice, alpha transparency etc. Here is a quick adaptation of the previous plot to demonstrate. Note that here we pass a special convenience argument to bg/fill; if it detects a numeric in the range of [0,1], then it automatically inherits the grouped colour mappings but with added transparency.\n\ntinyplot(\n  Temp ~ Wind | Ozone, data = aq,\n  pch  = 21,      # use filled plot character\n  cex  = 2,\n  col  = \"black\", # override automatic (grouped) border colour of points\n  fill = 0.5,     # use background fill instead with added alpha transparency \n)",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#interval-plots",
+    "href": "vignettes/intro_tutorial.html#interval-plots",
+    "title": "Tutorial",
+    "section": "Interval plots",
+    "text": "Interval plots\ntinyplot adds supports for interval plots via the \"pointrange\", \"errorbar\", \"ribbon\" type arguments. A canonical use-case is regression analysis and prediction.\n\nmod = lm(Temp ~ 0 + Month / Day, data = aq)\naq = cbind(aq, predict(mod, interval = \"confidence\"))\n\nwith(\n  aq,\n  tinyplot(\n    x = Day, y = fit,\n    ymin = lwr, ymax = upr,\n    by = Month,\n    type = \"ribbon\",\n    grid = TRUE,\n    main = \"Model predictions\"\n  )\n)\n\n\n\n\n\n\n\n\nSimilarly, we can grab the model estimates to produce nice coefficient plots.\n\ncoeftab = data.frame(\n  gsub(\"Month\", \"\", names(coef(mod))),\n  coef(mod),\n  confint(mod)\n) |&gt;\n  setNames(c(\"term\", \"estimate\", \"ci_low\", \"ci_high\"))\n\nwith(\n  subset(coeftab, !grepl(\"Day\", term)),\n  tinyplot(\n    x = term, y = estimate,\n    ymin = ci_low, ymax = ci_high,\n    type = \"pointrange\", # or: \"errobar\", \"ribbon\"\n    pch = 19, col = \"dodgerblue\",\n    grid = TRUE,\n    main = \"Average Monthly Effect on Temperature\"\n  )\n)",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#facets",
+    "href": "vignettes/intro_tutorial.html#facets",
+    "title": "Tutorial",
+    "section": "Facets",
+    "text": "Facets\nAlongside the standard “by” grouping approach that we have seen thus far, tinyplot also supports faceted plots. Mirroring the main tinyplot function, the facet argument accepts both atomic and formula methods.\n\nwith(\n  aq,\n  tinyplot(\n    x = Day, y = fit,\n    ymin = lwr, ymax = upr,\n    type = \"ribbon\",\n    facet = Month, ## &lt;= facet, not by\n    grid = TRUE,\n    main = \"Predicted air temperatures\"\n  )\n)\n\n\n\n\n\n\n\n\nBy default, facets will be arranged in a square configuration if more than three facets are detected. Users can override this behaviour by supplying nrow or ncol in the “facet.args” helper function. (The margin padding between individual facets can also be adjusted via the fmar argument.) Note that we can also reduce axis label redundancy by turning off the plot frame.\n\nwith(\n  aq,\n  tinyplot(\n    x = Day, y = fit,\n    ymin = lwr, ymax = upr,\n    type = \"ribbon\",\n    facet = Month,\n    facet.args = list(nrow = 1),\n    grid = TRUE, frame = FALSE,\n    main = \"Predicted air temperatures\"\n  )\n)\n\n\n\n\n\n\n\n\nHere’s a slightly fancier version where we combine facets with (by) colour grouping, add a background fill to the facet text, and also add back the original values to our model predictions. For this particular example, we’ll use the facet = \"by\" convenience shorthand to facet along the same month variable as the colour grouping. But you can easily specify different by and facet variables if that’s what your data support.\n\n# Plot the original points \nwith(\n  aq,\n  tinyplot(\n    x = Day, y = Temp,\n    by = Month,\n    facet = \"by\", facet.args = list(bg = \"grey90\"),\n    palette = \"dark2\",\n    grid = TRUE, frame = FALSE, ylim = c(50, 100),\n    main = \"Actual and predicted air temperatures\"\n  )\n)\n# Add the model predictions to the same plot \nwith(\n  aq,\n  tinyplot(\n    x = Day, y = fit,\n    ymin = lwr, ymax = upr,\n    by = Month, facet = \"by\",\n    type = \"ribbon\",\n    palette = \"dark2\",\n    add = TRUE\n  )\n)\n\n\n\n\n\n\n\n\nAgain, the facet argument also accepts a formula interface. One particular use case is for two-sided formulas, which arranges the facet layout in a fixed grid arrangement. Here’s a simple (if contrived) example.\n\naq$hot = ifelse(aq$Temp&gt;=75, \"hot\", \"cold\")\naq$windy = ifelse(aq$Wind&gt;=15, \"windy\", \"calm\")\n\ntinyplot(\n Temp ~ Day, data = aq,\n facet = windy ~ hot,\n # the rest of these arguments are optional...\n facet.args = list(col = \"white\", bg = \"black\"),\n pch = 16, col = \"dodgerblue\",\n grid = TRUE, frame = FALSE, ylim = c(50, 100),\n main = \"Daily temperatures vs. wind\"\n)\n\n\n\n\n\n\n\n\nThe facet.args customizations can also be set globally via the tpar() function, which provides a nice segue to our final section.",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#customization",
+    "href": "vignettes/intro_tutorial.html#customization",
+    "title": "Tutorial",
+    "section": "Customization",
+    "text": "Customization\nCustomizing your plots further is straightforward, whether that is done directly by changing tinyplot arguments for a single plot, or by setting global parameters. For setting global parameters, users can invoke the standard par() arguments. But for improved convenience and integration with the rest of the package, we recommend that users instead go via tpar(), which is an extended version of par() that supports all of the latter’s parameters plus some tinyplot-specific ones. Here’s a quick penultimate example, where we impose several global changes (e.g., rotated axis labels, removed plot frame to get Tufte-style floating axes, etc.) before drawing the plot. change our point character, tick labels, and font family globally, before adding some transparency to our colour palette, and use Tufte-style floating axes with a background panel grid.\n\nop = tpar(\n  bty    = \"n\",           # No box (frame) around the plot \n  family = \"HersheySans\", # Use R's Hershey font instead of Arial default\n  grid   = TRUE,          # Add a background grid\n  las    = 1,             # Horizontal axis tick labels\n  pch    = 16             # Filled points as default\n)\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"b\",\n  alpha = 0.5,\n  main = \"Daily temperatures by month\"\n)\n\n\n\n\n\n\n\n\nNote: For access to a much wider variety of fonts, you might consider the showtext package (link).\nAt the risk of repeating ourselves, the use of (t)par in the previous example again underscores the correspondence with the base graphics system. Because tinyplot is effectively a convenience wrapper around base plot, any global elements that you have set for the latter should carry over to the former. For nice out-of-the-box themes, we recommend the basetheme package (link).\n\ntpar(op) # revert global changes from above\n\nlibrary(basetheme)\nbasetheme(\"royal\") # or \"clean\", \"dark\", \"ink\", \"brutal\", etc.\n\ntpar(pch = 15) # filled squares as first pch type\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"b\",\n  pch = \"by\",\n  palette = \"tropic\",\n  main = \"Daily temperatures by month\"\n)\n\n\n\n\n\n\n\n\nbasetheme(NULL)  # back to default theme\ndev.off()\n#&gt; null device \n#&gt;           1",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#conclusion",
+    "href": "vignettes/intro_tutorial.html#conclusion",
+    "title": "Tutorial",
+    "section": "Conclusion",
+    "text": "Conclusion\nIn summary, consider the tinyplot package if you are looking for base R plot functionality with added convenience features. You can use (nearly) the exact same syntax and all of your theme elements should carry over too. It has no dependencies other than base R itself and this should make it an attractive option for package developers, as well as situations where dependency management is expensive (e.g., propoduction piplines, continuous integration or an R application running in a browser via WebAssembly).",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "vignettes/intro_tutorial.html#footnotes",
+    "href": "vignettes/intro_tutorial.html#footnotes",
+    "title": "Tutorial",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nAt this point, experienced base plot users might protest that you can colour by groups using the col argument, e.g. with(aq, plot(Day, Temp, col = Month)). This is true, but there are several limitations. First, you don’t get an automatic legend. Second, the base plot.formula method doesn’t specify the grouping within the formula itself (not a deal-breaker, but not particularly consistent either). Third, and perhaps most importantly, this grouping doesn’t carry over to line plots (i.e., type=“l”). Instead, you have to transpose your data and use matplot. See this old StackOverflow thread for a longer discussion.↩︎\nSee the accompanying help pages of those two functions for more details on the available palettes, or read Zeileis & Murrell (2023, The R Journal, doi:10.32614/RJ-2023-071).↩︎\nFor example, if you have installed the ggsci package (link) then you could use palette = ggsci::pal_npg() to generate a palette consistent with those used by the Nature Publishing Group.↩︎",
+    "crumbs": [
+      "Tutorial"
+    ]
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "tinyplot ",
@@ -47,16 +157,6 @@
     "text": "Footnotes\n\n\nBoth lattice and ggplot2 are built on top of the grid package, which was incoporated into the base R distribution way back in R 2.0.0. ggplot2, in particular, is arguably the most important and influential (high-level) graphics library of the last two decades, across any programming language.↩︎\nJust type demo(graphics) or demo(persp) into your R console to get an idea. Or, take a look at these two excellent tutorials.↩︎",
     "crumbs": [
       "Home"
-    ]
-  },
-  {
-    "objectID": "vignettes/gallery.html",
-    "href": "vignettes/gallery.html",
-    "title": "Gallery",
-    "section": "",
-    "text": "WIP…",
-    "crumbs": [
-      "Gallery"
     ]
   },
   {
@@ -248,113 +348,13 @@
     ]
   },
   {
-    "objectID": "vignettes/intro_tutorial.html",
-    "href": "vignettes/intro_tutorial.html",
-    "title": "Tutorial",
+    "objectID": "vignettes/gallery.html",
+    "href": "vignettes/gallery.html",
+    "title": "Gallery",
     "section": "",
-    "text": "The goal of this intro tutorial is to give you a sense of the main features and syntax of tinyplot, a lightweight extension of the base R graphics system. We don’t try to cover everything, but you should come away with a good understanding of how the package works and how it can integrate with your own projects.",
+    "text": "WIP…",
     "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#preliminaries",
-    "href": "vignettes/intro_tutorial.html#preliminaries",
-    "title": "Tutorial",
-    "section": "Preliminaries",
-    "text": "Preliminaries\nStart by loading the package. For the examples in this tutorial, we’ll be using a slightly modified version of the airquality dataset that comes bundled with base R. So let’s go ahead and create that now too.\n\nlibrary(tinyplot)\n\naq = airquality\naq$Month = factor(month.abb[aq$Month], levels = month.abb[5:9])",
-    "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#equivalence-with-plot",
-    "href": "vignettes/intro_tutorial.html#equivalence-with-plot",
-    "title": "Tutorial",
-    "section": "Equivalence with plot()",
-    "text": "Equivalence with plot()\nAs far as possible, tinyplot tries to be a drop-in replacement for regular plot calls.\n\npar(mfrow = c(1, 2))\n\nplot(0:10, main = \"plot\")\ntinyplot(0:10, main = \"tinyplot\")\n\n\n\n\n\n\n\n\npar(mfrow = c(1, 1)) # reset layout\n\nSimilarly, we can plot elements from a data frame using either the atomic or formula methods. Here’s a simple example using the aq dataset that we created earlier.\n\n# with(aq,  tinyplot(Day, Temp)) # atomic method (same as below)\ntinyplot(Temp ~ Day, data = aq)  # formula method\n\n\n\n\n\n\n\n\nIf you’d prefer to save on a few keystrokes, you can use the shorthand plt alias instead.\n\nplt(Temp ~ Day, data = aq) # `plt` = shorthand alias for `tinyplot`\n\n\n\n\n\n\n\n\n(Note that the plt shorthand would work for all of the remaining plotting calls below. But we’ll stick to tinyplot to keep things simple.)",
-    "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#grouped-data",
-    "href": "vignettes/intro_tutorial.html#grouped-data",
-    "title": "Tutorial",
-    "section": "Grouped data",
-    "text": "Grouped data\nWhere tinyplot starts to diverge from its base counterpart is with respect to grouped data. In particular, tinyplot allows you to characterize groups using the by argument.1\n\n# tinyplot(aq$Day, aq$Temp, by = aq$Month) # same as below\nwith(aq, tinyplot(Day, Temp, by = Month))\n\n\n\n\n\n\n\n\nAn arguably more convenient approach is to use the equivalent formula syntax. Just place the “by” grouping variable after a vertical bar (i.e., |).\n\ntinyplot(Temp ~ Day | Month, data = aq)\n\n\n\n\n\n\n\n\nYou can use standard base plotting arguments to adjust features of your plot. For example, change pch (plot character) to get filled points and cex (character expansion) to change their size.\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  pch = 16,\n  cex = 2\n)\n\n\n\n\n\n\n\n\nSimilarly, converting to a grouped line plot is a simple matter of adjusting the type argument.\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"l\"\n)\n\n\n\n\n\n\n\n\nThe default behaviour of tinyplot is to represent groups through colour. However, note that we can automatically adjust pch and lty by groups too by passing the \"by\" convenience keyword. This can be used in conjunction with the default group colouring. Or, as a replacement for group colouring—an option that may be particularly useful for contexts where colour is expensive or prohibited (e.g., certain academic journals).\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"l\",\n  col = \"black\", # override automatic group colours\n  lty = \"by\"     # change line type by group instead\n)\n\n\n\n\n\n\n\n\nThe \"by\" convenience argument is also available for mapping group colours to background fill bg (alias fill). One use case is to override the grouped border colours for filled plot characters and instead pass them through the background fill.\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  pch = 21,      # use filled circles\n  col = \"black\", # override automatic group (border) colours of points\n  fill = \"by\"    # use background fill by group instead\n)",
-    "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#colours",
-    "href": "vignettes/intro_tutorial.html#colours",
-    "title": "Tutorial",
-    "section": "Colours",
-    "text": "Colours\nOn the subject of group colours, the default palette should adjust automatically depending on the class and cardinality of the grouping variable. For example, a sequential (“viridis”) palette will be used if an ordered factor is detected.\n\ntinyplot(\n  Temp ~ Day | ordered(Month), data = aq,\n  pch = 16\n)\n\n\n\n\n\n\n\n\nHowever, this behaviour is easily customized via the palette argument. The default set of discrete colours are inherited from the user’s current global palette. (Most likely the “R4” set of colors; see ?palette). However, all of the various palettes listed by palette.pals() and hcl.pals() are supported as convenience strings.2 Note that case-insensitive, partial matching for these convenience string is allowed. For example:\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"l\",\n  palette = \"tableau\" # or \"ggplot\", \"okabe\", \"set2\", \"harmonic\", etc.\n)\n\n\n\n\n\n\n\n\nBeyond these convenience strings, users can also supply a valid palette-generating function for finer control and additional options.3 You can also use the alpha argument to adjust the (alpha) transparency of your colours:\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  pch = 19, cex = 2,\n  palette = \"tableau\",\n  alpha = 0.3\n)\n\n\n\n\n\n\n\n\nTo underscore what we said earlier, colours are inherited from the user’s current palette. So these can also be set globally, just as they can for the base plot function. The next code chunk will set a new default palette for the remainder of the plots that follow.\n\n# Set the default palette globally via the generic palette function\npalette(\"tableau\")",
-    "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#legend",
-    "href": "vignettes/intro_tutorial.html#legend",
-    "title": "Tutorial",
-    "section": "Legend",
-    "text": "Legend\nIn all of the preceding plots, you will have noticed that we get an automatic legend. The legend position and look can be customized with the legend argument. At a minimum, you can pass the familiar legend position keywords as a convenience string (“topright”, “bottom”, “left”, etc.). Moreover, a key feature of tinyplot is that we can easily and elegantly place the legend outside the plot area by adding a trailing “!” to these keywords. (As you may have realised, the default legend position is “right!”.) Let’s demonstrate by moving the legend to the left of the plot:\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"l\",\n  legend = \"left!\"\n)\n\n\n\n\n\n\n\n\nBeyond the convenience of these positional keywords, the legend argument also permits additional customization by passing an appropriate function (or, a list of arguments that will be passed on to the standard legend() function internally.) So you can change or turn off the legend title, remove the bounding box, switch the direction of the legend text to horizontal, etc. Here’s a grouped density plot example, where we also add some shading by specifying that the background colour should vary by groups too.\n\nwith(\n  aq,\n  tinyplot(\n    density(Temp),\n    by = Month,\n    fill = \"by\",                         # add fill by groups\n    grid = TRUE,                         # add background grid\n    legend = list(\"topright\", bty = \"o\") # change legend features\n  )\n)\n\n\n\n\n\n\n\n\nAll of the legend examples that we have seen thus far are representations of discrete groups. However, please note that tinyplot also supports grouping by continuous variables, which automatically yield gradient legends.\n\ntinyplot(Temp ~ Wind | Ozone, data = aq, pch = 19)\n\n\n\n\n\n\n\n\nGradient legends (and plots) can be customized in an identical manner to discrete legends by adjusting the keyword positioning, palette choice, alpha transparency etc. Here is a quick adaptation of the previous plot to demonstrate. Note that here we pass a special convenience argument to bg/fill; if it detects a numeric in the range of [0,1], then it automatically inherits the grouped colour mappings but with added transparency.\n\ntinyplot(\n  Temp ~ Wind | Ozone, data = aq,\n  pch  = 21,      # use filled plot character\n  cex  = 2,\n  col  = \"black\", # override automatic (grouped) border colour of points\n  fill = 0.5,     # use background fill instead with added alpha transparency \n)",
-    "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#interval-plots",
-    "href": "vignettes/intro_tutorial.html#interval-plots",
-    "title": "Tutorial",
-    "section": "Interval plots",
-    "text": "Interval plots\ntinyplot adds supports for interval plots via the \"pointrange\", \"errorbar\", \"ribbon\" type arguments. A canonical use-case is regression analysis and prediction.\n\nmod = lm(Temp ~ 0 + Month / Day, data = aq)\naq = cbind(aq, predict(mod, interval = \"confidence\"))\n\nwith(\n  aq,\n  tinyplot(\n    x = Day, y = fit,\n    ymin = lwr, ymax = upr,\n    by = Month,\n    type = \"ribbon\",\n    grid = TRUE,\n    main = \"Model predictions\"\n  )\n)\n\n\n\n\n\n\n\n\nSimilarly, we can grab the model estimates to produce nice coefficient plots.\n\ncoeftab = data.frame(\n  gsub(\"Month\", \"\", names(coef(mod))),\n  coef(mod),\n  confint(mod)\n) |&gt;\n  setNames(c(\"term\", \"estimate\", \"ci_low\", \"ci_high\"))\n\nwith(\n  subset(coeftab, !grepl(\"Day\", term)),\n  tinyplot(\n    x = term, y = estimate,\n    ymin = ci_low, ymax = ci_high,\n    type = \"pointrange\", # or: \"errobar\", \"ribbon\"\n    pch = 19, col = \"dodgerblue\",\n    grid = TRUE,\n    main = \"Average Monthly Effect on Temperature\"\n  )\n)",
-    "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#facets",
-    "href": "vignettes/intro_tutorial.html#facets",
-    "title": "Tutorial",
-    "section": "Facets",
-    "text": "Facets\nAlongside the standard “by” grouping approach that we have seen thus far, tinyplot also supports faceted plots. Mirroring the main tinyplot function, the facet argument accepts both atomic and formula methods.\n\nwith(\n  aq,\n  tinyplot(\n    x = Day, y = fit,\n    ymin = lwr, ymax = upr,\n    type = \"ribbon\",\n    facet = Month, ## &lt;= facet, not by\n    grid = TRUE,\n    main = \"Predicted air temperatures\"\n  )\n)\n\n\n\n\n\n\n\n\nBy default, facets will be arranged in a square configuration if more than three facets are detected. Users can override this behaviour by supplying nrow or ncol in the “facet.args” helper function. (The margin padding between individual facets can also be adjusted via the fmar argument.) Note that we can also reduce axis label redundancy by turning off the plot frame.\n\nwith(\n  aq,\n  tinyplot(\n    x = Day, y = fit,\n    ymin = lwr, ymax = upr,\n    type = \"ribbon\",\n    facet = Month,\n    facet.args = list(nrow = 1),\n    grid = TRUE, frame = FALSE,\n    main = \"Predicted air temperatures\"\n  )\n)\n\n\n\n\n\n\n\n\nHere’s a slightly fancier version where we combine facets with (by) colour grouping, add a background fill to the facet text, and also add back the original values to our model predictions. For this particular example, we’ll use the facet = \"by\" convenience shorthand to facet along the same month variable as the colour grouping. But you can easily specify different by and facet variables if that’s what your data support.\n\n# Plot the original points \nwith(\n  aq,\n  tinyplot(\n    x = Day, y = Temp,\n    by = Month,\n    facet = \"by\", facet.args = list(bg = \"grey90\"),\n    palette = \"dark2\",\n    grid = TRUE, frame = FALSE, ylim = c(50, 100),\n    main = \"Actual and predicted air temperatures\"\n  )\n)\n# Add the model predictions to the same plot \nwith(\n  aq,\n  tinyplot(\n    x = Day, y = fit,\n    ymin = lwr, ymax = upr,\n    by = Month, facet = \"by\",\n    type = \"ribbon\",\n    palette = \"dark2\",\n    add = TRUE\n  )\n)\n\n\n\n\n\n\n\n\nAgain, the facet argument also accepts a formula interface. One particular use case is for two-sided formulas, which arranges the facet layout in a fixed grid arrangement. Here’s a simple (if contrived) example.\n\naq$hot = ifelse(aq$Temp&gt;=75, \"hot\", \"cold\")\naq$windy = ifelse(aq$Wind&gt;=15, \"windy\", \"calm\")\n\ntinyplot(\n Temp ~ Day, data = aq,\n facet = windy ~ hot,\n # the rest of these arguments are optional...\n facet.args = list(col = \"white\", bg = \"black\"),\n pch = 16, col = \"dodgerblue\",\n grid = TRUE, frame = FALSE, ylim = c(50, 100),\n main = \"Daily temperatures vs. wind\"\n)\n\n\n\n\n\n\n\n\nThe facet.args customizations can also be set globally via the tpar() function, which provides a nice segue to our final section.",
-    "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#customization",
-    "href": "vignettes/intro_tutorial.html#customization",
-    "title": "Tutorial",
-    "section": "Customization",
-    "text": "Customization\nCustomizing your plots further is straightforward, whether that is done directly by changing tinyplot arguments for a single plot, or by setting global parameters. For setting global parameters, users can invoke the standard par() arguments. But for improved convenience and integration with the rest of the package, we recommend that users instead go via tpar(), which is an extended version of par() that supports all of the latter’s parameters plus some tinyplot-specific ones. Here’s a quick penultimate example, where we impose several global changes (e.g., rotated axis labels, removed plot frame to get Tufte-style floating axes, etc.) before drawing the plot. change our point character, tick labels, and font family globally, before adding some transparency to our colour palette, and use Tufte-style floating axes with a background panel grid.\n\nop = tpar(\n  bty    = \"n\",           # No box (frame) around the plot \n  family = \"HersheySans\", # Use R's Hershey font instead of Arial default\n  grid   = TRUE,          # Add a background grid\n  las    = 1,             # Horizontal axis tick labels\n  pch    = 16             # Filled points as default\n)\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"b\",\n  alpha = 0.5,\n  main = \"Daily temperatures by month\"\n)\n\n\n\n\n\n\n\n\nNote: For access to a much wider variety of fonts, you might consider the showtext package (link).\nAt the risk of repeating ourselves, the use of (t)par in the previous example again underscores the correspondence with the base graphics system. Because tinyplot is effectively a convenience wrapper around base plot, any global elements that you have set for the latter should carry over to the former. For nice out-of-the-box themes, we recommend the basetheme package (link).\n\ntpar(op) # revert global changes from above\n\nlibrary(basetheme)\nbasetheme(\"royal\") # or \"clean\", \"dark\", \"ink\", \"brutal\", etc.\n\ntpar(pch = 15) # filled squares as first pch type\n\ntinyplot(\n  Temp ~ Day | Month, data = aq,\n  type = \"b\",\n  pch = \"by\",\n  palette = \"tropic\",\n  main = \"Daily temperatures by month\"\n)\n\n\n\n\n\n\n\n\nbasetheme(NULL)  # back to default theme\ndev.off()\n#&gt; null device \n#&gt;           1",
-    "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#conclusion",
-    "href": "vignettes/intro_tutorial.html#conclusion",
-    "title": "Tutorial",
-    "section": "Conclusion",
-    "text": "Conclusion\nIn summary, consider the tinyplot package if you are looking for base R plot functionality with added convenience features. You can use (nearly) the exact same syntax and all of your theme elements should carry over too. It has no dependencies other than base R itself and this should make it an attractive option for package developers, as well as situations where dependency management is expensive (e.g., propoduction piplines, continuous integration or an R application running in a browser via WebAssembly).",
-    "crumbs": [
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "vignettes/intro_tutorial.html#footnotes",
-    "href": "vignettes/intro_tutorial.html#footnotes",
-    "title": "Tutorial",
-    "section": "Footnotes",
-    "text": "Footnotes\n\n\nAt this point, experienced base plot users might protest that you can colour by groups using the col argument, e.g. with(aq, plot(Day, Temp, col = Month)). This is true, but there are several limitations. First, you don’t get an automatic legend. Second, the base plot.formula method doesn’t specify the grouping within the formula itself (not a deal-breaker, but not particularly consistent either). Third, and perhaps most importantly, this grouping doesn’t carry over to line plots (i.e., type=“l”). Instead, you have to transpose your data and use matplot. See this old StackOverflow thread for a longer discussion.↩︎\nSee the accompanying help pages of those two functions for more details on the available palettes, or read Zeileis & Murrell (2023, The R Journal, doi:10.32614/RJ-2023-071).↩︎\nFor example, if you have installed the ggsci package (link) then you could use palette = ggsci::pal_npg() to generate a palette consistent with those used by the Nature Publishing Group.↩︎",
-    "crumbs": [
-      "Tutorial"
+      "Gallery"
     ]
   }
 ]

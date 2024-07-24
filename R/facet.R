@@ -1,8 +1,8 @@
-#' Facet layout structure
-#'
-#' This function is called by `tinyplot`. Given some inputs, it returns 
-#' information about the layout of the facets.
-#'
+# Facet layout structure
+#
+# This function is called by `tinyplot`. Given some inputs, it returns 
+# information about the layout of the facets.
+#
 facet_layout = function(facet, add = FALSE, facet.args = list()) {
   nfacet_rows = 1
   nfacet_cols = 1

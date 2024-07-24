@@ -1,7 +1,7 @@
-#' Draw plot draw plot elements
-#'
-#' This function is called by `tinyplot()` to draw plot elements such as lines, polygons and points.
-#'
+# Draw plot draw plot elements
+#
+# This function is called by `tinyplot()` to draw plot elements such as lines, polygons and points.
+#
 draw_elements = function(type,
                           xx,
                           yy,

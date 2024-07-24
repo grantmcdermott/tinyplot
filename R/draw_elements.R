@@ -1,5 +1,28 @@
-draw_elements <- function(type, xx, yy, xxmin, xxmax, yymin, yymax, bg, icol, ilwd, ipch, ibg, ilty, cex, dots, 
-                          empty_plot, facet_by, split_data, i = 1, xlvls, lgnd_labs) {
+#' Draw plot draw plot elements
+#'
+#' This function is called by `tinyplot()` to draw plot elements such as lines, polygons and points.
+#'
+draw_elements = function(type,
+                          xx,
+                          yy,
+                          xxmin,
+                          xxmax,
+                          yymin,
+                          yymax,
+                          bg,
+                          icol,
+                          ilwd,
+                          ipch,
+                          ibg,
+                          ilty,
+                          cex,
+                          dots,
+                          empty_plot,
+                          facet_by,
+                          split_data,
+                          i = 1,
+                          xlvls,
+                          lgnd_labs) {
 
   ## polygons before lines, segments/arrows before points, etc.
   if (isTRUE(empty_plot)) {

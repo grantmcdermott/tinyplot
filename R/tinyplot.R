@@ -783,7 +783,7 @@ tinyplot.default = function(
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
   #   come later.
-  fargs <- facet_layout(facet = facet, facet.args = facet.args, add = add)
+  fargs = facet_layout(facet = facet, facet.args = facet.args, add = add)
   list2env(fargs, environment())
 
   #
@@ -1424,7 +1424,7 @@ tinyplot.formula = function(
   if (NCOL(mf) < x_loc) stop("formula should specify at least one variable on the right-hand side")
   y = if (no_y) NULL else mf[, y_loc]
   x = mf[, x_loc]
-  by_loc <- x_loc + 1L
+  by_loc = x_loc + 1L
   if (NCOL(mf) < by_loc) {
     # special catch if by is the same as x or y (normally for continuous legend)
     by_same_y = by_same_x = FALSE

@@ -1,5 +1,5 @@
 #' @importFrom methods as
-#' @importFrom stats update
+#' @importFrom stats update density
 #' @rdname tinyplot
 #' @export
 tinyplot.density = function(
@@ -52,7 +52,7 @@ tinyplot.density = function(
             if (!is.null(facet)) facet = facet[-attr(x, "na.action")]
             x = as.numeric(x)
         }
-        object = stats::density(x)
+        object = density(x)
         legend_args = list(...)[["legend_args"]]
     }
 
@@ -202,37 +202,37 @@ tinyplot.density = function(
 }
 
 
-density_args <- function(fargs, dots, by_dep) {
-    fargs <- utils::modifyList(fargs, dots)
+density_args = function(fargs, dots, by_dep) {
+    fargs = utils::modifyList(fargs, dots)
 
     if (!is.null(fargs[["y"]])) {
-        fargs[["y"]] <- NULL
+        fargs[["y"]] = NULL
         message("\nNote: A `y` argument has been supplied, but will be ignored for density plots.\n")
     }
 
-    fargs$type <- "l"
+    fargs$type = "l"
 
-    if (is.null(fargs$main)) fargs$main <- NA
+    if (is.null(fargs$main)) fargs$main = NA
 
     if (is.null(fargs[["legend_args"]][["title"]])) {
-        fargs[["legend_args"]][["title"]] <- by_dep
+        fargs[["legend_args"]][["title"]] = by_dep
     }
 
     if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend_args"]])) {
         if (is.atomic(fargs[["legend"]])) {
-            fargs[["legend"]] <- list(x = fargs[["legend"]])
+            fargs[["legend"]] = list(x = fargs[["legend"]])
         } else if (!is.list(fargs[["legend"]])) {
-            fargs[["legend"]] <- as.list(fargs[["legend"]])
+            fargs[["legend"]] = as.list(fargs[["legend"]])
         }
 
         if (is.null(names(fargs[["legend"]])[1]) || names(fargs[["legend"]])[1] == "") {
-            names(fargs[["legend"]])[1] <- "x"
+            names(fargs[["legend"]])[1] = "x"
         }
 
-        fargs[["legend_args"]] <- modifyList(fargs[["legend"]], fargs[["legend_args"]])
-        fargs[["legend"]] <- NULL
+        fargs[["legend_args"]] = modifyList(fargs[["legend"]], fargs[["legend_args"]])
+        fargs[["legend"]] = NULL
     }
 
-    fargs$y <- fargs$ymin <- fargs$ymax <- fargs$ylab <- fargs$xlab <- NULL
+    fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
     return(fargs)
 }

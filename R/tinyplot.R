@@ -532,9 +532,7 @@ tinyplot.default = function(
 
   # catch for adding to existing facet plot
   if (!is.null(facet) && isTRUE(add)) {
-    (
-      par(get_saved_par(when = "after"))
-    )
+    par(get_saved_par(when = "after"))
   }
 
   # Capture deparsed expressions early, before x, y and by are evaluated

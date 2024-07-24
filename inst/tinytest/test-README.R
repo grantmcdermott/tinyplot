@@ -143,7 +143,7 @@ tpar(op)
 # continue with tests
 #
 
-exit_if_not(length(find.package("basetheme", quiet=TRUE)) > 0)
+if (length(find.package("basetheme", quiet=TRUE)) == 0) exit_file("basetheme")
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
 

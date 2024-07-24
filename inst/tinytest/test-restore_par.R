@@ -4,7 +4,7 @@ using("tinysnapshot")
 # ## Avoid test fails on older R versions (pre 4.4.0) due to slight change in
 # ## density grid value calculations.
 # ## https://bugs.r-project.org/show_bug.cgi?id=18337
-# exit_if_not(getRversion() >= "4.4.0")
+if (getRversion() < "4.4.0") exit_file("R < 4.4.0")
 
 
 op = par(no.readonly = TRUE)

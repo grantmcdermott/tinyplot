@@ -4,7 +4,7 @@ using("tinysnapshot")
 ## Avoid test fails on older R versions (pre 4.4.0) due to slight change in
 ## density grid value calculations.
 ## https://bugs.r-project.org/show_bug.cgi?id=18337
-exit_if_not(getRversion() >= "4.4.0")
+if (getRversion() < "4.4.0") exit_file("R < 4.4.0")
 
 mtcars$am = as.factor(mtcars$am)
 
@@ -55,6 +55,7 @@ expect_snapshot_plot(f2b, label = "density_type_fill")
 
 # Some extra tests for bespoke legend placement
 f1 = function() with(mtcars, tinyplot(mpg, by = am, type = "density", legend = "bottom!"))
+
 f2 = function() with(mtcars, tinyplot(mpg, by = am, type = "density", legend = list(x = "bottom!")))
 expect_snapshot_plot(f1, label = "density_legend_bottom")
 expect_snapshot_plot(f2, label = "density_legend_bottom")

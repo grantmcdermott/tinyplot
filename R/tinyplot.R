@@ -508,8 +508,10 @@ tinyplot.default = function(
   dots = list(...)
 
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
-  legend = sanitize_legend(substitute(legend), add)
   type = sanitize_type(type, x, y)
+
+  if (isTRUE(add)) legend = FALSE
+
 
   xlabs = NULL
 

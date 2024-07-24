@@ -757,6 +757,8 @@ tinyplot.default = function(
     }
   }
 
+  ncolors = length(col)
+  lgnd_labs = rep(NA, times = ncolors)
   if (isTRUE(by_continuous)) {
     ## Identify the pretty break points for our labels
     nlabs = 5
@@ -774,7 +776,6 @@ tinyplot.default = function(
     ## Find the (approximate) location of our pretty labels
     pidx = rescale_num(c(byvar_range, pbyvar), to = c(1, ncolors))[-c(1:2)]
     pidx = round(pidx)
-    lgnd_labs = rep(NA, times = ncolors)
     lgnd_labs[pidx] = pbyvar
   }
 
@@ -1282,7 +1283,7 @@ tinyplot.default = function(
       draw_elements(
         type = type, xx = xx, yy = yy, xxmin = xxmin, xxmax = xxmax, yymin = yymin, yymax = yymax, 
         bg = bg, icol = icol, ilwd = ilwd, ipch = ipch, ibg = ibg, ilty = ilty, cex = cex, dots = dots,
-        empty_plot = empty_plot, facet_by = facet_by, split_data = split_data, i = i)
+        empty_plot = empty_plot, facet_by = facet_by, split_data = split_data, i = i, xlvls = xlvls, lgnd_labs = lgnd_labs)
     }
   }
 

@@ -1,5 +1,5 @@
 draw_elements <- function(type, xx, yy, xxmin, xxmax, yymin, yymax, bg, icol, ilwd, ipch, ibg, ilty, cex, dots, 
-                          empty_plot, facet_by, split_data, i = 1) {
+                          empty_plot, facet_by, split_data, i = 1, xlvls, lgnd_labs) {
 
   ## polygons before lines, segments/arrows before points, etc.
   if (isTRUE(empty_plot)) {
@@ -91,7 +91,8 @@ draw_elements <- function(type, xx, yy, xxmin, xxmax, yymin, yymax, bg, icol, il
     staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
     outwex_xx = ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
     at_xx = unique(xx)
-    if (!is.null(by) && isFALSE(facet_by) && length(split_data) > 1) {
+    x_by = !is.null(by) && identical(xlvls, lgnd_labs)
+    if (!is.null(by) && isFALSE(x_by) && isFALSE(facet_by) && length(split_data)>1) {
       boxwex_xx_orig = boxwex_xx
       boxwex_xx = boxwex_xx / length(split_data) - 0.01
       at_xx = at_xx + seq(-((boxwex_xx_orig - boxwex_xx) / 2), ((boxwex_xx_orig - boxwex_xx) / 2), length.out = length(split_data))[i]

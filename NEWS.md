@@ -22,6 +22,12 @@ New features:
   - `type = "histogram"` (alias `type = "hist"`). (#164 @grantmcdermott)
   - `type = "jitter"` (alias `type = "j"`). (#170 @grantmcdermott)
 
+Internals:
+
+- The main codebase has been refactored through modularization and assessrtions,
+which should simplify future maintenance and enable better user-level error
+messages (#171, #173 @vincentarelbundock)
+
 Misc:
 
 - Various documentation improvements.

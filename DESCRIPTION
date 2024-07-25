@@ -56,7 +56,7 @@ Suggests:
   tinysnapshot (>= 0.0.3),
   knitr
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 URL: https://grantmcdermott.com/tinyplot/
 BugReports: https://github.com/grantmcdermott/tinyplot/issues
 Roxygen: list(markdown = TRUE)

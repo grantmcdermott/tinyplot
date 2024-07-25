@@ -57,15 +57,15 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-<rect x='74.40' y='403.04' width='38.40' height='13.76' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='112.80' y='416.80' width='38.40' height='0.00' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='151.20' y='348.00' width='38.40' height='68.80' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='189.60' y='141.60' width='38.40' height='275.20' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='228.00' y='72.80' width='38.40' height='344.00' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='266.40' y='155.36' width='38.40' height='261.44' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='304.80' y='251.68' width='38.40' height='165.12' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='343.20' y='265.44' width='38.40' height='151.36' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='381.60' y='334.24' width='38.40' height='82.56' style='stroke-width: 0.75; fill: #D3D3D3;' />
-<rect x='420.00' y='403.04' width='38.40' height='13.76' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='74.40' y='403.04' width='38.40' height='13.76' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='112.80' y='416.80' width='38.40' height='0.00' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='151.20' y='348.00' width='38.40' height='68.80' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='189.60' y='141.60' width='38.40' height='275.20' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='228.00' y='72.80' width='38.40' height='344.00' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='266.40' y='155.36' width='38.40' height='261.44' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='304.80' y='251.68' width='38.40' height='165.12' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='343.20' y='265.44' width='38.40' height='151.36' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='381.60' y='334.24' width='38.40' height='82.56' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='420.00' y='403.04' width='38.40' height='13.76' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
 </g>
 </svg>

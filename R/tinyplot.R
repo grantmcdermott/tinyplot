@@ -67,7 +67,9 @@
 #'   should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
-#' @param type character string giving the type of plot desired. Options are:
+#' @param type character string giving the type of plot desired. If no argument
+#'   is provided, then the plot type will default to something that makes sense
+#'   given the nature of `x` and `y` (i.e., usually `"p"`). Options are:
 #'   - The same set of 1-character values supported by
 #'   \code{\link[graphics]{plot}}: `"p"` for points, `"l"` for lines, `"b"` for
 #'   both points and lines, `"c"` for empty points joined by lines, `"o"` for
@@ -470,7 +472,7 @@ tinyplot.default = function(
     facet = NULL,
     facet.args = NULL,
     data = NULL,
-    type = "p",
+    type = NULL,
     xlim = NULL,
     ylim = NULL,
     log = "",
@@ -504,14 +506,16 @@ tinyplot.default = function(
     width = NULL,
     height = NULL,
     empty = FALSE,
-    ...) {
+    ...
+    ) {
+  
   dots = list(...)
 
+  if (isTRUE(add)) legend = FALSE
+  
+  # sanitize arguments
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
   type = sanitize_type(type, x, y)
-
-  if (isTRUE(add)) legend = FALSE
-
 
   xlabs = NULL
 
@@ -616,7 +620,25 @@ tinyplot.default = function(
     was_area_type = FALSE # flag to keep track for some legend adjustments below
   }
 
-  if (type %in% c("j", "jitter")) {
+  if (type == "jitter") {
+    if (is.character(x)) x = as.factor(x)
+    if (is.character(y)) y = as.factor(y)
+    if (is.factor(x)) {
+      xlvls = levels(x)
+      xlabs = seq_along(xlvls)
+      names(xlabs) = xlvls
+      x = as.integer(x)
+    } else {
+      xlabs = NULL
+    }
+    if (is.factor(y)) {
+      ylvls = levels(y)
+      ylabs = seq_along(ylvls)
+      names(ylabs) = ylvls
+      y = as.integer(y)
+    } else {
+      ylabs = NULL
+    }
     x = jitter(x)
     y = jitter(y)
     type = "p"
@@ -1059,7 +1081,7 @@ tinyplot.default = function(
       if (isTRUE(axes)) {
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
-          if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
+          if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
             Axis(x, side = xside, at = xlabs, labels = names(xlabs))
           } else {
             Axis(x, side = xside)
@@ -1068,7 +1090,7 @@ tinyplot.default = function(
         } else {
           # ... else only print the "outside" axes.
           if (ii %in% oxaxis) {
-            if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot") && !is.null(xlabs)) {
+            if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
               Axis(x, side = xside, at = xlabs, labels = names(xlabs))
             } else {
               Axis(x, side = xside)
@@ -1301,7 +1323,7 @@ tinyplot.formula = function(
     data = parent.frame(),
     facet = NULL,
     facet.args = NULL,
-    type = "p",
+    type = NULL,
     xlim = NULL,
     ylim = NULL,
 # log = "",
@@ -1463,7 +1485,7 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (type %in% c("hist", "histogram")) {
+  if (!is.null(type) && type %in% c("hist", "histogram")) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = names(mf)[x_loc]
   } else if (no_y) {

@@ -276,11 +276,21 @@ tinyplot(
 ```
 
 
-## Interval plots
+## More plot types
 
-`tinyplot` adds supports for interval plots via the `"pointrange"`, `"errorbar"`,
-`"ribbon"` type arguments. A canonical use-case is regression analysis and
-prediction.
+We have already seen several plot types above such as `"p"` (points), `"l"`
+(lines), and `"density"`. In general, **tinyplot** supports all of the primitive
+plot types/elements available in base R, as well as a number of additional plot
+types that can be a bit tedious to code up manually. The full list of supported
+plot types can be viewed in
+[this pinned GitHub issue](https://github.com/grantmcdermott/tinyplot/issues/97),
+or by checking the
+[`?tinyplot`](https://grantmcdermott.com/tinyplot/man/tinyplot.html#arguments)
+documentation.
+
+For example, **tinyplot** support interval plots via the `"pointrange"`,
+`"errorbar"`, `"ribbon"` type arguments. A canonical use-case is regression
+analysis and prediction.
 
 ```{r ribbon_pred}
 mod = lm(Temp ~ 0 + Month / Day, data = aq)
@@ -302,15 +312,18 @@ with(
 Similarly, we can grab the model estimates to produce nice coefficient plots.
 
 ```{r pointrange, warning = FALSE}
-coeftab = data.frame(
+# grab coefs of interest
+monthcoefs = data.frame(
   gsub("Month", "", names(coef(mod))),
   coef(mod),
   confint(mod)
-) |>
-  setNames(c("term", "estimate", "ci_low", "ci_high"))
+  ) |>
+  setNames(c("term", "estimate", "ci_low", "ci_high")) |>
+  subset(!grepl("Day", term))
 
+# plot
 with(
-  subset(coeftab, !grepl("Day", term)),
+  monthcoefs,
   tinyplot(
     x = term, y = estimate,
     ymin = ci_low, ymax = ci_high,

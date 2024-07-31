@@ -1,13 +1,14 @@
 ---
 title: "Tutorial"
-output: rmarkdown::html_vignette
-vignette: >
+format: html
+engine: knitr
+vignette: |
   %\VignetteIndexEntry{Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",

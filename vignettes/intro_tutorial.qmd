@@ -275,7 +275,6 @@ tinyplot(
 )
 ```
 
-
 ## More plot types
 
 We have already seen several plot types above such as `"p"` (points), `"l"`
@@ -496,6 +495,35 @@ basetheme(NULL)  # back to default theme
 dev.off()
 ```
 
+
+## Saving plots
+
+A final point to note is that **tinyplot** offers convenience features for
+exporting plots to disk. Simply invoke the `file` argument to specify the
+relevant file path (including the extension type). You can customize the output
+dimensions (in inches) via the accompanying `width` and `height`
+arguments.^[The default dimensions are 7x7, with a resolution of 300 DPI.
+However, these too can be customized via the `file.width`, `file.height`, and
+`file.res` parameters in
+[`tpar()`](https://grantmcdermott.com/tinyplot/man/tpar.html).]
+
+```{r save_plot}
+#| eval: false
+tinyplot(
+  Temp ~ Day | Month, data = aq,
+  file = "aq.png", width = 8, height = 5
+)
+
+# optional: delete the saved plot
+unlink("aq.png")
+```
+
+Alongside convenience, the benefit of this native **tinyplot** approach (versus
+the traditional approach of manually opening an external graphics device, e.g.
+`png()`) is that all of your current graphic settings are automatically carried
+over to the exported file. Feel free to try yourself by setting some global
+graphics parameters via `tpar()` and then using `file` to save a plot.
+
 ## Conclusion
 
 In summary, consider the **tinyplot** package if you are looking for base R `plot`
@@ -503,7 +531,7 @@ functionality with added convenience features. You can use (nearly) the exact
 same syntax and all of your theme elements should carry over too. It has no
 dependencies other than base R itself and this should make it an attractive
 option for package developers, as well as situations where dependency management
-is expensive (e.g., propoduction piplines, continuous integration or an R
+is expensive (e.g., production pipelines, continuous integration or an R
 application running in a browser via
 [WebAssembly](https://docs.r-wasm.org/webr/latest/)).
 

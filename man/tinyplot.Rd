@@ -44,7 +44,7 @@ tinyplot(x, ...)
   facet = NULL,
   facet.args = NULL,
   data = NULL,
-  type = "p",
+  type = NULL,
   xlim = NULL,
   ylim = NULL,
   log = "",
@@ -86,7 +86,7 @@ tinyplot(x, ...)
   data = parent.frame(),
   facet = NULL,
   facet.args = NULL,
-  type = "p",
+  type = NULL,
   xlim = NULL,
   ylim = NULL,
   main = NULL,
@@ -175,7 +175,9 @@ and background. Default values for these arguments are inherited from
 features globally for all \code{tinyplot} plots.
 }}
 
-\item{type}{character string giving the type of plot desired. Options are:
+\item{type}{character string giving the type of plot desired. If no argument
+is provided, then the plot type will default to something sensible for the
+type of \code{x} and \code{y} inputs (i.e., usually \code{"p"}). Options are:
 \itemize{
 \item The same set of 1-character values supported by
 \code{\link[graphics]{plot}}: \code{"p"} for points, \code{"l"} for lines, \code{"b"} for

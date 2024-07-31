@@ -62,15 +62,18 @@ earlier.
 tinyplot(Temp ~ Day, data = aq)  # formula method
 ```
 
+### Aside: `plt` shorthand
+
 If you'd prefer to save on a few keystrokes, you can use the shorthand `plt`
-alias instead.
+alias instead of typing out `tinyplot`.
 
 ```{r plt_simple}
 plt(Temp ~ Day, data = aq) # `plt` = shorthand alias for `tinyplot`
 ```
 
-(Note that the `plt` shorthand would work for all of the remaining plotting
-calls below. But we'll stick to `tinyplot` to keep things simple.)
+Please note that the `plt` shorthand would work for all of the remaining
+plot calls below. But we'll stick to `tinyplot` to avoid any potential
+confusion.
 
 ## Grouped data
 

@@ -1,13 +1,14 @@
 ---
 title: "Tutorial"
-output: rmarkdown::html_vignette
-vignette: >
+format: html
+engine: knitr
+vignette: |
   %\VignetteIndexEntry{Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -61,15 +62,18 @@ earlier.
 tinyplot(Temp ~ Day, data = aq)  # formula method
 ```
 
+### Aside: `plt` shorthand
+
 If you'd prefer to save on a few keystrokes, you can use the shorthand `plt`
-alias instead.
+alias instead of typing out `tinyplot`.
 
 ```{r plt_simple}
 plt(Temp ~ Day, data = aq) # `plt` = shorthand alias for `tinyplot`
 ```
 
-(Note that the `plt` shorthand would work for all of the remaining plotting
-calls below. But we'll stick to `tinyplot` to keep things simple.)
+Please note that the `plt` shorthand would work for all of the remaining
+plot calls below. But we'll stick to `tinyplot` to avoid any potential
+confusion.
 
 ## Grouped data
 
@@ -274,12 +278,21 @@ tinyplot(
 )
 ```
 
+## More plot types
 
-## Interval plots
+We have already seen several plot types above such as `"p"` (points), `"l"`
+(lines), and `"density"`. In general, **tinyplot** supports all of the primitive
+plot types/elements available in base R, as well as a number of additional plot
+types that can be a bit tedious to code up manually. The full list of supported
+plot types can be viewed in
+[this pinned GitHub issue](https://github.com/grantmcdermott/tinyplot/issues/97),
+or by checking the
+[`?tinyplot`](https://grantmcdermott.com/tinyplot/man/tinyplot.html#arguments)
+documentation.
 
-`tinyplot` adds supports for interval plots via the `"pointrange"`, `"errorbar"`,
-`"ribbon"` type arguments. A canonical use-case is regression analysis and
-prediction.
+For example, **tinyplot** support interval plots via the `"pointrange"`,
+`"errorbar"`, `"ribbon"` type arguments. A canonical use-case is regression
+analysis and prediction.
 
 ```{r ribbon_pred}
 mod = lm(Temp ~ 0 + Month / Day, data = aq)
@@ -301,15 +314,18 @@ with(
 Similarly, we can grab the model estimates to produce nice coefficient plots.
 
 ```{r pointrange, warning = FALSE}
-coeftab = data.frame(
+# grab coefs of interest
+monthcoefs = data.frame(
   gsub("Month", "", names(coef(mod))),
   coef(mod),
   confint(mod)
-) |>
-  setNames(c("term", "estimate", "ci_low", "ci_high"))
+  ) |>
+  setNames(c("term", "estimate", "ci_low", "ci_high")) |>
+  subset(!grepl("Day", term))
 
+# plot
 with(
-  subset(coeftab, !grepl("Day", term)),
+  monthcoefs,
   tinyplot(
     x = term, y = estimate,
     ymin = ci_low, ymax = ci_high,
@@ -482,6 +498,35 @@ basetheme(NULL)  # back to default theme
 dev.off()
 ```
 
+
+## Saving plots
+
+A final point to note is that **tinyplot** offers convenience features for
+exporting plots to disk. Simply invoke the `file` argument to specify the
+relevant file path (including the extension type). You can customize the output
+dimensions (in inches) via the accompanying `width` and `height`
+arguments.^[The default dimensions are 7x7, with a resolution of 300 DPI.
+However, these too can be customized via the `file.width`, `file.height`, and
+`file.res` parameters in
+[`tpar()`](https://grantmcdermott.com/tinyplot/man/tpar.html).]
+
+```{r save_plot}
+#| eval: false
+tinyplot(
+  Temp ~ Day | Month, data = aq,
+  file = "aq.png", width = 8, height = 5
+)
+
+# optional: delete the saved plot
+unlink("aq.png")
+```
+
+Alongside convenience, the benefit of this native **tinyplot** approach (versus
+the traditional approach of manually opening an external graphics device, e.g.
+`png()`) is that all of your current graphic settings are automatically carried
+over to the exported file. Feel free to try yourself by setting some global
+graphics parameters via `tpar()` and then using `file` to save a plot.
+
 ## Conclusion
 
 In summary, consider the **tinyplot** package if you are looking for base R `plot`
@@ -489,7 +534,7 @@ functionality with added convenience features. You can use (nearly) the exact
 same syntax and all of your theme elements should carry over too. It has no
 dependencies other than base R itself and this should make it an attractive
 option for package developers, as well as situations where dependency management
-is expensive (e.g., propoduction piplines, continuous integration or an R
+is expensive (e.g., production pipelines, continuous integration or an R
 application running in a browser via
 [WebAssembly](https://docs.r-wasm.org/webr/latest/)).
 

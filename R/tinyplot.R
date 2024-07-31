@@ -68,8 +68,8 @@
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
 #' @param type character string giving the type of plot desired. If no argument
-#'   is provided, then the plot type will default to something that makes sense
-#'   given the nature of `x` and `y` (i.e., usually `"p"`). Options are:
+#'   is provided, then the plot type will default to something sensible for the
+#'   type of `x` and `y` inputs (i.e., usually `"p"`). Options are:
 #'   - The same set of 1-character values supported by
 #'   \code{\link[graphics]{plot}}: `"p"` for points, `"l"` for lines, `"b"` for
 #'   both points and lines, `"c"` for empty points joined by lines, `"o"` for
@@ -583,7 +583,7 @@ tinyplot.default = function(
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
       if (is.null(ylim)) ylim = range(c(ymin, ymax))
-    } else if (!type %in% c("density", "hist", "histogram")) {
+    } else if (!type %in% c("density", "histogram")) {
       y = x
       x = seq_along(x)
       xlab = "Index"
@@ -604,7 +604,7 @@ tinyplot.default = function(
     return(do.call(tinyplot.density, args = fargs))
   }
 
-  if (type %in% c("hist", "histogram")) {
+  if (type == "histogram") {
     fargs = histogram_args(
       x = x, by = by, facet = facet, facet_by = facet_by, dots = dots,
       ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha)
@@ -1485,7 +1485,7 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (!is.null(type) && type %in% c("hist", "histogram")) {
+  if (!is.null(type) && type == c("hist", "histogram")) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = names(mf)[x_loc]
   } else if (no_y) {

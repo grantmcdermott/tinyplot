@@ -4,7 +4,7 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## 0.1.0.99 (dev version)
+## 0.2.0
 
 New features:
 
@@ -24,9 +24,9 @@ New features:
 
 Internals:
 
-- The main codebase has been refactored through modularization and assessrtions,
-which should simplify future maintenance and enable better user-level error
-messages (#171, #173 @vincentarelbundock)
+- The main codebase has been significantly refactored (modularized), which
+should simplify future maintenance and enable better user-level error messages
+(#171, #173 @vincentarelbundock)
 
 Misc:
 

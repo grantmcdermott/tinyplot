@@ -1,3 +1,4 @@
+# utility function to convert user input about aesthetics into useable formats, including by-groups.
 aesthetics = function(...) {
   list2env(list(...), environment())
 

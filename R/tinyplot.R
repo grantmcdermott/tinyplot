@@ -735,75 +735,36 @@ tinyplot.default = function(
     ))
   }
 
-  ngrps = length(split_data)
+  palette = substitute(palette)
 
-  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
-
-  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
-
-  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
-
-  # palette = substitute(palette)
-  col = by_col(
-    ngrps = ngrps,
+  # aesthetics by group: col, bg, etc.
+  aesthetics_args = aesthetics(
+    adjustcolor = adjustcolor,
+    alpha = alpha,
+    bg = bg,
+    by = by,
+    by_continuous = by_continuous,
+    by_ordered = by_ordered,
     col = col,
-    palette = substitute(palette),
-    gradient = by_continuous,
-    ordered = by_ordered,
-    alpha = alpha
-  )
-  if (is.null(bg) && !is.null(fill)) bg = fill
-  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
-    alpha = bg
-    bg = "by"
-  }
-  if (!is.null(bg) && length(bg) == 1 && bg == "by") {
-    bg = by_col(
-      ngrps = ngrps,
-      col = NULL,
-      palette = substitute(palette),
-      gradient = by_continuous,
-      ordered = by_ordered,
-      alpha = alpha
-    )
-  } else if (length(bg) != ngrps) {
-    bg = rep(bg, ngrps)
-  }
-  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
-    if (!is.null(bg)) {
-      bg = adjustcolor(bg, ribbon.alpha)
-    } else if (!is.null(col)) {
-      bg = adjustcolor(col, ribbon.alpha)
-    }
-  }
-
-  ncolors = length(col)
-  lgnd_labs = rep(NA, times = ncolors)
-  if (isTRUE(by_continuous)) {
-    ## Identify the pretty break points for our labels
-    nlabs = 5
-    ncolors = length(col)
-    ubyvar = unique(by)
-    byvar_range = range(ubyvar)
-    pbyvar = pretty(byvar_range, n = nlabs)
-    pbyvar = pbyvar[pbyvar >= byvar_range[1] & pbyvar <= byvar_range[2]]
-    # optional thinning
-    if (length(ubyvar) == 2 && all(ubyvar %in% pbyvar)) {
-      pbyvar = ubyvar
-    } else if (length(pbyvar) > nlabs) {
-      pbyvar = pbyvar[seq_along(pbyvar) %% 2 == 0]
-    }
-    ## Find the (approximate) location of our pretty labels
-    pidx = rescale_num(c(byvar_range, pbyvar), to = c(1, ncolors))[-c(1:2)]
-    pidx = round(pidx)
-    lgnd_labs[pidx] = pbyvar
-  }
+    fill = fill,
+    lty = lty,
+    lwd = lwd,
+    palette = palette,
+    pch = pch,
+    rescale_num = rescale_num,
+    ribbon.alpha = ribbon.alpha,
+    split_data = split_data,
+    type = type)
+  list2env(aesthetics_args, environment())
 
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
   #   come later.
-  fargs = facet_layout(facet = facet, facet.args = facet.args, add = add)
+  fargs = facet_layout(
+    facet = facet,
+    facet.args = facet.args,
+    add = add)
   list2env(fargs, environment())
 
   #

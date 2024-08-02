@@ -517,7 +517,7 @@ tinyplot.default = function(
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
   type = sanitize_type(type, x, y)
 
-  xlabs = NULL
+  xlabs = ylabs = NULL # placeholders
 
   # Write plot to output file or window with fixed dimensions
   setup_device(file = file, width = width, height = height)
@@ -813,19 +813,19 @@ tinyplot.default = function(
     }
 
     draw_legend(
+      bg = bg,
+      by_dep = by_dep,
+      cex = cex * cex_fct_adj,
+      col = col,
+      gradient = by_continuous,
+      has_sub = has_sub,
       legend = legend,
       legend_args = legend_args,
-      by_dep = by_dep,
       lgnd_labs = lgnd_labs,
-      type = type,
-      pch = pch,
       lty = lty,
       lwd = lwd,
-      col = col,
-      bg = bg,
-      gradient = by_continuous,
-      cex = cex * cex_fct_adj,
-      has_sub = has_sub
+      pch = pch,
+      type = type
     )
 
     has_legend = TRUE
@@ -893,289 +893,42 @@ tinyplot.default = function(
   ## Facet windows
   #
 
-  omar = NULL # Placeholder variable for now, which we re-assign as part of facet margins
-
-  if (!is.null(facet) && isFALSE(add)) {
-    if (is.null(omar)) omar = par("mar")
-
-    # Grab some of the customizable facet args that we'll be using later
-    facet_rect = FALSE
-    facet_text = .tpar[["facet.cex"]]
-    facet_font = .tpar[["facet.font"]]
-    facet_col = .tpar[["facet.col"]]
-    facet_bg = .tpar[["facet.bg"]]
-    facet_border = .tpar[["facet.border"]]
-    if (!is.null(facet.args)) {
-      if (!is.null(facet.args[["cex"]])) facet_text = facet.args[["cex"]]
-      if (!is.null(facet.args[["col"]])) facet_col = facet.args[["col"]]
-      if (!is.null(facet.args[["font"]])) facet_font = facet.args[["font"]]
-      if (!is.null(facet.args[["bg"]])) facet_bg = facet.args[["bg"]]
-      if (!is.null(facet.args[["border"]])) facet_border = facet.args[["border"]]
-    }
-    if (!is.null(facet_bg) || !is.null(facet_border)) facet_rect = TRUE
-
-    # Need extra adjustment to top margin if facet titles have "\n" newline
-    # separator. (Note that we'll also need to take account for this in the
-    # individual facet margins / gaps further below.)
-    facet_newlines = lengths(gregexpr("\n", grep("\\n", facets, value = TRUE)))
-    # if (length(facet_newlines)==0) facet_newlines = 0
-    # omar[3] = omar[3] + max(facet_newlines)
-    facet_newlines = ifelse(length(facet_newlines) == 0, 0, max(facet_newlines))
-    omar[3] = omar[3] + facet_newlines * facet_text / cex_fct_adj
-    # apply the changes
-    par(mar = omar)
-  }
-
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
   # Skip if adding to an existing plot
 
-  if (isFALSE(add)) {
-    if (nfacets > 1) {
-      # Set facet margins (i.e., gaps between facets)
-      if (is.null(facet.args[["fmar"]])) {
-        fmar = tpar("fmar")
-      } else {
-        if (length(facet.args[["fmar"]]) != 4) {
-          warning(
-            "`fmar` has to be a vector of length four, e.g.",
-            "`facet.args = list(fmar = c(b,l,t,r))`.",
-            "\n",
-            "Resetting to fmar = c(1,1,1,1) default.",
-            "\n"
-          )
-          fmar = tpar("fmar")
-        } else {
-          fmar = facet.args[["fmar"]]
-        }
-      }
-      # We need to adjust for n>=3 facet cases for correct spacing...
-      if (nfacets >= 3) {
-        ## ... exception for 2x2 cases
-        if (!(nfacet_rows == 2 && nfacet_cols == 2)) fmar = fmar * .75
-      }
-      # Extra reduction if no plot frame to reduce whitespace
-      if (isFALSE(frame.plot)) {
-        fmar = fmar - 0.5
-      }
-
-      ooma = par("oma")
-
-      # Bump top margin down for facet titles
-      fmar[3] = fmar[3] + 1
-      if (isTRUE(attr(facet, "facet_grid"))) {
-        fmar[3] = max(0, fmar[3] - 1)
-        # Indent for RHS facet_grid title strip if "right!" legend
-        if (has_legend && ooma[4] > 0) ooma[4] = ooma[4] + 1
-      }
-      fmar[3] = fmar[3] + facet_newlines * facet_text / cex_fct_adj
-
-      omar = par("mar")
-
-      # Now we set the margins. The trick here is that we simultaneously adjust
-      # inner (mar) and outer (oma) margins by the same amount, but in opposite
-      # directions, to preserve the overall facet and plot centroids.
-      nmar = (fmar + .1) / cex_fct_adj
-      noma = (ooma + omar - fmar - .1) / cex_fct_adj
-      # Catch in case of negative oma values. (Probably only occurs with some
-      # user-supplied tpar(lmar) values and a "left!" positioned legend.)
-      if (any(noma < 0)) {
-        noma_orig = noma
-        noma[noma < 0] = 0
-        # noma_diff = noma-noma_orig
-        # nmar = nmar + noma_diff
-      }
-      # apply changes
-      par(oma = noma)
-      par(mar = nmar)
-
-      # Now that the margins have been set, arrange facet rows and columns based
-      # on our earlier calculations.
-      par(mfrow = c(nfacet_rows, nfacet_cols))
-    }
-
-    ## Loop over the individual facet windows and draw the plot region
-    ## components (axes, titles, box, grid, etc.)
-    for (ii in ifacet) {
-      # See: https://github.com/grantmcdermott/tinyplot/issues/65
-      if (nfacets > 1) {
-        mfgi = ceiling(ii / nfacet_cols)
-        mfgj = ii %% nfacet_cols
-        if (mfgj == 0) mfgj = nfacet_cols
-        par(mfg = c(mfgi, mfgj))
-      }
-
-      ## Set the plot window
-      ## Problem: Passing extra args through ... (e.g., legend_args) to plot.window
-      ## triggers an annoying warning about unrecognized graphical params.
-      # plot.window(
-      #   xlim = xlim, ylim = ylim,
-      #   asp = asp, log = log,
-      #   # ...
-      # )
-      ## Solution: Only pass on relevant args using name checking and do.call.
-      ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
-      pdots = dots[names(dots) %in% names(formals(plot.default))]
-      ## catch for flipped boxplots...
-      if (type == "boxplot" && isTRUE(dots[["horizontal"]])) {
-        log_flip = log
-        if (!is.null(log)) {
-          if (log == "x") log_flip = "y"
-          if (log == "y") log_flip = "x"
-        }
-        do.call(
-          "plot.window",
-          c(list(xlim = ylim, ylim = xlim, asp = asp, log = log_flip), pdots)
-        )
-        xside = 2
-        yside = 1
-      } else {
-        ## ... standard plot window for all other cases
-        do.call(
-          "plot.window",
-          c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)
-        )
-        xside = 1
-        yside = 2
-      }
-
-      # axes, plot.frame and grid
-      if (isTRUE(axes)) {
-        if (isTRUE(frame.plot)) {
-          # if plot frame is true then print axes per normal...
-          if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-            Axis(x, side = xside, at = xlabs, labels = names(xlabs))
-          } else {
-            Axis(x, side = xside)
-          }
-          Axis(y, side = yside)
-        } else {
-          # ... else only print the "outside" axes.
-          if (ii %in% oxaxis) {
-            if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-              Axis(x, side = xside, at = xlabs, labels = names(xlabs))
-            } else {
-              Axis(x, side = xside)
-            }
-          }
-          if (ii %in% oyaxis) {
-            Axis(y, side = yside)
-          }
-        }
-      }
-
-      # facet titles
-      ## Note: facet titles could be done more simply with mtext... but then we
-      ## couldn't adjust background features (e.g., fill), or rotate the rhs
-      ## facet grid text. So we're rolling our own "manual" versions with text
-      ## and rect.
-      if (!is.null(facet)) {
-        # Get the four corners of plot area (x1, x2, y1, y2)
-        corners = par("usr")
-        # special logic for facet grids
-        if (is.null(facet_newlines) || facet_newlines == 0) {
-          facet_title_lines = 1
-        } else {
-          facet_title_lines = 1 + facet_newlines
-        }
-        # different logic for facet grids versus regular facets
-        if (isTRUE(attr(facet, "facet_grid"))) {
-          ## top facet strips
-          if (ii %in% 1:nfacet_cols) {
-            if (isTRUE(facet_rect)) {
-              line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
-              line_height = line_height * facet_text / cex_fct_adj
-              rect(
-                corners[1], corners[4], corners[2], corners[4] + line_height,
-                col = facet_bg, border = facet_border,
-                xpd = NA
-              )
-            }
-            text(
-              x = mean(corners[1:2]),
-              y = corners[4] + grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user"),
-              labels = sub("^(.*?)~.*", "\\1", facets[[ii]]),
-              adj = c(0.5, 0),
-              cex = facet_text / cex_fct_adj,
-              col = facet_col,
-              font = facet_font,
-              xpd = NA,
-            )
-          }
-          ## right facet strips
-          if (ii %% nfacet_cols == 0 || ii == nfacets) {
-            if (isTRUE(facet_rect)) {
-              line_height = grconvertX(facet_title_lines + .1, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
-              line_height = line_height * facet_text / cex_fct_adj
-              rect(
-                corners[2], corners[3], corners[2] + line_height, corners[4],
-                col = facet_bg, border = facet_border,
-                xpd = NA
-              )
-            }
-            text(
-              x = corners[2] + grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user"),
-              y = mean(corners[3:4]),
-              labels = sub("^.*?~(.*)", "\\1", facets[[ii]]),
-              srt = 270,
-              adj = c(0.5, 0),
-              cex = facet_text / cex_fct_adj,
-              col = facet_col,
-              font = facet_font,
-              xpd = NA
-            )
-          }
-        } else {
-          if (isTRUE(facet_rect)) {
-            line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
-            line_height = line_height * facet_text / cex_fct_adj
-            rect(
-              corners[1], corners[4], corners[2], corners[4] + line_height,
-              col = facet_bg, border = facet_border,
-              xpd = NA
-            )
-          }
-          text(
-            x = mean(corners[1:2]),
-            y = corners[4] + grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user"),
-            labels = paste(facets[[ii]]),
-            adj = c(0.5, 0),
-            cex = facet_text / cex_fct_adj,
-            col = facet_col,
-            font = facet_font,
-            xpd = NA
-          )
-        }
-      }
-
-      # plot frame
-      if (frame.plot) box()
-
-      # panel grid lines
-      if (is.null(grid)) grid = .tpar[["grid"]]
-      if (!is.null(grid)) {
-        if (is.logical(grid)) {
-          ## If grid is TRUE create a default grid. Rather than just calling the default grid()
-          ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
-          ## and works better for axes based on date/time classes. Exception: For axes in logs,
-          ## resort to using grid() which is likely better handled there.
-          if (isTRUE(grid)) {
-            gnx = gny = NULL
-            if (!par("xlog")) {
-              abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
-              gnx = NA
-            }
-            if (!par("ylog")) {
-              abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
-              gny = NA
-            }
-            grid(nx = gnx, ny = gny)
-          }
-        } else {
-          grid
-        }
-      }
-    } # end of ii facet loop
-  } # end of add check
+  facet_window_args = draw_facet_window(
+    add = add,
+    asp = asp,
+    axes = axes,
+    cex_fct_adj = cex_fct_adj,
+    dots = dots,
+    facet = facet,
+    facet.args = facet.args,
+    facets = facets,
+    frame.plot = frame.plot,
+    grid = grid,
+    has_legend = has_legend,
+    ifacet = ifacet,
+    log = log,
+    nfacet_cols = nfacet_cols,
+    nfacet_rows = nfacet_rows,
+    nfacets = nfacets,
+    oxaxis = oxaxis,
+    oyaxis = oyaxis,
+    type = type,
+    x = x,
+    y = y,
+    xlabs = xlabs,
+    ylabs = ylabs,
+    xmax = xmax,
+    ymax = ymax,
+    xmin = xmin,
+    ymin = ymin,
+    xlab = xlab,
+    ylab = ylab,
+    xlim = xlim,
+    ylim = ylim)
+  list2env(facet_window_args, environment())
 
 
   #

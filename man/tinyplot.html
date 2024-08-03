@@ -304,7 +304,7 @@ tinyplot(
   ylab = NULL,
   ann = par("ann"),
   axes = TRUE,
-  frame.plot = axes,
+  frame.plot = NULL,
   asp = NA,
   grid = NULL,
   palette = NULL,
@@ -328,6 +328,8 @@ tinyplot(
   width = NULL,
   height = NULL,
   empty = FALSE,
+  xaxt = NULL,
+  yaxt = NULL,
   ...
 )
 
@@ -346,7 +348,7 @@ tinyplot(
   ylab = NULL,
   ann = par("ann"),
   axes = TRUE,
-  frame.plot = axes,
+  frame.plot = NULL,
   asp = NA,
   grid = NULL,
   pch = NULL,
@@ -515,7 +517,7 @@ a logical value indicating whether the default annotation (title and x and y axi
 <code id="axes">axes</code>
 </td>
 <td>
-a logical value indicating whether both axes should be drawn on the plot. Use <code style="white-space: pre;">graphical parameter</code> "xaxt" or "yaxt" to suppress just one of the axes.
+logical or character. Should axes be drawn (<code>TRUE</code> or <code>FALSE</code>)? Or alternatively what type of axes should be drawn: <code style="white-space: pre;">“standard” (with axis, ticks, and labels; equivalent to </code>TRUE<code style="white-space: pre;">), “none” (no axes; equivalent to </code>FALSE<code style="white-space: pre;">), </code>"ticks"<code style="white-space: pre;">(only ticks and labels without axis line),</code>"labels"<code style="white-space: pre;">(only labels without ticks and axis line),</code>"axis"<code style="white-space: pre;">(only axis line and labels but no ticks). To control this separately for the two axes, use the character specifications for</code>xaxt<code>and/or</code>yaxt’.
 </td>
 </tr>
 <tr>
@@ -523,7 +525,7 @@ a logical value indicating whether both axes should be drawn on the plot. Use <c
 <code id="frame.plot">frame.plot</code>
 </td>
 <td>
-a logical indicating whether a box should be drawn around the plot. Can also use <code>frame</code> as an acceptable argument alias.
+a logical indicating whether a box should be drawn around the plot. Can also use <code>frame</code> as an acceptable argument alias. The default is to draw a frame if both axis types (set via <code>axes</code>, <code>xaxt</code>, or <code>yaxt</code>) include axis lines.
 </td>
 </tr>
 <tr>
@@ -750,6 +752,14 @@ numeric giving the plot height in inches. Same considerations as <code>width</co
 </td>
 <td>
 logical indicating whether the interior plot region should be left empty. The default is <code>FALSE</code>. Setting to <code>TRUE</code> has a similar effect to invoking <code>type = “n”</code> above, except that any legend artifacts owing to a particular plot type (e.g., lines for <code>type = “l”</code> or squares for <code>type = “area”</code>) will still be drawn correctly alongside the empty plot. In contrast,<code>type = “n”</code> implicitly assumes a scatterplot and so any legend will only depict points.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="xaxt">xaxt</code>, <code id="yaxt">yaxt</code>
+</td>
+<td>
+character specifying the type of x-axis and y-axis, respectively. See <code>axes</code> for the possible values.
 </td>
 </tr>
 <tr>

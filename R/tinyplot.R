@@ -531,7 +531,7 @@ tinyplot.default = function(
 
   ## handle defaults of axes, xaxt, yaxt, frame.plot
   ## - convert axes to character if necessary
-  ## - set defaults of xaxt/yaxt if these are NULL
+  ## - set defaults of xaxt/yaxt (if these are NULL) based on axes
   ## - set logical axes based on xaxt/yaxt
   ## - set frame.plot default based on xaxt/yaxt
   if (!is.character(axes)) axes = if (isFALSE(axes)) "none" else "standard"
@@ -543,17 +543,6 @@ tinyplot.default = function(
   yaxt = substr(match.arg(yaxt, axis_types), 1L, 1L)
   axes = any(c(xaxt, yaxt) != "n")
   if (is.null(frame.plot) || !is.logical(frame.plot)) frame.plot = all(c(xaxt, yaxt) %in% c("s", "a"))
-
-  ## auxiliary function with axis type
-  ## (could also become an unexported function in the package)
-  tinyAxis = function(x = NULL, ..., type = "standard") {
-    switch(substr(type, 1L, 1L),
-      "n" = invisible(numeric(0L)),
-      "l" = Axis(x = x, ..., tick = FALSE),
-      "t" = Axis(x = x, ..., lwd = 0, lwd.ticks = 1),
-      "a" = Axis(x = x, ..., lwd.ticks = 0),
-      Axis(x = x, ...))
-  }
 
   # Write plot to output file or window with fixed dimensions
   setup_device(file = file, width = width, height = height)

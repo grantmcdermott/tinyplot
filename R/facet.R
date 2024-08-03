@@ -114,7 +114,7 @@ get_facet_fml = function(formula, data = NULL) {
 
 
 # draw plotting window, taking into account the possible presence of facets
-draw_facet_window <- function(...) {
+draw_facet_window <- function(grid, ...) {
   list2env(list(...), environment())
 
   omar = NULL # Placeholder for now, which we re-assign as part of facet margins

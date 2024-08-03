@@ -54,7 +54,7 @@ tinyplot(x, ...)
   ylab = NULL,
   ann = par("ann"),
   axes = TRUE,
-  frame.plot = axes,
+  frame.plot = NULL,
   asp = NA,
   grid = NULL,
   palette = NULL,
@@ -78,6 +78,8 @@ tinyplot(x, ...)
   width = NULL,
   height = NULL,
   empty = FALSE,
+  xaxt = NULL,
+  yaxt = NULL,
   ...
 )
 
@@ -95,7 +97,7 @@ tinyplot(x, ...)
   ylab = NULL,
   ann = par("ann"),
   axes = TRUE,
-  frame.plot = axes,
+  frame.plot = NULL,
   asp = NA,
   grid = NULL,
   pch = NULL,
@@ -217,12 +219,13 @@ the range of the \code{finite} values to be plotted should be used.}
 \item{ann}{a logical value indicating whether the default annotation (title
 and x and y axis labels) should appear on the plot.}
 
-\item{axes}{a logical value indicating whether both axes should be drawn on
-the plot. Use \verb{graphical parameter} "xaxt" or "yaxt" to suppress just one of
-the axes.}
+\item{axes}{logical or character. Should axes be drawn (\code{TRUE} or \code{FALSE})?
+Or alternatively what type of axes should be drawn: \verb{"standard" (with axis, ticks, and labels; equivalent to }TRUE\verb{), "none" (no axes; equivalent to }FALSE\verb{), }"ticks"\verb{(only ticks and labels without axis line),}"labels"\verb{(only labels without ticks and axis line),}"axis"\verb{(only axis line and labels but no ticks). To control this separately for the two axes, use the character specifications for}xaxt\code{and/or}yaxt`.}
 
 \item{frame.plot}{a logical indicating whether a box should be drawn around
-the plot. Can also use \code{frame} as an acceptable argument alias.}
+the plot. Can also use \code{frame} as an acceptable argument alias.
+The default is to draw a frame if both axis types (set via \code{axes}, \code{xaxt},
+or \code{yaxt}) include axis lines.}
 
 \item{asp}{the y/xy/x aspect ratio, see \code{plot.window}.}
 
@@ -419,6 +422,9 @@ particular plot type (e.g., lines for \code{type = "l"} or squares for
 \code{type = "area"}) will still be drawn correctly alongside the empty plot. In
 contrast,\code{type = "n"} implicitly assumes a scatterplot and so any legend
 will only depict points.}
+
+\item{xaxt, yaxt}{character specifying the type of x-axis and y-axis, respectively.
+See \code{axes} for the possible values.}
 
 \item{formula}{a \code{formula} that optionally includes grouping variable(s)
 after a vertical bar, e.g. \code{y ~ x | z}. One-sided formulae are also

@@ -112,11 +112,17 @@
 #' @param ylab a label for the y axis, defaults to a description of y.
 #' @param ann a logical value indicating whether the default annotation (title
 #'   and x and y axis labels) should appear on the plot.
-#' @param axes a logical value indicating whether both axes should be drawn on
-#'   the plot. Use `graphical parameter` "xaxt" or "yaxt" to suppress just one of
-#'   the axes.
+#' @param axes logical or character. Should axes be drawn (`TRUE` or `FALSE`)?
+#'   Or alternatively what type of axes should be drawn: `"standard" (with
+#'   axis, ticks, and labels; equivalent to `TRUE`), "none" (no axes;
+#'   equivalent to `FALSE`), `"ticks"` (only ticks and labels without axis line),
+#'   `"labels"` (only labels without ticks and axis line), `"axis"` (only axis
+#'   line and labels but no ticks). To control this separately for the two
+#'   axes, use the character specifications for `xaxt` and/or `yaxt`.
 #' @param frame.plot a logical indicating whether a box should be drawn around
 #'   the plot. Can also use `frame` as an acceptable argument alias.
+#'   The default is to draw a frame if both axis types (set via `axes`, `xaxt`,
+#'   or `yaxt`) include axis lines.
 #' @param grid argument for plotting a background panel grid, one of either:
 #'    - a logical (i.e., `TRUE` to draw the grid), or
 #'    - a panel grid plotting function like `grid()`.
@@ -267,6 +273,8 @@
 #' @param height numeric giving the plot height in inches. Same considerations as
 #'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
 #'  specified.
+#' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
+#'   See `axes` for the possible values.
 #' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
 #'   the "Details" section of \code{\link[graphics]{plot}}.
 #'
@@ -482,7 +490,7 @@ tinyplot.default = function(
     ylab = NULL,
     ann = par("ann"),
     axes = TRUE,
-    frame.plot = axes,
+    frame.plot = NULL,
     asp = NA,
     grid = NULL,
     palette = NULL,
@@ -506,6 +514,8 @@ tinyplot.default = function(
     width = NULL,
     height = NULL,
     empty = FALSE,
+    xaxt = NULL,
+    yaxt = NULL,
     ...
     ) {
   
@@ -518,6 +528,21 @@ tinyplot.default = function(
   type = sanitize_type(type, x, y)
 
   xlabs = NULL
+
+  ## handle defaults of axes, xaxt, yaxt, frame.plot
+  ## - convert axes to character if necessary
+  ## - set defaults of xaxt/yaxt (if these are NULL) based on axes
+  ## - set logical axes based on xaxt/yaxt
+  ## - set frame.plot default based on xaxt/yaxt
+  if (!is.character(axes)) axes = if (isFALSE(axes)) "none" else "standard"
+  axis_types = c("standard", "none", "labels", "ticks", "axis")
+  axes = match.arg(axes, axis_types)
+  if (is.null(xaxt)) xaxt = axes
+  if (is.null(yaxt)) yaxt = axes
+  xaxt = substr(match.arg(xaxt, axis_types), 1L, 1L)
+  yaxt = substr(match.arg(yaxt, axis_types), 1L, 1L)
+  axes = any(c(xaxt, yaxt) != "n")
+  if (is.null(frame.plot) || !is.logical(frame.plot)) frame.plot = all(c(xaxt, yaxt) %in% c("s", "a"))
 
   # Write plot to output file or window with fixed dimensions
   setup_device(file = file, width = width, height = height)
@@ -1076,27 +1101,27 @@ tinyplot.default = function(
         yside = 2
       }
 
-      # axes, plot.frame and grid
+      # axes, frame.plot and grid
       if (isTRUE(axes)) {
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
           if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-            Axis(x, side = xside, at = xlabs, labels = names(xlabs))
+            tinyAxis(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
           } else {
-            Axis(x, side = xside)
+            tinyAxis(x, side = xside, type = xaxt)
           }
-          Axis(y, side = yside)
+          tinyAxis(y, side = yside, type = yaxt)
         } else {
           # ... else only print the "outside" axes.
           if (ii %in% oxaxis) {
             if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-              Axis(x, side = xside, at = xlabs, labels = names(xlabs))
+              tinyAxis(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
             } else {
-              Axis(x, side = xside)
+              tinyAxis(x, side = xside, type = xaxt)
             }
           }
           if (ii %in% oyaxis) {
-            Axis(y, side = yside)
+            tinyAxis(y, side = yside, type = yaxt)
           }
         }
       }
@@ -1332,7 +1357,7 @@ tinyplot.formula = function(
     ylab = NULL,
     ann = par("ann"),
     axes = TRUE,
-    frame.plot = axes,
+    frame.plot = NULL,
     asp = NA,
     grid = NULL,
     pch = NULL,

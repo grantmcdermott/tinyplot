@@ -46,7 +46,7 @@ Imports:
   tools,
   utils
 Suggests:
-  altdoc (>= 0.3.0),
+  altdoc (>= 0.4.0),
   basetheme,
   fontquiver,
   png,

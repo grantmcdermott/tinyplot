@@ -12,7 +12,7 @@ op = par(no.readonly = TRUE)
 f1 = function() {
   tinyplot(
     Sepal.Width ~ Sepal.Length | Species, iris,
-    grid = grid(),
+    grid = function() grid(),
     legend = legend("bottom!", bty = "o")
   )
   points(6,3, pch = 17, col = "hotpink", cex = 1.5)

@@ -374,7 +374,9 @@ draw_facet_window <- function(...) {
       # panel grid lines
       if (is.null(grid)) grid = .tpar[["grid"]]
       if (!is.null(grid)) {
-        if (is.logical(grid)) {
+        if (is.function(grid)) {
+          grid()
+        } else if (is.logical(grid)) {
           ## If grid is TRUE create a default grid. Rather than just calling the default grid()
           ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
           ## and works better for axes based on date/time classes. Exception: For axes in logs,

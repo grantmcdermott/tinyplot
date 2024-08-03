@@ -4,6 +4,13 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## 0.2.0.99 (development version)
+
+Bug fixes:
+
+- Fix duplicate plots produced with `type = "density"`, which was a regression
+accidentally introduced in v0.2.0 (#187 @grantmcdermott)
+
 ## 0.2.0
 
 New features:

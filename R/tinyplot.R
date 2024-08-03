@@ -121,6 +121,8 @@
 #'   axes, use the character specifications for `xaxt` and/or `yaxt`.
 #' @param frame.plot a logical indicating whether a box should be drawn around
 #'   the plot. Can also use `frame` as an acceptable argument alias.
+#'   The default is to draw a frame if both axis types (set via `axes`, `xaxt`,
+#'   or `yaxt`) include axis lines.
 #' @param grid argument for plotting a background panel grid, one of either:
 #'    - a logical (i.e., `TRUE` to draw the grid), or
 #'    - a panel grid plotting function like `grid()`.
@@ -488,7 +490,7 @@ tinyplot.default = function(
     ylab = NULL,
     ann = par("ann"),
     axes = TRUE,
-    frame.plot = axes,
+    frame.plot = NULL,
     asp = NA,
     grid = NULL,
     palette = NULL,
@@ -527,10 +529,30 @@ tinyplot.default = function(
 
   xlabs = NULL
 
-  ## handle character frame.plot: only draw frame
-  ## for axis types including the axis line
-  if(is.character(frame.plot)) {
-    frame.plot = substr(frame.plot, 1L, 1L) %in% c("s", "a")
+  ## handle defaults of axes, xaxt, yaxt, frame.plot
+  ## - convert axes to character if necessary
+  ## - set defaults of xaxt/yaxt if these are NULL
+  ## - set logical axes based on xaxt/yaxt
+  ## - set frame.plot default based on xaxt/yaxt
+  if (!is.character(axes)) axes = if (isFALSE(axes)) "none" else "standard"
+  axis_types = c("standard", "none", "labels", "ticks", "axis")
+  axes = match.arg(axes, axis_types)
+  if (is.null(xaxt)) xaxt = axes
+  if (is.null(yaxt)) yaxt = axes
+  xaxt = substr(match.arg(xaxt, axis_types), 1L, 1L)
+  yaxt = substr(match.arg(yaxt, axis_types), 1L, 1L)
+  axes = any(c(xaxt, yaxt) != "n")
+  if (is.null(frame.plot) || !is.logical(frame.plot)) frame.plot = all(c(xaxt, yaxt) %in% c("s", "a"))
+
+  ## auxiliary function with axis type
+  ## (could also become an unexported function in the package)
+  tinyAxis = function(x = NULL, ..., type = "standard") {
+    switch(substr(type, 1L, 1L),
+      "n" = invisible(numeric(0L)),
+      "l" = Axis(x = x, ..., tick = FALSE),
+      "t" = Axis(x = x, ..., lwd = 0, lwd.ticks = 1),
+      "a" = Axis(x = x, ..., lwd.ticks = 0),
+      Axis(x = x, ...))
   }
 
   # Write plot to output file or window with fixed dimensions
@@ -1091,33 +1113,6 @@ tinyplot.default = function(
       }
 
       # axes, frame.plot and grid
-      
-      ## handle axis types
-      axis_types = c("standard", "none", "labels", "ticks", "axis")
-      if(is.character(axes)) {
-        axes = match.arg(axes, axis_types)
-        if (is.null(xaxt)) xaxt = axes
-        if (is.null(yaxt)) yaxt = axes
-        axes = axes != "none"
-      } else {
-        if (is.null(xaxt)) xaxt = if(isTRUE(axes)) "standard" else "none"
-        if (is.null(yaxt)) yaxt = if(isTRUE(axes)) "standard" else "none"
-      }
-      xaxt = substr(match.arg(xaxt, axis_types), 1L, 1L)
-      yaxt = substr(match.arg(yaxt, axis_types), 1L, 1L)
-      ## xaxt/yaxt can overrule axes
-      axes = any(c(xaxt, yaxt) != "n")
-
-      ## auxiliary function with axis type
-      tinyAxis = function(x = NULL, ..., type = "standard") {
-        switch(substr(type, 1L, 1L),
-          "n" = invisible(numeric(0L)),
-          "l" = Axis(x = x, ..., tick = FALSE),
-          "t" = Axis(x = x, ..., lwd = 0, lwd.ticks = 1),
-          "a" = Axis(x = x, ..., lwd.ticks = 0),
-          Axis(x = x, ...))
-      }
-
       if (isTRUE(axes)) {
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
@@ -1373,7 +1368,7 @@ tinyplot.formula = function(
     ylab = NULL,
     ann = par("ann"),
     axes = TRUE,
-    frame.plot = axes,
+    frame.plot = NULL,
     asp = NA,
     grid = NULL,
     pch = NULL,

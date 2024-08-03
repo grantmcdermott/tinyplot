@@ -54,7 +54,7 @@ tinyplot(x, ...)
   ylab = NULL,
   ann = par("ann"),
   axes = TRUE,
-  frame.plot = axes,
+  frame.plot = NULL,
   asp = NA,
   grid = NULL,
   palette = NULL,
@@ -97,7 +97,7 @@ tinyplot(x, ...)
   ylab = NULL,
   ann = par("ann"),
   axes = TRUE,
-  frame.plot = axes,
+  frame.plot = NULL,
   asp = NA,
   grid = NULL,
   pch = NULL,
@@ -223,7 +223,9 @@ and x and y axis labels) should appear on the plot.}
 Or alternatively what type of axes should be drawn: \verb{"standard" (with axis, ticks, and labels; equivalent to }TRUE\verb{), "none" (no axes; equivalent to }FALSE\verb{), }"ticks"\verb{(only ticks and labels without axis line),}"labels"\verb{(only labels without ticks and axis line),}"axis"\verb{(only axis line and labels but no ticks). To control this separately for the two axes, use the character specifications for}xaxt\code{and/or}yaxt`.}
 
 \item{frame.plot}{a logical indicating whether a box should be drawn around
-the plot. Can also use \code{frame} as an acceptable argument alias.}
+the plot. Can also use \code{frame} as an acceptable argument alias.
+The default is to draw a frame if both axis types (set via \code{axes}, \code{xaxt},
+or \code{yaxt}) include axis lines.}
 
 \item{asp}{the y/xy/x aspect ratio, see \code{plot.window}.}
 

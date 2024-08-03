@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.55">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -256,17 +256,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">tinyplot(x, ...)
+<pre><code class="language-R">## S3 method for class 'density'
+tinyplot(
+  x = NULL,
+  by = NULL,
+  facet = NULL,
+  facet.args = NULL,
+  type = c("l", "area"),
+  xlim = NULL,
+  ylim = NULL,
+  main = NULL,
+  sub = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  ann = par("ann"),
+  axes = TRUE,
+  frame.plot = axes,
+  asp = NA,
+  grid = NULL,
+  pch = NULL,
+  col = NULL,
+  lty = NULL,
+  lwd = NULL,
+  bg = NULL,
+  fill = NULL,
+  restore.par = FALSE,
+  ...
+)
+
+tinyplot(x, ...)
 
 ## Default S3 method:
 tinyplot(
-  x,
+  x = NULL,
   y = NULL,
   by = NULL,
   facet = NULL,
   facet.args = NULL,
   data = NULL,
-  type = "p",
+  type = NULL,
   xlim = NULL,
   ylim = NULL,
   log = "",
@@ -309,7 +337,7 @@ tinyplot(
   data = parent.frame(),
   facet = NULL,
   facet.args = NULL,
-  type = "p",
+  type = NULL,
   xlim = NULL,
   ylim = NULL,
   main = NULL,
@@ -333,34 +361,6 @@ tinyplot(
   ...
 )
 
-## S3 method for class 'density'
-tinyplot(
-  x = NULL,
-  by = NULL,
-  facet = NULL,
-  facet.args = NULL,
-  type = c("l", "area"),
-  xlim = NULL,
-  ylim = NULL,
-  main = NULL,
-  sub = NULL,
-  xlab = NULL,
-  ylab = NULL,
-  ann = par("ann"),
-  axes = TRUE,
-  frame.plot = axes,
-  asp = NA,
-  grid = NULL,
-  pch = NULL,
-  col = NULL,
-  lty = NULL,
-  lwd = NULL,
-  bg = NULL,
-  fill = NULL,
-  restore.par = FALSE,
-  ...
-)
-
 plt(x, ...)
 </code></pre>
 </section>
@@ -373,14 +373,6 @@ plt(x, ...)
 </td>
 <td>
 the x and y arguments provide the x and y coordinates for the plot. Any reasonable way of defining the coordinates is acceptable; most likely the names of existing vectors or columns of data frames. See the ‘Examples’ section below, or the function <code>xy.coords</code> for details. If supplied separately, <code>x</code> and <code>y</code> must be of the same length.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="...">…</code>
-</td>
-<td>
-other graphical parameters. See <code>par</code> or the "Details" section of <code>plot</code>.
 </td>
 </tr>
 <tr>
@@ -434,18 +426,10 @@ grouping variable(s). The default behaviour is for groups to be represented in t
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="data">data</code>
-</td>
-<td>
-a data.frame (or list) from which the variables in formula should be taken. A matrix is converted to a data frame.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="type">type</code>
 </td>
 <td>
-<p>character string giving the type of plot desired. Options are:</p>
+<p>character string giving the type of plot desired. If no argument is provided, then the plot type will default to something sensible for the type of <code>x</code> and <code>y</code> inputs (i.e., usually <code>“p”</code>). Options are:</p>
 <ul>
 <li>
 <p>The same set of 1-character values supported by <code>plot</code>: <code>“p”</code> for points, <code>“l”</code> for lines, <code>“b”</code> for both points and lines, <code>“c”</code> for empty points joined by lines, <code>“o”</code> for overplotted points and lines, <code>“s”</code> and <code>“S”</code> for stair steps, and <code>“h”</code> for histogram-like vertical lines. Specifying <code>“n”</code> produces an empty plot over the extent of the data, but with no internal elements (see also the <code>empty</code> argument below).</p>
@@ -484,14 +468,6 @@ the x limits (x1, x2) of the plot. Note that x1 &gt; x2 is allowed and leads to 
 </td>
 <td>
 the y limits of the plot.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="log">log</code>
-</td>
-<td>
-a character string which contains "x" if the x axis is to be logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if both axes are to be logarithmic.
 </td>
 </tr>
 <tr>
@@ -576,6 +552,95 @@ the y/xy/x aspect ratio, see <code>plot.window</code>.
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="pch">pch</code>
+</td>
+<td>
+plotting "character", i.e., symbol to use. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>pch</code>. In addition, users can supply a special <code>pch = “by”</code> convenience argument, in which case the characters will automatically loop over the number groups. This automatic looping will begin at the global character value (i.e., <code>par(“pch”)</code>) and recycle as necessary.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="col">col</code>
+</td>
+<td>
+plotting color. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>col</code>. Note that the default behaviour in <code>tinyplot</code> is to vary group colors along any variables declared in the <code>by</code> argument. Thus, specifying colors manually should not be necessary unless users wish to override the automatic colors produced by this grouping process. Typically, this would only be done if grouping features are deferred to some other graphical parameter (i.e., passing the "by" keyword to one of <code>pch</code>, <code>lty</code>, <code>lwd</code>, or <code>bg</code>; see below.)
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="lty">lty</code>
+</td>
+<td>
+line type. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>lty</code>. In addition, users can supply a special <code>lty = “by”</code> convenience argument, in which case the line type will automatically loop over the number groups. This automatic looping will begin at the global line type value (i.e., <code>par(“lty”)</code>) and recycle as necessary.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="lwd">lwd</code>
+</td>
+<td>
+line width. Numeric scalar or vector of length equal to the number of categories in the <code>by</code> variable. See <code>lwd</code>. In addition, users can supply a special <code>lwd = “by”</code> convenience argument, in which case the line width will automatically loop over the number of groups. This automatic looping will be centered at the global line width value (i.e.,
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="bg">bg</code>
+</td>
+<td>
+<p>background fill color for the open plot symbols 21:25 (see <code>points.default</code>), as well as ribbon and area plot types. For the latter group—including filled density plots—an automatic alpha transparency adjustment will be applied (see the <code>ribbon.alpha</code> argument further below). Users can also supply either one of two special convenience arguments that will cause the background fill to inherit the automatic grouped coloring behaviour of <code>col</code>:</p>
+<ul>
+<li>
+<p><code>bg = “by”</code> will insert a background fill that inherits the main color mappings from <code>col</code>.</p>
+</li>
+<li>
+<p><code style="white-space: pre;">by = &lt;numeric[0,1]&gt;</code> (i.e., a numeric in the range <code style="white-space: pre;">[0,1]</code>) will insert a background fill that inherits the main color mapping(s) from <code>col</code>, but with added alpha-transparency.</p>
+</li>
+</ul>
+For both of these convenience arguments, note that the (grouped) <code>bg</code> mappings will persist even if the (grouped) <code>col</code> defaults are themselves overridden. This can be useful if you want to preserve the grouped palette mappings by background fill but not boundary color, e.g.&nbsp;filled points. See examples.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="fill">fill</code>
+</td>
+<td>
+alias for <code>bg</code>. If non-NULL values for both <code>bg</code> and <code>fill</code> are provided, then the latter will be ignored in favour of the former.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="restore.par">restore.par</code>
+</td>
+<td>
+a logical value indicating whether the <code>par</code> settings prior to calling <code>tinyplot</code> should be restored on exit. Defaults to FALSE, which makes it possible to add elements to the plot after it has been drawn. However, note the the outer margins of the graphics device may have been altered to make space for the <code>tinyplot</code> legend. Users can opt out of this persistent behaviour by setting to TRUE instead. See also get_saved_par for another option to recover the original <code>par</code> settings, as well as longer discussion about the trade-offs involved.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="...">…</code>
+</td>
+<td>
+other graphical parameters. See <code>par</code> or the "Details" section of <code>plot</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="data">data</code>
+</td>
+<td>
+a data.frame (or list) from which the variables in formula should be taken. A matrix is converted to a data frame.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="log">log</code>
+</td>
+<td>
+a character string which contains "x" if the x axis is to be logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if both axes are to be logarithmic.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="palette">palette</code>
 </td>
 <td>
@@ -617,63 +682,6 @@ the y/xy/x aspect ratio, see <code>plot.window</code>.
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="pch">pch</code>
-</td>
-<td>
-plotting "character", i.e., symbol to use. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>pch</code>. In addition, users can supply a special <code>pch = “by”</code> convenience argument, in which case the characters will automatically loop over the number groups. This automatic looping will begin at the global character value (i.e., <code>par(“pch”)</code>) and recycle as necessary.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="lty">lty</code>
-</td>
-<td>
-line type. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>lty</code>. In addition, users can supply a special <code>lty = “by”</code> convenience argument, in which case the line type will automatically loop over the number groups. This automatic looping will begin at the global line type value (i.e., <code>par(“lty”)</code>) and recycle as necessary.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="lwd">lwd</code>
-</td>
-<td>
-line width. Numeric scalar or vector of length equal to the number of categories in the <code>by</code> variable. See <code>lwd</code>. In addition, users can supply a special <code>lwd = “by”</code> convenience argument, in which case the line width will automatically loop over the number of groups. This automatic looping will be centered at the global line width value (i.e.,
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="col">col</code>
-</td>
-<td>
-plotting color. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>col</code>. Note that the default behaviour in <code>tinyplot</code> is to vary group colors along any variables declared in the <code>by</code> argument. Thus, specifying colors manually should not be necessary unless users wish to override the automatic colors produced by this grouping process. Typically, this would only be done if grouping features are deferred to some other graphical parameter (i.e., passing the "by" keyword to one of <code>pch</code>, <code>lty</code>, <code>lwd</code>, or <code>bg</code>; see below.)
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="bg">bg</code>
-</td>
-<td>
-<p>background fill color for the open plot symbols 21:25 (see <code>points.default</code>), as well as ribbon and area plot types. For the latter group—including filled density plots—an automatic alpha transparency adjustment will be applied (see the <code>ribbon.alpha</code> argument further below). Users can also supply either one of two special convenience arguments that will cause the background fill to inherit the automatic grouped coloring behaviour of <code>col</code>:</p>
-<ul>
-<li>
-<p><code>bg = “by”</code> will insert a background fill that inherits the main color mappings from <code>col</code>.</p>
-</li>
-<li>
-<p><code style="white-space: pre;">by = &lt;numeric[0,1]&gt;</code> (i.e., a numeric in the range <code style="white-space: pre;">[0,1]</code>) will insert a background fill that inherits the main color mapping(s) from <code>col</code>, but with added alpha-transparency.</p>
-</li>
-</ul>
-For both of these convenience arguments, note that the (grouped) <code>bg</code> mappings will persist even if the (grouped) <code>col</code> defaults are themselves overridden. This can be useful if you want to preserve the grouped palette mappings by background fill but not boundary color, e.g.&nbsp;filled points. See examples.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="fill">fill</code>
-</td>
-<td>
-alias for <code>bg</code>. If non-NULL values for both <code>bg</code> and <code>fill</code> are provided, then the latter will be ignored in favour of the former.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="alpha">alpha</code>
 </td>
 <td>
@@ -686,14 +694,6 @@ a numeric in the range <code style="white-space: pre;">[0,1]</code> for adjustin
 </td>
 <td>
 character expansion. A numerical vector (can be a single value) giving the amount by which plotting characters and symbols should be scaled relative to the default. Note that NULL is equivalent to 1.0, while NA renders the characters invisible.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="restore.par">restore.par</code>
-</td>
-<td>
-a logical value indicating whether the <code>par</code> settings prior to calling <code>tinyplot</code> should be restored on exit. Defaults to FALSE, which makes it possible to add elements to the plot after it has been drawn. However, note the the outer margins of the graphics device may have been altered to make space for the <code>tinyplot</code> legend. Users can opt out of this persistent behaviour by setting to TRUE instead. See also get_saved_par for another option to recover the original <code>par</code> settings, as well as longer discussion about the trade-offs involved.
 </td>
 </tr>
 <tr>
@@ -781,7 +781,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>aq <span class="ot">=</span> <span class="fu">transform</span>(</span>
@@ -908,6 +908,13 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 </figure>
 </div>
 </div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Facet plots are supported too. Facets can be drawn on their own...</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
@@ -920,7 +927,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -938,7 +945,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-10.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -958,7 +965,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-10.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-11.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -975,7 +982,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-11.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-12.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -993,7 +1000,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-12.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-13.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1011,7 +1018,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-13.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-14.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1030,7 +1037,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-14.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tinyplot_files/figure-html/unnamed-chunk-1-15.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

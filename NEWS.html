@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.55">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -232,13 +232,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#news" id="toc-news" class="nav-link active" data-scroll-target="#news">News</a>
   <ul class="collapse">
-  <li><a href="#dev-version" id="toc-dev-version" class="nav-link" data-scroll-target="#dev-version">0.1.0.99 (dev version)</a></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.1.0</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.0.5</a></li>
-  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.0.4</a></li>
-  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">0.0.3</a></li>
-  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">0.0.2</a></li>
-  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">0.0.1</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.2.0</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.1.0</a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.0.5</a></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">0.0.4</a></li>
+  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">0.0.3</a></li>
+  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">0.0.2</a></li>
+  <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6">0.0.1</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -252,8 +252,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="news" class="level1">
 <h1>News</h1>
 <p><em>If you are viewing this file on CRAN, please check the <a href="https://grantmcdermott.com/tinyplot/NEWS.html">latest NEWS</a> on our website where the formatting is also better.</em></p>
-<section id="dev-version" class="level2">
-<h2 class="anchored" data-anchor-id="dev-version">0.1.0.99 (dev version)</h2>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section">0.2.0</h2>
 <p>New features:</p>
 <ul>
 <li>Support for additional plot types:
@@ -267,13 +267,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type = "jitter"</code> (alias <code>type = "j"</code>). (<a href="https://github.com/grantmcdermott/tinyplot/issues/170">#170</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
 </ul>
+<p>Internals:</p>
+<ul>
+<li>The main codebase has been significantly refactored (modularized), which should simplify future maintenance and enable better user-level error messages (<a href="https://github.com/grantmcdermott/tinyplot/issues/171">#171</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/173">#173</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+</ul>
 <p>Misc:</p>
 <ul>
 <li>Various documentation improvements.</li>
 </ul>
 </section>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">0.1.0</h2>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1">0.1.0</h2>
 <p>Our first CRAN submission! This v0.1.0 release includes the following new features and updates:</p>
 <p>License:</p>
 <ul>
@@ -316,8 +320,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li>Update some test snapshots to match slight changes in the way that R 4.4.0 calculates <code>density</code> grid coords. (<a href="https://github.com/grantmcdermott/tinyplot/issues/150">#150</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="section-1" class="level2">
-<h2 class="anchored" data-anchor-id="section-1">0.0.5</h2>
+<section id="section-2" class="level2">
+<h2 class="anchored" data-anchor-id="section-2">0.0.5</h2>
 <p><strong>IMPORTANT BREAKING CHANGE:</strong></p>
 <p>The package has been renamed to <strong>tinyplot</strong>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/22">#22</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p>
 <p>This package renaming also incorporates the following function changes:</p>
@@ -343,8 +347,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <p>Many thanks to everyone who provided thoughtful feedback about this prospective name change, especially <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> and <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> for kicking off the discussion, as well as the 100+ participants who voted in the social media poll.</p>
 <p>For more details about the rational underlying this renaming decision, please see the following GitHub comment, as well as the discussion that preceded it: https://github.com/grantmcdermott/plot2/issues/22#issuecomment-1928472754</p>
 </section>
-<section id="section-2" class="level2">
-<h2 class="anchored" data-anchor-id="section-2">0.0.4</h2>
+<section id="section-3" class="level2">
+<h2 class="anchored" data-anchor-id="section-3">0.0.4</h2>
 <p>Website:</p>
 <p>We now have a dedicated website! (<a href="https://github.com/grantmcdermott/tinyplot/issues/80">#80</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</p>
 <p>New features:</p>
@@ -369,8 +373,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li>Fix bug where grid wasn’t auto-expanding correctly for area plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/92">#92</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="section-3" class="level2">
-<h2 class="anchored" data-anchor-id="section-3">0.0.3</h2>
+<section id="section-4" class="level2">
+<h2 class="anchored" data-anchor-id="section-4">0.0.3</h2>
 <p>Breaking changes:</p>
 <ul>
 <li>Colour palettes are now controlled via a single <code>palette</code> argument that unifies the old <code>palette</code> and (deprecated) <code>palette.args</code> arguments. In addition, the default palette for small groups has been changed from “Okabe-Ito” to “R4”. (<a href="https://github.com/grantmcdermott/tinyplot/issues/31">#31</a> and <a href="https://github.com/grantmcdermott/tinyplot/issues/32">#32</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
@@ -393,8 +397,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li>Setting a global palette, e.g.&nbsp;<code>palette("ggplot2")</code> is now respected. (<a href="https://github.com/grantmcdermott/tinyplot/issues/44">#44</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="section-4" class="level2">
-<h2 class="anchored" data-anchor-id="section-4">0.0.2</h2>
+<section id="section-5" class="level2">
+<h2 class="anchored" data-anchor-id="section-5">0.0.2</h2>
 <p>Breaking changes:</p>
 <ul>
 <li>Legend defaults have been changed. The default position is now “right!” and drawn without a border, i.e.&nbsp;bty = “n” (<a href="https://github.com/grantmcdermott/tinyplot/issues/14">#14</a> by <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>).</li>
@@ -417,8 +421,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li><a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> have joined the project as core contributors. 🎉</li>
 </ul>
 </section>
-<section id="section-5" class="level2">
-<h2 class="anchored" data-anchor-id="section-5">0.0.1</h2>
+<section id="section-6" class="level2">
+<h2 class="anchored" data-anchor-id="section-6">0.0.1</h2>
 <ul>
 <li>Initial release on GitHub.</li>
 </ul>

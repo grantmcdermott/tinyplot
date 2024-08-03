@@ -1,4 +1,5 @@
 project:
+  output-dir: ../docs/
   type: website
 
 website:

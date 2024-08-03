@@ -600,7 +600,6 @@ tinyplot.default = function(
   if (type == "density") {
     fargs = mget(ls(environment(), sorted = FALSE))
     fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
-    do.call(tinyplot.density, args = fargs)
     return(do.call(tinyplot.density, args = fargs))
   }
 

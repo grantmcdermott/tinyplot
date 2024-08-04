@@ -527,6 +527,8 @@ tinyplot.default = function(
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
   type = sanitize_type(type, x, y)
 
+  palette = substitute(palette)
+
   xlabs = ylabs = NULL
 
   ## handle defaults of axes, xaxt, yaxt, frame.plot
@@ -712,24 +714,9 @@ tinyplot.default = function(
 
 
   # plot limits
-  xy = xy.coords(x = x, y = y)
-  if (is.null(xlim)) xlim = range(xy$x[is.finite(xy$x)])
-  if (is.null(ylim)) ylim = range(xy$y[is.finite(xy$y)])
+  fargs = lim_args(x = x, bg = bg, by = by, col = col, fill = fill, type = type, xlim = xlim, xmax = xmax, xmin = xmin, y = y, ylim = ylim, ymax = ymax, ymin = ymin, palette = palette)
+  list2env(fargs, environment())
 
-  if (!is.null(xmin)) xlim[1] = min(c(xlim, xmin))
-  if (!is.null(xmax)) xlim[2] = max(c(xlim, xmax))
-  if (!is.null(ymin)) ylim[1] = min(c(ylim, ymin))
-  if (!is.null(ymax)) ylim[2] = max(c(ylim, ymax))
-
-  if (type == "boxplot") {
-    xlim = xlim + c(-0.5, 0.5)
-    if (is.null(by) && is.null(palette)) {
-      if (is.null(col)) col = par("fg")
-      if (is.null(bg) && is.null(fill)) bg = "lightgray"
-    } else {
-      fill = bg = "by"
-    }
-  }
 
   # split data
   by_ordered = FALSE

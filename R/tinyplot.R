@@ -733,7 +733,13 @@ tinyplot.default = function(
   }
 
   # aesthetics by group: col, bg, etc.
-  aesthetics_args = aesthetics(adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous, by_ordered = by_ordered, col = col, fill = fill, lty = lty, lwd = lwd, palette = substitute(palette), pch = pch, rescale_num = rescale_num, ribbon.alpha = ribbon.alpha, split_data = split_data, type = type)
+  aesthetics_args = aesthetics(
+    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by,
+    by_continuous = by_continuous, by_ordered = by_ordered,
+    col = col, fill = fill, lty = lty, lwd = lwd, palette = substitute(palette),
+    pch = pch, rescale_num = rescale_num, ribbon.alpha = ribbon.alpha,
+    split_data = split_data, type = type
+  )
   list2env(aesthetics_args, environment())
 
   ncolors = length(col)
@@ -1018,9 +1024,28 @@ tinyplot.default = function(
 
       # Draw the individual plot elements...
       draw_elements(
-        type = type, xx = xx, yy = yy, xxmin = xxmin, xxmax = xxmax, yymin = yymin, yymax = yymax, 
-        bg = bg, icol = icol, ilwd = ilwd, ipch = ipch, ibg = ibg, ilty = ilty, cex = cex, dots = dots,
-        empty_plot = empty_plot, facet_by = facet_by, split_data = split_data, i = i, xlvls = xlvls, lgnd_labs = lgnd_labs)
+        type = type,
+        xx = xx,
+        yy = yy,
+        xxmin = xxmin,
+        xxmax = xxmax,
+        yymin = yymin,
+        yymax = yymax, 
+        bg = bg,
+        icol = icol,
+        ilwd = ilwd,
+        ipch = ipch,
+        ibg = ibg,
+        ilty = ilty,
+        cex = cex,
+        dots = dots,
+        empty_plot = empty_plot,
+        facet_by = facet_by,
+        split_data = split_data,
+        i = i,
+        xlvls = xlvls,
+        lgnd_labs = lgnd_labs
+      )
     }
   }
 

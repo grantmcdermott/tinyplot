@@ -116,7 +116,7 @@ get_facet_fml = function(formula, data = NULL) {
 
 # internal function to draw window with different facets, grids, axes, etc.
 
-draw_facet_window <- function(grid, ...) {
+draw_facet_window = function(grid, ...) {
 
   list2env(list(...), environment())
 

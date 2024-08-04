@@ -759,47 +759,9 @@ tinyplot.default = function(
     ))
   }
 
-  ngrps = length(split_data)
-
-  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
-
-  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
-
-  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
-
-  # palette = substitute(palette)
-  col = by_col(
-    ngrps = ngrps,
-    col = col,
-    palette = substitute(palette),
-    gradient = by_continuous,
-    ordered = by_ordered,
-    alpha = alpha
-  )
-  if (is.null(bg) && !is.null(fill)) bg = fill
-  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
-    alpha = bg
-    bg = "by"
-  }
-  if (!is.null(bg) && length(bg) == 1 && bg == "by") {
-    bg = by_col(
-      ngrps = ngrps,
-      col = NULL,
-      palette = substitute(palette),
-      gradient = by_continuous,
-      ordered = by_ordered,
-      alpha = alpha
-    )
-  } else if (length(bg) != ngrps) {
-    bg = rep(bg, ngrps)
-  }
-  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
-    if (!is.null(bg)) {
-      bg = adjustcolor(bg, ribbon.alpha)
-    } else if (!is.null(col)) {
-      bg = adjustcolor(col, ribbon.alpha)
-    }
-  }
+  # aesthetics by group: col, bg, etc.
+  aesthetics_args = aesthetics(adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous, by_ordered = by_ordered, col = col, fill = fill, lty = lty, lwd = lwd, palette = substitute(palette), pch = pch, rescale_num = rescale_num, ribbon.alpha = ribbon.alpha, split_data = split_data, type = type)
+  list2env(aesthetics_args, environment())
 
   ncolors = length(col)
   lgnd_labs = rep(NA, times = ncolors)

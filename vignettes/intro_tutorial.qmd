@@ -244,8 +244,9 @@ the background colour should vary by groups too.
 with(
   aq,
   tinyplot(
-    density(Temp),
+    Temp,
     by = Month,
+    type = "density",
     fill = "by",                         # add fill by groups
     grid = TRUE,                         # add background grid
     legend = list("topright", bty = "o") # change legend features

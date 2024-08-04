@@ -259,6 +259,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Fix duplicate plots produced with <code>type = "density"</code>, which was a regression accidentally introduced in v0.2.0 (<a href="https://github.com/grantmcdermott/tinyplot/issues/187">#187</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
+<p>New Features:</p>
+<ul>
+<li>The <code>axes</code> argument of <code>tinyplot()</code>/<code>plt()</code> gains extra options for fine-grained control of the plot axes. In addition to the existing logical (<code>TRUE</code>/<code>FALSE</code>) option, users can now specify one of the following character keywords (or, just their first letters as a convenient shorthand): <code>"standard"</code> (with axis, ticks, and labels; equivalent to <code>TRUE</code>), <code>"none"</code> (no axes; equivalent to <code>FALSE</code>), <code>"ticks"</code> (only ticks and labels without axis line), <code>"labels"</code> (only labels without ticks and axis line), <code>"axis"</code> (only axis line and labels but no ticks). Simultaneously, the main plotting functions also gain the <code>xaxt</code> and <code>yaxt</code> for <em>separately</em> controlling the two axes using the same keyword options. For example, <code>plt(0:10, xaxt = "l", yaxt = "t")</code> will yield a plot where the x-axis only contains labels and the y-axis contains both labels and ticks, but no axis line. (<a href="https://github.com/grantmcdermott/tinyplot/issues/190">#190</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+</ul>
+<p>Internals:</p>
+<ul>
+<li>Continued modularization of the main code logic. (<a href="https://github.com/grantmcdermott/tinyplot/issues/192">#192</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+</ul>
 </section>
 <section id="section" class="level2">
 <h2 class="anchored" data-anchor-id="section">0.2.0</h2>
@@ -268,7 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>type = "n"</code>, i.e.&nbsp;empty plot. Since <code>type = "n"</code> implicitly assumes points, which limits the type of legend that can be drawn alongside the empty plot, we have also added a companion <code>empty</code> argument that can be used alongside any plot type. (<a href="https://github.com/grantmcdermott/tinyplot/issues/157">#157</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/167">#167</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>type = "boxplot"</code>. Simultaneously enables <code>plt(numeric ~ factor)</code> support, first raised in <a href="https://github.com/grantmcdermott/tinyplot/issues/2">#2</a>, so that a boxplot is automatically plotted if a numeric is plotted against a factor. (<a href="https://github.com/grantmcdermott/tinyplot/issues/154">#154</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li><code>type = "polypath</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/159">#159</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>type = "polypath"</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/159">#159</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>type = "rect"</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/161">#161</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>type = "segments"</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/163">#163</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>type = "histogram"</code> (alias <code>type = "hist"</code>). (<a href="https://github.com/grantmcdermott/tinyplot/issues/164">#164</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>

@@ -11,6 +11,25 @@ Bug fixes:
 - Fix duplicate plots produced with `type = "density"`, which was a regression
 accidentally introduced in v0.2.0 (#187 @grantmcdermott)
 
+New Features:
+
+- The `axes` argument of `tinyplot()`/`plt()` gains extra options for
+fine-grained control of the plot axes. In addition to the existing logical
+(`TRUE`/`FALSE`) option, users can now specify one of the following character
+keywords (or, just their first letters as a convenient shorthand): `"standard"`
+(with axis, ticks, and labels; equivalent to `TRUE`), `"none"` (no axes;
+equivalent to `FALSE`), `"ticks"` (only ticks and labels without axis line),
+`"labels"` (only labels without ticks and axis line), `"axis"` (only axis line
+and labels but no ticks). Simultaneously, the main plotting functions also gain
+the `xaxt` and `yaxt` for _separately_ controlling the two axes using the same
+keyword options. For example, `plt(0:10, xaxt = "l", yaxt = "t")` will yield a
+plot where the x-axis only contains labels and the y-axis contains both labels
+and ticks, but no axis line. (#190 @zeileis)
+
+Internals:
+
+- Continued modularization of the main code logic. (#192 @vincentarelbundock)
+
 ## 0.2.0
 
 New features:
@@ -23,7 +42,7 @@ New features:
   - `type = "boxplot"`. Simultaneously enables `plt(numeric ~ factor)`
   support, first raised in #2, so that a boxplot is automatically plotted if a
   numeric is plotted against a factor. (#154 @grantmcdermott)
-  - `type = "polypath`. (#159 @grantmcdermott)
+  - `type = "polypath"`. (#159 @grantmcdermott)
   - `type = "rect"`. (#161 @grantmcdermott)
   - `type = "segments"`. (#163 @grantmcdermott)
   - `type = "histogram"` (alias `type = "hist"`). (#164 @grantmcdermott)

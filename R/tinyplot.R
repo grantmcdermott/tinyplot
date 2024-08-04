@@ -936,7 +936,18 @@ tinyplot.default = function(
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
   # Skip if adding to an existing plot
 
-  facet_window_args = draw_facet_window( add = add, asp = asp, axes = axes, cex_fct_adj = cex_fct_adj, dots = dots, facet = facet, facet.args = facet.args, facet_newlines = facet_newlines, facet_rect = facet_rect, facet_text = facet_text, facet_font = facet_font, facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border, facets = facets, frame.plot = frame.plot, grid = grid, has_legend = has_legend, ifacet = ifacet, log = log, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows, nfacets = nfacets, oxaxis = oxaxis, oyaxis = oyaxis, type = type, x = x, xaxt = xaxt, xlab = xlab, xlabs = xlabs, xlim = xlim, xmax = xmax, xmin = xmin, y = y, yaxt = yaxt, ylab = ylab, ylabs = ylabs, ylim = ylim, ymax = ymax, ymin = ymin)
+  facet_window_args = draw_facet_window(
+    add = add, asp = asp, axes = axes, cex_fct_adj = cex_fct_adj, dots = dots,
+    facet = facet, facet.args = facet.args, facet_newlines = facet_newlines,
+    facet_rect = facet_rect, facet_text = facet_text, facet_font = facet_font,
+    facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
+    facets = facets, frame.plot = frame.plot, grid = grid, has_legend =
+    has_legend, ifacet = ifacet, log = log, nfacet_cols = nfacet_cols,
+    nfacet_rows = nfacet_rows, nfacets = nfacets, oxaxis = oxaxis, oyaxis =
+    oyaxis, type = type, x = x, xaxt = xaxt, xlab = xlab, xlabs = xlabs, xlim =
+    xlim, xmax = xmax, xmin = xmin, y = y, yaxt = yaxt, ylab = ylab, ylabs =
+    ylabs, ylim = ylim, ymax = ymax, ymin = ymin
+  )
   list2env(facet_window_args, environment())
 
 

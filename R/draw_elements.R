@@ -111,12 +111,13 @@ draw_elements = function(
           rule = irule
         )
       } else if (type == "boxplot") {
+        at_xx = unique(xx)
+        x_by = !is.null(by) && identical(xlvls, lgnd_labs) 
         horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
         boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
+        if (isTRUE(x_by)) boxwex_xx = boxwex_xx * 2
         staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
         outwex_xx = ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
-        at_xx = unique(xx)
-        x_by = !is.null(by) && identical(xlvls, lgnd_labs)
         if (!is.null(by) && isFALSE(x_by) && isFALSE(facet_by) && length(split_data) > 1) {
           boxwex_xx_orig = boxwex_xx
           boxwex_xx = boxwex_xx / length(split_data) - 0.01

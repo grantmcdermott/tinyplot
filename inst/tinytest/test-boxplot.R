@@ -59,6 +59,30 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "boxplot_groups_x_same_legendFALSE")
 
+# achim's example of "equivalent" x and by
+# https://github.com/grantmcdermott/tinyplot/issues/195#issuecomment-2268074228
+f = function() {
+  d = data.frame(
+    outcome = sin(1:40 - 3),
+    player1 = factor(rep(c("female", "male"), each = 20)),
+    player2 = factor(rep(rep(c("female", "male"), each = 10), 2))
+  )
+  tinyplot(outcome ~ player1 | player2, data = d)
+}
+expect_snapshot_plot(f, label = "boxplot_groups_x_equivalent")
+
+# variation where legend if switched off
+f = function() {
+  d = data.frame(
+    outcome = sin(1:40 - 3),
+    player1 = factor(rep(c("female", "male"), each = 20)),
+    player2 = factor(rep(rep(c("female", "male"), each = 10), 2))
+  )
+  tinyplot(outcome ~ player1 | player2, data = d, legend = FALSE)
+}
+expect_snapshot_plot(f, label = "boxplot_groups_x_equivalent_legendFALSE")
+
+
 #
 ## facets
 

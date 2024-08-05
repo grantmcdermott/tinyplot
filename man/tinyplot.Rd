@@ -302,8 +302,9 @@ setting to TRUE instead. See also \link{get_saved_par} for another option to
 recover the original \code{\link[graphics]{par}} settings, as well as
 longer discussion about the trade-offs involved.}
 
-\item{...}{other graphical parameters. See \code{\link[graphics]{par}} or
-the "Details" section of \code{\link[graphics]{plot}}.}
+\item{...}{other graphical parameters (see \code{\link[graphics]{par}}), or
+arguments passed to the relevant plot type (e.g., \code{breaks} for
+\code{type = "histogram"}, or \code{varwidth} for \code{type = "boxplot"}).}
 
 \item{data}{a data.frame (or list) from which the variables in formula
 should be taken. A matrix is converted to a data frame.}

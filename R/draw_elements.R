@@ -114,6 +114,12 @@ draw_elements = function(
       } else if (type == "boxplot") {
         at_xx = unique(xx)
         horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
+        range_xx = ifelse(!is.null(dots[["range"]]), dots[["range"]], 1.5)
+        boxwidth_xx = NULL
+        if (!is.null(dots[["boxwidth"]])) boxwidth_xx = dots[["boxwidth"]]
+        varwidth_xx = ifelse(!is.null(dots[["varwidth"]]), dots[["varwidth"]], FALSE)
+        notch_xx = ifelse(!is.null(dots[["notch"]]), dots[["notch"]], FALSE)
+        outline_xx = ifelse(!is.null(dots[["outline"]]), dots[["outline"]], TRUE)
         boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
         if (isTRUE(x_by)) boxwex_xx = boxwex_xx * 2
         staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
@@ -132,6 +138,11 @@ draw_elements = function(
           add = TRUE, axes = FALSE,
           horizontal = horizontal,
           at = at_xx,
+          range = range_xx,
+          width = boxwidth_xx,
+          varwidth = varwidth_xx,
+          notch = notch_xx,
+          outline = outline_xx,
           boxwex = boxwex_xx,
           staplewex = staplewex_xx,
           outwex = outwex_xx

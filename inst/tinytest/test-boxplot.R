@@ -53,6 +53,12 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "boxplot_groups_x_same")
 
+# variation where legend is switched off
+f = function() {
+  plt(Sepal.Length ~ Species | Species, iris, type = "boxplot", legend = FALSE)
+}
+expect_snapshot_plot(f, label = "boxplot_groups_x_same_legendFALSE")
+
 #
 ## facets
 

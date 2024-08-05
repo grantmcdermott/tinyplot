@@ -10,6 +10,8 @@ Bug fixes:
 
 - Fix duplicate plots produced with `type = "density"`, which was a regression
 accidentally introduced in v0.2.0 (#187 @grantmcdermott)
+- Ensure correct boxplot positioning if `x` == `by`, or these two are
+functionally identical. (#196 @grantmcdermott)
 
 New Features:
 
@@ -25,6 +27,11 @@ the `xaxt` and `yaxt` for _separately_ controlling the two axes using the same
 keyword options. For example, `plt(0:10, xaxt = "l", yaxt = "t")` will yield a
 plot where the x-axis only contains labels and the y-axis contains both labels
 and ticks, but no axis line. (#190 @zeileis)
+- Support additional boxplot arguments like `varwidth`, `notch`, etc. Note
+that `tinyplot(..., type = "boxplot", boxwidth = <num>)` is equivalent to the
+`boxplot(..., width = <num>)`; we just use the "box(width)" prefix to avoid 
+conflicting with the existing `tinyplot(..., width)` argument.
+(#196 @grantmcdermott)
 
 Internals:
 

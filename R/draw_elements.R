@@ -23,7 +23,8 @@ draw_elements = function(
     split_data,
     i = 1,
     xlvls,
-    lgnd_labs
+    lgnd_labs,
+    x_by = FALSE
     ) {
 
       ## polygons before lines, segments/arrows before points, etc.
@@ -112,7 +113,6 @@ draw_elements = function(
         )
       } else if (type == "boxplot") {
         at_xx = unique(xx)
-        x_by = !is.null(by) && (identical(xlvls, lgnd_labs) || identical(xlvls, names(split_data))) 
         horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
         boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
         if (isTRUE(x_by)) boxwex_xx = boxwex_xx * 2

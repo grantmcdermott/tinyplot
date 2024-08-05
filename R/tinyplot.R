@@ -650,6 +650,11 @@ tinyplot.default = function(
     fargs = jitter_args(x = x, y = y)
     list2env(fargs, environment())
   }
+  # flag if x==by (currently only used if type = "boxplot")
+  x_by = FALSE
+  if (type == "boxplot") {
+    x_by = identical(x, by)
+  }
 
   if (type == "boxplot") x = as.factor(x)
   if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
@@ -692,8 +697,7 @@ tinyplot.default = function(
       rm(xord)
     }
   }
-
-
+  
   # plot limits
   fargs = lim_args(
     x = x, xlim = xlim, xmax = xmax, xmin = xmin,
@@ -1055,7 +1059,8 @@ tinyplot.default = function(
         split_data = split_data,
         i = i,
         xlvls = xlvls,
-        lgnd_labs = lgnd_labs
+        lgnd_labs = lgnd_labs,
+        x_by = x_by
       )
     }
   }

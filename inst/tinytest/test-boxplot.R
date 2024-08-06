@@ -92,6 +92,11 @@ f = function() {
 expect_snapshot_plot(f, label = "boxplot_facet_by")
 
 f = function() {
+  plt(mpg ~ gear | gear, facet = "by", data = mtcars, type = "boxplot")
+}
+expect_snapshot_plot(f, label = "boxplot_facet_by_x_same")
+
+f = function() {
   plt(mpg ~ gear | factor(cyl), data = mtcars, type = "boxplot", facet = ~am)
 }
 expect_snapshot_plot(f, label = "boxplot_groups_facets_with_missings")

@@ -24,20 +24,20 @@ tinyformula = function(formula, facet = NULL) {
   facet = if (is.null(orig_facet) || !inherits(orig_facet, "formula")) NULL else ~ a + b
 
   ## fill with actual terms
-  environment(x) = parent.frame()
+  environment(x) = environment(formula)
   if (!is.null(y)) {
-    environment(y) = parent.frame()
+    environment(y) = environment(formula)
     y[[2L]] = formula[[2L]]
   }
   if (is.null(by)) {
     x[[2L]] = formula[[nf]]
   } else {
-    environment(by) = parent.frame()
+    environment(by) = environment(formula)
     by[[2L]] = formula[[nf]][[3L]]
     x[[2L]] = formula[[nf]][[2L]]
   }
   if (!is.null(facet)) {
-    environment(facet) = parent.frame()
+    environment(facet) = environment(formula)
     if (length(orig_facet) == 3L) {
       facet[[2L]][[3L]] <- orig_facet[[3L]]
       facet[[2L]][[2L]] <- orig_facet[[2L]]    

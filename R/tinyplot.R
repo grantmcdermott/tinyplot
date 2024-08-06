@@ -580,6 +580,13 @@ tinyplot.default = function(
     deparse1(substitute(y))
   }
   by_dep = deparse1(substitute(by))
+  
+  # flag if x==by (currently only used if type = "boxplot")
+  x_by = FALSE
+  if (type == "boxplot") {
+    x_by = identical(x, by)
+  }
+  
   facet_dep = deparse1(substitute(facet))
   facet_by = FALSE
   if (!is.null(facet) && length(facet) == 1 && facet == "by") {
@@ -651,12 +658,7 @@ tinyplot.default = function(
     fargs = jitter_args(x = x, y = y)
     list2env(fargs, environment())
   }
-  # flag if x==by (currently only used if type = "boxplot")
-  x_by = FALSE
-  if (type == "boxplot") {
-    x_by = identical(x, by)
-  }
-
+  
   if (type == "boxplot") x = as.factor(x)
   if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
     if (is.character(x)) x = as.factor(x)

@@ -1106,20 +1106,15 @@ tinyplot.formula = function(
     by = if (length(bynam) == 1L) by[[bynam]] else interaction(by, sep = ":")
   }
 
-  ## extract facet (if formula)
-  if (!is.null(tf$facet)) {
-    xfacet = tinyframe(tf$facet, mf)
-    if (length(facet) == 2L) {
-      yfacet = NULL
-    } else {
-      yfacet = xfacet[, 1L]
-      xfacet = xfacet[, -1L]
-    }
-    xfacet = interaction(xfacet, sep = ":")
+  ## extract x/y facet (if formula)
+  if (!is.null(tf$xfacet) || !is.null(tf$yfacet)) {
+    xfacet = tinyframe(tf$xfacet, mf)
+    yfacet = tinyframe(tf$yfacet, mf)
+    if (!is.null(xfacet)) xfacet = if (ncol(xfacet) == 1L) xfacet[[1L]] else interaction(xfacet, sep = ":")
+    if (!is.null(yfacet)) yfacet = if (ncol(yfacet) == 1L) yfacet[[1L]] else interaction(yfacet, sep = ":")
     if (is.null(yfacet)) {
       facet = xfacet
     } else {
-      ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
       facet = interaction(xfacet, yfacet, sep = "~")
       attr(facet, "facet_grid") = TRUE
       attr(facet, "facet_nrow") = length(unique(yfacet))

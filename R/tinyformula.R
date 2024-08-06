@@ -3,25 +3,31 @@
 tinyformula = function(formula, facet = NULL) {
   ## input
   ## - formula:       y ~ x or y ~ x | z or ~ x or ~ x | z
-  ## - facet:         ~ a or ~ a + b or a ~ b
+  ## - facet:         ~ a or ~ a + b or b ~ a
   ##
   ## output:
-  ## - x:     ~ x
-  ## - y:     NULL or ~ y
-  ## - by:    NULL or ~ z or ~ z1 + z2 + ... (use interaction of all)
-  ## - facet: NULL or ~ a or ~ a + b etc.
-  ## - full:  e.g. ~ x + y + z + a + b
+  ## - x:      ~ x
+  ## - y:      NULL or ~ y
+  ## - by:     NULL or ~ z or ~ z1 + z2 + ... (use interaction of all)
+  ## - xfacet: NULL or ~ a or ~ a + b etc.
+  ## - yfacet: NULL or ~ b
+  ## - full:   e.g. ~ x + y + z + a + b
 
   ## preliminaries
   if (!inherits(formula, "formula")) formula = as.formula(formula)
   nf = length(formula)
-  orig_facet = facet
 
   ## basic formula types
   x     = ~ x
   y     = if (nf == 2L) NULL else ~ y
   by    = if (!inherits(formula[[nf]], "call") || formula[[nf]][[1L]] != as.name("|")) NULL else ~ z
-  facet = if (is.null(orig_facet) || !inherits(orig_facet, "formula")) NULL else ~ a + b
+  if (is.null(facet) || !inherits(facet, "formula")) {
+    xfacet = NULL
+    yfacet = NULL
+  } else {
+    xfacet = ~ a
+    yfacet = if (length(facet) == 2L) NULL else ~ b
+  }
 
   ## fill with actual terms
   environment(x) = environment(formula)
@@ -36,28 +42,29 @@ tinyformula = function(formula, facet = NULL) {
     by[[2L]] = formula[[nf]][[3L]]
     x[[2L]] = formula[[nf]][[2L]]
   }
-  if (!is.null(facet)) {
-    environment(facet) = environment(formula)
-    if (length(orig_facet) == 3L) {
-      facet[[2L]][[3L]] <- orig_facet[[3L]]
-      facet[[2L]][[2L]] <- orig_facet[[2L]]    
-    } else {
-      facet[[2L]] <- orig_facet[[2L]]
-    }
+  if (!is.null(xfacet)) {
+    environment(xfacet) = environment(formula)
+    xfacet[[2L]] <- facet[[length(facet)]]
+  }
+  if (!is.null(yfacet)) {
+    environment(yfacet) = environment(formula)
+    yfacet[[2L]] <- facet[[2L]]
   }
 
   ## combine everything
   full = x
-  if (!is.null(y))     full[[2L]] = call("+", full[[2L]], y[[2L]])
-  if (!is.null(by))    full[[2L]] = call("+", full[[2L]], by[[2L]])
-  if (!is.null(facet)) full[[2L]] = call("+", full[[2L]], facet[[2L]])
+  if (!is.null(y))      full[[2L]] = call("+", full[[2L]], y[[2L]])
+  if (!is.null(by))     full[[2L]] = call("+", full[[2L]], by[[2L]])
+  if (!is.null(xfacet)) full[[2L]] = call("+", full[[2L]], xfacet[[2L]])
+  if (!is.null(yfacet)) full[[2L]] = call("+", full[[2L]], yfacet[[2L]])
 
   ## return list of all formulas
   return(list(
     x = x,
     y = y,
     by = by,
-    facet = facet,
+    xfacet = xfacet,
+    yfacet = yfacet,
     full = full
   ))
 }

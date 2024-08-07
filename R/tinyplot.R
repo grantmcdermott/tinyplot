@@ -275,8 +275,9 @@
 #'  specified.
 #' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
 #'   See `axes` for the possible values.
-#' @param ... other graphical parameters. See \code{\link[graphics]{par}} or
-#'   the "Details" section of \code{\link[graphics]{plot}}.
+#' @param ... other graphical parameters (see \code{\link[graphics]{par}}), or
+#'   arguments passed to the relevant plot type (e.g., `breaks` for
+#'   `type = "histogram"`, or `varwidth` for `type = "boxplot"`). 
 #'
 #' @returns No return value, called for side effect of producing a plot.
 #'   
@@ -579,7 +580,12 @@ tinyplot.default = function(
     deparse1(substitute(y))
   }
   by_dep = deparse1(substitute(by))
+  
+  # flag if x==by (currently only used if type = "boxplot")
+  x_by = identical(x, by)
+  
   facet_dep = deparse1(substitute(facet))
+  # flag if facet==by
   facet_by = FALSE
   if (!is.null(facet) && length(facet) == 1 && facet == "by") {
     by = as.factor(by) ## if by==facet, then both need to be factors
@@ -650,7 +656,7 @@ tinyplot.default = function(
     fargs = jitter_args(x = x, y = y)
     list2env(fargs, environment())
   }
-
+  
   if (type == "boxplot") x = as.factor(x)
   if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
     if (is.character(x)) x = as.factor(x)
@@ -692,10 +698,14 @@ tinyplot.default = function(
       rm(xord)
     }
   }
-
-
+  
   # plot limits
-  fargs = lim_args(x = x, bg = bg, by = by, col = col, fill = fill, type = type, xlim = xlim, xmax = xmax, xmin = xmin, y = y, ylim = ylim, ymax = ymax, ymin = ymin, palette = palette)
+  fargs = lim_args(
+    x = x, xlim = xlim, xmax = xmax, xmin = xmin,
+    y = y, ylim = ylim, ymax = ymax, ymin = ymin,
+    type = type,
+    col = col, bg = bg, by = by, fill = fill, palette = palette
+    )
   list2env(fargs, environment())
 
 
@@ -728,7 +738,13 @@ tinyplot.default = function(
   }
 
   # aesthetics by group: col, bg, etc.
-  aesthetics_args = aesthetics(adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous, by_ordered = by_ordered, col = col, fill = fill, lty = lty, lwd = lwd, palette = substitute(palette), pch = pch, rescale_num = rescale_num, ribbon.alpha = ribbon.alpha, split_data = split_data, type = type)
+  aesthetics_args = aesthetics(
+    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by,
+    by_continuous = by_continuous, by_ordered = by_ordered,
+    col = col, fill = fill, lty = lty, lwd = lwd, palette = substitute(palette),
+    pch = pch, rescale_num = rescale_num, ribbon.alpha = ribbon.alpha,
+    split_data = split_data, type = type
+  )
   list2env(aesthetics_args, environment())
 
   ncolors = length(col)
@@ -925,7 +941,18 @@ tinyplot.default = function(
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
   # Skip if adding to an existing plot
 
-  facet_window_args = draw_facet_window( add = add, asp = asp, axes = axes, cex_fct_adj = cex_fct_adj, dots = dots, facet = facet, facet.args = facet.args, facet_newlines = facet_newlines, facet_rect = facet_rect, facet_text = facet_text, facet_font = facet_font, facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border, facets = facets, frame.plot = frame.plot, grid = grid, has_legend = has_legend, ifacet = ifacet, log = log, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows, nfacets = nfacets, oxaxis = oxaxis, oyaxis = oyaxis, type = type, x = x, xaxt = xaxt, xlab = xlab, xlabs = xlabs, xlim = xlim, xmax = xmax, xmin = xmin, y = y, yaxt = yaxt, ylab = ylab, ylabs = ylabs, ylim = ylim, ymax = ymax, ymin = ymin)
+  facet_window_args = draw_facet_window(
+    add = add, asp = asp, axes = axes, cex_fct_adj = cex_fct_adj, dots = dots,
+    facet = facet, facet.args = facet.args, facet_newlines = facet_newlines,
+    facet_rect = facet_rect, facet_text = facet_text, facet_font = facet_font,
+    facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
+    facets = facets, frame.plot = frame.plot, grid = grid, has_legend =
+    has_legend, ifacet = ifacet, log = log, nfacet_cols = nfacet_cols,
+    nfacet_rows = nfacet_rows, nfacets = nfacets, oxaxis = oxaxis, oyaxis =
+    oyaxis, type = type, x = x, xaxt = xaxt, xlab = xlab, xlabs = xlabs, xlim =
+    xlim, xmax = xmax, xmin = xmin, y = y, yaxt = yaxt, ylab = ylab, ylabs =
+    ylabs, ylim = ylim, ymax = ymax, ymin = ymin
+  )
   list2env(facet_window_args, environment())
 
 
@@ -1013,9 +1040,29 @@ tinyplot.default = function(
 
       # Draw the individual plot elements...
       draw_elements(
-        type = type, xx = xx, yy = yy, xxmin = xxmin, xxmax = xxmax, yymin = yymin, yymax = yymax, 
-        bg = bg, icol = icol, ilwd = ilwd, ipch = ipch, ibg = ibg, ilty = ilty, cex = cex, dots = dots,
-        empty_plot = empty_plot, facet_by = facet_by, split_data = split_data, i = i, xlvls = xlvls, lgnd_labs = lgnd_labs)
+        type = type,
+        xx = xx,
+        yy = yy,
+        xxmin = xxmin,
+        xxmax = xxmax,
+        yymin = yymin,
+        yymax = yymax, 
+        bg = bg,
+        icol = icol,
+        ilwd = ilwd,
+        ipch = ipch,
+        ibg = ibg,
+        ilty = ilty,
+        cex = cex,
+        dots = dots,
+        empty_plot = empty_plot,
+        facet_by = facet_by,
+        split_data = split_data,
+        i = i,
+        xlvls = xlvls,
+        lgnd_labs = lgnd_labs,
+        x_by = x_by
+      )
     }
   }
 

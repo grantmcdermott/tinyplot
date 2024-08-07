@@ -582,12 +582,10 @@ tinyplot.default = function(
   by_dep = deparse1(substitute(by))
   
   # flag if x==by (currently only used if type = "boxplot")
-  x_by = FALSE
-  if (type == "boxplot") {
-    x_by = identical(x, by)
-  }
+  x_by = identical(x, by)
   
   facet_dep = deparse1(substitute(facet))
+  # flag if facet==by
   facet_by = FALSE
   if (!is.null(facet) && length(facet) == 1 && facet == "by") {
     by = as.factor(by) ## if by==facet, then both need to be factors

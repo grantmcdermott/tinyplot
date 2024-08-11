@@ -1,68 +1,6 @@
-histogram_args = function(x, by, facet, facet_by, dots, ylab, col, bg, fill, ribbon.alpha) {
+histogram_args = function(x, by, facet, facet_by, dots, ylab, col, bg, fill, ribbon.alpha, datapoints) {
   hbreaks = ifelse(!is.null(dots[["breaks"]]), dots[["breaks"]], "Sturges")
   hist_list = hist(x, breaks = hbreaks, plot = FALSE)
-  
-  if (!is.null(by) || !is.null(facet)) {
-    split_type = ifelse(is.null(facet) || isTRUE(facet_by), "byonly", ifelse(is.null(by), "facetonly", "byandfacet"))
-    
-    if (split_type == "byonly") {
-      split_x = split(x, by)
-    } else if (split_type == "facetonly") {
-      split_x = split(x, facet)
-    } else {
-      split_x = split(x, interaction(by, facet, sep = "___"))
-    }
-    
-    hist_split = lapply(seq_along(split_x), function(s) {
-      h = hist(split_x[[s]], breaks = hist_list$breaks, plot = FALSE)
-      h$breaks = h$breaks[-1]
-      
-      if (split_type %in% c("byonly", "byandfacet")) {
-        h$by = rep(names(split_x)[[s]], length(h$breaks))
-      } else {
-        h$by = NULL
-      }
-      
-      if (split_type %in% c("facetonly", "byandfacet")) {
-        h$facet = rep(names(split_x)[[s]], length(h$breaks))
-      } else if (isTRUE(facet_by)) {
-        h$facet = h$by
-      } else {
-        h$facet = NULL
-      }
-      return(h)
-    })
-    
-    hist_list = do.call(Map, c(c, hist_split))
-    xmin = hist_list$breaks
-    xmax = hist_list$mids + (hist_list$mids - hist_list$breaks)
-    by = hist_list$by
-    
-    if (split_type == "byandfacet") by = sub("___.*$", "", by)
-    facet = hist_list$facet
-    
-    if (split_type == "byandfacet") facet = sub(".*___", "", facet)
-    if (!is.null(facet)) facet = as.factor(facet)
-  } else {
-    xmin = hist_list$breaks[-1]
-    xmax = hist_list$mids + (hist_list$mids - hist_list$breaks[-1])
-  }
-  
-  ymin = hist_list$counts
-  
-  # Optional: remove zero count cases
-  if (!is.null(by) || !is.null(facet)) {
-    hidx = which(ymin != 0)
-    xmin = xmin[hidx]
-    xmax = xmax[hidx]
-    ymin = ymin[hidx]
-    by = by[hidx]
-    facet = facet[hidx]
-  }
-  
-  ymax = rep(0, length(ymin))
-  x = c(xmin, xmax)
-  y = c(ymin, ymax)
   
   if (is.null(ylab)) ylab = "Frequency"
   if (is.null(by) && is.null(palette)) {
@@ -77,21 +15,38 @@ histogram_args = function(x, by, facet, facet_by, dots, ylab, col, bg, fill, rib
   
   type = "rect"
 
+  dp = datapoints
+  dp_breaks = hist(dp$x, breaks = hbreaks, plot = FALSE)
+  dp = split(dp, list(datapoints$by, datapoints$facet))
+  dp = Filter(function(x) nrow(x) > 0, dp)
+
+  dp = lapply(dp, function(k) {
+    h = hist(k$x, breaks = dp_breaks$breaks, plot = FALSE)
+    out = data.frame(
+      by = k$by[1], # already split
+      facet = k$facet[1], # already split
+      ymin = 0,
+      ymax = h$counts,
+      xmin = h$breaks[-1],
+      xmax = h$mids + (h$mids - h$breaks[-1])
+    )
+    return(out)
+  })
+  dp = do.call(rbind, dp)
+
   out = list(
-    x = x, 
-    y = y, 
-    ymin = ymin, 
-    ymax = ymax, 
-    xmin = xmin, 
-    xmax = xmax, 
+    x = c(dp$xmin, dp$xmax), 
+    y = c(dp$ymin, dp$ymax),
+    ymin = dp$ymin, 
+    ymax = dp$ymax, 
+    xmin = dp$xmin, 
+    xmax = dp$xmax, 
     ylab = ylab, 
     col = col, 
     bg = bg, 
     type = type, 
-    by = by, 
-    facet = facet,
-    hbreaks = hbreaks,
-    hist_list = hist_list
+    by = dp$by, 
+    facet = dp$facet
   )
   return(out)
 }

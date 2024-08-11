@@ -636,10 +636,17 @@ tinyplot.default = function(
     return(do.call(tinyplot.density, args = fargs))
   }
 
+  datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)
+  datapoints = Filter(function(z) length(z) > 0, datapoints)
+  datapoints = data.frame(datapoints)
+  datapoints[["rowid"]] = seq_len(nrow(datapoints))
+  datapoints[["facet"]] = if (!is.null(facet)) facet else ""
+  datapoints[["by"]] = if (!is.null(by)) by else ""
+
   if (type == "histogram") {
     fargs = histogram_args(
       x = x, by = by, facet = facet, facet_by = facet_by, dots = dots,
-      ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha)
+      ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha, datapoints = datapoints)
     list2env(fargs, environment())
   }
 

@@ -45,8 +45,8 @@ histogram_args = function(x, by, facet, facet_by, dots, ylab, col, bg, fill, rib
     col = col, 
     bg = bg, 
     type = type, 
-    by = dp$by, 
-    facet = dp$facet
+    by = if (length(unique(dp$by)) == 1) by else dp$by, 
+    facet = if (length(unique(dp$facet)) == 1) facet else dp$facet
   )
   return(out)
 }

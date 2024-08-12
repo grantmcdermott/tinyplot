@@ -661,11 +661,11 @@ tinyplot.default = function(
     list2env(fargs, environment())
 
   } else if (type == "boxplot") {
-    fargs = boxplot_args(datapoints = datapoints, by = by, facet = facet)
+    fargs = boxplot_args(datapoints = datapoints)
     list2env(fargs, environment())
 
   } else if (type == "ribbon") {
-    fargs = ribbon_args(datapoints = datapoints, by = by, facet = facet)
+    fargs = ribbon_args(datapoints = datapoints)
     list2env(fargs, environment())
   }
   

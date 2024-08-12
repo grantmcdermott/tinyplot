@@ -1,4 +1,4 @@
-boxplot_args <- function(datapoints, by, facet) {
+boxplot_args <- function(datapoints) {
   dp = datapoints
 
   # Convert x to factor if it's not already
@@ -33,9 +33,11 @@ boxplot_args <- function(datapoints, by, facet) {
     y = dp$y,
     ymin = dp$ymin,
     ymax = dp$ymax,
-    by = if (length(unique(dp$by)) == 1) by else dp$by, 
-    facet = if (length(unique(dp$facet)) == 1) facet else dp$facet,
     xlabs = xlabs,
     datapoints = datapoints)
+
+  if (length(unique(dp$by)) > 1) out[["by"]] = dp$by
+  if (length(unique(dp$facet)) > 1) out[["facet"]] = dp$facet
+
   return(out)
 }

@@ -1,4 +1,4 @@
-histogram_args = function(x, by, facet, dots, ylab, col, bg, fill, ribbon.alpha, datapoints) {
+type_histogram = function(x, by, facet, dots, ylab, col, bg, fill, ribbon.alpha, datapoints) {
   hbreaks = ifelse(!is.null(dots[["breaks"]]), dots[["breaks"]], "Sturges")
   hist_list = hist(x, breaks = hbreaks, plot = FALSE)
   

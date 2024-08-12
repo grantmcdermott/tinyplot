@@ -644,28 +644,28 @@ tinyplot.default = function(
   datapoints[["facet"]] = if (!is.null(facet)) facet else ""
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
-  # standalone: before and in addition to type = "point"
+  # jitter is standalone: before and in addition to type = "point"
   if (type == "jitter") {
-    fargs = jitter_args(datapoints)
+    fargs = type_jitter(datapoints)
     list2env(fargs, environment())
   }
 
   if (type == "histogram") {
-    fargs = histogram_args(
+    fargs = type_histogram(
       x = x, by = by, facet = facet, dots = dots,
       ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha, datapoints = datapoints)
     list2env(fargs, environment())
 
   } else if (type == "area") {
-    fargs = area_args(datapoints)
+    fargs = type_area(datapoints)
     list2env(fargs, environment())
 
   } else if (type == "boxplot") {
-    fargs = boxplot_args(datapoints = datapoints)
+    fargs = type_boxplot(datapoints = datapoints)
     list2env(fargs, environment())
 
   } else if (type == "ribbon") {
-    fargs = ribbon_args(datapoints = datapoints, xlabs = xlabs)
+    fargs = type_ribbon(datapoints = datapoints, xlabs = xlabs)
     list2env(fargs, environment())
   
   } else if (type %in% c("pointrange", "errorbar")) {

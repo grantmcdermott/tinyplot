@@ -1,4 +1,4 @@
-boxplot_args <- function(datapoints) {
+type_boxplot <- function(datapoints) {
   dp = datapoints
 
   # Convert x to factor if it's not already

@@ -1,4 +1,4 @@
-ribbon_args <- function(datapoints, xlabs) {
+type_ribbon <- function(datapoints, xlabs) {
   dp = datapoints
 
   # Convert x to factor if it's not already

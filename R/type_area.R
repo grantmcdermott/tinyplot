@@ -1,4 +1,4 @@
-area_args = function(datapoints) {
+type_area = function(datapoints) {
   dp = datapoints
   dp$ymax = dp$y
   dp$ymin = rep.int(0, nrow(dp))

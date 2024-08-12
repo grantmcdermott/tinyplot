@@ -36,6 +36,7 @@
   assign(".saved_par_before", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
   assign(".saved_par_after", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
 
-  utils::globalVariables(c("cex_fct_adj", "facets", "nfacet_cols", "nfacet_rows", "nfacets", "oxaxis", "oyaxis"))
+  utils::globalVariables(c("cex_fct_adj", "facets", "nfacet_cols", "nfacet_rows", "nfacets", "oxaxis", "oyaxis", "add", "asp", "axes", "by_continuous", "by_ordered", "dots", "facet", "facet.args", "facet_bg", "facet_border", "facet_col", "facet_font", "facet_newlines", "facet_rect", "facet_text", "fill", "frame.plot", "has_legend", "ifacet", "ngrps", "ribbon.alpha", "split_data", "type", "x", "xaxt", "xlabs", "xlim", "xlvls", "xmax", "xmin", "y", "yaxt", "ylim", "ymax", "ymin"
+))
   
 }

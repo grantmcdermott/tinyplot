@@ -935,15 +935,6 @@ tinyplot.default = function(
     idata = split_data[[i]]
     ifacet = idata[["facet"]]
     if (!is.null(ifacet)) {
-      idata[["facet"]] = NULL ## Don't need this anymore since we'll be splitting by ifacet
-      ## Need extra catch for non-groupby data that also doesn't have ymin or
-      ## ymax vars
-      if (is.null(by) || isTRUE(by_continuous)) {
-        if (is.null(idata[["xmin"]])) idata[["xmin"]] = NULL
-        if (is.null(idata[["xmax"]])) idata[["xmax"]] = NULL
-        if (is.null(idata[["ymin"]])) idata[["ymin"]] = NULL
-        if (is.null(idata[["ymax"]])) idata[["ymax"]] = NULL
-      }
       if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(by, to = c(1, 100)))]
         idata[["bg"]] = bg[round(rescale_num(by, to = c(1, 100)))]

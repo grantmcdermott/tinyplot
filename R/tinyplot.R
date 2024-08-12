@@ -676,7 +676,7 @@ tinyplot.default = function(
   # plot limits
   fargs = lim_args(
     datapoints = datapoints, xlim = xlim, ylim = ylim, palette = palette,
-    col = col, bg = bg, fill = fill, type = type, by = by)
+    col = col, bg = bg, fill = fill, type = type)
   list2env(fargs, environment())
 
 

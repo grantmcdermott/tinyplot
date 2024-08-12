@@ -1,6 +1,6 @@
 # calculate limits of each plot
 
-lim_args = function(datapoints, xlim, ylim, palette, col, bg, fill, type, by) {
+lim_args = function(datapoints, xlim, ylim, palette, col, bg, fill, type) {
 
   if (all(c("x", "y") %in% names(datapoints))) {
     xy = xy.coords(x = datapoints$x, y = datapoints$y)
@@ -13,7 +13,7 @@ lim_args = function(datapoints, xlim, ylim, palette, col, bg, fill, type, by) {
 
   if (type == "boxplot") {
     xlim = xlim + c(-0.5, 0.5)
-    if (is.null(by) && is.null(palette)) {
+    if (length(unique(datapoints[["by"]])) == 1 && is.null(palette)) {
       if (is.null(col)) col = par("fg")
       if (is.null(bg) && is.null(fill)) bg = "lightgray"
     } else {

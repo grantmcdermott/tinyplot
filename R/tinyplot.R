@@ -663,9 +663,13 @@ tinyplot.default = function(
   } else if (type == "boxplot") {
     fargs = boxplot_args(datapoints = datapoints, by = by, facet = facet)
     list2env(fargs, environment())
+
+  } else if (type == "ribbon") {
+    fargs = ribbon_args(datapoints = datapoints, by = by, facet = facet)
+    list2env(fargs, environment())
   }
   
-  if (type %in% c("pointrange", "errorbar", "ribbon")) {
+  if (type %in% c("pointrange", "errorbar")) {
     if (is.character(x)) x = as.factor(x)
     if (is.factor(x)) {
       ## For non-boxplots... Need to maintain order that was observed in the
@@ -675,30 +679,6 @@ tinyplot.default = function(
       xlabs = seq_along(xlvls)
       names(xlabs) = xlvls
       x = as.integer(x)
-    }
-    if (type %in% c("ribbon")) {
-      if (is.null(by) && is.null(facet)) {
-        xord = order(x)
-      } else if (is.null(facet)) {
-        xord = order(by, x)
-        by = by[xord]
-      } else if (is.null(by)) {
-        facet_grid = attr(facet, "facet_grid")
-        xord = order(facet, x)
-        facet = facet[xord]
-        attr(facet, "facet_grid") = facet_grid
-      } else {
-        facet_grid = attr(facet, "facet_grid")
-        xord = order(by, facet, x)
-        by = by[xord]
-        facet = facet[xord]
-        attr(facet, "facet_grid") = facet_grid
-      }
-      x = x[xord]
-      y = y[xord]
-      ymin = ymin[xord]
-      ymax = ymax[xord]
-      rm(xord)
     }
   }
   

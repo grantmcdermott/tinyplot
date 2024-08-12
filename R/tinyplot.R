@@ -659,26 +659,24 @@ tinyplot.default = function(
   } else if (type == "area") {
     fargs = area_args(datapoints)
     list2env(fargs, environment())
-  }
 
+  } else if (type == "boxplot") {
+    fargs = boxplot_args(datapoints = datapoints, by = by, facet = facet)
+    list2env(fargs, environment())
+  }
   
-  if (type == "boxplot") x = as.factor(x)
-  if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
+  if (type %in% c("pointrange", "errorbar", "ribbon")) {
     if (is.character(x)) x = as.factor(x)
     if (is.factor(x)) {
       ## For non-boxplots... Need to maintain order that was observed in the
       ## original data (i.e., no new sorting by factor)
-      if (type != "boxplot") {
-        xlvls = unique(x)
-        x = factor(x, levels = xlvls)
-      } else {
-        xlvls = levels(x)
-      }
+      xlvls = unique(x)
+      x = factor(x, levels = xlvls)
       xlabs = seq_along(xlvls)
       names(xlabs) = xlvls
       x = as.integer(x)
     }
-    if (type %in% c("ribbon", "boxplot")) {
+    if (type %in% c("ribbon")) {
       if (is.null(by) && is.null(facet)) {
         xord = order(x)
       } else if (is.null(facet)) {

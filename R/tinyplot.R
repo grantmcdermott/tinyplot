@@ -690,24 +690,17 @@ tinyplot.default = function(
     by_ordered = is.ordered(by)
   }
 
-  if (!is.null(by) && !by_continuous) {
-    split_data = list(x = x, y = y)
-    split_data[["xmin"]] = xmin
-    split_data[["xmax"]] = xmax
-    split_data[["ymin"]] = ymin
-    split_data[["ymax"]] = ymax
-    split_data[["facet"]] = facet
-    split_data = lapply(split_data, split, by)
-    split_data = do.call(function(...) Map("list", ...), split_data)
-  } else {
-    split_data = list(list(
-      x = x, y = y,
-      xmin = xmin, xmax = xmax,
-      ymin = ymin, ymax = ymax,
-      facet = facet
-    ))
+  dp = datapoints
+  if (length(unique(dp$facet)) == 1) {
+    dp[["facet"]] = NULL
   }
-
+  if (!by_continuous) {
+    split_data = split(dp, datapoints$by)
+    split_data = lapply(split_data, as.list)
+  } else {
+    split_data = list(as.list(dp))
+  }
+  
   # aesthetics by group: col, bg, etc.
   aesthetics_args = aesthetics(
     adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by,

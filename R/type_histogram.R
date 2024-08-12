@@ -1,4 +1,4 @@
-histogram_args = function(x, by, facet, facet_by, dots, ylab, col, bg, fill, ribbon.alpha, datapoints) {
+histogram_args = function(x, by, facet, dots, ylab, col, bg, fill, ribbon.alpha, datapoints) {
   hbreaks = ifelse(!is.null(dots[["breaks"]]), dots[["breaks"]], "Sturges")
   hist_list = hist(x, breaks = hbreaks, plot = FALSE)
   
@@ -18,7 +18,7 @@ histogram_args = function(x, by, facet, facet_by, dots, ylab, col, bg, fill, rib
   dp = datapoints
   dp_breaks = hist(dp$x, breaks = hbreaks, plot = FALSE)
   dp = split(dp, list(datapoints$by, datapoints$facet))
-  dp = Filter(function(x) nrow(x) > 0, dp)
+  dp = Filter(function(k) nrow(k) > 0, dp)
 
   dp = lapply(dp, function(k) {
     h = hist(k$x, breaks = dp_breaks$breaks, plot = FALSE)

@@ -527,6 +527,7 @@ tinyplot.default = function(
   # sanitize arguments
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
   type = sanitize_type(type, x, y)
+  was_area_type = identical(type, "area") # flag to keep track for some legend adjustments below
 
   palette = substitute(palette)
 
@@ -643,26 +644,23 @@ tinyplot.default = function(
   datapoints[["facet"]] = if (!is.null(facet)) facet else ""
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
+  # standalone: before and in addition to type = "point"
+  if (type == "jitter") {
+    fargs = jitter_args(datapoints)
+    list2env(fargs, environment())
+  }
+
   if (type == "histogram") {
     fargs = histogram_args(
-      x = x, by = by, facet = facet, facet_by = facet_by, dots = dots,
+      x = x, by = by, facet = facet, dots = dots,
       ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha, datapoints = datapoints)
     list2env(fargs, environment())
-  }
 
-  if (type == "area") {
-    ymax = y
-    ymin = rep.int(0, length(y))
-    type = "ribbon"
-    was_area_type = TRUE
-  } else {
-    was_area_type = FALSE # flag to keep track for some legend adjustments below
-  }
-
-  if (type == "jitter") {
-    fargs = jitter_args(x = x, y = y)
+  } else if (type == "area") {
+    fargs = area_args(datapoints)
     list2env(fargs, environment())
   }
+
   
   if (type == "boxplot") x = as.factor(x)
   if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {

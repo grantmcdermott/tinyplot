@@ -45,6 +45,7 @@ histogram_args = function(x, by, facet, dots, ylab, col, bg, fill, ribbon.alpha,
     col = col, 
     bg = bg, 
     type = type, 
+    datapoints = dp,
     by = if (length(unique(dp$by)) == 1) by else dp$by, 
     facet = if (length(unique(dp$facet)) == 1) facet else dp$facet
   )

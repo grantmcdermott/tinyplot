@@ -34,7 +34,7 @@ boxplot_args <- function(datapoints) {
     ymin = dp$ymin,
     ymax = dp$ymax,
     xlabs = xlabs,
-    datapoints = datapoints)
+    datapoints = dp)
 
   if (length(unique(dp$by)) > 1) out[["by"]] = dp$by
   if (length(unique(dp$facet)) > 1) out[["facet"]] = dp$facet

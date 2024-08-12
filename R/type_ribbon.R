@@ -1,4 +1,4 @@
-ribbon_args <- function(datapoints) {
+ribbon_args <- function(datapoints, xlabs) {
   dp = datapoints
 
   # Convert x to factor if it's not already
@@ -32,14 +32,13 @@ ribbon_args <- function(datapoints) {
   # Reorder x, y, ymin, and ymax based on the order determined
   dp = dp[xord,]
   
-  # Return the result as a list called 'out'
   out <- list(
     x = dp$x,
     y = dp$y,
     ymin = dp$ymin,
     ymax = dp$ymax,
     xlabs = xlabs,
-    datapoints = datapoints)
+    datapoints = dp)
 
   if (length(unique(dp$by)) > 1) out[["by"]] = dp$by
   if (length(unique(dp$facet)) > 1) out[["facet"]] = dp$facet

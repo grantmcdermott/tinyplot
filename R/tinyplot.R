@@ -665,21 +665,12 @@ tinyplot.default = function(
     list2env(fargs, environment())
 
   } else if (type == "ribbon") {
-    fargs = ribbon_args(datapoints = datapoints)
+    fargs = ribbon_args(datapoints = datapoints, xlabs = xlabs)
     list2env(fargs, environment())
-  }
   
-  if (type %in% c("pointrange", "errorbar")) {
-    if (is.character(x)) x = as.factor(x)
-    if (is.factor(x)) {
-      ## For non-boxplots... Need to maintain order that was observed in the
-      ## original data (i.e., no new sorting by factor)
-      xlvls = unique(x)
-      x = factor(x, levels = xlvls)
-      xlabs = seq_along(xlvls)
-      names(xlabs) = xlvls
-      x = as.integer(x)
-    }
+  } else if (type %in% c("pointrange", "errorbar")) {
+    fargs = type_pointrange(datapoints = datapoints, xlabs = xlabs)
+    list2env(fargs, environment())
   }
   
   # plot limits

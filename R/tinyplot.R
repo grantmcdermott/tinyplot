@@ -113,7 +113,7 @@
 #' @param ann a logical value indicating whether the default annotation (title
 #'   and x and y axis labels) should appear on the plot.
 #' @param axes logical or character. Should axes be drawn (`TRUE` or `FALSE`)?
-#'   Or alternatively what type of axes should be drawn: `"standard" (with
+#'   Or alternatively what type of axes should be drawn: "standard" (with
 #'   axis, ticks, and labels; equivalent to `TRUE`), "none" (no axes;
 #'   equivalent to `FALSE`), `"ticks"` (only ticks and labels without axis line),
 #'   `"labels"` (only labels without ticks and axis line), `"axis"` (only axis

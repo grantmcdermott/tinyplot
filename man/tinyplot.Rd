@@ -220,8 +220,8 @@ the range of the \code{finite} values to be plotted should be used.}
 and x and y axis labels) should appear on the plot.}
 
 \item{axes}{logical or character. Should axes be drawn (\code{TRUE} or \code{FALSE})?
-Or alternatively what type of axes should be drawn: "standard" (with
-axis, ticks, and labels; equivalent to \code{TRUE}), "none" (no axes;
+Or alternatively what type of axes should be drawn: \code{"standard"} (with
+axis, ticks, and labels; equivalent to \code{TRUE}), \code{"none"} (no axes;
 equivalent to \code{FALSE}), \code{"ticks"} (only ticks and labels without axis line),
 \code{"labels"} (only labels without ticks and axis line), \code{"axis"} (only axis
 line and labels but no ticks). To control this separately for the two

@@ -619,9 +619,9 @@ tinyplot.default = function(
     } else if (!type %in% c("density", "histogram")) {
       y = x
       x = seq_along(x)
-      xlab = "Index"
+      if (is.null(xlab)) xlab = "Index"
     } else {
-      ylab = "Frequency"
+      if (is.null(ylab)) ylab = "Frequency"
     }
   }
 

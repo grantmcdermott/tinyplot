@@ -12,6 +12,7 @@ Bug fixes:
 accidentally introduced in v0.2.0 (#187 @grantmcdermott)
 - Ensure correct boxplot positioning if `x` == `by`, or these two are
 functionally identical. (#196 @grantmcdermott)
+- `xlab` and `ylab` arguments not respected in some plots. Thanks to @lbelzile for reporting Issue #203.
 
 New Features:
 

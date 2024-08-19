@@ -7,7 +7,11 @@ facet_layout = function(facet, add = FALSE, facet.args = list()) {
   nfacet_rows = 1
   nfacet_cols = 1
   if (!is.null(facet)) {
-    facets = sort(unique(facet))
+    if (is.factor(facet)) {
+      facets = levels(facet)
+    } else {
+      facets = sort(unique(facet))
+    }
     ifacet = seq_along(facets)
     nfacets = length(facets)
     

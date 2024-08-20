@@ -260,6 +260,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Fix duplicate plots produced with <code>type = "density"</code>, which was a regression accidentally introduced in v0.2.0 (<a href="https://github.com/grantmcdermott/tinyplot/issues/187">#187</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Ensure correct boxplot positioning if <code>x</code> == <code>by</code>, or these two are functionally identical. (<a href="https://github.com/grantmcdermott/tinyplot/issues/196">#196</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>xlab</code> and <code>ylab</code> arguments not respected in some plots. Thanks to <a href="https://github.com/lbelzile"><span class="citation" data-cites="lbelzile">@lbelzile</span></a> for reporting Issue <a href="https://github.com/grantmcdermott/tinyplot/issues/203">#203</a>.</li>
+<li>Avoid triggering an inadvertent legend when a function transformation of x is plotted against x itself, <code>tinyplot(log(x) ~ x)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/197">#197</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Facets with interactions and/or multivariate formulas (e.g., complex grid arrangements like <code>tinyplot(mpg ~ wt, data = mtcars, facet = am + vs ~ gear)</code>) now plot all panels correctly, even if some combinations are missing. (<a href="https://github.com/grantmcdermott/tinyplot/issues/197">#197</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>New Features:</p>
 <ul>
@@ -269,6 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Internals:</p>
 <ul>
 <li>Continued modularization of the main code logic. (<a href="https://github.com/grantmcdermott/tinyplot/issues/192">#192</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li>Revamped formula processing that allows for better sanity checking and edge-case logic. (<a href="https://github.com/grantmcdermott/tinyplot/issues/197">#197</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 </ul>
 </section>
 <section id="section" class="level2">

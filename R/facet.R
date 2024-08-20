@@ -7,14 +7,9 @@ facet_layout = function(facet, add = FALSE, facet.args = list()) {
   nfacet_rows = 1
   nfacet_cols = 1
   if (!is.null(facet)) {
-    if (is.factor(facet)) {
-      facets = levels(facet)
-    } else {
-      facets = sort(unique(facet))
-    }
+    facets = if (is.factor(facet)) levels(facet) else sort(unique(facet))
     ifacet = seq_along(facets)
     nfacets = length(facets)
-    
     if (isTRUE(add)) {
       omfrow = par("mfrow")
       nfacet_rows = omfrow[1]

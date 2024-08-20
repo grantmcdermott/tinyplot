@@ -1117,142 +1117,70 @@ tinyplot.formula = function(
       warning("only one of the arguments 'x' and 'formula' should be specified, defaulting to the 'formula' argument")
     }
   }
-
-  ## catch one-sided formula ~ x or ~ x | z with no "y" variable
-  if (!inherits(formula, "formula")) formula = as.formula(formula)
-  no_y = length(formula) == 2L
-  fml_rhs = if (no_y) 2L else 3L
-
-  ## convert y ~ x | z to y ~ x + z for standard formula parsing
-  if (length(formula[[fml_rhs]]) == 3L) {
-    if (formula[[fml_rhs]][[1L]] == as.name("|")) {
-      formula[[fml_rhs]][[1L]] = as.name("+")
-    }
-  }
-
-  # placeholder for legend title
+  
+  ## placeholder for legend title
   legend_args = list(x = NULL)
+
+  ## process all formulas
+  tf = tinyformula(formula, facet)
 
   ## set up model frame
   m = match.call(expand.dots = FALSE)
   m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
-  m$formula = formula
+  m$formula = tf$full
   ## need stats:: for non-standard evaluation
   m[[1L]] = quote(stats::model.frame)
-  # catch for facets (need to ensure that na.omit, na.action, etc. are at done
-  # at the same level to avoid mismatches if there any missing variables)
-  has_facet_fml = !is.null(facet) && inherits(facet, "formula")
-  if (has_facet_fml) {
-    facet_fml = facet
-    facet_fml[[1]] = as.name("+")
-    if (no_y) {
-      m$formula = eval(substitute(
-        update(formula, ~ . + facet_fml), list(facet_fml = facet_fml)
-      ))
-    } else {
-      m$formula = eval(substitute(
-        update(formula, . ~ . + facet_fml), list(facet_fml = facet_fml)
-      ))
-    }
-  }
   mf = eval.parent(m)
 
-  ## We need to do some extra work if we included facet variables in the model
-  ## frame above
-  if (has_facet_fml) {
-    # separate the facet columns from the rest of the model frame
-    facet_n_cols = length(all.vars(facet_fml))
-    fmf = mf[, tail(seq_along(mf), facet_n_cols), drop = FALSE]
-    mf = mf[, head(seq_along(mf), -facet_n_cols), drop = FALSE]
-    # now do some prep work on the facets themselves for nicer plotting (e.g,
-    # grid arrangement for two-sided facet formula)
-    no_yfacet = length(facet) == 2L
-    facet_fml_rhs = if (no_yfacet) 2L else 3L
-    if (no_yfacet) {
-      yfacet_loc = NULL
-      xfacet_loc = 1L
-    } else {
-      yfacet_loc = 1L
-      xfacet_loc = 2L
-    }
-    if (NCOL(fmf) < xfacet_loc) stop("formula should specify at least one variable on the right-hand side")
-    yfacet = if (no_yfacet) NULL else fmf[, yfacet_loc]
-    xfacet = fmf[, xfacet_loc:NCOL(fmf)]
+  ## extract x
+  x = tinyframe(tf$x, mf)
+  xnam = names(x)[[1L]]
+  if (length(names(x)) != 1L) warning(paste("formula should specify exactly one x-variable, using:", xnam))
+  x = x[[xnam]]
+  
+  ## extract y (if any)
+  y = tinyframe(tf$y, mf)
+  if (!is.null(y)) {
+    ynam = names(y)[[1L]]
+    if (length(names(y)) > 1L) warning(paste("formula should specify at most one y-variable, using:", ynam))
+    y = y[[ynam]]
+  }
 
-    ## return object
-    xfacet = interaction(xfacet, sep = ":")
-    if (no_yfacet) {
+  ## extract by (if any)
+  by = tinyframe(tf$by, mf)
+  if (!is.null(by)) {
+    bynam = names(by)
+    by = if (length(bynam) == 1L) by[[bynam]] else interaction(by, sep = ":")
+  }
+
+  ## extract x/y facet (if formula)
+  if (!is.null(tf$xfacet) || !is.null(tf$yfacet)) {
+    xfacet = tinyframe(tf$xfacet, mf)
+    yfacet = tinyframe(tf$yfacet, mf)
+    if (!is.null(xfacet)) xfacet = if (ncol(xfacet) == 1L) xfacet[[1L]] else interaction(xfacet, sep = ":")
+    if (!is.null(yfacet)) yfacet = if (ncol(yfacet) == 1L) yfacet[[1L]] else interaction(yfacet, sep = ":")
+    if (is.null(yfacet)) {
       facet = xfacet
     } else {
-      # yfacet = interaction(yfacet, sep = ":")
-      ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
       facet = interaction(xfacet, yfacet, sep = "~")
       attr(facet, "facet_grid") = TRUE
       attr(facet, "facet_nrow") = length(unique(yfacet))
     }
   }
 
-  ## extract variables: x, y (if any), by (if any)
-  if (no_y) {
-    y_loc = NULL
-    x_loc = 1L
-  } else {
-    y_loc = 1L
-    x_loc = 2L
-  }
-  if (NCOL(mf) < x_loc) stop("formula should specify at least one variable on the right-hand side")
-  y = if (no_y) NULL else mf[, y_loc]
-  x = mf[, x_loc]
-  by_loc = x_loc + 1L
-  if (NCOL(mf) < by_loc) {
-    # special catch if by is the same as x or y (normally for continuous legend)
-    by_same_y = by_same_x = FALSE
-    fml_all_vars = all.vars(m$formula, unique = FALSE)
-    if (anyDuplicated(fml_all_vars) > 0) {
-      if (isTRUE(no_y)) {
-        by_same_x = TRUE ## i.e., if there is duplication and no y var, assume by must be the same as x
-      } else {
-        fml_lhs_vars = paste(attr(terms(m$formula), "variables")[[2]])
-        fml_rhs_vars = fml_all_vars[!(fml_all_vars %in% fml_lhs_vars)]
-        if (anyDuplicated(fml_rhs_vars) > 0) {
-          by_same_x = TRUE
-        } else {
-          by_same_y = TRUE
-        }
-      }
-    }
-    if (isTRUE(by_same_y)) {
-      by = y
-      bylab = names(mf)[y_loc]
-      legend_args[["title"]] = bylab
-    } else if (isTRUE(by_same_x)) {
-      by = x
-      bylab = names(mf)[x_loc]
-      legend_args[["title"]] = bylab
-    } else {
-      by = bylab = NULL
-    }
-  } else if (NCOL(mf) == by_loc) {
-    by = mf[, by_loc]
-    bylab = names(mf)[by_loc]
-    legend_args[["title"]] = bylab
-    # if (!inherits(by, "factor")) by = as.factor(by)
-  } else if (NCOL(mf) > by_loc) {
-    by = do.call("interaction", mf[, -c(y_loc, x_loc)])
-    bylab = sprintf("interaction(%s)", paste(names(mf)[-c(y_loc, x_loc)], collapse = ", "))
-    legend_args[["title"]] = bylab
-  }
-
   ## nice axis and legend labels
   if (!is.null(type) && type %in% c("hist", "histogram")) {
     if (is.null(ylab)) ylab = "Frequency"
-    if (is.null(xlab)) xlab = names(mf)[x_loc]
-  } else if (no_y) {
-    if (is.null(ylab)) ylab = names(mf)[x_loc]
+    if (is.null(xlab)) xlab = xnam
+  } else if (is.null(y)) {
+    if (is.null(ylab)) ylab = xnam
     if (is.null(xlab)) xlab = "Index"
   } else {
-    if (is.null(ylab)) ylab = names(mf)[y_loc]
-    if (is.null(xlab)) xlab = names(mf)[x_loc]
+    if (is.null(ylab)) ylab = ynam
+    if (is.null(xlab)) xlab = xnam
+  }
+  if (!is.null(by)) {
+    legend_args[["title"]] = if (length(bynam) == 1L) bynam else sprintf("interaction(%s)", paste(bynam, collapse = ", "))
   }
 
   tinyplot.default(

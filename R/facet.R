@@ -7,15 +7,17 @@ facet_layout = function(facet, add = FALSE, facet.args = list()) {
   nfacet_rows = 1
   nfacet_cols = 1
   if (!is.null(facet)) {
-    facets = sort(unique(facet))
+    facets = if (is.factor(facet)) levels(facet) else sort(unique(facet))
     ifacet = seq_along(facets)
     nfacets = length(facets)
-    
     if (isTRUE(add)) {
       omfrow = par("mfrow")
       nfacet_rows = omfrow[1]
       nfacet_cols = omfrow[2]
     } else {
+      if (isTRUE(attr(facet, "facet_grid"))) {
+        facet.args[["nrow"]] = attr(facet, "facet_nrow")
+      }
       if (!is.null(facet.args[["nrow"]])) {
         nfacet_rows = facet.args[["nrow"]]
         nfacet_cols = ceiling(nfacets / nfacet_rows)

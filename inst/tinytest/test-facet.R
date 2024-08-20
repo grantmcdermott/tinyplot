@@ -233,7 +233,7 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_ribbon_by")
 
 
-if (getRversion() <= "4.4.0") {
+if (getRversion() >= "4.4.0") {
   f = function() {
     with(
       mtcars2,
@@ -370,7 +370,7 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_2x2_formula")
 
 
-if (getRversion()  <= "4.4.0") {
+if (getRversion()  >= "4.4.0") {
   f = function() {
     tinyplot(
       ~ mpg | am, mtcars,
@@ -400,8 +400,17 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_grid")
 
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = am + vs ~ gear,
+    main = "facet grid multivar",
+    sub = "Notes: Missing combos are still displayed correctly"
+  )
+}
+expect_snapshot_plot(f, label = "facet_grid_multivar")
 
-if (getRversion() <= "4.4.0") {
+if (getRversion() >= "4.4.0") {
   f = function() {
     tinyplot(
       mpg ~ wt | factor(gear), data = mtcars,

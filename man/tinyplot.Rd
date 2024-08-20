@@ -231,7 +231,12 @@ both axes are to be logarithmic.}
 and x and y axis labels) should appear on the plot.}
 
 \item{axes}{logical or character. Should axes be drawn (\code{TRUE} or \code{FALSE})?
-Or alternatively what type of axes should be drawn: \verb{"standard" (with axis, ticks, and labels; equivalent to }TRUE\verb{), "none" (no axes; equivalent to }FALSE\verb{), }"ticks"\verb{(only ticks and labels without axis line),}"labels"\verb{(only labels without ticks and axis line),}"axis"\verb{(only axis line and labels but no ticks). To control this separately for the two axes, use the character specifications for}xaxt\code{and/or}yaxt`.}
+Or alternatively what type of axes should be drawn: \code{"standard"} (with
+axis, ticks, and labels; equivalent to \code{TRUE}), \code{"none"} (no axes;
+equivalent to \code{FALSE}), \code{"ticks"} (only ticks and labels without axis line),
+\code{"labels"} (only labels without ticks and axis line), \code{"axis"} (only axis
+line and labels but no ticks). To control this separately for the two
+axes, use the character specifications for \code{xaxt} and/or \code{yaxt}.}
 
 \item{frame.plot}{a logical indicating whether a box should be drawn around
 the plot. Can also use \code{frame} as an acceptable argument alias.
@@ -608,7 +613,7 @@ tinyplot(
 # It's possible to further customize the look of you plots using familiar
 # arguments and base plotting theme settings (e.g., via `(t)par`).
 
-tpar(family = "HersheySans", las = 1)
+op = tpar(family = "HersheySans", las = 1)
 tinyplot(
   Temp ~ Day | Month,
   data = aq,
@@ -617,6 +622,7 @@ tinyplot(
   main = "Daily temperatures by month",
   frame = FALSE, grid = TRUE
 )
+tpar(op) # restore original graphics parameters
 
 # Note: For more examples and a detailed walkthrough, please see the
 # introductory tinyplot tutorial available online:

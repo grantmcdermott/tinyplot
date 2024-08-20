@@ -613,7 +613,7 @@ tinyplot(
 # It's possible to further customize the look of you plots using familiar
 # arguments and base plotting theme settings (e.g., via `(t)par`).
 
-tpar(family = "HersheySans", las = 1)
+op = tpar(family = "HersheySans", las = 1)
 tinyplot(
   Temp ~ Day | Month,
   data = aq,
@@ -622,6 +622,7 @@ tinyplot(
   main = "Daily temperatures by month",
   frame = FALSE, grid = TRUE
 )
+tpar(op) # restore original graphics parameters
 
 # Note: For more examples and a detailed walkthrough, please see the
 # introductory tinyplot tutorial available online:

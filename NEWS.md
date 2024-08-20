@@ -12,7 +12,14 @@ Bug fixes:
 accidentally introduced in v0.2.0 (#187 @grantmcdermott)
 - Ensure correct boxplot positioning if `x` == `by`, or these two are
 functionally identical. (#196 @grantmcdermott)
-- `xlab` and `ylab` arguments not respected in some plots. Thanks to @lbelzile for reporting Issue #203.
+- `xlab` and `ylab` arguments not respected in some plots. Thanks to @lbelzile
+for reporting Issue #203.
+- Avoid triggering an inadvertent legend when a function transformation of x is
+plotted against x itself, `tinyplot(log(x) ~ x)`. (#197 @zeileis)
+- Facets with interactions and/or multivariate formulas (e.g., complex grid
+arrangements like `tinyplot(mpg ~ wt, data = mtcars, facet = am + vs ~ gear)`)
+now plot all panels correctly, even if some combinations are missing. (#197
+@grantmcdermott)
 
 New Features:
 
@@ -37,6 +44,8 @@ conflicting with the existing `tinyplot(..., width)` argument.
 Internals:
 
 - Continued modularization of the main code logic. (#192 @vincentarelbundock)
+- Revamped formula processing that allows for better sanity checking and
+edge-case logic. (#197 @zeileis)
 
 ## 0.2.0
 

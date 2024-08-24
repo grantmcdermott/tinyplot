@@ -264,6 +264,9 @@ draw_facet_window = function(grid, ...) {
       if (!is.null(facet)) {
         # Get the four corners of plot area (x1, x2, y1, y2)
         corners = par("usr")
+        # catch for logged axes
+        if (isTRUE(par("xlog"))) corners[1:2] = 10^(corners[1:2])
+        if (isTRUE(par("ylog"))) corners[3:4] = 10^(corners[3:4])
         # special logic for facet grids
         if (is.null(facet_newlines) || facet_newlines == 0) {
           facet_title_lines = 1

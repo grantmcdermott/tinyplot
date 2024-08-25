@@ -316,14 +316,13 @@ draw_facet_window = function(grid, ...) {
           ## right facet strips
           if (ii %% nfacet_cols == 0 || ii == nfacets) {
             if (isTRUE(facet_rect)) {
+              line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
               if (xlog) {
-                line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
                 line_height = grconvertX(line_height, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
                 rect_width = corners[2] * line_height
                 
               } else {
-                line_height = grconvertX(facet_title_lines + .1, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
-                line_height = line_height * facet_text / cex_fct_adj
+                line_height = grconvertX(line_height, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
                 rect_width = corners[2] + line_height
               }
               rect(
@@ -341,7 +340,6 @@ draw_facet_window = function(grid, ...) {
               xpos = corners[2] + xpos
             }
             ypos = if (ylog) 10^(mean(log10(corners[3:4]))) else mean(corners[3:4])
-            ## end test
             text(
               x = xpos,
               y = ypos,

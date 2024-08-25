@@ -44,11 +44,11 @@ tinyformula = function(formula, facet = NULL) {
   }
   if (!is.null(xfacet)) {
     environment(xfacet) = environment(formula)
-    xfacet[[2L]] <- facet[[length(facet)]]
+    xfacet[[2L]] = facet[[length(facet)]]
   }
   if (!is.null(yfacet)) {
     environment(yfacet) = environment(formula)
-    yfacet[[2L]] <- facet[[2L]]
+    yfacet[[2L]] = facet[[2L]]
   }
 
   ## combine everything
@@ -69,7 +69,7 @@ tinyformula = function(formula, facet = NULL) {
   ))
 }
 
-tinyframe <- function(formula, data, drop = FALSE) {
+tinyframe = function(formula, data, drop = FALSE) {
   ## input
   ## - formula: (sub-)formula
   ## - data: model.frame from full formula

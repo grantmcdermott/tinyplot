@@ -528,6 +528,7 @@ tinyplot.default = function(
   # sanitize arguments
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
   type = sanitize_type(type, x, y)
+  was_area_type = identical(type, "area") # flag to keep track for some legend adjustments below
 
   palette = substitute(palette)
 
@@ -637,76 +638,46 @@ tinyplot.default = function(
     return(do.call(tinyplot.density, args = fargs))
   }
 
-  if (type == "histogram") {
-    fargs = histogram_args(
-      x = x, by = by, facet = facet, facet_by = facet_by, dots = dots,
-      ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha)
-    list2env(fargs, environment())
-  }
+  datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)
+  datapoints = Filter(function(z) length(z) > 0, datapoints)
+  datapoints = data.frame(datapoints)
+  datapoints[["rowid"]] = seq_len(nrow(datapoints))
+  datapoints[["facet"]] = if (!is.null(facet)) facet else ""
+  datapoints[["by"]] = if (!is.null(by)) by else ""
 
-  if (type == "area") {
-    ymax = y
-    ymin = rep.int(0, length(y))
-    type = "ribbon"
-    was_area_type = TRUE
-  } else {
-    was_area_type = FALSE # flag to keep track for some legend adjustments below
-  }
-
+  # jitter is standalone: before and in addition to type = "point"
   if (type == "jitter") {
-    fargs = jitter_args(x = x, y = y)
+    fargs = type_jitter(datapoints)
     list2env(fargs, environment())
   }
+
+  if (type == "histogram") {
+    fargs = type_histogram(
+      x = x, by = by, facet = facet, dots = dots,
+      ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha, datapoints = datapoints)
+    list2env(fargs, environment())
+
+  } else if (type == "area") {
+    fargs = type_area(datapoints)
+    list2env(fargs, environment())
+
+  } else if (type == "boxplot") {
+    fargs = type_boxplot(datapoints = datapoints)
+    list2env(fargs, environment())
+
+  } else if (type == "ribbon") {
+    fargs = type_ribbon(datapoints = datapoints, xlabs = xlabs)
+    list2env(fargs, environment())
   
-  if (type == "boxplot") x = as.factor(x)
-  if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot")) {
-    if (is.character(x)) x = as.factor(x)
-    if (is.factor(x)) {
-      ## For non-boxplots... Need to maintain order that was observed in the
-      ## original data (i.e., no new sorting by factor)
-      if (type != "boxplot") {
-        xlvls = unique(x)
-        x = factor(x, levels = xlvls)
-      } else {
-        xlvls = levels(x)
-      }
-      xlabs = seq_along(xlvls)
-      names(xlabs) = xlvls
-      x = as.integer(x)
-    }
-    if (type %in% c("ribbon", "boxplot")) {
-      if (is.null(by) && is.null(facet)) {
-        xord = order(x)
-      } else if (is.null(facet)) {
-        xord = order(by, x)
-        by = by[xord]
-      } else if (is.null(by)) {
-        facet_grid = attr(facet, "facet_grid")
-        xord = order(facet, x)
-        facet = facet[xord]
-        attr(facet, "facet_grid") = facet_grid
-      } else {
-        facet_grid = attr(facet, "facet_grid")
-        xord = order(by, facet, x)
-        by = by[xord]
-        facet = facet[xord]
-        attr(facet, "facet_grid") = facet_grid
-      }
-      x = x[xord]
-      y = y[xord]
-      ymin = ymin[xord]
-      ymax = ymax[xord]
-      rm(xord)
-    }
+  } else if (type %in% c("pointrange", "errorbar")) {
+    fargs = type_pointrange(datapoints = datapoints, xlabs = xlabs)
+    list2env(fargs, environment())
   }
   
   # plot limits
   fargs = lim_args(
-    x = x, xlim = xlim, xmax = xmax, xmin = xmin,
-    y = y, ylim = ylim, ymax = ymax, ymin = ymin,
-    type = type,
-    col = col, bg = bg, by = by, fill = fill, palette = palette
-    )
+    datapoints = datapoints, xlim = xlim, ylim = ylim, palette = palette,
+    col = col, bg = bg, fill = fill, type = type)
   list2env(fargs, environment())
 
 
@@ -720,24 +691,16 @@ tinyplot.default = function(
     by_ordered = is.ordered(by)
   }
 
-  if (!is.null(by) && !by_continuous) {
-    split_data = list(x = x, y = y)
-    split_data[["xmin"]] = xmin
-    split_data[["xmax"]] = xmax
-    split_data[["ymin"]] = ymin
-    split_data[["ymax"]] = ymax
-    split_data[["facet"]] = facet
-    split_data = lapply(split_data, split, by)
-    split_data = do.call(function(...) Map("list", ...), split_data)
-  } else {
-    split_data = list(list(
-      x = x, y = y,
-      xmin = xmin, xmax = xmax,
-      ymin = ymin, ymax = ymax,
-      facet = facet
-    ))
+  if (length(unique(datapoints$facet)) == 1) {
+    datapoints[["facet"]] = NULL
   }
-
+  if (!by_continuous) {
+    split_data = split(datapoints, datapoints$by)
+    split_data = lapply(split_data, as.list)
+  } else {
+    split_data = list(as.list(datapoints))
+  }
+  
   # aesthetics by group: col, bg, etc.
   aesthetics_args = aesthetics(
     adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by,
@@ -972,15 +935,6 @@ tinyplot.default = function(
     idata = split_data[[i]]
     ifacet = idata[["facet"]]
     if (!is.null(ifacet)) {
-      idata[["facet"]] = NULL ## Don't need this anymore since we'll be splitting by ifacet
-      ## Need extra catch for non-groupby data that also doesn't have ymin or
-      ## ymax vars
-      if (is.null(by) || isTRUE(by_continuous)) {
-        if (is.null(idata[["xmin"]])) idata[["xmin"]] = NULL
-        if (is.null(idata[["xmax"]])) idata[["xmax"]] = NULL
-        if (is.null(idata[["ymin"]])) idata[["ymin"]] = NULL
-        if (is.null(idata[["ymax"]])) idata[["ymax"]] = NULL
-      }
       if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(by, to = c(1, 100)))]
         idata[["bg"]] = bg[round(rescale_num(by, to = c(1, 100)))]

@@ -3,7 +3,7 @@ using("tinysnapshot")
 
 # test case adapted from ?segments Examples
 set.seed(42L)
-x = stats::runif(12); y <- stats::rnorm(12)
+x = stats::runif(12); y = stats::rnorm(12)
 i = order(x, y); x = x[i]; y = y[i]
 s = seq(length(x)-1)  # one shorter than data
 s = s[-length(s)]

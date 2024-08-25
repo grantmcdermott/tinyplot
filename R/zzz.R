@@ -1,3 +1,9 @@
+#' Operations on package load
+#' @importFrom utils globalVariables
+#' @param libname library name
+#' @param pkgname package name name
+#' @keywords internal
+#' @noRd
 .onLoad = function(libname, pkgname) {
   
   # https://stackoverflow.com/questions/12598242/global-variables-in-packages-in-r
@@ -36,6 +42,48 @@
   assign(".saved_par_before", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
   assign(".saved_par_after", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
 
-  utils::globalVariables(c("cex_fct_adj", "facets", "nfacet_cols", "nfacet_rows", "nfacets", "oxaxis", "oyaxis"))
-  
+  globalVariables(c(
+    "add",
+    "asp",
+    "axes",
+    "by_continuous",
+    "by_ordered",
+    "cex_fct_adj",
+    "dots",
+    "facet_bg",
+    "facet_border",
+    "facet_col",
+    "facet_font",
+    "facet_newlines",
+    "facet_rect",
+    "facet_text",
+    "facet.args",
+    "facet",
+    "facets",
+    "fill",
+    "frame.plot",
+    "has_legend",
+    "ifacet",
+    "nfacet_cols",
+    "nfacet_rows",
+    "nfacets",
+    "ngrps",
+    "oxaxis",
+    "oyaxis",
+    "ribbon.alpha",
+    "split_data",
+    "type",
+    "x",
+    "xaxt",
+    "xlabs",
+    "xlim",
+    "xlvls",
+    "xmax",
+    "xmin",
+    "y",
+    "yaxt",
+    "ylim",
+    "ymax",
+    "ymin"
+    ))
 }

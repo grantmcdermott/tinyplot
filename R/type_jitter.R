@@ -1,4 +1,6 @@
-jitter_args = function(x, y) {
+type_jitter = function(datapoints) {
+  x = datapoints$x
+  y = datapoints$y
   if (is.character(x)) x = as.factor(x)
   if (is.character(y)) y = as.factor(y)
   if (is.factor(x)) {
@@ -19,6 +21,17 @@ jitter_args = function(x, y) {
   }
   x = jitter(x)
   y = jitter(y)
-  type = "p"
-  return(as.list(environment()))
+
+  datapoints$x = x
+  datapoints$y = y
+
+  out = list(
+    datapoints = datapoints,
+    x = x,
+    y = y,
+    xlabs = xlabs,
+    ylabs = ylabs,
+    type = "p"
+  )
+  return(out)
 }

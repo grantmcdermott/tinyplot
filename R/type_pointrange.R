@@ -1,18 +1,17 @@
 type_pointrange = function(datapoints, xlabs) {
- dp = datapoints
- if (is.character(dp$x)) dp$x = as.factor(dp$x)
- if (is.factor(dp$x)) {
+ if (is.character(datapoints$x)) datapoints$x = as.factor(datapoints$x)
+ if (is.factor(datapoints$x)) {
      ## original data (i.e., no new sorting by factor)
-     xlvls = unique(dp$x)
-     dp$x = factor(dp$x, levels = xlvls)
+     xlvls = unique(datapoints$x)
+     datapoints$x = factor(datapoints$x, levels = xlvls)
      xlabs = seq_along(xlvls)
      names(xlabs) = xlvls
-     dp$x = as.integer(dp$x)
+     datapoints$x = as.integer(datapoints$x)
  }
   out = list(
-    x = dp$x,
+    x = datapoints$x,
     xlabs = xlabs,
-    datapoints = dp)
+    datapoints = datapoints)
 
   return(out)
 }

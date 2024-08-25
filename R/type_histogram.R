@@ -15,13 +15,12 @@ type_histogram = function(x, by, facet, dots, ylab, col, bg, fill, ribbon.alpha,
   
   type = "rect"
 
-  dp = datapoints
-  dp_breaks = hist(dp$x, breaks = hbreaks, plot = FALSE)
-  dp = split(dp, list(datapoints$by, datapoints$facet))
-  dp = Filter(function(k) nrow(k) > 0, dp)
+  datapoints_breaks = hist(datapoints$x, breaks = hbreaks, plot = FALSE)
+  datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
+  datapoints = Filter(function(k) nrow(k) > 0, datapoints)
 
-  dp = lapply(dp, function(k) {
-    h = hist(k$x, breaks = dp_breaks$breaks, plot = FALSE)
+  datapoints = lapply(datapoints, function(k) {
+    h = hist(k$x, breaks = datapoints_breaks$breaks, plot = FALSE)
     out = data.frame(
       by = k$by[1], # already split
       facet = k$facet[1], # already split
@@ -32,22 +31,22 @@ type_histogram = function(x, by, facet, dots, ylab, col, bg, fill, ribbon.alpha,
     )
     return(out)
   })
-  dp = do.call(rbind, dp)
+  datapoints = do.call(rbind, datapoints)
 
   out = list(
-    x = c(dp$xmin, dp$xmax), 
-    y = c(dp$ymin, dp$ymax),
-    ymin = dp$ymin, 
-    ymax = dp$ymax, 
-    xmin = dp$xmin, 
-    xmax = dp$xmax, 
+    x = c(datapoints$xmin, datapoints$xmax), 
+    y = c(datapoints$ymin, datapoints$ymax),
+    ymin = datapoints$ymin, 
+    ymax = datapoints$ymax, 
+    xmin = datapoints$xmin, 
+    xmax = datapoints$xmax, 
     ylab = ylab, 
     col = col, 
     bg = bg, 
     type = type, 
-    datapoints = dp,
-    by = if (length(unique(dp$by)) == 1) by else dp$by, 
-    facet = if (length(unique(dp$facet)) == 1) facet else dp$facet
+    datapoints = datapoints,
+    by = if (length(unique(datapoints$by)) == 1) by else datapoints$by, 
+    facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
   )
   return(out)
 }

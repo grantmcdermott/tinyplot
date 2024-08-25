@@ -1,11 +1,10 @@
 type_area = function(datapoints) {
-  dp = datapoints
-  dp$ymax = dp$y
-  dp$ymin = rep.int(0, nrow(dp))
+  datapoints$ymax = datapoints$y
+  datapoints$ymin = rep.int(0, nrow(datapoints))
   out = list(
-    datapoints = dp,
-    ymax = dp$ymax,
-    ymin = dp$ymin,
+    datapoints = datapoints,
+    ymax = datapoints$ymax,
+    ymin = datapoints$ymin,
     type = "ribbon"
   )
   return(out)

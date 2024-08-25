@@ -29,6 +29,7 @@ type_jitter = function(datapoints) {
     datapoints = datapoints,
     x = x,
     y = y,
+    xlabs = xlabs,
     ylabs = ylabs,
     type = "p"
   )

@@ -102,14 +102,14 @@
 #' tpar(sp)
 #'
 #' @export
-get_saved_par <- function(when = c("before", "after")) {
+get_saved_par = function(when = c("before", "after")) {
   when = match.arg(when)
   par_env_name = paste0(".saved_par_", when)
   return(get(par_env_name, envir = get(".tinyplot_env", envir = parent.env(environment()))))
 }
 
 # (non-exported) companion function(s) for setting the original pars
-set_saved_par <- function(when = c("before", "after"), value) {
+set_saved_par = function(when = c("before", "after"), value) {
   when = match.arg(when)
   par_env_name = paste0(".saved_par_", when)
   assign(par_env_name, value, envir = get(".tinyplot_env", envir = parent.env(environment())))

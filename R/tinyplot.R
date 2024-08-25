@@ -691,15 +691,14 @@ tinyplot.default = function(
     by_ordered = is.ordered(by)
   }
 
-  dp = datapoints
-  if (length(unique(dp$facet)) == 1) {
-    dp[["facet"]] = NULL
+  if (length(unique(datapoints$facet)) == 1) {
+    datapoints[["facet"]] = NULL
   }
   if (!by_continuous) {
-    split_data = split(dp, datapoints$by)
+    split_data = split(datapoints, datapoints$by)
     split_data = lapply(split_data, as.list)
   } else {
-    split_data = list(as.list(dp))
+    split_data = list(as.list(datapoints))
   }
   
   # aesthetics by group: col, bg, etc.

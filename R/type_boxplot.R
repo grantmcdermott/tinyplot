@@ -1,4 +1,4 @@
-type_boxplot <- function(datapoints) {
+type_boxplot = function(datapoints) {
   dp = datapoints
 
   # Convert x to factor if it's not already
@@ -28,7 +28,7 @@ type_boxplot <- function(datapoints) {
   dp = dp[xord,]
   
   # Return the result as a list called 'out'
-  out <- list(
+  out = list(
     x = dp$x,
     y = dp$y,
     ymin = dp$ymin,

@@ -1,4 +1,4 @@
-type_ribbon <- function(datapoints, xlabs) {
+type_ribbon = function(datapoints, xlabs) {
   dp = datapoints
 
   # Convert x to factor if it's not already
@@ -32,7 +32,7 @@ type_ribbon <- function(datapoints, xlabs) {
   # Reorder x, y, ymin, and ymax based on the order determined
   dp = dp[xord,]
   
-  out <- list(
+  out = list(
     x = dp$x,
     y = dp$y,
     ymin = dp$ymin,

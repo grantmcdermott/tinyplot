@@ -286,9 +286,15 @@ draw_facet_window = function(grid, ...) {
                 xpd = NA
               )
             }
+            ## test
+            xpos = if (isTRUE(par("xlog"))) exp(mean(log(corners[1:2]))) else mean(corners[1:2])
+            ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+            if (isTRUE(par("ylog"))) ypos = exp(ypos)
+            ypos = corners[4] + ypos
+            ## end test
             text(
-              x = mean(corners[1:2]),
-              y = corners[4] + grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user"),
+              x = xpos,
+              y = ypos,
               labels = sub("^(.*?)~.*", "\\1", facets[[ii]]),
               adj = c(0.5, 0),
               cex = facet_text / cex_fct_adj,
@@ -308,9 +314,15 @@ draw_facet_window = function(grid, ...) {
                 xpd = NA
               )
             }
+            ## test
+            xpos = grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+            if (isTRUE(par("xlog"))) xpos = exp(xpos)
+            xpos = corners[2] + xpos
+            ypos = if (isTRUE(par("ylog"))) exp(mean(log(corners[3:4]))) else mean(corners[3:4])
+            ## end test
             text(
-              x = corners[2] + grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user"),
-              y = mean(corners[3:4]),
+              x = xpos,
+              y = ypos,
               labels = sub("^.*?~(.*)", "\\1", facets[[ii]]),
               srt = 270,
               adj = c(0.5, 0),
@@ -330,9 +342,15 @@ draw_facet_window = function(grid, ...) {
               xpd = NA
             )
           }
+          ## test
+          xpos = if (isTRUE(par("xlog"))) exp(mean(log(corners[1:2]))) else mean(corners[1:2])
+          ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+          if (isTRUE(par("ylog"))) ypos = exp(ypos)
+          ypos = corners[4] + ypos
+          ## end test
           text(
-            x = mean(corners[1:2]),
-            y = corners[4] + grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user"),
+            x = xpos,
+            y = ypos,
             labels = paste(facets[[ii]]),
             adj = c(0.5, 0),
             cex = facet_text / cex_fct_adj,

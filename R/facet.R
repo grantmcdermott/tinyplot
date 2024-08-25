@@ -265,8 +265,10 @@ draw_facet_window = function(grid, ...) {
         # Get the four corners of plot area (x1, x2, y1, y2)
         corners = par("usr")
         # catch for logged axes
-        if (isTRUE(par("xlog"))) corners[1:2] = 10^(corners[1:2])
-        if (isTRUE(par("ylog"))) corners[3:4] = 10^(corners[3:4])
+        xlog = isTRUE(par("xlog"))
+        ylog = isTRUE(par("ylog"))
+        if (xlog) corners[1:2] = 10^(corners[1:2])
+        if (ylog) corners[3:4] = 10^(corners[3:4])
         # special logic for facet grids
         if (is.null(facet_newlines) || facet_newlines == 0) {
           facet_title_lines = 1
@@ -278,19 +280,37 @@ draw_facet_window = function(grid, ...) {
           ## top facet strips
           if (ii %in% 1:nfacet_cols) {
             if (isTRUE(facet_rect)) {
-              line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
-              line_height = line_height * facet_text / cex_fct_adj
+              # line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+              # line_height = line_height * facet_text / cex_fct_adj
+              # if (ylog) line_height = exp(line_height)
+              line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
+              if (ylog) {
+                line_height = grconvertY(line_height, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+                # rect_height = corners[4] + 10^(line_height)
+                rect_height = corners[4] * line_height
+              } else {
+                line_height = grconvertY(line_height, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+                rect_height = corners[4] + line_height
+              }
               rect(
-                corners[1], corners[4], corners[2], corners[4] + line_height,
+                corners[1], corners[4], corners[2], rect_height,
                 col = facet_bg, border = facet_border,
                 xpd = NA
               )
             }
             ## test
-            xpos = if (isTRUE(par("xlog"))) exp(mean(log(corners[1:2]))) else mean(corners[1:2])
-            ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
-            if (isTRUE(par("ylog"))) ypos = exp(ypos)
-            ypos = corners[4] + ypos
+            # xpos = if (xlog) exp(mean(log(corners[1:2]))) else mean(corners[1:2])
+            xpos = if (xlog) 10^(mean(log10(corners[1:2]))) else mean(corners[1:2])
+            # ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+            # if (ylog) ypos = exp(ypos)
+            # ypos = corners[4] + ypos
+            if (ylog) {
+              ypos = grconvertY(0.4, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+              ypos = corners[4] * ypos
+            } else {
+              ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+              ypos = corners[4] + ypos
+            }
             ## end test
             text(
               x = xpos,
@@ -306,19 +326,39 @@ draw_facet_window = function(grid, ...) {
           ## right facet strips
           if (ii %% nfacet_cols == 0 || ii == nfacets) {
             if (isTRUE(facet_rect)) {
-              line_height = grconvertX(facet_title_lines + .1, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
-              line_height = line_height * facet_text / cex_fct_adj
+              # line_height = grconvertX(facet_title_lines + .1, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+              # line_height = line_height * facet_text / cex_fct_adj
+              # if (xlog) line_height = exp(line_height)
+              if (xlog) {
+                line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
+                line_height = grconvertX(line_height, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
+                rect_width = corners[2] * line_height
+                
+              } else {
+                line_height = grconvertX(facet_title_lines + .1, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+                line_height = line_height * facet_text / cex_fct_adj
+                rect_width = corners[2] + line_height
+              }
               rect(
-                corners[2], corners[3], corners[2] + line_height, corners[4],
+                corners[2], corners[3], rect_width, corners[4],
                 col = facet_bg, border = facet_border,
                 xpd = NA
               )
             }
             ## test
-            xpos = grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
-            if (isTRUE(par("xlog"))) xpos = exp(xpos)
-            xpos = corners[2] + xpos
-            ypos = if (isTRUE(par("ylog"))) exp(mean(log(corners[3:4]))) else mean(corners[3:4])
+            # xpos = grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+            # if (xlog) xpos = exp(xpos)
+            # xpos = corners[2] + xpos
+            if (xlog) {
+              xpos = grconvertX(0.4, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
+              xpos = corners[2] * xpos
+              
+            } else {
+              xpos = grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+              xpos = corners[2] + xpos
+            }
+            # ypos = if (ylog) exp(mean(log(corners[3:4]))) else mean(corners[3:4])
+            ypos = if (ylog) 10^(mean(log10(corners[3:4]))) else mean(corners[3:4])
             ## end test
             text(
               x = xpos,
@@ -334,19 +374,36 @@ draw_facet_window = function(grid, ...) {
           }
         } else {
           if (isTRUE(facet_rect)) {
-            line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
-            line_height = line_height * facet_text / cex_fct_adj
+            # line_height = grconvertY(facet_title_lines + .1, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+            # line_height = line_height * facet_text / cex_fct_adj
+            # if (ylog) line_height = exp(line_height)
+            line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
+            if (ylog) {
+              line_height = grconvertY(line_height, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+              # rect_height = corners[4] + 10^(line_height)
+              rect_height = corners[4] * line_height
+            } else {
+              line_height = grconvertY(line_height, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+              rect_height = corners[4] + line_height
+            }
             rect(
-              corners[1], corners[4], corners[2], corners[4] + line_height,
+              # corners[1], corners[4], corners[2], corners[4] + line_height,
+              corners[1], corners[4], corners[2], rect_height,
               col = facet_bg, border = facet_border,
               xpd = NA
             )
           }
           ## test
-          xpos = if (isTRUE(par("xlog"))) exp(mean(log(corners[1:2]))) else mean(corners[1:2])
-          ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
-          if (isTRUE(par("ylog"))) ypos = exp(ypos)
-          ypos = corners[4] + ypos
+          xpos = if (xlog) 10^(mean(log10(corners[1:2]))) else mean(corners[1:2])
+          # ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+          if (ylog) {
+            ypos = grconvertY(0.4, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+            # ypos = exp(log(corners[4]) + ypos)
+            ypos = corners[4] * ypos
+          } else {
+            ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+            ypos = corners[4] + ypos
+          }
           ## end test
           text(
             x = xpos,

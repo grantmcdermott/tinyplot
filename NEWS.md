@@ -6,22 +6,6 @@ where the formatting is also better._
 
 ## 0.2.0.99 (development version)
 
-Bug fixes:
-
-- Fix duplicate plots produced with `type = "density"`, which was a regression
-accidentally introduced in v0.2.0 (#187 @grantmcdermott)
-- Ensure correct boxplot positioning if `x` == `by`, or these two are
-functionally identical. (#196 @grantmcdermott)
-- `xlab` and `ylab` arguments not respected in some plots. Thanks to @lbelzile
-for reporting Issue #203.
-- Avoid triggering an inadvertent legend when a function transformation of x is
-plotted against x itself, `tinyplot(log(x) ~ x)`. (#197 @zeileis)
-- Facets with interactions and/or multivariate formulas (e.g., complex grid
-arrangements like `tinyplot(mpg ~ wt, data = mtcars, facet = am + vs ~ gear)`)
-now plot all panels correctly, even if some combinations are missing. (#197
-@grantmcdermott)
-- Fix alignment of facet titles when axes are logged. (#207 @grantmcdermott)
-
 New Features:
 
 - The `axes` argument of `tinyplot()`/`plt()` gains extra options for
@@ -41,6 +25,22 @@ that `tinyplot(..., type = "boxplot", boxwidth = <num>)` is equivalent to the
 `boxplot(..., width = <num>)`; we just use the "box(width)" prefix to avoid 
 conflicting with the existing `tinyplot(..., width)` argument.
 (#196 @grantmcdermott)
+
+Bug fixes:
+
+- Fix duplicate plots produced with `type = "density"`, which was a regression
+accidentally introduced in v0.2.0 (#187 @grantmcdermott)
+- Ensure correct boxplot positioning if `x` == `by`, or these two are
+functionally identical. (#196 @grantmcdermott)
+- `xlab` and `ylab` arguments not respected in some plots. Thanks to @lbelzile
+for reporting Issue #203.
+- Avoid triggering an inadvertent legend when a function transformation of x is
+plotted against x itself, `tinyplot(log(x) ~ x)`. (#197 @zeileis)
+- Facets with interactions and/or multivariate formulas (e.g., complex grid
+arrangements like `tinyplot(mpg ~ wt, data = mtcars, facet = am + vs ~ gear)`)
+now plot all panels correctly, even if some combinations are missing. (#197
+@grantmcdermott)
+- Fix alignment of facet titles when axes are logged. (#207 @grantmcdermott)
 
 Internals:
 

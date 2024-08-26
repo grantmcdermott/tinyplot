@@ -20,6 +20,7 @@ plotted against x itself, `tinyplot(log(x) ~ x)`. (#197 @zeileis)
 arrangements like `tinyplot(mpg ~ wt, data = mtcars, facet = am + vs ~ gear)`)
 now plot all panels correctly, even if some combinations are missing. (#197
 @grantmcdermott)
+- Fix alignment of facet titles when axes are logged. (#207 @grantmcdermott)
 
 New Features:
 
@@ -43,7 +44,8 @@ conflicting with the existing `tinyplot(..., width)` argument.
 
 Internals:
 
-- Continued modularization of the main code logic. (#192 @vincentarelbundock)
+- Continued modularization of the main code logic. (#192 & #198
+@vincentarelbundock)
 - Revamped formula processing that allows for better sanity checking and
 edge-case logic. (#197 @zeileis)
 

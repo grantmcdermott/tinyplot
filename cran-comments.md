@@ -1,7 +1,8 @@
 ## Overview
 
-This is a minor update that introduces support for additional plot types, as
-well as some internal improvements.
+This patch update introduces a few minor new features, but is mostly focused on
+bug fixes (including addressing some minor regressions from our previous v0.2.0
+submission last month).
 
 ## Test environments
 Local: Arch Linux

@@ -403,6 +403,17 @@ expect_snapshot_plot(f, label = "facet_grid")
 f = function() {
   tinyplot(
     mpg ~ wt, data = mtcars,
+    facet = am ~ cyl, facet.args = list(bg = adjustcolor("hotpink", 0.5)),
+    log = "xy",
+    main = "facet grid (logged axes)",
+    sub = "Notes: Transmission (rows) vs Cylinders (cols)"
+  )
+}
+expect_snapshot_plot(f, label = "facet_grid_log")
+
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
     facet = am + vs ~ gear,
     main = "facet grid multivar",
     sub = "Notes: Missing combos are still displayed correctly"

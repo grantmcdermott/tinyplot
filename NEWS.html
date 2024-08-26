@@ -257,7 +257,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="development-version">0.2.0.99 (development version)</h2>
 <p>New Features:</p>
 <ul>
-<li>The <code>axes</code> argument of <code>tinyplot()</code>/<code>plt()</code> gains extra options for fine-grained control of the plot axes. In addition to the existing logical (<code>TRUE</code>/<code>FALSE</code>) option, users can now specify one of the following character keywords (or, just their first letters as a convenient shorthand): <code>"standard"</code> (with axis, ticks, and labels; equivalent to <code>TRUE</code>), <code>"none"</code> (no axes; equivalent to <code>FALSE</code>), <code>"ticks"</code> (only ticks and labels without axis line), <code>"labels"</code> (only labels without ticks and axis line), <code>"axis"</code> (only axis line and labels but no ticks). Simultaneously, the main plotting functions also gain the <code>xaxt</code> and <code>yaxt</code> for <em>separately</em> controlling the two axes using the same keyword options. For example, <code>plt(0:10, xaxt = "l", yaxt = "t")</code> will yield a plot where the x-axis only contains labels and the y-axis contains both labels and ticks, but no axis line. (<a href="https://github.com/grantmcdermott/tinyplot/issues/190">#190</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>The <code>axes</code> argument of <code>tinyplot()</code>/<code>plt()</code> gains extra options for fine-grained control of the plot axes. In addition to the existing logical (<code>TRUE</code>/<code>FALSE</code>) option, users can now specify one of the following character keywords (or, just their first letters as a convenient shorthand):
+<ul>
+<li><code>"standard"</code> (with axis, ticks, and labels; equivalent to <code>TRUE</code>),</li>
+<li><code>"none"</code> (no axes; equivalent to <code>FALSE</code>),</li>
+<li><code>"ticks"</code> (only ticks and labels without axis line),</li>
+<li><code>"labels"</code> (only labels without ticks and axis line),</li>
+<li><code>"axis"</code> (only axis line and labels but no ticks).</li>
+</ul>
+Simultaneously, the main plotting functions also gain the <code>xaxt</code> and <code>yaxt</code> for <em>separately</em> controlling the two axes using the same keyword options. For example, <code>plt(0:10, xaxt = "l", yaxt = "t")</code> will yield a plot where the x-axis only contains labels and the y-axis contains both labels and ticks, but no axis line. (<a href="https://github.com/grantmcdermott/tinyplot/issues/190">#190</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 <li>Support additional boxplot arguments like <code>varwidth</code>, <code>notch</code>, etc. Note that <code>tinyplot(..., type = "boxplot", boxwidth = &lt;num&gt;)</code> is equivalent to the <code>boxplot(..., width = &lt;num&gt;)</code>; we just use the “box(width)” prefix to avoid conflicting with the existing <code>tinyplot(..., width)</code> argument. (<a href="https://github.com/grantmcdermott/tinyplot/issues/196">#196</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Bug fixes:</p>

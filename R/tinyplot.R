@@ -599,6 +599,7 @@ tinyplot.default = function(
       facet.args[["nrow"]] = attr(facet, "facet_nrow")
     }
   }
+  facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
 
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
@@ -737,6 +738,7 @@ tinyplot.default = function(
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
   #   come later.
+  attributes(facet) = facet_attr ## TODO: better solution for restoring facet attributes?
   fargs = facet_layout(facet = facet, facet.args = facet.args, add = add)
   list2env(fargs, environment())
 

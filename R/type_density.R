@@ -172,6 +172,7 @@ tinyplot.density = function(
             facet = factor(facet)
         }
         attr(facet, "facet_grid") = facet_attributes[["facet_grid"]]
+        attr(facet, "facet_nrow") = facet_attributes[["facet_nrow"]]
     }
 
     tinyplot.default(

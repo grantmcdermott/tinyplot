@@ -32,11 +32,8 @@ tinyplot.density = function(
     ## override if bg = "by"
     if (!is.null(bg) || !is.null(fill)) type = "area"
 
-    # catch for facet_grid
-    if (!is.null(facet)) {
-        facet_attributes = attributes(facet)
-        # facet_grid = attr(facet, "facet_grid")
-    }
+    ## catch for facet_grid/nrow
+    facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
 
     if (inherits(x, "density")) {
         object = x
@@ -164,15 +161,10 @@ tinyplot.density = function(
     if (is.null(xlab)) xlab = paste0("N = ", object$n, "   Bandwidth = ", sprintf("%.4g", object$bw))
     if (is.null(main)) main = paste0(paste(object$call, collapse = "(x = "), ")")
 
-    # if (!is.null(facet)) attr(facet, "facet_grid") = facet_grid
+    ## facet handling
     if (!is.null(facet)) {
-        if (!is.null(facet_attributes[["levels"]])) {
-            facet = factor(facet, levels = facet_attributes[["levels"]])
-        } else {
-            facet = factor(facet)
-        }
-        attr(facet, "facet_grid") = facet_attributes[["facet_grid"]]
-        attr(facet, "facet_nrow") = facet_attributes[["facet_nrow"]]
+        facet = if (is.null(facet_attr[["levels"]])) factor(facet) else factor(facet, levels = facet_attr[["levels"]])
+        attributes(facet) = facet_attr ## TODO: better solution for restoring facet attributes?
     }
 
     tinyplot.default(

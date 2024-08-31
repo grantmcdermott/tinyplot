@@ -312,7 +312,7 @@
     "href": "CITATION.html",
     "title": "Citation",
     "section": "",
-    "text": "Citation\nTo cite package ‘tinyplot’ in publications use:\n\nMcDermott G, Arel-Bundock V, Zeileis A (2024). tinyplot: Lightweight Extension of the Base R Graphics System. R package version 0.2.1, https://grantmcdermott.com/tinyplot/.",
+    "text": "Citation\nTo cite package ‘tinyplot’ in publications use:\n\nMcDermott G, Arel-Bundock V, Zeileis A (2024). tinyplot: Lightweight Extension of the Base R Graphics System. R package version 0.2.1.99, https://grantmcdermott.com/tinyplot/.",
     "crumbs": [
       "Citation"
     ]

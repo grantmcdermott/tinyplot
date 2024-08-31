@@ -462,6 +462,24 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_density_grid")
 
+f = function() {
+  tinyplot(
+    ~ wt, data = mtcars,
+    type = "hist",
+    facet = cyl ~ am
+  )
+}
+expect_snapshot_plot(f, label = "facet_hist_3x2")
+
+f = function() {
+  tinyplot(
+    ~ wt, data = mtcars,
+    type = "density",
+    facet = cyl ~ am
+  )
+}
+expect_snapshot_plot(f, label = "facet_density_3x2")
+
 #
 # restore original par settings
 #

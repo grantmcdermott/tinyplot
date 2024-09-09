@@ -22,44 +22,83 @@ draw_elements = function(
     facet_by,
     split_data,
     i = 1,
-    xlvls,
-    lgnd_labs,
-    x_by = FALSE
+    xlvls,     # do we still need this?
+    lgnd_labs, # ditto?
+    x_by = FALSE,
+    flip = FALSE
     ) {
 
       ## polygons before lines, segments/arrows before points, etc.
       if (isTRUE(empty_plot)) {
 
       } else if (type == "ribbon") {
-        polygon(
-          x = c(xx, rev(xx)),
-          y = c(yymin, rev(yymax)),
-          col = bg[i],
-          border = FALSE
-        )
+        if (isFALSE(flip)) {
+          polygon(
+            x = c(xx, rev(xx)),
+            y = c(yymin, rev(yymax)),
+            col = bg[i],
+            border = FALSE
+          )
+        } else {
+          polygon(
+            x = c(xxmin, rev(xxmax)),
+            y = c(yy, rev(yy)),
+            col = bg[i],
+            border = FALSE
+          )
+          
+        }
+        
       } else if (type == "pointrange") {
-        segments(
-          x0 = xx,
-          y0 = yymin,
-          x1 = xx,
-          y1 = yymax,
-          col = icol,
-          # lty = ilty,
-          lwd = ilwd
+        if (isFALSE(flip)) {
+          segments(
+            x0 = xx,
+            y0 = yymin,
+            x1 = xx,
+            y1 = yymax,
+            col = icol,
+            # lty = ilty,
+            lwd = ilwd
+          )
+        } else (
+          segments(
+            x0 = xxmin,
+            y0 = yy,
+            x1 = xxmax,
+            y1 = yy,
+            col = icol,
+            # lty = ilty,
+            lwd = ilwd
+          )
         )
       } else if (type == "errorbar") {
-        arrows(
-          x0 = xx,
-          y0 = yymin,
-          x1 = xx,
-          y1 = yymax,
-          col = icol,
-          # lty = ilty,
-          lwd = ilwd,
-          length = 0.05,
-          angle = 90,
-          code = 3
-        )
+        if (isFALSE(flip)) {
+          arrows(
+            x0 = xx,
+            y0 = yymin,
+            x1 = xx,
+            y1 = yymax,
+            col = icol,
+            # lty = ilty,
+            lwd = ilwd,
+            length = 0.05,
+            angle = 90,
+            code = 3
+          )
+        } else {
+          arrows(
+            x0 = xxmin,
+            y0 = yy,
+            x1 = xxmax,
+            y1 = yy,
+            col = icol,
+            # lty = ilty,
+            lwd = ilwd,
+            length = 0.05,
+            angle = 90,
+            code = 3
+          )
+        }
       }
 
       ## now draw the points/lines/polygons/etc

@@ -240,7 +240,12 @@ draw_facet_window = function(grid, ...) {
           } else {
             tinyAxis(x, side = xside, type = xaxt)
           }
-          tinyAxis(y, side = yside, type = yaxt)
+          # tinyAxis(y, side = yside, type = yaxt)
+          if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
+            tinyAxis(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+          } else {
+            tinyAxis(y, side = yside, type = yaxt)
+          }
         } else {
           # ... else only print the "outside" axes.
           if (ii %in% oxaxis) {
@@ -251,7 +256,12 @@ draw_facet_window = function(grid, ...) {
             }
           }
           if (ii %in% oyaxis) {
-            tinyAxis(y, side = yside, type = yaxt)
+            # tinyAxis(y, side = yside, type = yaxt)
+            if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
+              tinyAxis(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+            } else {
+              tinyAxis(y, side = yside, type = yaxt)
+            }
           }
         }
       }
@@ -403,11 +413,21 @@ draw_facet_window = function(grid, ...) {
           if (isTRUE(grid)) {
             gnx = gny = NULL
             if (!par("xlog")) {
-              abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              # abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              if (isFALSE(flip)) {
+                abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              } else {
+                abline(h = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              }
               gnx = NA
             }
             if (!par("ylog")) {
-              abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              # abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              if (isFALSE(flip)) {
+                abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              } else {
+                abline(v = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              }
               gny = NA
             }
             grid(nx = gnx, ny = gny)

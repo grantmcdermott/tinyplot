@@ -1,4 +1,4 @@
-type_boxplot = function(datapoints) {
+type_boxplot = function(datapoints, ...) {
   # Convert x to factor if it's not already
   datapoints$x = as.factor(datapoints$x)
 

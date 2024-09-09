@@ -1,6 +1,6 @@
-type_histogram = function(x, by, facet, dots, ylab, col, bg, fill, ribbon.alpha, datapoints) {
-  hbreaks = ifelse(!is.null(dots[["breaks"]]), dots[["breaks"]], "Sturges")
-  hist_list = hist(x, breaks = hbreaks, plot = FALSE)
+type_histogram = function(by, facet, ylab, col, bg, fill, ribbon.alpha, datapoints, breaks = NULL, ...) {
+  hbreaks = ifelse(!is.null(breaks), breaks, "Sturges")
+  hist_list = hist(datapoints[["x"]], breaks = hbreaks, plot = FALSE)
   
   if (is.null(ylab)) ylab = "Frequency"
   if (is.null(by) && is.null(palette)) {

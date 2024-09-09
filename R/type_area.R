@@ -1,4 +1,4 @@
-type_area = function(datapoints) {
+type_area = function(datapoints, ...) {
   datapoints$ymax = datapoints$y
   datapoints$ymin = rep.int(0, nrow(datapoints))
   out = list(

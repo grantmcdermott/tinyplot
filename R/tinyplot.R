@@ -646,33 +646,28 @@ tinyplot.default = function(
   datapoints[["facet"]] = if (!is.null(facet)) facet else ""
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
-  # jitter is standalone: before and in addition to type = "point"
-  if (type == "jitter") {
-    fargs = type_jitter(datapoints)
-    list2env(fargs, environment())
-  }
-
-  if (type == "histogram") {
-    fargs = type_histogram(
-      x = x, by = by, facet = facet, dots = dots,
-      ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha, datapoints = datapoints)
-    list2env(fargs, environment())
-
-  } else if (type == "area") {
-    fargs = type_area(datapoints)
-    list2env(fargs, environment())
-
-  } else if (type == "boxplot") {
-    fargs = type_boxplot(datapoints = datapoints)
-    list2env(fargs, environment())
-
-  } else if (type == "ribbon") {
-    fargs = type_ribbon(datapoints = datapoints, xlabs = xlabs)
-    list2env(fargs, environment())
-  
-  } else if (type %in% c("pointrange", "errorbar")) {
-    fargs = type_pointrange(datapoints = datapoints, xlabs = xlabs)
-    list2env(fargs, environment())
+  type_dict = list(
+    "jitter" = type_jitter,
+    "histogram" = type_histogram,
+    "area" = type_area,
+    "boxplot" = type_boxplot,
+    "ribbon" = type_ribbon,
+    "pointrange" = type_pointrange,
+    "errorbar" = type_pointrange
+  )
+  if (isTRUE(type %in% names(type_dict))) {
+    fargs = list(
+      by = by,
+      facet = facet,
+      ylab = ylab,
+      col = col,
+      bg = bg,
+      fill = fill,
+      ribbon.alpha = ribbon.alpha,
+      xlabs = xlabs,
+      datapoints = datapoints)
+    fargs = c(fargs, dots)
+    list2env(do.call(type_dict[[type]], fargs), environment())
   }
   
   # plot limits

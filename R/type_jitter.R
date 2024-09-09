@@ -1,4 +1,4 @@
-type_jitter = function(datapoints) {
+type_jitter = function(datapoints, ...) {
   x = datapoints$x
   y = datapoints$y
   if (is.character(x)) x = as.factor(x)

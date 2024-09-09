@@ -1,4 +1,4 @@
-type_pointrange = function(datapoints, xlabs) {
+type_pointrange = function(datapoints, xlabs, ...) {
  if (is.character(datapoints$x)) datapoints$x = as.factor(datapoints$x)
  if (is.factor(datapoints$x)) {
      ## original data (i.e., no new sorting by factor)

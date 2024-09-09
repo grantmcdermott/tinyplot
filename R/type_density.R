@@ -36,8 +36,8 @@ tinyplot.density = function(
     if (!is.null(facet) && !is.factor(facet)) {
         facet_attr = attributes(facet)
         facet = factor(facet)
-        facet_attr[["class"]] <- NULL
-        for (i in names(facet_attr)) attr(facet, i) <- facet_attr[[i]]
+        facet_attr[["class"]] = NULL
+        for (i in names(facet_attr)) attr(facet, i) = facet_attr[[i]]
     }
     facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
 

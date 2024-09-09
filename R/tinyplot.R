@@ -701,16 +701,19 @@ tinyplot.default = function(
   } else {
     split_data = list(as.list(datapoints))
   }
-  
+
   # aesthetics by group: col, bg, etc.
-  aesthetics_args = aesthetics(
-    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by,
-    by_continuous = by_continuous, by_ordered = by_ordered,
-    col = col, fill = fill, lty = lty, lwd = lwd, palette = substitute(palette),
-    pch = pch, rescale_num = rescale_num, ribbon.alpha = ribbon.alpha,
-    split_data = split_data, type = type
-  )
-  list2env(aesthetics_args, environment())
+  ngrps = length(split_data)
+  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
+  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
+  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+  col = by_col(
+    ngrps = ngrps, col = col, palette = palette,
+    gradient = by_continuous, ordered = by_ordered, alpha = alpha)
+  bg = by_bg(
+    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous, 
+    by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette), 
+    ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type)
 
   ncolors = length(col)
   lgnd_labs = rep(NA, times = ncolors)

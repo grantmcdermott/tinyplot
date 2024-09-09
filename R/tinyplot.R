@@ -680,34 +680,40 @@ tinyplot.default = function(
   }
   
   # swap x and y values if flip is TRUE
-  if (isTRUE(flip) && type != "boxplot") {
-    # limits, labs, etc.
-    xlim_cp = xlim
-    xlim = ylim
-    ylim = xlim_cp
-    xlab_cp = xlab
-    xlab = ylab
-    ylab = xlab_cp
-    xlabs_cp = xlabs
-    xlabs = ylabs
-    ylabs = xlabs_cp
-    xaxt_cp = xaxt
-    xaxt = yaxt
-    yaxt = xaxt_cp
-    # log
-    # x/y vars
-    x_cp = datapoints[['x']]
-    datapoints[['x']] = datapoints[['y']]
-    datapoints[['y']] = x_cp
-    # x/y min and max vars
-    xmin_cp = if (!is.null(datapoints[['xmin']])) datapoints[['xmin']] else NULL
-    datapoints[['xmin']] = if (!is.null(datapoints[['ymin']])) datapoints[['ymin']] else NULL
-    datapoints[['ymin']] = if (!is.null(xmin_cp)) xmin_cp else NULL
-    xmax_cp = if (!is.null(datapoints[['xmax']])) datapoints[['xmax']] else NULL
-    datapoints[['xmax']] = if (!is.null(datapoints[['ymax']])) datapoints[['ymax']] else NULL
-    datapoints[['ymax']] = if (!is.null(xmax_cp)) xmax_cp else NULL
-    # clean up
-    rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, x_cp, xmin_cp, xmax_cp) 
+  if (isTRUE(flip)) {
+    if (type != "boxplot") {
+      # limits, labs, etc.
+      xlim_cp = xlim
+      xlim = ylim
+      ylim = xlim_cp
+      xlab_cp = xlab
+      xlab = ylab
+      ylab = xlab_cp
+      xlabs_cp = xlabs
+      xlabs = ylabs
+      ylabs = xlabs_cp
+      xaxt_cp = xaxt
+      xaxt = yaxt
+      yaxt = xaxt_cp
+      if (!is.null(log)) {
+        log = if (log=="x") "y" else if (log=="y") "x" else log
+      }
+      # x/y vars
+      x_cp = datapoints[['x']]
+      datapoints[['x']] = datapoints[['y']]
+      datapoints[['y']] = x_cp
+      # x/y min and max vars
+      xmin_cp = if (!is.null(datapoints[['xmin']])) datapoints[['xmin']] else NULL
+      datapoints[['xmin']] = if (!is.null(datapoints[['ymin']])) datapoints[['ymin']] else NULL
+      datapoints[['ymin']] = if (!is.null(xmin_cp)) xmin_cp else NULL
+      xmax_cp = if (!is.null(datapoints[['xmax']])) datapoints[['xmax']] else NULL
+      datapoints[['xmax']] = if (!is.null(datapoints[['ymax']])) datapoints[['ymax']] else NULL
+      datapoints[['ymax']] = if (!is.null(xmax_cp)) xmax_cp else NULL
+      # clean up
+      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, x_cp, xmin_cp, xmax_cp) 
+    } else {
+      dots[["horizontal"]] = TRUE
+    }
   }
   
   

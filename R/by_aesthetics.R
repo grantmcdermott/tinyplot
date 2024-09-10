@@ -247,3 +247,47 @@ by_lwd = function(ngrps, type, lwd=NULL) {
   
   return(lwd)
 }
+
+
+by_bg = function(
+  adjustcolor,
+  alpha,
+  bg,
+  by,
+  by_continuous,
+  by_ordered,
+  col,
+  fill,
+  ngrps,
+  palette,
+  ribbon.alpha,
+  type) {
+
+  if (is.null(bg) && !is.null(fill)) bg = fill
+  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
+    alpha = bg
+    bg = "by"
+  }
+  if (!is.null(bg) && length(bg) == 1 && bg == "by") {
+    bg = by_col(
+      ngrps = ngrps,
+      col = NULL,
+      palette = palette,
+      gradient = by_continuous,
+      ordered = by_ordered,
+      alpha = alpha
+    )
+  } else if (length(bg) != ngrps) {
+    bg = rep(bg, ngrps)
+  }
+  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
+    if (!is.null(bg)) {
+      bg = adjustcolor(bg, ribbon.alpha)
+    } else if (!is.null(col)) {
+      bg = adjustcolor(col, ribbon.alpha)
+    }
+  }
+
+  return(bg)
+}
+

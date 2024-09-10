@@ -1,4 +1,4 @@
-type_boxplot = function(datapoints) {
+type_boxplot = function(datapoints, bg, col, palette, ...) {
   # Convert x to factor if it's not already
   datapoints$x = as.factor(datapoints$x)
 
@@ -21,7 +21,14 @@ type_boxplot = function(datapoints) {
   } else {
     xord = order(datapoints$by, datapoints$facet, datapoints$x)
   }
-  
+
+  if (length(unique(datapoints[["by"]])) == 1 && is.null(palette)) {
+    if (is.null(col)) col = par("fg")
+    if (is.null(bg)) bg = "lightgray"
+  } else {
+    bg = "by"
+  }
+
   # Reorder x, y, ymin, and ymax based on the order determined
   datapoints = datapoints[xord,]
   
@@ -32,7 +39,9 @@ type_boxplot = function(datapoints) {
     ymin = datapoints$ymin,
     ymax = datapoints$ymax,
     xlabs = xlabs,
-    datapoints = datapoints)
+    datapoints = datapoints,
+    col = col,
+    bg = bg)
 
   if (length(unique(datapoints$by)) > 1) out[["by"]] = datapoints$by
   if (length(unique(datapoints$facet)) > 1) out[["facet"]] = datapoints$facet

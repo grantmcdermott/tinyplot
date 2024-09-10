@@ -631,6 +631,8 @@ tinyplot.default = function(
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
 
+  # alias
+  if (is.null(bg) && !is.null(fill)) bg = fill
 
   # type-specific settings and arguments
   if (type == "density") {
@@ -646,39 +648,32 @@ tinyplot.default = function(
   datapoints[["facet"]] = if (!is.null(facet)) facet else ""
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
-  # jitter is standalone: before and in addition to type = "point"
-  if (type == "jitter") {
-    fargs = type_jitter(datapoints)
-    list2env(fargs, environment())
-  }
-
-  if (type == "histogram") {
-    fargs = type_histogram(
-      x = x, by = by, facet = facet, dots = dots,
-      ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha, datapoints = datapoints)
-    list2env(fargs, environment())
-
-  } else if (type == "area") {
-    fargs = type_area(datapoints)
-    list2env(fargs, environment())
-
-  } else if (type == "boxplot") {
-    fargs = type_boxplot(datapoints = datapoints)
-    list2env(fargs, environment())
-
-  } else if (type == "ribbon") {
-    fargs = type_ribbon(datapoints = datapoints, xlabs = xlabs)
-    list2env(fargs, environment())
-  
-  } else if (type %in% c("pointrange", "errorbar")) {
-    fargs = type_pointrange(datapoints = datapoints, xlabs = xlabs)
-    list2env(fargs, environment())
+  type_dict = list(
+    "jitter" = type_jitter,
+    "histogram" = type_histogram,
+    "area" = type_area,
+    "boxplot" = type_boxplot,
+    "ribbon" = type_ribbon,
+    "pointrange" = type_pointrange,
+    "errorbar" = type_pointrange
+  )
+  if (isTRUE(type %in% names(type_dict))) {
+    fargs = list(
+      by = by,
+      facet = facet,
+      ylab = ylab,
+      col = col,
+      bg = bg,
+      palette = palette,
+      ribbon.alpha = ribbon.alpha,
+      xlabs = xlabs,
+      datapoints = datapoints)
+    fargs = c(fargs, dots)
+    list2env(do.call(type_dict[[type]], fargs), environment())
   }
   
   # plot limits
-  fargs = lim_args(
-    datapoints = datapoints, xlim = xlim, ylim = ylim, palette = palette,
-    col = col, bg = bg, fill = fill, type = type)
+  fargs = lim_args(datapoints = datapoints, xlim = xlim, ylim = ylim, type = type)
   list2env(fargs, environment())
 
 
@@ -701,16 +696,19 @@ tinyplot.default = function(
   } else {
     split_data = list(as.list(datapoints))
   }
-  
+
   # aesthetics by group: col, bg, etc.
-  aesthetics_args = aesthetics(
-    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by,
-    by_continuous = by_continuous, by_ordered = by_ordered,
-    col = col, fill = fill, lty = lty, lwd = lwd, palette = substitute(palette),
-    pch = pch, rescale_num = rescale_num, ribbon.alpha = ribbon.alpha,
-    split_data = split_data, type = type
-  )
-  list2env(aesthetics_args, environment())
+  ngrps = length(split_data)
+  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
+  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
+  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+  col = by_col(
+    ngrps = ngrps, col = col, palette = palette,
+    gradient = by_continuous, ordered = by_ordered, alpha = alpha)
+  bg = by_bg(
+    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous, 
+    by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette), 
+    ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type)
 
   ncolors = length(col)
   lgnd_labs = rep(NA, times = ncolors)
@@ -915,9 +913,9 @@ tinyplot.default = function(
     facets = facets, frame.plot = frame.plot, grid = grid, has_legend =
     has_legend, ifacet = ifacet, log = log, nfacet_cols = nfacet_cols,
     nfacet_rows = nfacet_rows, nfacets = nfacets, oxaxis = oxaxis, oyaxis =
-    oyaxis, type = type, x = x, xaxt = xaxt, xlab = xlab, xlabs = xlabs, xlim =
-    xlim, xmax = xmax, xmin = xmin, y = y, yaxt = yaxt, ylab = ylab, ylabs =
-    ylabs, ylim = ylim, ymax = ymax, ymin = ymin
+    oyaxis, type = type, x = x, xaxt = xaxt, xlabs = xlabs, xlim =
+    xlim, xmax = datapoints$xmax, xmin = datapoints$xmin, y = y, yaxt = yaxt,
+    ylim = ylim, ymax = datapoints$ymax, ymin = datapoints$ymin
   )
   list2env(facet_window_args, environment())
 

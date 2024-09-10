@@ -1,4 +1,4 @@
-type_ribbon = function(datapoints, xlabs) {
+type_ribbon = function(datapoints, xlabs, ...) {
   # Convert x to factor if it's not already
   if (is.character(datapoints$x)) {
     datapoints$x = as.factor(datapoints$x)

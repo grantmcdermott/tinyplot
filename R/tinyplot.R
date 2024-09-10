@@ -631,6 +631,8 @@ tinyplot.default = function(
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
 
+  # alias
+  if (is.null(bg) && !is.null(fill)) bg = fill
 
   # type-specific settings and arguments
   if (type == "density") {
@@ -662,7 +664,6 @@ tinyplot.default = function(
       ylab = ylab,
       col = col,
       bg = bg,
-      fill = fill,
       palette = palette,
       ribbon.alpha = ribbon.alpha,
       xlabs = xlabs,

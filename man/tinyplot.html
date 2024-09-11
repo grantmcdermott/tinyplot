@@ -390,7 +390,7 @@ other graphical parameters (see <code>par</code>), or arguments passed to the re
 <code id="by">by</code>
 </td>
 <td>
-grouping variable(s). The default behaviour is for groups to be represented in the form of distinct colours, which will also trigger an automatic legend. (See <code>legend</code> below for customization options.) However, groups can also be presented through other plot parameters (e.g., <code>pch</code> or <code>lty</code>) by passing an appropriate "by" keyword; see Examples. Note that continuous (i.e., gradient) colour legends are also supported if the user passes a numeric or integer to <code>by</code>.
+grouping variable(s). The default behaviour is for groups to be represented in the form of distinct colours, which will also trigger an automatic legend. (See <code>legend</code> below for customization options.) However, groups can also be presented through other plot parameters (e.g., <code>pch</code> or <code>lty</code>) by passing an appropriate "by" keyword; see Examples. Note that continuous (i.e., gradient) colour legends are also supported if the user passes a numeric or integer to <code>by</code>. To group by multiple variables, wrap them with <code>interaction</code>.
 </td>
 </tr>
 <tr>
@@ -767,7 +767,7 @@ character specifying the type of x-axis and y-axis, respectively. See <code>axes
 <code id="formula">formula</code>
 </td>
 <td>
-a <code>formula</code> that optionally includes grouping variable(s) after a vertical bar, e.g.&nbsp;<code>y ~ x | z</code>. One-sided formulae are also permitted, e.g.&nbsp;<code>~ y | z</code>. Note that the <code>formula</code> and <code>x</code> arguments should not be specified in the same call.
+a <code>formula</code> that optionally includes grouping variable(s) after a vertical bar, e.g.&nbsp;<code>y ~ x | z</code>. One-sided formulae are also permitted, e.g.&nbsp;<code>~ y | z</code>. Multiple grouping variables can be specified in different ways, e.g.&nbsp;<code>y ~ x | z1:z2</code> or <code>y ~ x | z1 + z2</code>. (These two representations are treated as equivalent; both are parsed as <code>interaction(z1, z2)</code> internally.) Note that the <code>formula</code> and <code>x</code> arguments should not be specified in the same call.
 </td>
 </tr>
 <tr>

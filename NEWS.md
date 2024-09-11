@@ -11,6 +11,16 @@ Bug fixes:
 - Better preserve facet attributes, thus avoiding misarrangement of facet grids
 for density and histogram types. (#209 @zeileis)
 
+Internals:
+
+- Continued modularization/abstraction of the code logic. (#214
+@vincentarelbundock)
+
+Misc:
+
+- Documentation improvements, e.g. explicit guidance on how to specify multiple
+grouping variables (thanks to @strengjacke for reporting #213).
+
 ## 0.2.1
 
 New Features:

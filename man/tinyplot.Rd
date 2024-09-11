@@ -53,6 +53,7 @@ tinyplot(x, ...)
   empty = FALSE,
   xaxt = NULL,
   yaxt = NULL,
+  flip = FALSE,
   ...
 )
 
@@ -132,7 +133,8 @@ automatic legend. (See \code{legend} below for customization options.) However,
 groups can also be presented through other plot parameters (e.g., \code{pch} or
 \code{lty}) by passing an appropriate "by" keyword; see Examples. Note that
 continuous (i.e., gradient) colour legends are also supported if the user
-passes a numeric or integer to \code{by}.}
+passes a numeric or integer to \code{by}. To group by multiple variables, wrap
+them with \code{\link[base]{interaction}}.}
 
 \item{facet}{the faceting variable(s) that you want arrange separate plot
 windows by. Can be specified in various ways:
@@ -432,10 +434,17 @@ will only depict points.}
 \item{xaxt, yaxt}{character specifying the type of x-axis and y-axis, respectively.
 See \code{axes} for the possible values.}
 
-\item{formula}{a \code{formula} that optionally includes grouping variable(s)
-after a vertical bar, e.g. \code{y ~ x | z}. One-sided formulae are also
-permitted, e.g. \code{~ y | z}. Note that the \code{formula} and \code{x} arguments
-should not be specified in the same call.}
+\item{flip}{logical. Should the plot orientation be flipped, so that the
+y-axis is on the horizontal plane and the x-axis is on the vertical plane?
+Default is FALSE.}
+
+\item{formula}{a \code{\link[stats]{formula}} that optionally includes
+grouping variable(s) after a vertical bar, e.g. \code{y ~ x | z}. One-sided
+formulae are also permitted, e.g. \code{~ y | z}. Multiple grouping variables
+can be specified in different ways, e.g. \code{y ~ x | z1:z2} or
+\code{y ~ x | z1 + z2}. (These two representations are treated as equivalent;
+both are parsed as \code{interaction(z1, z2)} internally.) Note that the
+\code{formula} and \code{x} arguments should not be specified in the same call.}
 
 \item{subset, na.action, drop.unused.levels}{arguments passed to \code{model.frame}
 when extracting the data from \code{formula} and \code{data}.}

@@ -19,7 +19,8 @@
 #'   groups can also be presented through other plot parameters (e.g., `pch` or
 #'   `lty`) by passing an appropriate "by" keyword; see Examples. Note that
 #'   continuous (i.e., gradient) colour legends are also supported if the user
-#'   passes a numeric or integer to `by`.
+#'   passes a numeric or integer to `by`. To group by multiple variables, wrap
+#'   them with \code{\link[base]{interaction}}.
 #' @param facet the faceting variable(s) that you want arrange separate plot
 #'   windows by. Can be specified in various ways:
 #'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in 
@@ -61,10 +62,13 @@
 #'   \code{\link[tinyplot]{tpar}} (where they take a "facet." prefix, e.g. 
 #'   `tpar("facet.cex")`). The latter function can also be used to set these
 #'   features globally for all `tinyplot` plots.
-#' @param formula a `formula` that optionally includes grouping variable(s)
-#'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
-#'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
-#'   should not be specified in the same call.
+#' @param formula a \code{\link[stats]{formula}} that optionally includes
+#'   grouping variable(s) after a vertical bar, e.g. `y ~ x | z`. One-sided
+#'   formulae are also permitted, e.g. `~ y | z`. Multiple grouping variables
+#'   can be specified in different ways, e.g. `y ~ x | z1:z2` or
+#'   `y ~ x | z1 + z2`. (These two representations are treated as equivalent;
+#'   both are parsed as `interaction(z1, z2)` internally.) Note that the
+#'   `formula` and `x` arguments should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
 #' @param type character string giving the type of plot desired. If no argument
@@ -635,6 +639,8 @@ tinyplot.default = function(
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
 
+  # alias
+  if (is.null(bg) && !is.null(fill)) bg = fill
 
   # type-specific settings and arguments
   if (type == "density") {
@@ -650,33 +656,28 @@ tinyplot.default = function(
   datapoints[["facet"]] = if (!is.null(facet)) facet else ""
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
-  # jitter is standalone: before and in addition to type = "point"
-  if (type == "jitter") {
-    fargs = type_jitter(datapoints)
-    list2env(fargs, environment())
-  }
-
-  if (type == "histogram") {
-    fargs = type_histogram(
-      x = x, by = by, facet = facet, dots = dots,
-      ylab = ylab, col = col, bg = bg, fill = fill, ribbon.alpha = ribbon.alpha, datapoints = datapoints)
-    list2env(fargs, environment())
-
-  } else if (type == "area") {
-    fargs = type_area(datapoints)
-    list2env(fargs, environment())
-
-  } else if (type == "boxplot") {
-    fargs = type_boxplot(datapoints = datapoints)
-    list2env(fargs, environment())
-
-  } else if (type == "ribbon") {
-    fargs = type_ribbon(datapoints = datapoints, xlabs = xlabs)
-    list2env(fargs, environment())
-  
-  } else if (type %in% c("pointrange", "errorbar")) {
-    fargs = type_pointrange(datapoints = datapoints, xlabs = xlabs)
-    list2env(fargs, environment())
+  type_dict = list(
+    "jitter" = type_jitter,
+    "histogram" = type_histogram,
+    "area" = type_area,
+    "boxplot" = type_boxplot,
+    "ribbon" = type_ribbon,
+    "pointrange" = type_pointrange,
+    "errorbar" = type_pointrange
+  )
+  if (isTRUE(type %in% names(type_dict))) {
+    fargs = list(
+      by = by,
+      facet = facet,
+      ylab = ylab,
+      col = col,
+      bg = bg,
+      palette = palette,
+      ribbon.alpha = ribbon.alpha,
+      xlabs = xlabs,
+      datapoints = datapoints)
+    fargs = c(fargs, dots)
+    list2env(do.call(type_dict[[type]], fargs), environment())
   }
   
   # swap x and y values if flip is TRUE
@@ -719,9 +720,7 @@ tinyplot.default = function(
   
   
   # plot limits
-  fargs = lim_args(
-    datapoints = datapoints, xlim = xlim, ylim = ylim, palette = palette,
-    col = col, bg = bg, fill = fill, type = type)
+  fargs = lim_args(datapoints = datapoints, xlim = xlim, ylim = ylim, type = type)
   list2env(fargs, environment())
 
 
@@ -744,16 +743,19 @@ tinyplot.default = function(
   } else {
     split_data = list(as.list(datapoints))
   }
-  
+
   # aesthetics by group: col, bg, etc.
-  aesthetics_args = aesthetics(
-    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by,
-    by_continuous = by_continuous, by_ordered = by_ordered,
-    col = col, fill = fill, lty = lty, lwd = lwd, palette = substitute(palette),
-    pch = pch, rescale_num = rescale_num, ribbon.alpha = ribbon.alpha,
-    split_data = split_data, type = type
-  )
-  list2env(aesthetics_args, environment())
+  ngrps = length(split_data)
+  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
+  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
+  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+  col = by_col(
+    ngrps = ngrps, col = col, palette = palette,
+    gradient = by_continuous, ordered = by_ordered, alpha = alpha)
+  bg = by_bg(
+    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous, 
+    by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette), 
+    ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type)
 
   ncolors = length(col)
   lgnd_labs = rep(NA, times = ncolors)
@@ -955,12 +957,16 @@ tinyplot.default = function(
     facet = facet, facet.args = facet.args, facet_newlines = facet_newlines,
     facet_rect = facet_rect, facet_text = facet_text, facet_font = facet_font,
     facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
-    facets = facets, frame.plot = frame.plot, grid = grid, has_legend =
-    has_legend, ifacet = ifacet, log = log, nfacet_cols = nfacet_cols,
-    nfacet_rows = nfacet_rows, nfacets = nfacets, oxaxis = oxaxis, oyaxis =
-    oyaxis, type = type, x = x, xaxt = xaxt, xlab = xlab, xlabs = xlabs, xlim =
-    xlim, xmax = xmax, xmin = xmin, y = y, yaxt = yaxt, ylab = ylab, ylabs =
-    ylabs, ylim = ylim, ymax = ymax, ymin = ymin, flip = flip
+    facets = facets, ifacet = ifacet,
+    nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows, nfacets = nfacets,
+    frame.plot = frame.plot, grid = grid,
+    has_legend = has_legend, log = log,
+    oxaxis = oxaxis, oyaxis = oyaxis, type = type,
+    x = x, xaxt = xaxt, xlabs = xlabs, xlim = xlim,
+    xmax = datapoints$xmax, xmin = datapoints$xmin,
+    y = y, yaxt = yaxt, ylabs = ylabs ,ylim = ylim,
+    ymax = datapoints$ymax, ymin = datapoints$ymin,
+    flip = flip
   )
   list2env(facet_window_args, environment())
 

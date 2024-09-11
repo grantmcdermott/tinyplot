@@ -19,7 +19,8 @@
 #'   groups can also be presented through other plot parameters (e.g., `pch` or
 #'   `lty`) by passing an appropriate "by" keyword; see Examples. Note that
 #'   continuous (i.e., gradient) colour legends are also supported if the user
-#'   passes a numeric or integer to `by`.
+#'   passes a numeric or integer to `by`. To group by multiple variables, wrap
+#'   them with \code{\link[base]{interaction}}.
 #' @param facet the faceting variable(s) that you want arrange separate plot
 #'   windows by. Can be specified in various ways:
 #'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in 
@@ -61,10 +62,13 @@
 #'   \code{\link[tinyplot]{tpar}} (where they take a "facet." prefix, e.g. 
 #'   `tpar("facet.cex")`). The latter function can also be used to set these
 #'   features globally for all `tinyplot` plots.
-#' @param formula a `formula` that optionally includes grouping variable(s)
-#'   after a vertical bar, e.g. `y ~ x | z`. One-sided formulae are also
-#'   permitted, e.g. `~ y | z`. Note that the `formula` and `x` arguments
-#'   should not be specified in the same call.
+#' @param formula a \code{\link[base]{formula}} that optionally includes
+#'   grouping variable(s) after a vertical bar, e.g. `y ~ x | z`. One-sided
+#'   formulae are also permitted, e.g. `~ y | z`. Multiple grouping variables
+#'   can be specified in different ways, e.g. `y ~ x | z1:z2` or
+#'   `y ~ x | z1 + z2`. (These two representations are treated as equivalent;
+#'   both are parsed as `interaction(z1, z2)` internally.) Note that the
+#'   `formula` and `x` arguments should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
 #' @param type character string giving the type of plot desired. If no argument

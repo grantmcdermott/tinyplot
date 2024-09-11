@@ -62,7 +62,7 @@
 #'   \code{\link[tinyplot]{tpar}} (where they take a "facet." prefix, e.g. 
 #'   `tpar("facet.cex")`). The latter function can also be used to set these
 #'   features globally for all `tinyplot` plots.
-#' @param formula a \code{\link[base]{formula}} that optionally includes
+#' @param formula a \code{\link[stats]{formula}} that optionally includes
 #'   grouping variable(s) after a vertical bar, e.g. `y ~ x | z`. One-sided
 #'   formulae are also permitted, e.g. `~ y | z`. Multiple grouping variables
 #'   can be specified in different ways, e.g. `y ~ x | z1:z2` or

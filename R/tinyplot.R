@@ -587,9 +587,14 @@ tinyplot.default = function(
   }
   by_dep = deparse1(substitute(by))
   
+  ## coerce character variables to factors
+  if (!is.null(x) && is.character(x)) x <- factor(x)
+  if (!is.null(y) && is.character(y)) y <- factor(y)
+  if (!is.null(by) && is.character(by)) by <- factor(by)
+
   # flag if x==by (currently only used if type = "boxplot")
   x_by = identical(x, by)
-  
+
   facet_dep = deparse1(substitute(facet))
   # flag if facet==by
   facet_by = FALSE

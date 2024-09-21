@@ -8,8 +8,10 @@ lim_args = function(datapoints, xlim, ylim, type) {
     if (is.null(ylim)) ylim = range(xy$y[is.finite(xy$y)])
   }
 
-  xlim = range(c(xlim, datapoints[["xmin"]], datapoints[["xmax"]]), finite = TRUE)
-  ylim = range(c(ylim, datapoints[["ymin"]], datapoints[["ymax"]]), finite = TRUE)
+  if (is.null(xlim))
+    xlim = range(c(xlim, datapoints[["xmin"]], datapoints[["xmax"]]), finite = TRUE)
+  if (is.null(ylim))
+    ylim = range(c(ylim, datapoints[["ymin"]], datapoints[["ymax"]]), finite = TRUE)
 
   if (type == "boxplot") {
     xlim = xlim + c(-0.5, 0.5)

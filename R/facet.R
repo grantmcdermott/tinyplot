@@ -415,9 +415,11 @@ draw_facet_window = function(grid, ...) {
             if (!par("xlog")) {
               # abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               if (isFALSE(flip)) {
+                # would be nice to use xlim but fails for date types
                 abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+                # abline(v = pretty(xlim), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               } else {
-                abline(h = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+                abline(v = pretty(xlim), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               }
               gnx = NA
             }
@@ -425,8 +427,9 @@ draw_facet_window = function(grid, ...) {
               # abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               if (isFALSE(flip)) {
                 abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+                # abline(h = pretty(ylim), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               } else {
-                abline(v = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+                abline(h = pretty(ylim), col = "lightgray", lty = "dotted", lwd = par("lwd"))
               }
               gny = NA
             }

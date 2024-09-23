@@ -10,6 +10,7 @@ Bug fixes:
 
 - Better preserve facet attributes, thus avoiding misarrangement of facet grids
 for density and histogram types. (#209 @zeileis)
+- Respect `xlim` and `ylim` when explicitly supplied by the user. (thanks to @mclements for code submission #221)
 
 Internals:
 

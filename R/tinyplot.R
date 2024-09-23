@@ -612,7 +612,6 @@ tinyplot.default = function(
       xmax_dep = deparse(substitute(xmax))
       x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")
       x = rep(NA, length(x))
-      if (is.null(xlim)) xlim = range(c(xmin, xmax))
     }
   }
   if (is.null(y)) {
@@ -622,7 +621,6 @@ tinyplot.default = function(
       ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
-      if (is.null(ylim)) ylim = range(c(ymin, ymax))
     } else if (!type %in% c("density", "histogram")) {
       y = x
       x = seq_along(x)

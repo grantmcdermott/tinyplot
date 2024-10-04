@@ -106,3 +106,10 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "flip_ribbon_pred")
 
+
+f = function() {
+  x_dtt = strptime(20010101:20010110, format="%Y%m%d", tz = "UTC")
+  y = 1:10
+  tinyplot(x_dtt, y, grid = TRUE, flip = TRUE)
+}
+expect_snapshot_plot(f, label = "flip_date_time")

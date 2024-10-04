@@ -968,14 +968,12 @@ tinyplot.default = function(
     frame.plot = frame.plot, grid = grid,
     has_legend = has_legend, log = log,
     oxaxis = oxaxis, oyaxis = oyaxis, type = type,
-    # x = x,
     x = datapoints$x,
-    xaxt = xaxt, xlabs = xlabs, xlim = xlim,
-    xmax = datapoints$xmax, xmin = datapoints$xmin,
-    # y = y,
     y = datapoints$y,
-    yaxt = yaxt, ylabs = ylabs ,ylim = ylim,
+    xmax = datapoints$xmax, xmin = datapoints$xmin,
     ymax = datapoints$ymax, ymin = datapoints$ymin,
+    xaxt = xaxt, xlabs = xlabs, xlim = xlim,
+    yaxt = yaxt, ylabs = ylabs, ylim = ylim,
     flip = flip
   )
   list2env(facet_window_args, environment())

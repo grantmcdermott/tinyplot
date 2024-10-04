@@ -968,9 +968,13 @@ tinyplot.default = function(
     frame.plot = frame.plot, grid = grid,
     has_legend = has_legend, log = log,
     oxaxis = oxaxis, oyaxis = oyaxis, type = type,
-    x = x, xaxt = xaxt, xlabs = xlabs, xlim = xlim,
+    # x = x,
+    x = datapoints$x,
+    xaxt = xaxt, xlabs = xlabs, xlim = xlim,
     xmax = datapoints$xmax, xmin = datapoints$xmin,
-    y = y, yaxt = yaxt, ylabs = ylabs ,ylim = ylim,
+    # y = y,
+    y = datapoints$y,
+    yaxt = yaxt, ylabs = ylabs ,ylim = ylim,
     ymax = datapoints$ymax, ymin = datapoints$ymin,
     flip = flip
   )

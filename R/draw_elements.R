@@ -22,8 +22,6 @@ draw_elements = function(
     facet_by,
     split_data,
     i = 1,
-    xlvls,     # do we still need this?
-    lgnd_labs, # ditto?
     x_by = FALSE,
     flip = FALSE
     ) {

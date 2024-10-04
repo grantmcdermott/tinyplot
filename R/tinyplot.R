@@ -640,6 +640,7 @@ tinyplot.default = function(
       if (is.null(ylab)) ylab = "Frequency"
     }
   }
+  
 
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
@@ -1070,8 +1071,6 @@ tinyplot.default = function(
         facet_by = facet_by,
         split_data = split_data,
         i = i,
-        xlvls = xlvls,
-        lgnd_labs = lgnd_labs,
         x_by = x_by,
         flip = flip
       )

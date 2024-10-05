@@ -32,45 +32,7 @@ draw_elements = function(
       ## polygons before lines, segments/arrows before points, etc.
       if (isTRUE(empty_plot)) return(invisible())
 
-      if (type == "boxplot") {
-        at_xx = unique(xx)
-        horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
-        range_xx = ifelse(!is.null(dots[["range"]]), dots[["range"]], 1.5)
-        boxwidth_xx = NULL
-        if (!is.null(dots[["boxwidth"]])) boxwidth_xx = dots[["boxwidth"]]
-        varwidth_xx = ifelse(!is.null(dots[["varwidth"]]), dots[["varwidth"]], FALSE)
-        notch_xx = ifelse(!is.null(dots[["notch"]]), dots[["notch"]], FALSE)
-        outline_xx = ifelse(!is.null(dots[["outline"]]), dots[["outline"]], TRUE)
-        boxwex_xx = ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
-        if (isTRUE(x_by)) boxwex_xx = boxwex_xx * 2
-        staplewex_xx = ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
-        outwex_xx = ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
-        if (!is.null(by) && isFALSE(x_by) && isFALSE(facet_by) && length(split_data) > 1) {
-          boxwex_xx_orig = boxwex_xx
-          boxwex_xx = boxwex_xx / length(split_data) - 0.01
-          at_xx = at_xx + seq(-((boxwex_xx_orig - boxwex_xx) / 2), ((boxwex_xx_orig - boxwex_xx) / 2), length.out = length(split_data))[i]
-        }
-        boxplot(
-          formula = yy ~ xx,
-          pch = ipch,
-          lty = ilty,
-          border = icol,
-          col = ibg,
-          add = TRUE, axes = FALSE,
-          horizontal = horizontal,
-          at = at_xx,
-          range = range_xx,
-          width = boxwidth_xx,
-          varwidth = varwidth_xx,
-          notch = notch_xx,
-          outline = outline_xx,
-          boxwex = boxwex_xx,
-          staplewex = staplewex_xx,
-          outwex = outwex_xx
-        )
-
-    } else {
-        draw_fun = switch(
+      draw_fun = switch(
         type,
         "ribbon" = draw_ribbon,
         "pointrange" = draw_pointrange,
@@ -79,6 +41,7 @@ draw_elements = function(
         "polypath" = draw_polypath,
         "rect" = draw_rect,
         "segments" = draw_segments,
+        "boxplot" = draw_boxplot,
         "p" = ,
         "points" = draw_points,
         "l" = ,
@@ -88,7 +51,7 @@ draw_elements = function(
         "h" = ,
         "s" = ,
         "S" = draw_lines)
-        draw_fun(xx = xx,
+      draw_fun(xx = xx,
           yy = yy,
           xxmin = xxmin,
           yymin = yymin,
@@ -102,13 +65,15 @@ draw_elements = function(
           ibg = ibg,
           dots = dots,
           type = type,
+          i = i,
+          x_by = x_by,
+          facet_by = facet_by,
+          split_data = split_data,
           flip = flip)
 
-      }
 }
 
 
-# Draw Ribbon
 draw_ribbon <- function(xx, yy, xxmin, xxmax, yymin, yymax, ibg, ilty, ilwd, icol, ipch, i = 1, flip = FALSE, ...) {
   if (isFALSE(flip)) {
     draw_polygon(x = c(xx, rev(xx)), y = c(yymin, rev(yymax)), icol = NA, ibg = ibg)
@@ -119,7 +84,6 @@ draw_ribbon <- function(xx, yy, xxmin, xxmax, yymin, yymax, ibg, ilty, ilwd, ico
 }
 
 
-# Draw Pointrange
 draw_pointrange <- function(xx, yy, xxmin, yymin, xxmax, yymax, icol, ibg, ipch, ilwd, cex, ...) {
   segments(
     x0 = xxmin,
@@ -133,7 +97,6 @@ draw_pointrange <- function(xx, yy, xxmin, yymin, xxmax, yymax, icol, ibg, ipch,
 }
 
 
-# Draw Errorbar
 draw_errorbar <- function(xx, yy, xxmin, yymin, xxmax, yymax, icol, ibg, ipch, ilwd, cex, ...) {
   arrows(
     x0 = xxmin,
@@ -150,7 +113,6 @@ draw_errorbar <- function(xx, yy, xxmin, yymin, xxmax, yymax, icol, ibg, ipch, i
 }
 
 
-# Draw Points
 draw_points <- function(xx, yy, icol, ibg, ipch, ilwd, cex, ...) {
   points(
     x = xx,
@@ -165,7 +127,6 @@ draw_points <- function(xx, yy, icol, ibg, ipch, ilwd, cex, ...) {
 }
 
 
-# Draw Lines
 draw_lines <- function(xx, yy, icol, ipch, ilty, ilwd, type, ...) {
   lines(
     x = xx,
@@ -179,7 +140,6 @@ draw_lines <- function(xx, yy, icol, ipch, ilty, ilwd, type, ...) {
 }
 
 
-# Draw Polygon
 draw_polygon <- function(xx, yy, icol, ibg, ilty = par("lty"), ilwd = par("lwd"), ...) {
   polygon(
     x = xx,
@@ -192,7 +152,6 @@ draw_polygon <- function(xx, yy, icol, ibg, ilty = par("lty"), ilwd = par("lwd")
 }
 
 
-# Draw Polypath
 draw_polypath <- function(xx, yy, icol, ibg, ilty, ilwd, dots, ...) {
   irule <- ifelse(!is.null(dots[["rule"]]), dots[["rule"]], "winding")
   polypath(
@@ -207,7 +166,6 @@ draw_polypath <- function(xx, yy, icol, ibg, ilty, ilwd, dots, ...) {
 }
 
 
-# Draw Rectangle
 draw_rect <- function(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ibg, ...) {
   rect(
     xleft = xxmin, ybottom = yymin, xright = xxmax, ytop = yymax,
@@ -219,7 +177,6 @@ draw_rect <- function(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ibg, ...) {
 }
 
 
-# Draw Segments
 draw_segments <- function(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ...) {
   segments(
     x0 = xxmin, y0 = yymin, x1 = xxmax, y1 = yymax,
@@ -230,20 +187,20 @@ draw_segments <- function(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ...) {
 }
 
 
-# Draw Boxplot
 draw_boxplot <- function(xx, yy, ipch, ilty, icol, ibg, dots, i = 1, x_by = FALSE, facet_by = FALSE, split_data, ...) {
+
   at_xx <- unique(xx)
-  horizontal <- ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
-  range_xx <- ifelse(!is.null(dots[["range"]]), dots[["range"]], 1.5)
-  boxwidth_xx <- ifelse(!is.null(dots[["boxwidth"]]), dots[["boxwidth"]], NULL)
-  varwidth_xx <- ifelse(!is.null(dots[["varwidth"]]), dots[["varwidth"]], FALSE)
-  notch_xx <- ifelse(!is.null(dots[["notch"]]), dots[["notch"]], FALSE)
-  outline_xx <- ifelse(!is.null(dots[["outline"]]), dots[["outline"]], TRUE)
-  boxwex_xx <- ifelse(!is.null(dots[["boxwex"]]), dots[["boxwex"]], 0.8)
+  horizontal <- if (!is.null(dots[["horizontal"]])) dots[["horizontal"]] else FALSE
+  range_xx <- if (!is.null(dots[["range"]])) dots[["range"]] else 1.5
+  boxwidth_xx <- if (!is.null(dots[["boxwidth"]])) dots[["boxwidth"]] else NULL
+  varwidth_xx <- if (!is.null(dots[["varwidth"]])) dots[["varwidth"]] else FALSE
+  notch_xx <- if (!is.null(dots[["notch"]])) dots[["notch"]] else FALSE
+  outline_xx <- if (!is.null(dots[["outline"]])) dots[["outline"]] else TRUE
+  boxwex_xx <- if (!is.null(dots[["boxwex"]])) dots[["boxwex"]] else 0.8
   if (isTRUE(x_by)) boxwex_xx <- boxwex_xx * 2
-  staplewex_xx <- ifelse(!is.null(dots[["staplewex"]]), dots[["staplewex"]], 0.5)
-  outwex_xx <- ifelse(!is.null(dots[["outwex"]]), dots[["outwex"]], 0.5)
-  
+  staplewex_xx <- if (!is.null(dots[["staplewex"]])) dots[["staplewex"]] else 0.5
+  outwex_xx <- if (!is.null(dots[["outwex"]])) dots[["outwex"]] else 0.5
+
   # Handle multiple groups
   if (!is.null(split_data) && isFALSE(x_by) && isFALSE(facet_by) && length(split_data) > 1) {
     boxwex_xx_orig <- boxwex_xx
@@ -273,6 +230,7 @@ draw_boxplot <- function(xx, yy, ipch, ilty, icol, ibg, dots, i = 1, x_by = FALS
     staplewex = staplewex_xx,
     outwex = outwex_xx
   )
+
 }
 
 

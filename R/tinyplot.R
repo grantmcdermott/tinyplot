@@ -535,7 +535,6 @@ tinyplot.default = function(
   
   # sanitize arguments
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
-  was_area_type = identical(type, "area") # flag to keep track for some legend adjustments below
 
 
   # type factories vs. strings
@@ -831,7 +830,7 @@ tinyplot.default = function(
 
     has_sub = !is.null(sub)
 
-    if (isTRUE(was_area_type) || isTRUE(type %in% c("rect", "histogram", "hist"))) {
+    if (isTRUE(type %in% c("area", "rect", "histogram", "hist"))) {
       legend_args[["pt.lwd"]] = par("lwd")
       legend_args[["lty"]] = 0
     }
@@ -1022,12 +1021,12 @@ tinyplot.default = function(
 
     ## Inner loop over the "facet" variables
     for (ii in seq_along(idata)) {
-      xx = idata[[ii]]$x
-      yy = idata[[ii]]$y
-      xxmin = idata[[ii]]$xmin
-      xxmax = idata[[ii]]$xmax
-      yymin = idata[[ii]]$ymin
-      yymax = idata[[ii]]$ymax
+      ix = idata[[ii]]$x
+      iy = idata[[ii]]$y
+      ixmin = idata[[ii]]$xmin
+      ixmax = idata[[ii]]$xmax
+      iymin = idata[[ii]]$ymin
+      iymax = idata[[ii]]$ymax
 
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
@@ -1046,7 +1045,7 @@ tinyplot.default = function(
 
       # empty plot flag
       empty_plot = FALSE
-      if (isTRUE(empty) || isTRUE(type == "n") || ((length(xx) == 0) && !(type %in% c("histogram", "hist", "rect", "segments")))) {
+      if (isTRUE(empty) || isTRUE(type == "n") || ((length(ix) == 0) && !(type %in% c("histogram", "hist", "rect", "segments")))) {
         empty_plot = TRUE
       }
 
@@ -1054,12 +1053,12 @@ tinyplot.default = function(
       draw_elements(
         type = type,
         i = i,
-        ix = xx,
-        iy = yy,
-        ixmin = xxmin,
-        ixmax = xxmax,
-        iymin = yymin,
-        iymax = yymax, 
+        ix = ix,
+        iy = iy,
+        ixmin = ixmin,
+        ixmax = ixmax,
+        iymin = iymin,
+        iymax = iymax, 
         icol = icol,
         ilwd = ilwd,
         ipch = ipch,

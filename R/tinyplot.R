@@ -668,9 +668,7 @@ tinyplot.default = function(
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
   type_dict = list(
-    "histogram" = type_histogram,
-    "area" = type_area,
-    "ribbon" = type_ribbon
+    "histogram" = type_histogram
   )
   if (!is.null(type_data) || isTRUE(type %in% names(type_dict))) {
     fargs = list(

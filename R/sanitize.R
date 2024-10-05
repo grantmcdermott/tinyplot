@@ -26,6 +26,8 @@ sanitize_type = function(type, x, y) {
 
     if (identical(type, "points")) {
         return(type_points())
+    } else if (identical(type, "segments")) {
+        return(type_segments())
     } else if (identical(type, "polypath")) {
         return(type_polypath())
     } else if (identical(type, "pointrange")) {

@@ -38,7 +38,6 @@ draw_elements = function(
           "ribbon" = draw_ribbon,
           "polygon" = type_polygon()$draw,
           "rect" = draw_rect,
-          "segments" = draw_segments,
           "p" = ,
           "points" = type_points()$draw,
           "l" = ,
@@ -98,14 +97,6 @@ draw_rect <- function(ixmin, iymin, ixmax, iymax, ilty, ilwd, icol, ibg, ...) {
 }
 
 
-draw_segments <- function(ixmin, iymin, ixmax, iymax, ilty, ilwd, icol, ...) {
-  segments(
-    x0 = ixmin, y0 = iymin, x1 = ixmax, y1 = iymax,
-    lty = ilty,
-    lwd = ilwd,
-    col = icol
-  )
-}
 
 
 

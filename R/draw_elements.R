@@ -36,7 +36,7 @@ draw_elements = function(
         draw_fun = switch(
           type,
           "ribbon" = draw_ribbon,
-          "polygon" = draw_polygon,
+          "polygon" = type_polygon()$draw,
           "polypath" = draw_polypath,
           "rect" = draw_rect,
           "segments" = draw_segments,
@@ -76,31 +76,14 @@ draw_elements = function(
 
 
 draw_ribbon <- function(ix, iy, ixmin, ixmax, iymin, iymax, ibg, ilty, ilwd, icol, ipch, i, flip = FALSE, ...) {
-  if (isFALSE(flip)) {
-    draw_polygon(ix = c(ix, rev(ix)), iy = c(iymin, rev(iymax)), icol = NA, ibg = ibg)
-  } else {
-    draw_polygon(ix = c(ixmin, rev(ixmax)), iy = c(iy, rev(iy)), icol = NA, ibg = ibg)
-  }
-  draw_lines()(ix = ix, iy = iy, icol = icol, ipch = ipch, ilty = ilty, ilwd = ilwd, type = "l")
-}
-
-
-
-
-
-
-
-
-
-draw_polygon <- function(ix, iy, icol, ibg, ilty = par("lty"), ilwd = par("lwd"), ...) {
-  polygon(
-    x = ix,
-    y = iy,
-    border = icol,
-    col = ibg,
-    lty = ilty,
-    lwd = ilwd
-  )
+    polyg = type_polygon()$draw
+    lin = type_lines()$draw
+    if (isFALSE(flip)) {
+        polyg(ix = c(ix, rev(ix)), iy = c(iymin, rev(iymax)), icol = NA, ibg = ibg)
+    } else {
+        polyg(c(ixmin, rev(ixmax)), iy = c(iy, rev(iy)), icol = NA, ibg = ibg)
+    }
+    lin(ix = ix, iy = iy, icol = icol, ipch = ipch, ilty = ilty, ilwd = ilwd, type = "l")
 }
 
 

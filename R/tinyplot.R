@@ -671,9 +671,7 @@ tinyplot.default = function(
     "histogram" = type_histogram,
     "area" = type_area,
     "boxplot" = type_boxplot,
-    "ribbon" = type_ribbon,
-    "pointrange" = type_pointrange,
-    "errorbar" = type_pointrange
+    "ribbon" = type_ribbon
   )
   if (!is.null(type_data) || isTRUE(type %in% names(type_dict))) {
     fargs = list(

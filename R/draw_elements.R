@@ -36,8 +36,6 @@ draw_elements = function(
         draw_fun = switch(
           type,
           "ribbon" = draw_ribbon,
-          "pointrange" = draw_pointrange,
-          "errorbar" = draw_errorbar,
           "polygon" = draw_polygon,
           "polypath" = draw_polypath,
           "rect" = draw_rect,
@@ -87,33 +85,7 @@ draw_ribbon <- function(ix, iy, ixmin, ixmax, iymin, iymax, ibg, ilty, ilwd, ico
 }
 
 
-draw_pointrange <- function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, ilwd, cex, ...) {
-  segments(
-    x0 = ixmin,
-    y0 = iymin,
-    x1 = ixmax,
-    y1 = iymax,
-    col = icol,
-    lwd = ilwd
-  )
-  draw_points()(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
-}
 
-
-draw_errorbar <- function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, ilwd, cex, ...) {
-  arrows(
-    x0 = ixmin,
-    y0 = iymin,
-    x1 = ixmax,
-    y1 = iymax,
-    col = icol,
-    lwd = ilwd,
-    length = 0.05,
-    angle = 90,
-    code = 3
-  )
-  draw_points()(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
-}
 
 
 

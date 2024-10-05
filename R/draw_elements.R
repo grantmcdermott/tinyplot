@@ -26,47 +26,13 @@ draw_elements = function(
     flip = FALSE
     ) {
 
+      types = c("boxplot", "ribbon", "pointrange", "errorbar", "polygon", "polypath", "rect", "segments", "p", "points", "l", "o", "b", "c", "h", "s", "S", "n")
+      assert_choice(type, types, null.ok = TRUE)
+
       ## polygons before lines, segments/arrows before points, etc.
-      if (isTRUE(empty_plot)) {
+      if (isTRUE(empty_plot)) return(invisible())
 
-      } else if (type == "ribbon") {
-        draw_ribbon( xx = xx, yy = yy, xxmin = xxmin, xxmax = xxmax, yymin = yymin, yymax = yymax, icol = icol, ibg = ibg, flip = flip)
-
-      } else if (type == "pointrange") {
-        draw_pointrange(xx = xx, yy = yy, xxmin = xxmin, yymin = yymin, xxmax = xxmax, yymax = yymax, icol = icol, ilwd = ilwd, ipch = ipch, cex = cex, ibg = ibg)
-
-      } else if (type == "errorbar") {
-        draw_errorbar(xx = xx, yy = yy, xxmin = xxmin, yymin = yymin, xxmax = xxmax, yymax = yymax, icol = icol, ilwd = ilwd, ipch = ipch, cex = cex, ibg = ibg)
-
-      }
-
-      ## now draw the points/lines/polygons/etc
-      if (isTRUE(empty_plot)) {
-        # empty plot
-      } else if (type == "p") {
-        draw_points(xx = xx, yy = yy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
-
-     } else if (type %in% c("l", "o", "b", "c", "h", "s", "S", "ribbon")) {
-        rtype = type == "ribbon"
-        if (rtype) type = "l"
-        lines(
-          x = xx,
-          y = yy,
-          col = icol,
-          type = type,
-          pch = ipch,
-          lty = ilty,
-          lwd = ilwd
-        )
-        if (rtype) type = "ribbon"
-
-      } else if (type == "polygon") {
-        draw_polygon(x = xx, y = yy, icol = icol, ibg = ibg, ilty = ilty, ilwd = ilwd)
-
-      } else if (type == "polypath") {
-        draw_polypath(xx = xx, yy = yy, icol = icol, ibg = ibg, ilty = ilty, ilwd = ilwd, dots = dots)
-
-      } else if (type == "boxplot") {
+      if (type == "boxplot") {
         at_xx = unique(xx)
         horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
         range_xx = ifelse(!is.null(dots[["range"]]), dots[["range"]], 1.5)
@@ -102,36 +68,56 @@ draw_elements = function(
           staplewex = staplewex_xx,
           outwex = outwex_xx
         )
-      } else if (type == "rect") {
-        rect(
-          xleft = xxmin, ybottom = yymin, xright = xxmax, ytop = yymax,
-          lty = ilty,
-          lwd = ilwd,
-          border = icol,
-          col = ibg
-        )
-      } else if (type == "segments") {
-        segments(
-          x0 = xxmin, y0 = yymin, x1 = xxmax, y1 = yymax,
-          lty = ilty,
-          lwd = ilwd,
-          col = icol
-        )
-      } else if (!type %in% c("pointrange", "errorbar")) {
-        stop("`type` argument not supported.", call. = FALSE)
+
+    } else {
+        draw_fun = switch(
+        type,
+        "ribbon" = draw_ribbon,
+        "pointrange" = draw_pointrange,
+        "errorbar" = draw_errorbar,
+        "polygon" = draw_polygon,
+        "polypath" = draw_polypath,
+        "rect" = draw_rect,
+        "segments" = draw_segments,
+        "p" = ,
+        "points" = draw_points,
+        "l" = ,
+        "o" = ,
+        "b" = ,
+        "c" = ,
+        "h" = ,
+        "s" = ,
+        "S" = draw_lines)
+        draw_fun(xx = xx,
+          yy = yy,
+          xxmin = xxmin,
+          yymin = yymin,
+          xxmax = xxmax,
+          yymax = yymax,
+          icol = icol,
+          ilwd = ilwd,
+          ilty = ilty,
+          ipch = ipch,
+          cex = cex,
+          ibg = ibg,
+          dots = dots,
+          type = type,
+          flip = flip)
+
       }
 }
 
 
-
 # Draw Ribbon
-draw_ribbon <- function(xx, yy, xxmin, xxmax, yymin, yymax, ibg, icol, i = 1, flip = FALSE, ...) {
+draw_ribbon <- function(xx, yy, xxmin, xxmax, yymin, yymax, ibg, ilty, ilwd, icol, ipch, i = 1, flip = FALSE, ...) {
   if (isFALSE(flip)) {
     draw_polygon(x = c(xx, rev(xx)), y = c(yymin, rev(yymax)), icol = NA, ibg = ibg)
   } else {
     draw_polygon(x = c(xxmin, rev(xxmax)), y = c(yy, rev(yy)), icol = NA, ibg = ibg)
   }
+  draw_lines(xx = xx, yy = yy, icol = icol, ipch = ipch, ilty = ilty, ilwd = ilwd, type = "l")
 }
+
 
 # Draw Pointrange
 draw_pointrange <- function(xx, yy, xxmin, yymin, xxmax, yymax, icol, ibg, ipch, ilwd, cex, ...) {
@@ -145,6 +131,7 @@ draw_pointrange <- function(xx, yy, xxmin, yymin, xxmax, yymax, icol, ibg, ipch,
   )
   draw_points(xx = xx, yy = yy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
 }
+
 
 # Draw Errorbar
 draw_errorbar <- function(xx, yy, xxmin, yymin, xxmax, yymax, icol, ibg, ipch, ilwd, cex, ...) {
@@ -162,6 +149,7 @@ draw_errorbar <- function(xx, yy, xxmin, yymin, xxmax, yymax, icol, ibg, ipch, i
   draw_points(xx = xx, yy = yy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
 }
 
+
 # Draw Points
 draw_points <- function(xx, yy, icol, ibg, ipch, ilwd, cex, ...) {
   points(
@@ -176,6 +164,7 @@ draw_points <- function(xx, yy, icol, ibg, ipch, ilwd, cex, ...) {
   )
 }
 
+
 # Draw Lines
 draw_lines <- function(xx, yy, icol, ipch, ilty, ilwd, type, ...) {
   lines(
@@ -189,6 +178,7 @@ draw_lines <- function(xx, yy, icol, ipch, ilty, ilwd, type, ...) {
   )
 }
 
+
 # Draw Polygon
 draw_polygon <- function(xx, yy, icol, ibg, ilty = par("lty"), ilwd = par("lwd"), ...) {
   polygon(
@@ -201,8 +191,9 @@ draw_polygon <- function(xx, yy, icol, ibg, ilty = par("lty"), ilwd = par("lwd")
   )
 }
 
+
 # Draw Polypath
-draw_polypath <- function(xx, yy, icol, ibg, ilty, ilwd, dots) {
+draw_polypath <- function(xx, yy, icol, ibg, ilty, ilwd, dots, ...) {
   irule <- ifelse(!is.null(dots[["rule"]]), dots[["rule"]], "winding")
   polypath(
     x = xx,
@@ -214,6 +205,30 @@ draw_polypath <- function(xx, yy, icol, ibg, ilty, ilwd, dots) {
     rule = irule
   )
 }
+
+
+# Draw Rectangle
+draw_rect <- function(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ibg, ...) {
+  rect(
+    xleft = xxmin, ybottom = yymin, xright = xxmax, ytop = yymax,
+    lty = ilty,
+    lwd = ilwd,
+    border = icol,
+    col = ibg
+  )
+}
+
+
+# Draw Segments
+draw_segments <- function(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ...) {
+  segments(
+    x0 = xxmin, y0 = yymin, x1 = xxmax, y1 = yymax,
+    lty = ilty,
+    lwd = ilwd,
+    col = icol
+  )
+}
+
 
 # Draw Boxplot
 draw_boxplot <- function(xx, yy, ipch, ilty, icol, ibg, dots, i = 1, x_by = FALSE, facet_by = FALSE, split_data, ...) {
@@ -239,7 +254,7 @@ draw_boxplot <- function(xx, yy, ipch, ilty, icol, ibg, dots, i = 1, x_by = FALS
       length.out = length(split_data)
     )[i]
   }
-  
+
   boxplot(
     formula = yy ~ xx,
     pch = ipch,
@@ -260,82 +275,4 @@ draw_boxplot <- function(xx, yy, ipch, ilty, icol, ibg, dots, i = 1, x_by = FALS
   )
 }
 
-# Draw Rectangle
-draw_rect <- function(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ibg, ...) {
-  rect(
-    xleft = xxmin, ybottom = yymin, xright = xxmax, ytop = yymax,
-    lty = ilty,
-    lwd = ilwd,
-    border = icol,
-    col = ibg
-  )
-}
 
-# Draw Segments
-draw_segments <- function(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ...) {
-  segments(
-    x0 = xxmin, y0 = yymin, x1 = xxmax, y1 = yymax,
-    lty = ilty,
-    lwd = ilwd,
-    col = icol
-  )
-}
-
-# # Dispatcher Function
-# draw_elements <- function(
-#   type,
-#   xx,
-#   yy,
-#   xxmin,
-#   xxmax,
-#   yymin,
-#   yymax,
-#   bg,
-#   icol,
-#   ilwd,
-#   ipch,
-#   ibg,
-#   ilty,
-#   cex,
-#   dots,
-#   empty_plot,
-#   facet_by,
-#   split_data,
-#   i = 1,
-#   x_by = FALSE,
-#   flip = FALSE,
-#   ...
-# ) {
-#   if (isTRUE(empty_plot)) {
-#     # Do nothing for empty plot
-#     return()
-#   }
-#   
-#   switch(
-#     type,
-#     "ribbon" = draw_ribbon(xx, yy, xxmin, xxmax, yymin, yymax, bg, i, flip, ...),
-#     "pointrange" = {
-#       draw_pointrange(xxmin, yymin, xxmax, yymax, icol, ilwd, ...)
-#       draw_points(xx, yy, icol, ibg, ipch, ilwd, cex, ...)
-#     },
-#     "errorbar" = {
-#       draw_errorbar(xxmin, yymin, xxmax, yymax, icol, ilwd, ...)
-#       draw_points(xx, yy, icol, ibg, ipch, ilwd, cex, ...)
-#     },
-#     "p" = draw_points(xx, yy, icol, ibg, ipch, ilwd, cex, ...),
-#     "l" = draw_lines(xx, yy, icol, ipch, ilty, ilwd, type, ...),
-#     "o" = draw_lines(xx, yy, icol, ipch, ilty, ilwd, type, ...),
-#     "b" = draw_lines(xx, yy, icol, ipch, ilty, ilwd, type, ...),
-#     "c" = draw_lines(xx, yy, icol, ipch, ilty, ilwd, type, ...),
-#     "h" = draw_lines(xx, yy, icol, ipch, ilty, ilwd, type, ...),
-#     "s" = draw_lines(xx, yy, icol, ipch, ilty, ilwd, type, ...),
-#     "S" = draw_lines(xx, yy, icol, ipch, ilty, ilwd, type, ...),
-#     "polygon" = draw_polygon(xx, yy, icol, ibg, ilty, ilwd, ...),
-#     "polypath" = draw_polypath(xx, yy, icol, ibg, ilty, ilwd, dots, ...),
-#     "boxplot" = draw_boxplot(xx, yy, ipch, ilty, icol, ibg, dots, i, x_by, facet_by, split_data, ...),
-#     "rect" = draw_rect(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ibg, ...),
-#     "segments" = draw_segments(xxmin, yymin, xxmax, yymax, ilty, ilwd, icol, ...),
-#     stop("`type` argument not supported.", call. = FALSE)
-#   )
-# }
-#

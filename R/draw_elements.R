@@ -26,7 +26,7 @@ draw_elements = function(
     draw_fun = NULL
     ) {
 
-      types = c("area", "boxplot", "ribbon", "pointrange", "errorbar", "polygon", "polypath", "rect", "segments", "p", "points", "l", "o", "b", "c", "h", "s", "S", "n")
+      types = c("area", "boxplot", "ribbon", "pointrange", "histogram", "errorbar", "polygon", "polypath", "rect", "segments", "p", "points", "l", "o", "b", "c", "h", "s", "S", "n")
       assert_choice(type, types, null.ok = TRUE)
 
       ## polygons before lines, segments/arrows before points, etc.

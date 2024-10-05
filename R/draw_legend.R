@@ -166,7 +166,7 @@ draw_legend = function(
   ) {
     legend_args[["pt.cex"]] = cex
   }
-  if (type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot") || isTRUE(gradient)) {
+  if (type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram") || isTRUE(gradient)) {
     legend_args[["pch"]] = 22
     if (is.null(legend_args[["pt.cex"]])) legend_args[["pt.cex"]] = 3.5
     if (is.null(legend_args[["pt.lwd"]]) && (!is.null(type) && !(type %in% c("rect", "polygon", "polypath", "boxplot")))) {

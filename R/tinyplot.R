@@ -587,7 +587,7 @@ tinyplot.default = function(
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = if (!is.null(x)) {
     deparse1(substitute(x))
-  } else if (type %in% c("rect", "segments")) {
+  } else if (type %in% c("rect", "segments", "hist", "histogram")) {
     x = NULL
     NULL
   }
@@ -623,7 +623,7 @@ tinyplot.default = function(
 
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
-    if (type %in% c("rect", "segments")) {
+    if (type %in% c("rect", "segments", "histogram", "hist")) {
       xmin_dep = deparse(substitute(xmin))
       xmax_dep = deparse(substitute(xmax))
       x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")
@@ -667,10 +667,7 @@ tinyplot.default = function(
   datapoints[["facet"]] = if (!is.null(facet)) facet else ""
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
-  type_dict = list(
-    "histogram" = type_histogram
-  )
-  if (!is.null(type_data) || isTRUE(type %in% names(type_dict))) {
+  if (!is.null(type_data)) {
     fargs = list(
       by = by,
       facet = facet,
@@ -681,10 +678,10 @@ tinyplot.default = function(
       ribbon.alpha = ribbon.alpha,
       xlabs = xlabs,
       datapoints = datapoints)
-    fun = if (is.null(type_data)) type_dict[[type]] else type_data
     fargs = c(fargs, dots)
-    list2env(do.call(fun, fargs), environment())
+    list2env(do.call(type_data, fargs), environment())
   }
+
   
   # swap x and y values if flip is TRUE
   assert_flag(flip)
@@ -723,9 +720,9 @@ tinyplot.default = function(
       dots[["horizontal"]] = TRUE
     }
   }
-  
-  
-  
+
+
+
   # plot limits
   fargs = lim_args(datapoints = datapoints, xlim = xlim, ylim = ylim, type = type)
   list2env(fargs, environment())
@@ -834,7 +831,7 @@ tinyplot.default = function(
 
     has_sub = !is.null(sub)
 
-    if (isTRUE(was_area_type) || isTRUE(type == "rect")) {
+    if (isTRUE(was_area_type) || isTRUE(type %in% c("rect", "histogram", "hist"))) {
       legend_args[["pt.lwd"]] = par("lwd")
       legend_args[["lty"]] = 0
     }
@@ -1049,7 +1046,7 @@ tinyplot.default = function(
 
       # empty plot flag
       empty_plot = FALSE
-      if (isTRUE(empty) || isTRUE(type == "n") || ((length(xx) == 0) && !(type %in% c("rect", "segments")))) {
+      if (isTRUE(empty) || isTRUE(type == "n") || ((length(xx) == 0) && !(type %in% c("histogram", "hist", "rect", "segments")))) {
         empty_plot = TRUE
       }
 

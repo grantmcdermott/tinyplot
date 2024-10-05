@@ -1,6 +1,6 @@
 type_jitter = function(factor = 1, amount = NULL) {
   out <- list(
-    draw = draw_points,
+    draw = draw_points(),
     data = data_jitter(factor = factor, amount = amount),
     name = "p"
   )

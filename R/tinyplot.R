@@ -668,7 +668,6 @@ tinyplot.default = function(
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
   type_dict = list(
-    "jitter" = type_jitter,
     "histogram" = type_histogram,
     "area" = type_area,
     "boxplot" = type_boxplot,

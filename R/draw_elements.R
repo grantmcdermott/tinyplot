@@ -44,7 +44,7 @@ draw_elements = function(
           "segments" = draw_segments,
           "boxplot" = draw_boxplot,
           "p" = ,
-          "points" = draw_points,
+          "points" = draw_points(),
           "l" = ,
           "o" = ,
           "b" = ,
@@ -96,7 +96,7 @@ draw_pointrange <- function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch,
     col = icol,
     lwd = ilwd
   )
-  draw_points(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
+  draw_points()(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
 }
 
 
@@ -112,7 +112,7 @@ draw_errorbar <- function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, i
     angle = 90,
     code = 3
   )
-  draw_points(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
+  draw_points()(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
 }
 
 

@@ -1,7 +1,7 @@
 type_points = function() {
   out <- list(
-    draw = draw_points,
-    data = data_points,
+    draw = draw_points(),
+    data = NULL,
     name = "p"
   )
   class(out) <- "tinyplot_type"
@@ -9,21 +9,19 @@ type_points = function() {
 }
 
 
-data_points = function(datapoints, ...) {
-    return(list())
-}
-
-
-draw_points <- function(ix, iy, icol, ibg, ipch, ilwd, cex, ...) {
-  points(
-    x = ix,
-    y = iy,
-    col = icol,
-    bg = ibg,
-    type = "p",
-    pch = ipch,
-    lwd = ilwd,
-    cex = cex
-  )
+draw_points = function() {
+    fun = function(ix, iy, icol, ibg, ipch, ilwd, cex, ...) {
+        points(
+            x = ix,
+            y = iy,
+            col = icol,
+            bg = ibg,
+            type = "p",
+            pch = ipch,
+            lwd = ilwd,
+            cex = cex
+        )
+    }
+    return(fun)
 }
 

@@ -48,55 +48,28 @@ draw_elements = function(
         }
         
       } else if (type == "pointrange") {
-        if (isFALSE(flip)) {
-          segments(
-            x0 = xx,
-            y0 = yymin,
-            x1 = xx,
-            y1 = yymax,
-            col = icol,
-            # lty = ilty,
-            lwd = ilwd
-          )
-        } else (
-          segments(
-            x0 = xxmin,
-            y0 = yy,
-            x1 = xxmax,
-            y1 = yy,
-            col = icol,
-            # lty = ilty,
-            lwd = ilwd
-          )
+        segments(
+          x0 = xxmin,
+          y0 = yymin,
+          x1 = xxmax,
+          y1 = yymax,
+          col = icol,
+          # lty = ilty,
+          lwd = ilwd
         )
       } else if (type == "errorbar") {
-        if (isFALSE(flip)) {
-          arrows(
-            x0 = xx,
-            y0 = yymin,
-            x1 = xx,
-            y1 = yymax,
-            col = icol,
-            # lty = ilty,
-            lwd = ilwd,
-            length = 0.05,
-            angle = 90,
-            code = 3
-          )
-        } else {
-          arrows(
-            x0 = xxmin,
-            y0 = yy,
-            x1 = xxmax,
-            y1 = yy,
-            col = icol,
-            # lty = ilty,
-            lwd = ilwd,
-            length = 0.05,
-            angle = 90,
-            code = 3
-          )
-        }
+        arrows(
+          x0 = xxmin,
+          y0 = yymin,
+          x1 = xxmax,
+          y1 = yymax,
+          col = icol,
+          # lty = ilty,
+          lwd = ilwd,
+          length = 0.05,
+          angle = 90,
+          code = 3
+        )
       }
 
       ## now draw the points/lines/polygons/etc

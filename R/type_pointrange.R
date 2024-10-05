@@ -8,6 +8,8 @@ type_pointrange = function(datapoints, xlabs, ...) {
      names(xlabs) = xlvls
      datapoints$x = as.integer(datapoints$x)
  }
+ datapoints$xmin = datapoints$x
+ datapoints$xmax = datapoints$x
   out = list(
     x = datapoints$x,
     xlabs = xlabs,

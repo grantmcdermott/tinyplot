@@ -654,7 +654,7 @@ tinyplot.default = function(
   if (is.null(bg) && !is.null(fill)) bg = fill
 
   # type-specific settings and arguments
-  if (type == "density") {
+  if (isTRUE(type == "density")) {
     fargs = mget(ls(environment(), sorted = FALSE))
     fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
     return(do.call(tinyplot.density, args = fargs))
@@ -670,7 +670,6 @@ tinyplot.default = function(
   type_dict = list(
     "histogram" = type_histogram,
     "area" = type_area,
-    "boxplot" = type_boxplot,
     "ribbon" = type_ribbon
   )
   if (!is.null(type_data) || isTRUE(type %in% names(type_dict))) {
@@ -836,7 +835,7 @@ tinyplot.default = function(
 
     has_sub = !is.null(sub)
 
-    if (isTRUE(was_area_type) || type == "rect") {
+    if (isTRUE(was_area_type) || isTRUE(type == "rect")) {
       legend_args[["pt.lwd"]] = par("lwd")
       legend_args[["lty"]] = 0
     }
@@ -1051,7 +1050,7 @@ tinyplot.default = function(
 
       # empty plot flag
       empty_plot = FALSE
-      if (isTRUE(empty) || type == "n" || ((length(xx) == 0) && !(type %in% c("rect", "segments")))) {
+      if (isTRUE(empty) || isTRUE(type == "n") || ((length(xx) == 0) && !(type %in% c("rect", "segments")))) {
         empty_plot = TRUE
       }
 

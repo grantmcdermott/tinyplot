@@ -9,7 +9,7 @@ lim_args = function(datapoints, xlim, ylim, type) {
     ylim = range(c(datapoints[["y"]], datapoints[["ymin"]],
                    datapoints[["ymax"]]), finite = TRUE)
 
-  if (type == "boxplot") {
+  if (identical(type, "boxplot")) {
     xlim = xlim + c(-0.5, 0.5)
   }
 

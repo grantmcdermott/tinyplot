@@ -11,6 +11,19 @@ sanitize_type = function(type, x, y) {
         return(type)
     }
 
+    if (is.null(type)) {
+        # enforce boxplot type for y ~ factor(x)
+        if (!is.null(x) && is.factor(x) && !is.factor(y)) {
+            return(type_boxplot())
+        } else {
+            type = "p"
+        }
+    } else if (type %in% c("hist", "histogram")) {
+        type = "histogram"
+    } else if (type %in% c("j", "jitter")) {
+        type = return(type_jitter())
+    }
+
     if (identical(type, "points")) {
         return(type_points())
     } else if (identical(type, "polypath")) {
@@ -19,21 +32,10 @@ sanitize_type = function(type, x, y) {
         return(type_pointrange())
     } else if (identical(type, "errorbar")) {
         return(type_errorbar())
+    } else if (identical(type, "boxplot")) {
+        return(type_boxplot())
     } else if (isTRUE(type %in% c("j", "jitter"))) {
         return(type_jitter())
-    }
-
-    if (is.null(type)) {
-        # enforce boxplot type for y ~ factor(x)
-        if (!is.null(x) && is.factor(x) && !is.factor(y)) {
-            type = "boxplot"
-        } else {
-            type = "p"
-        }
-    } else if (type %in% c("hist", "histogram")) {
-        type = "histogram"
-    } else if (type %in% c("j", "jitter")) {
-        type = "jitter"
     }
 
     out = list(draw = NULL, data = NULL, name = type)

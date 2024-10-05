@@ -209,7 +209,7 @@ draw_facet_window = function(grid, ...) {
       ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
       pdots = dots[names(dots) %in% names(formals(plot.default))]
       ## catch for flipped boxplots...
-      if (type == "boxplot" && isTRUE(dots[["horizontal"]])) {
+      if (identical(type, "boxplot") && isTRUE(dots[["horizontal"]])) {
         log_flip = log
         if (!is.null(log)) {
           if (log == "x") log_flip = "y"

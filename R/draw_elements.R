@@ -39,7 +39,6 @@ draw_elements = function(
           "polygon" = type_polygon()$draw,
           "rect" = draw_rect,
           "segments" = draw_segments,
-          "boxplot" = draw_boxplot,
           "p" = ,
           "points" = type_points()$draw,
           "l" = ,
@@ -108,51 +107,5 @@ draw_segments <- function(ixmin, iymin, ixmax, iymax, ilty, ilwd, icol, ...) {
   )
 }
 
-
-draw_boxplot <- function(i, ix, iy, ipch, ilty, icol, ibg, dots, x_by = FALSE, facet_by = FALSE, split_data, ...) {
-
-  at_ix <- unique(ix)
-  horizontal <- if (!is.null(dots[["horizontal"]])) dots[["horizontal"]] else FALSE
-  range_ix <- if (!is.null(dots[["range"]])) dots[["range"]] else 1.5
-  boxwidth_ix <- if (!is.null(dots[["boxwidth"]])) dots[["boxwidth"]] else NULL
-  varwidth_ix <- if (!is.null(dots[["varwidth"]])) dots[["varwidth"]] else FALSE
-  notch_ix <- if (!is.null(dots[["notch"]])) dots[["notch"]] else FALSE
-  outline_ix <- if (!is.null(dots[["outline"]])) dots[["outline"]] else TRUE
-  boxwex_ix <- if (!is.null(dots[["boxwex"]])) dots[["boxwex"]] else 0.8
-  if (isTRUE(x_by)) boxwex_ix <- boxwex_ix * 2
-  staplewex_ix <- if (!is.null(dots[["staplewex"]])) dots[["staplewex"]] else 0.5
-  outwex_ix <- if (!is.null(dots[["outwex"]])) dots[["outwex"]] else 0.5
-
-  # Handle multiple groups
-  if (!is.null(split_data) && isFALSE(x_by) && isFALSE(facet_by) && length(split_data) > 1) {
-    boxwex_ix_orig <- boxwex_ix
-    boxwex_ix <- boxwex_ix / length(split_data) - 0.01
-    at_ix <- at_ix + seq(
-      -((boxwex_ix_orig - boxwex_ix) / 2),
-      ((boxwex_ix_orig - boxwex_ix) / 2),
-      length.out = length(split_data)
-    )[i]
-  }
-
-  boxplot(
-    formula = iy ~ ix,
-    pch = ipch,
-    lty = ilty,
-    border = icol,
-    col = ibg,
-    add = TRUE, axes = FALSE,
-    horizontal = horizontal,
-    at = at_ix,
-    range = range_ix,
-    width = boxwidth_ix,
-    varwidth = varwidth_ix,
-    notch = notch_ix,
-    outline = outline_ix,
-    boxwex = boxwex_ix,
-    staplewex = staplewex_ix,
-    outwex = outwex_ix
-  )
-
-}
 
 

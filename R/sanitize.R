@@ -38,6 +38,8 @@ sanitize_type = function(type, x, y) {
         return(type_errorbar())
     } else if (identical(type, "boxplot")) {
         return(type_boxplot())
+    } else if (identical(type, "ribbon")) {
+        return(type_ribbon())
     } else if (isTRUE(type %in% c("j", "jitter"))) {
         return(type_jitter())
     }

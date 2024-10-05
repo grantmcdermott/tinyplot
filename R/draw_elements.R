@@ -35,7 +35,7 @@ draw_elements = function(
       if (is.null(draw_fun)) {
         draw_fun = switch(
           type,
-          "ribbon" = draw_ribbon,
+          "ribbon" = type_ribbon()$draw,
           "polygon" = type_polygon()$draw,
           "rect" = type_rect()$draw,
           "p" = ,
@@ -70,24 +70,5 @@ draw_elements = function(
         flip = flip)
 
 }
-
-
-draw_ribbon <- function(ix, iy, ixmin, ixmax, iymin, iymax, ibg, ilty, ilwd, icol, ipch, i, flip = FALSE, ...) {
-    polyg = type_polygon()$draw
-    lin = type_lines()$draw
-    if (isFALSE(flip)) {
-        polyg(ix = c(ix, rev(ix)), iy = c(iymin, rev(iymax)), icol = NA, ibg = ibg)
-    } else {
-        polyg(c(ixmin, rev(ixmax)), iy = c(iy, rev(iy)), icol = NA, ibg = ibg)
-    }
-    lin(ix = ix, iy = iy, icol = icol, ipch = ipch, ilty = ilty, ilwd = ilwd, type = "l")
-}
-
-
-
-
-
-
-
 
 

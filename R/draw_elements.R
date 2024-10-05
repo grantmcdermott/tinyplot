@@ -37,7 +37,7 @@ draw_elements = function(
           type,
           "ribbon" = draw_ribbon,
           "polygon" = type_polygon()$draw,
-          "rect" = draw_rect,
+          "rect" = type_rect()$draw,
           "p" = ,
           "points" = type_points()$draw,
           "l" = ,
@@ -86,15 +86,6 @@ draw_ribbon <- function(ix, iy, ixmin, ixmax, iymin, iymax, ibg, ilty, ilwd, ico
 
 
 
-draw_rect <- function(ixmin, iymin, ixmax, iymax, ilty, ilwd, icol, ibg, ...) {
-  rect(
-    xleft = ixmin, ybottom = iymin, xright = ixmax, ytop = iymax,
-    lty = ilty,
-    lwd = ilwd,
-    border = icol,
-    col = ibg
-  )
-}
 
 
 

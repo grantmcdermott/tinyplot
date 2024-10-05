@@ -10,7 +10,8 @@ New features:
 
 - The new `flip` argument allows for easily flipping (swapping) the orientation
 of the x and y axes. This should work regardless of plot type, e.g.
-`plt(~Sepal.Length, data = iris, type = "density")`. (#216 @grantmcdermott)
+`plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
+(#216 @grantmcdermott)
 
 Bug fixes:
 

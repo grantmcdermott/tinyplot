@@ -685,6 +685,7 @@ tinyplot.default = function(
   }
   
   # swap x and y values if flip is TRUE
+  assert_flag(flip)
   if (isTRUE(flip)) {
     if (type != "boxplot") {
       # limits, labs, etc.

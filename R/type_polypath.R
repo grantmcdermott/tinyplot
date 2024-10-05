@@ -2,7 +2,7 @@ type_polypath = function() {
   out <- list(
     draw = draw_polypath(),
     data = NULL,
-    name = "p"
+    name = "polypath"
   )
   class(out) <- "tinyplot_type"
   return(out)

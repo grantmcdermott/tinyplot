@@ -37,7 +37,6 @@ draw_elements = function(
           type,
           "ribbon" = draw_ribbon,
           "polygon" = type_polygon()$draw,
-          "polypath" = draw_polypath,
           "rect" = draw_rect,
           "segments" = draw_segments,
           "boxplot" = draw_boxplot,
@@ -87,18 +86,6 @@ draw_ribbon <- function(ix, iy, ixmin, ixmax, iymin, iymax, ibg, ilty, ilwd, ico
 }
 
 
-draw_polypath <- function(ix, iy, icol, ibg, ilty, ilwd, dots, ...) {
-  irule <- ifelse(!is.null(dots[["rule"]]), dots[["rule"]], "winding")
-  polypath(
-    x = ix,
-    y = iy,
-    border = icol,
-    col = ibg,
-    lty = ilty,
-    lwd = ilwd,
-    rule = irule
-  )
-}
 
 
 draw_rect <- function(ixmin, iymin, ixmax, iymax, ilty, ilwd, icol, ibg, ...) {

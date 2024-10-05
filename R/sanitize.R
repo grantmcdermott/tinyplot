@@ -7,6 +7,16 @@ sanitize_ribbon.alpha = function(ribbon.alpha) {
 
 
 sanitize_type = function(type, x, y) {
+    if (inherits(type, "tinyplot_type")) {
+        return(type)
+    }
+
+    if (identical(type, "points")) {
+        return(type_points())
+    } else if (isTRUE(type %in% c("j", "jitter"))) {
+        return(type_jitter())
+    }
+
     if (is.null(type)) {
         # enforce boxplot type for y ~ factor(x)
         if (!is.null(x) && is.factor(x) && !is.factor(y)) {
@@ -19,5 +29,7 @@ sanitize_type = function(type, x, y) {
     } else if (type %in% c("j", "jitter")) {
         type = "jitter"
     }
-    return(type)
+
+    out = list(draw = NULL, data = NULL, name = type)
+    return(out)
 }

@@ -528,15 +528,22 @@ tinyplot.default = function(
     flip = FALSE,
     ...
     ) {
-  
+
   dots = list(...)
 
   if (isTRUE(add)) legend = FALSE
   
   # sanitize arguments
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
-  type = sanitize_type(type, x, y)
   was_area_type = identical(type, "area") # flag to keep track for some legend adjustments below
+
+
+  # type factories vs. strings
+  type = sanitize_type(type, x, y)
+  type_data = type$data
+  type_draw = type$draw
+  type = type$name
+
 
   palette = substitute(palette)
 
@@ -669,7 +676,7 @@ tinyplot.default = function(
     "pointrange" = type_pointrange,
     "errorbar" = type_pointrange
   )
-  if (isTRUE(type %in% names(type_dict))) {
+  if (!is.null(type_data) || isTRUE(type %in% names(type_dict))) {
     fargs = list(
       by = by,
       facet = facet,
@@ -680,8 +687,9 @@ tinyplot.default = function(
       ribbon.alpha = ribbon.alpha,
       xlabs = xlabs,
       datapoints = datapoints)
+    fun = if (is.null(type_data)) type_dict[[type]] else type_data
     fargs = c(fargs, dots)
-    list2env(do.call(type_dict[[type]], fargs), environment())
+    list2env(do.call(fun, fargs), environment())
   }
   
   # swap x and y values if flip is TRUE
@@ -1053,13 +1061,13 @@ tinyplot.default = function(
       # Draw the individual plot elements...
       draw_elements(
         type = type,
-        xx = xx,
-        yy = yy,
-        xxmin = xxmin,
-        xxmax = xxmax,
-        yymin = yymin,
-        yymax = yymax, 
-        bg = bg,
+        i = i,
+        ix = xx,
+        iy = yy,
+        ixmin = xxmin,
+        ixmax = xxmax,
+        iymin = yymin,
+        iymax = yymax, 
         icol = icol,
         ilwd = ilwd,
         ipch = ipch,
@@ -1070,9 +1078,9 @@ tinyplot.default = function(
         empty_plot = empty_plot,
         facet_by = facet_by,
         split_data = split_data,
-        i = i,
         x_by = x_by,
-        flip = flip
+        flip = flip,
+        draw_fun = type_draw
       )
     }
   }
@@ -1180,7 +1188,7 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (!is.null(type) && type %in% c("hist", "histogram")) {
+  if (!is.null(type) && isTRUE(type %in% c("hist", "histogram"))) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {

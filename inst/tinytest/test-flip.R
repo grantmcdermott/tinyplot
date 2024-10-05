@@ -52,7 +52,7 @@ f = function () {
     type = "density", fill = 0.5,
     grid = TRUE,
     flip = TRUE,
-    main = "Flipped histogram"
+    main = "Flipped density"
   )
 }
 expect_snapshot_plot(f, label = "flip_density")

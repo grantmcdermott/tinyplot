@@ -30,22 +30,7 @@ draw_elements = function(
       if (isTRUE(empty_plot)) {
 
       } else if (type == "ribbon") {
-        if (isFALSE(flip)) {
-          polygon(
-            x = c(xx, rev(xx)),
-            y = c(yymin, rev(yymax)),
-            col = bg[i],
-            border = FALSE
-          )
-        } else {
-          polygon(
-            x = c(xxmin, rev(xxmax)),
-            y = c(yy, rev(yy)),
-            col = bg[i],
-            border = FALSE
-          )
-
-        }
+        draw_ribbon( xx = xx, yy = yy, xxmin = xxmin, xxmax = xxmax, yymin = yymin, yymax = yymax, icol = icol, ibg = ibg, flip = flip)
 
       } else if (type == "pointrange") {
         draw_pointrange(xx = xx, yy = yy, xxmin = xxmin, yymin = yymin, xxmax = xxmax, yymax = yymax, icol = icol, ilwd = ilwd, ipch = ipch, cex = cex, ibg = ibg)
@@ -140,11 +125,11 @@ draw_elements = function(
 
 
 # Draw Ribbon
-draw_ribbon <- function(xx, yy, xxmin, xxmax, yymin, yymax, bg, i = 1, flip = FALSE, ...) {
+draw_ribbon <- function(xx, yy, xxmin, xxmax, yymin, yymax, ibg, icol, i = 1, flip = FALSE, ...) {
   if (isFALSE(flip)) {
-    draw_polygon(x = c(xx, rev(xx)), y = c(yymin, rev(yymax)), icol = bg[i], ibg = bg[i])
+    draw_polygon(x = c(xx, rev(xx)), y = c(yymin, rev(yymax)), icol = NA, ibg = ibg)
   } else {
-    draw_polygon(x = c(xxmin, rev(xxmax)), y = c(yy, rev(yy)), icol = bg[i], ibg = bg[i])
+    draw_polygon(x = c(xxmin, rev(xxmax)), y = c(yy, rev(yy)), icol = NA, ibg = ibg)
   }
 }
 

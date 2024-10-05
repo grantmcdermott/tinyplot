@@ -112,4 +112,4 @@ f = function() {
   y = 1:10
   tinyplot(x_dt, y, grid = TRUE, flip = TRUE)
 }
-expect_snapshot_plot(f, label = "flip_date_time")
+expect_snapshot_plot(f, label = "flip_date")

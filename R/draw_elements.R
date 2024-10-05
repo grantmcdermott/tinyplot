@@ -42,14 +42,14 @@ draw_elements = function(
           "segments" = draw_segments,
           "boxplot" = draw_boxplot,
           "p" = ,
-          "points" = draw_points(),
+          "points" = type_points()$draw,
           "l" = ,
           "o" = ,
           "b" = ,
           "c" = ,
           "h" = ,
           "s" = ,
-          "S" = draw_lines)
+          "S" = type_lines(type = type)$draw)
       }
       draw_fun(
         ibg = ibg,
@@ -81,7 +81,7 @@ draw_ribbon <- function(ix, iy, ixmin, ixmax, iymin, iymax, ibg, ilty, ilwd, ico
   } else {
     draw_polygon(ix = c(ixmin, rev(ixmax)), iy = c(iy, rev(iy)), icol = NA, ibg = ibg)
   }
-  draw_lines(ix = ix, iy = iy, icol = icol, ipch = ipch, ilty = ilty, ilwd = ilwd, type = "l")
+  draw_lines()(ix = ix, iy = iy, icol = icol, ipch = ipch, ilty = ilty, ilwd = ilwd, type = "l")
 }
 
 
@@ -90,17 +90,6 @@ draw_ribbon <- function(ix, iy, ixmin, ixmax, iymin, iymax, ibg, ilty, ilwd, ico
 
 
 
-draw_lines <- function(ix, iy, icol, ipch, ilty, ilwd, type, ...) {
-  lines(
-    x = ix,
-    y = iy,
-    col = icol,
-    type = type,
-    pch = ipch,
-    lty = ilty,
-    lwd = ilwd
-  )
-}
 
 
 draw_polygon <- function(ix, iy, icol, ibg, ilty = par("lty"), ilwd = par("lwd"), ...) {

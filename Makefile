@@ -16,6 +16,9 @@ document: ## altdoc::render_docs()
 check: document ## devtools::check()
 	R CMD check .
 
+website: website ## altdoc::render_docs()
+	Rscript -e "pkgload::load_all();altdoc::render_docs()"
+
 install: document ## devtools::install(dependencies = FALSE)
 	R CMD INSTALL .
 

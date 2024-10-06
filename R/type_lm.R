@@ -2,7 +2,7 @@
 #' 
 #' @inheritParams type_glm
 #' @export
-type_lm = function(se = FALSE, level = 0.95, ...) {
+type_lm = function(se = FALSE, level = 0.95) {
     assert_flag(se)
     out = list(
         draw = draw_ribbon(),

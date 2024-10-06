@@ -8,8 +8,7 @@ type_loess(
   span = 0.75,
   degree = 2,
   family = "gaussian",
-  control = stats::loess.control(),
-  ...
+  control = stats::loess.control()
 )
 }
 \arguments{
@@ -24,9 +23,6 @@ type_loess(
     biweight function.  Can be abbreviated.}
 
 \item{control}{control parameters: see \code{\link[stats]{loess.control}}.}
-
-\item{...}{control parameters can also be supplied directly
-    (\emph{if} \code{control} is not specified).}
 }
 \description{
 LOESS type

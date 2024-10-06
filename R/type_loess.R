@@ -6,8 +6,7 @@ type_loess = function(
     span = 0.75,
     degree = 2,
     family = "gaussian",
-    control = stats::loess.control(),
-    ...) {
+    control = stats::loess.control()) {
     out = list(
         draw = draw_lines(),
         data = data_loess(span = span, degree = degree, family = family, control = control),

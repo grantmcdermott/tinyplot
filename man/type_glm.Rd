@@ -4,7 +4,7 @@
 \alias{type_glm}
 \title{GLM type}
 \usage{
-type_glm(family = "gaussian", se = FALSE, level = 0.95, type = "response", ...)
+type_glm(family = "gaussian", se = FALSE, level = 0.95, type = "response")
 }
 \arguments{
 \item{family}{a description of the error distribution and link
@@ -20,13 +20,6 @@ type_glm(family = "gaussian", se = FALSE, level = 0.95, type = "response", ...)
 
 \item{type}{character, partial matching allowed.  Type of weights to
     extract from the fitted model object.  Can be abbreviated.}
-
-\item{...}{
-    For \code{glm}: arguments to be used to form the default
-    \code{control} argument if it is not supplied directly.
-
-    For \code{weights}: further arguments passed to or from other methods.
-  }
 }
 \description{
 GLM type

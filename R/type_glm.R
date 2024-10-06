@@ -5,7 +5,7 @@
 #' @inheritParams stats::predict.glm
 #' @inheritParams stats::confint
 #' @export
-type_glm = function(family = "gaussian", se = FALSE, level = 0.95, type = "response", ...) {
+type_glm = function(family = "gaussian", se = FALSE, level = 0.95, type = "response") {
     assert_flag(se)
     out = list(
         draw = draw_ribbon(),

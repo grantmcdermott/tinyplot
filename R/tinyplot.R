@@ -1050,29 +1050,44 @@ tinyplot.default = function(
       }
 
       # Draw the individual plot elements...
-      draw_elements(
-        type = type,
-        i = i,
-        ix = ix,
-        iy = iy,
-        ixmin = ixmin,
-        ixmax = ixmax,
-        iymin = iymin,
-        iymax = iymax, 
-        icol = icol,
-        ilwd = ilwd,
-        ipch = ipch,
-        ibg = ibg,
-        ilty = ilty,
-        cex = cex,
-        dots = dots,
-        empty_plot = empty_plot,
-        facet_by = facet_by,
-        split_data = split_data,
-        x_by = x_by,
-        flip = flip,
-        draw_fun = type_draw
-      )
+      if (!isTRUE(empty_plot)) {
+        if (is.null(type_draw)) {
+            type_draw = switch(
+            type,
+            "ribbon" = type_ribbon()$draw,
+            "polygon" = type_polygon()$draw,
+            "rect" = type_rect()$draw,
+            "p" = ,
+            "points" = type_points()$draw,
+            "l" = ,
+            "o" = ,
+            "b" = ,
+            "c" = ,
+            "h" = ,
+            "s" = ,
+            "S" = type_lines(type = type)$draw)
+        }
+        type_draw(
+            ibg = ibg,
+            icol = icol,
+            ilty = ilty,
+            ilwd = ilwd,
+            ipch = ipch,
+            ix = ix,
+            ixmax = ixmax,
+            ixmin = ixmin,
+            iy = iy,
+            iymax = iymax,
+            iymin = iymin,
+            cex = cex,
+            dots = dots,
+            type = type,
+            x_by = x_by,
+            i = i,
+            facet_by = facet_by,
+            split_data = split_data,
+            flip = flip)
+      }
     }
   }
 

@@ -134,43 +134,44 @@ Here is a minimalist example of a custom type that logs both `x` and `y` and plo
 
 ```{r}
 type_log = function(base = exp(1)) {
+
+  data_log = function() {
+    fun = function(datapoints, ...) {
+      datapoints$x = log(datapoints$x, base = base)
+      datapoints$y = log(datapoints$y, base = base)
+      datapoints = datapoints[order(datapoints$x), ]
+      return(list(datapoints = datapoints, ...))
+    }
+    return(fun)
+  }
+
+  draw_log = function() {
+    fun = function(ix, iy, icol, ...) {
+      points(
+        x = ix,
+        y = iy,
+        col = icol
+      )
+    }
+    return(fun)
+  }
+
   out = list(
     draw = draw_log(),
-    data = data_log(base = base),
+    data = data_log(),
     name = "log"
   )
   class(out) = "tinyplot_type"
   return(out)
 }
 
-data_log = function(base) {
-    fun = function(datapoints, ...) {
-        datapoints$x = log(datapoints$x, base = base)
-        datapoints$y = log(datapoints$y, base = base)
-        datapoints = datapoints[order(datapoints$x), ]
-        return(list(datapoints = datapoints, ...))
-    }
-    return(fun)
-}
-
-draw_log = function() {
-    fun = function(ix, iy, icol, ...) {
-        points(
-            x = ix,
-            y = iy,
-            col = icol
-        )
-    }
-    return(fun)
-}
+plt(mpg ~ wt | factor(am), data = mtcars,
+  type = "p", main = "Raw")
 
 plt(mpg ~ wt | factor(am), data = mtcars,
-    type = "p", main = "Raw")
+  type = type_log(), main = "Ln")
 
 plt(mpg ~ wt | factor(am), data = mtcars,
-    type = type_log(), main = "Ln")
-
-plt(mpg ~ wt | factor(am), data = mtcars,
-    type = type_log(base = 10), main = "Log 10")
+  type = type_log(base = 10), main = "Log 10")
 ```
 

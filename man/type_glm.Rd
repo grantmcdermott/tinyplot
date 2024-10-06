@@ -4,7 +4,7 @@
 \alias{type_glm}
 \title{GLM type}
 \usage{
-type_glm(family = "gaussian", se = FALSE, level = 0.95, type = "response")
+type_glm(family = "gaussian", se = TRUE, level = 0.95, type = "response")
 }
 \arguments{
 \item{family}{a description of the error distribution and link

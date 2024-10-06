@@ -4,7 +4,7 @@
 \alias{type_lm}
 \title{LM type}
 \usage{
-type_lm(se = FALSE, level = 0.95)
+type_lm(se = TRUE, level = 0.95)
 }
 \arguments{
 \item{se}{logical. If TRUE, confidence intervals are drawn.}

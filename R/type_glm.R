@@ -5,7 +5,7 @@
 #' @inheritParams stats::predict.glm
 #' @inheritParams stats::confint
 #' @export
-type_glm = function(family = "gaussian", se = FALSE, level = 0.95, type = "response") {
+type_glm = function(family = "gaussian", se = TRUE, level = 0.95, type = "response") {
     assert_flag(se)
     out = list(
         draw = draw_ribbon(),
@@ -38,7 +38,7 @@ data_glm = function(family, se, level, type, ...) {
                     nd = ci(nd$y, nd$se, level, fit$df.residual, backtransform = stats::family(fit)$linkinv)
                 }
             } else {
-                nd$y = stats::predict(fit, nd)
+                nd$y = stats::predict(fit, nd, type = type)
             }
             nd
         })

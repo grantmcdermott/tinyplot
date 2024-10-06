@@ -11,7 +11,7 @@ sanitize_type = function(type, x, y) {
         return(type)
     }
 
-    types = c("area", "boxplot", "ribbon", "pointrange", "histogram", "errorbar", "polygon", "polypath", "loess", "rect", "segments", "p", "points", "l", "o", "b", "c", "h", "s", "S", "n")
+    types = c("area", "boxplot", "ribbon", "pointrange", "histogram", "errorbar", "polygon", "polypath", "rect", "segments", "points", "p", "l", "o", "b", "c", "h", "s", "S", "n", "loess", "lm", "glm")
     assert_choice(type, types, null.ok = TRUE)
 
     if (is.null(type)) {
@@ -31,8 +31,6 @@ sanitize_type = function(type, x, y) {
         return(type_points())
     } else if (identical(type, "segments")) {
         return(type_segments())
-    } else if (identical(type, "loess")) {
-        return(type_loess())
     } else if (identical(type, "area")) {
         return(type_area())
     } else if (identical(type, "rect")) {
@@ -51,6 +49,13 @@ sanitize_type = function(type, x, y) {
         return(type_histogram())
     } else if (isTRUE(type %in% c("j", "jitter"))) {
         return(type_jitter())
+    # statistical functions
+    } else if (identical(type, "loess")) {
+        return(type_loess())
+    } else if (identical(type, "glm")) {
+        return(type_glm())
+    } else if (identical(type, "lm")) {
+        return(type_lm())
     }
 
     out = list(draw = NULL, data = NULL, name = type)

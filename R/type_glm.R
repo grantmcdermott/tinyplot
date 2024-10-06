@@ -31,7 +31,7 @@ data_glm = function(family, se, level, type, ...) {
                     nd$y = p$estimate
                     nd$ymax = p$conf.high
                     nd$ymin = p$conf.low
-                    
+
                 } else {
                     nd$y = stats::predict(fit, newdata = nd, type = type)
                     nd = ci(nd$y, nd$se, level, fit$df.residual, backtransform = stats::family(fit)$linkinv)

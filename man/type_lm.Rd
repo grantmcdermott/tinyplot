@@ -9,6 +9,8 @@ type_lm(se = FALSE, level = 0.95, ...)
 \arguments{
 \item{se}{logical. If TRUE, confidence intervals are drawn.}
 
+\item{level}{the confidence level required.}
+
 \item{...}{
     For \code{glm}: arguments to be used to form the default
     \code{control} argument if it is not supplied directly.

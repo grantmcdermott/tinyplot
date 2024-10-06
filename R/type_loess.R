@@ -6,7 +6,7 @@ type_loess = function(
     span = 0.75,
     degree = 2,
     family = "gaussian",
-    control = loess.control(),
+    control = stats::loess.control(),
     ...) {
     out <- list(
         draw = draw_lines(),

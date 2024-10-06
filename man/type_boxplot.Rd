@@ -6,7 +6,7 @@
 \usage{
 type_boxplot(
   range = 1.5,
-  boxwidth = NULL,
+  width = NULL,
   varwidth = FALSE,
   notch = FALSE,
   outline = TRUE,
@@ -21,6 +21,9 @@ type_boxplot(
     to the most extreme data point which is no more than
     \code{range} times the interquartile range from the box. A value
     of zero causes the whiskers to extend to the data extremes.}
+
+\item{width}{a vector giving the relative widths of the boxes making
+    up the plot.}
 
 \item{varwidth}{if \code{varwidth} is \code{TRUE}, the boxes are
     drawn with widths proportional to the square-roots of the number

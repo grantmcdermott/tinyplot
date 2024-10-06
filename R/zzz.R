@@ -61,6 +61,7 @@
     "facet",
     "facets",
     "fill",
+    "flip",
     "frame.plot",
     "has_legend",
     "ifacet",
@@ -82,6 +83,7 @@
     "xmin",
     "y",
     "yaxt",
+    "ylabs",
     "ylim",
     "ymax",
     "ymin"

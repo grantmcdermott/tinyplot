@@ -4,7 +4,7 @@
 #' @export
 type_boxplot = function(
     range = 1.5,
-    boxwidth = NULL,
+    width = NULL,
     varwidth = FALSE,
     notch = FALSE,
     outline = TRUE,
@@ -14,7 +14,7 @@ type_boxplot = function(
   out <- list(
     draw = draw_boxplot(
       range = range,
-      boxwidth = boxwidth,
+      width = width,
       varwidth = varwidth,
       notch = notch,
       outline = outline,
@@ -30,7 +30,7 @@ type_boxplot = function(
 
 
 
-draw_boxplot = function(range, boxwidth, varwidth, notch, outline, boxwex, staplewex, outwex) {
+draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewex, outwex) {
     fun = function(i, ix, iy, ipch, ilty, icol, ibg, dots, x_by = FALSE, facet_by = FALSE, split_data, ...) {
 
         at_ix <- unique(ix)
@@ -58,7 +58,7 @@ draw_boxplot = function(range, boxwidth, varwidth, notch, outline, boxwex, stapl
             horizontal = horizontal,
             at = at_ix,
             range = range,
-            width = boxwidth,
+            width = width,
             varwidth = varwidth,
             notch = notch,
             outline = outline,

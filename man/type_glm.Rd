@@ -16,6 +16,8 @@ type_glm(family = "gaussian", se = FALSE, level = 0.95, type = "response", ...)
 
 \item{se}{logical. If TRUE, confidence intervals are drawn.}
 
+\item{level}{the confidence level required.}
+
 \item{type}{character, partial matching allowed.  Type of weights to
     extract from the fitted model object.  Can be abbreviated.}
 

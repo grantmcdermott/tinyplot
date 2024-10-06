@@ -3,6 +3,7 @@
 #' @param se logical. If TRUE, confidence intervals are drawn.
 #' @inheritParams stats::glm
 #' @inheritParams stats::predict.glm
+#' @inheritParams stats::confint
 #' @export
 type_glm = function(family = "gaussian", se = FALSE, level = 0.95, type = "response", ...) {
     assert_flag(se)

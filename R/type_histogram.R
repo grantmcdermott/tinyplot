@@ -1,10 +1,10 @@
 type_histogram = function() {
-    out <- list(
+    out = list(
         data = data_histogram(),
         draw = draw_rect(),
         name = "histogram"
     )
-    class(out) <- "tinyplot_type"
+    class(out) = "tinyplot_type"
     return(out)
 }
 

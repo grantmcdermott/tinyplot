@@ -1,10 +1,10 @@
 type_area = function() {
-  out <- list(
+  out = list(
     draw = NULL,
     data = data_area(),
     name = "area"
   )
-  class(out) <- "tinyplot_type"
+  class(out) = "tinyplot_type"
   return(out)
 }
 

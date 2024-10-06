@@ -1,15 +1,15 @@
 type_lines = function(type = "l") {
-  out <- list(
+  out = list(
     draw = draw_lines(type = type),
     data = NULL,
     name = type
   )
-  class(out) <- "tinyplot_type"
+  class(out) = "tinyplot_type"
   return(out)
 }
 
 
-draw_lines <- function(type = "l") {
+draw_lines = function(type = "l") {
     fun = function(ix, iy, icol, ipch, ilty, ilwd, ...) {
         lines(
             x = ix,

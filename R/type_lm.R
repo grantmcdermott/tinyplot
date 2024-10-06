@@ -4,12 +4,12 @@
 #' @export
 type_lm = function(se = FALSE, level = 0.95, ...) {
     assert_flag(se)
-    out <- list(
+    out = list(
         draw = draw_ribbon(),
         data = data_lm(se = se, level = level),
         name = if (isTRUE(se)) "ribbon" else "l"
     )
-    class(out) <- "tinyplot_type"
+    class(out) = "tinyplot_type"
     return(out)
 }
 

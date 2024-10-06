@@ -3,17 +3,17 @@
 #' @inheritParams graphics::arrows
 #' @export
 type_errorbar = function(length = 0.05) {
-  out <- list(
+  out = list(
     draw = draw_errorbar(length = length),
     data = data_pointrange(),
     name = "p"
   )
-  class(out) <- "tinyplot_type"
+  class(out) = "tinyplot_type"
   return(out)
 }
 
 
-draw_errorbar <- function(length = 0.05) {
+draw_errorbar = function(length = 0.05) {
     fun = function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, ilwd, cex, ...) {
         arrows(
             x0 = ixmin,

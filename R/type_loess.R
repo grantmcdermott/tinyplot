@@ -8,12 +8,12 @@ type_loess = function(
     family = "gaussian",
     control = stats::loess.control(),
     ...) {
-    out <- list(
+    out = list(
         draw = draw_lines(),
         data = data_loess(span = span, degree = degree, family = family, control = control),
         name = "l"
     )
-    class(out) <- "tinyplot_type"
+    class(out) = "tinyplot_type"
     return(out)
 }
 

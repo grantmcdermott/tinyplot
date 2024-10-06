@@ -7,12 +7,12 @@
 #' @export
 type_glm = function(family = "gaussian", se = FALSE, level = 0.95, type = "response", ...) {
     assert_flag(se)
-    out <- list(
+    out = list(
         draw = draw_ribbon(),
         data = data_glm(family = family, se = se, level = level, type = type),
         name = if (isTRUE(se)) "ribbon" else "l"
     )
-    class(out) <- "tinyplot_type"
+    class(out) = "tinyplot_type"
     return(out)
 }
 

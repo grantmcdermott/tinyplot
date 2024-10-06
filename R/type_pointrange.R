@@ -1,16 +1,16 @@
 type_pointrange = function() {
-  out <- list(
+  out = list(
     draw = draw_pointrange(),
     data = data_pointrange(),
     name = "p"
   )
-  class(out) <- "tinyplot_type"
+  class(out) = "tinyplot_type"
   return(out)
 }
 
 
 
-draw_pointrange <- function() {
+draw_pointrange = function() {
     fun = function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, ilwd, cex, ...) {
         segments(
             x0 = ixmin,

@@ -3,12 +3,12 @@
 #' @inheritParams base::jitter
 #' @export
 type_jitter = function(factor = 1, amount = NULL) {
-  out <- list(
+  out = list(
     draw = draw_points(),
     data = data_jitter(factor = factor, amount = amount),
     name = "p"
   )
-  class(out) <- "tinyplot_type"
+  class(out) = "tinyplot_type"
   return(out)
 }
 

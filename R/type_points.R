@@ -1,10 +1,10 @@
 type_points = function() {
-  out <- list(
+  out = list(
     draw = draw_points(),
     data = NULL,
     name = "p"
   )
-  class(out) <- "tinyplot_type"
+  class(out) = "tinyplot_type"
   return(out)
 }
 

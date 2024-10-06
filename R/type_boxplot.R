@@ -11,7 +11,7 @@ type_boxplot = function(
     boxwex = 0.8,
     staplewex = 0.5,
     outwex = 0.5) {
-  out <- list(
+  out = list(
     draw = draw_boxplot(
       range = range,
       width = width,
@@ -24,7 +24,7 @@ type_boxplot = function(
     data = data_boxplot(),
     name = "boxplot"
   )
-  class(out) <- "tinyplot_type"
+  class(out) = "tinyplot_type"
   return(out)
 }
 
@@ -33,15 +33,15 @@ type_boxplot = function(
 draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewex, outwex) {
     fun = function(i, ix, iy, ipch, ilty, icol, ibg, dots, x_by = FALSE, facet_by = FALSE, split_data, ...) {
 
-        at_ix <- unique(ix)
-        horizontal <- if (!is.null(dots[["horizontal"]])) dots[["horizontal"]] else FALSE
-        if (isTRUE(x_by)) boxwex <- boxwex * 2
+        at_ix = unique(ix)
+        horizontal = if (!is.null(dots[["horizontal"]])) dots[["horizontal"]] else FALSE
+        if (isTRUE(x_by)) boxwex = boxwex * 2
 
         # Handle multiple groups
         if (!is.null(split_data) && isFALSE(x_by) && isFALSE(facet_by) && length(split_data) > 1) {
-            boxwex_orig <- boxwex
-            boxwex <- boxwex / length(split_data) - 0.01
-            at_ix <- at_ix + seq(
+            boxwex_orig = boxwex
+            boxwex = boxwex / length(split_data) - 0.01
+            at_ix = at_ix + seq(
                 -((boxwex_orig - boxwex) / 2),
                 ((boxwex_orig - boxwex) / 2),
                 length.out = length(split_data)

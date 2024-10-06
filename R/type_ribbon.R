@@ -1,15 +1,15 @@
 type_ribbon = function() {
-  out <- list(
+  out = list(
     draw = draw_ribbon(),
     data = data_ribbon(),
     name = "ribbon"
   )
-  class(out) <- "tinyplot_type"
+  class(out) = "tinyplot_type"
   return(out)
 }
 
 
-draw_ribbon <- function() {
+draw_ribbon = function() {
     fun = function(ix, iy, ixmin, ixmax, iymin, iymax, ibg, ilty, ilwd, icol, ipch, i, flip = FALSE, ...) {
         polyg = type_polygon()$draw
         lin = type_lines()$draw

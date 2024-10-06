@@ -1,3 +1,7 @@
+#' Scatter plot with jittered points
+#'
+#' @inheritParams base::jitter
+#' @export
 type_jitter = function(factor = 1, amount = NULL) {
   out <- list(
     draw = draw_points(),

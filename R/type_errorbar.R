@@ -1,6 +1,10 @@
-type_errorbar = function() {
+#' Error bars
+#'
+#' @inheritParams graphics::arrows
+#' @export
+type_errorbar = function(length = 0.05) {
   out <- list(
-    draw = draw_errorbar(),
+    draw = draw_errorbar(length = length),
     data = data_pointrange(),
     name = "p"
   )
@@ -9,7 +13,7 @@ type_errorbar = function() {
 }
 
 
-draw_errorbar <- function() {
+draw_errorbar <- function(length = 0.05) {
     fun = function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, ilwd, cex, ...) {
         arrows(
             x0 = ixmin,
@@ -18,7 +22,7 @@ draw_errorbar <- function() {
             y1 = iymax,
             col = icol,
             lwd = ilwd,
-            length = 0.05,
+            length = length,
             angle = 90,
             code = 3
         )

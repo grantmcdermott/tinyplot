@@ -1,6 +1,7 @@
 #' Boxplot type
 #'
 #' @inheritParams graphics::boxplot
+#' @export
 type_boxplot = function(
     range = 1.5,
     boxwidth = NULL,

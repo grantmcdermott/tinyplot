@@ -11,6 +11,9 @@ sanitize_type = function(type, x, y) {
         return(type)
     }
 
+    types = c("area", "boxplot", "ribbon", "pointrange", "histogram", "errorbar", "polygon", "polypath", "loess", "rect", "segments", "p", "points", "l", "o", "b", "c", "h", "s", "S", "n")
+    assert_choice(type, types, null.ok = TRUE)
+
     if (is.null(type)) {
         # enforce boxplot type for y ~ factor(x)
         if (!is.null(x) && is.factor(x) && !is.factor(y)) {
@@ -28,6 +31,8 @@ sanitize_type = function(type, x, y) {
         return(type_points())
     } else if (identical(type, "segments")) {
         return(type_segments())
+    } else if (identical(type, "loess")) {
+        return(type_loess())
     } else if (identical(type, "area")) {
         return(type_area())
     } else if (identical(type, "rect")) {

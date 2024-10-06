@@ -2,7 +2,7 @@
 % Please edit documentation in R/type_jitter.R
 \name{type_jitter}
 \alias{type_jitter}
-\title{Scatter plot with jittered points}
+\title{Jittered points type}
 \usage{
 type_jitter(factor = 1, amount = NULL)
 }
@@ -16,5 +16,5 @@ type_jitter(factor = 1, amount = NULL)
     the smallest difference between \code{x} values.}
 }
 \description{
-Scatter plot with jittered points
+Jittered points type
 }

@@ -1,4 +1,4 @@
-#' Error bars
+#' Error bars type
 #'
 #' @inheritParams graphics::arrows
 #' @export

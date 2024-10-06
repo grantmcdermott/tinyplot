@@ -34,13 +34,11 @@ expect_snapshot_plot(f, label = "boxplot_groups")
 f = function() {
   plt(len ~ dose | factor(supp, labels = c("Ascorbic acid", "Orange juice")), 
       data = ToothGrowth,
-      boxwex = 0.5,
-      staplewex = 0,
       lty  = 1, pch = 16,
       main = "Guinea Pigs' Tooth Growth",
       xlab = "Vitamin C dose mg", ylab = "tooth length",
       ylim = c(0, 35),
-      type = "boxplot",
+      type = type_boxplot(boxwex = 0.5, staplewex = 0),
       legend = list(title = NULL),
       horizontal = TRUE
   )

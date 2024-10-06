@@ -2,7 +2,7 @@
 % Please edit documentation in R/type_errorbar.R
 \name{type_errorbar}
 \alias{type_errorbar}
-\title{Error bars}
+\title{Error bars type}
 \usage{
 type_errorbar(length = 0.05)
 }
@@ -10,5 +10,5 @@ type_errorbar(length = 0.05)
 \item{length}{length of the edges of the arrow head (in inches).}
 }
 \description{
-Error bars
+Error bars type
 }

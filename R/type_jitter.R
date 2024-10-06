@@ -1,4 +1,4 @@
-#' Scatter plot with jittered points
+#' Jittered points type
 #'
 #' @inheritParams base::jitter
 #' @export

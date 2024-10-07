@@ -686,6 +686,9 @@ tinyplot.default = function(
   
   # swap x and y values if flip is TRUE
   assert_flag(flip)
+  # extra catch for boxplots
+  if (type == "boxplot" && !is.null(dots[["horizontal"]])) flip = dots[["horizontal"]]
+  # now swap the values
   if (isTRUE(flip)) {
     if (type != "boxplot") {
       # limits, labs, etc.
@@ -718,7 +721,12 @@ tinyplot.default = function(
       # clean up
       rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, x_cp, xmin_cp, xmax_cp) 
     } else {
-      dots[["horizontal"]] = TRUE
+      # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
+      # and just catch a few elements that we draw beforehand.
+      xlab_cp = xlab
+      xlab = ylab
+      ylab = xlab_cp
+      rm(xlab_cp)
     }
   }
   

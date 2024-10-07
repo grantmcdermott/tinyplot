@@ -123,7 +123,7 @@ draw_elements = function(
         )
       } else if (type == "boxplot") {
         at_xx = unique(xx)
-        horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
+        horizontal = flip
         range_xx = ifelse(!is.null(dots[["range"]]), dots[["range"]], 1.5)
         boxwidth_xx = NULL
         if (!is.null(dots[["boxwidth"]])) boxwidth_xx = dots[["boxwidth"]]

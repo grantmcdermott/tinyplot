@@ -8,7 +8,7 @@ type_loess(
   span = 0.75,
   degree = 2,
   family = "gaussian",
-  control = stats::loess.control()
+  control = loess.control()
 )
 }
 \arguments{

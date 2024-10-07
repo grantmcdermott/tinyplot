@@ -27,8 +27,7 @@ for (rrule in c("winding", "evenodd")) {
       c(.1, .1, .9, .9, NA, .2, .2, .8, .8),
       c(.1, .9, .9, .1, NA, .2, .8, .8, .2),
       main = "Nested rectangles, both clockwise",
-      type = "polypath",
-      rule = rrule,
+      type = type_polypath(rule = rrule),
       fill = "grey",
       axes = FALSE, xlab = NA, ylab = NA
     )
@@ -41,8 +40,7 @@ for (rrule in c("winding", "evenodd")) {
       c(.1, .1, .9, .9, NA, .2, .8, .8, .2),
       c(.1, .9, .9, .1, NA, .2, .2, .8, .8),
       main = "Nested rectangles, outer clockwise, inner anti-clockwise",
-      type = "polypath",
-      rule = rrule,
+      type = type_polypath(rule = rrule),
       fill = "grey",
       axes = FALSE, xlab = NA, ylab = NA
     )
@@ -55,8 +53,7 @@ for (rrule in c("winding", "evenodd")) {
       c(.1, .1, .4, .4, NA, .6, .9, .9, .6),
       c(.1, .4, .4, .1, NA, .6, .6, .9, .9),
       main = "Disjoint rectangles",
-      type = "polypath",
-      rule = rrule,
+      type = type_polypath(rule = rrule),
       fill = "grey",
       axes = FALSE, xlab = NA, ylab = NA
     )
@@ -69,8 +66,7 @@ for (rrule in c("winding", "evenodd")) {
       c(.1, .1, .6, .6, NA, .4, .4, .9, .9),
       c(.1, .6, .6, .1, NA, .4, .9, .9, .4),
       main = "Overlapping rectangles, both clockwise",
-      type = "polypath",
-      rule = rrule,
+      type = type_polypath(rule = rrule),
       fill = "grey",
       axes = FALSE, xlab = NA, ylab = NA
     )
@@ -83,8 +79,7 @@ for (rrule in c("winding", "evenodd")) {
       c(.1, .1, .6, .6, NA, .4, .9, .9, .4),
       c(.1, .6, .6, .1, NA, .4, .4, .9, .9),
       main = "Overlapping rectangles, one clockwise, other anti-clockwise",
-      type = "polypath",
-      rule = rrule,
+      type = type_polypath(rule = rrule),
       fill = "grey",
       axes = FALSE, xlab = NA, ylab = NA
     )

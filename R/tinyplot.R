@@ -668,15 +668,19 @@ tinyplot.default = function(
 
   if (!is.null(type_data)) {
     fargs = list(
-      by = by,
-      facet = facet,
-      ylab = ylab,
-      col = col,
+      datapoints = datapoints,
       bg = bg,
+      by = by,
+      col = col,
+      facet = facet,
       palette = palette,
       ribbon.alpha = ribbon.alpha,
+      xaxt = xaxt,
       xlabs = xlabs,
-      datapoints = datapoints)
+      xlim = xlim,
+      yaxt = yaxt,
+      ylab = ylab,
+      ylim = ylim)
     fargs = c(fargs, dots)
     list2env(do.call(type_data, fargs), environment())
   }

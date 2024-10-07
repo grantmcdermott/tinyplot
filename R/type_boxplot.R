@@ -31,10 +31,9 @@ type_boxplot = function(
 
 
 draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewex, outwex) {
-    fun = function(iby, ix, iy, ipch, ilty, icol, ibg, dots, x_by = FALSE, facet_by = FALSE, data_by, ...) {
+    fun = function(iby, ix, iy, ipch, ilty, icol, ibg, x_by = FALSE, facet_by = FALSE, data_by, flip, ...) {
 
         at_ix = unique(ix)
-        horizontal = if (!is.null(dots[["horizontal"]])) dots[["horizontal"]] else FALSE
         if (isTRUE(x_by)) boxwex = boxwex * 2
 
         # Handle multiple groups
@@ -54,8 +53,8 @@ draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewe
             lty = ilty,
             border = icol,
             col = ibg,
+            horizontal = flip,
             add = TRUE, axes = FALSE,
-            horizontal = horizontal,
             at = at_ix,
             range = range,
             width = width,

@@ -10,14 +10,14 @@ f = function() {
 expect_snapshot_plot(f, label = "boxplot_simple")
 
 f = function() {
-  plt(count ~ spray, data = InsectSprays, type = "boxplot", horizontal = TRUE)
+  plt(count ~ spray, data = InsectSprays, type = "boxplot", flip = TRUE)
 }
 expect_snapshot_plot(f, label = "boxplot_simple_horizontal")
 
 f = function() {
   plt(
     decrease ~ treatment, data = OrchardSprays, fill = "bisque",
-    log = "y", type = "boxplot", horizontal = TRUE
+    log = "y", type = "boxplot", flip = TRUE
   )
 }
 expect_snapshot_plot(f, label = "boxplot_log_horizontal")
@@ -40,7 +40,7 @@ f = function() {
       ylim = c(0, 35),
       type = type_boxplot(boxwex = 0.5, staplewex = 0),
       legend = list(title = NULL),
-      horizontal = TRUE
+      flip = TRUE
   )
 }
 expect_snapshot_plot(f, label = "boxplot_groups_argpass")

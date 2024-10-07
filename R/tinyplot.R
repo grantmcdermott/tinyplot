@@ -537,6 +537,7 @@ tinyplot.default = function(
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
   type = sanitize_type(type, x, y)
   was_area_type = identical(type, "area") # flag to keep track for some legend adjustments below
+  assert_flag(flip)
 
   palette = substitute(palette)
 
@@ -685,7 +686,6 @@ tinyplot.default = function(
   }
   
   # swap x and y values if flip is TRUE
-  assert_flag(flip)
   # extra catch for boxplots
   if (type == "boxplot" && !is.null(dots[["horizontal"]])) flip = dots[["horizontal"]]
   # now swap the values

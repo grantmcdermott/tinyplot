@@ -292,27 +292,8 @@ or by checking the
 documentation.
 
 For example, **tinyplot** support interval plots via the `"pointrange"`,
-`"errorbar"`, `"ribbon"` type arguments. A canonical use-case is regression
-analysis and prediction.
-
-```{r ribbon_pred}
-mod = lm(Temp ~ 0 + Month / Day, data = aq)
-aq = cbind(aq, predict(mod, interval = "confidence"))
-
-with(
-  aq,
-  tinyplot(
-    x = Day, y = fit,
-    ymin = lwr, ymax = upr,
-    by = Month,
-    type = "ribbon",
-    grid = TRUE,
-    main = "Model predictions"
-  )
-)
-```
-
-Similarly, we can grab the model estimates to produce nice coefficient plots.
+`"errorbar"`, `"ribbon"` type arguments. A canonical use-case is coefficient
+plots: 
 
 ```{r pointrange, warning = FALSE}
 # grab coefs of interest
@@ -336,6 +317,14 @@ with(
     main = "Average Monthly Effect on Temperature"
   )
 )
+```
+
+**tinyplot** also supports special types to fit models and display their predictions, along with confidence intervals. Here's an example where we fit a logistic regression model:
+
+```{r ribbon_pred}
+tinyplot(
+  I(Temp > 80) ~ Wind, data = aq,
+  type = type_glm(family = binomial))
 ```
 
 ## Facets

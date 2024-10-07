@@ -29,13 +29,13 @@ The `type` argument in `tinyplot` supports all the standard plot types from base
 The default plot type is `"p"`, which creates a scatter plot of points.
 
 ```{r}
-plt(Temp ~ Day | Month, data = aq, type = "p", main = "Points")
+tinyplot(Temp ~ Day | Month, data = aq, type = "p", main = "Points")
 ```
 
 Use `"l"` to connect data points with lines.
 
 ```{r}
-plt(Temp ~ Day | Month, data = aq, type = "l", main = "Lines")
+tinyplot(Temp ~ Day | Month, data = aq, type = "l", main = "Lines")
 ```
 
 * `b` (Points and Lines): Combines points and lines in the plot.
@@ -85,10 +85,10 @@ For example, we can add noise to data points using the `"jitter"` type. This all
 
 ```{r}
 #| layout-ncol: 2
-plt(Temp ~ Month, data = aq, main = "Default jittering", 
+tinyplot(Temp ~ Month, data = aq, main = "Default jittering", 
     type = "jitter")
 
-plt(Temp ~ Month, data = aq, main = "Modest jittering",
+tinyplot(Temp ~ Month, data = aq, main = "Modest jittering",
     type = type_jitter(amount = 0.05))
 ```
 
@@ -96,22 +96,26 @@ In this example, we use `type_glm()` to fit a logit regression model to the data
 
 ```{r}
 #| layout-ncol: 2
-plt(Hot ~ Wind, data = aq, main = "Logit with 95% interval",
+tinyplot(Hot ~ Wind, data = aq, main = "Logit with 95% interval",
     type = type_glm(family = "binomial"))
 
-plt(Hot ~ Wind, data = aq, main = "Logit with 50% interval",
+tinyplot(Hot ~ Wind, data = aq, main = "Logit with 50% interval",
     type = type_glm(family = "binomial", level = 0.5))
 ```
 
 Most `tinyplot` types support grouping and faceting:
 
 ```{r}
-plt(Temp ~ Wind | Month, data = aq, type = type_lm(se = FALSE))
+tinyplot(Temp ~ Wind | Month, data = aq, type = type_lm(se = FALSE))
 ```
 
 # Custom types
 
-It is easy to add custom types to `tinyplot`. To do this, we need to define 3 functions:
+It is easy to add custom types to `tinyplot`. Users who need highly customized plots, or developers who want to add support to their package or functions, only need to define three simple functions: `data_typename()`, `draw_typename()`, and `type_typename()`.
+
+In this section, we explain the role of each of these functions and present a minimalist example of a custom type. Interested readers may refer to [the `tinyplot` source code](https://github.com/grantmcdermott/tinyplot) to see many more examples, since each `tinyplot` type is itself implemented as a custom type.
+
+The three functions that we need to define for a new type are:
 
 1. `data_*()`: Function factory.
     - Accepts a list of internal objects
@@ -165,13 +169,13 @@ type_log = function(base = exp(1)) {
   return(out)
 }
 
-plt(mpg ~ wt | factor(am), data = mtcars,
+tinyplot(mpg ~ wt | factor(am), data = mtcars,
   type = "p", main = "Raw")
 
-plt(mpg ~ wt | factor(am), data = mtcars,
+tinyplot(mpg ~ wt | factor(am), data = mtcars,
   type = type_log(), main = "Ln")
 
-plt(mpg ~ wt | factor(am), data = mtcars,
+tinyplot(mpg ~ wt | factor(am), data = mtcars,
   type = type_log(base = 10), main = "Log 10")
 ```
 

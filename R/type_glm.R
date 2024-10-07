@@ -4,7 +4,7 @@
 #' @inheritParams stats::glm
 #' @inheritParams stats::predict.glm
 #' @inheritParams stats::confint
-#' @importFrom stats glm predict family
+#' @importFrom stats glm predict
 #' @export
 type_glm = function(family = "gaussian", se = TRUE, level = 0.95, type = "response") {
     assert_flag(se)
@@ -29,14 +29,14 @@ data_glm = function(family, se, level, type, ...) {
             if (se == TRUE) {
                 if (identical(type, "response")) {
                     p = predict(fit, newdata = nd, type = "link", se.fit = TRUE)
-                    p = ci(p$fit, p$se.fit, conf.level = level, fit$df.residual, backtransform = family(fit)$linkinv)
+                    p = ci(p$fit, p$se.fit, conf.level = level, fit$df.residual, backtransform = stats::family(fit)$linkinv)
                     nd$y = p$estimate
                     nd$ymax = p$conf.high
                     nd$ymin = p$conf.low
 
                 } else {
                     nd$y = predict(fit, newdata = nd, type = type)
-                    nd = ci(nd$y, nd$se, level, fit$df.residual, backtransform = family(fit)$linkinv)
+                    nd = ci(nd$y, nd$se, level, fit$df.residual, backtransform = stats::family(fit)$linkinv)
                 }
             } else {
                 nd$y = predict(fit, nd, type = type)

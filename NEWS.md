@@ -22,7 +22,9 @@ character variable automatically being coerced to a factor. (#219 @zeileis)
 - Respect `xlim` and `ylim` when explicitly supplied by the user. (Thanks to
 @mclements for code submission #221)
 - Axis titles for flipped (horizontal) boxplots are appropriately swapped too.
-(#216 @grantmcdermott)
+(#223 @grantmcdermott)
+- Ribbon plots without `ymin` or `ymax` args, now inherit these values from `y`
+(#224 @grantmcdermott)
 
 Internals:
 

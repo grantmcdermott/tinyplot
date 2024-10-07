@@ -726,11 +726,6 @@ tinyplot.default = function(
       rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, x_cp, xmin_cp, xmax_cp) 
     } else {
       dots[["horizontal"]] = TRUE
-    }
-  }
-
-
-
       # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
       # and just catch a few elements that we draw beforehand.
       xlab_cp = xlab
@@ -739,9 +734,8 @@ tinyplot.default = function(
       rm(xlab_cp)
     }
   }
-  
-  
-  
+
+
   # plot limits
   fargs = lim_args(datapoints = datapoints, xlim = xlim, ylim = ylim, type = type)
   list2env(fargs, environment())

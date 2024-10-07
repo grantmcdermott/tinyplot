@@ -256,10 +256,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>If you are viewing this file on CRAN, please check the <a href="https://grantmcdermott.com/tinyplot/NEWS.html">latest NEWS</a> on our website where the formatting is also better.</em></p>
 <section id="dev-version" class="level2">
 <h2 class="anchored" data-anchor-id="dev-version">0.2.1.99 (dev version)</h2>
+<p>New features:</p>
+<ul>
+<li>The new <code>flip</code> argument allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
 <p>Bug fixes:</p>
 <ul>
 <li>Better preserve facet attributes, thus avoiding misarrangement of facet grids for density and histogram types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/209">#209</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
-<li>Respect <code>xlim</code> and <code>ylim</code> when explicitly supplied by the user. (thanks to <a href="https://github.com/mclements"><span class="citation" data-cites="mclements">@mclements</span></a> for code submission <a href="https://github.com/grantmcdermott/tinyplot/issues/221">#221</a>)</li>
+<li>Plots of the form <code>plt(numeric ~ character)</code> now work correctly, with the character variable automatically being coerced to a factor. (<a href="https://github.com/grantmcdermott/tinyplot/issues/219">#219</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Respect <code>xlim</code> and <code>ylim</code> when explicitly supplied by the user. (Thanks to <a href="https://github.com/mclements"><span class="citation" data-cites="mclements">@mclements</span></a> for code submission <a href="https://github.com/grantmcdermott/tinyplot/issues/221">#221</a>)</li>
+<li>Axis titles for flipped (horizontal) boxplots are appropriately swapped too. (<a href="https://github.com/grantmcdermott/tinyplot/issues/223">#223</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Ribbon plots without <code>ymin</code> or <code>ymax</code> args, now inherit these values from <code>y</code> (<a href="https://github.com/grantmcdermott/tinyplot/issues/224">#224</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Internals:</p>
 <ul>

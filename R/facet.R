@@ -412,7 +412,7 @@ draw_facet_window = function(grid, ...) {
           ## resort to using grid() which is likely better handled there.
           if (isTRUE(grid)) {
             gnx = gny = NULL
-            if (!par("xlog")) {
+            if (!any(c(par("xlog"), type == "boxplot"))) {
               if (!inherits(x, c("POSIXt", "Date"))) {
                 xg = pretty(xlim)
               } else {
@@ -427,7 +427,7 @@ draw_facet_window = function(grid, ...) {
               abline(v = xg, col = "lightgray", lty = "dotted", lwd = par("lwd"))
               gnx = NA
             }
-            if (!par("ylog")) {
+            if (!any(c(par("ylog"), type == "boxplot"))) {
               if (!inherits(y, c("POSIXt", "Date"))) {
                 yg = pretty(ylim)
               } else {

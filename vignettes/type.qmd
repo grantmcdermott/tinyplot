@@ -72,7 +72,7 @@ Visualizations:
 - `histogram`: Creates a histogram of a single variable.
 - `density`: Plots the density estimate of a variable.
 
-There are two main ways to use `tinyplot` types. First, we can specify the type directly using a string shortcut in the `type` argument, such as `type="boxplot"`. For example, to create a box plot, use `type = "boxplot"`. 
+There are two main ways to use `tinyplot` types. First, we can specify the type directly using a string shortcut in the `type` argument, such as `type="boxplot"`.
 
 Second, many `tinyplot` types are implemented by a `type_*()` function which includes arguments that allow us to customize the plot further. For example, the `type_jitter()` function includes arguments to control the amount of jittering, and the `type_glm()` includes an argument to control the width of the confidence interval to display. To see what arguments are available for each type, simply consult the type-specific documentation:
 
@@ -123,7 +123,7 @@ It is easy to add custom types to `tinyplot`. To do this, we need to define 3 fu
     - Accepts information about data point values and aesthetics. 
         - Inputs must include `...`
         - The `i` prefix in argument names indicates that we are operating on a subgroup of the data, identified by `facet` or using the `|` operator in a formula.
-        - Available arguments are: "ibg", "icol", "ilty", "ilwd", "ipch", "ix", "ixmax", "ixmin", "iy", "iymax", "iymin", "cex", "dots", "type", "x_by", "i", "facet_by", "split_data", "flip"
+        - Available arguments are: `ibg`, `icol`, `ilty`, `ilwd`, `ipch`, `ix`, `ixmax`, `ixmin`, `iy`, `iymax`, `iymin`, `cex`, `dots`, `type`, `x_by`, `i`, `facet_by`, `by_data`, `facet_data`, `flip`
     - Returns a function which can call base R to draw the plot.
 3. `type_*()`: A wrapper function that returns a named list with three elements:
     - `draw`

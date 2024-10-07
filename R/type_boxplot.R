@@ -31,21 +31,21 @@ type_boxplot = function(
 
 
 draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewex, outwex) {
-    fun = function(i, ix, iy, ipch, ilty, icol, ibg, dots, x_by = FALSE, facet_by = FALSE, split_data, ...) {
+    fun = function(iby, ix, iy, ipch, ilty, icol, ibg, dots, x_by = FALSE, facet_by = FALSE, data_by, ...) {
 
         at_ix = unique(ix)
         horizontal = if (!is.null(dots[["horizontal"]])) dots[["horizontal"]] else FALSE
         if (isTRUE(x_by)) boxwex = boxwex * 2
 
         # Handle multiple groups
-        if (!is.null(split_data) && isFALSE(x_by) && isFALSE(facet_by) && length(split_data) > 1) {
+        if (!is.null(data_by) && isFALSE(x_by) && isFALSE(facet_by) && length(data_by) > 1) {
             boxwex_orig = boxwex
-            boxwex = boxwex / length(split_data) - 0.01
+            boxwex = boxwex / length(data_by) - 0.01
             at_ix = at_ix + seq(
                 -((boxwex_orig - boxwex) / 2),
                 ((boxwex_orig - boxwex) / 2),
-                length.out = length(split_data)
-            )[i]
+                length.out = length(data_by)
+            )[iby]
         }
 
         boxplot(

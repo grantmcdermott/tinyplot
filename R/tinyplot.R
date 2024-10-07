@@ -1097,9 +1097,11 @@ tinyplot.default = function(
             dots = dots,
             type = type,
             x_by = x_by,
-            i = i,
+            iby = i,
+            ifacet = ii,
             facet_by = facet_by,
-            split_data = split_data,
+            data_facet = idata,
+            data_by = split_data,
             flip = flip)
       }
     }

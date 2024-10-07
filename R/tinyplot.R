@@ -249,6 +249,9 @@
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
+#' @param flip logical. Should the plot orientation be flipped, so that the
+#'   y-axis is on the horizontal plane and the x-axis is on the vertical plane?
+#'   Default is FALSE.
 #' @param file character string giving the file path for writing a plot to disk.
 #'   If specified, the plot will not be displayed interactively, but rather sent
 #'   to the appropriate external graphics device (i.e.,
@@ -522,6 +525,7 @@ tinyplot.default = function(
     empty = FALSE,
     xaxt = NULL,
     yaxt = NULL,
+    flip = FALSE,
     ...
     ) {
   
@@ -533,6 +537,7 @@ tinyplot.default = function(
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
   type = sanitize_type(type, x, y)
   was_area_type = identical(type, "area") # flag to keep track for some legend adjustments below
+  assert_flag(flip)
 
   palette = substitute(palette)
 
@@ -634,6 +639,7 @@ tinyplot.default = function(
       if (is.null(ylab)) ylab = "Frequency"
     }
   }
+  
 
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
@@ -678,6 +684,53 @@ tinyplot.default = function(
     fargs = c(fargs, dots)
     list2env(do.call(type_dict[[type]], fargs), environment())
   }
+  
+  # swap x and y values if flip is TRUE
+  # extra catch for boxplots
+  if (type == "boxplot" && !is.null(dots[["horizontal"]])) flip = dots[["horizontal"]]
+  # now swap the values
+  if (isTRUE(flip)) {
+    if (type != "boxplot") {
+      # limits, labs, etc.
+      xlim_cp = xlim
+      xlim = ylim
+      ylim = xlim_cp
+      xlab_cp = xlab
+      xlab = ylab
+      ylab = xlab_cp
+      xlabs_cp = xlabs
+      xlabs = ylabs
+      ylabs = xlabs_cp
+      xaxt_cp = xaxt
+      xaxt = yaxt
+      yaxt = xaxt_cp
+      if (!is.null(log)) {
+        log = if (log=="x") "y" else if (log=="y") "x" else log
+      }
+      # x/y vars
+      x_cp = datapoints[['x']]
+      datapoints[['x']] = datapoints[['y']]
+      datapoints[['y']] = x_cp
+      # x/y min and max vars
+      xmin_cp = if (!is.null(datapoints[['xmin']])) datapoints[['xmin']] else NULL
+      datapoints[['xmin']] = if (!is.null(datapoints[['ymin']])) datapoints[['ymin']] else NULL
+      datapoints[['ymin']] = if (!is.null(xmin_cp)) xmin_cp else NULL
+      xmax_cp = if (!is.null(datapoints[['xmax']])) datapoints[['xmax']] else NULL
+      datapoints[['xmax']] = if (!is.null(datapoints[['ymax']])) datapoints[['ymax']] else NULL
+      datapoints[['ymax']] = if (!is.null(xmax_cp)) xmax_cp else NULL
+      # clean up
+      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, x_cp, xmin_cp, xmax_cp) 
+    } else {
+      # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
+      # and just catch a few elements that we draw beforehand.
+      xlab_cp = xlab
+      xlab = ylab
+      ylab = xlab_cp
+      rm(xlab_cp)
+    }
+  }
+  
+  
   
   # plot limits
   fargs = lim_args(datapoints = datapoints, xlim = xlim, ylim = ylim, type = type)
@@ -917,12 +970,18 @@ tinyplot.default = function(
     facet = facet, facet.args = facet.args, facet_newlines = facet_newlines,
     facet_rect = facet_rect, facet_text = facet_text, facet_font = facet_font,
     facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
-    facets = facets, frame.plot = frame.plot, grid = grid, has_legend =
-    has_legend, ifacet = ifacet, log = log, nfacet_cols = nfacet_cols,
-    nfacet_rows = nfacet_rows, nfacets = nfacets, oxaxis = oxaxis, oyaxis =
-    oyaxis, type = type, x = x, xaxt = xaxt, xlabs = xlabs, xlim =
-    xlim, xmax = datapoints$xmax, xmin = datapoints$xmin, y = y, yaxt = yaxt,
-    ylim = ylim, ymax = datapoints$ymax, ymin = datapoints$ymin
+    facets = facets, ifacet = ifacet,
+    nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows, nfacets = nfacets,
+    frame.plot = frame.plot, grid = grid,
+    has_legend = has_legend, log = log,
+    oxaxis = oxaxis, oyaxis = oyaxis, type = type,
+    x = datapoints$x,
+    y = datapoints$y,
+    xmax = datapoints$xmax, xmin = datapoints$xmin,
+    ymax = datapoints$ymax, ymin = datapoints$ymin,
+    xaxt = xaxt, xlabs = xlabs, xlim = xlim,
+    yaxt = yaxt, ylabs = ylabs, ylim = ylim,
+    flip = flip
   )
   list2env(facet_window_args, environment())
 
@@ -1021,9 +1080,8 @@ tinyplot.default = function(
         facet_by = facet_by,
         split_data = split_data,
         i = i,
-        xlvls = xlvls,
-        lgnd_labs = lgnd_labs,
-        x_by = x_by
+        x_by = x_by,
+        flip = flip
       )
     }
   }

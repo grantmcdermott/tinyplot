@@ -209,7 +209,7 @@ draw_facet_window = function(grid, ...) {
       ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
       pdots = dots[names(dots) %in% names(formals(plot.default))]
       ## catch for flipped boxplots...
-      if (type == "boxplot" && isTRUE(dots[["horizontal"]])) {
+      if (type == "boxplot" && isTRUE(flip)) {
         log_flip = log
         if (!is.null(log)) {
           if (log == "x") log_flip = "y"
@@ -240,7 +240,12 @@ draw_facet_window = function(grid, ...) {
           } else {
             tinyAxis(x, side = xside, type = xaxt)
           }
-          tinyAxis(y, side = yside, type = yaxt)
+          # tinyAxis(y, side = yside, type = yaxt)
+          if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
+            tinyAxis(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+          } else {
+            tinyAxis(y, side = yside, type = yaxt)
+          }
         } else {
           # ... else only print the "outside" axes.
           if (ii %in% oxaxis) {
@@ -251,7 +256,12 @@ draw_facet_window = function(grid, ...) {
             }
           }
           if (ii %in% oyaxis) {
-            tinyAxis(y, side = yside, type = yaxt)
+            # tinyAxis(y, side = yside, type = yaxt)
+            if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
+              tinyAxis(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+            } else {
+              tinyAxis(y, side = yside, type = yaxt)
+            }
           }
         }
       }
@@ -402,12 +412,34 @@ draw_facet_window = function(grid, ...) {
           ## resort to using grid() which is likely better handled there.
           if (isTRUE(grid)) {
             gnx = gny = NULL
-            if (!par("xlog")) {
-              abline(v = pretty(extendrange(x)), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+            if (!any(c(par("xlog"), type == "boxplot"))) {
+              if (!inherits(x, c("POSIXt", "Date"))) {
+                xg = pretty(xlim)
+              } else {
+                # Catch for datetime (since xlim has been coerced to numeric)
+                tz = attributes(x)[["tzone"]]
+                if (inherits(x, "POSIXt")) {
+                  xg = pretty(as.POSIXct(extendrange(xlim), tz = tz))
+                } else {
+                  xg = pretty(as.Date(round(extendrange(xlim)), tz = tz))
+                }
+              }
+              abline(v = xg, col = "lightgray", lty = "dotted", lwd = par("lwd"))
               gnx = NA
             }
-            if (!par("ylog")) {
-              abline(h = pretty(extendrange(c(y, ymin, ymax))), col = "lightgray", lty = "dotted", lwd = par("lwd"))
+            if (!any(c(par("ylog"), type == "boxplot"))) {
+              if (!inherits(y, c("POSIXt", "Date"))) {
+                yg = pretty(ylim)
+              } else {
+                # Catch for datetime (since xlim has been coerced to numeric)
+                tz = attributes(y)[["tzone"]]
+                if (inherits(x, "POSIXt")) {
+                  yg = pretty(as.POSIXct(extendrange(ylim), tz = tz))
+                } else {
+                  yg = pretty(as.Date(extendrange(ylim), tz = tz))
+                }
+              }
+              abline(h = yg, col = "lightgray", lty = "dotted", lwd = par("lwd"))
               gny = NA
             }
             grid(nx = gnx, ny = gny)

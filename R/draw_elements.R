@@ -22,26 +22,36 @@ draw_elements = function(
     facet_by,
     split_data,
     i = 1,
-    xlvls,
-    lgnd_labs,
-    x_by = FALSE
+    x_by = FALSE,
+    flip = FALSE
     ) {
 
       ## polygons before lines, segments/arrows before points, etc.
       if (isTRUE(empty_plot)) {
 
       } else if (type == "ribbon") {
-        polygon(
-          x = c(xx, rev(xx)),
-          y = c(yymin, rev(yymax)),
-          col = bg[i],
-          border = FALSE
-        )
+        if (isFALSE(flip)) {
+          polygon(
+            x = c(xx, rev(xx)),
+            y = c(yymin, rev(yymax)),
+            col = bg[i],
+            border = FALSE
+          )
+        } else {
+          polygon(
+            x = c(xxmin, rev(xxmax)),
+            y = c(yy, rev(yy)),
+            col = bg[i],
+            border = FALSE
+          )
+          
+        }
+        
       } else if (type == "pointrange") {
         segments(
-          x0 = xx,
+          x0 = xxmin,
           y0 = yymin,
-          x1 = xx,
+          x1 = xxmax,
           y1 = yymax,
           col = icol,
           # lty = ilty,
@@ -49,9 +59,9 @@ draw_elements = function(
         )
       } else if (type == "errorbar") {
         arrows(
-          x0 = xx,
+          x0 = xxmin,
           y0 = yymin,
-          x1 = xx,
+          x1 = xxmax,
           y1 = yymax,
           col = icol,
           # lty = ilty,
@@ -113,7 +123,7 @@ draw_elements = function(
         )
       } else if (type == "boxplot") {
         at_xx = unique(xx)
-        horizontal = ifelse(!is.null(dots[["horizontal"]]), dots[["horizontal"]], FALSE)
+        horizontal = flip
         range_xx = ifelse(!is.null(dots[["range"]]), dots[["range"]], 1.5)
         boxwidth_xx = NULL
         if (!is.null(dots[["boxwidth"]])) boxwidth_xx = dots[["boxwidth"]]

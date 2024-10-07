@@ -6,11 +6,25 @@ where the formatting is also better._
 
 ## 0.2.1.99 (dev version)
 
+New features:
+
+- The new `flip` argument allows for easily flipping (swapping) the orientation
+of the x and y axes. This should work regardless of plot type, e.g.
+`plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
+(#216 @grantmcdermott)
+
 Bug fixes:
 
 - Better preserve facet attributes, thus avoiding misarrangement of facet grids
 for density and histogram types. (#209 @zeileis)
-- Respect `xlim` and `ylim` when explicitly supplied by the user. (thanks to @mclements for code submission #221)
+- Plots of the form `plt(numeric ~ character)` now work correctly, with the
+character variable automatically being coerced to a factor. (#219 @zeileis)
+- Respect `xlim` and `ylim` when explicitly supplied by the user. (Thanks to
+@mclements for code submission #221)
+- Axis titles for flipped (horizontal) boxplots are appropriately swapped too.
+(#223 @grantmcdermott)
+- Ribbon plots without `ymin` or `ymax` args, now inherit these values from `y`
+(#224 @grantmcdermott)
 
 Internals:
 

@@ -53,6 +53,7 @@ tinyplot(x, ...)
   empty = FALSE,
   xaxt = NULL,
   yaxt = NULL,
+  flip = FALSE,
   ...
 )
 
@@ -432,6 +433,10 @@ will only depict points.}
 
 \item{xaxt, yaxt}{character specifying the type of x-axis and y-axis, respectively.
 See \code{axes} for the possible values.}
+
+\item{flip}{logical. Should the plot orientation be flipped, so that the
+y-axis is on the horizontal plane and the x-axis is on the vertical plane?
+Default is FALSE.}
 
 \item{formula}{a \code{\link[stats]{formula}} that optionally includes
 grouping variable(s) after a vertical bar, e.g. \code{y ~ x | z}. One-sided

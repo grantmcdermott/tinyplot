@@ -59,7 +59,7 @@ expect_snapshot_plot(f, label = "flip_density")
 
 # flipped boxplot (equivalent to horizontal = TRUE)
 f = function() {
-  plt(count ~ spray, data = InsectSprays, type = "boxplot", flip = TRUE)
+  plt(count ~ spray, data = InsectSprays, type = "boxplot", flip = TRUE, grid = TRUE)
 }
 expect_snapshot_plot(f, label = "flip_boxplot")
 

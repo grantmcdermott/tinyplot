@@ -30,3 +30,14 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "ribbon_no_y")
+
+f = function() {
+  with(
+    mtcars2,
+    tinyplot(
+      x = wt, y = fit,
+      type = "ribbon"
+    )
+  )
+}
+expect_snapshot_plot(f, label = "ribbon_no_yminymax")

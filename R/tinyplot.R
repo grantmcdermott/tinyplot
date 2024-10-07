@@ -543,6 +543,8 @@ tinyplot.default = function(
   type_draw = type$draw
   type = type$name
 
+  was_area_type = identical(type, "area") # flag to keep track for some legend adjustments below
+  assert_flag(flip)
 
   palette = substitute(palette)
 
@@ -688,6 +690,9 @@ tinyplot.default = function(
   
   # swap x and y values if flip is TRUE
   assert_flag(flip)
+  # extra catch for boxplots
+  if (type == "boxplot" && !is.null(dots[["horizontal"]])) flip = dots[["horizontal"]]
+  # now swap the values
   if (isTRUE(flip)) {
     if (type != "boxplot") {
       # limits, labs, etc.
@@ -726,6 +731,17 @@ tinyplot.default = function(
 
 
 
+      # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
+      # and just catch a few elements that we draw beforehand.
+      xlab_cp = xlab
+      xlab = ylab
+      ylab = xlab_cp
+      rm(xlab_cp)
+    }
+  }
+  
+  
+  
   # plot limits
   fargs = lim_args(datapoints = datapoints, xlim = xlim, ylim = ylim, type = type)
   list2env(fargs, environment())

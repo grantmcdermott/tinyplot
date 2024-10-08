@@ -57,6 +57,10 @@ data_ribbon = function() {
         # Reorder x, y, ymin, and ymax based on the order determined
         datapoints = datapoints[xord,]
 
+        # Catch for missing ymin and ymax 
+        if (is.null(datapoints$ymin)) datapoints$ymin = datapoints$y 
+        if (is.null(datapoints$ymax)) datapoints$ymax = datapoints$y
+
         out = list(
             x = datapoints$x,
             y = datapoints$y,

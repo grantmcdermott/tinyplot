@@ -588,7 +588,7 @@ tinyplot.default = function(
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = if (!is.null(x)) {
     deparse1(substitute(x))
-  } else if (type %in% c("rect", "segments", "hist", "histogram")) {
+  } else if (type %in% c("rect", "segments")) {
     x = NULL
     NULL
   }

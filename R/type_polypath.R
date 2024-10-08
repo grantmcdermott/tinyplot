@@ -1,3 +1,7 @@
+#' Polypath type
+#' 
+#' @inheritParams graphics::polypath
+#' @export
 type_polypath = function(rule = "winding") {
     draw_polypath = function() {
         fun =  function(ix, iy, icol, ibg, ilty, ilwd, dots, ...) {

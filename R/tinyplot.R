@@ -624,7 +624,7 @@ tinyplot.default = function(
 
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
-    if (type %in% c("rect", "segments", "histogram", "hist")) {
+    if (type %in% c("rect", "segments")) {
       xmin_dep = deparse(substitute(xmin))
       xmax_dep = deparse(substitute(xmax))
       x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")

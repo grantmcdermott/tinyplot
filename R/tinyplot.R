@@ -71,26 +71,31 @@
 #'   `formula` and `x` arguments should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
-#' @param type character string giving the type of plot desired. If no argument
-#'   is provided, then the plot type will default to something sensible for the
-#'   type of `x` and `y` inputs (i.e., usually `"p"`). Options are:
-#'   - The same set of 1-character values supported by
-#'   \code{\link[graphics]{plot}}: `"p"` for points, `"l"` for lines, `"b"` for
-#'   both points and lines, `"c"` for empty points joined by lines, `"o"` for
-#'   overplotted points and lines, `"s"` and `"S"` for stair steps, and `"h"`
-#'   for histogram-like vertical lines. Specifying `"n"` produces an empty plot
-#'   over the extent of the data, but with no internal elements (see also the
-#'   `empty` argument below).
-#'   - Additional tinyplot types:
-#'      - `"jitter"` (alias `"j"`) for jittered points.
-#'      - `"rect"`, `"segments"`, `"polygon"`, or `"polypath"`, which are all
-#'      equivalent to their base counterparts, but don't require an existing
-#'      plot window.
-#'      - `"boxplot"`, `"histogram"` (alias `"hist"`), or `"density"` for
-#'      distribution plots.
-#'      - `"pointrange"` or `"errorbar"` for segment intervals, and `"ribbon"`
-#'      or `"area"` for polygon intervals (where area plots are a special case
-#'      of ribbon plots with `ymin` set to 0 and `ymax` set to `y`; see below).
+#' @param type character string or call to a `type_*()` function giving the 
+#'   type of plot desired.
+#'   - NULL (default): Choose a sensible type for the type of `x` and `y` inputs 
+#'     (i.e., usually `"p"`).
+#'   - 1-character values supported by \code{\link[graphics]{plot}}: 
+#'     - `"p"` Points
+#'     - `"l"` Lines
+#'     - `"b"` Both points and lines
+#'     - `"c"` Empty points joined by lines
+#'     - `"o"` Overplotted points and lines
+#'     - `"s"` Stair steps
+#'     - `"S"` Stair steps
+#'     - `"h"` Histogram-like vertical lines
+#'     - `"n"` Empty plot over the extent of the data
+#'   - `tinyplot` types:
+#'      - `"rect"`, `"segments"`, or `"polygon"`: Equivalent to base `R`
+#'      - `"density"`: Kernel density plot
+#'      - `"jitter"` or `type_jitter()`: Jittered points
+#'      - `"polypath"` or `type_polypath()`
+#'      - `"boxplot"` or `type_boxplot()`
+#'      - `"histogram"` or `type_histogram()`
+#'      - `"pointrange"` or `"errorbar"`: segment intervals
+#'      - `"ribbon"` or `"area"` for polygon intervals (where area plots 
+#'        are a special case of ribbon plots with `ymin` set to 0 and `ymax` 
+#'        set to `y`; see below).
 #' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   `"rect"` or `"segments"` (where all four min-max coordinates are required),

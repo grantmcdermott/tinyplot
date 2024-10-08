@@ -14,7 +14,7 @@ document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
 
 check: document ## devtools::check()
-	R CMD check .
+	Rscript -e "devtools::check()"
 
 website: website ## altdoc::render_docs()
 	Rscript -e "pkgload::load_all();altdoc::render_docs()"

@@ -52,6 +52,9 @@ data_glm = function(family, se, level, type, ...) {
 }
 
 
+#' Calculate confidence intervals
+#' @importFrom stats qt
+#' @keywords internal
 ci = function(estimate, std.error, conf.level, df, backtransform = identity) {
     crit = qt(1 - (1 - conf.level) / 2, df)
     out = list(

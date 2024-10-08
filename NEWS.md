@@ -6,12 +6,25 @@ where the formatting is also better._
 
 ## 0.2.1.99 (dev version)
 
+Breaking changes:
+
+* Type-specific arguments are no longer passed through the main function via
+`...`. Instead, they are now passed through a dedicated `type_*()` functions in
+the `type` argument.
+
 New features:
 
 - The new `flip` argument allows for easily flipping (swapping) the orientation
-of the x and y axes. This should work regardless of plot type, e.g.
-`plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
-(#216 @grantmcdermott)
+  of the x and y axes. This should work regardless of plot type, e.g.
+  `plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
+  (#216 @grantmcdermott)
+- New plot types added in #222:
+    - `type_glm()` (shortcut: `"glm"`
+    - `type_lm()` (shortcut: `"lm"`
+    - `type_loess()` (shortcut: `"loess"`
+- Custom types can now be defined by users by creating `type_typename()`
+  functions. (#222 @vincentarelbundock)
+- Types vignette on the website. (#222 @vincentarelbundock)
 
 Bug fixes:
 
@@ -29,6 +42,8 @@ character variable automatically being coerced to a factor. (#219 @zeileis)
 Internals:
 
 - Continued modularization/abstraction of the code logic. (#214
+@vincentarelbundock)
+- Major internal refactor of the type drawing and data processing. (#222
 @vincentarelbundock)
 
 Misc:

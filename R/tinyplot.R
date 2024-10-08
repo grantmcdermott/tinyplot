@@ -542,8 +542,8 @@ tinyplot.default = function(
   type_data = type$data
   type_draw = type$draw
   type = type$name
+  was_area_type = identical(type, "area")
 
-  was_area_type = identical(type, "area") # flag to keep track for some legend adjustments below
   assert_flag(flip)
 
   palette = substitute(palette)
@@ -842,7 +842,7 @@ tinyplot.default = function(
 
     has_sub = !is.null(sub)
 
-    if (isTRUE(type %in% c("area", "rect", "histogram", "hist"))) {
+    if (isTRUE(was_area_type) || isTRUE(type %in% c("area", "rect", "hist", "histogram"))) {
       legend_args[["pt.lwd"]] = par("lwd")
       legend_args[["lty"]] = 0
     }

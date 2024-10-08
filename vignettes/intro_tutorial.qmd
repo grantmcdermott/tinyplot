@@ -296,6 +296,8 @@ For example, **tinyplot** support interval plots via the `"pointrange"`,
 plots: 
 
 ```{r pointrange, warning = FALSE}
+mod = lm(Temp ~ 0 + Month / Day, data = aq)
+
 # grab coefs of interest
 monthcoefs = data.frame(
   gsub("Month", "", names(coef(mod))),
@@ -322,9 +324,11 @@ with(
 **tinyplot** also supports special types to fit models and display their predictions, along with confidence intervals. Here's an example where we fit a logistic regression model:
 
 ```{r ribbon_pred}
-tinyplot(
-  I(Temp > 80) ~ Wind, data = aq,
-  type = type_glm(family = binomial))
+with(aq,
+  tinyplot(
+    I(Temp > 80) ~ Wind,
+    type = type_glm(family = binomial))
+)
 ```
 
 ## Facets
@@ -334,16 +338,11 @@ Alongside the standard "by" grouping approach that we have seen thus far,
 `facet` argument accepts both atomic and formula methods.
 
 ```{r facet_simple}
-with(
-  aq,
+with(aq,
   tinyplot(
-    x = Day, y = fit,
-    ymin = lwr, ymax = upr,
-    type = "ribbon",
-    facet = Month, ## <= facet, not by
-    grid = TRUE,
-    main = "Predicted air temperatures"
-  )
+    Temp ~ Wind,
+    facet = Month,
+    type = type_lm())
 )
 ```
 
@@ -354,17 +353,13 @@ between individual facets can also be adjusted via the `fmar` argument.) Note
 that we can also reduce axis label redundancy by turning off the plot frame.
 
 ```{r facet_nrow}
-with(
-  aq,
+with(aq,
   tinyplot(
-    x = Day, y = fit,
-    ymin = lwr, ymax = upr,
-    type = "ribbon",
+    x = Wind, y = Temp,
     facet = Month,
     facet.args = list(nrow = 1),
     grid = TRUE, frame = FALSE,
-    main = "Predicted air temperatures"
-  )
+    type = type_lm())
 )
 ```
 
@@ -376,30 +371,39 @@ as the colour grouping. But you can easily specify different `by` and `facet`
 variables if that's what your data support.
 
 ```{r facet_fancy}
-# Plot the original points 
-with(
-  aq,
+with(aq,
+  tinyplot(
+    y = Temp, x = Wind,
+    by = Month,
+    facet = "by",
+    facet.args = list(nrow = 1, list(bg = "grey90")),
+    palette = "dark2",
+    grid = TRUE, frame = FALSE,
+    type = type_lm())
+)
+```
+
+# Add the original points 
+
+```{r}
+with(aq, {
+  tinyplot(
+    y = Temp, x = Wind,
+    by = Month,
+    facet = "by",
+    facet.args = list(nrow = 1, list(bg = "grey90")),
+    palette = "dark2",
+    grid = TRUE, frame = FALSE,
+    type = type_lm())
   tinyplot(
     x = Day, y = Temp,
     by = Month,
     facet = "by", facet.args = list(bg = "grey90"),
     palette = "dark2",
     grid = TRUE, frame = FALSE, ylim = c(50, 100),
-    main = "Actual and predicted air temperatures"
-  )
-)
-# Add the model predictions to the same plot 
-with(
-  aq,
-  tinyplot(
-    x = Day, y = fit,
-    ymin = lwr, ymax = upr,
-    by = Month, facet = "by",
-    type = "ribbon",
-    palette = "dark2",
-    add = TRUE
-  )
-)
+    main = "Actual and predicted air temperatures",
+    add = TRUE)
+})
 ```
 
 Again, the `facet` argument also accepts a formula interface. One particular use

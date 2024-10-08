@@ -19,6 +19,11 @@ data_lm = function(se, level, ...) {
     fun = function(datapoints, ...) {
         dat = split(datapoints, list(datapoints$facet, datapoints$by))
         dat = lapply(dat, function(x) {
+            if (nrow(x) == 0) return(x)
+            if (nrow(x) < 3) {
+                x$y = NA
+                return(x)
+            }
             fit = lm(y ~ x, data = x)
             nd = data.frame(x = seq(min(x$x), max(x$x), length.out = 100))
             nd$by = x$by[1]

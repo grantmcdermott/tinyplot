@@ -1,6 +1,7 @@
 # News
 
 _If you are viewing this file on CRAN, please check the
+http://www.polljunkie.com/poll/qnbeij/fini
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
@@ -19,9 +20,9 @@ New features:
   `plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
   (#216 @grantmcdermott)
 - New plot types added in #222:
-    - `type_glm()` (shortcut: `"glm"`
-    - `type_lm()` (shortcut: `"lm"`
-    - `type_loess()` (shortcut: `"loess"`
+    - `type_glm()` (shortcut: `"glm"`)
+    - `type_lm()` (shortcut: `"lm"`)
+    - `type_loess()` (shortcut: `"loess"`)
 - Custom types can now be defined by users by creating `type_typename()`
   functions. (#222 @vincentarelbundock)
 - Types vignette on the website. (#222 @vincentarelbundock)

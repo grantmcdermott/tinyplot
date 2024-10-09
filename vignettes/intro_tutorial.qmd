@@ -21,14 +21,13 @@ knitr::opts_chunk$set(
 ```
 
 The goal of this intro tutorial is to give you a sense of the main features and
-syntax of **tinyplot**, a lightweight extension of the base R graphics system. We
-don't try to cover everything, but you should come away with a good
+syntax of **tinyplot**, a lightweight extension of the base R graphics system.
+We don't try to cover everything, but you should come away with a good
 understanding of how the package works and how it can integrate with your own
 projects.
 
 We start this tutorial by loading the package and a slightly modified version
 of the `airquality` dataset that comes bundled with base R:
-and create that now too.
 
 ```{r aq}
 library(tinyplot)
@@ -342,7 +341,7 @@ with(aq,
   tinyplot(
     Temp ~ Wind,
     facet = Month,
-    type = type_lm())
+    type = "lm"
 )
 ```
 
@@ -357,7 +356,7 @@ with(aq,
     x = Wind, y = Temp,
     facet = Month,
     facet.args = list(nrow = 1),
-    type = type_lm())
+    type = "lm")
 )
 ```
 
@@ -378,7 +377,7 @@ with(aq,
     facet.args = list(nrow = 1, list(bg = "grey90")),
     palette = "dark2",
     grid = TRUE, frame = FALSE,
-    type = type_lm())
+    type = "lm")
 )
 ```
 

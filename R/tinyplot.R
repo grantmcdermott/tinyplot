@@ -96,6 +96,9 @@
 #'      - `"ribbon"` or `"area"` for polygon intervals (where area plots 
 #'        are a special case of ribbon plots with `ymin` set to 0 and `ymax` 
 #'        set to `y`; see below).
+#'      - `"lm"` or `type_lm()`: Linear model fit
+#'      - `"glm"` or `type_glm()`: Generalized linear model fit
+#'      - `"loess"` or `type_loess()`: Local regression fit
 #' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   `"rect"` or `"segments"` (where all four min-max coordinates are required),

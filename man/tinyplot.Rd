@@ -215,6 +215,9 @@ type of plot desired.
 \item \code{"ribbon"} or \code{"area"} for polygon intervals (where area plots
 are a special case of ribbon plots with \code{ymin} set to 0 and \code{ymax}
 set to \code{y}; see below).
+\item \code{"lm"} or \code{type_lm()}: Linear model fit
+\item \code{"glm"} or \code{type_glm()}: Generalized linear model fit
+\item \code{"loess"} or \code{type_loess()}: Local regression fit
 }
 }}
 

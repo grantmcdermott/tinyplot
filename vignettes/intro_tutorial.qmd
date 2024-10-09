@@ -27,7 +27,7 @@ understanding of how the package works and how it can integrate with your own
 projects.
 
 We start this tutorial by loading the package and a slightly modified version
-of the `airquality` dataset that comes bundled with base R:
+of the `airquality` dataset that comes bundled with base R.
 
 ```{r aq}
 library(tinyplot)

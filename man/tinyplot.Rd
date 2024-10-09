@@ -186,28 +186,38 @@ features globally for all \code{tinyplot} plots.
 \item{data}{a data.frame (or list) from which the variables in formula
 should be taken. A matrix is converted to a data frame.}
 
-\item{type}{character string giving the type of plot desired. If no argument
-is provided, then the plot type will default to something sensible for the
-type of \code{x} and \code{y} inputs (i.e., usually \code{"p"}). Options are:
+\item{type}{character string or call to a \verb{type_*()} function giving the
+type of plot desired.
 \itemize{
-\item The same set of 1-character values supported by
-\code{\link[graphics]{plot}}: \code{"p"} for points, \code{"l"} for lines, \code{"b"} for
-both points and lines, \code{"c"} for empty points joined by lines, \code{"o"} for
-overplotted points and lines, \code{"s"} and \code{"S"} for stair steps, and \code{"h"}
-for histogram-like vertical lines. Specifying \code{"n"} produces an empty plot
-over the extent of the data, but with no internal elements (see also the
-\code{empty} argument below).
-\item Additional tinyplot types:
+\item NULL (default): Choose a sensible type for the type of \code{x} and \code{y} inputs
+(i.e., usually \code{"p"}).
+\item 1-character values supported by \code{\link[graphics]{plot}}:
 \itemize{
-\item \code{"jitter"} (alias \code{"j"}) for jittered points.
-\item \code{"rect"}, \code{"segments"}, \code{"polygon"}, or \code{"polypath"}, which are all
-equivalent to their base counterparts, but don't require an existing
-plot window.
-\item \code{"boxplot"}, \code{"histogram"} (alias \code{"hist"}), or \code{"density"} for
-distribution plots.
-\item \code{"pointrange"} or \code{"errorbar"} for segment intervals, and \code{"ribbon"}
-or \code{"area"} for polygon intervals (where area plots are a special case
-of ribbon plots with \code{ymin} set to 0 and \code{ymax} set to \code{y}; see below).
+\item \code{"p"} Points
+\item \code{"l"} Lines
+\item \code{"b"} Both points and lines
+\item \code{"c"} Empty points joined by lines
+\item \code{"o"} Overplotted points and lines
+\item \code{"s"} Stair steps
+\item \code{"S"} Stair steps
+\item \code{"h"} Histogram-like vertical lines
+\item \code{"n"} Empty plot over the extent of the data
+}
+\item \code{tinyplot} types:
+\itemize{
+\item \code{"rect"}, \code{"segments"}, or \code{"polygon"}: Equivalent to base \code{R}
+\item \code{"density"}: Kernel density plot
+\item \code{"jitter"} or \code{type_jitter()}: Jittered points
+\item \code{"polypath"} or \code{type_polypath()}
+\item \code{"boxplot"} or \code{type_boxplot()}
+\item \code{"histogram"} or \code{type_histogram()}
+\item \code{"pointrange"} or \code{"errorbar"}: segment intervals
+\item \code{"ribbon"} or \code{"area"} for polygon intervals (where area plots
+are a special case of ribbon plots with \code{ymin} set to 0 and \code{ymax}
+set to \code{y}; see below).
+\item \code{"lm"} or \code{type_lm()}: Linear model fit
+\item \code{"glm"} or \code{type_glm()}: Generalized linear model fit
+\item \code{"loess"} or \code{type_loess()}: Local regression fit
 }
 }}
 

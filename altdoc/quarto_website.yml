@@ -17,6 +17,8 @@ website:
         file: index.qmd
       - text: Tutorial
         file: vignettes/intro_tutorial.qmd
+      - text: Plot types
+        file: vignettes/type.qmd
       - text: Gallery
         file: vignettes/gallery.qmd
       - section: $ALTDOC_MAN_BLOCK

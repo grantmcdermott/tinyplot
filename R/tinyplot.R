@@ -71,26 +71,34 @@
 #'   `formula` and `x` arguments should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
-#' @param type character string giving the type of plot desired. If no argument
-#'   is provided, then the plot type will default to something sensible for the
-#'   type of `x` and `y` inputs (i.e., usually `"p"`). Options are:
-#'   - The same set of 1-character values supported by
-#'   \code{\link[graphics]{plot}}: `"p"` for points, `"l"` for lines, `"b"` for
-#'   both points and lines, `"c"` for empty points joined by lines, `"o"` for
-#'   overplotted points and lines, `"s"` and `"S"` for stair steps, and `"h"`
-#'   for histogram-like vertical lines. Specifying `"n"` produces an empty plot
-#'   over the extent of the data, but with no internal elements (see also the
-#'   `empty` argument below).
-#'   - Additional tinyplot types:
-#'      - `"jitter"` (alias `"j"`) for jittered points.
-#'      - `"rect"`, `"segments"`, `"polygon"`, or `"polypath"`, which are all
-#'      equivalent to their base counterparts, but don't require an existing
-#'      plot window.
-#'      - `"boxplot"`, `"histogram"` (alias `"hist"`), or `"density"` for
-#'      distribution plots.
-#'      - `"pointrange"` or `"errorbar"` for segment intervals, and `"ribbon"`
-#'      or `"area"` for polygon intervals (where area plots are a special case
-#'      of ribbon plots with `ymin` set to 0 and `ymax` set to `y`; see below).
+#' @param type character string or call to a `type_*()` function giving the 
+#'   type of plot desired.
+#'   - NULL (default): Choose a sensible type for the type of `x` and `y` inputs 
+#'     (i.e., usually `"p"`).
+#'   - 1-character values supported by \code{\link[graphics]{plot}}: 
+#'     - `"p"` Points
+#'     - `"l"` Lines
+#'     - `"b"` Both points and lines
+#'     - `"c"` Empty points joined by lines
+#'     - `"o"` Overplotted points and lines
+#'     - `"s"` Stair steps
+#'     - `"S"` Stair steps
+#'     - `"h"` Histogram-like vertical lines
+#'     - `"n"` Empty plot over the extent of the data
+#'   - `tinyplot` types:
+#'      - `"rect"`, `"segments"`, or `"polygon"`: Equivalent to base `R`
+#'      - `"density"`: Kernel density plot
+#'      - `"jitter"` or `type_jitter()`: Jittered points
+#'      - `"polypath"` or `type_polypath()`
+#'      - `"boxplot"` or `type_boxplot()`
+#'      - `"histogram"` or `type_histogram()`
+#'      - `"pointrange"` or `"errorbar"`: segment intervals
+#'      - `"ribbon"` or `"area"` for polygon intervals (where area plots 
+#'        are a special case of ribbon plots with `ymin` set to 0 and `ymax` 
+#'        set to `y`; see below).
+#'      - `"lm"` or `type_lm()`: Linear model fit
+#'      - `"glm"` or `type_glm()`: Generalized linear model fit
+#'      - `"loess"` or `type_loess()`: Local regression fit
 #' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   `"rect"` or `"segments"` (where all four min-max coordinates are required),
@@ -528,15 +536,22 @@ tinyplot.default = function(
     flip = FALSE,
     ...
     ) {
-  
+
   dots = list(...)
 
   if (isTRUE(add)) legend = FALSE
   
   # sanitize arguments
   ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
+
+
+  # type factories vs. strings
   type = sanitize_type(type, x, y)
-  was_area_type = identical(type, "area") # flag to keep track for some legend adjustments below
+  type_data = type$data
+  type_draw = type$draw
+  type = type$name
+  was_area_type = identical(type, "area")
+
   assert_flag(flip)
 
   palette = substitute(palette)
@@ -648,7 +663,7 @@ tinyplot.default = function(
   if (is.null(bg) && !is.null(fill)) bg = fill
 
   # type-specific settings and arguments
-  if (type == "density") {
+  if (isTRUE(type == "density")) {
     fargs = mget(ls(environment(), sorted = FALSE))
     fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
     return(do.call(tinyplot.density, args = fargs))
@@ -661,33 +676,29 @@ tinyplot.default = function(
   datapoints[["facet"]] = if (!is.null(facet)) facet else ""
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
-  type_dict = list(
-    "jitter" = type_jitter,
-    "histogram" = type_histogram,
-    "area" = type_area,
-    "boxplot" = type_boxplot,
-    "ribbon" = type_ribbon,
-    "pointrange" = type_pointrange,
-    "errorbar" = type_pointrange
-  )
-  if (isTRUE(type %in% names(type_dict))) {
+  if (!is.null(type_data)) {
     fargs = list(
-      by = by,
-      facet = facet,
-      ylab = ylab,
-      col = col,
+      datapoints = datapoints,
       bg = bg,
+      by = by,
+      col = col,
+      facet = facet,
       palette = palette,
       ribbon.alpha = ribbon.alpha,
+      xaxt = xaxt,
       xlabs = xlabs,
-      datapoints = datapoints)
+      xlim = xlim,
+      yaxt = yaxt,
+      ylab = ylab,
+      ylim = ylim)
     fargs = c(fargs, dots)
-    list2env(do.call(type_dict[[type]], fargs), environment())
+    list2env(do.call(type_data, fargs), environment())
   }
+
   
   # swap x and y values if flip is TRUE
+  assert_flag(flip)
   # extra catch for boxplots
-  if (type == "boxplot" && !is.null(dots[["horizontal"]])) flip = dots[["horizontal"]]
   # now swap the values
   if (isTRUE(flip)) {
     if (type != "boxplot") {
@@ -729,9 +740,8 @@ tinyplot.default = function(
       rm(xlab_cp)
     }
   }
-  
-  
-  
+
+
   # plot limits
   fargs = lim_args(datapoints = datapoints, xlim = xlim, ylim = ylim, type = type)
   list2env(fargs, environment())
@@ -840,7 +850,7 @@ tinyplot.default = function(
 
     has_sub = !is.null(sub)
 
-    if (isTRUE(was_area_type) || type == "rect") {
+    if (isTRUE(was_area_type) || isTRUE(type %in% c("area", "rect", "hist", "histogram"))) {
       legend_args[["pt.lwd"]] = par("lwd")
       legend_args[["lty"]] = 0
     }
@@ -1031,12 +1041,12 @@ tinyplot.default = function(
 
     ## Inner loop over the "facet" variables
     for (ii in seq_along(idata)) {
-      xx = idata[[ii]]$x
-      yy = idata[[ii]]$y
-      xxmin = idata[[ii]]$xmin
-      xxmax = idata[[ii]]$xmax
-      yymin = idata[[ii]]$ymin
-      yymax = idata[[ii]]$ymax
+      ix = idata[[ii]]$x
+      iy = idata[[ii]]$y
+      ixmin = idata[[ii]]$xmin
+      ixmax = idata[[ii]]$xmax
+      iymin = idata[[ii]]$ymin
+      iymax = idata[[ii]]$ymax
 
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
@@ -1055,34 +1065,51 @@ tinyplot.default = function(
 
       # empty plot flag
       empty_plot = FALSE
-      if (isTRUE(empty) || type == "n" || ((length(xx) == 0) && !(type %in% c("rect", "segments")))) {
+      if (isTRUE(empty) || isTRUE(type == "n") || ((length(ix) == 0) && !(type %in% c("histogram", "hist", "rect", "segments")))) {
         empty_plot = TRUE
       }
 
       # Draw the individual plot elements...
-      draw_elements(
-        type = type,
-        xx = xx,
-        yy = yy,
-        xxmin = xxmin,
-        xxmax = xxmax,
-        yymin = yymin,
-        yymax = yymax, 
-        bg = bg,
-        icol = icol,
-        ilwd = ilwd,
-        ipch = ipch,
-        ibg = ibg,
-        ilty = ilty,
-        cex = cex,
-        dots = dots,
-        empty_plot = empty_plot,
-        facet_by = facet_by,
-        split_data = split_data,
-        i = i,
-        x_by = x_by,
-        flip = flip
-      )
+      if (!isTRUE(empty_plot)) {
+        if (is.null(type_draw)) {
+            type_draw = switch(
+            type,
+            "ribbon" = type_ribbon()$draw,
+            "polygon" = type_polygon()$draw,
+            "rect" = type_rect()$draw,
+            "p" = ,
+            "points" = type_points()$draw,
+            "l" = ,
+            "o" = ,
+            "b" = ,
+            "c" = ,
+            "h" = ,
+            "s" = ,
+            "S" = type_lines(type = type)$draw)
+        }
+        type_draw(
+            ibg = ibg,
+            icol = icol,
+            ilty = ilty,
+            ilwd = ilwd,
+            ipch = ipch,
+            ix = ix,
+            ixmax = ixmax,
+            ixmin = ixmin,
+            iy = iy,
+            iymax = iymax,
+            iymin = iymin,
+            cex = cex,
+            dots = dots,
+            type = type,
+            x_by = x_by,
+            iby = i,
+            ifacet = ii,
+            facet_by = facet_by,
+            data_facet = idata,
+            data_by = split_data,
+            flip = flip)
+      }
     }
   }
 
@@ -1189,7 +1216,7 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (!is.null(type) && type %in% c("hist", "histogram")) {
+  if (!is.null(type) && isTRUE(type %in% c("hist", "histogram"))) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {

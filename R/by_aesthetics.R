@@ -1,21 +1,20 @@
 by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL, alpha = NULL) {
-  
   if (is.null(ordered)) ordered = FALSE
   if (is.null(alpha)) alpha = 1
   if (is.null(gradient)) gradient = FALSE
   if (isTRUE(gradient)) {
     ngrps = 100L
   }
-  
+
   # palette = substitute(palette, env = parent.env(environment()))
-  
+
   # special "by" convenience keyword (will treat as NULL & handle grouping below)
-  if (!anyNA(col) && !is.null(col) && length(col)==1 && col=="by") col = NULL
+  if (!anyNA(col) && !is.null(col) && length(col) == 1 && col == "by") col = NULL
 
   if (is.null(col) && is.null(palette)) {
     col = seq_len(ngrps)
   }
-  
+
   if (is.atomic(col) && is.vector(col)) {
     if (length(col) == 1) {
       col = rep(col, ngrps)
@@ -26,7 +25,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         # interpolate gradient colors
         col = colorRampPalette(colors = col, alpha = TRUE)(ngrps)
       }
-    } 
+    }
     if (isTRUE(gradient)) {
       col = rev(col)
     }
@@ -36,7 +35,6 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
   }
 
   if (is.null(palette)) {
-
     if (ngrps <= length(palette()) && isFALSE(ordered) && isFALSE(gradient)) {
       palette_fun = function(alpha) adjustcolor(palette(), alpha) # must be function to avoid arg ambiguity
       args = list(alpha = alpha)
@@ -49,7 +47,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         if (isFALSE(gradient) && isFALSE(ordered)) {
           palette_fun = hcl.colors
         } else {
-          palette_fun_gradient = function(n, palette, from = 0.1, to = 0.9, alpha = 1)  {
+          palette_fun_gradient = function(n, palette, from = 0.1, to = 0.9, alpha = 1) {
             colorRampPalette(
               hcl.colors(n = 100, palette = palette, alpha = alpha)[(100 * from + 1):(100 * to)],
               alpha = TRUE
@@ -57,15 +55,11 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
           }
           palette_fun = palette_fun_gradient
         }
-        
-      } 
+      }
       args = list(n = ngrps, palette = palette, alpha = alpha)
     }
-
   } else {
-
     if (is.character(palette)) {
-
       fx = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
       pal_match = charmatch(fx(palette), fx(palette.pals()))
       if (!is.na(pal_match)) {
@@ -89,23 +83,18 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         }
       }
       args = list(n = ngrps, palette = palette, alpha = alpha)
-
     } else if (class(palette) %in% c("call", "name")) {
-
       args = as.list(palette)
       palette_fun = paste(args[[1]])
       args[[1]] = NULL
       args[["n"]] = ngrps
       # remove unnamed arguments to prevent unintentional argument sliding
       if (any(names(args) == "")) args[[which(names(args) == "")]] = NULL
-
     } else {
-
       stop(
         "\nInvalid palette argument. Must be a recognized keyword, or a",
         "palette-generating function with named arguments.\n"
       )
-
     }
   }
 
@@ -115,96 +104,91 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
   )
 
   if (length(cols) > ngrps) cols = cols[1:ngrps]
-  
+
   # For gradient and ordered colors, we'll run high to low
   if (isTRUE(gradient) || isTRUE(ordered)) cols = rev(cols)
 
   return(cols)
-
 }
 
 
-by_pch = function(ngrps, type, pch=NULL) {
-  
+by_pch = function(ngrps, type, pch = NULL) {
   no_pch = FALSE
   if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot")) {
     no_pch = TRUE
     pch = NULL
-    
+
     # special "by" convenience keyword
-  } else if (!is.null(pch) && length(pch)==1 && pch=="by") {
+  } else if (!is.null(pch) && length(pch) == 1 && pch == "by") {
     no_pch = TRUE # skip checks below
     pch = 1:ngrps + par("pch") - 1
     # correctly recycle if over max pch type
     pch_ceiling = 25 # see ?pch
-    if (max(pch)>pch_ceiling) {
-      pch_below = pch[pch<=pch_ceiling]
-      pch_above = pch[pch>pch_ceiling]
+    if (max(pch) > pch_ceiling) {
+      pch_below = pch[pch <= pch_ceiling]
+      pch_above = pch[pch > pch_ceiling]
       pch_above = rep_len(0:pch_ceiling, length(pch_above))
       pch = c(pch_below, pch_above)
     }
-    
+
     # return NULL if not a valid point type
   } else if (is.null(pch)) {
     pch = par("pch")
   }
 
   if (!no_pch) {
-    
     if (!is.atomic(pch) || !is.vector(pch) || !is.numeric(pch) || (length(pch) != 1 && length(pch) != ngrps)) {
       stop(sprintf("`pch` must be `NULL` or a numeric vector of length 1 or %s.", ngrps), call. = FALSE)
     }
-    
+
     if (length(pch) == 1) {
       pch = rep(pch, ngrps)
     }
   }
-  
+
   return(pch)
 }
 
 
-by_lty = function(ngrps, type, lty=NULL) {
-
+by_lty = function(ngrps, type, lty = NULL) {
   # We only care about line types, otherwise return NULL
   if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon", "boxplot", "rect", "segments")) {
     out = NULL
-    
+
     # special "by" convenience keyword
-  } else if (!is.null(lty) && length(lty)==1 && lty=="by") {
-    
+  } else if (!is.null(lty) && length(lty) == 1 && lty == "by") {
     lty_dict = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
     par_lty = par("lty")
-    
+
     if (!par_lty %in% lty_dict) {
       warning(
         "\nBesoke lty specifications (i.e., using string combinations) are not",
         "currently supported alongside the lty='by' keyword argument.",
         "Defaulting to 1 and looping from there.\n"
-        )
+      )
       par_lty = 1
     } else {
-      par_lty = which(par_lty==lty_dict)
+      par_lty = which(par_lty == lty_dict)
     }
     out = 1:ngrps + par_lty - 1
     # correctly recycle if over max pch type
     lty_ceiling = 6 # see ?pch
-    if (max(out)>lty_ceiling) {
-      lty_below = out[out<=lty_ceiling]
-      lty_above = out[out>lty_ceiling]
+    if (max(out) > lty_ceiling) {
+      lty_below = out[out <= lty_ceiling]
+      lty_above = out[out > lty_ceiling]
       lty_above = rep_len(1:lty_ceiling, length(lty_above))
       out = c(lty_below, lty_above)
     }
-    
+
     # NULL -> solid (or default) line
   } else if (is.null(lty)) {
-    if (type == "boxplot") {
+    if (identical(type, "boxplot")) {
       out = NULL
     } else {
       out = rep(par("lty"), ngrps)
     }
-  
-  # atomic vector: sanity check length
+
+    # atomic vector: sanity check length
   } else if (is.atomic(lty) && is.vector(lty)) {
     if (length(lty) == 1) {
       out = rep(lty, ngrps)
@@ -220,15 +204,14 @@ by_lty = function(ngrps, type, lty=NULL) {
 }
 
 
-by_lwd = function(ngrps, type, lwd=NULL) {
-
+by_lwd = function(ngrps, type, lwd = NULL) {
   lwd_base = par("lwd")
-  lwd_floor = lwd_base / min(5, max((ngrps-1), 1))
+  lwd_floor = lwd_base / min(5, max((ngrps - 1), 1))
   lwd_ceiling = lwd_base * min(5, ngrps)
-  
+
   no_lwd = FALSE
   # special "by" convenience keyword
-  if (!is.null(lwd) && length(lwd)==1 && lwd=="by") {
+  if (!is.null(lwd) && length(lwd) == 1 && lwd == "by") {
     no_lwd = TRUE # skip checks below
     lwd = seq(lwd_floor, lwd_ceiling, length.out = ngrps)
   } else if (is.null(lwd)) {
@@ -244,7 +227,7 @@ by_lwd = function(ngrps, type, lwd=NULL) {
       lwd = rep(lwd, ngrps)
     }
   }
-  
+
   return(lwd)
 }
 
@@ -262,7 +245,6 @@ by_bg = function(
   palette,
   ribbon.alpha,
   type) {
-
   if (is.null(bg) && !is.null(fill)) bg = fill
   if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
     alpha = bg
@@ -290,4 +272,3 @@ by_bg = function(
 
   return(bg)
 }
-

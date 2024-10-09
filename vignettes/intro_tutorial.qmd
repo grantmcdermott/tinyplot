@@ -21,16 +21,13 @@ knitr::opts_chunk$set(
 ```
 
 The goal of this intro tutorial is to give you a sense of the main features and
-syntax of **tinyplot**, a lightweight extension of the base R graphics system. We
-don't try to cover everything, but you should come away with a good
+syntax of **tinyplot**, a lightweight extension of the base R graphics system.
+We don't try to cover everything, but you should come away with a good
 understanding of how the package works and how it can integrate with your own
 projects.
 
-## Preliminaries
-
-Start by loading the package. For the examples in this tutorial, we'll be using
-a slightly modified version of the `airquality` dataset that comes bundled with
-base R. So let's go ahead and create that now too.
+We start this tutorial by loading the package and a slightly modified version
+of the `airquality` dataset that comes bundled with base R.
 
 ```{r aq}
 library(tinyplot)
@@ -292,29 +289,12 @@ or by checking the
 documentation.
 
 For example, **tinyplot** support interval plots via the `"pointrange"`,
-`"errorbar"`, `"ribbon"` type arguments. A canonical use-case is regression
-analysis and prediction.
-
-```{r ribbon_pred}
-mod = lm(Temp ~ 0 + Month / Day, data = aq)
-aq = cbind(aq, predict(mod, interval = "confidence"))
-
-with(
-  aq,
-  tinyplot(
-    x = Day, y = fit,
-    ymin = lwr, ymax = upr,
-    by = Month,
-    type = "ribbon",
-    grid = TRUE,
-    main = "Model predictions"
-  )
-)
-```
-
-Similarly, we can grab the model estimates to produce nice coefficient plots.
+`"errorbar"`, `"ribbon"` type arguments. A canonical use-case is coefficient
+plots: 
 
 ```{r pointrange, warning = FALSE}
+mod = lm(Temp ~ 0 + Month / Day, data = aq)
+
 # grab coefs of interest
 monthcoefs = data.frame(
   gsub("Month", "", names(coef(mod))),
@@ -338,6 +318,18 @@ with(
 )
 ```
 
+**tinyplot** also supports special types to fit models and display their predictions, along with confidence intervals. Here's an example where we fit a logistic regression model:
+
+```{r ribbon_pred}
+with(aq,
+  tinyplot(
+    I(Temp > 80) ~ Wind,
+    type = type_glm(family = binomial))
+)
+```
+
+We will see examples of more plot types below, including a other model prediction types. Please also take a look at [the dedicated Plot Types vignette](types.qmd) for explicit details on all of the different plot types that tinyplot supports, as well as how to create your own custom types.
+
 ## Facets
 
 Alongside the standard "by" grouping approach that we have seen thus far,
@@ -345,16 +337,11 @@ Alongside the standard "by" grouping approach that we have seen thus far,
 `facet` argument accepts both atomic and formula methods.
 
 ```{r facet_simple}
-with(
-  aq,
+with(aq,
   tinyplot(
-    x = Day, y = fit,
-    ymin = lwr, ymax = upr,
-    type = "ribbon",
-    facet = Month, ## <= facet, not by
-    grid = TRUE,
-    main = "Predicted air temperatures"
-  )
+    Temp ~ Wind,
+    facet = Month,
+    type = "lm")
 )
 ```
 
@@ -362,58 +349,39 @@ By default, facets will be arranged in a square configuration if more than
 three facets are detected. Users can override this behaviour by supplying
 `nrow` or `ncol` in the "facet.args" helper function. (The margin padding
 between individual facets can also be adjusted via the `fmar` argument.) Note
-that we can also reduce axis label redundancy by turning off the plot frame.
 
 ```{r facet_nrow}
-with(
-  aq,
+with(aq,
   tinyplot(
-    x = Day, y = fit,
-    ymin = lwr, ymax = upr,
-    type = "ribbon",
+    x = Wind, y = Temp,
     facet = Month,
     facet.args = list(nrow = 1),
-    grid = TRUE, frame = FALSE,
-    main = "Predicted air temperatures"
-  )
+    type = "lm")
 )
 ```
 
 Here's a slightly fancier version where we combine facets with (by) colour
-grouping, add a background fill to the facet text, and also add back the
-original values to our model predictions. For this particular example, we'll use
-the `facet = "by"` convenience shorthand to facet along the same month variable
-as the colour grouping. But you can easily specify different `by` and `facet`
-variables if that's what your data support.
+grouping, add a background fill to the facet text, add back the original values
+to our model predictions, and reduce axis label redundancy by turning off the
+plot frame. For this particular example, we'll use the `facet = "by"`
+convenience shorthand to facet along the same month variable as the colour
+grouping. But you can easily specify different `by` and `facet` variables if
+that's what your data support.
 
 ```{r facet_fancy}
-# Plot the original points 
-with(
-  aq,
+with(aq,
   tinyplot(
-    x = Day, y = Temp,
+    y = Temp, x = Wind,
     by = Month,
-    facet = "by", facet.args = list(bg = "grey90"),
+    facet = "by",
+    facet.args = list(nrow = 1, list(bg = "grey90")),
     palette = "dark2",
-    grid = TRUE, frame = FALSE, ylim = c(50, 100),
-    main = "Actual and predicted air temperatures"
-  )
-)
-# Add the model predictions to the same plot 
-with(
-  aq,
-  tinyplot(
-    x = Day, y = fit,
-    ymin = lwr, ymax = upr,
-    by = Month, facet = "by",
-    type = "ribbon",
-    palette = "dark2",
-    add = TRUE
-  )
+    grid = TRUE, frame = FALSE,
+    type = "lm")
 )
 ```
 
-Again, the `facet` argument also accepts a formula interface. One particular use
+The `facet` argument also accepts a formula interface. One particular use
 case is for two-sided formulas, which arranges the facet layout in a fixed grid
 arrangement. Here's a simple (if contrived) example.
 
@@ -435,7 +403,30 @@ tinyplot(
 The `facet.args` customizations can also be set globally via the `tpar()`
 function, which provides a nice segue to our final section.
 
-## Customization
+## Overlay plots
+
+```{r}
+with(aq, {
+  tinyplot(
+    y = Temp, x = Wind,
+    by = Month,
+    facet = "by",
+    facet.args = list(nrow = 1, list(bg = "grey90")),
+    palette = "dark2",
+    grid = TRUE, frame = FALSE,
+    type = type_lm())
+  tinyplot(
+    x = Day, y = Temp,
+    by = Month,
+    facet = "by", facet.args = list(bg = "grey90"),
+    palette = "dark2",
+    grid = TRUE, frame = FALSE, ylim = c(50, 100),
+    main = "Actual and predicted air temperatures",
+    add = TRUE)
+})
+```
+
+## Themes
 
 Customizing your plots further is straightforward, whether that is done directly
 by changing `tinyplot` arguments for a single plot, or by setting global

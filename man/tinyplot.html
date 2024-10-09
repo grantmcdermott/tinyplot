@@ -163,6 +163,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/type.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Plot types</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/gallery.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Gallery</span></a>
   </div>
@@ -198,6 +204,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/tpar.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tpar</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_boxplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_boxplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_errorbar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_errorbar</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_glm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_jitter</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_lm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_loess</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_polypath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_polypath</span></a>
   </div>
 </li>
       </ul>
@@ -448,25 +496,78 @@ a data.frame (or list) from which the variables in formula should be taken. A ma
 <code id="type">type</code>
 </td>
 <td>
-<p>character string giving the type of plot desired. If no argument is provided, then the plot type will default to something sensible for the type of <code>x</code> and <code>y</code> inputs (i.e., usually <code>“p”</code>). Options are:</p>
+<p>character string or call to a <code style="white-space: pre;">type_*()</code> function giving the type of plot desired.</p>
 <ul>
 <li>
-<p>The same set of 1-character values supported by <code>plot</code>: <code>“p”</code> for points, <code>“l”</code> for lines, <code>“b”</code> for both points and lines, <code>“c”</code> for empty points joined by lines, <code>“o”</code> for overplotted points and lines, <code>“s”</code> and <code>“S”</code> for stair steps, and <code>“h”</code> for histogram-like vertical lines. Specifying <code>“n”</code> produces an empty plot over the extent of the data, but with no internal elements (see also the <code>empty</code> argument below).</p>
+<p>NULL (default): Choose a sensible type for the type of <code>x</code> and <code>y</code> inputs (i.e., usually <code>“p”</code>).</p>
 </li>
 <li>
-<p>Additional tinyplot types:</p>
+<p>1-character values supported by <code>plot</code>:</p>
 <ul>
 <li>
-<p><code>“jitter”</code> (alias <code>“j”</code>) for jittered points.</p>
+<p><code>“p”</code> Points</p>
 </li>
 <li>
-<p><code>“rect”</code>, <code>“segments”</code>, <code>“polygon”</code>, or <code>“polypath”</code>, which are all equivalent to their base counterparts, but don’t require an existing plot window.</p>
+<p><code>“l”</code> Lines</p>
 </li>
 <li>
-<p><code>“boxplot”</code>, <code>“histogram”</code> (alias <code>“hist”</code>), or <code>“density”</code> for distribution plots.</p>
+<p><code>“b”</code> Both points and lines</p>
 </li>
 <li>
-<p><code>“pointrange”</code> or <code>“errorbar”</code> for segment intervals, and <code>“ribbon”</code> or <code>“area”</code> for polygon intervals (where area plots are a special case of ribbon plots with <code>ymin</code> set to 0 and <code>ymax</code> set to <code>y</code>; see below).</p>
+<p><code>“c”</code> Empty points joined by lines</p>
+</li>
+<li>
+<p><code>“o”</code> Overplotted points and lines</p>
+</li>
+<li>
+<p><code>“s”</code> Stair steps</p>
+</li>
+<li>
+<p><code>“S”</code> Stair steps</p>
+</li>
+<li>
+<p><code>“h”</code> Histogram-like vertical lines</p>
+</li>
+<li>
+<p><code>“n”</code> Empty plot over the extent of the data</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>tinyplot</code> types:</p>
+<ul>
+<li>
+<p><code>“rect”</code>, <code>“segments”</code>, or <code>“polygon”</code>: Equivalent to base <code>R</code></p>
+</li>
+<li>
+<p><code>“density”</code>: Kernel density plot</p>
+</li>
+<li>
+<p><code>“jitter”</code> or <code>type_jitter()</code>: Jittered points</p>
+</li>
+<li>
+<p><code>“polypath”</code> or <code>type_polypath()</code></p>
+</li>
+<li>
+<p><code>“boxplot”</code> or <code>type_boxplot()</code></p>
+</li>
+<li>
+<p><code>“histogram”</code> or <code>type_histogram()</code></p>
+</li>
+<li>
+<p><code>“pointrange”</code> or <code>“errorbar”</code>: segment intervals</p>
+</li>
+<li>
+<p><code>“ribbon”</code> or <code>“area”</code> for polygon intervals (where area plots are a special case of ribbon plots with <code>ymin</code> set to 0 and <code>ymax</code> set to <code>y</code>; see below).</p>
+</li>
+<li>
+<p><code>“lm”</code> or <code>type_lm()</code>: Linear model fit</p>
+</li>
+<li>
+<p><code>“glm”</code> or <code>type_glm()</code>: Generalized linear model fit</p>
+</li>
+<li>
+<p><code>“loess”</code> or <code>type_loess()</code>: Local regression fit</p>
 </li>
 </ul>
 </li>

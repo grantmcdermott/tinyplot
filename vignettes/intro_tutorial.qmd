@@ -341,7 +341,7 @@ with(aq,
   tinyplot(
     Temp ~ Wind,
     facet = Month,
-    type = "lm"
+    type = "lm")
 )
 ```
 

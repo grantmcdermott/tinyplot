@@ -28,7 +28,7 @@ data_glm = function(family, se, level, type, ...) {
                 return(x)
             }
             fit = glm(y ~ x, data = x, family = family)
-            nd = data.frame(x = seq(min(x$x), max(x$x), length.out = 100))
+            nd = data.frame(x = seq(min(x$x, na.rm = TRUE), max(x$x, na.rm = TRUE), length.out = 100))
             nd$by = x$by[1]
             nd$facet = x$facet[1]
             if (se == TRUE) {

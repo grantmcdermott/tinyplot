@@ -9,23 +9,41 @@ where the formatting is also better._
 
 Breaking changes:
 
-* Type-specific arguments are no longer passed through the main function via
-`...`. Instead, they are now passed through a dedicated `type_*()` functions in
-the `type` argument.
+- Type-specific arguments (i.e., affecting the default behaviour of a certain
+plot type) should no longer be passed via `...` in the main plotting function.
+Instead, these additional arguments must now be passed explicitly as part of the
+corresponding `type_*()` function in the `type` argument. So, for example, you
+should now use `plt(Nile, type = type_histogram(breaks = 30))` instead of
+`plt(Nile, type = "histogram", breaks = 30)` if you wanted to adjust the number
+of breaks. More details are provided below and also in the new dedicated
+[Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html).
+The essential idea is that shortcut character types (here: `"histogram"`) all
+still work, but are deliberately limited to default behaviour. In contrast, the
+functional equivalents (here: `type_histogram()`) is where we can customize
+behaviour by passing appropriate arguments. We're sorry to introduce a breaking
+change, but this new approach should ensure that users have better control of
+how their plots behave, and avoids guesswork on our side.
 
 New features:
 
+- Alongside the standard character shortcuts (`"p"`, `"l"`, etc.), the `type`
+argument now accepts functional `type_*()` equivalents. These functional plot
+types enable a variety of additional features. (#222 @vincentarelbundock)
+  - New model-based plot types:
+    - `type_glm()` (shortcut: `"glm"`)
+    - `type_lm()` (shortcut: `"lm"`)
+    - `type_loess()` (shortcut: `"loess"`)
+  - Explicit argument passing for modified behaviour type
+  (e.g., `type_lm(se = FALSE)`).
+  - Users can define their own custom types by creating `type_<typename>()`
+  functions.
+  - More details are provided in the dedicated
+  [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html)
+  on the website.
 - The new `flip` argument allows for easily flipping (swapping) the orientation
   of the x and y axes. This should work regardless of plot type, e.g.
   `plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
   (#216 @grantmcdermott)
-- New plot types added in #222:
-    - `type_glm()` (shortcut: `"glm"`)
-    - `type_lm()` (shortcut: `"lm"`)
-    - `type_loess()` (shortcut: `"loess"`)
-- Custom types can now be defined by users by creating `type_typename()`
-  functions. (#222 @vincentarelbundock)
-- Types vignette on the website. (#222 @vincentarelbundock)
 
 Bug fixes:
 

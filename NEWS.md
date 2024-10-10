@@ -19,7 +19,7 @@ of breaks. More details are provided below and also in the new dedicated
 [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html).
 The essential idea is that shortcut character types (here: `"histogram"`) all
 still work, but are deliberately limited to default behaviour. In contrast, the
-functional equivalents (here: `type_histogram()`) is where we can customize
+functional equivalents (here: `type_histogram()`) are where we can customize
 behaviour by passing appropriate arguments. We're sorry to introduce a breaking
 change, but this new approach should ensure that users have better control of
 how their plots behave, and avoids guesswork on our side.

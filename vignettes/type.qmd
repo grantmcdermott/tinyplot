@@ -38,6 +38,8 @@ Use `"l"` to connect data points with lines.
 tinyplot(Temp ~ Day | Month, data = aq, type = "l", main = "Lines")
 ```
 
+Other base plot types supported as single-character strings: 
+
 * `b` (Points and Lines): Combines points and lines in the plot.
 * `c` (Empty Points Joined by Lines): Plots empty points connected by lines.
 * `o` (Overplotted Points and Lines): Overlaps points and lines.
@@ -67,9 +69,9 @@ Shapes:
 
 Visualizations:
 
-- `jitter`, `type_jitter()`: Jittered points.
-- `boxplot`, `type_boxplot()`: Creates a box-and-whisker plot.
-- `histogram`: Creates a histogram of a single variable.
+- `jitter` / `type_jitter()`: Jittered points.
+- `boxplot` / `type_boxplot()`: Creates a box-and-whisker plot.
+- `histogram` / `type_histogram()`: Creates a histogram of a single variable.
 - `density`: Plots the density estimate of a variable.
 
 There are two main ways to use `tinyplot` types. First, we can specify the type directly using a string shortcut in the `type` argument, such as `type="boxplot"`.
@@ -85,28 +87,36 @@ For example, we can add noise to data points using the `"jitter"` type. This all
 
 ```{r}
 #| layout-ncol: 2
-tinyplot(Temp ~ Month, data = aq, main = "Default jittering", 
-    type = "jitter")
+tinyplot(
+  Temp ~ Month, data = aq, main = "Default jittering", 
+  type = "jitter"
+)
 
-tinyplot(Temp ~ Month, data = aq, main = "Modest jittering",
-    type = type_jitter(amount = 0.05))
+tinyplot(
+  Temp ~ Month, data = aq, main = "Modest jittering",
+  type = type_jitter(amount = 0.05)
+)
 ```
 
 In this example, we use `type_glm()` to fit a logit regression model to the data, and display different confidence interval sizes:
 
 ```{r}
 #| layout-ncol: 2
-tinyplot(Hot ~ Wind, data = aq, main = "Logit with 95% interval",
-    type = type_glm(family = "binomial"))
+tinyplot(
+  Hot ~ Wind, data = aq, main = "Logit with 95% interval",
+  type = type_glm(family = "binomial")
+)
 
-tinyplot(Hot ~ Wind, data = aq, main = "Logit with 50% interval",
-    type = type_glm(family = "binomial", level = 0.5))
+tinyplot(
+  Hot ~ Wind, data = aq, main = "Logit with 50% interval",
+  type = type_glm(family = "binomial", level = 0.5)
+)
 ```
 
-Most `tinyplot` types support grouping and faceting:
+All `tinyplot` types should support grouping and faceting:
 
 ```{r}
-tinyplot(Temp ~ Wind | Month, data = aq, type = type_lm(se = FALSE))
+tinyplot(Temp ~ Wind | Month, data = aq, facet = "by", type = "lm")
 ```
 
 # Custom types

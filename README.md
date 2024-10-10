@@ -135,7 +135,7 @@ plt(
 Hopefully, these have been enough to pique your interest. Head over to
 the [intro
 tutorial](https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html)
-for many more examples, including range plots and customization.
+for many more examples, including model-based and custom plot types.
 
 [^1]: Both **lattice** and **ggplot2** are built on top of the **grid**
     package, which was incoporated into the base R distribution way back

@@ -226,6 +226,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./man/type_histogram.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_histogram</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./man/type_jitter.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_jitter</span></a>
   </div>
@@ -306,19 +312,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="dev-version">0.2.1.99 (dev version)</h2>
 <p>Breaking changes:</p>
 <ul>
-<li>Type-specific arguments are no longer passed through the main function via <code>...</code>. Instead, they are now passed through a dedicated <code>type_*()</code> functions in the <code>type</code> argument.</li>
+<li>Type-specific arguments (i.e., affecting the default behaviour of a certain plot type) should no longer be passed via <code>...</code> in the main plotting function. Instead, these additional arguments must now be passed explicitly as part of the corresponding <code>type_*()</code> function in the <code>type</code> argument. So, for example, you should now use <code>plt(Nile, type = type_histogram(breaks = 30))</code> instead of <code>plt(Nile, type = "histogram", breaks = 30)</code> if you wanted to adjust the number of breaks. More details are provided below and also in the new dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a>. The essential idea is that shortcut character types (here: <code>"histogram"</code>) all still work, but are deliberately limited to default behaviour. In contrast, the functional equivalents (here: <code>type_histogram()</code>) are where we can customize behaviour by passing appropriate arguments. We’re sorry to introduce a breaking change, but this new approach should ensure that users have better control of how their plots behave, and avoids guesswork on our side.</li>
 </ul>
 <p>New features:</p>
 <ul>
-<li>The new <code>flip</code> argument allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>New plot types added in <a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a>:
+<li>Alongside the standard character shortcuts (<code>"p"</code>, <code>"l"</code>, etc.), the <code>type</code> argument now accepts functional <code>type_*()</code> equivalents. These functional plot types enable a variety of additional features. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)
+<ul>
+<li>New model-based plot types:
 <ul>
 <li><code>type_glm()</code> (shortcut: <code>"glm"</code>)</li>
 <li><code>type_lm()</code> (shortcut: <code>"lm"</code>)</li>
 <li><code>type_loess()</code> (shortcut: <code>"loess"</code>)</li>
 </ul></li>
-<li>Custom types can now be defined by users by creating <code>type_typename()</code> functions. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
-<li>Types vignette on the website. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li>Explicit argument passing for modified behaviour type (e.g., <code>type_lm(se = FALSE)</code>).</li>
+<li>Users can define their own custom types by creating <code>type_&lt;typename&gt;()</code> functions.</li>
+<li>More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a> on the website.</li>
+</ul></li>
+<li>The new <code>flip</code> argument allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Bug fixes:</p>
 <ul>

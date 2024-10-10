@@ -1216,7 +1216,8 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (!is.null(type) && isTRUE(type %in% c("hist", "histogram"))) {
+  hist_type = (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
+  if (!is.null(type) && hist_type) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {

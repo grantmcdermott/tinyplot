@@ -1,17 +1,39 @@
-type_histogram = function() {
+#' Histogram type
+#' 
+#' @md
+#' @description Type function for histogram plots. `type_hist` is an alias for
+#'   `type_histogram`.
+#' @param breaks Passed to \code{\link[graphics]{hist}}. One of:
+#' - a vector giving the breakpoints between histogram cells,
+#' - a function to compute the vector of breakpoints,
+#' - a single number giving the number of cells for the histogram,
+#' - a character string naming an algorithm to compute the number of cells (see ‘Details’ of \code{\link[graphics]{hist}}),
+#' - a function to compute the number of cells.
+#' In the last three cases the number is a suggestion only; as the breakpoints
+#' will be set to pretty values, the number is limited to 1e6 (with a warning if
+#' it was larger). If breaks is a function, the x vector is supplied to it as
+#' the only argument (and the number of breaks is only limited by the amount of
+#' available memory).
+#' @export
+type_histogram = function(breaks = "Sturges") {
     out = list(
-        data = data_histogram(),
+        data = data_histogram(breaks = breaks),
         draw = draw_rect(),
         name = "histogram"
     )
     class(out) = "tinyplot_type"
     return(out)
 }
+#' @export
+#' @name type_hist
+#' @rdname type_histogram
+type_hist = type_histogram
 
 
-data_histogram = function() {
-    fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints, breaks = NULL, ...) {
-        hbreaks = ifelse(!is.null(breaks), breaks, "Sturges")
+data_histogram = function(breaks = "Sturges") {
+    hbreaks = breaks
+    fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints, .breaks = hbreaks, ...) {
+        hbreaks = ifelse(!is.null(.breaks), .breaks, "Sturges")
 
         if (is.null(ylab)) ylab = "Frequency"
         if (is.null(by) && is.null(palette)) {

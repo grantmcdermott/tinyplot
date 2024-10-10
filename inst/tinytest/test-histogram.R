@@ -21,8 +21,9 @@ f = function() {
   with(
     iris,
     plt(
-      Petal.Length, by = Species, type = "hist",
-      fill = 0.4, breaks = 30, palette = "classic"
+      Petal.Length, by = Species,
+      type = type_histogram(breaks = 30),
+      fill = 0.4, palette = "classic"
     )
   )
 }
@@ -42,8 +43,9 @@ f = function() {
   with(
     transform(iris, long_sepal = paste("Long sepal:", Sepal.Length > mean(Sepal.Length))),
     plt(
-      Petal.Length, by = Species, facet = long_sepal, type = "hist",
-      fill = 0.4, breaks = 30, palette = "classic", frame = FALSE, grid = TRUE
+      Petal.Length, by = Species, facet = long_sepal,
+      type = type_histogram(breaks = 30),
+      fill = 0.4, palette = "classic", frame = FALSE, grid = TRUE
     )
   )
 }
@@ -54,8 +56,9 @@ f = function() {
     ~Petal.Length | Species,
     data = transform(iris, long_sepal = paste("Long sepal:", Sepal.Length > mean(Sepal.Length))),
     facet = ~long_sepal,
-    type = "hist", fill = 0.4, 
-    breaks = 30, palette = "classic", frame = FALSE, grid = TRUE,
+    type = type_histogram(breaks = 30),
+    fill = 0.4,
+    palette = "classic", frame = FALSE, grid = TRUE,
   )
 }
 expect_snapshot_plot(f, label = "hist_grouped_faceted")

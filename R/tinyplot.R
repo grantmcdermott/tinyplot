@@ -290,9 +290,7 @@
 #'  specified.
 #' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
 #'   See `axes` for the possible values.
-#' @param ... other graphical parameters (see \code{\link[graphics]{par}}), or
-#'   arguments passed to the relevant plot type (e.g., `breaks` for
-#'   `type = "histogram"`, or `varwidth` for `type = "boxplot"`). 
+#' @param ... other graphical parameters (see \code{\link[graphics]{par}}). 
 #'
 #' @returns No return value, called for side effect of producing a plot.
 #'   
@@ -1216,7 +1214,8 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  if (!is.null(type) && isTRUE(type %in% c("hist", "histogram"))) {
+  hist_type = (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
+  if (!is.null(type) && hist_type) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {

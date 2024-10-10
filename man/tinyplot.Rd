@@ -123,9 +123,7 @@ likely the names of existing vectors or columns of data frames. See the
 \code{\link[grDevices]{xy.coords}} for details. If supplied separately, \code{x}
 and \code{y} must be of the same length.}
 
-\item{...}{other graphical parameters (see \code{\link[graphics]{par}}), or
-arguments passed to the relevant plot type (e.g., \code{breaks} for
-\code{type = "histogram"}, or \code{varwidth} for \code{type = "boxplot"}).}
+\item{...}{other graphical parameters (see \code{\link[graphics]{par}}).}
 
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an

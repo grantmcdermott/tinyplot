@@ -290,9 +290,7 @@
 #'  specified.
 #' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
 #'   See `axes` for the possible values.
-#' @param ... other graphical parameters (see \code{\link[graphics]{par}}), or
-#'   arguments passed to the relevant plot type (e.g., `breaks` for
-#'   `type = "histogram"`, or `varwidth` for `type = "boxplot"`). 
+#' @param ... other graphical parameters (see \code{\link[graphics]{par}}). 
 #'
 #' @returns No return value, called for side effect of producing a plot.
 #'   

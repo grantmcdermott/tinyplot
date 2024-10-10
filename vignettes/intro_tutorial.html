@@ -293,7 +293,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#legend" id="toc-legend" class="nav-link" data-scroll-target="#legend">Legend</a></li>
   <li><a href="#more-plot-types" id="toc-more-plot-types" class="nav-link" data-scroll-target="#more-plot-types">More plot types</a></li>
   <li><a href="#facets" id="toc-facets" class="nav-link" data-scroll-target="#facets">Facets</a></li>
-  <li><a href="#overlay-plots" id="toc-overlay-plots" class="nav-link" data-scroll-target="#overlay-plots">Overlay plots</a></li>
   <li><a href="#themes" id="toc-themes" class="nav-link" data-scroll-target="#themes">Themes</a></li>
   <li><a href="#saving-plots" id="toc-saving-plots" class="nav-link" data-scroll-target="#saving-plots">Saving plots</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
@@ -374,6 +373,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Please note that the <code>plt</code> shorthand would work for all of the remaining plot calls below. But we’ll stick to <code>tinyplot</code> to avoid any potential confusion.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use the <code>plt()</code> alias instead of <code>tinyplot()</code> to save yourself a few keystrokes.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="grouped-data" class="level2">
@@ -535,17 +547,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Beyond the convenience of these positional keywords, the <code>legend</code> argument also permits additional customization by passing an appropriate function (or, a list of arguments that will be passed on to the standard <code>legend()</code> function internally.) So you can change or turn off the legend title, remove the bounding box, switch the direction of the legend text to horizontal, etc. Here’s a grouped density plot example, where we also add some shading by specifying that the background colour should vary by groups too.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  aq,</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    Temp,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> Month,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"density"</span>,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"by"</span>,                         <span class="co"># add fill by groups</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid =</span> <span class="cn">TRUE</span>,                         <span class="co"># add background grid</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"topright"</span>, <span class="at">bty =</span> <span class="st">"o"</span>) <span class="co"># change legend features</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> Temp <span class="sc">|</span> Month,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> aq,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"density"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">fill =</span> <span class="st">"by"</span>,                         <span class="co"># add fill by groups</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>,                         <span class="co"># add background grid</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"topright"</span>, <span class="at">bty =</span> <span class="st">"o"</span>) <span class="co"># change legend features</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -619,13 +628,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p><strong>tinyplot</strong> also supports special types to fit models and display their predictions, along with confidence intervals. Here’s an example where we fit a logistic regression model:</p>
+<p><strong>tinyplot</strong> also supports special types to fit models and display their predictions, along with confidence intervals. Here is a somewhat silly example where we fit a linear model to predict temperature by day of month.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(aq,</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">I</span>(Temp <span class="sc">&gt;</span> <span class="dv">80</span>) <span class="sc">~</span> Wind,</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">type_glm</span>(<span class="at">family =</span> binomial))</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"lm"</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Linear model"</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -634,18 +644,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We will see examples of more plot types below, including a other model prediction types. Please also take a look at <a href="types.qmd">the dedicated Plot Types vignette</a> for explicit details on all of the different plot types that tinyplot supports, as well as how to create your own custom types.</p>
+<p>The default behaviour of these model types can be adjusted by passing appropriate arguments to the equivalent <em>functional</em> version of the type in question. These functional types all follow a <code>type_&lt;typename&gt;</code> syntax, so that <code>"lm"</code> is paired with <code>type_lm()</code>, etc. Below we illustrate an adapted generalised linear model, where we passing the binomial <a href="https://search.r-project.org/R/refmans/stats/html/family.html">family</a> argument and thus fit a logistic regression.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">I</span>(Temp <span class="sc">&gt;</span> <span class="dv">80</span>) <span class="sc">~</span> Wind, aq,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_glm</span>(<span class="at">family =</span> binomial),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Logit model: Temps above 80 °F"</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_tutorial_files/figure-html/ribbon_pred_glm-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We will see examples of more plot types below, including other model prediction types. Please also take a look at <a href="types.qmd">the dedicated Plot Types vignette</a> for explicit details about all of the different plot types that <strong>tinyplot</strong> supports, as well as how to create your own custom types.</p>
 </section>
 <section id="facets" class="level2">
 <h2 class="anchored" data-anchor-id="facets">Facets</h2>
-<p>Alongside the standard “by” grouping approach that we have seen thus far, <strong>tinyplot</strong> also supports faceted plots. Mirroring the main <code>tinyplot</code> function, the <code>facet</code> argument accepts both atomic and formula methods.</p>
+<p>Alongside the standard “by” grouping approach that we have seen thus far, <strong>tinyplot</strong> also supports faceted plots. Mirroring the main <code>tinyplot</code> function, the <code>facet</code> argument accepts both atomic and formula methods. In general, however, we recommend the formula version as being safer since it does a better job of handling missing values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(aq,</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    Temp <span class="sc">~</span> Wind,</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">facet =</span> Month,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"lm"</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day, aq,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span>Month, <span class="do">## &lt;= facet, not by</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"lm"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Predicted air temperatures"</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -654,15 +680,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>By default, facets will be arranged in a square configuration if more than three facets are detected. Users can override this behaviour by supplying <code>nrow</code> or <code>ncol</code> in the “facet.args” helper function. (The margin padding between individual facets can also be adjusted via the <code>fmar</code> argument.) Note</p>
+<p>By default, facets will be arranged in a square configuration if more than three facets are detected. Users can override this behaviour by supplying <code>nrow</code> or <code>ncol</code> in the “facet.args” helper function. (The margin padding between individual facets can also be adjusted via the <code>fmar</code> argument.) Note that we can also reduce axis label redundancy by turning off the plot frame.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(aq,</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Wind, <span class="at">y =</span> Temp,</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">facet =</span> Month,</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>),</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"lm"</span>)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day, aq,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span>Month, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"lm"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Predicted air temperatures"</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -671,18 +698,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Here’s a slightly fancier version where we combine facets with (by) colour grouping, add a background fill to the facet text, add back the original values to our model predictions, and reduce axis label redundancy by turning off the plot frame. For this particular example, we’ll use the <code>facet = "by"</code> convenience shorthand to facet along the same month variable as the colour grouping. But you can easily specify different <code>by</code> and <code>facet</code> variables if that’s what your data support.</p>
+<p>Here’s a slightly fancier version where we combine facets with (by) colour grouping, add a background fill to the facet text, and also overlay the original values alongside our model predictions. For this particular example, we’ll use the <code>facet = "by"</code> convenience shorthand to facet along the same month variable as the colour grouping. But you can easily specify different <code>by</code> and <code>facet</code> variables if that’s what your data support.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(aq,</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> Temp, <span class="at">x =</span> Wind,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> Month,</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">facet =</span> <span class="st">"by"</span>,</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>, <span class="fu">list</span>(<span class="at">bg =</span> <span class="st">"grey90"</span>)),</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"dark2"</span>,</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"lm"</span>)</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">bg =</span> <span class="st">"grey90"</span>),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"lm"</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"dark2"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">axes =</span> <span class="st">"l"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>),</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Actual and predicted air temperatures"</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">bg =</span> <span class="st">"grey90"</span>),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"dark2"</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">add =</span> <span class="cn">TRUE</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -691,20 +724,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The <code>facet</code> argument also accepts a formula interface. One particular use case is for two-sided formulas, which arranges the facet layout in a fixed grid arrangement. Here’s a simple (if contrived) example.</p>
+<p>Note that the <code>facet</code> argument also accepts a <em>two-sided</em> formula for arranging facets in a fixed grid layout. Here’s a simple (if contrived) example.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>hot <span class="ot">=</span> <span class="fu">ifelse</span>(aq<span class="sc">$</span>Temp<span class="sc">&gt;=</span><span class="dv">75</span>, <span class="st">"hot"</span>, <span class="st">"cold"</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>windy <span class="ot">=</span> <span class="fu">ifelse</span>(aq<span class="sc">$</span>Wind<span class="sc">&gt;=</span><span class="dv">15</span>, <span class="st">"windy"</span>, <span class="st">"calm"</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a> Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a> <span class="at">facet =</span> windy <span class="sc">~</span> hot,</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a> <span class="co"># the rest of these arguments are optional...</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a> <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">col =</span> <span class="st">"white"</span>, <span class="at">bg =</span> <span class="st">"black"</span>),</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a> <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>,</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a> <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>),</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a> <span class="at">main =</span> <span class="st">"Daily temperatures vs. wind"</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>hot <span class="ot">=</span> <span class="fu">ifelse</span>(aq<span class="sc">$</span>Temp<span class="sc">&gt;=</span><span class="dv">75</span>, <span class="st">"hot"</span>, <span class="st">"cold"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>windy <span class="ot">=</span> <span class="fu">ifelse</span>(aq<span class="sc">$</span>Wind<span class="sc">&gt;=</span><span class="dv">15</span>, <span class="st">"windy"</span>, <span class="st">"calm"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a> Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a> <span class="at">facet =</span> windy <span class="sc">~</span> hot,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a> <span class="co"># the rest of these arguments are optional...</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a> <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">col =</span> <span class="st">"white"</span>, <span class="at">bg =</span> <span class="st">"black"</span>),</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a> <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a> <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>),</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a> <span class="at">main =</span> <span class="st">"Daily temperatures vs. wind"</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -713,37 +746,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The <code>facet.args</code> customizations can also be set globally via the <code>tpar()</code> function, which provides a nice segue to our final section.</p>
-</section>
-<section id="overlay-plots" class="level2">
-<h2 class="anchored" data-anchor-id="overlay-plots">Overlay plots</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(aq, {</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> Temp, <span class="at">x =</span> Wind,</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> Month,</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">facet =</span> <span class="st">"by"</span>,</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>, <span class="fu">list</span>(<span class="at">bg =</span> <span class="st">"grey90"</span>)),</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"dark2"</span>,</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">type_lm</span>())</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Day, <span class="at">y =</span> Temp,</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> Month,</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">bg =</span> <span class="st">"grey90"</span>),</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"dark2"</span>,</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>),</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">"Actual and predicted air temperatures"</span>,</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="intro_tutorial_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
-</figure>
-</div>
-</div>
-</div>
+<p>The <code>facet.args</code> customizations can also be set globally via the <code>tpar()</code> function, which provides a nice segue to our penultimate section.</p>
 </section>
 <section id="themes" class="level2">
 <h2 class="anchored" data-anchor-id="themes">Themes</h2>
@@ -804,7 +807,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="saving-plots" class="level2">
 <h2 class="anchored" data-anchor-id="saving-plots">Saving plots</h2>
-<p>A final point to note is that <strong>tinyplot</strong> offers convenience features for exporting plots to disk. Simply invoke the <code>file</code> argument to specify the relevant file path (including the extension type). You can customize the output dimensions (in inches) via the accompanying <code>width</code> and <code>height</code> arguments.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p>A final point to note is that <strong>tinyplot</strong> offers convenience features for exporting plots to disk. Simply invoke the <code>file</code> argument to specify the relevant file path (including the extension type). You can customize the output dimensions (in inches) via the accompanying <code>width</code> and <code>height</code> arguments.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq,</span>
@@ -830,7 +833,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li id="fn1"><p>At this point, experienced base plot users might protest that you <em>can</em> colour by groups using the <code>col</code> argument, e.g. <code>with(aq, plot(Day, Temp, col = Month))</code>. This is true, but there are several limitations. First, you don’t get an automatic legend. Second, the base <code>plot.formula</code> method doesn’t specify the grouping within the formula itself (not a deal-breaker, but not particularly consistent either). Third, and perhaps most importantly, this grouping doesn’t carry over to line plots (i.e., type=“l”). Instead, you have to transpose your data and use <code>matplot</code>. See <a href="https://stackoverflow.com/questions/10519873/how-to-create-a-line-plot-with-groups-in-base-r-without-loops">this</a> old StackOverflow thread for a longer discussion.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>See the accompanying help pages of those two functions for more details on the available palettes, or read Zeileis &amp; Murrell (2023, The R Journal, <a href="https://doi.org/10.32614/RJ-2023-071">doi:10.32614/RJ-2023-071</a>).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>For example, if you have installed the <strong>ggsci</strong> package (<a href="https://nanx.me/ggsci/index.html">link</a>) then you could use <code>palette = ggsci::pal_npg()</code> to generate a palette consistent with those used by the Nature Publishing Group.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>The default dimensions are 7x7, with a resolution of 300 DPI. However, these too can be customized via the <code>file.width</code>, <code>file.height</code>, and <code>file.res</code> parameters in <a href="https://grantmcdermott.com/tinyplot/man/tpar.html"><code>tpar()</code></a>.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>The grouped setting here makes this visualization equivalent to <code>predict(lm(Temp ~ 0 + Month / Day, data = aq), interval = "confidence")</code>.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>The default dimensions are 7x7, with a resolution of 300 DPI. However, these too can be customized via the <code>file.width</code>, <code>file.height</code>, and <code>file.res</code> parameters in <a href="https://grantmcdermott.com/tinyplot/man/tpar.html"><code>tpar()</code></a>.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -123,6 +123,11 @@ draw_facet_window = function(grid, ...) {
   list2env(list(...), environment())
 
   if (isFALSE(add)) {
+
+    ## optionally allow to modify the style of axis interval calculation
+    if (!is.null(xaxs)) par(xaxs = xaxs)
+    if (!is.null(yaxs)) par(yaxs = yaxs)
+
     if (nfacets > 1) {
       # Set facet margins (i.e., gaps between facets)
       if (is.null(facet.args[["fmar"]])) {

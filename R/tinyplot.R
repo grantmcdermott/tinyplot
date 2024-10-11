@@ -290,7 +290,7 @@
 #'  specified.
 #' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
 #'   See `axes` for the possible values.
-#' @param ... other graphical parameters (see \code{\link[graphics]{par}}). 
+#' @param xaxs,yaxs,... other graphical parameters (see \code{\link[graphics]{par}}).
 #'
 #' @returns No return value, called for side effect of producing a plot.
 #'   
@@ -532,6 +532,8 @@ tinyplot.default = function(
     xaxt = NULL,
     yaxt = NULL,
     flip = FALSE,
+    xaxs = NULL,
+    yaxs = NULL,
     ...
     ) {
 
@@ -989,7 +991,7 @@ tinyplot.default = function(
     ymax = datapoints$ymax, ymin = datapoints$ymin,
     xaxt = xaxt, xlabs = xlabs, xlim = xlim,
     yaxt = yaxt, ylabs = ylabs, ylim = ylim,
-    flip = flip
+    flip = flip, xaxs = xaxs, yaxs = yaxs
   )
   list2env(facet_window_args, environment())
 

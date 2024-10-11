@@ -126,7 +126,7 @@ data_spineplot = function(off = NULL, ylevels = ylevels) {
         if(is.factor(datapoints$x)) {
             breaks = NULL
             off = if(is.null(off)) 0.02 else off/100
-            if (is.null(xlim)) xlim = c(0, 1 + (nlevels(datapoints$x) * nlevels(datapoints$by) - 1L) * off)
+            if (is.null(xlim)) xlim = c(0, 1 + (nlevels(datapoints$x) * pmax(1L, nlevels(datapoints$by)) - 1L) * off)
         } else {
             off = 0
             if (is.null(xlim)) xlim = c(0, 1)
@@ -157,6 +157,7 @@ data_spineplot = function(off = NULL, ylevels = ylevels) {
             xlim = xlim,
             ylim = ylim,
             axes = FALSE,
+            frame.plot = FALSE,
             spine_axes = axes, ## FIXME: how to stop outer function from drawing axes but preserving user spec?
             xaxt = "n",
             yaxt = "n",

@@ -54,6 +54,8 @@ tinyplot(x, ...)
   xaxt = NULL,
   yaxt = NULL,
   flip = FALSE,
+  xaxs = NULL,
+  yaxs = NULL,
   ...
 )
 
@@ -122,8 +124,6 @@ likely the names of existing vectors or columns of data frames. See the
 'Examples' section below, or the function
 \code{\link[grDevices]{xy.coords}} for details. If supplied separately, \code{x}
 and \code{y} must be of the same length.}
-
-\item{...}{other graphical parameters (see \code{\link[graphics]{par}}).}
 
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an
@@ -445,6 +445,8 @@ See \code{axes} for the possible values.}
 \item{flip}{logical. Should the plot orientation be flipped, so that the
 y-axis is on the horizontal plane and the x-axis is on the vertical plane?
 Default is FALSE.}
+
+\item{xaxs, yaxs, ...}{other graphical parameters (see \code{\link[graphics]{par}}).}
 
 \item{formula}{a \code{\link[stats]{formula}} that optionally includes
 grouping variable(s) after a vertical bar, e.g. \code{y ~ x | z}. One-sided

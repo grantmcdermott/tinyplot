@@ -676,6 +676,10 @@ tinyplot.default = function(
   datapoints[["facet"]] = if (!is.null(facet)) facet else ""
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
+  ## initialize empty list with information that type_data
+  ## can overwrite in order to pass on to type_draw
+  type_info = list()
+
   if (!is.null(type_data)) {
     fargs = list(
       datapoints = datapoints,
@@ -1108,7 +1112,8 @@ tinyplot.default = function(
             facet_by = facet_by,
             data_facet = idata,
             data_by = split_data,
-            flip = flip)
+            flip = flip,
+            type_info = type_info)
       }
     }
   }

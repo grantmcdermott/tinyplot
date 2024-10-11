@@ -14,12 +14,9 @@ type_spineplot = function(tol.ylab = 0.05, off = NULL, ylevels = NULL, col = NUL
 
 #' @importFrom grDevices gray.colors
 draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL) {
-    fun = function(data_facet, ifacet, ...) {
+    fun = function(data_facet, ifacet, type_info, ...) {
 
         ## TODO: handle flip argument
-
-        ## FIXME: how to obtain variables from $data() output list?
-        data_out <- function(x) parent.frame(n = 2L)[[x]]
 
         ## get data subset for current facet
         dat = data.frame(data_facet[[ifacet]])
@@ -27,7 +24,7 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
         ## set up frequency table
         x = dat$x
         x.categorical = is.factor(x)
-        breaks = data_out("breaks")
+        breaks = type_info[["breaks"]]
         if(!x.categorical) {
             x = cut(as.numeric(x), breaks = breaks, include.lowest = TRUE)
         }
@@ -82,7 +79,7 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
         rect(xleft, ybottom, xright, ytop, col = col) ## TODO: handle more graphical parameters and ...
 
         ## axes
-        if(data_out("spine_axes")) {
+        if(type_info[["axes"]]) {
             ## side --
             ## 1: either numeric or level names
             if(x.categorical)
@@ -153,16 +150,15 @@ data_spineplot = function(off = NULL, ylevels = ylevels) {
 
         out = list(
             datapoints = datapoints,
-            breaks = breaks,
             xlim = xlim,
             ylim = ylim,
             axes = FALSE,
             frame.plot = FALSE,
-            spine_axes = axes, ## FIXME: how to stop outer function from drawing axes but preserving user spec?
             xaxt = "n",
             yaxt = "n",
             xaxs = "i",
-            yaxs = "i"
+            yaxs = "i",
+            type_info = list(breaks = breaks, axes = axes)
         )
         return(out)
     }

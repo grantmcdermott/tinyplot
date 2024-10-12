@@ -463,13 +463,12 @@ draw_facet_window = function(grid, ...) {
 ## has the position "left", "right", "top", or "bottom" in the facet grid
 is_facet_position = function(position, ifacet, facet_window_args) {
   id = facet_window_args$ifacet
-  nr = facet_window_args$nfacet_rows
   nc = facet_window_args$nfacet_cols
-  gr = matrix(c(id, rep.int(0, nr * nc - length(id))), nrow = nr, ncol = nc, byrow = TRUE)
+  ni = tail(id, 1L)
   switch(position,
-    "left"   = col(gr)[which(ifacet == gr)] == 1L,
-    "right"  = col(gr)[which(ifacet == gr)] == nc || ifacet == which.max(id),
-    "top"    = row(gr)[which(ifacet == gr)] == 1L,
-    "bottom" = row(gr)[which(ifacet == gr)] == nr,
+    "left"   = ifacet %in% seq(1L, ni, by = nc),
+    "right"  = ifacet %in% pmin(ni, seq(1L, ni, by = nc) + nc - 1L),
+    "top"    = ifacet %in% head(id, nc),
+    "bottom" = ifacet %in% tail(id, nc),
     NA)
 }

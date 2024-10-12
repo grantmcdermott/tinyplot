@@ -687,6 +687,7 @@ tinyplot.default = function(
       by = by,
       col = col,
       facet = facet,
+      facet.args = facet.args,
       palette = palette,
       ribbon.alpha = ribbon.alpha,
       xaxt = xaxt,
@@ -1113,7 +1114,8 @@ tinyplot.default = function(
             data_facet = idata,
             data_by = split_data,
             flip = flip,
-            type_info = type_info)
+            type_info = type_info,
+            facet_window_args = facet_window_args)
       }
     }
   }

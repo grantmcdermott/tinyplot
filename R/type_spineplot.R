@@ -14,7 +14,7 @@ type_spineplot = function(tol.ylab = 0.05, off = NULL, ylevels = NULL, col = NUL
 
 #' @importFrom grDevices gray.colors
 draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL) {
-    fun = function(data_facet, ifacet, type_info, ...) {
+    fun = function(data_facet, ifacet, facet_window_args, type_info, ...) {
 
         ## TODO: handle flip argument
 
@@ -79,36 +79,33 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
         rect(xleft, ybottom, xright, ytop, col = col) ## TODO: handle more graphical parameters and ...
 
         ## axes
+        ## - standard categorical axes (xaxt/yaxt == "s") _without_ ticks
+        ## - never draw additional axis lines, box always for spinogram
         if(type_info[["axes"]]) {
-            ## side --
-            ## 1: either numeric or level names
-            if(x.categorical)
-                axis(1, at = (xat[1L:nx] + xat[2L:(nx+1L)] - off)/2,
-                     labels = xaxlabels, tick = FALSE)
-            else
-                axis(1, at = xat, labels = xaxlabels)
-
-            ## 2: axis with level names of y
-            yat = yat[,1L]
-            equidist = any(diff(yat) < tol.ylab)
-            yat = if(equidist) seq.int(1/(2*ny), 1-1/(2*ny), by = 1/ny)
-            else (yat[-1L] + yat[-length(yat)])/2
-            axis(2, at = yat, labels = yaxlabels, tick = FALSE)
-
-            ## 3: none
-            ## 4: simple numeric
-            axis(4)
+            if (type_info[["xaxt"]] != "n") {
+                if (x.categorical) {
+                    axis(1, at = (xat[1L:nx] + xat[2L:(nx+1L)] - off)/2, labels = xaxlabels, tick = type_info[["xaxt"]] == "t")
+                } else {
+                    axis(1, at = xat, labels = xaxlabels, tick = type_info[["xaxt"]] %in% c("s", "t"))
+                }
+            }
+            if (type_info[["yaxt"]] != "n") {
+                yat = yat[,1L]
+                equidist = any(diff(yat) < tol.ylab)
+                yat = if(equidist) seq.int(1/(2*ny), 1-1/(2*ny), by = 1/ny) else (yat[-1L] + yat[-length(yat)])/2
+                axis(2, at = yat, labels = yaxlabels, tick = type_info[["yaxt"]] == "t")
+                if (is_facet_position("right", ifacet, facet_window_args)) axis(4, tick = type_info[["yaxt"]] %in% c("s", "t"))
+            }
         }
         if(!x.categorical) box()
-
-        ## FIXME: where/how set xlim/ylim and draw axis labels?
     }
     return(fun)
 }
 
 #' @importFrom grDevices nclass.Sturges
 data_spineplot = function(off = NULL, ylevels = ylevels) {
-    fun = function(datapoints, breaks = NULL, weights = NULL, xlim = NULL, ylim = NULL, axes = TRUE, ...) {
+    fun = function(datapoints, breaks = NULL, weights = NULL,
+      facet = NULL, facet.args = NULL, xlim = NULL, ylim = NULL, axes = TRUE, xaxt = NULL, yaxt = NULL, ...) {
 
         ## process weights
         if (!is.null(weights)) {
@@ -148,8 +145,14 @@ data_spineplot = function(off = NULL, ylevels = ylevels) {
 	if (!is.null(ylevels)) datapoints$y = factor(y, levels = if(is.numeric(ylevels)) levels(y)[ylevels] else ylevels)
         if (is.null(ylim)) ylim = c(0, 1)
 
+        ## adjust facet margins
+        if (!is.null(facet) && is.null(facet.args[["fmar"]])) {
+          facet.args[["fmar"]] <- c(2, 2, 2, 2)
+        }
+
         out = list(
             datapoints = datapoints,
+            facet.args = facet.args,
             xlim = xlim,
             ylim = ylim,
             axes = FALSE,
@@ -158,13 +161,12 @@ data_spineplot = function(off = NULL, ylevels = ylevels) {
             yaxt = "n",
             xaxs = "i",
             yaxs = "i",
-            type_info = list(breaks = breaks, axes = axes)
+            type_info = list(breaks = breaks, axes = axes, xaxt = xaxt, yaxt = yaxt)
         )
         return(out)
     }
     return(fun)
 }
-
 
 ## aq = transform(
 ##   airquality,

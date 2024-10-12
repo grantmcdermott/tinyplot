@@ -33,10 +33,10 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
         ## FIXME: data_facet only contains the first by group?
         if (any(dat$by != "")) x = interaction(dat$by, x)
         if(is.null(dat$weights)) {
-            tab <- table(x, dat$y)
+            tab = table(x, dat$y)
         } else {
-            tab <- as.table(tapply(dat$weights, list(x, dat$y), FUN = sum, na.rm = TRUE))
-            tab[is.na(tab)] <- 0
+            tab = as.table(tapply(dat$weights, list(x, dat$y), FUN = sum, na.rm = TRUE))
+            tab[is.na(tab)] = 0
         }
         nx = nrow(tab)
         ny = ncol(tab)
@@ -48,7 +48,7 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
         if (is.null(yaxlabels)) yaxlabels = rev(levels(dat$y))
 
         ## axis labels
-        yaxlabels <- if(is.null(yaxlabels)) levels(y) else rep_len(yaxlabels, ny)
+        yaxlabels = if(is.null(yaxlabels)) levels(y) else rep_len(yaxlabels, ny)
         if(x.categorical) {
             xaxlabels = if(is.null(xaxlabels)) {
                 levels(x)
@@ -56,7 +56,7 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
                 rep_len(xaxlabels, nx)
             }
         } else {
-            xaxlabels <- if(is.null(xaxlabels)) {
+            xaxlabels = if(is.null(xaxlabels)) {
                 if(is.numeric(dat$x)) breaks else c(dat$x[1L], dat$x[c(diff(as.numeric(x)) > 0, TRUE)])
             } else {
                 rep_len(xaxlabels, nx + 1L)
@@ -147,7 +147,7 @@ data_spineplot = function(off = NULL, ylevels = ylevels) {
 
         ## adjust facet margins
         if (!is.null(facet) && is.null(facet.args[["fmar"]])) {
-          facet.args[["fmar"]] <- c(2, 2, 2, 2)
+          facet.args[["fmar"]] = c(2, 2, 2, 2)
         }
 
         out = list(
@@ -176,5 +176,5 @@ data_spineplot = function(off = NULL, ylevels = ylevels) {
 ## )
 ## tinyplot(Hot ~ Wind2, facet = ~ Month, data = aq, type = type_spineplot())
 ## 
-## ttnc <- as.data.frame(Titanic)
+## ttnc = as.data.frame(Titanic)
 ## tinyplot(Survived ~ Sex, facet = ~ Class, data = ttnc, weights = ttnc$Freq, type = type_spineplot())

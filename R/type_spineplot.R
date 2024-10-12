@@ -14,12 +14,13 @@ type_spineplot = function(tol.ylab = 0.05, off = NULL, ylevels = NULL, col = NUL
 
 #' @importFrom grDevices gray.colors
 draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL) {
-    fun = function(data_facet, ifacet, facet_window_args, type_info, ...) {
-
-        ## TODO: handle flip argument
+    fun = function(data_facet, ifacet, icol, ilty, ilwd, flip, facet_window_args, type_info, ...) {
 
         ## get data subset for current facet
         dat = data.frame(data_facet[[ifacet]])
+
+        ## handle flip internally in order to actually flip splitting direction
+        if (flip) names(dat)[c(which(names(dat) == "x"), which(names(dat) == "y"))] = c("y", "x")
 
         ## set up frequency table
         x = dat$x
@@ -31,7 +32,7 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
         ## TODO: process by grouping via: interaction + spacing + labeling
         ## (for now just do interaction)
         ## FIXME: data_facet only contains the first by group?
-        if (any(dat$by != "")) x = interaction(dat$by, x)
+        ## if (any(dat$by != "")) x = interaction(dat$by, x)
         if(is.null(dat$weights)) {
             tab = table(x, dat$y)
         } else {
@@ -42,7 +43,7 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
         ny = ncol(tab)
 
         ## graphical parameters
-        if (is.null(col)) col = gray.colors(ny)
+        if (is.null(col)) col = if (icol == "#000000FF") gray.colors(ny) else seq_palette(icol, ny)
         col = rep_len(col, ny)
         off = if(!x.categorical) 0 else if(is.null(off)) 0.02 else off/100
         if (is.null(yaxlabels)) yaxlabels = rev(levels(dat$y))
@@ -75,29 +76,36 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
         xright = rep(xat[2L:(nx+1L)] - off, rep(ny, nx))
 
         ## plot rectangles
-        col = rep(col, nx)
-        rect(xleft, ybottom, xright, ytop, col = col) ## TODO: handle more graphical parameters and ...
-
+        col = rep.int(col, nx)
+        if (type_info[["xaxt"]] %in% c("l", "t", "n") &&
+            type_info[["yaxt"]] %in% c("l", "t", "n") &&
+            !all(c(type_info[["xaxt"]], type_info[["yaxt"]]) == "n")) ilwd = 0
+        if (flip) {
+            rect(ybottom, xleft, ytop, xright, col = col, lty = ilty, lwd = ilwd)
+        } else {
+            rect(xleft, ybottom, xright, ytop, col = col, lty = ilty, lwd = ilwd)
+        }
+        
         ## axes
         ## - standard categorical axes (xaxt/yaxt == "s") _without_ ticks
         ## - never draw additional axis lines, box always for spinogram
         if(type_info[["axes"]]) {
-            if (type_info[["xaxt"]] != "n") {
-                if (x.categorical) {
-                    axis(1, at = (xat[1L:nx] + xat[2L:(nx+1L)] - off)/2, labels = xaxlabels, tick = type_info[["xaxt"]] == "t")
-                } else {
-                    axis(1, at = xat, labels = xaxlabels, tick = type_info[["xaxt"]] %in% c("s", "t"))
-                }
+            if (x.categorical) {
+                spine_axis(if (flip) 2 else 1, at = (xat[1L:nx] + xat[2L:(nx+1L)] - off)/2, labels = xaxlabels,
+                    type = type_info[["xaxt"]], categorical = TRUE)
+            } else {
+                spine_axis(if (flip) 2 else 1, at = xat, labels = xaxlabels,
+                    type = type_info[["xaxt"]], categorical = FALSE)
             }
-            if (type_info[["yaxt"]] != "n") {
-                yat = yat[,1L]
-                equidist = any(diff(yat) < tol.ylab)
-                yat = if(equidist) seq.int(1/(2*ny), 1-1/(2*ny), by = 1/ny) else (yat[-1L] + yat[-length(yat)])/2
-                axis(2, at = yat, labels = yaxlabels, tick = type_info[["yaxt"]] == "t")
-                if (is_facet_position("right", ifacet, facet_window_args)) axis(4, tick = type_info[["yaxt"]] %in% c("s", "t"))
-            }
+            yat = yat[, if(flip) ncol(yat) else 1L]
+            equidist = any(diff(yat) < tol.ylab)
+            yat = if(equidist) seq.int(1/(2*ny), 1-1/(2*ny), by = 1/ny) else (yat[-1L] + yat[-length(yat)])/2
+            spine_axis(if (flip) 3 else 2, at = yat, labels = yaxlabels,
+                type = type_info[["yaxt"]], categorical = TRUE)
+            if (is_facet_position(if(flip) "bottom" else "right", ifacet, facet_window_args)) spine_axis(if (flip) 1 else 4,
+                type = type_info[["yaxt"]], categorical = FALSE)
         }
-        if(!x.categorical) box()
+        if(!x.categorical && (is.null(ilwd) || ilwd > 0)) box()
     }
     return(fun)
 }
@@ -120,7 +128,7 @@ data_spineplot = function(off = NULL, ylevels = ylevels) {
         if(is.factor(datapoints$x)) {
             breaks = NULL
             off = if(is.null(off)) 0.02 else off/100
-            if (is.null(xlim)) xlim = c(0, 1 + (nlevels(datapoints$x) * pmax(1L, nlevels(datapoints$by)) - 1L) * off)
+            if (is.null(xlim)) xlim = c(0, 1 + (nlevels(datapoints$x) - 1L) * off)
         } else {
             off = 0
             if (is.null(xlim)) xlim = c(0, 1)
@@ -166,6 +174,52 @@ data_spineplot = function(off = NULL, ylevels = ylevels) {
         return(out)
     }
     return(fun)
+}
+
+spine_axis = function(side, ..., type = "standard", categorical = TRUE) {
+    type = match.arg(type, c("standard", "none", "labels", "ticks", "axis"))
+    ## standard: with axis, ticks (unless categorical), and labels
+    ## none: no axes
+    ## labels: only labels without ticks and axis line
+    ## ticks: only ticks and labels without axis line
+    ## axis: only axis line and labels but no ticks
+
+    if (type == "none") {
+        invisible(numeric(0L))
+    } else {
+        args = list(side = side, ...)
+        if (type == "labels") {
+            args$tick = FALSE
+        } else if (type == "ticks") {
+            args$lwd = 0
+            if (!("lwd.ticks" %in% names(args))) args$lwd.ticks = if (categorical) 0 else 1
+        } else if (type == "axis") {
+            if (categorical) {
+                args$tick = FALSE
+            } else {
+                args$lwd.ticks = 0
+            }
+        } else {
+            args$tick = !categorical
+        }
+        do.call("axis", args)
+    }
+}
+
+to_hcl = function(x) {
+    x = t(col2rgb(x)/255)
+    x = convertColor(x, from = "sRGB", to = "Luv")
+    x = cbind(H = atan2(x[, 3L], x[, 2L]) * 180/pi, C = sqrt(x[, 2L]^2 + x[, 3L]^2), L = x[, 1L])
+    x[is.na(x[, 1L]), 1L] = 0
+    x[x[, 1L] < 0, 1L] = x[x[, 1L] < 0, 1L] + 360
+    return(x)
+}
+
+seq_palette = function(x, n, power = 1.5) {
+    x = drop(to_hcl(x[1L]))
+    hcl(h = x[1L],
+        c = seq.int(from = x[2L]^(1/power), to = 0, length.out = n + 1)[1L:n]^power,
+        l = 100 - seq.int(from = (100 - x[3L])^(1/power), to = pmin(8, (100 - x[3L])/2)^(1/power), length.out = n)^power)[1L:n]
 }
 
 ## aq = transform(

@@ -206,6 +206,7 @@ spine_axis = function(side, ..., type = "standard", categorical = TRUE) {
     }
 }
 
+#' @importFrom grDevices col2rgb convertColor hcl
 to_hcl = function(x) {
     x = t(col2rgb(x)/255)
     x = convertColor(x, from = "sRGB", to = "Luv")

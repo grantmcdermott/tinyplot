@@ -290,7 +290,7 @@
 #'  specified.
 #' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
 #'   See `axes` for the possible values.
-#' @param ... other graphical parameters (see \code{\link[graphics]{par}}). 
+#' @param xaxs,yaxs,... other graphical parameters (see \code{\link[graphics]{par}}).
 #'
 #' @returns No return value, called for side effect of producing a plot.
 #'   
@@ -532,6 +532,8 @@ tinyplot.default = function(
     xaxt = NULL,
     yaxt = NULL,
     flip = FALSE,
+    xaxs = NULL,
+    yaxs = NULL,
     ...
     ) {
 
@@ -674,6 +676,10 @@ tinyplot.default = function(
   datapoints[["facet"]] = if (!is.null(facet)) facet else ""
   datapoints[["by"]] = if (!is.null(by)) by else ""
 
+  ## initialize empty list with information that type_data
+  ## can overwrite in order to pass on to type_draw
+  type_info = list()
+
   if (!is.null(type_data)) {
     fargs = list(
       datapoints = datapoints,
@@ -681,6 +687,7 @@ tinyplot.default = function(
       by = by,
       col = col,
       facet = facet,
+      facet.args = facet.args,
       palette = palette,
       ribbon.alpha = ribbon.alpha,
       xaxt = xaxt,
@@ -989,7 +996,7 @@ tinyplot.default = function(
     ymax = datapoints$ymax, ymin = datapoints$ymin,
     xaxt = xaxt, xlabs = xlabs, xlim = xlim,
     yaxt = yaxt, ylabs = ylabs, ylim = ylim,
-    flip = flip
+    flip = flip, xaxs = xaxs, yaxs = yaxs
   )
   list2env(facet_window_args, environment())
 
@@ -1106,7 +1113,9 @@ tinyplot.default = function(
             facet_by = facet_by,
             data_facet = idata,
             data_by = split_data,
-            flip = flip)
+            flip = flip,
+            type_info = type_info,
+            facet_window_args = facet_window_args)
       }
     }
   }

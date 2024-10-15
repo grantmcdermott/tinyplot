@@ -158,7 +158,9 @@ draw_legend = function(
   if (is.null(legend_args[["bty"]])) legend_args[["bty"]] = "n"
   if (is.null(legend_args[["horiz"]])) legend_args[["horiz"]] = FALSE
   if (is.null(legend_args[["xpd"]])) legend_args[["xpd"]] = NA
-  if (is.null(legend_args[["pt.bg"]])) legend_args[["pt.bg"]] = bg
+  if (is.null(legend_args[["pt.bg"]])) {
+    legend_args[["pt.bg"]] = if (identical(type, "spineplot")) legend_args[["col"]] else bg
+  }
   if (
     type %in% c("p", "pointrange", "errorbar") &&
     (length(col) == 1 || length(cex) == 1) &&
@@ -166,7 +168,7 @@ draw_legend = function(
   ) {
     legend_args[["pt.cex"]] = cex
   }
-  if (type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram") || isTRUE(gradient)) {
+  if (type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot") || isTRUE(gradient)) {
     legend_args[["pch"]] = 22
     if (is.null(legend_args[["pt.cex"]])) legend_args[["pt.cex"]] = 3.5
     if (is.null(legend_args[["pt.lwd"]]) && (!is.null(type) && !(type %in% c("rect", "polygon", "polypath", "boxplot")))) {
@@ -218,6 +220,9 @@ draw_legend = function(
   if (grepl("right!$|left!$", legend_args[["x"]])) {
     
     outer_right = grepl("right!$", legend_args[["x"]])
+    
+    # extra bump for spineplot if outer_right legend (to accommodate secondary y-axis)
+    if (identical(type, "spineplot")) lmar[1] = lmar[1] + 1.1
     
     ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
     if (outer_right) legend_args[["x"]] = gsub("right!$", "left", legend_args[["x"]])

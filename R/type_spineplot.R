@@ -111,10 +111,12 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
 }
 
 #' @importFrom grDevices nclass.Sturges
-data_spineplot = function(off = NULL, ylevels = ylevels) {
-    fun = function(datapoints, breaks = NULL, weights = NULL,
-      facet = NULL, facet.args = NULL, xlim = NULL, ylim = NULL, axes = TRUE, xaxt = NULL, yaxt = NULL, ...) {
-
+data_spineplot = function(off = NULL, ylevels = ylevels, ...) {
+    fun = function(
+      datapoints, breaks = NULL, weights = NULL,
+      facet = NULL, facet.args = NULL, xlim = NULL, ylim = NULL, axes = TRUE, xaxt = NULL, yaxt = NULL, ...
+    ) {
+      
         ## process weights
         if (!is.null(weights)) {
             ny = length(datapoints$y)

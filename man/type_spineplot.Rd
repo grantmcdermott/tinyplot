@@ -5,15 +5,21 @@
 \title{Spineplot and spinogram type}
 \usage{
 type_spineplot(
+  breaks = NULL,
   tol.ylab = 0.05,
   off = NULL,
   ylevels = NULL,
   col = NULL,
   xaxlabels = NULL,
-  yaxlabels = NULL
+  yaxlabels = NULL,
+  weights = NULL
 )
 }
 \arguments{
+\item{breaks}{if the explanatory variable is numeric, this controls how
+    it is discretized. \code{breaks} is passed to \code{\link[graphics]{hist}} and can
+    be a list of arguments.}
+
 \item{tol.ylab}{convenience tolerance parameter for y-axis annotation.
     If the distance between two labels drops under this threshold, they are
     plotted equidistantly.}
@@ -31,7 +37,51 @@ type_spineplot(
     Default to \code{levels(y)} and \code{levels(x)}, respectively for the
     spine plot. For \code{xaxlabels} in the spinogram, the breaks are
     used.}
+
+\item{weights}{numeric. A vector of frequency weights for each
+    observation in the data. If \code{NULL} all weights are implicitly
+    assumed to be 1. If \code{x} is already a 2-way table, the weights
+    are ignored.}
 }
 \description{
 Spineplot and spinogram type
+}
+\examples{
+# "spineplot" type convenience string
+tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot")
+
+# Use `type_spineplot()` to pass extra arguments for customization
+tinyplot(Species ~ Sepal.Width, data = iris, type = type_spineplot(breaks = 4))
+p = palette.colors(3, "Pastel 1")
+tinyplot(Species ~ Sepal.Width, data = iris, type = type_spineplot(breaks = 4, col = p))
+
+# Grouped and faceted spineplots
+
+ttnc = as.data.frame(Titanic)
+tinyplot(
+  Survived ~ Sex, facet = ~ Class, data = ttnc,
+  type = type_spineplot(weights = ttnc$Freq)
+)
+
+# For grouped "by" spineplots, it's better visually to facet as well
+tinyplot(
+  Survived ~ Sex | Class, facet = "by", data = ttnc,
+  type = type_spineplot(weights = ttnc$Freq)
+)
+
+# Fancier version. Note the smart inheritance of spacing etc.
+tinyplot(
+  Survived ~ Sex | Class, facet = "by", data = ttnc,
+  type = type_spineplot(weights = ttnc$Freq),
+  palette = "Dark 2", facet.args = list(nrow = 1), axes = "t"
+)
+
+# PS. If you really need to drop faceting for grouped spineplots, then at
+# least add alpha transparency
+tinyplot(
+  Survived ~ Sex | Class, data = ttnc,
+  type = type_spineplot(weights = ttnc$Freq),
+  alpha = 0.3
+)
+
 }

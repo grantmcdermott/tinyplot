@@ -1070,7 +1070,7 @@ tinyplot.default = function(
 
       # empty plot flag
       empty_plot = FALSE
-      if (isTRUE(empty) || isTRUE(type == "n") || ((length(ix) == 0) && !(type %in% c("histogram", "hist", "rect", "segments")))) {
+      if (isTRUE(empty) || isTRUE(type == "n") || ((length(ix) == 0) && !(type %in% c("histogram", "hist", "rect", "segments", "spineplot")))) {
         empty_plot = TRUE
       }
 

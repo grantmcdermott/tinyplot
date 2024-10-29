@@ -329,6 +329,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a> on the website.</li>
 </ul></li>
 <li>The new <code>flip</code> argument allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>tpar()</code> gains additional <code>grid.col</code>, <code>grid.lty</code>, and <code>grid.lwd</code> arguments for fine-grained control over the appearance of the default panel grid when <code>plt(..., grid = TRUE)</code> is called. (<a href="https://github.com/grantmcdermott/tinyplot/issues/237">#237</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Bug fixes:</p>
 <ul>

@@ -424,7 +424,7 @@ draw_facet_window = function(grid, ...) {
                   xg = pretty(as.Date(round(extendrange(xlim)), tz = tz))
                 }
               }
-              abline(v = xg, col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              abline(v = xg, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
               gnx = NA
             }
             if (!any(c(par("ylog"), type == "boxplot"))) {
@@ -439,10 +439,10 @@ draw_facet_window = function(grid, ...) {
                   yg = pretty(as.Date(extendrange(ylim), tz = tz))
                 }
               }
-              abline(h = yg, col = "lightgray", lty = "dotted", lwd = par("lwd"))
+              abline(h = yg, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
               gny = NA
             }
-            grid(nx = gnx, ny = gny)
+            grid(nx = gnx, ny = gny, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
           }
         } else {
           grid

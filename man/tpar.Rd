@@ -88,6 +88,15 @@ you should rather use \code{par()} instead.
 \code{grid} \tab\tab Logical indicating whether a background panel grid should be added to plots automatically. Defaults to NULL, which is equivalent to \code{FALSE}.\cr
 \tab\tab\cr
 \tab\tab\cr
+\code{grid.col} \tab\tab Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to \code{"lightgray"}.\cr
+\tab\tab\cr
+\tab\tab\cr
+\code{grid.lty} \tab\tab Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to \code{"dotted"}.\cr
+\tab\tab\cr
+\tab\tab\cr
+\code{grid.lwd} \tab\tab Non-negative numeric giving the line of the panel grid lines. Defaults to \code{1}.\cr
+\tab\tab\cr
+\tab\tab\cr
 \code{lmar} \tab\tab A numeric vector of form \code{c(inner, outer)} that gives the margin padding, in terms of lines, around the automatic \code{tinyplot} legend. Defaults to \code{c(1.0, 0.1)}, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is \code{"top!"}, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by \code{par("mar")[3]}.)\cr
 \tab\tab\cr
 \tab\tab\cr

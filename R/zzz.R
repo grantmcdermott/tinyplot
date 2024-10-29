@@ -29,6 +29,9 @@
   
   # Plot grid
   .tpar$grid = if(is.null(getOption("tinyplot_grid"))) FALSE else as.logical(getOption("tinyplot_grid"))
+  .tpar$grid.col = if(is.null(getOption("tinyplot_grid.col"))) "lightgray" else getOption("tinyplot_grid.col")
+  .tpar$grid.lty = if(is.null(getOption("tinyplot_grid.lty"))) "dotted" else getOption("tinyplot_grid.lty")
+  .tpar$grid.lwd = if(is.null(getOption("tinyplot_grid.lwd"))) 1 else as.numeric(getOption("tinyplot_grid.lwd"))
   
   # Legend margin, i.e. gap between the legend and the plot elements
   .tpar$lmar = if(is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))

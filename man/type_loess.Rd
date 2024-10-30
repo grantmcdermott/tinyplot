@@ -2,7 +2,7 @@
 % Please edit documentation in R/type_loess.R
 \name{type_loess}
 \alias{type_loess}
-\title{LOESS type}
+\title{Loess type}
 \usage{
 type_loess(
   span = 0.75,
@@ -25,7 +25,19 @@ type_loess(
     biweight function.  Can be abbreviated.}
 
 \item{control}{control parameters: see \code{\link[stats]{loess.control}}.}
+
+\item{se}{logical. If \code{TRUE} (the default), confidence intervals are drawn.}
+
+\item{level}{the confidence level required if \code{se = TRUE}. Default is 0.95.}
 }
 \description{
-LOESS type
+Type function for plotting a LOESS (LOcal regrESSion) fit.
+Arguments are passed to \code{\link[stats]{loess}}.
+}
+\examples{
+# "loess" type convenience string
+tinyplot(dist ~ speed, data = cars, type = "loess")
+
+# Use `type_loess()` to pass extra arguments for customization
+tinyplot(dist ~ speed, data = cars, type = type_loess(span = 0.5, degree = 1))
 }

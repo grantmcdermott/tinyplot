@@ -1,7 +1,18 @@
-#' LOESS type
+#' Loess type
+#' 
+#' @description Type function for plotting a LOESS (LOcal regrESSion) fit.
+#' Arguments are passed to \code{\link[stats]{loess}}.
 #' 
 #' @inheritParams stats::loess
+#' @param se logical. If `TRUE` (the default), confidence intervals are drawn.
+#' @param level the confidence level required if `se = TRUE`. Default is 0.95.
 #' @importFrom stats loess loess.control predict
+#' @examples
+#' # "loess" type convenience string
+#' tinyplot(dist ~ speed, data = cars, type = "loess")
+#' 
+#' # Use `type_loess()` to pass extra arguments for customization
+#' tinyplot(dist ~ speed, data = cars, type = type_loess(span = 0.5, degree = 1))
 #' @export
 type_loess = function(
     span = 0.75,

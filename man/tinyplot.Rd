@@ -216,6 +216,7 @@ set to \code{y}; see below).
 \item \code{"lm"} or \code{type_lm()}: Linear model fit
 \item \code{"glm"} or \code{type_glm()}: Generalized linear model fit
 \item \code{"loess"} or \code{type_loess()}: Local regression fit
+\item \code{"spline"} or \code{type_spline()}: Cubic spline fit
 }
 }}
 

@@ -33,6 +33,7 @@ types enable a variety of additional features. (#222 @vincentarelbundock)
     - `type_glm()` (shortcut: `"glm"`)
     - `type_lm()` (shortcut: `"lm"`)
     - `type_loess()` (shortcut: `"loess"`)
+    - `type_spline()` (shortcut: `"spline"`)
   - Explicit argument passing for modified behaviour type
   (e.g., `type_lm(se = FALSE)`).
   - Users can define their own custom types by creating `type_<typename>()`
@@ -44,6 +45,9 @@ types enable a variety of additional features. (#222 @vincentarelbundock)
   of the x and y axes. This should work regardless of plot type, e.g.
   `plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
   (#216 @grantmcdermott)
+- `tpar()` gains additional `grid.col`, `grid.lty`, and `grid.lwd` arguments for
+  fine-grained control over the appearance of the default panel grid when
+  `plt(..., grid = TRUE)` is called. (#237 @grantmcdermott)
 
 Bug fixes:
 

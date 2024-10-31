@@ -78,6 +78,15 @@
 #'   `grid` \tab\tab Logical indicating whether a background panel grid should be added to plots automatically. Defaults to NULL, which is equivalent to `FALSE`.\cr
 #'   \tab\tab\cr
 #'   \tab\tab\cr
+#'   `grid.col` \tab\tab Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to `"lightgray"`.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
+#'   `grid.lty` \tab\tab Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to `"dotted"`.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
+#'   `grid.lwd` \tab\tab Non-negative numeric giving the line of the panel grid lines. Defaults to `1`.\cr
+#'   \tab\tab\cr
+#'   \tab\tab\cr
 #'   `lmar` \tab\tab A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is `"top!"`, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by `par("mar")[3]`.)\cr
 #'   \tab\tab\cr
 #'   \tab\tab\cr
@@ -212,6 +221,23 @@ tpar = function(...) {
     if(!is.null(grid) && !is.logical(grid)) stop("grid needs to be NULL or logical")
     .tpar$grid = grid
   }
+  
+  if (length(opts$grid.col)) {
+    grid.col = opts$grid.col
+    .tpar$grid.col = grid.col
+  }
+  
+  if (length(opts$grid.lty)) {
+    grid.lty = opts$grid.lty
+    .tpar$grid.lty = grid.lty
+  }
+  
+  if (length(opts$grid.lwd)) {
+    grid.lwd = as.numeric(opts$grid.lwd)
+    if(!is.numeric(grid.lwd) || grid.lwd < 0) stop("grid.lwd needs to be a non-negative numeric")
+    .tpar$grid.lwd = grid.lwd
+  }
+  
   
   if (length(opts$lmar)) {
     lmar = as.numeric(opts$lmar)

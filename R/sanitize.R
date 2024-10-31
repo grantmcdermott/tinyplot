@@ -11,9 +11,9 @@ sanitize_type = function(type, x, y) {
         return(type)
     }
 
-    types = c("area", "boxplot", "density", "jitter", "ribbon", "pointrange", "hist", 
-        "histogram", "errorbar", "polygon", "polypath", "rect", "segments", "points", 
-        "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", "loess", "lm", "glm",
+    types = c("area", "boxplot", "density", "jitter", "ribbon", "pointrange", "hist",
+        "histogram", "errorbar", "polygon", "polypath", "rect", "segments", "points",
+        "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", "loess", "spline", "lm", "glm",
         "spineplot"
         )
     assert_choice(type, types, null.ok = TRUE)
@@ -47,6 +47,7 @@ sanitize_type = function(type, x, y) {
         "j" = type_jitter(),
         "jitter" = type_jitter(),
         "loess" = type_loess(),
+        "spline" = type_spline(),
         "glm" = type_glm(),
         "lm" = type_lm(),
         NULL  # Default case

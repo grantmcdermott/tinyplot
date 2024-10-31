@@ -33,6 +33,7 @@ types enable a variety of additional features. (#222 @vincentarelbundock)
     - `type_glm()` (shortcut: `"glm"`)
     - `type_lm()` (shortcut: `"lm"`)
     - `type_loess()` (shortcut: `"loess"`)
+    - `type_spline()` (shortcut: `"spline"`)
   - Explicit argument passing for modified behaviour type
   (e.g., `type_lm(se = FALSE)`).
   - Users can define their own custom types by creating `type_<typename>()`

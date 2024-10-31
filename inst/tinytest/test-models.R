@@ -38,6 +38,10 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "model_loess_by")
 
+f = function() {
+  plt(Temp ~ Day | factor(Month), data = airquality, type = type_spline())
+}
+expect_snapshot_plot(f, label = "model_spline_by")
 
 # facet
 f = function() {
@@ -56,3 +60,8 @@ f = function() {
   plt(Temp ~ Day | Month, data = airquality, facet = "by", type = type_loess())
 }
 expect_snapshot_plot(f, label = "model_loess_facet")
+
+f = function() {
+  plt(Temp ~ Day | Month, data = airquality, facet = "by", type = type_spline())
+}
+expect_snapshot_plot(f, label = "model_spline_facet")

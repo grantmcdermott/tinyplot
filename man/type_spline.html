@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>get_saved_par – tinyplot</title>
+<title>type_spline – tinyplot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -137,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/draw_legend.html">Reference</a></li><li class="breadcrumb-item"><a href="../man/get_saved_par.html">get_saved_par</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/draw_legend.html">Reference</a></li><li class="breadcrumb-item"><a href="../man/type_spline.html">type_spline</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -190,7 +190,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/get_saved_par.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/get_saved_par.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">get_saved_par</span></a>
   </div>
 </li>
@@ -256,7 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_spline.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/type_spline.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">type_spline</span></a>
   </div>
 </li>
@@ -290,13 +290,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#retrieve-the-saved-graphical-parameters" id="toc-retrieve-the-saved-graphical-parameters" class="nav-link active" data-scroll-target="#retrieve-the-saved-graphical-parameters">Retrieve the saved graphical parameters</a>
+  <li><a href="#spline-type" id="toc-spline-type" class="nav-link active" data-scroll-target="#spline-type">Spline type</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
-  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
@@ -308,15 +306,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="retrieve-the-saved-graphical-parameters" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="retrieve-the-saved-graphical-parameters">Retrieve the saved graphical parameters</h2>
+<section id="spline-type" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="spline-type">Spline type</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Convenience function for retrieving the graphical parameters (i.e., the full list of <code>tag = value</code> pairs held in <code>par</code>) from either immediately before or immediately after the most recent tinyplot call.</p>
+<p>Type function for plotting a cubic (or Hermite) spline interpolation. Arguments are passed to <code>spline</code>; see for default argument values.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">get_saved_par(when = c("before", "after"))
+<pre><code class="language-R">type_spline(
+  n = NULL,
+  method = "fmm",
+  xmin = NULL,
+  xmax = NULL,
+  xout = NULL,
+  ties = mean
+)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -324,106 +329,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table>
 <tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="when">when</code>
+<code id="n">n</code>
 </td>
 <td>
-character. From when should the saved parameters be retrieved? Either "before" (the default) or "after" the preceding <code>tinyplot</code> call.
+if <code>xout</code> is left unspecified, interpolation takes place at <code>n</code> equally spaced points spanning the interval [<code>xmin</code>, <code>xmax</code>].
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="method">method</code>
+</td>
+<td>
+specifies the type of spline to be used. Possible values are <code>“fmm”</code>, <code>“natural”</code>, <code>“periodic”</code>, <code>“monoH.FC”</code> and <code>“hyman”</code>. Can be abbreviated.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="xmin">xmin</code>, <code id="xmax">xmax</code>
+</td>
+<td>
+left-hand and right-hand endpoint of the interpolation interval (when <code>xout</code> is unspecified).
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="xout">xout</code>
+</td>
+<td>
+an optional set of values specifying where interpolation is to take place.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="ties">ties</code>
+</td>
+<td>
+handling of tied <code>x</code> values. The string <code>“ordered”</code> or a function (or the name of a function) taking a single vector argument and returning a single number or a length-2 <code>list</code> of both, see <code>approx</code> and its ‘Details’ section, and the example below.
 </td>
 </tr>
 </tbody></table>
-</section>
-<section id="details" class="level3">
-<h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>A potential side-effect of tinyplot is that it can change a user’s <code>par</code> settings. For example, it may adjust the inner and outer plot margins to make space for an automatic legend; see draw_legend. While it is possible to immediately restore the original <code>par</code> settings upon exit via the <code>tinyplot(…, restore.par = TRUE)</code> argument, this is not the default behaviour. The reason being that we need to preserve the adjusted parameter settings in case users want to add further graphical annotations to their plot (e.g., <code>abline</code>, <code>text</code>, etc.) Nevertheless, it may still prove desirable to recall and reset these original graphical parameters after the fact (e.g., once all these extra annotations have been added). That is the purpose of this get_saved_par function.</p>
-<p>Of course, users may prefer to manually capture and reset graphical parameters, as per the standard method described in the <code>par</code> documentation. For example:</p>
-<div class="sourceCode">
-<pre>op = par(no.readonly = TRUE)  # save current par settings 
-# &lt;do lots of (tiny)plotting&gt;
-par(op)                       # reset original pars
-</pre>
-</div>
-<p>This standard manual approach may be safer than get_saved_par because it offers more precise control. Specifically, the value of get_saved_par itself will be reset after ever new tinyplot call; i.e.&nbsp;it may inherit an already-changed set of parameters. Users should bear these trade-offs in mind when deciding which approach to use. As a general rule, get_saved_par offers the convenience of resetting the original <code>par</code> settings even if a user forgot to save them beforehand. But one should avoid invoking it after a series of consecutive tinyplot calls.</p>
-<p>Finally, note that users can always call <code>dev.off</code> to reset all <code>par</code> settings to their defaults.</p>
-</section>
-<section id="value" class="level3">
-<h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>A list of <code>par</code> settings.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrived example where we draw a grouped scatterplot with a legend and</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># manually add corresponding best fit lines for each group...</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># First draw the grouped scatterplot</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Preserving adjusted par settings is good for adding elements to our plot</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">levels</span>(iris<span class="sc">$</span>Species)) {</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Length, iris, <span class="at">subset =</span> Species<span class="sc">==</span>s),</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">which</span>(<span class="fu">levels</span>(iris<span class="sc">$</span>Species)<span class="sc">==</span>s)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># "spline" type convenience string</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars, <span class="at">type =</span> <span class="st">"spline"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Use `type_spline()` to pass extra arguments for customization</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars, <span class="at">type =</span> <span class="fu">type_spline</span>(<span class="at">method =</span> <span class="st">"natural"</span>, <span class="at">n =</span> <span class="dv">25</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="get_saved_par_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_spline_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get saved par from before the preceding tinyplot call (but don't use yet)</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">=</span> <span class="fu">get_saved_par</span>(<span class="st">"before"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Note the changed margins will affect regular plots too, which is probably</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># not desirable</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="get_saved_par_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset the original parameters (could use `par(sp)` here)</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tpar</span>(sp)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Redraw our simple plot with our corrected right margin</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick example going the other way, "correcting" for par.restore = TRUE...</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris, <span class="at">restore.par =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Our added best lines will be wrong b/c of misaligned par</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">levels</span>(iris<span class="sc">$</span>Species)) {</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Length, iris, <span class="at">subset =</span> Species<span class="sc">==</span>s),</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">which</span>(<span class="fu">levels</span>(iris<span class="sc">$</span>Species)<span class="sc">==</span>s), <span class="at">lty =</span> <span class="dv">2</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># grab the par settings from the _end_ of the preceding tinyplot call to fix</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tpar</span>(<span class="fu">get_saved_par</span>(<span class="st">"after"</span>))</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># now the best lines are correct</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">levels</span>(iris<span class="sc">$</span>Species)) {</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Length, iris, <span class="at">subset =</span> Species<span class="sc">==</span>s),</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">which</span>(<span class="fu">levels</span>(iris<span class="sc">$</span>Species)<span class="sc">==</span>s)</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="get_saved_par_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reset again to original saved par settings before exit</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tpar</span>(sp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

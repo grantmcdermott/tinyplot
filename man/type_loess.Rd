@@ -2,7 +2,7 @@
 % Please edit documentation in R/type_loess.R
 \name{type_loess}
 \alias{type_loess}
-\title{Loess type}
+\title{Local polynomial regression plot type}
 \usage{
 type_loess(
   span = 0.75,

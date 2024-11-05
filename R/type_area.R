@@ -1,3 +1,5 @@
+#' @rdname type_ribbon
+#' @export
 type_area = function() {
   out = list(
     draw = NULL,

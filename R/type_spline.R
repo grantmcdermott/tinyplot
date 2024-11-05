@@ -1,10 +1,11 @@
-#' Spline type
+#' Spline plot type
 #' 
 #' @description Type function for plotting a cubic (or Hermite) spline interpolation.
-#' Arguments are passed to \code{\link[stats]{spline}}; see for default argument
-#' values.
+#' Arguments are passed to \code{\link[stats]{spline}}; see this latter function
+#' for default argument values.
 #' 
 #' @inheritParams stats::spline
+#' @inherit stats::spline details
 #' @importFrom stats spline
 #' @examples
 #' # "spline" type convenience string

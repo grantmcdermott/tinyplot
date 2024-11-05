@@ -1,3 +1,38 @@
+#' Ribbon and area plot types
+#' 
+#' @description Type constructor functions for producing polygon ribbons, which 
+#' define a `y` interval (usually spanning from `ymin` to `ymax`) for each
+#' `x` value. Area plots are a special case of ribbon plot where `ymin` is
+#' set to 0 and `ymax` is set to `y`.
+#' 
+#' @examples
+#' x = 1:100/10
+#' y = sin(x)
+#' 
+#' #
+#' ## Ribbon plots
+#' 
+#' # "ribbon" convenience string
+#' tinyplot(x = x, ymin = y-1, ymax = y+1, type = "ribbon")
+
+#' # Same result with type_ribbon()
+#' tinyplot(x = x, ymin = y-1, ymax = y+1, type = type_ribbon())
+#' 
+#' # y will be added as a line if it is specified
+#' tinyplot(x = x, y = y, ymin = y-1, ymax = y+1, type = "ribbon")
+#'
+#' #
+#' ## Area plots
+#'   
+#' # "area" type convenience string
+#' tinyplot(x, y, type = "area")
+#' 
+#' # Same result with type_area()
+#' tinyplot(x, y, type = type_area())
+#' 
+#' # Area plots are often used for time series charts
+#' tinyplot(AirPassengers, type = "area")
+#' @export
 type_ribbon = function() {
   out = list(
     draw = draw_ribbon(),

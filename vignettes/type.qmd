@@ -2,12 +2,17 @@
 title: "Plot types"
 ---
 
-`tinyplot` is a lightweight extension of R's base plotting system, designed to simplify and enhance data visualization. One of its key features is the `type` argument, which allows you to specify different types of plots easily. This tutorial will guide you through the various plot types available in `tinyplot`, demonstrating how to use the `type` argument to create a wide range of visualizations.
+**tinyplot** is a lightweight extension of R's base plotting system, designed to
+simplify and enhance data visualization. One of its key features is the `type`
+argument, which allows you to specify different types of plots easily. This
+tutorial will guide you through the various plot types available in
+**tinyplot**, demonstrating how to use the `type` argument to create a wide
+range of visualizations.
 
 We will consider three categories of plot types:
 
 1. Base types
-2. `tinyplot` types
+2. **tinyplot** types
 3. Custom types
 
 We will use the built-in `airquality` dataset for our examples:
@@ -22,68 +27,66 @@ aq = transform(
 )
 ```
 
-# Base types
+## Base types
 
-The `type` argument in `tinyplot` supports all the standard plot types from base R's `plot` function. These are specified using single-character strings.
+The `type` argument in `tinyplot` supports all the standard plot types from
+base R's `plot` function. These are specified using single-character strings.
 
-The default plot type is `"p"`, which creates a scatter plot of points.
+- `"p"` (Points): Produces a scatter plot of points. This is (usually) the default plot type.
+- `"l"` (Lines): Produces a line plot.
+- `"b"` (Points and Lines): Combines points and lines in same the plot.
+- `"c"` (Empty Points Joined by Lines): Plots empty points connected by lines.
+- `"o"` (Overplotted Points and Lines): Overlaps points and lines.
+- `"s"` and `"S"` (Stair Steps): Creates a step plot.
+- `"h"` (Histogram-like Vertical Lines): Plots vertical lines resembling a histogram.
+- `"n"` (Empty Plot): Creates an empty plot frame without data.
+
+For example, we can use `"b"` to create a plot with combined points and lines.
 
 ```{r}
-tinyplot(Temp ~ Day | Month, data = aq, type = "p", main = "Points")
+tinyplot(Temp ~ Day | Month, data = aq, type = "b", main = "Points and lines")
 ```
 
-Use `"l"` to connect data points with lines.
+## tinyplot types
 
-```{r}
-tinyplot(Temp ~ Day | Month, data = aq, type = "l", main = "Lines")
-```
-
-Other base plot types supported as single-character strings: 
-
-* `b` (Points and Lines): Combines points and lines in the plot.
-* `c` (Empty Points Joined by Lines): Plots empty points connected by lines.
-* `o` (Overplotted Points and Lines): Overlaps points and lines.
-* `s` and `S` (Stair Steps): Creates a step plot.
-* `h` (Histogram-like Vertical Lines): Plots vertical lines resembling a histogram.
-* `n` (Empty Plot): Creates an empty plot frame without data.
-
-# `tinyplot` types
-
-Beyond the base types, `tinyplot` introduces additional plot types for more advanced visualizations. 
+Beyond the base types, **tinyplot** introduces additional plot types for more
+advanced visualizations. Each of these additional types are available either as
+a convenience string (with default behaviour) or a companion `type_*()` function
+(with options for customized behaviour).
 
 Models:
 
-- `loess`, `type_loess()`: Local regression curve.
-- `lm`, `type_lm()`: Linear regression line.
-- `glm`, `type_glm()`: Generalized linear model fit.
+- `"loess"` / `type_loess()`: Local regression curve.
+- `"lm"` / `type_lm()`: Linear regression line.
+- `"glm"` / `type_glm()`: Generalized linear model fit.
+- `"spline"` / `type_spline()`: Cubic (or Hermite) spline interpolation.
 
 Shapes:
 
-- `segments`: Draws line segments between pairs of points.
-- `polygon`: Draws filled polygons.
-- `errorbar`: Adds error bars to points; requires ymin and ymax.
-- `pointrange`: Combines points with error bars.
-- `ribbon`: Creates a filled area between ymin and ymax.
-- `area`: Plots the area under the curve from y = 0 to y = f(x).
-- `rect`: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
+- `area` / `type_area()`: Plots the area under the curve from `y` = 0 to `y` = f(`x`).
+- `rect` / `type_area()`: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
+- `ribbon` / `type_ribbon()`: Creates a filled area between `ymin` and `ymax`.
+- `"segments"` / `type_segements()`: Draws line segments between pairs of points.
+- `"polygon"` / `type_polygon()`: Draws polygons.
+- `"polypath"` / `type_polypath()`: Draws a path whose vertices are given in `x` and `y`.
+- `"errorbar"` / `type_errorbar()`: Adds error bars to points; requires `ymin` and `ymax`.
+- `pointrange` / `type_pointrange`: Combines points with error bars.
 
 Visualizations:
 
-- `jitter` / `type_jitter()`: Jittered points.
-- `boxplot` / `type_boxplot()`: Creates a box-and-whisker plot.
-- `histogram` / `type_histogram()`: Creates a histogram of a single variable.
-- `density`: Plots the density estimate of a variable.
+- `"jitter"` / `type_jitter()`: Jittered points.
+- `"boxplot"` / `type_boxplot()`: Creates a box-and-whisker plot.
+- `"histogram"` / `type_histogram()`: Creates a histogram of a single variable.
+- `"density"`: Plots the density estimate of a variable.
 
-There are two main ways to use `tinyplot` types. First, we can specify the type directly using a string shortcut in the `type` argument, such as `type="boxplot"`.
+To see the difference between the convenience strings and their respective
+companion `type_*` functions, let's quickly walk through two examples.
 
-Second, many `tinyplot` types are implemented by a `type_*()` function which includes arguments that allow us to customize the plot further. For example, the `type_jitter()` function includes arguments to control the amount of jittering, and the `type_glm()` includes an argument to control the width of the confidence interval to display. To see what arguments are available for each type, simply consult the type-specific documentation:
-
-```r
-?type_jitter
-?type_glm
-```
-
-For example, we can add noise to data points using the `"jitter"` type. This allows us to avoid overplotting and can be useful to visualize discrete variables. On the left, we use the string shortcut with default settings. On the right, we use the `type_jitter()` function to select a smaller amount of jittering:
+**Example 1: jittering.** We can add noise to data points using jittering. This
+allows us to avoid overplotting and can be useful to visualize discrete
+variables. On the left, we use the `"jitter` string shortcut with default
+settings. On the right, we use the `type_jitter()` function to reduce the amount
+of jittering.
 
 ```{r}
 #| layout-ncol: 2
@@ -98,7 +101,10 @@ tinyplot(
 )
 ```
 
-In this example, we use `type_glm()` to fit a logit regression model to the data, and display different confidence interval sizes:
+**Example 2: Logit fit.** In this example, we use `type_glm()` to fit a logistic
+regression model to the data, but with different confidence intervals.^[Note: If
+we simply specified the `"glm"` convenience string on its own, we'd get a linear
+fit since the default family is `gaussian`.]
 
 ```{r}
 #| layout-ncol: 2
@@ -113,17 +119,33 @@ tinyplot(
 )
 ```
 
-All `tinyplot` types should support grouping and faceting:
+To see what arguments are available for each type, simply consult the
+type-specific documentation.
+
+```r
+?type_jitter
+?type_glm
+# etc
+```
+
+Finally, please note that all **tinyplot** types support grouping and faceting.
 
 ```{r}
 tinyplot(Temp ~ Wind | Month, data = aq, facet = "by", type = "lm")
 ```
 
-# Custom types
+## Custom types
 
-It is easy to add custom types to `tinyplot`. Users who need highly customized plots, or developers who want to add support to their package or functions, only need to define three simple functions: `data_typename()`, `draw_typename()`, and `type_typename()`.
+It is easy to add custom types to **tinyplot**. Users who need highly customized
+plots, or developers who want to add support to their package or functions, only
+need to define three simple functions: `data_typename()`, `draw_typename()`, and
+`type_typename()`.
 
-In this section, we explain the role of each of these functions and present a minimalist example of a custom type. Interested readers may refer to [the `tinyplot` source code](https://github.com/grantmcdermott/tinyplot) to see many more examples, since each `tinyplot` type is itself implemented as a custom type.
+In this section, we explain the role of each of these functions and present a
+minimalist example of a custom type. Interested readers may refer to
+[the **tinyplot** source code](https://github.com/grantmcdermott/tinyplot)
+to see many more examples, since each **tinyplot** type is itself implemented as a
+custom type.
 
 The three functions that we need to define for a new type are:
 
@@ -144,9 +166,11 @@ The three functions that we need to define for a new type are:
     - `data`
     - `name`
 
-Here is a minimalist example of a custom type that logs both `x` and `y` and plots lines:
+Here is a minimalist example of a custom type that logs both `x` and `y` and
+plots lines.
 
 ```{r}
+#| layout-ncol: 2
 type_log = function(base = exp(1)) {
 
   data_log = function() {
@@ -180,12 +204,17 @@ type_log = function(base = exp(1)) {
 }
 
 tinyplot(mpg ~ wt | factor(am), data = mtcars,
-  type = "p", main = "Raw")
-
-tinyplot(mpg ~ wt | factor(am), data = mtcars,
   type = type_log(), main = "Ln")
 
 tinyplot(mpg ~ wt | factor(am), data = mtcars,
   type = type_log(base = 10), main = "Log 10")
 ```
 
+To underscore what we said above, the **tinyplot**
+[source code](https://github.com/grantmcdermott/tinyplot/tree/main/R)
+contains many examples of type constructor functions that should provide a
+helpful starting point for custom plot types. Failing that, the **tinyplot**
+team are always happy to help guide users on how to create their own types and
+re-purpose existing **tinyplot** code. Just let us know by
+[raising an issue](https://github.com/grantmcdermott/tinyplot/issues)
+on our GitHub repo.

@@ -44,7 +44,7 @@ data_lm = function(se, level, ...) {
                 nd$ymax = p$conf.high
                 nd$ymin = p$conf.low
             } else {
-                nd$y = predict(fit, nd)
+                nd$y = predict(fit, newdata = nd)
             }
             nd
         })

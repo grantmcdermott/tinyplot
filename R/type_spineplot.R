@@ -9,6 +9,13 @@
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_spineplot(breaks = 4))
 #' p = palette.colors(3, "Pastel 1")
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_spineplot(breaks = 4, col = p))
+#' rm(p)
+#' 
+#' # More idiomatic tinyplot way of drawing the previous plot: use y == by
+#' tinyplot(
+#'   Species ~ Sepal.Width | Species, data = iris, type = type_spineplot(breaks = 4),
+#'   palette = "Pastel 1", legend = FALSE
+#' )
 #' 
 #' # Grouped and faceted spineplots
 #' 
@@ -29,14 +36,6 @@
 #'   Survived ~ Sex | Class, facet = "by", data = ttnc,
 #'   type = type_spineplot(weights = ttnc$Freq),
 #'   palette = "Dark 2", facet.args = list(nrow = 1), axes = "t"
-#' )
-#' 
-#' # PS. If you really need to drop faceting for grouped spineplots, then at
-#' # least add alpha transparency
-#' tinyplot(
-#'   Survived ~ Sex | Class, data = ttnc,
-#'   type = type_spineplot(weights = ttnc$Freq),
-#'   alpha = 0.3
 #' )
 #' 
 #' @export

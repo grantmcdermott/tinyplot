@@ -15,13 +15,71 @@ website:
     contents:
       - text: Home
         file: index.qmd
-      - text: Tutorial
-        file: vignettes/intro_tutorial.qmd
-      - text: Plot types
-        file: vignettes/type.qmd
-      - text: Gallery
-        file: vignettes/gallery.qmd
-      - section: $ALTDOC_MAN_BLOCK
+      - section: Tutorials
+        contents:
+        - text: Introduction
+          file: vignettes/introduction.qmd
+        - text: Plot types
+          file: vignettes/types.qmd
+        - text: Gallery
+          file: vignettes/gallery.qmd
+      # - section: $ALTDOC_MAN_BLOCK
+      - section: Reference
+        contents:
+        - section: Plotting functions
+          contents:
+          - text: draw_legend
+            file: man/draw_legend.qmd
+          - text: tinyplot
+            file: man/tinyplot.qmd
+        - section: Plot types
+          contents:
+          #
+          - section: Shapes
+            contents:
+            - text: type_area, type_ribbon
+              file: man/type_ribbon.qmd
+            - text: type_errorbar, type_pointrange
+              file: man/type_errorbar.qmd
+            - text: type_lines
+              file: man/type_lines.qmd
+            - text: type_points
+              file: man/type_points.qmd
+            - text: type_polygon
+              file: man/type_polygon.qmd
+            - text: type_polypath
+              file: man/type_polypath.qmd
+            - text: type_rect
+              file: man/type_rect.qmd
+            - text: type_segments
+              file: man/type_segments.qmd
+          #
+          - section: Visualizations
+            contents:
+            - text: type_boxplot
+              file: man/type_boxplot.qmd
+            - text: type_histogram
+              file: man/type_histogram.qmd
+            - text: type_jitter
+              file: man/type_jitter.qmd
+          #
+          - section: Models
+            contents:
+            - text: type_glm
+              file: man/type_glm.qmd
+            - text: type_loess
+              file: man/type_loess.qmd
+            - text: type_lm
+              file: man/type_lm.qmd
+            - text: type_spline
+              file: man/type_spline.qmd
+        #
+        - section: Options
+          contents:
+          - text: tpar
+            file: man/tpar.qmd
+          - text: get_saved_par
+            file: man/get_saved_par.qmd
       - text: News
         file: $ALTDOC_NEWS
       - text: Changelog

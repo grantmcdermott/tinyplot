@@ -2,7 +2,7 @@
 % Please edit documentation in R/type_spline.R
 \name{type_spline}
 \alias{type_spline}
-\title{Spline type}
+\title{Spline plot type}
 \usage{
 type_spline(
   n = NULL,
@@ -36,8 +36,34 @@ type_spline(
 }
 \description{
 Type function for plotting a cubic (or Hermite) spline interpolation.
-Arguments are passed to \code{\link[stats]{spline}}; see for default argument
-values.
+Arguments are passed to \code{\link[stats]{spline}}; see this latter function
+for default argument values.
+}
+\details{
+The inputs can contain missing values which are deleted, so at least
+  one complete \code{(x, y)} pair is required.
+  If \code{method = "fmm"}, the spline used is that of
+  Forsythe, Malcolm and Moler
+  (an exact cubic is fitted through the four points at each
+  end of the data, and this is used to determine the end conditions).
+  Natural splines are used when \code{method = "natural"}, and periodic
+  splines when \code{method = "periodic"}.
+
+  The method \code{"monoH.FC"} computes a \emph{monotone} Hermite spline
+  according to the method of Fritsch and Carlson.  It does so by
+  determining slopes such that the Hermite spline, determined by
+  \eqn{(x_i,y_i,m_i)}{(x[i],y[i],m[i])}, is monotone (increasing or
+  decreasing) \bold{iff} the data are.
+
+  Method \code{"hyman"} computes a \emph{monotone} cubic spline using
+  Hyman filtering of an \code{method = "fmm"} fit for strictly monotonic
+  inputs.
+
+  These interpolation splines can also be used for extrapolation, that is
+  prediction at points outside the range of \code{x}.  Extrapolation
+  makes little sense for \code{method = "fmm"}; for natural splines it
+  is linear using the slope of the interpolating curve at the nearest
+  data point.
 }
 \examples{
 # "spline" type convenience string

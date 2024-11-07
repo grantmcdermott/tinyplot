@@ -68,7 +68,7 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
             }
         }
         datapoints$weights = weights
-
+        
         ## process x variable
         if(is.factor(datapoints$x)) {
             breaks = NULL
@@ -107,8 +107,17 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
         x = datapoints$x
         y = datapoints$y
         
-        datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
-        datapoints = Filter(function(k) nrow(k) > 0, datapoints)
+        x_by = identical(datapoints$x, datapoints$by)
+        y_by = identical(datapoints$y, datapoints$by)
+        # if either x_by or y_by are TRUE, we'll only split by facets and then
+        # use some simpl logic to assign colouring on the backend
+        if (isTRUE(x_by) || isTRUE(y_by)) {
+          datapoints = split(datapoints, list(datapoints$facet))
+          datapoints = Filter(function(k) nrow(k) > 0, datapoints)
+        } else {
+          datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
+          datapoints = Filter(function(k) nrow(k) > 0, datapoints)
+        }
         
         # construct spineplot rectangles and breaks points for each by-facet combo
         datapoints = Map(function(dat, x.categorical, off) {
@@ -184,6 +193,10 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
             rep_len(xaxlabels, nx + 1L)
           }
         }
+        
+        # catch for x_by / y/by
+        if (isTRUE(x_by)) datapoints$by = rep(xaxlabels, each = ny) # each x label extends over ny rows
+        if (isTRUE(y_by)) datapoints$by = rep(yaxlabels, length.out = nrow(datapoints))
           
         ## grayscale flag
         grayscale = length(unique(datapoints[["by"]])) == 1 && is.null(palette)
@@ -219,7 +232,9 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
             axes = axes,
             xaxt = xaxt, 
             yaxt = yaxt,
-            grayscale = grayscale
+            grayscale = grayscale,
+            x_by = x_by,
+            y_by = y_by
           ),
           facet.args = facet.args
         )
@@ -248,11 +263,15 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
       ny = type_info[["ny"]]
       x.categorical = type_info[["x.categorical"]]
       grayscale = type_info[["grayscale"]]
+      x_by = type_info[["x_by"]]
+      y_by = type_info[["y_by"]]
       
       ## graphical parameters
       if (is.null(col)) {
         if (is.null(ibg)) ibg = icol
-        ibg = if (isTRUE(grayscale)) gray.colors(ny) else seq_palette(ibg, ny)
+        if (isFALSE(y_by)) {
+          ibg = if (isTRUE(grayscale)) gray.colors(ny) else seq_palette(ibg, ny)
+        }
         ibg = rep_len(ibg, ny)
       } else {
         ibg = col

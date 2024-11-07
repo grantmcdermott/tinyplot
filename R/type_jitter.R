@@ -1,6 +1,16 @@
-#' Jittered points type
+#' Jittered points plot type
+#'
+#' @description Type function for plotting jittered points.
+#' Arguments are passed to \code{\link[base]{jitter}}.
 #'
 #' @inheritParams base::jitter
+#' @inherit base::jitter details
+#' @examples
+#' # "jitter" type convenience string
+#' tinyplot(Sepal.Length ~ Species, data = iris, type = "jitter")
+#' 
+#' # Use `type_jitter()` to pass extra arguments for customization
+#' tinyplot(Sepal.Length ~ Species, data = iris, type = type_jitter(factor = 0.5))
 #' @export
 type_jitter = function(factor = 1, amount = NULL) {
   out = list(

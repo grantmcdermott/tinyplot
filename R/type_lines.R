@@ -1,3 +1,17 @@
+#' Lines plot type
+#'
+#' @description Type function for plotting lines.
+#' 
+#' @inheritParams graphics::plot.default
+#' 
+#' @examples
+#' # "l" type convenience character string
+#' tinyplot(circumference ~ age | Tree, data = Orange, type = "l")
+#' 
+#' # Use `type_lines()` to pass extra arguments for customization
+#' tinyplot(circumference ~ age | Tree, data = Orange, type = type_lines(type = "s"))
+#' 
+#' @export
 type_lines = function(type = "l") {
   out = list(
     draw = draw_lines(type = type),

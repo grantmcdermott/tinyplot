@@ -1,10 +1,19 @@
-#' GLM type
+#' Generalized linear model plot type
+#' 
+#' @description Type function for plotting a generalized model fit.
+#' Arguments are passed to \code{\link[stats]{glm}}.
 #' 
 #' @param se logical. If TRUE, confidence intervals are drawn.
 #' @inheritParams stats::glm
 #' @inheritParams stats::predict.glm
 #' @inheritParams stats::confint
 #' @importFrom stats glm predict
+#' @examples
+#' # "glm" type convenience string
+#' tinyplot(am ~ mpg, data = mtcars, type = "glm")
+#' 
+#' # Use `type_glm()` to pass extra arguments for customization
+#' tinyplot(am ~ mpg, data = mtcars, type = type_glm(family = "binomial"))
 #' @export
 type_glm = function(family = "gaussian", se = TRUE, level = 0.95, type = "response") {
     assert_flag(se)

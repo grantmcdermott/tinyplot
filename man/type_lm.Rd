@@ -2,7 +2,7 @@
 % Please edit documentation in R/type_lm.R
 \name{type_lm}
 \alias{type_lm}
-\title{LM type}
+\title{Linear model plot type}
 \usage{
 type_lm(se = TRUE, level = 0.95)
 }
@@ -12,5 +12,13 @@ type_lm(se = TRUE, level = 0.95)
 \item{level}{the confidence level required.}
 }
 \description{
-LM type
+Type function for plotting a linear model fit.
+Arguments are passed to \code{\link[stats]{lm}}.
+}
+\examples{
+# "lm" type convenience string
+tinyplot(dist ~ speed, data = cars, type = "lm")
+
+# Use `type_lm()` to pass extra arguments for customization
+tinyplot(dist ~ speed, data = cars, type = type_lm(level = 0.9))
 }

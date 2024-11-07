@@ -1,4 +1,4 @@
-#' Histogram type
+#' Histogram plot type
 #' 
 #' @md
 #' @description Type function for histogram plots. `type_hist` is an alias for
@@ -14,6 +14,12 @@
 #' it was larger). If breaks is a function, the x vector is supplied to it as
 #' the only argument (and the number of breaks is only limited by the amount of
 #' available memory).
+#' @examples
+#' # "histogram"/"hist" type convenience string(s)
+#' tinyplot(Nile, type = "histogram")
+#' 
+#' # Use `type_histogram()` to pass extra arguments for customization
+#' tinyplot(Nile, type = type_histogram(breaks = 30))
 #' @export
 type_histogram = function(breaks = "Sturges") {
     out = list(

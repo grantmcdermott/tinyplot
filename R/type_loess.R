@@ -1,4 +1,4 @@
-#' Loess type
+#' Local polynomial regression plot type
 #' 
 #' @description Type function for plotting a LOESS (LOcal regrESSion) fit.
 #' Arguments are passed to \code{\link[stats]{loess}}.

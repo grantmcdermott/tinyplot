@@ -1,7 +1,6 @@
 # News
 
 _If you are viewing this file on CRAN, please check the
-http://www.polljunkie.com/poll/qnbeij/fini
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 

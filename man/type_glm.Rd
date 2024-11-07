@@ -2,7 +2,7 @@
 % Please edit documentation in R/type_glm.R
 \name{type_glm}
 \alias{type_glm}
-\title{GLM type}
+\title{Generalized linear model plot type}
 \usage{
 type_glm(family = "gaussian", se = TRUE, level = 0.95, type = "response")
 }
@@ -22,5 +22,13 @@ type_glm(family = "gaussian", se = TRUE, level = 0.95, type = "response")
     extract from the fitted model object.  Can be abbreviated.}
 }
 \description{
-GLM type
+Type function for plotting a generalized model fit.
+Arguments are passed to \code{\link[stats]{glm}}.
+}
+\examples{
+# "glm" type convenience string
+tinyplot(am ~ mpg, data = mtcars, type = "glm")
+
+# Use `type_glm()` to pass extra arguments for customization
+tinyplot(am ~ mpg, data = mtcars, type = type_glm(family = "binomial"))
 }

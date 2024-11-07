@@ -1,7 +1,16 @@
-#' LM type
-#' 
+#' Linear model plot type
+#'
+#' @description Type function for plotting a linear model fit.
+#' Arguments are passed to \code{\link[stats]{lm}}.
+#'  
 #' @inheritParams type_glm
 #' @importFrom stats lm predict
+#' @examples
+#' # "lm" type convenience string
+#' tinyplot(dist ~ speed, data = cars, type = "lm")
+#' 
+#' # Use `type_lm()` to pass extra arguments for customization
+#' tinyplot(dist ~ speed, data = cars, type = type_lm(level = 0.9))
 #' @export
 type_lm = function(se = TRUE, level = 0.95) {
     assert_flag(se)
@@ -35,7 +44,7 @@ data_lm = function(se, level, ...) {
                 nd$ymax = p$conf.high
                 nd$ymin = p$conf.low
             } else {
-                nd$y = predict(fit, nd)
+                nd$y = predict(fit, newdata = nd)
             }
             nd
         })

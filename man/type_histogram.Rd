@@ -3,7 +3,7 @@
 \name{type_histogram}
 \alias{type_histogram}
 \alias{type_hist}
-\title{Histogram type}
+\title{Histogram plot type}
 \usage{
 type_histogram(breaks = "Sturges")
 
@@ -27,4 +27,11 @@ available memory).
 \description{
 Type function for histogram plots. \code{type_hist} is an alias for
 \code{type_histogram}.
+}
+\examples{
+# "histogram"/"hist" type convenience string(s)
+tinyplot(Nile, type = "histogram")
+
+# Use `type_histogram()` to pass extra arguments for customization
+tinyplot(Nile, type = type_histogram(breaks = 30))
 }

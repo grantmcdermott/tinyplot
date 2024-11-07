@@ -1,3 +1,5 @@
+#' @rdname type_errorbar
+#' @export
 type_pointrange = function() {
   out = list(
     draw = draw_pointrange(),

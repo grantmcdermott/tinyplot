@@ -473,7 +473,6 @@ tinyplot(
   xmax = NULL,
   ymin = NULL,
   ymax = NULL,
-  ribbon.alpha = NULL,
   add = FALSE,
   file = NULL,
   width = NULL,
@@ -934,14 +933,6 @@ a logical value indicating whether the <code>par</code> settings prior to callin
 </td>
 <td>
 minimum and maximum coordinates of relevant area or interval plot types. Only used when the <code>type</code> argument is one of <code>“rect”</code> or <code>“segments”</code> (where all four min-max coordinates are required), or <code>“pointrange”</code>, <code>“errorbar”</code>, or <code>“ribbon”</code> (where only <code>ymin</code> and <code>ymax</code> required alongside <code>x</code>).
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="ribbon.alpha">ribbon.alpha</code>
-</td>
-<td>
-numeric factor modifying the opacity alpha of any ribbon shading; typically in <code style="white-space: pre;">[0, 1]</code>. Only used when <code>type = “ribbon”</code>, or when the <code>bg</code> fill argument is specified in a density plot (since filled density plots are converted to ribbon plots internally). If an an applicable plot type is called but no explicit value is provided, then will default to <code>tpar(“ribbon.alpha”)</code> (i.e., probably <code>0.2</code> unless this has been overridden by the user in their global settings.)
 </td>
 </tr>
 <tr>

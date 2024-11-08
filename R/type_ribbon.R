@@ -1,5 +1,10 @@
 #' Ribbon and area plot types
 #' 
+#' @param alpha numeric value between 0 and 1 specifying the opacity of ribbon shading
+#'   If no `alpha` value is provided, then will default to `tpar("ribbon.alpha")` 
+#'   (i.e., probably `0.2` unless this has been overridden by the user in their global 
+#'   settings.)
+#'
 #' @description Type constructor functions for producing polygon ribbons, which 
 #' define a `y` interval (usually spanning from `ymin` to `ymax`) for each
 #' `x` value. Area plots are a special case of ribbon plot where `ymin` is
@@ -33,10 +38,10 @@
 #' # Area plots are often used for time series charts
 #' tinyplot(AirPassengers, type = "area")
 #' @export
-type_ribbon = function() {
+type_ribbon = function(alpha = NULL) {
   out = list(
     draw = draw_ribbon(),
-    data = data_ribbon(),
+    data = data_ribbon(ribbon.alpha = alpha),
     name = "ribbon"
   )
   class(out) = "tinyplot_type"
@@ -59,7 +64,8 @@ draw_ribbon = function() {
 }
 
 
-data_ribbon = function() {
+data_ribbon = function(ribbon.alpha = NULL) {
+    ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
     fun = function(datapoints, xlabs, ...) {
         # Convert x to factor if it's not already
         if (is.character(datapoints$x)) {
@@ -102,7 +108,8 @@ data_ribbon = function() {
             ymin = datapoints$ymin,
             ymax = datapoints$ymax,
             xlabs = xlabs,
-            datapoints = datapoints)
+            datapoints = datapoints,
+            ribbon.alpha = ribbon.alpha)
 
         if (length(unique(datapoints$by)) > 1) out[["by"]] = datapoints$by
         if (length(unique(datapoints$facet)) > 1) out[["facet"]] = datapoints$facet

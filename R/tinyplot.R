@@ -248,13 +248,6 @@
 #'   longer discussion about the trade-offs involved.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
-#' @param ribbon.alpha numeric factor modifying the opacity alpha of any ribbon
-#'   shading; typically in `[0, 1]`. Only used when `type = "ribbon"`, or when
-#'   the `bg` fill argument is specified in a density plot (since filled density
-#'   plots are converted to ribbon plots internally). If an an applicable plot
-#'   type is called but no explicit value is provided, then will default to
-#'   `tpar("ribbon.alpha")` (i.e., probably `0.2` unless this has been
-#'   overridden by the user in their global settings.)
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
 #'   added elements will be turned off.
@@ -524,7 +517,6 @@ tinyplot.default = function(
     xmax = NULL,
     ymin = NULL,
     ymax = NULL,
-    ribbon.alpha = NULL,
     add = FALSE,
     file = NULL,
     width = NULL,
@@ -540,9 +532,8 @@ tinyplot.default = function(
 
   if (isTRUE(add)) legend = FALSE
   
-  # sanitize arguments
-  ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
 
+  # sanitize arguments
 
   # type factories vs. strings
   type = sanitize_type(type, x, y)
@@ -556,6 +547,9 @@ tinyplot.default = function(
   palette = substitute(palette)
 
   xlabs = ylabs = NULL
+
+  # will be overwritten by some type_data() functions and ignored by others
+  ribbon.alpha = sanitize_ribbon.alpha(NULL)
 
   ## handle defaults of axes, xaxt, yaxt, frame.plot
   ## - convert axes to character if necessary

@@ -7,7 +7,13 @@
 \usage{
 type_area()
 
-type_ribbon()
+type_ribbon(alpha = NULL)
+}
+\arguments{
+\item{alpha}{numeric value between 0 and 1 specifying the opacity of ribbon shading
+If no \code{alpha} value is provided, then will default to \code{tpar("ribbon.alpha")}
+(i.e., probably \code{0.2} unless this has been overridden by the user in their global
+settings.)}
 }
 \description{
 Type constructor functions for producing polygon ribbons, which

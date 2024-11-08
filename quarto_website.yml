@@ -62,6 +62,8 @@ website:
               file: man/type_histogram.qmd
             - text: type_jitter
               file: man/type_jitter.qmd
+            - text: type_spineplot
+              file: man/type_spineplot.qmd
           #
           - section: Models
             contents:

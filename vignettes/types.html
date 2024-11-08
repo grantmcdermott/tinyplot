@@ -311,6 +311,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">type_jitter</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_spineplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_spineplot</span></a>
+  </div>
+</li>
       </ul>
   </li>
           <li class="sidebar-item sidebar-item-section">
@@ -496,10 +502,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Visualizations:</p>
 <ul>
-<li><code>"jitter"</code> / <code>type_jitter()</code>: Jittered points.</li>
 <li><code>"boxplot"</code> / <code>type_boxplot()</code>: Creates a box-and-whisker plot.</li>
-<li><code>"histogram"</code> / <code>type_histogram()</code>: Creates a histogram of a single variable.</li>
 <li><code>"density"</code>: Plots the density estimate of a variable.</li>
+<li><code>"histogram"</code> / <code>type_histogram()</code>: Creates a histogram of a single variable.</li>
+<li><code>"jitter"</code> / <code>type_jitter()</code>: Jittered points.</li>
+<li><code>"spineplot"</code> / <code>type_spineplot()</code>: Creates a spineplot or spinogram.</li>
 </ul>
 <p>To see the difference between the convenience strings and their respective companion <code>type_*</code> functions, let’s quickly walk through two examples.</p>
 <p><strong>Example 1: jittering.</strong> We can add noise to data points using jittering. This allows us to avoid overplotting and can be useful to visualize discrete variables. On the left, we use the <code>"jitter</code> string shortcut with default settings. On the right, we use the <code>type_jitter()</code> function to reduce the amount of jittering.</p>

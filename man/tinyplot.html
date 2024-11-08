@@ -311,6 +311,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">type_jitter</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_spineplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_spineplot</span></a>
+  </div>
+</li>
       </ul>
   </li>
           <li class="sidebar-item sidebar-item-section">
@@ -476,6 +482,8 @@ tinyplot(
   xaxt = NULL,
   yaxt = NULL,
   flip = FALSE,
+  xaxs = NULL,
+  yaxs = NULL,
   ...
 )
 
@@ -549,14 +557,6 @@ tinyplot(
 </td>
 <td>
 the x and y arguments provide the x and y coordinates for the plot. Any reasonable way of defining the coordinates is acceptable; most likely the names of existing vectors or columns of data frames. See the ‘Examples’ section below, or the function <code>xy.coords</code> for details. If supplied separately, <code>x</code> and <code>y</code> must be of the same length.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="...">…</code>
-</td>
-<td>
-other graphical parameters (see <code>par</code>).
 </td>
 </tr>
 <tr>
@@ -998,6 +998,14 @@ character specifying the type of x-axis and y-axis, respectively. See <code>axes
 </td>
 <td>
 logical. Should the plot orientation be flipped, so that the y-axis is on the horizontal plane and the x-axis is on the vertical plane? Default is FALSE.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="xaxs">xaxs</code>, <code id="yaxs">yaxs</code>, <code id="...">…</code>
+</td>
+<td>
+other graphical parameters (see <code>par</code>).
 </td>
 </tr>
 <tr>

@@ -536,6 +536,10 @@ tinyplot.default = function(
     ...
     ) {
 
+  # save for plt_add()
+  options(tinyplot_last_call = match.call(tinyplot, 
+    call = sys.call(sys.parent()), expand.dots = TRUE))
+
   dots = list(...)
 
   if (isTRUE(add)) legend = FALSE

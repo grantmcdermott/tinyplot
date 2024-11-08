@@ -438,6 +438,27 @@ tinyplot(
 The `facet.args` customizations can also be set globally via the `tpar()`
 function, which provides a nice segue to our penultimate section.
 
+## Layers
+
+In many contexts, it is convenient to build plots step-by-step, adding layers with different elements on top of a base. 
+
+The `tinyplot()` function includes an `add=TRUE` argument that adds element to an existing plot, instead of drawing a new window. This argument is useful, but a bit verbose, as it requires users to make very similar successive calls, with many shared arguments.
+
+For convenience, the package also includes a `tinyplot_add()` function which captures the last `tinyplot()` call, keeps all the same arguments, and modifies just the arguments that the user explicitly wants to change. 
+
+In the following example, we first draw linear regression lines with facets and group coloring. Then, we add the original data points using `tinyplot_add()`. Notice that the same grouping and data options are carried over to points, without having to specify them in the `tinyplot_add()` function.
+
+```{r}
+library(tinyplot)
+
+tinyplot(Sepal.Width ~ Sepal.Length | Species,
+         facet = ~Species,
+         data = iris, 
+         type = type_lm())
+
+tinyplot_add(type = "p")
+```
+
 ## Themes
 
 Customizing your plots further is straightforward, whether that is done directly

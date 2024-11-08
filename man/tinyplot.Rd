@@ -45,7 +45,6 @@ tinyplot(x, ...)
   xmax = NULL,
   ymin = NULL,
   ymax = NULL,
-  ribbon.alpha = NULL,
   add = FALSE,
   draw = NULL,
   file = NULL,
@@ -55,6 +54,8 @@ tinyplot(x, ...)
   xaxt = NULL,
   yaxt = NULL,
   flip = FALSE,
+  xaxs = NULL,
+  yaxs = NULL,
   ...
 )
 
@@ -123,8 +124,6 @@ likely the names of existing vectors or columns of data frames. See the
 'Examples' section below, or the function
 \code{\link[grDevices]{xy.coords}} for details. If supplied separately, \code{x}
 and \code{y} must be of the same length.}
-
-\item{...}{other graphical parameters (see \code{\link[graphics]{par}}).}
 
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an
@@ -390,14 +389,6 @@ or interval plot types. Only used when the \code{type} argument is one of
 or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{ymin} and
 \code{ymax} required alongside \code{x}).}
 
-\item{ribbon.alpha}{numeric factor modifying the opacity alpha of any ribbon
-shading; typically in \verb{[0, 1]}. Only used when \code{type = "ribbon"}, or when
-the \code{bg} fill argument is specified in a density plot (since filled density
-plots are converted to ribbon plots internally). If an an applicable plot
-type is called but no explicit value is provided, then will default to
-\code{tpar("ribbon.alpha")} (i.e., probably \code{0.2} unless this has been
-overridden by the user in their global settings.)}
-
 \item{add}{logical. If TRUE, then elements are added to the current plot rather
 than drawing a new plot window. Note that the automatic legend for the
 added elements will be turned off.}
@@ -455,6 +446,8 @@ See \code{axes} for the possible values.}
 \item{flip}{logical. Should the plot orientation be flipped, so that the
 y-axis is on the horizontal plane and the x-axis is on the vertical plane?
 Default is FALSE.}
+
+\item{xaxs, yaxs, ...}{other graphical parameters (see \code{\link[graphics]{par}}).}
 
 \item{formula}{a \code{\link[stats]{formula}} that optionally includes
 grouping variable(s) after a vertical bar, e.g. \code{y ~ x | z}. One-sided

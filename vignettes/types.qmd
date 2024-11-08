@@ -74,10 +74,11 @@ Shapes:
 
 Visualizations:
 
-- `"jitter"` / `type_jitter()`: Jittered points.
 - `"boxplot"` / `type_boxplot()`: Creates a box-and-whisker plot.
-- `"histogram"` / `type_histogram()`: Creates a histogram of a single variable.
 - `"density"`: Plots the density estimate of a variable.
+- `"histogram"` / `type_histogram()`: Creates a histogram of a single variable.
+- `"jitter"` / `type_jitter()`: Jittered points.
+- `"spineplot"` / `type_spineplot()`: Creates a spineplot or spinogram.
 
 To see the difference between the convenience strings and their respective
 companion `type_*` functions, let's quickly walk through two examples.

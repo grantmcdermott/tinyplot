@@ -22,6 +22,8 @@ functional equivalents (here: `type_histogram()`) are where we can customize
 behaviour by passing appropriate arguments. We're sorry to introduce a breaking
 change, but this new approach should ensure that users have better control of
 how their plots behave, and avoids guesswork on our side.
+- `ribbon.alpha` is deprecated in `tinyplot()`. Use the `alpha` argument of the
+`type_ribbon()` function instead: `plt(..., type = type_ribbon(alpha = 0.5))`
 
 New features:
 
@@ -33,13 +35,17 @@ types enable a variety of additional features. (#222 @vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`)
     - `type_loess()` (shortcut: `"loess"`)
     - `type_spline()` (shortcut: `"spline"`)
+  - New `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
+  plots and spinograms. These are modified versions of a histogram or mosaic
+  plot, and are particularly useful for visualizing factor variables. (#233
+  @zeileis with contributions from @grantmcdermott)
   - Explicit argument passing for modified behaviour type
   (e.g., `type_lm(se = FALSE)`).
   - Users can define their own custom types by creating `type_<typename>()`
   functions.
   - More details are provided in the dedicated
   [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html)
-  on the website.
+  on the website.)
 - The new `flip` argument allows for easily flipping (swapping) the orientation
   of the x and y axes. This should work regardless of plot type, e.g.
   `plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
@@ -60,6 +66,9 @@ character variable automatically being coerced to a factor. (#219 @zeileis)
 (#223 @grantmcdermott)
 - Ribbon plots without `ymin` or `ymax` args, now inherit these values from `y`
 (#224 @grantmcdermott)
+- Plots where `y` is a factor now work automatically, dispatching to the new
+`type_spineplot()` type. Thanks to @zeileis for the original suggestion all the
+way back in #2 and the eventual solution in #233. 
 
 Internals:
 

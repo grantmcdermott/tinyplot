@@ -50,8 +50,13 @@ Spineplot and spinogram type
 # "spineplot" type convenience string
 tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot")
 
+# Aside: specifying the type is redundant for this example, since tinyplot
+# default's to "spineplot" if y is a factor (just like base plot).
+tinyplot(Species ~ Sepal.Width, data = iris)
+
 # Use `type_spineplot()` to pass extra arguments for customization
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_spineplot(breaks = 4))
+
 p = palette.colors(3, "Pastel 1")
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_spineplot(breaks = 4, col = p))
 rm(p)
@@ -65,6 +70,7 @@ tinyplot(
 # Grouped and faceted spineplots
 
 ttnc = as.data.frame(Titanic)
+
 tinyplot(
   Survived ~ Sex, facet = ~ Class, data = ttnc,
   type = type_spineplot(weights = ttnc$Freq)
@@ -81,6 +87,13 @@ tinyplot(
   Survived ~ Sex | Class, facet = "by", data = ttnc,
   type = type_spineplot(weights = ttnc$Freq),
   palette = "Dark 2", facet.args = list(nrow = 1), axes = "t"
+)
+
+# Note: It's possible to use "by" on its own (without faceting), but the
+# overlaid result isn't great. We will likely overhaul this behaviour in a
+# future version of tinyplot...
+tinyplot(Survived ~ Sex | Class, data = ttnc,
+  type = type_spineplot(weights = ttnc$Freq), alpha = 0.3
 )
 
 }

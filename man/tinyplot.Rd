@@ -47,6 +47,7 @@ tinyplot(x, ...)
   ymax = NULL,
   ribbon.alpha = NULL,
   add = FALSE,
+  draw = NULL,
   file = NULL,
   width = NULL,
   height = NULL,
@@ -401,6 +402,14 @@ overridden by the user in their global settings.)}
 than drawing a new plot window. Note that the automatic legend for the
 added elements will be turned off.}
 
+\item{draw}{a function that draws directly on the plot canvas (before \code{x} and
+\code{y} are plotted). The \code{draw} argument is primarily useful for adding common
+elements to each facet of a faceted plot, e.g.
+\code{\link[graphics]{abline}} or \code{\link[graphics]{text}}. Note that
+this argument is somewhat experimental and that \emph{no} internal checking is
+done for correctness; the provided argument is simply captured and
+evaluated as-is. See Examples.}
+
 \item{file}{character string giving the file path for writing a plot to disk.
 If specified, the plot will not be displayed interactively, but rather sent
 to the appropriate external graphics device (i.e.,
@@ -602,6 +611,15 @@ tinyplot(
  Temp ~ Day,
  facet = windy ~ hot,
  data = aq
+)
+
+# To add common elements to each facet, use the `draw` argument
+
+tinyplot(
+ Temp ~ Day,
+ facet = windy ~ hot,
+ data = aq,
+ draw = abline(h = 75, lty = 2, col = "hotpink")
 )
 
 # The (automatic) legend position and look can be customized using

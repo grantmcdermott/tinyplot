@@ -41,3 +41,16 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "ribbon_no_yminymax")
+
+
+f = function() {
+  with(
+    mtcars2,
+    tinyplot(
+      x = wt, y = fit,
+      ymin = lwr, ymax = upr,
+      type = type_ribbon(alpha = .5)
+    )
+  )
+}
+expect_snapshot_plot(f, label = "ribbon_alpha50")

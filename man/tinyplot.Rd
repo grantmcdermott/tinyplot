@@ -45,7 +45,6 @@ tinyplot(x, ...)
   xmax = NULL,
   ymin = NULL,
   ymax = NULL,
-  ribbon.alpha = NULL,
   add = FALSE,
   file = NULL,
   width = NULL,
@@ -388,14 +387,6 @@ or interval plot types. Only used when the \code{type} argument is one of
 \code{"rect"} or \code{"segments"} (where all four min-max coordinates are required),
 or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{ymin} and
 \code{ymax} required alongside \code{x}).}
-
-\item{ribbon.alpha}{numeric factor modifying the opacity alpha of any ribbon
-shading; typically in \verb{[0, 1]}. Only used when \code{type = "ribbon"}, or when
-the \code{bg} fill argument is specified in a density plot (since filled density
-plots are converted to ribbon plots internally). If an an applicable plot
-type is called but no explicit value is provided, then will default to
-\code{tpar("ribbon.alpha")} (i.e., probably \code{0.2} unless this has been
-overridden by the user in their global settings.)}
 
 \item{add}{logical. If TRUE, then elements are added to the current plot rather
 than drawing a new plot window. Note that the automatic legend for the

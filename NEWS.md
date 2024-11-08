@@ -22,6 +22,8 @@ functional equivalents (here: `type_histogram()`) are where we can customize
 behaviour by passing appropriate arguments. We're sorry to introduce a breaking
 change, but this new approach should ensure that users have better control of
 how their plots behave, and avoids guesswork on our side.
+- `ribbon.alpha` is deprecated in `tinyplot()`. Use the `alpha` argument of the
+`type_ribbon()` function instead: `plt(..., type = type_ribbon(alpha = 0.5))`
 
 New features:
 

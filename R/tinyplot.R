@@ -540,6 +540,10 @@ tinyplot.default = function(
   options(tinyplot_last_call = match.call(tinyplot, 
     call = sys.call(sys.parent()), expand.dots = TRUE))
 
+  ## TODO: remove the global option above and move to this when density is refactored
+  # cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
+  # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
+
   dots = list(...)
 
   if (isTRUE(add)) legend = FALSE

@@ -1,11 +1,14 @@
 source("helpers.R")
 using("tinysnapshot")
 
+# first test
+expect_error(tinyplot_add(type = "p"), pattern = "No previous tinyplot")
+
 f = function() {
   tinyplot(Sepal.Width ~ Sepal.Length | Species,
            facet = ~Species,
            data = iris, 
-           type = type_lm())
-  tinyplot_add(type = "p")
+           type = "p")
+  tinyplot_add(type = type_lm())
 }
 expect_snapshot_plot(f, label = "tinyplot_add")

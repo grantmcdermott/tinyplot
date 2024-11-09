@@ -409,12 +409,7 @@ tinyplot(
   ylim = c(50, 100),
   main = "Actual and predicted air temperatures"
 )
-tinyplot(
-  Temp ~ Day | Month, aq,
-  facet = "by", facet.args = list(bg = "grey90"),
-  palette = "dark2",
-  add = TRUE
-)
+tinyplot_add(type = "p")
 ```
 
 Note that the `facet` argument also accepts a _two-sided_ formula for arranging
@@ -444,7 +439,7 @@ In many contexts, it is convenient to build plots step-by-step, adding layers wi
 
 The `tinyplot()` function includes an `add=TRUE` argument that adds element to an existing plot, instead of drawing a new window. This argument is useful, but a bit verbose, as it requires users to make very similar successive calls, with many shared arguments.
 
-For convenience, the package also includes a `tinyplot_add()` function which captures the last `tinyplot()` call, keeps all the same arguments, and modifies just the arguments that the user explicitly wants to change. 
+For convenience, the package also includes a `tinyplot_add()` function (alias `plt_add()`), which captures the last `tinyplot()` call, keeps all the same arguments, and modifies just the arguments that the user explicitly wants to change. 
 
 In the following example, we first draw linear regression lines with facets and group coloring. Then, we add the original data points using `tinyplot_add()`. Notice that the same grouping and data options are carried over to points, without having to specify them in the `tinyplot_add()` function.
 
@@ -454,9 +449,9 @@ library(tinyplot)
 tinyplot(Sepal.Width ~ Sepal.Length | Species,
          facet = ~Species,
          data = iris, 
-         type = type_lm())
+         type = "p")
 
-tinyplot_add(type = "p")
+tinyplot_add(type = type_lm())
 ```
 
 ## Themes

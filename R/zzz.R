@@ -44,6 +44,7 @@
   
   assign(".saved_par_before", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
   assign(".saved_par_after", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
+  assign(".last_call", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
 
   globalVariables(c(
     "add",

@@ -49,6 +49,9 @@
 #'   precedence if both are specified together. Ignored if a two-sided formula
 #'   is passed to the main `facet` argument, since the layout is arranged in a
 #'   fixed grid.
+#'   - `free` a logical for whether the axes limits of the individual facets
+#'   should vary freely depending on the respective data subset. Default is
+#'   `FALSE`.
 #'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
 #'   between facets in terms of lines. Defaults to the value of `tpar("fmar")`,
 #'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each
@@ -1061,6 +1064,17 @@ tinyplot.default = function(
         mfgj = ii %% nfacet_cols
         if (mfgj == 0) mfgj = nfacet_cols
         par(mfg = c(mfgi, mfgj))
+        
+        # Free free facets, we need to reset par(usr) based on the current data
+        # data subset limits
+        if (isTRUE(facet.args[["free"]]) && length(ix)>0) {
+          xlim = range(ix, na.rm = TRUE)
+          ylim = range(iy, na.rm = TRUE)
+          if (!is.null(iymin)) ylim = range(ylim, range(iymin, na.rm = TRUE), na.rm = TRUE)
+          if (!is.null(iymax)) ylim = range(ylim, range(iymax, na.rm = TRUE), na.ram = TRUE)
+          xlim = extendrange(range(ix, na.rm = TRUE), f = 0.04)
+          par(usr = c(extendrange(xlim), extendrange(ylim)))
+        }
       }
 
       # empty plot flag

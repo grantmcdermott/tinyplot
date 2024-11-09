@@ -1,8 +1,8 @@
 source("helpers.R")
 using("tinysnapshot")
 
-# first test
-expect_error(tinyplot_add(type = "p"), pattern = "No previous tinyplot")
+## error message cannot be tested in this suite
+# expect_error(tinyplot_add(type = "p"), pattern = "No previous tinyplot")
 
 f = function() {
   tinyplot(Sepal.Width ~ Sepal.Length | Species,

@@ -17,9 +17,11 @@ Arguments not supplied to \code{tinyplot_add()} remain unchanged from the previo
 No return value, called for side effect of producing a plot.
 }
 \description{
-This function grabs the last \code{tinyplot} call, sets \code{add=TRUE}, and
-overwrites some of the arguments with those explicitly supplied by the
-user. Then, the call is evaluated again to add a layer to an existing plot.
+This convenience function grabs the preceding \code{tinyplot} call and updates it
+with any new arguments that have been explicitly provided by the user. It
+then injects \code{add=TRUE}, before evaluating the updated call and thus adds a
+new layer to the existing plot. Users can call either \code{tinyplot_add()}, or
+its shorthand alias \code{plt_add()}.
 }
 \details{
 Note: the automatic legend for the added elements will be turned off.
@@ -29,9 +31,17 @@ library(tinyplot)
 
 tinyplot(Sepal.Width ~ Sepal.Length | Species,
          facet = ~Species,
-         data = iris, 
-         type = type_lm())
+         data = iris)
 
-tinyplot_add(type = "p")
+tinyplot_add(type = "lm")   ## or : plt_add(type = "lm")
+
+## Note: the previous function is equivalent to (but much more convenient
+## than) re-writing the full call with the new type and `add=TRUE`:
+
+# tinyplot(Sepal.Width ~ Sepal.Length | Species,
+#          facet = ~Species,
+#          data = iris, 
+#          type = "lm", 
+#          add = TRUE)
 
 }

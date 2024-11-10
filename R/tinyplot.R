@@ -250,7 +250,9 @@
 #'   when extracting the data from `formula` and `data`.
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
-#'   added elements will be turned off.
+#'   added elements will be turned off. See also [tinyplot_add], which provides
+#'   a convenient wrapper around this functionality for layering on top of an
+#'   existing plot without having to repeat arguments.
 #' @param flip logical. Should the plot orientation be flipped, so that the
 #'   y-axis is on the horizontal plane and the x-axis is on the vertical plane?
 #'   Default is FALSE.
@@ -531,7 +533,7 @@ tinyplot.default = function(
     ) {
 
   # save for plt_add()
-  options(tinyplot_last_call = match.call(tinyplot, 
+  options(tinyplot_last_call = match.call(tinyplot,
     call = sys.call(sys.parent()), expand.dots = TRUE))
 
   ## TODO: remove the global option above and move to this when density is refactored

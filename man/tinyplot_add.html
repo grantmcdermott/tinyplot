@@ -420,8 +420,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
@@ -437,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="unnumbered anchored" data-anchor-id="add-new-elements-to-the-current-tinyplot">Add new elements to the current <code>tinyplot</code></h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>This function grabs the last <code>tinyplot</code> call, sets <code>add=TRUE</code>, and overwrites some of the arguments with those explicitly supplied by the user. Then, the call is evaluated again to add a layer to an existing plot.</p>
+<p>This convenience function grabs the preceding <code>tinyplot</code> call and updates it with any new arguments that have been explicitly provided by the user. It then injects <code>add=TRUE</code> and evaluates the updated call, thereby drawing a new layer on top of the existing plot. <code>plt_add()</code> is a shorthand alias for <code>tinyplot_add()</code>.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -454,18 +454,25 @@ plt_add(...)
 <code id="...">…</code>
 </td>
 <td>
-All named arguments override arguments from the previous calls. Arguments not supplied to <code>tinyplot_add()</code> remain unchanged from the previous call.
+All named arguments override arguments from the previous calls. Arguments not supplied to tinyplot_add remain unchanged from the previous call.
 </td>
 </tr>
 </tbody></table>
 </section>
-<section id="details" class="level3">
-<h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>Note: the automatic legend for the added elements will be turned off.</p>
-</section>
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
 <p>No return value, called for side effect of producing a plot.</p>
+</section>
+<section id="limitations" class="level3">
+<h3 class="anchored" data-anchor-id="limitations">Limitations</h3>
+<ul>
+<li>
+<p>Currently, <code>tinyplot_add</code> only works reliably if you are adding to a plot that was originally constructed with the tinyplot.formula method (and passed an appropriate <code>data</code> argument). In contrast, we cannot guarantee that using <code>tinyplot_add</code> will work correctly if your original plot was constructed with the atomic tinyplot.default method. The reason has to do with potential environment mismatches. (An exception is thus if your plot arguments (<code>x</code>, <code>y</code>, etc.) are attached to your global R environment.)</p>
+</li>
+<li>
+<p>Automatic legends for the added elements will be turned off.</p>
+</li>
+</ul>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -476,10 +483,9 @@ All named arguments override arguments from the previous calls. Arguments not su
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Width <span class="sc">~</span> Sepal.Length <span class="sc">|</span> Species,</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">facet =</span> <span class="sc">~</span>Species,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> iris, </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">type_lm</span>())</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"p"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> iris)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)   <span class="do">## or : plt_add(type = "lm")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -487,6 +493,14 @@ All named arguments override arguments from the previous calls. Arguments not su
 </figure>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Note: the previous function is equivalent to (but much more convenient</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">## than) re-writing the full call with the new type and `add=TRUE`:</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># tinyplot(Sepal.Width ~ Sepal.Length | Species,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#          facet = ~Species,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#          data = iris, </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#          type = "lm", </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#          add = TRUE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

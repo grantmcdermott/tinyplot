@@ -391,7 +391,9 @@ or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{
 
 \item{add}{logical. If TRUE, then elements are added to the current plot rather
 than drawing a new plot window. Note that the automatic legend for the
-added elements will be turned off.}
+added elements will be turned off. See also \link{tinyplot_add}, which provides
+a convenient wrapper around this functionality for layering on top of an
+existing plot without having to repeat arguments.}
 
 \item{draw}{a function that draws directly on the plot canvas (before \code{x} and
 \code{y} are plotted). The \code{draw} argument is primarily useful for adding common

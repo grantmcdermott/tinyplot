@@ -250,7 +250,9 @@
 #'   when extracting the data from `formula` and `data`.
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
-#'   added elements will be turned off.
+#'   added elements will be turned off. See also [tinyplot_add], which provides
+#'   a convenient wrapper around this functionality for layering on top of an
+#'   existing plot without having to repeat arguments.
 #' @param draw a function that draws directly on the plot canvas (before `x` and
 #'   `y` are plotted). The `draw` argument is primarily useful for adding common
 #'   elements to each facet of a faceted plot, e.g.
@@ -546,6 +548,14 @@ tinyplot.default = function(
     yaxs = NULL,
     ...
     ) {
+
+  # save for plt_add()
+  options(tinyplot_last_call = match.call(tinyplot,
+    call = sys.call(sys.parent()), expand.dots = TRUE))
+
+  ## TODO: remove the global option above and move to this when density is refactored
+  # cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
+  # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
 
   dots = list(...)
 

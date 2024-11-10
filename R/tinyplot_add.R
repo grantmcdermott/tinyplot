@@ -3,15 +3,23 @@
 #' @description
 #' This convenience function grabs the preceding `tinyplot` call and updates it
 #' with any new arguments that have been explicitly provided by the user. It
-#' then injects `add=TRUE`, before evaluating the updated call and thus adds a
-#' new layer to the existing plot. Users can call either `tinyplot_add()`, or
-#' its shorthand alias `plt_add()`.
+#' then injects `add=TRUE` and evaluates the updated call, thereby drawing a new
+#' layer on top of the existing plot. `plt_add()` is a shorthand alias for
+#' `tinyplot_add()`.
 #'
-#' @details
-#' Note: the automatic legend for the added elements will be turned off.
+#' @section Limitations: 
+#' - Currently, `tinyplot_add` only works reliably if you are adding to a plot
+#' that was originally constructed with the [tinyplot.formula] method (and
+#' passed an appropriate `data` argument). In contrast, we cannot guarantee that
+#' using `tinyplot_add` will work correctly if your original plot was
+#' constructed with the atomic [tinyplot.default] method. The reason has to do
+#' with potential environment mismatches. (An exception is thus if your plot
+#' arguments (`x`, `y`, etc.) are attached to your global R environment.)
+#' - Automatic legends for the added elements will be turned off.
 #'
 #' @param ... All named arguments override arguments from the previous calls.
-#' Arguments not supplied to `tinyplot_add()` remain unchanged from the previous call.
+#' Arguments not supplied to [tinyplot_add] remain unchanged from the previous
+#' call.
 #'
 #' @examples
 #' library(tinyplot)

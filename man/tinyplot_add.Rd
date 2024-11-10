@@ -11,7 +11,8 @@ plt_add(...)
 }
 \arguments{
 \item{...}{All named arguments override arguments from the previous calls.
-Arguments not supplied to \code{tinyplot_add()} remain unchanged from the previous call.}
+Arguments not supplied to \link{tinyplot_add} remain unchanged from the previous
+call.}
 }
 \value{
 No return value, called for side effect of producing a plot.
@@ -19,13 +20,24 @@ No return value, called for side effect of producing a plot.
 \description{
 This convenience function grabs the preceding \code{tinyplot} call and updates it
 with any new arguments that have been explicitly provided by the user. It
-then injects \code{add=TRUE}, before evaluating the updated call and thus adds a
-new layer to the existing plot. Users can call either \code{tinyplot_add()}, or
-its shorthand alias \code{plt_add()}.
+then injects \code{add=TRUE} and evaluates the updated call, thereby drawing a new
+layer on top of the existing plot. \code{plt_add()} is a shorthand alias for
+\code{tinyplot_add()}.
 }
-\details{
-Note: the automatic legend for the added elements will be turned off.
+\section{Limitations}{
+
+\itemize{
+\item Currently, \code{tinyplot_add} only works reliably if you are adding to a plot
+that was originally constructed with the \link{tinyplot.formula} method (and
+passed an appropriate \code{data} argument). In contrast, we cannot guarantee that
+using \code{tinyplot_add} will work correctly if your original plot was
+constructed with the atomic \link{tinyplot.default} method. The reason has to do
+with potential environment mismatches. (An exception is thus if your plot
+arguments (\code{x}, \code{y}, etc.) are attached to your global R environment.)
+\item Automatic legends for the added elements will be turned off.
 }
+}
+
 \examples{
 library(tinyplot)
 

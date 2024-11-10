@@ -457,10 +457,12 @@ draw_facet_window = function(grid, ...) {
       # For free facets, we need to enforce the plot frame and reset the (facet)
       # window limits based on the data subset
       if (isTRUE(facet.args[["free"]])) {
-        xlim = range(split(x, facet)[[ii]], na.rm = TRUE)
-        ylim = range(split(y, facet)[[ii]], na.rm = TRUE)
-        if (!is.null(ymin)) ylim = range(ylim, range(split(ymin, facet)[[ii]], na.rm = TRUE), na.rm = TRUE)
-        if (!is.null(ymax)) ylim = range(ylim, range(split(ymax, facet)[[ii]], na.rm = TRUE), na.rm = TRUE)
+        # xlim = range(split(x, facet)[[ii]], na.rm = TRUE)
+        # ylim = range(split(y, facet)[[ii]], na.rm = TRUE)
+        xlim = range(split(c(x, xmin, xmax), facet)[[ii]], na.rm = TRUE)
+        ylim = range(split(c(y, ymin, ymax), facet)[[ii]], na.rm = TRUE)
+        # if (!is.null(ymin)) ylim = range(ylim, range(split(ymin, facet)[[ii]], na.rm = TRUE), na.rm = TRUE)
+        # if (!is.null(ymax)) ylim = range(ylim, range(split(ymax, facet)[[ii]], na.rm = TRUE), na.rm = TRUE)
         frame.plot = TRUE
       }
       

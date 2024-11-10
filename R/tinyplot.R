@@ -1073,7 +1073,8 @@ tinyplot.default = function(
           if (!is.null(iymin)) ylim = range(ylim, range(iymin, na.rm = TRUE), na.rm = TRUE)
           if (!is.null(iymax)) ylim = range(ylim, range(iymax, na.rm = TRUE), na.ram = TRUE)
           xlim = extendrange(range(ix, na.rm = TRUE), f = 0.04)
-          par(usr = c(extendrange(xlim), extendrange(ylim)))
+          fusr = c(extendrange(xlim), extendrange(ylim))
+          par(usr = fusr)
         }
       }
 

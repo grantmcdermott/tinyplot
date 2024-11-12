@@ -35,6 +35,10 @@ types enable a variety of additional features. (#222 @vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`)
     - `type_loess()` (shortcut: `"loess"`)
     - `type_spline()` (shortcut: `"spline"`)
+  - New function-based types
+    - `type_abline()`
+    - `type_hline()`
+    - `type_vline()`
   - New `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
   plots and spinograms. These are modified versions of a histogram or mosaic
   plot, and are particularly useful for visualizing factor variables. (#233

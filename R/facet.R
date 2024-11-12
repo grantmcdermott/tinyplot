@@ -453,6 +453,10 @@ draw_facet_window = function(grid, ...) {
           grid
         }
       }
+      
+      # drawn elements
+      if (!is.null(draw)) eval(draw)
+      
     } # end of ii facet loop
   } # end of add check
 

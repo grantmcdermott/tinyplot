@@ -4,7 +4,7 @@
 \alias{type_abline}
 \title{Add straight lines to a plot}
 \usage{
-type_abline(a = 0, b = 1, col = "black", lty = 1, lwd = 1)
+type_abline(a = 0, b = 1, col = NULL, lty = NULL, lwd = NULL)
 }
 \arguments{
 \item{a, b}{the intercept and slope, single values.}

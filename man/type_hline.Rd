@@ -4,7 +4,7 @@
 \alias{type_hline}
 \title{Trace a horizontal line on the plot}
 \usage{
-type_hline(h = 0, col = "black", lty = 1, lwd = 1)
+type_hline(h = 0, col = NULL, lty = NULL, lwd = NULL)
 }
 \arguments{
 \item{h}{y-value(s) for horizontal line(s). Numeric of length 1 or equal to the number of facets.}

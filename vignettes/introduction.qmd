@@ -488,7 +488,7 @@ tinyplot(
 Compared to "manually" drawing these elements on a plot _ex post_---e.g., via a
 separate `abline()` call---there are several advantages to the idiomatic
 **tinyplot** interface. First, the `draw` argument is facet-aware and will
-ensure that each individual facet is drawn on correctly. Second, you can
+ensure that each individual facet is correctly drawn upon. Second, you can
 leverage the special `ii` internal counter to draw programmatically across
 facets (see
 [here](https://github.com/grantmcdermott/tinyplot/pull/245#issue-2642589951)).

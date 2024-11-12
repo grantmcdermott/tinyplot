@@ -476,7 +476,7 @@ annotate your plot with text. The **tinyplot** way to do this is by passing the
 `tinyplot(..., draw = <draw_function>)` argument. Here we demonstrate with a
 simplified version of our facet grid example from earlier.
 
-```{r facet_grid_draw}
+```{r draw_simple}
 tinyplot(
  Temp ~ Day, data = aq,
  facet = windy ~ hot,
@@ -501,7 +501,7 @@ Here's a slightly more complicated density plot example, where we use
 `draw = {...}` to pass multiple drawing functions, including plotting all of the
 distributions in the background of each facet via a secondary `tinyplot()` call.
 
-```{r facet_grid_draw}
+```{r draw_complex}
 palette("tableau")
 tinyplot(
   ~Temp | Month, aq, type = "density", facet = "by", lwd = 2, fill = "by",

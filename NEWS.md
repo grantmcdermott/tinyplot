@@ -39,6 +39,7 @@ types enable a variety of additional features. (#222 @vincentarelbundock)
     - `type_abline()`
     - `type_hline()`
     - `type_vline()`
+  - `type_function()` can trace arbitrary functions.
   - New `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
   plots and spinograms. These are modified versions of a histogram or mosaic
   plot, and are particularly useful for visualizing factor variables. (#233

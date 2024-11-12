@@ -16,12 +16,46 @@
 type_vline = function(v = 0, col = "black", lty = 1, lwd = 1) {
   assert_numeric(v)
   draw_vline = function() {
-    fun = function(data_facet, ifacet, ...) {
+    fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
       nfacets = length(data_facet)
-      if (length(v) == 1) v = rep(v, nfacets)
-      if (length(col) == 1) col = rep(col, nfacets)
-      if (length(lty) == 1) lty = rep(lty, nfacets)
-      if (length(lwd) == 1) lwd = rep(lwd, nfacets)
+
+      if (length(v) == 1) {
+        v = rep(v, nfacets)
+      } else if (length(v) != nfacets) {
+        msg = "Length of 'v' must be 1 or equal to the number of facets"
+        stop(msg, call. = FALSE)
+      }
+
+      if (is.null(col)) {
+        col = icol
+      }
+      if (length(col) == 1) {
+        col = rep(col, nfacets)
+      } else if (length(col) != nfacets) {
+        msg = "Length of 'col' must be 1 or equal to the number of facets"
+        stop(msg, call. = FALSE)
+      }
+
+      if (is.null(lty)) {
+        lty = if (!is.null(ilty)) ilty else 1
+      }
+      if (length(lty) == 1) {
+        lty = rep(lty, nfacets)
+      } else if (length(lty) != nfacets) {
+        msg = "Length of 'lty' must be 1 or equal to the number of facets"
+        stop(msg, call. = FALSE)
+      }
+
+      if (is.null(lwd)) {
+        lwd = if (!is.null(ilwd)) ilwd else 1
+      }
+      if (length(lwd) == 1) {
+        lwd = rep(lwd, nfacets)
+      } else if (length(lwd) != nfacets) {
+        msg = "Length of 'lwd' must be 1 or equal to the number of facets"
+        stop(msg, call. = FALSE)
+      }
+
       abline(v = v[ifacet], col = col[ifacet], lty = lty[ifacet], lwd = lwd[ifacet])
     }
     return(fun)
@@ -34,4 +68,3 @@ type_vline = function(v = 0, col = "black", lty = 1, lwd = 1) {
   class(out) = "tinyplot_type"
   return(out)
 }
-

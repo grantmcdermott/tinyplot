@@ -493,7 +493,7 @@ leverage the special `ii` internal counter to draw programmatically across
 facets (see
 [here](https://github.com/grantmcdermott/tinyplot/pull/245#issue-2642589951)).
 Third, the `draw` argument is fully generic and accepts _any_
-drawing/annotating functions. You can combine multiple drawing functions by
+drawing/annotating function. You can combine multiple drawing functions by
 wrapping them with curly brackets`{}`, and even pass `tinyplot()` back towards
 itself.
 

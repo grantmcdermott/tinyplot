@@ -497,20 +497,19 @@ drawing/annotating functions. You can combine multiple drawing functions by
 wrapping them with curly brackets`{}`, and even pass `tinyplot()` back towards
 itself.
 
-Here's a slightly more complicated density plot example, where we use
-`draw = {...}` to pass multiple drawing functions, including plotting all of the
-distributions in the background of each facet via a secondary `tinyplot()` call.
+Here's a slightly more complicated "spaghetti" plot example, where we pass
+multiple functions through `draw = {...}`, including drawing all of the
+lines in the background (of each facet) via a secondary `tinyplot()` call.
 
-```{r draw_complex}
-palette("tableau")
+```{r draw_spaghetti}
 tinyplot(
-  ~Temp | Month, aq, type = "density", facet = "by", lwd = 2, fill = "by",
-  frame = FALSE,
+  Temp ~ Day | Month, aq, facet = "by", lwd = 3, type = "l",
+  frame = FALSE, legend = FALSE, ylim = c(50, 100),
   draw = {
-    tinyplot(~Temp | Month, aq, type = "density", col = "grey", fill = "grey90", add = TRUE)
-    abline(v = 75, lty = 2)
-    text(75, 0.085, "Cold", pos = 2)
-    text(75, 0.085, "Hot", pos = 4)
+    tinyplot(Temp ~ Day | Month, aq, col = "grey", type = "l", add = TRUE)
+    abline(h = 75, lty = 2)
+    text(5.5, 75, "Cold", pos = 1, offset = 0.4)
+    text(5.5, 75, "Hot", pos = 3, offset = 0.4)
   }
 )
 ```

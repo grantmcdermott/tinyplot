@@ -253,7 +253,16 @@
 #'   when extracting the data from `formula` and `data`.
 #' @param add logical. If TRUE, then elements are added to the current plot rather
 #'   than drawing a new plot window. Note that the automatic legend for the
-#'   added elements will be turned off.
+#'   added elements will be turned off. See also [tinyplot_add], which provides
+#'   a convenient wrapper around this functionality for layering on top of an
+#'   existing plot without having to repeat arguments.
+#' @param draw a function that draws directly on the plot canvas (before `x` and
+#'   `y` are plotted). The `draw` argument is primarily useful for adding common
+#'   elements to each facet of a faceted plot, e.g.
+#'   \code{\link[graphics]{abline}} or \code{\link[graphics]{text}}. Note that
+#'   this argument is somewhat experimental and that _no_ internal checking is
+#'   done for correctness; the provided argument is simply captured and
+#'   evaluated as-is. See Examples.
 #' @param flip logical. Should the plot orientation be flipped, so that the
 #'   y-axis is on the horizontal plane and the x-axis is on the vertical plane?
 #'   Default is FALSE.
@@ -434,6 +443,15 @@
 #'  data = aq
 #' )
 #' 
+#' # To add common elements to each facet, use the `draw` argument
+#' 
+#' tinyplot(
+#'  Temp ~ Day,
+#'  facet = windy ~ hot,
+#'  data = aq,
+#'  draw = abline(h = 75, lty = 2, col = "hotpink")
+#' )
+#' 
 #' # The (automatic) legend position and look can be customized using
 #' # appropriate arguments. Note the trailing "!" in the `legend` position
 #' # argument below. This tells `tinyplot` to place the legend _outside_ the plot
@@ -521,6 +539,7 @@ tinyplot.default = function(
     ymin = NULL,
     ymax = NULL,
     add = FALSE,
+    draw = NULL,
     file = NULL,
     width = NULL,
     height = NULL,
@@ -533,9 +552,18 @@ tinyplot.default = function(
     ...
     ) {
 
+  # save for plt_add()
+  options(tinyplot_last_call = match.call(tinyplot,
+    call = sys.call(sys.parent()), expand.dots = TRUE))
+
+  ## TODO: remove the global option above and move to this when density is refactored
+  # cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
+  # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
+
   dots = list(...)
 
   if (isTRUE(add)) legend = FALSE
+  draw = substitute(draw)
   
 
   # sanitize arguments
@@ -994,7 +1022,9 @@ tinyplot.default = function(
     ymax = datapoints$ymax, ymin = datapoints$ymin,
     xaxt = xaxt, xlabs = xlabs, xlim = xlim,
     yaxt = yaxt, ylabs = ylabs, ylim = ylim,
-    flip = flip, xaxs = xaxs, yaxs = yaxs
+    flip = flip,
+    draw = draw,
+    xaxs = xaxs, yaxs = yaxs
   )
   list2env(facet_window_args, environment())
 

@@ -53,6 +53,9 @@ types enable a variety of additional features. (#222 @vincentarelbundock)
 - `tpar()` gains additional `grid.col`, `grid.lty`, and `grid.lwd` arguments for
   fine-grained control over the appearance of the default panel grid when
   `plt(..., grid = TRUE)` is called. (#237 @grantmcdermott)
+- The new `tinyplot_add()` (alias: `plt_add()`) convenience function allows
+easy layering of plots without having to specify repeat arguments. (#246
+@vincentarelbundock)
 
 Bug fixes:
 

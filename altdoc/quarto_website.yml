@@ -28,10 +28,12 @@ website:
         contents:
         - section: Plotting functions
           contents:
-          - text: draw_legend
-            file: man/draw_legend.qmd
           - text: tinyplot
             file: man/tinyplot.qmd
+          - text: tinyplot_add
+            file: man/tinyplot_add.qmd
+          - text: draw_legend
+            file: man/draw_legend.qmd
         - section: Plot types
           contents:
           #

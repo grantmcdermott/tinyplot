@@ -454,6 +454,9 @@ draw_facet_window = function(grid, ...) {
         }
       }
       
+      # drawn elements
+      if (!is.null(draw)) eval(draw)
+      
       # For free facets, we need to enforce the plot frame and reset the (facet)
       # window limits based on the data subset
       if (isTRUE(facet.args[["free"]])) {

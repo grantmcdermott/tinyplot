@@ -12,7 +12,7 @@ sanitize_type = function(type, x, y) {
   }
 
   types = c(
-    "area", "boxplot", "density", "jitter", "ribbon", "pointrange", "hist",
+    "area", "boxplot", "density", "jitter", "ribbon", "pointrange", "hist", "ridge",
     "histogram", "errorbar", "polygon", "polypath", "rect", "qq", "segments", "points",
     "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", "loess", "spline", "lm", "glm",
     "spineplot"

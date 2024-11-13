@@ -1,7 +1,24 @@
-#' Ridge plot
+#' Ridge plot type
+#'
+#' @description Type function for producing ridge plots (also known as joy plots),
+#' which display density distributions for multiple groups with vertical offsets.
+#' This function uses `tinyplot` scaffolding, which enables added functionality
+#' such as grouping and faceting.
+#'
+#' @param offset Numeric. Controls the vertical spacing between the ridges.
+#'   Default is `0.8`. Smaller values will result in more overlap.
+#' @param col Character. Fill color of each ridge.
+#' @param border Character. Color of the ridge borders.
+#'
+#' @examples
+#' tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
+#'
+#' tinyplot(Month ~ Ozone,
+#'   data = airquality,
+#'   type = type_ridge(offset = .5, col = "light blue", border = "black"))
 #'
 #' @export
-type_ridge = function(offset = .2, col = "grey", border = "white") {
+type_ridge = function(offset = .8, col = "grey", border = "white") {
   data_ridge = function() {
     fun = function(datapoints, ...) {
       d = split(datapoints, datapoints$y)

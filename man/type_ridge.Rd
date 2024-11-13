@@ -2,10 +2,29 @@
 % Please edit documentation in R/type_ridge.R
 \name{type_ridge}
 \alias{type_ridge}
-\title{Ridge plot}
+\title{Ridge plot type}
 \usage{
-type_ridge(offset = 0.2, col = "grey", border = "white")
+type_ridge(offset = 0.8, col = "grey", border = "white")
+}
+\arguments{
+\item{offset}{Numeric. Controls the vertical spacing between the ridges.
+Default is \code{0.8}. Smaller values will result in more overlap.}
+
+\item{col}{Character. Fill color of each ridge.}
+
+\item{border}{Character. Color of the ridge borders.}
 }
 \description{
-Ridge plot
+Type function for producing ridge plots (also known as joy plots),
+which display density distributions for multiple groups with vertical offsets.
+This function uses \code{tinyplot} scaffolding, which enables added functionality
+such as grouping and faceting.
+}
+\examples{
+tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
+
+tinyplot(Month ~ Ozone,
+  data = airquality,
+  type = type_ridge(offset = .5, col = "light blue", border = "black"))
+
 }

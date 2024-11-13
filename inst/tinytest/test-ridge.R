@@ -1,0 +1,14 @@
+source("helpers.R")
+using("tinysnapshot")
+
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
+}
+expect_snapshot_plot(f, label = "ridge_01")
+
+f = function() {
+  tinyplot(Month ~ Ozone,
+    data = airquality,
+    type = type_ridge(offset = .5, col = "light blue", border = "black"))
+}
+expect_snapshot_plot(f, label = "ridge_02")

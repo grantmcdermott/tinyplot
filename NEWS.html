@@ -457,6 +457,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type_loess()</code> (shortcut: <code>"loess"</code>)</li>
 <li><code>type_spline()</code> (shortcut: <code>"spline"</code>)</li>
 </ul></li>
+<li><code>type_function()</code> can trace arbitrary functions.</li>
 <li>New <code>type_spineplot()</code> (shortcut: <code>"spineplot"</code>) type for producing spine plots and spinograms. These are modified versions of a histogram or mosaic plot, and are particularly useful for visualizing factor variables. (<a href="https://github.com/grantmcdermott/tinyplot/issues/233">#233</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> with contributions from <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Explicit argument passing for modified behaviour type (e.g., <code>type_lm(se = FALSE)</code>).</li>
 <li>Users can define their own custom types by creating <code>type_&lt;typename&gt;()</code> functions.</li>

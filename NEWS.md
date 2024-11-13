@@ -41,6 +41,8 @@ types enable a variety of additional features. (#222 @vincentarelbundock)
     - `type_vline()`: verticla line
     - `type_function()` arbitrary function.
   - `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
+  - `type_function()` can trace arbitrary functions.
+  - New `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
   plots and spinograms. These are modified versions of a histogram or mosaic
   plot, and are particularly useful for visualizing factor variables. (#233
   @zeileis with contributions from @grantmcdermott)

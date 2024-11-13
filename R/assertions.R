@@ -29,6 +29,23 @@ assert_choice = function(x, choice, null.ok = FALSE, name = as.character(substit
   stop(msg, call. = FALSE)
 }
 
+check_true = function(x, null.ok = FALSE) {
+  if (is.null(x) && isTRUE(null.ok)) {
+    return(invisible(TRUE))
+  }
+  if (isTRUE(x)) {
+    return(invisible(TRUE))
+  }
+  return(FALSE)
+}
+
+assert_true = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+  msg = sprintf("`%s` must be true.", name)
+  if (!isTRUE(check_true(x, null.ok = null.ok))) {
+    stop(msg, call. = FALSE)
+  }
+}
+
 check_string = function(x, null.ok = FALSE) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))

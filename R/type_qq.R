@@ -7,7 +7,7 @@
 #' @inheritParams tinyplot
 #' @examples
 #' tinyplot(~mpg, data = mtcars, type = type_qq(lty = 3))
-#' @importFrom stats qnorm ppoints
+#' @importFrom stats qnorm ppoints quantile
 #' @export
 type_qq = function(distribution = qnorm, lty = NULL, col = "black", lwd = 1) {
   data_qq = function(distribution) {

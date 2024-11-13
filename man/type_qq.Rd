@@ -2,7 +2,7 @@
 % Please edit documentation in R/type_qq.R
 \name{type_qq}
 \alias{type_qq}
-\title{Draw a quantile-quantile plot}
+\title{Quantile-Quantile plot (QQ)}
 \usage{
 type_qq(distribution = qnorm, lty = NULL, col = "black", lwd = 1)
 }

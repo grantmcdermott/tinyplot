@@ -1,13 +1,13 @@
 #' Add function to a plot
 #'
 #' @details
-#' When using `type_function()` in a `tinyplot()` call, the `x` value indicates 
+#' When using `type_function()` in a `tinyplot()` call, the `x` value indicates
 #' the range of values to plot on the x-axis.
 #'
 #' @param fun Function of `x` to plot.
 #' @param args Additional arguments to be passed to `fun`
-#' @param n Number of points to interpolate on the x axis. 
-#' @param ... Additional arguments are passed to the `lines()` function, 
+#' @param n Number of points to interpolate on the x axis.
+#' @param ... Additional arguments are passed to the `lines()` function,
 #' ex: `type="p"`, `col="pink"`.
 #' @examples
 #' # Plot the normal density
@@ -19,7 +19,8 @@
 #' ))
 #'
 #' # Additional arguments are passed to the `lines()` function.
-#' tinyplot(x = -4:4, type = type_function(fun = dnorm, 
+#' tinyplot(x = -4:4, type = type_function(
+#'   fun = dnorm,
 #'   col = "pink", type = "p", pch = 3
 #' ))
 #'
@@ -29,6 +30,9 @@ type_function = function(fun = dnorm, args = list(), n = 101, ...) {
   lines_args = list(...)
   data_function = function(args, fun) {
     funky = function(xlim, ylim, datapoints, ...) {
+      if (nrow(datapoints) == 0 || !"x" %in% names(datapoints)) {
+        stop("Need to provide x values to plot the function.", call. = FALSE)
+      }
       if (is.null(xlim)) {
         xlim = range(datapoints[["x"]])
       }
@@ -62,4 +66,3 @@ type_function = function(fun = dnorm, args = list(), n = 101, ...) {
   class(out) = "tinyplot_type"
   return(out)
 }
-

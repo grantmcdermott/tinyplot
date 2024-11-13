@@ -2,7 +2,7 @@
 % Please edit documentation in R/type_qq.R
 \name{type_qq}
 \alias{type_qq}
-\title{Quantile-Quantile plot (QQ)}
+\title{Draw a quantile-quantile plot}
 \usage{
 type_qq(distribution = qnorm, lty = NULL, col = "black", lwd = 1)
 }
@@ -32,7 +32,8 @@ line width will automatically loop over the number of groups. This
 automatic looping will be centered at the global line width value (i.e.,}
 }
 \description{
-Plots the theoretical quantiles of \code{y} on the x-axis against observed values of \code{y} on the y-axis.
+Plots the theoretical quantiles of \code{x} on the horizontal axis
+against observed values of \code{x} on the vertical axis.
 }
 \examples{
 tinyplot(~mpg, data = mtcars, type = type_qq(lty = 3))

@@ -1,6 +1,7 @@
 #' Quantile-Quantile plot (QQ)
 #'
-#' @description Plots the theoretical quantiles of `y` on the x-axis against observed values of `y` on the y-axis.
+#' @description Plots the theoretical quantiles of `x` on the horizontal axis
+#' against observed values of `x` on the vertical axis.
 #'
 #' @param distribution Distribution function to use.
 #' @inheritParams tinyplot

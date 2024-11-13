@@ -24,24 +24,32 @@
 type_ridge = function(offset = .8) {
   data_ridge = function() {
     fun = function(datapoints, ...) {
-      d = split(datapoints, datapoints$y)
       get_density = function(k) {
         tmp = density(k$x)
         tmp = data.frame(x = tmp$x, y = tmp$y, z = k$y[1])
         tmp$y = unlist(tapply(tmp$y, tmp$z, function(k) k / max(k)))
+        tmp$facet = k$facet[1]
+        tmp$by = k$by[1]
         tmp
       }
+      d = split(datapoints, list(datapoints$y, datapoints$facet))
       d = lapply(d, function(k) tryCatch(get_density(k), error = function(e) NULL))
-      for (idx in seq_along(d)) {
-        d[[idx]]$y = d[[idx]]$y + offset * (idx - 1)
+      d = do.call(rbind, d)
+      d = split(d, d$facet)
+      offset_y = function(k) {
+        z = split(k, k$z)
+        for (idx in seq_along(z)) {
+          z[[idx]]$y = z[[idx]]$y + offset * (idx - 1)
+        }
+        z = do.call(rbind, z)
+        return(z)
       }
-      out = do.call(rbind, d)
-      out$by = out$facet = ""
+      d = do.call(rbind, lapply(d, offset_y))
 
       out = list(
-        datapoints = out,
+        datapoints = d,
         yaxt = "n",
-        ylim = range(out$y)
+        ylim = range(d$y)
       )
       return(out)
     }
@@ -62,6 +70,7 @@ type_ridge = function(offset = .8) {
     }
     return(fun)
   }
+
   out = list(
     draw = draw_ridge(),
     data = data_ridge(),

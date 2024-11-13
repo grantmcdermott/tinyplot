@@ -258,7 +258,6 @@ draw_facet_window = function(grid, ...) {
           fusr[[ii]] = c(extendrange(xlim, f = 0.04), extendrange(ylim, f = 0.04))
           assign(".fusr", fusr, envir = get(".tinyplot_env", envir = parent.env(environment())))
           # Explicitly set (override) the current facet extent
-          print(fusr[[ii]])
           par(usr = fusr[[ii]])
           # if plot frame is true then print axes per normal...
           if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {

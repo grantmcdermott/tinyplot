@@ -24,6 +24,7 @@ tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 
 tinyplot(Month ~ Ozone,
   data = airquality,
-  type = type_ridge(offset = .5, col = "light blue", border = "black"))
+  type = type_ridge(offset = .5),
+  bg = "light blue", col = "black"))
 
 }

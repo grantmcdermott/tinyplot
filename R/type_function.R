@@ -9,6 +9,7 @@
 #' @param n Number of points to interpolate on the x axis.
 #' @param ... Additional arguments are passed to the `lines()` function,
 #' ex: `type="p"`, `col="pink"`.
+#' @importFrom stats dnorm
 #' @examples
 #' # Plot the normal density
 #' tinyplot(x = -4:4, type = type_function(dnorm))

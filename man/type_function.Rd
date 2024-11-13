@@ -7,7 +7,7 @@
 type_function(fun = dnorm, args = list(), n = 101, ...)
 }
 \arguments{
-\item{fun}{Function of \code{x} to plot.}
+\item{fun}{Function of \code{x} to plot. Defaults to \code{\link[stats]{dnorm}}.}
 
 \item{args}{Additional arguments to be passed to \code{fun}}
 
@@ -37,5 +37,9 @@ tinyplot(x = -4:4, type = type_function(
   fun = dnorm,
   col = "pink", type = "p", pch = 3
 ))
+
+# Custom function example
+# (Here using the `\()` anonymous function syntax introduced in R 4.1.0)
+tinyplot(x = -4:4, type = type_function(fun = \(x) 0.5 * exp(-abs(x))))
 
 }

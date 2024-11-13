@@ -39,14 +39,12 @@ website:
             contents:
             - text: type_area
               file: man/type_ribbon.qmd
-            - text: type_ribbon
-              file: man/type_ribbon.qmd
             - text: type_errorbar
-              file: man/type_errorbar.qmd
-            - text: type_pointrange
               file: man/type_errorbar.qmd
             - text: type_lines
               file: man/type_lines.qmd
+            - text: type_pointrange
+              file: man/type_errorbar.qmd
             - text: type_points
               file: man/type_points.qmd
             - text: type_polygon
@@ -55,6 +53,8 @@ website:
               file: man/type_polypath.qmd
             - text: type_rect
               file: man/type_rect.qmd
+            - text: type_ribbon
+              file: man/type_ribbon.qmd
             - text: type_segments
               file: man/type_segments.qmd
           - section: Visualizations
@@ -65,12 +65,16 @@ website:
               file: man/type_histogram.qmd
             - text: type_jitter
               file: man/type_jitter.qmd
+            - text: type_qq
+              file: man/type_qq.qmd
             - text: type_spineplot
               file: man/type_spineplot.qmd
           - section: Functions
             contents:
             - text: type_abline
               file: man/type_abline.qmd
+            - text: type_function
+              file: man/type_function.qmd
             - text: type_hline
               file: man/type_hline.qmd
             - text: type_vline

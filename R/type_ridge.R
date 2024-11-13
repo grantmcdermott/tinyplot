@@ -18,7 +18,7 @@
 #' tinyplot(Month ~ Ozone,
 #'   data = airquality,
 #'   type = type_ridge(offset = .5),
-#'   bg = "light blue", col = "black"))
+#'   bg = "light blue", col = "black")
 #'
 #' @export
 type_ridge = function(offset = .8) {

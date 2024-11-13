@@ -4,7 +4,6 @@
 #' against observed values of `x` on the vertical axis.
 #'
 #' @param distribution Distribution function to use.
-#' @inheritParams tinyplot
 #' @examples
 #' tinyplot(~mpg, data = mtcars, type = type_qq())
 #'

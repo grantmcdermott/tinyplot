@@ -1098,7 +1098,8 @@ tinyplot.default = function(
         # For free facets, we need to reset par(usr) based extent of that
         # particular facet (which we calculated and saved to the .fusr env var
         # back in draw_facet_window())
-        if (isTRUE(facet.args[["free"]]) && length(ix)>0) {
+        # if (isTRUE(facet.args[["free"]]) && length(ix)>0) {
+        if (isTRUE(facet.args[["free"]])) {
           fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
           par(usr = fusr[[ii]])
         }

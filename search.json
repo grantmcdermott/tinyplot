@@ -859,14 +859,26 @@
     "href": "man/type_function.html",
     "title": "tinyplot",
     "section": "",
-    "text": "Add function to a plot\n\n\n\ntype_function(fun = dnorm, args = list(), n = 101, ...)\n\n\n\n\n\n\n\nfun\n\n\nFunction of x to plot.\n\n\n\n\nargs\n\n\nAdditional arguments to be passed to fun\n\n\n\n\nn\n\n\nNumber of points to interpolate on the x axis.\n\n\n\n\n…\n\n\nAdditional arguments are passed to the lines() function, ex: type=“p”, col=“pink”.\n\n\n\n\n\n\nWhen using type_function() in a tinyplot() call, the x value indicates the range of values to plot on the x-axis.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# Plot the normal density\ntinyplot(x = -4:4, type = type_function(dnorm))\n\n\n\n\n\n\n\n# Extra arguments for the function to plot\ntinyplot(x = -1:10, type = type_function(\n  fun = dnorm, args = list(mean = 3)\n))\n\n\n\n\n\n\n\n# Additional arguments are passed to the `lines()` function.\ntinyplot(x = -4:4, type = type_function(\n  fun = dnorm,\n  col = \"pink\", type = \"p\", pch = 3\n))"
+    "text": "Add function to a plot\n\n\n\ntype_function(fun = dnorm, args = list(), n = 101, ...)\n\n\n\n\n\n\n\nfun\n\n\nFunction of x to plot. Defaults to dnorm.\n\n\n\n\nargs\n\n\nAdditional arguments to be passed to fun\n\n\n\n\nn\n\n\nNumber of points to interpolate on the x axis.\n\n\n\n\n…\n\n\nAdditional arguments are passed to the lines() function, ex: type=“p”, col=“pink”.\n\n\n\n\n\n\nWhen using type_function() in a tinyplot() call, the x value indicates the range of values to plot on the x-axis.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# Plot the normal density\ntinyplot(x = -4:4, type = type_function(dnorm))\n\n\n\n\n\n\n\n# Extra arguments for the function to plot\ntinyplot(x = -1:10, type = type_function(\n  fun = dnorm, args = list(mean = 3)\n))\n\n\n\n\n\n\n\n# Additional arguments are passed to the `lines()` function.\ntinyplot(x = -4:4, type = type_function(\n  fun = dnorm,\n  col = \"pink\", type = \"p\", pch = 3\n))\n\n\n\n\n\n\n\n# Custom function example\n# (Here using the `\\()` anonymous function syntax introduced in R 4.1.0)\ntinyplot(x = -4:4, type = type_function(fun = \\(x) 0.5 * exp(-abs(x))))",
+    "crumbs": [
+      "Reference",
+      "Plot types",
+      "Functions",
+      "type_function"
+    ]
   },
   {
     "objectID": "man/type_function.html#add-function-to-a-plot",
     "href": "man/type_function.html#add-function-to-a-plot",
     "title": "tinyplot",
     "section": "",
-    "text": "Add function to a plot\n\n\n\ntype_function(fun = dnorm, args = list(), n = 101, ...)\n\n\n\n\n\n\n\nfun\n\n\nFunction of x to plot.\n\n\n\n\nargs\n\n\nAdditional arguments to be passed to fun\n\n\n\n\nn\n\n\nNumber of points to interpolate on the x axis.\n\n\n\n\n…\n\n\nAdditional arguments are passed to the lines() function, ex: type=“p”, col=“pink”.\n\n\n\n\n\n\nWhen using type_function() in a tinyplot() call, the x value indicates the range of values to plot on the x-axis.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# Plot the normal density\ntinyplot(x = -4:4, type = type_function(dnorm))\n\n\n\n\n\n\n\n# Extra arguments for the function to plot\ntinyplot(x = -1:10, type = type_function(\n  fun = dnorm, args = list(mean = 3)\n))\n\n\n\n\n\n\n\n# Additional arguments are passed to the `lines()` function.\ntinyplot(x = -4:4, type = type_function(\n  fun = dnorm,\n  col = \"pink\", type = \"p\", pch = 3\n))"
+    "text": "Add function to a plot\n\n\n\ntype_function(fun = dnorm, args = list(), n = 101, ...)\n\n\n\n\n\n\n\nfun\n\n\nFunction of x to plot. Defaults to dnorm.\n\n\n\n\nargs\n\n\nAdditional arguments to be passed to fun\n\n\n\n\nn\n\n\nNumber of points to interpolate on the x axis.\n\n\n\n\n…\n\n\nAdditional arguments are passed to the lines() function, ex: type=“p”, col=“pink”.\n\n\n\n\n\n\nWhen using type_function() in a tinyplot() call, the x value indicates the range of values to plot on the x-axis.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# Plot the normal density\ntinyplot(x = -4:4, type = type_function(dnorm))\n\n\n\n\n\n\n\n# Extra arguments for the function to plot\ntinyplot(x = -1:10, type = type_function(\n  fun = dnorm, args = list(mean = 3)\n))\n\n\n\n\n\n\n\n# Additional arguments are passed to the `lines()` function.\ntinyplot(x = -4:4, type = type_function(\n  fun = dnorm,\n  col = \"pink\", type = \"p\", pch = 3\n))\n\n\n\n\n\n\n\n# Custom function example\n# (Here using the `\\()` anonymous function syntax introduced in R 4.1.0)\ntinyplot(x = -4:4, type = type_function(fun = \\(x) 0.5 * exp(-abs(x))))",
+    "crumbs": [
+      "Reference",
+      "Plot types",
+      "Functions",
+      "type_function"
+    ]
   },
   {
     "objectID": "LICENSE.html",

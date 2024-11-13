@@ -1095,16 +1095,12 @@ tinyplot.default = function(
         if (mfgj == 0) mfgj = nfacet_cols
         par(mfg = c(mfgi, mfgj))
         
-        # Free free facets, we need to reset par(usr) based on the current data
-        # data subset limits
+        # For free facets, we need to reset par(usr) based extent of that
+        # particular facet (which we calculated and saved to the .fusr env var
+        # back in draw_facet_window())
         if (isTRUE(facet.args[["free"]]) && length(ix)>0) {
-          xlim = range(ix, na.rm = TRUE)
-          ylim = range(iy, na.rm = TRUE)
-          if (!is.null(iymin)) ylim = range(ylim, range(iymin, na.rm = TRUE), na.rm = TRUE)
-          if (!is.null(iymax)) ylim = range(ylim, range(iymax, na.rm = TRUE), na.ram = TRUE)
-          xlim = extendrange(range(ix, na.rm = TRUE), f = 0.04)
-          fusr = c(extendrange(xlim), extendrange(ylim))
-          par(usr = fusr)
+          fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
+          par(usr = fusr[[ii]])
         }
       }
 

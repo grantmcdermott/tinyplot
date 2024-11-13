@@ -152,7 +152,7 @@ draw_facet_window = function(grid, ...) {
         if (!(nfacet_rows == 2 && nfacet_cols == 2)) fmar = fmar * .75
       }
       # Extra reduction if no plot frame to reduce whitespace
-      if (isFALSE(frame.plot)) {
+      if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
         fmar = fmar - 0.5
       }
 
@@ -236,9 +236,44 @@ draw_facet_window = function(grid, ...) {
         yside = 2
       }
 
+      
       # axes, frame.plot and grid
-      if (isTRUE(axes)) {
-        if (isTRUE(frame.plot)) {
+      if (isTRUE(axes) || isTRUE(facet.args[["free"]])) {
+        
+        # Special logic if facets are free...
+        if (isTRUE(facet.args[["free"]])) {
+          # First, we need to calculate the plot extent and axes range of each
+          # individual facet.
+          xfree = split(c(x, xmin, xmax), facet)[[ii]]
+          yfree = split(c(y, ymin, ymax), facet)[[ii]]
+          xlim = range(xfree, na.rm = TRUE) 
+          ylim = range(yfree, na.rm = TRUE) 
+          # We'll save this in a special .fusr env var (list) that we'll re-use
+          # when it comes to plotting the actual elements later
+          if (ii==1) {
+            fusr = replicate(4, vector("double", length = nfacets), simplify = FALSE)
+            assign(".fusr", fusr, envir = get(".tinyplot_env", envir = parent.env(environment())))
+          }
+          fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
+          fusr[[ii]] = c(extendrange(xlim, f = 0.04), extendrange(ylim, f = 0.04))
+          assign(".fusr", fusr, envir = get(".tinyplot_env", envir = parent.env(environment())))
+          # Explicitly set (override) the current facet extent
+          print(fusr[[ii]])
+          par(usr = fusr[[ii]])
+          # if plot frame is true then print axes per normal...
+          if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
+            tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
+          } else {
+            tinyAxis(xfree, side = xside, type = xaxt)
+          }
+          if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
+            tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+          } else {
+            tinyAxis(yfree, side = yside, type = yaxt)
+          }
+          
+        # For fixed facets we can just reuse the same plot extent and axes limits   
+        } else if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
           if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
             tinyAxis(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
@@ -456,18 +491,6 @@ draw_facet_window = function(grid, ...) {
       
       # drawn elements
       if (!is.null(draw)) eval(draw)
-      
-      # For free facets, we need to enforce the plot frame and reset the (facet)
-      # window limits based on the data subset
-      if (isTRUE(facet.args[["free"]])) {
-        # xlim = range(split(x, facet)[[ii]], na.rm = TRUE)
-        # ylim = range(split(y, facet)[[ii]], na.rm = TRUE)
-        xlim = range(split(c(x, xmin, xmax), facet)[[ii]], na.rm = TRUE)
-        ylim = range(split(c(y, ymin, ymax), facet)[[ii]], na.rm = TRUE)
-        # if (!is.null(ymin)) ylim = range(ylim, range(split(ymin, facet)[[ii]], na.rm = TRUE), na.rm = TRUE)
-        # if (!is.null(ymax)) ylim = range(ylim, range(split(ymax, facet)[[ii]], na.rm = TRUE), na.rm = TRUE)
-        frame.plot = TRUE
-      }
       
     } # end of ii facet loop
   } # end of add check

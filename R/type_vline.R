@@ -15,6 +15,13 @@
 #' @export
 type_vline = function(v = 0, col = "black", lty = 1, lwd = 1) {
   assert_numeric(v)
+  data_vline = function(datapoints, ...) {
+    if (nrow(datapoints) == 0) {
+      msg = "`type_vline() only works on existing plots with x and y data points."
+      stop(msg, call. = FALSE)
+    }
+    return(list())
+  }
   draw_vline = function() {
     fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
       nfacets = length(data_facet)
@@ -62,7 +69,7 @@ type_vline = function(v = 0, col = "black", lty = 1, lwd = 1) {
   }
   out = list(
     draw = draw_vline(),
-    data = NULL,
+    data = data_vline,
     name = "vline"
   )
   class(out) = "tinyplot_type"

@@ -8,6 +8,13 @@
 #' tinyplot_add(type = type_hline(h = 12, col = "pink", lty = 3, lwd = 3))
 #' @export
 type_hline = function(h = 0, col = NULL, lty = NULL, lwd = NULL) {
+  data_hline = function(datapoints, ...) {
+    if (nrow(datapoints) == 0) {
+      msg = "`type_hline() only works on existing plots with x and y data points."
+      stop(msg, call. = FALSE)
+    }
+    return(list())
+  }
   draw_hline = function() {
     fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
       nfacets = length(data_facet)
@@ -55,7 +62,7 @@ type_hline = function(h = 0, col = NULL, lty = NULL, lwd = NULL) {
   }
   out = list(
     draw = draw_hline(),
-    data = NULL,
+    data = data_hline,
     name = "hline"
   )
   class(out) = "tinyplot_type"

@@ -1,6 +1,11 @@
 source("helpers.R")
 using("tinysnapshot")
 
+expect_error(tinyplot(type = type_hline(h = 10)), pattern = "data points")
+expect_error(tinyplot(type = type_vline(v = 10)), pattern = "data points")
+expect_error(tinyplot(type = type_abline(a = 0, b = 1)), pattern = "data points")
+
+
 f = function() {
   plt(mpg ~ hp | factor(cyl), facet = ~ factor(cyl), data = mtcars)
   plt_add(type = type_hline(h = 12, col = "pink", lty = 3, lwd = 3))
@@ -9,7 +14,8 @@ expect_snapshot_plot(f, label = "hline")
 
 
 f = function() {
-  tinyplot(mpg ~ hp | factor(cyl), facet = ~ factor(cyl), data = mtcars, 
+  tinyplot(mpg ~ hp | factor(cyl),
+    facet = ~ factor(cyl), data = mtcars,
     col = c("black", "green", "orange"))
   tinyplot_add(type = type_vline(
     v = c(100, 150, 200), lty = 3, lwd = 3,
@@ -19,7 +25,7 @@ f = function() {
 expect_snapshot_plot(f, label = "vline_vector")
 
 
-## TODO: uncomment this when ready to test. Probably after the tinyplot_add 
+## TODO: uncomment this when ready to test. Probably after the tinyplot_add
 ## refactor to save in an environment instead of global option
 # f = function() {
 #   mod = lm(mpg ~ hp, data = mtcars)

@@ -10,6 +10,13 @@
 #' tinyplot_add(type = type_abline(a = 0, b = 1))
 #' @export
 type_abline = function(a = 0, b = 1, col = NULL, lty = NULL, lwd = NULL) {
+  data_abline = function(datapoints, ...) {
+    if (nrow(datapoints) == 0) {
+      msg = "`type_abline() only works on existing plots with x and y data points."
+      stop(msg, call. = FALSE)
+    }
+    return(list())
+  }
   draw_abline = function() {
     fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
       nfacets = length(data_facet)
@@ -64,7 +71,7 @@ type_abline = function(a = 0, b = 1, col = NULL, lty = NULL, lwd = NULL) {
   }
   out = list(
     draw = draw_abline(),
-    data = NULL,
+    data = data_abline,
     name = "abline"
   )
   class(out) = "tinyplot_type"

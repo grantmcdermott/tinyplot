@@ -25,28 +25,38 @@ how their plots behave, and avoids guesswork on our side.
 - `ribbon.alpha` is deprecated in `tinyplot()`. Use the `alpha` argument of the
 `type_ribbon()` function instead: `plt(..., type = type_ribbon(alpha = 0.5))`
 
-New features:
+New plot type engine:
 
 - Alongside the standard character shortcuts (`"p"`, `"l"`, etc.), the `type`
-argument now accepts functional `type_*()` equivalents. These functional plot
-types enable a variety of additional features. (#222 @vincentarelbundock)
-  - New model-based plot types:
-    - `type_glm()` (shortcut: `"glm"`)
-    - `type_lm()` (shortcut: `"lm"`)
-    - `type_loess()` (shortcut: `"loess"`)
-    - `type_spline()` (shortcut: `"spline"`)
-  - `type_function()` can trace arbitrary functions.
-  - New `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
-  plots and spinograms. These are modified versions of a histogram or mosaic
-  plot, and are particularly useful for visualizing factor variables. (#233
-  @zeileis with contributions from @grantmcdermott)
-  - Explicit argument passing for modified behaviour type
+  argument now accepts functional `type_*()` equivalents. These functional plot
+  types enable a variety of additional features. (#222 @vincentarelbundock)
+- Explicit argument passing for modified behaviour type
   (e.g., `type_lm(se = FALSE)`).
-  - Users can define their own custom types by creating `type_<typename>()`
+- Users can define their own custom types by creating `type_<typename>()`
   functions.
-  - More details are provided in the dedicated
+- More details are provided in the dedicated
   [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html)
   on the website.)
+
+New plot types:
+
+  - Models:
+    - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
+    - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)
+    - `type_loess()` (shortcut: `"loess"`) (@vincentarelbundock)
+    - `type_spline()` (shortcut: `"spline"`)
+  - Functions:
+    - `type_function()` can trace arbitrary functions. (#250 @vincentarelbundock)
+  - Visualizations:
+    - `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
+    plots and spinograms. These are modified versions of a histogram or mosaic
+    plot, and are particularly useful for visualizing factor variables. (#233
+    @zeileis with contributions from @grantmcdermott)
+    - `type_ridge()` (shortcut: "ridge") type for producing ridge plots 
+      (aka joy plots). (#252 @vincentarelbundock)
+
+New features:
+
 - The new `flip` argument allows for easily flipping (swapping) the orientation
   of the x and y axes. This should work regardless of plot type, e.g.
   `plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.

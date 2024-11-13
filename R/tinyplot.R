@@ -1,11 +1,11 @@
 #' @title Lightweight extension of the base R plotting function
-#'  
+#'
 #' @description
 #' Enhances the base \code{\link[graphics]{plot}} function. Supported features
 #' include automatic legends and facets for grouped data, additional plot types,
 #' theme customization, and so on. Users can call either `tinyplot()`, or its
 #' shorthand alias `plt()`.
-#' 
+#'
 #' @md
 #' @param x,y the x and y arguments provide the x and y coordinates for the
 #'   plot. Any reasonable way of defining the coordinates is acceptable; most
@@ -23,7 +23,7 @@
 #'   them with \code{\link[base]{interaction}}.
 #' @param facet the faceting variable(s) that you want arrange separate plot
 #'   windows by. Can be specified in various ways:
-#'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in 
+#'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in
 #'   atomic form, simply interact them, e.g.
 #'   `interaction(fvar1, fvar2)` or `factor(fvar1):factor(fvar2)`.
 #'   - As a one-sided formula, e.g. `facet = ~fvar`. Multiple variables can be
@@ -59,7 +59,7 @@
 #'   \code{\link[tinyplot]{tpar}} for more details.
 #'   - `cex`, `font`, `col`, `bg`, `border` for adjusting the facet title text
 #'   and background. Default values for these arguments are inherited from
-#'   \code{\link[tinyplot]{tpar}} (where they take a "facet." prefix, e.g. 
+#'   \code{\link[tinyplot]{tpar}} (where they take a "facet." prefix, e.g.
 #'   `tpar("facet.cex")`). The latter function can also be used to set these
 #'   features globally for all `tinyplot` plots.
 #' @param formula a \code{\link[stats]{formula}} that optionally includes
@@ -71,11 +71,11 @@
 #'   `formula` and `x` arguments should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
-#' @param type character string or call to a `type_*()` function giving the 
+#' @param type character string or call to a `type_*()` function giving the
 #'   type of plot desired.
-#'   - NULL (default): Choose a sensible type for the type of `x` and `y` inputs 
+#'   - NULL (default): Choose a sensible type for the type of `x` and `y` inputs
 #'     (i.e., usually `"p"`).
-#'   - 1-character values supported by \code{\link[graphics]{plot}}: 
+#'   - 1-character values supported by \code{\link[graphics]{plot}}:
 #'     - `"p"` Points
 #'     - `"l"` Lines
 #'     - `"b"` Both points and lines
@@ -93,8 +93,8 @@
 #'      - `"boxplot"` or `type_boxplot()`
 #'      - `"histogram"` or `type_histogram()`
 #'      - `"pointrange"` or `"errorbar"`: segment intervals
-#'      - `"ribbon"` or `"area"` for polygon intervals (where area plots 
-#'        are a special case of ribbon plots with `ymin` set to 0 and `ymax` 
+#'      - `"ribbon"` or `"area"` for polygon intervals (where area plots
+#'        are a special case of ribbon plots with `ymin` set to 0 and `ymax`
 #'        set to `y`; see below).
 #'      - `"lm"` or `type_lm()`: Linear model fit
 #'      - `"glm"` or `type_glm()`: Generalized linear model fit
@@ -110,7 +110,7 @@
 #'   the range of the `finite` values to be plotted should be used.
 #' @param ylim the y limits of the plot.
 #' @param log a character string which contains "x" if the x axis is to be
-#'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if 
+#'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
 #'   both axes are to be logarithmic.
 #' @param empty logical indicating whether the interior plot region should be
 #'  left empty. The default is `FALSE`. Setting to `TRUE` has a similar effect
@@ -178,7 +178,7 @@
 #'    "right!", "topleft!", or "bottom!". This will place the legend _outside_
 #'    the plotting area and adjust the margins of the plot accordingly. Finally,
 #'    users can also turn off any legend printing by specifying "none".
-#'    - Logical value, where TRUE corresponds to the default case above (same 
+#'    - Logical value, where TRUE corresponds to the default case above (same
 #'    effect as specifying NULL) and FALSE turns the legend off (same effect as
 #'    specifying "none").
 #'    - A list or, equivalently, a dedicated `legend()` function with supported
@@ -208,7 +208,7 @@
 #'   can supply a special `lwd = "by"` convenience argument, in which case the
 #'   line width will automatically loop over the number of groups. This
 #'   automatic looping will be centered at the global line width value (i.e.,
-#`   par("lwd")`) and pad on either side of that.
+# `   par("lwd")`) and pad on either side of that.
 #' @param bg background fill color for the open plot symbols 21:25 (see
 #'   `points.default`), as well as ribbon and area plot types. For the latter
 #'   group---including filled density plots---an automatic alpha transparency
@@ -216,18 +216,18 @@
 #'   Users can also supply either one of two special convenience arguments that
 #'   will cause the background fill to inherit the automatic grouped coloring
 #'   behaviour of `col`:
-#'   
+#'
 #'   - `bg = "by"` will insert a background fill that inherits the main color
 #'   mappings from `col`.
 #'   - `by = <numeric[0,1]>` (i.e., a numeric in the range `[0,1]`) will insert
 #'   a background fill that inherits the main color mapping(s) from `col`, but
 #'   with added alpha-transparency.
-#'   
+#'
 #'   For both of these convenience arguments, note that the (grouped) `bg`
 #'   mappings will persist even if the (grouped) `col` defaults are themselves
 #'   overridden. This can be useful if you want to preserve the grouped palette
 #'   mappings by background fill but not boundary color, e.g. filled points. See
-#'   examples. 
+#'   examples.
 #' @param fill alias for `bg`. If non-NULL values for both `bg` and `fill` are
 #'   provided, then the latter will be ignored in favour of the former.
 #' @param alpha a numeric in the range `[0,1]` for adjusting the alpha channel
@@ -296,63 +296,63 @@
 #' @param xaxs,yaxs,... other graphical parameters (see \code{\link[graphics]{par}}).
 #'
 #' @returns No return value, called for side effect of producing a plot.
-#'   
+#'
 #' @details
 #' Disregarding the enhancements that it supports, `tinyplot` tries as far as
 #' possible to mimic the behaviour and syntax logic of the original base
 #' \code{\link[graphics]{plot}} function. Users should therefore be able to swap
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
-#'   
+#'
 #' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
 #' @importFrom graphics abline arrows axis Axis box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit
 #' @importFrom tools file_ext
-#' 
+#'
 #' @examples
-#' #' 
+#' #'
 #' aq = transform(
 #'   airquality,
 #'   Month = factor(Month, labels = month.abb[unique(Month)])
 #' )
-#' 
+#'
 #' # In most cases, `tinyplot` should be a drop-in replacement for regular
 #' # `plot` calls. For example:
-#' 
+#'
 #' op = tpar(mfrow = c(1, 2))
 #' plot(0:10, main = "plot")
 #' tinyplot(0:10, main = "tinyplot")
 #' tpar(op) # restore original layout
-#' 
+#'
 #' # Aside: `tinyplot::tpar()` is a (near) drop-in replacement for `par()`
-#' 
-#' # Unlike vanilla plot, however, tinyplot allows you to characterize groups 
+#'
+#' # Unlike vanilla plot, however, tinyplot allows you to characterize groups
 #' # using either the `by` argument or equivalent `|` formula syntax.
-#' 
+#'
 #' with(aq, tinyplot(Day, Temp, by = Month)) ## atomic method
-#' tinyplot(Temp ~ Day | Month, data = aq)   ## formula method
-#' 
+#' tinyplot(Temp ~ Day | Month, data = aq) ## formula method
+#'
 #' # (Notice that we also get an automatic legend.)
-#' 
+#'
 #' # You can also use the equivalent shorthand `plt()` alias if you'd like to
 #' # save on a few keystrokes
-#' 
+#'
 #' plt(Temp ~ Day | Month, data = aq) ## shorthand alias
 #'
 #' # Use standard base plotting arguments to adjust features of your plot.
 #' # For example, change `pch` (plot character) to get filled points and `cex`
 #' # (character expansion) to increase their size.
-#' 
+#'
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   pch = 16,
 #'   cex = 2
 #' )
-#' 
+#'
 #' # We can add alpha transparency for overlapping points
-#' 
+#'
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
@@ -360,112 +360,112 @@
 #'   cex = 2,
 #'   alpha = 0.3
 #' )
-#' 
-#' # To get filled points with a common solid background color, use an 
+#'
+#' # To get filled points with a common solid background color, use an
 #' # appropriate plotting character (21:25) and combine with one of the special
 #' # `bg` convenience arguments.
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
-#'   pch = 21,     # use filled circles
+#'   pch = 21, # use filled circles
 #'   cex = 2,
-#'   bg = 0.3,     # numeric in [0,1] adds a grouped background fill with transparency
+#'   bg = 0.3, # numeric in [0,1] adds a grouped background fill with transparency
 #'   col = "black" # override default color mapping; give all points a black border
 #' )
-#' 
+#'
 #' # Converting to a grouped line plot is a simple matter of adjusting the
 #' # `type` argument.
-#' 
+#'
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "l"
 #' )
-#' 
+#'
 #' # Similarly for other plot types, including some additional ones provided
-#' # directly by tinyplot, e.g. density plots or internal plots (ribbons, 
+#' # directly by tinyplot, e.g. density plots or internal plots (ribbons,
 #' # pointranges, etc.)
-#' 
+#'
 #' tinyplot(
 #'   ~ Temp | Month,
 #'   data = aq,
 #'   type = "density",
 #'   fill = "by"
 #' )
-#' 
+#'
 #' # Facet plots are supported too. Facets can be drawn on their own...
-#' 
+#'
 #' tinyplot(
 #'   Temp ~ Day,
-#'   facet = ~ Month, 
+#'   facet = ~Month,
 #'   data = aq,
 #'   type = "area",
 #'   main = "Temperatures by month"
 #' )
-#' 
+#'
 #' # ... or combined/contrasted with the by (colour) grouping.
-#' 
+#'
 #' aq = transform(aq, Summer = Month %in% c("Jun", "Jul", "Aug"))
 #' tinyplot(
 #'   Temp ~ Day | Summer,
-#'   facet = ~ Month, 
+#'   facet = ~Month,
 #'   data = aq,
 #'   type = "area",
 #'   palette = "dark2",
 #'   main = "Temperatures by month and season"
 #' )
-#' 
+#'
 #' # Users can override the default square window arrangement by passing `nrow`
 #' # or `ncol` to the helper facet.args argument. Note that we can also reduce
 #' # axis label repetition across facets by turning the plot frame off.
-#' 
+#'
 #' tinyplot(
 #'   Temp ~ Day | Summer,
-#'   facet = ~ Month, facet.args = list(nrow = 1),
+#'   facet = ~Month, facet.args = list(nrow = 1),
 #'   data = aq,
 #'   type = "area",
 #'   palette = "dark2",
 #'   frame = FALSE,
 #'   main = "Temperatures by month and season"
 #' )
-#' 
+#'
 #' # Use a two-sided formula to arrange the facet windows in a fixed grid.
 #' # LHS -> facet rows; RHS -> facet columns
-#' 
-#' aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
-#' aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+#'
+#' aq$hot = ifelse(aq$Temp >= 75, "hot", "cold")
+#' aq$windy = ifelse(aq$Wind >= 15, "windy", "calm")
 #' tinyplot(
-#'  Temp ~ Day,
-#'  facet = windy ~ hot,
-#'  data = aq
+#'   Temp ~ Day,
+#'   facet = windy ~ hot,
+#'   data = aq
 #' )
-#' 
+#'
 #' # To add common elements to each facet, use the `draw` argument
-#' 
+#'
 #' tinyplot(
-#'  Temp ~ Day,
-#'  facet = windy ~ hot,
-#'  data = aq,
-#'  draw = abline(h = 75, lty = 2, col = "hotpink")
+#'   Temp ~ Day,
+#'   facet = windy ~ hot,
+#'   data = aq,
+#'   draw = abline(h = 75, lty = 2, col = "hotpink")
 #' )
-#' 
+#'
 #' # The (automatic) legend position and look can be customized using
 #' # appropriate arguments. Note the trailing "!" in the `legend` position
 #' # argument below. This tells `tinyplot` to place the legend _outside_ the plot
 #' # area.
-#' 
+#'
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "l",
 #'   legend = legend("bottom!", title = "Month of the year", bty = "o")
 #' )
-#' 
+#'
 #' # The default group colours are inherited from either the "R4" or "Viridis"
 #' # palettes, depending on the number of groups. However, all palettes listed
 #' # by `palette.pals()` and `hcl.pals()` are supported as convenience strings,
 #' # or users can supply a valid palette-generating function for finer control
-#' 
+#'
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
@@ -486,11 +486,11 @@
 #'   frame = FALSE, grid = TRUE
 #' )
 #' tpar(op) # restore original graphics parameters
-#' 
+#'
 #' # Note: For more examples and a detailed walkthrough, please see the
 #' # introductory tinyplot tutorial available online:
 #' # https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html
-#' 
+#'
 #' @rdname tinyplot
 #' @export
 tinyplot =
@@ -546,9 +546,7 @@ tinyplot.default = function(
     flip = FALSE,
     xaxs = NULL,
     yaxs = NULL,
-    ...
-    ) {
-
+    ...) {
   # save for plt_add()
   options(tinyplot_last_call = match.call(tinyplot,
     call = sys.call(sys.parent()), expand.dots = TRUE))
@@ -561,7 +559,7 @@ tinyplot.default = function(
 
   if (isTRUE(add)) legend = FALSE
   draw = substitute(draw)
-  
+
 
   # sanitize arguments
 
@@ -629,7 +627,7 @@ tinyplot.default = function(
     deparse1(substitute(y))
   }
   by_dep = deparse1(substitute(by))
-  
+
   ## coerce character variables to factors
   if (!is.null(x) && is.character(x)) x = factor(x)
   if (!is.null(y) && is.character(y)) y = factor(y)
@@ -669,7 +667,7 @@ tinyplot.default = function(
       ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
-    } else if (!type %in% c("density", "histogram")) {
+    } else if (!type %in% c("density", "histogram", "function")) {
       y = x
       x = seq_along(x)
       if (is.null(xlab)) xlab = "Index"
@@ -677,7 +675,6 @@ tinyplot.default = function(
       if (is.null(ylab)) ylab = "Frequency"
     }
   }
-  
 
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
@@ -695,9 +692,11 @@ tinyplot.default = function(
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)
-  datapoints[["rowid"]] = seq_len(nrow(datapoints))
-  datapoints[["facet"]] = if (!is.null(facet)) facet else ""
-  datapoints[["by"]] = if (!is.null(by)) by else ""
+  if (nrow(datapoints) > 0) {
+    datapoints[["rowid"]] = seq_len(nrow(datapoints))
+    datapoints[["facet"]] = if (!is.null(facet)) facet else ""
+    datapoints[["by"]] = if (!is.null(by)) by else ""
+  }
 
   ## initialize empty list with information that type_data
   ## can overwrite in order to pass on to type_draw
@@ -723,7 +722,7 @@ tinyplot.default = function(
     list2env(do.call(type_data, fargs), environment())
   }
 
-  
+
   # swap x and y values if flip is TRUE
   assert_flag(flip)
   # extra catch for boxplots
@@ -744,21 +743,21 @@ tinyplot.default = function(
       xaxt = yaxt
       yaxt = xaxt_cp
       if (!is.null(log)) {
-        log = if (log=="x") "y" else if (log=="y") "x" else log
+        log = if (log == "x") "y" else if (log == "y") "x" else log
       }
       # x/y vars
-      x_cp = datapoints[['x']]
-      datapoints[['x']] = datapoints[['y']]
-      datapoints[['y']] = x_cp
+      x_cp = datapoints[["x"]]
+      datapoints[["x"]] = datapoints[["y"]]
+      datapoints[["y"]] = x_cp
       # x/y min and max vars
-      xmin_cp = if (!is.null(datapoints[['xmin']])) datapoints[['xmin']] else NULL
-      datapoints[['xmin']] = if (!is.null(datapoints[['ymin']])) datapoints[['ymin']] else NULL
-      datapoints[['ymin']] = if (!is.null(xmin_cp)) xmin_cp else NULL
-      xmax_cp = if (!is.null(datapoints[['xmax']])) datapoints[['xmax']] else NULL
-      datapoints[['xmax']] = if (!is.null(datapoints[['ymax']])) datapoints[['ymax']] else NULL
-      datapoints[['ymax']] = if (!is.null(xmax_cp)) xmax_cp else NULL
+      xmin_cp = if (!is.null(datapoints[["xmin"]])) datapoints[["xmin"]] else NULL
+      datapoints[["xmin"]] = if (!is.null(datapoints[["ymin"]])) datapoints[["ymin"]] else NULL
+      datapoints[["ymin"]] = if (!is.null(xmin_cp)) xmin_cp else NULL
+      xmax_cp = if (!is.null(datapoints[["xmax"]])) datapoints[["xmax"]] else NULL
+      datapoints[["xmax"]] = if (!is.null(datapoints[["ymax"]])) datapoints[["ymax"]] else NULL
+      datapoints[["ymax"]] = if (!is.null(xmax_cp)) xmax_cp else NULL
       # clean up
-      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, x_cp, xmin_cp, xmax_cp) 
+      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, x_cp, xmin_cp, xmax_cp)
     } else {
       # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
       # and just catch a few elements that we draw beforehand.
@@ -804,8 +803,8 @@ tinyplot.default = function(
     ngrps = ngrps, col = col, palette = palette,
     gradient = by_continuous, ordered = by_ordered, alpha = alpha)
   bg = by_bg(
-    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous, 
-    by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette), 
+    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous,
+    by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette),
     ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type)
 
   ncolors = length(col)
@@ -1102,8 +1101,7 @@ tinyplot.default = function(
       # Draw the individual plot elements...
       if (!isTRUE(empty_plot)) {
         if (is.null(type_draw)) {
-            type_draw = switch(
-            type,
+          type_draw = switch(type,
             "ribbon" = type_ribbon()$draw,
             "polygon" = type_polygon()$draw,
             "rect" = type_rect()$draw,
@@ -1115,32 +1113,33 @@ tinyplot.default = function(
             "c" = ,
             "h" = ,
             "s" = ,
-            "S" = type_lines(type = type)$draw)
+            "S" = type_lines(type = type)$draw
+          )
         }
         type_draw(
-            ibg = ibg,
-            icol = icol,
-            ilty = ilty,
-            ilwd = ilwd,
-            ipch = ipch,
-            ix = ix,
-            ixmax = ixmax,
-            ixmin = ixmin,
-            iy = iy,
-            iymax = iymax,
-            iymin = iymin,
-            cex = cex,
-            dots = dots,
-            type = type,
-            x_by = x_by,
-            iby = i,
-            ifacet = ii,
-            facet_by = facet_by,
-            data_facet = idata,
-            data_by = split_data,
-            flip = flip,
-            type_info = type_info,
-            facet_window_args = facet_window_args)
+          ibg = ibg,
+          icol = icol,
+          ilty = ilty,
+          ilwd = ilwd,
+          ipch = ipch,
+          ix = ix,
+          ixmax = ixmax,
+          ixmin = ixmin,
+          iy = iy,
+          iymax = iymax,
+          iymin = iymin,
+          cex = cex,
+          dots = dots,
+          type = type,
+          x_by = x_by,
+          iby = i,
+          ifacet = ii,
+          facet_by = facet_by,
+          data_facet = idata,
+          data_by = split_data,
+          flip = flip,
+          type_info = type_info,
+          facet_window_args = facet_window_args)
       }
     }
   }
@@ -1164,7 +1163,7 @@ tinyplot.formula = function(
     type = NULL,
     xlim = NULL,
     ylim = NULL,
-# log = "",
+    # log = "",
     main = NULL,
     sub = NULL,
     xlab = NULL,
@@ -1196,7 +1195,7 @@ tinyplot.formula = function(
       warning("only one of the arguments 'x' and 'formula' should be specified, defaulting to the 'formula' argument")
     }
   }
-  
+
   ## placeholder for legend title
   legend_args = list(x = NULL)
 
@@ -1216,7 +1215,7 @@ tinyplot.formula = function(
   xnam = names(x)[[1L]]
   if (length(names(x)) != 1L) warning(paste("formula should specify exactly one x-variable, using:", xnam))
   x = x[[xnam]]
-  
+
   ## extract y (if any)
   y = tinyframe(tf$y, mf)
   if (!is.null(y)) {
@@ -1295,6 +1294,3 @@ tinyplot.formula = function(
 #' @name plt
 #' @rdname tinyplot
 plt = tinyplot
-
-
-

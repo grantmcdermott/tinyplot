@@ -29,6 +29,7 @@
 #' # (Here using the `\()` anonymous function syntax introduced in R 4.1.0)
 #' tinyplot(x = -4:4, type = type_function(fun = \(x) 0.5 * exp(-abs(x))))
 #'
+#' @importFrom stats dnorm
 #' @export
 type_function = function(fun = dnorm, args = list(), n = 101, ...) {
   assert_function(fun)

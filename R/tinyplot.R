@@ -708,6 +708,7 @@ tinyplot.default = function(
       bg = bg,
       by = by,
       col = col,
+      lty = lty,
       facet = facet,
       facet.args = facet.args,
       palette = palette,

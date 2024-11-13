@@ -247,7 +247,9 @@ draw_facet_window = function(grid, ...) {
           xfree = split(c(x, xmin, xmax), facet)[[ii]]
           yfree = split(c(y, ymin, ymax), facet)[[ii]]
           xlim = range(xfree, na.rm = TRUE) 
-          ylim = range(yfree, na.rm = TRUE) 
+          ylim = range(yfree, na.rm = TRUE)
+          xext = extendrange(xlim, f = 0.04)
+          yext = extendrange(ylim, f = 0.04)
           # We'll save this in a special .fusr env var (list) that we'll re-use
           # when it comes to plotting the actual elements later
           if (ii==1) {
@@ -255,7 +257,7 @@ draw_facet_window = function(grid, ...) {
             assign(".fusr", fusr, envir = get(".tinyplot_env", envir = parent.env(environment())))
           }
           fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
-          fusr[[ii]] = c(extendrange(xlim, f = 0.04), extendrange(ylim, f = 0.04))
+          fusr[[ii]] = c(xext, yext)
           assign(".fusr", fusr, envir = get(".tinyplot_env", envir = parent.env(environment())))
           # Explicitly set (override) the current facet extent
           par(usr = fusr[[ii]])

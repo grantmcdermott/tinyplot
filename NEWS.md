@@ -35,6 +35,7 @@ types enable a variety of additional features. (#222 @vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`)
     - `type_loess()` (shortcut: `"loess"`)
     - `type_spline()` (shortcut: `"spline"`)
+    - `type_qq()`
   - New function-based types
     - `type_abline()`: line with intercept and slope
     - `type_hline()`: horizontal line

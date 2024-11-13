@@ -24,6 +24,7 @@
 #'   col = "pink", type = "p", pch = 3
 #' ))
 #'
+#' @importFrom stats dnorm
 #' @export
 type_function = function(fun = dnorm, args = list(), n = 101, ...) {
   assert_function(fun)

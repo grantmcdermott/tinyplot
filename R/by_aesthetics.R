@@ -114,7 +114,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
 
 by_pch = function(ngrps, type, pch = NULL) {
   no_pch = FALSE
-  if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot")) {
+  if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot", "qq")) {
     no_pch = TRUE
     pch = NULL
 
@@ -152,7 +152,7 @@ by_pch = function(ngrps, type, pch = NULL) {
 
 by_lty = function(ngrps, type, lty = NULL) {
   # We only care about line types, otherwise return NULL
-  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon", "boxplot", "rect", "segments")) {
+  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon", "boxplot", "rect", "segments", "qq")) {
     out = NULL
 
     # special "by" convenience keyword
@@ -233,18 +233,18 @@ by_lwd = function(ngrps, type, lwd = NULL) {
 
 
 by_bg = function(
-  adjustcolor,
-  alpha,
-  bg,
-  by,
-  by_continuous,
-  by_ordered,
-  col,
-  fill,
-  ngrps,
-  palette,
-  ribbon.alpha,
-  type) {
+    adjustcolor,
+    alpha,
+    bg,
+    by,
+    by_continuous,
+    by_ordered,
+    col,
+    fill,
+    ngrps,
+    palette,
+    ribbon.alpha,
+    type) {
   if (is.null(bg) && !is.null(fill)) bg = fill
   if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
     alpha = bg

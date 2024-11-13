@@ -1129,10 +1129,7 @@ tinyplot.default = function(
           iy = iy,
           iymax = iymax,
           iymin = iymin,
-<<<<<<< HEAD
           iz = iz,
-=======
->>>>>>> main
           cex = cex,
           dots = dots,
           type = type,

@@ -33,7 +33,8 @@ tinyplot(x = -1:10, type = type_function(
 ))
 
 # Additional arguments are passed to the `lines()` function.
-tinyplot(x = -4:4, type = type_function(fun = dnorm, 
+tinyplot(x = -4:4, type = type_function(
+  fun = dnorm,
   col = "pink", type = "p", pch = 3
 ))
 

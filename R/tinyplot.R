@@ -667,7 +667,7 @@ tinyplot.default = function(
       ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
-    } else if (!type %in% c("density", "histogram")) {
+    } else if (!type %in% c("density", "histogram", "function")) {
       y = x
       x = seq_along(x)
       if (is.null(xlab)) xlab = "Index"
@@ -675,7 +675,6 @@ tinyplot.default = function(
       if (is.null(ylab)) ylab = "Frequency"
     }
   }
-
 
   if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab)) ylab = y_dep
@@ -693,9 +692,11 @@ tinyplot.default = function(
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)
-  datapoints[["rowid"]] = seq_len(nrow(datapoints))
-  datapoints[["facet"]] = if (!is.null(facet)) facet else ""
-  datapoints[["by"]] = if (!is.null(by)) by else ""
+  if (nrow(datapoints) > 0) {
+    datapoints[["rowid"]] = seq_len(nrow(datapoints))
+    datapoints[["facet"]] = if (!is.null(facet)) facet else ""
+    datapoints[["by"]] = if (!is.null(by)) by else ""
+  }
 
   ## initialize empty list with information that type_data
   ## can overwrite in order to pass on to type_draw
@@ -1128,7 +1129,10 @@ tinyplot.default = function(
           iy = iy,
           iymax = iymax,
           iymin = iymin,
+<<<<<<< HEAD
           iz = iz,
+=======
+>>>>>>> main
           cex = cex,
           dots = dots,
           type = type,

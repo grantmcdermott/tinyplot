@@ -243,13 +243,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./man/type_ribbon.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_area, type_ribbon</span></a>
+ <span class="menu-text">type_area</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/type_ribbon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_ribbon</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./man/type_errorbar.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_errorbar, type_pointrange</span></a>
+ <span class="menu-text">type_errorbar</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/type_errorbar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_pointrange</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -328,12 +340,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
- <span class="menu-text">Models</span></a>
+ <span class="menu-text">Functions</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth3 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/type_abline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_abline</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/type_hline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_hline</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/type_vline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_vline</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Models</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth3 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./man/type_glm.html" class="sidebar-item-text sidebar-link">
@@ -364,13 +405,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
  <span class="menu-text">Options</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./man/tpar.html" class="sidebar-item-text sidebar-link">
@@ -443,8 +484,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="dev-version">0.2.1.99 (dev version)</h2>
 <p>Breaking changes:</p>
 <ul>
-<li>Type-specific arguments (i.e., affecting the default behaviour of a certain plot type) should no longer be passed via <code>...</code> in the main plotting function. Instead, these additional arguments must now be passed explicitly as part of the corresponding <code>type_*()</code> function in the <code>type</code> argument. So, for example, you should now use <code>plt(Nile, type = type_histogram(breaks = 30))</code> instead of <code>plt(Nile, type = "histogram", breaks = 30)</code> if you wanted to adjust the number of breaks. More details are provided below and also in the new dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a>. The essential idea is that shortcut character types (here: <code>"histogram"</code>) all still work, but are deliberately limited to default behaviour. In contrast, the functional equivalents (here: <code>type_histogram()</code>) are where we can customize behaviour by passing appropriate arguments. We’re sorry to introduce a breaking change, but this new approach should ensure that users have better control of how their plots behave, and avoids guesswork on our side.</li>
-<li><code>ribbon.alpha</code> is deprecated in <code>tinyplot()</code>. Use the <code>alpha</code> argument of the <code>type_ribbon()</code> function instead: <code>plt(..., type = type_ribbon(alpha = 0.5))</code></li>
+<li>Type-specific arguments (i.e., affecting the default behaviour of a certain plot type) should no longer be passed via <code>...</code> in the main plotting function. Instead, these additional arguments must now be passed explicitly as part of the corresponding <code>type_*()</code> function in the <code>type</code> argument. So, for example, you should now use <code>tinyplot(Nile, type = type_histogram(breaks = 30))</code> instead of <code>tinyplot(Nile, type = "histogram", breaks = 30)</code> if you wanted to adjust the number of breaks. More details are provided below and also in the new dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a>. The essential idea is that shortcut character types (here: <code>"histogram"</code>) all still work, but are deliberately limited to default behaviour. In contrast, the functional equivalents (here: <code>type_histogram()</code>) are where we can customize behaviour by passing appropriate arguments. We’re sorry to introduce a breaking change, but this new approach should ensure that users have better control of how their plots behave, and avoids guesswork on our side.</li>
+<li><code>ribbon.alpha</code> is deprecated in <code>tinyplot()</code>. Use the <code>alpha</code> argument of the <code>type_ribbon()</code> function instead: <code>tinyplot(..., type = type_ribbon(alpha = 0.5))</code></li>
 </ul>
 <p>New features:</p>
 <ul>
@@ -457,14 +498,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type_loess()</code> (shortcut: <code>"loess"</code>)</li>
 <li><code>type_spline()</code> (shortcut: <code>"spline"</code>)</li>
 </ul></li>
+<li>New function-based types
+<ul>
+<li><code>type_abline()</code>: line with intercept and slope</li>
+<li><code>type_hline()</code>: horizontal line</li>
+<li><code>type_vline()</code>: verticla line</li>
+<li><code>type_function()</code> arbitrary function.</li>
+</ul></li>
+<li><code>type_spineplot()</code> (shortcut: <code>"spineplot"</code>) type for producing spine</li>
 <li><code>type_function()</code> can trace arbitrary functions.</li>
 <li>New <code>type_spineplot()</code> (shortcut: <code>"spineplot"</code>) type for producing spine plots and spinograms. These are modified versions of a histogram or mosaic plot, and are particularly useful for visualizing factor variables. (<a href="https://github.com/grantmcdermott/tinyplot/issues/233">#233</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> with contributions from <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Explicit argument passing for modified behaviour type (e.g., <code>type_lm(se = FALSE)</code>).</li>
 <li>Users can define their own custom types by creating <code>type_&lt;typename&gt;()</code> functions.</li>
 <li>More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a> on the website.)</li>
 </ul></li>
-<li>The new <code>flip</code> argument allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li><code>tpar()</code> gains additional <code>grid.col</code>, <code>grid.lty</code>, and <code>grid.lwd</code> arguments for fine-grained control over the appearance of the default panel grid when <code>plt(..., grid = TRUE)</code> is called. (<a href="https://github.com/grantmcdermott/tinyplot/issues/237">#237</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>The new <code>flip</code> argument allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>tinyplot(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>tpar()</code> gains additional <code>grid.col</code>, <code>grid.lty</code>, and <code>grid.lwd</code> arguments for fine-grained control over the appearance of the default panel grid when <code>tinyplot(..., grid = TRUE)</code> is called. (<a href="https://github.com/grantmcdermott/tinyplot/issues/237">#237</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>The new <code>tinyplot_add()</code> (alias: <code>plt_add()</code>) convenience function allows easy layering of plots without having to specify repeat arguments. (<a href="https://github.com/grantmcdermott/tinyplot/issues/246">#246</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 </ul>
 <p>Bug fixes:</p>
@@ -570,7 +619,7 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li>We have a shiny new <code>tinyplot</code> logo. (<a href="https://github.com/grantmcdermott/tinyplot/issues/148">#148</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>The new <code>get_saved_par()</code> function can be used to retrieve the <code>par</code> settings from immediately before or immediately after the preceding <code>tinyplot</code> call. This function replaces some older (non-exported) internal functions that <code>tinyplot</code> was using to restore and control <code>par</code> environments. But it could also prove help to end users who are looking for additional ways to restore <code>par</code> settings after the fact. See <code>?get_saved_par</code> for some examples. (<a href="https://github.com/grantmcdermott/tinyplot/issues/152">#152</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>tinyplot</code>/<code>plt</code> gaina a new <code>alpha = &lt;numeric[0,1]&gt;</code> convenience argument for adding transparency to plot elements and colours. Example use: <code>plt(rnorm(1e3), pch = 19, alpha = 0.3)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/129">#129</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Similar to the preceding news item, transparency can be added to (grouped) background fill by passing <code>bg</code> (or its alias, <code>fill</code>) a numeric in the range <code>[0,1]</code>. This feature has the same effect as <code>bg = "by"</code> except for the added transparency. Example use: <code>plt(lat ~ long | depth, data = quakes, pch = 21, cex = 2, bg = 0.2)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/129">#129</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Similar to the preceding news item, transparency can be added to (grouped) background fill by passing <code>bg</code> (or its alias, <code>fill</code>) a numeric in the range <code>[0,1]</code>. This feature has the same effect as <code>bg = "by"</code> except for the added transparency. Example use: <code>tinyplot(lat ~ long | depth, data = quakes, pch = 21, cex = 2, bg = 0.2)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/129">#129</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Bug fixes:</p>
 <ul>

@@ -4,21 +4,20 @@
 \alias{type_ridge}
 \title{Ridge plot type}
 \usage{
-type_ridge(offset = 0.8, col = "grey", border = "white")
+type_ridge(offset = 0.8)
 }
 \arguments{
 \item{offset}{Numeric. Controls the vertical spacing between the ridges.
 Default is \code{0.8}. Smaller values will result in more overlap.}
-
-\item{col}{Character. Fill color of each ridge.}
-
-\item{border}{Character. Color of the ridge borders.}
 }
 \description{
 Type function for producing ridge plots (also known as joy plots),
 which display density distributions for multiple groups with vertical offsets.
 This function uses \code{tinyplot} scaffolding, which enables added functionality
 such as grouping and faceting.
+
+The line color is controlled by the \code{col} argument in the \code{tinyplot()} call.
+The fill color is controlled by the \code{bg} argument in the \code{tinyplot()} call.
 }
 \examples{
 tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")

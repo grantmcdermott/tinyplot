@@ -5,10 +5,12 @@
 #' This function uses `tinyplot` scaffolding, which enables added functionality
 #' such as grouping and faceting.
 #'
+#' The line color is controlled by the `col` argument in the `tinyplot()` call.
+#' The fill color is controlled by the `bg` argument in the `tinyplot()` call.
+#'
+#'
 #' @param offset Numeric. Controls the vertical spacing between the ridges.
 #'   Default is `0.8`. Smaller values will result in more overlap.
-#' @param col Character. Fill color of each ridge.
-#' @param border Character. Color of the ridge borders.
 #'
 #' @examples
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
@@ -18,7 +20,7 @@
 #'   type = type_ridge(offset = .5, col = "light blue", border = "black"))
 #'
 #' @export
-type_ridge = function(offset = .8, col = "grey", border = "white") {
+type_ridge = function(offset = .8) {
   data_ridge = function() {
     fun = function(datapoints, ...) {
       d = split(datapoints, datapoints$y)
@@ -46,11 +48,12 @@ type_ridge = function(offset = .8, col = "grey", border = "white") {
   }
 
   draw_ridge = function() {
-    fun = function(ix, iy, iz, ...) {
+    fun = function(ix, iy, iz, ibg, icol, ...) {
       d = data.frame(x = ix, y = iy, z = iz)
       ds = split(d, d$z)
+      if (is.null(ibg)) ibg = "grey"
       for (i in rev(seq_along(ds))) {
-        with(ds[[i]], polygon(x, y = y, col = col, border = border))
+        with(ds[[i]], polygon(x, y = y, col = ibg, border = icol))
       }
       lab = unique(d$z)
       val = cumsum(rep(offset, length(lab))) - offset

@@ -346,47 +346,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
- <span class="menu-text">Functions</span></a>
+ <span class="menu-text">Models</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth3 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../man/type_abline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_abline</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../man/type_function.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_function</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../man/type_hline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_hline</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../man/type_vline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_vline</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-          <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
- <span class="menu-text">Models</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth3 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_glm.html" class="sidebar-item-text sidebar-link">
@@ -409,6 +374,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/type_spline.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_spline</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Functions</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth3 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_abline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_abline</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_function</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_hline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_hline</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_vline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_vline</span></a>
   </div>
 </li>
       </ul>
@@ -784,7 +784,7 @@ Tip
 <section id="more-plot-types" class="level2">
 <h2 class="anchored" data-anchor-id="more-plot-types">More plot types</h2>
 <p>We have already seen several plot types above such as <code>"p"</code> (points), <code>"l"</code> (lines), and <code>"density"</code>. In general, <strong>tinyplot</strong> supports all of the primitive plot types/elements available in base R, as well as a number of additional plot types that can be a bit tedious to code up manually. The full list of supported plot types can be viewed in <a href="https://github.com/grantmcdermott/tinyplot/issues/97">this pinned GitHub issue</a>, or by checking the <a href="https://grantmcdermott.com/tinyplot/man/tinyplot.html#arguments"><code>?tinyplot</code></a> documentation.</p>
-<p>For example, <strong>tinyplot</strong> support interval plots via the <code>"pointrange"</code>, <code>"errorbar"</code>, <code>"ribbon"</code> type arguments. A canonical use-case is coefficient plots:</p>
+<p>For example, <strong>tinyplot</strong> supports interval plots via the <code>"pointrange"</code>, <code>"errorbar"</code>, <code>"ribbon"</code>, and related type arguments. A canonical use-case is coefficient plots:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(Temp <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Month <span class="sc">/</span> Day, <span class="at">data =</span> aq)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -904,7 +904,7 @@ Tip
 </div>
 </div>
 </div>
-<p>The <code>facet.args</code> customizations can also be set globally via the <code>tpar()</code> function. We will revisit this idea in the <span class="citation" data-cites="themes">@themes</span> section below.</p>
+<p>The <code>facet.args</code> customizations can also be set globally via the <code>tpar()</code> function. We will revisit this idea in the <strong>?@sec-themes</strong> section below.</p>
 <p>Finally, the <code>facet</code> argument also accepts a <em>two-sided</em> formula for arranging facets in a fixed grid layout. Here’s a simple (if contrived) example.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
@@ -929,8 +929,8 @@ Tip
 <h2 class="anchored" data-anchor-id="layers">Layers</h2>
 <p>In many contexts, it is convenient to build plots step-by-step, adding layers with different elements on top of a base. The <strong>tinyplot</strong> package offers a few ways to achieve this layering effect.</p>
 <p>Similar to many base plotting functions, users can invoke the <code>tinyplot(..., add=TRUE)</code> argument to draw a plot on top of an existing one, rather than opening a new window. However, while this argument is useful, it can become verbose since it requires users to make very similar successive calls, with many shared arguments.</p>
-<p>For this reason, the <strong>tinyplot</strong> package also provides a special <code>tinyplot_add()</code> (alias <code>plt_add()</code>) convenience function for adding layers to an existing tinyplot. The idea is that users need simply pass the <em>specific</em> arguments that they want to add or modify relative to the base layer, and all arguments will be inherited from the original.</p>
-<p>An example may help to demonstrate. Here we first draw some faceted points with group colouring and various other aesthetic tweaks. Next, we add regression lines with a simple <code>tinyplot_add(type = "lm")</code> call. Notice that the original grouping, data and aesthetic options are all carried over correctly, without having to repeat ourselves.</p>
+<p>For this reason, the <strong>tinyplot</strong> package provides a special <code>tinyplot_add()</code> (alias <code>plt_add()</code>) convenience function for adding layers to an existing tinyplot. The idea is that users need simply pass the <em>specific</em> arguments that they want to add or modify relative to the base layer, and all arguments will be inherited from the original.</p>
+<p>An example may help to demonstrate. Here we first draw some faceted points with group colouring and various other aesthetic tweaks. Next, we add regression fits with a simple <code>tinyplot_add(type = "lm")</code> call. Notice that the original grouping, data and aesthetic options are all carried over correctly, without having to repeat ourselves.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq,</span>
@@ -942,7 +942,7 @@ Tip
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>),</span>
 <span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Actual and predicted air temperatures"</span></span>
 <span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add regression lines</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add regression fits</span></span>
 <span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>

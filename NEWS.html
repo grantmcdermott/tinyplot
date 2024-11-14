@@ -346,47 +346,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
- <span class="menu-text">Functions</span></a>
+ <span class="menu-text">Models</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth3 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./man/type_abline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_abline</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./man/type_function.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_function</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./man/type_hline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_hline</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./man/type_vline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_vline</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-          <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
- <span class="menu-text">Models</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth3 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./man/type_glm.html" class="sidebar-item-text sidebar-link">
@@ -409,6 +374,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./man/type_spline.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_spline</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Functions</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth3 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/type_abline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_abline</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/type_function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_function</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/type_hline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_hline</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/type_vline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_vline</span></a>
   </div>
 </li>
       </ul>
@@ -496,18 +496,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="dev-version">0.2.1.99 (dev version)</h2>
 <p>Breaking changes:</p>
 <ul>
-<li>Type-specific arguments (i.e., affecting the default behaviour of a certain plot type) should no longer be passed via <code>...</code> in the main plotting function. Instead, these additional arguments must now be passed explicitly as part of the corresponding <code>type_*()</code> function in the <code>type</code> argument. So, for example, you should now use <code>tinyplot(Nile, type = type_histogram(breaks = 30))</code> instead of <code>tinyplot(Nile, type = "histogram", breaks = 30)</code> if you wanted to adjust the number of breaks. More details are provided below and also in the new dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a>. The essential idea is that shortcut character types (here: <code>"histogram"</code>) all still work, but are deliberately limited to default behaviour. In contrast, the functional equivalents (here: <code>type_histogram()</code>) are where we can customize behaviour by passing appropriate arguments. We’re sorry to introduce a breaking change, but this new approach should ensure that users have better control of how their plots behave, and avoids guesswork on our side.</li>
+<li>As part of our new plot <code>type</code> logic (see below), character-based shortcuts like <code>type = "p"</code>, <code>type = "hist"</code>, etc. are reserved for default behaviour. In turn, this means that any type-specific arguments for customizing behaviour should no longer be passed through the main <code>tinyplot(...)</code> function (i.e., via <code>...</code>), since they will be ignored. Rather, these ancilliary arguments must now be passed explicitly as part of the corresponding <code>type_*()</code> function to the <code>type</code> argument. For example, say that you want to change the default number of breaks in a histogram plot. Whereas previously you could have called, say, <code>tinyplot(Nile, type = "hist", breaks = 30)</code>, now you should instead call <code>tinyplot(Nile, type = type_hist(breaks = 30))</code>. We’re sorry for introducing a breaking change, but again this should only impact plots that deviate from the default behaviour. Taking a longer-term view, this new <code>type</code> logic ensures that users can better control how their plots behave, avoids guesswork on our side, and should help to reduce the overall maintenance burden of the package.</li>
 <li><code>ribbon.alpha</code> is deprecated in <code>tinyplot()</code>. Use the <code>alpha</code> argument of the <code>type_ribbon()</code> function instead: <code>tinyplot(..., type = type_ribbon(alpha = 0.5))</code></li>
 </ul>
-<p>New plot type engine:</p>
+<p>New plot <code>type</code> logic and functional equivalents:</p>
 <ul>
-<li>Alongside the standard character shortcuts (<code>"p"</code>, <code>"l"</code>, etc.), the <code>type</code> argument now accepts functional <code>type_*()</code> equivalents. These functional plot types enable a variety of additional features. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
-<li>Explicit argument passing for modified behaviour type (e.g., <code>type_lm(se = FALSE)</code>).</li>
+<li>Alongside the standard character shortcuts (<code>"p"</code>, <code>"l"</code>, etc.), the <code>type</code> argument now accepts functional <code>type_*()</code> equivalents (<code>type_points()</code>, <code>type_lines()</code>, etc.). These functional plot types enable a variety of additional features, as well as a more disciplined approach to explicit argument passing for customized type behaviour. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li>Users can define their own custom types by creating <code>type_&lt;typename&gt;()</code> functions.</li>
-<li>More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a> on the website.)</li>
+<li>More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a> on the website.</li>
 </ul>
 <p>New plot types:</p>
 <ul>
+<li>Visualizations:
+<ul>
+<li><code>type_spineplot()</code> (shortcut: <code>"spineplot"</code>) type for producing spine plots and spinograms. These are modified versions of a histogram or mosaic plot, and are particularly useful for visualizing factor variables. (<a href="https://github.com/grantmcdermott/tinyplot/issues/233">#233</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> with contributions from <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>type_qq()</code> (shortcut: “qq”) type for quantile-quantile plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/251">#251</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+</ul></li>
 <li>Models:
 <ul>
 <li><code>type_glm()</code> (shortcut: <code>"glm"</code>) <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
@@ -521,11 +525,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type_hline()</code>: horizontal line(s) (<a href="https://github.com/grantmcdermott/tinyplot/issues/249">#249</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li><code>type_vline()</code>: vertical line(s) (<a href="https://github.com/grantmcdermott/tinyplot/issues/249">#249</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li><code>type_function()</code>: arbitrary function. (<a href="https://github.com/grantmcdermott/tinyplot/issues/250">#250</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
-</ul></li>
-<li>Visualizations:
-<ul>
-<li><code>type_spineplot()</code> (shortcut: <code>"spineplot"</code>) type for producing spine plots and spinograms. These are modified versions of a histogram or mosaic plot, and are particularly useful for visualizing factor variables. (<a href="https://github.com/grantmcdermott/tinyplot/issues/233">#233</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> with contributions from <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li><code>type_qq()</code> (shortcut: “qq”) type for quantile-quantile plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/251">#251</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 </ul></li>
 </ul>
 <p>New features:</p>

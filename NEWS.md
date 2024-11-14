@@ -25,39 +25,50 @@ how their plots behave, and avoids guesswork on our side.
 - `ribbon.alpha` is deprecated in `tinyplot()`. Use the `alpha` argument of the
 `type_ribbon()` function instead: `tinyplot(..., type = type_ribbon(alpha = 0.5))`
 
-New features:
+New plot type engine:
 
 - Alongside the standard character shortcuts (`"p"`, `"l"`, etc.), the `type`
-argument now accepts functional `type_*()` equivalents. These functional plot
-types enable a variety of additional features. (#222 @vincentarelbundock)
-  - New model-based plot types:
-    - `type_glm()` (shortcut: `"glm"`)
-    - `type_lm()` (shortcut: `"lm"`)
-    - `type_loess()` (shortcut: `"loess"`)
-    - `type_spline()` (shortcut: `"spline"`)
-    - `type_qq()`
-  - New function-based types
-    - `type_abline()`: line with intercept and slope
-    - `type_hline()`: horizontal line
-    - `type_vline()`: verticla line
-    - `type_function()` arbitrary function.
-  - `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
-  - `type_function()` can trace arbitrary functions.
-  - New `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
-  plots and spinograms. These are modified versions of a histogram or mosaic
-  plot, and are particularly useful for visualizing factor variables. (#233
-  @zeileis with contributions from @grantmcdermott)
-  - Explicit argument passing for modified behaviour type
+  argument now accepts functional `type_*()` equivalents. These functional plot
+  types enable a variety of additional features. (#222 @vincentarelbundock)
+- Explicit argument passing for modified behaviour type
   (e.g., `type_lm(se = FALSE)`).
-  - Users can define their own custom types by creating `type_<typename>()`
+- Users can define their own custom types by creating `type_<typename>()`
   functions.
-  - More details are provided in the dedicated
+- More details are provided in the dedicated
   [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html)
   on the website.)
-- The new `flip` argument allows for easily flipping (swapping) the orientation
+
+New plot types:
+
+  - Models:
+    - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
+    - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)
+    - `type_loess()` (shortcut: `"loess"`) (@vincentarelbundock)
+    - `type_spline()` (shortcut: `"spline"`) (#241 @grantmcdermott)
+  - Functions:
+    - `type_abline()`: line(s) with intercept and slope (#249 @vincentarelbundock)
+    - `type_hline()`: horizontal line(s) (#249 @vincentarelbundock)
+    - `type_vline()`: vertical line(s) (#249 @vincentarelbundock)
+    - `type_function()`: arbitrary function. (#250 @vincentarelbundock)
+  - Visualizations:
+    - `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
+    plots and spinograms. These are modified versions of a histogram or mosaic
+    plot, and are particularly useful for visualizing factor variables. (#233
+    @zeileis with contributions from @grantmcdermott)
+    - `type_qq()` (shortcut: "qq") type for quantile-quantile plots. (#251
+    @vincentarelbundock)
+
+New features:
+
+- New `tinyplot()` arguments:
+  -  `flip <logical>` allows for easily flipping (swapping) the orientation
   of the x and y axes. This should work regardless of plot type, e.g.
   `tinyplot(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
   (#216 @grantmcdermott)
+  - `draw = <draw_funcs>` allows users to pass arbitrary drawing functions that
+  are evaluated as-is, before the main plotting elements. A core use case is
+  drawing common annotations across every facet of a faceted plot, e.g. text or
+  threshold lines. (#245 @grantmcdermott)
 - `tpar()` gains additional `grid.col`, `grid.lty`, and `grid.lwd` arguments for
   fine-grained control over the appearance of the default panel grid when
   `tinyplot(..., grid = TRUE)` is called. (#237 @grantmcdermott)

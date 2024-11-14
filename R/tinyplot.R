@@ -547,9 +547,14 @@ tinyplot.default = function(
     xaxs = NULL,
     yaxs = NULL,
     ...) {
-  # save for plt_add()
-  options(tinyplot_last_call = match.call(tinyplot,
-    call = sys.call(sys.parent()), expand.dots = TRUE))
+  # save for tinyplot_add()
+  if (!isTRUE(add)) {
+    calls = sys.calls()
+    idx = grep("^tinyplot", sapply(calls, function(k) k[[1]]))
+    if (length(idx) > 0) {
+      options(tinyplot_last_call = calls[[idx[1]]])
+    }
+  }
 
   ## TODO: remove the global option above and move to this when density is refactored
   # cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)

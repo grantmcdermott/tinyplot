@@ -12,8 +12,8 @@ Breaking changes:
 plot type) should no longer be passed via `...` in the main plotting function.
 Instead, these additional arguments must now be passed explicitly as part of the
 corresponding `type_*()` function in the `type` argument. So, for example, you
-should now use `plt(Nile, type = type_histogram(breaks = 30))` instead of
-`plt(Nile, type = "histogram", breaks = 30)` if you wanted to adjust the number
+should now use `tinyplot(Nile, type = type_histogram(breaks = 30))` instead of
+`tinyplot(Nile, type = "histogram", breaks = 30)` if you wanted to adjust the number
 of breaks. More details are provided below and also in the new dedicated
 [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html).
 The essential idea is that shortcut character types (here: `"histogram"`) all
@@ -23,7 +23,7 @@ behaviour by passing appropriate arguments. We're sorry to introduce a breaking
 change, but this new approach should ensure that users have better control of
 how their plots behave, and avoids guesswork on our side.
 - `ribbon.alpha` is deprecated in `tinyplot()`. Use the `alpha` argument of the
-`type_ribbon()` function instead: `plt(..., type = type_ribbon(alpha = 0.5))`
+`type_ribbon()` function instead: `tinyplot(..., type = type_ribbon(alpha = 0.5))`
 
 New plot type engine:
 
@@ -44,24 +44,34 @@ New plot types:
     - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)
     - `type_loess()` (shortcut: `"loess"`) (@vincentarelbundock)
-    - `type_spline()` (shortcut: `"spline"`)
+    - `type_spline()` (shortcut: `"spline"`) (#241 @grantmcdermott)
   - Functions:
-    - `type_function()` can trace arbitrary functions. (#250 @vincentarelbundock)
+    - `type_abline()`: line(s) with intercept and slope (#249 @vincentarelbundock)
+    - `type_hline()`: horizontal line(s) (#249 @vincentarelbundock)
+    - `type_vline()`: vertical line(s) (#249 @vincentarelbundock)
+    - `type_function()`: arbitrary function. (#250 @vincentarelbundock)
   - Visualizations:
     - `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
     plots and spinograms. These are modified versions of a histogram or mosaic
     plot, and are particularly useful for visualizing factor variables. (#233
     @zeileis with contributions from @grantmcdermott)
+    - `type_qq()` (shortcut: "qq") type for quantile-quantile plots. (#251
+    @vincentarelbundock)
 
 New features:
 
-- The new `flip` argument allows for easily flipping (swapping) the orientation
+- New `tinyplot()` arguments:
+  -  `flip <logical>` allows for easily flipping (swapping) the orientation
   of the x and y axes. This should work regardless of plot type, e.g.
-  `plt(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
+  `tinyplot(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)`.
   (#216 @grantmcdermott)
+  - `draw = <draw_funcs>` allows users to pass arbitrary drawing functions that
+  are evaluated as-is, before the main plotting elements. A core use case is
+  drawing common annotations across every facet of a faceted plot, e.g. text or
+  threshold lines. (#245 @grantmcdermott)
 - `tpar()` gains additional `grid.col`, `grid.lty`, and `grid.lwd` arguments for
   fine-grained control over the appearance of the default panel grid when
-  `plt(..., grid = TRUE)` is called. (#237 @grantmcdermott)
+  `tinyplot(..., grid = TRUE)` is called. (#237 @grantmcdermott)
 - The new `tinyplot_add()` (alias: `plt_add()`) convenience function allows
 easy layering of plots without having to specify repeat arguments. (#246
 @vincentarelbundock)
@@ -237,7 +247,7 @@ adding transparency to plot elements and colours. Example use:
 background fill by passing `bg` (or its alias, `fill`) a numeric in the range
 `[0,1]`. This feature has the same effect as `bg = "by"` except for the added
 transparency. Example use:
-`plt(lat ~ long | depth, data = quakes, pch = 21, cex = 2, bg = 0.2)`. (#129
+`tinyplot(lat ~ long | depth, data = quakes, pch = 21, cex = 2, bg = 0.2)`. (#129
 @grantmcdermott)
 
 

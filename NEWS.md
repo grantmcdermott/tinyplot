@@ -52,8 +52,6 @@ New plot types:
     plots and spinograms. These are modified versions of a histogram or mosaic
     plot, and are particularly useful for visualizing factor variables. (#233
     @zeileis with contributions from @grantmcdermott)
-    - `type_ridge()` (shortcut: "ridge") type for producing ridge plots 
-      (aka joy plots). (#252 @vincentarelbundock)
 
 New features:
 

@@ -576,6 +576,9 @@ tinyplot.default = function(
 
   xlabs = ylabs = NULL
 
+  # type_ridge()
+  ygroup = NULL
+
   # will be overwritten by some type_data() functions and ignored by others
   ribbon.alpha = sanitize_ribbon.alpha(NULL)
 
@@ -689,7 +692,7 @@ tinyplot.default = function(
     return(do.call(tinyplot.density, args = fargs))
   }
 
-  datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)
+  datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)
   if (nrow(datapoints) > 0) {

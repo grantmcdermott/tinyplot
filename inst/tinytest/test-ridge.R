@@ -9,7 +9,7 @@ expect_snapshot_plot(f, label = "ridge_01")
 f = function() {
   tinyplot(Month ~ Ozone,
     data = airquality,
-    type = type_ridge(offset = .5),
+    type = type_ridge(scale = 1),
     bg = "light blue", col = "black")
 }
 expect_snapshot_plot(f, label = "ridge_02")

@@ -9,47 +9,48 @@
 #' The fill color is controlled by the `bg` argument in the `tinyplot()` call.
 #'
 #'
-#' @param offset Numeric. Controls the vertical spacing between the ridges.
-#'   Default is `0.8`. Smaller values will result in more overlap.
+#' @param scale Numeric. Controls the scaling factor of each plot.
+#' Values greater than 1 means that plots overlap.
 #'
 #' @examples
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 #'
 #' tinyplot(Month ~ Ozone,
 #'   data = airquality,
-#'   type = type_ridge(offset = .5),
+#'   type = type_ridge(scale = 1),
 #'   bg = "light blue", col = "black")
 #'
 #' @export
-type_ridge = function(offset = .8) {
+type_ridge = function(scale = 1.5) {
   data_ridge = function() {
     fun = function(datapoints, ...) {
       get_density = function(k) {
-        tmp = density(k$x)
-        tmp = data.frame(x = tmp$x, y = tmp$y, z = k$y[1])
-        tmp$y = unlist(tapply(tmp$y, tmp$z, function(k) k / max(k)))
-        tmp$facet = k$facet[1]
-        tmp$by = k$by[1]
-        tmp
+        out = density(k$x)
+        out = data.frame(x = out$x, ymax = out$y, ymin = 0, y = k$y[1])
+        out$ymax = out$ymax / max(out$ymax) * scale
+        out$facet = k$facet[1]
+        out$by = k$by[1]
+        return(out)
       }
       d = split(datapoints, list(datapoints$y, datapoints$facet))
       d = lapply(d, function(k) tryCatch(get_density(k), error = function(e) NULL))
-      d = do.call(rbind, d)
+      d = do.call(rbind, Filter(function(x) !is.null(x), d))
       d = split(d, d$facet)
-      offset_y = function(k) {
-        z = split(k, k$z)
-        for (idx in seq_along(z)) {
-          z[[idx]]$y = z[[idx]]$y + offset * (idx - 1)
+      offset_z = function(k) {
+        ksplit = split(k, k$y)
+        for (idx in seq_along(ksplit)) {
+          ksplit[[idx]]$ymax = ksplit[[idx]]$ymax + idx - 1
+          ksplit[[idx]]$ymin = ksplit[[idx]]$ymin + idx - 1
         }
-        z = do.call(rbind, z)
-        return(z)
+        k = do.call(rbind, ksplit)
+        return(k)
       }
-      d = do.call(rbind, lapply(d, offset_y))
+      d = do.call(rbind, lapply(d, offset_z))
 
       out = list(
         datapoints = d,
         yaxt = "n",
-        ylim = range(d$y)
+        ylim = c(min(d$ymin), max(d$ymax))
       )
       return(out)
     }
@@ -57,15 +58,15 @@ type_ridge = function(offset = .8) {
   }
 
   draw_ridge = function() {
-    fun = function(ix, iy, iz, ibg, icol, ...) {
-      d = data.frame(x = ix, y = iy, z = iz)
-      ds = split(d, d$z)
+    fun = function(ix, iy, iz, ibg, icol, iymin, iymax, ...) {
+      d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
+      dsplit = split(d, d$y)
       if (is.null(ibg)) ibg = "grey"
-      for (i in rev(seq_along(ds))) {
-        with(ds[[i]], polygon(x, y = y, col = ibg, border = icol))
+      for (i in rev(seq_along(dsplit))) {
+        with(dsplit[[i]], polygon(x, ymax, col = ibg, border = icol))
       }
-      lab = unique(d$z)
-      val = cumsum(rep(offset, length(lab))) - offset
+      lab = unique(d$y)
+      val = cumsum(rep(1, length(lab))) - 1
       axis(2, at = val, lab)
     }
     return(fun)

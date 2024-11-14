@@ -4,11 +4,11 @@
 \alias{type_ridge}
 \title{Ridge plot type}
 \usage{
-type_ridge(offset = 0.8)
+type_ridge(scale = 1.5)
 }
 \arguments{
-\item{offset}{Numeric. Controls the vertical spacing between the ridges.
-Default is \code{0.8}. Smaller values will result in more overlap.}
+\item{scale}{Numeric. Controls the scaling factor of each plot.
+Values greater than 1 means that plots overlap.}
 }
 \description{
 Type function for producing ridge plots (also known as joy plots),
@@ -24,7 +24,7 @@ tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 
 tinyplot(Month ~ Ozone,
   data = airquality,
-  type = type_ridge(offset = .5),
+  type = type_ridge(scale = 1),
   bg = "light blue", col = "black")
 
 }

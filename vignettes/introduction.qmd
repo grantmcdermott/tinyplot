@@ -1,5 +1,5 @@
 ---
-title: "Tutorial"
+title: "Introduction to tinyplot"
 format: html
 engine: knitr
 vignette: |

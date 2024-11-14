@@ -293,9 +293,9 @@ or by checking the
 [`?tinyplot`](https://grantmcdermott.com/tinyplot/man/tinyplot.html#arguments)
 documentation.
 
-For example, **tinyplot** support interval plots via the `"pointrange"`,
-`"errorbar"`, `"ribbon"` type arguments. A canonical use-case is coefficient
-plots: 
+For example, **tinyplot** supports interval plots via the `"pointrange"`,
+`"errorbar"`, `"ribbon"`, and related type arguments. A canonical use-case is
+coefficient plots: 
 
 ```{r pointrange, warning = FALSE}
 mod = lm(Temp ~ 0 + Month / Day, data = aq)
@@ -412,7 +412,7 @@ tinyplot(
 ```
 
 The `facet.args` customizations can also be set globally via the `tpar()`
-function. We will revisit this idea in the @themes section below.
+function. We will revisit this idea in the @sec-themes section below.
 
 Finally, the `facet` argument also accepts a _two-sided_ formula for arranging
 facets in a fixed grid layout. Here's a simple (if contrived) example.
@@ -441,7 +441,7 @@ rather than opening a new window. However, while this argument is useful, it can
 become verbose since it requires users to make very similar successive calls,
 with many shared arguments.
 
-For this reason, the **tinyplot** package also provides a special
+For this reason, the **tinyplot** package provides a special
 `tinyplot_add()` (alias `plt_add()`) convenience function for adding layers to
 an existing tinyplot. The idea is that users need simply pass the _specific_
 arguments that they want to add or modify relative to the base layer, and all
@@ -449,7 +449,7 @@ arguments will be inherited from the original.
 
 An example may help to demonstrate. Here we first draw some faceted points with
 group colouring and various other aesthetic tweaks. Next, we add regression
-lines with a simple `tinyplot_add(type = "lm")` call. Notice that the original
+fits with a simple `tinyplot_add(type = "lm")` call. Notice that the original
 grouping, data and aesthetic options are all carried over correctly, without
 having to repeat ourselves.
 
@@ -464,7 +464,7 @@ tinyplot(
   ylim = c(50, 100),
   main = "Actual and predicted air temperatures"
 )
-# Add regression lines
+# Add regression fits
 tinyplot_add(type = "lm")
 ```
 

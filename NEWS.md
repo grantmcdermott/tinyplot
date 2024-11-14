@@ -8,38 +8,46 @@ where the formatting is also better._
 
 Breaking changes:
 
-- Type-specific arguments (i.e., affecting the default behaviour of a certain
-plot type) should no longer be passed via `...` in the main plotting function.
-Instead, these additional arguments must now be passed explicitly as part of the
-corresponding `type_*()` function in the `type` argument. So, for example, you
-should now use `tinyplot(Nile, type = type_histogram(breaks = 30))` instead of
-`tinyplot(Nile, type = "histogram", breaks = 30)` if you wanted to adjust the number
-of breaks. More details are provided below and also in the new dedicated
-[Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html).
-The essential idea is that shortcut character types (here: `"histogram"`) all
-still work, but are deliberately limited to default behaviour. In contrast, the
-functional equivalents (here: `type_histogram()`) are where we can customize
-behaviour by passing appropriate arguments. We're sorry to introduce a breaking
-change, but this new approach should ensure that users have better control of
-how their plots behave, and avoids guesswork on our side.
+- As part of our new plot `type` logic (see below), character-based shortcuts
+like `type = "p"`, `type = "hist"`, etc. are reserved for default behaviour.
+In turn, this means that any type-specific arguments for customizing behaviour
+should no longer be passed through the main `tinyplot(...)` function (i.e.,
+via `...`), since they will be ignored. Rather, these ancilliary arguments
+must now be passed explicitly as part of the corresponding `type_*()` function
+to the `type` argument. For example, say that you want to change the default
+number of breaks in a histogram plot. Whereas previously you could have called,
+say, `tinyplot(Nile, type = "hist", breaks = 30)`, now you should instead 
+call `tinyplot(Nile, type = type_hist(breaks = 30))`. We're sorry for
+introducing a breaking change, but again this should only impact plots that
+deviate from the default behaviour. Taking a longer-term view, this new `type`
+logic ensures that users can better control how their plots behave, avoids
+guesswork on our side, and should help to reduce the overall maintenance burden
+of the package.
 - `ribbon.alpha` is deprecated in `tinyplot()`. Use the `alpha` argument of the
 `type_ribbon()` function instead: `tinyplot(..., type = type_ribbon(alpha = 0.5))`
 
-New plot type engine:
+New plot `type` logic and functional equivalents:
 
 - Alongside the standard character shortcuts (`"p"`, `"l"`, etc.), the `type`
-  argument now accepts functional `type_*()` equivalents. These functional plot
-  types enable a variety of additional features. (#222 @vincentarelbundock)
-- Explicit argument passing for modified behaviour type
-  (e.g., `type_lm(se = FALSE)`).
+  argument now accepts functional `type_*()` equivalents (`type_points()`,
+  `type_lines()`, etc.). These functional plot types enable a variety of
+  additional features, as well as a more disciplined approach to explicit
+  argument passing for customized type behaviour. (#222 @vincentarelbundock)
 - Users can define their own custom types by creating `type_<typename>()`
   functions.
 - More details are provided in the dedicated
   [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html)
-  on the website.)
+  on the website.
 
 New plot types:
 
+  - Visualizations:
+    - `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
+    plots and spinograms. These are modified versions of a histogram or mosaic
+    plot, and are particularly useful for visualizing factor variables. (#233
+    @zeileis with contributions from @grantmcdermott)
+    - `type_qq()` (shortcut: "qq") type for quantile-quantile plots. (#251
+    @vincentarelbundock)
   - Models:
     - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)
@@ -50,13 +58,6 @@ New plot types:
     - `type_hline()`: horizontal line(s) (#249 @vincentarelbundock)
     - `type_vline()`: vertical line(s) (#249 @vincentarelbundock)
     - `type_function()`: arbitrary function. (#250 @vincentarelbundock)
-  - Visualizations:
-    - `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
-    plots and spinograms. These are modified versions of a histogram or mosaic
-    plot, and are particularly useful for visualizing factor variables. (#233
-    @zeileis with contributions from @grantmcdermott)
-    - `type_qq()` (shortcut: "qq") type for quantile-quantile plots. (#251
-    @vincentarelbundock)
 
 New features:
 

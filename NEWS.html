@@ -499,33 +499,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Type-specific arguments (i.e., affecting the default behaviour of a certain plot type) should no longer be passed via <code>...</code> in the main plotting function. Instead, these additional arguments must now be passed explicitly as part of the corresponding <code>type_*()</code> function in the <code>type</code> argument. So, for example, you should now use <code>tinyplot(Nile, type = type_histogram(breaks = 30))</code> instead of <code>tinyplot(Nile, type = "histogram", breaks = 30)</code> if you wanted to adjust the number of breaks. More details are provided below and also in the new dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a>. The essential idea is that shortcut character types (here: <code>"histogram"</code>) all still work, but are deliberately limited to default behaviour. In contrast, the functional equivalents (here: <code>type_histogram()</code>) are where we can customize behaviour by passing appropriate arguments. We’re sorry to introduce a breaking change, but this new approach should ensure that users have better control of how their plots behave, and avoids guesswork on our side.</li>
 <li><code>ribbon.alpha</code> is deprecated in <code>tinyplot()</code>. Use the <code>alpha</code> argument of the <code>type_ribbon()</code> function instead: <code>tinyplot(..., type = type_ribbon(alpha = 0.5))</code></li>
 </ul>
-<p>New features:</p>
+<p>New plot type engine:</p>
 <ul>
-<li>Alongside the standard character shortcuts (<code>"p"</code>, <code>"l"</code>, etc.), the <code>type</code> argument now accepts functional <code>type_*()</code> equivalents. These functional plot types enable a variety of additional features. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)
-<ul>
-<li>New model-based plot types:
-<ul>
-<li><code>type_glm()</code> (shortcut: <code>"glm"</code>)</li>
-<li><code>type_lm()</code> (shortcut: <code>"lm"</code>)</li>
-<li><code>type_loess()</code> (shortcut: <code>"loess"</code>)</li>
-<li><code>type_spline()</code> (shortcut: <code>"spline"</code>)</li>
-<li><code>type_qq()</code></li>
-</ul></li>
-<li>New function-based types
-<ul>
-<li><code>type_abline()</code>: line with intercept and slope</li>
-<li><code>type_hline()</code>: horizontal line</li>
-<li><code>type_vline()</code>: verticla line</li>
-<li><code>type_function()</code> arbitrary function.</li>
-</ul></li>
-<li><code>type_spineplot()</code> (shortcut: <code>"spineplot"</code>) type for producing spine</li>
-<li><code>type_function()</code> can trace arbitrary functions.</li>
-<li>New <code>type_spineplot()</code> (shortcut: <code>"spineplot"</code>) type for producing spine plots and spinograms. These are modified versions of a histogram or mosaic plot, and are particularly useful for visualizing factor variables. (<a href="https://github.com/grantmcdermott/tinyplot/issues/233">#233</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> with contributions from <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Alongside the standard character shortcuts (<code>"p"</code>, <code>"l"</code>, etc.), the <code>type</code> argument now accepts functional <code>type_*()</code> equivalents. These functional plot types enable a variety of additional features. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li>Explicit argument passing for modified behaviour type (e.g., <code>type_lm(se = FALSE)</code>).</li>
 <li>Users can define their own custom types by creating <code>type_&lt;typename&gt;()</code> functions.</li>
 <li>More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a> on the website.)</li>
+</ul>
+<p>New plot types:</p>
+<ul>
+<li>Models:
+<ul>
+<li><code>type_glm()</code> (shortcut: <code>"glm"</code>) <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li><code>type_lm()</code> (shortcut: <code>"lm"</code>) <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li><code>type_loess()</code> (shortcut: <code>"loess"</code>) <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li><code>type_spline()</code> (shortcut: <code>"spline"</code>) (<a href="https://github.com/grantmcdermott/tinyplot/issues/241">#241</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
-<li>The new <code>flip</code> argument allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>tinyplot(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Functions:
+<ul>
+<li><code>type_abline()</code>: line(s) with intercept and slope (<a href="https://github.com/grantmcdermott/tinyplot/issues/249">#249</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li><code>type_hline()</code>: horizontal line(s) (<a href="https://github.com/grantmcdermott/tinyplot/issues/249">#249</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li><code>type_vline()</code>: vertical line(s) (<a href="https://github.com/grantmcdermott/tinyplot/issues/249">#249</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li><code>type_function()</code>: arbitrary function. (<a href="https://github.com/grantmcdermott/tinyplot/issues/250">#250</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+</ul></li>
+<li>Visualizations:
+<ul>
+<li><code>type_spineplot()</code> (shortcut: <code>"spineplot"</code>) type for producing spine plots and spinograms. These are modified versions of a histogram or mosaic plot, and are particularly useful for visualizing factor variables. (<a href="https://github.com/grantmcdermott/tinyplot/issues/233">#233</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> with contributions from <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>type_qq()</code> (shortcut: “qq”) type for quantile-quantile plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/251">#251</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+</ul></li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>New <code>tinyplot()</code> arguments:
+<ul>
+<li><code>flip &lt;logical&gt;</code> allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>tinyplot(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>draw = &lt;draw_funcs&gt;</code> allows users to pass arbitrary drawing functions that are evaluated as-is, before the main plotting elements. A core use case is drawing common annotations across every facet of a faceted plot, e.g.&nbsp;text or threshold lines. (<a href="https://github.com/grantmcdermott/tinyplot/issues/245">#245</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul></li>
 <li><code>tpar()</code> gains additional <code>grid.col</code>, <code>grid.lty</code>, and <code>grid.lwd</code> arguments for fine-grained control over the appearance of the default panel grid when <code>tinyplot(..., grid = TRUE)</code> is called. (<a href="https://github.com/grantmcdermott/tinyplot/issues/237">#237</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>The new <code>tinyplot_add()</code> (alias: <code>plt_add()</code>) convenience function allows easy layering of plots without having to specify repeat arguments. (<a href="https://github.com/grantmcdermott/tinyplot/issues/246">#246</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 </ul>

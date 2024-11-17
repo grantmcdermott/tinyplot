@@ -7,7 +7,7 @@
 #' layer on top of the existing plot. `plt_add()` is a shorthand alias for
 #' `tinyplot_add()`.
 #'
-#' @section Limitations: 
+#' @section Limitations:
 #' - Currently, `tinyplot_add` only works reliably if you are adding to a plot
 #' that was originally constructed with the [tinyplot.formula] method (and
 #' passed an appropriate `data` argument). In contrast, we cannot guarantee that
@@ -23,20 +23,20 @@
 #'
 #' @examples
 #' library(tinyplot)
-#' 
+#'
 #' tinyplot(Sepal.Width ~ Sepal.Length | Species,
-#'          facet = ~Species,
-#'          data = iris)
-#' 
-#' tinyplot_add(type = "lm")   ## or : plt_add(type = "lm")
-#' 
+#'   facet = ~Species,
+#'   data = iris)
+#'
+#' tinyplot_add(type = "lm") ## or : plt_add(type = "lm")
+#'
 #' ## Note: the previous function is equivalent to (but much more convenient
 #' ## than) re-writing the full call with the new type and `add=TRUE`:
-#' 
+#'
 #' # tinyplot(Sepal.Width ~ Sepal.Length | Species,
 #' #          facet = ~Species,
-#' #          data = iris, 
-#' #          type = "lm", 
+#' #          data = iris,
+#' #          type = "lm",
 #' #          add = TRUE)
 #'
 #' @returns No return value, called for side effect of producing a plot.
@@ -58,6 +58,12 @@ tinyplot_add = function(...) {
       cal[[n]] = args[[n]]
     }
   }
+
+  # allow first argument in tinyplot_add() to be unnamed
+  if (isTRUE(names(args)[1] == "")) {
+    cal[[2]] = args[[1]]
+  }
+
   cal[["add"]] = TRUE
   eval(cal)
 }

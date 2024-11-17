@@ -10,6 +10,7 @@
 #' @param ... Named arguments to override specific theme settings. These arguments are
 #'   passed to `tpar()` and take precedence over the predefined settings in the selected
 #'   theme.
+#' @inheritParams setHook
 #'
 #' @details
 #' The function uses `setHook("before.plot.new", ...)` to apply the specified
@@ -34,9 +35,11 @@
 #' tinyplot(mpg ~ hp | factor(am), data = mtcars)
 #'
 #' @export
-tinytheme = function(theme = NULL, ...) {
+tinytheme = function(theme = NULL, ..., action = "replace") {
+  assert_choice(action, c("append", "prepend", "replace"))
+
   if (is.null(theme)) {
-    setHook("before.plot.new", NULL, action = "replace")
+    setHook("before.plot.new", NULL, action = action)
     return(invisible(NULL))
   }
 

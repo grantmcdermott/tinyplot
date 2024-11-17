@@ -947,10 +947,12 @@ tinyplot.default = function(
     }
     adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend_args[["x"]]) && legend_args[["x"]] == "top!") || (is.list(legend_eval) && legend_eval[[1]] == "top!"))
     if (is.null(main) || isFALSE(adj_title)) {
-      title(
-        main = main,
-        sub = sub
-      )
+      args = list(main = main)
+      args[["adj"]] = get_tpar("adj.main", "adj")
+      do.call(title, args)
+      args = list(sub = sub)
+      args[["adj"]] = get_tpar("adj.sub", "adj")
+      do.call(title, args)
     } else {
       # For the "top!" legend case, bump main title up to make space for the
       # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
@@ -958,11 +960,20 @@ tinyplot.default = function(
       # which should equal the height of the new legend). Note that we also
       # include a 0.1 epsilon bump, which we're using to reset the tinyplot
       # window in case of recursive "top!" calls. (See draw_legend code.)
-      title(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1)
-      title(sub = sub)
+      args = list(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1)
+      args[["adj"]] = get_tpar("adj.main", "adj")
+      do.call(title, args)
+      args = list(sub = sub)
+      args[["adj"]] = get_tpar("adj.sub", "adj")
+      do.call(title, args)
     }
     # Axis titles
-    title(xlab = xlab, ylab = ylab)
+    args = list(xlab = xlab)
+    args[["adj"]] = get_tpar("adj.xlab", "adj")
+    do.call(title, args)
+    args = list(ylab = ylab)
+    args[["adj"]] = get_tpar("adj.ylab", "adj")
+    do.call(title, args)
   }
 
   #

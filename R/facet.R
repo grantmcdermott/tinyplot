@@ -1,6 +1,6 @@
 # Facet layout structure
 #
-# This function is called by `tinyplot`. Given some inputs, it returns 
+# This function is called by `tinyplot`. Given some inputs, it returns
 # information about the layout of the facets.
 #
 facet_layout = function(facet, add = FALSE, facet.args = list()) {
@@ -49,7 +49,7 @@ facet_layout = function(facet, add = FALSE, facet.args = list()) {
     facets = ifacet = nfacets = oxaxis = oyaxis = 1
     cex_fct_adj = 1
   }
-  
+
   list(
     facets = facets,
     ifacet = ifacet,
@@ -119,11 +119,9 @@ get_facet_fml = function(formula, data = NULL) {
 # internal function to draw window with different facets, grids, axes, etc.
 
 draw_facet_window = function(grid, ...) {
-
   list2env(list(...), environment())
 
   if (isFALSE(add)) {
-
     ## optionally allow to modify the style of axis interval calculation
     if (!is.null(xaxs)) par(xaxs = xaxs)
     if (!is.null(yaxs)) par(yaxs = yaxs)
@@ -238,26 +236,40 @@ draw_facet_window = function(grid, ...) {
 
       # axes, frame.plot and grid
       if (isTRUE(axes)) {
+        col.xaxs = get_tpar("col.xaxs", "col.axis")
+        col.yaxs = get_tpar("col.yaxs", "col.axis")
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
           if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-            tinyAxis(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
+            args = list(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
+            args[["col"]] = col.xaxs
+            do.call(tinyAxis, args)
           } else {
-            tinyAxis(x, side = xside, type = xaxt)
+            args = list(x, side = xside, type = xaxt)
+            args[["col"]] = col.xaxs
+            do.call(tinyAxis, args)
           }
           # tinyAxis(y, side = yside, type = yaxt)
           if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
-            tinyAxis(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+            args = list(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+            args[["col"]] = col.yaxs
+            do.call(tinyAxis, args)
           } else {
-            tinyAxis(y, side = yside, type = yaxt)
+            args = list(y, side = yside, type = yaxt)
+            args[["col"]] = col.yaxs
+            do.call(tinyAxis, args)
           }
         } else {
           # ... else only print the "outside" axes.
           if (ii %in% oxaxis) {
             if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-              tinyAxis(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
+              args = list(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
+              args[["col"]] = col.xaxs
+              do.call(tinyAxis, args)
             } else {
-              tinyAxis(x, side = xside, type = xaxt)
+              args = list(x, side = xside, type = xaxt)
+              args[["col"]] = col.yaxs
+              do.call(tinyAxis, args)
             }
           }
           if (ii %in% oyaxis) {
@@ -335,7 +347,6 @@ draw_facet_window = function(grid, ...) {
               if (xlog) {
                 line_height = grconvertX(line_height, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
                 rect_width = corners[2] * line_height
-                
               } else {
                 line_height = grconvertX(line_height, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
                 rect_width = corners[2] + line_height
@@ -349,7 +360,6 @@ draw_facet_window = function(grid, ...) {
             if (xlog) {
               xpos = grconvertX(0.4, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
               xpos = corners[2] * xpos
-              
             } else {
               xpos = grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
               xpos = corners[2] + xpos
@@ -453,10 +463,9 @@ draw_facet_window = function(grid, ...) {
           grid
         }
       }
-      
+
       # drawn elements
       if (!is.null(draw)) eval(draw)
-      
     } # end of ii facet loop
   } # end of add check
 
@@ -474,5 +483,6 @@ is_facet_position = function(position, ifacet, facet_window_args) {
     "right"  = ifacet %in% pmin(ni, seq(1L, ni, by = nc) + nc - 1L),
     "top"    = ifacet %in% head(id, nc),
     "bottom" = ifacet %in% tail(id, nc),
-    NA)
+    NA
+  )
 }

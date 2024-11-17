@@ -43,9 +43,10 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
     return(invisible(NULL))
   }
 
-  assert_choice(theme, c("simple"))
+  assert_choice(theme, c("simple", "ipsum"))
   settings = switch(theme,
-    "simple" = theme_simple
+    "simple" = theme_simple,
+    "ipsum" = theme_ipsum
   )
 
   dots = list(...)
@@ -72,4 +73,32 @@ theme_simple = list(
   font.sub        = 3, # Font style for the subtitle (italic)
   las             = 1, # Orientation of axis labels (1 = horizontal)
   tck             = 0 # Tick mark length (0 = none)
+)
+
+
+theme_ipsum = list(
+  adj.main = 0,
+  adj.sub = 0,
+  adj.xlab = 1,
+  adj.ylab = 1,
+  col.xaxs = NA,
+  col.yaxs = NA,
+  cex.axis = .8,
+  bg = "white", # Background color
+  bty = "n",
+  cex = 1, # Base font size scaling
+  cex.lab = 1,
+  cex.main = 1.5,
+  cex.sub = 1.2,
+  family = "Arial Narrow", # Base font family
+  fg = "black",
+  font = 1, # Font style (plain)
+  mgp = c(1.1, 0.1, 0),
+  font.axis = 1, # Font style for axis labels
+  font.lab = 1, # Font style for axis titles
+  font.main = 1, # Font style for the main title (normal)
+  font.sub = 3, # Font style for the subtitle (italic)
+  las = 1, # Orientation of axis labels (1 = horizontal)
+  grid = TRUE,
+  tck = 0 # Tick mark length (0 = none)
 )

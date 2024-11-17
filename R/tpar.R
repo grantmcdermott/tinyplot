@@ -1,5 +1,5 @@
 #' @title Set or query graphical parameters
-#'   
+#'
 #' @description Extends \code{\link[graphics]{par}}, serving as a (near) drop-in
 #'   replacement for setting or querying graphical parameters. The key
 #'   differences is that, beyond supporting the standard group of R graphical
@@ -8,13 +8,13 @@
 #'   \code{\link[graphics]{par}}, parameters are set by passing appropriate
 #'   `key = value` argument pairs, and multiple parameters can be set or queried
 #'   at the same time.
-#'   
+#'
 #' @md
 #' @param ... arguments of the form `key = value`. This includes all of the
 #'   parameters typically supported by \code{\link[graphics]{par}}, as well as
 #'   the `tinyplot`-specific ones described in the 'Graphical Parameters'
 #'   section below.
-#' 
+#'
 #' @details The `tinyplot`-specific parameters are saved in an internal
 #'   environment called `.tpar` for performance and safety reasons. However,
 #'   they can also be set at package load time via \code{\link[base]{options}},
@@ -22,31 +22,31 @@
 #'   behaviour at startup (e.g., through an `.Rprofile` file). These options all
 #'   take a `tinyplot_*` prefix, e.g.
 #'   `options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")`.
-#' 
+#'
 #' For their part, any "base" graphical parameters are caught dynamically and
 #'   passed on to \code{\link[graphics]{par}} as appropriate. Technically, only
 #'   parameters that satisfy `par(..., no.readonly = TRUE)` are evaluated.
-#'   
+#'
 #' However, note the important distinction: `tpar` only evaluates parameters
 #'   from \code{\link[graphics]{par}} if they are passed _explicitly_ by the
 #'   user. This means that `tpar` should not be used to capture the (invisible)
 #'   state of a user's entire set of graphics parameters, i.e. `tpar()` !=
 #'   `par()`. If you want to capture the _all_ existing graphics settings, then
-#'   you should rather use `par()` instead. 
-#'   
+#'   you should rather use `par()` instead.
+#'
 #' @returns When parameters are set, their previous values are returned in an
 #'   invisible named list. Such a list can be passed as an argument to `tpar` to
 #'   restore the parameter values.
-#'   
+#'
 #'   When just one parameter is queried, the value of that parameter is returned
 #'   as (atomic) vector. When two or more parameters are queried, their values
 #'   are returned in a list, with the list names giving the parameters.
-#'   
+#'
 #'   Note the inconsistency: setting one parameter returns a list, but querying
 #'   one parameter returns a vector.
 #'
 #' @section Additional Graphical Parameters:
-#' 
+#'
 #' \tabular{lll}{
 #'   `facet.cex` \tab\tab Expansion factor for facet titles. Defaults to `1`.\cr
 #'   \tab\tab\cr
@@ -92,59 +92,59 @@
 #'   \tab\tab\cr
 #'   `ribbon.alpha` \tab\tab Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" (and alike) type plots. Default value is `0.2`.\cr
 #' }
-#' 
+#'
 #' @importFrom graphics par
 #' @importFrom utils modifyList
-#' 
+#'
 #' @examples
 #' # Return a list of existing base and tinyplot graphic params
 #' tpar("las", "pch", "facet.bg", "facet.cex", "grid")
-#' 
+#'
 #' # Simple facet plot with these default values
 #' tinyplot(mpg ~ wt, data = mtcars, facet = ~am)
-#' 
+#'
 #' # Set params to something new. Similar to graphics::par(), note that we save
 #' # the existing values at the same time by assigning to an object.
 #' op = tpar(
-#'    las       = 1,
-#'    pch       = 2,
-#'    facet.bg  = "grey90",
-#'    facet.cex = 2,
-#'    grid      = TRUE
+#'   las       = 1,
+#'   pch       = 2,
+#'   facet.bg  = "grey90",
+#'   facet.cex = 2,
+#'   grid      = TRUE
 #' )
-#' 
+#'
 #' # Re-plot with these new params
 #' tinyplot(mpg ~ wt, data = mtcars, facet = ~am)
-#' 
+#'
 #' # Reset back to original values
 #' tpar(op)
-#' 
+#'
 #' # Important: tpar() only evalutes parameters that have been passed explicitly
 #' #   by the user. So it it should not be used to query and set (restore)
 #' #   parameters that weren't explicitly requested, i.e. tpar() != par().
-#' 
+#'
 #' # Note: The tinyplot-specific parameters can also be be set via `options`
 #' #   with a `tinyplot_*` prefix, which can be convenient for enabling
 #' #   different default behaviour at startup time (e.g., via an .Rprofile
 #' #   file). Example:
 #' # options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")
-#' 
+#'
 #' @export
 tpar = function(...) {
-  
   facet.col = facet.bg = facet.border = used_par_old = NULL
-  
+
   opts = list(...)
-  if (length(opts)==1 && is.null(names(opts))) {
+  if (length(opts) == 1 && is.null(names(opts))) {
     if (inherits(opts[[1]], "list") && !is.null(names(opts[[1]]))) {
       opts = opts[[1]]
     }
   }
-  
+
   tpar_old = as.list(.tpar)
   nam = names(opts)
-  
+
   known_par = names(par(no.readonly = TRUE))
+
   if (!is.null(nam)) {
     used_par = intersect(nam, known_par)
   } else {
@@ -155,127 +155,92 @@ tpar = function(...) {
     used_par_old = par(used_par)
     tpar_old = modifyList(tpar_old, used_par_old, keep.null = TRUE)
   }
-  
-  if (length(opts$facet.cex)) {
-    facet.cex = as.numeric(opts$facet.cex)
-    if(!is.numeric(facet.cex)) stop("facet.cex needs to be numeric")
-    if(length(facet.cex)!=1) stop("facet.cex needs to be of length 1")
-    .tpar$facet.cex = facet.cex
-  }
-  
-  if (length(opts$facet.font)) {
-    facet.font = as.numeric(opts$facet.font)
-    if(!is.numeric(facet.font)) stop("facet.font needs to be numeric")
-    if(length(facet.font)!=1) stop("facet.font needs to be of length 1")
-    .tpar$facet.font = facet.font
-  }
-  
+
   if (length(opts$facet.col) || ("facet.col" %in% nam && is.null(opts$facet.col))) {
     facet.col = opts$facet.col
-    if(!is.null(facet.col) && !is.numeric(facet.col) && !is.character(facet.col)) stop("facet.col needs to be NULL, or a numeric or character")
-    if(!is.null(facet.col) && length(facet.col)!=1) stop("facet.col needs to be of length 1")
+    if (!is.null(facet.col) && !is.numeric(facet.col) && !is.character(facet.col)) stop("facet.col needs to be NULL, or a numeric or character")
+    if (!is.null(facet.col) && length(facet.col) != 1) stop("facet.col needs to be of length 1")
     .tpar$facet.col = facet.col
   }
-  
+
   if (length(opts$facet.bg) || ("facet.bg" %in% nam && is.null(opts$facet.bg))) {
     facet.bg = opts$facet.bg
-    if(!is.null(facet.bg) && !is.numeric(facet.bg) && !is.character(facet.bg)) stop("facet.bg needs to be NULL, or a numeric or character")
-    if(!is.null(facet.bg) && length(facet.bg)!=1) stop("facet.bg needs to be of length 1")
+    if (!is.null(facet.bg) && !is.numeric(facet.bg) && !is.character(facet.bg)) stop("facet.bg needs to be NULL, or a numeric or character")
+    if (!is.null(facet.bg) && length(facet.bg) != 1) stop("facet.bg needs to be of length 1")
     .tpar$facet.bg = facet.bg
   }
-  
+
   if (length(opts$facet.border)) {
     facet.border = opts$facet.border
-    if(!is.na(facet.border) && !is.numeric(facet.border) && !is.character(facet.border)) stop("facet.border needs to be NA, or a numeric or character")
-    if(length(facet.border)!=1) stop("facet.border needs to be of length 1")
+    if (!is.na(facet.border) && !is.numeric(facet.border) && !is.character(facet.border)) stop("facet.border needs to be NA, or a numeric or character")
+    if (length(facet.border) != 1) stop("facet.border needs to be of length 1")
     .tpar$facet.border = facet.border
   }
-  
-  if (length(opts$file.width)) {
-    file.width = as.numeric(opts$file.width)
-    if(!is.numeric(file.width)) stop("file.width needs to be numeric")
-    .tpar$file.width = file.width
-  }
-  
-  if (length(opts$file.height)) {
-    file.height = as.numeric(opts$file.height)
-    if(!is.numeric(file.height)) stop("file.height needs to be numeric")
-    .tpar$file.height = file.height
-  }
-  
-  if (length(opts$file.res)) {
-    file.res = as.numeric(opts$file.res)
-    if(!is.numeric(file.res)) stop("file.res needs to be numeric")
-    .tpar$file.res = file.res
-  }
-  
+
   if (length(opts$fmar)) {
     fmar = as.numeric(opts$fmar)
-    if(!is.numeric(fmar)) stop("fmar needs to be numeric")
-    if(length(fmar)!=4) stop("fmar needs to be of length 4, i.e. c(b,l,t,r)")
+    if (!is.numeric(fmar)) stop("fmar needs to be numeric")
+    if (length(fmar) != 4) stop("fmar needs to be of length 4, i.e. c(b,l,t,r)")
     .tpar$fmar = fmar
   }
-  
-  if (length(opts$grid)) {
-    grid = as.logical(opts$grid)
-    if(!is.null(grid) && !is.logical(grid)) stop("grid needs to be NULL or logical")
-    .tpar$grid = grid
+
+
+  # tinyplot-specific parameters
+  tinyplot_params = c(
+    "adj.main", "adj.sub", "adj.ylab", "adj.xlab", "col.xaxs", "col.yaxs",
+    "col.axis", "lmar", "ribbon.alpha", "grid.lwd", "grid.lty", "grid.col", "grid", "file.res",
+    "file.height", "file.width", "facet.font", "facet.cex")
+  for (n in intersect(names(opts), tinyplot_params)) {
+    .tpar[[n]] = opts[[n]]
   }
-  
-  if (length(opts$grid.col)) {
-    grid.col = opts$grid.col
-    .tpar$grid.col = grid.col
-  }
-  
-  if (length(opts$grid.lty)) {
-    grid.lty = opts$grid.lty
-    .tpar$grid.lty = grid.lty
-  }
-  
-  if (length(opts$grid.lwd)) {
-    grid.lwd = as.numeric(opts$grid.lwd)
-    if(!is.numeric(grid.lwd) || grid.lwd < 0) stop("grid.lwd needs to be a non-negative numeric")
-    .tpar$grid.lwd = grid.lwd
-  }
-  
-  
-  if (length(opts$lmar)) {
-    lmar = as.numeric(opts$lmar)
-    if(!is.numeric(lmar)) stop("lmar needs to be numeric")
-    if(length(lmar)!=2) stop("lmar needs to be of length 2, i.e. c(inner, outer)")
-    .tpar$lmar = lmar
-  }
-  
-  if (length(opts$ribbon.alpha)) {
-    ribbon.alpha = as.numeric(opts$ribbon.alpha)
-    if (!is.numeric(ribbon.alpha) || ribbon.alpha<0 || ribbon.alpha>1) stop("ribbon.alpha needs to be a numeric in the range [0,1]")
-    .tpar$ribbon.alpha = ribbon.alpha
-  }
-  
+  assert_numeric(.tpar[["adj.main"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
+  assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
+  assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
+  assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
+  assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE)
+  assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
+  assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE)
+  assert_flag(.tpar[["grid"]], null.ok = TRUE)
+  assert_numeric(.tpar[["file.res"]], len = 1, lower = 0, null.ok = TRUE)
+  assert_numeric(.tpar[["file.height"]], len = 1, lower = 0, null.ok = TRUE)
+  assert_numeric(.tpar[["file.width"]], len = 1, lower = 0, null.ok = TRUE)
+  assert_numeric(.tpar[["facet.font"]], len = 1, null.ok = TRUE)
+  assert_numeric(.tpar[["facet.cex"]], len = 1, null.ok = TRUE)
+
+
   ## Like par(), we want the return object to be dependent on inputs...
-  
+
   # User didn't assign any new values, but may have requested explicit (print
   # of) some existing value(s)
   if (is.null(nam)) {
-    if (!is.null(opts) && length(opts)!=0) {
+    if (!is.null(opts) && length(opts) != 0) {
       # specific values requested
       ret = (`names<-`(lapply(opts, function(x) .tpar[[x]]), opts))
       if (length(used_par)) {
         ret_par = par(used_par)
         ret = modifyList(ret, ret_par, keep.null = TRUE)
       }
-      if (length(ret)==1) ret = ret[[1]]
+      if (length(ret) == 1) ret = ret[[1]]
       return(ret)
     } else {
       # no specific request; return all existing values invisibly
       return(invisible(tpar_old))
     }
-  # assign new values, but still return old values for saving existing settings
-  # a la `oldpar = par(param = new_value)`
+    # assign new values, but still return old values for saving existing settings
+    # a la `oldpar = par(param = new_value)`
   } else {
     `names<-`(lapply(nam, function(x) .tpar[[x]]), nam)
     return(invisible(tpar_old))
   }
-  
 }
 
+
+get_tpar = function(...) {
+  args = list(...)
+  for (a in args) {
+    if (!is.null(.tpar[[a]])) {
+      return(.tpar[[a]])
+    }
+  }
+  return(NULL)
+}

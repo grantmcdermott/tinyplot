@@ -114,11 +114,11 @@ tinyplot(mpg ~ wt, data = mtcars, facet = ~am)
 # Set params to something new. Similar to graphics::par(), note that we save
 # the existing values at the same time by assigning to an object.
 op = tpar(
-   las       = 1,
-   pch       = 2,
-   facet.bg  = "grey90",
-   facet.cex = 2,
-   grid      = TRUE
+  las       = 1,
+  pch       = 2,
+  facet.bg  = "grey90",
+  facet.cex = 2,
+  grid      = TRUE
 )
 
 # Re-plot with these new params

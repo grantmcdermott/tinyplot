@@ -7,6 +7,7 @@
 #' @param theme A character string specifying the name of the theme to apply.
 #'   If `NULL`, the current theme is reset to default settings. Available themes include:
 #'   - `"simple"`
+#' @param action "append", "prepend", or "replace" to the hook.
 #' @param ... Named arguments to override specific theme settings. These arguments are
 #'   passed to `tpar()` and take precedence over the predefined settings in the selected
 #'   theme.

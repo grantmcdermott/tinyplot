@@ -8,7 +8,7 @@ op = tpar()
 
 f = function() {
   tpar(mfrow = c(1, 2))
-  
+
   plot(0:10, main = "plot")
   tinyplot(0:10, main = "tinyplot")
 }
@@ -16,12 +16,11 @@ expect_snapshot_plot(f, label = "readme_base_1")
 
 f = function() {
   tpar(mfrow = c(2, 2))
-  
+
   with(aq, plot(Day, Temp, main = "plot"))
   plot(Temp ~ Day, data = aq, main = "plot (formula)")
   with(aq, tinyplot(Day, Temp, main = "tinyplot"))
   tinyplot(Temp ~ Day, data = aq, main = "tinyplot (formula)")
-  
 }
 expect_snapshot_plot(f, label = "readme_base_2")
 
@@ -65,9 +64,9 @@ f = function() {
     data = aq,
     type = "l",
     col = "black", # override automatic group colours
-    lty = "by"     # change line type by group instead
+    lty = "by" # change line type by group instead
   )
-} 
+}
 expect_snapshot_plot(f, label = "readme_by_lty")
 
 f = function() {
@@ -84,7 +83,7 @@ if ((getRversion() <= "4.3.1")) {
   f = function() {
     with(
       aq,
-      tinyplot(density(Temp), by = Month, legend = legend("topright", bty="o"))
+      tinyplot(density(Temp), by = Month, legend = legend("topright", bty = "o"))
     )
   }
   expect_snapshot_plot(f, label = "readme_density_topright")
@@ -119,7 +118,7 @@ expect_snapshot_plot(f, label = "readme_pointrange")
 
 f = function() {
   tpar(pch = 16, family = "HersheySans")
-  
+
   tinyplot(
     Temp ~ Day | Month,
     data = aq,
@@ -143,12 +142,13 @@ tpar(op)
 # continue with tests
 #
 
-if (length(find.package("basetheme", quiet=TRUE)) == 0) exit_file("basetheme")
+exit_file("basetheme: test after tinytheme if we still want to")
+
+if (length(find.package("basetheme", quiet = TRUE)) == 0) exit_file("basetheme")
 library(basetheme)
 basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
 
 f = function() {
-  
   tinyplot(
     Temp ~ Day | Month,
     data = aq,
@@ -156,7 +156,6 @@ f = function() {
     palette = "Tropic",
     main = "Daily temperatures by month"
   )
-  
 }
 expect_snapshot_plot(f, label = "readme_basetheme_royal")
 

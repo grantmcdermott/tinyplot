@@ -16,6 +16,8 @@ If \code{NULL}, the current theme is reset to default settings. Available themes
 \item{...}{Named arguments to override specific theme settings. These arguments are
 passed to \code{tpar()} and take precedence over the predefined settings in the selected
 theme.}
+
+\item{action}{"append", "prepend", or "replace" to the hook.}
 }
 \value{
 The function returns nothing. It is called for its side effects.

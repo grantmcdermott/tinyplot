@@ -5,9 +5,13 @@
 #' font styles, and axis labels. By default, a "bw" theme is available.
 #'
 #' @param theme A character string specifying the name of the theme to apply.
-#'   If `NULL`, the current theme is reset to default settings. Available themes include:
+#'   If `NULL`, the tinyplot settings are re-initialized and the graphical device is closed. Available themes include:
 #'   - `"bw"`
+#'   - `"classic"`
+#'   - `"grey"`
 #'   - `"ipsum"`
+#'   - `"minimal"`
+#'   - `"void"`
 #' @param action "append", "prepend", or "replace" to the hook.
 #' @param ... Named arguments to override specific theme settings. These arguments are
 #'   passed to `tpar()` and take precedence over the predefined settings in the selected
@@ -40,26 +44,18 @@
 tinytheme = function(theme = NULL, ..., action = "replace") {
   assert_choice(action, c("append", "prepend", "replace"))
 
-  # TODO: still does not reset everything
   if (is.null(theme)) {
-    old = .tpar[["old_theme"]]
-    if (!is.null(old)) {
-      known_par = names(par(no.readonly = TRUE))
-      tmp = old$par[names(old$par) %in% known_par]
-      do.call(par, tmp)
-      do.call(tpar, old[["tpar"]])
-    }
+    off = tryCatch(dev.off(), error = function(e) NULL)
     setHook("before.plot.new", NULL, action = action)
+    rm(list = names(.tpar), envir = .tpar)
+    init_tpar()
     return(invisible(NULL))
   }
 
-  old_par = par()
-  old_tpar = tpar()
-  .tpar[["old_theme"]] = list(par = old_par, tpar = old_tpar)
-
-  assert_choice(theme, c("bw", "minimal", "ipsum", "grey", "void"))
+  assert_choice(theme, sort(c("bw", "classic", "minimal", "ipsum", "grey", "void")))
   settings = switch(theme,
     "bw" = theme_bw,
+    "classic" = theme_classic,
     "minimal" = theme_minimal,
     "ipsum" = theme_ipsum,
     "grey" = theme_grey,
@@ -110,13 +106,17 @@ theme_bw = list(
   tck = 0 # Tick mark length (0 = none)
 )
 
-theme_minimal = modifyList(theme_bw, list(
-  bty = "n",
+theme_classic = modifyList(theme_bw, list(
+  bty = "l",
+  grid = FALSE,
+  grid.lty = 0,
+  tck = 1,
   lty = 0
 ))
 
-theme_classic = modifyList(theme_bw, list(
-  bty = "l"
+theme_minimal = modifyList(theme_bw, list(
+  bty = "n",
+  lty = 0
 ))
 
 theme_ipsum = modifyList(theme_bw, list(

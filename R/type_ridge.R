@@ -17,10 +17,15 @@
 #' used with `gradient = TRUE` corresponding to `gradient = "viridis"`.
 #' If a character vector of length greater than 1 is used, then it
 #' should specifify the colors in the palette, e.g.,
-#' `gradient = hcl.colors(500)`.
+#' `gradient = hcl.colors(512)`.
 #' @param breaks Numeric. If a color gradient is used for shading, the
 #' breaks between the colors can be modified. The default is to use
 #' equidistant breaks spanning the range of the `x` variable.
+#' @param probs Numeric. Instead of specifying the same `breaks` on the
+#' x-axis for all groups, it is possible to specify group-specific quantiles
+#' at the specified `probs`. The quantiles are computed based on the density
+#' (rather than the raw original variable). Only one of `breaks` or
+#' `probs` must be specified.
 #' @param bw,kernel,... Arguements passed to \code{\link[stats]{density}}.
 #' @param raster Logical. FIXME: Temporary argument to select plotting via
 #' `rasterImage` vs. `polygon`.
@@ -32,19 +37,26 @@
 #' ## x-variable also coded by color gradient (equivalent specifications)
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
-#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(500)))
+#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))
 #'
 #' ## color gradient with fewer segments
 #' tinyplot(Species ~ Sepal.Width, data = iris,
-#'   type = type_ridge(gradient = TRUE, breaks = pretty(iris$Sepal.Width, 6)))
+#'   type = type_ridge(gradient = TRUE, breaks = seq(2, 4.5, by = 0.5)))
 #'
-#' ## use common bandwidth for all densities
+#' ## use the same bandwidth for all densities
 #' tinyplot(Species ~ Sepal.Width, data = iris,
 #'   type = type_ridge(bw = bw.nrd0(iris$Sepal.Width)))
 #'
+#' ## highlighting only the center 50% of the density (between 25% and 75% quantile)
+#' tinyplot(Species ~ Sepal.Width, data = iris, col = "white", type = type_ridge(
+#'   gradient = hcl.colors(3, "Dark Mint")[c(2, 1, 2)], probs = c(0.25, 0.75)))
+#'
+#' ## highlighting the probability distribution by the color gradient
+#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(
+#'   gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)], probs = 0:500/500))
+#'
 #' ## customized ridge plot without overlap of densities
-#' tinyplot(Month ~ Ozone,
-#'   data = airquality,
+#' tinyplot(Month ~ Ozone, data = airquality,
 #'   type = type_ridge(scale = 1),
 #'   bg = "light blue", col = "black")
 #'
@@ -54,8 +66,9 @@
 #'   type = type_ridge(gradient = TRUE),
 #'   grid = TRUE, axes = "t", col = "white")
 #'
+#'
 #' @export
-type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = TRUE) {
+type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = NULL) {
   density_args = list(bw = bw, kernel = kernel, ...)
   data_ridge = function() {
     fun = function(datapoints, yaxt = NULL, ...) {
@@ -84,18 +97,44 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0",
 
       ## use color gradient?
       xlim = range(d$x, na.rm = TRUE)
+      if (!is.null(probs)) {
+        if (!is.null(breaks)) {
+          warning("only one of 'breaks' and 'quantile' must be specified")
+          probs = NULL
+        } else {
+          if (probs[1L] > 0) probs = c(0, probs)
+          if (probs[length(probs)] < 1) probs = c(probs, 1)
+        }
+      }
       if (!isFALSE(gradient)) {
         palette = gradient
         gradient = TRUE
         if (isTRUE(palette)) palette = "viridis"
-        if (is.character(palette) && length(palette) == 1L) {
-          palette = hcl.colors(if (is.null(breaks)) 500L else length(breaks) - 1L, palette = palette)
+
+        if (length(palette) > 1L || !is.character(palette)) {
+          ## color vector already given
+          if (is.null(breaks) && is.null(probs)) {
+            breaks = seq(from = xlim[1L], to = xlim[2L], length.out = length(palette) + 1L)
+            raster = TRUE
+          } else {
+            npal = pmax(length(breaks), length(probs)) - 1L
+            if (length(palette) != npal) {
+              warning("length of 'palette' does not match 'breaks'/'probs'")
+              palette = rep_len(palette, npal)
+            }
+            raster = npal > 20L
+          }
+        } else {
+          ## only palette name given
+          npal = if (is.null(breaks) && is.null(probs)) 512L else pmax(length(breaks), length(probs)) - 1L
+          palette = hcl.colors(npal, palette = palette)
+          if (is.null(breaks) && is.null(probs)) breaks = seq(from = xlim[1L], to = xlim[2L], length.out = npal + 1L)
+          raster = npal > 20L
         }
-        if (is.null(breaks)) breaks = seq(from = xlim[1L], to = xlim[2L], length.out = length(palette) + 1L)
-        palette = rep_len(palette, length(breaks) - 1L)
       } else {
         palette = NULL
-        if (!is.null(breaks)) gradient = TRUE
+        raster = FALSE
+        if (!is.null(breaks) || !is.null(probs)) gradient = TRUE
       }
       if (!is.null(breaks)) {
         breaks[1L] = pmin(breaks[1L], xlim[1L])
@@ -110,6 +149,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0",
           gradient = gradient,
           palette = palette,
           breaks = breaks,
+          probs = probs,
           yaxt = yaxt,
           raster = raster)
       )
@@ -123,11 +163,12 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0",
       d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
       dsplit = split(d, d$y)
       if (is.null(ibg)) ibg = "gray"
-      draw_segments = if(type_info[["raster"]]) segmented_raster else segmented_polygon
+      draw_segments = if (type_info[["raster"]]) segmented_raster else segmented_polygon
       for (i in rev(seq_along(dsplit))) {
         if (type_info[["gradient"]]) {
           with(dsplit[[i]], draw_segments(x, ymax, ymin = ymin[1L],
             breaks = type_info[["breaks"]],
+            probs = type_info[["probs"]],
             col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]],
             border = if (is.null(type_info[["palette"]])) icol else "transparent"))
         }
@@ -151,17 +192,24 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0",
 
 ## auxiliary function for drawing shaded segmented polygon
 #' @importFrom stats approx
-segmented_polygon = function(x, y, ymin = 0, breaks = range(x), col = "lightgray", border = "transparent") {
+segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, col = "lightgray", border = "transparent") {
+
+  if (!is.null(probs)) {
+    ## map quantiles to breaks
+    if (!(missing(breaks) || is.null(breaks))) stop("only one of 'breaks' and 'probs' must be specified")
+    breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
+    ybreaks = probs + ymin
+  } else {
+    ## y values at breaks
+    ybreaks = approx(x, y, xout = breaks)$y
+    ybreaks[is.na(ybreaks)] = ymin
+  }
 
   ## sanity check
   if (breaks[1L] > x[1L] || breaks[length(breaks)] < x[length(x)]) stop("'breaks' do no span range of 'x'")
 
   ## recycle color (if necessary)
   col = rep_len(col, length(breaks) - 1L)
-
-  ## y values at breaks
-  ybreaks = approx(x, y, xout = breaks)$y
-  ybreaks[is.na(ybreaks)] = ymin
 
   ## add start/end of polygon
   x = x[c(1, seq_along(x), length(x))]
@@ -190,11 +238,17 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), col = "lightgray
 
 #' @importFrom graphics rasterImage
 #' @importFrom grDevices as.raster
-segmented_raster = function(x, y, ymin = 0, breaks = range(x), col = "lightgray", border = "transparent") {
+segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, col = "lightgray", border = "transparent") {
   ## set up raster matrix on x-grid and 500 y-pixels 
   n = length(x) - 1L
   m = 500L ## FIXME: hard-coded?
   r = matrix(1:n, ncol = n, nrow = m, byrow = TRUE)
+
+  ## map quantiles to breaks
+  if (!is.null(probs)) {
+    if (!(missing(breaks) || is.null(breaks))) stop("only one of 'breaks' and 'probs' must be specified")
+    breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
+  }
 
   ## map colors to intervals and fill colors by column
   col = col[cut(x, breaks = breaks, include.lowest = TRUE)]
@@ -208,4 +262,28 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), col = "lightgray"
 
   ## plot density and add raster gradient
   rasterImage(as.raster(r), min(x), ymin, max(x), ymax, interpolate = length(breaks) >= 20L) ## FIXME: improve quality for "few" breaks?
+}
+
+## auxiliary function for determining quantiles based on density function
+#' @importFrom stats median
+quantile.density = function(x, probs = seq(0, 1, 0.25), ...) {
+  ## sanity check for probabilities
+  if (any(probs < 0 | probs > 1)) stop("'probs' outside [0,1]")
+
+  ## probability density function, extrapolated to zero, use midpoints
+  n = length(x$x)
+  pdf = x$y
+  pdf = c(0, pdf, 0)
+
+  ## x variable, also extrapolated, use midpoints
+  x = x$x
+  delta = median(diff(x))
+  x = c(x[1L] - delta, x, x[n] + delta)
+
+  ## numerical integration of density
+  cdf = c(0, cumsum(diff(x) * (pdf[-1L] + pdf[-(n + 2L)])/2))
+  cdf = cdf/cdf[n + 2L]
+
+  ## approximate quantiles
+  approx(cdf, x, xout = probs, rule = 2)$y  
 }

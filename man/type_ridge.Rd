@@ -8,10 +8,11 @@ type_ridge(
   scale = 1.5,
   gradient = FALSE,
   breaks = NULL,
+  probs = NULL,
   bw = "nrd0",
   kernel = "gaussian",
   ...,
-  raster = TRUE
+  raster = NULL
 )
 }
 \arguments{
@@ -24,11 +25,17 @@ used, then it can either be of length 1 and specify the palette to be
 used with \code{gradient = TRUE} corresponding to \code{gradient = "viridis"}.
 If a character vector of length greater than 1 is used, then it
 should specifify the colors in the palette, e.g.,
-\code{gradient = hcl.colors(500)}.}
+\code{gradient = hcl.colors(512)}.}
 
 \item{breaks}{Numeric. If a color gradient is used for shading, the
 breaks between the colors can be modified. The default is to use
 equidistant breaks spanning the range of the \code{x} variable.}
+
+\item{probs}{Numeric. Instead of specifying the same \code{breaks} on the
+x-axis for all groups, it is possible to specify group-specific quantiles
+at the specified \code{probs}. The quantiles are computed based on the density
+(rather than the raw original variable). Only one of \code{breaks} or
+\code{probs} must be specified.}
 
 \item{bw, kernel, ...}{Arguements passed to \code{\link[stats]{density}}.}
 
@@ -51,19 +58,26 @@ tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 ## x-variable also coded by color gradient (equivalent specifications)
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
-tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(500)))
+tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))
 
 ## color gradient with fewer segments
 tinyplot(Species ~ Sepal.Width, data = iris,
-  type = type_ridge(gradient = TRUE, breaks = pretty(iris$Sepal.Width, 6)))
+  type = type_ridge(gradient = TRUE, breaks = seq(2, 4.5, by = 0.5)))
 
-## use common bandwidth for all densities
+## use the same bandwidth for all densities
 tinyplot(Species ~ Sepal.Width, data = iris,
   type = type_ridge(bw = bw.nrd0(iris$Sepal.Width)))
 
+## highlighting only the center 50\% of the density (between 25\% and 75\% quantile)
+tinyplot(Species ~ Sepal.Width, data = iris, col = "white", type = type_ridge(
+  gradient = hcl.colors(3, "Dark Mint")[c(2, 1, 2)], probs = c(0.25, 0.75)))
+
+## highlighting the probability distribution by the color gradient
+tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(
+  gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)], probs = 0:500/500))
+
 ## customized ridge plot without overlap of densities
-tinyplot(Month ~ Ozone,
-  data = airquality,
+tinyplot(Month ~ Ozone, data = airquality,
   type = type_ridge(scale = 1),
   bg = "light blue", col = "black")
 
@@ -72,5 +86,6 @@ airq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
 tinyplot(Month ~ Ozone, facet = ~ Late, data = airq,
   type = type_ridge(gradient = TRUE),
   grid = TRUE, axes = "t", col = "white")
+
 
 }

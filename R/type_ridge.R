@@ -11,7 +11,7 @@
 #'
 #' @param scale Numeric. Controls the scaling factor of each plot.
 #' Values greater than 1 means that plots overlap.
-#' @param gradient logical or character. Should a color gradient be used
+#' @param gradient Logical or character. Should a color gradient be used
 #' to shade the area under the density? If a character specification is
 #' used, then it can either be of length 1 and specify the palette to be
 #' used with `gradient = TRUE` corresponding to `gradient = "viridis"`.
@@ -21,16 +21,13 @@
 #' @param breaks Numeric. If a color gradient is used for shading, the
 #' breaks between the colors can be modified. The default is to use
 #' equidistant breaks spanning the range of the `x` variable.
+#' @param bw,kernel,... Arguements passed to \code{\link[stats]{density}}.
 #'
 #' @examples
+#' ## default ridge plot
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 #'
-#' tinyplot(Month ~ Ozone,
-#'   data = airquality,
-#'   type = type_ridge(scale = 1),
-#'   bg = "light blue", col = "black")
-#'
-#' ## equivalent specifications of color gradients
+#' ## x-variable also coded by color gradient (equivalent specifications)
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(100)))
@@ -39,13 +36,28 @@
 #' tinyplot(Species ~ Sepal.Width, data = iris,
 #'   type = type_ridge(gradient = TRUE, breaks = pretty(iris$Sepal.Width, 6)))
 #'
+#' ## use common bandwidth for all densities
+#' tinyplot(Species ~ Sepal.Width, data = iris,
+#'   type = type_ridge(bw = bw.nrd0(iris$Sepal.Width)))
+#'
+#' ## customized ridge plot without overlap of densities
+#' tinyplot(Month ~ Ozone,
+#'   data = airquality,
+#'   type = type_ridge(scale = 1),
+#'   bg = "light blue", col = "black")
+#'
+#' ## with faceting and color gradient
+#' airq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
+#' tinyplot(Month ~ Ozone, facet = ~ Late, data = airq,
+#'   grid = TRUE, col = "white", type = type_ridge(gradient = TRUE))
 #'
 #' @export
-type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL) {
+type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0", kernel = "gaussian", ...) {
+  density_args = list(bw = bw, kernel = kernel, ...)
   data_ridge = function() {
     fun = function(datapoints, ...) {
       get_density = function(k) {
-        out = density(k$x)
+        out = do.call("density", c(list(x = k$x), density_args))
         out = data.frame(x = out$x, ymax = out$y, ymin = 0, y = k$y[1])
         out$ymax = out$ymax / max(out$ymax) * scale
         out$facet = k$facet[1]

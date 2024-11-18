@@ -4,13 +4,20 @@
 \alias{type_ridge}
 \title{Ridge plot type}
 \usage{
-type_ridge(scale = 1.5, gradient = FALSE, breaks = NULL)
+type_ridge(
+  scale = 1.5,
+  gradient = FALSE,
+  breaks = NULL,
+  bw = "nrd0",
+  kernel = "gaussian",
+  ...
+)
 }
 \arguments{
 \item{scale}{Numeric. Controls the scaling factor of each plot.
 Values greater than 1 means that plots overlap.}
 
-\item{gradient}{logical or character. Should a color gradient be used
+\item{gradient}{Logical or character. Should a color gradient be used
 to shade the area under the density? If a character specification is
 used, then it can either be of length 1 and specify the palette to be
 used with \code{gradient = TRUE} corresponding to \code{gradient = "viridis"}.
@@ -21,6 +28,8 @@ should specifify the colors in the palette, e.g.,
 \item{breaks}{Numeric. If a color gradient is used for shading, the
 breaks between the colors can be modified. The default is to use
 equidistant breaks spanning the range of the \code{x} variable.}
+
+\item{bw, kernel, ...}{Arguements passed to \code{\link[stats]{density}}.}
 }
 \description{
 Type function for producing ridge plots (also known as joy plots),
@@ -32,14 +41,10 @@ The line color is controlled by the \code{col} argument in the \code{tinyplot()}
 The fill color is controlled by the \code{bg} argument in the \code{tinyplot()} call.
 }
 \examples{
+## default ridge plot
 tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 
-tinyplot(Month ~ Ozone,
-  data = airquality,
-  type = type_ridge(scale = 1),
-  bg = "light blue", col = "black")
-
-## equivalent specifications of color gradients
+## x-variable also coded by color gradient (equivalent specifications)
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(100)))
@@ -48,5 +53,19 @@ tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.co
 tinyplot(Species ~ Sepal.Width, data = iris,
   type = type_ridge(gradient = TRUE, breaks = pretty(iris$Sepal.Width, 6)))
 
+## use common bandwidth for all densities
+tinyplot(Species ~ Sepal.Width, data = iris,
+  type = type_ridge(bw = bw.nrd0(iris$Sepal.Width)))
+
+## customized ridge plot without overlap of densities
+tinyplot(Month ~ Ozone,
+  data = airquality,
+  type = type_ridge(scale = 1),
+  bg = "light blue", col = "black")
+
+## with faceting and color gradient
+airq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
+tinyplot(Month ~ Ozone, facet = ~ Late, data = airq,
+  grid = TRUE, col = "white", type = type_ridge(gradient = TRUE))
 
 }

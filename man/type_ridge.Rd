@@ -10,7 +10,8 @@ type_ridge(
   breaks = NULL,
   bw = "nrd0",
   kernel = "gaussian",
-  ...
+  ...,
+  raster = TRUE
 )
 }
 \arguments{
@@ -23,13 +24,16 @@ used, then it can either be of length 1 and specify the palette to be
 used with \code{gradient = TRUE} corresponding to \code{gradient = "viridis"}.
 If a character vector of length greater than 1 is used, then it
 should specifify the colors in the palette, e.g.,
-\code{gradient = hcl.colors(100)}.}
+\code{gradient = hcl.colors(500)}.}
 
 \item{breaks}{Numeric. If a color gradient is used for shading, the
 breaks between the colors can be modified. The default is to use
 equidistant breaks spanning the range of the \code{x} variable.}
 
 \item{bw, kernel, ...}{Arguements passed to \code{\link[stats]{density}}.}
+
+\item{raster}{Logical. FIXME: Temporary argument to select plotting via
+\code{rasterImage} vs. \code{polygon}.}
 }
 \description{
 Type function for producing ridge plots (also known as joy plots),
@@ -47,7 +51,7 @@ tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 ## x-variable also coded by color gradient (equivalent specifications)
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
-tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(100)))
+tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(500)))
 
 ## color gradient with fewer segments
 tinyplot(Species ~ Sepal.Width, data = iris,

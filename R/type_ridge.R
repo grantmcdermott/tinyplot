@@ -17,11 +17,13 @@
 #' used with `gradient = TRUE` corresponding to `gradient = "viridis"`.
 #' If a character vector of length greater than 1 is used, then it
 #' should specifify the colors in the palette, e.g.,
-#' `gradient = hcl.colors(100)`.
+#' `gradient = hcl.colors(500)`.
 #' @param breaks Numeric. If a color gradient is used for shading, the
 #' breaks between the colors can be modified. The default is to use
 #' equidistant breaks spanning the range of the `x` variable.
 #' @param bw,kernel,... Arguements passed to \code{\link[stats]{density}}.
+#' @param raster Logical. FIXME: Temporary argument to select plotting via
+#' `rasterImage` vs. `polygon`.
 #'
 #' @examples
 #' ## default ridge plot
@@ -30,7 +32,7 @@
 #' ## x-variable also coded by color gradient (equivalent specifications)
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
-#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(100)))
+#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(500)))
 #'
 #' ## color gradient with fewer segments
 #' tinyplot(Species ~ Sepal.Width, data = iris,
@@ -53,7 +55,7 @@
 #'   grid = TRUE, axes = "t", col = "white")
 #'
 #' @export
-type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0", kernel = "gaussian", ...) {
+type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = TRUE) {
   density_args = list(bw = bw, kernel = kernel, ...)
   data_ridge = function() {
     fun = function(datapoints, yaxt = NULL, ...) {
@@ -87,7 +89,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0",
         gradient = TRUE
         if (isTRUE(palette)) palette = "viridis"
         if (is.character(palette) && length(palette) == 1L) {
-          palette = hcl.colors(if (is.null(breaks)) 100 else length(breaks) - 1L, palette = palette)
+          palette = hcl.colors(if (is.null(breaks)) 500L else length(breaks) - 1L, palette = palette)
         }
         if (is.null(breaks)) breaks = seq(from = xlim[1L], to = xlim[2L], length.out = length(palette) + 1L)
         palette = rep_len(palette, length(breaks) - 1L)
@@ -108,7 +110,8 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0",
           gradient = gradient,
           palette = palette,
           breaks = breaks,
-          yaxt = yaxt)
+          yaxt = yaxt,
+          raster = raster)
       )
       return(out)
     }
@@ -119,10 +122,11 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0",
     fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info, ...) {
       d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
       dsplit = split(d, d$y)
-      if (is.null(ibg)) ibg = "grey"
+      if (is.null(ibg)) ibg = "gray"
+      draw_segments = if(type_info[["raster"]]) segmented_raster else segmented_polygon
       for (i in rev(seq_along(dsplit))) {
         if (type_info[["gradient"]]) {
-          with(dsplit[[i]], segmented_polygon(x, ymax, ymin = ymin[1L],
+          with(dsplit[[i]], draw_segments(x, ymax, ymin = ymin[1L],
             breaks = type_info[["breaks"]],
             col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]],
             border = if (is.null(type_info[["palette"]])) icol else "transparent"))
@@ -182,4 +186,25 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), col = "lightgray
 
   ## draw all polygons
   polygon(xy$x, xy$y, col = col[ok], border = border)
+}
+
+#' @importFrom graphics rasterImage
+#' @importFrom grDevices as.raster
+segmented_raster = function(x, y, ymin = 0, breaks = range(x), col = "lightgray", border = "transparent") {
+  ## set up raster matrix on x-grid and 1000 y-pixels 
+  n = length(x) - 1L
+  m = 1000L ## FIXME: hard-coded?
+  r = matrix(1:n, ncol = n, nrow = m, byrow = TRUE)
+
+  ## map colors to intervals and fill colors by column
+  col = col[cut(x, breaks = breaks, include.lowest = TRUE)]
+  r[] = col[r]
+
+  ## clip raster pixels above density line
+  ymax = round(m * (y - ymin)/(max(y) - ymin))
+  ix = lapply(1:n, function(i) if(ymax[i] < m) cbind(setdiff(1:m, (m + 1L) - 0L:ymax[i]), i) else NULL)
+  r[do.call("rbind", ix)] = NA
+
+  ## plot density and add raster gradient
+  rasterImage(as.raster(r), min(x), ymin, max(x), max(y))
 }

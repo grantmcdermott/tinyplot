@@ -191,9 +191,9 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), col = "lightgray
 #' @importFrom graphics rasterImage
 #' @importFrom grDevices as.raster
 segmented_raster = function(x, y, ymin = 0, breaks = range(x), col = "lightgray", border = "transparent") {
-  ## set up raster matrix on x-grid and 1000 y-pixels 
+  ## set up raster matrix on x-grid and 500 y-pixels 
   n = length(x) - 1L
-  m = 1000L ## FIXME: hard-coded?
+  m = 500L ## FIXME: hard-coded?
   r = matrix(1:n, ncol = n, nrow = m, byrow = TRUE)
 
   ## map colors to intervals and fill colors by column
@@ -201,10 +201,11 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), col = "lightgray"
   r[] = col[r]
 
   ## clip raster pixels above density line
-  ymax = round(m * (y - ymin)/(max(y) - ymin))
-  ix = lapply(1:n, function(i) if(ymax[i] < m) cbind(setdiff(1:m, (m + 1L) - 0L:ymax[i]), i) else NULL)
-  r[do.call("rbind", ix)] = NA
+  ymax = max(y)
+  ix = cbind(as.vector(row(r)), as.vector(col(r)))
+  ix = ix[seq(from = ymax, to = ymin, length.out = m)[row(r)] > y[col(r)], , drop = FALSE]
+  r[ix] = NA
 
   ## plot density and add raster gradient
-  rasterImage(as.raster(r), min(x), ymin, max(x), max(y))
+  rasterImage(as.raster(r), min(x), ymin, max(x), ymax, interpolate = length(breaks) >= 20L) ## FIXME: improve quality for "few" breaks?
 }

@@ -82,24 +82,25 @@ theme_ipsum = list(
   adj.sub = 0,
   adj.xlab = 1,
   adj.ylab = 1,
-  col.xaxs = NA,
-  col.yaxs = NA,
-  cex.axis = .8,
   bg = "white", # Background color
   bty = "n",
   cex = 1, # Base font size scaling
+  cex.axis = .8,
   cex.lab = 1,
   cex.main = 1.5,
-  cex.sub = 1.2,
+  cex.sub = 1,
+  col.xaxs = NA,
+  col.yaxs = NA,
   family = "Arial Narrow", # Base font family
   fg = "black",
   font = 1, # Font style (plain)
-  mgp = c(1.1, 0.1, 0),
   font.axis = 1, # Font style for axis labels
   font.lab = 1, # Font style for axis titles
   font.main = 1, # Font style for the main title (normal)
   font.sub = 3, # Font style for the subtitle (italic)
-  las = 1, # Orientation of axis labels (1 = horizontal)
   grid = TRUE,
+  las = 1, # Orientation of axis labels (1 = horizontal)
+  mgp = c(1.1, 0.1, 0),
+  side.sub = 3,
   tck = 0 # Tick mark length (0 = none)
 )

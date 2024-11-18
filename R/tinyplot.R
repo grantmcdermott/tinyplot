@@ -945,34 +945,60 @@ tinyplot.default = function(
     if (is.null(legend_eval)) {
       legend_eval = tryCatch(paste0(legend)[[2]], error = function(e) NULL)
     }
+
     adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend_args[["x"]]) && legend_args[["x"]] == "top!") || (is.list(legend_eval) && legend_eval[[1]] == "top!"))
-    if (is.null(main) || isFALSE(adj_title)) {
-      args = list(main = main)
-      args[["adj"]] = get_tpar("adj.main", "adj")
-      do.call(title, args)
-      args = list(sub = sub)
-      args[["adj"]] = get_tpar("adj.sub", "adj")
-      do.call(title, args)
+
+    # For the "top!" legend case, bump main title up to make space for the
+    # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
+    # and add the difference between original top margin and new one (i.e.,
+    # which should equal the height of the new legend). Note that we also
+    # include a 0.1 epsilon bump, which we're using to reset the tinyplot
+    # window in case of recursive "top!" calls. (See draw_legend code.)
+
+    if (isTRUE(adj_title)) {
+      line_main = par("mgp")[3] + 1.7 + (par("mar")[3] - opar[["mar"]][3])
     } else {
-      # For the "top!" legend case, bump main title up to make space for the
-      # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
-      # and add the difference between original top margin and new one (i.e.,
-      # which should equal the height of the new legend). Note that we also
-      # include a 0.1 epsilon bump, which we're using to reset the tinyplot
-      # window in case of recursive "top!" calls. (See draw_legend code.)
-      args = list(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1)
-      args[["adj"]] = get_tpar("adj.main", "adj")
-      do.call(title, args)
-      args = list(sub = sub)
-      args[["adj"]] = get_tpar("adj.sub", "adj")
-      do.call(title, args)
+      line_main = par("mgp")[3] + 1.7
     }
+
+    if (!is.null(sub)) {
+      if (isTRUE(get_tpar("side.sub", 1) == 3)) {
+        line_main = line_main + 1.2
+      }
+      if (isTRUE(get_tpar("side.sub", 1) == 3)) {
+        line_sub = get_tpar("line.sub", 1.7)
+      } else {
+        line_sub = get_tpar("line.sub", 4)
+      }
+      args = list(
+        text = sub,
+        line = line_sub,
+        cex = get_tpar("cex.sub", 1.2),
+        adj = get_tpar(c("adj.sub", "adj")),
+        font = get_tpar("font.sub", 1),
+        side = get_tpar("side.sub", 1))
+      args = Filter(function(x) !is.null(x), args)
+      do.call(mtext, args)
+    }
+
+    if (!is.null(main)) {
+      args = list(
+        text = main,
+        line = line_main,
+        cex = get_tpar("cex.main", 1.4),
+        font = get_tpar("font.main", 2),
+        adj = get_tpar(c("adj.main", "adj")), 3)
+      args = Filter(function(x) !is.null(x), args)
+      do.call(mtext, args)
+    }
+
+
     # Axis titles
     args = list(xlab = xlab)
-    args[["adj"]] = get_tpar("adj.xlab", "adj")
+    args[["adj"]] = get_tpar(c("adj.xlab", "adj"))
     do.call(title, args)
     args = list(ylab = ylab)
-    args[["adj"]] = get_tpar("adj.ylab", "adj")
+    args[["adj"]] = get_tpar(c("adj.ylab", "adj"))
     do.call(title, args)
   }
 

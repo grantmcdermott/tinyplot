@@ -236,8 +236,8 @@ draw_facet_window = function(grid, ...) {
 
       # axes, frame.plot and grid
       if (isTRUE(axes)) {
-        col.xaxs = get_tpar("col.xaxs", "col.axis")
-        col.yaxs = get_tpar("col.yaxs", "col.axis")
+        col.xaxs = get_tpar(c("col.xaxs", "col.axis"))
+        col.yaxs = get_tpar(c("col.yaxs", "col.axis"))
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
           if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {

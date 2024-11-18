@@ -189,23 +189,24 @@ tpar = function(...) {
   tinyplot_params = c(
     "adj.main", "adj.sub", "adj.ylab", "adj.xlab", "col.xaxs", "col.yaxs",
     "col.axis", "lmar", "ribbon.alpha", "grid.lwd", "grid.lty", "grid.col", "grid", "file.res",
-    "file.height", "file.width", "facet.font", "facet.cex")
+    "file.height", "file.width", "facet.font", "facet.cex", "side.sub")
   for (n in intersect(names(opts), tinyplot_params)) {
     .tpar[[n]] = opts[[n]]
   }
-  assert_numeric(.tpar[["adj.main"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
-  assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
-  assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
-  assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
-  assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE)
-  assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE)
-  assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE)
-  assert_flag(.tpar[["grid"]], null.ok = TRUE)
-  assert_numeric(.tpar[["file.res"]], len = 1, lower = 0, null.ok = TRUE)
-  assert_numeric(.tpar[["file.height"]], len = 1, lower = 0, null.ok = TRUE)
-  assert_numeric(.tpar[["file.width"]], len = 1, lower = 0, null.ok = TRUE)
-  assert_numeric(.tpar[["facet.font"]], len = 1, null.ok = TRUE)
-  assert_numeric(.tpar[["facet.cex"]], len = 1, null.ok = TRUE)
+  assert_numeric(.tpar[["adj.main"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.main")
+  assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.sub")
+  assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.xlab")
+  assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
+  assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE, name = "lmar")
+  assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "ribbon.alpha")
+  assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE, name = "grid.lwd")
+  assert_flag(.tpar[["grid"]], null.ok = TRUE, name = "grid")
+  assert_numeric(.tpar[["file.res"]], len = 1, lower = 0, null.ok = TRUE, name = "file.res")
+  assert_numeric(.tpar[["file.height"]], len = 1, lower = 0, null.ok = TRUE, name = "file.height")
+  assert_numeric(.tpar[["file.width"]], len = 1, lower = 0, null.ok = TRUE, name = "file.width")
+  assert_numeric(.tpar[["facet.font"]], len = 1, null.ok = TRUE, name = "facet.font")
+  assert_numeric(.tpar[["facet.cex"]], len = 1, null.ok = TRUE, name = "facet.cex")
+  assert_numeric(.tpar[["side.sub"]], len = 1, null.ok = TRUE, name = "side.sub")
 
 
   ## Like par(), we want the return object to be dependent on inputs...
@@ -235,12 +236,15 @@ tpar = function(...) {
 }
 
 
-get_tpar = function(...) {
-  args = list(...)
-  for (a in args) {
-    if (!is.null(.tpar[[a]])) {
-      return(.tpar[[a]])
+get_tpar = function(opts, default = NULL) {
+  for (o in opts) {
+    tp = .tpar[[o]]
+    p = suppressWarnings(par(o))
+    if (!is.null(tp)) {
+      return(tp)
+    } else if (!is.null(p)) {
+      return(p)
     }
   }
-  return(NULL)
+  return(default)
 }

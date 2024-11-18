@@ -4,11 +4,23 @@
 \alias{type_ridge}
 \title{Ridge plot type}
 \usage{
-type_ridge(scale = 1.5)
+type_ridge(scale = 1.5, gradient = FALSE, breaks = NULL)
 }
 \arguments{
 \item{scale}{Numeric. Controls the scaling factor of each plot.
 Values greater than 1 means that plots overlap.}
+
+\item{gradient}{logical or character. Should a color gradient be used
+to shade the area under the density? If a character specification is
+used, then it can either be of length 1 and specify the palette to be
+used with \code{gradient = TRUE} corresponding to \code{gradient = "viridis"}.
+If a character vector of length greater than 1 is used, then it
+should specifify the colors in the palette, e.g.,
+\code{gradient = hcl.colors(100)}.}
+
+\item{breaks}{Numeric. If a color gradient is used for shading, the
+breaks between the colors can be modified. The default is to use
+equidistant breaks spanning the range of the \code{x} variable.}
 }
 \description{
 Type function for producing ridge plots (also known as joy plots),
@@ -26,5 +38,15 @@ tinyplot(Month ~ Ozone,
   data = airquality,
   type = type_ridge(scale = 1),
   bg = "light blue", col = "black")
+
+## equivalent specifications of color gradients
+tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
+tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
+tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(100)))
+
+## color gradient with fewer segments
+tinyplot(Species ~ Sepal.Width, data = iris,
+  type = type_ridge(gradient = TRUE, breaks = pretty(iris$Sepal.Width, 6)))
+
 
 }

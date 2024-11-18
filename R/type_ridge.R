@@ -49,13 +49,14 @@
 #' ## with faceting and color gradient
 #' airq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
 #' tinyplot(Month ~ Ozone, facet = ~ Late, data = airq,
-#'   grid = TRUE, col = "white", type = type_ridge(gradient = TRUE))
+#'   type = type_ridge(gradient = TRUE),
+#'   grid = TRUE, axes = "t", col = "white")
 #'
 #' @export
 type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0", kernel = "gaussian", ...) {
   density_args = list(bw = bw, kernel = kernel, ...)
   data_ridge = function() {
-    fun = function(datapoints, ...) {
+    fun = function(datapoints, yaxt = NULL, ...) {
       get_density = function(k) {
         out = do.call("density", c(list(x = k$x), density_args))
         out = data.frame(x = out$x, ymax = out$y, ymin = 0, y = k$y[1])
@@ -106,7 +107,8 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0",
         type_info = list(
           gradient = gradient,
           palette = palette,
-          breaks = breaks)
+          breaks = breaks,
+          yaxt = yaxt)
       )
       return(out)
     }
@@ -129,7 +131,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, bw = "nrd0",
       }
       lab = unique(d$y)
       val = cumsum(rep(1, length(lab))) - 1
-      axis(2, at = val, lab)
+      tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
     }
     return(fun)
   }

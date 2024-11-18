@@ -66,6 +66,7 @@ tinyplot(Month ~ Ozone,
 ## with faceting and color gradient
 airq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
 tinyplot(Month ~ Ozone, facet = ~ Late, data = airq,
-  grid = TRUE, col = "white", type = type_ridge(gradient = TRUE))
+  type = type_ridge(gradient = TRUE),
+  grid = TRUE, axes = "t", col = "white")
 
 }

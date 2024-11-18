@@ -115,25 +115,25 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
           ## color vector already given
           if (is.null(breaks) && is.null(probs)) {
             breaks = seq(from = xlim[1L], to = xlim[2L], length.out = length(palette) + 1L)
-            raster = TRUE
+            if (is.null(raster)) raster = TRUE
           } else {
             npal = pmax(length(breaks), length(probs)) - 1L
             if (length(palette) != npal) {
               warning("length of 'palette' does not match 'breaks'/'probs'")
               palette = rep_len(palette, npal)
             }
-            raster = npal > 20L
+            if (is.null(raster)) raster = npal > 20L
           }
         } else {
           ## only palette name given
           npal = if (is.null(breaks) && is.null(probs)) 512L else pmax(length(breaks), length(probs)) - 1L
           palette = hcl.colors(npal, palette = palette)
           if (is.null(breaks) && is.null(probs)) breaks = seq(from = xlim[1L], to = xlim[2L], length.out = npal + 1L)
-          raster = npal > 20L
+          if (is.null(raster)) raster = npal > 20L
         }
       } else {
         palette = NULL
-        raster = FALSE
+        if (is.null(raster)) raster = FALSE
         if (!is.null(breaks) || !is.null(probs)) gradient = TRUE
       }
       if (!is.null(breaks)) {

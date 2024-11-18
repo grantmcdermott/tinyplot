@@ -2,11 +2,11 @@
 #'
 #' The `tinytheme` function sets or resets the theme for plots created with
 #' `tinyplot`. Themes control the appearance of plots, such as text alignment,
-#' font styles, and axis labels. By default, a "simple" theme is available.
+#' font styles, and axis labels. By default, a "bw" theme is available.
 #'
 #' @param theme A character string specifying the name of the theme to apply.
 #'   If `NULL`, the current theme is reset to default settings. Available themes include:
-#'   - `"simple"`
+#'   - `"bw"`
 #'   - `"ipsum"`
 #' @param action "append", "prepend", or "replace" to the hook.
 #' @param ... Named arguments to override specific theme settings. These arguments are
@@ -25,11 +25,11 @@
 #'
 #' @examples
 #' # Set a theme
-#' tinytheme("simple")
+#' tinytheme("bw")
 #' tinyplot(mpg ~ hp | factor(am), data = mtcars)
 #'
 #' # Customize the theme by overriding default settings
-#' tinytheme("simple", fg = "blue", font.main = 2)
+#' tinytheme("bw", fg = "blue", font.main = 2)
 #' tinyplot(mpg ~ hp | factor(am), data = mtcars, main = "Hello World!")
 #'
 #' # Reset the theme
@@ -40,16 +40,30 @@
 tinytheme = function(theme = NULL, ..., action = "replace") {
   assert_choice(action, c("append", "prepend", "replace"))
 
+  # TODO: still does not reset everything
   if (is.null(theme)) {
+    old = .tpar[["old_theme"]]
+    if (!is.null(old)) {
+      known_par = names(par(no.readonly = TRUE))
+      tmp = old$par[names(old$par) %in% known_par]
+      do.call(par, tmp)
+      do.call(tpar, old[["tpar"]])
+    }
     setHook("before.plot.new", NULL, action = action)
     return(invisible(NULL))
   }
 
-  assert_choice(theme, c("simple", "ipsum", "grey"))
+  old_par = par()
+  old_tpar = tpar()
+  .tpar[["old_theme"]] = list(par = old_par, tpar = old_tpar)
+
+  assert_choice(theme, c("bw", "minimal", "ipsum", "grey", "void"))
   settings = switch(theme,
-    "simple" = theme_simple,
+    "bw" = theme_bw,
+    "minimal" = theme_minimal,
     "ipsum" = theme_ipsum,
-    "grey" = theme_grey
+    "grey" = theme_grey,
+    "void" = theme_void,
   )
 
   dots = list(...)
@@ -64,82 +78,66 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
   setHook("before.plot.new", theme_fun, action = "replace")
 }
 
-theme_simple = list(
-  fg              = "black", # Foreground color
-  adj             = 0.5, # Horizontal alignment of text
-  bty             = "l", # Box type around the plot
-  family          = "serif", # Font family
-  font            = 1, # Font style (plain)
-  font.axis       = 1, # Font style for axis labels
-  font.lab        = 1, # Font style for axis titles
-  font.main       = 1, # Font style for the main title (normal)
-  font.sub        = 3, # Font style for the subtitle (italic)
-  las             = 1, # Orientation of axis labels (1 = horizontal)
-  tck             = 0 # Tick mark length (0 = none)
-)
 
-
-theme_ipsum = list(
+theme_bw = list(
+  fg = "black",
+  adj = 0.5,
+  bty = "o",
+  lwd = .5,
+  font = 1,
+  font.axis = 1,
+  cex.main = 1.2,
+  cex.xlab = 1,
+  cex.ylab = 1,
+  cex.axis = 1,
+  side.sub = 3,
   adj.main = 0,
   adj.sub = 0,
-  adj.xlab = 1,
-  adj.ylab = 1,
-  bg = "white", # Background color
-  bty = "n",
-  cex = 1, # Base font size scaling
-  cex.axis = .8,
-  cex.lab = 1,
-  cex.main = 1.5,
-  cex.sub = 1,
+  font.lab = 1,
+  font.main = 1,
+  font.sub = 1,
+  font = 1,
+  font.axis = 1,
+  font.lab = 1,
+  font.main = 1,
+  font.sub = 3,
+  grid = TRUE,
+  grid.lty = 1,
   col.xaxs = NA,
   col.yaxs = NA,
-  family = "Arial Narrow", # Base font family
-  fg = "black",
-  font = 1, # Font style (plain)
-  font.axis = 1, # Font style for axis labels
-  font.lab = 1, # Font style for axis titles
-  font.main = 1, # Font style for the main title (normal)
-  font.sub = 3, # Font style for the subtitle (italic)
-  grid = TRUE,
-  las = 1, # Orientation of axis labels (1 = horizontal)
-  mgp = c(1.1, 0.1, 0),
-  side.sub = 3,
+  grid.lwd = 0.5,
+  las = 1,
   tck = 0 # Tick mark length (0 = none)
 )
 
+theme_minimal = modifyList(theme_bw, list(
+  bty = "n",
+  lty = 0
+))
 
-theme_grey = list(
-  adj.main = 0.5, # Center main title
-  adj.sub = 0.5, # Center subtitle
-  adj.xlab = 0.5, # Center x-axis title
-  adj.ylab = 0.5, # Center y-axis title
-  bg = "white", # Background color
-  bty = "n", # No box around the plot
-  cex = 1, # Base font size scaling
-  cex.axis = 0.8, # Axis text size
-  cex.lab = 1, # Axis label size
-  cex.main = 1.2, # Main title size
-  cex.sub = 0.9, # Subtitle size
-  col.axis = "#4D4D4D", # Axis text color
-  col.lab = "black", # Axis label color
-  col.main = "black", # Main title color
-  col.sub = "black", # Subtitle color
-  col.ticks = "#B3B3B3", # Tick color
-  col.xaxs = NA, # No color for x-axis line
-  col.yaxs = NA, # No color for y-axis line
-  fg = "black", # Foreground color (text, lines)
-  font = 1, # Font style (plain)
-  font.axis = 1, # Font style for axis labels
-  font.lab = 1, # Font style for axis titles
-  font.main = 1, # Font style for the main title
-  font.sub = 1, # Font style for the subtitle
-  grid = TRUE, # Display grid
-  grid.col = "white", # Grid line color
-  grid.lwd = 1, # Grid line width
-  grid.lty = "solid", # Grid line type
-  grid.bg = "#EBEBEB",
-  las = 1, # Horizontal axis labels
-  family = "", # Base font family
-  mgp = c(3, 1, 0), # Margin for axis titles (mgp[1]), axis labels (mgp[2]), axis lines (mgp[3])
-  tck = -0.02 # Tick mark length (negative for inside ticks)
-)
+theme_classic = modifyList(theme_bw, list(
+  bty = "l"
+))
+
+theme_ipsum = modifyList(theme_bw, list(
+  family = "Arial Narrow",
+  font.sub = 3,
+  bty = "n"
+))
+
+theme_grey = modifyList(theme_bw, list(
+  bty = "n",
+  lty = 0,
+  grid = TRUE,
+  grid.col = "white",
+  grid.lwd = 1,
+  grid.lty = "solid",
+  grid.bg = "#EBEBEB"
+))
+
+theme_void = modifyList(theme_bw, list(
+  xaxt = "n",
+  yaxt = "n",
+  ann = FALSE,
+  bty = "n"
+))

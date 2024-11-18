@@ -248,21 +248,21 @@ draw_facet_window = function(grid, ...) {
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
           if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-            args = list(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
+            args = list(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, cex = get_tpar("cex.axis", 0.8))
             args[["col"]] = col.xaxs
             do.call(tinyAxis, args)
           } else {
-            args = list(x, side = xside, type = xaxt)
+            args = list(x, side = xside, type = xaxt, cex = get_tpar("cex.axis", 0.8))
             args[["col"]] = col.xaxs
             do.call(tinyAxis, args)
           }
           # tinyAxis(y, side = yside, type = yaxt)
           if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
-            args = list(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+            args = list(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, cex = get_tpar("cex.axis", 0.8))
             args[["col"]] = col.yaxs
             do.call(tinyAxis, args)
           } else {
-            args = list(y, side = yside, type = yaxt)
+            args = list(y, side = yside, type = yaxt, cex = get_tpar("cex.axis", 0.8))
             args[["col"]] = col.yaxs
             do.call(tinyAxis, args)
           }
@@ -270,11 +270,11 @@ draw_facet_window = function(grid, ...) {
           # ... else only print the "outside" axes.
           if (ii %in% oxaxis) {
             if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-              args = list(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
+              args = list(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, cex = get_tpar("cex.axis", 0.8))
               args[["col"]] = col.xaxs
               do.call(tinyAxis, args)
             } else {
-              args = list(x, side = xside, type = xaxt)
+              args = list(x, side = xside, type = xaxt, cex = get_tpar("cex.axis", 0.8))
               args[["col"]] = col.yaxs
               do.call(tinyAxis, args)
             }
@@ -282,9 +282,9 @@ draw_facet_window = function(grid, ...) {
           if (ii %in% oyaxis) {
             # tinyAxis(y, side = yside, type = yaxt)
             if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
-              tinyAxis(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+              tinyAxis(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, cex = get_tpar("cex.axis", 0.8))
             } else {
-              tinyAxis(y, side = yside, type = yaxt)
+              tinyAxis(y, side = yside, type = yaxt, cex = get_tpar("cex.axis", 0.8))
             }
           }
         }

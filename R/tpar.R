@@ -189,7 +189,7 @@ tpar = function(...) {
   tinyplot_params = c(
     "adj.main", "adj.sub", "adj.ylab", "adj.xlab", "col.xaxs", "col.yaxs",
     "col.axis", "lmar", "ribbon.alpha", "grid.lwd", "grid.lty", "grid.col", "grid", "file.res",
-    "file.height", "file.width", "facet.font", "facet.cex", "side.sub")
+    "file.height", "file.width", "facet.font", "facet.cex", "side.sub", "grid.bg")
   for (n in intersect(names(opts), tinyplot_params)) {
     .tpar[[n]] = opts[[n]]
   }
@@ -207,6 +207,7 @@ tpar = function(...) {
   assert_numeric(.tpar[["facet.font"]], len = 1, null.ok = TRUE, name = "facet.font")
   assert_numeric(.tpar[["facet.cex"]], len = 1, null.ok = TRUE, name = "facet.cex")
   assert_numeric(.tpar[["side.sub"]], len = 1, null.ok = TRUE, name = "side.sub")
+  assert_string(.tpar[["grid.bg"]], null.ok = TRUE, name = "grid.bg")
 
 
   ## Like par(), we want the return object to be dependent on inputs...

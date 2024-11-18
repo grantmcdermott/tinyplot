@@ -121,6 +121,13 @@ get_facet_fml = function(formula, data = NULL) {
 draw_facet_window = function(grid, ...) {
   list2env(list(...), environment())
 
+  # draw background color only in the grid rectangle
+  grid.bg = get_tpar("grid.bg")
+  if (!is.null(grid.bg)) {
+    corners = par("usr")
+    rect(corners[1], corners[3], corners[2], corners[4], col = grid.bg, border = NA)
+  }
+
   if (isFALSE(add)) {
     ## optionally allow to modify the style of axis interval calculation
     if (!is.null(xaxs)) par(xaxs = xaxs)

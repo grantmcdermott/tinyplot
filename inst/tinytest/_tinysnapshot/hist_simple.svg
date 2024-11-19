@@ -23,26 +23,26 @@
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.67px' lengthAdjust='spacingAndGlyphs'>Nile</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='56.71px' lengthAdjust='spacingAndGlyphs'>Frequency</text>
-<line x1='74.40' y1='430.56' x2='458.40' y2='430.56' style='stroke-width: 0.75;' />
-<line x1='74.40' y1='430.56' x2='74.40' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='151.20' y1='430.56' x2='151.20' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='228.00' y1='430.56' x2='228.00' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='304.80' y1='430.56' x2='304.80' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='381.60' y1='430.56' x2='381.60' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='458.40' y1='430.56' x2='458.40' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='74.40' y1='430.56' x2='458.40' y2='430.56' style='stroke-width: 0.38;' />
+<line x1='74.40' y1='430.56' x2='74.40' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='151.20' y1='430.56' x2='151.20' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='228.00' y1='430.56' x2='228.00' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='304.80' y1='430.56' x2='304.80' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='381.60' y1='430.56' x2='381.60' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='458.40' y1='430.56' x2='458.40' y2='437.76' style='stroke-width: 0.38;' />
 <text x='74.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>400</text>
 <text x='151.20' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>600</text>
 <text x='228.00' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>800</text>
 <text x='304.80' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.70px' lengthAdjust='spacingAndGlyphs'>1000</text>
 <text x='381.60' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.70px' lengthAdjust='spacingAndGlyphs'>1200</text>
 <text x='458.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.70px' lengthAdjust='spacingAndGlyphs'>1400</text>
-<line x1='59.04' y1='416.80' x2='59.04' y2='72.80' style='stroke-width: 0.75;' />
-<line x1='59.04' y1='416.80' x2='51.84' y2='416.80' style='stroke-width: 0.75;' />
-<line x1='59.04' y1='348.00' x2='51.84' y2='348.00' style='stroke-width: 0.75;' />
-<line x1='59.04' y1='279.20' x2='51.84' y2='279.20' style='stroke-width: 0.75;' />
-<line x1='59.04' y1='210.40' x2='51.84' y2='210.40' style='stroke-width: 0.75;' />
-<line x1='59.04' y1='141.60' x2='51.84' y2='141.60' style='stroke-width: 0.75;' />
-<line x1='59.04' y1='72.80' x2='51.84' y2='72.80' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='416.80' x2='59.04' y2='72.80' style='stroke-width: 0.38;' />
+<line x1='59.04' y1='416.80' x2='51.84' y2='416.80' style='stroke-width: 0.38;' />
+<line x1='59.04' y1='348.00' x2='51.84' y2='348.00' style='stroke-width: 0.38;' />
+<line x1='59.04' y1='279.20' x2='51.84' y2='279.20' style='stroke-width: 0.38;' />
+<line x1='59.04' y1='210.40' x2='51.84' y2='210.40' style='stroke-width: 0.38;' />
+<line x1='59.04' y1='141.60' x2='51.84' y2='141.60' style='stroke-width: 0.38;' />
+<line x1='59.04' y1='72.80' x2='51.84' y2='72.80' style='stroke-width: 0.38;' />
 <text transform='translate(41.76,416.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
 <text transform='translate(41.76,348.00) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
 <text transform='translate(41.76,279.20) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>10</text>

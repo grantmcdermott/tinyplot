@@ -235,14 +235,14 @@
 <text transform='translate(264.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.35px' lengthAdjust='spacingAndGlyphs'>Temp</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<line x1='312.04' y1='430.56' x2='462.71' y2='430.56' style='stroke-width: 0.75;' />
-<line x1='312.04' y1='430.56' x2='312.04' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='337.16' y1='430.56' x2='337.16' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='362.27' y1='430.56' x2='362.27' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='387.38' y1='430.56' x2='387.38' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='412.49' y1='430.56' x2='412.49' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='437.60' y1='430.56' x2='437.60' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='462.71' y1='430.56' x2='462.71' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='312.04' y1='430.56' x2='462.71' y2='430.56' style='stroke-width: 0.38;' />
+<line x1='312.04' y1='430.56' x2='312.04' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='337.16' y1='430.56' x2='337.16' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='362.27' y1='430.56' x2='362.27' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='387.38' y1='430.56' x2='387.38' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='412.49' y1='430.56' x2='412.49' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='437.60' y1='430.56' x2='437.60' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='462.71' y1='430.56' x2='462.71' y2='437.76' style='stroke-width: 0.38;' />
 <text x='312.04' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
 <text x='337.16' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
 <text x='362.27' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>10</text>
@@ -250,11 +250,11 @@
 <text x='412.49' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>20</text>
 <text x='437.60' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text x='462.71' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>30</text>
-<line x1='311.04' y1='373.60' x2='311.04' y2='119.70' style='stroke-width: 0.75;' />
-<line x1='311.04' y1='373.60' x2='303.84' y2='373.60' style='stroke-width: 0.75;' />
-<line x1='311.04' y1='277.07' x2='303.84' y2='277.07' style='stroke-width: 0.75;' />
-<line x1='311.04' y1='193.46' x2='303.84' y2='193.46' style='stroke-width: 0.75;' />
-<line x1='311.04' y1='119.70' x2='303.84' y2='119.70' style='stroke-width: 0.75;' />
+<line x1='311.04' y1='373.60' x2='311.04' y2='119.70' style='stroke-width: 0.38;' />
+<line x1='311.04' y1='373.60' x2='303.84' y2='373.60' style='stroke-width: 0.38;' />
+<line x1='311.04' y1='277.07' x2='303.84' y2='277.07' style='stroke-width: 0.38;' />
+<line x1='311.04' y1='193.46' x2='303.84' y2='193.46' style='stroke-width: 0.38;' />
+<line x1='311.04' y1='119.70' x2='303.84' y2='119.70' style='stroke-width: 0.38;' />
 <text transform='translate(293.76,373.60) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>60</text>
 <text transform='translate(293.76,277.07) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>70</text>
 <text transform='translate(293.76,193.46) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>80</text>

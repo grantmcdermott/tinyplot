@@ -8,9 +8,13 @@ tinytheme(theme = NULL, ..., action = "replace")
 }
 \arguments{
 \item{theme}{A character string specifying the name of the theme to apply.
-If \code{NULL}, the current theme is reset to default settings. Available themes include:
+If \code{NULL}, the tinyplot settings are re-initialized and the graphical device is closed. Available themes include:
 \itemize{
-\item \code{"simple"}
+\item \code{"bw"}
+\item \code{"classic"}
+\item \code{"dark"}
+\item \code{"grey"}
+\item \code{"minimal"}
 }}
 
 \item{...}{Named arguments to override specific theme settings. These arguments are
@@ -25,7 +29,7 @@ The function returns nothing. It is called for its side effects.
 \description{
 The \code{tinytheme} function sets or resets the theme for plots created with
 \code{tinyplot}. Themes control the appearance of plots, such as text alignment,
-font styles, and axis labels. By default, a "simple" theme is available.
+font styles, and axis labels. By default, a "bw" theme is available.
 }
 \details{
 The function uses \code{setHook("before.plot.new", ...)} to apply the specified
@@ -36,11 +40,11 @@ To reset the theme to default settings (no customization), call \code{tinytheme(
 }
 \examples{
 # Set a theme
-tinytheme("simple")
+tinytheme("bw")
 tinyplot(mpg ~ hp | factor(am), data = mtcars)
 
 # Customize the theme by overriding default settings
-tinytheme("simple", fg = "blue", font.main = 2)
+tinytheme("bw", fg = "blue", font.main = 2)
 tinyplot(mpg ~ hp | factor(am), data = mtcars, main = "Hello World!")
 
 # Reset the theme

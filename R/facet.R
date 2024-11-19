@@ -245,6 +245,7 @@ draw_facet_window = function(grid, ...) {
       if (isTRUE(axes)) {
         args_x = list(x,
           side = xside,
+          type = xaxt,
           cex = get_tpar(c("cex.xaxs", "cex.axis"), 0.8),
           col = get_tpar(c("col.xaxs", "col.axis"), "grey90"),
           lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 0.5),
@@ -252,6 +253,7 @@ draw_facet_window = function(grid, ...) {
         )
         args_y = list(y,
           side = yside,
+          type = yaxt,
           cex = get_tpar(c("cex.yaxs", "cex.axis"), 0.8),
           col = get_tpar(c("col.yaxs", "col.axis"), "grey90"),
           lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 0.5),
@@ -267,12 +269,12 @@ draw_facet_window = function(grid, ...) {
         }
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
-          do.call(Axis, args_x)
-          do.call(Axis, args_y)
+          do.call(tinyAxis, args_x)
+          do.call(tinyAxis, args_y)
         } else {
           # ... else only print the "outside" axes.
-          if (ii %in% oxaxis) do.call(Axis, args_x)
-          if (ii %in% oyaxis) do.call(Axis, args_y)
+          if (ii %in% oxaxis) do.call(tinyAxis, args_x)
+          if (ii %in% oyaxis) do.call(tinyAxis, args_y)
         }
       }
 

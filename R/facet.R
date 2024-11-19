@@ -240,6 +240,15 @@ draw_facet_window = function(grid, ...) {
       # axes, frame.plot and grid
       if (isTRUE(axes) || isTRUE(facet.args[["free"]])) {
         
+        if (isTRUE(facet.args[["free"]]) && (par("xlog") || par("ylog"))) {
+          warning(
+            "\nFree scale axes for faceted plots are currently not supported if the axes are logged. Reverting back to fixed scales.",
+            "\nIf support for this feature is important to you, please raise an issue on our GitHub repo:",
+            "\nhttps://github.com/grantmcdermott/tinyplot/issues\n"
+          )
+          facet.args[["free"]] = FALSE
+        }
+        
         # Special logic if facets are free...
         if (isTRUE(facet.args[["free"]])) {
           # First, we need to calculate the plot extent and axes range of each

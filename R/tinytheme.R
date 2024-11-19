@@ -10,7 +10,6 @@
 #'   - `"classic"`
 #'   - `"dark"`
 #'   - `"grey"`
-#'   - `"ipsum"`
 #'   - `"minimal"`
 #' @param action "append", "prepend", or "replace" to the hook.
 #' @param ... Named arguments to override specific theme settings. These arguments are
@@ -44,21 +43,21 @@
 tinytheme = function(theme = NULL, ..., action = "replace") {
   assert_choice(action, c("append", "prepend", "replace"))
 
+  off = tryCatch(dev.off(), error = function(e) NULL)
+  setHook("before.plot.new", NULL, action = action)
+  rm(list = names(.tpar), envir = .tpar)
+  init_tpar()
+
   if (is.null(theme)) {
-    off = tryCatch(dev.off(), error = function(e) NULL)
-    setHook("before.plot.new", NULL, action = action)
-    rm(list = names(.tpar), envir = .tpar)
-    init_tpar()
     return(invisible(NULL))
   }
 
-  assert_choice(theme, sort(c("bw", "classic", "dark", "ipsum", "grey", "minimal")))
+  assert_choice(theme, sort(c("bw", "classic", "dark", "grey", "minimal")))
   settings = switch(theme,
     "bw" = theme_bw,
     "classic" = theme_classic,
     "dark" = theme_dark,
     "grey" = theme_grey,
-    "ipsum" = theme_ipsum,
     "minimal" = theme_minimal
   )
 
@@ -67,11 +66,16 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
     settings[[n]] = dots[[n]]
   }
 
-  theme_fun = function() {
-    do.call(tpar, settings)
-  }
+  do.call(tpar, settings)
 
-  setHook("before.plot.new", theme_fun, action = "replace")
+  ## Hook approach doesn't work because some of our tinyplot() code requires access to
+  ## themeing options before drawing the plot window, and the hook on "before.plot.new"
+  ## only sets tpar() at that time, which is too late.
+  ##
+  # theme_fun = function() {
+  #   do.call(tpar, settings)
+  # }
+  # setHook("before.plot.new", theme_fun, action = "replace")
 }
 
 
@@ -84,10 +88,7 @@ theme_bw = list(
   cex.main = 1.2,
   cex.xlab = 1,
   cex.ylab = 1,
-  fg = "black",
   font = 1,
-  font = 1,
-  font.axis = 1,
   font.axis = 1,
   font.lab = 1,
   font.main = 1,
@@ -104,26 +105,16 @@ theme_bw = list(
 theme_classic = modifyList(theme_bw, list(
   bty = "l",
   grid = FALSE,
-  grid.lty = 0,
-  lty = 0
+  grid.lty = 0
 ))
 
 theme_minimal = modifyList(theme_bw, list(
   bty = "n",
-  col.xaxs = NA,
-  col.yaxs = NA,
-  lty = 0,
-  lty.axis = 0,
-  lwd.axis = 0
+  xaxt = "labels",
+  yaxt = "labels"
 ))
 
-theme_ipsum = modifyList(theme_minimal, list(
-  font.sub = 3
-))
-
-theme_grey = modifyList(theme_bw, list(
-  bty = "n",
-  lty = 0,
+theme_grey = modifyList(theme_minimal, list(
   grid = TRUE,
   grid.col = "white",
   grid.lwd = 1,
@@ -131,19 +122,14 @@ theme_grey = modifyList(theme_bw, list(
   grid.bg = "#EBEBEB"
 ))
 
-theme_dark = list(
+theme_dark = modifyList(theme_minimal, list(
   bg = "#1A1A1A",
   fg = "#BBBBBB",
-  bty = "n",
   col = "#BBBBBB",
-  col.xaxs = NA,
-  col.yaxs = NA,
   col.axis = "#BBBBBB",
   col.lab = "#BBBBBB",
   col.main = "#BBBBBB",
   col.sub = "#BBBBBB",
-  las = 1,
-  grid = TRUE,
-  grid.col = "#323232",
-  grid.lty = 1
-)
+  col = "#BBBBBB",
+  grid.col = "#323232"
+))

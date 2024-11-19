@@ -592,8 +592,8 @@ tinyplot.default = function(
   if (!is.character(axes)) axes = if (isFALSE(axes)) "none" else "standard"
   axis_types = c("standard", "none", "labels", "ticks", "axis")
   axes = match.arg(axes, axis_types)
-  if (is.null(xaxt)) xaxt = axes
-  if (is.null(yaxt)) yaxt = axes
+  if (is.null(xaxt)) xaxt = get_tpar("xaxt", axes)
+  if (is.null(yaxt)) yaxt = get_tpar("yaxt", axes)
   xaxt = substr(match.arg(xaxt, axis_types), 1L, 1L)
   yaxt = substr(match.arg(yaxt, axis_types), 1L, 1L)
   axes = any(c(xaxt, yaxt) != "n")

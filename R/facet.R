@@ -243,50 +243,34 @@ draw_facet_window = function(grid, ...) {
 
       # axes, frame.plot and grid
       if (isTRUE(axes)) {
-        col.xaxs = get_tpar(c("col.xaxs", "col.axis"))
-        col.yaxs = get_tpar(c("col.yaxs", "col.axis"))
+        args_x = list(x,
+          side = xside,
+          cex = get_tpar(c("cex.xaxs", "cex.axis"), 0.8),
+          col = get_tpar(c("col.xaxs", "col.axis"), "grey90"),
+          lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 0.5)
+        )
+        args_y = list(y,
+          side = yside,
+          cex = get_tpar(c("cex.yaxs", "cex.axis"), 0.8),
+          col = get_tpar(c("col.yaxs", "col.axis"), "grey90"),
+          lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 0.5)
+        )
+        type_range_x = type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)
+        type_range_y = isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)
+        if (type_range_x) {
+          args_x = modifyList(args_x, list(at = xlabs, labels = names(xlabs)))
+        }
+        if (type_range_y) {
+          args_y = modifyList(args_y, list(at = ylabs, labels = names(ylabs)))
+        }
         if (isTRUE(frame.plot)) {
           # if plot frame is true then print axes per normal...
-          if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-            args = list(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, cex = get_tpar("cex.axis", 0.8))
-            args[["col"]] = col.xaxs
-            do.call(tinyAxis, args)
-          } else {
-            args = list(x, side = xside, type = xaxt, cex = get_tpar("cex.axis", 0.8))
-            args[["col"]] = col.xaxs
-            do.call(tinyAxis, args)
-          }
-          # tinyAxis(y, side = yside, type = yaxt)
-          if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
-            args = list(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, cex = get_tpar("cex.axis", 0.8))
-            args[["col"]] = col.yaxs
-            do.call(tinyAxis, args)
-          } else {
-            args = list(y, side = yside, type = yaxt, cex = get_tpar("cex.axis", 0.8))
-            args[["col"]] = col.yaxs
-            do.call(tinyAxis, args)
-          }
+          do.call(Axis, args_x)
+          do.call(Axis, args_y)
         } else {
           # ... else only print the "outside" axes.
-          if (ii %in% oxaxis) {
-            if (type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
-              args = list(x, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, cex = get_tpar("cex.axis", 0.8))
-              args[["col"]] = col.xaxs
-              do.call(tinyAxis, args)
-            } else {
-              args = list(x, side = xside, type = xaxt, cex = get_tpar("cex.axis", 0.8))
-              args[["col"]] = col.yaxs
-              do.call(tinyAxis, args)
-            }
-          }
-          if (ii %in% oyaxis) {
-            # tinyAxis(y, side = yside, type = yaxt)
-            if (isTRUE(flip) && type %in% c("pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
-              tinyAxis(y, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, cex = get_tpar("cex.axis", 0.8))
-            } else {
-              tinyAxis(y, side = yside, type = yaxt, cex = get_tpar("cex.axis", 0.8))
-            }
-          }
+          if (ii %in% oxaxis) do.call(Axis, args_x)
+          if (ii %in% oyaxis) do.call(Axis, args_y)
         }
       }
 

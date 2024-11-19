@@ -76,53 +76,50 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
 
 
 theme_bw = list(
-  fg = "black",
   adj = 0.5,
+  adj.main = 0,
+  adj.sub = 0,
   bty = "o",
-  lwd = .5,
-  font = 1,
-  font.axis = 1,
+  cex.axis = 1,
   cex.main = 1.2,
   cex.xlab = 1,
   cex.ylab = 1,
-  cex.axis = 1,
-  side.sub = 3,
-  adj.main = 0,
-  adj.sub = 0,
-  font.lab = 1,
-  font.main = 1,
-  font.sub = 1,
+  fg = "black",
   font = 1,
+  font = 1,
+  font.axis = 1,
   font.axis = 1,
   font.lab = 1,
   font.main = 1,
-  font.sub = 3,
   grid = TRUE,
   grid.lty = 1,
-  col.xaxs = NA,
-  col.yaxs = NA,
   grid.lwd = 0.5,
   las = 1,
-  tck = 0 # Tick mark length (0 = none)
+  lwd = 0.5,
+  lwd.axis = 0.5,
+  side.sub = 3,
+  tck = -.02
 )
 
 theme_classic = modifyList(theme_bw, list(
   bty = "l",
   grid = FALSE,
   grid.lty = 0,
-  tck = 1,
   lty = 0
 ))
 
 theme_minimal = modifyList(theme_bw, list(
   bty = "n",
-  lty = 0
+  col.xaxs = NA,
+  col.yaxs = NA,
+  lty = 0,
+  lty.axis = 0,
+  lwd.axis = 0
 ))
 
-theme_ipsum = modifyList(theme_bw, list(
+theme_ipsum = modifyList(theme_minimal, list(
   family = "Arial Narrow",
-  font.sub = 3,
-  bty = "n"
+  font.sub = 3
 ))
 
 theme_grey = modifyList(theme_bw, list(

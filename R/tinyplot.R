@@ -589,11 +589,19 @@ tinyplot.default = function(
   ## - set defaults of xaxt/yaxt (if these are NULL) based on axes
   ## - set logical axes based on xaxt/yaxt
   ## - set frame.plot default based on xaxt/yaxt
-  if (!is.character(axes)) axes = if (isFALSE(axes)) "none" else "standard"
+  if (isFALSE(axes)) {
+    axes = xaxt = yaxt = "none"
+  } else if (isTRUE(axes)) {
+    axes = "standard"
+    if (is.null(xaxt)) xaxt = get_tpar("xaxt", default = "standard")
+    if (is.null(yaxt)) yaxt = get_tpar("yaxt", default = "standard")
+  } else {
+    xaxt = yaxt = axes
+  }
   axis_types = c("standard", "none", "labels", "ticks", "axis")
   axes = match.arg(axes, axis_types)
-  if (is.null(xaxt)) xaxt = get_tpar("xaxt", axes)
-  if (is.null(yaxt)) yaxt = get_tpar("yaxt", axes)
+  xaxt = match.arg(xaxt, axis_types)
+  yaxt = match.arg(yaxt, axis_types)
   xaxt = substr(match.arg(xaxt, axis_types), 1L, 1L)
   yaxt = substr(match.arg(yaxt, axis_types), 1L, 1L)
   axes = any(c(xaxt, yaxt) != "n")
@@ -956,9 +964,9 @@ tinyplot.default = function(
     # window in case of recursive "top!" calls. (See draw_legend code.)
 
     if (isTRUE(adj_title)) {
-      line_main = par("mgp")[3] + 1.7 + (par("mar")[3] - opar[["mar"]][3])
+      line_main = par("mgp")[3] + 1.7 - .1 + (par("mar")[3] - opar[["mar"]][3])
     } else {
-      line_main = par("mgp")[3] + 1.7
+      line_main = par("mgp")[3] + 1.7 - .1
     }
 
     if (!is.null(sub)) {

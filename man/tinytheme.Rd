@@ -13,7 +13,7 @@ If \code{NULL}, the tinyplot settings are re-initialized and the graphical devic
 \item \code{"bw"}
 \item \code{"classic"}
 \item \code{"dark"}
-\item \code{"grey"}
+\item \code{"ipsum"}
 \item \code{"minimal"}
 }}
 

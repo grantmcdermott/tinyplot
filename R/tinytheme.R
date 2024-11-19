@@ -9,7 +9,7 @@
 #'   - `"bw"`
 #'   - `"classic"`
 #'   - `"dark"`
-#'   - `"grey"`
+#'   - `"ipsum"`
 #'   - `"minimal"`
 #' @param action "append", "prepend", or "replace" to the hook.
 #' @param ... Named arguments to override specific theme settings. These arguments are

@@ -54,6 +54,7 @@
     "by_ordered",
     "cex_fct_adj",
     "dots",
+    "draw",
     "facet_bg",
     "facet_border",
     "facet_col",

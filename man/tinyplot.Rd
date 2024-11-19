@@ -484,7 +484,7 @@ out existing \code{plot} calls for \code{tinyplot} (or its shorthand alias \code
 without causing unexpected changes to the output.
 }
 \examples{
-#' 
+#'
 aq = transform(
   airquality,
   Month = factor(Month, labels = month.abb[unique(Month)])
@@ -500,11 +500,11 @@ tpar(op) # restore original layout
 
 # Aside: `tinyplot::tpar()` is a (near) drop-in replacement for `par()`
 
-# Unlike vanilla plot, however, tinyplot allows you to characterize groups 
+# Unlike vanilla plot, however, tinyplot allows you to characterize groups
 # using either the `by` argument or equivalent `|` formula syntax.
 
 with(aq, tinyplot(Day, Temp, by = Month)) ## atomic method
-tinyplot(Temp ~ Day | Month, data = aq)   ## formula method
+tinyplot(Temp ~ Day | Month, data = aq) ## formula method
 
 # (Notice that we also get an automatic legend.)
 
@@ -534,15 +534,15 @@ tinyplot(
   alpha = 0.3
 )
 
-# To get filled points with a common solid background color, use an 
+# To get filled points with a common solid background color, use an
 # appropriate plotting character (21:25) and combine with one of the special
 # `bg` convenience arguments.
 tinyplot(
   Temp ~ Day | Month,
   data = aq,
-  pch = 21,     # use filled circles
+  pch = 21, # use filled circles
   cex = 2,
-  bg = 0.3,     # numeric in [0,1] adds a grouped background fill with transparency
+  bg = 0.3, # numeric in [0,1] adds a grouped background fill with transparency
   col = "black" # override default color mapping; give all points a black border
 )
 
@@ -556,7 +556,7 @@ tinyplot(
 )
 
 # Similarly for other plot types, including some additional ones provided
-# directly by tinyplot, e.g. density plots or internal plots (ribbons, 
+# directly by tinyplot, e.g. density plots or internal plots (ribbons,
 # pointranges, etc.)
 
 tinyplot(
@@ -570,7 +570,7 @@ tinyplot(
 
 tinyplot(
   Temp ~ Day,
-  facet = ~ Month, 
+  facet = ~Month,
   data = aq,
   type = "area",
   main = "Temperatures by month"
@@ -581,7 +581,7 @@ tinyplot(
 aq = transform(aq, Summer = Month \%in\% c("Jun", "Jul", "Aug"))
 tinyplot(
   Temp ~ Day | Summer,
-  facet = ~ Month, 
+  facet = ~Month,
   data = aq,
   type = "area",
   palette = "dark2",
@@ -594,7 +594,7 @@ tinyplot(
 
 tinyplot(
   Temp ~ Day | Summer,
-  facet = ~ Month, facet.args = list(nrow = 1),
+  facet = ~Month, facet.args = list(nrow = 1),
   data = aq,
   type = "area",
   palette = "dark2",
@@ -605,21 +605,21 @@ tinyplot(
 # Use a two-sided formula to arrange the facet windows in a fixed grid.
 # LHS -> facet rows; RHS -> facet columns
 
-aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
-aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+aq$hot = ifelse(aq$Temp >= 75, "hot", "cold")
+aq$windy = ifelse(aq$Wind >= 15, "windy", "calm")
 tinyplot(
- Temp ~ Day,
- facet = windy ~ hot,
- data = aq
+  Temp ~ Day,
+  facet = windy ~ hot,
+  data = aq
 )
 
 # To add common elements to each facet, use the `draw` argument
 
 tinyplot(
- Temp ~ Day,
- facet = windy ~ hot,
- data = aq,
- draw = abline(h = 75, lty = 2, col = "hotpink")
+  Temp ~ Day,
+  facet = windy ~ hot,
+  data = aq,
+  draw = abline(h = 75, lty = 2, col = "hotpink")
 )
 
 # The (automatic) legend position and look can be customized using

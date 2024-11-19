@@ -6,9 +6,34 @@ using("tinysnapshot")
 
 f = function() {
   tinyplot(Sepal.Width ~ Sepal.Length | Species,
-           facet = ~Species,
-           data = iris, 
-           type = "p")
+    facet = ~Species,
+    data = iris,
+    type = "p")
   tinyplot_add(type = type_lm())
 }
 expect_snapshot_plot(f, label = "tinyplot_add")
+
+
+f = function() {
+  k = seq(-3, 3, length.out = 100)
+  tinyplot(x = k, type = type_function(dnorm))
+  tinyplot_add(
+    x = k[k < -1.96],
+    ymax = dnorm(k[k < -1.96]),
+    ymin = 0,
+    type = "ribbon")
+  tinyplot_add(
+    x = k[k > 1],
+    ymax = dnorm(k[k > 1]),
+    ymin = 0,
+    type = "ribbon")
+}
+expect_snapshot_plot(f, label = "tinyplot_add_multiple")
+
+
+# allow first argument to be unnamed
+f = function() {
+  tinyplot(mpg ~ hp, type = "lm", data = mtcars)
+  tinyplot_add(mpg ~ hp | factor(cyl), type = "p", pch = 16)
+}
+expect_snapshot_plot(f, label = "tinyplot_add_unnamed")

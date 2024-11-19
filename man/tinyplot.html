@@ -659,6 +659,9 @@ grouping variable(s). The default behaviour is for groups to be represented in t
 <p><code>nrow</code>, <code>ncol</code> for overriding the default "square" facet window arrangement. Only one of these should be specified, but <code>nrow</code> will take precedence if both are specified together. Ignored if a two-sided formula is passed to the main <code>facet</code> argument, since the layout is arranged in a fixed grid.</p>
 </li>
 <li>
+<p><code>free</code> a logical value indicating whether the axis limits (scales) for each individual facet should adjust independently to match the range of the data within that facet. Default is <code>FALSE</code>. Separate free scaling of the x- or y-axis (i.e., whilst holding the other axis fixed) is not currently supported.</p>
+</li>
+<li>
 <p><code>fmar</code> a vector of form <code>c(b,l,t,r)</code> for controlling the base margin between facets in terms of lines. Defaults to the value of <code>tpar(“fmar”)</code>, which should be <code>c(1,1,1,1)</code>, i.e.&nbsp;a single line of padding around each individual facet, assuming it hasn’t been overridden by the user as part their global <code>tpar</code> settings. Note some automatic adjustments are made for certain layouts, and depending on whether the plot is framed or not, to reduce excess whitespace. See <code>tpar</code> for more details.</p>
 </li>
 <li>

@@ -15,14 +15,11 @@
 #' @param ... Named arguments to override specific theme settings. These arguments are
 #'   passed to `tpar()` and take precedence over the predefined settings in the selected
 #'   theme.
-#' @inheritParams setHook
 #'
 #' @details
-#' The function uses `setHook("before.plot.new", ...)` to apply the specified
-#' theme settings just before a new plot is drawn. Themes are implemented
-#' as a list of graphical parameters, which are passed to the `tpar` function.
+#' Sets a list of graphical parameters using `tpar()`
 #'
-#' To reset the theme to default settings (no customization), call `tinytheme(NULL)`.
+#' To reset the theme to default settings (no customization), call `tinytheme()` without arguments.
 #'
 #' @return The function returns nothing. It is called for its side effects.
 #'
@@ -44,7 +41,6 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
   assert_choice(action, c("append", "prepend", "replace"))
 
   off = tryCatch(dev.off(), error = function(e) NULL)
-  setHook("before.plot.new", NULL, action = action)
   rm(list = names(.tpar), envir = .tpar)
   init_tpar()
 
@@ -80,6 +76,7 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
 
 
 theme_bw = list(
+  tinytheme = "bw",
   adj = 0.5,
   adj.main = 0,
   adj.sub = 0,
@@ -103,18 +100,21 @@ theme_bw = list(
 )
 
 theme_classic = modifyList(theme_bw, list(
+  tinytheme = "classic",
   bty = "l",
   grid = FALSE,
   grid.lty = 0
 ))
 
 theme_minimal = modifyList(theme_bw, list(
+  tinytheme = "minimal",
   bty = "n",
   xaxt = "labels",
   yaxt = "labels"
 ))
 
 theme_ipsum = modifyList(theme_minimal, list(
+  tinytheme = "ipsum",
   bty = "n",
   font.sub = 3,
   adj.ylab = 1,
@@ -131,6 +131,7 @@ theme_ipsum = modifyList(theme_minimal, list(
 # ))
 
 theme_dark = modifyList(theme_minimal, list(
+  tinytheme = "dark",
   bg = "#1A1A1A",
   fg = "#BBBBBB",
   col = "#BBBBBB",

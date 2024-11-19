@@ -47,51 +47,23 @@
 #'
 #' @section Additional Graphical Parameters:
 #'
-#' \tabular{lll}{
-#'   `facet.cex` \tab\tab Expansion factor for facet titles. Defaults to `1`.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `facet.font` \tab\tab An integer corresponding to the desired font face for facet titles. For most font families and graphics devices, one of four possible values: `1` (regular), `2` (bold), `3` (italic), or `4` (bold italic). Defaults to `NULL`, which is equivalent to `1` (i.e., regular).\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `facet.col` \tab\tab Character or integer specifying the facet text colour. If an integer, will correspond to the user's default global colour palette (see \code{\link[grDevices]{palette}}). Defaults to `NULL`, which is equivalent to "black".\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `facet.bg` \tab\tab Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see \code{\link[grDevices]{palette}}). Passed \code{\link[graphics]{rect}}. Defaults to `NULL` (none).\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `facet.border` \tab\tab Character or integer specifying the facet border colour. If an integer, will correspond to the users default colour palette (see \code{\link[grDevices]{palette}}). Passed \code{\link[graphics]{rect}}. Defaults to `NA` (none).\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `file.height` \tab\tab Numeric specifying the height (in inches) of any plot that is written to disk using the `tinyplot(..., file = X)` argument. Defaults to 7.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `file.width` \tab\tab Numeric specifying the width (in inches) of any plot that is written to disk using the `tinyplot(..., file = X)` argument. Defaults to 7.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `file.res` \tab\tab Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the `tinyplot(..., file = X)` argument. Defaults to 300.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `fmar` \tab\tab A numeric vector of form `c(b,l,t,r)` for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to `c(1,1,1,1)`, i.e. a single line of padding around each facet. If more that three facets are detected, the `fmar` parameter is scaled by 0.75 (i.e., three-quarters) to reduce the excess whitespace that would otherwise arise due to the absent axes lines and labels. (An exception is made for 2x2 plots to better match the `cex` expansion logic of the base graphics system under this particular layout.) Similarly, note that an extra 0.5 lines is subtracted from each side of the facet padding for plots that aren't framed, to reduce excess whitespace.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `grid` \tab\tab Logical indicating whether a background panel grid should be added to plots automatically. Defaults to NULL, which is equivalent to `FALSE`.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `grid.col` \tab\tab Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to `"lightgray"`.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `grid.lty` \tab\tab Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to `"dotted"`.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `grid.lwd` \tab\tab Non-negative numeric giving the line of the panel grid lines. Defaults to `1`.\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `lmar` \tab\tab A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`, where the first number represents the "inner" margin between the legend and the plot region, and the second number represents the "outer" margin between the legend and edge of the graphics device. (Note that an exception for the definition of the "outer" legend margin occurs when the legend placement is `"top!"`, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by `par("mar")[3]`.)\cr
-#'   \tab\tab\cr
-#'   \tab\tab\cr
-#'   `ribbon.alpha` \tab\tab Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" (and alike) type plots. Default value is `0.2`.\cr
-#' }
+#' * `adj.xlab`: Numeric value between 0 and 1 controlling the alignment of the x-axis label.
+#' * `adj.ylab`: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
+#' * `facet.bg`: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NULL` (none).
+#' * `facet.border`: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NA` (none).
+#' * `facet.cex`: Expansion factor for facet titles. Defaults to `1`.
+#' * `facet.col`: Character or integer specifying the facet text colour. If an integer, will correspond to the user's default global colour palette (see `palette`). Defaults to `NULL`, which is equivalent to "black".
+#' * `facet.font`: An integer corresponding to the desired font face for facet titles. For most font families and graphics devices, one of four possible values: `1` (regular), `2` (bold), `3` (italic), or `4` (bold italic). Defaults to `NULL`, which is equivalent to `1` (i.e., regular).
+#' * `file.height`: Numeric specifying the height (in inches) of any plot that is written to disk using the `tinyplot(..., file = X)` argument. Defaults to `7`.
+#' * `file.res`: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the `tinyplot(..., file = X)` argument. Defaults to `300`.
+#' * `file.width`: Numeric specifying the width (in inches) of any plot that is written to disk using the `tinyplot(..., file = X)` argument. Defaults to `7`.
+#' * `fmar`: A numeric vector of form `c(b,l,t,r)` for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to `c(1,1,1,1)`. If more than three facets are detected, the `fmar` parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the `cex` expansion logic of base graphics.
+#' * `grid.col`: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to `"lightgray"`.
+#' * `grid.lty`: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to `"dotted"`.
+#' * `grid.lwd`: Non-negative numeric giving the line width of the panel grid lines. Defaults to `1`.
+#' * `grid`: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to `NULL`, which is equivalent to `FALSE`.
+#' * `lmar`: A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
+#' * `ribbon.alpha`: Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is `0.2`.
 #'
 #' @importFrom graphics par
 #' @importFrom utils modifyList
@@ -188,7 +160,7 @@ tpar = function(...) {
   # tinyplot-specific parameters
   tinyplot_params = c(
     "adj.main", "adj.sub", "adj.ylab", "adj.xlab", "col.xaxs", "col.yaxs",
-    "lwd.yaxs", "lwd.xaxs", "lty.yaxs", "lty.xaxs",
+    "lwd.yaxs", "lwd.xaxs", "lty.yaxs", "lty.xaxs", "tinytheme",
     "col.axis", "lmar", "ribbon.alpha", "grid.lwd", "grid.lty", "grid.col", "grid", "file.res",
     "file.height", "file.width", "facet.font", "facet.cex", "side.sub", "grid.bg")
   for (n in intersect(names(opts), tinyplot_params)) {

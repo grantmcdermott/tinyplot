@@ -32,11 +32,9 @@ The \code{tinytheme} function sets or resets the theme for plots created with
 font styles, and axis labels. By default, a "bw" theme is available.
 }
 \details{
-The function uses \code{setHook("before.plot.new", ...)} to apply the specified
-theme settings just before a new plot is drawn. Themes are implemented
-as a list of graphical parameters, which are passed to the \code{tpar} function.
+Sets a list of graphical parameters using \code{tpar()}
 
-To reset the theme to default settings (no customization), call \code{tinytheme(NULL)}.
+To reset the theme to default settings (no customization), call \code{tinytheme()} without arguments.
 }
 \examples{
 # Set a theme

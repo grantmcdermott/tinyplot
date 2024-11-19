@@ -54,23 +54,16 @@ advanced visualizations. Each of these additional types are available either as
 a convenience string (with default behaviour) or a companion `type_*()` function
 (with options for customized behaviour).
 
-Models:
-
-- `"loess"` / `type_loess()`: Local regression curve.
-- `"lm"` / `type_lm()`: Linear regression line.
-- `"glm"` / `type_glm()`: Generalized linear model fit.
-- `"spline"` / `type_spline()`: Cubic (or Hermite) spline interpolation.
-
 Shapes:
 
 - `area` / `type_area()`: Plots the area under the curve from `y` = 0 to `y` = f(`x`).
+- `"errorbar"` / `type_errorbar()`: Adds error bars to points; requires `ymin` and `ymax`.
+- `pointrange` / `type_pointrange`: Combines points with error bars.
+- `"polygon"` / `type_polygon()`: Draws polygons.
+- `"polypath"` / `type_polypath()`: Draws a path whose vertices are given in `x` and `y`.
 - `rect` / `type_area()`: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
 - `ribbon` / `type_ribbon()`: Creates a filled area between `ymin` and `ymax`.
 - `"segments"` / `type_segements()`: Draws line segments between pairs of points.
-- `"polygon"` / `type_polygon()`: Draws polygons.
-- `"polypath"` / `type_polypath()`: Draws a path whose vertices are given in `x` and `y`.
-- `"errorbar"` / `type_errorbar()`: Adds error bars to points; requires `ymin` and `ymax`.
-- `pointrange` / `type_pointrange`: Combines points with error bars.
 
 Visualizations:
 
@@ -78,10 +71,25 @@ Visualizations:
 - `"density"`: Plots the density estimate of a variable.
 - `"histogram"` / `type_histogram()`: Creates a histogram of a single variable.
 - `"jitter"` / `type_jitter()`: Jittered points.
+- `"qq"` / `type_qq()`: Creates a quantile-quantile plot.
 - `"spineplot"` / `type_spineplot()`: Creates a spineplot or spinogram.
 
+Models:
+
+- `"loess"` / `type_loess()`: Local regression curve.
+- `"lm"` / `type_lm()`: Linear regression line.
+- `"glm"` / `type_glm()`: Generalized linear model fit.
+- `"spline"` / `type_spline()`: Cubic (or Hermite) spline interpolation.
+
+Functions:
+
+- `type_abline()`: line(s) with intercept and slope.
+- `type_hline()`: horizontal line(s).
+- `type_vline()`: vertical line(s).
+- `type_function()`: arbitrary function.
+
 To see the difference between the convenience strings and their respective
-companion `type_*` functions, let's quickly walk through two examples.
+`type_*()` functional equivalents, let's quickly walk through two examples.
 
 **Example 1: jittering.** We can add noise to data points using jittering. This
 allows us to avoid overplotting and can be useful to visualize discrete

@@ -69,7 +69,7 @@ combined with a minimal footprint.
 ## Quickstart
 
 The **tinyplot** website includes a detailed [introductory
-tutorial](https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html),
+tutorial](https://grantmcdermott.com/tinyplot/vignettes/introduction.html),
 with numerous examples. But here are some quickstart examples of the
 package in action.
 

@@ -393,12 +393,13 @@ tinyplot(
 ```
 
 To customize facets, simply pass a list of named arguments through the companion
-`facet.args` argument. For example, users can override the default "square"
-facet window arrangement by supplying explicit `nrow` or `ncol` values. They can
-also adjust the padding (margin) between individual facets, change the facet
-title text and background, etc., etc. Here's a simple example where we (1)
-arrange the facets in a single row, (2) add some background fill to the facet
-text, and (3) and reduce axis redundancy by turning off the plot frame.
+`facet.args` argument. Customization options include: override the default
+"square" facet window arrangement; allow free-scaled axes so that the limits of
+each individual facet are drawn independently; adjust the padding (margin)
+between individual facets; change the facet title text and background; etc.
+Here is a simple example where we (1) arrange the facets in a single row, (2)
+add some background fill to the facet text, and (3) and reduce axis redundancy
+by turning off the plot frame.
 
 ```{r facet_nrow}
 tinyplot(
@@ -412,7 +413,7 @@ tinyplot(
 ```
 
 The `facet.args` customizations can also be set globally via the `tpar()`
-function. We will revisit this idea in the @themes section below.
+function. We will revisit this idea in the [Themes](#themes) section below.
 
 Finally, the `facet` argument also accepts a _two-sided_ formula for arranging
 facets in a fixed grid layout. Here's a simple (if contrived) example.

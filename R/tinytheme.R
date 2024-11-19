@@ -12,7 +12,6 @@
 #'   - `"grey"`
 #'   - `"ipsum"`
 #'   - `"minimal"`
-#'   - `"void"`
 #' @param action "append", "prepend", or "replace" to the hook.
 #' @param ... Named arguments to override specific theme settings. These arguments are
 #'   passed to `tpar()` and take precedence over the predefined settings in the selected
@@ -53,15 +52,14 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
     return(invisible(NULL))
   }
 
-  assert_choice(theme, sort(c("bw", "classic", "dark", "ipsum", "grey", "minimal", "void")))
+  assert_choice(theme, sort(c("bw", "classic", "dark", "ipsum", "grey", "minimal")))
   settings = switch(theme,
     "bw" = theme_bw,
     "classic" = theme_classic,
     "dark" = theme_dark,
     "grey" = theme_grey,
     "ipsum" = theme_ipsum,
-    "minimal" = theme_minimal,
-    "void" = theme_void
+    "minimal" = theme_minimal
   )
 
   dots = list(...)
@@ -120,7 +118,6 @@ theme_minimal = modifyList(theme_bw, list(
 ))
 
 theme_ipsum = modifyList(theme_minimal, list(
-  family = "Arial Narrow",
   font.sub = 3
 ))
 
@@ -132,13 +129,6 @@ theme_grey = modifyList(theme_bw, list(
   grid.lwd = 1,
   grid.lty = "solid",
   grid.bg = "#EBEBEB"
-))
-
-theme_void = modifyList(theme_bw, list(
-  col.axis = NA,
-  ann = FALSE,
-  grid.lwd = 0,
-  bty = "n"
 ))
 
 theme_dark = list(

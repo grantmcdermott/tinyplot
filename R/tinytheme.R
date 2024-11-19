@@ -8,6 +8,7 @@
 #'   If `NULL`, the tinyplot settings are re-initialized and the graphical device is closed. Available themes include:
 #'   - `"bw"`
 #'   - `"classic"`
+#'   - `"dark"`
 #'   - `"grey"`
 #'   - `"ipsum"`
 #'   - `"minimal"`
@@ -52,14 +53,15 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
     return(invisible(NULL))
   }
 
-  assert_choice(theme, sort(c("bw", "classic", "minimal", "ipsum", "grey", "void")))
+  assert_choice(theme, sort(c("bw", "classic", "dark", "ipsum", "grey", "minimal", "void")))
   settings = switch(theme,
     "bw" = theme_bw,
     "classic" = theme_classic,
-    "minimal" = theme_minimal,
-    "ipsum" = theme_ipsum,
+    "dark" = theme_dark,
     "grey" = theme_grey,
-    "void" = theme_void,
+    "ipsum" = theme_ipsum,
+    "minimal" = theme_minimal,
+    "void" = theme_void
   )
 
   dots = list(...)
@@ -133,8 +135,25 @@ theme_grey = modifyList(theme_bw, list(
 ))
 
 theme_void = modifyList(theme_bw, list(
-  xaxt = "n",
-  yaxt = "n",
+  col.axis = NA,
   ann = FALSE,
+  grid.lwd = 0,
   bty = "n"
 ))
+
+theme_dark = list(
+  bg = "#1A1A1A",
+  fg = "#BBBBBB",
+  bty = "n",
+  col = "#BBBBBB",
+  col.xaxs = NA,
+  col.yaxs = NA,
+  col.axis = "#BBBBBB",
+  col.lab = "#BBBBBB",
+  col.main = "#BBBBBB",
+  col.sub = "#BBBBBB",
+  las = 1,
+  grid = TRUE,
+  grid.col = "#323232",
+  grid.lty = 1
+)

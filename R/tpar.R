@@ -188,6 +188,7 @@ tpar = function(...) {
   # tinyplot-specific parameters
   tinyplot_params = c(
     "adj.main", "adj.sub", "adj.ylab", "adj.xlab", "col.xaxs", "col.yaxs",
+    "lwd.yaxs", "lwd.xaxs", "lty.yaxs", "lty.xaxs",
     "col.axis", "lmar", "ribbon.alpha", "grid.lwd", "grid.lty", "grid.col", "grid", "file.res",
     "file.height", "file.width", "facet.font", "facet.cex", "side.sub", "grid.bg")
   for (n in intersect(names(opts), tinyplot_params)) {

@@ -166,10 +166,11 @@ arrangement. Only one of these should be specified, but \code{nrow} will take
 precedence if both are specified together. Ignored if a two-sided formula
 is passed to the main \code{facet} argument, since the layout is arranged in a
 fixed grid.
-\item \code{free} a logical for whether the axes limits of the individual facets
-should vary freely depending on the respective data subset. Default is
-\code{FALSE}. Separate free x- and y-axis scaling (i.e., whilst holding the
-other axis fixed) is not currently supported.
+\item \code{free} a logical value indicating whether the axis limits (scales) for
+each individual facet should adjust independently to match the range of
+the data within that facet. Default is \code{FALSE}. Separate free scaling of
+the x- or y-axis (i.e., whilst holding the other axis fixed) is not
+currently supported.
 \item \code{fmar} a vector of form \code{c(b,l,t,r)} for controlling the base margin
 between facets in terms of lines. Defaults to the value of \code{tpar("fmar")},
 which should be \code{c(1,1,1,1)}, i.e. a single line of padding around each

@@ -51,7 +51,8 @@
 #'   fixed grid.
 #'   - `free` a logical for whether the axes limits of the individual facets
 #'   should vary freely depending on the respective data subset. Default is
-#'   `FALSE`.
+#'   `FALSE`. Separate free x- and y-axis scaling (i.e., whilst holding the
+#'   other axis fixed) is not currently supported.
 #'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
 #'   between facets in terms of lines. Defaults to the value of `tpar("fmar")`,
 #'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each

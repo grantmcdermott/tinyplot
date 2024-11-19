@@ -480,6 +480,33 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_density_3x2")
 
+
+#
+# Free facet scales
+#
+
+f = function() {
+  tinyplot(
+    ~ Ozone, aq, 
+    type = "density",
+    facet = ~hot:windy, 
+    facet.args = list(free = TRUE),
+    main = "Free facet scales"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free")
+
+f = function() {
+  tinyplot(
+    ~ Ozone, aq, 
+    type = "density",
+    facet = windy ~ hot, 
+    facet.args = list(free = TRUE),
+    main = "Free facet scales (grid)"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_grid")
+
 #
 # restore original par settings
 #

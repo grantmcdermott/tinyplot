@@ -52,12 +52,12 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
     return(invisible(NULL))
   }
 
-  assert_choice(theme, sort(c("bw", "classic", "dark", "grey", "minimal")))
+  assert_choice(theme, sort(c("bw", "classic", "dark", "ipsum", "minimal")))
   settings = switch(theme,
     "bw" = theme_bw,
     "classic" = theme_classic,
     "dark" = theme_dark,
-    "grey" = theme_grey,
+    "ipsum" = theme_ipsum,
     "minimal" = theme_minimal
   )
 
@@ -114,13 +114,21 @@ theme_minimal = modifyList(theme_bw, list(
   yaxt = "labels"
 ))
 
-theme_grey = modifyList(theme_minimal, list(
-  grid = TRUE,
-  grid.col = "white",
-  grid.lwd = 1,
-  grid.lty = "solid",
-  grid.bg = "#EBEBEB"
+theme_ipsum = modifyList(theme_minimal, list(
+  bty = "n",
+  font.sub = 3,
+  adj.ylab = 1,
+  adj.xlab = 1
 ))
+
+## TODO: Does not work well with facets: area between facets is grey as well
+# theme_grey = modifyList(theme_minimal, list(
+#   grid = TRUE,
+#   grid.col = "white",
+#   grid.lwd = 1,
+#   grid.lty = "solid",
+#   grid.bg = "#EBEBEB"
+# ))
 
 theme_dark = modifyList(theme_minimal, list(
   bg = "#1A1A1A",

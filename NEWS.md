@@ -70,6 +70,8 @@ New features:
   are evaluated as-is, before the main plotting elements. A core use case is
   drawing common annotations across every facet of a faceted plot, e.g. text or
   threshold lines. (#245 @grantmcdermott)
+  - `facet.args` gains a `free = <logical>` sub-argument for independently
+  scaling the axes limits of individual facets. (#253 @grantmcdermott)
 - `tpar()` gains additional `grid.col`, `grid.lty`, and `grid.lwd` arguments for
   fine-grained control over the appearance of the default panel grid when
   `tinyplot(..., grid = TRUE)` is called. (#237 @grantmcdermott)

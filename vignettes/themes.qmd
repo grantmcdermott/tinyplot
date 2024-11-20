@@ -7,7 +7,7 @@ title: "Themes"
 The `tinytheme()` function applies groups of graphical settings to plots, according to pre-defined styles.  One of the built-in styles is called "ipsum", inspired by the [**hrbrthemes** for **ggplot2**.](https://cran.r-project.org/web/packages/hrbrthemes/index.html)
 
 ```{r}
-pkgload::load_all()
+library(tinyplot)
 
 tinytheme("ipsum")
 

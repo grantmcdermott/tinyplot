@@ -131,5 +131,6 @@ theme_dark = modifyList(theme_minimal, list(
   col.lab = "#BBBBBB",
   col.main = "#BBBBBB",
   col.sub = "#BBBBBB",
+  col.axis = "#BBBBBB",
   grid.col = "#323232"
 ))

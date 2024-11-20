@@ -200,7 +200,6 @@ known_tpar = c(
     "adj.ylab",
     "cex.xlab",
     "cex.ylab",
-    "col.axis",
     "col.xaxs",
     "col.yaxs",
     "facet.bg",

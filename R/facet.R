@@ -248,7 +248,6 @@ draw_facet_window = function(grid, ...) {
           side = xside,
           type = xaxt,
           cex = get_tpar(c("cex.xaxs", "cex.axis"), 0.8),
-          col = get_tpar(c("col.xaxs", "col.axis"), "grey90"),
           lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 0.5),
           lty = get_tpar(c("lty.xaxs", "lty.axis"), 1)
         )
@@ -256,7 +255,6 @@ draw_facet_window = function(grid, ...) {
           side = yside,
           type = yaxt,
           cex = get_tpar(c("cex.yaxs", "cex.axis"), 0.8),
-          col = get_tpar(c("col.yaxs", "col.axis"), "grey90"),
           lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 0.5),
           lty = get_tpar(c("lty.yaxs", "lty.axis"), 1)
         )

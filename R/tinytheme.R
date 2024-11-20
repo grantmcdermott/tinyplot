@@ -39,7 +39,9 @@
 #' @export
 tinytheme = function(theme = NULL, ...) {
   # Always close device and re-initialize graphical parameters
-  off = tryCatch(dev.off(), error = function(e) NULL)
+  if (names(dev.cur()) != "null device") {
+    dev.off()
+  }
   rm(list = names(.tpar), envir = .tpar)
   init_tpar()
   setHook("before.plot.new", NULL, action = "replace")
@@ -126,11 +128,11 @@ theme_dark = modifyList(theme_minimal, list(
   tinytheme = "dark",
   bg = "#1A1A1A",
   fg = "#BBBBBB",
-  col = "#BBBBBB",
-  col.axis = "#BBBBBB",
+  # col = "white",
+  col.xaxs = "#BBBBBB",
+  col.yaxs = "#BBBBBB",
   col.lab = "#BBBBBB",
   col.main = "#BBBBBB",
   col.sub = "#BBBBBB",
-  col = "#BBBBBB",
   grid.col = "#323232"
 ))

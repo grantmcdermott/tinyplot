@@ -129,6 +129,7 @@ tpar = function(...) {
       do.call(par, base_params)
     }
     setHook("before.plot.new", tpar_hook, action = "append")
+    do.call(par, base_params)
   }
 
 

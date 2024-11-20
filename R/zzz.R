@@ -10,12 +10,10 @@
   tnypltptns = parent.env(environment())
   assign(".tinyplot_env", new.env(), envir = tnypltptns)
   .tpar = new.env()
-  .tpar_persistent = new.env()
 
   assign(".tpar", .tpar, envir = tnypltptns)
-  assign(".tpar_persistent", .tpar_persistent, envir = tnypltptns)
 
-  init_tpar_persistent()
+  init_tpar()
 
   assign(".saved_par_before", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))
   assign(".saved_par_after", NULL, envir = get(".tinyplot_env", envir = parent.env(environment())))

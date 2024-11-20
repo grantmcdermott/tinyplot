@@ -37,13 +37,14 @@
 #' tinyplot(mpg ~ hp | factor(am), data = mtcars)
 #'
 #' @export
-tinytheme = function(theme = NULL, ..., action = "replace") {
-  assert_choice(action, c("append", "prepend", "replace"))
-
+tinytheme = function(theme = NULL, ...) {
+  # Always close device and re-initialize graphical parameters
   off = tryCatch(dev.off(), error = function(e) NULL)
   rm(list = names(.tpar), envir = .tpar)
   init_tpar()
+  setHook("before.plot.new", NULL, action = "replace")
 
+  # Empty call only resets the theme
   if (is.null(theme)) {
     return(invisible(NULL))
   }
@@ -62,10 +63,7 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
     settings[[n]] = dots[[n]]
   }
 
-  theme_fun = function() {
-    do.call(tpar, settings)
-  }
-  setHook("before.plot.new", theme_fun, action = action)
+  tpar(settings)
 }
 
 

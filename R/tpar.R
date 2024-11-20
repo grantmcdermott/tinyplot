@@ -102,7 +102,7 @@
 #' # options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")
 #'
 #' @export
-tpar = function(..., persistent = FALSE) {
+tpar = function(...) {
   opts = list(...)
   if (length(opts) == 1 && is.null(names(opts))) {
     if (inherits(opts[[1]], "list") && !is.null(names(opts[[1]]))) {
@@ -110,14 +110,32 @@ tpar = function(..., persistent = FALSE) {
     }
   }
 
-  assign_tpar(opts, persistent = persistent)
+
+  ###### Assign parameters
+
+  # assign tinyplot-specific arguments with known names to .tpar
+  assign_tpar(opts)
+
+  # return informative error messages if the input is invalid
   assert_tpar(.tpar)
 
-  ## Like par(), we want the return object to be dependent on inputs...
+  # if tpar(...) includes arguments that are not known to be tinyplot-specific,
+  # we set a hook to set them using par() when the graphic device is started
+  nam = names(opts)
+  if (!is.null(nam)) {
+    base_params = setdiff(nam, known_tpar)
+    base_params = opts[base_params]
+    tpar_hook = function() {
+      do.call(par, base_params)
+    }
+    setHook("before.plot.new", tpar_hook, action = "append")
+  }
+
+
+  ###### Retrieve parameters
 
   # User didn't assign any new values, but may have requested explicit (print
   # of) some existing value(s)
-  nam = names(opts)
   tpar_old = as.list(.tpar)
   if (is.null(nam)) {
     known_par = names(par(no.readonly = TRUE))
@@ -158,14 +176,9 @@ tpar = function(..., persistent = FALSE) {
 #
 get_tpar = function(opts, default = NULL) {
   # parameter priority
-  # temporary tpar() -> persistent tpar() -> temporary par()
+  # .tpar[["name"]] -> par("name")
   for (o in opts) {
     tp = .tpar[[o]]
-    if (!is.null(tp)) {
-      return(tp)
-    }
-
-    tp = .tpar_persistent[[o]]
     if (!is.null(tp)) {
       return(tp)
     }
@@ -179,12 +192,13 @@ get_tpar = function(opts, default = NULL) {
 }
 
 
-assign_tpar = function(opts, persistent = FALSE) {
-  tinyplot_params = c(
+known_tpar = c(
     "adj.main",
     "adj.sub",
     "adj.xlab",
     "adj.ylab",
+    "cex.xlab",
+    "cex.ylab",
     "col.axis",
     "col.xaxs",
     "col.yaxs",
@@ -207,17 +221,18 @@ assign_tpar = function(opts, persistent = FALSE) {
     "lty.yaxs",
     "lwd.xaxs",
     "lwd.yaxs",
+    "lwd.axis",
     "ribbon.alpha",
     "side.sub",
     "tinytheme",
     "xaxt",
-    "yaxt")
-  for (n in intersect(names(opts), tinyplot_params)) {
-    if (persistent) {
-      .tpar_persistent[[n]] = opts[[n]]
-    } else {
-      .tpar[[n]] = opts[[n]]
-    }
+    "yaxt"
+)
+
+
+assign_tpar = function(opts) {
+  for (n in intersect(names(opts), known_tpar)) {
+    .tpar[[n]] = opts[[n]]
   }
 }
 
@@ -266,31 +281,31 @@ assert_tpar = function(.tpar) {
 }
 
 
-init_tpar_persistent = function() {
+init_tpar = function() {
   # Figure output options if written to file
-  .tpar_persistent$file.width = if (is.null(getOption("tinyplot_file.width"))) 7 else as.numeric(getOption("tinyplot_file.width"))
-  .tpar_persistent$file.height = if (is.null(getOption("tinyplot_file.height"))) 7 else as.numeric(getOption("tinyplot_file.height"))
-  .tpar_persistent$file.res = if (is.null(getOption("tinyplot_file.res"))) 300 else as.numeric(getOption("tinyplot_file.res"))
+  .tpar$file.width = if (is.null(getOption("tinyplot_file.width"))) 7 else as.numeric(getOption("tinyplot_file.width"))
+  .tpar$file.height = if (is.null(getOption("tinyplot_file.height"))) 7 else as.numeric(getOption("tinyplot_file.height"))
+  .tpar$file.res = if (is.null(getOption("tinyplot_file.res"))) 300 else as.numeric(getOption("tinyplot_file.res"))
 
   # Facet margin, i.e. gap between the individual facet windows
-  .tpar_persistent$fmar = if (is.null(getOption("tinyplot_fmar"))) c(1, 1, 1, 1) else as.numeric(getOption("tinyplot_fmar"))
+  .tpar$fmar = if (is.null(getOption("tinyplot_fmar"))) c(1, 1, 1, 1) else as.numeric(getOption("tinyplot_fmar"))
 
   # Other facet options
-  .tpar_persistent$facet.cex = if (is.null(getOption("tinyplot_facet.cex"))) 1 else as.numeric(getOption("tinyplot_facet.cex"))
-  .tpar_persistent$facet.font = if (is.null(getOption("tinyplot_facet.font"))) NULL else as.numeric(getOption("tinyplot_facet.font"))
-  .tpar_persistent$facet.col = if (is.null(getOption("tinyplot_facet.col"))) NULL else getOption("tinyplot_facet.col")
-  .tpar_persistent$facet.bg = if (is.null(getOption("tinyplot_facet.bg"))) NULL else getOption("tinyplot_facet.bg")
-  .tpar_persistent$facet.border = if (is.null(getOption("tinyplot_facet.border"))) NA else getOption("tinyplot_facet.border")
+  .tpar$facet.cex = if (is.null(getOption("tinyplot_facet.cex"))) 1 else as.numeric(getOption("tinyplot_facet.cex"))
+  .tpar$facet.font = if (is.null(getOption("tinyplot_facet.font"))) NULL else as.numeric(getOption("tinyplot_facet.font"))
+  .tpar$facet.col = if (is.null(getOption("tinyplot_facet.col"))) NULL else getOption("tinyplot_facet.col")
+  .tpar$facet.bg = if (is.null(getOption("tinyplot_facet.bg"))) NULL else getOption("tinyplot_facet.bg")
+  .tpar$facet.border = if (is.null(getOption("tinyplot_facet.border"))) NA else getOption("tinyplot_facet.border")
 
   # Plot grid
-  .tpar_persistent$grid = if (is.null(getOption("tinyplot_grid"))) FALSE else as.logical(getOption("tinyplot_grid"))
-  .tpar_persistent$grid.col = if (is.null(getOption("tinyplot_grid.col"))) "lightgray" else getOption("tinyplot_grid.col")
-  .tpar_persistent$grid.lty = if (is.null(getOption("tinyplot_grid.lty"))) "dotted" else getOption("tinyplot_grid.lty")
-  .tpar_persistent$grid.lwd = if (is.null(getOption("tinyplot_grid.lwd"))) 1 else as.numeric(getOption("tinyplot_grid.lwd"))
+  .tpar$grid = if (is.null(getOption("tinyplot_grid"))) FALSE else as.logical(getOption("tinyplot_grid"))
+  .tpar$grid.col = if (is.null(getOption("tinyplot_grid.col"))) "lightgray" else getOption("tinyplot_grid.col")
+  .tpar$grid.lty = if (is.null(getOption("tinyplot_grid.lty"))) "dotted" else getOption("tinyplot_grid.lty")
+  .tpar$grid.lwd = if (is.null(getOption("tinyplot_grid.lwd"))) 1 else as.numeric(getOption("tinyplot_grid.lwd"))
 
   # Legend margin, i.e. gap between the legend and the plot elements
-  .tpar_persistent$lmar = if (is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))
+  .tpar$lmar = if (is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))
 
   # Alpha fill (transparency) default for ribbon and area plots
-  .tpar_persistent$ribbon.alpha = if (is.null(getOption("tinyplot_ribbon.alpha"))) 0.2 else as.numeric(getOption("tinyplot_ribbon.alpha"))
+  .tpar$ribbon.alpha = if (is.null(getOption("tinyplot_ribbon.alpha"))) 0.2 else as.numeric(getOption("tinyplot_ribbon.alpha"))
 }

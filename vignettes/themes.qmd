@@ -46,7 +46,7 @@ tinyplot(hp ~ mpg, data = mtcars, main = "Cars (Part II)")
 tinytheme()
 ```
 
-# Theme gallery
+# Gallery
 
 **tinyplot** comes with a number of built-in themes, which can be applied using the `tinytheme()` function. The following examples demonstrate the available themes.
 

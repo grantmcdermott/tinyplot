@@ -21,6 +21,8 @@ website:
           file: vignettes/introduction.qmd
         - text: Plot types
           file: vignettes/types.qmd
+        - text: Themes
+          file: vignettes/themes.qmd
         - text: Gallery
           file: vignettes/gallery.qmd
       - section: Reference

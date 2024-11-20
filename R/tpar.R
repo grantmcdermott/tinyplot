@@ -9,14 +9,16 @@
 #'   `key = value` argument pairs, and multiple parameters can be set or queried
 #'   at the same time.
 #'
-#' @md
 #' @param ... arguments of the form `key = value`. This includes all of the
 #'   parameters typically supported by \code{\link[graphics]{par}}, as well as
 #'   the `tinyplot`-specific ones described in the 'Graphical Parameters'
 #'   section below.
-##' @param hook Logical. If `TRUE`, base graphical parameters persist across 
+#' @param hook Logical. If `TRUE`, base graphical parameters persist across 
 #'   plots via a hook applied before each new plot (see `?setHook`).
+#' @param init Logical. If `TRUE`, resets all `tinyplot` parameters and hooks. 
+#'   You may need to call `dev.off()` to reset device-specific graphical parameters.
 #'
+#' @md
 #' @details The `tinyplot`-specific parameters are saved in an internal
 #'   environment called `.tpar` for performance and safety reasons. However,
 #'   they can also be set at package load time via \code{\link[base]{options}},
@@ -131,16 +133,16 @@ tpar = function(..., hook = FALSE, init = FALSE) {
   # we set a hook to set them using par() when the graphic device is started
   nam = names(opts)
   if (!is.null(nam)) {
-    base_params = setdiff(nam, known_tpar)
-    base_params = opts[base_params]
+    base_par = setdiff(nam, known_tpar)
+    base_par = opts[base_par]
     if (isTRUE(hook)) {
       tpar_hook = function() {
-        do.call(par, base_params)
+        par(base_par)
       }
-      setHook("before.plot.new", tpar_hook, action = "append")
-      do.call(par, base_params)
+      setHook("before.plot.new", tpar_hook, action = "replace")
+      par(base_par) 
     } else {
-      par(base_params)
+      par(base_par)
     }
   }
 
@@ -294,8 +296,12 @@ assert_tpar = function(.tpar) {
 
 init_tpar = function(rm_hook = FALSE) {
   rm(list = names(.tpar), envir = .tpar)
+
   if (isTRUE(rm_hook)) {
-    setHook("before.plot.new", NULL, action = "replace")
+    hook = getHook("before.plot.new")
+    if (length(hook) > 0) {
+      setHook("before.plot.new", function(...) return(invisible(NULL)), action = "replace")
+    }
   }
 
   # Figure output options if written to file

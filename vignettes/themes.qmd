@@ -2,11 +2,122 @@
 title: "Themes"
 ---
 
-# `par()` and `tpar()`
+# `tinytheme()`
 
-In base R, the appearance of plots can be controlled using graphical parameters defined with the `par()` function. **tinyplot** offers an extended version of this function---`tpar()`---with additional visual parameters. For example, we can change the alignment of axis labels using the `adj.xlab` and `adj.ylab` parameters.
+The `tinytheme()` function applies groups of graphical settings to plots, according to pre-defined styles.  One of the built-in styles is called "ipsum", inspired by the [**hrbrthemes** for **ggplot2**.](https://cran.r-project.org/web/packages/hrbrthemes/index.html)
 
 ```{r}
+pkgload::load_all()
+
+tinytheme("ipsum")
+
+tinyplot(Sepal.Width ~ Sepal.Length | Species,
+  facet = ~Species,
+  data = iris,
+  main = "Title of this plot",
+  sub = "A smaller subtitle",
+  pch = 16,
+  palette = "okabeito")
+```
+
+The changes made by `tinytheme()` are persistent, and apply to all subsequent `tinyplot()` calls.
+
+```{r}
+tinyplot(mpg ~ hp, data = mtcars, main = "Cars")
+```
+
+To reset graphical parameters to factory defaults, call  `tinytheme()` without arguments.
+
+```{r}
+tinytheme()
+```
+
+The `tinytheme()` function accepts any graphical parameter supported by `par()` and `tpar()`, and applies them in persistent fashion.
+
+```{r}
+#| layout-ncol: 2
+tinytheme("ipsum", family = "Arial Narrow", pch = 2, col.axis = "red")
+tinyplot(mpg ~ hp, data = mtcars, main = "Cars (Part I)")
+tinyplot(hp ~ mpg, data = mtcars, main = "Cars (Part II)")
+```
+
+```{r}
+# reset
+tinytheme()
+```
+
+# Theme gallery
+
+**tinyplot** comes with a number of built-in themes, which can be applied using the `tinytheme()` function. The following examples demonstrate the available themes.
+
+Please contribute new themes by [opening a Pull Request on Github.](https://github.com/grantmcdermott/tinyplot)
+
+## Default
+
+```{r}
+f = function() {
+  tinyplot(Sepal.Width ~ Sepal.Length | Species,
+    facet = ~Species,
+    data = iris,
+    main = "Title of this plot",
+    sub = "A smaller subtitle",
+    pch = 16,
+    palette = "tableau")
+}
+
+f()
+```
+
+## ipsum
+
+```{r}
+tinytheme("ipsum")
+f()
+```
+
+## bw
+
+```{r}
+tinytheme("bw")
+f()
+```
+
+# classic
+
+```{r}
+tinytheme("classic")
+f()
+```
+
+## minimal
+
+```{r}
+tinytheme("minimal")
+f()
+```
+
+## dark
+
+```{r}
+tinytheme("dark")
+f()
+```
+
+
+```{r}
+# Reset to default theme.
+tinytheme()
+```
+
+
+# `par()` and `tpar()`
+
+In base R, the appearance of plots can be controlled using graphical parameters defined with the `par()` function. Those settings stay in force as long as a graphical device stays open. On the other hand, these parameters are reset when the plotting window is closed or, for example, when executing a new code chunk in a Quarto notebook.
+
+**tinyplot** offers an extended version of this function---`tpar()`---which offers additional **tinyplot**-specific visual parameters (See `?tpar` for a complete list). For example, we can change the alignment of axis labels using the `adj.xlab` and `adj.ylab` parameters.
+
+```{r}
+#| eval: false
 library(tinyplot)
 tinyplot(mpg ~ hp, data = mtcars)
 
@@ -14,44 +125,27 @@ tpar("adj.ylab" = 1, "adj.xlab" = 1)
 tinyplot(mpg ~ hp, data = mtcars)
 ```
 
-See `?par()` and `?tpar()` for a list of available parameters.
-
-# `tinytheme()`
-
-Instead of modifying every graphical parameter individually, users can call `tinytheme()` to set multiple parameters at once, according to pre-defined styles. One of the built-in styles is called "ipsum", inspired by the [**hrbrthemes** for **ggplot2**.](https://cran.r-project.org/web/packages/hrbrthemes/index.html)
+Another convenient feature of `tpar()` is that it can set persistent graphical parameters via a "hook" mechanism (see `?setHook`). For this, we use the `hook=TRUE` argument. Without this feature, parameters are reset in every code chunk.
 
 ```{r}
-library(tinyplot)
-
-tinytheme("ipsum")
-
-tinyplot(Sepal.Width ~ Sepal.Length | Species,
-  facet = ~Species,
-  data = iris,
-  pch = 16,
-  main = "Title of this plot",
-  sub = "A smaller subtitle",
-  palette = "okabeito")
+par(col = "red", pch = 4)
+tinyplot(mpg ~ hp, data = mtcars)
+```
+```{r}
+tinyplot(wt ~ qsec, data = mtcars)
 ```
 
-The changes are persistent, and will apply to all graphs until the graphical device is closed.
+With the `hook=TRUE` argument, the graphical parameters are persistent.
 
 ```{r}
-tinyplot(Sepal.Width ~ Sepal.Length | Species,
-  facet = ~Species,
-  data = iris,
-  pch = 16,
-  main = "Title of this plot",
-  sub = "A smaller subtitle",
-  palette = "okabeito")
+tpar(col = "red", pch = 4, hook = TRUE)
+tinyplot(mpg ~ hp, data = mtcars)
+```
+```{r}
+tinyplot(wt ~ qsec, data = mtcars)
 ```
 
 ```{r}
-#| eval: false
-tinyplot(mpg ~ hp, data = mtcars, main = "Cars")
+# reset to default theme
+tinytheme()
 ```
-
-
-
-
-

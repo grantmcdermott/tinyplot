@@ -80,6 +80,27 @@ confusion.
 Use the `plt()` alias instead of `tinyplot()` to save yourself a few keystrokes.
 :::
 
+## Themes
+
+To change the look of your plots, you can call the `tinytheme()` function. This will modify several graphical settings at once to match one of several pre-defined styles. The [Themes vignette](themes.qmd) provides a more detailed overview of this feature. Here, we apply the "ipsum" theme to a simple plot.
+
+```{r}
+# apply theme
+tinytheme("ipsum")
+
+# plot
+tinyplot(Temp ~ Day, data = aq, 
+  main = "Daily temperature", 
+  sub = "Air quality data")
+
+# reset theme to default
+tinytheme()
+```
+
+
+
+
+
 ## Grouped data
 
 Where `tinyplot` starts to diverge from its base counterpart is

@@ -14,6 +14,9 @@ section below.}
 
 \item{hook}{Logical. If \code{TRUE}, base graphical parameters persist across
 plots via a hook applied before each new plot (see \code{?setHook}).}
+
+\item{init}{Logical. If \code{TRUE}, resets all \code{tinyplot} parameters and hooks.
+You may need to call \code{dev.off()} to reset device-specific graphical parameters.}
 }
 \value{
 When parameters are set, their previous values are returned in an

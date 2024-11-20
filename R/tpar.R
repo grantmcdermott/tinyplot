@@ -102,9 +102,7 @@
 #' # options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")
 #'
 #' @export
-tpar = function(...) {
-  facet.col = facet.bg = facet.border = used_par_old = NULL
-
+tpar = function(..., persistent = FALSE) {
   opts = list(...)
   if (length(opts) == 1 && is.null(names(opts))) {
     if (inherits(opts[[1]], "list") && !is.null(names(opts[[1]]))) {
@@ -112,82 +110,27 @@ tpar = function(...) {
     }
   }
 
-  tpar_old = as.list(.tpar)
-  nam = names(opts)
-
-  known_par = names(par(no.readonly = TRUE))
-
-  if (!is.null(nam)) {
-    used_par = intersect(nam, known_par)
-  } else {
-    used_par = intersect(opts, known_par)
-  }
-  if (length(used_par)) {
-    if (!is.null(nam)) used_par = opts[used_par]
-    used_par_old = par(used_par)
-    tpar_old = modifyList(tpar_old, used_par_old, keep.null = TRUE)
-  }
-
-  if (length(opts$facet.col) || ("facet.col" %in% nam && is.null(opts$facet.col))) {
-    facet.col = opts$facet.col
-    if (!is.null(facet.col) && !is.numeric(facet.col) && !is.character(facet.col)) stop("facet.col needs to be NULL, or a numeric or character")
-    if (!is.null(facet.col) && length(facet.col) != 1) stop("facet.col needs to be of length 1")
-    .tpar$facet.col = facet.col
-  }
-
-  if (length(opts$facet.bg) || ("facet.bg" %in% nam && is.null(opts$facet.bg))) {
-    facet.bg = opts$facet.bg
-    if (!is.null(facet.bg) && !is.numeric(facet.bg) && !is.character(facet.bg)) stop("facet.bg needs to be NULL, or a numeric or character")
-    if (!is.null(facet.bg) && length(facet.bg) != 1) stop("facet.bg needs to be of length 1")
-    .tpar$facet.bg = facet.bg
-  }
-
-  if (length(opts$facet.border)) {
-    facet.border = opts$facet.border
-    if (!is.na(facet.border) && !is.numeric(facet.border) && !is.character(facet.border)) stop("facet.border needs to be NA, or a numeric or character")
-    if (length(facet.border) != 1) stop("facet.border needs to be of length 1")
-    .tpar$facet.border = facet.border
-  }
-
-  if (length(opts$fmar)) {
-    fmar = as.numeric(opts$fmar)
-    if (!is.numeric(fmar)) stop("fmar needs to be numeric")
-    if (length(fmar) != 4) stop("fmar needs to be of length 4, i.e. c(b,l,t,r)")
-    .tpar$fmar = fmar
-  }
-
-
-  # tinyplot-specific parameters
-  tinyplot_params = c(
-    "adj.main", "adj.sub", "adj.ylab", "adj.xlab", "col.xaxs", "col.yaxs",
-    "lwd.yaxs", "lwd.xaxs", "lty.yaxs", "lty.xaxs", "tinytheme",
-    "col.axis", "lmar", "ribbon.alpha", "grid.lwd", "grid.lty", "grid.col", "grid", "file.res",
-    "file.height", "file.width", "facet.font", "facet.cex", "side.sub", "grid.bg")
-  for (n in intersect(names(opts), tinyplot_params)) {
-    .tpar[[n]] = opts[[n]]
-  }
-  assert_numeric(.tpar[["adj.main"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.main")
-  assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.sub")
-  assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.xlab")
-  assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
-  assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE, name = "lmar")
-  assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "ribbon.alpha")
-  assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE, name = "grid.lwd")
-  assert_flag(.tpar[["grid"]], null.ok = TRUE, name = "grid")
-  assert_numeric(.tpar[["file.res"]], len = 1, lower = 0, null.ok = TRUE, name = "file.res")
-  assert_numeric(.tpar[["file.height"]], len = 1, lower = 0, null.ok = TRUE, name = "file.height")
-  assert_numeric(.tpar[["file.width"]], len = 1, lower = 0, null.ok = TRUE, name = "file.width")
-  assert_numeric(.tpar[["facet.font"]], len = 1, null.ok = TRUE, name = "facet.font")
-  assert_numeric(.tpar[["facet.cex"]], len = 1, null.ok = TRUE, name = "facet.cex")
-  assert_numeric(.tpar[["side.sub"]], len = 1, null.ok = TRUE, name = "side.sub")
-  assert_string(.tpar[["grid.bg"]], null.ok = TRUE, name = "grid.bg")
-
+  assign_tpar(opts, persistent = persistent)
+  assert_tpar(.tpar)
 
   ## Like par(), we want the return object to be dependent on inputs...
 
   # User didn't assign any new values, but may have requested explicit (print
   # of) some existing value(s)
+  nam = names(opts)
+  tpar_old = as.list(.tpar)
   if (is.null(nam)) {
+    known_par = names(par(no.readonly = TRUE))
+    if (!is.null(nam)) {
+      used_par = intersect(nam, known_par)
+    } else {
+      used_par = intersect(opts, known_par)
+    }
+    if (length(used_par)) {
+      if (!is.null(nam)) used_par = opts[used_par]
+      used_par_old = par(used_par)
+      tpar_old = modifyList(as.list(.tpar), used_par_old, keep.null = TRUE)
+    }
     if (!is.null(opts) && length(opts) != 0) {
       # specific values requested
       ret = (`names<-`(lapply(opts, function(x) .tpar[[x]]), opts))
@@ -204,21 +147,150 @@ tpar = function(...) {
     # assign new values, but still return old values for saving existing settings
     # a la `oldpar = par(param = new_value)`
   } else {
-    `names<-`(lapply(nam, function(x) .tpar[[x]]), nam)
+    `names<-`(lapply(nam, function(x) .tpar
+      [[x]]), nam)
     return(invisible(tpar_old))
   }
 }
 
 
+# Two levels of priority:
+#
 get_tpar = function(opts, default = NULL) {
+  # parameter priority
+  # temporary tpar() -> persistent tpar() -> temporary par()
   for (o in opts) {
     tp = .tpar[[o]]
-    p = suppressWarnings(par(o))
     if (!is.null(tp)) {
       return(tp)
-    } else if (!is.null(p)) {
+    }
+
+    tp = .tpar_persistent[[o]]
+    if (!is.null(tp)) {
+      return(tp)
+    }
+
+    p = suppressWarnings(par(o))
+    if (!is.null(p)) {
       return(p)
     }
   }
   return(default)
+}
+
+
+assign_tpar = function(opts, persistent = FALSE) {
+  tinyplot_params = c(
+    "adj.main",
+    "adj.sub",
+    "adj.xlab",
+    "adj.ylab",
+    "col.axis",
+    "col.xaxs",
+    "col.yaxs",
+    "facet.bg",
+    "facet.border",
+    "facet.cex",
+    "facet.col",
+    "facet.font",
+    "file.height",
+    "file.res",
+    "file.width",
+    "fmar",
+    "grid",
+    "grid.bg",
+    "grid.col",
+    "grid.lty",
+    "grid.lwd",
+    "lmar",
+    "lty.xaxs",
+    "lty.yaxs",
+    "lwd.xaxs",
+    "lwd.yaxs",
+    "ribbon.alpha",
+    "side.sub",
+    "tinytheme",
+    "xaxt",
+    "yaxt")
+  for (n in intersect(names(opts), tinyplot_params)) {
+    if (persistent) {
+      .tpar_persistent[[n]] = opts[[n]]
+    } else {
+      .tpar[[n]] = opts[[n]]
+    }
+  }
+}
+
+
+assert_tpar = function(.tpar) {
+  assert_numeric(.tpar[["adj.main"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.main")
+  assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.sub")
+  assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.xlab")
+  assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
+  assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE, name = "lmar")
+  assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "ribbon.alpha")
+  assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE, name = "grid.lwd")
+  assert_flag(.tpar[["grid"]], null.ok = TRUE, name = "grid")
+  assert_numeric(.tpar[["file.res"]], len = 1, lower = 0, null.ok = TRUE, name = "file.res")
+  assert_numeric(.tpar[["file.height"]], len = 1, lower = 0, null.ok = TRUE, name = "file.height")
+  assert_numeric(.tpar[["file.width"]], len = 1, lower = 0, null.ok = TRUE, name = "file.width")
+  assert_numeric(.tpar[["facet.font"]], len = 1, null.ok = TRUE, name = "facet.font")
+  assert_numeric(.tpar[["facet.cex"]], len = 1, null.ok = TRUE, name = "facet.cex")
+  assert_numeric(.tpar[["side.sub"]], len = 1, null.ok = TRUE, name = "side.sub")
+  assert_string(.tpar[["grid.bg"]], null.ok = TRUE, name = "grid.bg")
+  assert_numeric(.tpar[["fmar"]], len = 4, null.ok = TRUE, name = "fmar")
+
+  facet.col = .tpar[["facet.col"]]
+  if (!is.null(facet.col)) {
+    if (!is.null(facet.col) && !is.numeric(facet.col) && !is.character(facet.col)) {
+      stop("facet.col needs to be NULL, or a numeric or character", call. = FALSE)
+    }
+    assert_true(length(facet.col) == 1, name = "length(facet.col)==1")
+  }
+
+  facet.bg = .tpar$facet.bg
+  if (!is.null(facet.bg)) {
+    if (!is.numeric(facet.bg) && !is.character(facet.bg)) {
+      stop("facet.bg needs to be NULL, or a numeric or character", call. = FALSE)
+    }
+    assert_true(length(facet.bg) == 1, name = "length(facet.bg)==1")
+  }
+
+  facet.border = .tpar$facet.border
+  if (!is.null(facet.border)) {
+    if (!is.numeric(facet.border) && !is.character(facet.border) && !is.na(facet.border)) {
+      stop("facet.border needs to be NULL, or a numeric, character, or NA", call. = FALSE)
+    }
+    assert_true(length(facet.border) == 1, name = "length(facet.border)==1")
+  }
+}
+
+
+init_tpar_persistent = function() {
+  # Figure output options if written to file
+  .tpar_persistent$file.width = if (is.null(getOption("tinyplot_file.width"))) 7 else as.numeric(getOption("tinyplot_file.width"))
+  .tpar_persistent$file.height = if (is.null(getOption("tinyplot_file.height"))) 7 else as.numeric(getOption("tinyplot_file.height"))
+  .tpar_persistent$file.res = if (is.null(getOption("tinyplot_file.res"))) 300 else as.numeric(getOption("tinyplot_file.res"))
+
+  # Facet margin, i.e. gap between the individual facet windows
+  .tpar_persistent$fmar = if (is.null(getOption("tinyplot_fmar"))) c(1, 1, 1, 1) else as.numeric(getOption("tinyplot_fmar"))
+
+  # Other facet options
+  .tpar_persistent$facet.cex = if (is.null(getOption("tinyplot_facet.cex"))) 1 else as.numeric(getOption("tinyplot_facet.cex"))
+  .tpar_persistent$facet.font = if (is.null(getOption("tinyplot_facet.font"))) NULL else as.numeric(getOption("tinyplot_facet.font"))
+  .tpar_persistent$facet.col = if (is.null(getOption("tinyplot_facet.col"))) NULL else getOption("tinyplot_facet.col")
+  .tpar_persistent$facet.bg = if (is.null(getOption("tinyplot_facet.bg"))) NULL else getOption("tinyplot_facet.bg")
+  .tpar_persistent$facet.border = if (is.null(getOption("tinyplot_facet.border"))) NA else getOption("tinyplot_facet.border")
+
+  # Plot grid
+  .tpar_persistent$grid = if (is.null(getOption("tinyplot_grid"))) FALSE else as.logical(getOption("tinyplot_grid"))
+  .tpar_persistent$grid.col = if (is.null(getOption("tinyplot_grid.col"))) "lightgray" else getOption("tinyplot_grid.col")
+  .tpar_persistent$grid.lty = if (is.null(getOption("tinyplot_grid.lty"))) "dotted" else getOption("tinyplot_grid.lty")
+  .tpar_persistent$grid.lwd = if (is.null(getOption("tinyplot_grid.lwd"))) 1 else as.numeric(getOption("tinyplot_grid.lwd"))
+
+  # Legend margin, i.e. gap between the legend and the plot elements
+  .tpar_persistent$lmar = if (is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))
+
+  # Alpha fill (transparency) default for ribbon and area plots
+  .tpar_persistent$ribbon.alpha = if (is.null(getOption("tinyplot_ribbon.alpha"))) 0.2 else as.numeric(getOption("tinyplot_ribbon.alpha"))
 }

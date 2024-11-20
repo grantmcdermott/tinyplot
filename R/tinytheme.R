@@ -62,16 +62,10 @@ tinytheme = function(theme = NULL, ..., action = "replace") {
     settings[[n]] = dots[[n]]
   }
 
-  do.call(tpar, settings)
-
-  ## Hook approach doesn't work because some of our tinyplot() code requires access to
-  ## themeing options before drawing the plot window, and the hook on "before.plot.new"
-  ## only sets tpar() at that time, which is too late.
-  ##
-  # theme_fun = function() {
-  #   do.call(tpar, settings)
-  # }
-  # setHook("before.plot.new", theme_fun, action = "replace")
+  theme_fun = function() {
+    do.call(tpar, settings)
+  }
+  setHook("before.plot.new", theme_fun, action = action)
 }
 
 

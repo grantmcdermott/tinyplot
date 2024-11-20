@@ -49,8 +49,8 @@
 #'   precedence if both are specified together. Ignored if a two-sided formula
 #'   is passed to the main `facet` argument, since the layout is arranged in a
 #'   fixed grid.
-#'   - `free` a logical value indicating whether the axis limits (scales) for 
-#'   each individual facet should adjust independently to match the range of 
+#'   - `free` a logical value indicating whether the axis limits (scales) for
+#'   each individual facet should adjust independently to match the range of
 #'   the data within that facet. Default is `FALSE`. Separate free scaling of
 #'   the x- or y-axis (i.e., whilst holding the other axis fixed) is not
 #'   currently supported.
@@ -1148,7 +1148,7 @@ tinyplot.default = function(
         mfgj = ii %% nfacet_cols
         if (mfgj == 0) mfgj = nfacet_cols
         par(mfg = c(mfgi, mfgj))
-        
+
         # For free facets, we need to reset par(usr) based extent of that
         # particular facet... which we calculated and saved to the .fusr env var
         # (list) back in draw_facet_window()

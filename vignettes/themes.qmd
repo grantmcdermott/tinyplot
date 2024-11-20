@@ -1,7 +1,24 @@
 ---
 title: "Themes"
+format: html
+engine: knitr
+vignette: |
+  %\VignetteIndexEntry{Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
+```{r include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  # fig.path = "man/figures/README-",
+  out.width = "70%",
+  fig.width = 8,
+  dpi = 300,
+  asp = 0.625
+)
+```
 # `tinytheme()`
 
 The `tinytheme()` function applies groups of graphical settings to plots, according to pre-defined styles.  One of the built-in styles is called "ipsum", inspired by the [**hrbrthemes** for **ggplot2**.](https://cran.r-project.org/web/packages/hrbrthemes/index.html)

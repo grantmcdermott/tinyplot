@@ -1,6 +1,7 @@
 source("helpers.R")
 using("tinysnapshot")
 
+op = par(no.readonly = TRUE)
 mtcars$am = as.factor(mtcars$am)
 
 #
@@ -265,7 +266,7 @@ if (getRversion() >= "4.4.0") {
 ## Density plot versions
 
 # restore original par settings
-tinytheme()
+par(op)
 
 ## Avoid test fails on older R versions (pre 4.4.0) due to slight change in
 ## density grid value calculations.
@@ -518,4 +519,4 @@ expect_snapshot_plot(f, label = "facet_free_grid")
 # restore original par settings
 #
 
-tinytheme()
+par(op)

@@ -82,7 +82,7 @@ tinytheme("bw")
 f()
 ```
 
-# classic
+## classic
 
 ```{r}
 tinytheme("classic")

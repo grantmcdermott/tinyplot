@@ -39,9 +39,7 @@
 #' @export
 tinytheme = function(theme = NULL, ...) {
   # Always close device and re-initialize graphical parameters
-  rm(list = names(.tpar), envir = .tpar)
-  init_tpar()
-  setHook("before.plot.new", NULL, action = "replace")
+  init_tpar(rm_hook = TRUE)
 
   # Empty call only resets the theme
   if (is.null(theme)) {
@@ -62,7 +60,7 @@ tinytheme = function(theme = NULL, ...) {
     settings[[n]] = dots[[n]]
   }
 
-  tpar(settings)
+  tpar(settings, hook = TRUE)
 }
 
 

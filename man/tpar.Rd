@@ -4,13 +4,16 @@
 \alias{tpar}
 \title{Set or query graphical parameters}
 \usage{
-tpar(...)
+tpar(..., hook = FALSE, init = FALSE)
 }
 \arguments{
 \item{...}{arguments of the form \code{key = value}. This includes all of the
 parameters typically supported by \code{\link[graphics]{par}}, as well as
 the \code{tinyplot}-specific ones described in the 'Graphical Parameters'
 section below.}
+
+\item{hook}{Logical. If \code{TRUE}, base graphical parameters persist across
+plots via a hook applied before each new plot (see \code{?setHook}).}
 }
 \value{
 When parameters are set, their previous values are returned in an

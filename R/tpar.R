@@ -14,6 +14,8 @@
 #'   parameters typically supported by \code{\link[graphics]{par}}, as well as
 #'   the `tinyplot`-specific ones described in the 'Graphical Parameters'
 #'   section below.
+##' @param hook Logical. If `TRUE`, base graphical parameters persist across 
+#'   plots via a hook applied before each new plot (see `?setHook`).
 #'
 #' @details The `tinyplot`-specific parameters are saved in an internal
 #'   environment called `.tpar` for performance and safety reasons. However,
@@ -102,7 +104,13 @@
 #' # options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")
 #'
 #' @export
-tpar = function(...) {
+tpar = function(..., hook = FALSE, init = FALSE) {
+  if (isTRUE(init)) {
+    init_tpar(rm_hook = TRUE)
+    return(invisible(NULL))
+  }
+
+
   opts = list(...)
   if (length(opts) == 1 && is.null(names(opts))) {
     if (inherits(opts[[1]], "list") && !is.null(names(opts[[1]]))) {
@@ -125,11 +133,15 @@ tpar = function(...) {
   if (!is.null(nam)) {
     base_params = setdiff(nam, known_tpar)
     base_params = opts[base_params]
-    tpar_hook = function() {
+    if (isTRUE(hook)) {
+      tpar_hook = function() {
+        do.call(par, base_params)
+      }
+      setHook("before.plot.new", tpar_hook, action = "append")
       do.call(par, base_params)
+    } else {
+      par(base_params)
     }
-    setHook("before.plot.new", tpar_hook, action = "append")
-    do.call(par, base_params)
   }
 
 
@@ -173,8 +185,7 @@ tpar = function(...) {
 }
 
 
-# Two levels of priority:
-#
+# Two levels of priority: .tpar[["name"]] -> par("name")
 get_tpar = function(opts, default = NULL) {
   # parameter priority
   # .tpar[["name"]] -> par("name")
@@ -281,7 +292,12 @@ assert_tpar = function(.tpar) {
 }
 
 
-init_tpar = function() {
+init_tpar = function(rm_hook = FALSE) {
+  rm(list = names(.tpar), envir = .tpar)
+  if (isTRUE(rm_hook)) {
+    setHook("before.plot.new", NULL, action = "replace")
+  }
+
   # Figure output options if written to file
   .tpar$file.width = if (is.null(getOption("tinyplot_file.width"))) 7 else as.numeric(getOption("tinyplot_file.width"))
   .tpar$file.height = if (is.null(getOption("tinyplot_file.height"))) 7 else as.numeric(getOption("tinyplot_file.height"))

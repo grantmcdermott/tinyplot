@@ -51,7 +51,7 @@ tinytheme()
 tinyplot(mpg ~ hp | factor(am), data = mtcars)
 
 # Custom theme
-options(tinyplot_theme_custom = list(pch = 3, col = "red")
+options(tinyplot_theme_custom = list(font.main = 3, col = "red"))
 tinytheme("custom")
 tinyplot(mpg ~ hp | factor(am), data = mtcars)
 

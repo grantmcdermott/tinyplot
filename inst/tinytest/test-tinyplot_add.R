@@ -29,3 +29,11 @@ f = function() {
     type = "ribbon")
 }
 expect_snapshot_plot(f, label = "tinyplot_add_multiple")
+
+
+# allow first argument to be unnamed
+f = function() {
+  tinyplot(mpg ~ hp, type = "lm", data = mtcars)
+  tinyplot_add(mpg ~ hp | factor(cyl), type = "p", pch = 16)
+}
+expect_snapshot_plot(f, label = "tinyplot_add_unnamed")

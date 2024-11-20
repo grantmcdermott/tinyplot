@@ -49,6 +49,11 @@
 #'   precedence if both are specified together. Ignored if a two-sided formula
 #'   is passed to the main `facet` argument, since the layout is arranged in a
 #'   fixed grid.
+#'   - `free` a logical value indicating whether the axis limits (scales) for 
+#'   each individual facet should adjust independently to match the range of 
+#'   the data within that facet. Default is `FALSE`. Separate free scaling of
+#'   the x- or y-axis (i.e., whilst holding the other axis fixed) is not
+#'   currently supported.
 #'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
 #'   between facets in terms of lines. Defaults to the value of `tpar("fmar")`,
 #'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each
@@ -1143,6 +1148,14 @@ tinyplot.default = function(
         mfgj = ii %% nfacet_cols
         if (mfgj == 0) mfgj = nfacet_cols
         par(mfg = c(mfgi, mfgj))
+        
+        # For free facets, we need to reset par(usr) based extent of that
+        # particular facet... which we calculated and saved to the .fusr env var
+        # (list) back in draw_facet_window()
+        if (isTRUE(facet.args[["free"]])) {
+          fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
+          par(usr = fusr[[ii]])
+        }
       }
 
       # empty plot flag

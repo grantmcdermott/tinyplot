@@ -109,6 +109,22 @@ f()
 tinytheme()
 ```
 
+# Custom themes
+
+Users can define custom themes by storing graphical parameters in a global option and calling `tinytheme("custom")`.
+
+```{r}
+options(tinyplot_theme_custom = list(font.main = 3, col = "red"))
+tinytheme("custom")
+f()
+```
+
+
+```{r}
+# Reset to default theme.
+tinytheme()
+```
+
 
 # `par()` and `tpar()`
 

@@ -11,6 +11,7 @@
 #'   - `"dark"`
 #'   - `"ipsum"`
 #'   - `"minimal"`
+#'   - `"custom"`
 #' @param ... Named arguments to override specific theme settings. These arguments are
 #'   passed to `tpar()` and take precedence over the predefined settings in the selected
 #'   theme.
@@ -19,6 +20,8 @@
 #' Sets a list of graphical parameters using `tpar()`
 #'
 #' To reset the theme to default settings (no customization), call `tinytheme()` without arguments.
+#'
+#' The `"custom"` theme sets parameters stored in a list in a global option. See examples below.
 #'
 #' @return The function returns nothing. It is called for its side effects.
 #'
@@ -35,6 +38,11 @@
 #' tinytheme()
 #' tinyplot(mpg ~ hp | factor(am), data = mtcars)
 #'
+#' # Custom theme
+#' options(tinyplot_theme_custom = list(pch = 3, col = "red")
+#' tinytheme("custom")
+#' tinyplot(mpg ~ hp | factor(am), data = mtcars)
+#'
 #' @export
 tinytheme = function(theme = NULL, ...) {
   # Always close device and re-initialize graphical parameters
@@ -45,13 +53,14 @@ tinytheme = function(theme = NULL, ...) {
     return(invisible(NULL))
   }
 
-  assert_choice(theme, sort(c("bw", "classic", "dark", "ipsum", "minimal")))
+  assert_choice(theme, sort(c("bw", "classic", "custom", "dark", "ipsum", "minimal")))
   settings = switch(theme,
     "bw" = theme_bw,
     "classic" = theme_classic,
     "dark" = theme_dark,
     "ipsum" = theme_ipsum,
-    "minimal" = theme_minimal
+    "minimal" = theme_minimal,
+    "custom" = getOption("tinyplot_theme_custom", default = list())
   )
 
   dots = list(...)

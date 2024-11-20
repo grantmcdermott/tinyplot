@@ -15,6 +15,7 @@ If \code{NULL}, the tinyplot settings are re-initialized and the graphical devic
 \item \code{"dark"}
 \item \code{"ipsum"}
 \item \code{"minimal"}
+\item \code{"custom"}
 }}
 
 \item{...}{Named arguments to override specific theme settings. These arguments are
@@ -33,6 +34,8 @@ font styles, and axis labels. By default, a "bw" theme is available.
 Sets a list of graphical parameters using \code{tpar()}
 
 To reset the theme to default settings (no customization), call \code{tinytheme()} without arguments.
+
+The \code{"custom"} theme sets parameters stored in a list in a global option. See examples below.
 }
 \examples{
 # Set a theme
@@ -45,6 +48,11 @@ tinyplot(mpg ~ hp | factor(am), data = mtcars, main = "Hello World!")
 
 # Reset the theme
 tinytheme()
+tinyplot(mpg ~ hp | factor(am), data = mtcars)
+
+# Custom theme
+options(tinyplot_theme_custom = list(pch = 3, col = "red")
+tinytheme("custom")
 tinyplot(mpg ~ hp | factor(am), data = mtcars)
 
 }

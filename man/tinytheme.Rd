@@ -20,8 +20,6 @@ If \code{NULL}, the tinyplot settings are re-initialized and the graphical devic
 \item{...}{Named arguments to override specific theme settings. These arguments are
 passed to \code{tpar()} and take precedence over the predefined settings in the selected
 theme.}
-
-\item{action}{"append", "prepend", or "replace" to the hook.}
 }
 \value{
 The function returns nothing. It is called for its side effects.

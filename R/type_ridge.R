@@ -96,7 +96,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
       d = do.call(rbind, lapply(d, offset_z))
       
       # Manual breaks flag. Only used if gradient is on
-      mbreaks_flag = !is.null(breaks) || !is.null(probs)
+      manbreaks = !is.null(breaks) || !is.null(probs)
 
       ## use color gradient?
       xlim = range(d$x, na.rm = TRUE)
@@ -153,7 +153,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
           palette = palette,
           breaks = breaks,
           probs = probs,
-          mbreaks_flag = mbreaks_flag,
+          manbreaks = manbreaks,
           yaxt = yaxt,
           raster = raster)
       )
@@ -176,7 +176,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
               x, ymax, ymin = ymin[1L],
               breaks = type_info[["breaks"]],
               probs = type_info[["probs"]],
-              mbreaks_flag = type_info[["mbreaks_flag"]],
+              manbreaks = type_info[["manbreaks"]],
               col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]],
               border = if (is.null(type_info[["palette"]])) icol else "transparent"
             )
@@ -201,7 +201,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
 }
 
 ## auxiliary function for drawing shaded segmented polygon
-segmented_polygon = function(x, y, ymin = 0, breaks = range(x), mbreaks_flag = FALSE, probs = NULL, col = "lightgray", border = "transparent") {
+segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, manbreaks = FALSE, col = "lightgray", border = "transparent") {
 
   if (!is.null(probs)) {
     ## map quantiles to breaks
@@ -216,7 +216,7 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), mbreaks_flag = F
   # col = rep_len(col, length(breaks) - 1L)
   
   # Create individual polygons
-  if (isFALSE(mbreaks_flag)) {
+  if (isFALSE(manbreaks)) {
     # Special case for length(breaks)==length(x). We can take a fully vectorised
     # shortcut
     xx = c(rbind(x[-length(x)], x[-1], x[-1], x[-length(x)], NA))
@@ -248,20 +248,22 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), mbreaks_flag = F
   yy = yy[1:(length(yy)-1)]
   
   # Color ramp for cases where the breaks don't match 
-  if (mbreaks_flag) {
-    if (!is.null(breaks) && length(breaks)-1 != length(col) && !is.atomic(col)) {
+  if (isFALSE(is.atomic(col))) {
+    if (isTRUE(manbreaks)) {
+      if (!is.null(breaks) && length(breaks)-1 != length(col)) {
+        xrange = range(xx, na.rm = TRUE)
+        idx = which(breaks >= xrange[1] & breaks < xrange[2])
+        idx = c(idx, length(idx)+1)
+        col = col[idx]
+        col = colorRampPalette(col)(length(x)) # support alpha?
+      }
+    } else if (isFALSE(manbreaks) || length(col) > length(x) || length(x) %% length(col) != 0) {
       xrange = range(xx, na.rm = TRUE)
       idx = which(breaks >= xrange[1] & breaks < xrange[2])
       idx = c(idx, length(idx)+1)
       col = col[idx]
       col = colorRampPalette(col)(length(x)) # support alpha?
     }
-  } else if (isFALSE(mbreaks_flag) || length(col) > length(x) || length(x) %% length(col) != 0) {
-      xrange = range(xx, na.rm = TRUE)
-      idx = which(breaks >= xrange[1] & breaks < xrange[2])
-      idx = c(idx, length(idx)+1)
-      col = col[idx]
-      col = colorRampPalette(col)(length(x)) # support alpha?
   }
   
   ## draw all polygons
@@ -270,7 +272,7 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), mbreaks_flag = F
 
 #' @importFrom graphics rasterImage
 #' @importFrom grDevices as.raster
-segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, mbreaks_flag = FALSE, col = "lightgray", border = "transparent") {
+segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, manbreaks = FALSE, col = "lightgray", border = "transparent") {
   ## set up raster matrix on x-grid and 500 y-pixels 
   n = length(x) - 1L
   m = 500L ## FIXME: hard-coded?

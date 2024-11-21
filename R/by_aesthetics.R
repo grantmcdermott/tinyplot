@@ -6,6 +6,14 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
     ngrps = 100L
   }
 
+  if (is.null(palette)) {
+    if (ngrps <= 8) {
+      palette = get_tpar("palette.qualitative", default = NULL)
+    } else {
+      palette = get_tpar("palette.sequential", default = NULL)
+    }
+  }
+
   # palette = substitute(palette, env = parent.env(environment()))
 
   # special "by" convenience keyword (will treat as NULL & handle grouping below)

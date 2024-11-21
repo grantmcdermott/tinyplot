@@ -137,5 +137,7 @@ theme_dark = modifyList(theme_minimal, list(
   col.main = "#BBBBBB",
   col.sub = "#BBBBBB",
   col.axis = "#BBBBBB",
-  grid.col = "#6D6D6D"
+  grid.col = "#6D6D6D",
+  palette.qualitative = "Set 2",
+  palette.sequential = "Sunset"
 ))

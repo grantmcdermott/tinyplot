@@ -67,6 +67,8 @@
 #' * `grid.lwd`: Non-negative numeric giving the line width of the panel grid lines. Defaults to `1`.
 #' * `grid`: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to `NULL`, which is equivalent to `FALSE`.
 #' * `lmar`: A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
+#' * `palette.qualitative`: Palette for qualitative colors. See the `palette` argumetn in `?tinyplot`.
+#' * `palette.sequential`: Palette for sequential colors. See the `palette` argumetn in `?tinyplot`.
 #' * `ribbon.alpha`: Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is `0.2`.
 #'
 #' @importFrom graphics par
@@ -234,7 +236,8 @@ known_tpar = c(
     "lwd.xaxs",
     "lwd.yaxs",
     "lwd.axis",
-    "palette",
+    "palette.qualitative",
+    "palette.sequential",
     "ribbon.alpha",
     "side.sub",
     "tinytheme",

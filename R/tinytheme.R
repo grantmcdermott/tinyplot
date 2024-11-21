@@ -5,13 +5,12 @@
 #' font styles, and axis labels. By default, a "bw" theme is available.
 #'
 #' @param theme A character string specifying the name of the theme to apply.
-#'   If `NULL`, the tinyplot settings are re-initialized and the graphical device is closed. Available themes include:
+#'   - `"default"`
 #'   - `"bw"`
 #'   - `"classic"`
 #'   - `"dark"`
 #'   - `"ipsum"`
 #'   - `"minimal"`
-#'   - `"custom"`
 #' @param ... Named arguments to override specific theme settings. These arguments are
 #'   passed to `tpar()` and take precedence over the predefined settings in the selected
 #'   theme.
@@ -39,28 +38,26 @@
 #' tinyplot(mpg ~ hp | factor(am), data = mtcars)
 #'
 #' # Custom theme
-#' options(tinyplot_theme_custom = list(font.main = 3, col = "red"))
-#' tinytheme("custom")
+#' tinytheme("default", font.main = 3, col = "red")
 #' tinyplot(mpg ~ hp | factor(am), data = mtcars)
 #'
 #' @export
-tinytheme = function(theme = NULL, ...) {
+tinytheme = function(theme = "default", ...) {
   # Always close device and re-initialize graphical parameters
   init_tpar(rm_hook = TRUE)
 
+  assert_choice(theme, c("default", sort(c("bw", "classic", "dark", "ipsum", "minimal"))))
   # Empty call only resets the theme
-  if (is.null(theme)) {
+  if (isTRUE(theme == "default")) {
     return(invisible(NULL))
   }
 
-  assert_choice(theme, sort(c("bw", "classic", "custom", "dark", "ipsum", "minimal")))
   settings = switch(theme,
     "bw" = theme_bw,
     "classic" = theme_classic,
     "dark" = theme_dark,
     "ipsum" = theme_ipsum,
-    "minimal" = theme_minimal,
-    "custom" = getOption("tinyplot_theme_custom", default = list())
+    "minimal" = theme_minimal
   )
 
   dots = list(...)

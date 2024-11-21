@@ -128,11 +128,10 @@ tinytheme()
 
 # Custom themes
 
-Users can define custom themes by storing graphical parameters in a global option and calling `tinytheme("custom")`.
+Users can define custom themes by setting the theme to "default" and passing additional graphical parameters to `tinytheme()`.
 
 ```{r}
-options(tinyplot_theme_custom = list(font.main = 3, col = "red"))
-tinytheme("custom")
+tinytheme("default", font.main = 3, col = "red")
 f()
 ```
 

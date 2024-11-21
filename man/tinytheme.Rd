@@ -8,14 +8,13 @@ tinytheme(theme = NULL, ...)
 }
 \arguments{
 \item{theme}{A character string specifying the name of the theme to apply.
-If \code{NULL}, the tinyplot settings are re-initialized and the graphical device is closed. Available themes include:
 \itemize{
+\item \code{"default"}
 \item \code{"bw"}
 \item \code{"classic"}
 \item \code{"dark"}
 \item \code{"ipsum"}
 \item \code{"minimal"}
-\item \code{"custom"}
 }}
 
 \item{...}{Named arguments to override specific theme settings. These arguments are
@@ -51,8 +50,7 @@ tinytheme()
 tinyplot(mpg ~ hp | factor(am), data = mtcars)
 
 # Custom theme
-options(tinyplot_theme_custom = list(font.main = 3, col = "red"))
-tinytheme("custom")
+tinytheme("default", font.main = 3, col = "red")
 tinyplot(mpg ~ hp | factor(am), data = mtcars)
 
 }

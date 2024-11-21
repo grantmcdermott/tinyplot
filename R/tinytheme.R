@@ -1,8 +1,11 @@
 #' Set or Reset Plot Themes for `tinyplot`
 #'
+#' @description
 #' The `tinytheme` function sets or resets the theme for plots created with
 #' `tinyplot`. Themes control the appearance of plots, such as text alignment,
 #' font styles, and axis labels. By default, a "bw" theme is available.
+#'
+#' Warning: `tinytheme()` shuts down all open graphical devices.
 #'
 #' @param theme A character string specifying the name of the theme to apply.
 #'   - `"default"`

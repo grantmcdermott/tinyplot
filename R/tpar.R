@@ -136,10 +136,7 @@ tpar = function(..., hook = FALSE, init = FALSE) {
     base_par = setdiff(nam, known_tpar)
     base_par = opts[base_par]
     if (isTRUE(hook)) {
-      tpar_hook = function() {
-        par(base_par)
-      }
-      setHook("before.plot.new", tpar_hook, action = "replace")
+      setHook("before.plot.new", NULL, action = "replace")
       par(base_par) 
     } else {
       par(base_par)
@@ -166,6 +163,7 @@ tpar = function(..., hook = FALSE, init = FALSE) {
     }
     if (!is.null(opts) && length(opts) != 0) {
       # specific values requested
+      opts = Filter(is.character, opts)
       ret = (`names<-`(lapply(opts, function(x) .tpar[[x]]), opts))
       if (length(used_par)) {
         ret_par = par(used_par)
@@ -298,10 +296,12 @@ assert_tpar = function(.tpar) {
 init_tpar = function(rm_hook = FALSE) {
   rm(list = names(.tpar), envir = .tpar)
 
+  grDevices::graphics.off()
+
   if (isTRUE(rm_hook)) {
     hook = getHook("before.plot.new")
     if (length(hook) > 0) {
-      setHook("before.plot.new", function(...) return(invisible(NULL)), action = "replace")
+      setHook("before.plot.new", NULL, action = "replace")
     }
   }
 

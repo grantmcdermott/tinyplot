@@ -249,7 +249,7 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), mbreaks_flag = F
   
   # Color ramp for cases where the breaks don't match 
   if (mbreaks_flag) {
-    if (!is.null(breaks) && length(breaks)-1 != length(col)) {
+    if (!is.null(breaks) && length(breaks)-1 != length(col) && !is.atomic(col)) {
       xrange = range(xx, na.rm = TRUE)
       idx = which(breaks >= xrange[1] & breaks < xrange[2])
       idx = c(idx, length(idx)+1)

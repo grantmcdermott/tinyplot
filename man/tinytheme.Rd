@@ -4,7 +4,7 @@
 \alias{tinytheme}
 \title{Set or Reset Plot Themes for \code{tinyplot}}
 \usage{
-tinytheme(theme = NULL, ...)
+tinytheme(theme = "default", ...)
 }
 \arguments{
 \item{theme}{A character string specifying the name of the theme to apply.

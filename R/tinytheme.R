@@ -47,12 +47,9 @@ tinytheme = function(theme = "default", ...) {
   init_tpar(rm_hook = TRUE)
 
   assert_choice(theme, c("default", sort(c("bw", "classic", "dark", "ipsum", "minimal"))))
-  # Empty call only resets the theme
-  if (isTRUE(theme == "default")) {
-    return(invisible(NULL))
-  }
 
   settings = switch(theme,
+    "default" = theme_default,
     "bw" = theme_bw,
     "classic" = theme_classic,
     "dark" = theme_dark,
@@ -68,6 +65,8 @@ tinytheme = function(theme = "default", ...) {
   tpar(settings, hook = TRUE)
 }
 
+
+theme_default = list()
 
 theme_bw = list(
   tinytheme = "bw",

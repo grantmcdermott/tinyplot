@@ -584,9 +584,9 @@ tinyplot.default = function(
 
   palette = substitute(palette)
 
-  if (is.null(palette)) {
-    palette = get_tpar("palette", default = NULL)
-  }
+  # themes
+  if (is.null(palette)) palette = get_tpar("palette", default = NULL)
+  if (is.null(pch)) pch = get_tpar("pch", default = NULL)
 
   xlabs = ylabs = NULL
 

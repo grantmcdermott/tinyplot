@@ -136,7 +136,8 @@ tpar = function(..., hook = FALSE, init = FALSE) {
     base_par = setdiff(nam, known_tpar)
     base_par = opts[base_par]
     if (isTRUE(hook)) {
-      setHook("before.plot.new", NULL, action = "replace")
+      # need weird function because of Quarto evaluate::evaluate failure
+      setHook("before.plot.new", function(...) NULL, action = "replace")
       par(base_par) 
     } else {
       par(base_par)
@@ -301,7 +302,8 @@ init_tpar = function(rm_hook = FALSE) {
   if (isTRUE(rm_hook)) {
     hook = getHook("before.plot.new")
     if (length(hook) > 0) {
-      setHook("before.plot.new", NULL, action = "replace")
+      # need weird function because of Quarto evaluate::evaluate failure
+      setHook("before.plot.new", function(...) NULL, action = "replace")
     }
   }
 

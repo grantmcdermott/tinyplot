@@ -584,6 +584,10 @@ tinyplot.default = function(
 
   palette = substitute(palette)
 
+  if (is.null(palette)) {
+    palette = get_tpar("palette", default = NULL)
+  }
+
   xlabs = ylabs = NULL
 
   # will be overwritten by some type_data() functions and ignored by others

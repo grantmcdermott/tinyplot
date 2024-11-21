@@ -235,6 +235,7 @@ known_tpar = c(
     "lwd.xaxs",
     "lwd.yaxs",
     "lwd.axis",
+    "palette",
     "ribbon.alpha",
     "side.sub",
     "tinytheme",

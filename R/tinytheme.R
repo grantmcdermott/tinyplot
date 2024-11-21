@@ -91,6 +91,8 @@ theme_bw = list(
   las = 1,
   lwd = 0.5,
   lwd.axis = 0.5,
+  palette.qualitative = "Okabe-Ito",
+  palette.sequential = "Mako",
   side.sub = 3,
   tck = -.02
 )
@@ -116,15 +118,6 @@ theme_ipsum = modifyList(theme_minimal, list(
   adj.ylab = 1,
   adj.xlab = 1
 ))
-
-## TODO: Does not work well with facets: area between facets is grey as well
-# theme_grey = modifyList(theme_minimal, list(
-#   grid = TRUE,
-#   grid.col = "white",
-#   grid.lwd = 1,
-#   grid.lty = "solid",
-#   grid.bg = "#EBEBEB"
-# ))
 
 theme_dark = modifyList(theme_minimal, list(
   tinytheme = "dark",

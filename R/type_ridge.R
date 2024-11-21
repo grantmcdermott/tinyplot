@@ -68,7 +68,7 @@
 #'
 #'
 #' @export
-type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = NULL) {
+type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = FALSE) {
   density_args = list(bw = bw, kernel = kernel, ...)
   data_ridge = function() {
     fun = function(datapoints, yaxt = NULL, ...) {
@@ -94,6 +94,9 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
         return(k)
       }
       d = do.call(rbind, lapply(d, offset_z))
+      
+      # Manual breaks flag. Only used if gradient is on
+      mbreaks_flag = !is.null(breaks) || !is.null(probs)
 
       ## use color gradient?
       xlim = range(d$x, na.rm = TRUE)
@@ -115,25 +118,25 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
           ## color vector already given
           if (is.null(breaks) && is.null(probs)) {
             breaks = seq(from = xlim[1L], to = xlim[2L], length.out = length(palette) + 1L)
-            if (is.null(raster)) raster = TRUE
+            # if (is.null(raster)) raster = TRUE
           } else {
             npal = pmax(length(breaks), length(probs)) - 1L
             if (length(palette) != npal) {
               warning("length of 'palette' does not match 'breaks'/'probs'")
               palette = rep_len(palette, npal)
             }
-            if (is.null(raster)) raster = npal > 20L
+            if (isTRUE(raster)) raster = npal > 20L
           }
         } else {
           ## only palette name given
           npal = if (is.null(breaks) && is.null(probs)) 512L else pmax(length(breaks), length(probs)) - 1L
           palette = hcl.colors(npal, palette = palette)
           if (is.null(breaks) && is.null(probs)) breaks = seq(from = xlim[1L], to = xlim[2L], length.out = npal + 1L)
-          if (is.null(raster)) raster = npal > 20L
+          if (isTRUE(raster)) raster = npal > 20L
         }
       } else {
         palette = NULL
-        if (is.null(raster)) raster = FALSE
+        # if (is.null(raster)) raster = FALSE
         if (!is.null(breaks) || !is.null(probs)) gradient = TRUE
       }
       if (!is.null(breaks)) {
@@ -150,6 +153,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
           palette = palette,
           breaks = breaks,
           probs = probs,
+          mbreaks_flag = mbreaks_flag,
           yaxt = yaxt,
           raster = raster)
       )
@@ -166,11 +170,17 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
       draw_segments = if (type_info[["raster"]]) segmented_raster else segmented_polygon
       for (i in rev(seq_along(dsplit))) {
         if (type_info[["gradient"]]) {
-          with(dsplit[[i]], draw_segments(x, ymax, ymin = ymin[1L],
-            breaks = type_info[["breaks"]],
-            probs = type_info[["probs"]],
-            col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]],
-            border = if (is.null(type_info[["palette"]])) icol else "transparent"))
+          with(
+            dsplit[[i]],
+            draw_segments(
+              x, ymax, ymin = ymin[1L],
+              breaks = type_info[["breaks"]],
+              probs = type_info[["probs"]],
+              mbreaks_flag = type_info[["mbreaks_flag"]],
+              col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]],
+              border = if (is.null(type_info[["palette"]])) icol else "transparent"
+            )
+          )
         }
         with(dsplit[[i]], polygon(x, ymax, col = if (type_info[["gradient"]]) "transparent" else ibg, border = icol))
       }
@@ -191,54 +201,76 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
 }
 
 ## auxiliary function for drawing shaded segmented polygon
-#' @importFrom stats approx
-segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, col = "lightgray", border = "transparent") {
+segmented_polygon = function(x, y, ymin = 0, breaks = range(x), mbreaks_flag = FALSE, probs = NULL, col = "lightgray", border = "transparent") {
 
   if (!is.null(probs)) {
     ## map quantiles to breaks
     if (!(missing(breaks) || is.null(breaks))) stop("only one of 'breaks' and 'probs' must be specified")
     breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
-    ybreaks = probs + ymin
-  } else {
-    ## y values at breaks
-    ybreaks = approx(x, y, xout = breaks)$y
-    ybreaks[is.na(ybreaks)] = ymin
   }
 
   ## sanity check
   if (breaks[1L] > x[1L] || breaks[length(breaks)] < x[length(x)]) stop("'breaks' do no span range of 'x'")
 
-  ## recycle color (if necessary)
-  col = rep_len(col, length(breaks) - 1L)
-
-  ## add start/end of polygon
-  x = x[c(1, seq_along(x), length(x))]
-  y = c(ymin, y, ymin)
-
-  ## split data into segments defined by breaks
-  xy = split(data.frame(x = x, y = y), cut(x, breaks = breaks, include.lowest = TRUE))
-
-  ## non-empty segments
-  ok = vapply(xy, nrow, 0L) > 0L
-
-  ## augment each segment with breaks and add NA in between
-  xy = lapply(seq_along(xy)[ok], function(i) rbind(
-    data.frame(x = rep.int(breaks[i], 2L), y = c(ymin, ybreaks[i])),
-    xy[[i]],
-    data.frame(x = c(rep.int(breaks[i + 1L], 2L), NA), y = c(ybreaks[i + 1L], ymin, NA))
-  ))
-
-  ## combine everything, omit last NA separator
-  xy = do.call("rbind", xy)
-  xy = xy[-nrow(xy), , drop = FALSE]
-
+  # ## recycle color (if necessary) rather use colorRampPalette below
+  # col = rep_len(col, length(breaks) - 1L)
+  
+  # Create individual polygons
+  if (isFALSE(mbreaks_flag)) {
+    # Special case for length(breaks)==length(x). We can take a fully vectorised
+    # shortcut
+    xx = c(rbind(x[-length(x)], x[-1], x[-1], x[-length(x)], NA))
+    yy = c(rbind(y[-length(y)], y[-1], ymin, ymin, NA))
+  } else {
+    # For other cases, we'll do a bit more work to make sure that the polygons
+    # overlap
+    bvals = do.call(c, sapply(seq_along(breaks[-1]), function(b) tail(x[x<breaks[b]], 1)))
+    bidx = match(bvals, x)
+    bidx = c(1, bidx, length(x))
+    xx = do.call(c, sapply(
+      seq_along(bidx[-1]),
+      function(b) {
+        xx = x[bidx[b]:bidx[b+1]]
+        c(xx, rev(xx), NA)
+      }
+    ))
+    yy = do.call(c, sapply(
+      seq_along(bidx[-1]),
+      function(b) {
+        yy = y[bidx[b]:bidx[b+1]]
+        c(yy, rep(ymin, length(yy)), NA)
+      }
+    ))
+  }
+  
+  # Drop trailing NAs
+  xx = xx[1:(length(xx)-1)]
+  yy = yy[1:(length(yy)-1)]
+  
+  # Color ramp for cases where the breaks don't match 
+  if (mbreaks_flag) {
+    if (!is.null(breaks) && length(breaks)-1 != length(col)) {
+      xrange = range(xx, na.rm = TRUE)
+      idx = which(breaks >= xrange[1] & breaks < xrange[2])
+      idx = c(idx, length(idx)+1)
+      col = col[idx]
+      col = colorRampPalette(col)(length(x)) # support alpha?
+    }
+  } else if (isFALSE(mbreaks_flag) || length(col) > length(x) || length(x) %% length(col) != 0) {
+      xrange = range(xx, na.rm = TRUE)
+      idx = which(breaks >= xrange[1] & breaks < xrange[2])
+      idx = c(idx, length(idx)+1)
+      col = col[idx]
+      col = colorRampPalette(col)(length(x)) # support alpha?
+  }
+  
   ## draw all polygons
-  polygon(xy$x, xy$y, col = col[ok], border = border)
+  polygon(xx, yy, col = col, border = border)
 }
 
 #' @importFrom graphics rasterImage
 #' @importFrom grDevices as.raster
-segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, col = "lightgray", border = "transparent") {
+segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, mbreaks_flag = FALSE, col = "lightgray", border = "transparent") {
   ## set up raster matrix on x-grid and 500 y-pixels 
   n = length(x) - 1L
   m = 500L ## FIXME: hard-coded?

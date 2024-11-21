@@ -12,7 +12,7 @@ type_ridge(
   bw = "nrd0",
   kernel = "gaussian",
   ...,
-  raster = NULL
+  raster = FALSE
 )
 }
 \arguments{

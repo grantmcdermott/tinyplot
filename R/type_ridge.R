@@ -241,6 +241,18 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, ma
         c(yy, rep(ymin, length(yy)), NA)
       }
     ))
+    # Catch for missing lower breaks if individual density doesn't span the full
+    # range of x (and discrete color fills are supplied)
+    # Aside: We only need to fix the lower missing breaks, since missing top
+    # breaks will be ignored in the final polygon call anyway
+    lwrmissings = breaks < x[bidx][1]
+    if (any(lwrmissings[-1])) {
+      lwrmissings = breaks[lwrmissings] 
+      xxtra = c(rbind(lwrmissings[-length(lwrmissings)], lwrmissings[-1], lwrmissings[-1], lwrmissings[-length(lwrmissings)], NA))
+      yytra = c(rbind(rep(ymin, length(lwrmissings)-1), ymin, ymin, ymin, NA))
+      xx = c(xxtra, xx)
+      yy = c(yytra, yy)
+    }
   }
   
   # Drop trailing NAs
@@ -248,7 +260,7 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, ma
   yy = yy[1:(length(yy)-1)]
   
   # Color ramp for cases where the breaks don't match 
-  if (isFALSE(is.atomic(col))) {
+  if (isFALSE(length(col)==1)) {
     if (isTRUE(manbreaks)) {
       if (!is.null(breaks) && length(breaks)-1 != length(col)) {
         xrange = range(xx, na.rm = TRUE)

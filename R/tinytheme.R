@@ -92,7 +92,7 @@ theme_bw = list(
   lwd = 0.5,
   lwd.axis = 0.5,
   palette.qualitative = "Okabe-Ito",
-  palette.sequential = "Mako",
+  palette.sequential = "ag_Sunset",
   side.sub = 3,
   tck = -.02
 )

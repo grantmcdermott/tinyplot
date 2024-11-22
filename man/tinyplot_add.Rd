@@ -42,18 +42,18 @@ arguments (\code{x}, \code{y}, etc.) are attached to your global R environment.)
 library(tinyplot)
 
 tinyplot(Sepal.Width ~ Sepal.Length | Species,
-         facet = ~Species,
-         data = iris)
+  facet = ~Species,
+  data = iris)
 
-tinyplot_add(type = "lm")   ## or : plt_add(type = "lm")
+tinyplot_add(type = "lm") ## or : plt_add(type = "lm")
 
 ## Note: the previous function is equivalent to (but much more convenient
 ## than) re-writing the full call with the new type and `add=TRUE`:
 
 # tinyplot(Sepal.Width ~ Sepal.Length | Species,
 #          facet = ~Species,
-#          data = iris, 
-#          type = "lm", 
+#          data = iris,
+#          type = "lm",
 #          add = TRUE)
 
 }

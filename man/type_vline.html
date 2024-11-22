@@ -492,7 +492,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_vline(v = 0, col = "black", lty = 1, lwd = 1)
+<pre><code class="language-R">type_vline(v = 0)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -504,30 +504,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </td>
 <td>
 x-value(s) for vertical line(s). Numeric of length 1 or equal to the number of facets.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="col">col</code>
-</td>
-<td>
-plotting color. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>col</code>. Note that the default behaviour in <code>tinyplot</code> is to vary group colors along any variables declared in the <code>by</code> argument. Thus, specifying colors manually should not be necessary unless users wish to override the automatic colors produced by this grouping process. Typically, this would only be done if grouping features are deferred to some other graphical parameter (i.e., passing the "by" keyword to one of <code>pch</code>, <code>lty</code>, <code>lwd</code>, or <code>bg</code>; see below.)
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="lty">lty</code>
-</td>
-<td>
-line type. Character, integer, or vector of length equal to the number of categories in the <code>by</code> variable. See <code>lty</code>. In addition, users can supply a special <code>lty = “by”</code> convenience argument, in which case the line type will automatically loop over the number groups. This automatic looping will begin at the global line type value (i.e., <code>par(“lty”)</code>) and recycle as necessary.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="lwd">lwd</code>
-</td>
-<td>
-line width. Numeric scalar or vector of length equal to the number of categories in the <code>by</code> variable. See <code>lwd</code>. In addition, users can supply a special <code>lwd = “by”</code> convenience argument, in which case the line width will automatically loop over the number of groups. This automatic looping will be centered at the global line width value (i.e.,
 </td>
 </tr>
 </tbody></table>
@@ -549,9 +525,7 @@ line width. Numeric scalar or vector of length equal to the number of categories
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># facet-specify location and colors</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"green"</span>, <span class="st">"orange"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp <span class="sc">|</span> <span class="fu">factor</span>(cyl), <span class="at">facet =</span> <span class="sc">~</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> mtcars, <span class="at">col =</span> cols)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">v =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">200</span>), <span class="at">col =</span> cols, <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">3</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="at">v =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">200</span>)), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

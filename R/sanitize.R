@@ -6,7 +6,7 @@ sanitize_ribbon.alpha = function(ribbon.alpha) {
 
 
 
-sanitize_type = function(type, x, y) {
+sanitize_type = function(type, x, y, dots) {
   if (inherits(type, "tinyplot_type")) {
     return(type)
   }
@@ -22,44 +22,50 @@ sanitize_type = function(type, x, y) {
   if (is.null(type)) {
     if (!is.null(x) && is.factor(x) && !is.factor(y)) {
       # enforce boxplot type for y ~ factor(x)
-      return(type_boxplot())
+      type = type_boxplot
     } else if (is.factor(y)) {
       # enforce spineplot type for factor(y) ~ x
-      return(type_spineplot())
+      type = type_spineplot
     } else {
       type = "p"
     }
   } else if (type %in% c("hist", "histogram")) {
     type = "histogram"
   } else if (type %in% c("j", "jitter")) {
-    type = return(type_jitter())
+    type = type_jitter
   }
 
-  type_fun = switch(type,
-    "points" = type_points(),
-    "segments" = type_segments(),
-    "area" = type_area(),
-    "rect" = type_rect(),
-    "polypath" = type_polypath(),
-    "polygon" = type_polygon(),
-    "pointrange" = type_pointrange(),
-    "errorbar" = type_errorbar(),
-    "boxplot" = type_boxplot(),
-    "ribbon" = type_ribbon(),
-    "histogram" = type_histogram(),
-    "spineplot" = type_spineplot(),
-    "qq" = type_qq(),
-    "j" = type_jitter(),
-    "jitter" = type_jitter(),
-    "loess" = type_loess(),
-    "spline" = type_spline(),
-    "glm" = type_glm(),
-    "lm" = type_lm(),
-    NULL # Default case
+  if (is.character(type)) type = switch(type,
+    "points" = type_points,
+    "segments" = type_segments,
+    "area" = type_area,
+    "rect" = type_rect,
+    "polypath" = type_polypath,
+    "polygon" = type_polygon,
+    "pointrange" = type_pointrange,
+    "errorbar" = type_errorbar,
+    "boxplot" = type_boxplot,
+    "ribbon" = type_ribbon,
+    "histogram" = type_histogram,
+    "spineplot" = type_spineplot,
+    "qq" = type_qq,
+    "j" = type_jitter,
+    "jitter" = type_jitter,
+    "loess" = type_loess,
+    "spline" = type_spline,
+    "glm" = type_glm,
+    "lm" = type_lm,
+    type # Default case
   )
-  if (inherits(type_fun, "tinyplot_type")) {
-    return(type_fun)
+  
+  if (is.function(type)) {
+    args = intersect(names(formals(type)), names(dots))
+    args = if (length(args) >= 1L) dots[args] else list()
+    type = do.call(type, args)
+    type$dots = dots[setdiff(names(dots), names(args))]
   }
+  
+  if (inherits(type, "tinyplot_type")) return(type)
 
   out = list(draw = NULL, data = NULL, name = type)
   return(out)

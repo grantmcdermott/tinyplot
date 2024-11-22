@@ -574,7 +574,8 @@ tinyplot.default = function(
   # sanitize arguments
 
   # type factories vs. strings
-  type = sanitize_type(type, x, y)
+  type = sanitize_type(type, x, y, dots)
+  if ("dots" %in% names(type)) dots = type$dots
   type_data = type$data
   type_draw = type$draw
   type = type$name

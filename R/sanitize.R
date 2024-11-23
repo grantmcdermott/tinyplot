@@ -15,7 +15,7 @@ sanitize_type = function(type, x, y, dots) {
     "area", "boxplot", "density", "jitter", "ribbon", "pointrange", "hist",
     "histogram", "errorbar", "polygon", "polypath", "rect", "qq", "segments", "points",
     "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", "loess", "spline", "lm", "glm",
-    "spineplot"
+    "spineplot", "function"
   )
   assert_choice(type, types, null.ok = TRUE)
 
@@ -55,6 +55,7 @@ sanitize_type = function(type, x, y, dots) {
     "spline" = type_spline,
     "glm" = type_glm,
     "lm" = type_lm,
+    "function" = type_function,
     type # Default case
   )
   

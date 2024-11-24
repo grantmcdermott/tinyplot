@@ -641,7 +641,7 @@ tinyplot.default = function(
   if (!is.null(y) && is.character(y)) y = factor(y)
   if (!is.null(by) && is.character(by)) by = factor(by)
 
-  # flag if x==by (currently only used if type = "boxplot")
+  # flag if x==by (currently only used for "boxplot", "spineplot" and "ridges" types)
   x_by = identical(x, by)
 
   facet_dep = deparse1(substitute(facet))

@@ -12,7 +12,8 @@ type_ridge(
   bw = "nrd0",
   kernel = "gaussian",
   ...,
-  raster = FALSE
+  raster = FALSE,
+  col = NULL
 )
 }
 \arguments{
@@ -37,10 +38,19 @@ at the specified \code{probs}. The quantiles are computed based on the density
 (rather than the raw original variable). Only one of \code{breaks} or
 \code{probs} must be specified.}
 
-\item{bw, kernel, ...}{Arguements passed to \code{\link[stats]{density}}.}
+\item{bw, kernel, ...}{Arguments passed to \code{\link[stats]{density}}.}
 
-\item{raster}{Logical. FIXME: Temporary argument to select plotting via
-\code{rasterImage} vs. \code{polygon}.}
+\item{raster}{Logical. Should the ridges and color gradient, if relevant,
+be drawn via a coercion to \code{\link[graphics]{rasterImage}}? Note that
+this will result in potential smoothness artifacts at high resolutions.
+Defaults to \code{FALSE}, in which case the ridges and color gradient will be
+passed in vectorised fashion to \code{\link[graphics]{polygon}}.}
+
+\item{col}{Character string denoting the outline (border) color for all
+of the ridge densities. Note that a singular value is expected; if multiple
+colors are provided then only the first will be used. This argument is mostly
+useful for the aesthetic effect of drawing a common outline color in
+combination with gradient fills. See Examples.}
 }
 \description{
 Type function for producing ridge plots (also known as joy plots),
@@ -55,18 +65,33 @@ The fill color is controlled by the \code{bg} argument in the \code{tinyplot()} 
 ## default ridge plot
 tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 
-## x-variable also coded by color gradient (equivalent specifications)
-tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
-tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
-tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))
-
-## color gradient with fewer segments
-tinyplot(Species ~ Sepal.Width, data = iris,
-  type = type_ridge(gradient = TRUE, breaks = seq(2, 4.5, by = 0.5)))
-
 ## use the same bandwidth for all densities
 tinyplot(Species ~ Sepal.Width, data = iris,
   type = type_ridge(bw = bw.nrd0(iris$Sepal.Width)))
+
+## customized ridge plot without overlap of densities
+tinyplot(Species ~ Sepal.Width, data = iris,
+  type = type_ridge(scale = 1),
+  bg = "light blue", col = "black")
+
+## by grouping is also supported. two special cases of interest:
+
+# 1) by == y (color by y groups)
+tinyplot(Species ~ Sepal.Width | Species, data = iris, type = "ridge")
+
+# 2) by == x (gradient coloring along x)
+tinyplot(Species ~ Sepal.Width | Sepal.Width, data = iris, type = "ridge")
+
+# aside: pass explicit `type_ridge(col = <col>)` arg to set a common border
+# color
+tinyplot(Species ~ Sepal.Width | Sepal.Width, data = iris,
+  type = type_ridge(col = "white"))
+
+## gradient coloring along the x-axis can also be invoked manually without
+## a legend (the following lines are all equivalent)
+tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
+# tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
+# tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))
 
 ## highlighting only the center 50\% of the density (between 25\% and 75\% quantile)
 tinyplot(Species ~ Sepal.Width, data = iris, col = "white", type = type_ridge(
@@ -76,16 +101,10 @@ tinyplot(Species ~ Sepal.Width, data = iris, col = "white", type = type_ridge(
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(
   gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)], probs = 0:500/500))
 
-## customized ridge plot without overlap of densities
-tinyplot(Month ~ Ozone, data = airquality,
-  type = type_ridge(scale = 1),
-  bg = "light blue", col = "black")
-
 ## with faceting and color gradient
 airq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
 tinyplot(Month ~ Ozone, facet = ~ Late, data = airq,
   type = type_ridge(gradient = TRUE),
   grid = TRUE, axes = "t", col = "white")
-
 
 }

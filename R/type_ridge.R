@@ -26,26 +26,49 @@
 #' at the specified `probs`. The quantiles are computed based on the density
 #' (rather than the raw original variable). Only one of `breaks` or
 #' `probs` must be specified.
-#' @param bw,kernel,... Arguements passed to \code{\link[stats]{density}}.
-#' @param raster Logical. FIXME: Temporary argument to select plotting via
-#' `rasterImage` vs. `polygon`.
+#' @param bw,kernel,... Arguments passed to \code{\link[stats]{density}}.
+#' @param raster Logical. Should the ridges and color gradient, if relevant,
+#' be drawn via a coercion to \code{\link[graphics]{rasterImage}}? Note that
+#' this will result in potential smoothness artifacts at high resolutions.
+#' Defaults to `FALSE`, in which case the ridges and color gradient will be
+#' passed in vectorised fashion to \code{\link[graphics]{polygon}}.
+#' @param col Character string denoting the outline (border) color for all
+#' of the ridge densities. Note that a singular value is expected; if multiple
+#' colors are provided then only the first will be used. This argument is mostly
+#' useful for the aesthetic effect of drawing a common outline color in
+#' combination with gradient fills. See Examples.
 #'
 #' @examples
 #' ## default ridge plot
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 #'
-#' ## x-variable also coded by color gradient (equivalent specifications)
-#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
-#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
-#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))
-#'
-#' ## color gradient with fewer segments
-#' tinyplot(Species ~ Sepal.Width, data = iris,
-#'   type = type_ridge(gradient = TRUE, breaks = seq(2, 4.5, by = 0.5)))
-#'
 #' ## use the same bandwidth for all densities
 #' tinyplot(Species ~ Sepal.Width, data = iris,
 #'   type = type_ridge(bw = bw.nrd0(iris$Sepal.Width)))
+#'
+#' ## customized ridge plot without overlap of densities
+#' tinyplot(Species ~ Sepal.Width, data = iris,
+#'   type = type_ridge(scale = 1),
+#'   bg = "light blue", col = "black")
+#'
+#' ## by grouping is also supported. two special cases of interest:
+#'
+#' # 1) by == y (color by y groups)
+#' tinyplot(Species ~ Sepal.Width | Species, data = iris, type = "ridge")
+#'
+#' # 2) by == x (gradient coloring along x)
+#' tinyplot(Species ~ Sepal.Width | Sepal.Width, data = iris, type = "ridge")
+#'
+#' # aside: pass explicit `type_ridge(col = <col>)` arg to set a common border
+#' # color
+#' tinyplot(Species ~ Sepal.Width | Sepal.Width, data = iris,
+#'   type = type_ridge(col = "white"))
+#'
+#' ## gradient coloring along the x-axis can also be invoked manually without
+#' ## a legend (the following lines are all equivalent)
+#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
+#' # tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
+#' # tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))
 #'
 #' ## highlighting only the center 50% of the density (between 25% and 75% quantile)
 #' tinyplot(Species ~ Sepal.Width, data = iris, col = "white", type = type_ridge(
@@ -55,20 +78,14 @@
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(
 #'   gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)], probs = 0:500/500))
 #'
-#' ## customized ridge plot without overlap of densities
-#' tinyplot(Month ~ Ozone, data = airquality,
-#'   type = type_ridge(scale = 1),
-#'   bg = "light blue", col = "black")
-#'
 #' ## with faceting and color gradient
 #' airq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
 #' tinyplot(Month ~ Ozone, facet = ~ Late, data = airq,
 #'   type = type_ridge(gradient = TRUE),
 #'   grid = TRUE, axes = "t", col = "white")
 #'
-#'
 #' @export
-type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = FALSE) {
+type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = FALSE, col = NULL) {
   density_args = list(bw = bw, kernel = kernel, ...)
   data_ridge = function() {
     fun = function(datapoints, yaxt = NULL, ...) {
@@ -80,12 +97,26 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
         out$by = k$by[1]
         return(out)
       }
-      d = split(datapoints, list(datapoints$y, datapoints$facet))
+      #  catch for special cases
+      x_by = identical(datapoints$x, datapoints$by)
+      y_by = identical(datapoints$y, datapoints$by)
+      if (x_by) {
+        gradient = TRUE
+        datapoints$by = ""
+      }
+      if (y_by) {
+        datapoints$by = ""
+      }
+      # flag for (non-gradient) interior fill adjustment
+      fill_by = y_by || length(unique(datapoints$by)) != 1
+      if (isTRUE(x_by)) fill_by = FALSE
+      ##
+      d = split(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
       d = lapply(d, function(k) tryCatch(get_density(k), error = function(e) NULL))
       d = do.call(rbind, Filter(function(x) !is.null(x), d))
       d = split(d, d$facet)
       offset_z = function(k) {
-        ksplit = split(k, k$y)
+        ksplit = split(k, rev(k$y))
         for (idx in seq_along(ksplit)) {
           ksplit[[idx]]$ymax = ksplit[[idx]]$ymax + idx - 1
           ksplit[[idx]]$ymin = ksplit[[idx]]$ymin + idx - 1
@@ -94,6 +125,11 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
         return(k)
       }
       d = do.call(rbind, lapply(d, offset_z))
+      
+      if (y_by) {
+        d$y = factor(d$y)
+        d$by = d$y
+      }
       
       # Manual breaks flag. Only used if gradient is on
       manbreaks = !is.null(breaks) || !is.null(probs)
@@ -110,7 +146,8 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
         }
       }
       if (!isFALSE(gradient)) {
-        palette = gradient
+        dotspal = list(...)[["palette"]]
+        palette = if (!is.null(dotspal)) dotspal else gradient
         gradient = TRUE
         if (isTRUE(palette)) palette = "viridis"
 
@@ -136,7 +173,6 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
         }
       } else {
         palette = NULL
-        # if (is.null(raster)) raster = FALSE
         if (!is.null(breaks) || !is.null(probs)) gradient = TRUE
       }
       if (!is.null(breaks)) {
@@ -155,7 +191,12 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
           probs = probs,
           manbreaks = manbreaks,
           yaxt = yaxt,
-          raster = raster)
+          raster = raster,
+          x_by = x_by,
+          y_by = y_by,
+          fill_by = fill_by,
+          col = col
+        )
       )
       return(out)
     }
@@ -166,9 +207,12 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
     fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info, ...) {
       d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
       dsplit = split(d, d$y)
-      if (is.null(ibg)) ibg = "gray"
+      if (is.null(ibg)) {
+        ibg = if (isTRUE(type_info[["fill_by"]])) seq_palette(icol, n = 2)[2] else "gray"
+      }
+      if (!is.null(type_info[["col"]])) icol = type_info[["col"]]
       draw_segments = if (type_info[["raster"]]) segmented_raster else segmented_polygon
-      for (i in rev(seq_along(dsplit))) {
+      for (i in seq_along(dsplit)) {
         if (type_info[["gradient"]]) {
           with(
             dsplit[[i]],
@@ -185,7 +229,11 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
         with(dsplit[[i]], polygon(x, ymax, col = if (type_info[["gradient"]]) "transparent" else ibg, border = icol))
       }
       lab = unique(d$y)
-      val = cumsum(rep(1, length(lab))) - 1
+      if (isTRUE(type_info[["y_by"]])) {
+        val = match(lab, levels(d$y)) - 1
+      } else {
+        val = cumsum(rep(1, length(lab))) - 1
+      }
       tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
     }
     return(fun)
@@ -261,20 +309,21 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, ma
   
   # Color ramp for cases where the breaks don't match 
   if (isFALSE(length(col)==1)) {
+    col = rev(col) ## uncomment to make extreme cols dark
     if (isTRUE(manbreaks)) {
       if (!is.null(breaks) && length(breaks)-1 != length(col)) {
         xrange = range(xx, na.rm = TRUE)
         idx = which(breaks >= xrange[1] & breaks < xrange[2])
         idx = c(idx, length(idx)+1)
         col = col[idx]
-        col = colorRampPalette(col)(length(x)) # support alpha?
+        col = colorRampPalette(col, alpha = TRUE)(length(x)) # support alpha?
       }
     } else if (isFALSE(manbreaks) || length(col) > length(x) || length(x) %% length(col) != 0) {
       xrange = range(xx, na.rm = TRUE)
       idx = which(breaks >= xrange[1] & breaks < xrange[2])
       idx = c(idx, length(idx)+1)
       col = col[idx]
-      col = colorRampPalette(col)(length(x)) # support alpha?
+      col = colorRampPalette(col, alpha = TRUE)(length(x)) # support alpha?
     }
   }
   

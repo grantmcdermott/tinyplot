@@ -7,12 +7,33 @@ f = function() {
 expect_snapshot_plot(f, label = "ridge_01")
 
 f = function() {
-  tinyplot(Month ~ Ozone,
-    data = airquality,
+  tinyplot(Species ~ Sepal.Width, data = iris,
     type = type_ridge(scale = 1),
     bg = "light blue", col = "black")
 }
 expect_snapshot_plot(f, label = "ridge_02")
+
+f = function() {
+  tinyplot(am ~ mpg | factor(cyl), data = mtcars, type = "ridge")
+}
+expect_snapshot_plot(f, label = "ridge_by")
+
+# special by cases
+
+## by == y
+f = function() {
+  tinyplot(Species ~ Sepal.Width | Species, data = iris, type = "ridge")
+}
+expect_snapshot_plot(f, label = "ridge_by_y")
+
+## by == x
+f = function() {
+  tinyplot(Species ~ Sepal.Width | Sepal.Width, data = iris,
+           type = type_ridge(col = "white"), palette = "plasma")
+}
+expect_snapshot_plot(f, label = "ridge_by_x")
+
+# "manual" gradients
 
 f = function() {
   tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))

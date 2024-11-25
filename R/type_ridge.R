@@ -37,6 +37,10 @@
 #' colors are provided then only the first will be used. This argument is mostly
 #' useful for the aesthetic effect of drawing a common outline color in
 #' combination with gradient fills. See Examples.
+#' @param alpha Numeric in the range `[0,1]` for adjusting the alpha
+#' transparency of the density fills. In most cases, will default to a value of
+#' 1, i.e. fully opaque. But for some `by` grouped plots (excepting the special
+#' cases where `by==y` or `by==x`), will default to 0.6.
 #'
 #' @examples
 #' ## default ridge plot
@@ -85,7 +89,7 @@
 #'   grid = TRUE, axes = "t", col = "white")
 #'
 #' @export
-type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = FALSE, col = NULL) {
+type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = FALSE, col = NULL, alpha = NULL) {
   density_args = list(bw = bw, kernel = kernel, ...)
   data_ridge = function() {
     fun = function(datapoints, yaxt = NULL, ...) {
@@ -98,18 +102,21 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
         return(out)
       }
       #  catch for special cases
+      anyby = length(unique(datapoints$by)) != 1
       x_by = identical(datapoints$x, datapoints$by)
       y_by = identical(datapoints$y, datapoints$by)
       if (x_by) {
         gradient = TRUE
         datapoints$by = ""
-      }
-      if (y_by) {
+      } else if (y_by) {
         datapoints$by = ""
+      } else if (anyby && is.null(alpha)) {
+        alpha = 0.6
       }
       # flag for (non-gradient) interior fill adjustment
-      fill_by = y_by || length(unique(datapoints$by)) != 1
+      fill_by = anyby || y_by
       if (isTRUE(x_by)) fill_by = FALSE
+      # if (isTRUE(anyby) && is.null(alpha)) alpha = 0.6
       ##
       d = split(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
       d = lapply(d, function(k) tryCatch(get_density(k), error = function(e) NULL))
@@ -196,7 +203,8 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
           x_by = x_by,
           y_by = y_by,
           fill_by = fill_by,
-          col = col
+          col = col,
+          alpha = alpha
         )
       )
       return(out)
@@ -211,6 +219,9 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
       if (is.null(ibg)) {
         ibg = if (isTRUE(type_info[["fill_by"]])) seq_palette(icol, n = 2)[2] else "gray"
       }
+      if (!is.null(type_info[["alpha"]]) && is.null(type_info[["palette"]])) {
+        ibg = adjustcolor(ibg, alpha.f = type_info[["alpha"]])
+      }
       if (!is.null(type_info[["col"]])) icol = type_info[["col"]]
       draw_segments = if (type_info[["raster"]]) segmented_raster else segmented_polygon
       for (i in rev(seq_along(dsplit))) {
@@ -222,17 +233,22 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
               breaks = type_info[["breaks"]],
               probs = type_info[["probs"]],
               manbreaks = type_info[["manbreaks"]],
-              col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]]#,
-              # border = if (is.null(type_info[["palette"]])) icol else "transparent"
+              col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]],
+              # border = if (is.null(type_info[["palette"]])) icol else "transparent",
+              alpha = alpha
             )
           )
         }
         with(dsplit[[i]], polygon(x, ymax, col = if (type_info[["gradient"]]) "transparent" else ibg, border = NA))
         with(dsplit[[i]], lines(x, ymax, col = icol))
       }
-      lab = unique(d$y)
+      lab = if (is.factor(d$y)) levels(d$y) else unique(d$y)
       if (isTRUE(type_info[["y_by"]])) {
-        val = match(lab, levels(d$y)) - 1
+        # avoid duplicating the y-axis labs for the special y==by case
+        # val = match(lab, levels(d$y)) - 1
+        val = match(d$y[1], levels(d$y))
+        lab = lab[val]
+        val = val - 1
       } else {
         val = cumsum(rep(1, length(lab))) - 1
       }
@@ -251,7 +267,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
 }
 
 ## auxiliary function for drawing shaded segmented polygon
-segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, manbreaks = FALSE, col = "lightgray", border = "transparent") {
+segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, manbreaks = FALSE, col = "lightgray", border = "transparent", alpha = NULL) {
 
   if (!is.null(probs)) {
     ## map quantiles to breaks
@@ -309,6 +325,8 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, ma
   xx = xx[1:(length(xx)-1)]
   yy = yy[1:(length(yy)-1)]
   
+  if (!is.null(alpha)) col = adjustcolor(col, alpha.f = alpha)
+  
   # Color ramp for cases where the breaks don't match 
   if (isFALSE(length(col)==1)) {
     col = rev(col) ## uncomment to make extreme cols dark
@@ -335,7 +353,7 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, ma
 
 #' @importFrom graphics rasterImage
 #' @importFrom grDevices as.raster
-segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, manbreaks = FALSE, col = "lightgray", border = "transparent") {
+segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, manbreaks = FALSE, col = "lightgray", border = "transparent", alpha = NULL) {
   ## set up raster matrix on x-grid and 500 y-pixels 
   n = length(x) - 1L
   m = 500L ## FIXME: hard-coded?
@@ -347,6 +365,7 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, man
     breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
   }
 
+  if (!is.null(alpha)) col = adjustcolor(col, alpha.f = alpha)
   ## map colors to intervals and fill colors by column
   col = col[cut(x, breaks = breaks, include.lowest = TRUE)]
   r[] = col[r]

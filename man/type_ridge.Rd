@@ -13,7 +13,8 @@ type_ridge(
   kernel = "gaussian",
   ...,
   raster = FALSE,
-  col = NULL
+  col = NULL,
+  alpha = NULL
 )
 }
 \arguments{
@@ -51,6 +52,11 @@ of the ridge densities. Note that a singular value is expected; if multiple
 colors are provided then only the first will be used. This argument is mostly
 useful for the aesthetic effect of drawing a common outline color in
 combination with gradient fills. See Examples.}
+
+\item{alpha}{Numeric in the range \verb{[0,1]} for adjusting the alpha
+transparency of the density fills. In most cases, will default to a value of
+1, i.e. fully opaque. But for some \code{by} grouped plots (excepting the special
+cases where \code{by==y} or \code{by==x}), will default to 0.6.}
 }
 \description{
 Type function for producing ridge plots (also known as joy plots),

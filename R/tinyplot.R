@@ -586,6 +586,9 @@ tinyplot.default = function(
 
   xlabs = ylabs = NULL
 
+  # type_ridge()
+  ygroup = NULL
+
   # will be overwritten by some type_data() functions and ignored by others
   ribbon.alpha = sanitize_ribbon.alpha(NULL)
 
@@ -643,7 +646,7 @@ tinyplot.default = function(
   if (!is.null(y) && is.character(y)) y = factor(y)
   if (!is.null(by) && is.character(by)) by = factor(by)
 
-  # flag if x==by (currently only used if type = "boxplot")
+  # flag if x==by (currently only used for "boxplot", "spineplot" and "ridges" types)
   x_by = identical(x, by)
 
   facet_dep = deparse1(substitute(facet))
@@ -699,7 +702,7 @@ tinyplot.default = function(
     return(do.call(tinyplot.density, args = fargs))
   }
 
-  datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)
+  datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)
   if (nrow(datapoints) > 0) {
@@ -787,7 +790,7 @@ tinyplot.default = function(
 
   # split data
   by_ordered = FALSE
-  by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
+  by_continuous = !is.null(by) && inherits(datapoints$by, c("numeric", "integer"))
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
     by_continuous = FALSE
@@ -1081,8 +1084,9 @@ tinyplot.default = function(
 
     ## Inner loop over the "facet" variables
     for (ii in seq_along(idata)) {
-      ix = idata[[ii]]$x
-      iy = idata[[ii]]$y
+      ix = idata[[ii]][["x"]]
+      iy = idata[[ii]][["y"]]
+      iz = idata[[ii]][["z"]]
       ixmin = idata[[ii]]$xmin
       ixmax = idata[[ii]]$xmax
       iymin = idata[[ii]]$ymin
@@ -1147,6 +1151,7 @@ tinyplot.default = function(
           iy = iy,
           iymax = iymax,
           iymin = iymin,
+          iz = iz,
           cex = cex,
           dots = dots,
           type = type,

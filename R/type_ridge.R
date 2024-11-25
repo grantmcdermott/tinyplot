@@ -116,7 +116,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
       d = do.call(rbind, Filter(function(x) !is.null(x), d))
       d = split(d, d$facet)
       offset_z = function(k) {
-        ksplit = split(k, rev(k$y))
+        ksplit = split(k, k$y)
         for (idx in seq_along(ksplit)) {
           ksplit[[idx]]$ymax = ksplit[[idx]]$ymax + idx - 1
           ksplit[[idx]]$ymin = ksplit[[idx]]$ymin + idx - 1
@@ -128,7 +128,9 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
       
       if (y_by) {
         d$y = factor(d$y)
-        d$by = d$y
+        d$by = factor(d$y, levels = rev(levels(d$y)))
+      } else if (x_by) {
+        d$by = d$x
       }
       
       # Manual breaks flag. Only used if gradient is on
@@ -155,7 +157,6 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
           ## color vector already given
           if (is.null(breaks) && is.null(probs)) {
             breaks = seq(from = xlim[1L], to = xlim[2L], length.out = length(palette) + 1L)
-            # if (is.null(raster)) raster = TRUE
           } else {
             npal = pmax(length(breaks), length(probs)) - 1L
             if (length(palette) != npal) {
@@ -212,7 +213,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
       }
       if (!is.null(type_info[["col"]])) icol = type_info[["col"]]
       draw_segments = if (type_info[["raster"]]) segmented_raster else segmented_polygon
-      for (i in seq_along(dsplit)) {
+      for (i in rev(seq_along(dsplit))) {
         if (type_info[["gradient"]]) {
           with(
             dsplit[[i]],

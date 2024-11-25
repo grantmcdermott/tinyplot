@@ -785,7 +785,7 @@ tinyplot.default = function(
 
   # split data
   by_ordered = FALSE
-  by_continuous = !is.null(by) && inherits(by, c("numeric", "integer"))
+  by_continuous = !is.null(by) && inherits(datapoints$by, c("numeric", "integer"))
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
     by_continuous = FALSE

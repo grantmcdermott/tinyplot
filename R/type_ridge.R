@@ -222,12 +222,13 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
               breaks = type_info[["breaks"]],
               probs = type_info[["probs"]],
               manbreaks = type_info[["manbreaks"]],
-              col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]],
-              border = if (is.null(type_info[["palette"]])) icol else "transparent"
+              col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]]#,
+              # border = if (is.null(type_info[["palette"]])) icol else "transparent"
             )
           )
         }
-        with(dsplit[[i]], polygon(x, ymax, col = if (type_info[["gradient"]]) "transparent" else ibg, border = icol))
+        with(dsplit[[i]], polygon(x, ymax, col = if (type_info[["gradient"]]) "transparent" else ibg, border = NA))
+        with(dsplit[[i]], lines(x, ymax, col = icol))
       }
       lab = unique(d$y)
       if (isTRUE(type_info[["y_by"]])) {

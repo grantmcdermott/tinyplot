@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>type_ribbon – tinyplot</title>
+<title>type_ridge – tinyplot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -137,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_ribbon.html">Shapes</a></li><li class="breadcrumb-item"><a href="../man/type_ribbon.html">type_area</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_boxplot.html">Visualizations</a></li><li class="breadcrumb-item"><a href="../man/type_ridge.html">type_ridge</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -233,16 +233,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
  <span class="menu-text">Shapes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth3 show">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth3 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_ribbon.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/type_ribbon.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_area</span></a>
   </div>
 </li>
@@ -304,13 +304,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Visualizations</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth3 ">  
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth3 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_boxplot.html" class="sidebar-item-text sidebar-link">
@@ -337,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_ridge.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/type_ridge.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">type_ridge</span></a>
   </div>
 </li>
@@ -474,7 +474,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#ribbon-and-area-plot-types" id="toc-ribbon-and-area-plot-types" class="nav-link active" data-scroll-target="#ribbon-and-area-plot-types">Ribbon and area plot types</a>
+  <li><a href="#ridge-plot-type" id="toc-ridge-plot-type" class="nav-link active" data-scroll-target="#ridge-plot-type">Ridge plot type</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
@@ -485,22 +485,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_ribbon.html">Shapes</a></li><li class="breadcrumb-item"><a href="../man/type_ribbon.html">type_area</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_boxplot.html">Visualizations</a></li><li class="breadcrumb-item"><a href="../man/type_ridge.html">type_ridge</a></li></ol></nav></header>
 
 
 
 
-<section id="ribbon-and-area-plot-types" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="ribbon-and-area-plot-types">Ribbon and area plot types</h2>
+<section id="ridge-plot-type" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="ridge-plot-type">Ridge plot type</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Type constructor functions for producing polygon ribbons, which define a <code>y</code> interval (usually spanning from <code>ymin</code> to <code>ymax</code>) for each <code>x</code> value. Area plots are a special case of ribbon plot where <code>ymin</code> is set to 0 and <code>ymax</code> is set to <code>y</code>.</p>
+<p>Type function for producing ridge plots (also known as joy plots), which display density distributions for multiple groups with vertical offsets. This function uses <code>tinyplot</code> scaffolding, which enables added functionality such as grouping and faceting.</p>
+<p>The line color is controlled by the <code>col</code> argument in the <code>tinyplot()</code> call. The fill color is controlled by the <code>bg</code> argument in the <code>tinyplot()</code> call.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_area()
-
-type_ribbon(alpha = NULL)
+<pre><code class="language-R">type_ridge(
+  scale = 1.5,
+  gradient = FALSE,
+  breaks = NULL,
+  probs = NULL,
+  bw = "nrd0",
+  kernel = "gaussian",
+  ...,
+  raster = FALSE,
+  col = NULL,
+  alpha = NULL
+)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -508,10 +518,66 @@ type_ribbon(alpha = NULL)
 <table>
 <tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="scale">scale</code>
+</td>
+<td>
+Numeric. Controls the scaling factor of each plot. Values greater than 1 means that plots overlap.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="gradient">gradient</code>
+</td>
+<td>
+Logical or character. Should a color gradient be used to shade the area under the density? If a character specification is used, then it can either be of length 1 and specify the palette to be used with <code>gradient = TRUE</code> corresponding to <code>gradient = “viridis”</code>. If a character vector of length greater than 1 is used, then it should specifify the colors in the palette, e.g., <code>gradient = hcl.colors(512)</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="breaks">breaks</code>
+</td>
+<td>
+Numeric. If a color gradient is used for shading, the breaks between the colors can be modified. The default is to use equidistant breaks spanning the range of the <code>x</code> variable.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="probs">probs</code>
+</td>
+<td>
+Numeric. Instead of specifying the same <code>breaks</code> on the x-axis for all groups, it is possible to specify group-specific quantiles at the specified <code>probs</code>. The quantiles are computed based on the density (rather than the raw original variable). Only one of <code>breaks</code> or <code>probs</code> must be specified.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="bw">bw</code>, <code id="kernel">kernel</code>, <code id="...">…</code>
+</td>
+<td>
+Arguments passed to <code>density</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="raster">raster</code>
+</td>
+<td>
+Logical. Should the ridges and color gradient, if relevant, be drawn via a coercion to <code>rasterImage</code>? Note that this will result in potential smoothness artifacts at high resolutions. Defaults to <code>FALSE</code>, in which case the ridges and color gradient will be passed in vectorised fashion to <code>polygon</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="col">col</code>
+</td>
+<td>
+Character string denoting the outline (border) color for all of the ridge densities. Note that a singular value is expected; if multiple colors are provided then only the first will be used. This argument is mostly useful for the aesthetic effect of drawing a common outline color in combination with gradient fills. See Examples.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="alpha">alpha</code>
 </td>
 <td>
-numeric value between 0 and 1 specifying the opacity of ribbon shading If no <code>alpha</code> value is provided, then will default to <code>tpar(“ribbon.alpha”)</code> (i.e., probably <code>0.2</code> unless this has been overridden by the user in their global settings.)
+Numeric in the range <code style="white-space: pre;">[0,1]</code> for adjusting the alpha transparency of the density fills. In most cases, will default to a value of 1, i.e.&nbsp;fully opaque. But for some <code>by</code> grouped plots (excepting the special cases where <code>by==y</code> or <code>by==x</code>), will default to 0.6.
 </td>
 </tr>
 </tbody></table>
@@ -521,54 +587,109 @@ numeric value between 0 and 1 specifying the opacity of ribbon shading If no <co
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span><span class="sc">/</span><span class="dv">10</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">sin</span>(x)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Ribbon plots</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># "ribbon" convenience string</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="at">x =</span> x, <span class="at">ymin =</span> y<span class="dv">-1</span>, <span class="at">ymax =</span> y<span class="sc">+</span><span class="dv">1</span>, <span class="at">type =</span> <span class="st">"ribbon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## default ridge plot</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"ridge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same result with type_ribbon()</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="at">x =</span> x, <span class="at">ymin =</span> y<span class="dv">-1</span>, <span class="at">ymax =</span> y<span class="sc">+</span><span class="dv">1</span>, <span class="at">type =</span> <span class="fu">type_ribbon</span>())</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># y will be added as a line if it is specified</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">ymin =</span> y<span class="dv">-1</span>, <span class="at">ymax =</span> y<span class="sc">+</span><span class="dv">1</span>, <span class="at">type =</span> <span class="st">"ribbon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## use the same bandwidth for all densities</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width, <span class="at">data =</span> iris,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_ridge</span>(<span class="at">bw =</span> <span class="fu">bw.nrd0</span>(iris<span class="sc">$</span>Sepal.Width)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Area plots</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># "area" type convenience string</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(x, y, <span class="at">type =</span> <span class="st">"area"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## customized ridge plot without overlap of densities</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width, <span class="at">data =</span> iris,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_ridge</span>(<span class="at">scale =</span> <span class="dv">1</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">bg =</span> <span class="st">"light blue"</span>, <span class="at">col =</span> <span class="st">"black"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same result with type_area()</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(x, y, <span class="at">type =</span> <span class="fu">type_area</span>())</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Area plots are often used for time series charts</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(AirPassengers, <span class="at">type =</span> <span class="st">"area"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## by grouping is also supported. two special cases of interest:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) by == y (color by y groups)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width <span class="sc">|</span> Species, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"ridge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) by == x (gradient coloring along x)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width <span class="sc">|</span> Sepal.Width, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"ridge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># aside: pass explicit `type_ridge(col = &lt;col&gt;)` arg to set a common border</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># color</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width <span class="sc">|</span> Sepal.Width, <span class="at">data =</span> iris,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_ridge</span>(<span class="at">col =</span> <span class="st">"white"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## gradient coloring along the x-axis can also be invoked manually without</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## a legend (the following lines are all equivalent)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="fu">type_ridge</span>(<span class="at">gradient =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">## highlighting only the center 50% of the density (between 25% and 75% quantile)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width, <span class="at">data =</span> iris, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">type =</span> <span class="fu">type_ridge</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">gradient =</span> <span class="fu">hcl.colors</span>(<span class="dv">3</span>, <span class="st">"Dark Mint"</span>)[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)], <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## highlighting the probability distribution by the color gradient</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="fu">type_ridge</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">gradient =</span> <span class="fu">hcl.colors</span>(<span class="dv">250</span>, <span class="st">"Dark Mint"</span>)[<span class="fu">c</span>(<span class="dv">250</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">250</span>)], <span class="at">probs =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">500</span><span class="sc">/</span><span class="dv">500</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## with faceting and color gradient</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>airq <span class="ot">=</span> <span class="fu">transform</span>(airquality, <span class="at">Late =</span> <span class="fu">ifelse</span>(Day <span class="sc">&gt;</span> <span class="dv">15</span>, <span class="st">"Late"</span>, <span class="st">"Early"</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Month <span class="sc">~</span> Ozone, <span class="at">facet =</span> <span class="sc">~</span> Late, <span class="at">data =</span> airq,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_ridge</span>(<span class="at">gradient =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">axes =</span> <span class="st">"t"</span>, <span class="at">col =</span> <span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ridge_files/figure-html/unnamed-chunk-1-10.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

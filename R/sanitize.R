@@ -12,7 +12,7 @@ sanitize_type = function(type, x, y, dots) {
   }
 
   types = c(
-    "area", "boxplot", "density", "jitter", "ribbon", "pointrange", "hist",
+    "area", "boxplot", "density", "jitter", "ribbon", "pointrange", "hist", "ridge",
     "histogram", "errorbar", "polygon", "polypath", "rect", "qq", "segments", "points",
     "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", "loess", "spline", "lm", "glm",
     "spineplot", "function"
@@ -51,7 +51,8 @@ sanitize_type = function(type, x, y, dots) {
     "qq" = type_qq,
     "j" = type_jitter,
     "jitter" = type_jitter,
-    "loess" = type_loess,
+    "loess" = type_loess,                                    
+    "ridge" = type_ridge,
     "spline" = type_spline,
     "glm" = type_glm,
     "lm" = type_lm,

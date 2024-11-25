@@ -42,12 +42,14 @@ New plot `type` logic and functional equivalents:
 New plot types:
 
   - Visualizations:
-    - `type_spineplot()` (shortcut: `"spineplot"`) type for producing spine
-    plots and spinograms. These are modified versions of a histogram or mosaic
-    plot, and are particularly useful for visualizing factor variables. (#233
+    - `type_spineplot()` (shortcut: `"spineplot"`) spine plots and
+    spinograms. These are modified versions of a histogram or mosaic plot,
+    and are particularly useful for visualizing factor variables. (#233
     @zeileis with contributions from @grantmcdermott)
-    - `type_qq()` (shortcut: "qq") type for quantile-quantile plots. (#251
+    - `type_qq()` (shortcut: "qq") for quantile-quantile plots. (#251
     @vincentarelbundock)
+    - `type_ridge()` (shortcut: `"ridge"`) for ridge plots aka Joy plots.
+    (#252 @vincentarelbundock, @zeileis, and @grantmcdermott)
   - Models:
     - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)

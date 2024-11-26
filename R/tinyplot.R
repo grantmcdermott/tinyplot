@@ -552,6 +552,9 @@ tinyplot.default = function(
     xaxs = NULL,
     yaxs = NULL,
     ...) {
+  par_first = get_saved_par("first")
+  if (is.null(par_first)) set_saved_par("first", par())
+
   # save for tinyplot_add()
   if (!isTRUE(add)) {
     calls = sys.calls()

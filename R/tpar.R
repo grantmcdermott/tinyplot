@@ -133,6 +133,8 @@ tpar = function(..., hook = FALSE) {
       if (isTRUE(hook)) {
         setHook("before.plot.new", function() par(base_par), action = "append")
       } else {
+        par_names = names(par(no.readonly = TRUE))
+        base_par = base_par[names(base_par) %in% par_names]
         par(base_par) 
       }
     }

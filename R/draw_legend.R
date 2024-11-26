@@ -159,7 +159,11 @@ draw_legend = function(
   if (is.null(legend_args[["horiz"]])) legend_args[["horiz"]] = FALSE
   if (is.null(legend_args[["xpd"]])) legend_args[["xpd"]] = NA
   if (is.null(legend_args[["pt.bg"]])) {
-    legend_args[["pt.bg"]] = if (identical(type, "spineplot")) legend_args[["col"]] else bg
+    if (identical(type, "ridge") && isFALSE(gradient)) {
+      legend_args[["pt.bg"]] = sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
+    } else {
+      legend_args[["pt.bg"]] = if (identical(type, "spineplot")) legend_args[["col"]] else bg
+    }
   }
   if (
     type %in% c("p", "pointrange", "errorbar") &&
@@ -168,10 +172,10 @@ draw_legend = function(
   ) {
     legend_args[["pt.cex"]] = cex
   }
-  if (type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot") || isTRUE(gradient)) {
+  if (type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge") || isTRUE(gradient)) {
     legend_args[["pch"]] = 22
     if (is.null(legend_args[["pt.cex"]])) legend_args[["pt.cex"]] = 3.5
-    if (is.null(legend_args[["pt.lwd"]]) && (!is.null(type) && !(type %in% c("rect", "polygon", "polypath", "boxplot")))) {
+    if (is.null(legend_args[["pt.lwd"]]) && (!is.null(type) && !(type %in% c("rect", "polygon", "polypath", "boxplot", "ridge")))) {
       legend_args[["pt.lwd"]] = 0
     }
     if (is.null(legend_args[["y.intersp"]])) legend_args[["y.intersp"]] = 1.25

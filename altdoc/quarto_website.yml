@@ -69,6 +69,8 @@ website:
               file: man/type_jitter.qmd
             - text: type_qq
               file: man/type_qq.qmd
+            - text: type_ridge
+              file: man/type_ridge.qmd
             - text: type_spineplot
               file: man/type_spineplot.qmd
           - section: Models

@@ -125,6 +125,12 @@ likely the names of existing vectors or columns of data frames. See the
 \code{\link[grDevices]{xy.coords}} for details. If supplied separately, \code{x}
 and \code{y} must be of the same length.}
 
+\item{...}{other graphical parameters. If \code{type} is a character specification
+(such as \code{"hist"}) then any argument names that match those from the corresponding
+\verb{type_*()} function (such as \code{\link{type_hist}}) are passed on to that.
+All remaining arguments from \code{...} can be further graphical parameters, see
+\code{\link[graphics]{par}}).}
+
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an
 automatic legend. (See \code{legend} below for customization options.) However,
@@ -346,9 +352,7 @@ features are deferred to some other graphical parameter (i.e., passing the
 "by" keyword to one of \code{pch}, \code{lty}, \code{lwd}, or \code{bg}; see below.)}
 
 \item{bg}{background fill color for the open plot symbols 21:25 (see
-\code{points.default}), as well as ribbon and area plot types. For the latter
-group---including filled density plots---an automatic alpha transparency
-adjustment will be applied (see the \code{ribbon.alpha} argument further below).
+\code{points.default}), as well as ribbon and area plot types.
 Users can also supply either one of two special convenience arguments that
 will cause the background fill to inherit the automatic grouped coloring
 behaviour of \code{col}:
@@ -454,7 +458,9 @@ See \code{axes} for the possible values.}
 y-axis is on the horizontal plane and the x-axis is on the vertical plane?
 Default is FALSE.}
 
-\item{xaxs, yaxs, ...}{other graphical parameters (see \code{\link[graphics]{par}}).}
+\item{xaxs, yaxs}{character specifying the style of the interval calculation used
+for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
+for the possible values.}
 
 \item{formula}{a \code{\link[stats]{formula}} that optionally includes
 grouping variable(s) after a vertical bar, e.g. \code{y ~ x | z}. One-sided

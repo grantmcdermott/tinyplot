@@ -46,7 +46,20 @@
 #'
 #' @export
 tinytheme = function(theme = "default", ...) {
-  # Always close device and re-initialize graphical parameters
+  # in interactive sessions, we close the graphics device to reset parameters
+  if (interactive()) {
+    grDevices::graphics.off()
+  } else {
+    par_first = get_saved_par("first")
+    if (!is.null(par_first)) {
+      do.call(tpar, par_first)
+    } else {
+      set_saved_par("first", par())
+    }
+  }
+
+  # in notebooks, we don't want to close the device because no image.
+  # init_tpar() tries to be smarkt, but may fail.
   init_tpar(rm_hook = TRUE)
 
   assert_choice(theme, c("default", sort(c("bw", "classic", "dark", "ipsum", "minimal"))))

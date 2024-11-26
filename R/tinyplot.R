@@ -976,13 +976,14 @@ tinyplot.default = function(
     # window in case of recursive "top!" calls. (See draw_legend code.)
 
     if (isTRUE(adj_title)) {
-      line_main = par("mgp")[3] + 1.7 - .1 + (par("mar")[3] - opar[["mar"]][3])
+      line_main = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1
     } else {
-      line_main = par("mgp")[3] + 1.7 - .1
+      line_main = NULL
     }
 
     if (!is.null(sub)) {
       if (isTRUE(get_tpar("side.sub", 1) == 3)) {
+        if (is.null(line_main)) line_main = par("mgp")[3] + 1.7 - .1
         line_main = line_main + 1.2
       }
       if (isTRUE(get_tpar("side.sub", 1) == 3)) {
@@ -1004,14 +1005,14 @@ tinyplot.default = function(
 
     if (!is.null(main)) {
       args = list(
-        text = main,
+        main = main,
         line = line_main,
-        cex = get_tpar("cex.main", 1.4),
-        col = get_tpar("col.main", "black"),
-        font = get_tpar("font.main", 2),
-        adj = get_tpar(c("adj.main", "adj")), 3)
+        cex.main = get_tpar("cex.main", 1.4),
+        col.main = get_tpar("col.main", "black"),
+        font.main = get_tpar("font.main", 2),
+        adj = get_tpar(c("adj.main", "adj"), 3))
       args = Filter(function(x) !is.null(x), args)
-      do.call(mtext, args)
+      do.call(title, args)
     }
 
 

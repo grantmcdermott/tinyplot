@@ -23,24 +23,24 @@
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.36px' lengthAdjust='spacingAndGlyphs'>Index</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='46.01px' lengthAdjust='spacingAndGlyphs'>rnorm(1)</text>
-<line x1='74.40' y1='430.56' x2='458.40' y2='430.56' style='stroke-width: 0.38;' />
-<line x1='74.40' y1='430.56' x2='74.40' y2='437.76' style='stroke-width: 0.38;' />
-<line x1='170.40' y1='430.56' x2='170.40' y2='437.76' style='stroke-width: 0.38;' />
-<line x1='266.40' y1='430.56' x2='266.40' y2='437.76' style='stroke-width: 0.38;' />
-<line x1='362.40' y1='430.56' x2='362.40' y2='437.76' style='stroke-width: 0.38;' />
-<line x1='458.40' y1='430.56' x2='458.40' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='74.40' y1='430.56' x2='458.40' y2='430.56' style='stroke-width: 0.75;' />
+<line x1='74.40' y1='430.56' x2='74.40' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='170.40' y1='430.56' x2='170.40' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='266.40' y1='430.56' x2='266.40' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='362.40' y1='430.56' x2='362.40' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='458.40' y1='430.56' x2='458.40' y2='437.76' style='stroke-width: 0.75;' />
 <text x='74.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>0.6</text>
 <text x='170.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>0.8</text>
 <text x='266.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>1.0</text>
 <text x='362.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>1.2</text>
 <text x='458.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>1.4</text>
-<line x1='59.04' y1='423.88' x2='59.04' y2='110.23' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='423.88' x2='51.84' y2='423.88' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='361.15' x2='51.84' y2='361.15' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='298.42' x2='51.84' y2='298.42' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='235.69' x2='51.84' y2='235.69' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='172.96' x2='51.84' y2='172.96' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='110.23' x2='51.84' y2='110.23' style='stroke-width: 0.38;' />
+<line x1='59.04' y1='423.88' x2='59.04' y2='110.23' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='423.88' x2='51.84' y2='423.88' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='361.15' x2='51.84' y2='361.15' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='298.42' x2='51.84' y2='298.42' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='235.69' x2='51.84' y2='235.69' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='172.96' x2='51.84' y2='172.96' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='110.23' x2='51.84' y2='110.23' style='stroke-width: 0.75;' />
 <text transform='translate(41.76,423.88) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>0.8</text>
 <text transform='translate(41.76,361.15) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>1.0</text>
 <text transform='translate(41.76,298.42) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>1.2</text>

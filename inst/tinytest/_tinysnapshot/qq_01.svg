@@ -23,24 +23,24 @@
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.36px' lengthAdjust='spacingAndGlyphs'>Index</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>hp</text>
-<line x1='88.12' y1='430.56' x2='444.68' y2='430.56' style='stroke-width: 0.38;' />
-<line x1='88.12' y1='430.56' x2='88.12' y2='437.76' style='stroke-width: 0.38;' />
-<line x1='177.26' y1='430.56' x2='177.26' y2='437.76' style='stroke-width: 0.38;' />
-<line x1='266.40' y1='430.56' x2='266.40' y2='437.76' style='stroke-width: 0.38;' />
-<line x1='355.54' y1='430.56' x2='355.54' y2='437.76' style='stroke-width: 0.38;' />
-<line x1='444.68' y1='430.56' x2='444.68' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='88.12' y1='430.56' x2='444.68' y2='430.56' style='stroke-width: 0.75;' />
+<line x1='88.12' y1='430.56' x2='88.12' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='177.26' y1='430.56' x2='177.26' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='266.40' y1='430.56' x2='266.40' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='355.54' y1='430.56' x2='355.54' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='444.68' y1='430.56' x2='444.68' y2='437.76' style='stroke-width: 0.75;' />
 <text x='88.12' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='10.67px' lengthAdjust='spacingAndGlyphs'>-2</text>
 <text x='177.26' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='10.67px' lengthAdjust='spacingAndGlyphs'>-1</text>
 <text x='266.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
 <text x='355.54' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text x='444.68' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>2</text>
-<line x1='59.04' y1='419.23' x2='59.04' y2='115.34' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='419.23' x2='51.84' y2='419.23' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='358.45' x2='51.84' y2='358.45' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='297.68' x2='51.84' y2='297.68' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='236.90' x2='51.84' y2='236.90' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='176.12' x2='51.84' y2='176.12' style='stroke-width: 0.38;' />
-<line x1='59.04' y1='115.34' x2='51.84' y2='115.34' style='stroke-width: 0.38;' />
+<line x1='59.04' y1='419.23' x2='59.04' y2='115.34' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='419.23' x2='51.84' y2='419.23' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='358.45' x2='51.84' y2='358.45' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='297.68' x2='51.84' y2='297.68' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='236.90' x2='51.84' y2='236.90' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='176.12' x2='51.84' y2='176.12' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='115.34' x2='51.84' y2='115.34' style='stroke-width: 0.75;' />
 <text transform='translate(41.76,419.23) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>50</text>
 <text transform='translate(41.76,358.45) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>100</text>
 <text transform='translate(41.76,297.68) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>150</text>

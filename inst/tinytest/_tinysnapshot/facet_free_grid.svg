@@ -21,7 +21,7 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='266.40' y='33.12' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='156.80px' lengthAdjust='spacingAndGlyphs'>Free facet scales (grid)</text>
+<text x='266.40' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='156.80px' lengthAdjust='spacingAndGlyphs'>Free facet scales (grid)</text>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='230.83px' lengthAdjust='spacingAndGlyphs'>N = [35, 73, 5, ...]   Joint Bandwidth = 5.693</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='40.02px' lengthAdjust='spacingAndGlyphs'>Density</text>
 </g>

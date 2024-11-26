@@ -12,10 +12,12 @@ sanitize_type = function(type, x, y, dots) {
   }
 
   types = c(
-    "area", "boxplot", "density", "jitter", "ribbon", "pointrange", "hist", "ridge",
-    "histogram", "errorbar", "polygon", "polypath", "rect", "qq", "segments", "points",
-    "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", "loess", "spline", "lm", "glm",
-    "spineplot", "function"
+    "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", 
+    "density",
+    "abline", "area", "boxplot", "errorbar", "function", "glm", "hist",
+    "histogram", "hline", "j", "jitter", "lines", "lm", "loess", "pointrange",
+    "points", "polygon", "polypath", "qq", "rect", "ribbon", "ridge",
+    "segments", "spineplot", "spline", "vline"
   )
   assert_choice(type, types, null.ok = TRUE)
 
@@ -29,19 +31,18 @@ sanitize_type = function(type, x, y, dots) {
     } else {
       type = "p"
     }
-  } else if (type %in% c("hist", "histogram")) {
-    type = "histogram"
-  } else if (type %in% c("j", "jitter")) {
-    type = type_jitter
   }
 
   if (is.character(type)) type = switch(type,
+    "abline"     = type_abline,
     "area"       = type_area,
     "boxplot"    = type_boxplot,
     "errorbar"   = type_errorbar,
     "function"   = type_function,
     "glm"        = type_glm,
+    "hist"       = type_histogram,
     "histogram"  = type_histogram,
+    "hline"      = type_hline,
     "j"          = type_jitter,
     "jitter"     = type_jitter,
     "lines"      = type_lines,
@@ -58,6 +59,7 @@ sanitize_type = function(type, x, y, dots) {
     "segments"   = type_segments,
     "spineplot"  = type_spineplot,
     "spline"     = type_spline,
+    "vline"      = type_vline,
     type           # default case
   )
   

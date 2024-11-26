@@ -4,7 +4,7 @@
 \alias{tpar}
 \title{Set or query graphical parameters}
 \usage{
-tpar(..., hook = FALSE, init = FALSE)
+tpar(..., hook = FALSE)
 }
 \arguments{
 \item{...}{arguments of the form \code{key = value}. This includes all of the

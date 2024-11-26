@@ -108,12 +108,7 @@
 #' # options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")
 #'
 #' @export
-tpar = function(..., hook = FALSE, init = FALSE) {
-  if (isTRUE(init)) {
-    init_tpar(rm_hook = TRUE)
-    return(invisible(NULL))
-  }
-
+tpar = function(..., hook = FALSE) {
 
   opts = list(...)
   if (length(opts) == 1 && is.null(names(opts))) {
@@ -121,7 +116,6 @@ tpar = function(..., hook = FALSE, init = FALSE) {
       opts = opts[[1]]
     }
   }
-
 
   ###### Assign parameters
 
@@ -137,12 +131,12 @@ tpar = function(..., hook = FALSE, init = FALSE) {
   if (!is.null(nam)) {
     base_par = setdiff(nam, known_tpar)
     base_par = opts[base_par]
-    if (isTRUE(hook)) {
-      # need weird function because of Quarto evaluate::evaluate failure
-      setHook("before.plot.new", function(...) NULL, action = "replace")
-      par(base_par) 
-    } else {
-      par(base_par)
+    if (length(base_par) > 0) {
+      if (isTRUE(hook)) {
+        setHook("before.plot.new", function() par(base_par), action = "append")
+      } else {
+        par(base_par) 
+      }
     }
   }
 
@@ -300,13 +294,12 @@ assert_tpar = function(.tpar) {
 init_tpar = function(rm_hook = FALSE) {
   rm(list = names(.tpar), envir = .tpar)
 
-  grDevices::graphics.off()
-
   if (isTRUE(rm_hook)) {
     hook = getHook("before.plot.new")
     if (length(hook) > 0) {
       # need weird function because of Quarto evaluate::evaluate failure
-      setHook("before.plot.new", function(...) NULL, action = "replace")
+      # setHook("before.plot.new", NULL, action = "replace")
+      setHook("before.plot.new", function() NULL, action = "replace")
     }
   }
 

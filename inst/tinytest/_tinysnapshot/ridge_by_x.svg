@@ -44,14 +44,14 @@
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>Species</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<line x1='60.74' y1='430.56' x2='369.96' y2='430.56' style='stroke-width: 0.75;' />
-<line x1='60.74' y1='430.56' x2='60.74' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='112.27' y1='430.56' x2='112.27' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='163.81' y1='430.56' x2='163.81' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='215.35' y1='430.56' x2='215.35' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='266.88' y1='430.56' x2='266.88' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='318.42' y1='430.56' x2='318.42' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='369.96' y1='430.56' x2='369.96' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='60.74' y1='430.56' x2='369.96' y2='430.56' style='stroke-width: 0.38;' />
+<line x1='60.74' y1='430.56' x2='60.74' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='112.27' y1='430.56' x2='112.27' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='163.81' y1='430.56' x2='163.81' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='215.35' y1='430.56' x2='215.35' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='266.88' y1='430.56' x2='266.88' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='318.42' y1='430.56' x2='318.42' y2='437.76' style='stroke-width: 0.38;' />
+<line x1='369.96' y1='430.56' x2='369.96' y2='437.76' style='stroke-width: 0.38;' />
 <text x='60.74' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>1.5</text>
 <text x='112.27' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>2.0</text>
 <text x='163.81' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>2.5</text>

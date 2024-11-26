@@ -79,6 +79,8 @@ you should rather use \code{par()} instead.
 \item \code{grid.lwd}: Non-negative numeric giving the line width of the panel grid lines. Defaults to \code{1}.
 \item \code{grid}: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to \code{NULL}, which is equivalent to \code{FALSE}.
 \item \code{lmar}: A numeric vector of form \code{c(inner, outer)} that gives the margin padding, in terms of lines, around the automatic \code{tinyplot} legend. Defaults to \code{c(1.0, 0.1)}. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
+\item \code{palette.qualitative}: Palette for qualitative colors. See the \code{palette} argumetn in \code{?tinyplot}.
+\item \code{palette.sequential}: Palette for sequential colors. See the \code{palette} argumetn in \code{?tinyplot}.
 \item \code{ribbon.alpha}: Numeric factor in the range \verb{[0,1]} for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is \code{0.2}.
 }
 }

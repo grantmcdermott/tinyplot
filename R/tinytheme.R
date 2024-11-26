@@ -65,7 +65,11 @@ tinytheme = function(theme = "default", ...) {
     settings[[n]] = dots[[n]]
   }
 
-  tpar(settings, hook = TRUE)
+  if (length(settings) > 0) {
+    tpar(settings, hook = TRUE)
+  }
+
+  return(invisible(NULL))
 }
 
 

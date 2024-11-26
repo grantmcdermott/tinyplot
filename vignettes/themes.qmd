@@ -53,7 +53,7 @@ The `tinytheme()` function accepts any graphical parameter supported by `par()` 
 
 ```{r}
 #| layout-ncol: 2
-tinytheme("ipsum", family = "Arial Narrow", pch = 2, col.axis = "red")
+tinytheme("ipsum", family = "serif", pch = 2, col.axis = "red")
 tinyplot(mpg ~ hp, data = mtcars, main = "Cars (Part I)")
 tinyplot(hp ~ mpg, data = mtcars, main = "Cars (Part II)")
 ```
@@ -150,7 +150,6 @@ In base R, the appearance of plots can be controlled using graphical parameters 
 
 ```{r}
 #| eval: false
-library(tinyplot)
 tinyplot(mpg ~ hp, data = mtcars)
 
 tpar("adj.ylab" = 1, "adj.xlab" = 1)

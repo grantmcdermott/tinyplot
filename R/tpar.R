@@ -15,8 +15,6 @@
 #'   section below.
 #' @param hook Logical. If `TRUE`, base graphical parameters persist across 
 #'   plots via a hook applied before each new plot (see `?setHook`).
-#' @param init Logical. If `TRUE`, resets all `tinyplot` parameters and hooks. 
-#'   You may need to call `dev.off()` to reset device-specific graphical parameters.
 #'
 #' @md
 #' @details The `tinyplot`-specific parameters are saved in an internal

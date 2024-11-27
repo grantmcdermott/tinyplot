@@ -1,3 +1,6 @@
+#' auxiliary Axis() interface with different parameter combinations based on type
+#'
+#' @keywords internal
 tinyAxis = function(x = NULL, ..., type = "standard") {
   type = match.arg(type, c("standard", "none", "labels", "ticks", "axis"))
   if (type == "none") {

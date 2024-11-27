@@ -381,6 +381,7 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, man
 }
 
 ## auxiliary function for determining quantiles based on density function
+
 #' @importFrom stats median approx
 quantile.density = function(x, probs = seq(0, 1, 0.25), ...) {
   ## sanity check for probabilities

@@ -6,35 +6,39 @@ where the formatting is also better._
 
 ## 0.2.1.99 (dev version)
 
-Breaking changes:
+New plot `type` processing and some breaking changes:
 
-- As part of our new plot `type` logic (see below), character-based shortcuts
-like `type = "p"`, `type = "hist"`, etc. are reserved for default behaviour.
-In turn, this means that any type-specific arguments for customizing behaviour
-should no longer be passed through the main `tinyplot(...)` function (i.e.,
-via `...`), since they will be ignored. Rather, these ancilliary arguments
-must now be passed explicitly as part of the corresponding `type_*()` function
-to the `type` argument. For example, say that you want to change the default
-number of breaks in a histogram plot. Whereas previously you could have called,
-say, `tinyplot(Nile, type = "hist", breaks = 30)`, now you should instead 
-call `tinyplot(Nile, type = type_hist(breaks = 30))`. We're sorry for
-introducing a breaking change, but again this should only impact plots that
-deviate from the default behaviour. Taking a longer-term view, this new `type`
-logic ensures that users can better control how their plots behave, avoids
-guesswork on our side, and should help to reduce the overall maintenance burden
-of the package.
-- `ribbon.alpha` is deprecated in `tinyplot()`. Use the `alpha` argument of the
-`type_ribbon()` function instead: `tinyplot(..., type = type_ribbon(alpha = 0.5))`
-
-New plot `type` logic and functional equivalents:
-
-- Alongside the standard character shortcuts (`"p"`, `"l"`, etc.), the `type`
-  argument now accepts functional `type_*()` equivalents (`type_points()`,
-  `type_lines()`, etc.). These functional plot types enable a variety of
-  additional features, as well as a more disciplined approach to explicit
-  argument passing for customized type behaviour. (#222 @vincentarelbundock)
-- Users can define their own custom types by creating `type_<typename>()`
-  functions.
+- In previous versions of `tinyplot` the plot `type` was specified by character
+  arguments, i.e., either the standard character shortcuts (such `"p"`, `"l"`,
+  etc.) or labels (such as `"hist"`, `"boxplot"`, etc.). In addition, the
+  `type` argument now accepts functional `type_*()` equivalents (e.g.,
+  `type_hist()`) which enable a variety of additional features, as well as a
+  more disciplined approach to explicit argument passing for customized type
+  behavior. (#222 @vincentarelbundock)
+- All plot types provided in the package can be specified either by a character
+  label or the corresponding function. Thus, the following two are equivalent:
+  `tinyplot(Nile, type = "hist")` and `tinyplot(Nile, type = type_hist())`.
+- The main advantage of the function specification is that many more plot types
+  can be supported (see list below) and users can define their own custom types
+  by creating `type_<typename>()` functions.
+- Enabling these new features comes at the cost of a different approach for
+  specifying ancilliary arguments of the type function. It is recommended to
+  pass such arguments explicitly to the `type_*()` function call, e.g., as in
+  `tinyplot(Nile, type = type_hist(breaks = 30))`. In many situations it is
+  still possible to use the character specification plus extra arguments
+  instead, e.g., as in `tinyplot(Nile, type = "hist", breaks = 30)`. However,
+  this only works if the ancilliary type arguments do not match or even
+  partially match any of the arguments of the `tinyplot()` function itself.
+  This is why the former approach is recommended (unless using only the
+  default type).
+- Due to this change in the processing of the ancilliary type arguments there
+  are a few breaking changes but we have tried to minimize them. One argument
+  that was deprecated explicitly is `ribbon.alpha` in `tinyplot()`. Use the
+  `alpha` argument of the `type_ribbon()` function instead:
+  `tinyplot(..., type = type_ribbon(alpha = 0.5))`. Note that it is not
+  equivalent to use `tinyplot(..., type = "ribbon", alpha = 0.5)` because the
+  latter matches the `alpha` argument of `tinyplot()` (rather than of
+  `type_ribbon()`) and modifies the `palette` rather than the ribbon only.
 - More details are provided in the dedicated
   [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html)
   on the website.

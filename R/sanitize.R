@@ -6,61 +6,71 @@ sanitize_ribbon.alpha = function(ribbon.alpha) {
 
 
 
-sanitize_type = function(type, x, y) {
+sanitize_type = function(type, x, y, dots) {
   if (inherits(type, "tinyplot_type")) {
     return(type)
   }
 
   types = c(
-    "area", "boxplot", "density", "jitter", "ribbon", "pointrange", "hist", "ridge",
-    "histogram", "errorbar", "polygon", "polypath", "rect", "qq", "segments", "points",
-    "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", "loess", "spline", "lm", "glm",
-    "spineplot"
+    "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", 
+    "density",
+    "abline", "area", "boxplot", "errorbar", "function", "glm", "hist",
+    "histogram", "hline", "j", "jitter", "lines", "lm", "loess", "pointrange",
+    "points", "polygon", "polypath", "qq", "rect", "ribbon", "ridge",
+    "segments", "spineplot", "spline", "vline"
   )
   assert_choice(type, types, null.ok = TRUE)
 
   if (is.null(type)) {
     if (!is.null(x) && is.factor(x) && !is.factor(y)) {
       # enforce boxplot type for y ~ factor(x)
-      return(type_boxplot())
+      type = type_boxplot
     } else if (is.factor(y)) {
       # enforce spineplot type for factor(y) ~ x
-      return(type_spineplot())
+      type = type_spineplot
     } else {
       type = "p"
     }
-  } else if (type %in% c("hist", "histogram")) {
-    type = "histogram"
-  } else if (type %in% c("j", "jitter")) {
-    type = return(type_jitter())
   }
 
-  type_fun = switch(type,
-    "points" = type_points(),
-    "segments" = type_segments(),
-    "area" = type_area(),
-    "rect" = type_rect(),
-    "polypath" = type_polypath(),
-    "polygon" = type_polygon(),
-    "pointrange" = type_pointrange(),
-    "errorbar" = type_errorbar(),
-    "boxplot" = type_boxplot(),
-    "ribbon" = type_ribbon(),
-    "histogram" = type_histogram(),
-    "spineplot" = type_spineplot(),
-    "j" = type_jitter(),
-    "jitter" = type_jitter(),
-    "loess" = type_loess(),
-    "ridge" = type_ridge(),
-    "qq" = type_qq(),
-    "spline" = type_spline(),
-    "glm" = type_glm(),
-    "lm" = type_lm(),
-    NULL # Default case
+  if (is.character(type)) type = switch(type,
+    "abline"     = type_abline,
+    "area"       = type_area,
+    "boxplot"    = type_boxplot,
+    "errorbar"   = type_errorbar,
+    "function"   = type_function,
+    "glm"        = type_glm,
+    "hist"       = type_histogram,
+    "histogram"  = type_histogram,
+    "hline"      = type_hline,
+    "j"          = type_jitter,
+    "jitter"     = type_jitter,
+    "lines"      = type_lines,
+    "lm"         = type_lm,
+    "loess"      = type_loess,
+    "pointrange" = type_pointrange,
+    "points"     = type_points,
+    "polygon"    = type_polygon,
+    "polypath"   = type_polypath,
+    "qq"         = type_qq,
+    "rect"       = type_rect,
+    "ribbon"     = type_ribbon,
+    "ridge"      = type_ridge,
+    "segments"   = type_segments,
+    "spineplot"  = type_spineplot,
+    "spline"     = type_spline,
+    "vline"      = type_vline,
+    type           # default case
   )
-  if (inherits(type_fun, "tinyplot_type")) {
-    return(type_fun)
+  
+  if (is.function(type)) {
+    args = intersect(names(formals(type)), names(dots))
+    args = if (length(args) >= 1L) dots[args] else list()
+    type = do.call(type, args)
+    type$dots = dots[setdiff(names(dots), names(args))]
   }
+  
+  if (inherits(type, "tinyplot_type")) return(type)
 
   out = list(draw = NULL, data = NULL, name = type)
   return(out)

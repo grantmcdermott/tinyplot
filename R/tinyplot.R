@@ -215,9 +215,7 @@
 #'   automatic looping will be centered at the global line width value (i.e.,
 # `   par("lwd")`) and pad on either side of that.
 #' @param bg background fill color for the open plot symbols 21:25 (see
-#'   `points.default`), as well as ribbon and area plot types. For the latter
-#'   group---including filled density plots---an automatic alpha transparency
-#'   adjustment will be applied (see the `ribbon.alpha` argument further below).
+#'   `points.default`), as well as ribbon and area plot types.
 #'   Users can also supply either one of two special convenience arguments that
 #'   will cause the background fill to inherit the automatic grouped coloring
 #'   behaviour of `col`:
@@ -298,7 +296,14 @@
 #'  specified.
 #' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
 #'   See `axes` for the possible values.
-#' @param xaxs,yaxs,... other graphical parameters (see \code{\link[graphics]{par}}).
+#' @param xaxs,yaxs character specifying the style of the interval calculation used
+#'   for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
+#'   for the possible values.
+#' @param ... other graphical parameters. If `type` is a character specification
+#'   (such as `"hist"`) then any argument names that match those from the corresponding
+#'   `type_*()` function (such as \code{\link{type_hist}}) are passed on to that.
+#'   All remaining arguments from `...` can be further graphical parameters, see
+#'   \code{\link[graphics]{par}}).
 #'
 #' @returns No return value, called for side effect of producing a plot.
 #'
@@ -574,7 +579,8 @@ tinyplot.default = function(
   # sanitize arguments
 
   # type factories vs. strings
-  type = sanitize_type(type, x, y)
+  type = sanitize_type(type, x, y, dots)
+  if ("dots" %in% names(type)) dots = type$dots
   type_data = type$data
   type_draw = type$draw
   type = type$name

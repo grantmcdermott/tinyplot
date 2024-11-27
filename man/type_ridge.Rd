@@ -9,6 +9,7 @@ type_ridge(
   gradient = FALSE,
   breaks = NULL,
   probs = NULL,
+  ylevels = NULL,
   bw = "nrd0",
   kernel = "gaussian",
   ...,
@@ -38,6 +39,9 @@ x-axis for all groups, it is possible to specify group-specific quantiles
 at the specified \code{probs}. The quantiles are computed based on the density
 (rather than the raw original variable). Only one of \code{breaks} or
 \code{probs} must be specified.}
+
+\item{ylevels}{a character or numeric vector specifying in which order
+the levels of the y-variable should be plotted.}
 
 \item{bw, kernel, ...}{Arguments passed to \code{\link[stats]{density}}.}
 

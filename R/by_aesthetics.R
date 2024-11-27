@@ -7,8 +7,9 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
   }
 
   if (is.null(palette)) {
-    if (ngrps <= 8) {
-      palette = get_tpar("palette.qualitative", default = NULL)
+    pal_qual = get_tpar("palette.qualitative", default = NULL)
+    if (ngrps <= max(c(length(pal), 8))) {
+      palette = pal_qual
     } else {
       palette = get_tpar("palette.sequential", default = NULL)
     }

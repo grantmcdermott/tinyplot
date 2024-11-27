@@ -626,6 +626,14 @@ the x and y arguments provide the x and y coordinates for the plot. Any reasonab
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="...">…</code>
+</td>
+<td>
+other graphical parameters. If <code>type</code> is a character specification (such as <code>“hist”</code>) then any argument names that match those from the corresponding <code style="white-space: pre;">type_*()</code> function (such as <code>type_hist</code>) are passed on to that. All remaining arguments from <code>…</code> can be further graphical parameters, see <code>par</code>).
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="by">by</code>
 </td>
 <td>
@@ -952,7 +960,7 @@ plotting color. Character, integer, or vector of length equal to the number of c
 <code id="bg">bg</code>
 </td>
 <td>
-<p>background fill color for the open plot symbols 21:25 (see <code>points.default</code>), as well as ribbon and area plot types. For the latter group—including filled density plots—an automatic alpha transparency adjustment will be applied (see the <code>ribbon.alpha</code> argument further below). Users can also supply either one of two special convenience arguments that will cause the background fill to inherit the automatic grouped coloring behaviour of <code>col</code>:</p>
+<p>background fill color for the open plot symbols 21:25 (see <code>points.default</code>), as well as ribbon and area plot types. Users can also supply either one of two special convenience arguments that will cause the background fill to inherit the automatic grouped coloring behaviour of <code>col</code>:</p>
 <ul>
 <li>
 <p><code>bg = “by”</code> will insert a background fill that inherits the main color mappings from <code>col</code>.</p>
@@ -1070,10 +1078,10 @@ logical. Should the plot orientation be flipped, so that the y-axis is on the ho
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="xaxs">xaxs</code>, <code id="yaxs">yaxs</code>, <code id="...">…</code>
+<code id="xaxs">xaxs</code>, <code id="yaxs">yaxs</code>
 </td>
 <td>
-other graphical parameters (see <code>par</code>).
+character specifying the style of the interval calculation used for the x-axis and y-axis, respectively. See <code>par</code> for the possible values.
 </td>
 </tr>
 <tr>

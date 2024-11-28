@@ -98,7 +98,6 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
       get_density = function(k) {
         out = do.call("density", c(list(x = k$x), density_args))
         out = data.frame(x = out$x, ymax = out$y, ymin = 0, y = k$y[1])
-        out$ymax = out$ymax / max(out$ymax) * scale
         out$facet = k$facet[1]
         out$by = k$by[1]
         return(out)
@@ -131,6 +130,7 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
       d = split(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
       d = lapply(d, function(k) tryCatch(get_density(k), error = function(e) NULL))
       d = do.call(rbind, Filter(function(x) !is.null(x), d))
+      d$ymax = d$ymax / max(d$ymax) * scale
       d = split(d, d$facet)
       offset_z = function(k) {
         ksplit = split(k, k$y)

@@ -10,11 +10,16 @@ tinytheme(theme = "default", ...)
 \item{theme}{A character string specifying the name of the theme to apply.
 \itemize{
 \item \code{"default"}
+\item \code{"basic"}
+\item \code{"clean"}
+\item \code{"clean2"}
 \item \code{"bw"}
 \item \code{"classic"}
 \item \code{"dark"}
 \item \code{"ipsum"}
 \item \code{"minimal"}
+\item \code{"tufte"}
+\item \code{"void"}
 }}
 
 \item{...}{Named arguments to override specific theme settings. These arguments are
@@ -28,8 +33,6 @@ The function returns nothing. It is called for its side effects.
 The \code{tinytheme} function sets or resets the theme for plots created with
 \code{tinyplot}. Themes control the appearance of plots, such as text alignment,
 font styles, and axis labels. By default, a "bw" theme is available.
-
-Warning: \code{tinytheme()} shuts down all open graphical devices.
 }
 \details{
 Sets a list of graphical parameters using \code{tpar()}

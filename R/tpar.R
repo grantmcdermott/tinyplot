@@ -131,7 +131,7 @@ tpar = function(..., hook = FALSE) {
     base_par = opts[base_par]
     if (length(base_par) > 0) {
       if (isTRUE(hook)) {
-        setHook("before.plot.new", function() par(base_par), action = "append")
+        setHook("before.plot.new", function() par(base_par), action = "replace")
       } else {
         par_names = names(par(no.readonly = TRUE))
         base_par = base_par[names(base_par) %in% par_names]
@@ -175,8 +175,7 @@ tpar = function(..., hook = FALSE) {
     # assign new values, but still return old values for saving existing settings
     # a la `oldpar = par(param = new_value)`
   } else {
-    `names<-`(lapply(nam, function(x) .tpar
-      [[x]]), nam)
+    `names<-`(lapply(nam, function(x) .tpar[[x]]), nam)
     return(invisible(tpar_old))
   }
 }
@@ -190,12 +189,13 @@ get_tpar = function(opts, default = NULL) {
     tp = .tpar[[o]]
     if (!is.null(tp)) {
       return(tp)
+    } else {
+      p = suppressWarnings(par(o))
+      if (!is.null(p)) {
+        return(p)
+      }
     }
 
-    p = suppressWarnings(par(o))
-    if (!is.null(p)) {
-      return(p)
-    }
   }
   return(default)
 }
@@ -230,6 +230,7 @@ known_tpar = c(
     "lwd.xaxs",
     "lwd.yaxs",
     "lwd.axis",
+    "pch",
     "palette.qualitative",
     "palette.sequential",
     "ribbon.alpha",

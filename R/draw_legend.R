@@ -290,9 +290,12 @@ draw_legend = function(
     # GM: The legend inset spacing only works _exactly_ if we refresh the plot
     # area. I'm not sure why (and it works properly if we use the same
     # parameters manually while debugging), but this hack seems to work.
-    par(new = TRUE)
+    ## v0.3.0 update: Using (temporary) hook instead of direct par(new = TRUE)
+    ## assignment to play nice with tinytheme logic.
+    oldhook = getHook("before.plot.new")
+    setHook("before.plot.new", function() par(new = TRUE), action = "append")
     plot.new()
-    par(new = FALSE)
+    setHook("before.plot.new", oldhook, action = "replace")
     # Finally, set the inset as part of the legend args.
     legend_args[["inset"]] = c(1+inset, 0)
     
@@ -381,9 +384,12 @@ draw_legend = function(
     # GM: The legend inset spacing only works _exactly_ if we refresh the plot
     # area. I'm not sure why (and it works properly if we use the same
     # parameters manually while debugging), but this hack seems to work.
-    par(new = TRUE)
+    ## v0.3.0 update: Using (temporary) hook instead of direct par(new = TRUE)
+    ## assignment to play nice with tinytheme logic.
+    oldhook = getHook("before.plot.new")
+    setHook("before.plot.new", function() par(new = TRUE), action = "append")
     plot.new()
-    par(new = FALSE)
+    setHook("before.plot.new", oldhook, action = "replace")
     # Finally, set the inset as part of the legend args.
     legend_args[["inset"]] = c(0, 1+inset)
     

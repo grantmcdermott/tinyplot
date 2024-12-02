@@ -16,7 +16,8 @@ expect_snapshot_plot(f, label = "boxplot_simple_horizontal")
 
 f = function() {
   plt(
-    decrease ~ treatment, data = OrchardSprays, fill = "bisque",
+    decrease ~ treatment,
+    data = OrchardSprays, fill = "bisque",
     log = "y", type = "boxplot", flip = TRUE
   )
 }
@@ -26,21 +27,21 @@ expect_snapshot_plot(f, label = "boxplot_log_horizontal")
 ## grouped boxplots
 
 f = function() {
-  plt(len ~ dose | supp,data = ToothGrowth, type = "boxplot")
+  plt(len ~ dose | supp, data = ToothGrowth, type = "boxplot")
 }
 expect_snapshot_plot(f, label = "boxplot_groups")
 
 # fancier version with arg passing
 f = function() {
-  plt(len ~ dose | factor(supp, labels = c("Ascorbic acid", "Orange juice")), 
-      data = ToothGrowth,
-      lty  = 1, pch = 16,
-      main = "Guinea Pigs' Tooth Growth",
-      xlab = "Vitamin C dose mg", ylab = "tooth length",
-      ylim = c(0, 35),
-      type = type_boxplot(boxwex = 0.5, staplewex = 0),
-      legend = list(title = NULL),
-      flip = TRUE
+  plt(len ~ dose | factor(supp, labels = c("Ascorbic acid", "Orange juice")),
+    data = ToothGrowth,
+    lty = 1, pch = 16,
+    main = "Guinea Pigs' Tooth Growth",
+    xlab = "Vitamin C dose mg", ylab = "tooth length",
+    ylim = c(0, 35),
+    type = type_boxplot(boxwex = 0.5, staplewex = 0),
+    legend = list(title = NULL),
+    flip = TRUE
   )
 }
 expect_snapshot_plot(f, label = "boxplot_groups_argpass")

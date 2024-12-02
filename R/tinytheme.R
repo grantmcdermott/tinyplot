@@ -137,7 +137,7 @@ theme_default = list(
   font = par("font"), # 1,
   font.axis = par("font.axis"), # 1,
   font.lab = par("font.lab"), # 1,
-  font.main = par("font.main"), # 1,
+  font.main = par("font.main"), # 2,
   grid = FALSE,
   grid.col = "lightgray",
   grid.lty = "dotted",
@@ -155,6 +155,11 @@ theme_default = list(
   yaxt = "standard"
 )
 
+# derivatives of "default" 
+# - basic
+# - tufte
+# - void
+
 theme_basic = modifyList(theme_default, list(
   tinytheme = "basic",
   facet.bg = "gray90",
@@ -163,20 +168,49 @@ theme_basic = modifyList(theme_default, list(
   pch = 16
 ))
 
+theme_tufte = modifyList(theme_default, list(
+  tinytheme = "tufte",
+  adj.main = 0,
+  adj.sub = 0,
+  bty = "n",
+  font.main = 1,
+  lab = c(10, 10, 7),
+  # palette.sequential = "Grays",
+  pch = 16,
+  side.sub = 3,
+  tck = .02
+))
+
+theme_void = modifyList(theme_default, list(
+  tinytheme = "void",
+  adj.main = 0,
+  adj.sub = 0,
+  font.main = 1,
+  palette.qualitative = "Tableau 10",
+  palette.sequential = "ag_Sunset",
+  pch = 16,
+  side.sub = 3,
+  # tck = -.02,
+  xaxt = "none",
+  yaxt = "none"
+))
+
+# derivatives of "basic" 
+# - clean
+
 theme_clean = modifyList(theme_basic, list(
   tinytheme = "clean",
   adj.main = 0,
   adj.sub = 0,
-  # facet.bg = "gray90",
-  # facet.border = "black",
-  # grid = TRUE,
   las = 1,
-  palette.qualitative = "Tableau 10",
-  palette.sequential = "ag_Sunset",
-  # pch = 16,
   side.sub = 3#,
   # tck = -.02
 ))
+
+# derivatives of "clean" 
+# - clean2
+# - classic
+# - bw
 
 theme_clean2 = modifyList(theme_clean, list(
   tinytheme = "clean2",
@@ -185,36 +219,19 @@ theme_clean2 = modifyList(theme_clean, list(
   yaxt = "labels"
 ))
 
-# theme_bw = list(
-#   tinytheme = "bw",
-#   adj = 0.5,
-#   adj.main = 0,
-#   adj.sub = 0,
-#   # bty = "o",
-#   # cex.axis = 1,
-#   # cex.main = 1.2,
-#   # cex.xlab = 1,
-#   # cex.ylab = 1,
-#   facet.bg = "gray90",
-#   facet.border = "black",
-#   font = 1,
-#   font.axis = 1,
-#   font.lab = 1,
-#   font.main = 1,
-#   grid = TRUE,
-#   grid.lty = 1,
-#   grid.lwd = 0.5,
-#   las = 1,
-#   lwd = 0.5,
-#   lwd.axis = 0.5,
-#   palette.qualitative = "Okabe-Ito",
-#   palette.sequential = "ag_Sunset",
-#   pch = 16,
-#   side.sub = 3,
-#   tck = -.02
-# )
+theme_classic = modifyList(theme_clean, list(
+  tinytheme = "classic",
+  bty = "l",
+  facet.bg = NULL,
+  font.main = 1,
+  grid = FALSE,
+  palette.qualitative = "Okabe-Ito",
+  tck = -.02
+))
+
 theme_bw = modifyList(theme_clean, list(
   tinytheme = "bw",
+  font.main = 1,
   grid.lty = 1,
   grid.lwd = 0.5,
   lwd = 0.5,
@@ -224,15 +241,11 @@ theme_bw = modifyList(theme_clean, list(
   tck = -.02
 ))
 
-theme_classic = modifyList(theme_clean, list(
-  tinytheme = "classic",
-  bty = "l",
-  facet.bg = NULL,
-  grid = FALSE,
-  palette.qualitative = "Okabe-Ito",
-  tck = -.02
-))
-
+# derivatives of "bw"
+# - minimal
+# - ipsum
+# - dark
+ 
 theme_minimal = modifyList(theme_bw, list(
   tinytheme = "minimal",
   bty = "n",
@@ -268,27 +281,3 @@ theme_dark = modifyList(theme_minimal, list(
   # new = TRUE
 ))
 
-theme_tufte = modifyList(theme_default, list(
-  tinytheme = "tufte",
-  adj.main = 0,
-  adj.sub = 0,
-  bty = "n",
-  lab = c(10, 10, 7),
-  # palette.sequential = "Grays",
-  pch = 16,
-  side.sub = 3,
-  tck = .02
-))
-
-theme_void = modifyList(theme_clean, list(
-  tinytheme = "void",
-  adj.main = 0,
-  adj.sub = 0,
-  facet.bg = NULL,
-  facet.border = NULL,
-  grid = FALSE,
-  side.sub = 3,
-  # tck = -.02,
-  xaxt = "none",
-  yaxt = "none"
-))

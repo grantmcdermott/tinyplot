@@ -208,7 +208,8 @@ draw_legend = function(
   
   ## restore inner margin defaults
   ## (in case the plot region/margins were affected by the preceding tinyplot call)
-  if (any(ooma != 0)) {
+  dynmar = isTRUE(.tpar[["dynmar"]])
+  if (any(ooma != 0) && !dynmar) {
     if ( ooma[1] != 0 & omar[1] == par("mgp")[1] + 1*par("cex.lab") ) omar[1] = 5.1
     if ( ooma[2] != 0 & omar[2] == par("mgp")[1] + 1*par("cex.lab") ) omar[2] = 4.1
     if ( ooma[3] == topmar_epsilon & omar[3] != 4.1 ) omar[3] = 4.1
@@ -218,7 +219,6 @@ draw_legend = function(
   ## restore outer margin defaults
   par(omd = c(0,1,0,1))
   ooma = par("oma")
-  
   
   ## Legend to outer side (either right or left) of plot
   if (grepl("right!$|left!$", legend_args[["x"]])) {
@@ -244,7 +244,24 @@ draw_legend = function(
     }
     par(mar = omar)
     
-    if (isTRUE(new_plot)) plot.new()
+    # if (isTRUE(new_plot)) plot.new()
+    if (isTRUE(new_plot)) {
+      plot.new()
+      # FIXME. Is the below hack necessary? Should we rather just live with the
+      # default margins of the theme?
+      # Experimental: For themed + dynamic plots, we need to make sure the
+      # adjusted plot margins for the legend are reinstated (after being
+      # overwritten by the before.plot.new hook.
+      if (dynmar) {
+        omar = par("mar")
+        if (outer_right) {
+          omar[4] = 0
+        } else {
+          omar[2] = par("mgp")[1] + 1*par("cex.lab")
+        }
+        par(mar = omar)
+      }
+    }
     
     legend_args[["horiz"]] = FALSE
     
@@ -294,6 +311,7 @@ draw_legend = function(
     ## assignment to play nice with tinytheme logic.
     oldhook = getHook("before.plot.new")
     setHook("before.plot.new", function() par(new = TRUE), action = "append")
+    setHook("before.plot.new", function() par(mar = omar), action = "append")
     plot.new()
     setHook("before.plot.new", oldhook, action = "replace")
     # Finally, set the inset as part of the legend args.
@@ -313,7 +331,7 @@ draw_legend = function(
     ## width---will be off the first time.
     if (outer_bottom) {
       omar[1] = par("mgp")[1] + 1*par("cex.lab")
-      if (isTRUE(has_sub)) omar[1] = omar[1] + 1*par("cex.sub")
+      if (isTRUE(has_sub) && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
     } else {
       ## For "top!", the logic is slightly different: We don't expand the outer
       ## margin b/c we need the legend to come underneath the main title. So
@@ -388,6 +406,7 @@ draw_legend = function(
     ## assignment to play nice with tinytheme logic.
     oldhook = getHook("before.plot.new")
     setHook("before.plot.new", function() par(new = TRUE), action = "append")
+    setHook("before.plot.new", function() par(mar = omar), action = "append") ## experimental dynmar
     plot.new()
     setHook("before.plot.new", oldhook, action = "replace")
     # Finally, set the inset as part of the legend args.

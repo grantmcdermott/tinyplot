@@ -128,6 +128,9 @@ draw_facet_window = function(grid, ...) {
     rect(corners[1], corners[3], corners[2], corners[4], col = grid.bg, border = NA)
   }
 
+  ## dynamic margins flag
+  dynmar = isTRUE(.tpar[["dynmar"]])
+  
   if (isFALSE(add)) {
     ## optionally allow to modify the style of axis interval calculation
     if (!is.null(xaxs)) par(xaxs = xaxs)
@@ -173,6 +176,41 @@ draw_facet_window = function(grid, ...) {
       fmar[3] = fmar[3] + facet_newlines * facet_text / cex_fct_adj
 
       omar = par("mar")
+      
+      ## Dynamic plot margin adjustments
+      if (dynmar) {
+        if (par("las") %in% 1:2) {
+          # extra whitespace bump on the y axis
+          # yaxl = axTicks(2)
+          yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+          whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
+          # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
+          if (whtsbp > 0) {
+            omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
+            fmar[2] = fmar[2] + whtsbp * cex_fct_adj
+          }
+        }
+        if (par("las") %in% 2:3) {
+          # extra whitespace bump on the x axis
+          # xaxl = axTicks(1)
+          xaxl = axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog"))
+          whtsbp = grconvertY(max(strwidth(xaxl, "figure")), from = "nfc", to = "lines") - 1
+          # whtsbp = grconvertY(max(strwidth(xaxl, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
+          if (whtsbp > 0) {
+            omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
+            fmar[1] = fmar[1] + whtsbp * cex_fct_adj
+          }
+        }
+        # FIXME: Is this causing issues for lhs legends with facet_grid?
+        # catch for missing rhs legend
+        if (isTRUE(attr(facet, "facet_grid")) && !has_legend) {
+          omar[4] = omar[4] + 1
+        }
+        # Extra reduction if no plot frame to reduce whitespace
+        if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+          fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
+        }
+      }
 
       # Now we set the margins. The trick here is that we simultaneously adjust
       # inner (mar) and outer (oma) margins by the same amount, but in opposite
@@ -194,6 +232,31 @@ draw_facet_window = function(grid, ...) {
       # Now that the margins have been set, arrange facet rows and columns based
       # on our earlier calculations.
       par(mfrow = c(nfacet_rows, nfacet_cols))
+    } else if (dynmar) {
+      # Dynamic plot margin adjustments
+      omar = par("mar")
+      omar = omar - c(0, 0, 1, 0) # reduce top whitespace since no facet (title)
+      if (par("las") %in% 1:2) {
+        # extra whitespace bump on the y axis
+        # yaxl = axTicks(2)
+        yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+        whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
+        # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
+        if (whtsbp > 0) {
+          omar[2] = omar[2] + whtsbp
+        }
+      }
+      if (par("las") %in% 2:3) {
+        # extra whitespace bump on the x axis
+        # xaxl = axTicks(1)
+        xaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("xlog"))
+        whtsbp = grconvertY(max(strwidth(xaxl, "figure")), from = "nfc", to = "lines") - 1
+        # whtsbp = grconvertY(max(strwidth(xaxl, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
+        if (whtsbp > 0) {
+          omar[1] = omar[1] + whtsbp
+        }
+      }
+       par(mar = omar)
     }
 
     ## Loop over the individual facet windows and draw the plot region

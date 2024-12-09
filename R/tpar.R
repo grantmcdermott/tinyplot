@@ -210,6 +210,7 @@ known_tpar = c(
     "cex.ylab",
     "col.xaxs",
     "col.yaxs",
+    "dynmar",
     "facet.bg",
     "facet.border",
     "facet.cex",
@@ -253,6 +254,7 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.sub")
   assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.xlab")
   assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
+  assert_flag(.tpar[["dynmar"]], null.ok = FALSE, name = "dynmar")
   assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE, name = "lmar")
   assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "ribbon.alpha")
   assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE, name = "grid.lwd")
@@ -304,6 +306,8 @@ init_tpar = function(rm_hook = FALSE) {
     }
   }
 
+  .tpar$dynmar = if (is.null(getOption("tinyplot_dynmar"))) FALSE else as.logical(getOption("tinyplot_dynmar"))
+  
   # Figure output options if written to file
   .tpar$file.width = if (is.null(getOption("tinyplot_file.width"))) 7 else as.numeric(getOption("tinyplot_file.width"))
   .tpar$file.height = if (is.null(getOption("tinyplot_file.height"))) 7 else as.numeric(getOption("tinyplot_file.height"))

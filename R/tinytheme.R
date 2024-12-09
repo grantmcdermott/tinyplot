@@ -131,6 +131,7 @@ theme_default = list(
   col.lab = par("col.lab"), #"black",
   col.main = par("col.main"), #"black",
   col.sub = par("col.sub"), #"black",
+  dynmar = FALSE,
   facet.bg = NULL,
   facet.border = NA,
   fg = par("fg"),
@@ -146,6 +147,8 @@ theme_default = list(
   las = par("las"), # 0,
   lwd = par("lwd"), # 1,
   lwd.axis = par("lwd"), # 1,
+  mar = c(5.1, 4.1, 4.1, 2.1), ## test
+  mgp = par("mgp"),
   # palette.qualitative = "R4",
   # palette.sequential = "ag_Sunset",
   pch = par("pch"), # 1,
@@ -178,7 +181,7 @@ theme_tufte = modifyList(theme_default, list(
   # palette.sequential = "Grays",
   pch = 16,
   side.sub = 3,
-  tck = .02
+  tcl = 0.2
 ))
 
 theme_void = modifyList(theme_default, list(
@@ -199,12 +202,29 @@ theme_void = modifyList(theme_default, list(
 # - clean
 
 theme_clean = modifyList(theme_basic, list(
+  ## Notes:
+  ##  - 1. Reduce axis title gap by 0.5 lines and also reduce tcl to 0.3 lines.
+  ##  - 2. Sub moves to top.
+  ##  - 3. Also want to remove excess white on rhs of plot margin (when no legend).
+  ##  - Together, 1, 2, and 3 imply that...
+  ##    -- mgp[1] should be adjusted by 0.8 (= 0.5 + 0.3)
+  ##    -- mgp[2] should be adjusted by 0.3
+  ##    -- mar[1] should be adjusted by 1.8 (= 1 (no sub) + 0.5 + 0.3 (tighter axis labs))
+  ##    -- mar[2] should be adjusted by 0.8 (= 0.5 + 0.3)
+  ##    -- mar[3] should remain unchanged (main + sub will adjust automatically)
+  ##    -- mar[4] should be adjusted by 1.5 (relative to 2.1)
+  ##
   tinytheme = "clean",
   adj.main = 0,
   adj.sub = 0,
+  dynmar = TRUE,
   las = 1,
-  side.sub = 3#,
-  # tck = -.02
+  mar = c(5.1, 4.1, 4.1, 2.1) - c(1+0.5+0.3, 0.5+0.3, 0, 1.5), ## test
+  mgp = c(3, 1, 0) - c(0.5+0.3, 0.3, 0), # i.e., subtract 0.5 lines + the (abs) value of the tcl adjustment
+  palette.qualitative = "Tableau 10",
+  palette.sequential = "ag_Sunset",
+  side.sub = 3,
+  tcl = -0.3
 ))
 
 # derivatives of "clean" 
@@ -225,8 +245,8 @@ theme_classic = modifyList(theme_clean, list(
   facet.bg = NULL,
   font.main = 1,
   grid = FALSE,
-  palette.qualitative = "Okabe-Ito",
-  tck = -.02
+  palette.qualitative = "Okabe-Ito"#,
+  # tck = -.02
 ))
 
 theme_bw = modifyList(theme_clean, list(
@@ -237,7 +257,7 @@ theme_bw = modifyList(theme_clean, list(
   lwd = 0.5,
   lwd.axis = 0.5,
   palette.qualitative = "Okabe-Ito",
-  palette.sequential = "ag_Sunset",
+  # palette.sequential = "ag_Sunset",
   tck = -.02
 ))
 

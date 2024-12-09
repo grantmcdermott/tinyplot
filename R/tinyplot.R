@@ -1007,7 +1007,9 @@ tinyplot.default = function(
         col = get_tpar("col.sub", "black"),
         adj = get_tpar(c("adj.sub", "adj")),
         font = get_tpar("font.sub", 1),
-        side = get_tpar("side.sub", 1))
+        side = get_tpar("side.sub", 1),
+        las = 1
+      )
       args = Filter(function(x) !is.null(x), args)
       do.call(mtext, args)
     }

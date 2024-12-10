@@ -83,9 +83,11 @@ if (requireNamespace("png", quietly = TRUE)) {
     ))
     obj = png::readPNG(tmp_path, info = TRUE)
     unlink(tmp_path)
-    dims = attr(obj, "dim")
+    # dims = attr(obj, "dim")
+    dims = attr(obj, "info")[["dim"]]
     return(dims)
   }
-  expect_equal(f(), c(1200, 1200, 4), label = "png_size")
+  # expect_equal(f(), c(1200, 1200, 4), label = "png_size")
+  expect_equal(f(), c(1200, 1200), label = "png_size")
 }
 

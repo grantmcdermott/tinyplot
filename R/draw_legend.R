@@ -247,8 +247,6 @@ draw_legend = function(
     # if (isTRUE(new_plot)) plot.new()
     if (isTRUE(new_plot)) {
       plot.new()
-      # FIXME. Is the below hack necessary? Should we rather just live with the
-      # default margins of the theme?
       # Experimental: For themed + dynamic plots, we need to make sure the
       # adjusted plot margins for the legend are reinstated (after being
       # overwritten by the before.plot.new hook.
@@ -341,7 +339,25 @@ draw_legend = function(
     }
     par(mar = omar)
     
-    if (isTRUE(new_plot)) plot.new()
+    # if (isTRUE(new_plot)) plot.new()
+    if (isTRUE(new_plot)) {
+      plot.new()
+      # Experimental: For themed + dynamic plots, we need to make sure the
+      # adjusted plot margins for the legend are reinstated (after being
+      # overwritten by the before.plot.new hook.
+      if (dynmar) {
+        omar = par("mar")
+        if (outer_bottom) {
+          # omar[1] = par("mgp")[1] + 1*par("cex.lab")
+          omar[1] = theme_clean$mgp[1] + 1*par("cex.lab") ## bit of a hack
+          if (isTRUE(has_sub) && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
+        } else {
+          ooma[3] = ooma[3] + topmar_epsilon
+          par(oma = ooma)
+        }
+        par(mar = omar)
+      }
+    }
     
     legend_args[["horiz"]] = TRUE
     

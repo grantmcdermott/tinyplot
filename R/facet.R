@@ -183,8 +183,8 @@ draw_facet_window = function(grid, ...) {
           # extra whitespace bump on the y axis
           # yaxl = axTicks(2)
           yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
-          whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
-          # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
+          # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
+          whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
           if (whtsbp > 0) {
             omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
             fmar[2] = fmar[2] + whtsbp * cex_fct_adj
@@ -240,8 +240,8 @@ draw_facet_window = function(grid, ...) {
         # extra whitespace bump on the y axis
         # yaxl = axTicks(2)
         yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
-        whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
-        # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
+        # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
+        whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {
           omar[2] = omar[2] + whtsbp
         }

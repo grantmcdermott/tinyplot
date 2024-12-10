@@ -17,6 +17,25 @@ for (thm in thms) {
 }
 rm(thm)
 
+# legend placement
+tinytheme("clean")
+
+f = function() tinyplot(
+  mpg ~ hp | factor(am), data = mtcars,
+  main = "Title of the plot",
+  sub = 'tinytheme("clean") + legend = "left!"',
+  legend = "left!"
+)
+expect_snapshot_plot(f, label = "tinytheme_legend_left")
+
+f = function() tinyplot(
+  mpg ~ hp | factor(am), data = mtcars,
+  main = "Title of the plot",
+  sub = 'tinytheme("clean") + legend = "bottom!"',
+  legend = "bottom!"
+)
+expect_snapshot_plot(f, label = paste0("tinytheme_legend_bottom"))
+
 #
 ## Dynamic plots
 

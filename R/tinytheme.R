@@ -25,14 +25,28 @@
 #'   - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
 #'   - `"tufte"`: floating axes and minimalist plot artifacts in the style of Edward Tufte.
 #'   - `"void"`: switches off all axes, titles, legends, etc.
-#' @param ... Named arguments to override specific theme settings. These arguments are
-#'   passed to `tpar()` and take precedence over the predefined settings in the selected
-#'   theme.
+#' @param ... Named arguments to override specific theme settings. These
+#'   arguments are passed to `tpar()` and take precedence over the predefined
+#'   settings in the selected theme.
 #'
 #' @details
 #' Sets a list of graphical parameters using `tpar()`
 #'
-#' To reset the theme to default settings (no customization), call `tinytheme()` without arguments.
+#' To reset the theme to default settings (no customization), call `tinytheme()`
+#' without arguments.
+#' 
+#' **Cavear emptor:** Themes are a somewhat experimental feature of `tinyplot`.
+#' We are reasonably confident that they should work as expected for most
+#' "standard" cases. However, there may be some sharp edges. Please report any
+#' unexpected behaviour to our GitHub repo:
+#' https://github.com/grantmcdermott/tinyplot/issues
+#' 
+#' Known current limitations include:
+#' 
+#' - Themes do not work well when `legend = "top!"`.
+#' - Themes do not play nicely with some complex plot types, particularly `"spineplot"` and `"ridge"`.
+#' - Dynamic margin spacing does not account for multi-line strings (e.g., axes
+#' or main titles that contain `"\n"`).
 #'
 #' @return The function returns nothing. It is called for its side effects.
 #'

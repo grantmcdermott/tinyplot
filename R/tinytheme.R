@@ -1,22 +1,30 @@
 #' Set or Reset Plot Themes for `tinyplot`
 #'
+#' @md
 #' @description
 #' The `tinytheme` function sets or resets the theme for plots created with
 #' `tinyplot`. Themes control the appearance of plots, such as text alignment,
-#' font styles, and axis labels. By default, a "bw" theme is available.
+#' font styles, axis labels, and even dynamic margin adjustment to reduce
+#' whitespace.
 #'
 #' @param theme A character string specifying the name of the theme to apply.
-#'   - `"default"`
-#'   - `"basic"`
-#'   - `"clean"`
-#'   - `"clean2"`
-#'   - `"bw"`
-#'   - `"classic"`
-#'   - `"dark"`
-#'   - `"ipsum"`
-#'   - `"minimal"`
-#'   - `"tufte"`
-#'   - `"void"`
+#'   Themes are arranged in an approximate hierarchy, adding or subtracting
+#'   elements in the order presented below. Note that several themes are
+#'   _dynamic_, in the sense that they attempt to reduce whitespace in a way
+#'   that is responsive to the length of axes labels, tick marks, etc. These
+#'   dynamic plots are marked with an asterisk (*) below.
+#'   
+#'   - `"default"`: inherits the user's default base graphics settings.
+#'   - `"basic"`: light modification of `"default"`, only adding filled points, a panel background grid, and light gray background to facet titles.
+#'   - `"clean"` (*): builds on `"basic"` by moving the subtitle above the plotting area, adding horizontal axis labels, employing tighter default plot margins and title gaps to reduce whitespace, and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors). The first of our dynamic themes and the foundation for several derivative themes that follow below.
+#'   - `"clean2"` (*): removes the plot frame (box) from `"clean"`,
+#'   - `"classic"` (*): connects the axes in a L-shape, but removes the other top and right-hand edges of the plot frame (box). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name. 
+#'   - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name. 
+#'   - `"ipsum"` (*): similar to `"bw"`, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**. 
+#'   - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name. 
+#'   - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
+#'   - `"tufte"`: floating axes and minimalist plot artifacts in the style of Edward Tufte.
+#'   - `"void"`: switches off all axes, titles, legends, etc.
 #' @param ... Named arguments to override specific theme settings. These arguments are
 #'   passed to `tpar()` and take precedence over the predefined settings in the selected
 #'   theme.
@@ -26,41 +34,62 @@
 #'
 #' To reset the theme to default settings (no customization), call `tinytheme()` without arguments.
 #'
-#' The `"custom"` theme sets parameters stored in a list in a global option. See examples below.
-#'
 #' @return The function returns nothing. It is called for its side effects.
 #'
 #' @examples
+#' 
+#' # Reusable plot function
+#' p = function() tinyplot(
+#'   mpg ~ hp | factor(am), data = mtcars,
+#'   main = "Fuel efficiency vs. horsepower",
+#'   sub = "Brought to you by Motor Trend magazine"
+#' )
+#' 
+#' p()
+#' 
 #' # Set a theme
 #' tinytheme("bw")
-#' tinyplot(mpg ~ hp | factor(am), data = mtcars)
-#'
+#' p()
+#'          
 #' # Customize the theme by overriding default settings
-#' tinytheme("bw", fg = "blue", font.main = 2)
-#' tinyplot(mpg ~ hp | factor(am), data = mtcars, main = "Hello World!")
+#' tinytheme("bw", fg = "hotpink", font.main = 2, font.sub = 3)
+#' p()
 #'
 #' # Reset the theme
 #' tinytheme()
-#' tinyplot(mpg ~ hp | factor(am), data = mtcars)
-#'
-#' # Custom theme
-#' tinytheme("default", font.main = 3, col = "red")
-#' tinyplot(mpg ~ hp | factor(am), data = mtcars)
+#' p()
+#' 
+#' # Themes showcase
+#' ## We'll use a slightly more intricate plot (long y-axis labs and facets)
+#' ## to demonstrate dynamic margin adjustment etc.
+#' 
+#' 
+#' thms = eval(formals(tinytheme)$theme)
+#' 
+#' for (thm in thms) {
+#'   tinytheme(thm)
+#'   tinyplot(
+#'     I(mpg*1e4) ~ hp | factor(am), facet = ~cyl, data = mtcars,
+#'     main = "Demonstration of tinyplot themes",
+#'     sub = paste('tinytheme("', thm, '")')
+#'   )
+#' }
+#' 
+#' # Reset
+#' tinytheme()
 #'
 #' @export
-tinytheme = function(theme = "default", ...) {
-# tinytheme = function(theme = NULL, ...) {
-  # in interactive sessions, we close the graphics device to reset parameters
-  # if (interactive()) {
-  #   # grDevices::graphics.off()
-  # } else {
-  #   par_first = get_saved_par("first")
-  #   if (!is.null(par_first)) {
-  #     do.call(tpar, par_first)
-  #   } else {
-  #     set_saved_par("first", par())
-  #   }
-  # }
+tinytheme = function(
+    theme = c(
+      "default", "basic",
+      "clean", "clean2", "bw", "classic",
+      "minimal", "ipsum", "dark",
+      "tufte", "void"
+    ),
+    ...
+    ) {
+  
+  theme = match.arg(theme)
 
   # in notebooks, we don't want to close the device because no image.
   # init_tpar() tries to be smart, but may fail.
@@ -139,6 +168,7 @@ theme_default = list(
   font.axis = par("font.axis"), # 1,
   font.lab = par("font.lab"), # 1,
   font.main = par("font.main"), # 2,
+  font.sub = par("font.sub"), # 2,
   grid = FALSE,
   grid.col = "lightgray",
   grid.lty = "dotted",
@@ -245,8 +275,7 @@ theme_classic = modifyList(theme_clean, list(
   facet.bg = NULL,
   font.main = 1,
   grid = FALSE,
-  palette.qualitative = "Okabe-Ito"#,
-  # tck = -.02
+  palette.qualitative = "Okabe-Ito"
 ))
 
 theme_bw = modifyList(theme_clean, list(
@@ -256,9 +285,7 @@ theme_bw = modifyList(theme_clean, list(
   grid.lwd = 0.5,
   lwd = 0.5,
   lwd.axis = 0.5,
-  palette.qualitative = "Okabe-Ito",
-  # palette.sequential = "ag_Sunset",
-  tck = -.02
+  palette.qualitative = "Okabe-Ito"
 ))
 
 # derivatives of "bw"
@@ -297,7 +324,6 @@ theme_dark = modifyList(theme_minimal, list(
   # facet.bg = "gray20",
   grid.col = "#6D6D6D",
   palette.qualitative = "Set 2",
-  palette.sequential = "Sunset"#,
-  # new = TRUE
+  palette.sequential = "Sunset"
 ))
 

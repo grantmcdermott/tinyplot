@@ -4,22 +4,31 @@
 \alias{tinytheme}
 \title{Set or Reset Plot Themes for \code{tinyplot}}
 \usage{
-tinytheme(theme = "default", ...)
+tinytheme(
+  theme = c("default", "basic", "clean", "clean2", "bw", "classic", "minimal", "ipsum",
+    "dark", "tufte", "void"),
+  ...
+)
 }
 \arguments{
 \item{theme}{A character string specifying the name of the theme to apply.
+Themes are arranged in an approximate hierarchy, adding or subtracting
+elements in the order presented below. Note that several themes are
+\emph{dynamic}, in the sense that they attempt to reduce whitespace in a way
+that is responsive to the length of axes labels, tick marks, etc. These
+dynamic plots are marked with an asterisk (*) below.
 \itemize{
-\item \code{"default"}
-\item \code{"basic"}
-\item \code{"clean"}
-\item \code{"clean2"}
-\item \code{"bw"}
-\item \code{"classic"}
-\item \code{"dark"}
-\item \code{"ipsum"}
-\item \code{"minimal"}
-\item \code{"tufte"}
-\item \code{"void"}
+\item \code{"default"}: inherits the user's default base graphics settings.
+\item \code{"basic"}: light modification of \code{"default"}, only adding filled points, a panel background grid, and light gray background to facet titles.
+\item \code{"clean"} (*): builds on \code{"basic"} by moving the subtitle above the plotting area, adding horizontal axis labels, employing tighter default plot margins and title gaps to reduce whitespace, and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors). The first of our dynamic themes and the foundation for several derivative themes that follow below.
+\item \code{"clean2"} (*): removes the plot frame (box) from \code{"clean"},
+\item \code{"classic"} (*): connects the axes in a L-shape, but removes the other top and right-hand edges of the plot frame (box). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
+\item \code{"bw"} (*): similar to \code{"clean"}, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
+\item \code{"ipsum"} (*): similar to \code{"bw"}, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
+\item \code{"minimal"} (*): removes the plot frame (box) from \code{"bw"}, as well as the background for facet titles. Inspired by the \strong{ggplot2} theme of the same name.
+\item \code{"dark"} (*): similar to \code{"minimal"}, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
+\item \code{"tufte"}: floating axes and minimalist plot artifacts in the style of Edward Tufte.
+\item \code{"void"}: switches off all axes, titles, legends, etc.
 }}
 
 \item{...}{Named arguments to override specific theme settings. These arguments are
@@ -32,30 +41,54 @@ The function returns nothing. It is called for its side effects.
 \description{
 The \code{tinytheme} function sets or resets the theme for plots created with
 \code{tinyplot}. Themes control the appearance of plots, such as text alignment,
-font styles, and axis labels. By default, a "bw" theme is available.
+font styles, axis labels, and even dynamic margin adjustment to reduce
+whitespace.
 }
 \details{
 Sets a list of graphical parameters using \code{tpar()}
 
 To reset the theme to default settings (no customization), call \code{tinytheme()} without arguments.
-
-The \code{"custom"} theme sets parameters stored in a list in a global option. See examples below.
 }
 \examples{
+
+# Reusable plot function
+p = function() tinyplot(
+  mpg ~ hp | factor(am), data = mtcars,
+  main = "Fuel efficiency vs. horsepower",
+  sub = "Brought to you by Motor Trend magazine"
+)
+
+p()
+
 # Set a theme
 tinytheme("bw")
-tinyplot(mpg ~ hp | factor(am), data = mtcars)
-
+p()
+         
 # Customize the theme by overriding default settings
-tinytheme("bw", fg = "blue", font.main = 2)
-tinyplot(mpg ~ hp | factor(am), data = mtcars, main = "Hello World!")
+tinytheme("bw", fg = "hotpink", font.main = 2, font.sub = 3)
+p()
 
 # Reset the theme
 tinytheme()
-tinyplot(mpg ~ hp | factor(am), data = mtcars)
+p()
 
-# Custom theme
-tinytheme("default", font.main = 3, col = "red")
-tinyplot(mpg ~ hp | factor(am), data = mtcars)
+# Themes showcase
+## We'll use a slightly more intricate plot (long y-axis labs and facets)
+## to demonstrate dynamic margin adjustment etc.
+
+
+thms = eval(formals(tinytheme)$theme)
+
+for (thm in thms) {
+  tinytheme(thm)
+  tinyplot(
+    I(mpg*1e4) ~ hp | factor(am), facet = ~cyl, data = mtcars,
+    main = "Demonstration of tinyplot themes",
+    sub = paste('tinytheme("', thm, '")')
+  )
+}
+
+# Reset
+tinytheme()
 
 }

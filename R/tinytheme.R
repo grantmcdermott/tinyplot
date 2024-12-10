@@ -69,7 +69,7 @@
 #' p()
 #'          
 #' # Customize the theme by overriding default settings
-#' tinytheme("bw", fg = "green", font.main = 2, font.sub = 3)
+#' tinytheme("bw", fg = "green", font.main = 2, font.sub = 3, family = "Palatino")
 #' p()
 #'
 #' # Reset the theme
@@ -179,6 +179,7 @@ theme_default = list(
   dynmar = FALSE,
   facet.bg = NULL,
   facet.border = NA,
+  family = par("family"), # ""
   fg = par("fg"),
   font = par("font"), # 1,
   font.axis = par("font.axis"), # 1,

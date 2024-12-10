@@ -83,7 +83,7 @@ tinytheme("dark")
 p()
          
 # Customize the theme by overriding default settings
-tinytheme("bw", fg = "green", font.main = 2, font.sub = 3)
+tinytheme("bw", fg = "green", font.main = 2, font.sub = 3, family = "Palatino")
 p()
 
 # Reset the theme

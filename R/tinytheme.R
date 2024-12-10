@@ -42,7 +42,7 @@
 #' p = function() tinyplot(
 #'   lat ~ long | depth, data = quakes,
 #'   main = "Earthquakes off Fiji",
-#'   sub = "Data courtesy of Harvard PRIM-H project"
+#'   sub = "Data courtesy of the Harvard PRIM-H project"
 #' )
 #' p()
 #' 

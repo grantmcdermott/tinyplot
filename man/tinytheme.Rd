@@ -53,19 +53,22 @@ To reset the theme to default settings (no customization), call \code{tinytheme(
 
 # Reusable plot function
 p = function() tinyplot(
-  mpg ~ hp | factor(am), data = mtcars,
-  main = "Fuel efficiency vs. horsepower",
-  sub = "Brought to you by Motor Trend magazine"
+  lat ~ long | depth, data = quakes,
+  main = "Earthquakes off Fiji",
+  sub = "Data courtesy of Harvard PRIM-H project"
 )
-
 p()
 
 # Set a theme
 tinytheme("bw")
 p()
+
+# Try a different theme
+tinytheme("dark")
+p()
          
 # Customize the theme by overriding default settings
-tinytheme("bw", fg = "hotpink", font.main = 2, font.sub = 3)
+tinytheme("bw", fg = "green", font.main = 2, font.sub = 3)
 p()
 
 # Reset the theme
@@ -76,15 +79,14 @@ p()
 ## We'll use a slightly more intricate plot (long y-axis labs and facets)
 ## to demonstrate dynamic margin adjustment etc.
 
-
 thms = eval(formals(tinytheme)$theme)
 
 for (thm in thms) {
   tinytheme(thm)
   tinyplot(
-    I(mpg*1e4) ~ hp | factor(am), facet = ~cyl, data = mtcars,
+    I(Sepal.Length*1e4) ~ Petal.Length | Species, facet = "by", data = iris,
     main = "Demonstration of tinyplot themes",
-    sub = paste('tinytheme("', thm, '")')
+    sub = paste0('tinytheme("', thm, '")')
   )
 }
 

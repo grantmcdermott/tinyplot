@@ -1,0 +1,57 @@
+source("helpers.R")
+using("tinysnapshot")
+
+tinytheme()
+
+
+thms = eval(formals(tinytheme)$theme)
+
+for (thm in thms) {
+  tinytheme(thm)
+  f = function() tinyplot(
+    mpg ~ hp | factor(am), data = mtcars,
+    main = "Title of the plot",
+    sub = paste0('tinytheme("', thm, '")')
+  )
+  expect_snapshot_plot(f, label = paste0("tinytheme_", thm))
+}
+rm(thm)
+
+#
+## Dynamic plots
+
+f = function() {
+  tinyplot(
+    I(Sepal.Length*1e9) ~ Petal.Length | Species, data = iris,
+    main = "Dynamic plot adjustment and whitespace reduction",
+    sub = "For themes with las = 1, etc."
+  )
+}
+
+tinytheme("clean")
+f()
+expect_snapshot_plot(f, label = "tinytheme_dynamic_clean")
+
+tinytheme("dark")
+f()
+expect_snapshot_plot(f, label = "tinytheme_dynamic_dark")
+
+f = function() {
+  tinyplot(
+    I(mpg*1e3) ~ hp | disp, data = mtcars, facet = cyl ~ am,
+    main = "Dynamic plot adjustment and whitespace reduction",
+    sub = "Works with facets too"
+  )
+}
+tinytheme("clean")
+f()
+expect_snapshot_plot(f, label = "tinytheme_dynamic_clean_facet")
+
+tinytheme("dark")
+f()
+expect_snapshot_plot(f, label = "tinytheme_dynamic_dark_facet")
+
+#
+## reset
+
+tinytheme()

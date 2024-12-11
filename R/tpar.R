@@ -71,7 +71,13 @@
 #'
 #' @importFrom graphics par
 #' @importFrom utils modifyList
-#'
+#' 
+#' @seealso [graphics::par] which `tpar` builds on top of. [get_saved_par] is
+#' a convenience function for retrieving graphical parameters at different
+#' stages of a `tinyplot` call (and used for internal accounting purposes).
+#' [tinytheme] allows users to easily set a group of graphics parameters
+#' in a single function call, according to a variety of predefined themes.
+#' 
 #' @examples
 #' # Return a list of existing base and tinyplot graphic params
 #' tpar("las", "pch", "facet.bg", "facet.cex", "grid")

@@ -49,6 +49,8 @@
 #' or main titles that contain `"\n"`).
 #'
 #' @return The function returns nothing. It is called for its side effects.
+#' 
+#' @seealso [tpar] which does the heavy lifting under the hood.
 #'
 #' @examples
 #' 

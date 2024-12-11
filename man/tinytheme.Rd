@@ -109,3 +109,6 @@ for (thm in thms) {
 tinytheme()
 
 }
+\seealso{
+\link{tpar} which does the heavy lifting under the hood.
+}

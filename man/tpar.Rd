@@ -62,6 +62,7 @@ you should rather use \code{par()} instead.
 \itemize{
 \item \code{adj.xlab}: Numeric value between 0 and 1 controlling the alignment of the x-axis label.
 \item \code{adj.ylab}: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
+\item \code{dynmar}: Logical indicating whether \code{tinyplot} should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal \code{tinythemes()} logic and should \emph{not} be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 \item \code{facet.bg}: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see \code{palette}). Passed to \code{rect}. Defaults to \code{NULL} (none).
 \item \code{facet.border}: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see \code{palette}). Passed to \code{rect}. Defaults to \code{NA} (none).
 \item \code{facet.cex}: Expansion factor for facet titles. Defaults to \code{1}.

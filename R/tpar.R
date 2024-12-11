@@ -51,6 +51,7 @@
 #'
 #' * `adj.xlab`: Numeric value between 0 and 1 controlling the alignment of the x-axis label.
 #' * `adj.ylab`: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
+#' * `dynmar`: Logical indicating whether `tinyplot` should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal `tinythemes()` logic and should _not_ be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 #' * `facet.bg`: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NULL` (none).
 #' * `facet.border`: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NA` (none).
 #' * `facet.cex`: Expansion factor for facet titles. Defaults to `1`.

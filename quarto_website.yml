@@ -19,8 +19,10 @@ website:
         contents:
         - text: Introduction
           file: vignettes/introduction.qmd
-        - text: Plot types
+        - text: Types
           file: vignettes/types.qmd
+        - text: Themes
+          file: vignettes/themes.qmd
         - text: Gallery
           file: vignettes/gallery.qmd
       - section: Reference
@@ -31,6 +33,8 @@ website:
             file: man/tinyplot.qmd
           - text: tinyplot_add
             file: man/tinyplot_add.qmd
+          - text: tinytheme
+            file: man/tinytheme.qmd
           - text: draw_legend
             file: man/draw_legend.qmd
         - section: Plot types

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.37">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,10 +69,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-35b661c73272c531296c3b360bfb6fcf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d83fba8907f73068b64e07941be842b2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -173,7 +173,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/types.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Plot types</span></a>
+ <span class="menu-text">Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/themes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Themes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -212,6 +218,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/tinyplot_add.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tinyplot_add</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/tinytheme.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tinytheme</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -482,6 +494,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
   <li><a href="#additional-graphical-parameters" id="toc-additional-graphical-parameters" class="nav-link" data-scroll-target="#additional-graphical-parameters">Additional Graphical Parameters</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
@@ -501,7 +514,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">tpar(...)
+<pre><code class="language-R">tpar(..., hook = FALSE)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -513,6 +526,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </td>
 <td>
 arguments of the form <code>key = value</code>. This includes all of the parameters typically supported by <code>par</code>, as well as the <code>tinyplot</code>-specific ones described in the ‘Graphical Parameters’ section below.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="hook">hook</code>
+</td>
+<td>
+Logical. If <code>TRUE</code>, base graphical parameters persist across plots via a hook applied before each new plot (see <code>?setHook</code>).
 </td>
 </tr>
 </tbody></table>
@@ -531,386 +552,72 @@ arguments of the form <code>key = value</code>. This includes all of the paramet
 </section>
 <section id="additional-graphical-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="additional-graphical-parameters">Additional Graphical Parameters</h3>
-<table>
-<tbody><tr>
-<td style="text-align: left;">
-<code>facet.cex</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Expansion factor for facet titles. Defaults to <code>1</code>.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>facet.font</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-An integer corresponding to the desired font face for facet titles. For most font families and graphics devices, one of four possible values: <code>1</code> (regular), <code>2</code> (bold), <code>3</code> (italic), or <code>4</code> (bold italic). Defaults to <code>NULL</code>, which is equivalent to <code>1</code> (i.e., regular).
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>facet.col</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Character or integer specifying the facet text colour. If an integer, will correspond to the user’s default global colour palette (see <code>palette</code>). Defaults to <code>NULL</code>, which is equivalent to “black”.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>facet.bg</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Character or integer specifying the facet background colour. If an integer, will correspond to the user’s default colour palette (see <code>palette</code>). Passed <code>rect</code>. Defaults to <code>NULL</code> (none).
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>facet.border</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Character or integer specifying the facet border colour. If an integer, will correspond to the users default colour palette (see <code>palette</code>). Passed <code>rect</code>. Defaults to <code>NA</code> (none).
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>file.height</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Numeric specifying the height (in inches) of any plot that is written to disk using the <code>tinyplot(…, file = X)</code> argument. Defaults to 7.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>file.width</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Numeric specifying the width (in inches) of any plot that is written to disk using the <code>tinyplot(…, file = X)</code> argument. Defaults to 7.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>file.res</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the <code>tinyplot(…, file = X)</code> argument. Defaults to 300.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>fmar</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-A numeric vector of form <code>c(b,l,t,r)</code> for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to <code>c(1,1,1,1)</code>, i.e.&nbsp;a single line of padding around each facet. If more that three facets are detected, the <code>fmar</code> parameter is scaled by 0.75 (i.e., three-quarters) to reduce the excess whitespace that would otherwise arise due to the absent axes lines and labels. (An exception is made for 2x2 plots to better match the <code>cex</code> expansion logic of the base graphics system under this particular layout.) Similarly, note that an extra 0.5 lines is subtracted from each side of the facet padding for plots that aren’t framed, to reduce excess whitespace.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>grid</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Logical indicating whether a background panel grid should be added to plots automatically. Defaults to NULL, which is equivalent to <code>FALSE</code>.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>grid.col</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to <code>“lightgray”</code>.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>grid.lty</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to <code>“dotted”</code>.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>grid.lwd</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Non-negative numeric giving the line of the panel grid lines. Defaults to <code>1</code>.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>lmar</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-A numeric vector of form <code>c(inner, outer)</code> that gives the margin padding, in terms of lines, around the automatic <code>tinyplot</code> legend. Defaults to <code>c(1.0, 0.1)</code>, where the first number represents the “inner” margin between the legend and the plot region, and the second number represents the “outer” margin between the legend and edge of the graphics device. (Note that an exception for the definition of the “outer” legend margin occurs when the legend placement is <code>“top!”</code>, since the legend is placed above the plot region but below the main title. In such cases, the outer margin is relative to the existing gap between the title and the plot region, which is itself determined by <code>par(“mar”)[3]</code>.)
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-<code>ribbon.alpha</code>
-</td>
-<td style="text-align: left;">
-</td>
-<td style="text-align: left;">
-Numeric factor in the range <code style="white-space: pre;">[0,1]</code> for modifying the opacity alpha of “ribbon” and “area” (and alike) type plots. Default value is <code>0.2</code>.
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-</td>
-</tr>
-</tbody></table>
+<ul>
+<li>
+<p><code>adj.xlab</code>: Numeric value between 0 and 1 controlling the alignment of the x-axis label.</p>
+</li>
+<li>
+<p><code>adj.ylab</code>: Numeric value between 0 and 1 controlling the alignment of the y-axis label.</p>
+</li>
+<li>
+<p><code>dynmar</code>: Logical indicating whether <code>tinyplot</code> should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal <code>tinythemes()</code> logic and should <em>not</em> be adjusted manually unless you really know what you are doing or don’t mind risking unintended consequences to your plot.</p>
+</li>
+<li>
+<p><code>facet.bg</code>: Character or integer specifying the facet background colour. If an integer, will correspond to the user’s default colour palette (see <code>palette</code>). Passed to <code>rect</code>. Defaults to <code>NULL</code> (none).</p>
+</li>
+<li>
+<p><code>facet.border</code>: Character or integer specifying the facet border colour. If an integer, will correspond to the user’s default colour palette (see <code>palette</code>). Passed to <code>rect</code>. Defaults to <code>NA</code> (none).</p>
+</li>
+<li>
+<p><code>facet.cex</code>: Expansion factor for facet titles. Defaults to <code>1</code>.</p>
+</li>
+<li>
+<p><code>facet.col</code>: Character or integer specifying the facet text colour. If an integer, will correspond to the user’s default global colour palette (see <code>palette</code>). Defaults to <code>NULL</code>, which is equivalent to "black".</p>
+</li>
+<li>
+<p><code>facet.font</code>: An integer corresponding to the desired font face for facet titles. For most font families and graphics devices, one of four possible values: <code>1</code> (regular), <code>2</code> (bold), <code>3</code> (italic), or <code>4</code> (bold italic). Defaults to <code>NULL</code>, which is equivalent to <code>1</code> (i.e., regular).</p>
+</li>
+<li>
+<p><code>file.height</code>: Numeric specifying the height (in inches) of any plot that is written to disk using the <code>tinyplot(…, file = X)</code> argument. Defaults to <code>7</code>.</p>
+</li>
+<li>
+<p><code>file.res</code>: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the <code>tinyplot(…, file = X)</code> argument. Defaults to <code>300</code>.</p>
+</li>
+<li>
+<p><code>file.width</code>: Numeric specifying the width (in inches) of any plot that is written to disk using the <code>tinyplot(…, file = X)</code> argument. Defaults to <code>7</code>.</p>
+</li>
+<li>
+<p><code>fmar</code>: A numeric vector of form <code>c(b,l,t,r)</code> for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to <code>c(1,1,1,1)</code>. If more than three facets are detected, the <code>fmar</code> parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the <code>cex</code> expansion logic of base graphics.</p>
+</li>
+<li>
+<p><code>grid.col</code>: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to <code>“lightgray”</code>.</p>
+</li>
+<li>
+<p><code>grid.lty</code>: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to <code>“dotted”</code>.</p>
+</li>
+<li>
+<p><code>grid.lwd</code>: Non-negative numeric giving the line width of the panel grid lines. Defaults to <code>1</code>.</p>
+</li>
+<li>
+<p><code>grid</code>: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to <code>NULL</code>, which is equivalent to <code>FALSE</code>.</p>
+</li>
+<li>
+<p><code>lmar</code>: A numeric vector of form <code>c(inner, outer)</code> that gives the margin padding, in terms of lines, around the automatic <code>tinyplot</code> legend. Defaults to <code>c(1.0, 0.1)</code>. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.</p>
+</li>
+<li>
+<p><code>palette.qualitative</code>: Palette for qualitative colors. See the <code>palette</code> argumetn in <code>?tinyplot</code>.</p>
+</li>
+<li>
+<p><code>palette.sequential</code>: Palette for sequential colors. See the <code>palette</code> argumetn in <code>?tinyplot</code>.</p>
+</li>
+<li>
+<p><code>ribbon.alpha</code>: Numeric factor in the range <code style="white-space: pre;">[0,1]</code> for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is <code>0.2</code>.</p>
+</li>
+</ul>
+</section>
+<section id="see-also" class="level3">
+<h3 class="anchored" data-anchor-id="see-also">See Also</h3>
+<p>graphics::par which <code>tpar</code> builds on top of. get_saved_par is a convenience function for retrieving graphical parameters at different stages of a <code>tinyplot</code> call (and used for internal accounting purposes). tinytheme allows users to easily set a group of graphics parameters in a single function call, according to a variety of predefined themes.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -947,11 +654,11 @@ $grid
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set params to something new. Similar to graphics::par(), note that we save</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the existing values at the same time by assigning to an object.</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>op <span class="ot">=</span> <span class="fu">tpar</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">las       =</span> <span class="dv">1</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">pch       =</span> <span class="dv">2</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">facet.bg  =</span> <span class="st">"grey90"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">facet.cex =</span> <span class="dv">2</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">grid      =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">las       =</span> <span class="dv">1</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch       =</span> <span class="dv">2</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet.bg  =</span> <span class="st">"grey90"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet.cex =</span> <span class="dv">2</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid      =</span> <span class="cn">TRUE</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Re-plot with these new params</span></span>

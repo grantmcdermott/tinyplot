@@ -1,9 +1,8 @@
 source("helpers.R")
 using("tinysnapshot")
 
+op = par(no.readonly = TRUE)
 mtcars$am = as.factor(mtcars$am)
-
-op = par()
 
 #
 ## simple scatterplot cases first
@@ -138,7 +137,7 @@ if (getRversion() >= "4.4.0") {
 
 f = function() {
   ofmar = tpar("fmar")
-  tpar(fmar = c(1,1,0.5,2))
+  tpar(fmar = c(1, 1, 0.5, 2))
   with(
     mtcars,
     tinyplot(
@@ -156,7 +155,7 @@ f = function() {
     tinyplot(
       x = wt, y = mpg,
       facet = interaction(cyl, am),
-      facet.args = list(fmar = c(1,1,0.5,2))
+      facet.args = list(fmar = c(1, 1, 0.5, 2))
     )
   )
 }
@@ -184,7 +183,6 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_ribbon")
 
 f = function() {
-  
   with(
     mtcars1,
     tinyplot(
@@ -241,7 +239,7 @@ if (getRversion() >= "4.4.0") {
         x = wt, y = mpg,
         by = am, facet = cyl,
         palette = "dark2",
-        grid = TRUE, #frame = FALSE,
+        grid = TRUE, # frame = FALSE,
         main = "Car efficiency",
         xlab = "Weight", ylab = "MPG",
         legend = list(title = "Transmission"),
@@ -268,7 +266,7 @@ if (getRversion() >= "4.4.0") {
 ## Density plot versions
 
 # restore original par settings
-tpar(op)
+par(op)
 
 ## Avoid test fails on older R versions (pre 4.4.0) due to slight change in
 ## density grid value calculations.
@@ -312,7 +310,7 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_density_by")
 
 
-if (getRversion()  >= "4.4.0") {
+if (getRversion() >= "4.4.0") {
   f = function() {
     with(
       mtcars,
@@ -338,7 +336,8 @@ if (getRversion()  >= "4.4.0") {
 
 f = function() {
   tinyplot(
-    mpg ~ wt, data = mtcars,
+    mpg ~ wt,
+    data = mtcars,
     facet = ~cyl
   )
 }
@@ -346,7 +345,8 @@ expect_snapshot_plot(f, label = "facet_formula")
 
 f = function() {
   tinyplot(
-    mpg ~ wt, data = mtcars,
+    mpg ~ wt,
+    data = mtcars,
     facet = ~am
   )
 }
@@ -354,7 +354,8 @@ expect_snapshot_plot(f, label = "facet_1x2_formula")
 
 f = function() {
   tinyplot(
-    mpg ~ wt, data = mtcars,
+    mpg ~ wt,
+    data = mtcars,
     facet = ~am,
     facet.args = list(ncol = 1)
   )
@@ -363,14 +364,15 @@ expect_snapshot_plot(f, label = "facet_2x1_formula")
 
 f = function() {
   tinyplot(
-    mpg ~ wt, data = mtcars,
-    facet = ~am:vs
+    mpg ~ wt,
+    data = mtcars,
+    facet = ~ am:vs
   )
 }
 expect_snapshot_plot(f, label = "facet_2x2_formula")
 
 
-if (getRversion()  >= "4.4.0") {
+if (getRversion() >= "4.4.0") {
   f = function() {
     tinyplot(
       ~ mpg | am, mtcars,
@@ -392,7 +394,8 @@ if (getRversion()  >= "4.4.0") {
 
 f = function() {
   tinyplot(
-    mpg ~ wt, data = mtcars,
+    mpg ~ wt,
+    data = mtcars,
     facet = am ~ cyl,
     main = "facet grid",
     sub = "Notes: Transmission (rows) vs Cylinders (cols)"
@@ -402,7 +405,8 @@ expect_snapshot_plot(f, label = "facet_grid")
 
 f = function() {
   tinyplot(
-    mpg ~ wt, data = mtcars,
+    mpg ~ wt,
+    data = mtcars,
     facet = am ~ cyl, facet.args = list(bg = adjustcolor("hotpink", 0.5)),
     log = "xy",
     main = "facet grid (logged axes)",
@@ -413,7 +417,8 @@ expect_snapshot_plot(f, label = "facet_grid_log")
 
 f = function() {
   tinyplot(
-    mpg ~ wt, data = mtcars,
+    mpg ~ wt,
+    data = mtcars,
     facet = am + vs ~ gear,
     main = "facet grid multivar",
     sub = "Notes: Missing combos are still displayed correctly"
@@ -424,29 +429,30 @@ expect_snapshot_plot(f, label = "facet_grid_multivar")
 if (getRversion() >= "4.4.0") {
   f = function() {
     tinyplot(
-      mpg ~ wt | factor(gear), data = mtcars,
+      mpg ~ wt | factor(gear),
+      data = mtcars,
       facet = am ~ cyl,
       facet.args = list(bg = "grey90"),
-      pch  = 19, palette = "classic",
+      pch = 19, palette = "classic",
       legend = list(title = "Gears"),
       main = "facet grid (fancy)",
       sub = "Notes: Transmission (rows) vs Cylinders (cols)",
       grid = TRUE, frame = FALSE,
-      xlim = c(1,6), ylim = c(10,35)
+      xlim = c(1, 6), ylim = c(10, 35)
     )
   }
   expect_snapshot_plot(f, label = "facet_grid_fancy")
 }
 
 aq = airquality
-aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
-aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+aq$hot = ifelse(aq$Temp >= 75, "hot", "cold")
+aq$windy = ifelse(aq$Wind >= 15, "windy", "calm")
 
 f = function() {
   tinyplot(
-    ~ Ozone, aq, 
+    ~Ozone, aq,
     type = "density",
-    facet = ~hot:windy, 
+    facet = ~ hot:windy,
     main = "Ozone pollution is worse on hot, calm days"
   )
 }
@@ -454,9 +460,9 @@ expect_snapshot_plot(f, label = "facet_density_formula")
 
 f = function() {
   tinyplot(
-    ~ Ozone, aq, 
+    ~Ozone, aq,
     type = "density",
-    facet = windy ~ hot, 
+    facet = windy ~ hot,
     main = "Ozone pollution is worse on hot, calm days"
   )
 }
@@ -464,7 +470,8 @@ expect_snapshot_plot(f, label = "facet_density_grid")
 
 f = function() {
   tinyplot(
-    ~ wt, data = mtcars,
+    ~wt,
+    data = mtcars,
     type = "hist",
     facet = cyl ~ am
   )
@@ -473,7 +480,8 @@ expect_snapshot_plot(f, label = "facet_hist_3x2")
 
 f = function() {
   tinyplot(
-    ~ wt, data = mtcars,
+    ~wt,
+    data = mtcars,
     type = "density",
     facet = cyl ~ am
   )
@@ -487,9 +495,9 @@ expect_snapshot_plot(f, label = "facet_density_3x2")
 
 f = function() {
   tinyplot(
-    ~ Ozone, aq, 
+    ~Ozone, aq,
     type = "density",
-    facet = ~hot:windy, 
+    facet = ~ hot:windy,
     facet.args = list(free = TRUE),
     main = "Free facet scales"
   )
@@ -498,9 +506,9 @@ expect_snapshot_plot(f, label = "facet_free")
 
 f = function() {
   tinyplot(
-    ~ Ozone, aq, 
+    ~Ozone, aq,
     type = "density",
-    facet = windy ~ hot, 
+    facet = windy ~ hot,
     facet.args = list(free = TRUE),
     main = "Free facet scales (grid)"
   )
@@ -511,4 +519,4 @@ expect_snapshot_plot(f, label = "facet_free_grid")
 # restore original par settings
 #
 
-tpar(op)
+par(op)

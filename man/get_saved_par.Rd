@@ -4,7 +4,7 @@
 \alias{get_saved_par}
 \title{Retrieve the saved graphical parameters}
 \usage{
-get_saved_par(when = c("before", "after"))
+get_saved_par(when = c("before", "after", "first"))
 }
 \arguments{
 \item{when}{character. From when should the saved parameters be retrieved?

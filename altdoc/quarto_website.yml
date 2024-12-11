@@ -19,7 +19,7 @@ website:
         contents:
         - text: Introduction
           file: vignettes/introduction.qmd
-        - text: Plot types
+        - text: Types
           file: vignettes/types.qmd
         - text: Themes
           file: vignettes/themes.qmd

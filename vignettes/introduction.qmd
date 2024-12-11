@@ -80,23 +80,6 @@ confusion.
 Use the `plt()` alias instead of `tinyplot()` to save yourself a few keystrokes.
 :::
 
-## Themes
-
-To change the look of your plots, you can call the `tinytheme()` function. This will modify several graphical settings at once to match one of several pre-defined styles. The [Themes vignette](themes.qmd) provides a more detailed overview of this feature. Here, we apply the "ipsum" theme to a simple plot.
-
-```{r}
-# apply theme
-tinytheme("ipsum")
-
-# plot
-tinyplot(Temp ~ Day, data = aq, 
-  main = "Daily temperature", 
-  sub = "Air quality data")
-
-# reset theme to default
-tinytheme()
-```
-
 ## Grouped data
 
 Where `tinyplot` starts to diverge from its base counterpart is
@@ -430,7 +413,8 @@ tinyplot(
 ```
 
 The `facet.args` customizations can also be set globally via the `tpar()`
-function. We will revisit this idea in the [Themes](#themes) section below.
+function, or as part of a dedicated `tinytheme()`. We will revisit this idea in
+the [Themes](#themes) section below.
 
 Finally, the `facet` argument also accepts a _two-sided_ formula for arranging
 facets in a fixed grid layout. Here's a simple (if contrived) example.
@@ -530,6 +514,35 @@ tinyplot(
     text(5.5, 75, "Hot", pos = 3, offset = 0.4)
   }
 )
+```
+
+## Themes
+
+In the examples thus far, we have adjusted our plot aesthetics manually by
+tweaking individual arguments and settings. A more convenient way to change the
+look of your plots is by calling the `tinytheme()` function. This will modify
+several graphical settings simultaneously to match a variety of pre-defined
+styles. In addition to convenience, themes have the added benefit of enabling
+dynamic adjustment of the plot regions, so that excess whitespace is reduced and
+long text strings (e.g., horizontal axis labels) are accounted for. Please see
+the `?tinytheme` help page, as well as the dedicated
+[Themes vignette](themes.qmd) for a detailed overview of **tinyplot**'s theming
+functionality. Here we provide a small taster by applying the "dark" theme to
+one of our earlier plots.
+
+```{r}
+# apply theme
+tinytheme("dark")
+
+# plot
+tinyplot(
+  Temp ~ Wind | Ozone, data = aq,
+  main = "An example of a tinytheme() in action",
+  sub = "Notice that the subtitle is above the plot"
+)
+
+# reset theme to default
+tinytheme()
 ```
 
 ## Saving plots

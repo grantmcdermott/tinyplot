@@ -55,7 +55,7 @@ tinyplot(
 ```
 
 One particular feature that may interest users is the fact that `tinytheme()`
-uses some internal ~magic~ logic to dynamically adjust plot margins to avoid
+uses some internal ~~magic~~ logic to dynamically adjust plot margins to avoid
 whitespace. For example, when long horizontal y-axis labels are detected:
 
 ```{r}

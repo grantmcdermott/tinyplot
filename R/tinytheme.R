@@ -35,7 +35,7 @@
 #' To reset the theme to default settings (no customization), call `tinytheme()`
 #' without arguments.
 #' 
-#' **Cavear emptor:** Themes are a somewhat experimental feature of `tinyplot`.
+#' **Caveat emptor:** Themes are a somewhat experimental feature of `tinyplot`.
 #' We are reasonably confident that they should work as expected for most
 #' "standard" cases. However, there may be some sharp edges. Please report any
 #' unexpected behaviour to our GitHub repo:
@@ -46,7 +46,7 @@
 #' - Themes do not work well when `legend = "top!"`.
 #' - Themes do not play nicely with some complex plot types, particularly `"spineplot"` and `"ridge"`.
 #' - Dynamic margin spacing does not account for multi-line strings (e.g., axes
-#' or main titles that contain `"\n"`).
+#' or main titles that contain "\\n").
 #'
 #' @return The function returns nothing. It is called for its side effects.
 #' 

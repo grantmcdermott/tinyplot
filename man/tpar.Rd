@@ -118,9 +118,9 @@ tpar(op)
 
 }
 \seealso{
-\link[graphics:par]{graphics::par} which \code{tpar} builds on top of. \link{get_saved_par} is
-a convenience function for retrieving graphical parameters at different
+\code{\link[graphics:par]{graphics::par}} which \code{tpar} builds on top of. \code{\link{get_saved_par}}
+is a convenience function for retrieving graphical parameters at different
 stages of a \code{tinyplot} call (and used for internal accounting purposes).
-\link{tinytheme} allows users to easily set a group of graphics parameters
+\code{\link{tinytheme}} allows users to easily set a group of graphics parameters
 in a single function call, according to a variety of predefined themes.
 }

@@ -51,10 +51,10 @@ To reset the theme to default settings (no customization), call \code{tinytheme(
 without arguments.
 
 \strong{Caveat emptor:} Themes are a somewhat experimental feature of \code{tinyplot}.
-We are reasonably confident that they should work as expected for most
-"standard" cases. However, there may be some sharp edges. Please report any
-unexpected behaviour to our GitHub repo:
-https://github.com/grantmcdermott/tinyplot/issues
+While we feel confident that themes should work as expected for most
+"standard" cases, there may be some sharp edges. Please report any unexpected
+behaviour to our GitHub repo:
+\url{https://github.com/grantmcdermott/tinyplot/issues}
 
 Known current limitations include:
 \itemize{
@@ -110,5 +110,5 @@ tinytheme()
 
 }
 \seealso{
-\link{tpar} which does the heavy lifting under the hood.
+\code{\link{tpar}} which does the heavy lifting under the hood.
 }

@@ -17,11 +17,11 @@
 #'   - `"default"`: inherits the user's default base graphics settings.
 #'   - `"basic"`: light modification of `"default"`, only adding filled points, a panel background grid, and light gray background to facet titles.
 #'   - `"clean"` (*): builds on `"basic"` by moving the subtitle above the plotting area, adding horizontal axis labels, employing tighter default plot margins and title gaps to reduce whitespace, and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors). The first of our dynamic themes and the foundation for several derivative themes that follow below.
-#'   - `"clean2"` (*): removes the plot frame (box) from `"clean"`,
+#'   - `"clean2"` (*): removes the plot frame (box) from `"clean"`.
 #'   - `"classic"` (*): connects the axes in a L-shape, but removes the other top and right-hand edges of the plot frame (box). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name. 
 #'   - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name. 
-#'   - `"ipsum"` (*): similar to `"bw"`, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**. 
 #'   - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name. 
+#'   - `"ipsum"` (*): similar to `"minimal"`, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**. 
 #'   - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
 #'   - `"tufte"`: floating axes and minimalist plot artifacts in the style of Edward Tufte.
 #'   - `"void"`: switches off all axes, titles, legends, etc.
@@ -36,10 +36,10 @@
 #' without arguments.
 #' 
 #' **Caveat emptor:** Themes are a somewhat experimental feature of `tinyplot`.
-#' We are reasonably confident that they should work as expected for most
-#' "standard" cases. However, there may be some sharp edges. Please report any
-#' unexpected behaviour to our GitHub repo:
-#' https://github.com/grantmcdermott/tinyplot/issues
+#' While we feel confident that themes should work as expected for most
+#' "standard" cases, there may be some sharp edges. Please report any unexpected
+#' behaviour to our GitHub repo:
+#' <https://github.com/grantmcdermott/tinyplot/issues>
 #' 
 #' Known current limitations include:
 #' 
@@ -50,7 +50,7 @@
 #'
 #' @return The function returns nothing. It is called for its side effects.
 #' 
-#' @seealso [tpar] which does the heavy lifting under the hood.
+#' @seealso [`tpar`] which does the heavy lifting under the hood.
 #'
 #' @examples
 #' 

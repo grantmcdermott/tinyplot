@@ -21,11 +21,11 @@ dynamic plots are marked with an asterisk (*) below.
 \item \code{"default"}: inherits the user's default base graphics settings.
 \item \code{"basic"}: light modification of \code{"default"}, only adding filled points, a panel background grid, and light gray background to facet titles.
 \item \code{"clean"} (*): builds on \code{"basic"} by moving the subtitle above the plotting area, adding horizontal axis labels, employing tighter default plot margins and title gaps to reduce whitespace, and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors). The first of our dynamic themes and the foundation for several derivative themes that follow below.
-\item \code{"clean2"} (*): removes the plot frame (box) from \code{"clean"},
+\item \code{"clean2"} (*): removes the plot frame (box) from \code{"clean"}.
 \item \code{"classic"} (*): connects the axes in a L-shape, but removes the other top and right-hand edges of the plot frame (box). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
 \item \code{"bw"} (*): similar to \code{"clean"}, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
-\item \code{"ipsum"} (*): similar to \code{"bw"}, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
 \item \code{"minimal"} (*): removes the plot frame (box) from \code{"bw"}, as well as the background for facet titles. Inspired by the \strong{ggplot2} theme of the same name.
+\item \code{"ipsum"} (*): similar to \code{"minimal"}, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
 \item \code{"dark"} (*): similar to \code{"minimal"}, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
 \item \code{"tufte"}: floating axes and minimalist plot artifacts in the style of Edward Tufte.
 \item \code{"void"}: switches off all axes, titles, legends, etc.

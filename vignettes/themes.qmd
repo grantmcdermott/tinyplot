@@ -85,9 +85,8 @@ tinyplot(mpg ~ hp, data = mtcars, main = "Fuel efficiency vs. horsepower")
 
 ### Gallery
 
-The `tinytheme()` function ships with a number of built-in themes, which build
-on top of each other in an approximately hierarchical manner (adding or
-subtracting elements from the predecessor theme).
+We'll use the following running example to demonstrate the full gallery of
+built-in `tintheme()` themes.
 
 ```{r}
 p = function() {
@@ -120,83 +119,82 @@ p = function() {
 <!-- tinytheme() -->
 <!-- ``` -->
 
-#### default
+#### "default"
 
 ```{r}
 tinytheme() ## same as tinytheme("default")
 p()
 ```
 
-#### basic
+#### "basic"
 
 ```{r}
 tinytheme("basic")
 p()
 ```
 
-#### clean
+#### "clean"
 
 ```{r}
 tinytheme("clean")
 p()
 ```
 
-#### clean2
+#### "clean2"
 
 ```{r}
 tinytheme("clean2")
 p()
 ```
 
-#### bw
-
-```{r}
-tinytheme("bw")
-p()
-```
-
-#### classic
+#### "classic"
 
 ```{r}
 tinytheme("classic")
 p()
 ```
 
-#### minimal
+#### "bw"
+
+```{r}
+tinytheme("bw")
+p()
+```
+
+#### "minimal"
 
 ```{r}
 tinytheme("minimal")
 p()
 ```
 
-#### ipsum
+#### "ipsum"
 
 ```{r}
 tinytheme("ipsum")
 p()
 ```
 
-#### dark
+#### "dark"
 
 ```{r}
 tinytheme("dark")
 p()
 ```
 
-#### tufte
+#### "tufte"
 
 ```{r}
 tinytheme("tufte")
 p()
 ```
 
-#### void
+#### "void"
 
 ```{r}
 tinytheme("void")
 p()
 ```
-
 
 ```{r}
 # Reset to default theme

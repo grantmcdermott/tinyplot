@@ -512,7 +512,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>If you are viewing this file on CRAN, please check the <a href="https://grantmcdermott.com/tinyplot/NEWS.html">latest NEWS</a> on our website where the formatting is also better.</em></p>
 <section id="dev-version" class="level2">
 <h2 class="anchored" data-anchor-id="dev-version">0.2.1.99 (dev version)</h2>
-<p>New plot <code>type</code> processing and some breaking changes:</p>
+<p><strong>tinyplot</strong> v0.3.0 is a big release with many new features, both internal and user-facing. Below we have tried to group alike news items together, starting with the new plot type processing system.</p>
+<p>New plot <code>type</code> processing system:</p>
 <ul>
 <li>In previous versions of <code>tinyplot</code> the plot <code>type</code> was specified by character arguments, i.e., either the standard character shortcuts (such <code>"p"</code>, <code>"l"</code>, etc.) or labels (such as <code>"hist"</code>, <code>"boxplot"</code>, etc.). In addition, the <code>type</code> argument now accepts functional <code>type_*()</code> equivalents (e.g., <code>type_hist()</code>) which enable a variety of additional features, as well as a more disciplined approach to explicit argument passing for customized type behavior. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li>All plot types provided in the package can be specified either by a character label or the corresponding function. Thus, the following two are equivalent: <code>tinyplot(Nile, type = "hist")</code> and <code>tinyplot(Nile, type = type_hist())</code>.</li>
@@ -544,7 +545,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type_function()</code>: arbitrary function. (<a href="https://github.com/grantmcdermott/tinyplot/issues/250">#250</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 </ul></li>
 </ul>
-<p>New features:</p>
+<p>Other new features:</p>
 <ul>
 <li>New <code>tinyplot()</code> arguments:
 <ul>
@@ -554,6 +555,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 <li><code>tpar()</code> gains additional <code>grid.col</code>, <code>grid.lty</code>, and <code>grid.lwd</code> arguments for fine-grained control over the appearance of the default panel grid when <code>tinyplot(..., grid = TRUE)</code> is called. (<a href="https://github.com/grantmcdermott/tinyplot/issues/237">#237</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>The new <code>tinyplot_add()</code> (alias: <code>plt_add()</code>) convenience function allows easy layering of plots without having to specify repeat arguments. (<a href="https://github.com/grantmcdermott/tinyplot/issues/246">#246</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li>The new <code>tinytheme()</code> function provides a convenient mechanism for styling plots according to a variety of pre-defined themes, e.g.&nbsp;<code>tinytheme("clean")</code>. Users can also add their own custom themes or tweak an existing theme. Themes are persistent and will affect all subsequent plots until they are explicitly reset, e.g.&nbsp;by calling <code>tinytheme()</code> (with no argument) to restore the default plot aesthetic. Behind the scenes, <code>tinytheme()</code> sets a hook for a group graphical parameters by passing them through <code>tpar()</code>. Users can still use <code>tpar()</code> to style their plots by manually setting individual graphical parameters. But going forward we expect that most <strong>tinyplot</strong> users will prefer the convenience of going through <code>tinytheme()</code>. More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/themes.html">Themes vignette</a> on the website. (<a href="https://github.com/grantmcdermott/tinyplot/issues/258">#258</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Bug fixes:</p>
 <ul>

@@ -540,7 +540,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>“clean”</code> (*): builds on <code>“basic”</code> by moving the subtitle above the plotting area, adding horizontal axis labels, employing tighter default plot margins and title gaps to reduce whitespace, and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors). The first of our dynamic themes and the foundation for several derivative themes that follow below.</p>
 </li>
 <li>
-<p><code>“clean2”</code> (*): removes the plot frame (box) from <code>“clean”</code>,</p>
+<p><code>“clean2”</code> (*): removes the plot frame (box) from <code>“clean”</code>.</p>
 </li>
 <li>
 <p><code>“classic”</code> (*): connects the axes in a L-shape, but removes the other top and right-hand edges of the plot frame (box). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
@@ -549,10 +549,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>“bw”</code> (*): similar to <code>“clean”</code>, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
 </li>
 <li>
-<p><code>“ipsum”</code> (*): similar to <code>“bw”</code>, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the <strong>hrbrthemes</strong> theme of the same name for <strong>ggplot2</strong>.</p>
+<p><code>“minimal”</code> (*): removes the plot frame (box) from <code>“bw”</code>, as well as the background for facet titles. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
 </li>
 <li>
-<p><code>“minimal”</code> (*): removes the plot frame (box) from <code>“bw”</code>, as well as the background for facet titles. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
+<p><code>“ipsum”</code> (*): similar to <code>“minimal”</code>, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the <strong>hrbrthemes</strong> theme of the same name for <strong>ggplot2</strong>.</p>
 </li>
 <li>
 <p><code>“dark”</code> (*): similar to <code>“minimal”</code>, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.</p>
@@ -580,7 +580,7 @@ Named arguments to override specific theme settings. These arguments are passed 
 <h3 class="anchored" data-anchor-id="details">Details</h3>
 <p>Sets a list of graphical parameters using <code>tpar()</code></p>
 <p>To reset the theme to default settings (no customization), call <code>tinytheme()</code> without arguments.</p>
-<p><strong>Cavear emptor:</strong> Themes are a somewhat experimental feature of <code>tinyplot</code>. We are reasonably confident that they should work as expected for most "standard" cases. However, there may be some sharp edges. Please report any unexpected behaviour to our GitHub repo: https://github.com/grantmcdermott/tinyplot/issues</p>
+<p><strong>Caveat emptor:</strong> Themes are a somewhat experimental feature of <code>tinyplot</code>. While we feel confident that themes should work as expected for most "standard" cases, there may be some sharp edges. Please report any unexpected behaviour to our GitHub repo: <a href="https://github.com/grantmcdermott/tinyplot/issues">https://github.com/grantmcdermott/tinyplot/issues</a></p>
 <p>Known current limitations include:</p>
 <ul>
 <li>
@@ -590,7 +590,7 @@ Named arguments to override specific theme settings. These arguments are passed 
 <p>Themes do not play nicely with some complex plot types, particularly <code>“spineplot”</code> and <code>“ridge”</code>.</p>
 </li>
 <li>
-<p>Dynamic margin spacing does not account for multi-line strings (e.g., axes or main titles that contain <code>“”</code>).</p>
+<p>Dynamic margin spacing does not account for multi-line strings (e.g., axes or main titles that contain "").</p>
 </li>
 </ul>
 </section>
@@ -600,7 +600,7 @@ Named arguments to override specific theme settings. These arguments are passed 
 </section>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p>tpar which does the heavy lifting under the hood.</p>
+<p><code>tpar</code> which does the heavy lifting under the hood.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>

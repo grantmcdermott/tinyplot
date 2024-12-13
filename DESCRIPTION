@@ -47,7 +47,6 @@ Imports:
   utils
 Suggests:
   altdoc (>= 0.4.0),
-  basetheme,
   fontquiver,
   png,
   rsvg,

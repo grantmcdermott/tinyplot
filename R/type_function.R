@@ -5,7 +5,7 @@
 #' the range of values to plot on the x-axis.
 #'
 #' @param fun Function of `x` to plot. Defaults to \code{\link[stats]{dnorm}}.
-#' @param args Additional arguments to be passed to `fun`
+#' @param args List of additional arguments to be passed to `fun`.
 #' @param n Number of points to interpolate on the x axis.
 #' @param ... Additional arguments are passed to the `lines()` function,
 #' ex: `type="p"`, `col="pink"`.

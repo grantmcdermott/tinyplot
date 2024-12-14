@@ -93,6 +93,8 @@ website:
               file: man/type_function.qmd
             - text: type_hline
               file: man/type_hline.qmd
+            - text: type_summary
+              file: man/type_summary.qmd
             - text: type_vline
               file: man/type_vline.qmd
         #

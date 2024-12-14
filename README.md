@@ -15,7 +15,8 @@
 ## What
 
 A lightweight extension of the base R graphics system, with support for
-automatic grouping, legends, facets, and various other enhancements.
+automatic grouping, legends, facets, themes, and various other
+enhancements.
 
 The stable version of **tinyplot** is available on CRAN.
 
@@ -102,16 +103,29 @@ plt(
 
 <img src="man/figures/README-quickstart3-1.png" style="width:70.0%" />
 
-Grouped grouped density plot with automatic legend:
+Speaking of aesthetic tweaks, **tinyplot** also provides a set of
+built-in themes for convenient plot customization:
+
+``` r
+tinytheme("clean2")
+
+plt(Sepal.Length ~ Petal.Length | Species, data = iris)
+```
+
+<img src="man/figures/README-quickstart_theme-1.png"
+style="width:70.0%" />
+
+Themes are persistent and will be applied to subsequent plots. For
+example, here is a grouped grouped density plot:
 
 ``` r
 plt(
   ~ Petal.Length | Species,
   data = iris,
   type = "density",
-  palette = "dark", fill = "by",
-  grid = TRUE,
-  main = "Distribution of petal lengths by species"
+  fill = "by",
+  main = "Distribution of petal lengths",
+  sub = "Grouped by species"
 )
 ```
 
@@ -123,14 +137,17 @@ facet layout:
 ``` r
 plt(
   Sepal.Length ~ Petal.Length | Sepal.Length, data = iris,
-  facet = ~Species, facet.args = list(bg = "grey90"),
-  pch = 19,
-  main = "Faceted Species!",
-  grid = TRUE, frame = FALSE
+  facet = ~Species, pch = 19,
+  main = "Faceted flowers", sub = "Brought to you by tinyplot"
 )
 ```
 
 <img src="man/figures/README-quickstart5-1.png" style="width:70.0%" />
+
+``` r
+# reset the theme 
+tinytheme()
+```
 
 Hopefully, these have been enough to pique your interest. Head over to
 the [intro

@@ -68,6 +68,8 @@ New plot types:
     - `type_hline()`: horizontal line(s) (#249 @vincentarelbundock)
     - `type_vline()`: vertical line(s) (#249 @vincentarelbundock)
     - `type_function()`: arbitrary function. (#250 @vincentarelbundock)
+    - `type_summary()`: summarize values of `y` along unique values of `x` (#274
+    @grantmcdermott)
 
 Other new features:
 

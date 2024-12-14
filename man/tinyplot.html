@@ -425,6 +425,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_summary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_vline.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_vline</span></a>
   </div>
@@ -747,43 +753,99 @@ a data.frame (or list) from which the variables in formula should be taken. A ma
 </ul>
 </li>
 <li>
-<p><code>tinyplot</code> types:</p>
+<p><code>tinyplot</code>-specific types. These fall into several categories:</p>
 <ul>
 <li>
-<p><code>“rect”</code>, <code>“segments”</code>, or <code>“polygon”</code>: Equivalent to base <code>R</code></p>
+<p>Shapes:</p>
+<ul>
+<li>
+<p><code>“area”</code> / <code>type_area()</code>: Plots the area under the curve from <code>y</code> = 0 to <code>y</code> = f(<code>x</code>).</p>
 </li>
 <li>
-<p><code>“density”</code>: Kernel density plot</p>
+<p><code>“errorbar”</code> / <code>type_errorbar()</code>: Adds error bars to points; requires <code>ymin</code> and <code>ymax</code>.</p>
 </li>
 <li>
-<p><code>“jitter”</code> or <code>type_jitter()</code>: Jittered points</p>
+<p><code>“pointrange”</code> / <code>type_pointrange()</code>: Combines points with error bars.</p>
 </li>
 <li>
-<p><code>“polypath”</code> or <code>type_polypath()</code></p>
+<p><code>“polygon”</code> / <code>type_polygon()</code>: Draws polygons.</p>
 </li>
 <li>
-<p><code>“boxplot”</code> or <code>type_boxplot()</code></p>
+<p><code>“polypath”</code> / <code>type_polypath()</code>: Draws a path whose vertices are given in <code>x</code> and <code>y</code>.</p>
 </li>
 <li>
-<p><code>“histogram”</code> or <code>type_histogram()</code></p>
+<p><code>“rect”</code> / <code>type_rect()</code>: Draws rectangles; requires <code>xmin</code>, <code>xmax</code>, <code>ymin</code>, and <code>ymax</code>.</p>
 </li>
 <li>
-<p><code>“pointrange”</code> or <code>“errorbar”</code>: segment intervals</p>
+<p><code>“ribbon”</code> / <code>type_ribbon()</code>: Creates a filled area between <code>ymin</code> and <code>ymax</code>.</p>
 </li>
 <li>
-<p><code>“ribbon”</code> or <code>“area”</code> for polygon intervals (where area plots are a special case of ribbon plots with <code>ymin</code> set to 0 and <code>ymax</code> set to <code>y</code>; see below).</p>
+<p><code>“segments”</code> / <code>type_segments()</code>: Draws line segments between pairs of points.</p>
+</li>
+</ul>
 </li>
 <li>
-<p><code>“lm”</code> or <code>type_lm()</code>: Linear model fit</p>
+<p>Visualizations:</p>
+<ul>
+<li>
+<p><code>“boxplot”</code> / <code>type_boxplot()</code>: Creates a box-and-whisker plot.</p>
 </li>
 <li>
-<p><code>“glm”</code> or <code>type_glm()</code>: Generalized linear model fit</p>
+<p><code>“density”</code>: Plots the density estimate of a variable.</p>
 </li>
 <li>
-<p><code>“loess”</code> or <code>type_loess()</code>: Local regression fit</p>
+<p><code>“histogram”</code> / <code>type_histogram()</code>: Creates a histogram of a single variable.</p>
 </li>
 <li>
-<p><code>“spline”</code> or <code>type_spline()</code>: Cubic spline fit</p>
+<p><code>“jitter”</code> / <code>type_jitter()</code>: Jittered points.</p>
+</li>
+<li>
+<p><code>“qq”</code> / <code>type_qq()</code>: Creates a quantile-quantile plot.</p>
+</li>
+<li>
+<p><code>“ridge”</code> / <code>type_ridge()</code>: Creates a ridgeline (aka joy) plot.</p>
+</li>
+<li>
+<p><code>“spineplot”</code> / <code>type_spineplot()</code>: Creates a spineplot or spinogram.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Models:</p>
+<ul>
+<li>
+<p><code>“loess”</code> / <code>type_loess()</code>: Local regression curve.</p>
+</li>
+<li>
+<p><code>“lm”</code> / <code>type_lm()</code>: Linear regression line.</p>
+</li>
+<li>
+<p><code>“glm”</code> / <code>type_glm()</code>: Generalized linear model fit.</p>
+</li>
+<li>
+<p><code>“spline”</code> / <code>type_spline()</code>: Cubic (or Hermite) spline interpolation.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Functions:</p>
+<ul>
+<li>
+<p><code>type_abline()</code>: line(s) with intercept and slope.</p>
+</li>
+<li>
+<p><code>type_hline()</code>: horizontal line(s).</p>
+</li>
+<li>
+<p><code>type_vline()</code>: vertical line(s).</p>
+</li>
+<li>
+<p><code>type_function()</code>: arbitrary function.</p>
+</li>
+<li>
+<p><code>type_summary()</code>: summarize <code>y</code> by unique values of <code>x</code>.</p>
+</li>
+</ul>
 </li>
 </ul>
 </li>

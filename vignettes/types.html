@@ -425,6 +425,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_summary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_vline.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_vline</span></a>
   </div>
@@ -561,14 +567,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Beyond the base types, <strong>tinyplot</strong> introduces additional plot types for more advanced visualizations. Each of these additional types are available either as a convenience string (with default behaviour) or a companion <code>type_*()</code> function (with options for customized behaviour).</p>
 <p>Shapes:</p>
 <ul>
-<li><code>area</code> / <code>type_area()</code>: Plots the area under the curve from <code>y</code> = 0 to <code>y</code> = f(<code>x</code>).</li>
+<li><code>"area"</code> / <code>type_area()</code>: Plots the area under the curve from <code>y</code> = 0 to <code>y</code> = f(<code>x</code>).</li>
 <li><code>"errorbar"</code> / <code>type_errorbar()</code>: Adds error bars to points; requires <code>ymin</code> and <code>ymax</code>.</li>
-<li><code>pointrange</code> / <code>type_pointrange</code>: Combines points with error bars.</li>
+<li><code>"pointrange"</code> / <code>type_pointrange()</code>: Combines points with error bars.</li>
 <li><code>"polygon"</code> / <code>type_polygon()</code>: Draws polygons.</li>
 <li><code>"polypath"</code> / <code>type_polypath()</code>: Draws a path whose vertices are given in <code>x</code> and <code>y</code>.</li>
-<li><code>rect</code> / <code>type_area()</code>: Draws rectangles; requires <code>xmin</code>, <code>xmax</code>, <code>ymin</code>, and <code>ymax</code>.</li>
-<li><code>ribbon</code> / <code>type_ribbon()</code>: Creates a filled area between <code>ymin</code> and <code>ymax</code>.</li>
-<li><code>"segments"</code> / <code>type_segements()</code>: Draws line segments between pairs of points.</li>
+<li><code>"rect"</code> / <code>type_rect()</code>: Draws rectangles; requires <code>xmin</code>, <code>xmax</code>, <code>ymin</code>, and <code>ymax</code>.</li>
+<li><code>"ribbon"</code> / <code>type_ribbon()</code>: Creates a filled area between <code>ymin</code> and <code>ymax</code>.</li>
+<li><code>"segments"</code> / <code>type_segments()</code>: Draws line segments between pairs of points.</li>
 </ul>
 <p>Visualizations:</p>
 <ul>
@@ -577,6 +583,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>"histogram"</code> / <code>type_histogram()</code>: Creates a histogram of a single variable.</li>
 <li><code>"jitter"</code> / <code>type_jitter()</code>: Jittered points.</li>
 <li><code>"qq"</code> / <code>type_qq()</code>: Creates a quantile-quantile plot.</li>
+<li><code>"ridge"</code> / <code>type_ridge()</code>: Creates a ridgeline (aka joy) plot.</li>
 <li><code>"spineplot"</code> / <code>type_spineplot()</code>: Creates a spineplot or spinogram.</li>
 </ul>
 <p>Models:</p>
@@ -592,6 +599,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type_hline()</code>: horizontal line(s).</li>
 <li><code>type_vline()</code>: vertical line(s).</li>
 <li><code>type_function()</code>: arbitrary function.</li>
+<li><code>type_summary()</code>: summarize <code>y</code> by unique values of <code>x</code>.</li>
 </ul>
 <p>To see the difference between the convenience strings and their respective <code>type_*()</code> functional equivalents, let’s quickly walk through two examples.</p>
 <p><strong>Example 1: jittering.</strong> We can add noise to data points using jittering. This allows us to avoid overplotting and can be useful to visualize discrete variables. On the left, we use the <code>"jitter</code> string shortcut with default settings. On the right, we use the <code>type_jitter()</code> function to reduce the amount of jittering.</p>

@@ -7,7 +7,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Lightweight extension of the base R graphics system, with support for automatic legends, facets, and various other enhancements.
+Lightweight extension of the base R graphics system, with support for automatic legends, facets, themes, and various other enhancements.
 }
 \seealso{
 Useful links:

@@ -142,7 +142,8 @@ tpar = function(..., hook = FALSE) {
       } else {
         par_names = names(par(no.readonly = TRUE))
         base_par = base_par[names(base_par) %in% par_names]
-        par(base_par) 
+        base_par_old = par(base_par)
+        par(base_par)
       }
     }
   }
@@ -183,6 +184,7 @@ tpar = function(..., hook = FALSE) {
     # a la `oldpar = par(param = new_value)`
   } else {
     `names<-`(lapply(nam, function(x) .tpar[[x]]), nam)
+    if (length(base_par) > 0 && isFALSE(hook)) tpar_old = modifyList(tpar_old, base_par_old, keep.null = TRUE)
     return(invisible(tpar_old))
   }
 }

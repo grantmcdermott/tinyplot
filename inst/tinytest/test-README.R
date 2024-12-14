@@ -137,28 +137,3 @@ expect_snapshot_plot(f, label = "readme_hershey_plus")
 #
 
 tpar(op)
-
-#
-# continue with tests
-#
-
-exit_file("basetheme: test after tinytheme if we still want to")
-
-if (length(find.package("basetheme", quiet = TRUE)) == 0) exit_file("basetheme")
-library(basetheme)
-basetheme("royal") # or "clean", "dark", "ink", "brutal", etc.
-
-f = function() {
-  tinyplot(
-    Temp ~ Day | Month,
-    data = aq,
-    type = "b", pch = 15:19,
-    palette = "Tropic",
-    main = "Daily temperatures by month"
-  )
-}
-expect_snapshot_plot(f, label = "readme_basetheme_royal")
-
-# back to default theme
-basetheme(NULL)
-# dev.off()

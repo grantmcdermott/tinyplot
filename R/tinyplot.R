@@ -483,23 +483,24 @@
 #'   palette = "tableau"
 #' )
 #'
-#' # It's possible to further customize the look of you plots using familiar
-#' # arguments and base plotting theme settings (e.g., via `(t)par`).
+#' # It's possible to customize the look of your plots by setting graphical
+#' # parameters (e.g., via `(t)par`)... But a more convenient way is to just use
+#' # built-in themes (see `?tinytheme`). 
 #'
-#' op = tpar(family = "HersheySans", las = 1)
+#' tinytheme("clean2")
 #' tinyplot(
-#'   Temp ~ Day | Month,
-#'   data = aq,
-#'   type = "b", pch = 16,
-#'   palette = "tableau", alpha = 0.5,
+#'   Temp ~ Day | Month, data = aq,
+#'   type = "b",
+#'   alpha = 0.5,
 #'   main = "Daily temperatures by month",
-#'   frame = FALSE, grid = TRUE
+#'   sub = "Brought to you by tinyplot"
 #' )
-#' tpar(op) # restore original graphics parameters
+#' # reset the theme
+#' tinytheme()
 #'
-#' # Note: For more examples and a detailed walkthrough, please see the
-#' # introductory tinyplot tutorial available online:
-#' # https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html
+#' # For more examples and a detailed walkthrough, please see the introductory
+#' # tinyplot tutorial available online:
+#' # https://grantmcdermott.com/tinyplot/vignettes/introduction.html
 #'
 #' @rdname tinyplot
 #' @export

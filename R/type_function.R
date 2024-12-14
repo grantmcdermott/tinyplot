@@ -1,15 +1,16 @@
-#' Add function to a plot
+#' Plot a function
 #'
 #' @details
 #' When using `type_function()` in a `tinyplot()` call, the `x` value indicates
 #' the range of values to plot on the x-axis.
 #'
 #' @param fun Function of `x` to plot. Defaults to \code{\link[stats]{dnorm}}.
-#' @param args Additional arguments to be passed to `fun`
+#' @param args List of additional arguments to be passed to `fun`.
 #' @param n Number of points to interpolate on the x axis.
 #' @param ... Additional arguments are passed to the `lines()` function,
 #' ex: `type="p"`, `col="pink"`.
 #' @importFrom stats dnorm
+#' 
 #' @examples
 #' # Plot the normal density
 #' tinyplot(x = -4:4, type = type_function(dnorm))
@@ -29,7 +30,6 @@
 #' # (Here using the `\()` anonymous function syntax introduced in R 4.1.0)
 #' tinyplot(x = -4:4, type = type_function(fun = \(x) 0.5 * exp(-abs(x))))
 #'
-#' @importFrom stats dnorm
 #' @export
 type_function = function(fun = dnorm, args = list(), n = 101, ...) {
   assert_function(fun)

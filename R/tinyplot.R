@@ -90,21 +90,35 @@
 #'     - `"S"` Stair steps
 #'     - `"h"` Histogram-like vertical lines
 #'     - `"n"` Empty plot over the extent of the data
-#'   - `tinyplot` types:
-#'      - `"rect"`, `"segments"`, or `"polygon"`: Equivalent to base `R`
-#'      - `"density"`: Kernel density plot
-#'      - `"jitter"` or `type_jitter()`: Jittered points
-#'      - `"polypath"` or `type_polypath()`
-#'      - `"boxplot"` or `type_boxplot()`
-#'      - `"histogram"` or `type_histogram()`
-#'      - `"pointrange"` or `"errorbar"`: segment intervals
-#'      - `"ribbon"` or `"area"` for polygon intervals (where area plots
-#'        are a special case of ribbon plots with `ymin` set to 0 and `ymax`
-#'        set to `y`; see below).
-#'      - `"lm"` or `type_lm()`: Linear model fit
-#'      - `"glm"` or `type_glm()`: Generalized linear model fit
-#'      - `"loess"` or `type_loess()`: Local regression fit
-#'      - `"spline"` or `type_spline()`: Cubic spline fit
+#'   - `tinyplot`-specific types. These fall into several categories:
+#'     - Shapes:
+#'       - `"area"` / [`type_area()`]: Plots the area under the curve from `y` = 0 to `y` = f(`x`).
+#'       - `"errorbar"` / [`type_errorbar()`]: Adds error bars to points; requires `ymin` and `ymax`.
+#'       - `"pointrange"` / [`type_pointrange()`]: Combines points with error bars.
+#'       - `"polygon"` / [`type_polygon()`]: Draws polygons.
+#'       - `"polypath"` / [`type_polypath()`]: Draws a path whose vertices are given in `x` and `y`.
+#'       - `"rect"` / [`type_rect()`]: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
+#'       - `"ribbon"` / [`type_ribbon()`]: Creates a filled area between `ymin` and `ymax`.
+#'       - `"segments"` / [`type_segments()`]: Draws line segments between pairs of points.
+#'     - Visualizations:
+#'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
+#'       - `"density"`: Plots the density estimate of a variable.
+#'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.
+#'       - `"jitter"` / [`type_jitter()`]: Jittered points.
+#'       - `"qq"` / [`type_qq()`]: Creates a quantile-quantile plot.
+#'       - `"ridge"` / [`type_ridge()`]: Creates a ridgeline (aka joy) plot.
+#'       - `"spineplot"` / [`type_spineplot()`]: Creates a spineplot or spinogram.
+#'     - Models:
+#'       - `"loess"` / [`type_loess()`]: Local regression curve.
+#'       - `"lm"` / [`type_lm()`]: Linear regression line.
+#'       - `"glm"` / [`type_glm()`]: Generalized linear model fit.
+#'       - `"spline"` / [`type_spline()`]: Cubic (or Hermite) spline interpolation.
+#'     - Functions:
+#'       - [`type_abline()`]: line(s) with intercept and slope.
+#'       - [`type_hline()`]: horizontal line(s).
+#'       - [`type_vline()`]: vertical line(s).
+#'       - [`type_function()`]: arbitrary function. 
+#'       - [`type_summary()`]: summarize `y` by unique values of `x`.
 #' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   `"rect"` or `"segments"` (where all four min-max coordinates are required),

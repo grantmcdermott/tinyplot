@@ -1,7 +1,7 @@
 #' Plot summary values of `y` at unique values of `x`
 #'
 #' @md
-#' @details
+#' @description
 #' Applies a summary function to `y` along unique values of `x`. This is useful,
 #' say, for quickly plotting mean values of your dataset. Internally,
 #' `type_summary()` applies a thin wrapper around \code{\link[stats]{ave}} and

@@ -1,4 +1,4 @@
-#' Add function to a plot
+#' Plot a function
 #'
 #' @details
 #' When using `type_function()` in a `tinyplot()` call, the `x` value indicates

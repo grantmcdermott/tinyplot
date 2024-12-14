@@ -2,14 +2,14 @@
 % Please edit documentation in R/type_function.R
 \name{type_function}
 \alias{type_function}
-\title{Add function to a plot}
+\title{Plot a function}
 \usage{
 type_function(fun = dnorm, args = list(), n = 101, ...)
 }
 \arguments{
 \item{fun}{Function of \code{x} to plot. Defaults to \code{\link[stats]{dnorm}}.}
 
-\item{args}{Additional arguments to be passed to \code{fun}}
+\item{args}{List of additional arguments to be passed to \code{fun}.}
 
 \item{n}{Number of points to interpolate on the x axis.}
 
@@ -17,7 +17,7 @@ type_function(fun = dnorm, args = list(), n = 101, ...)
 ex: \code{type="p"}, \code{col="pink"}.}
 }
 \description{
-Add function to a plot
+Plot a function
 }
 \details{
 When using \code{type_function()} in a \code{tinyplot()} call, the \code{x} value indicates

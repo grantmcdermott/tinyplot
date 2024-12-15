@@ -107,6 +107,7 @@
 #'       - `"jitter"` / [`type_jitter()`]: Jittered points.
 #'       - `"qq"` / [`type_qq()`]: Creates a quantile-quantile plot.
 #'       - `"ridge"` / [`type_ridge()`]: Creates a ridgeline (aka joy) plot.
+#'       - `"rug"` / [`type_rug()`]: Adds a rug to an existing plot.
 #'       - `"spineplot"` / [`type_spineplot()`]: Creates a spineplot or spinogram.
 #'     - Models:
 #'       - `"loess"` / [`type_loess()`]: Local regression curve.

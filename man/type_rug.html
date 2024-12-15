@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>type_jitter – tinyplot</title>
+<title>type_rug – tinyplot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -137,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_boxplot.html">Visualizations</a></li><li class="breadcrumb-item"><a href="../man/type_jitter.html">type_jitter</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_boxplot.html">Visualizations</a></li><li class="breadcrumb-item"><a href="../man/type_rug.html">type_rug</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -337,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_jitter</span></a>
   </div>
 </li>
@@ -355,7 +355,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">type_rug</span></a>
   </div>
 </li>
@@ -498,7 +498,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#jittered-points-plot-type" id="toc-jittered-points-plot-type" class="nav-link active" data-scroll-target="#jittered-points-plot-type">Jittered points plot type</a>
+  <li><a href="#add-a-rug-to-a-plot" id="toc-add-a-rug-to-a-plot" class="nav-link active" data-scroll-target="#add-a-rug-to-a-plot">Add a rug to a plot</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
@@ -510,20 +510,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_boxplot.html">Visualizations</a></li><li class="breadcrumb-item"><a href="../man/type_jitter.html">type_jitter</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_boxplot.html">Visualizations</a></li><li class="breadcrumb-item"><a href="../man/type_rug.html">type_rug</a></li></ol></nav></header>
 
 
 
 
-<section id="jittered-points-plot-type" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="jittered-points-plot-type">Jittered points plot type</h2>
+<section id="add-a-rug-to-a-plot" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="add-a-rug-to-a-plot">Add a rug to a plot</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Type function for plotting jittered points. Arguments are passed to <code>jitter</code>.</p>
+<p>Adds a rug representation (1-d plot) of the data to the plot.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_jitter(factor = 1, amount = NULL)
+<pre><code class="language-R">type_rug(
+  ticksize = 0.03,
+  side = 1,
+  quiet = getOption("warn") &lt; 0,
+  jitter = FALSE,
+  amount = NULL
+)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -531,10 +537,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table>
 <tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="factor">factor</code>
+<code id="ticksize">ticksize</code>
 </td>
 <td>
-numeric.
+The length of the ticks making up the ‘rug’. Positive lengths give inwards ticks.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="side">side</code>
+</td>
+<td>
+On which side of the plot box the rug will be plotted. Normally 1 (bottom) or 3 (top).
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="quiet">quiet</code>
+</td>
+<td>
+logical indicating if there should be a warning about clipped values.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="jitter">jitter</code>
+</td>
+<td>
+Logical. Add jittering to separate ties? Default is <code>FALSE</code>.
 </td>
 </tr>
 <tr>
@@ -542,39 +572,42 @@ numeric.
 <code id="amount">amount</code>
 </td>
 <td>
-<p>numeric; if positive, used as <em>amount</em> (see below), otherwise, if <code>= 0</code> the default is <code>factor * z/50</code>.</p>
-Default (<code>NULL</code>): <code>factor * d/5</code> where <code>d</code> is about the smallest difference between <code>x</code> values.
+Numeric. Amount of jittering (see <code>jitter</code>). Only used if <code>jitter</code> is <code>TRUE</code>.
 </td>
 </tr>
 </tbody></table>
 </section>
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>The result, say <code>r</code>, is <code>r &lt;- x + runif(n, -a, a)</code> where <code>n &lt;- length(x)</code> and <code>a</code> is the <code>amount</code> argument (if specified).</p>
-<p>Let <code>z &lt;- max(x) - min(x)</code> (assuming the usual case). The amount <code>a</code> to be added is either provided as <em>positive</em> argument <code>amount</code> or otherwise computed from <code>z</code>, as follows:</p>
-<p>If <code>amount == 0</code>, we set <code>a &lt;- factor * z/50</code> (same as S).</p>
-<p>If <code>amount</code> is <code>NULL</code> (<em>default</em>), we set <code>a &lt;- factor * d/5</code> where <em>d</em> is the smallest difference between adjacent unique (apart from fuzz) <code>x</code> values.</p>
+<p>This function should only be used as part of <code>tinyplot_add()</code>, i.e.&nbsp;adding to an existing plot.</p>
+<p>In most cases, determining which variable receives the rug representation will be based on the <code>side</code> argument (i.e., x-variable if side is 1 or 3, and y-variable if side is 2 or 4). An exception is if the preceding plot type was either <code>“density”</code> or <code>“histogram”</code>; for these latter cases, the x-variable will always be used. See Examples.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># "jitter" type convenience string</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"jitter"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>wt <span class="sc">|</span> am, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"density"</span>, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">fill =</span> <span class="st">"by"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"rug"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># use type_rug() to pass extra options</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_rug</span>(<span class="at">side =</span> <span class="dv">3</span>, <span class="at">ticksize =</span> <span class="fl">0.05</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="type_jitter_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_rug_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use `type_jitter()` to pass extra arguments for customization</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="fu">type_jitter</span>(<span class="at">factor =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For ties, use jittering</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(eruptions <span class="sc">~</span> waiting, <span class="at">data =</span> faithful, <span class="at">type =</span> <span class="st">"lm"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_rug</span>(<span class="at">jitter =</span> <span class="cn">TRUE</span>, <span class="at">amount =</span> <span class="fl">0.3</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_rug</span>(<span class="at">jitter =</span> <span class="cn">TRUE</span>, <span class="at">amount =</span> <span class="fl">0.1</span>, <span class="at">side =</span> <span class="dv">2</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Add original points just for reference</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"p"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="type_jitter_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_rug_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

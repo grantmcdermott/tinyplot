@@ -16,7 +16,7 @@ sanitize_type = function(type, x, y, dots) {
     "density",
     "abline", "area", "boxplot", "errorbar", "function", "glm", "hist",
     "histogram", "hline", "j", "jitter", "lines", "lm", "loess", "pointrange",
-    "points", "polygon", "polypath", "qq", "rect", "ribbon", "ridge",
+    "points", "polygon", "polypath", "qq", "rect", "ribbon", "ridge", "rug",
     "segments", "spineplot", "spline", "vline"
   )
   assert_choice(type, types, null.ok = TRUE)
@@ -56,6 +56,7 @@ sanitize_type = function(type, x, y, dots) {
     "rect"       = type_rect,
     "ribbon"     = type_ribbon,
     "ridge"      = type_ridge,
+    "rug"        = type_rug,
     "segments"   = type_segments,
     "spineplot"  = type_spineplot,
     "spline"     = type_spline,

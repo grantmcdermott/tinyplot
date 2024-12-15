@@ -33,7 +33,7 @@ install.packages("tinyplot", repos = "https://grantmcdermott.r-universe.dev")
 ## Why
 
 R users are spoiled for choice when it comes to visualization
-frameworks. The options, of course, include **lattice** and **ggplot2**;
+frameworks. The options, of course, include **ggplot2** and **lattice**;
 say nothing of the bewildering array of extensions built around, on top
 of, and in between these amazing packages.[^1]
 
@@ -151,17 +151,17 @@ tinytheme()
 
 Hopefully, these have been enough to pique your interest. Head over to
 the [intro
-tutorial](https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html)
+tutorial](https://grantmcdermott.com/tinyplot/vignettes/introduction.html)
 for many more examples, including model-based and custom plot types.
 
-[^1]: Both **lattice** and **ggplot2** are built on top of the **grid**
-    package, which was incoporated into the base R distribution way back
-    in R 2.0.0. **ggplot2**, in particular, is arguably the most
-    important and influential (high-level) graphics library of the last
-    two decades, across any programming language.
+[^1]: You could make a strong case that **ggplot2**, in particular, is
+    the most influential graphics library of the last two decades,
+    across any programming language. Both **ggplot2** and **lattice**
+    are built on top of the lower-level **grid** package, which was
+    incorporated into the base R distribution way back in R 2.0.0.
 
 [^2]: Just type `demo(graphics)` or `demo(persp)` into your R console to
     get an idea. Or, take a look at
     [these](https://github.com/karoliskoncevicius/r_notes/blob/main/baseplotting.md)
-    [two](https://quizzical-engelbart-d15a44.netlify.app/2021-2022_m2-data-2_visu-2_practice#1)
+    [two](https://poisonalien.github.io/basegraphics/baseplots.html)
     excellent tutorials.

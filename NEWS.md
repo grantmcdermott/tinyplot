@@ -58,6 +58,8 @@ New plot types:
     @vincentarelbundock)
     - `type_ridge()` (shortcut: `"ridge"`) for ridge plots aka Joy plots.
     (#252 @vincentarelbundock, @zeileis, and @grantmcdermott)
+    - `type_rug()` (shortcut: `"rug"`) adds a rug to an existing plot. (#276
+    @grantmcdermott)
   - Models:
     - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)

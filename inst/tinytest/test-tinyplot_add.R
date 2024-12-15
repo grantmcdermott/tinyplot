@@ -37,3 +37,18 @@ f = function() {
   tinyplot_add(mpg ~ hp | factor(cyl), type = "p", pch = 16)
 }
 expect_snapshot_plot(f, label = "tinyplot_add_unnamed")
+
+# type = "rug"
+f = function() {
+  tinyplot(eruptions ~ waiting, data = faithful, type = "lm")
+  tinyplot_add(type = "rug")
+  tinyplot_add(type = type_rug(side = 2, jitter = TRUE, amount = 0.1))
+}
+expect_snapshot_plot(f, label = "tinyplot_add_rug")
+
+# type = "rug" (adding to "density" should default to x variable)
+f = function() {
+  tinyplot( ~ eruptions, data = faithful, type = "density")
+  tinyplot_add(type = "rug")
+}
+expect_snapshot_plot(f, label = "tinyplot_add_rug_density")

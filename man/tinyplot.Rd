@@ -233,6 +233,7 @@ type of plot desired.
 \item \code{"jitter"} / \code{\link[=type_jitter]{type_jitter()}}: Jittered points.
 \item \code{"qq"} / \code{\link[=type_qq]{type_qq()}}: Creates a quantile-quantile plot.
 \item \code{"ridge"} / \code{\link[=type_ridge]{type_ridge()}}: Creates a ridgeline (aka joy) plot.
+\item \code{"rug"} / \code{\link[=type_rug]{type_rug()}}: Adds a rug to an existing plot.
 \item \code{"spineplot"} / \code{\link[=type_spineplot]{type_spineplot()}}: Creates a spineplot or spinogram.
 }
 \item Models:

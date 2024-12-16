@@ -174,6 +174,7 @@ arrangements like `tinyplot(mpg ~ wt, data = mtcars, facet = am + vs ~ gear)`)
 now plot all panels correctly, even if some combinations are missing. (#197
 @grantmcdermott)
 - Fix alignment of facet titles when axes are logged. (#207 @grantmcdermott)
+- Consistent decimals for gradient legends (#277 @grantmcdermott) 
 
 Internals:
 

@@ -574,7 +574,7 @@ gradient_legend = function(legend_args, lmar = NULL, outer_right = NULL, outer_b
   
   if (isFALSE(horiz)) {
     labs_idx = !is.na(lgnd_labs)
-    lgnd_labs[labs_idx] = paste0(" ", lgnd_labs[labs_idx])
+    lgnd_labs[labs_idx] = paste0(" ", format(lgnd_labs[labs_idx]))
     lbl_x_anchor = rasterbox[3]
     ttl_x_anchor = rasterbox[1]
     lbl_adj = c(0, 0.5)

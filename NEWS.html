@@ -613,6 +613,7 @@ Simultaneously, the main plotting functions also gain the <code>xaxt</code> and 
 <li>Avoid triggering an inadvertent legend when a function transformation of x is plotted against x itself, <code>tinyplot(log(x) ~ x)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/197">#197</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 <li>Facets with interactions and/or multivariate formulas (e.g., complex grid arrangements like <code>tinyplot(mpg ~ wt, data = mtcars, facet = am + vs ~ gear)</code>) now plot all panels correctly, even if some combinations are missing. (<a href="https://github.com/grantmcdermott/tinyplot/issues/197">#197</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Fix alignment of facet titles when axes are logged. (<a href="https://github.com/grantmcdermott/tinyplot/issues/207">#207</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Consistent decimals for gradient legends (<a href="https://github.com/grantmcdermott/tinyplot/issues/277">#277</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Internals:</p>
 <ul>

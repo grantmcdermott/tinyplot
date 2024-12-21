@@ -15,7 +15,8 @@
 ## What
 
 A lightweight extension of the base R graphics system, with support for
-automatic grouping, legends, facets, and various other enhancements.
+automatic grouping, legends, facets, themes, and various other
+enhancements.
 
 The stable version of **tinyplot** is available on CRAN.
 
@@ -32,7 +33,7 @@ install.packages("tinyplot", repos = "https://grantmcdermott.r-universe.dev")
 ## Why
 
 R users are spoiled for choice when it comes to visualization
-frameworks. The options, of course, include **lattice** and **ggplot2**;
+frameworks. The options, of course, include **ggplot2** and **lattice**;
 say nothing of the bewildering array of extensions built around, on top
 of, and in between these amazing packages.[^1]
 
@@ -102,16 +103,29 @@ plt(
 
 <img src="man/figures/README-quickstart3-1.png" style="width:70.0%" />
 
-Grouped grouped density plot with automatic legend:
+Speaking of aesthetic tweaks, **tinyplot** also provides a set of
+built-in themes for convenient plot customization:
+
+``` r
+tinytheme("clean2")
+
+plt(Sepal.Length ~ Petal.Length | Species, data = iris)
+```
+
+<img src="man/figures/README-quickstart_theme-1.png"
+style="width:70.0%" />
+
+Themes are persistent and will be applied to subsequent plots. For
+example, here is a grouped grouped density plot:
 
 ``` r
 plt(
   ~ Petal.Length | Species,
   data = iris,
   type = "density",
-  palette = "dark", fill = "by",
-  grid = TRUE,
-  main = "Distribution of petal lengths by species"
+  fill = "by",
+  main = "Distribution of petal lengths",
+  sub = "Grouped by species"
 )
 ```
 
@@ -123,28 +137,31 @@ facet layout:
 ``` r
 plt(
   Sepal.Length ~ Petal.Length | Sepal.Length, data = iris,
-  facet = ~Species, facet.args = list(bg = "grey90"),
-  pch = 19,
-  main = "Faceted Species!",
-  grid = TRUE, frame = FALSE
+  facet = ~Species, pch = 19,
+  main = "Faceted flowers", sub = "Brought to you by tinyplot"
 )
 ```
 
 <img src="man/figures/README-quickstart5-1.png" style="width:70.0%" />
 
+``` r
+# reset the theme 
+tinytheme()
+```
+
 Hopefully, these have been enough to pique your interest. Head over to
 the [intro
-tutorial](https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html)
+tutorial](https://grantmcdermott.com/tinyplot/vignettes/introduction.html)
 for many more examples, including model-based and custom plot types.
 
-[^1]: Both **lattice** and **ggplot2** are built on top of the **grid**
-    package, which was incoporated into the base R distribution way back
-    in R 2.0.0. **ggplot2**, in particular, is arguably the most
-    important and influential (high-level) graphics library of the last
-    two decades, across any programming language.
+[^1]: You could make a strong case that **ggplot2**, in particular, is
+    the most influential graphics library of the last two decades,
+    across any programming language. Both **ggplot2** and **lattice**
+    are built on top of the lower-level **grid** package, which was
+    incorporated into the base R distribution way back in R 2.0.0.
 
 [^2]: Just type `demo(graphics)` or `demo(persp)` into your R console to
     get an idea. Or, take a look at
     [these](https://github.com/karoliskoncevicius/r_notes/blob/main/baseplotting.md)
-    [two](https://quizzical-engelbart-d15a44.netlify.app/2021-2022_m2-data-2_visu-2_practice#1)
+    [two](https://poisonalien.github.io/basegraphics/baseplots.html)
     excellent tutorials.

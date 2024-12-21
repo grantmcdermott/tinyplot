@@ -212,22 +212,45 @@ type of plot desired.
 \item \code{"h"} Histogram-like vertical lines
 \item \code{"n"} Empty plot over the extent of the data
 }
-\item \code{tinyplot} types:
+\item \code{tinyplot}-specific types. These fall into several categories:
 \itemize{
-\item \code{"rect"}, \code{"segments"}, or \code{"polygon"}: Equivalent to base \code{R}
-\item \code{"density"}: Kernel density plot
-\item \code{"jitter"} or \code{type_jitter()}: Jittered points
-\item \code{"polypath"} or \code{type_polypath()}
-\item \code{"boxplot"} or \code{type_boxplot()}
-\item \code{"histogram"} or \code{type_histogram()}
-\item \code{"pointrange"} or \code{"errorbar"}: segment intervals
-\item \code{"ribbon"} or \code{"area"} for polygon intervals (where area plots
-are a special case of ribbon plots with \code{ymin} set to 0 and \code{ymax}
-set to \code{y}; see below).
-\item \code{"lm"} or \code{type_lm()}: Linear model fit
-\item \code{"glm"} or \code{type_glm()}: Generalized linear model fit
-\item \code{"loess"} or \code{type_loess()}: Local regression fit
-\item \code{"spline"} or \code{type_spline()}: Cubic spline fit
+\item Shapes:
+\itemize{
+\item \code{"area"} / \code{\link[=type_area]{type_area()}}: Plots the area under the curve from \code{y} = 0 to \code{y} = f(\code{x}).
+\item \code{"errorbar"} / \code{\link[=type_errorbar]{type_errorbar()}}: Adds error bars to points; requires \code{ymin} and \code{ymax}.
+\item \code{"pointrange"} / \code{\link[=type_pointrange]{type_pointrange()}}: Combines points with error bars.
+\item \code{"polygon"} / \code{\link[=type_polygon]{type_polygon()}}: Draws polygons.
+\item \code{"polypath"} / \code{\link[=type_polypath]{type_polypath()}}: Draws a path whose vertices are given in \code{x} and \code{y}.
+\item \code{"rect"} / \code{\link[=type_rect]{type_rect()}}: Draws rectangles; requires \code{xmin}, \code{xmax}, \code{ymin}, and \code{ymax}.
+\item \code{"ribbon"} / \code{\link[=type_ribbon]{type_ribbon()}}: Creates a filled area between \code{ymin} and \code{ymax}.
+\item \code{"segments"} / \code{\link[=type_segments]{type_segments()}}: Draws line segments between pairs of points.
+}
+\item Visualizations:
+\itemize{
+\item \code{"boxplot"} / \code{\link[=type_boxplot]{type_boxplot()}}: Creates a box-and-whisker plot.
+\item \code{"density"}: Plots the density estimate of a variable.
+\item \code{"histogram"} / \code{\link[=type_histogram]{type_histogram()}}: Creates a histogram of a single variable.
+\item \code{"jitter"} / \code{\link[=type_jitter]{type_jitter()}}: Jittered points.
+\item \code{"qq"} / \code{\link[=type_qq]{type_qq()}}: Creates a quantile-quantile plot.
+\item \code{"ridge"} / \code{\link[=type_ridge]{type_ridge()}}: Creates a ridgeline (aka joy) plot.
+\item \code{"rug"} / \code{\link[=type_rug]{type_rug()}}: Adds a rug to an existing plot.
+\item \code{"spineplot"} / \code{\link[=type_spineplot]{type_spineplot()}}: Creates a spineplot or spinogram.
+}
+\item Models:
+\itemize{
+\item \code{"loess"} / \code{\link[=type_loess]{type_loess()}}: Local regression curve.
+\item \code{"lm"} / \code{\link[=type_lm]{type_lm()}}: Linear regression line.
+\item \code{"glm"} / \code{\link[=type_glm]{type_glm()}}: Generalized linear model fit.
+\item \code{"spline"} / \code{\link[=type_spline]{type_spline()}}: Cubic (or Hermite) spline interpolation.
+}
+\item Functions:
+\itemize{
+\item \code{\link[=type_abline]{type_abline()}}: line(s) with intercept and slope.
+\item \code{\link[=type_hline]{type_hline()}}: horizontal line(s).
+\item \code{\link[=type_vline]{type_vline()}}: vertical line(s).
+\item \code{\link[=type_function]{type_function()}}: arbitrary function.
+\item \code{\link[=type_summary]{type_summary()}}: summarize \code{y} by unique values of \code{x}.
+}
 }
 }}
 
@@ -652,22 +675,23 @@ tinyplot(
   palette = "tableau"
 )
 
-# It's possible to further customize the look of you plots using familiar
-# arguments and base plotting theme settings (e.g., via `(t)par`).
+# It's possible to customize the look of your plots by setting graphical
+# parameters (e.g., via `(t)par`)... But a more convenient way is to just use
+# built-in themes (see `?tinytheme`). 
 
-op = tpar(family = "HersheySans", las = 1)
+tinytheme("clean2")
 tinyplot(
-  Temp ~ Day | Month,
-  data = aq,
-  type = "b", pch = 16,
-  palette = "tableau", alpha = 0.5,
+  Temp ~ Day | Month, data = aq,
+  type = "b",
+  alpha = 0.5,
   main = "Daily temperatures by month",
-  frame = FALSE, grid = TRUE
+  sub = "Brought to you by tinyplot"
 )
-tpar(op) # restore original graphics parameters
+# reset the theme
+tinytheme()
 
-# Note: For more examples and a detailed walkthrough, please see the
-# introductory tinyplot tutorial available online:
-# https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html
+# For more examples and a detailed walkthrough, please see the introductory
+# tinyplot tutorial available online:
+# https://grantmcdermott.com/tinyplot/vignettes/introduction.html
 
 }

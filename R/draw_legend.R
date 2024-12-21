@@ -208,7 +208,8 @@ draw_legend = function(
   
   ## restore inner margin defaults
   ## (in case the plot region/margins were affected by the preceding tinyplot call)
-  if (any(ooma != 0)) {
+  dynmar = isTRUE(.tpar[["dynmar"]])
+  if (any(ooma != 0) && !dynmar) {
     if ( ooma[1] != 0 & omar[1] == par("mgp")[1] + 1*par("cex.lab") ) omar[1] = 5.1
     if ( ooma[2] != 0 & omar[2] == par("mgp")[1] + 1*par("cex.lab") ) omar[2] = 4.1
     if ( ooma[3] == topmar_epsilon & omar[3] != 4.1 ) omar[3] = 4.1
@@ -218,7 +219,6 @@ draw_legend = function(
   ## restore outer margin defaults
   par(omd = c(0,1,0,1))
   ooma = par("oma")
-  
   
   ## Legend to outer side (either right or left) of plot
   if (grepl("right!$|left!$", legend_args[["x"]])) {
@@ -244,7 +244,22 @@ draw_legend = function(
     }
     par(mar = omar)
     
-    if (isTRUE(new_plot)) plot.new()
+    # if (isTRUE(new_plot)) plot.new()
+    if (isTRUE(new_plot)) {
+      plot.new()
+      # Experimental: For themed + dynamic plots, we need to make sure the
+      # adjusted plot margins for the legend are reinstated (after being
+      # overwritten by the before.plot.new hook.
+      if (dynmar) {
+        omar = par("mar")
+        if (outer_right) {
+          omar[4] = 0
+        } else {
+          omar[2] = par("mgp")[1] + 1*par("cex.lab")
+        }
+        par(mar = omar)
+      }
+    }
     
     legend_args[["horiz"]] = FALSE
     
@@ -290,9 +305,13 @@ draw_legend = function(
     # GM: The legend inset spacing only works _exactly_ if we refresh the plot
     # area. I'm not sure why (and it works properly if we use the same
     # parameters manually while debugging), but this hack seems to work.
-    par(new = TRUE)
+    ## v0.3.0 update: Using (temporary) hook instead of direct par(new = TRUE)
+    ## assignment to play nice with tinytheme logic.
+    oldhook = getHook("before.plot.new")
+    setHook("before.plot.new", function() par(new = TRUE), action = "append")
+    setHook("before.plot.new", function() par(mar = omar), action = "append")
     plot.new()
-    par(new = FALSE)
+    setHook("before.plot.new", oldhook, action = "replace")
     # Finally, set the inset as part of the legend args.
     legend_args[["inset"]] = c(1+inset, 0)
     
@@ -310,7 +329,7 @@ draw_legend = function(
     ## width---will be off the first time.
     if (outer_bottom) {
       omar[1] = par("mgp")[1] + 1*par("cex.lab")
-      if (isTRUE(has_sub)) omar[1] = omar[1] + 1*par("cex.sub")
+      if (isTRUE(has_sub) && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
     } else {
       ## For "top!", the logic is slightly different: We don't expand the outer
       ## margin b/c we need the legend to come underneath the main title. So
@@ -320,7 +339,25 @@ draw_legend = function(
     }
     par(mar = omar)
     
-    if (isTRUE(new_plot)) plot.new()
+    # if (isTRUE(new_plot)) plot.new()
+    if (isTRUE(new_plot)) {
+      plot.new()
+      # Experimental: For themed + dynamic plots, we need to make sure the
+      # adjusted plot margins for the legend are reinstated (after being
+      # overwritten by the before.plot.new hook.
+      if (dynmar) {
+        omar = par("mar")
+        if (outer_bottom) {
+          # omar[1] = par("mgp")[1] + 1*par("cex.lab")
+          omar[1] = theme_clean$mgp[1] + 1*par("cex.lab") ## bit of a hack
+          if (isTRUE(has_sub) && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
+        } else {
+          ooma[3] = ooma[3] + topmar_epsilon
+          par(oma = ooma)
+        }
+        par(mar = omar)
+      }
+    }
     
     legend_args[["horiz"]] = TRUE
     
@@ -381,9 +418,13 @@ draw_legend = function(
     # GM: The legend inset spacing only works _exactly_ if we refresh the plot
     # area. I'm not sure why (and it works properly if we use the same
     # parameters manually while debugging), but this hack seems to work.
-    par(new = TRUE)
+    ## v0.3.0 update: Using (temporary) hook instead of direct par(new = TRUE)
+    ## assignment to play nice with tinytheme logic.
+    oldhook = getHook("before.plot.new")
+    setHook("before.plot.new", function() par(new = TRUE), action = "append")
+    setHook("before.plot.new", function() par(mar = omar), action = "append") ## experimental dynmar
     plot.new()
-    par(new = FALSE)
+    setHook("before.plot.new", oldhook, action = "replace")
     # Finally, set the inset as part of the legend args.
     legend_args[["inset"]] = c(0, 1+inset)
     
@@ -533,7 +574,7 @@ gradient_legend = function(legend_args, lmar = NULL, outer_right = NULL, outer_b
   
   if (isFALSE(horiz)) {
     labs_idx = !is.na(lgnd_labs)
-    lgnd_labs[labs_idx] = paste0(" ", lgnd_labs[labs_idx])
+    lgnd_labs[labs_idx] = paste0(" ", format(lgnd_labs[labs_idx]))
     lbl_x_anchor = rasterbox[3]
     ttl_x_anchor = rasterbox[1]
     lbl_adj = c(0, 0.5)

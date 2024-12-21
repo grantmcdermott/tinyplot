@@ -6,7 +6,11 @@ where the formatting is also better._
 
 ## 0.2.1.99 (dev version)
 
-New plot `type` processing and some breaking changes:
+**tinyplot** v0.3.0 is a big release with many new features, both internal and
+user-facing. Below we have tried to group alike news items together, starting
+with the new plot type processing system.
+
+New plot `type` processing system:
 
 - In previous versions of `tinyplot` the plot `type` was specified by character
   arguments, i.e., either the standard character shortcuts (such `"p"`, `"l"`,
@@ -54,6 +58,8 @@ New plot types:
     @vincentarelbundock)
     - `type_ridge()` (shortcut: `"ridge"`) for ridge plots aka Joy plots.
     (#252 @vincentarelbundock, @zeileis, and @grantmcdermott)
+    - `type_rug()` (shortcut: `"rug"`) adds a rug to an existing plot. (#276
+    @grantmcdermott)
   - Models:
     - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)
@@ -64,8 +70,10 @@ New plot types:
     - `type_hline()`: horizontal line(s) (#249 @vincentarelbundock)
     - `type_vline()`: vertical line(s) (#249 @vincentarelbundock)
     - `type_function()`: arbitrary function. (#250 @vincentarelbundock)
+    - `type_summary()`: summarize values of `y` along unique values of `x` (#274
+    @grantmcdermott)
 
-New features:
+Other new features:
 
 - New `tinyplot()` arguments:
   -  `flip <logical>` allows for easily flipping (swapping) the orientation
@@ -84,6 +92,19 @@ New features:
 - The new `tinyplot_add()` (alias: `plt_add()`) convenience function allows
 easy layering of plots without having to specify repeat arguments. (#246
 @vincentarelbundock)
+- The new `tinytheme()` function provides a convenient mechanism for styling
+plots according to a variety of pre-defined themes, e.g. `tinytheme("clean")`.
+Users can also add their own custom themes or tweak an existing theme. Themes
+are persistent and will affect all subsequent plots until they are explicitly
+reset, e.g. by calling `tinytheme()` (with no argument) to restore the default
+plot aesthetic. Behind the scenes, `tinytheme()` sets a hook for a group
+graphical parameters by passing them through `tpar()`. Users can still use
+`tpar()` to style their plots by manually setting individual graphical
+parameters. But going forward we expect that most **tinyplot** users will prefer
+the convenience of going through `tinytheme()`. More details are provided in the
+dedicated
+[Themes vignette](https://grantmcdermott.com/tinyplot/vignettes/themes.html)
+on the website. (#258 @vincentarelbundock and @grantmcdermott)
 
 Bug fixes:
 
@@ -99,7 +120,7 @@ character variable automatically being coerced to a factor. (#219 @zeileis)
 (#224 @grantmcdermott)
 - Plots where `y` is a factor now work automatically, dispatching to the new
 `type_spineplot()` type. Thanks to @zeileis for the original suggestion all the
-way back in #2 and the eventual solution in #233. 
+way back in #2 and the eventual solution in #233.
 
 Internals:
 
@@ -153,6 +174,7 @@ arrangements like `tinyplot(mpg ~ wt, data = mtcars, facet = am + vs ~ gear)`)
 now plot all panels correctly, even if some combinations are missing. (#197
 @grantmcdermott)
 - Fix alignment of facet titles when axes are logged. (#207 @grantmcdermott)
+- Consistent decimals for gradient legends (#277 @grantmcdermott) 
 
 Internals:
 

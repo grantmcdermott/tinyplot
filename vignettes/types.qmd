@@ -56,14 +56,14 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 
 Shapes:
 
-- `area` / `type_area()`: Plots the area under the curve from `y` = 0 to `y` = f(`x`).
+- `"area"` / `type_area()`: Plots the area under the curve from `y` = 0 to `y` = f(`x`).
 - `"errorbar"` / `type_errorbar()`: Adds error bars to points; requires `ymin` and `ymax`.
-- `pointrange` / `type_pointrange`: Combines points with error bars.
+- `"pointrange"` / `type_pointrange()`: Combines points with error bars.
 - `"polygon"` / `type_polygon()`: Draws polygons.
 - `"polypath"` / `type_polypath()`: Draws a path whose vertices are given in `x` and `y`.
-- `rect` / `type_area()`: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
-- `ribbon` / `type_ribbon()`: Creates a filled area between `ymin` and `ymax`.
-- `"segments"` / `type_segements()`: Draws line segments between pairs of points.
+- `"rect"` / `type_rect()`: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
+- `"ribbon"` / `type_ribbon()`: Creates a filled area between `ymin` and `ymax`.
+- `"segments"` / `type_segments()`: Draws line segments between pairs of points.
 
 Visualizations:
 
@@ -72,6 +72,8 @@ Visualizations:
 - `"histogram"` / `type_histogram()`: Creates a histogram of a single variable.
 - `"jitter"` / `type_jitter()`: Jittered points.
 - `"qq"` / `type_qq()`: Creates a quantile-quantile plot.
+- `"ridge"` / `type_ridge()`: Creates a ridgeline (aka joy) plot.
+- `"rug"` / `type_rug()`: Adds a rug to an existing plot.
 - `"spineplot"` / `type_spineplot()`: Creates a spineplot or spinogram.
 
 Models:
@@ -87,6 +89,7 @@ Functions:
 - `type_hline()`: horizontal line(s).
 - `type_vline()`: vertical line(s).
 - `type_function()`: arbitrary function.
+- `type_summary()`: summarize `y` by unique values of `x`.
 
 To see the difference between the convenience strings and their respective
 `type_*()` functional equivalents, let's quickly walk through two examples.

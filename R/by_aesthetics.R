@@ -6,6 +6,15 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
     ngrps = 100L
   }
 
+  if (is.null(palette)) {
+    pal_qual = get_tpar("palette.qualitative", default = NULL)
+    if (ngrps <= max(c(length(pal_qual), 8))) {
+      palette = pal_qual
+    } else {
+      palette = get_tpar("palette.sequential", default = NULL)
+    }
+  }
+
   # palette = substitute(palette, env = parent.env(environment()))
 
   # special "by" convenience keyword (will treat as NULL & handle grouping below)

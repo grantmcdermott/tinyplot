@@ -90,21 +90,36 @@
 #'     - `"S"` Stair steps
 #'     - `"h"` Histogram-like vertical lines
 #'     - `"n"` Empty plot over the extent of the data
-#'   - `tinyplot` types:
-#'      - `"rect"`, `"segments"`, or `"polygon"`: Equivalent to base `R`
-#'      - `"density"`: Kernel density plot
-#'      - `"jitter"` or `type_jitter()`: Jittered points
-#'      - `"polypath"` or `type_polypath()`
-#'      - `"boxplot"` or `type_boxplot()`
-#'      - `"histogram"` or `type_histogram()`
-#'      - `"pointrange"` or `"errorbar"`: segment intervals
-#'      - `"ribbon"` or `"area"` for polygon intervals (where area plots
-#'        are a special case of ribbon plots with `ymin` set to 0 and `ymax`
-#'        set to `y`; see below).
-#'      - `"lm"` or `type_lm()`: Linear model fit
-#'      - `"glm"` or `type_glm()`: Generalized linear model fit
-#'      - `"loess"` or `type_loess()`: Local regression fit
-#'      - `"spline"` or `type_spline()`: Cubic spline fit
+#'   - `tinyplot`-specific types. These fall into several categories:
+#'     - Shapes:
+#'       - `"area"` / [`type_area()`]: Plots the area under the curve from `y` = 0 to `y` = f(`x`).
+#'       - `"errorbar"` / [`type_errorbar()`]: Adds error bars to points; requires `ymin` and `ymax`.
+#'       - `"pointrange"` / [`type_pointrange()`]: Combines points with error bars.
+#'       - `"polygon"` / [`type_polygon()`]: Draws polygons.
+#'       - `"polypath"` / [`type_polypath()`]: Draws a path whose vertices are given in `x` and `y`.
+#'       - `"rect"` / [`type_rect()`]: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
+#'       - `"ribbon"` / [`type_ribbon()`]: Creates a filled area between `ymin` and `ymax`.
+#'       - `"segments"` / [`type_segments()`]: Draws line segments between pairs of points.
+#'     - Visualizations:
+#'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
+#'       - `"density"`: Plots the density estimate of a variable.
+#'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.
+#'       - `"jitter"` / [`type_jitter()`]: Jittered points.
+#'       - `"qq"` / [`type_qq()`]: Creates a quantile-quantile plot.
+#'       - `"ridge"` / [`type_ridge()`]: Creates a ridgeline (aka joy) plot.
+#'       - `"rug"` / [`type_rug()`]: Adds a rug to an existing plot.
+#'       - `"spineplot"` / [`type_spineplot()`]: Creates a spineplot or spinogram.
+#'     - Models:
+#'       - `"loess"` / [`type_loess()`]: Local regression curve.
+#'       - `"lm"` / [`type_lm()`]: Linear regression line.
+#'       - `"glm"` / [`type_glm()`]: Generalized linear model fit.
+#'       - `"spline"` / [`type_spline()`]: Cubic (or Hermite) spline interpolation.
+#'     - Functions:
+#'       - [`type_abline()`]: line(s) with intercept and slope.
+#'       - [`type_hline()`]: horizontal line(s).
+#'       - [`type_vline()`]: vertical line(s).
+#'       - [`type_function()`]: arbitrary function. 
+#'       - [`type_summary()`]: summarize `y` by unique values of `x`.
 #' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   `"rect"` or `"segments"` (where all four min-max coordinates are required),
@@ -314,7 +329,7 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'
-#' @importFrom grDevices adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
+#' @importFrom grDevices axisTicks adjustcolor colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
 #' @importFrom graphics abline arrows axis Axis box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit
@@ -483,23 +498,24 @@
 #'   palette = "tableau"
 #' )
 #'
-#' # It's possible to further customize the look of you plots using familiar
-#' # arguments and base plotting theme settings (e.g., via `(t)par`).
+#' # It's possible to customize the look of your plots by setting graphical
+#' # parameters (e.g., via `(t)par`)... But a more convenient way is to just use
+#' # built-in themes (see `?tinytheme`). 
 #'
-#' op = tpar(family = "HersheySans", las = 1)
+#' tinytheme("clean2")
 #' tinyplot(
-#'   Temp ~ Day | Month,
-#'   data = aq,
-#'   type = "b", pch = 16,
-#'   palette = "tableau", alpha = 0.5,
+#'   Temp ~ Day | Month, data = aq,
+#'   type = "b",
+#'   alpha = 0.5,
 #'   main = "Daily temperatures by month",
-#'   frame = FALSE, grid = TRUE
+#'   sub = "Brought to you by tinyplot"
 #' )
-#' tpar(op) # restore original graphics parameters
+#' # reset the theme
+#' tinytheme()
 #'
-#' # Note: For more examples and a detailed walkthrough, please see the
-#' # introductory tinyplot tutorial available online:
-#' # https://grantmcdermott.com/tinyplot/vignettes/intro_tutorial.html
+#' # For more examples and a detailed walkthrough, please see the introductory
+#' # tinyplot tutorial available online:
+#' # https://grantmcdermott.com/tinyplot/vignettes/introduction.html
 #'
 #' @rdname tinyplot
 #' @export
@@ -557,6 +573,9 @@ tinyplot.default = function(
     xaxs = NULL,
     yaxs = NULL,
     ...) {
+  par_first = get_saved_par("first")
+  if (is.null(par_first)) set_saved_par("first", par())
+
   # save for tinyplot_add()
   if (!isTRUE(add)) {
     calls = sys.calls()
@@ -590,6 +609,10 @@ tinyplot.default = function(
 
   palette = substitute(palette)
 
+  # themes
+  if (is.null(palette)) palette = get_tpar("palette", default = NULL)
+  if (is.null(pch)) pch = get_tpar("pch", default = NULL)
+
   xlabs = ylabs = NULL
 
   # type_ridge()
@@ -603,11 +626,19 @@ tinyplot.default = function(
   ## - set defaults of xaxt/yaxt (if these are NULL) based on axes
   ## - set logical axes based on xaxt/yaxt
   ## - set frame.plot default based on xaxt/yaxt
-  if (!is.character(axes)) axes = if (isFALSE(axes)) "none" else "standard"
+  if (isFALSE(axes)) {
+    axes = xaxt = yaxt = "none"
+  } else if (isTRUE(axes)) {
+    axes = "standard"
+    if (is.null(xaxt)) xaxt = get_tpar("xaxt", default = "standard")
+    if (is.null(yaxt)) yaxt = get_tpar("yaxt", default = "standard")
+  } else {
+    xaxt = yaxt = axes
+  }
   axis_types = c("standard", "none", "labels", "ticks", "axis")
   axes = match.arg(axes, axis_types)
-  if (is.null(xaxt)) xaxt = axes
-  if (is.null(yaxt)) yaxt = axes
+  xaxt = match.arg(xaxt, axis_types)
+  yaxt = match.arg(yaxt, axis_types)
   xaxt = substr(match.arg(xaxt, axis_types), 1L, 1L)
   yaxt = substr(match.arg(yaxt, axis_types), 1L, 1L)
   axes = any(c(xaxt, yaxt) != "n")
@@ -959,24 +990,66 @@ tinyplot.default = function(
     if (is.null(legend_eval)) {
       legend_eval = tryCatch(paste0(legend)[[2]], error = function(e) NULL)
     }
+
     adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend_args[["x"]]) && legend_args[["x"]] == "top!") || (is.list(legend_eval) && legend_eval[[1]] == "top!"))
-    if (is.null(main) || isFALSE(adj_title)) {
-      title(
-        main = main,
-        sub = sub
-      )
+
+    # For the "top!" legend case, bump main title up to make space for the
+    # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
+    # and add the difference between original top margin and new one (i.e.,
+    # which should equal the height of the new legend). Note that we also
+    # include a 0.1 epsilon bump, which we're using to reset the tinyplot
+    # window in case of recursive "top!" calls. (See draw_legend code.)
+
+    if (isTRUE(adj_title)) {
+      line_main = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1
     } else {
-      # For the "top!" legend case, bump main title up to make space for the
-      # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)
-      # and add the difference between original top margin and new one (i.e.,
-      # which should equal the height of the new legend). Note that we also
-      # include a 0.1 epsilon bump, which we're using to reset the tinyplot
-      # window in case of recursive "top!" calls. (See draw_legend code.)
-      title(main = main, line = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1)
-      title(sub = sub)
+      line_main = NULL
     }
+
+    if (!is.null(sub)) {
+      if (isTRUE(get_tpar("side.sub", 1) == 3)) {
+        if (is.null(line_main)) line_main = par("mgp")[3] + 1.7 - .1
+        line_main = line_main + 1.2
+      }
+      if (isTRUE(get_tpar("side.sub", 1) == 3)) {
+        line_sub = get_tpar("line.sub", 1.7)
+      } else {
+        line_sub = get_tpar("line.sub", 4)
+      }
+      args = list(
+        text = sub,
+        line = line_sub,
+        cex = get_tpar("cex.sub", 1.2),
+        col = get_tpar("col.sub", "black"),
+        adj = get_tpar(c("adj.sub", "adj")),
+        font = get_tpar("font.sub", 1),
+        side = get_tpar("side.sub", 1),
+        las = 1
+      )
+      args = Filter(function(x) !is.null(x), args)
+      do.call(mtext, args)
+    }
+
+    if (!is.null(main)) {
+      args = list(
+        main = main,
+        line = line_main,
+        cex.main = get_tpar("cex.main", 1.4),
+        col.main = get_tpar("col.main", "black"),
+        font.main = get_tpar("font.main", 2),
+        adj = get_tpar(c("adj.main", "adj"), 3))
+      args = Filter(function(x) !is.null(x), args)
+      do.call(title, args)
+    }
+
+
     # Axis titles
-    title(xlab = xlab, ylab = ylab)
+    args = list(xlab = xlab)
+    args[["adj"]] = get_tpar(c("adj.xlab", "adj"))
+    do.call(title, args)
+    args = list(ylab = ylab)
+    args[["adj"]] = get_tpar(c("adj.ylab", "adj"))
+    do.call(title, args)
   }
 
   #

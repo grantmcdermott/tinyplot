@@ -1170,6 +1170,7 @@ tinyplot.default = function(
       ixmax = idata[[ii]]$xmax
       iymin = idata[[ii]]$ymin
       iymax = idata[[ii]]$ymax
+      ilabels = idata[[ii]][["labels"]]
 
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
@@ -1230,6 +1231,7 @@ tinyplot.default = function(
           iy = iy,
           iymax = iymax,
           iymin = iymin,
+          ilabels = ilabels,
           iz = iz,
           cex = cex,
           dots = dots,

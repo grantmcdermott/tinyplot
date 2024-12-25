@@ -38,7 +38,7 @@ data_text = function(labels) {
 }
 
 draw_text = function(adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, font = NULL) {
-  fun = function(ix, iy, ilabels, icol, ...) {
-    text(x = ix, y = iy, labels = ilabels, col = icol, adj = adj, pos = pos, offset = offset, vfont = vfont, font = font)
+  fun = function(ix, iy, ilabels, icol, cex, ...) {
+    text(x = ix, y = iy, labels = ilabels, col = icol, adj = adj, pos = pos, offset = offset, vfont = vfont, font = font, cex = cex)
   }
 }

@@ -1,21 +1,21 @@
 #' Text annotations plot type
 #'
 #' @description Type function for adding text annotations to a plot. This function allows
-#' you to draw text at specified (x,y) coordinates. If no label is provided, the y-values 
+#' you to draw text at specified (x,y) coordinates. If no label is provided, the y-values
 #' will be used as the text labels.
 #'
 #' @param labels Character vector of the same length as the number of x,y coordinates.
 #' @param font Font to be used, following [graphics::par()]
 #' @inheritParams graphics::text
-#' @examples 
-#' 
+#' @examples
+#'
 #' tinyplot(mpg ~ hp | factor(cyl),
-#'     data = mtcars,
-#'     type = type_text(
-#'         labels = row.names(mtcars), 
-#'         font = 2,
-#'         adj = 0))
-#' 
+#'   data = mtcars,
+#'   type = type_text(
+#'     labels = row.names(mtcars),
+#'     font = 2,
+#'     adj = 0))
+#'
 #' @export
 type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, font = NULL) {
   out = list(
@@ -29,7 +29,11 @@ type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, vfont = NULL,
 
 data_text = function(labels) {
   fun = function(datapoints, ...) {
-    assert_character(labels, len = nrow(datapoints), name = "labels")
+    assert_character(labels, name = "labels")
+    if (length(labels) != 1 && length(labels) != nrow(datapoints)) {
+      msg <- sprintf("`labels` must be of length 1 or %s.", nrow(datapoints))
+      stop(msg, call. = FALSE)
+    }
     datapoints$labels = labels
     out = list(datapoints = datapoints)
     return(out)
@@ -42,3 +46,4 @@ draw_text = function(adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, font = 
     text(x = ix, y = iy, labels = ilabels, col = icol, adj = adj, pos = pos, offset = offset, vfont = vfont, font = font, cex = cex)
   }
 }
+

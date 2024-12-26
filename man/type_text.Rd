@@ -48,10 +48,10 @@ will be used as the text labels.
 \examples{
 
 tinyplot(mpg ~ hp | factor(cyl),
-    data = mtcars,
-    type = type_text(
-        labels = row.names(mtcars), 
-        font = 2,
-        adj = 0))
+  data = mtcars,
+  type = type_text(
+    labels = row.names(mtcars),
+    font = 2,
+    adj = 0))
 
 }

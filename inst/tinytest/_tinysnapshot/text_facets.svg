@@ -21,9 +21,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<circle cx='467.48' cy='237.60' r='2.70' style='stroke-width: 0.75;' />
-<circle cx='467.48' cy='252.00' r='2.70' style='stroke-width: 0.75; stroke: #DF536B;' />
-<circle cx='467.48' cy='266.40' r='2.70' style='stroke-width: 0.75; stroke: #61D04F;' />
+<polygon points='464.78,240.30 470.18,240.30 470.18,234.90 464.78,234.90 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<polygon points='464.78,254.70 470.18,254.70 470.18,249.30 464.78,249.30 ' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
+<polygon points='464.78,269.10 470.18,269.10 470.18,263.70 464.78,263.70 ' style='stroke-width: 0.75; stroke: none; fill: #61D04F;' />
 <text x='473.52' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='52.68px' lengthAdjust='spacingAndGlyphs'>factor(cyl)</text>
 <text x='478.28' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
 <text x='478.28' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>

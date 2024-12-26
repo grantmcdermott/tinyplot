@@ -22,7 +22,6 @@ f = function() {
 expect_snapshot_plot(f, label = "text_missing_label")
 
 
-pkgload::load_all()
 f = function() {
   x = c(1, 2, 3)
   y = c(1, 2, 3)

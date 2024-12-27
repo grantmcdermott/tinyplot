@@ -224,6 +224,7 @@ type of plot desired.
 \item \code{"rect"} / \code{\link[=type_rect]{type_rect()}}: Draws rectangles; requires \code{xmin}, \code{xmax}, \code{ymin}, and \code{ymax}.
 \item \code{"ribbon"} / \code{\link[=type_ribbon]{type_ribbon()}}: Creates a filled area between \code{ymin} and \code{ymax}.
 \item \code{"segments"} / \code{\link[=type_segments]{type_segments()}}: Draws line segments between pairs of points.
+\item \code{"text"} / \code{\link[=type_text]{type_text()}}: Add text annotations.
 }
 \item Visualizations:
 \itemize{
@@ -677,11 +678,12 @@ tinyplot(
 
 # It's possible to customize the look of your plots by setting graphical
 # parameters (e.g., via `(t)par`)... But a more convenient way is to just use
-# built-in themes (see `?tinytheme`). 
+# built-in themes (see `?tinytheme`).
 
 tinytheme("clean2")
 tinyplot(
-  Temp ~ Day | Month, data = aq,
+  Temp ~ Day | Month,
+  data = aq,
   type = "b",
   alpha = 0.5,
   main = "Daily temperatures by month",

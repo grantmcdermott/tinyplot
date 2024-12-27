@@ -60,6 +60,7 @@ New plot types:
     (#252 @vincentarelbundock, @zeileis, and @grantmcdermott)
     - `type_rug()` (shortcut: `"rug"`) adds a rug to an existing plot. (#276
     @grantmcdermott)
+    - `type_text()` (shortcut: `"text"`) adds text annotations. (@vincentarelbundock)
   - Models:
     - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)

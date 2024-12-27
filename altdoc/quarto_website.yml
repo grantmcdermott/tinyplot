@@ -59,6 +59,8 @@ website:
               file: man/type_rect.qmd
             - text: type_ribbon
               file: man/type_ribbon.qmd
+            - text: type_text
+              file: man/type_text.qmd
             - text: type_segments
               file: man/type_segments.qmd
           - section: Visualizations

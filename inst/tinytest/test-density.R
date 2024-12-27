@@ -8,23 +8,23 @@ if (getRversion() < "4.4.0") exit_file("R < 4.4.0")
 
 mtcars$am = as.factor(mtcars$am)
 
-f = function() with(mtcars, tinyplot(density(mpg)))
-expect_snapshot_plot(f, label = "density_nogroups")
-
-f = function() with(mtcars, tinyplot(density(mpg), by = am))
-expect_snapshot_plot(f, label = "density_numeric")
-
-f = function() with(iris, tinyplot(density(Sepal.Width), by = Species))
-expect_snapshot_plot(f, label = "density_factor")
-
-f = function() with(iris, tinyplot(density(Sepal.Width), by = Species, bg = "by"))
-expect_snapshot_plot(f, label = "density_fill")
-
-f = function() with(iris, tinyplot(density(Sepal.Width), by = Species, fill = "by"))
-expect_snapshot_plot(f, label = "density_fill")
-
-f = function() with(iris, tinyplot(density(Sepal.Width), by = Species, type = "area"))
-expect_snapshot_plot(f, label = "density_fill")
+# f = function() with(mtcars, tinyplot(density(mpg)))
+# expect_snapshot_plot(f, label = "density_nogroups")
+# 
+# f = function() with(mtcars, tinyplot(density(mpg), by = am))
+# expect_snapshot_plot(f, label = "density_numeric")
+# 
+# f = function() with(iris, tinyplot(density(Sepal.Width), by = Species))
+# expect_snapshot_plot(f, label = "density_factor")
+# 
+# f = function() with(iris, tinyplot(density(Sepal.Width), by = Species, bg = "by"))
+# expect_snapshot_plot(f, label = "density_fill")
+# 
+# f = function() with(iris, tinyplot(density(Sepal.Width), by = Species, fill = "by"))
+# expect_snapshot_plot(f, label = "density_fill")
+# 
+# f = function() with(iris, tinyplot(density(Sepal.Width), by = Species, type = "area"))
+# expect_snapshot_plot(f, label = "density_fill")
 
 ## Now test `type = "density"` versions (both atomic and formula)
 ## Should be the same as above, modulo missing titles

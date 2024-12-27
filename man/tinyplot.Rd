@@ -4,6 +4,7 @@
 \alias{tinyplot}
 \alias{tinyplot.default}
 \alias{tinyplot.formula}
+\alias{tinyplot.density}
 \alias{plt}
 \title{Lightweight extension of the base R plotting function}
 \usage{
@@ -86,6 +87,8 @@ tinyplot(x, ...)
   drop.unused.levels = TRUE,
   ...
 )
+
+\method{tinyplot}{density}(x = NULL, type = c("l", "area"), ...)
 
 plt(x, ...)
 }

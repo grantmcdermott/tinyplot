@@ -100,6 +100,7 @@
 #'       - `"rect"` / [`type_rect()`]: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
 #'       - `"ribbon"` / [`type_ribbon()`]: Creates a filled area between `ymin` and `ymax`.
 #'       - `"segments"` / [`type_segments()`]: Draws line segments between pairs of points.
+#'       - `"text"` / [`type_text()`]: Add text annotations.
 #'     - Visualizations:
 #'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
 #'       - `"density"`: Plots the density estimate of a variable.
@@ -118,7 +119,7 @@
 #'       - [`type_abline()`]: line(s) with intercept and slope.
 #'       - [`type_hline()`]: horizontal line(s).
 #'       - [`type_vline()`]: vertical line(s).
-#'       - [`type_function()`]: arbitrary function. 
+#'       - [`type_function()`]: arbitrary function.
 #'       - [`type_summary()`]: summarize `y` by unique values of `x`.
 #' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
 #'   or interval plot types. Only used when the `type` argument is one of
@@ -500,11 +501,12 @@
 #'
 #' # It's possible to customize the look of your plots by setting graphical
 #' # parameters (e.g., via `(t)par`)... But a more convenient way is to just use
-#' # built-in themes (see `?tinytheme`). 
+#' # built-in themes (see `?tinytheme`).
 #'
 #' tinytheme("clean2")
 #' tinyplot(
-#'   Temp ~ Day | Month, data = aq,
+#'   Temp ~ Day | Month,
+#'   data = aq,
 #'   type = "b",
 #'   alpha = 0.5,
 #'   main = "Daily temperatures by month",
@@ -1170,6 +1172,7 @@ tinyplot.default = function(
       ixmax = idata[[ii]]$xmax
       iymin = idata[[ii]]$ymin
       iymax = idata[[ii]]$ymax
+      ilabels = idata[[ii]][["labels"]]
 
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
@@ -1230,6 +1233,7 @@ tinyplot.default = function(
           iy = iy,
           iymax = iymax,
           iymin = iymin,
+          ilabels = ilabels,
           iz = iz,
           cex = cex,
           dots = dots,

@@ -64,6 +64,7 @@ Shapes:
 - `"rect"` / `type_rect()`: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
 - `"ribbon"` / `type_ribbon()`: Creates a filled area between `ymin` and `ymax`.
 - `"segments"` / `type_segments()`: Draws line segments between pairs of points.
+- `"text"` / `type_text()`: Add text annotations to a plot.
 
 Visualizations:
 

@@ -1,10 +1,9 @@
 #' Text annotations plot type
 #'
 #' @description Type function for adding text annotations to a plot. This function allows
-#' you to draw text at specified (x,y) coordinates. If no label is provided, the y-values
-#' will be used as the text labels.
+#' you to draw text at specified (x,y) coordinates.
 #'
-#' @param labels Character vector of the same length as the number of x,y coordinates.
+#' @param labels Character vector of length 1 or of the same length as the number of x,y coordinates.
 #' @param font Font to be used, following [graphics::par()]
 #' @inheritParams graphics::text
 #' @examples
@@ -46,4 +45,3 @@ draw_text = function(adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, font = 
     text(x = ix, y = iy, labels = ilabels, col = icol, adj = adj, pos = pos, offset = offset, vfont = vfont, font = font, cex = cex)
   }
 }
-

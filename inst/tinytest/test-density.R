@@ -8,8 +8,8 @@ if (getRversion() < "4.4.0") exit_file("R < 4.4.0")
 
 mtcars$am = as.factor(mtcars$am)
 
-# f = function() with(mtcars, tinyplot(density(mpg)))
-# expect_snapshot_plot(f, label = "density_nogroups")
+f = function() with(mtcars, tinyplot(density(mpg)))
+expect_snapshot_plot(f, label = "density_nogroups")
 # 
 # f = function() with(mtcars, tinyplot(density(mpg), by = am))
 # expect_snapshot_plot(f, label = "density_numeric")

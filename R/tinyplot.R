@@ -738,13 +738,6 @@ tinyplot.default = function(
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
 
-  # # type-specific settings and arguments
-  # if (isTRUE(type == "density")) {
-  #   fargs = mget(ls(environment(), sorted = FALSE))
-  #   fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
-  #   return(do.call(tinyplot.density, args = fargs))
-  # }
-
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)

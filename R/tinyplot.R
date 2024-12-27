@@ -102,7 +102,7 @@
 #'       - `"segments"` / [`type_segments()`]: Draws line segments between pairs of points.
 #'     - Visualizations:
 #'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
-#'       - `"density"`: Plots the density estimate of a variable.
+#'       - `"density"` / [`type_density()`]: Plots the density estimate of a variable.
 #'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.
 #'       - `"jitter"` / [`type_jitter()`]: Jittered points.
 #'       - `"qq"` / [`type_qq()`]: Creates a quantile-quantile plot.

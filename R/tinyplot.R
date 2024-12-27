@@ -600,11 +600,15 @@ tinyplot.default = function(
   # type factories vs. strings
   type = sanitize_type(type, x, y, dots)
   if ("dots" %in% names(type)) dots = type$dots
+  
+  # retrieve type-specific data and drawing functions
   type_data = type$data
   type_draw = type$draw
   type = type$name
+  
+  # area flag (mostly for legend)
   was_area_type = identical(type, "area")
-
+  # check flip flag is logical 
   assert_flag(flip)
 
   palette = substitute(palette)
@@ -717,12 +721,14 @@ tinyplot.default = function(
       ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
-    } else if (!type %in% c("density", "histogram", "function")) {
+    } else if (type == "density") {
+      if (is.null(ylab)) ylab = "Density"
+    } else if (type %in% c("histogram", "function")) {
+      if (is.null(ylab)) ylab = "Frequency"
+    } else {
       y = x
       x = seq_along(x)
       if (is.null(xlab)) xlab = "Index"
-    } else {
-      if (is.null(ylab)) ylab = "Frequency"
     }
   }
 
@@ -732,12 +738,12 @@ tinyplot.default = function(
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
 
-  # type-specific settings and arguments
-  if (isTRUE(type == "density")) {
-    fargs = mget(ls(environment(), sorted = FALSE))
-    fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
-    return(do.call(tinyplot.density, args = fargs))
-  }
+  # # type-specific settings and arguments
+  # if (isTRUE(type == "density")) {
+  #   fargs = mget(ls(environment(), sorted = FALSE))
+  #   fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
+  #   return(do.call(tinyplot.density, args = fargs))
+  # }
 
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
@@ -1350,8 +1356,12 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
+  dens_type = (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
   hist_type = (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
-  if (!is.null(type) && hist_type) {
+  if (!is.null(type) && dens_type) {
+    if (is.null(ylab)) ylab = "Density"
+    if (is.null(xlab)) xlab = xnam
+  } else if (!is.null(type) && hist_type) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {

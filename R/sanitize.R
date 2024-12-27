@@ -37,6 +37,7 @@ sanitize_type = function(type, x, y, dots) {
     "abline"     = type_abline,
     "area"       = type_area,
     "boxplot"    = type_boxplot,
+    "density"    = type_density,
     "errorbar"   = type_errorbar,
     "function"   = type_function,
     "glm"        = type_glm,

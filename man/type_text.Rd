@@ -14,7 +14,7 @@ type_text(
 )
 }
 \arguments{
-\item{labels}{Character vector of the same length as the number of x,y coordinates.}
+\item{labels}{Character vector of length 1 or of the same length as the number of x,y coordinates.}
 
 \item{adj}{one or two values in \eqn{[0, 1]} which specify the x
     (and optionally y) adjustment (\sQuote{justification}) of the
@@ -42,8 +42,7 @@ type_text(
 }
 \description{
 Type function for adding text annotations to a plot. This function allows
-you to draw text at specified (x,y) coordinates. If no label is provided, the y-values
-will be used as the text labels.
+you to draw text at specified (x,y) coordinates.
 }
 \examples{
 

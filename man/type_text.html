@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>tpar – tinyplot</title>
+<title>type_text – tinyplot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -101,6 +101,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -137,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item"><a href="../man/tpar.html">Options</a></li><li class="breadcrumb-item"><a href="../man/tpar.html">tpar</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_ribbon.html">Shapes</a></li><li class="breadcrumb-item"><a href="../man/type_text.html">type_text</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -236,22 +265,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Plot types</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Shapes</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth3 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth3 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_ribbon.html" class="sidebar-item-text sidebar-link">
@@ -308,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">type_text</span></a>
   </div>
 </li>
@@ -453,16 +482,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
  <span class="menu-text">Options</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/tpar.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/tpar.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tpar</span></a>
   </div>
 </li>
@@ -504,35 +533,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#set-or-query-graphical-parameters" id="toc-set-or-query-graphical-parameters" class="nav-link active" data-scroll-target="#set-or-query-graphical-parameters">Set or query graphical parameters</a>
+  <li><a href="#text-annotations-plot-type" id="toc-text-annotations-plot-type" class="nav-link active" data-scroll-target="#text-annotations-plot-type">Text annotations plot type</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
-  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
-  <li><a href="#additional-graphical-parameters" id="toc-additional-graphical-parameters" class="nav-link" data-scroll-target="#additional-graphical-parameters">Additional Graphical Parameters</a></li>
-  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item"><a href="../man/tpar.html">Options</a></li><li class="breadcrumb-item"><a href="../man/tpar.html">tpar</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Reference</li><li class="breadcrumb-item">Plot types</li><li class="breadcrumb-item"><a href="../man/type_ribbon.html">Shapes</a></li><li class="breadcrumb-item"><a href="../man/type_text.html">type_text</a></li></ol></nav></header>
 
 
 
 
-<section id="set-or-query-graphical-parameters" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="set-or-query-graphical-parameters">Set or query graphical parameters</h2>
+<section id="text-annotations-plot-type" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="text-annotations-plot-type">Text annotations plot type</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Extends <code>par</code>, serving as a (near) drop-in replacement for setting or querying graphical parameters. The key differences is that, beyond supporting the standard group of R graphical parameters in <code>par</code>, <code>tpar</code> also supports additional graphical parameters that are provided by <code>tinyplot</code>. Similar to <code>par</code>, parameters are set by passing appropriate <code>key = value</code> argument pairs, and multiple parameters can be set or queried at the same time.</p>
+<p>Type function for adding text annotations to a plot. This function allows you to draw text at specified (x,y) coordinates. If no label is provided, the y-values will be used as the text labels.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">tpar(..., hook = FALSE)
+<pre><code class="language-R">type_text(
+  labels,
+  adj = NULL,
+  pos = NULL,
+  offset = 0.5,
+  vfont = NULL,
+  font = NULL
+)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -540,166 +572,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table>
 <tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="...">…</code>
+<code id="labels">labels</code>
 </td>
 <td>
-arguments of the form <code>key = value</code>. This includes all of the parameters typically supported by <code>par</code>, as well as the <code>tinyplot</code>-specific ones described in the ‘Graphical Parameters’ section below.
+Character vector of the same length as the number of x,y coordinates.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hook">hook</code>
+<code id="adj">adj</code>
 </td>
 <td>
-Logical. If <code>TRUE</code>, base graphical parameters persist across plots via a hook applied before each new plot (see <code>?setHook</code>).
+one or two values in <span class="math inline">\([0, 1]\)</span> which specify the x (and optionally y) adjustment (‘justification’) of the labels, with 0 for left/bottom, 1 for right/top, and 0.5 for centered. On most devices values outside <span class="math inline">\([0, 1]\)</span> will also work. See below.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="pos">pos</code>
+</td>
+<td>
+a position specifier for the text. If specified this overrides any <code>adj</code> value given. Values of <code>1</code>, <code>2</code>, <code>3</code> and <code>4</code>, respectively indicate positions below, to the left of, above and to the right of the specified <code>(x,y)</code> coordinates.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="offset">offset</code>
+</td>
+<td>
+when <code>pos</code> is specified, this value controls the distance (‘offset’) of the text label from the specified coordinate in fractions of a character width.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="vfont">vfont</code>
+</td>
+<td>
+<code>NULL</code> for the current font family, or a character vector of length 2 for <code>Hershey</code> vector fonts. The first element of the vector selects a typeface and the second element selects a style. Ignored if <code>labels</code> is an expression.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="font">font</code>
+</td>
+<td>
+Font to be used, following <code>graphics::par()</code>
 </td>
 </tr>
 </tbody></table>
-</section>
-<section id="details" class="level3">
-<h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>The <code>tinyplot</code>-specific parameters are saved in an internal environment called <code>.tpar</code> for performance and safety reasons. However, they can also be set at package load time via <code>options</code>, which may prove convenient for users that want to enable different default behaviour at startup (e.g., through an <code>.Rprofile</code> file). These options all take a <code style="white-space: pre;">tinyplot_*</code> prefix, e.g. <code>options(tinyplot_grid = TRUE, tinyplot_facet.bg = “grey90”)</code>.</p>
-<p>For their part, any "base" graphical parameters are caught dynamically and passed on to <code>par</code> as appropriate. Technically, only parameters that satisfy <code>par(…, no.readonly = TRUE)</code> are evaluated.</p>
-<p>However, note the important distinction: <code>tpar</code> only evaluates parameters from <code>par</code> if they are passed <em>explicitly</em> by the user. This means that <code>tpar</code> should not be used to capture the (invisible) state of a user’s entire set of graphics parameters, i.e.&nbsp;<code>tpar()</code> != <code>par()</code>. If you want to capture the <em>all</em> existing graphics settings, then you should rather use <code>par()</code> instead.</p>
-</section>
-<section id="value" class="level3">
-<h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>When parameters are set, their previous values are returned in an invisible named list. Such a list can be passed as an argument to <code>tpar</code> to restore the parameter values.</p>
-<p>When just one parameter is queried, the value of that parameter is returned as (atomic) vector. When two or more parameters are queried, their values are returned in a list, with the list names giving the parameters.</p>
-<p>Note the inconsistency: setting one parameter returns a list, but querying one parameter returns a vector.</p>
-</section>
-<section id="additional-graphical-parameters" class="level3">
-<h3 class="anchored" data-anchor-id="additional-graphical-parameters">Additional Graphical Parameters</h3>
-<ul>
-<li>
-<p><code>adj.xlab</code>: Numeric value between 0 and 1 controlling the alignment of the x-axis label.</p>
-</li>
-<li>
-<p><code>adj.ylab</code>: Numeric value between 0 and 1 controlling the alignment of the y-axis label.</p>
-</li>
-<li>
-<p><code>dynmar</code>: Logical indicating whether <code>tinyplot</code> should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal <code>tinythemes()</code> logic and should <em>not</em> be adjusted manually unless you really know what you are doing or don’t mind risking unintended consequences to your plot.</p>
-</li>
-<li>
-<p><code>facet.bg</code>: Character or integer specifying the facet background colour. If an integer, will correspond to the user’s default colour palette (see <code>palette</code>). Passed to <code>rect</code>. Defaults to <code>NULL</code> (none).</p>
-</li>
-<li>
-<p><code>facet.border</code>: Character or integer specifying the facet border colour. If an integer, will correspond to the user’s default colour palette (see <code>palette</code>). Passed to <code>rect</code>. Defaults to <code>NA</code> (none).</p>
-</li>
-<li>
-<p><code>facet.cex</code>: Expansion factor for facet titles. Defaults to <code>1</code>.</p>
-</li>
-<li>
-<p><code>facet.col</code>: Character or integer specifying the facet text colour. If an integer, will correspond to the user’s default global colour palette (see <code>palette</code>). Defaults to <code>NULL</code>, which is equivalent to "black".</p>
-</li>
-<li>
-<p><code>facet.font</code>: An integer corresponding to the desired font face for facet titles. For most font families and graphics devices, one of four possible values: <code>1</code> (regular), <code>2</code> (bold), <code>3</code> (italic), or <code>4</code> (bold italic). Defaults to <code>NULL</code>, which is equivalent to <code>1</code> (i.e., regular).</p>
-</li>
-<li>
-<p><code>file.height</code>: Numeric specifying the height (in inches) of any plot that is written to disk using the <code>tinyplot(…, file = X)</code> argument. Defaults to <code>7</code>.</p>
-</li>
-<li>
-<p><code>file.res</code>: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the <code>tinyplot(…, file = X)</code> argument. Defaults to <code>300</code>.</p>
-</li>
-<li>
-<p><code>file.width</code>: Numeric specifying the width (in inches) of any plot that is written to disk using the <code>tinyplot(…, file = X)</code> argument. Defaults to <code>7</code>.</p>
-</li>
-<li>
-<p><code>fmar</code>: A numeric vector of form <code>c(b,l,t,r)</code> for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to <code>c(1,1,1,1)</code>. If more than three facets are detected, the <code>fmar</code> parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the <code>cex</code> expansion logic of base graphics.</p>
-</li>
-<li>
-<p><code>grid.col</code>: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to <code>“lightgray”</code>.</p>
-</li>
-<li>
-<p><code>grid.lty</code>: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to <code>“dotted”</code>.</p>
-</li>
-<li>
-<p><code>grid.lwd</code>: Non-negative numeric giving the line width of the panel grid lines. Defaults to <code>1</code>.</p>
-</li>
-<li>
-<p><code>grid</code>: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to <code>NULL</code>, which is equivalent to <code>FALSE</code>.</p>
-</li>
-<li>
-<p><code>lmar</code>: A numeric vector of form <code>c(inner, outer)</code> that gives the margin padding, in terms of lines, around the automatic <code>tinyplot</code> legend. Defaults to <code>c(1.0, 0.1)</code>. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.</p>
-</li>
-<li>
-<p><code>palette.qualitative</code>: Palette for qualitative colors. See the <code>palette</code> argumetn in <code>?tinyplot</code>.</p>
-</li>
-<li>
-<p><code>palette.sequential</code>: Palette for sequential colors. See the <code>palette</code> argumetn in <code>?tinyplot</code>.</p>
-</li>
-<li>
-<p><code>ribbon.alpha</code>: Numeric factor in the range <code style="white-space: pre;">[0,1]</code> for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is <code>0.2</code>.</p>
-</li>
-</ul>
-</section>
-<section id="see-also" class="level3">
-<h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p><code>graphics::par</code> which <code>tpar</code> builds on top of. <code>get_saved_par</code> is a convenience function for retrieving graphical parameters at different stages of a <code>tinyplot</code> call (and used for internal accounting purposes). <code>tinytheme</code> allows users to easily set a group of graphics parameters in a single function call, according to a variety of predefined themes.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a list of existing base and tinyplot graphic params</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tpar</span>(<span class="st">"las"</span>, <span class="st">"pch"</span>, <span class="st">"facet.bg"</span>, <span class="st">"facet.cex"</span>, <span class="st">"grid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$las
-[1] 0
-
-$pch
-[1] 1
-
-$facet.bg
-NULL
-
-$facet.cex
-[1] 1
-
-$grid
-[1] FALSE</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple facet plot with these default values</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars, <span class="at">facet =</span> <span class="sc">~</span>am)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp <span class="sc">|</span> <span class="fu">factor</span>(cyl),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mtcars,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_text</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">row.names</span>(mtcars),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">font =</span> <span class="dv">2</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tpar_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_text_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set params to something new. Similar to graphics::par(), note that we save</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the existing values at the same time by assigning to an object.</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>op <span class="ot">=</span> <span class="fu">tpar</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">las       =</span> <span class="dv">1</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch       =</span> <span class="dv">2</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet.bg  =</span> <span class="st">"grey90"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet.cex =</span> <span class="dv">2</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid      =</span> <span class="cn">TRUE</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Re-plot with these new params</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars, <span class="at">facet =</span> <span class="sc">~</span>am)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="tpar_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset back to original values</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tpar</span>(op)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Important: tpar() only evalutes parameters that have been passed explicitly</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   by the user. So it it should not be used to query and set (restore)</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   parameters that weren't explicitly requested, i.e. tpar() != par().</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: The tinyplot-specific parameters can also be be set via `options`</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   with a `tinyplot_*` prefix, which can be convenient for enabling</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   different default behaviour at startup time (e.g., via an .Rprofile</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   file). Example:</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># options(tinyplot_grid = TRUE, tinyplot_facet.bg = "grey90")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

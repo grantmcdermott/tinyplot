@@ -1395,6 +1395,73 @@ tinyplot.formula = function(
   )
 }
 
+#' @rdname tinyplot
+#' @export
+tinyplot.density = function(
+    x = NULL,
+    type = c("l", "area"),
+    ...) {
+  
+  dots = list(...)
+  
+  if (!is.null(dots[["by"]]) || !is.null(dots[["facet"]])) {
+    stop(
+      '\nGrouped and/or faceted plots are no longer supported with the tinyplot.density() method. ',
+      '\nPlease use the dedicated type argument instead, e.g. `tinyplot(..., type = "density")`. See `?type_density` for details.',
+      '\n\nThis breaking change was introduced in tinyplot v0.3.0.'
+    )
+  }
+  
+  type = match.arg(type)
+  
+  ## override if bg = "by"
+  if (!is.null(dots[["bg"]]) || !is.null(dots[["fill"]])) type = "area"
+  
+  if (inherits(x, "density")) {
+    object = x
+    # legend_args = list(x = NULL)
+    # # Grab by label to pass on legend title to tinyplot.default
+    # legend_args[["title"]] = deparse(substitute(by))
+  } else {
+    ## An internal catch for non-density objects that were forcibly
+    ## passed to tinyplot.density (e.g., via a one-side formula)
+    if (anyNA(x)) {
+      x = na.omit(x)
+      x = as.numeric(x)
+    }
+    object = density(x)
+  }
+  
+  x = object$x
+  y = object$y
+  
+  if (type == "area") {
+    ymin = rep(0, length(y))
+    ymax = y
+    # # set extra legend params to get bordered boxes with fill
+    # legend_args[["x.intersp"]] = 1.25
+    # legend_args[["lty"]] = 0
+    # legend_args[["pt.lwd"]] = 1
+  }
+  
+  # splice in change arguments
+  dots[["x"]] = x
+  dots[["y"]] = y
+  dots[["type"]] = type
+  
+  ## axes range
+  if (is.null(dots[["xlim"]])) dots[["xlim"]] = range(x)
+  if (is.null(dots[["ylim"]])) dots[["ylim"]] = range(y)
+  
+  ## nice labels and titles
+  if (is.null(dots[["ylab"]])) dots[["ylab"]] = "Density"
+  if (is.null(dots[["xlab"]])) dots[["xlab"]] = paste0("N = ", object$n, "   Bandwidth = ", sprintf("%.4g", object$bw))
+  if (is.null(dots[["main"]])) dots[["main"]] = paste0(paste(object$call, collapse = "(x = "), ")")
+  
+  do.call(tinyplot.default, args = dots)
+  
+}
+
 
 #' @export
 #' @name plt

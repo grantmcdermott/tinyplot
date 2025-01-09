@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-d83fba8907f73068b64e07941be842b2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -612,35 +612,10 @@ tinyplot(
   ...
 )
 
-plt(x, ...)
-
 ## S3 method for class 'density'
-tinyplot(
-  x = NULL,
-  by = NULL,
-  facet = NULL,
-  facet.args = NULL,
-  type = c("l", "area"),
-  xlim = NULL,
-  ylim = NULL,
-  main = NULL,
-  sub = NULL,
-  xlab = NULL,
-  ylab = NULL,
-  ann = par("ann"),
-  axes = TRUE,
-  frame.plot = axes,
-  asp = NA,
-  grid = NULL,
-  pch = NULL,
-  col = NULL,
-  lty = NULL,
-  lwd = NULL,
-  bg = NULL,
-  fill = NULL,
-  restore.par = FALSE,
-  ...
-)
+tinyplot(x = NULL, type = c("l", "area"), ...)
+
+plt(x, ...)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -806,7 +781,7 @@ a data.frame (or list) from which the variables in formula should be taken. A ma
 <p><code>“boxplot”</code> / <code>type_boxplot()</code>: Creates a box-and-whisker plot.</p>
 </li>
 <li>
-<p><code>“density”</code>: Plots the density estimate of a variable.</p>
+<p><code>“density”</code> / <code>type_density()</code>: Plots the density estimate of a variable.</p>
 </li>
 <li>
 <p><code>“histogram”</code> / <code>type_histogram()</code>: Creates a histogram of a single variable.</p>

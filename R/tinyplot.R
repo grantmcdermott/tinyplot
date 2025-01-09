@@ -103,7 +103,7 @@
 #'       - `"text"` / [`type_text()`]: Add text annotations.
 #'     - Visualizations:
 #'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
-#'       - `"density"`: Plots the density estimate of a variable.
+#'       - `"density"` / [`type_density()`]: Plots the density estimate of a variable.
 #'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.
 #'       - `"jitter"` / [`type_jitter()`]: Jittered points.
 #'       - `"qq"` / [`type_qq()`]: Creates a quantile-quantile plot.
@@ -602,11 +602,15 @@ tinyplot.default = function(
   # type factories vs. strings
   type = sanitize_type(type, x, y, dots)
   if ("dots" %in% names(type)) dots = type$dots
+  
+  # retrieve type-specific data and drawing functions
   type_data = type$data
   type_draw = type$draw
   type = type$name
+  
+  # area flag (mostly for legend)
   was_area_type = identical(type, "area")
-
+  # check flip flag is logical 
   assert_flag(flip)
 
   palette = substitute(palette)
@@ -719,12 +723,14 @@ tinyplot.default = function(
       ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
-    } else if (!type %in% c("density", "histogram", "function")) {
+    } else if (type == "density") {
+      if (is.null(ylab)) ylab = "Density"
+    } else if (type %in% c("histogram", "function")) {
+      if (is.null(ylab)) ylab = "Frequency"
+    } else {
       y = x
       x = seq_along(x)
       if (is.null(xlab)) xlab = "Index"
-    } else {
-      if (is.null(ylab)) ylab = "Frequency"
     }
   }
 
@@ -733,13 +739,6 @@ tinyplot.default = function(
 
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
-
-  # type-specific settings and arguments
-  if (isTRUE(type == "density")) {
-    fargs = mget(ls(environment(), sorted = FALSE))
-    fargs = density_args(fargs = fargs, dots = dots, by_dep = by_dep)
-    return(do.call(tinyplot.density, args = fargs))
-  }
 
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
@@ -1354,8 +1353,12 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
+  dens_type = (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
   hist_type = (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
-  if (!is.null(type) && hist_type) {
+  if (!is.null(type) && dens_type) {
+    if (is.null(ylab)) ylab = "Density"
+    if (is.null(xlab)) xlab = xnam
+  } else if (!is.null(type) && hist_type) {
     if (is.null(ylab)) ylab = "Frequency"
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {
@@ -1394,6 +1397,73 @@ tinyplot.formula = function(
     restore.par = restore.par,
     ...
   )
+}
+
+#' @rdname tinyplot
+#' @export
+tinyplot.density = function(
+    x = NULL,
+    type = c("l", "area"),
+    ...) {
+  
+  dots = list(...)
+  
+  if (!is.null(dots[["by"]]) || !is.null(dots[["facet"]])) {
+    stop(
+      '\nGrouped and/or faceted plots are no longer supported with the tinyplot.density() method. ',
+      '\nPlease use the dedicated type argument instead, e.g. `tinyplot(..., type = "density")`. See `?type_density` for details.',
+      '\n\nThis breaking change was introduced in tinyplot v0.3.0.'
+    )
+  }
+  
+  type = match.arg(type)
+  
+  ## override if bg = "by"
+  if (!is.null(dots[["bg"]]) || !is.null(dots[["fill"]])) type = "area"
+  
+  if (inherits(x, "density")) {
+    object = x
+    # legend_args = list(x = NULL)
+    # # Grab by label to pass on legend title to tinyplot.default
+    # legend_args[["title"]] = deparse(substitute(by))
+  } else {
+    ## An internal catch for non-density objects that were forcibly
+    ## passed to tinyplot.density (e.g., via a one-side formula)
+    if (anyNA(x)) {
+      x = na.omit(x)
+      x = as.numeric(x)
+    }
+    object = density(x)
+  }
+  
+  x = object$x
+  y = object$y
+  
+  if (type == "area") {
+    ymin = rep(0, length(y))
+    ymax = y
+    # # set extra legend params to get bordered boxes with fill
+    # legend_args[["x.intersp"]] = 1.25
+    # legend_args[["lty"]] = 0
+    # legend_args[["pt.lwd"]] = 1
+  }
+  
+  # splice in change arguments
+  dots[["x"]] = x
+  dots[["y"]] = y
+  dots[["type"]] = type
+  
+  ## axes range
+  if (is.null(dots[["xlim"]])) dots[["xlim"]] = range(x)
+  if (is.null(dots[["ylim"]])) dots[["ylim"]] = range(y)
+  
+  ## nice labels and titles
+  if (is.null(dots[["ylab"]])) dots[["ylab"]] = "Density"
+  if (is.null(dots[["xlab"]])) dots[["xlab"]] = paste0("N = ", object$n, "   Bandwidth = ", sprintf("%.4g", object$bw))
+  if (is.null(dots[["main"]])) dots[["main"]] = paste0(paste(object$call, collapse = "(x = "), ")")
+  
+  do.call(tinyplot.default, args = dots)
+  
 }
 
 

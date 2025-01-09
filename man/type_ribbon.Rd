@@ -5,7 +5,7 @@
 \alias{type_ribbon}
 \title{Ribbon and area plot types}
 \usage{
-type_area()
+type_area(alpha = NULL)
 
 type_ribbon(alpha = NULL)
 }

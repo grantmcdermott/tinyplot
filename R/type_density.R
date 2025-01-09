@@ -1,237 +1,146 @@
-#' @importFrom methods as
-#' @importFrom stats update density
-#' @rdname tinyplot
+#' Density plot type
+#' 
+#' @md
+#' @description Type function for density plots.
+#' @inheritParams stats::density
+#' @param kernel a character string giving the smoothing kernel to be used. This
+#'   must partially match one of `"gaussian"`, `"rectangular"`, `"triangular"`,
+#'   `"epanechnikov"`, `"biweight"`, `"cosine"` or `"optcosine"`, with default
+#'   `"gaussian"`, and may be abbreviated to a unique prefix (single letter).
+#'
+#'   `"cosine"` is smoother than `"optcosine"`, which is the usual 'cosine'
+#'   kernel in the literature and almost MSE-efficient. However, `"cosine"` is
+#'   the version used by S.
+#' @inheritParams type_ribbon
+#' @param joint.bw character string indicating whether (and how) the smoothing
+#'   bandwidth should be computed from the joint data distribution. The default
+#'   value of `"none"` means that bandwidths will be computed independently for
+#'   each data subgroup. Choosing `"full"` will result in a joint bandwidth
+#'   computed from the full distribution. Similarly, `"owm"` will compute the
+#'   joint bandwidth as the observation-weighted mean of the individual subgroup
+#'   bandwidths. Note that the `joint.bw` argument is only relevant for grouped
+#'   or faceted density plots.
+#' @inherit stats::density details
+#' @section Titles: This tinyplot method for density plots differs from the base
+#'   \code{\link[stats]{plot.density}} function in its treatment of titles. The
+#'   x-axis title displays only the variable name, omitting details about the
+#'   number of observations and smoothing bandwidth. Additionally, the main
+#'   title is left blank by default for a cleaner appearance.
+#' @examples
+#' # "density" type convenience string
+#' tinyplot(~Sepal.Length, data = iris, type = "density")
+#' 
+#' # grouped density example
+#' tinyplot(~Sepal.Length | Species, data = iris, type = "density")
+#' 
+#' # use `bg = "by"` (or, equivalent `fill = "by"`) to get filled densities
+#' tinyplot(~Sepal.Length | Species, data = iris, type = "density", fill = "by")
+#' 
+#' # use `type_density()` to pass extra arguments for customization
+#' tinyplot(
+#'   ~Sepal.Length | Species, data = iris,
+#'   type = type_density(bw = "SJ"),
+#'   main = "Bandwidth computed using method of Sheather & Jones (1991)"
+#' )
+#' 
+#' # The default for grouped density plots is to compute bandwidths
+#' # independently for each subgroup. To override, specify the type of joint
+#' # bandwidth computation
+#' tinyplot(~Sepal.Length | Species, data = iris, type = "density") # "none" (default)
+#' tinyplot_add(type = type_density(joint.bw = "full"), lty = 2)    # full dataset
+#' tinyplot_add(type = type_density(joint.bw = "owm"), lty = 3)     # obs-weighted mean
+#' legend("topright", c("None", "Full", "OWM"), lty = 1:3, title = "Joint BW")
+#' 
+#' @importFrom stats density weighted.mean
+#' @importFrom stats bw.SJ bw.bcv bw.nrd bw.nrd0 bw.ucv 
 #' @export
-tinyplot.density = function(
-    x = NULL,
-    by = NULL,
-    facet = NULL,
-    facet.args = NULL,
-    type = c("l", "area"),
-    xlim = NULL,
-    ylim = NULL,
-    # log = "",
-    main = NULL,
-    sub = NULL,
-    xlab = NULL,
-    ylab = NULL,
-    ann = par("ann"),
-    axes = TRUE,
-    frame.plot = axes,
-    asp = NA,
-    grid = NULL,
-    pch = NULL,
-    col = NULL,
-    lty = NULL,
-    lwd = NULL,
-    bg = NULL,
-    fill = NULL,
-    restore.par = FALSE,
-    ...) {
-    type = match.arg(type)
-    ## override if bg = "by"
-    if (!is.null(bg) || !is.null(fill)) type = "area"
-
-    ## ensure factor and preserve facet attributes
-    if (!is.null(facet) && !is.factor(facet)) {
-        facet_attr = attributes(facet)
-        facet = factor(facet)
-        facet_attr[["class"]] = NULL
-        for (i in names(facet_attr)) attr(facet, i) = facet_attr[[i]]
-    }
-    facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
-
-    if (inherits(x, "density")) {
-        object = x
-        legend_args = list(x = NULL)
-        # Grab by label to pass on legend title to tinyplot.default
-        legend_args[["title"]] = deparse(substitute(by))
-    } else {
-        ## An internal catch for non-density objects that were forcibly
-        ## passed to tinyplot.density (e.g., via a one-side formula)
-        if (anyNA(x)) {
-            x = na.omit(x)
-            if (!is.null(by)) by = by[-attr(x, "na.action")]
-            if (!is.null(facet)) facet = facet[-attr(x, "na.action")]
-            x = as.numeric(x)
-        }
-        object = density(x)
-        legend_args = list(...)[["legend_args"]]
-    }
-
-    by_names = facet_names = NULL
-    if (is.null(by) && is.null(facet)) {
-        x = object$x
-        y = object$y
-    } else {
-        x = eval(str2lang(object$data.name), envir = parent.frame())
-        if (anyNA(x)) {
-            x = na.omit(x)
-            if (!is.null(by) && length(by) != length(x)) by = by[-attr(x, "na.action")]
-            if (!is.null(facet) && length(facet) != length(x)) facet = facet[-attr(x, "na.action")]
-            x = as.numeric(x)
-        }
-        if (is.null(facet) || identical(by, facet)) {
-            split_x = split(x, f = by)
-        } else if (is.null(by)) {
-            split_x = split(x, f = facet)
-        } else {
-            split_x = split(x, f = list(by, facet), sep = "::")
-        }
-        # joint bandwidth
-        bw_type = as.list(object$call[-1])[["bw"]]
-        if (is.null(bw_type)) bw_type = stats::bw.nrd0 else bw_type = str2lang(paste0("bw.", bw))
-        xs_mask = lengths(split_x) > 1
-        bws = vapply(split_x[xs_mask], bw_type, numeric(1))
-        bw = mean(bws, na.rm = TRUE)
-        #
-        split_object = lapply(split_x, function(xx) update(object, x = xx, bw = bw))
-        by_names = names(split_object)
-        if (all(grepl("::", by_names))) {
-            by_names = strsplit(by_names, "::")
-            facet_names = sapply(by_names, `[[`, 2)
-            facet_names = tryCatch(as(facet_names, class(facet)), error = function(e) facet_names)
-            by_names = sapply(by_names, `[[`, 1)
-        } else if (identical(by, facet)) {
-            facet_names = by_names ## yuck
-        } else if (is.null(by) && !is.null(facet)) {
-            facet_names = names(split_object)
-        }
-        by_names = tryCatch(as(by_names, class(by)), error = function(e) if (inherits(by, "factor")) as.factor(by_names) else by_names)
-        # need to coerce facet variables to factors for faceting to work properly later on
-        # if we originally passed a factor, try to preserve this order for grid arrangement
-        if (inherits(facet, "factor")) {
-            orig_len = nlevels(facet)
-            new_len = length(facet_names)
-            if (orig_len == new_len) {
-                facet_names = levels(facet)
-            } else {
-                ## need to recycle names if nested in multiple by splits
-                facet_names = rep(levels(facet), each = new_len / orig_len)
-            }
-        } else {
-            facet_names = tryCatch(as(facet_names, class(facet)), error = function(e) facet_names)
-            facet_names = tryCatch(as.factor(facet_names), error = function(e) facet_names)
-        }
-
-        split_object = lapply(seq_along(split_object), function(ii) {
-            lst = list(
-                x = split_object[[ii]]$x,
-                y = split_object[[ii]]$y,
-                n = split_object[[ii]]$n
-            )
-            if (!is.null(by)) {
-                lst$by = rep_len(by_names[ii], length.out = length(lst$x))
-            } else {
-                lst$by = NULL
-            }
-            if (!is.null(facet)) {
-                lst$facet = rep_len(facet_names[ii], length.out = length(lst$x))
-            } else {
-                lst$facet = NULL
-            }
-            return(lst)
-        })
-        ## combine element by element
-        res = do.call(Map, c(c, split_object))
-        ## now pull out the individual vectors
-        x = res[["x"]]
-        y = res[["y"]]
-        by = res[["by"]]
-        facet = res[["facet"]]
-        bw = sprintf("%.4g", bw)
-        n = res[["n"]]
-        if (is.null(xlab)) {
-            if (length(by_names) > 3 || length(facet_names) > 3) {
-                n = c(n[1:3], "...")
-            }
-            n = paste0("[", paste(n, collapse = ", "), "]")
-            xlab = paste0("N = ", n, "   Joint Bandwidth = ", bw)
-        }
-    }
-    if (type == "area") {
-        ymin = rep(0, length(y))
-        ymax = y
-        # set extra legend params to get bordered boxes with fill
-        legend_args[["x.intersp"]] = 1.25
-        legend_args[["lty"]] = 0
-        legend_args[["pt.lwd"]] = 1
-    }
-
-    ## axes range
-    if (is.null(xlim)) xlim = range(x)
-    if (is.null(ylim)) ylim = range(y)
-
-    ## nice labels and titles
-    if (is.null(ylab)) ylab = "Density"
-    if (is.null(xlab)) xlab = paste0("N = ", object$n, "   Bandwidth = ", sprintf("%.4g", object$bw))
-    if (is.null(main)) main = paste0(paste(object$call, collapse = "(x = "), ")")
-
-    ## facet handling
-    if (!is.null(facet)) {
-        facet = factor(facet, levels = facet_attr[["levels"]])
-        attributes(facet) = facet_attr ## TODO: better solution for restoring facet attributes?
-    }
-
-    tinyplot.default(
-        x = x, y = y, by = by, facet = facet, facet.args = facet.args,
-        type = type,
-        xlim = xlim,
-        ylim = ylim,
-        # log = "",
-        main = main,
-        sub = sub,
-        xlab = xlab,
-        ylab = ylab,
-        ann = ann,
-        axes = axes,
-        frame.plot = frame.plot,
-        asp = asp,
-        grid = grid,
-        legend_args = legend_args,
-        pch = pch,
-        col = col,
-        bg = bg,
-        fill = fill,
-        lty = lty,
-        lwd = lwd,
-        restore.par = restore.par,
-        ...
+type_density = function(
+        bw = "nrd0",
+        adjust = 1,
+        kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"),
+        n = 512,
+        # more args from density here?
+        joint.bw =  c("none", "full", "owm"),
+        alpha = NULL
+    ) {
+    kernel = match.arg(kernel)
+    joint.bw = match.arg(joint.bw)
+    out = list(
+        data = data_density(bw = bw, adjust = adjust, kernel = kernel, n = n,
+                            joint.bw = joint.bw, alpha = alpha),
+        draw = NULL,
+        name = "density"
     )
+    class(out) = "tinyplot_type"
+    return(out)
 }
 
-
-density_args = function(fargs, dots, by_dep) {
-    fargs = utils::modifyList(fargs, dots)
-
-    if (!is.null(fargs[["y"]])) {
-        fargs[["y"]] = NULL
-        message("\nNote: A `y` argument has been supplied, but will be ignored for density plots.\n")
-    }
-
-    fargs$type = "l"
-
-    if (is.null(fargs$main)) fargs$main = NA
-
-    if (is.null(fargs[["legend_args"]][["title"]])) {
-        fargs[["legend_args"]][["title"]] = by_dep
-    }
-
-    if (!is.null(fargs[["legend"]]) && !is.null(fargs[["legend_args"]])) {
-        if (is.atomic(fargs[["legend"]])) {
-            fargs[["legend"]] = list(x = fargs[["legend"]])
-        } else if (!is.list(fargs[["legend"]])) {
-            fargs[["legend"]] = as.list(fargs[["legend"]])
+data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
+                        joint.bw = "none", alpha = NULL) {
+    fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints,  ...) {
+        
+        ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)
+        
+        if (is.null(ylab)) ylab = "Density"
+        
+        datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
+        datapoints = Filter(function(k) nrow(k) > 0, datapoints)
+        
+        if (joint.bw == "none" || is.numeric(bw)) {
+            dens_bw = bw
+        } else {
+            # Use weighted mean of subgroup bandwidths
+            # Define a function that uses switch() to call the appropriate bandwidth function
+            bw_fun = function(kernel, data) {
+                kernel = tolower(kernel)
+                switch(
+                    kernel,
+                    nrd0 = bw.nrd0(data),
+                    nrd  = bw.nrd(data),
+                    ucv  = bw.ucv(data),
+                    bcv  = bw.bcv(data),
+                    sj   = bw.SJ(data),
+                    stop("Invalid `bw` string. Choose from 'nrd0', 'nrd', 'ucv', 'bcv', or 'SJ'.")
+                )
+            }
+            if (joint.bw == "full") {
+                dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
+            } else if (joint.bw == "owm") {
+                bws = sapply(datapoints, function(dat) bw_fun(kernel = bw, dat$x))
+                ws = sapply(datapoints, nrow)
+                dens_bw = weighted.mean(bws, ws)
+            }
         }
-
-        if (is.null(names(fargs[["legend"]])[1]) || names(fargs[["legend"]])[1] == "") {
-            names(fargs[["legend"]])[1] = "x"
-        }
-
-        fargs[["legend_args"]] = modifyList(fargs[["legend"]], fargs[["legend_args"]])
-        fargs[["legend"]] = NULL
+        
+        datapoints = lapply(datapoints, function(dat) {
+            d = density(dat$x, bw = dens_bw, kernel = kernel, n = n)
+            out = data.frame(
+                by = dat$by[1], # already split
+                facet = dat$facet[1], # already split
+                y = d$y,
+                x = d$x
+            )
+            return(out)
+        })
+        datapoints = do.call(rbind, datapoints)
+        datapoints$ymax = datapoints$y
+        datapoints$ymin = rep.int(0, nrow(datapoints))
+        
+        # flags for legend and fill
+        dtype = if (!is.null(bg)) "ribbon" else "l"
+        dwas_area_type = !is.null(bg)
+        
+        out = list(
+            ylab = ylab,
+            type = dtype,
+            was_area_type = dwas_area_type,
+            ribbon.alpha = ribbon.alpha,
+            datapoints = datapoints,
+            by = if (length(unique(datapoints$by)) == 1) by else datapoints$by, 
+            facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
+        )
+        return(out)
     }
-
-    fargs$y = fargs$ymin = fargs$ymax = fargs$ylab = fargs$xlab = NULL
-    return(fargs)
+    return(fun)
 }
+

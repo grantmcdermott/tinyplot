@@ -51,7 +51,8 @@
 #' tinyplot_add(type = type_density(joint.bw = "owm"), lty = 3)     # obs-weighted mean
 #' legend("topright", c("None", "Full", "OWM"), lty = 1:3, title = "Joint BW")
 #' 
-#' @importFrom stats density
+#' @importFrom stats density weighted.mean
+#' @importFrom stats bw.SJ bw.bcv bw.nrd bw.nrd0 bw.ucv 
 #' @export
 type_density = function(
         bw = "nrd0",

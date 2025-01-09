@@ -131,8 +131,6 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         
         out = list(
             ylab = ylab,
-            xlim = range(datapoints$x),
-            ylim = range(datapoints$y),
             type = dtype,
             was_area_type = dwas_area_type,
             ribbon.alpha = ribbon.alpha,

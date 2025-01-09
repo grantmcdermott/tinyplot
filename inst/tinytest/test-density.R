@@ -53,6 +53,22 @@ expect_snapshot_plot(f1b, label = "density_type_fill")
 expect_snapshot_plot(f2a, label = "density_type_fill")
 expect_snapshot_plot(f2b, label = "density_type_fill")
 
+# test arg passing
+f1 = function() tinyplot(
+  ~ Sepal.Width | Species, iris,
+  type = type_density(bw = "SJ"),
+  main = 'bw = "SJ"'
+)
+expect_snapshot_plot(f1, label = "density_type_bw_sj")
+
+f1 = function() {
+  tinyplot(~ Sepal.Width | Species, iris, type = type_density(joint.bw = "none"))
+  tinyplot_add(type = type_density(joint.bw = "full"), lty = 2)
+  tinyplot_add(type = type_density(joint.bw = "owm"), lty = 3)
+  legend("topright", c("None", "Full", "OWM"), lty = 1:3, title = "Joint BW")
+}
+expect_snapshot_plot(f1, label = "density_type_joint_bw")
+
 # Some extra tests for bespoke legend placement
 f1 = function() with(mtcars, tinyplot(mpg, by = am, type = "density", legend = "bottom!"))
 

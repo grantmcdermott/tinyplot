@@ -10,7 +10,7 @@ type_density(
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   n = 512,
-  indiv.bw = FALSE,
+  joint.bw = c("none", "full", "owm"),
   alpha = NULL
 )
 }
@@ -50,11 +50,14 @@ the version used by S.}
     always makes sense to specify \code{n} as a power of two.
   }
 
-\item{indiv.bw}{Should the smoothing bandwidth be computed individually
-(independently) for each data subgroup? Defaults to \code{FALSE}, in which case
-a common bandwidth is obtained from the full dataset and then applied
-across all subgroups. Only relevant for grouped density plots, i.e. those
-called with a valid \code{by} (\code{|})  argument.}
+\item{joint.bw}{character string indicating whether (and how) the smoothing
+bandwidth should be computed from the joint data distribution. The default
+value of \code{"none"} means that bandwidths will be computed independently for
+each data subgroup. Choosing \code{"full"} will result in a joint bandwidth
+computed from the full distribution. Similarly, \code{"owm"} will compute the
+joint bandwidth as the observation-weighted mean of the individual subgroup
+bandwidths. Note that the \code{joint.bw} argument is only relevant for grouped
+or faceted density plots.}
 
 \item{alpha}{numeric value between 0 and 1 specifying the opacity of ribbon shading
 If no \code{alpha} value is provided, then will default to \code{tpar("ribbon.alpha")}
@@ -107,14 +110,16 @@ tinyplot(~Sepal.Length | Species, data = iris, type = "density", fill = "by")
 # use `type_density()` to pass extra arguments for customization
 tinyplot(
   ~Sepal.Length | Species, data = iris,
-  type = type_density(kernel = "cosine"), main = "cosine kernel"
+  type = type_density(bw = "SJ"),
+  main = "Bandwidth computed using method of Sheather & Jones (1991)"
 )
 
-# The default for grouped density plots is to use a common bandwidth,
-# computed on the full dataset. Invoke the `indiv.bw` argument to override.
-tinyplot(
-  ~Sepal.Length | Species, data = iris,
-  type = type_density(indiv.bw = TRUE), main = "Individual bandwidths"
-)
+# The default for grouped density plots is to compute bandwidths
+# independently for each subgroup. To override, specify the type of joint
+# bandwidth computation
+tinyplot(~Sepal.Length | Species, data = iris, type = "density") # "none" (default)
+tinyplot_add(type = type_density(joint.bw = "full"), lty = 2)    # full dataset
+tinyplot_add(type = type_density(joint.bw = "owm"), lty = 3)     # obs-weighted mean
+legend("topright", c("None", "Full", "OWM"), lty = 1:3, title = "Joint BW")
 
 }

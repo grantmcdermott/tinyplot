@@ -12,11 +12,14 @@
 #'   kernel in the literature and almost MSE-efficient. However, `"cosine"` is
 #'   the version used by S.
 #' @inheritParams type_ribbon
-#' @param indiv.bw Should the smoothing bandwidth be computed individually
-#'   (independently) for each data subgroup? Defaults to `FALSE`, in which case
-#'   a common bandwidth is obtained from the full dataset and then applied
-#'   across all subgroups. Only relevant for grouped density plots, i.e. those
-#'   called with a valid `by` (`|`)  argument.
+#' @param joint.bw character string indicating whether (and how) the smoothing
+#'   bandwidth should be computed from the joint data distribution. The default
+#'   value of `"none"` means that bandwidths will be computed independently for
+#'   each data subgroup. Choosing `"full"` will result in a joint bandwidth
+#'   computed from the full distribution. Similarly, `"owm"` will compute the
+#'   joint bandwidth as the observation-weighted mean of the individual subgroup
+#'   bandwidths. Note that the `joint.bw` argument is only relevant for grouped
+#'   or faceted density plots.
 #' @inherit stats::density details
 #' @section Titles: This tinyplot method for density plots differs from the base
 #'   \code{\link[stats]{plot.density}} function in its treatment of titles. The
@@ -36,33 +39,34 @@
 #' # use `type_density()` to pass extra arguments for customization
 #' tinyplot(
 #'   ~Sepal.Length | Species, data = iris,
-#'   type = type_density(kernel = "cosine"), main = "cosine kernel"
+#'   type = type_density(bw = "SJ"),
+#'   main = "Bandwidth computed using method of Sheather & Jones (1991)"
 #' )
 #' 
-#' # The default for grouped density plots is to use a common bandwidth,
-#' # computed on the full dataset. Invoke the `indiv.bw` argument to override.
-#' tinyplot(
-#'   ~Sepal.Length | Species, data = iris,
-#'   type = type_density(indiv.bw = TRUE), main = "Individual bandwidths"
-#' )
+#' # The default for grouped density plots is to compute bandwidths
+#' # independently for each subgroup. To override, specify the type of joint
+#' # bandwidth computation
+#' tinyplot(~Sepal.Length | Species, data = iris, type = "density") # "none" (default)
+#' tinyplot_add(type = type_density(joint.bw = "full"), lty = 2)    # full dataset
+#' tinyplot_add(type = type_density(joint.bw = "owm"), lty = 3)     # obs-weighted mean
+#' legend("topright", c("None", "Full", "OWM"), lty = 1:3, title = "Joint BW")
 #' 
 #' @importFrom stats density
 #' @export
 type_density = function(
         bw = "nrd0",
         adjust = 1,
-        kernel = c("gaussian", "epanechnikov", "rectangular",
-                   "triangular", "biweight",
-                   "cosine", "optcosine"),
+        kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"),
         n = 512,
         # more args from density here?
-        indiv.bw = FALSE,
+        joint.bw =  c("none", "full", "owm"),
         alpha = NULL
     ) {
     kernel = match.arg(kernel)
+    joint.bw = match.arg(joint.bw)
     out = list(
         data = data_density(bw = bw, adjust = adjust, kernel = kernel, n = n,
-                            indiv.bw = indiv.bw, alpha = alpha),
+                            joint.bw = joint.bw, alpha = alpha),
         draw = NULL,
         name = "density"
     )
@@ -71,30 +75,41 @@ type_density = function(
 }
 
 data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
-                        indiv.bw = FALSE, alpha = NULL) {
+                        joint.bw = "none", alpha = NULL) {
     fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints,  ...) {
         
         ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)
         
         if (is.null(ylab)) ylab = "Density"
-        # if (is.null(by) && is.null(palette)) {
-        #     if (is.null(col)) col = par("fg")
-        #     if (is.null(bg)) bg = "lightgray"
-        # } else {
-        #     if (is.null(bg)) bg = ribbon.alpha
-        # }
-        # if (!is.null(bg) && bg=="by") bg = ribbon.alpha
-        
-        assert_logical(indiv.bw)
-        if (indiv.bw) {
-            dens_bw = bw
-        } else {
-            dens_full = density(datapoints$x, bw = bw, adjust = adjust, kernel = kernel, n = n)
-            dens_bw = dens_full$bw
-        }
         
         datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
+        
+        if (joint.bw == "none" || is.numeric(bw)) {
+            dens_bw = bw
+        } else {
+            # Use weighted mean of subgroup bandwidths
+            # Define a function that uses switch() to call the appropriate bandwidth function
+            bw_fun = function(kernel, data) {
+                kernel = tolower(kernel)
+                switch(
+                    kernel,
+                    nrd0 = bw.nrd0(data),
+                    nrd  = bw.nrd(data),
+                    ucv  = bw.ucv(data),
+                    bcv  = bw.bcv(data),
+                    sj   = bw.SJ(data),
+                    stop("Invalid `bw` string. Choose from 'nrd0', 'nrd', 'ucv', 'bcv', or 'SJ'.")
+                )
+            }
+            if (joint.bw == "full") {
+                dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
+            } else if (joint.bw == "owm") {
+                bws = sapply(datapoints, function(dat) bw_fun(kernel = bw, dat$x))
+                ws = sapply(datapoints, nrow)
+                dens_bw = weighted.mean(bws, ws)
+            }
+        }
         
         datapoints = lapply(datapoints, function(dat) {
             d = density(dat$x, bw = dens_bw, kernel = kernel, n = n)

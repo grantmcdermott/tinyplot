@@ -64,7 +64,18 @@ tinyplot(Temp ~ Day, data = aq)  # formula method
 ```
 
 ::: {.callout-tip}
-Use the `plt()` alias instead of `tinyplot()` to save yourself a few keystrokes. The function and its alias produce identical results.
+## Tip: `plt()` shorthand alias
+
+Use the `plt()` alias instead of `tinyplot()` to save yourself a few keystrokes.
+For example:
+
+```{r plt_simple}
+#| eval: false
+plt(Temp ~ Day, data = aq)
+```
+
+Feel free to try this shorthand with any of the plots that follow; `tinyplot(<args>)`
+and `plt(<args>)` should produce identical results.
 :::
 
 ## Grouped data
@@ -430,7 +441,7 @@ become verbose since it requires users to make very similar successive calls,
 with many shared arguments.
 
 For this reason, the **tinyplot** package provides a special
-`tinyplot_add()` (alias `plt_add()`) convenience function for adding layers to
+`tinyplot_add()` convenience function for adding layers to
 an existing tinyplot. The idea is that users need simply pass the _specific_
 arguments that they want to add or modify relative to the base layer, and all
 arguments will be inherited from the original.
@@ -455,6 +466,18 @@ tinyplot(
 # Add regression fits
 tinyplot_add(type = "lm")
 ```
+
+::: {.callout-tip}
+## Tip: `plt_add()` shorthand alias
+
+Much like `plt()` is an alias for `tinyplot()`, you can save yourself a few
+keystrokes by typing `plt_add()` instead of `tinyplot_add()`:
+
+```{r plt_add}
+#| eval: false
+plt_add(type = "lm")
+```
+:::
 
 A related---but distinct---concept to adding plot layers is _drawing_ on a plot.
 The canonical use case is annotating your plot with text or some other

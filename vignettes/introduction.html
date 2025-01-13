@@ -510,10 +510,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#equivalence-with-plot" id="toc-equivalence-with-plot" class="nav-link active" data-scroll-target="#equivalence-with-plot">Equivalence with <code>plot()</code></a>
-  <ul class="collapse">
-  <li><a href="#aside-plt-shorthand" id="toc-aside-plt-shorthand" class="nav-link" data-scroll-target="#aside-plt-shorthand">Aside: <code>plt</code> shorthand</a></li>
-  </ul></li>
+  <li><a href="#equivalence-with-plot" id="toc-equivalence-with-plot" class="nav-link active" data-scroll-target="#equivalence-with-plot">Equivalence with <code>plot()</code></a></li>
   <li><a href="#grouped-data" id="toc-grouped-data" class="nav-link" data-scroll-target="#grouped-data">Grouped data</a></li>
   <li><a href="#colours" id="toc-colours" class="nav-link" data-scroll-target="#colours">Colours</a></li>
   <li><a href="#legend" id="toc-legend" class="nav-link" data-scroll-target="#legend">Legend</a></li>
@@ -590,34 +587,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<section id="aside-plt-shorthand" class="level3">
-<h3 class="anchored" data-anchor-id="aside-plt-shorthand">Aside: <code>plt</code> shorthand</h3>
-<p>If you’d prefer to save on a few keystrokes, you can use the shorthand <code>plt</code> alias instead of typing out <code>tinyplot</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq) <span class="co"># `plt` = shorthand alias for `tinyplot`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="introduction_files/figure-html/plt_simple-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Please note that the <code>plt</code> shorthand would work for all of the remaining plot calls below. But we’ll stick to <code>tinyplot</code> to avoid any potential confusion.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Tip
+Tip: <code>plt()</code> shorthand alias
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use the <code>plt()</code> alias instead of <code>tinyplot()</code> to save yourself a few keystrokes.</p>
+<p>Use the <code>plt()</code> alias instead of <code>tinyplot()</code> to save yourself a few keystrokes. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Feel free to try this shorthand with any of the plots that follow; <code>tinyplot(&lt;args&gt;)</code> and <code>plt(&lt;args&gt;)</code> should produce identical results.</p>
 </div>
 </div>
-</section>
 </section>
 <section id="grouped-data" class="level2">
 <h2 class="anchored" data-anchor-id="grouped-data">Grouped data</h2>
@@ -971,7 +957,7 @@ Tip
 <h2 class="anchored" data-anchor-id="layers">Layers</h2>
 <p>In many contexts, it is convenient to build plots step-by-step, adding layers with different elements on top of a base. The <strong>tinyplot</strong> package offers a few ways to achieve this layering effect.</p>
 <p>Similar to many base plotting functions, users can invoke the <code>tinyplot(..., add=TRUE)</code> argument to draw a plot on top of an existing one, rather than opening a new window. However, while this argument is useful, it can become verbose since it requires users to make very similar successive calls, with many shared arguments.</p>
-<p>For this reason, the <strong>tinyplot</strong> package provides a special <code>tinyplot_add()</code> (alias <code>plt_add()</code>) convenience function for adding layers to an existing tinyplot. The idea is that users need simply pass the <em>specific</em> arguments that they want to add or modify relative to the base layer, and all arguments will be inherited from the original.</p>
+<p>For this reason, the <strong>tinyplot</strong> package provides a special <code>tinyplot_add()</code> convenience function for adding layers to an existing tinyplot. The idea is that users need simply pass the <em>specific</em> arguments that they want to add or modify relative to the base layer, and all arguments will be inherited from the original.</p>
 <p>An example may help to demonstrate. Here we first draw some faceted points with group colouring and various other aesthetic tweaks. Next, we add regression fits with a simple <code>tinyplot_add(type = "lm")</code> call. Notice that the original grouping, data and aesthetic options are all carried over correctly, without having to repeat ourselves.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
@@ -994,14 +980,30 @@ Tip
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip: <code>plt_add()</code> shorthand alias
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Much like <code>plt()</code> is an alias for <code>tinyplot()</code>, you can save yourself a few keystrokes by typing <code>plt_add()</code> instead of <code>tinyplot_add()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 <p>A related—but distinct—concept to adding plot layers is <em>drawing</em> on a plot. The canonical use case is annotating your plot with text or some other function-based (rather than data-based) logic. For example, you may want to demarcate some threshold values with horizontal or vertical lines, or simply annotate your plot with text. The <strong>tinyplot</strong> way to do this is by passing the <code>tinyplot(..., draw = &lt;draw_function&gt;)</code> argument. Here we demonstrate with a simplified version of our facet grid example from earlier.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a> Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq,</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a> <span class="at">facet =</span> windy <span class="sc">~</span> hot,</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a> <span class="co"># draw a horizontal (threshold) line in each facet using the abline function</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a> <span class="at">draw =</span> <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">75</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"hotpink"</span>)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a> Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a> <span class="at">facet =</span> windy <span class="sc">~</span> hot,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a> <span class="co"># draw a horizontal (threshold) line in each facet using the abline function</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a> <span class="at">draw =</span> <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">75</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"hotpink"</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1013,16 +1015,16 @@ Tip
 <p>Compared to “manually” drawing these elements on a plot <em>ex post</em>—e.g., via a separate <code>abline()</code> call—there are several advantages to the idiomatic <strong>tinyplot</strong> interface. First, the <code>draw</code> argument is facet-aware and will ensure that each individual facet is correctly drawn upon. Second, you can leverage the special <code>ii</code> internal counter to draw programmatically across facets (see <a href="https://github.com/grantmcdermott/tinyplot/pull/245#issue-2642589951">here</a>). Third, the <code>draw</code> argument is fully generic and accepts <em>any</em> drawing/annotating function. You can combine multiple drawing functions by wrapping them with curly brackets<code>{}</code>, and even pass <code>tinyplot()</code> back towards itself.</p>
 <p>Here’s a slightly more complicated “spaghetti” plot example, where we pass multiple functions through <code>draw = {...}</code>, including drawing all of the lines in the background (of each facet) via a secondary <code>tinyplot()</code> call.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">type =</span> <span class="st">"l"</span>,</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>),</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">draw =</span> {</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tinyplot</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq, <span class="at">col =</span> <span class="st">"grey"</span>, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">75</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>(<span class="fl">5.5</span>, <span class="dv">75</span>, <span class="st">"Cold"</span>, <span class="at">pos =</span> <span class="dv">1</span>, <span class="at">offset =</span> <span class="fl">0.4</span>)</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>(<span class="fl">5.5</span>, <span class="dv">75</span>, <span class="st">"Hot"</span>, <span class="at">pos =</span> <span class="dv">3</span>, <span class="at">offset =</span> <span class="fl">0.4</span>)</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>),</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">draw =</span> {</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tinyplot</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq, <span class="at">col =</span> <span class="st">"grey"</span>, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">75</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>(<span class="fl">5.5</span>, <span class="dv">75</span>, <span class="st">"Cold"</span>, <span class="at">pos =</span> <span class="dv">1</span>, <span class="at">offset =</span> <span class="fl">0.4</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>(<span class="fl">5.5</span>, <span class="dv">75</span>, <span class="st">"Hot"</span>, <span class="at">pos =</span> <span class="dv">3</span>, <span class="at">offset =</span> <span class="fl">0.4</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1036,15 +1038,15 @@ Tip
 <h2 class="anchored" data-anchor-id="themes">Themes</h2>
 <p>In the examples thus far, we have adjusted our plot aesthetics manually by tweaking individual arguments and settings. A more convenient way to change the look of your plots is by calling the <code>tinytheme()</code> function. This will modify several graphical settings simultaneously to match a variety of pre-defined styles. In addition to convenience, themes have the added benefit of enabling dynamic adjustment of the plot regions, so that excess whitespace is reduced and long text strings (e.g., horizontal axis labels) are accounted for. Please see the <code>?tinytheme</code> help page, as well as the dedicated <a href="../vignettes/themes.html">Themes vignette</a> for a detailed overview of <strong>tinyplot</strong>’s theming functionality. Here we provide a small taster by applying the “dark” theme to one of our earlier plots.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply theme</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"dark"</span>)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Wind <span class="sc">|</span> Ozone, <span class="at">data =</span> aq,</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"An example of a tinytheme() in action"</span>,</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sub =</span> <span class="st">"Notice that the subtitle is above the plot"</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply theme</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"dark"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Wind <span class="sc">|</span> Ozone, <span class="at">data =</span> aq,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"An example of a tinytheme() in action"</span>,</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sub =</span> <span class="st">"Notice that the subtitle is above the plot"</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1052,22 +1054,22 @@ Tip
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># reset theme to default</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># reset theme to default</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="saving-plots" class="level2">
 <h2 class="anchored" data-anchor-id="saving-plots">Saving plots</h2>
 <p>A final point to note is that <strong>tinyplot</strong> offers convenience features for exporting plots to disk. Simply invoke the <code>file</code> argument to specify the relevant file path (including the extension type). You can customize the output dimensions (in inches) via the accompanying <code>width</code> and <code>height</code> arguments.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq,</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"aq.png"</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co"># optional: delete the saved plot</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="st">"aq.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"aq.png"</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co"># optional: delete the saved plot</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="st">"aq.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Alongside convenience, the benefit of this native <strong>tinyplot</strong> approach (versus the traditional approach of manually opening an external graphics device, e.g. <code>png()</code>) is that all of your current graphic settings are automatically carried over to the exported file. Feel free to try yourself by setting some global graphics parameters via <code>tpar()</code> and then using <code>file</code> to save a plot.</p>
 </section>

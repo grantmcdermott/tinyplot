@@ -26,6 +26,8 @@
 #' at the specified `probs`. The quantiles are computed based on the density
 #' (rather than the raw original variable). Only one of `breaks` or
 #' `probs` must be specified.
+#' @param ylevels a character or numeric vector specifying in which order
+#' the levels of the y-variable should be plotted.
 #' @param bw,kernel,... Arguments passed to \code{\link[stats]{density}}.
 #' @param raster Logical. Should the ridges and color gradient, if relevant,
 #' be drawn via a coercion to \code{\link[graphics]{rasterImage}}? Note that
@@ -89,14 +91,13 @@
 #'   grid = TRUE, axes = "t", col = "white")
 #'
 #' @export
-type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = FALSE, col = NULL, alpha = NULL) {
+type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL, ylevels = NULL, bw = "nrd0", kernel = "gaussian", ..., raster = FALSE, col = NULL, alpha = NULL) {
   density_args = list(bw = bw, kernel = kernel, ...)
   data_ridge = function() {
     fun = function(datapoints, yaxt = NULL, ...) {
       get_density = function(k) {
         out = do.call("density", c(list(x = k$x), density_args))
         out = data.frame(x = out$x, ymax = out$y, ymin = 0, y = k$y[1])
-        out$ymax = out$ymax / max(out$ymax) * scale
         out$facet = k$facet[1]
         out$by = k$by[1]
         return(out)
@@ -117,10 +118,19 @@ type_ridge = function(scale = 1.5, gradient = FALSE, breaks = NULL, probs = NULL
       fill_by = anyby || y_by
       if (isTRUE(x_by)) fill_by = FALSE
       # if (isTRUE(anyby) && is.null(alpha)) alpha = 0.6
+
+      ## reorder levels of y-variable if requested
+      if (!is.null(ylevels)) {
+        if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
+        datapoints$y = factor(datapoints$y, levels = if(is.numeric(ylevels)) levels(datapoints$y)[ylevels] else ylevels)
+        if (y_by) datapoints$by = datapoints$y
+      }
+
       ##
       d = split(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
       d = lapply(d, function(k) tryCatch(get_density(k), error = function(e) NULL))
       d = do.call(rbind, Filter(function(x) !is.null(x), d))
+      d$ymax = d$ymax / max(d$ymax) * scale
       d = split(d, d$facet)
       offset_z = function(k) {
         ksplit = split(k, k$y)

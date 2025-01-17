@@ -27,3 +27,8 @@ more_than_n_unique = function(x, n, small_vec_len = 1e3L) {
     return(FALSE)
   }
 }
+
+
+if (getRversion() <= "4.4.0") {
+   `%||%` = function(x, y) if (is.null(x)) y else x
+}

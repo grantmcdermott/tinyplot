@@ -39,7 +39,7 @@ type_hist = type_histogram
 data_histogram = function(breaks = "Sturges") {
     hbreaks = breaks
     fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints, .breaks = hbreaks, ...) {
-        hbreaks = ifelse(!is.null(.breaks), .breaks, "Sturges")
+        hbreaks = ifelse(!mapply(is.null, .breaks), .breaks, "Sturges")
 
         if (is.null(ylab)) ylab = "Frequency"
         if (is.null(by) && is.null(palette)) {
@@ -49,12 +49,11 @@ data_histogram = function(breaks = "Sturges") {
             if (is.null(bg)) bg = ribbon.alpha
         }
 
-        datapoints_breaks = hist(datapoints$x, breaks = hbreaks, plot = FALSE)
         datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
 
         datapoints = lapply(datapoints, function(k) {
-            h = hist(k$x, breaks = datapoints_breaks$breaks, plot = FALSE)
+            h = hist(k$x, breaks = hbreaks, plot = FALSE)
             out = data.frame(
                 by = k$by[1], # already split
                 facet = k$facet[1], # already split

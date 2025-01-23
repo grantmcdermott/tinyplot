@@ -21,9 +21,9 @@
 #' # Use `type_histogram()` to pass extra arguments for customization
 #' tinyplot(Nile, type = type_histogram(breaks = 30))
 #' @export
-type_histogram = function(breaks = "Sturges") {
+type_histogram = function(breaks = "Sturges", freebreaks = FALSE) {
     out = list(
-        data = data_histogram(breaks = breaks),
+        data = data_histogram(breaks = breaks, freebreaks = freebreaks),
         draw = draw_rect(),
         name = "histogram"
     )
@@ -36,10 +36,11 @@ type_histogram = function(breaks = "Sturges") {
 type_hist = type_histogram
 
 
-data_histogram = function(breaks = "Sturges") {
+data_histogram = function(breaks = "Sturges", freebreaks = FALSE) {
     hbreaks = breaks
-    fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints, .breaks = hbreaks, ...) {
-        hbreaks = ifelse(!mapply(is.null, .breaks), .breaks, "Sturges")
+    hfreebreaks = freebreaks
+    fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints, .breaks = hbreaks, .freebreaks = hfreebreaks, ...) {
+        hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 
         if (is.null(ylab)) ylab = "Frequency"
         if (is.null(by) && is.null(palette)) {
@@ -49,11 +50,13 @@ data_histogram = function(breaks = "Sturges") {
             if (is.null(bg)) bg = ribbon.alpha
         }
 
+        if (!.freebreaks) datapoints_breaks = hist(datapoints$x, breaks = hbreaks, plot = FALSE)$breaks
         datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
 
         datapoints = lapply(datapoints, function(k) {
-            h = hist(k$x, breaks = hbreaks, plot = FALSE)
+            if (.freebreaks) datapoints_breaks = hbreaks
+            h = hist(k$x, breaks = datapoints_breaks, plot = FALSE)
             out = data.frame(
                 by = k$by[1], # already split
                 facet = k$facet[1], # already split

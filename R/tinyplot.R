@@ -725,8 +725,15 @@ tinyplot.default = function(
       y = rep(NA, length(x))
     } else if (type == "density") {
       if (is.null(ylab)) ylab = "Density"
-    } else if (type %in% c("histogram", "function")) {
+    } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
+    } else if (type == "histogram") {
+      if (is.null(ylab)) {
+        mc = calls[[idx[1]]]
+        if (is.character(mc$type)) freq = mc$freq else freq = mc$type$freq
+        freq = ifelse(is.null(freq), TRUE, eval(freq))
+        ylab = ifelse(freq, "Frequency", "Density")
+      }
     } else {
       y = x
       x = seq_along(x)
@@ -1359,7 +1366,12 @@ tinyplot.formula = function(
     if (is.null(ylab)) ylab = "Density"
     if (is.null(xlab)) xlab = xnam
   } else if (!is.null(type) && hist_type) {
-    if (is.null(ylab)) ylab = "Frequency"
+    if (is.null(ylab)) {
+      mc = match.call()
+      if (is.character(type)) freq = mc$freq else freq = mc$type$freq
+      freq = ifelse(is.null(freq), TRUE, eval(freq))
+      ylab = ifelse(freq, "Frequency", "Density")
+    }
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {
     if (is.null(ylab)) ylab = xnam

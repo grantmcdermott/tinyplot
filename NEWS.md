@@ -7,43 +7,34 @@ where the formatting is also better._
 ## 0.2.1.99 (dev version)
 
 **tinyplot** v0.3.0 is a big release with many new features, both internal and
-user-facing. Below we have tried to group alike news items together, starting
-with the new plot type processing system.
+user-facing. Related updates are grouped below for easier navigation.
 
-New plot `type` processing system:
+New plot `type` processing system (#222 @vincentarelbundock):
 
-- In previous versions of `tinyplot` the plot `type` was specified by character
-  arguments, i.e., either the standard character shortcuts (such `"p"`, `"l"`,
-  etc.) or labels (such as `"hist"`, `"boxplot"`, etc.). In addition, the
-  `type` argument now accepts functional `type_*()` equivalents (e.g.,
-  `type_hist()`) which enable a variety of additional features, as well as a
-  more disciplined approach to explicit argument passing for customized type
-  behavior. (#222 @vincentarelbundock)
-- All plot types provided in the package can be specified either by a character
-  label or the corresponding function. Thus, the following two are equivalent:
-  `tinyplot(Nile, type = "hist")` and `tinyplot(Nile, type = type_hist())`.
-- The main advantage of the function specification is that many more plot types
-  can be supported (see list below) and users can define their own custom types
-  by creating `type_<typename>()` functions.
-- Enabling these new features comes at the cost of a different approach for
-  specifying ancilliary arguments of the type function. It is recommended to
-  pass such arguments explicitly to the `type_*()` function call, e.g., as in
-  `tinyplot(Nile, type = type_hist(breaks = 30))`. In many situations it is
-  still possible to use the character specification plus extra arguments
-  instead, e.g., as in `tinyplot(Nile, type = "hist", breaks = 30)`. However,
-  this only works if the ancilliary type arguments do not match or even
-  partially match any of the arguments of the `tinyplot()` function itself.
-  This is why the former approach is recommended (unless using only the
-  default type).
-- Due to this change in the processing of the ancilliary type arguments there
-  are a few breaking changes but we have tried to minimize them. One argument
-  that was deprecated explicitly is `ribbon.alpha` in `tinyplot()`. Use the
-  `alpha` argument of the `type_ribbon()` function instead:
-  `tinyplot(..., type = type_ribbon(alpha = 0.5))`. Note that it is not
-  equivalent to use `tinyplot(..., type = "ribbon", alpha = 0.5)` because the
-  latter matches the `alpha` argument of `tinyplot()` (rather than of
-  `type_ribbon()`) and modifies the `palette` rather than the ribbon only.
-- More details are provided in the dedicated
+- In addition to the standard character labels (e.g., `"p"`, `"density"`), the
+  `type` argument now supports _functional_ equivalents (e.g., `type_points()`,
+  `type_density()`. These new functional types all take the form `type_*()`.
+- The character and functional types are interchangeable. For example,
+  `tinyplot(Nile, type = "hist")` and `tinyplot(Nile, type = type_hist())`
+  produce exactly the same result.
+- The main advantage of the functional `type_*()` variants is that they offer
+  much more flexibility and control beyond the default case(s). Users can pass
+  appropriate arguments to existing types for customization and can even define
+  their own `type_<typename>()` functions.
+- On the development side, overhauling the `type` system has also allowed us to
+  introduce a number of new plot types and features (see list below). We have
+  also simplified our internal codebase, since explicit argument passing
+  requires less guesswork on our end.
+- Speaking of which, we now recommended that users explicitly pass ancillary
+  type-specific arguments as part of the relevant `type_*()` call. For example:
+  `tinyplot(Nile, type = type_hist(breaks = 30))` is preferable to
+  `tinyplot(Nile, type = "hist", breaks = 30)`. While the latter option will
+  still work in this particular case, we cannot guarantee that it will for other
+  cases. (Reason: Passing ancillary type-specific arguments at the top level of
+  the plot call only works if these do not conflict with the main arguments of
+  the `tinyplot()` function itself; see #267.)
+- Some minor breaking changes were unavoidable; see further below.
+- For more details on the new `type` system, please see the dedicated
   [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html)
   on the website.
 
@@ -60,6 +51,7 @@ New plot types:
     (#252 @vincentarelbundock, @zeileis, and @grantmcdermott)
     - `type_rug()` (shortcut: `"rug"`) adds a rug to an existing plot. (#276
     @grantmcdermott)
+    - `type_text()` (shortcut: `"text"`) adds text annotations. (@vincentarelbundock)
   - Models:
     - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)
@@ -105,6 +97,27 @@ the convenience of going through `tinytheme()`. More details are provided in the
 dedicated
 [Themes vignette](https://grantmcdermott.com/tinyplot/vignettes/themes.html)
 on the website. (#258 @vincentarelbundock and @grantmcdermott)
+
+Breaking changes:
+
+- There are a few breaking changes to grouped density plots. (#284 @grantmcdermott)
+  - The default smoothing bandwidth is now computed independently for each data
+    subgroup, rather than being computed from the joint density. Users can still
+    opt into using a joint bandwidth by invoking the
+    `type_density(joint.bw = <option>)` argument. See the function documentation
+    for details.
+  - Grouped and/or faceted plots are no longer possible on density objects
+    (i.e., via the `tinyplot.density()` method). Instead, please rather call
+    `tinyplot(..., type = "density")` or `tinyplot(..., type = type_density())`
+    on the raw data and pass grouping or facet arguments as needed.
+- The `ribbon.alpha` argument in `tinyplot()` has been deprecated. Use the
+  `alpha` argument in `type_ribbon()` (and equivalents) instead: e.g.,
+  `tinyplot(..., type = type_ribbon(alpha = 0.5))`.
+  - Aside: Please note that this is _not_ equivalent to using
+  `tinyplot(..., type = "ribbon", alpha = 0.5)` because the latter matches the
+  top-level `alpha` argument of `tinyplot()` itself (and thus modifies the
+  entire `palette`, rather than just the ribbon). See our warning about passing
+  ancillary type-specific arguments above.
 
 Bug fixes:
 

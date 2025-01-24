@@ -495,8 +495,7 @@ expect_snapshot_plot(f, label = "facet_density_3x2")
 
 f = function() {
   tinyplot(
-    ~Ozone, aq,
-    type = "density",
+    Solar.R~Ozone, aq,
     facet = ~ hot:windy,
     facet.args = list(free = TRUE),
     main = "Free facet scales"
@@ -506,8 +505,7 @@ expect_snapshot_plot(f, label = "facet_free")
 
 f = function() {
   tinyplot(
-    ~Ozone, aq,
-    type = "density",
+    Solar.R~Ozone, aq,
     facet = windy ~ hot,
     facet.args = list(free = TRUE),
     main = "Free facet scales (grid)"

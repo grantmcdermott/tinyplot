@@ -123,7 +123,9 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
 
 by_pch = function(ngrps, type, pch = NULL) {
   no_pch = FALSE
-  if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot", "qq")) {
+  if (identical(type, "text")) {
+    pch <- rep(15, ngrps)
+  } else if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot", "qq")) {
     no_pch = TRUE
     pch = NULL
 

@@ -14,12 +14,17 @@
 #' it was larger). If breaks is a function, the x vector is supplied to it as
 #' the only argument (and the number of breaks is only limited by the amount of
 #' available memory).
+#' @param freq Passed to \code{\link[graphics]{hist}}. logical; if TRUE, the 
+#' histogram graphic is a representation of frequencies, the counts component 
+#' of the result; if FALSE, probability densities, component density, are plotted 
+#' (so that the histogram has a total area of one). Defaults to TRUE if and only 
+#' if breaks are equidistant.
 #' @examples
 #' # "histogram"/"hist" type convenience string(s)
 #' tinyplot(Nile, type = "histogram")
 #' 
 #' # Use `type_histogram()` to pass extra arguments for customization
-#' tinyplot(Nile, type = type_histogram(breaks = 30))
+#' tinyplot(Nile, type = type_histogram(breaks = 30, freq = FALSE))
 #' @export
 type_histogram = function(breaks = "Sturges", freq = TRUE) {
     out = list(

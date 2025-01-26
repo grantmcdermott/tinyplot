@@ -6,12 +6,17 @@
 \usage{
 type_ridge(
   scale = 1.5,
-  gradient = FALSE,
+  global.max = TRUE,
   breaks = NULL,
   probs = NULL,
+  ylevels = NULL,
   bw = "nrd0",
-  kernel = "gaussian",
-  ...,
+  joint.bw = c("owm", "full", "none"),
+  adjust = 1,
+  kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
+    "cosine", "optcosine"),
+  n = 512,
+  gradient = FALSE,
   raster = FALSE,
   col = NULL,
   alpha = NULL
@@ -21,13 +26,11 @@ type_ridge(
 \item{scale}{Numeric. Controls the scaling factor of each plot.
 Values greater than 1 means that plots overlap.}
 
-\item{gradient}{Logical or character. Should a color gradient be used
-to shade the area under the density? If a character specification is
-used, then it can either be of length 1 and specify the palette to be
-used with \code{gradient = TRUE} corresponding to \code{gradient = "viridis"}.
-If a character vector of length greater than 1 is used, then it
-should specifify the colors in the palette, e.g.,
-\code{gradient = hcl.colors(512)}.}
+\item{global.max}{Logical. Should the height of the individual ridge
+densities be scaled relative to the global maximum? Default is \code{TRUE}.
+Changing to \code{FALSE} will cause a local maximum scaling to be used instead.
+Use this latter option if you wish to enforce the same relative height for
+each ridge density across \code{y} categories.}
 
 \item{breaks}{Numeric. If a color gradient is used for shading, the
 breaks between the colors can be modified. The default is to use
@@ -39,13 +42,66 @@ at the specified \code{probs}. The quantiles are computed based on the density
 (rather than the raw original variable). Only one of \code{breaks} or
 \code{probs} must be specified.}
 
-\item{bw, kernel, ...}{Arguments passed to \code{\link[stats]{density}}.}
+\item{ylevels}{a character or numeric vector specifying in which order
+the levels of the y-variable should be plotted.}
 
-\item{raster}{Logical. Should the ridges and color gradient, if relevant,
-be drawn via a coercion to \code{\link[graphics]{rasterImage}}? Note that
-this will result in potential smoothness artifacts at high resolutions.
-Defaults to \code{FALSE}, in which case the ridges and color gradient will be
-passed in vectorised fashion to \code{\link[graphics]{polygon}}.}
+\item{bw}{the smoothing bandwidth to be used.  The kernels are scaled
+    such that this is the standard deviation of the smoothing kernel.
+    (Note this differs from the reference books cited below.)
+
+    \code{bw} can also be a character string giving a rule to choose the
+    bandwidth.  See \code{\link[stats]{bw.nrd}}. \cr The default,
+    \code{"nrd0"}, has remained the default for historical and
+    compatibility reasons, rather than as a general recommendation,
+    where e.g., \code{"SJ"} would rather fit, see also
+    Venables and Ripley (2002).
+
+    The specified (or computed) value of \code{bw} is multiplied by
+    \code{adjust}.
+  }
+
+\item{joint.bw}{character string indicating whether (and how) the smoothing
+bandwidth should be computed from the joint data distribution. The default
+value of \code{"owm"} computes the joint bandwidth as the observation-weighted
+mean of the individual subgroup bandwidths. Choosing \code{"full"} will result
+in a joint bandwidth computed from the full distribution. Conversely,
+\code{"none"} means that bandwidths will be computed independently for each data
+subgroup (i.e., no joint bandwidth selection). Please note that the default
+behaviour here is \emph{different} to that of \code{type_density()}, where the
+equivalent \code{joint.bw} argument defaults to \code{"none"}.}
+
+\item{adjust}{the bandwidth used is actually \code{adjust*bw}.
+    This makes it easy to specify values like \sQuote{half the default}
+    bandwidth.}
+
+\item{kernel}{a character string giving the smoothing kernel to be used. This
+must partially match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"},
+\code{"epanechnikov"}, \code{"biweight"}, \code{"cosine"} or \code{"optcosine"}, with default
+\code{"gaussian"}, and may be abbreviated to a unique prefix (single letter).
+
+\code{"cosine"} is smoother than \code{"optcosine"}, which is the usual 'cosine'
+kernel in the literature and almost MSE-efficient. However, \code{"cosine"} is
+the version used by S.}
+
+\item{n}{the number of equally spaced points at which the density is
+    to be estimated.  When \code{n > 512}, it is rounded up to a power
+    of 2 during the calculations (as \code{\link[stats]{fft}} is used) and the
+    final result is interpolated by \code{\link[stats]{approx}}.  So it almost
+    always makes sense to specify \code{n} as a power of two.
+  }
+
+\item{gradient}{Logical or character. Should a gradient fill be used to
+shade the area under the density? If a character specification is used,
+then it can either be of length 1 and specify the palette to be used with
+\code{gradient = TRUE} corresponding to \code{gradient = "viridis"}. If a character
+vector of length greater than 1 is used, then it should specify the
+colors in the palette, e.g., \code{gradient = hcl.colors(512)}.}
+
+\item{raster}{Logical. Should the \code{gradient} fill be drawn using
+\code{\link[graphics]{rasterImage}}? Defaults to \code{FALSE}, in which case the
+\code{gradient} fill will instead be drawn using
+\code{\link[graphics]{polygon}}. See the \verb{Technical note on gradient fills}
+section below.}
 
 \item{col}{Character string denoting the outline (border) color for all
 of the ridge densities. Note that a singular value is expected; if multiple
@@ -67,9 +123,44 @@ such as grouping and faceting.
 The line color is controlled by the \code{col} argument in the \code{tinyplot()} call.
 The fill color is controlled by the \code{bg} argument in the \code{tinyplot()} call.
 }
+\section{Technical note on gradient fills}{
+
+
+\code{tinyplot} uses two basic approaches for drawing gradient fills in ridge line
+plots, e.g. if \code{type_ridge(gradient = TRUE)}.
+
+The first (and default) polygon-based approach involves dividing up the main
+density region into many smaller polygons along the x-axis. Each of these
+smaller polygons inherits a different color "segment" from the underlying
+palette swatch, which in turn creates the effect of a continuous gradient
+when they are all plotted together. Internally, this polygon-based approach
+is vectorised (i.e., all of the sub-polygons are plotted simultaneously). It
+is thus efficient from a plotting perspective and generally also performs
+well from an aesthetic perspective. However, it can occasionally produce
+undesirable plotting artifacts on some graphics devices---e.g., thin but
+visible vertical lines---if alpha transparency is being used at the same
+time.
+
+For this reason, we also offer an alternative raster-based approach for
+gradient fills that users can invoke via
+\code{type_ridge(gradient = TRUE, raster = TRUE)}. The essential idea is that we
+coerce the density polygon into a raster representation (using
+\code{\link[graphics]{rasterImage}}) and achieve the gradient effect via
+color interpolation. The trade-off this time is potential smoothness
+artifacts around the top of the ridge densities at high resolutions, since we
+have converted a vector object into a raster object.
+
+Again, we expect that the choice between these two approaches will only
+matter for ridge plots that combine gradient fills with alpha transparency
+(and on certain graphics devices). We recommend that users experiment to
+determine which approach is optimal for their device.
+}
+
 \examples{
-## default ridge plot
+## default ridge plot (using the "ridge" convenience string)
 tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
+
+## pass customization arguments through type_ridge(), for example...
 
 ## use the same bandwidth for all densities
 tinyplot(Species ~ Sepal.Width, data = iris,
@@ -78,6 +169,12 @@ tinyplot(Species ~ Sepal.Width, data = iris,
 ## customized ridge plot without overlap of densities
 tinyplot(Species ~ Sepal.Width, data = iris,
   type = type_ridge(scale = 1),
+  bg = "light blue", col = "black")
+  
+## turn off global max relative scaling if you want the same height for
+## densities across y categories
+tinyplot(Species ~ Sepal.Width, data = iris,
+  type = type_ridge(scale = 1, global.max = FALSE),
   bg = "light blue", col = "black")
 
 ## by grouping is also supported. two special cases of interest:
@@ -94,22 +191,34 @@ tinyplot(Species ~ Sepal.Width | Sepal.Width, data = iris,
   type = type_ridge(col = "white"))
 
 ## gradient coloring along the x-axis can also be invoked manually without
-## a legend (the following lines are all equivalent)
+## a legend (the following tinyplot calls are all equivalent)
 tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
 # tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
 # tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))
 
-## highlighting only the center 50\% of the density (between 25\% and 75\% quantile)
-tinyplot(Species ~ Sepal.Width, data = iris, col = "white", type = type_ridge(
-  gradient = hcl.colors(3, "Dark Mint")[c(2, 1, 2)], probs = c(0.25, 0.75)))
+## aside: when combining gradient fill with alpha transparency, it may be
+## better to use the raster-based approach (test on your graphics device)
+tinyplot(Species ~ Sepal.Width, data = iris,
+  type = type_ridge(gradient = TRUE, alpha = 0.5),
+  main = "polygon fill (default)")
+tinyplot(Species ~ Sepal.Width, data = iris,
+  type = type_ridge(gradient = TRUE, alpha = 0.5, raster = TRUE),
+  main = "raster fill")
 
-## highlighting the probability distribution by the color gradient
-tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(
-  gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)], probs = 0:500/500))
+## highlighting only the center 50\% of the density (between 25\% and 75\% quantile)
+tinyplot(Species ~ Sepal.Width, data = iris, col = "white",
+  type = type_ridge(
+    gradient = hcl.colors(3, "Dark Mint")[c(2, 1, 2)],
+    probs = c(0.25, 0.75)))
+
+## highlighting the probability distribution by color gradient (median = darkest point)
+tinyplot(Species ~ Sepal.Width, data = iris,
+  type = type_ridge(gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)],
+  probs = 0:500/500))
 
 ## with faceting and color gradient
-airq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
-tinyplot(Month ~ Ozone, facet = ~ Late, data = airq,
+aq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
+tinyplot(Month ~ Ozone, facet = ~ Late, data = aq,
   type = type_ridge(gradient = TRUE),
   grid = TRUE, axes = "t", col = "white")
 

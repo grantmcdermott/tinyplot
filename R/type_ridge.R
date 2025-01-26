@@ -10,6 +10,11 @@
 #'
 #' @param scale Numeric. Controls the scaling factor of each plot.
 #' Values greater than 1 means that plots overlap.
+#' @param global.max Logical. Should the height of the individual ridge
+#' densities be scaled relative to the global maximum? Default is `TRUE`.
+#' Changing to `FALSE` will cause a local maximum scaling to be used instead.
+#' Use this latter option if you wish to enforce the same relative height for
+#' each ridge density across `y` categories. 
 #' @param breaks Numeric. If a color gradient is used for shading, the
 #' breaks between the colors can be modified. The default is to use
 #' equidistant breaks spanning the range of the `x` variable.
@@ -91,9 +96,11 @@
 #' determine which approach is optimal for their device.
 #'
 #' @examples
-#' ## default ridge plot
+#' ## default ridge plot (using the "ridge" convenience string)
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
-#'
+#' 
+#' ## pass customization arguments through type_ridge(), for example...
+#' 
 #' ## use the same bandwidth for all densities
 #' tinyplot(Species ~ Sepal.Width, data = iris,
 #'   type = type_ridge(bw = bw.nrd0(iris$Sepal.Width)))
@@ -101,6 +108,12 @@
 #' ## customized ridge plot without overlap of densities
 #' tinyplot(Species ~ Sepal.Width, data = iris,
 #'   type = type_ridge(scale = 1),
+#'   bg = "light blue", col = "black")
+#'   
+#' ## turn off global max relative scaling if you want the same height for
+#' ## densities across y categories
+#' tinyplot(Species ~ Sepal.Width, data = iris,
+#'   type = type_ridge(scale = 1, global.max = FALSE),
 #'   bg = "light blue", col = "black")
 #'
 #' ## by grouping is also supported. two special cases of interest:
@@ -117,25 +130,30 @@
 #'   type = type_ridge(col = "white"))
 #'
 #' ## gradient coloring along the x-axis can also be invoked manually without
-#' ## a legend (the following lines are all equivalent)
+#' ## a legend (the following tinyplot calls are all equivalent)
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
 #' # tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
 #' # tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))
 #' 
 #' ## aside: when combining gradient fill with alpha transparency, it may be
 #' ## better to use the raster-based approach (test on your graphics device)
-#' tinyplot(Species ~ Sepal.Width, data = iris, main = "polygon approach (default)",
-#'   type = type_ridge(gradient = TRUE, alpha = 0.5))
-#' tinyplot(Species ~ Sepal.Width, data = iris, main = "raster approach",
-#'   type = type_ridge(gradient = TRUE, alpha = 0.5, raster = TRUE))
+#' tinyplot(Species ~ Sepal.Width, data = iris,
+#'   type = type_ridge(gradient = TRUE, alpha = 0.5),
+#'   main = "polygon fill (default)")
+#' tinyplot(Species ~ Sepal.Width, data = iris,
+#'   type = type_ridge(gradient = TRUE, alpha = 0.5, raster = TRUE),
+#'   main = "raster fill")
 #'
 #' ## highlighting only the center 50% of the density (between 25% and 75% quantile)
-#' tinyplot(Species ~ Sepal.Width, data = iris, col = "white", type = type_ridge(
-#'   gradient = hcl.colors(3, "Dark Mint")[c(2, 1, 2)], probs = c(0.25, 0.75)))
+#' tinyplot(Species ~ Sepal.Width, data = iris, col = "white",
+#'   type = type_ridge(
+#'     gradient = hcl.colors(3, "Dark Mint")[c(2, 1, 2)],
+#'     probs = c(0.25, 0.75)))
 #'
-#' ## highlighting the probability distribution by the color gradient
-#' tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(
-#'   gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)], probs = 0:500/500))
+#' ## highlighting the probability distribution by color gradient (median = darkest point)
+#' tinyplot(Species ~ Sepal.Width, data = iris,
+#'   type = type_ridge(gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)],
+#'   probs = 0:500/500))
 #'
 #' ## with faceting and color gradient
 #' aq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
@@ -146,6 +164,7 @@
 #' @export
 type_ridge = function(
     scale = 1.5,
+    global.max = TRUE,
     breaks = NULL,
     probs = NULL,
     ylevels = NULL,
@@ -170,6 +189,7 @@ type_ridge = function(
     data = data_ridge(bw = bw, adjust = adjust, kernel = kernel, n = n,
                       joint.bw = joint.bw,
                       scale = scale,
+                      global.max = global.max,
                       gradient = gradient,
                       breaks = breaks,
                       probs = probs,
@@ -189,6 +209,7 @@ type_ridge = function(
 data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       joint.bw = "owm",
                       scale = 1.5,
+                      global.max = TRUE,
                       gradient = FALSE,
                       breaks = NULL,
                       probs = NULL,
@@ -265,7 +286,11 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     })
     datapoints = do.call(rbind, datapoints)
 
-    datapoints$ymax = datapoints$ymax / max(datapoints$ymax) * scale
+    if (isTRUE(global.max)) {
+      datapoints$ymax = datapoints$ymax / max(datapoints$ymax) * scale
+    } else {
+      datapoints$ymax = ave(datapoints$ymax, datapoints$y, FUN = function(x) x / max(x) * scale)
+    }
     datapoints = split(datapoints, datapoints$facet)
     offset_z = function(k) {
       ksplit = split(k, k$y)

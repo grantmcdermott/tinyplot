@@ -543,7 +543,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   probs = NULL,
   ylevels = NULL,
   bw = "nrd0",
-  joint.bw = c("owm", "full", "none"),
+  joint.bw = c("mean", "full", "none"),
   adjust = 1,
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
@@ -613,7 +613,7 @@ a character or numeric vector specifying in which order the levels of the y-vari
 <code id="joint.bw">joint.bw</code>
 </td>
 <td>
-character string indicating whether (and how) the smoothing bandwidth should be computed from the joint data distribution. The default value of <code>“owm”</code> computes the joint bandwidth as the observation-weighted mean of the individual subgroup bandwidths. Choosing <code>“full”</code> will result in a joint bandwidth computed from the full distribution. Conversely, <code>“none”</code> means that bandwidths will be computed independently for each data subgroup (i.e., no joint bandwidth selection). Please note that the default behaviour here is <em>different</em> to that of <code>type_density()</code>, where the equivalent <code>joint.bw</code> argument defaults to <code>“none”</code>.
+character string indicating whether (and how) the smoothing bandwidth should be computed from the joint data distribution. The default of <code>“mean”</code> will compute the joint bandwidth as the mean of the individual subgroup bandwidths (weighted by their number of observations). Choosing <code>“full”</code> will result in a joint bandwidth computed from the full distribution (merging all subgroups). For <code>“none”</code> the individual bandwidth will be computed independently for each subgroup. See <code>type_density</code> for some discussion of practical considerations.
 </td>
 </tr>
 <tr>
@@ -677,8 +677,8 @@ Numeric in the range <code style="white-space: pre;">[0,1]</code> for adjusting 
 </section>
 <section id="technical-note-on-gradient-fills" class="level3">
 <h3 class="anchored" data-anchor-id="technical-note-on-gradient-fills">Technical note on gradient fills</h3>
-<p><code>tinyplot</code> uses two basic approaches for drawing gradient fills in ridge line plots, e.g.&nbsp;if <code>type_ridge(gradient = TRUE)</code>.</p>
-<p>The first (and default) polygon-based approach involves dividing up the main density region into many smaller polygons along the x-axis. Each of these smaller polygons inherits a different color "segment" from the underlying palette swatch, which in turn creates the effect of a continuous gradient when they are all plotted together. Internally, this polygon-based approach is vectorised (i.e., all of the sub-polygons are plotted simultaneously). It is thus efficient from a plotting perspective and generally also performs well from an aesthetic perspective. However, it can occasionally produce undesirable plotting artifacts on some graphics devices—e.g., thin but visible vertical lines—if alpha transparency is being used at the same time.</p>
+<p><code>tinyplot</code> uses two basic approaches for drawing gradient fills in ridge line plots, e.g., if <code>type_ridge(gradient = TRUE)</code>.</p>
+<p>The first (and default) polygon-based approach involves dividing up the main density region into many smaller polygons along the x-axis. Each of these smaller polygons inherits a different color "segment" from the underlying palette swatch, which in turn creates the effect of a continuous gradient when they are all plotted together. Internally, this polygon-based approach is vectorized (i.e., all of the sub-polygons are plotted simultaneously). It is thus efficient from a plotting perspective and generally also performs well from an aesthetic perspective. However, it can occasionally produce undesirable plotting artifacts on some graphics devices—e.g., thin but visible vertical lines—if alpha transparency is being used at the same time.</p>
 <p>For this reason, we also offer an alternative raster-based approach for gradient fills that users can invoke via <code>type_ridge(gradient = TRUE, raster = TRUE)</code>. The essential idea is that we coerce the density polygon into a raster representation (using <code>rasterImage</code>) and achieve the gradient effect via color interpolation. The trade-off this time is potential smoothness artifacts around the top of the ridge densities at high resolutions, since we have converted a vector object into a raster object.</p>
 <p>Again, we expect that the choice between these two approaches will only matter for ridge plots that combine gradient fills with alpha transparency (and on certain graphics devices). We recommend that users experiment to determine which approach is optimal for their device.</p>
 </section>

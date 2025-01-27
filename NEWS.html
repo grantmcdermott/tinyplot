@@ -587,10 +587,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Breaking changes:</p>
 <ul>
-<li>There are a few breaking changes to grouped density plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/284">#284</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)
+<li>There are a few breaking changes to grouped density plots.
 <ul>
-<li>The default smoothing bandwidth is now computed independently for each data subgroup, rather than being computed from the joint density. Users can still opt into using a joint bandwidth by invoking the <code>type_density(joint.bw = &lt;option&gt;)</code> argument. See the function documentation for details.</li>
-<li>Grouped and/or faceted plots are no longer possible on density objects (i.e., via the <code>tinyplot.density()</code> method). Instead, please rather call <code>tinyplot(..., type = "density")</code> or <code>tinyplot(..., type = type_density())</code> on the raw data and pass grouping or facet arguments as needed.</li>
+<li>The joint smoothing bandwidth is now computed using an observation-weighted mean (as opposed to a simple mean). Users can customize this joint bandwidth by invoking the new <code>type_density(joint.bw = &lt;option&gt;)</code> argument. See the function documentation for details. (<a href="https://github.com/grantmcdermott/tinyplot/issues/291">#291</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> and <a href="https://github.com/zeleis"><span class="citation" data-cites="zeleis">@zeleis</span></a>)</li>
+<li>Grouped and/or faceted plots are no longer possible on density objects (i.e., via the <code>tinyplot.density()</code> method). Instead, please rather call <code>tinyplot(..., type = "density")</code> or <code>tinyplot(..., type = type_density())</code> on the raw data and pass grouping or facet arguments as needed. (<a href="https://github.com/grantmcdermott/tinyplot/issues/284">#284</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
 <li>The <code>ribbon.alpha</code> argument in <code>tinyplot()</code> has been deprecated. Use the <code>alpha</code> argument in <code>type_ribbon()</code> (and equivalents) instead: e.g., <code>tinyplot(..., type = type_ribbon(alpha = 0.5))</code>.
 <ul>

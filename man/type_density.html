@@ -545,6 +545,7 @@ window.Quarto = {
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
+  <li><a href="#bandwidth-selection" id="toc-bandwidth-selection" class="nav-link" data-scroll-target="#bandwidth-selection">Bandwidth selection</a></li>
   <li><a href="#titles" id="toc-titles" class="nav-link" data-scroll-target="#titles">Titles</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
@@ -567,11 +568,11 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">type_density(
   bw = "nrd0",
+  joint.bw = c("mean", "full", "none"),
   adjust = 1,
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   n = 512,
-  joint.bw = c("none", "full", "owm"),
   alpha = NULL
 )
 </code></pre>
@@ -587,6 +588,14 @@ window.Quarto = {
 <p>the smoothing bandwidth to be used. The kernels are scaled such that this is the standard deviation of the smoothing kernel. (Note this differs from the reference books cited below.)</p>
 <p><code>bw</code> can also be a character string giving a rule to choose the bandwidth. See <code>bw.nrd</code>. <br> The default, <code>“nrd0”</code>, has remained the default for historical and compatibility reasons, rather than as a general recommendation, where e.g., <code>“SJ”</code> would rather fit, see also Venables and Ripley (2002).</p>
 <p>The specified (or computed) value of <code>bw</code> is multiplied by <code>adjust</code>.</p>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="joint.bw">joint.bw</code>
+</td>
+<td>
+character string indicating whether (and how) the smoothing bandwidth should be computed from the joint data distribution when there are multiple subgroups. The options are <code>“mean”</code> (the default), <code>“full”</code>, and <code>“none”</code>. See the "Bandwidth selection" section below for details.
 </td>
 </tr>
 <tr>
@@ -616,14 +625,6 @@ the bandwidth used is actually <code>adjust*bw</code>. This makes it easy to spe
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="joint.bw">joint.bw</code>
-</td>
-<td>
-character string indicating whether (and how) the smoothing bandwidth should be computed from the joint data distribution. The default value of <code>“none”</code> means that bandwidths will be computed independently for each data subgroup. Choosing <code>“full”</code> will result in a joint bandwidth computed from the full distribution. Similarly, <code>“owm”</code> will compute the joint bandwidth as the observation-weighted mean of the individual subgroup bandwidths. Note that the <code>joint.bw</code> argument is only relevant for grouped or faceted density plots.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="alpha">alpha</code>
 </td>
 <td>
@@ -637,6 +638,21 @@ numeric value between 0 and 1 specifying the opacity of ribbon shading If no <co
 <p>The algorithm used in <code>density.default</code> disperses the mass of the empirical distribution function over a regular grid of at least 512 points and then uses the fast Fourier transform to convolve this approximation with a discretized version of the kernel and then uses linear approximation to evaluate the density at the specified points.</p>
 <p>The statistical properties of a kernel are determined by <span class="math inline">\(\sigma^2_K = \int t^2 K(t) dt\)</span> which is always <span class="math inline">\(= 1\)</span> for our kernels (and hence the bandwidth <code>bw</code> is the standard deviation of the kernel) and <span class="math inline">\(R(K) = \int K^2(t) dt\)</span>.<br> MSE-equivalent bandwidths (for different kernels) are proportional to <span class="math inline">\(\sigma_K R(K)\)</span> which is scale invariant and for our kernels equal to <span class="math inline">\(R(K)\)</span>. This value is returned when <code>give.Rkern = TRUE</code>. See the examples for using exact equivalent bandwidths.</p>
 <p>Infinite values in <code>x</code> are assumed to correspond to a point mass at <code>+/-Inf</code> and the density estimate is of the sub-density on <code>(-Inf, +Inf)</code>.</p>
+</section>
+<section id="bandwidth-selection" class="level3">
+<h3 class="anchored" data-anchor-id="bandwidth-selection">Bandwidth selection</h3>
+<p>While the choice of smoothing bandwidth will always stand to affect a density visualization, it gains an added importance when multiple densities are drawn simultaneously (e.g., for subgroups with respect to <code>by</code> or <code>facet</code>). Allowing each subgroup to compute its own separate bandwidth independently offers greater flexibility in capturing the unique characteristics of each subgroup, particularly when distributions differ substantially in location and/or scale. However, this approach may overemphasize small random variations and make it harder to visually compare densities across subgroups. Hence, it is often useful to employ the same ("joint") bandwidth across all subgroups. The following strategies are available via the <code>joint.bw</code> argument:</p>
+<ul>
+<li>
+<p>The default <code>joint.bw = “mean”</code> first computes the individual bandwidths for each group but then computes their mean, weighted by the number of observations in each group. This will work well when all groups have similar amounts of scatter (similar variances), even when they have potentially rather different locations. The weighted averaging stabilizes potential fluctuations in the individual bandwidths, especially when some subgroups are rather small.</p>
+</li>
+<li>
+<p>Alternatively, <code>joint.bw = “full”</code> can be used to compute the joint bandwidth from the full joint distribution (merging all groups). This will yield an even more robust bandwidth, especially when the groups overlap substantially (i.e., have similar locations and scales). However, it may lead to too large bandwidths and thus too much smoothing, especially when the locations of the groups differ substantially.</p>
+</li>
+<li>
+<p>Finally, <code>joint.bw = “none”</code> disables the joint bandwidth so that each group just employs its individual bandwidth. This is often the best choice if the amounts of scatter differ substantially between the groups, thus necessitating different amounts of smoothing.</p>
+</li>
+</ul>
 </section>
 <section id="titles" class="level3">
 <h3 class="anchored" data-anchor-id="titles">Titles</h3>
@@ -687,13 +703,15 @@ numeric value between 0 and 1 specifying the opacity of ribbon shading If no <co
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The default for grouped density plots is to compute bandwidths</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># independently for each subgroup. To override, specify the type of joint</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># bandwidth computation</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"density"</span>) <span class="co"># "none" (default)</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_density</span>(<span class="at">joint.bw =</span> <span class="st">"full"</span>), <span class="at">lty =</span> <span class="dv">2</span>)    <span class="co"># full dataset</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_density</span>(<span class="at">joint.bw =</span> <span class="st">"owm"</span>), <span class="at">lty =</span> <span class="dv">3</span>)     <span class="co"># obs-weighted mean</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"None"</span>, <span class="st">"Full"</span>, <span class="st">"OWM"</span>), <span class="at">lty =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">title =</span> <span class="st">"Joint BW"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The default for grouped density plots is to use the mean of the</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># individual subgroup bandwidths (weighted by group size) as the</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># joint bandwidth. Alternatively, the bandwidth from the "full"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># data or separate individual bandwidths ("none") can be used.</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.25</span>), <span class="at">type =</span> <span class="st">"density"</span>)        <span class="co"># mean (default)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">joint.bw =</span> <span class="st">"full"</span>, <span class="at">lty =</span> <span class="dv">2</span>)        <span class="co"># full data</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">joint.bw =</span> <span class="st">"none"</span>, <span class="at">lty =</span> <span class="dv">3</span>)        <span class="co"># none (individual)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Mean"</span>, <span class="st">"Full"</span>, <span class="st">"None"</span>), <span class="at">lty =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">title =</span> <span class="st">"Joint BW"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

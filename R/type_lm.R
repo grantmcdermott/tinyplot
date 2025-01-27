@@ -7,10 +7,14 @@
 #' @importFrom stats lm predict
 #' @examples
 #' # "lm" type convenience string
-#' tinyplot(dist ~ speed, data = cars, type = "lm")
+#' tinyplot(Sepal.Width ~ Petal.Width, data = iris, type = "lm")
+#' 
+#' # Grouped model fits (here: illustrating an example of Simpson's paradox)
+#' tinyplot(Sepal.Width ~ Petal.Width | Species, data = iris, type = "lm")
+#' tinyplot_add(type = "p")
 #' 
 #' # Use `type_lm()` to pass extra arguments for customization
-#' tinyplot(dist ~ speed, data = cars, type = type_lm(level = 0.9))
+#' tinyplot(Sepal.Width ~ Petal.Width, data = iris, type = type_lm(level = 0.8))
 #' @export
 type_lm = function(se = TRUE, level = 0.95) {
     assert_flag(se)

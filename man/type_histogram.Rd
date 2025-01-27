@@ -34,4 +34,7 @@ tinyplot(Nile, type = "histogram")
 
 # Use `type_histogram()` to pass extra arguments for customization
 tinyplot(Nile, type = type_histogram(breaks = 30))
+
+# Grouped histogram example
+tinyplot(~Petal.Width | Species, data = iris, type = type_histogram(breaks = 30))
 }

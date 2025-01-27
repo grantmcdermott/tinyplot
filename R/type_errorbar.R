@@ -4,7 +4,6 @@
 #' 
 #' @inheritParams graphics::arrows
 #' @examples
-#' mod = lm(Sepal.Length ~ 0 + Sepal.Width * Species, iris)
 #' mod = lm(mpg ~ wt * factor(am), mtcars)
 #' coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
 #' colnames(coefs) = c("term", "est", "lwr", "upr")

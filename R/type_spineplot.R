@@ -1,12 +1,16 @@
-#' Spineplot and spinogram type
+#' Spineplot and spinogram types
 #'
+#' @description Type function(s) for producing spineplots and spinograms, which
+#'   are modified versions of histograms or mosaic plots, and particularly
+#'   useful for visualizing factor variables. Note that [`tinyplot`] defaults
+#'   to `type_spineplot()` if `y` is a factor variable.
 #' @inheritParams graphics::spineplot
 #' @examples
 #' # "spineplot" type convenience string
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot")
 #' 
-#' # Aside: specifying the type is redundant for this example, since tinyplot
-#' # default's to "spineplot" if y is a factor (just like base plot).
+#' # Aside: specifying the type is redundant for this example, since tinyplot()
+#' # defaults to "spineplot" if y is a factor (just like base plot).
 #' tinyplot(Species ~ Sepal.Width, data = iris)
 #' 
 #' # Use `type_spineplot()` to pass extra arguments for customization

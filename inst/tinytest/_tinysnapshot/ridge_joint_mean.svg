@@ -21,7 +21,7 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='266.40' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='117.18px' lengthAdjust='spacingAndGlyphs'>joint.bw = "owm"</text>
+<text x='266.40' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='122.00px' lengthAdjust='spacingAndGlyphs'>joint.bw = "mean"</text>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='64.70px' lengthAdjust='spacingAndGlyphs'>Sepal.Width</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <line x1='61.15' y1='430.56' x2='423.36' y2='430.56' style='stroke-width: 0.75;' />

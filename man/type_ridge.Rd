@@ -11,7 +11,7 @@ type_ridge(
   probs = NULL,
   ylevels = NULL,
   bw = "nrd0",
-  joint.bw = c("owm", "full", "none"),
+  joint.bw = c("mean", "full", "none"),
   adjust = 1,
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
@@ -62,8 +62,8 @@ the levels of the y-variable should be plotted.}
 
 \item{joint.bw}{character string indicating whether (and how) the smoothing
 bandwidth should be computed from the joint data distribution. The default of
-\code{"owm"} will compute the joint bandwidth as the observation-weighted mean
-of the individual subgroup bandwidths. Choosing \code{"full"} will result in a
+\code{"mean"} will compute the joint bandwidth as the mean of the individual
+subgroup bandwidths (weighted by their number of observations). Choosing \code{"full"} will result in a
 joint bandwidth computed from the full distribution (merging all subgroups).
 For \code{"none"} the individual bandwidth will be computed independently for
 each subgroup. See \code{\link{type_density}} for some discussion of

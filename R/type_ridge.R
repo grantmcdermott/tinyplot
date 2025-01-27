@@ -36,8 +36,8 @@
 #'   the version used by S.
 #' @param joint.bw character string indicating whether (and how) the smoothing
 #'   bandwidth should be computed from the joint data distribution. The default of
-#'   `"owm"` will compute the joint bandwidth as the observation-weighted mean
-#'   of the individual subgroup bandwidths. Choosing `"full"` will result in a
+#'   `"mean"` will compute the joint bandwidth as the mean of the individual
+#'   subgroup bandwidths (weighted by their number of observations). Choosing `"full"` will result in a
 #'   joint bandwidth computed from the full distribution (merging all subgroups).
 #'   For `"none"` the individual bandwidth will be computed independently for
 #'   each subgroup. See \code{\link{type_density}} for some discussion of
@@ -168,7 +168,7 @@ type_ridge = function(
     probs = NULL,
     ylevels = NULL,
     bw = "nrd0",
-    joint.bw =  c("owm", "full", "none"),
+    joint.bw =  c("mean", "full", "none"),
     adjust = 1,
     kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"),
     n = 512,
@@ -180,7 +180,7 @@ type_ridge = function(
     ) {
   
   kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
-  joint.bw = match.arg(joint.bw, c("owm", "full", "none"))
+  joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
 
   out = list(
     draw = draw_ridge(),
@@ -206,7 +206,7 @@ type_ridge = function(
 #
 ## Underlying data_ridge function
 data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
-                      joint.bw = "owm",
+                      joint.bw = "mean",
                       scale = 1.5,
                       global.max = TRUE,
                       gradient = FALSE,
@@ -264,7 +264,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         }
         if (joint.bw == "full") {
             dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
-        } else if (joint.bw == "owm") {
+        } else if (joint.bw == "mean") {
             bws = sapply(datapoints, function(dat) bw_fun(kernel = bw, dat$x))
             ws = sapply(datapoints, nrow)
             dens_bw = weighted.mean(bws, ws)

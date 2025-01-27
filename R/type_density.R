@@ -15,8 +15,8 @@
 #' @param joint.bw character string indicating whether (and how) the smoothing
 #'   bandwidth should be computed from the joint data distribution, in case
 #'   there are multiple subgroups (from `by` or `facet`). The default of
-#'   `"owm"` will compute the joint bandwidth as the observation-weighted mean
-#'   of the individual subgroup bandwidths. Choosing `"full"` will result in a
+#'   `"mean"` will compute the joint bandwidth as the mean of the individual
+#'   subgroup bandwidths (weighted by their number of observations). Choosing `"full"` will result in a
 #'   joint bandwidth computed from the full distribution (merging all subgroups).
 #'   For `"none"` the individual bandwidth will be computed independently for
 #'   each subgroup. When no grouped or faceted densities are visualized, the
@@ -38,7 +38,7 @@
 #'   bandwidth across all subgroups. The following strategies are available via the
 #'   `joint.bw` argument.
 #' 
-#'   The default `joint.bw = "owm"` first computes the individual bandwidths for
+#'   The default `joint.bw = "mean"` first computes the individual bandwidths for
 #'   each group but then computes their mean, weighted by the number of observations
 #'   in each group. This will work well when all groups have similar amounts of
 #'   scatter (similar variances), even when they have potentially rather different
@@ -77,7 +77,7 @@
 #' # individual subgroup bandwidths (weighted by group size) as the
 #' # joint bandwidth. Alternatively, the bandwidth from the "full"
 #' # data or separate individual bandwidths ("none") can be used.
-#' tinyplot(~Sepal.Length | Species, data = iris, type = "density") # owm (default)
+#' tinyplot(~Sepal.Length | Species, data = iris, type = "density") # mean (default)
 #' tinyplot_add(joint.bw = "full", lty = 2)                         # full data
 #' tinyplot_add(joint.bw = "none", lty = 3)                         # none (individual)
 #' legend("topright", c("Mean", "Full", "None"), lty = 1:3, bty = "n", title = "Joint BW")
@@ -91,11 +91,11 @@ type_density = function(
         kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"),
         n = 512,
         # more args from density here?
-        joint.bw =  c("owm", "full", "none"),
+        joint.bw =  c("mean", "full", "none"),
         alpha = NULL
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
-    joint.bw = match.arg(joint.bw, c("owm", "full", "none"))
+    joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
     out = list(
         data = data_density(bw = bw, adjust = adjust, kernel = kernel, n = n,
                             joint.bw = joint.bw, alpha = alpha),
@@ -136,7 +136,7 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             }
             if (joint.bw == "full") {
                 dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
-            } else if (joint.bw == "owm") {
+            } else if (joint.bw == "mean") {
                 bws = sapply(datapoints, function(dat) bw_fun(kernel = bw, dat$x))
                 ws = sapply(datapoints, nrow)
                 dens_bw = weighted.mean(bws, ws)

@@ -64,7 +64,7 @@ expect_snapshot_plot(f1, label = "density_type_bw_sj")
 f1 = function() {
   tinyplot(~ Sepal.Width | Species, iris, type = type_density(joint.bw = "none"))
   tinyplot_add(type = type_density(joint.bw = "full"), lty = 2)
-  tinyplot_add(type = type_density(joint.bw = "owm"), lty = 3)
+  tinyplot_add(type = type_density(joint.bw = "mean"), lty = 3)
   legend("topright", c("None", "Full", "OWM"), lty = 1:3, title = "Joint BW")
 }
 expect_snapshot_plot(f1, label = "density_type_joint_bw")

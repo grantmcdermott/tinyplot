@@ -10,7 +10,7 @@ type_density(
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   n = 512,
-  joint.bw = c("owm", "full", "none"),
+  joint.bw = c("mean", "full", "none"),
   alpha = NULL
 )
 }
@@ -53,8 +53,8 @@ the version used by S.}
 \item{joint.bw}{character string indicating whether (and how) the smoothing
 bandwidth should be computed from the joint data distribution, in case
 there are multiple subgroups (from \code{by} or \code{facet}). The default of
-\code{"owm"} will compute the joint bandwidth as the observation-weighted mean
-of the individual subgroup bandwidths. Choosing \code{"full"} will result in a
+\code{"mean"} will compute the joint bandwidth as the mean of the individual
+subgroup bandwidths (weighted by their number of observations). Choosing \code{"full"} will result in a
 joint bandwidth computed from the full distribution (merging all subgroups).
 For \code{"none"} the individual bandwidth will be computed independently for
 each subgroup. When no grouped or faceted densities are visualized, the
@@ -110,7 +110,7 @@ random variations too much. Hence, it is often useful to employ the same joint
 bandwidth across all subgroups. The following strategies are available via the
 \code{joint.bw} argument.
 
-The default \code{joint.bw = "owm"} first computes the individual bandwidths for
+The default \code{joint.bw = "mean"} first computes the individual bandwidths for
 each group but then computes their mean, weighted by the number of observations
 in each group. This will work well when all groups have similar amounts of
 scatter (similar variances), even when they have potentially rather different
@@ -151,7 +151,7 @@ tinyplot(
 # individual subgroup bandwidths (weighted by group size) as the
 # joint bandwidth. Alternatively, the bandwidth from the "full"
 # data or separate individual bandwidths ("none") can be used.
-tinyplot(~Sepal.Length | Species, data = iris, type = "density") # owm (default)
+tinyplot(~Sepal.Length | Species, data = iris, type = "density") # mean (default)
 tinyplot_add(joint.bw = "full", lty = 2)                         # full data
 tinyplot_add(joint.bw = "none", lty = 3)                         # none (individual)
 legend("topright", c("Mean", "Full", "None"), lty = 1:3, bty = "n", title = "Joint BW")

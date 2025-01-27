@@ -104,7 +104,7 @@ Breaking changes:
   - The joint smoothing bandwidth is now computed using an observation-weighted
     mean (as opposed to a simple mean). Users can customize this joint bandwidth 
     by invoking the new `type_density(joint.bw = <option>)` argument. See the
-    function documentation for details.  (#291 @grantmcdermott and @zeleis)
+    function documentation for details.  (#291 @grantmcdermott and @zeileis)
   - Grouped and/or faceted plots are no longer possible on density objects
     (i.e., via the `tinyplot.density()` method). Instead, please rather call
     `tinyplot(..., type = "density")` or `tinyplot(..., type = type_density())`

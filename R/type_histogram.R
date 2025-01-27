@@ -14,16 +14,21 @@
 #' it was larger). If breaks is a function, the x vector is supplied to it as
 #' the only argument (and the number of breaks is only limited by the amount of
 #' available memory).
+#' @param freq Passed to \code{\link[graphics]{hist}}. logical; if TRUE, the 
+#' histogram graphic is a representation of frequencies, the counts component 
+#' of the result; if FALSE, probability densities, component density, are plotted 
+#' (so that the histogram has a total area of one). Defaults to TRUE if and only 
+#' if breaks are equidistant.
 #' @examples
 #' # "histogram"/"hist" type convenience string(s)
 #' tinyplot(Nile, type = "histogram")
 #' 
 #' # Use `type_histogram()` to pass extra arguments for customization
-#' tinyplot(Nile, type = type_histogram(breaks = 30))
+#' tinyplot(Nile, type = type_histogram(breaks = 30, freq = FALSE))
 #' @export
-type_histogram = function(breaks = "Sturges") {
+type_histogram = function(breaks = "Sturges", freq = TRUE) {
     out = list(
-        data = data_histogram(breaks = breaks),
+        data = data_histogram(breaks = breaks, freq = freq),
         draw = draw_rect(),
         name = "histogram"
     )
@@ -36,12 +41,13 @@ type_histogram = function(breaks = "Sturges") {
 type_hist = type_histogram
 
 
-data_histogram = function(breaks = "Sturges") {
+data_histogram = function(breaks = "Sturges", freq = TRUE) {
     hbreaks = breaks
-    fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints, .breaks = hbreaks, ...) {
+    hfreq = freq
+    fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints, .breaks = hbreaks, .freq = hfreq,...) {
         hbreaks = ifelse(!is.null(.breaks), .breaks, "Sturges")
 
-        if (is.null(ylab)) ylab = "Frequency"
+        if (is.null(ylab)) ylab = ifelse(.freq, "Frequency", "Density")
         if (is.null(by) && is.null(palette)) {
             if (is.null(col)) col = par("fg")
             if (is.null(bg)) bg = "lightgray"
@@ -59,7 +65,7 @@ data_histogram = function(breaks = "Sturges") {
                 by = k$by[1], # already split
                 facet = k$facet[1], # already split
                 ymin = 0,
-                ymax = h$counts,
+                ymax = if (.freq) h$counts else h$density,
                 xmin = h$breaks[-1],
                 xmax = h$mids + (h$mids - h$breaks[-1])
             )

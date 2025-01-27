@@ -2,7 +2,7 @@ Package: tinyplot
 Type: Package
 Title: Lightweight Extension of the Base R Graphics System
 Version: 0.2.1.99
-Date: 2024-08-25
+Date: 2025-01-26
 Authors@R: 
   c(
     person(

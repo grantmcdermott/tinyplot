@@ -35,14 +35,13 @@
 #'   kernel in the literature and almost MSE-efficient. However, `"cosine"` is
 #'   the version used by S.
 #' @param joint.bw character string indicating whether (and how) the smoothing
-#'   bandwidth should be computed from the joint data distribution. The default
-#'   value of `"owm"` computes the joint bandwidth as the observation-weighted
-#'   mean of the individual subgroup bandwidths. Choosing `"full"` will result
-#'   in a joint bandwidth computed from the full distribution. Conversely,
-#'   `"none"` means that bandwidths will be computed independently for each data
-#'   subgroup (i.e., no joint bandwidth selection). Please note that the default
-#'   behaviour here is _different_ to that of `type_density()`, where the
-#'   equivalent `joint.bw` argument defaults to `"none"`.
+#'   bandwidth should be computed from the joint data distribution. The default of
+#'   `"mean"` will compute the joint bandwidth as the mean of the individual
+#'   subgroup bandwidths (weighted by their number of observations). Choosing `"full"` will result in a
+#'   joint bandwidth computed from the full distribution (merging all subgroups).
+#'   For `"none"` the individual bandwidth will be computed independently for
+#'   each subgroup. See \code{\link{type_density}} for some discussion of
+#'   practical considerations.
 #' @param gradient Logical or character. Should a gradient fill be used to
 #'   shade the area under the density? If a character specification is used,
 #'   then it can either be of length 1 and specify the palette to be used with
@@ -67,14 +66,14 @@
 #' @section Technical note on gradient fills:
 #' 
 #' `tinyplot` uses two basic approaches for drawing gradient fills in ridge line
-#' plots, e.g. if `type_ridge(gradient = TRUE)`.
+#' plots, e.g., if `type_ridge(gradient = TRUE)`.
 #' 
 #' The first (and default) polygon-based approach involves dividing up the main
 #' density region into many smaller polygons along the x-axis. Each of these
 #' smaller polygons inherits a different color "segment" from the underlying
 #' palette swatch, which in turn creates the effect of a continuous gradient
 #' when they are all plotted together. Internally, this polygon-based approach
-#' is vectorised (i.e., all of the sub-polygons are plotted simultaneously). It
+#' is vectorized (i.e., all of the sub-polygons are plotted simultaneously). It
 #' is thus efficient from a plotting perspective and generally also performs
 #' well from an aesthetic perspective. However, it can occasionally produce
 #' undesirable plotting artifacts on some graphics devices---e.g., thin but
@@ -169,7 +168,7 @@ type_ridge = function(
     probs = NULL,
     ylevels = NULL,
     bw = "nrd0",
-    joint.bw =  c("owm", "full", "none"), # changed order versus type_density
+    joint.bw =  c("mean", "full", "none"),
     adjust = 1,
     kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"),
     n = 512,
@@ -180,8 +179,8 @@ type_ridge = function(
     alpha = NULL
     ) {
   
-  kernel = match.arg(kernel)
-  joint.bw = match.arg(joint.bw)
+  kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
+  joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
 
   out = list(
     draw = draw_ridge(),
@@ -207,7 +206,7 @@ type_ridge = function(
 #
 ## Underlying data_ridge function
 data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
-                      joint.bw = "owm",
+                      joint.bw = "mean",
                       scale = 1.5,
                       global.max = TRUE,
                       gradient = FALSE,
@@ -249,26 +248,13 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     if (joint.bw == "none" || is.numeric(bw)) {
         dens_bw = bw
     } else {
-        # Use weighted mean of subgroup bandwidths
-        # Define a function that uses switch() to call the appropriate bandwidth function
-        bw_fun = function(kernel, data) {
-            kernel = tolower(kernel)
-            switch(
-                kernel,
-                nrd0 = bw.nrd0(data),
-                nrd  = bw.nrd(data),
-                ucv  = bw.ucv(data),
-                bcv  = bw.bcv(data),
-                sj   = bw.SJ(data),
-                stop("Invalid `bw` string. Choose from 'nrd0', 'nrd', 'ucv', 'bcv', or 'SJ'.")
-            )
-        }
-        if (joint.bw == "full") {
-            dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
-        } else if (joint.bw == "owm") {
+        if (joint.bw == "mean") {
+            # Use weighted mean of subgroup bandwidths
             bws = sapply(datapoints, function(dat) bw_fun(kernel = bw, dat$x))
             ws = sapply(datapoints, nrow)
             dens_bw = weighted.mean(bws, ws)
+        } else if (joint.bw == "full") {
+            dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
         }
     }
 

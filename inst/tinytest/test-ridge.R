@@ -17,11 +17,11 @@ expect_snapshot_plot(f, label = "ridge_alpha")
 f = function() {
   tinyplot(
     Species ~ Sepal.Width, data = iris,
-    main = 'joint.bw = "owm"',
-    type = type_ridge(joint.bw = "owm")
+    main = 'joint.bw = "mean"',
+    type = type_ridge(joint.bw = "mean")
   )
 }
-expect_snapshot_plot(f, label = "ridge_joint_owm")
+expect_snapshot_plot(f, label = "ridge_joint_mean")
 
 f = function() {
   tinyplot(

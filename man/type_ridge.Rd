@@ -11,7 +11,7 @@ type_ridge(
   probs = NULL,
   ylevels = NULL,
   bw = "nrd0",
-  joint.bw = c("owm", "full", "none"),
+  joint.bw = c("mean", "full", "none"),
   adjust = 1,
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
@@ -61,14 +61,13 @@ the levels of the y-variable should be plotted.}
   }
 
 \item{joint.bw}{character string indicating whether (and how) the smoothing
-bandwidth should be computed from the joint data distribution. The default
-value of \code{"owm"} computes the joint bandwidth as the observation-weighted
-mean of the individual subgroup bandwidths. Choosing \code{"full"} will result
-in a joint bandwidth computed from the full distribution. Conversely,
-\code{"none"} means that bandwidths will be computed independently for each data
-subgroup (i.e., no joint bandwidth selection). Please note that the default
-behaviour here is \emph{different} to that of \code{type_density()}, where the
-equivalent \code{joint.bw} argument defaults to \code{"none"}.}
+bandwidth should be computed from the joint data distribution. The default of
+\code{"mean"} will compute the joint bandwidth as the mean of the individual
+subgroup bandwidths (weighted by their number of observations). Choosing \code{"full"} will result in a
+joint bandwidth computed from the full distribution (merging all subgroups).
+For \code{"none"} the individual bandwidth will be computed independently for
+each subgroup. See \code{\link{type_density}} for some discussion of
+practical considerations.}
 
 \item{adjust}{the bandwidth used is actually \code{adjust*bw}.
     This makes it easy to specify values like \sQuote{half the default}
@@ -127,14 +126,14 @@ The fill color is controlled by the \code{bg} argument in the \code{tinyplot()} 
 
 
 \code{tinyplot} uses two basic approaches for drawing gradient fills in ridge line
-plots, e.g. if \code{type_ridge(gradient = TRUE)}.
+plots, e.g., if \code{type_ridge(gradient = TRUE)}.
 
 The first (and default) polygon-based approach involves dividing up the main
 density region into many smaller polygons along the x-axis. Each of these
 smaller polygons inherits a different color "segment" from the underlying
 palette swatch, which in turn creates the effect of a continuous gradient
 when they are all plotted together. Internally, this polygon-based approach
-is vectorised (i.e., all of the sub-polygons are plotted simultaneously). It
+is vectorized (i.e., all of the sub-polygons are plotted simultaneously). It
 is thus efficient from a plotting perspective and generally also performs
 well from an aesthetic perspective. However, it can occasionally produce
 undesirable plotting artifacts on some graphics devices---e.g., thin but

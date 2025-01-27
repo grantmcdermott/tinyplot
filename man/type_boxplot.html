@@ -530,7 +530,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="unnumbered anchored" data-anchor-id="boxplot-type">Boxplot type</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Type function for producing box-and-whisker plots. Arguments are passed to <code>boxplot</code>, although <code>tinyplot</code> scaffolding allows added functionality such as grouping and faceting.</p>
+<p>Type function for producing box-and-whisker plots. Arguments are passed to <code>boxplot</code>, although <code>tinyplot</code> scaffolding allows added functionality such as grouping and faceting. Box-and-whisker plots are the default plot type if <code>x</code> is a factor and <code>y</code> is numeric.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -633,15 +633,24 @@ outlier line width expansion, proportional to box width.
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># automatically produces a boxplot if x is a factor and y is numeric</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(count <span class="sc">~</span> spray, <span class="at">data =</span> InsectSprays)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Use `type_boxplot()` to pass extra arguments for customization</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  count <span class="sc">~</span> spray, <span class="at">data =</span> InsectSprays, <span class="at">lty =</span> <span class="dv">1</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_boxplot</span>(<span class="at">boxwex =</span> <span class="fl">0.3</span>, <span class="at">staplewex =</span> <span class="dv">0</span>, <span class="at">outline =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Grouped boxplot example</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(len <span class="sc">~</span> dose <span class="sc">|</span> supp, <span class="at">data =</span> ToothGrowth, <span class="at">type =</span> <span class="st">"boxplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_boxplot_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use `type_boxplot()` to pass extra arguments for customization</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  len <span class="sc">~</span> dose <span class="sc">|</span> supp, <span class="at">data =</span> ToothGrowth, <span class="at">lty =</span> <span class="dv">1</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_boxplot</span>(<span class="at">boxwex =</span> <span class="fl">0.3</span>, <span class="at">staplewex =</span> <span class="dv">0</span>, <span class="at">outline =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_boxplot_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

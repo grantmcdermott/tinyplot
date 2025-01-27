@@ -510,7 +510,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#spineplot-and-spinogram-type" id="toc-spineplot-and-spinogram-type" class="nav-link active" data-scroll-target="#spineplot-and-spinogram-type">Spineplot and spinogram type</a>
+  <li><a href="#spineplot-and-spinogram-types" id="toc-spineplot-and-spinogram-types" class="nav-link active" data-scroll-target="#spineplot-and-spinogram-types">Spineplot and spinogram types</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
@@ -526,11 +526,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="spineplot-and-spinogram-type" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="spineplot-and-spinogram-type">Spineplot and spinogram type</h2>
+<section id="spineplot-and-spinogram-types" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="spineplot-and-spinogram-types">Spineplot and spinogram types</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Spineplot and spinogram type</p>
+<p>Type function(s) for producing spineplots and spinograms, which are modified versions of histograms or mosaic plots, and particularly useful for visualizing factor variables. Note that <code>tinyplot</code> defaults to <code>type_spineplot()</code> if <code>y</code> is a factor variable.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -621,8 +621,8 @@ numeric. A vector of frequency weights for each observation in the data. If <cod
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aside: specifying the type is redundant for this example, since tinyplot</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># default's to "spineplot" if y is a factor (just like base plot).</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aside: specifying the type is redundant for this example, since tinyplot()</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># defaults to "spineplot" if y is a factor (just like base plot).</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Species <span class="sc">~</span> Sepal.Width, <span class="at">data =</span> iris)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Use `type_spineplot()` to pass extra arguments for customization</span></span>

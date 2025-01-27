@@ -557,18 +557,17 @@ length of the edges of the arrow head (in inches).
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Sepal.Width <span class="sc">*</span> Species, iris)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">*</span> <span class="fu">factor</span>(am), mtcars)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">names</span>(<span class="fu">coef</span>(mod)), <span class="fu">coef</span>(mod), <span class="fu">confint</span>(mod))</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(coefs) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"term"</span>, <span class="st">"est"</span>, <span class="st">"lwr"</span>, <span class="st">"upr"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>op <span class="ot">=</span> <span class="fu">tpar</span>(<span class="at">pch =</span> <span class="dv">19</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># "errorbar" and "pointrange" type convenience strings</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  coefs,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(<span class="at">x =</span> term, <span class="at">y =</span> est, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">type =</span> <span class="st">"errorbar"</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">*</span> <span class="fu">factor</span>(am), mtcars)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">names</span>(<span class="fu">coef</span>(mod)), <span class="fu">coef</span>(mod), <span class="fu">confint</span>(mod))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(coefs) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"term"</span>, <span class="st">"est"</span>, <span class="st">"lwr"</span>, <span class="st">"upr"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>op <span class="ot">=</span> <span class="fu">tpar</span>(<span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># "errorbar" and "pointrange" type convenience strings</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  coefs,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(<span class="at">x =</span> term, <span class="at">y =</span> est, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">type =</span> <span class="st">"errorbar"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

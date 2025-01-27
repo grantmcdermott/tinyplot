@@ -248,26 +248,13 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     if (joint.bw == "none" || is.numeric(bw)) {
         dens_bw = bw
     } else {
-        # Use weighted mean of subgroup bandwidths
-        # Define a function that uses switch() to call the appropriate bandwidth function
-        bw_fun = function(kernel, data) {
-            kernel = tolower(kernel)
-            switch(
-                kernel,
-                nrd0 = bw.nrd0(data),
-                nrd  = bw.nrd(data),
-                ucv  = bw.ucv(data),
-                bcv  = bw.bcv(data),
-                sj   = bw.SJ(data),
-                stop("Invalid `bw` string. Choose from 'nrd0', 'nrd', 'ucv', 'bcv', or 'SJ'.")
-            )
-        }
-        if (joint.bw == "full") {
-            dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
-        } else if (joint.bw == "mean") {
+        if (joint.bw == "mean") {
+            # Use weighted mean of subgroup bandwidths
             bws = sapply(datapoints, function(dat) bw_fun(kernel = bw, dat$x))
             ws = sapply(datapoints, nrow)
             dens_bw = weighted.mean(bws, ws)
+        } else if (joint.bw == "full") {
+            dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
         }
     }
 

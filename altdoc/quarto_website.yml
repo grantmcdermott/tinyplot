@@ -67,6 +67,8 @@ website:
             contents:
             - text: type_boxplot
               file: man/type_boxplot.qmd
+            - text: type_density
+              file: man/type_density.qmd
             - text: type_histogram
               file: man/type_histogram.qmd
             - text: type_jitter

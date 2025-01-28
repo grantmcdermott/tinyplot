@@ -17,8 +17,12 @@ Arguments are passed to \code{\link[stats]{lm}}.
 }
 \examples{
 # "lm" type convenience string
-tinyplot(dist ~ speed, data = cars, type = "lm")
+tinyplot(Sepal.Width ~ Petal.Width, data = iris, type = "lm")
+
+# Grouped model fits (here: illustrating an example of Simpson's paradox)
+tinyplot(Sepal.Width ~ Petal.Width | Species, data = iris, type = "lm")
+tinyplot_add(type = "p")
 
 # Use `type_lm()` to pass extra arguments for customization
-tinyplot(dist ~ speed, data = cars, type = type_lm(level = 0.9))
+tinyplot(Sepal.Width ~ Petal.Width, data = iris, type = type_lm(level = 0.8))
 }

@@ -5,9 +5,9 @@
 \alias{type_hist}
 \title{Histogram plot type}
 \usage{
-type_histogram(breaks = "Sturges")
+type_histogram(breaks = "Sturges", free.breaks = FALSE, drop.zeros = TRUE)
 
-type_hist(breaks = "Sturges")
+type_hist(breaks = "Sturges", free.breaks = FALSE, drop.zeros = TRUE)
 }
 \arguments{
 \item{breaks}{Passed to \code{\link[graphics]{hist}}. One of:
@@ -23,6 +23,18 @@ it was larger). If breaks is a function, the x vector is supplied to it as
 the only argument (and the number of breaks is only limited by the amount of
 available memory).
 }}
+
+\item{free.breaks}{Logical indicating whether the breakpoints should be
+computed separately for each group or facet? Default is \code{FALSE}, meaning
+that the breakpoints are computed from the full dataset; thus ensuring
+common bin widths across each group/facet. Can also use \code{free} as an
+acceptable argument alias. Ignored if there are no groups and/or facets.}
+
+\item{drop.zeros}{Logical indicating whether bins with zero counts should be
+dropped before plotting. Default is \code{TRUE}. Note that switching to \code{FALSE}
+may interfere with faceted plot behaviour if \code{facet.args = list(free)},
+since the \code{x} variable is effectively recorded over the full range of the
+x-axis (even if it does not extend over this range for every group).}
 }
 \description{
 Type function for histogram plots. \code{type_hist} is an alias for
@@ -36,5 +48,36 @@ tinyplot(Nile, type = "histogram")
 tinyplot(Nile, type = type_histogram(breaks = 30))
 
 # Grouped histogram example
-tinyplot(~Petal.Width | Species, data = iris, type = type_histogram(breaks = 30))
+tinyplot(
+    ~Petal.Width | Species,
+    type = "histogram",
+    data = iris
+)
+
+# Faceted version
+tinyplot(
+    ~Petal.Width, facet = ~Species,
+    type = "histogram",
+    data = iris
+)
+
+# For visualizing faceted histograms across varying scales, you may also wish
+# to impose free histogram breaks too (i.e., calculate breaks separately for
+# each group). Compare:
+
+# free facet scales + shared histogram breaks, versus...
+tinyplot(
+    ~Petal.Width, facet = ~Species,
+    facet.args = list(free = TRUE),
+    type = type_histogram(),
+    data = iris
+)
+# ... free facet scales + free histogram breaks
+tinyplot(
+    ~Petal.Width, facet = ~Species,
+    facet.args = list(free = TRUE),
+    type = type_histogram(free = TRUE),
+    data = iris
+)
+
 }

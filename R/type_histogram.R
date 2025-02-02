@@ -14,6 +14,16 @@
 #' it was larger). If breaks is a function, the x vector is supplied to it as
 #' the only argument (and the number of breaks is only limited by the amount of
 #' available memory).
+#' @param free.breaks Logical indicating whether the breakpoints should be
+#'   computed separately for each group or facet? Default is `FALSE`, meaning
+#'   that the breakpoints are computed from the full dataset; thus ensuring
+#'   common bin widths across each group/facet. Can also use `free` as an
+#'   acceptable argument alias. Ignored if there are no groups and/or facets.
+#' @param drop.zeros Logical indicating whether bins with zero counts should be
+#'   dropped before plotting. Default is `TRUE`. Note that switching to `FALSE`
+#'   may interfere with faceted plot behaviour if `facet.args = list(free)`,
+#'   since the `x` variable is effectively recorded over the full range of the
+#'   x-axis (even if it does not extend over this range for every group).
 #' @examples
 #' # "histogram"/"hist" type convenience string(s)
 #' tinyplot(Nile, type = "histogram")
@@ -22,11 +32,42 @@
 #' tinyplot(Nile, type = type_histogram(breaks = 30))
 #' 
 #' # Grouped histogram example
-#' tinyplot(~Petal.Width | Species, data = iris, type = type_histogram(breaks = 30))
+#' tinyplot(
+#'     ~Petal.Width | Species,
+#'     type = "histogram",
+#'     data = iris
+#' )
+#' 
+#' # Faceted version
+#' tinyplot(
+#'     ~Petal.Width, facet = ~Species,
+#'     type = "histogram",
+#'     data = iris
+#' )
+#' 
+#' # For visualizing faceted histograms across varying scales, you may also wish
+#' # to impose free histogram breaks too (i.e., calculate breaks separately for
+#' # each group). Compare:
+#' 
+#' # free facet scales + shared histogram breaks, versus...
+#' tinyplot(
+#'     ~Petal.Width, facet = ~Species,
+#'     facet.args = list(free = TRUE),
+#'     type = type_histogram(),
+#'     data = iris
+#' )
+#' # ... free facet scales + free histogram breaks
+#' tinyplot(
+#'     ~Petal.Width, facet = ~Species,
+#'     facet.args = list(free = TRUE),
+#'     type = type_histogram(free = TRUE),
+#'     data = iris
+#' )
+#' 
 #' @export
-type_histogram = function(breaks = "Sturges") {
+type_histogram = function(breaks = "Sturges", free.breaks = FALSE, drop.zeros = TRUE) {
     out = list(
-        data = data_histogram(breaks = breaks),
+        data = data_histogram(breaks = breaks, free.breaks = free.breaks, drop.zeros = drop.zeros),
         draw = draw_rect(),
         name = "histogram"
     )
@@ -39,10 +80,12 @@ type_histogram = function(breaks = "Sturges") {
 type_hist = type_histogram
 
 
-data_histogram = function(breaks = "Sturges") {
+data_histogram = function(breaks = "Sturges", free.breaks = FALSE, drop.zeros = TRUE) {
     hbreaks = breaks
-    fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints, .breaks = hbreaks, ...) {
-        hbreaks = ifelse(!is.null(.breaks), .breaks, "Sturges")
+    hfree.breaks = free.breaks
+    hdrop.zeros = drop.zeros
+    fun = function(by, facet, ylab, col, bg, ribbon.alpha, datapoints, .breaks = hbreaks, .freebreaks = hfree.breaks, .drop.zeros = hdrop.zeros, ...) {
+        hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 
         if (is.null(ylab)) ylab = "Frequency"
         if (is.null(by) && is.null(palette)) {
@@ -52,12 +95,20 @@ data_histogram = function(breaks = "Sturges") {
             if (is.null(bg)) bg = ribbon.alpha
         }
 
-        datapoints_breaks = hist(datapoints$x, breaks = hbreaks, plot = FALSE)
+        if (!.freebreaks) xbreaks = hist(datapoints$x, breaks = hbreaks, plot = FALSE)$breaks
         datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
-
+        
         datapoints = lapply(datapoints, function(k) {
-            h = hist(k$x, breaks = datapoints_breaks$breaks, plot = FALSE)
+            if (.freebreaks) xbreaks = breaks
+            h = hist(k$x, breaks = xbreaks, plot = FALSE)
+            # zero count cases
+            if (.drop.zeros) {
+                nzidx = which(h$counts > 0)
+                h$counts = h$counts[nzidx]
+                h$breaks = h$breaks[c(1, nzidx+1)]
+                h$mids = h$mids[nzidx]
+            }
             out = data.frame(
                 by = k$by[1], # already split
                 facet = k$facet[1], # already split
@@ -88,5 +139,3 @@ data_histogram = function(breaks = "Sturges") {
     }
     return(fun)
 }
-
-

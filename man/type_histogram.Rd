@@ -5,13 +5,9 @@
 \alias{type_hist}
 \title{Histogram plot type}
 \usage{
-type_histogram(breaks = "Sturges", freebreaks = FALSE)
+type_histogram(breaks = "Sturges", free.breaks = FALSE, drop.zeros = TRUE)
 
-type_hist(breaks = "Sturges", freebreaks = FALSE)
-
-type_histogram(breaks = "Sturges", freebreaks = FALSE)
-
-type_hist(breaks = "Sturges", freebreaks = FALSE)
+type_hist(breaks = "Sturges", free.breaks = FALSE, drop.zeros = TRUE)
 }
 \arguments{
 \item{breaks}{Passed to \code{\link[graphics]{hist}}. One of:
@@ -41,9 +37,6 @@ since the \code{x} variable is effectively recorded over the full range of the
 x-axis (even if it does not extend over this range for every group).}
 }
 \description{
-Type function for histogram plots. \code{type_hist} is an alias for
-\code{type_histogram}.
-
 Type function for histogram plots. \code{type_hist} is an alias for
 \code{type_histogram}.
 }
@@ -87,9 +80,4 @@ tinyplot(
     data = iris
 )
 
-# "histogram"/"hist" type convenience string(s)
-tinyplot(Nile, type = "histogram")
-
-# Use `type_histogram()` to pass extra arguments for customization
-tinyplot(Nile, type = type_histogram(breaks = 30))
 }

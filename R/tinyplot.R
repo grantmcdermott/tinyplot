@@ -725,9 +725,10 @@ tinyplot.default = function(
       y = rep(NA, length(x))
     } else if (type == "density") {
       if (is.null(ylab)) ylab = "Density"
-    } else if (type %in% c("histogram", "function")) {
+    # } else if (type %in% c("histogram", "function")) {
+    } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
-    } else {
+    } else if (type != "histogram") {
       y = x
       x = seq_along(x)
       if (is.null(xlab)) xlab = "Index"
@@ -735,7 +736,8 @@ tinyplot.default = function(
   }
 
   if (is.null(xlab)) xlab = x_dep
-  if (is.null(ylab)) ylab = y_dep
+  # if (is.null(ylab)) ylab = y_dep
+  if (is.null(ylab) && type != "histogram") ylab = y_dep
 
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
@@ -1356,10 +1358,10 @@ tinyplot.formula = function(
   dens_type = (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
   hist_type = (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
   if (!is.null(type) && dens_type) {
-    if (is.null(ylab)) ylab = "Density"
+    # if (is.null(ylab)) ylab = "Density" ## rather assign ylab as part of internal type_density() logic
     if (is.null(xlab)) xlab = xnam
   } else if (!is.null(type) && hist_type) {
-    if (is.null(ylab)) ylab = "Frequency"
+    # if (is.null(ylab)) ylab = "Frequency" ## rather assign ylab as part of internal type_histogram() logic
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {
     if (is.null(ylab)) ylab = xnam

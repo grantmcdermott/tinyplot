@@ -5,9 +5,21 @@
 \alias{type_hist}
 \title{Histogram plot type}
 \usage{
-type_histogram(breaks = "Sturges", free.breaks = FALSE, drop.zeros = TRUE)
+type_histogram(
+  breaks = "Sturges",
+  freq = NULL,
+  right = TRUE,
+  free.breaks = FALSE,
+  drop.zeros = TRUE
+)
 
-type_hist(breaks = "Sturges", free.breaks = FALSE, drop.zeros = TRUE)
+type_hist(
+  breaks = "Sturges",
+  freq = NULL,
+  right = TRUE,
+  free.breaks = FALSE,
+  drop.zeros = TRUE
+)
 }
 \arguments{
 \item{breaks}{Passed to \code{\link[graphics]{hist}}. One of:
@@ -23,6 +35,16 @@ it was larger). If breaks is a function, the x vector is supplied to it as
 the only argument (and the number of breaks is only limited by the amount of
 available memory).
 }}
+
+\item{freq}{logical; if \code{TRUE}, the histogram graphic is a
+    representation of frequencies, the \code{counts} component of
+    the result; if \code{FALSE}, probability densities, component
+    \code{density}, are plotted (so that the histogram has a total area
+    of one).  Defaults to \code{TRUE} \emph{if and only if} \code{breaks} are
+    equidistant (and \code{probability} is not specified).}
+
+\item{right}{logical; if \code{TRUE}, the histogram cells are
+    right-closed (left open) intervals.}
 
 \item{free.breaks}{Logical indicating whether the breakpoints should be
 computed separately for each group or facet? Default is \code{FALSE}, meaning
@@ -46,6 +68,8 @@ tinyplot(Nile, type = "histogram")
 
 # Use `type_histogram()` to pass extra arguments for customization
 tinyplot(Nile, type = type_histogram(breaks = 30))
+tinyplot(Nile, type = type_histogram(breaks = 30, freq = FALSE))
+# etc.
 
 # Grouped histogram example
 tinyplot(

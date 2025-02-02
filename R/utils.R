@@ -27,3 +27,18 @@ more_than_n_unique = function(x, n, small_vec_len = 1e3L) {
     return(FALSE)
   }
 }
+
+## Function that computes an appropriate bandwidth kernel based on a string
+## input
+bw_fun = function(kernel, x) {
+    kernel = tolower(kernel)
+    switch(
+        kernel,
+        nrd0 = bw.nrd0(x),
+        nrd  = bw.nrd(x),
+        ucv  = bw.ucv(x),
+        bcv  = bw.bcv(x),
+        sj   = bw.SJ(x),
+        stop("Invalid `bw` string. Choose from 'nrd0', 'nrd', 'ucv', 'bcv', or 'SJ'.")
+    )
+}

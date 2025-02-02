@@ -6,11 +6,11 @@
 \usage{
 type_density(
   bw = "nrd0",
+  joint.bw = c("mean", "full", "none"),
   adjust = 1,
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   n = 512,
-  joint.bw = c("none", "full", "owm"),
   alpha = NULL
 )
 }
@@ -29,6 +29,11 @@ type_density(
     The specified (or computed) value of \code{bw} is multiplied by
     \code{adjust}.
   }
+
+\item{joint.bw}{character string indicating whether (and how) the smoothing
+bandwidth should be computed from the joint data distribution when there
+are multiple subgroups. The options are \code{"mean"} (the default), \code{"full"},
+and \code{"none"}. See the "Bandwidth selection" section below for details.}
 
 \item{adjust}{the bandwidth used is actually \code{adjust*bw}.
     This makes it easy to specify values like \sQuote{half the default}
@@ -49,15 +54,6 @@ the version used by S.}
     final result is interpolated by \code{\link[stats]{approx}}.  So it almost
     always makes sense to specify \code{n} as a power of two.
   }
-
-\item{joint.bw}{character string indicating whether (and how) the smoothing
-bandwidth should be computed from the joint data distribution. The default
-value of \code{"none"} means that bandwidths will be computed independently for
-each data subgroup. Choosing \code{"full"} will result in a joint bandwidth
-computed from the full distribution. Similarly, \code{"owm"} will compute the
-joint bandwidth as the observation-weighted mean of the individual subgroup
-bandwidths. Note that the \code{joint.bw} argument is only relevant for grouped
-or faceted density plots.}
 
 \item{alpha}{numeric value between 0 and 1 specifying the opacity of ribbon shading
 If no \code{alpha} value is provided, then will default to \code{tpar("ribbon.alpha")}
@@ -89,6 +85,39 @@ The algorithm used in \code{density.default} disperses the mass of the
   \code{+/-Inf} and the density estimate is of the sub-density on
   \code{(-Inf, +Inf)}.
 }
+\section{Bandwidth selection}{
+ While the choice of smoothing bandwidth will
+always stand to affect a density visualization, it gains an added
+importance when multiple densities are drawn simultaneously (e.g., for
+subgroups with respect to \code{by} or \code{facet}). Allowing each subgroup to
+compute its own separate bandwidth independently offers greater flexibility
+in capturing the unique characteristics of each subgroup, particularly when
+distributions differ substantially in location and/or scale. However, this
+approach may overemphasize small random variations and make it harder to
+visually compare densities across subgroups. Hence, it is often useful to
+employ the same ("joint") bandwidth across all subgroups. The following
+strategies are available via the \code{joint.bw} argument:
+\itemize{
+\item The default \code{joint.bw = "mean"} first computes the individual bandwidths
+for each group but then computes their mean, weighted by the number of
+observations in each group. This will work well when all groups have
+similar amounts of scatter (similar variances), even when they have
+potentially rather different locations. The weighted averaging stabilizes
+potential fluctuations in the individual bandwidths, especially when some
+subgroups are rather small.
+\item Alternatively, \code{joint.bw = "full"} can be used to compute the joint
+bandwidth from the full joint distribution (merging all groups). This will
+yield an even more robust bandwidth, especially when the groups overlap
+substantially (i.e., have similar locations and scales). However, it may
+lead to too large bandwidths and thus too much smoothing, especially when
+the locations of the groups differ substantially.
+\item Finally, \code{joint.bw = "none"} disables the joint bandwidth so that each
+group just employs its individual bandwidth. This is often the best choice
+if the amounts of scatter differ substantially between the groups, thus
+necessitating different amounts of smoothing.
+}
+}
+
 \section{Titles}{
  This tinyplot method for density plots differs from the base
 \code{\link[stats]{plot.density}} function in its treatment of titles. The
@@ -114,12 +143,14 @@ tinyplot(
   main = "Bandwidth computed using method of Sheather & Jones (1991)"
 )
 
-# The default for grouped density plots is to compute bandwidths
-# independently for each subgroup. To override, specify the type of joint
-# bandwidth computation
-tinyplot(~Sepal.Length | Species, data = iris, type = "density") # "none" (default)
-tinyplot_add(type = type_density(joint.bw = "full"), lty = 2)    # full dataset
-tinyplot_add(type = type_density(joint.bw = "owm"), lty = 3)     # obs-weighted mean
-legend("topright", c("None", "Full", "OWM"), lty = 1:3, title = "Joint BW")
+# The default for grouped density plots is to use the mean of the
+# individual subgroup bandwidths (weighted by group size) as the
+# joint bandwidth. Alternatively, the bandwidth from the "full"
+# data or separate individual bandwidths ("none") can be used.
+tinyplot(~Sepal.Length | Species, data = iris,
+    ylim = c(0, 1.25), type = "density")        # mean (default)
+tinyplot_add(joint.bw = "full", lty = 2)        # full data
+tinyplot_add(joint.bw = "none", lty = 3)        # none (individual)
+legend("topright", c("Mean", "Full", "None"), lty = 1:3, bty = "n", title = "Joint BW")
 
 }

@@ -100,16 +100,16 @@ on the website. (#258 @vincentarelbundock and @grantmcdermott)
 
 Breaking changes:
 
-- There are a few breaking changes to grouped density plots. (#284 @grantmcdermott)
-  - The default smoothing bandwidth is now computed independently for each data
-    subgroup, rather than being computed from the joint density. Users can still
-    opt into using a joint bandwidth by invoking the
-    `type_density(joint.bw = <option>)` argument. See the function documentation
-    for details.
+- There are a few breaking changes to grouped density plots.
+  - The joint smoothing bandwidth is now computed using an observation-weighted
+    mean (as opposed to a simple mean). Users can customize this joint bandwidth 
+    by invoking the new `type_density(joint.bw = <option>)` argument. See the
+    function documentation for details.  (#291 @grantmcdermott and @zeileis)
   - Grouped and/or faceted plots are no longer possible on density objects
     (i.e., via the `tinyplot.density()` method). Instead, please rather call
     `tinyplot(..., type = "density")` or `tinyplot(..., type = type_density())`
     on the raw data and pass grouping or facet arguments as needed.
+    (#284 @grantmcdermott)
 - The `ribbon.alpha` argument in `tinyplot()` has been deprecated. Use the
   `alpha` argument in `type_ribbon()` (and equivalents) instead: e.g.,
   `tinyplot(..., type = type_ribbon(alpha = 0.5))`.

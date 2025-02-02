@@ -2,16 +2,52 @@ source("helpers.R")
 using("tinysnapshot")
 
 f = function() {
-  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", col = "white")
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 }
-expect_snapshot_plot(f, label = "ridge_01")
+expect_snapshot_plot(f, label = "ridge_basic")
+
+f = function() {
+  tinyplot(
+    Species ~ Sepal.Width, data = iris,
+    type = type_ridge(alpha = 0.5)
+  )
+}
+expect_snapshot_plot(f, label = "ridge_alpha")
+
+f = function() {
+  tinyplot(
+    Species ~ Sepal.Width, data = iris,
+    main = 'joint.bw = "mean"',
+    type = type_ridge(joint.bw = "mean")
+  )
+}
+expect_snapshot_plot(f, label = "ridge_joint_mean")
+
+f = function() {
+  tinyplot(
+    Species ~ Sepal.Width, data = iris,
+    main = 'joint.bw = "full"',
+    type = type_ridge(joint.bw = "full")
+  )
+}
+expect_snapshot_plot(f, label = "ridge_joint_full")
+
+f = function() {
+  tinyplot(
+    Species ~ Sepal.Width, data = iris,,
+    main = 'joint.bw = "none"',
+    type = type_ridge(joint.bw = "none")
+  )
+}
+expect_snapshot_plot(f, label = "ridge_joint_none")
+
 
 f = function() {
   tinyplot(Species ~ Sepal.Width, data = iris,
     type = type_ridge(scale = 1),
-    bg = "light blue", col = "black")
+    bg = "light blue")
 }
-expect_snapshot_plot(f, label = "ridge_02")
+expect_snapshot_plot(f, label = "ridge_scale")
 
 f = function() {
   tinyplot(am ~ mpg | factor(cyl), data = mtcars, type = "ridge")
@@ -60,7 +96,15 @@ f = function() {
 expect_snapshot_plot(f, label = "ridge_gradient_probs")
 
 tinyplot(
-  am ~ mpg, facet = ~vs, data = mtcars, type = type_ridge(gradient = "agsunset"),
+  am ~ mpg, facet = ~vs, data = mtcars,
+  type = type_ridge(gradient = "agsunset"),
   col = "white"
 )
 expect_snapshot_plot(f, label = "ridge_gradient_facet")
+
+tinyplot(
+  am ~ mpg, facet = ~vs, data = mtcars,
+  type = type_ridge(gradient = "agsunset", raster = TRUE, alpha = 0.5),
+  col = "white"
+)
+expect_snapshot_plot(f, label = "ridge_gradient_facet_raster_alpha")

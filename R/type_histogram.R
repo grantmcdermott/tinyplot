@@ -163,6 +163,9 @@ data_histogram = function(breaks = "Sturges", free.breaks = FALSE, drop.zeros = 
 #' 
 #' # Use `type_histogram()` to pass extra arguments for customization
 #' tinyplot(Nile, type = type_histogram(breaks = 30))
+#' 
+#' # Grouped histogram example
+#' tinyplot(~Petal.Width | Species, data = iris, type = type_histogram(breaks = 30))
 #' @export
 type_histogram = function(breaks = "Sturges", freebreaks = FALSE) {
     out = list(

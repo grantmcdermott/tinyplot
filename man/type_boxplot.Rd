@@ -52,6 +52,8 @@ type_boxplot(
 Type function for producing box-and-whisker plots.
 Arguments are passed to \code{\link[graphics]{boxplot}}, although \code{tinyplot}
 scaffolding allows added functionality such as grouping and faceting.
+Box-and-whisker plots are the default plot type if \code{x} is a factor and \code{y} is
+numeric.
 }
 \examples{
 # "boxplot" type convenience string
@@ -61,9 +63,12 @@ tinyplot(count ~ spray, data = InsectSprays, type = "boxplot")
 # automatically produces a boxplot if x is a factor and y is numeric
 tinyplot(count ~ spray, data = InsectSprays)
 
+# Grouped boxplot example
+tinyplot(len ~ dose | supp, data = ToothGrowth, type = "boxplot")
+
 # Use `type_boxplot()` to pass extra arguments for customization
 tinyplot(
-  count ~ spray, data = InsectSprays, lty = 1,
+  len ~ dose | supp, data = ToothGrowth, lty = 1,
   type = type_boxplot(boxwex = 0.3, staplewex = 0, outline = FALSE)
 )
 }

@@ -134,6 +134,10 @@ character variable automatically being coerced to a factor. (#219 @zeileis)
 - Plots where `y` is a factor now work automatically, dispatching to the new
 `type_spineplot()` type. Thanks to @zeileis for the original suggestion all the
 way back in #2 and the eventual solution in #233.
+- Free axis scaling now works properly for faceted histograms. The new
+`type_histogram(free.breaks = <logical>, drop.zeros = <logical>)` arguments
+enable fine-grained control over this behaviour. (#228 @eleuven and
+@grantmcdermott)
 
 Internals:
 

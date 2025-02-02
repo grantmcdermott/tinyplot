@@ -64,3 +64,24 @@ f = function() {
 expect_snapshot_plot(f, label = "hist_grouped_faceted")
 
 
+# free facet scales (and free histogram breaks)
+
+f = function() {
+  tinyplot(
+    ~Petal.Width, facet = ~Species,
+    facet.args = list(free = TRUE),
+    type = type_histogram(),
+    data = iris
+  )
+}
+expect_snapshot_plot(f, label = "hist_facet_free")
+
+f = function() {
+  tinyplot(
+    ~Petal.Width, facet = ~Species,
+    facet.args = list(free = TRUE),
+    type = type_histogram(free = TRUE),
+    data = iris
+  )
+}
+expect_snapshot_plot(f, label = "hist_facet_free_breaks_free")

@@ -215,7 +215,7 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
         if (isTRUE(y_by)) datapoints$by = rep(yaxlabels, length.out = nrow(datapoints))
           
         ## grayscale flag
-        grayscale = length(unique(datapoints[["by"]])) == 1 && is.null(palette)
+        grayscale = length(unique(datapoints[["by"]])) == 1 && is.null(palette) && is.null(.tpar[["palette.qualitative"]])
         
         out = list(
           x = c(datapoints$xmin, datapoints$xmax), 
@@ -235,6 +235,7 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
           yaxt = "n",
           xaxs = "i",
           yaxs = "i",
+          ylabs = yaxlabels,
           type_info = list(
             off = off,
             x.categorical = x.categorical,

@@ -70,6 +70,28 @@ tinytheme("dark")
 f()
 expect_snapshot_plot(f, label = "tinytheme_dynamic_dark_facet")
 
+# ridge and spineplot types (req's extra steps b/c of tinyAxis logic)
+
+tinytheme('clean')
+
+f = function() {
+  tinyplot(
+    Species ~ Petal.Length, data = iris, type = "ridge",
+    main = "Dynamic plot adjustment and whitespace reduction",
+    sub = "Ridge plot version"
+  )
+}
+expect_snapshot_plot(f, label = "tinytheme_dynamic_clean_ridge")
+
+f = function() {
+  tinyplot(
+    Species ~ Petal.Length, data = iris, type = "spineplot",
+    main = "Dynamic plot adjustment and whitespace reduction",
+    sub = "Spineplot version"
+  )
+}
+expect_snapshot_plot(f, label = "tinytheme_dynamic_clean_spineplot")
+
 #
 ## reset
 

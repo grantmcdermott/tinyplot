@@ -318,7 +318,9 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       dotspal = list(...)[["palette"]]
       palette = if (!is.null(dotspal)) dotspal else gradient
       gradient = TRUE
-      if (isTRUE(palette)) palette = "viridis"
+      if (isTRUE(palette)) {
+        palette = if (!is.null(.tpar[["palette.sequential"]])) .tpar[["palette.sequential"]] else "viridis"
+      }
 
       if (length(palette) > 1L || !is.character(palette)) {
         ## color vector already given
@@ -380,7 +382,8 @@ draw_ridge = function() {
     d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
     dsplit = split(d, d$y)
     if (is.null(ibg)) {
-      ibg = if (isTRUE(type_info[["fill_by"]])) seq_palette(icol, n = 2)[2] else "gray"
+      default_bg = if (!is.null(.tpar[["palette.qualitative"]])) seq_palette(by_col(), n = 2)[2] else "gray"
+      ibg = if (isTRUE(type_info[["fill_by"]])) seq_palette(icol, n = 2)[2] else default_bg
     }
     if (!is.null(type_info[["alpha"]]) && is.null(type_info[["palette"]])) {
       ibg = adjustcolor(ibg, alpha.f = type_info[["alpha"]])

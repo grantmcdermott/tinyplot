@@ -183,7 +183,9 @@ draw_facet_window = function(grid, ...) {
           # extra whitespace bump on the y axis
           # yaxl = axTicks(2)
           yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+          ## overrides for ridge and spineplot types
           if (type == "ridge") yaxl = levels(y)
+          if (type == "spineplot") yaxl = ylabs
           # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
           whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
           if (whtsbp > 0) {
@@ -237,11 +239,14 @@ draw_facet_window = function(grid, ...) {
       # Dynamic plot margin adjustments
       omar = par("mar")
       omar = omar - c(0, 0, 1, 0) # reduce top whitespace since no facet (title)
+      if (type == "spineplot") omar[4] = 2.1 # catch for spineplot RHS axis labs
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
         # yaxl = axTicks(2)
         yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+        ## overrides for ridge and spineplot types
         if (type == "ridge") yaxl = levels(y)
+        if (type == "spineplot") yaxl = ylabs
         # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
         whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {

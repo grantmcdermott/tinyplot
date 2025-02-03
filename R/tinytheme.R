@@ -44,7 +44,6 @@
 #' Known current limitations include:
 #' 
 #' - Themes do not work well when `legend = "top!"`.
-#' - Themes do not play nicely with some complex plot types, particularly `"spineplot"` and `"ridge"`.
 #' - Dynamic margin spacing does not account for multi-line strings (e.g., axes
 #' or main titles that contain "\\n").
 #'

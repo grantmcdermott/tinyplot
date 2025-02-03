@@ -595,7 +595,7 @@ window.Quarto = {
 <code id="joint.bw">joint.bw</code>
 </td>
 <td>
-character string indicating whether (and how) the smoothing bandwidth should be computed from the joint data distribution when there are multiple subgroups. The options are <code>“mean”</code> (the default), <code>“full”</code>, and <code>“none”</code>. See the "Bandwidth selection" section below for details.
+character string indicating whether (and how) the smoothing bandwidth should be computed from the joint data distribution when there are multiple subgroups. The options are <code>“mean”</code> (the default), <code>“full”</code>, and <code>“none”</code>. Also accepts a logical argument, where <code>TRUE</code> maps to <code>“mean”</code> and <code>FALSE</code> maps to <code>“none”</code>. See the "Bandwidth selection" section below for a discussion of practical considerations.
 </td>
 </tr>
 <tr>
@@ -694,7 +694,7 @@ numeric value between 0 and 1 specifying the opacity of ribbon shading If no <co
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris,</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_density</span>(<span class="at">bw =</span> <span class="st">"SJ"</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Bandwidth computed using method of Sheather &amp; Jones (1991)"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Bandwidth computed using Sheather &amp; Jones (1991)"</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>

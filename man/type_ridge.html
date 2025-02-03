@@ -613,7 +613,7 @@ a character or numeric vector specifying in which order the levels of the y-vari
 <code id="joint.bw">joint.bw</code>
 </td>
 <td>
-character string indicating whether (and how) the smoothing bandwidth should be computed from the joint data distribution. The default of <code>“mean”</code> will compute the joint bandwidth as the mean of the individual subgroup bandwidths (weighted by their number of observations). Choosing <code>“full”</code> will result in a joint bandwidth computed from the full distribution (merging all subgroups). For <code>“none”</code> the individual bandwidth will be computed independently for each subgroup. See <code>type_density</code> for some discussion of practical considerations.
+character string indicating whether (and how) the smoothing bandwidth should be computed from the joint data distribution. The default of <code>“mean”</code> will compute the joint bandwidth as the mean of the individual subgroup bandwidths (weighted by their number of observations). Choosing <code>“full”</code> will result in a joint bandwidth computed from the full distribution (merging all subgroups). For <code>“none”</code> the individual bandwidth will be computed independently for each subgroup. Also accepts a logical argument, where <code>TRUE</code> maps to <code>“mean”</code> and <code>FALSE</code> maps to <code>“none”</code>. See <code>type_density</code> for some discussion of practical considerations.
 </td>
 </tr>
 <tr>

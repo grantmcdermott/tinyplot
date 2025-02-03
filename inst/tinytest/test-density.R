@@ -69,6 +69,15 @@ f1 = function() {
 }
 expect_snapshot_plot(f1, label = "density_type_joint_bw")
 
+# logical version (TRUE -> "mean" and FALSE -> "none")
+f1 = function() {
+  tinyplot(~ Sepal.Width | Species, iris, type = type_density(joint.bw = TRUE))
+  tinyplot_add(type = type_density(joint.bw = FALSE), lty = 3)
+  legend("topright", c("TRUE (mean)", "FALSE (none)"), lty = 1:3, title = "Joint BW")
+}
+expect_snapshot_plot(f1, label = "density_type_joint_bw_logical")
+
+
 # Some extra tests for bespoke legend placement
 f1 = function() with(mtcars, tinyplot(mpg, by = am, type = "density", legend = "bottom!"))
 

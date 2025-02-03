@@ -35,13 +35,14 @@
 #'   kernel in the literature and almost MSE-efficient. However, `"cosine"` is
 #'   the version used by S.
 #' @param joint.bw character string indicating whether (and how) the smoothing
-#'   bandwidth should be computed from the joint data distribution. The default of
-#'   `"mean"` will compute the joint bandwidth as the mean of the individual
-#'   subgroup bandwidths (weighted by their number of observations). Choosing `"full"` will result in a
-#'   joint bandwidth computed from the full distribution (merging all subgroups).
-#'   For `"none"` the individual bandwidth will be computed independently for
-#'   each subgroup. See \code{\link{type_density}} for some discussion of
-#'   practical considerations.
+#'   bandwidth should be computed from the joint data distribution. The default
+#'   of `"mean"` will compute the joint bandwidth as the mean of the individual
+#'   subgroup bandwidths (weighted by their number of observations). Choosing
+#'   `"full"` will result in a joint bandwidth computed from the full
+#'   distribution (merging all subgroups). For `"none"` the individual bandwidth
+#'   will be computed independently for each subgroup. Also accepts a logical
+#'   argument, where `TRUE` maps to `"mean"` and `FALSE` maps to `"none"`. See
+#'   \code{\link{type_density}} for some discussion of practical considerations.
 #' @param gradient Logical or character. Should a gradient fill be used to
 #'   shade the area under the density? If a character specification is used,
 #'   then it can either be of length 1 and specify the palette to be used with
@@ -180,6 +181,9 @@ type_ridge = function(
     ) {
   
   kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
+  if (is.logical(joint.bw)) {
+    joint.bw = ifelse(joint.bw, "mean", "none")
+  }
   joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
 
   out = list(

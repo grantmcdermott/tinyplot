@@ -15,7 +15,9 @@
 #' @param joint.bw character string indicating whether (and how) the smoothing
 #'   bandwidth should be computed from the joint data distribution when there
 #'   are multiple subgroups. The options are `"mean"` (the default), `"full"`,
-#'   and `"none"`. See the "Bandwidth selection" section below for details.
+#'   and `"none"`. Also accepts a logical argument, where `TRUE` maps to
+#'   `"mean"` and `FALSE` maps to `"none"`. See the "Bandwidth selection"
+#'   section below for a discussion of practical considerations.
 #' @inherit stats::density details
 #' @section Bandwidth selection: While the choice of smoothing bandwidth will
 #'   always stand to affect a density visualization, it gains an added
@@ -67,7 +69,7 @@
 #' tinyplot(
 #'   ~Sepal.Length | Species, data = iris,
 #'   type = type_density(bw = "SJ"),
-#'   main = "Bandwidth computed using method of Sheather & Jones (1991)"
+#'   main = "Bandwidth computed using Sheather & Jones (1991)"
 #' )
 #' 
 #' # The default for grouped density plots is to use the mean of the
@@ -93,6 +95,9 @@ type_density = function(
         alpha = NULL
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
+    if (is.logical(joint.bw)) {
+        joint.bw = ifelse(joint.bw, "mean", "none")
+    }
     joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
     out = list(
         data = data_density(bw = bw, adjust = adjust, kernel = kernel, n = n,

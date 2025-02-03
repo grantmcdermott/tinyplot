@@ -33,7 +33,9 @@ type_density(
 \item{joint.bw}{character string indicating whether (and how) the smoothing
 bandwidth should be computed from the joint data distribution when there
 are multiple subgroups. The options are \code{"mean"} (the default), \code{"full"},
-and \code{"none"}. See the "Bandwidth selection" section below for details.}
+and \code{"none"}. Also accepts a logical argument, where \code{TRUE} maps to
+\code{"mean"} and \code{FALSE} maps to \code{"none"}. See the "Bandwidth selection"
+section below for a discussion of practical considerations.}
 
 \item{adjust}{the bandwidth used is actually \code{adjust*bw}.
     This makes it easy to specify values like \sQuote{half the default}
@@ -140,7 +142,7 @@ tinyplot(~Sepal.Length | Species, data = iris, type = "density", fill = "by")
 tinyplot(
   ~Sepal.Length | Species, data = iris,
   type = type_density(bw = "SJ"),
-  main = "Bandwidth computed using method of Sheather & Jones (1991)"
+  main = "Bandwidth computed using Sheather & Jones (1991)"
 )
 
 # The default for grouped density plots is to use the mean of the

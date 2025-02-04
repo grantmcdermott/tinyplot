@@ -6,7 +6,7 @@
 \usage{
 tinytheme(
   theme = c("default", "basic", "clean", "clean2", "bw", "classic", "minimal", "ipsum",
-    "dark", "tufte", "void", "ridge", "ridge2"),
+    "dark", "ridge", "ridge2", "tufte", "void"),
   ...
 )
 }
@@ -27,6 +27,8 @@ dynamic plots are marked with an asterisk (*) below.
 \item \code{"minimal"} (*): removes the plot frame (box) from \code{"bw"}, as well as the background for facet titles. Inspired by the \strong{ggplot2} theme of the same name.
 \item \code{"ipsum"} (*): similar to \code{"minimal"}, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
 \item \code{"dark"} (*): similar to \code{"minimal"}, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
+\item \code{"ridge"} (*): a specialized theme for ridge plots (see \code{\link[=type_ridge]{type_ridge()}}). Builds off of \code{"clean"}, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
+\item \code{"ridge2"} (*): removes the plot frame (box) from \code{"ridge"}, but retains the x-axis line. Again, not recommended for non-ridge plots.
 \item \code{"tufte"}: floating axes and minimalist plot artifacts in the style of Edward Tufte.
 \item \code{"void"}: switches off all axes, titles, legends, etc.
 }}
@@ -84,6 +86,10 @@ p()
 # Customize the theme by overriding default settings
 tinytheme("bw", fg = "green", font.main = 2, font.sub = 3, family = "Palatino")
 p()
+
+# Aside: One or two specialized themes are only meant for certain plot types
+tinytheme("ridge2")
+tinyplot(I(cut(lat, 10)) ~ depth, data = quakes, type = "ridge")
 
 # Reset the theme
 tinytheme()

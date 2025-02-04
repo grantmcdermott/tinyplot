@@ -23,6 +23,8 @@
 #'   - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name. 
 #'   - `"ipsum"` (*): similar to `"minimal"`, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**. 
 #'   - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
+#'   - `"ridge"` (*): a specialized theme for ridge plots (see [`type_ridge()`]). Builds off of `"clean"`, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
+#'   - `"ridge2"` (*): removes the plot frame (box) from `"ridge"`, but retains the x-axis line. Again, not recommended for non-ridge plots.
 #'   - `"tufte"`: floating axes and minimalist plot artifacts in the style of Edward Tufte.
 #'   - `"void"`: switches off all axes, titles, legends, etc.
 #' @param ... Named arguments to override specific theme settings. These
@@ -72,6 +74,10 @@
 #' # Customize the theme by overriding default settings
 #' tinytheme("bw", fg = "green", font.main = 2, font.sub = 3, family = "Palatino")
 #' p()
+#' 
+#' # Aside: One or two specialized themes are only meant for certain plot types
+#' tinytheme("ridge2")
+#' tinyplot(I(cut(lat, 10)) ~ depth, data = quakes, type = "ridge")
 #'
 #' # Reset the theme
 #' tinytheme()
@@ -101,8 +107,8 @@ tinytheme = function(
       "default", "basic",
       "clean", "clean2", "bw", "classic",
       "minimal", "ipsum", "dark",
-      "tufte", "void",
-      "ridge", "ridge2"
+      "ridge", "ridge2",
+      "tufte", "void"
     ),
     ...
     ) {
@@ -118,7 +124,7 @@ tinytheme = function(
     c(
       "default",
       sort(c("basic", "bw", "classic", "clean", "clean2", "dark", "ipsum",
-             "minimal", "tufte", "void", "ridge", "ridge2"))
+             "minimal", "ridge", "ridge2", "tufte", "void"))
     )
   )
 
@@ -132,10 +138,10 @@ tinytheme = function(
     "dark" = theme_dark,
     "ipsum" = theme_ipsum,
     "minimal" = theme_minimal,
-    "tufte" = theme_tufte,
-    "void" = theme_void,
     "ridge" = theme_ridge,
     "ridge2" = theme_ridge2,
+    "tufte" = theme_tufte,
+    "void" = theme_void,
   )
 
   dots = list(...)

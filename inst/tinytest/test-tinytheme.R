@@ -72,7 +72,7 @@ expect_snapshot_plot(f, label = "tinytheme_dynamic_dark_facet")
 
 # ridge and spineplot types (req's extra steps b/c of tinyAxis logic)
 
-tinytheme('clean')
+tinytheme('ridge')
 
 f = function() {
   tinyplot(
@@ -81,7 +81,9 @@ f = function() {
     sub = "Ridge plot version"
   )
 }
-expect_snapshot_plot(f, label = "tinytheme_dynamic_clean_ridge")
+expect_snapshot_plot(f, label = "tinytheme_dynamic_ridge")
+
+tinytheme('clean')
 
 f = function() {
   tinyplot(

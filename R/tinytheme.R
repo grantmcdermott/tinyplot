@@ -102,7 +102,7 @@ tinytheme = function(
       "clean", "clean2", "bw", "classic",
       "minimal", "ipsum", "dark",
       "tufte", "void",
-      "ridge"
+      "ridge", "ridge2"
     ),
     ...
     ) {
@@ -117,7 +117,8 @@ tinytheme = function(
     theme,
     c(
       "default",
-      sort(c("basic", "bw", "classic", "clean", "clean2", "dark", "ipsum", "minimal", "tufte", "void", "ridge"))
+      sort(c("basic", "bw", "classic", "clean", "clean2", "dark", "ipsum",
+             "minimal", "tufte", "void", "ridge", "ridge2"))
     )
   )
 
@@ -134,6 +135,7 @@ tinytheme = function(
     "tufte" = theme_tufte,
     "void" = theme_void,
     "ridge" = theme_ridge,
+    "ridge2" = theme_ridge2,
   )
 
   dots = list(...)
@@ -347,10 +349,15 @@ theme_dark = modifyList(theme_minimal, list(
   palette.sequential = "Sunset"
 ))
 
-# derivative of clean2
+# derivative of clean/clean2
 
-theme_ridge = modifyList(theme_clean2, list(
+theme_ridge = modifyList(theme_clean, list(
   tinytheme = "ridge",
-  palette.qualitative = NULL,
+  palette.qualitative = "Zissou 1",
+  grid = FALSE
+))
+theme_ridge2 = modifyList(theme_clean2, list(
+  tinytheme = "ridge2",
+  palette.qualitative = "Zissou 1",
   grid = FALSE
 ))

@@ -363,6 +363,8 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       breaks[1L] = pmin(breaks[1L], xlim[1L])
       breaks[length(breaks)] = pmax(breaks[length(breaks)], xlim[2L])
     }
+    
+    if (is.null(col) && !y_by) col = "black"
 
     out = list(
       datapoints = datapoints,
@@ -393,11 +395,11 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 ## Underlying draw_ridge function
 draw_ridge = function() {
   fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info, ...) {
-    ridge_theme = identical(.tpar[["tinytheme"]], "ridge")
+    ridge_theme = identical(.tpar[["tinytheme"]], "ridge") || identical(.tpar[["tinytheme"]], "ridge2")
     d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
     dsplit = split(d, d$y)
     if (is.null(ibg)) {
-      default_bg = if (!is.null(.tpar[["palette.qualitative"]])) seq_palette(by_col(), n = 2)[2] else "gray"
+      default_bg = if (!ridge_theme && !is.null(.tpar[["palette.qualitative"]])) seq_palette(by_col(), n = 2)[2] else "gray"
       ibg = if (isTRUE(type_info[["fill_by"]])) seq_palette(icol, n = 2)[2] else default_bg
     }
     if (!is.null(type_info[["alpha"]]) && is.null(type_info[["palette"]])) {
@@ -440,7 +442,7 @@ draw_ridge = function() {
                padj = 0,
                mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
                tcl = 0)
-      axis(1)
+      if (identical(.tpar[["tinytheme"]], "ridge")) axis(1, labels = FALSE)
     } else {
       tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
     }

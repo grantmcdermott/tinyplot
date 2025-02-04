@@ -196,6 +196,35 @@ tinytheme("void")
 p()
 ```
 
+#### "ridge"
+
+::: {.callout-note}
+The specialized `"ridge"` and `"ridge2"` themes are only intended for use with
+ridge plot types.
+:::
+
+```{r}
+p2 = function() {
+  tinyplot(
+    Species ~ Sepal.Width | Species, legend = FALSE,
+    data = iris,
+    type = "ridge",
+    main = "Title of the plot",
+    sub = "A smaller subtitle"
+  )
+}
+
+tinytheme("ridge")
+p2()
+```
+
+#### "ridge2"
+
+```{r}
+tinytheme("ridge2")
+p2()
+```
+
 ```{r}
 # Reset to default theme
 tinytheme()

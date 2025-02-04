@@ -161,73 +161,97 @@ determine which approach is optimal for their device.
 }
 
 \examples{
-## default ridge plot (using the "ridge" convenience string)
-tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
+aq = transform(
+  airquality,
+  Month = factor(month.abb[Month], levels = month.abb[5:9]),
+  Month2 = factor(month.name[Month], levels = month.name[5:9]),
+  Late = ifelse(Day > 15, "Late", "Early")
+  )
 
-## pass customization arguments through type_ridge(), for example...
+# default ridge plot (using the "ridge" convenience string)
+tinyplot(Month ~ Temp, data = aq, type = "ridge")
 
-## use the same bandwidth for all densities
-tinyplot(Species ~ Sepal.Width, data = iris,
-  type = type_ridge(bw = bw.nrd0(iris$Sepal.Width)))
+# for ridge plots, we recommend pairing with the dedicated theme(s), which
+# facilitate nicer y-axis labels, grid lines, etc.
 
-## customized ridge plot without overlap of densities
-tinyplot(Species ~ Sepal.Width, data = iris,
-  type = type_ridge(scale = 1),
-  bg = "light blue", col = "black")
+tinytheme("ridge")
+tinyplot(Month ~ Temp, data = aq, type = "ridge")
+
+tinytheme("ridge2") # removes the plot frame (but keeps x-axis line)
+tinyplot(Month ~ Temp, data = aq, type = "ridge")
+
+# the "ridge(2)" themes are especially helpful for long y labels, due to
+# dyanmic plot adjustment
+tinyplot(Month2 ~ Temp, data = aq, type = "ridge")
+
+# pass customization arguments through type_ridge()... for example, use
+# the scale argument to change/avoid overlap of densities (more on scaling
+# further below)
+
+tinyplot(Month ~ Temp, data = aq, type = type_ridge(scale = 1))
   
 ## by grouping is also supported. two special cases of interest:
 
 # 1) by == y (color by y groups)
-tinyplot(Species ~ Sepal.Width | Species, data = iris, type = "ridge")
+tinyplot(Month ~ Temp | Month, data = aq, type = "ridge")
 
 # 2) by == x (gradient coloring along x)
-tinyplot(Species ~ Sepal.Width | Sepal.Width, data = iris, type = "ridge")
+tinyplot(Month ~ Temp | Temp, data = aq, type = "ridge")
 
-# aside: pass explicit `type_ridge(col = <col>)` arg to set a common border
-# color
-tinyplot(Species ~ Sepal.Width | Sepal.Width, data = iris,
-  type = type_ridge(col = "white"))
+# aside: pass explicit `type_ridge(col = <col>)` arg to set a different
+# border color
+tinyplot(Month ~ Temp | Temp, data = aq, type = type_ridge(col = "white"))
 
-## gradient coloring along the x-axis can also be invoked manually without
-## a legend (the following tinyplot calls are all equivalent)
-tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
-# tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = "viridis"))
-# tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = hcl.colors(512)))
+# gradient coloring along the x-axis can also be invoked manually without
+# a legend (the next two tinyplot calls are equivalent)
 
-## aside: when combining gradient fill with alpha transparency, it may be
-## better to use the raster-based approach (test on your graphics device)
-tinyplot(Species ~ Sepal.Width, data = iris,
+# tinyplot(Month ~ Temp, data = aq, type = type_ridge(gradient = "agsunset"))
+tinyplot(Month ~ Temp, data = aq, type = type_ridge(gradient = TRUE))
+
+# aside: when combining gradient fill with alpha transparency, it may be
+# better to use the raster-based approach (test on your graphics device)
+
+tinyplot(Month ~ Temp, data = aq,
   type = type_ridge(gradient = TRUE, alpha = 0.5),
   main = "polygon fill (default)")
-tinyplot(Species ~ Sepal.Width, data = iris,
+tinyplot(Month ~ Temp, data = aq,
   type = type_ridge(gradient = TRUE, alpha = 0.5, raster = TRUE),
   main = "raster fill")
 
-## highlighting only the center 50\% of the density (between 25\% and 75\% quantile)
-tinyplot(Species ~ Sepal.Width, data = iris, col = "white",
-  type = type_ridge(
-    gradient = hcl.colors(3, "Dark Mint")[c(2, 1, 2)],
-    probs = c(0.25, 0.75)))
+# highlighting only the center 50\% of the density (i.e., 25\%-75\% quantiles)
+tinyplot(Month ~ Temp, data = aq, type = type_ridge(
+  gradient = hcl.colors(3, "Dark Mint")[c(2, 1, 2)],
+  probs = c(0.25, 0.75), col = "white"))
 
-## highlighting the probability distribution by color gradient (median = darkest point)
-tinyplot(Species ~ Sepal.Width, data = iris,
-  type = type_ridge(gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)],
+# highlighting the probability distribution by color gradient
+# (darkest point = median)
+tinyplot(Month ~ Temp, data = aq, type = type_ridge(
+  gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)],
   probs = 0:500/500))
 
-## with faceting and color gradient
-aq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
+# faceting also works, although we recommend switching (back) to the "ridge"
+# theme for faceted ridge plots
+
+tinytheme("ridge")
 tinyplot(Month ~ Ozone, facet = ~ Late, data = aq,
-  type = type_ridge(gradient = TRUE),
-  grid = TRUE, axes = "t", col = "white")
+  type = type_ridge(gradient = TRUE))
 
-## scaling of maximum density: jointly across all densities (default) vs. per facet
-tinyplot(cyl ~ mpg, facet = ~ am, data = mtcars, type = "ridge", scale = 1)
-tinyplot(cyl ~ mpg, facet = ~ am, data = mtcars, type = "ridge", scale = 1,
-  joint.max = "facet")
+## use the joint.max argument to vary the maximum density used for
+## determining relative scaling...
 
-## scaling of maximum density: jointly across all densities (default) vs. per by row
-tinyplot(am ~ mpg | factor(cyl), data = mtcars, type = "ridge", scale = 1)
-tinyplot(am ~ mpg | factor(cyl), data = mtcars, type = "ridge", scale = 1,
-  joint.max = "by")
+# jointly across all densities (default) vs. per facet
+tinyplot(Month ~ Temp, facet = ~ Late, data = aq,
+  type = type_ridge(scale = 1))
+tinyplot(Month ~ Temp, facet = ~ Late, data = aq,
+  type = type_ridge(scale = 1, joint.max = "facet"))
+
+# jointly across all densities (default) vs. per by row
+tinyplot(Month ~ Temp | Late, data = aq,
+  type = type_ridge(scale = 1))
+tinyplot(Month ~ Temp | Late, data = aq,
+  type = type_ridge(scale = 1, joint.max = "by"))
+  
+# restore the default theme
+tinytheme()
 
 }

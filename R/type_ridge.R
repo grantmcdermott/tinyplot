@@ -388,7 +388,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       breaks[length(breaks)] = pmax(breaks[length(breaks)], xlim[2L])
     }
     
-    if (is.null(col) && !y_by) col = "black"
+    if (is.null(col) && (!anyby || x_by)) col = "black"
 
     out = list(
       datapoints = datapoints,

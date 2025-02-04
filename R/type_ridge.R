@@ -393,6 +393,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 ## Underlying draw_ridge function
 draw_ridge = function() {
   fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info, ...) {
+    ridge_theme = identical(.tpar[["tinytheme"]], "ridge")
     d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
     dsplit = split(d, d$y)
     if (is.null(ibg)) {
@@ -403,6 +404,17 @@ draw_ridge = function() {
       ibg = adjustcolor(ibg, alpha.f = type_info[["alpha"]])
     }
     if (!is.null(type_info[["col"]])) icol = type_info[["col"]]
+    lab = if (is.factor(d$y)) levels(d$y) else unique(d$y)
+    if (isTRUE(type_info[["y_by"]])) {
+      # avoid duplicating the y-axis labs for the special y==by case
+      # val = match(lab, levels(d$y)) - 1
+      val = match(d$y[1], levels(d$y))
+      lab = lab[val]
+      val = val - 1
+    } else {
+      val = cumsum(rep(1, length(lab))) - 1
+    }
+    if (ridge_theme) abline(h = val, col = .tpar[["grid.col"]])
     draw_segments = if (type_info[["raster"]]) segmented_raster else segmented_polygon
     for (i in rev(seq_along(dsplit))) {
       if (type_info[["gradient"]]) {
@@ -422,17 +434,16 @@ draw_ridge = function() {
       with(dsplit[[i]], polygon(x, ymax, col = if (type_info[["gradient"]]) "transparent" else ibg, border = NA))
       with(dsplit[[i]], lines(x, ymax, col = icol))
     }
-    lab = if (is.factor(d$y)) levels(d$y) else unique(d$y)
-    if (isTRUE(type_info[["y_by"]])) {
-      # avoid duplicating the y-axis labs for the special y==by case
-      # val = match(lab, levels(d$y)) - 1
-      val = match(d$y[1], levels(d$y))
-      lab = lab[val]
-      val = val - 1
+    # tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]], padj = padj)
+    if (ridge_theme) {
+      tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
+               padj = 0,
+               mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
+               tcl = 0)
+      axis(1)
     } else {
-      val = cumsum(rep(1, length(lab))) - 1
+      tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
     }
-    tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
   }
   return(fun)
 }

@@ -6,7 +6,7 @@
 \usage{
 tinytheme(
   theme = c("default", "basic", "clean", "clean2", "bw", "classic", "minimal", "ipsum",
-    "dark", "tufte", "void"),
+    "dark", "tufte", "void", "ridge"),
   ...
 )
 }

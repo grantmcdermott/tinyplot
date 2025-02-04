@@ -220,7 +220,6 @@ type_ridge = function(
 
   out = list(
     draw = draw_ridge(),
-    # data = data_ridge(),
     data = data_ridge(bw = bw, adjust = adjust, kernel = kernel, n = n,
                       joint.bw = joint.bw,
                       scale = scale,

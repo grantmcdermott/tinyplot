@@ -5,6 +5,11 @@ f = function() {
   tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge")
 }
 expect_snapshot_plot(f, label = "ridge_basic")
+tinytheme("ridge")
+expect_snapshot_plot(f, label = "ridge_basic_theme_ridge")
+tinytheme("ridge2")
+expect_snapshot_plot(f, label = "ridge_basic_theme_ridge2")
+tinytheme()
 
 f = function() {
   tinyplot(
@@ -61,6 +66,11 @@ f = function() {
   tinyplot(Species ~ Sepal.Width | Species, data = iris, type = "ridge")
 }
 expect_snapshot_plot(f, label = "ridge_by_y")
+tinytheme("ridge")
+expect_snapshot_plot(f, label = "ridge_by_y_theme_ridge")
+tinytheme("ridge2")
+expect_snapshot_plot(f, label = "ridge_by_y_theme_ridge2")
+tinytheme()
 
 ## by == x
 f = function() {
@@ -68,6 +78,11 @@ f = function() {
            type = type_ridge(col = "white"), palette = "plasma")
 }
 expect_snapshot_plot(f, label = "ridge_by_x")
+tinytheme("ridge")
+expect_snapshot_plot(f, label = "ridge_by_x_theme_ridge")
+tinytheme("ridge2")
+expect_snapshot_plot(f, label = "ridge_by_x_theme_ridge2")
+tinytheme()
 
 # "manual" gradients
 
@@ -75,6 +90,11 @@ f = function() {
   tinyplot(Species ~ Sepal.Width, data = iris, type = type_ridge(gradient = TRUE))
 }
 expect_snapshot_plot(f, label = "ridge_gradient")
+tinytheme("ridge")
+expect_snapshot_plot(f, label = "ridge_gradient_theme_ridge")
+tinytheme("ridge2")
+expect_snapshot_plot(f, label = "ridge_gradient_theme_ridge2")
+tinytheme()
 
 f = function() {
   tinyplot(
@@ -103,6 +123,22 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "ridge_gradient_facet")
+tinytheme("ridge")
+expect_snapshot_plot(f, label = "ridge_gradient_facet_theme_ridge")
+tinytheme("ridge2")
+expect_snapshot_plot(f, label = "ridge_gradient_facet_theme_ridge2")
+tinytheme()
+
+f = function() {
+  tinyplot(
+    am ~ mpg, facet = ~vs, data = mtcars,
+    type = type_ridge(gradient = "agsunset", raster = TRUE, alpha = 0.5),
+    col = "white"
+  )
+}
+expect_snapshot_plot(f, label = "ridge_gradient_facet_raster_alpha")
+
+
 
 f = function() {
   tinyplot(

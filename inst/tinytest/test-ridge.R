@@ -95,16 +95,20 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "ridge_gradient_probs")
 
-tinyplot(
-  am ~ mpg, facet = ~vs, data = mtcars,
-  type = type_ridge(gradient = "agsunset"),
-  col = "white"
-)
+f = function() {
+  tinyplot(
+    am ~ mpg, facet = ~vs, data = mtcars,
+    type = type_ridge(gradient = "agsunset"),
+    col = "white"
+  )
+}
 expect_snapshot_plot(f, label = "ridge_gradient_facet")
 
-tinyplot(
-  am ~ mpg, facet = ~vs, data = mtcars,
-  type = type_ridge(gradient = "agsunset", raster = TRUE, alpha = 0.5),
-  col = "white"
-)
+f = function() {
+  tinyplot(
+    am ~ mpg, facet = ~vs, data = mtcars,
+    type = type_ridge(gradient = "agsunset", raster = TRUE, alpha = 0.5),
+    col = "white"
+  )
+}
 expect_snapshot_plot(f, label = "ridge_gradient_facet_raster_alpha")

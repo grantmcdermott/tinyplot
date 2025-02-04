@@ -179,15 +179,15 @@
 #' ## determining relative scaling...
 #' 
 #' # jointly across all densities (default) vs. per facet
-#' tinyplot(Month ~ Ozone, facet = ~ Late, data = aq,
+#' tinyplot(Month ~ Temp, facet = ~ Late, data = aq,
 #'   type = type_ridge(scale = 1))
-#' tinyplot(Month ~ Ozone, facet = ~ Late, data = aq,
+#' tinyplot(Month ~ Temp, facet = ~ Late, data = aq,
 #'   type = type_ridge(scale = 1, joint.max = "facet"))
 #' 
 #' # jointly across all densities (default) vs. per by row
-#' tinyplot(Month ~ Ozone | Late, data = aq,
+#' tinyplot(Month ~ Temp | Late, data = aq,
 #'   type = type_ridge(scale = 1))
-#' tinyplot(Month ~ Ozone | Late, data = aq,
+#' tinyplot(Month ~ Temp | Late, data = aq,
 #'   type = type_ridge(scale = 1, joint.max = "by"))
 #'   
 #' # restore the default theme

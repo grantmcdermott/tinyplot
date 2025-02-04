@@ -10,11 +10,15 @@
 #'
 #' @param scale Numeric. Controls the scaling factor of each plot.
 #' Values greater than 1 means that plots overlap.
-#' @param global.max Logical. Should the height of the individual ridge
-#' densities be scaled relative to the global maximum? Default is `TRUE`.
-#' Changing to `FALSE` will cause a local maximum scaling to be used instead.
-#' Use this latter option if you wish to enforce the same relative height for
-#' each ridge density across `y` categories. 
+#' @param joint.max character indicating how to scale the maximum of the densities:
+#'   The default `"all"` indicates that all densities are scaled jointly relative to
+#'   the same maximum so that the areas of all densities are comparable.
+#'   Alternatively, `"facet"` indicates that the maximum is computed within
+#'   each facet so that the areas of the densities are comparable within each
+#'   facet but not necessarily across facets. Finally, `"by"` indicates that
+#'   each row (in each facet) is scaled separately, so that the areas of the
+#'   densities for `by` groups in the same row are comparable but not necessarily
+#'   across rows.
 #' @param breaks Numeric. If a color gradient is used for shading, the
 #' breaks between the colors can be modified. The default is to use
 #' equidistant breaks spanning the range of the `x` variable.
@@ -110,12 +114,6 @@
 #'   type = type_ridge(scale = 1),
 #'   bg = "light blue", col = "black")
 #'   
-#' ## turn off global max relative scaling if you want the same height for
-#' ## densities across y categories
-#' tinyplot(Species ~ Sepal.Width, data = iris,
-#'   type = type_ridge(scale = 1, global.max = FALSE),
-#'   bg = "light blue", col = "black")
-#'
 #' ## by grouping is also supported. two special cases of interest:
 #'
 #' # 1) by == y (color by y groups)
@@ -160,11 +158,21 @@
 #' tinyplot(Month ~ Ozone, facet = ~ Late, data = aq,
 #'   type = type_ridge(gradient = TRUE),
 #'   grid = TRUE, axes = "t", col = "white")
+#' 
+#' ## scaling of maximum density: jointly across all densities (default) vs. per facet
+#' tinyplot(cyl ~ mpg, facet = ~ am, data = mtcars, type = "ridge", scale = 1)
+#' tinyplot(cyl ~ mpg, facet = ~ am, data = mtcars, type = "ridge", scale = 1,
+#'   joint.max = "facet")
+#' 
+#' ## scaling of maximum density: jointly across all densities (default) vs. per by row
+#' tinyplot(am ~ mpg | factor(cyl), data = mtcars, type = "ridge", scale = 1)
+#' tinyplot(am ~ mpg | factor(cyl), data = mtcars, type = "ridge", scale = 1,
+#'   joint.max = "by")
 #'
 #' @export
 type_ridge = function(
     scale = 1.5,
-    global.max = TRUE,
+    joint.max = c("all", "facet", "by"),
     breaks = NULL,
     probs = NULL,
     ylevels = NULL,
@@ -192,7 +200,7 @@ type_ridge = function(
     data = data_ridge(bw = bw, adjust = adjust, kernel = kernel, n = n,
                       joint.bw = joint.bw,
                       scale = scale,
-                      global.max = global.max,
+                      joint.max = joint.max,
                       gradient = gradient,
                       breaks = breaks,
                       probs = probs,
@@ -212,7 +220,7 @@ type_ridge = function(
 data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       joint.bw = "mean",
                       scale = 1.5,
-                      global.max = TRUE,
+                      joint.max = "all",
                       gradient = FALSE,
                       breaks = NULL,
                       probs = NULL,
@@ -276,11 +284,17 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     })
     datapoints = do.call(rbind, datapoints)
 
-    if (isTRUE(global.max)) {
-      datapoints$ymax = datapoints$ymax / max(datapoints$ymax) * scale
-    } else {
-      datapoints$ymax = ave(datapoints$ymax, datapoints$y, FUN = function(x) x / max(x) * scale)
+    if (is.character(joint.max)) {
+      joint.max = match.arg(joint.max, c("all", "facet", "by"))
+      joint.max = switch(joint.max,
+        "all" = rep.int(1, nrow(datapoints)),
+        "facet" = datapoints$facet,
+        "by" = interaction(datapoints$facet, datapoints$y)
+      )
+      joint.max = ave(datapoints$ymax, joint.max, FUN = max)
     }
+    datapoints$ymax = datapoints$ymax / joint.max * scale
+
     datapoints = split(datapoints, datapoints$facet)
     offset_z = function(k) {
       ksplit = split(k, k$y)

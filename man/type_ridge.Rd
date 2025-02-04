@@ -6,7 +6,7 @@
 \usage{
 type_ridge(
   scale = 1.5,
-  global.max = TRUE,
+  joint.max = c("all", "facet", "by"),
   breaks = NULL,
   probs = NULL,
   ylevels = NULL,
@@ -26,11 +26,15 @@ type_ridge(
 \item{scale}{Numeric. Controls the scaling factor of each plot.
 Values greater than 1 means that plots overlap.}
 
-\item{global.max}{Logical. Should the height of the individual ridge
-densities be scaled relative to the global maximum? Default is \code{TRUE}.
-Changing to \code{FALSE} will cause a local maximum scaling to be used instead.
-Use this latter option if you wish to enforce the same relative height for
-each ridge density across \code{y} categories.}
+\item{joint.max}{character indicating how to scale the maximum of the densities:
+The default \code{"all"} indicates that all densities are scaled jointly relative to
+the same maximum so that the areas of all densities are comparable.
+Alternatively, \code{"facet"} indicates that the maximum is computed within
+each facet so that the areas of the densities are comparable within each
+facet but not necessarily across facets. Finally, \code{"by"} indicates that
+each row (in each facet) is scaled separately, so that the areas of the
+densities for \code{by} groups in the same row are comparable but not necessarily
+across rows.}
 
 \item{breaks}{Numeric. If a color gradient is used for shading, the
 breaks between the colors can be modified. The default is to use
@@ -171,12 +175,6 @@ tinyplot(Species ~ Sepal.Width, data = iris,
   type = type_ridge(scale = 1),
   bg = "light blue", col = "black")
   
-## turn off global max relative scaling if you want the same height for
-## densities across y categories
-tinyplot(Species ~ Sepal.Width, data = iris,
-  type = type_ridge(scale = 1, global.max = FALSE),
-  bg = "light blue", col = "black")
-
 ## by grouping is also supported. two special cases of interest:
 
 # 1) by == y (color by y groups)
@@ -221,5 +219,15 @@ aq = transform(airquality, Late = ifelse(Day > 15, "Late", "Early"))
 tinyplot(Month ~ Ozone, facet = ~ Late, data = aq,
   type = type_ridge(gradient = TRUE),
   grid = TRUE, axes = "t", col = "white")
+
+## scaling of maximum density: jointly across all densities (default) vs. per facet
+tinyplot(cyl ~ mpg, facet = ~ am, data = mtcars, type = "ridge", scale = 1)
+tinyplot(cyl ~ mpg, facet = ~ am, data = mtcars, type = "ridge", scale = 1,
+  joint.max = "facet")
+
+## scaling of maximum density: jointly across all densities (default) vs. per by row
+tinyplot(am ~ mpg | factor(cyl), data = mtcars, type = "ridge", scale = 1)
+tinyplot(am ~ mpg | factor(cyl), data = mtcars, type = "ridge", scale = 1,
+  joint.max = "by")
 
 }

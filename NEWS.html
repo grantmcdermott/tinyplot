@@ -512,15 +512,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#news" id="toc-news" class="nav-link active" data-scroll-target="#news">News</a>
   <ul class="collapse">
-  <li><a href="#dev-version" id="toc-dev-version" class="nav-link" data-scroll-target="#dev-version">0.2.1.99 (dev version)</a></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.2.1</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.2.0</a></li>
-  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.1.0</a></li>
-  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">0.0.5</a></li>
-  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">0.0.4</a></li>
-  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">0.0.3</a></li>
-  <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6">0.0.2</a></li>
-  <li><a href="#section-7" id="toc-section-7" class="nav-link" data-scroll-target="#section-7">0.0.1</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.3.0</a>
+  <ul class="collapse">
+  <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
+  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
+  <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
+  <li><a href="#misc" id="toc-misc" class="nav-link" data-scroll-target="#misc">Misc</a></li>
+  </ul></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.2.1</a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.2.0</a></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">0.1.0</a></li>
+  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">0.0.5</a></li>
+  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">0.0.4</a></li>
+  <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6">0.0.3</a></li>
+  <li><a href="#section-7" id="toc-section-7" class="nav-link" data-scroll-target="#section-7">0.0.2</a></li>
+  <li><a href="#section-8" id="toc-section-8" class="nav-link" data-scroll-target="#section-8">0.0.1</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -534,22 +540,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="news" class="level1">
 <h1>News</h1>
 <p><em>If you are viewing this file on CRAN, please check the <a href="https://grantmcdermott.com/tinyplot/NEWS.html">latest NEWS</a> on our website where the formatting is also better.</em></p>
-<section id="dev-version" class="level2">
-<h2 class="anchored" data-anchor-id="dev-version">0.2.1.99 (dev version)</h2>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section">0.3.0</h2>
+<section id="new-features" class="level3">
+<h3 class="anchored" data-anchor-id="new-features">New features</h3>
 <p><strong>tinyplot</strong> v0.3.0 is a big release with many new features, both internal and user-facing. Related updates are grouped below for easier navigation.</p>
-<p>New plot <code>type</code> processing system (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>):</p>
+<section id="revamped-type-logic-and-functional-equivalents" class="level4">
+<h4 class="anchored" data-anchor-id="revamped-type-logic-and-functional-equivalents">Revamped <code>type</code> logic and functional equivalents</h4>
+<p><em>(Primary PR and author: <a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</em></p>
 <ul>
-<li>In addition to the standard character labels (e.g., <code>"p"</code>, <code>"density"</code>), the <code>type</code> argument now supports <em>functional</em> equivalents (e.g., <code>type_points()</code>, <code>type_density()</code>. These new functional types all take the form <code>type_*()</code>.</li>
-<li>The character and functional types are interchangeable. For example, <code>tinyplot(Nile, type = "hist")</code> and <code>tinyplot(Nile, type = type_hist())</code> produce exactly the same result.</li>
-<li>The main advantage of the functional <code>type_*()</code> variants is that they offer much more flexibility and control beyond the default case(s). Users can pass appropriate arguments to existing types for customization and can even define their own <code>type_&lt;typename&gt;()</code> functions.</li>
-<li>On the development side, overhauling the <code>type</code> system has also allowed us to introduce a number of new plot types and features (see list below). We have also simplified our internal codebase, since explicit argument passing requires less guesswork on our end.</li>
-<li>Speaking of which, we now recommended that users explicitly pass ancillary type-specific arguments as part of the relevant <code>type_*()</code> call. For example: <code>tinyplot(Nile, type = type_hist(breaks = 30))</code> is preferable to <code>tinyplot(Nile, type = "hist", breaks = 30)</code>. While the latter option will still work in this particular case, we cannot guarantee that it will for other cases. (Reason: Passing ancillary type-specific arguments at the top level of the plot call only works if these do not conflict with the main arguments of the <code>tinyplot()</code> function itself; see <a href="https://github.com/grantmcdermott/tinyplot/issues/267">#267</a>.)</li>
-<li>Some minor breaking changes were unavoidable; see further below.</li>
-<li>For more details on the new <code>type</code> system, please see the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a> on the website.</li>
+<li><p>In addition to the standard character labels (<code>"p"</code>, <code>"density"</code>, etc.), the <code>type</code> argument now supports <em>functional</em> equivalents (<code>type_points()</code>, <code>type_density()</code>, etc.). These new functional types all take the form <code>type_*()</code>.</p></li>
+<li><p>The character and functional types are interchangeable. For example,</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="st">"hist"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="fu">type_hist</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>produce exactly the same result.</p></li>
+<li><p>The main advantage of the functional <code>type_*()</code> variants is that they offer much more flexibility and control beyond the default case(s). Users can pass appropriate arguments to existing types for customization and can even define their own <code>type_&lt;typename&gt;()</code> functions. More information is available in the dedicated help page for each type (e.g., <code>?type_hist</code>, <code>?type_lm</code>, etc.)</p></li>
+<li><p>On the development side, overhauling the <code>type</code> system has also allowed us to introduce a number of new plot types and features (see list below). We have also simplified our internal codebase, since explicit argument passing requires less guesswork on our end. Speaking of which, we now recommended that users explicitly pass ancillary type-specific arguments as part of the relevant <code>type_*()</code> call. For example,</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="fu">type_hist</span>(<span class="at">breaks =</span> <span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>is preferable to</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="st">"hist"</span>, <span class="at">breaks =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>While the latter option will still work, we cannot guarantee that argument passing will work in every situation. (Reason: Passing ancillary type-specific arguments at the top level of the plot call only works if these do not conflict with the main arguments of the <code>tinyplot()</code> function itself; see <a href="https://github.com/grantmcdermott/tinyplot/issues/267">#267</a>.)</p></li>
+<li><p>Some minor breaking changes were unavoidable; see further below.</p></li>
+<li><p>For more details on the new <code>type</code> system, please see the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a> on the website.</p></li>
 </ul>
-<p>New plot types:</p>
+</section>
+<section id="support-for-additional-plot-types" class="level4">
+<h4 class="anchored" data-anchor-id="support-for-additional-plot-types">Support for additional plot types</h4>
 <ul>
-<li>Visualizations:
+<li><p>Visualizations:</p>
 <ul>
 <li><code>type_spineplot()</code> (shortcut: <code>"spineplot"</code>) spine plots and spinograms. These are modified versions of a histogram or mosaic plot, and are particularly useful for visualizing factor variables. (<a href="https://github.com/grantmcdermott/tinyplot/issues/233">#233</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> with contributions from <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>type_qq()</code> (shortcut: “qq”) for quantile-quantile plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/251">#251</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
@@ -557,14 +576,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type_rug()</code> (shortcut: <code>"rug"</code>) adds a rug to an existing plot. (<a href="https://github.com/grantmcdermott/tinyplot/issues/276">#276</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>type_text()</code> (shortcut: <code>"text"</code>) adds text annotations. <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 </ul></li>
-<li>Models:
+<li><p>Models:</p>
 <ul>
 <li><code>type_glm()</code> (shortcut: <code>"glm"</code>) <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li><code>type_lm()</code> (shortcut: <code>"lm"</code>) <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li><code>type_loess()</code> (shortcut: <code>"loess"</code>) <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li><code>type_spline()</code> (shortcut: <code>"spline"</code>) (<a href="https://github.com/grantmcdermott/tinyplot/issues/241">#241</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
-<li>Functions:
+<li><p>Functions:</p>
 <ul>
 <li><code>type_abline()</code>: line(s) with intercept and slope (<a href="https://github.com/grantmcdermott/tinyplot/issues/249">#249</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li><code>type_hline()</code>: horizontal line(s) (<a href="https://github.com/grantmcdermott/tinyplot/issues/249">#249</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
@@ -573,19 +592,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type_summary()</code>: summarize values of <code>y</code> along unique values of <code>x</code> (<a href="https://github.com/grantmcdermott/tinyplot/issues/274">#274</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
 </ul>
-<p>Other new features:</p>
+</section>
+<section id="themes" class="level4">
+<h4 class="anchored" data-anchor-id="themes">Themes</h4>
+<p><em>(Primary PR and authors: <a href="https://github.com/grantmcdermott/tinyplot/issues/258">#258</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</em></p>
 <ul>
-<li>New <code>tinyplot()</code> arguments:
+<li>The new <code>tinytheme()</code> function provides a convenient mechanism for styling plots according to a variety of pre-defined themes, e.g.&nbsp;<code>tinytheme("clean")</code>.</li>
+<li>Users can also add their own custom themes or tweak an existing theme.</li>
+<li>Themes are persistent and will affect all subsequent plots until they are explicitly reset, e.g.&nbsp;by calling <code>tinytheme()</code> (with no argument) to restore the default plot aesthetic.</li>
+<li>Behind the scenes, <code>tinytheme()</code> sets a hook for a group graphical parameters by passing them through <code>tpar()</code>. Users can still use <code>tpar()</code> to style their plots manually by setting individual graphical parameters. But going forward we expect that most <strong>tinyplot</strong> users will prefer the convenience of going through <code>tinytheme()</code>.</li>
+<li>More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/themes.html">Themes vignette</a> on the website.</li>
+</ul>
+</section>
+<section id="other-new-features" class="level4">
+<h4 class="anchored" data-anchor-id="other-new-features">Other new features</h4>
+<ul>
+<li><p>New <code>tinyplot()</code> arguments:</p>
 <ul>
 <li><code>flip &lt;logical&gt;</code> allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>tinyplot(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>draw = &lt;draw_funcs&gt;</code> allows users to pass arbitrary drawing functions that are evaluated as-is, before the main plotting elements. A core use case is drawing common annotations across every facet of a faceted plot, e.g.&nbsp;text or threshold lines. (<a href="https://github.com/grantmcdermott/tinyplot/issues/245">#245</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>facet.args</code> gains a <code>free = &lt;logical&gt;</code> sub-argument for independently scaling the axes limits of individual facets. (<a href="https://github.com/grantmcdermott/tinyplot/issues/253">#253</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
-<li><code>tpar()</code> gains additional <code>grid.col</code>, <code>grid.lty</code>, and <code>grid.lwd</code> arguments for fine-grained control over the appearance of the default panel grid when <code>tinyplot(..., grid = TRUE)</code> is called. (<a href="https://github.com/grantmcdermott/tinyplot/issues/237">#237</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>The new <code>tinyplot_add()</code> (alias: <code>plt_add()</code>) convenience function allows easy layering of plots without having to specify repeat arguments. (<a href="https://github.com/grantmcdermott/tinyplot/issues/246">#246</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
-<li>The new <code>tinytheme()</code> function provides a convenient mechanism for styling plots according to a variety of pre-defined themes, e.g.&nbsp;<code>tinytheme("clean")</code>. Users can also add their own custom themes or tweak an existing theme. Themes are persistent and will affect all subsequent plots until they are explicitly reset, e.g.&nbsp;by calling <code>tinytheme()</code> (with no argument) to restore the default plot aesthetic. Behind the scenes, <code>tinytheme()</code> sets a hook for a group graphical parameters by passing them through <code>tpar()</code>. Users can still use <code>tpar()</code> to style their plots by manually setting individual graphical parameters. But going forward we expect that most <strong>tinyplot</strong> users will prefer the convenience of going through <code>tinytheme()</code>. More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/themes.html">Themes vignette</a> on the website. (<a href="https://github.com/grantmcdermott/tinyplot/issues/258">#258</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><p><code>tpar()</code> gains additional <code>grid.col</code>, <code>grid.lty</code>, and <code>grid.lwd</code> arguments for fine-grained control over the appearance of the default panel grid when <code>tinyplot(..., grid = TRUE)</code> is called. (<a href="https://github.com/grantmcdermott/tinyplot/issues/237">#237</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
+<li><p>The new <code>tinyplot_add()</code> (alias: <code>plt_add()</code>) convenience function allows easy layering of plots without having to specify repeat arguments. (<a href="https://github.com/grantmcdermott/tinyplot/issues/246">#246</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</p></li>
 </ul>
-<p>Breaking changes:</p>
+</section>
+</section>
+<section id="breaking-changes" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h3>
 <ul>
 <li>There are a few breaking changes to grouped density plots.
 <ul>
@@ -597,7 +631,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Aside: Please note that this is <em>not</em> equivalent to using <code>tinyplot(..., type = "ribbon", alpha = 0.5)</code> because the latter matches the top-level <code>alpha</code> argument of <code>tinyplot()</code> itself (and thus modifies the entire <code>palette</code>, rather than just the ribbon). See our warning about passing ancillary type-specific arguments above.</li>
 </ul></li>
 </ul>
-<p>Bug fixes:</p>
+</section>
+<section id="bug-fixes" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
 <li>Better preserve facet attributes, thus avoiding misarrangement of facet grids for density and histogram types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/209">#209</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 <li>Plots of the form <code>plt(numeric ~ character)</code> now work correctly, with the character variable automatically being coerced to a factor. (<a href="https://github.com/grantmcdermott/tinyplot/issues/219">#219</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
@@ -607,18 +643,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Plots where <code>y</code> is a factor now work automatically, dispatching to the new <code>type_spineplot()</code> type. Thanks to <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> for the original suggestion all the way back in <a href="https://github.com/grantmcdermott/tinyplot/issues/2">#2</a> and the eventual solution in <a href="https://github.com/grantmcdermott/tinyplot/issues/233">#233</a>.</li>
 <li>Free axis scaling now works properly for faceted histograms. The new <code>type_histogram(free.breaks = &lt;logical&gt;, drop.zeros = &lt;logical&gt;)</code> arguments enable fine-grained control over this behaviour. (<a href="https://github.com/grantmcdermott/tinyplot/issues/228">#228</a> <a href="https://github.com/eleuven"><span class="citation" data-cites="eleuven">@eleuven</span></a> and <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
-<p>Internals:</p>
+</section>
+<section id="misc" class="level3">
+<h3 class="anchored" data-anchor-id="misc">Misc</h3>
 <ul>
 <li>Continued modularization/abstraction of the code logic. (<a href="https://github.com/grantmcdermott/tinyplot/issues/214">#214</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li>Major internal refactor of the type drawing and data processing. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
-</ul>
-<p>Misc:</p>
+<li>Documentation improvements, e.g.&nbsp;explicit guidance on how to specify multiple grouping variables (thanks to <a href="https://github.com/strengjacke"><span class="citation" data-cites="strengjacke">@strengjacke</span></a> for reporting <a href="https://github.com/grantmcdermott/tinyplot/issues/213">#213</a>).
 <ul>
-<li>Documentation improvements, e.g.&nbsp;explicit guidance on how to specify multiple grouping variables (thanks to <a href="https://github.com/strengjacke"><span class="citation" data-cites="strengjacke">@strengjacke</span></a> for reporting <a href="https://github.com/grantmcdermott/tinyplot/issues/213">#213</a>).</li>
+<li>The new functional type processing system also means that each type now has its own help page (e.g.&nbsp;<code>?type_hist</code>, <code>type_ridge</code>, etc.)</li>
+</ul></li>
 </ul>
 </section>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">0.2.1</h2>
+</section>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1">0.2.1</h2>
 <p>New Features:</p>
 <ul>
 <li>The <code>axes</code> argument of <code>tinyplot()</code>/<code>plt()</code> gains extra options for fine-grained control of the plot axes. In addition to the existing logical (<code>TRUE</code>/<code>FALSE</code>) option, users can now specify one of the following character keywords (or, just their first letters as a convenient shorthand):
@@ -648,8 +687,8 @@ Simultaneously, the main plotting functions also gain the <code>xaxt</code> and 
 <li>Revamped formula processing that allows for better sanity checking and edge-case logic. (<a href="https://github.com/grantmcdermott/tinyplot/issues/197">#197</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 </ul>
 </section>
-<section id="section-1" class="level2">
-<h2 class="anchored" data-anchor-id="section-1">0.2.0</h2>
+<section id="section-2" class="level2">
+<h2 class="anchored" data-anchor-id="section-2">0.2.0</h2>
 <p>New features:</p>
 <ul>
 <li>Support for additional plot types:
@@ -672,8 +711,8 @@ Simultaneously, the main plotting functions also gain the <code>xaxt</code> and 
 <li>Various documentation improvements.</li>
 </ul>
 </section>
-<section id="section-2" class="level2">
-<h2 class="anchored" data-anchor-id="section-2">0.1.0</h2>
+<section id="section-3" class="level2">
+<h2 class="anchored" data-anchor-id="section-3">0.1.0</h2>
 <p>Our first CRAN submission! This v0.1.0 release includes the following new features and updates:</p>
 <p>License:</p>
 <ul>
@@ -716,8 +755,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li>Update some test snapshots to match slight changes in the way that R 4.4.0 calculates <code>density</code> grid coords. (<a href="https://github.com/grantmcdermott/tinyplot/issues/150">#150</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="section-3" class="level2">
-<h2 class="anchored" data-anchor-id="section-3">0.0.5</h2>
+<section id="section-4" class="level2">
+<h2 class="anchored" data-anchor-id="section-4">0.0.5</h2>
 <p><strong>IMPORTANT BREAKING CHANGE:</strong></p>
 <p>The package has been renamed to <strong>tinyplot</strong>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/22">#22</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p>
 <p>This package renaming also incorporates the following function changes:</p>
@@ -726,14 +765,14 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li><code>par2()</code> is replaced by <code>tpar()</code>.</li>
 </ul>
 <p>So, where you used to write…</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plot2)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>… you should now write:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Or, use the equivalent shorthand `plt` alias</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Or, use the equivalent shorthand `plt` alias</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The package URLs have been updated accordingly:</p>
 <ul>
 <li>GitHub: https://github.com/grantmcdermott/tinyplot</li>
@@ -743,8 +782,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <p>Many thanks to everyone who provided thoughtful feedback about this prospective name change, especially <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> and <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> for kicking off the discussion, as well as the 100+ participants who voted in the social media poll.</p>
 <p>For more details about the rational underlying this renaming decision, please see the following GitHub comment, as well as the discussion that preceded it: https://github.com/grantmcdermott/plot2/issues/22#issuecomment-1928472754</p>
 </section>
-<section id="section-4" class="level2">
-<h2 class="anchored" data-anchor-id="section-4">0.0.4</h2>
+<section id="section-5" class="level2">
+<h2 class="anchored" data-anchor-id="section-5">0.0.4</h2>
 <p>Website:</p>
 <p>We now have a dedicated website! (<a href="https://github.com/grantmcdermott/tinyplot/issues/80">#80</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</p>
 <p>New features:</p>
@@ -769,8 +808,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li>Fix bug where grid wasn’t auto-expanding correctly for area plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/92">#92</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="section-5" class="level2">
-<h2 class="anchored" data-anchor-id="section-5">0.0.3</h2>
+<section id="section-6" class="level2">
+<h2 class="anchored" data-anchor-id="section-6">0.0.3</h2>
 <p>Breaking changes:</p>
 <ul>
 <li>Colour palettes are now controlled via a single <code>palette</code> argument that unifies the old <code>palette</code> and (deprecated) <code>palette.args</code> arguments. In addition, the default palette for small groups has been changed from “Okabe-Ito” to “R4”. (<a href="https://github.com/grantmcdermott/tinyplot/issues/31">#31</a> and <a href="https://github.com/grantmcdermott/tinyplot/issues/32">#32</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
@@ -793,8 +832,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li>Setting a global palette, e.g.&nbsp;<code>palette("ggplot2")</code> is now respected. (<a href="https://github.com/grantmcdermott/tinyplot/issues/44">#44</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="section-6" class="level2">
-<h2 class="anchored" data-anchor-id="section-6">0.0.2</h2>
+<section id="section-7" class="level2">
+<h2 class="anchored" data-anchor-id="section-7">0.0.2</h2>
 <p>Breaking changes:</p>
 <ul>
 <li>Legend defaults have been changed. The default position is now “right!” and drawn without a border, i.e.&nbsp;bty = “n” (<a href="https://github.com/grantmcdermott/tinyplot/issues/14">#14</a> by <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>).</li>
@@ -817,8 +856,8 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li><a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> have joined the project as core contributors. 🎉</li>
 </ul>
 </section>
-<section id="section-7" class="level2">
-<h2 class="anchored" data-anchor-id="section-7">0.0.1</h2>
+<section id="section-8" class="level2">
+<h2 class="anchored" data-anchor-id="section-8">0.0.1</h2>
 <ul>
 <li>Initial release on GitHub.</li>
 </ul>

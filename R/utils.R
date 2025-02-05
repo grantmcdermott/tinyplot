@@ -29,7 +29,7 @@ more_than_n_unique = function(x, n, small_vec_len = 1e3L) {
 }
 
 ## Function that computes an appropriate bandwidth kernel based on a string
-## input
+## input (and catches singleton/empty data vectors)
 bw_fun = function(kernel, x) {
     if (length(x) < 2L) return(NA_real_)
     kernel = tolower(kernel)
@@ -42,4 +42,24 @@ bw_fun = function(kernel, x) {
         sj   = bw.SJ(x),
         stop("Invalid `bw` string. Choose from 'nrd0', 'nrd', 'ucv', 'bcv', or 'SJ'.")
     )
+}
+
+## Convenience interface to density() that returns an empty density if necessary
+density_fun = function(x, bw, ...) {
+  if (length(x) >= 1L && !is.na(bw)) {
+    d = density(x, bw = bw, ...)
+  } else {
+    d = list(
+      x = numeric(0L),
+      y = numeric(0L),
+      bw = bw,
+      n = 0L,
+      old.coords = FALSE,
+      call = NA,
+      data.name = "",
+      has.na = FALSE
+    )
+    class(d) = "density"
+  }
+  return(d)
 }

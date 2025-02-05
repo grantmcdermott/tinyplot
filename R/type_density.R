@@ -134,7 +134,7 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         }
         
         datapoints = lapply(datapoints, function(dat) {
-            d = density(dat$x, bw = dens_bw, kernel = kernel, n = n)
+            d = density_fun(dat$x, bw = dens_bw, kernel = kernel, n = n)
             out = data.frame(
                 by = dat$by[1], # already split
                 facet = dat$facet[1], # already split

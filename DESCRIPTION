@@ -17,7 +17,7 @@ Authors@R:
       family = "Arel-Bundock",
       role = "aut",
       email = "vincent.arel-bundock@umontreal.ca",
-      comment = c(ORCID = "0000-0003-1995-6531", Twitter = "@vincentab")
+      comment = c(ORCID = "0000-0003-1995-6531")
     ),
     person(
       given = "Achim",

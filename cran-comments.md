@@ -1,5 +1,8 @@
 ## Overview
 
+_Note: this is a resubmission after the previous CRAN precheck caught a minor
+issue related to author meta-information in the DESCRIPTION file._
+
 **tinyplot** v0.3.0 is a major release with many new features, including a
 revamped type processing system, support for additional plot types, and a new
 plotting theme framework.

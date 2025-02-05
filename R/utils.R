@@ -31,6 +31,7 @@ more_than_n_unique = function(x, n, small_vec_len = 1e3L) {
 ## Function that computes an appropriate bandwidth kernel based on a string
 ## input
 bw_fun = function(kernel, x) {
+    if (length(x) < 2L) return(NA_real_)
     kernel = tolower(kernel)
     switch(
         kernel,

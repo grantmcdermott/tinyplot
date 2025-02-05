@@ -4,43 +4,62 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## 0.2.1.99 (dev version)
+## 0.3.0
+
+### New features
 
 **tinyplot** v0.3.0 is a big release with many new features, both internal and
 user-facing. Related updates are grouped below for easier navigation.
 
-New plot `type` processing system (#222 @vincentarelbundock):
+#### Revamped `type` logic and functional equivalents
 
-- In addition to the standard character labels (e.g., `"p"`, `"density"`), the
-  `type` argument now supports _functional_ equivalents (e.g., `type_points()`,
-  `type_density()`. These new functional types all take the form `type_*()`.
+_(Primary PR and author: #222 @vincentarelbundock)_
+
+- In addition to the standard character labels (`"p"`, `"density"`, etc.), the
+  `type` argument now supports _functional_ equivalents (`type_points()`,
+  `type_density()`, etc.). These new functional types all take the form
+  `type_*()`.
 - The character and functional types are interchangeable. For example,
-  `tinyplot(Nile, type = "hist")` and `tinyplot(Nile, type = type_hist())`
+  ```r
+  tinyplot(Nile, type = "hist")
+  ```
+  and
+  ```r
+  tinyplot(Nile, type = type_hist())
+  ```
   produce exactly the same result.
 - The main advantage of the functional `type_*()` variants is that they offer
   much more flexibility and control beyond the default case(s). Users can pass
   appropriate arguments to existing types for customization and can even define
-  their own `type_<typename>()` functions.
+  their own `type_<typename>()` functions. More information is available in the
+  dedicated help page for each type (e.g., `?type_hist`, `?type_lm`, etc.)
 - On the development side, overhauling the `type` system has also allowed us to
   introduce a number of new plot types and features (see list below). We have
   also simplified our internal codebase, since explicit argument passing
-  requires less guesswork on our end.
-- Speaking of which, we now recommended that users explicitly pass ancillary
-  type-specific arguments as part of the relevant `type_*()` call. For example:
-  `tinyplot(Nile, type = type_hist(breaks = 30))` is preferable to
-  `tinyplot(Nile, type = "hist", breaks = 30)`. While the latter option will
-  still work in this particular case, we cannot guarantee that it will for other
-  cases. (Reason: Passing ancillary type-specific arguments at the top level of
-  the plot call only works if these do not conflict with the main arguments of
-  the `tinyplot()` function itself; see #267.)
+  requires less guesswork on our end. Speaking of which, we now recommended that
+  users explicitly pass ancillary type-specific arguments as part of the
+  relevant `type_*()` call. For example,
+  ```r
+  tinyplot(Nile, type = type_hist(breaks = 30))
+  ```
+  is preferable to
+  ```r
+  tinyplot(Nile, type = "hist", breaks = 30)
+  ```
+  While the latter option will still work, we cannot guarantee that argument
+  passing will work in every situation. (Reason: Passing ancillary type-specific
+  arguments at the top level of the plot call only works if these do not
+  conflict with the main arguments of the `tinyplot()` function itself; see
+  #267.)
 - Some minor breaking changes were unavoidable; see further below.
 - For more details on the new `type` system, please see the dedicated
   [Plot types vignette](https://grantmcdermott.com/tinyplot/vignettes/types.html)
   on the website.
 
-New plot types:
+#### Support for additional plot types
 
   - Visualizations:
+  
     - `type_spineplot()` (shortcut: `"spineplot"`) spine plots and
     spinograms. These are modified versions of a histogram or mosaic plot,
     and are particularly useful for visualizing factor variables. (#233
@@ -52,11 +71,13 @@ New plot types:
     - `type_rug()` (shortcut: `"rug"`) adds a rug to an existing plot. (#276
     @grantmcdermott)
     - `type_text()` (shortcut: `"text"`) adds text annotations. (@vincentarelbundock)
+    
   - Models:
     - `type_glm()` (shortcut: `"glm"`) (@vincentarelbundock)
     - `type_lm()` (shortcut: `"lm"`) (@vincentarelbundock)
     - `type_loess()` (shortcut: `"loess"`) (@vincentarelbundock)
     - `type_spline()` (shortcut: `"spline"`) (#241 @grantmcdermott)
+    
   - Functions:
     - `type_abline()`: line(s) with intercept and slope (#249 @vincentarelbundock)
     - `type_hline()`: horizontal line(s) (#249 @vincentarelbundock)
@@ -65,7 +86,26 @@ New plot types:
     - `type_summary()`: summarize values of `y` along unique values of `x` (#274
     @grantmcdermott)
 
-Other new features:
+#### Themes
+
+_(Primary PR and authors: #258 @vincentarelbundock and @grantmcdermott)_
+
+- The new `tinytheme()` function provides a convenient mechanism for styling
+  plots according to a variety of pre-defined themes, e.g. `tinytheme("clean")`.
+- Users can also add their own custom themes or tweak an existing theme.
+- Themes are persistent and will affect all subsequent plots until they are
+  explicitly reset, e.g. by calling `tinytheme()` (with no argument) to restore
+  the default plot aesthetic.
+- Behind the scenes, `tinytheme()` sets a hook for a group graphical parameters
+  by passing them through `tpar()`. Users can still use `tpar()` to style their
+  plots manually by setting individual graphical parameters. But going forward
+  we expect that most **tinyplot** users will prefer the convenience of going
+  through `tinytheme()`.
+- More details are provided in the dedicated
+  [Themes vignette](https://grantmcdermott.com/tinyplot/vignettes/themes.html)
+  on the website.
+
+#### Other new features
 
 - New `tinyplot()` arguments:
   -  `flip <logical>` allows for easily flipping (swapping) the orientation
@@ -78,27 +118,16 @@ Other new features:
   threshold lines. (#245 @grantmcdermott)
   - `facet.args` gains a `free = <logical>` sub-argument for independently
   scaling the axes limits of individual facets. (#253 @grantmcdermott)
+  
 - `tpar()` gains additional `grid.col`, `grid.lty`, and `grid.lwd` arguments for
   fine-grained control over the appearance of the default panel grid when
   `tinyplot(..., grid = TRUE)` is called. (#237 @grantmcdermott)
+  
 - The new `tinyplot_add()` (alias: `plt_add()`) convenience function allows
 easy layering of plots without having to specify repeat arguments. (#246
 @vincentarelbundock)
-- The new `tinytheme()` function provides a convenient mechanism for styling
-plots according to a variety of pre-defined themes, e.g. `tinytheme("clean")`.
-Users can also add their own custom themes or tweak an existing theme. Themes
-are persistent and will affect all subsequent plots until they are explicitly
-reset, e.g. by calling `tinytheme()` (with no argument) to restore the default
-plot aesthetic. Behind the scenes, `tinytheme()` sets a hook for a group
-graphical parameters by passing them through `tpar()`. Users can still use
-`tpar()` to style their plots by manually setting individual graphical
-parameters. But going forward we expect that most **tinyplot** users will prefer
-the convenience of going through `tinytheme()`. More details are provided in the
-dedicated
-[Themes vignette](https://grantmcdermott.com/tinyplot/vignettes/themes.html)
-on the website. (#258 @vincentarelbundock and @grantmcdermott)
 
-Breaking changes:
+### Breaking changes
 
 - There are a few breaking changes to grouped density plots.
   - The joint smoothing bandwidth is now computed using an observation-weighted
@@ -119,7 +148,7 @@ Breaking changes:
   entire `palette`, rather than just the ribbon). See our warning about passing
   ancillary type-specific arguments above.
 
-Bug fixes:
+### Bug fixes
 
 - Better preserve facet attributes, thus avoiding misarrangement of facet grids
 for density and histogram types. (#209 @zeileis)
@@ -139,17 +168,16 @@ way back in #2 and the eventual solution in #233.
 enable fine-grained control over this behaviour. (#228 @eleuven and
 @grantmcdermott)
 
-Internals:
+### Misc
 
 - Continued modularization/abstraction of the code logic. (#214
 @vincentarelbundock)
 - Major internal refactor of the type drawing and data processing. (#222
 @vincentarelbundock)
-
-Misc:
-
 - Documentation improvements, e.g. explicit guidance on how to specify multiple
 grouping variables (thanks to @strengjacke for reporting #213).
+  - The new functional type processing system also means that each type now
+    has its own help page (e.g. `?type_hist`, `type_ridge`, etc.)
 
 ## 0.2.1
 

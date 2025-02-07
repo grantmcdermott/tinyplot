@@ -4,6 +4,12 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## Development
+
+Bugs:
+
+* The `cex` argument should be respected when using `type="bg"`. Thanks to @rjknell for report #307.
+
 ## 0.3.0
 
 ### New features

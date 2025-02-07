@@ -39,6 +39,7 @@ f = function() {
 expect_snapshot_plot(f, label = "tinyplot_add_unnamed")
 
 # type = "rug"
+set.seed(48103)
 f = function() {
   tinyplot(eruptions ~ waiting, data = faithful, type = "lm")
   tinyplot_add(type = "rug")

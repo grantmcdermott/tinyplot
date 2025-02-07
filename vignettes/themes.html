@@ -849,9 +849,13 @@ Note
 <section id="custom-themes" class="level3">
 <h3 class="anchored" data-anchor-id="custom-themes">Custom themes</h3>
 <p>Tweaking existing themes is easy. For example, the <code>tinytheme()</code> function also accepts any graphical parameter supported by <code>tpar()</code>/<code>par()</code> and applies them in persistent fashion.</p>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"ipsum"</span>, <span class="at">pch =</span> <span class="dv">2</span>, <span class="at">col.axis =</span> <span class="st">"red"</span>, <span class="at">cex.main =</span> <span class="dv">2</span>, <span class="at">family =</span> <span class="st">"Palatino"</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars, <span class="at">main =</span> <span class="st">"Fuel efficiency vs. horsepower"</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(hp <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars, <span class="at">main =</span> <span class="st">"Horsepower vs. fuel efficiency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ipsum"</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">2</span>, <span class="at">col.axis =</span> <span class="st">"darkcyan"</span>, <span class="at">cex =</span> <span class="fl">1.2</span>, <span class="at">cex.main =</span> <span class="dv">2</span>, <span class="at">cex.lab =</span> <span class="fl">1.5</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span><span class="st">"HersheyScript"</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars, <span class="at">main =</span> <span class="st">"Fuel efficiency vs. horsepower"</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(hp <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars, <span class="at">main =</span> <span class="st">"Horsepower vs. fuel efficiency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
@@ -876,11 +880,11 @@ Font families
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Fonts are a suprisingly effective way to add impact and personality to your plots. While it is perhaps underappreciated, base R actually comes with built-in support for quite a few font families. In the code chunk above we used the well-known “Palatino” font, but support also extends to other popular LaTeX and PDF fonts (see <code>?pdfFonts</code>), as well as custom fonts like the Hershey family (see <code>?Hershey</code>).</p>
+<p>Fonts are a suprisingly effective way to add impact and personality to your plots. While it is perhaps underappreciated, base R actually ships with built-in support for quite a few font families. In the code chunk above we used a member of the Hershey font family that comes bundled with the base R distribution (see <a href="https://search.r-project.org/R/refmans/grDevices/html/Hershey.html"><code>?Hershey</code></a>). But this built-in support also extends to other popular LaTex and PDF fonts like “Palatino”, “ComputerModern”, “Helvetica”, “AvantGarde”, etc. (see <a href="https://search.r-project.org/R/refmans/grDevices/html/postscriptFonts.html"><code>?pdfFonts</code></a>).</p>
 <p>For access to a <em>much</em> wider variety of fonts, you might consider the excellent <strong>showtext</strong> package (<a href="https://cran.r-project.org/package=showtext">link</a>). This package allows you to install <em>any</em> font family from the Google Font catalog, either on-the-fly or downloaded to your permanent fontbook collection. It plays very nicely with <strong>tinyplot</strong>.</p>
 </div>
 </div>
-<p>Similarly, to create your own themes “from scratch”, set the theme to <code>"default"</code> and passing additional graphical parameters to <code>tinytheme()</code>.</p>
+<p>Similarly, to create your own themes “from scratch”, set the theme to <code>"default"</code> and pass additional graphical parameters to <code>tinytheme()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"default"</span>, <span class="at">font.main =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

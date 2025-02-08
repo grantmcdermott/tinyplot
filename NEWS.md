@@ -4,11 +4,17 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## Development
+## 0.3.0.99 (dev version)
 
-Bugs:
+New features:
 
-* The `cex` argument should be respected when using `type="bg"`. Thanks to @rjknell for report #307.
+- `tinyplot(..., file = "*.pdf"")` will now default to using `cairo_pdf()`, if
+  supported on the user's machine, when writing PDFs. (#311 @grantcdermott)
+
+Bugs fixes:
+
+- The `cex` argument should be respected when using `type="bg"`. Thanks to
+  @rjknell for report #307 and @vincentarelbundock for the fix.
 
 ## 0.3.0
 

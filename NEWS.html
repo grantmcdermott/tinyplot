@@ -512,7 +512,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#news" id="toc-news" class="nav-link active" data-scroll-target="#news">News</a>
   <ul class="collapse">
-  <li><a href="#development" id="toc-development" class="nav-link" data-scroll-target="#development">Development</a></li>
+  <li><a href="#dev-version" id="toc-dev-version" class="nav-link" data-scroll-target="#dev-version">0.3.0.99 (dev version)</a></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.3.0</a>
   <ul class="collapse">
   <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
@@ -541,11 +541,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="news" class="level1">
 <h1>News</h1>
 <p><em>If you are viewing this file on CRAN, please check the <a href="https://grantmcdermott.com/tinyplot/NEWS.html">latest NEWS</a> on our website where the formatting is also better.</em></p>
-<section id="development" class="level2">
-<h2 class="anchored" data-anchor-id="development">Development</h2>
-<p>Bugs:</p>
+<section id="dev-version" class="level2">
+<h2 class="anchored" data-anchor-id="dev-version">0.3.0.99 (dev version)</h2>
+<p>New features:</p>
 <ul>
-<li>The <code>cex</code> argument should be respected when using <code>type="bg"</code>. Thanks to <a href="https://github.com/rjknell"><span class="citation" data-cites="rjknell">@rjknell</span></a> for report <a href="https://github.com/grantmcdermott/tinyplot/issues/307">#307</a>.</li>
+<li><code>tinyplot(..., file = "*.pdf")</code> will now default to using <code>cairo_pdf()</code> if cairo graphics are supported on the user’s machine. This should help to ensure better fidelity of (non-standard) fonts in PDFs. (<a href="https://github.com/grantmcdermott/tinyplot/issues/311">#311</a> <a href="https://github.com/grantcdermott"><span class="citation" data-cites="grantcdermott">@grantcdermott</span></a>)</li>
+</ul>
+<p>Bugs fixes:</p>
+<ul>
+<li>The <code>cex</code> argument should be respected when using <code>type="bg"</code>. Thanks to <a href="https://github.com/rjknell"><span class="citation" data-cites="rjknell">@rjknell</span></a> for report <a href="https://github.com/grantmcdermott/tinyplot/issues/307">#307</a> and <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> for the fix.</li>
 </ul>
 </section>
 <section id="section" class="level2">

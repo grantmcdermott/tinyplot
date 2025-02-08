@@ -584,6 +584,9 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 <p><code>adj.ylab</code>: Numeric value between 0 and 1 controlling the alignment of the y-axis label.</p>
 </li>
 <li>
+<p><code>cairo</code>: Logical indicating whether <code>cairo_pdf</code> should be used when writing plots to PDF. If <code>FALSE</code>, then <code>pdf</code> will be used instead, with implications for embedding (non-standard) fonts. Only used if <code>tinyplot(…, file = “&lt;filename&gt;.pdf”)</code> is called. Defaults to the value of <code>capabilities(“cairo”)</code>.</p>
+</li>
+<li>
 <p><code>dynmar</code>: Logical indicating whether <code>tinyplot</code> should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal <code>tinythemes()</code> logic and should <em>not</em> be adjusted manually unless you really know what you are doing or don’t mind risking unintended consequences to your plot.</p>
 </li>
 <li>
@@ -629,10 +632,10 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 <p><code>lmar</code>: A numeric vector of form <code>c(inner, outer)</code> that gives the margin padding, in terms of lines, around the automatic <code>tinyplot</code> legend. Defaults to <code>c(1.0, 0.1)</code>. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.</p>
 </li>
 <li>
-<p><code>palette.qualitative</code>: Palette for qualitative colors. See the <code>palette</code> argumetn in <code>?tinyplot</code>.</p>
+<p><code>palette.qualitative</code>: Palette for qualitative colors. See the <code>palette</code> argument in <code>?tinyplot</code>.</p>
 </li>
 <li>
-<p><code>palette.sequential</code>: Palette for sequential colors. See the <code>palette</code> argumetn in <code>?tinyplot</code>.</p>
+<p><code>palette.sequential</code>: Palette for sequential colors. See the <code>palette</code> argument in <code>?tinyplot</code>.</p>
 </li>
 <li>
 <p><code>ribbon.alpha</code>: Numeric factor in the range <code style="white-space: pre;">[0,1]</code> for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is <code>0.2</code>.</p>

@@ -14,7 +14,7 @@ setup_device = function(file, width, height) {
     # close interactive device if not already open
     if (isTRUE(fkdev)) dev.off()
     exttype = file_ext(filepath)
-    if (exttype == "pdf" && capabilities("cairo")) {
+    if (exttype == "pdf" && .tpar[["cairo"]]) {
       exttype = "cairo"
     } else if (exttype == "jpg") {
       exttype = "jpeg"

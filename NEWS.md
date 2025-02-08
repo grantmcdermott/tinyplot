@@ -8,8 +8,9 @@ where the formatting is also better._
 
 New features:
 
-- `tinyplot(..., file = "*.pdf"")` will now default to using `cairo_pdf()`, if
-  supported on the user's machine, when writing PDFs. (#311 @grantcdermott)
+- `tinyplot(..., file = "*.pdf")` will now default to using `cairo_pdf()` if
+  cairo graphics are supported on the user's machine. This should help to ensure
+  better fidelity of (non-standard) fonts in PDFs. (#311 @grantcdermott)
 
 Bugs fixes:
 

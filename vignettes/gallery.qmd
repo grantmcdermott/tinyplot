@@ -24,21 +24,21 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/altdoc/fig/gallery_01.qmd)"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/altdoc/fig/gallery_01.R)"
 
 knitr::include_graphics("../fig/gallery_01.png")
 ```
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/altdoc/fig/gallery_02.qmd)"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/altdoc/fig/gallery_02.R)"
 
 knitr::include_graphics("../fig/gallery_02.png")
 ```
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/altdoc/fig/gallery_03.qmd)"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/altdoc/fig/gallery_03.R)"
 
 knitr::include_graphics("../fig/gallery_03.png")
 ```

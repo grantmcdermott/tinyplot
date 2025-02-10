@@ -14,11 +14,16 @@ setup_device = function(file, width, height) {
     # close interactive device if not already open
     if (isTRUE(fkdev)) dev.off()
     exttype = file_ext(filepath)
-    if (exttype == "jpg") exttype = "jpeg"
+    if (exttype == "pdf" && .tpar[["cairo"]]) {
+      exttype = "cairo"
+    } else if (exttype == "jpg") {
+      exttype = "jpeg"
+    }
     switch(exttype,
       png = png(filepath, width = filewidth, height = fileheight, units = "in", res = fileres),
       jpeg = jpeg(filepath, width = filewidth, height = fileheight, units = "in", res = fileres),
       pdf = pdf(filepath, width = filewidth, height = fileheight),
+      cairo = cairo_pdf(filepath, width = filewidth, height = fileheight),
       svg = svg(filepath, width = filewidth, height = fileheight),
       stop("\nUnsupported file extension. Only '.png', '.jpg', '.pdf', or '.svg' are allowed.\n")
     )

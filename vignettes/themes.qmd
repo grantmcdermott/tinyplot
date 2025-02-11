@@ -241,7 +241,11 @@ in persistent fashion.
 
 ```{r}
 #| layout-ncol: 2
-tinytheme("ipsum", pch = 2, col.axis = "red", cex.main = 2, family = "Palatino")
+tinytheme(
+  "ipsum",
+  pch = 2, col.axis = "darkcyan", cex = 1.2, cex.main = 2, cex.lab = 1.5,
+  family ="HersheyScript"
+)
 tinyplot(mpg ~ hp, data = mtcars, main = "Fuel efficiency vs. horsepower")
 tinyplot(hp ~ mpg, data = mtcars, main = "Horsepower vs. fuel efficiency")
 ```
@@ -255,11 +259,13 @@ tinytheme()
 ## Font families
 
 Fonts are a suprisingly effective way to add impact and personality to your
-plots. While it is perhaps underappreciated, base R actually comes with built-in
-support for quite a few font families. In the code chunk above we used the
-well-known "Palatino" font, but support also extends to other popular LaTeX and
-PDF fonts (see `?pdfFonts`), as well as custom fonts like the Hershey family
-(see `?Hershey`).
+plots. While it is perhaps underappreciated, base R actually ships with built-in
+support for quite a few font families. In the code chunk above we used a member
+of the Hershey font family that comes bundled with the base R distribution (see
+[`?Hershey`](https://search.r-project.org/R/refmans/grDevices/html/Hershey.html)).
+But this built-in support also extends to other popular LaTex and PDF fonts like
+"Palatino", "ComputerModern", "Helvetica", "AvantGarde", etc.
+(see [`?pdfFonts`](https://search.r-project.org/R/refmans/grDevices/html/postscriptFonts.html)).
 
 For access to a _much_ wider variety of fonts, you might consider the excellent
 **showtext** package
@@ -271,7 +277,7 @@ It plays very nicely with **tinyplot**.
 :::
 
 Similarly, to create your own themes "from scratch", set the theme to
-`"default"` and passing additional graphical parameters to `tinytheme()`.
+`"default"` and pass additional graphical parameters to `tinytheme()`.
 
 ```{r}
 tinytheme("default", font.main = 3, col = "red")

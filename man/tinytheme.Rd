@@ -87,6 +87,10 @@ p()
 tinytheme("bw", fg = "green", font.main = 2, font.sub = 3, family = "Palatino")
 p()
 
+# Another custom theme example
+tinytheme("bw", font.main = 2, col.axis = "darkcyan", family = "HersheyScript")
+p()
+
 # Aside: One or two specialized themes are only meant for certain plot types
 tinytheme("ridge2")
 tinyplot(I(cut(lat, 10)) ~ depth, data = quakes, type = "ridge")

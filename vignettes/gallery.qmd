@@ -25,20 +25,20 @@ Click on a plot to get the link to its code.
 #| lightbox:
 #|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/altdoc/fig/gallery_01.R)"
-knitr::include_graphics("../fig/gallery_01.png")
+#| file: "fig/gallery_01.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/altdoc/fig/gallery_02.R)"
-knitr::include_graphics("../fig/gallery_02.png")
+#| file: "fig/gallery_02.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/altdoc/fig/gallery_03.R)"
-knitr::include_graphics("../fig/gallery_03.png")
+#| file: "fig/gallery_03.R"
 ```
 :::

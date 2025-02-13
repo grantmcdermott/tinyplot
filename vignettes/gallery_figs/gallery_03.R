@@ -1,6 +1,6 @@
 library(tinyplot)
 
-plt(
+tinyplot(
   Sepal.Length ~ Petal.Length | Sepal.Length,
   data = iris,
   facet = ~Species,

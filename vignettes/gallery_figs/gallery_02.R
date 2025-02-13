@@ -1,6 +1,6 @@
 library(tinyplot)
 
-plt(
+tinyplot(
   ~Petal.Length | Species,
   data = iris,
   type = "density",

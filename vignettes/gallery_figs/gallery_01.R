@@ -1,6 +1,6 @@
 library(tinyplot)
 
-plt(
+tinyplot(
   Sepal.Length ~ Petal.Length | Species,
   data = iris,
   palette = "dark",

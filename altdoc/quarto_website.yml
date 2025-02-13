@@ -1,6 +1,6 @@
 project:
   output-dir: ../docs/
-  website
+  type: website
 
 website:
   title: "$ALTDOC_PACKAGE_NAME"

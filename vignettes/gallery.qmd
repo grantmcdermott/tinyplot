@@ -1,17 +1,42 @@
 ---
 title: Gallery
-filters:
-  - lightbox
 lightbox: auto
+execute:
+  echo: false
 ---
 
-WIP...
+```{css}
+.gslide-desc {
+	text-align: center;
+  font-size: 1.6rem !important;
+}
+div.gslide-description, .gslide-desc {
+	background-color: #e0e0e0 !important;
+}
+```
+
+Click on a plot to get the link to its code.
 
 ::: {layout-ncol=2}
-![](../fig/gallery_01.png){group="elsewhere"}
 
-![](../fig/gallery_02.png){group="elsewhere"}
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_01.R)"
+#| file: "gallery_figs/gallery_01.R"
+```
 
-![](../fig/gallery_03.png){group="elsewhere"}
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_02.R)"
+#| file: "gallery_figs/gallery_02.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_03.R)"
+#| file: "gallery_figs/gallery_03.R"
+```
 :::
-

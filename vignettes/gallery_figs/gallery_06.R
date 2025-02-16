@@ -14,3 +14,6 @@ with(
         type = type_errorbar(length = 0.1)
     )
 )
+
+
+tinytheme() # reset theme (optional)

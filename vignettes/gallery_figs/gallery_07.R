@@ -9,3 +9,5 @@ tinyplot(
   type = "rect",
   palette = "viridis"
 )
+
+tinytheme() # reset theme (optional)

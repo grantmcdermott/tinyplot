@@ -5,3 +5,5 @@ tinyplot(
     type = "histogram",
     data = iris
 )
+
+tinytheme() # reset theme (optional)

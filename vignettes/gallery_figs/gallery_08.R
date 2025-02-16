@@ -12,3 +12,5 @@ tinyplot(Month ~ Temp | Temp,
   data = aq,
   type = type_ridge(col = "white")
 )
+
+tinytheme() # reset theme (optional)

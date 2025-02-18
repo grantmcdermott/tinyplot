@@ -23,13 +23,41 @@
 type_points = function() {
   out = list(
     draw = draw_points(),
-    data = NULL,
+    data = data_points(),
     name = "p"
   )
   class(out) = "tinyplot_type"
   return(out)
 }
 
+data_points = function() {
+  fun = function(datapoints, ...) {
+    # catch for factors (we should still be able to "force" plot these with points)
+    if (is.factor(datapoints$x)) {
+      xlvls = levels(datapoints$x)
+      xlabs = seq_along(xlvls)
+      names(xlabs) = xlvls
+      datapoints$x = as.integer(datapoints$x)
+    } else {
+      xlabs = NULL
+    }
+    if (is.factor(datapoints$y)) {
+      ylvls = levels(datapoints$y)
+      ylabs = seq_along(ylvls)
+      names(ylabs) = ylvls
+      datapoints$y = as.integer(datapoints$y)
+    } else {
+      ylabs = NULL
+    }
+    
+    out = list(
+      datapoints = datapoints,
+      xlabs = xlabs,
+      ylabs = ylabs
+    )
+    return(out)
+  }
+}
 
 draw_points = function() {
     fun = function(ix, iy, icol, ibg, ipch, ilwd, cex, ...) {

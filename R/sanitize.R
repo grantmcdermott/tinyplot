@@ -22,10 +22,10 @@ sanitize_type = function(type, x, y, dots) {
   assert_choice(type, types, null.ok = TRUE)
 
   if (is.null(type)) {
-    if (!is.null(x) && is.factor(x) && !is.factor(y)) {
+    if (!is.null(x) && (is.factor(x) || is.character(x)) && !(is.factor(y) || is.character(y))) {
       # enforce boxplot type for y ~ factor(x)
       type = type_boxplot
-    } else if (is.factor(y)) {
+    } else if (is.factor(y) || is.character(y)) {
       # enforce spineplot type for factor(y) ~ x
       type = type_spineplot
     } else {

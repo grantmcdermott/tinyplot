@@ -21,6 +21,8 @@ Bugs fixes:
   in #319 and fix in #320 by @kscott-1.
 - Passing `x` and/or `y` as character variables now triggers the same default
   plot type behaviour as factors, e.g. boxplots. (#323 @grantmcdermott)
+- Scatter plots (`type_points()`/`"p"`) now work even if `x` or `y` is a factor
+  or character variable. (#323 @grantmcdermott)
 
 ## 0.3.0
 

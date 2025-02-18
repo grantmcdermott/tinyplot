@@ -49,6 +49,7 @@ sanitize_type = function(type, x, y, dots) {
     "lines"      = type_lines,
     "lm"         = type_lm,
     "loess"      = type_loess,
+    "p"          = type_points,
     "pointrange" = type_pointrange,
     "points"     = type_points,
     "polygon"    = type_polygon,

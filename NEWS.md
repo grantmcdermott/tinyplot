@@ -17,6 +17,8 @@ Bugs fixes:
 - The `cex` argument should be respected when using `type="bg"`. Thanks to
   @rjknell for report #307 and @vincentarelbundock for the fix.
 
+- The `lwd` argument should be passed down to `pt.lwd` for type "p". Sets proper line weight for the border of pch symbols in legend. Report in #319 and fix in #320 by @kscott-1.
+
 ## 0.3.0
 
 ### New features

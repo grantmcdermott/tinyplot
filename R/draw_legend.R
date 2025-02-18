@@ -176,6 +176,10 @@ draw_legend = function(
     legend_args[["pt.lwd"]] = legend_args[["pt.lwd"]] %||% 0
   }
 
+  if (identical(type, "p")) {
+    legend_args[["pt.lwd"]] = legend_args[["pt.lwd"]] %||% lwd
+  }
+
   if (identical(type, "n") && isFALSE(gradient)) {
     legend_args[["pch"]] = legend_args[["pch"]] %||% par("pch")
   }

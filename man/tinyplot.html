@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-bd89562929948232a0cfc2a2280e30cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -937,6 +937,9 @@ the y/xy/x aspect ratio, see <code>plot.window</code>.
 </li>
 <li>
 <p>A palette-generating function. This can be "bare" (e.g., <code>palette.colors</code>) or "closed" with a set of named arguments (e.g., <code>palette.colors(palette = “Okabe-Ito”, alpha = 0.5)</code>). Note that any unnamed arguments will be ignored and the key <code>n</code> argument, denoting the number of colours, will automatically be spliced in as the number of groups.</p>
+</li>
+<li>
+<p>A vector or list of colours, e.g.&nbsp;<code>c(“darkorange”, “purple”, “cyan4”)</code>. If too few colours are provided for a discrete (qualitative) set of groups, then the colours will be recycled with a warning. For continuous (sequential) groups, a gradient palette will be interpolated.</p>
 </li>
 </ul>
 </td>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-bd89562929948232a0cfc2a2280e30cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -513,6 +513,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>New features:</p>
 <ul>
 <li><code>tinyplot(..., file = "*.pdf")</code> will now default to using <code>cairo_pdf()</code> if cairo graphics are supported on the user’s machine. This should help to ensure better fidelity of (non-standard) fonts in PDFs. (<a href="https://github.com/grantmcdermott/tinyplot/issues/311">#311</a> <a href="https://github.com/grantcdermott"><span class="citation" data-cites="grantcdermott">@grantcdermott</span></a>)</li>
+<li>The palette argument now accepts a vector or list of manual colours, e.g. <code>tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))</code>, or <code>tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))</code> (<a href="https://github.com/grantmcdermott/tinyplot/issues/325">#325</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Bugs fixes:</p>
 <ul>

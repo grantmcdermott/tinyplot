@@ -69,39 +69,87 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
     }
   } else {
     if (is.character(palette)) {
-      fx = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
-      pal_match = charmatch(fx(palette), fx(palette.pals()))
-      if (!is.na(pal_match)) {
-        if (pal_match < 1L) stop("'palette' is ambiguous")
-        palette_fun = palette.colors
-        if (isTRUE(gradient)) {
-          palette_fun2 = function(n, palette, alpha) colorRampPalette(palette.colors(palette = palette, alpha = alpha))(n)
-          palette_fun = palette_fun2
+      # special case: if vector of character strings, we assume that the user
+      # must have passed a vector of colours (e.g., c("red", "blue")) rather
+      # than a known/named colour palette (e.g. "Harmonic")
+      if (length(palette) > 1) {
+        palette_fun = "c"
+        if (!is.null(alpha)) palette = adjustcolor(palette, alpha.f = alpha)
+        args = as.list(palette)
+        if (length(args) < ngrps && length(args) != 1) {
+          # if manual colours < ngrps, either (1) interpolate for gradient
+          # colors, or (2) recycle for discrete colours
+          if (gradient) {
+            args = list(colorRampPalette(args, alpha = TRUE)(ngrps))
+          } else {
+            ncolsstr = paste0("(", length(args), ")")
+            ngrpsstr = paste0("(", ngrps, ")")
+            warning(
+              "\nFewer colours ", ncolsstr, " provided than than there are groups ",
+              ngrpsstr, ". Recycling to make up the shortfall."
+            )
+            args = rep(args, length.out = ngrps)
+          }
         }
       } else {
-        pal_match = charmatch(fx(palette), fx(hcl.pals()))
+        fx = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
+        pal_match = charmatch(fx(palette), fx(palette.pals()))
         if (!is.na(pal_match)) {
           if (pal_match < 1L) stop("'palette' is ambiguous")
-          palette_fun = hcl.colors
+          palette_fun = palette.colors
+          if (isTRUE(gradient)) {
+            palette_fun2 = function(n, palette, alpha) colorRampPalette(palette.colors(palette = palette, alpha = alpha))(n)
+            palette_fun = palette_fun2
+          }
         } else {
-          stop(
-            "\nPalette string not recogized. Must be a value produced by either",
-            "`palette.pals()` or `hcl.pals()`.\n",
-            call. = FALSE
-          )
+          pal_match = charmatch(fx(palette), fx(hcl.pals()))
+          if (!is.na(pal_match)) {
+            if (pal_match < 1L) stop("'palette' is ambiguous")
+            palette_fun = hcl.colors
+          } else {
+            stop(
+              "\nPalette string not recogized. Must be a value produced by either",
+              "`palette.pals()` or `hcl.pals()`.\n",
+              call. = FALSE
+            )
+          }
         }
+        args = list(n = ngrps, palette = palette, alpha = alpha)
       }
-      args = list(n = ngrps, palette = palette, alpha = alpha)
     } else if (class(palette) %in% c("call", "name")) {
       args = as.list(palette)
       palette_fun = paste(args[[1]])
       args[[1]] = NULL
-      args[["n"]] = ngrps
-      # remove unnamed arguments to prevent unintentional argument sliding
-      if (any(names(args) == "")) args[[which(names(args) == "")]] = NULL
+      # catch for direct vector or list
+      if (palette_fun %in% c("c", "list")) {
+        if (palette_fun == "list") palette_fun = "c"
+        if (!is.null(alpha)) args = lapply(args, function(a) adjustcolor(a, alpha.f = alpha))
+        if (length(args) < ngrps && length(args) != 1) {
+          # if manual colours < ngrps, either (1) interpolate for gradient
+          # colors, or (2) recycle for discrete colours
+          if (gradient) {
+            args = list(colorRampPalette(args, alpha = TRUE)(ngrps))
+          } else {
+            ncolsstr = paste0("(", length(args), ")")
+            ngrpsstr = paste0("(", ngrps, ")")
+            warning(
+              "\nFewer colours ", ncolsstr, " provided than than there are groups ",
+              ngrpsstr, ". Recycling to make up the shortfall."
+            )
+            args = rep(args, length.out = ngrps)
+          }
+        }
+      } else {
+        args[["n"]] = ngrps
+        # remove unnamed arguments to prevent unintentional argument sliding
+        if (any(names(args) == "")) args[[which(names(args) == "")]] = NULL
+      }
+    } else if (inherits(palette, "function")) {
+      args = list()
+      palette_fun = palette
     } else {
       stop(
-        "\nInvalid palette argument. Must be a recognized keyword, or a",
+        "\nInvalid palette argument. Must be a recognized keyword, or a ",
         "palette-generating function with named arguments.\n"
       )
     }

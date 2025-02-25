@@ -185,6 +185,10 @@
 #'    unnamed arguments will be ignored and the key `n` argument, denoting the
 #'    number of colours, will automatically be spliced in as the number of
 #'    groups.
+#'    - A vector or list of colours, e.g. `c("darkorange", "purple", "cyan4")`.
+#'    If too few colours are provided for a discrete (qualitative) set of
+#'    groups, then the colours will be recycled with a warning. For continuous
+#'    (sequential) groups, a gradient palette will be interpolated. 
 #' @param legend one of the following options:
 #'    - NULL (default), in which case the legend will be determined by the
 #'    grouping variable. If there is no group variable (i.e., `by` is NULL) then

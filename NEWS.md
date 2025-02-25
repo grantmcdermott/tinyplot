@@ -11,6 +11,9 @@ New features:
 - `tinyplot(..., file = "*.pdf")` will now default to using `cairo_pdf()` if
   cairo graphics are supported on the user's machine. This should help to ensure
   better fidelity of (non-standard) fonts in PDFs. (#311 @grantcdermott)
+- The palette argument now accepts a vector or list of manual colours, e.g.
+  `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
+  `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)
 
 Bugs fixes:
 

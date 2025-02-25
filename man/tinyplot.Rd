@@ -297,6 +297,10 @@ case-insensitive (e.g., "Okabe-Ito" and "okabe-ito" are both valid).
 unnamed arguments will be ignored and the key \code{n} argument, denoting the
 number of colours, will automatically be spliced in as the number of
 groups.
+\item A vector or list of colours, e.g. \code{c("darkorange", "purple", "cyan4")}.
+If too few colours are provided for a discrete (qualitative) set of
+groups, then the colours will be recycled with a warning. For continuous
+(sequential) groups, a gradient palette will be interpolated.
 }}
 
 \item{legend}{one of the following options:

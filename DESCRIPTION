@@ -36,6 +36,7 @@ Authors@R:
 Description: Lightweight extension of the base R graphics system, with support
       for automatic legends, facets, themes, and various other enhancements.
 License: Apache License (>= 2)
+Additional_repositories: https://etiennebacher.r-universe.dev
 Depends:
   R (>= 4.0)
 Imports: 
@@ -45,7 +46,7 @@ Imports:
   tools,
   utils
 Suggests:
-  altdoc (>= 0.5.0),
+  altdoc (>= 0.5.9000),
   fontquiver,
   png,
   rsvg,

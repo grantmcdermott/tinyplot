@@ -46,7 +46,7 @@ Imports:
   tools,
   utils
 Suggests:
-  altdoc (>= 0.5.9000),
+  altdoc (>= 0.5.0.9000),
   fontquiver,
   png,
   rsvg,

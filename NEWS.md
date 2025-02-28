@@ -26,6 +26,11 @@ Bugs fixes:
   plot type behaviour as factors, e.g. boxplots. (#323 @grantmcdermott)
 - Scatter plots (`type_points()`/`"p"`) now work even if `x` or `y` is a factor
   or character variable. (#323 @grantmcdermott)
+- The `col` argument now accepts a numeric index. (#330 @grantmcdermott)
+
+Misc:
+- Improved column spacing of Arguments in the References section of the website.
+  (#328 thanks to @etiennebacher's upstream `altdoc` fix)
 
 ## 0.3.0
 

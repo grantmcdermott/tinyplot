@@ -37,8 +37,11 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
     }
     if (isTRUE(gradient)) {
       col = rev(col)
+    } else if (!ordered && is.numeric(col)) {
+      col = palette()[col]
     }
     if (anyNA(col) || is.character(col)) {
+      if (alpha) col = adjustcolor(col, alpha.f = alpha)
       return(col)
     }
   }

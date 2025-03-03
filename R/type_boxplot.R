@@ -53,28 +53,18 @@ type_boxplot = function(
 
 
 draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewex, outwex) {
-    # fun = function(iby, ix, iy, ipch, ilty, icol, ibg, x_by = FALSE, facet_by = FALSE, data_by, flip, ...) {
     fun = function(iby, ix, iy, ipch, ilty, icol, ibg, x_by = FALSE, facet_by = FALSE, ngrps = 1, flip, ...) {
 
         at_ix = unique(ix)
         if (isTRUE(x_by)) boxwex = boxwex * 2
 
         # Handle multiple groups
-        # if (!is.null(data_by) && isFALSE(x_by) && isFALSE(facet_by) && length(data_by) > 1) {
         if (ngrps > 1 && isFALSE(x_by) && isFALSE(facet_by)) {
             boxwex_orig = boxwex
-            # boxwex = boxwex / length(data_by) - 0.01
             boxwex = boxwex / ngrps - 0.01
-            # at_ix = at_ix + seq(
-            #     -((boxwex_orig - boxwex) / 2),
-            #     ((boxwex_orig - boxwex) / 2),
-            #     # length.out = length(data_by)
-            #     length.out = ngrps
-            # )[iby]
             at_ix = at_ix + seq(
               -((boxwex_orig - boxwex) / 2),
               ((boxwex_orig - boxwex) / 2),
-              # length.out = length(data_by)
               length.out = ngrps
             )[iby]
         }

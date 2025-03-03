@@ -857,7 +857,7 @@ tinyplot.default = function(
 
   # aesthetics by group: col, bg, etc.
   # ngrps = length(split_data)
-  ngrps = if (is.factor(by)) length(levels(by)) else 100L ## FIXME
+  ngrps = if (is.null(by)) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by)) ## FIXME
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
@@ -1275,11 +1275,12 @@ tinyplot.default = function(
           dots = dots,
           type = type,
           x_by = x_by,
-          iby = i,
-          ifacet = ii,
+          iby = ii,
+          ifacet = i,
           facet_by = facet_by,
           data_facet = idata,
-          data_by = split_data,
+          # data_by = split_data,
+          ngrps = ngrps,
           flip = flip,
           type_info = type_info,
           facet_window_args = facet_window_args)

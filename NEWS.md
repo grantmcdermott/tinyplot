@@ -28,6 +28,15 @@ Bugs fixes:
   or character variable. (#323 @grantmcdermott)
 - The `col` argument now accepts a numeric index. (#330 @grantmcdermott)
 
+Internals:
+
+- The order of the nested loop for drawing interior plot elements has been
+  switched. We now loop over facets first (outer loop) before looping over
+  groups second (inner loop), rather than vice versa. The old/inverted nesting
+  logic was mostly an artifact of development inertia and this new nesting logic
+  should simplify the creation of certain plot types. (#331 @grantmcdermott)
+
+
 Misc:
 - Improved column spacing of Arguments in the References section of the website.
   (#328 thanks to @etiennebacher's upstream `altdoc` fix)

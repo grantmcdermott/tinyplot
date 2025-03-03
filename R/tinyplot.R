@@ -845,15 +845,15 @@ tinyplot.default = function(
   if (length(unique(datapoints$facet)) == 1) {
     datapoints[["facet"]] = NULL
   }
-  if (!by_continuous) {
-    split_data = split(datapoints, datapoints$by)
+  if (!is.null(datapoints$facet)) {
+    split_data = split(datapoints, datapoints$facet)
     split_data = lapply(split_data, as.list)
   } else {
     split_data = list(as.list(datapoints))
   }
 
   # aesthetics by group: col, bg, etc.
-  ngrps = length(split_data)
+  ngrps = if (is.null(by)) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by))
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
@@ -927,7 +927,7 @@ tinyplot.default = function(
   if ((is.null(legend) || legend != "none") && isFALSE(add)) {
     if (isFALSE(by_continuous)) {
       if (ngrps > 1) {
-        lgnd_labs = names(split_data)
+        lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
       } else {
         lgnd_labs = ylab
       }
@@ -1131,21 +1131,23 @@ tinyplot.default = function(
 
   # Finally, we can draw all of the plot elements (points, lines, etc.)
   # We'll do this via a nested loops:
-  #  1) Outer loop over groups
-  #  2) Inner loop over facets
+  #  1) Outer loop over facets
+  #  2) Inner loop over groups
 
-  ## Outer loop over the "by" groups
+  ## Outer loop over the facets
   for (i in seq_along(split_data)) {
-    # Split group-level data again to grab any facets
+    # Split group-level data again to grab any "by" groups
     idata = split_data[[i]]
-    ifacet = idata[["facet"]]
-    if (!is.null(ifacet)) {
+    iby = idata[["by"]]
+    if (!is.null(by)) { ## maybe all(iby=="")
       if (isTRUE(by_continuous)) {
-        idata[["col"]] = col[round(rescale_num(by, to = c(1, 100)))]
-        idata[["bg"]] = bg[round(rescale_num(by, to = c(1, 100)))]
+        idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
+        idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
+        idata = list(idata)
+      } else {
+        idata = lapply(idata, split, iby)
+        idata = do.call(function(...) Map("list", ...), idata)
       }
-      idata = lapply(idata, split, ifacet)
-      idata = do.call(function(...) Map("list", ...), idata)
     } else {
       idata = list(idata)
       if (isTRUE(by_continuous)) {
@@ -1161,15 +1163,33 @@ tinyplot.default = function(
         }
       }
     }
+    
+    # Set the facet "window" manually
+    # See: https://github.com/grantmcdermott/tinyplot/issues/65
+    if (nfacets > 1) {
+      mfgi = ceiling(i / nfacet_cols)
+      mfgj = i %% nfacet_cols
+      if (mfgj == 0) mfgj = nfacet_cols
+      par(mfg = c(mfgi, mfgj))
 
-    icol = col[i]
-    ibg = bg[i]
-    ipch = pch[i]
-    ilty = lty[i]
-    ilwd = lwd[i]
+      # For free facets, we need to reset par(usr) based extent of that
+      # particular facet... which we calculated and saved to the .fusr env var
+      # (list) back in draw_facet_window()
+      if (isTRUE(facet.args[["free"]])) {
+        fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
+        par(usr = fusr[[i]])
+      }
+    }
 
-    ## Inner loop over the "facet" variables
+
+    ## Inner loop over the "by" groupings
     for (ii in seq_along(idata)) {
+      icol = col[ii]
+      ibg = bg[ii]
+      ipch = pch[ii]
+      ilty = lty[ii]
+      ilwd = lwd[ii]
+      
       ix = idata[[ii]][["x"]]
       iy = idata[[ii]][["y"]]
       iz = idata[[ii]][["z"]]
@@ -1182,24 +1202,6 @@ tinyplot.default = function(
       if (isTRUE(by_continuous)) {
         icol = idata[[ii]]$col
         ibg = idata[[ii]]$bg
-      }
-
-      # Set the facet "window" manually
-      # See: https://github.com/grantmcdermott/tinyplot/issues/65
-      # if (nfacets > 1) par(mfg = c(1, ii))
-      if (nfacets > 1) {
-        mfgi = ceiling(ii / nfacet_cols)
-        mfgj = ii %% nfacet_cols
-        if (mfgj == 0) mfgj = nfacet_cols
-        par(mfg = c(mfgi, mfgj))
-
-        # For free facets, we need to reset par(usr) based extent of that
-        # particular facet... which we calculated and saved to the .fusr env var
-        # (list) back in draw_facet_window()
-        if (isTRUE(facet.args[["free"]])) {
-          fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
-          par(usr = fusr[[ii]])
-        }
       }
 
       # empty plot flag
@@ -1244,11 +1246,11 @@ tinyplot.default = function(
           dots = dots,
           type = type,
           x_by = x_by,
-          iby = i,
-          ifacet = ii,
+          iby = ii,
+          ifacet = i,
           facet_by = facet_by,
           data_facet = idata,
-          data_by = split_data,
+          ngrps = ngrps,
           flip = flip,
           type_info = type_info,
           facet_window_args = facet_window_args)

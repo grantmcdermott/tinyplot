@@ -126,7 +126,7 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
         x_by = identical(datapoints$x, datapoints$by)
         y_by = identical(datapoints$y, datapoints$by)
         # if either x_by or y_by are TRUE, we'll only split by facets and then
-        # use some simpl logic to assign colouring on the backend
+        # use some simple logic to assign colouring on the backend
         if (isTRUE(x_by) || isTRUE(y_by)) {
           datapoints = split(datapoints, list(datapoints$facet))
           datapoints = Filter(function(k) nrow(k) > 0, datapoints)
@@ -211,8 +211,8 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
         }
         
         # catch for x_by / y/by
-        if (isTRUE(x_by)) datapoints$by = rep(xaxlabels, each = ny) # each x label extends over ny rows
-        if (isTRUE(y_by)) datapoints$by = rep(yaxlabels, length.out = nrow(datapoints))
+        if (isTRUE(x_by)) datapoints$by = factor(rep(xaxlabels, each = ny)) # each x label extends over ny rows
+        if (isTRUE(y_by)) datapoints$by = factor(rep(yaxlabels, length.out = nrow(datapoints)))
           
         ## grayscale flag
         grayscale = length(unique(datapoints[["by"]])) == 1 && is.null(palette) && is.null(.tpar[["palette.qualitative"]])

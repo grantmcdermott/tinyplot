@@ -853,7 +853,7 @@ tinyplot.default = function(
   }
 
   # aesthetics by group: col, bg, etc.
-  ngrps = if (is.null(by)) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by)) ## FIXME
+  ngrps = if (is.null(by)) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by))
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
@@ -1139,7 +1139,7 @@ tinyplot.default = function(
     # Split group-level data again to grab any "by" groups
     idata = split_data[[i]]
     iby = idata[["by"]]
-    if (!is.null(by)) { ## check (maybe all(iby==""))
+    if (!is.null(by)) { ## maybe all(iby=="")
       if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
         idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
@@ -1166,7 +1166,6 @@ tinyplot.default = function(
     
     # Set the facet "window" manually
     # See: https://github.com/grantmcdermott/tinyplot/issues/65
-    # if (nfacets > 1) par(mfg = c(1, ii))
     if (nfacets > 1) {
       mfgi = ceiling(i / nfacet_cols)
       mfgj = i %% nfacet_cols

@@ -932,7 +932,8 @@ tinyplot.default = function(
     if (isFALSE(by_continuous)) {
       if (ngrps > 1) {
         # lgnd_labs = names(split_data)
-        lgnd_labs = if (is.factor(by)) levels(by) else unique(by)
+        # lgnd_labs = if (is.factor(by)) levels(by) else unique(by)
+        lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
       } else {
         lgnd_labs = ylab
       }
@@ -1150,8 +1151,8 @@ tinyplot.default = function(
       if (isTRUE(by_continuous)) {
         # idata[["col"]] = col[round(rescale_num(by, to = c(1, 100)))]
         # idata[["bg"]] = bg[round(rescale_num(by, to = c(1, 100)))]
-        idata[["col"]] = col[round(rescale_num(idata$by, from = range(by), to = c(1, 100)))]
-        idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(by), to = c(1, 100)))]
+        idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
+        idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
         idata = list(idata) ## test
       } else {
         idata = lapply(idata, split, iby)

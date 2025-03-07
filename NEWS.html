@@ -523,6 +523,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Scatter plots (<code>type_points()</code>/<code>"p"</code>) now work even if <code>x</code> or <code>y</code> is a factor or character variable. (<a href="https://github.com/grantmcdermott/tinyplot/issues/323">#323</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>The <code>col</code> argument now accepts a numeric index. (<a href="https://github.com/grantmcdermott/tinyplot/issues/330">#330</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
+<p>Internals:</p>
+<ul>
+<li>The order of the nested loop for drawing interior plot elements has been switched. We now loop over facets first (outer loop) before looping over groups second (inner loop), rather than vice versa. The old/inverted nesting logic was mostly an artifact of development inertia and this new nesting logic should simplify the creation of certain plot types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/331">#331</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
 <p>Misc: - Improved column spacing of Arguments in the References section of the website. (<a href="https://github.com/grantmcdermott/tinyplot/issues/328">#328</a> thanks to <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a>’s upstream <code>altdoc</code> fix)</p>
 </section>
 <section id="section" class="level2">

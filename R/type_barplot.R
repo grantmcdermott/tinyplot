@@ -93,15 +93,10 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
 
 #' @importFrom grDevices rect
 draw_barplot = function(width = 5/6) {
-    fun = function(data_by, iby, ifacet, ilwd, flip, facet_by, type_info, ...) {
+    fun = function(data_facet, iby, ifacet, ilwd, flip, facet_by, type_info, ...) {
       if (iby == 1L) {
-        df = lapply(data_by, as.data.frame)                     #FIXME# would be nice if tinyplot did not loop over by
-        df = do.call("rbind", df)                               #FIXME#
-        if (is.null(df$facet)) {                                #FIXME#
-          df$facet = ""                                         #FIXME#
-          df$facet = factor(df$facet)                           #FIXME#
-        }                                                       #FIXME#
-        df = df[as.numeric(df$facet) == ifacet, , drop = FALSE] #FIXME#
+        df = lapply(data_facet, as.data.frame) ## recombine all data in the current facet
+        df = do.call("rbind", df)
 
         if (flip) {
           xy <- which(names(df) %in% c("x", "y"))

@@ -27,8 +27,6 @@ data_jitter = function(factor, amount) {
     fun = function(datapoints, ...) {
         x = datapoints$x
         y = datapoints$y
-        if (is.character(x)) x = as.factor(x)
-        if (is.character(y)) y = as.factor(y)
         if (is.factor(x)) {
             xlvls = levels(x)
             xlabs = seq_along(xlvls)

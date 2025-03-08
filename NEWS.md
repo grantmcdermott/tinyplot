@@ -4,6 +4,43 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## 0.3.0.99 (dev version)
+
+New features:
+
+- `tinyplot(..., file = "*.pdf")` will now default to using `cairo_pdf()` if
+  cairo graphics are supported on the user's machine. This should help to ensure
+  better fidelity of (non-standard) fonts in PDFs. (#311 @grantcdermott)
+- The palette argument now accepts a vector or list of manual colours, e.g.
+  `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
+  `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)
+
+Bugs fixes:
+
+- The `cex` argument should be respected when using `type="bg"`. Thanks to
+  @rjknell for report #307 and @vincentarelbundock for the fix.
+- The `lwd` argument is now correctly passed down to `pt.lwd` for type `"p"`,
+  which sets proper line weight for the border of pch symbols in legend. Report
+  in #319 and fix in #320 by @kscott-1.
+- Passing `x` and/or `y` as character variables now triggers the same default
+  plot type behaviour as factors, e.g. boxplots. (#323 @grantmcdermott)
+- Scatter plots (`type_points()`/`"p"`) now work even if `x` or `y` is a factor
+  or character variable. (#323 @grantmcdermott)
+- The `col` argument now accepts a numeric index. (#330 @grantmcdermott)
+
+Internals:
+
+- The order of the nested loop for drawing interior plot elements has been
+  switched. We now loop over facets first (outer loop) before looping over
+  groups second (inner loop), rather than vice versa. The old/inverted nesting
+  logic was mostly an artifact of development inertia and this new nesting logic
+  should simplify the creation of certain plot types. (#331 @grantmcdermott)
+
+
+Misc:
+- Improved column spacing of Arguments in the References section of the website.
+  (#328 thanks to @etiennebacher's upstream `altdoc` fix)
+
 ## 0.3.0
 
 ### New features

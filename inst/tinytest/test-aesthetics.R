@@ -27,6 +27,11 @@ expect_snapshot_plot(f, label = "aesthetics_type_b_col_pch")
 f = function() tinyplot(Temp ~ Day | Month, data = aq, type = "l")
 expect_snapshot_plot(f, label = "aesthetics_type_l")
 
+
+# manual colour index
+f = function() tinyplot(Temp ~ Day | Month, data = aq, pch = 19, col = 2:6, alpha = 0.3)
+expect_snapshot_plot(f, label = "aesthetics_col_index")
+
 #
 # Next, convenience versions using the "by" keyword
 # 

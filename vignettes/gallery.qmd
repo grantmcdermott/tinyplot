@@ -1,17 +1,129 @@
 ---
 title: Gallery
-filters:
-  - lightbox
 lightbox: auto
+execute:
+  echo: false
 ---
 
-WIP...
+```{css}
+.gslide-desc {
+	text-align: center;
+  font-size: 1.6rem !important;
+}
+div.gslide-description, .gslide-desc {
+	background-color: #e0e0e0 !important;
+}
+```
+
+Click on a plot to get the link to its code.
 
 ::: {layout-ncol=2}
-![](../fig/gallery_01.png){group="elsewhere"}
 
-![](../fig/gallery_02.png){group="elsewhere"}
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_01.R)"
+#| file: "gallery_figs/gallery_01.R"
+```
 
-![](../fig/gallery_03.png){group="elsewhere"}
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_02.R)"
+#| file: "gallery_figs/gallery_02.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_03.R)"
+#| file: "gallery_figs/gallery_03.R"
+#| fig-asp: .5
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_04.R)"
+#| file: "gallery_figs/gallery_04.R"
+#| fig-asp: .5
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_05.R)"
+#| file: "gallery_figs/gallery_05.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_06.R)"
+#| file: "gallery_figs/gallery_06.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_07.R)"
+#| file: "gallery_figs/gallery_07.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_08.R)"
+#| file: "gallery_figs/gallery_08.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_09.R)"
+#| file: "gallery_figs/gallery_09.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_10.R)"
+#| file: "gallery_figs/gallery_10.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_11.R)"
+#| file: "gallery_figs/gallery_11.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_12.R)"
+#| file: "gallery_figs/gallery_12.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_13.R)"
+#| file: "gallery_figs/gallery_13.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_14.R)"
+#| file: "gallery_figs/gallery_14.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_15.R)"
+#| file: "gallery_figs/gallery_15.R"
+```
+
 :::
-

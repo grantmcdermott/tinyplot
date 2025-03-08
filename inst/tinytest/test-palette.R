@@ -71,3 +71,37 @@ f = function() {
     )
 }
 expect_snapshot_plot(f, label = "palette_function")
+
+# Test manual colours
+f = function() {
+    op = par(pch = 15)
+    tinyplot(
+        Sepal.Length ~ Petal.Length | Species, iris,
+        pch = "by",
+        alpha = 0.5,
+        palette = c("darkorange", "purple", "cyan4")
+    )
+    par(op)
+}
+expect_snapshot_plot(f, label = "palette_manual")
+
+f = function() {
+    op = par(pch = 15)
+    tinyplot(
+        Sepal.Length ~ Petal.Length | Species, iris,
+        pch = "by",
+        alpha = 0.5,
+        palette = c("darkorange", "purple")
+    )
+    par(op)
+}
+expect_warning(f())
+
+f = function() {
+    tinyplot(
+        Sepal.Length ~ Petal.Length | Sepal.Width, iris,
+        pch = "by",
+        palette =  c("darkcyan", "purple")
+    )
+}
+expect_snapshot_plot(f, label = "palette_manual_continuous")

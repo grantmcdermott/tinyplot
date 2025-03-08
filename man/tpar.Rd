@@ -62,6 +62,7 @@ you should rather use \code{par()} instead.
 \itemize{
 \item \code{adj.xlab}: Numeric value between 0 and 1 controlling the alignment of the x-axis label.
 \item \code{adj.ylab}: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
+\item \code{cairo}: Logical indicating whether \code{\link[grDevices]{cairo_pdf}} should be used when writing plots to PDF. If \code{FALSE}, then \code{\link[grDevices]{pdf}} will be used instead, with implications for embedding (non-standard) fonts. Only used if \code{tinyplot(..., file = "<filename>.pdf")} is called. Defaults to the value of \code{capabilities("cairo")}.
 \item \code{dynmar}: Logical indicating whether \code{tinyplot} should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal \code{tinythemes()} logic and should \emph{not} be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 \item \code{facet.bg}: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see \code{palette}). Passed to \code{rect}. Defaults to \code{NULL} (none).
 \item \code{facet.border}: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see \code{palette}). Passed to \code{rect}. Defaults to \code{NA} (none).
@@ -77,8 +78,8 @@ you should rather use \code{par()} instead.
 \item \code{grid.lwd}: Non-negative numeric giving the line width of the panel grid lines. Defaults to \code{1}.
 \item \code{grid}: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to \code{NULL}, which is equivalent to \code{FALSE}.
 \item \code{lmar}: A numeric vector of form \code{c(inner, outer)} that gives the margin padding, in terms of lines, around the automatic \code{tinyplot} legend. Defaults to \code{c(1.0, 0.1)}. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
-\item \code{palette.qualitative}: Palette for qualitative colors. See the \code{palette} argumetn in \code{?tinyplot}.
-\item \code{palette.sequential}: Palette for sequential colors. See the \code{palette} argumetn in \code{?tinyplot}.
+\item \code{palette.qualitative}: Palette for qualitative colors. See the \code{palette} argument in \code{?tinyplot}.
+\item \code{palette.sequential}: Palette for sequential colors. See the \code{palette} argument in \code{?tinyplot}.
 \item \code{ribbon.alpha}: Numeric factor in the range \verb{[0,1]} for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is \code{0.2}.
 }
 }

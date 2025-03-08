@@ -149,46 +149,53 @@ draw_legend = function(
   
   ## Use `!exists` rather than `is.null` for title in case user specified no title
   if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
-  if (is.null(legend_args[["pch"]])) legend_args[["pch"]] = pch
-  if (is.null(legend_args[["lty"]])) legend_args[["lty"]] = lty
-  if (!is.null(type) && !(type %in% c("p", "ribbon", "polygon", "polypath"))) {
-    if (is.null(legend_args[["lwd"]])) legend_args[["lwd"]] = lwd
+
+  legend_args[["pch"]] = legend_args[["pch"]] %||% pch
+  legend_args[["lty"]] = legend_args[["lty"]] %||% lty
+  legend_args[["col"]] = legend_args[["col"]] %||% col
+  legend_args[["bty"]] = legend_args[["bty"]] %||% "n"
+  legend_args[["horiz"]] = legend_args[["horiz"]] %||% FALSE
+  legend_args[["xpd"]] = legend_args[["xpd"]] %||% NA
+
+  if (!isTRUE(type %in% c("p", "ribbon", "polygon", "polypath"))) {
+    legend_args[["lwd"]] = legend_args[["lwd"]] %||% lwd
   }
-  if (is.null(legend_args[["col"]])) legend_args[["col"]] = col
-  if (is.null(legend_args[["bty"]])) legend_args[["bty"]] = "n"
-  if (is.null(legend_args[["horiz"]])) legend_args[["horiz"]] = FALSE
-  if (is.null(legend_args[["xpd"]])) legend_args[["xpd"]] = NA
-  if (is.null(legend_args[["pt.bg"]])) {
-    if (identical(type, "ridge") && isFALSE(gradient)) {
-      legend_args[["pt.bg"]] = sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
-    } else {
-      legend_args[["pt.bg"]] = if (identical(type, "spineplot")) legend_args[["col"]] else bg
-    }
+
+  if (isTRUE(type %in% c("p", "pointrange", "errorbar")) && (length(col) == 1 || length(cex) == 1)) {
+    legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% cex
   }
-  if (
-    type %in% c("p", "pointrange", "errorbar") &&
-    (length(col) == 1 || length(cex) == 1) &&
-    is.null(legend_args[["pt.cex"]])
-  ) {
-    legend_args[["pt.cex"]] = cex
-  }
-  if (type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge") || isTRUE(gradient)) {
+
+  if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge")) || isTRUE(gradient)) {
     legend_args[["pch"]] = 22
-    if (is.null(legend_args[["pt.cex"]])) legend_args[["pt.cex"]] = 3.5
-    if (is.null(legend_args[["pt.lwd"]]) && (!is.null(type) && !(type %in% c("rect", "polygon", "polypath", "boxplot", "ridge")))) {
-      legend_args[["pt.lwd"]] = 0
-    }
-    if (is.null(legend_args[["y.intersp"]])) legend_args[["y.intersp"]] = 1.25
-    if (is.null(legend_args[["seg.len"]])) legend_args[["seg.len"]] = 1.25
+    legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% 3.5
+    legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25
+    legend_args[["seg.len"]] = legend_args[["seg.len"]] %||% 1.25
   }
-  if (type == "n" && isFALSE(gradient)) {
-    if (is.null(legend_args[["pch"]])) legend_args[["pch"]] = par("pch")
+
+  if (isTRUE(type %in% c("ribbon", "hist", "histogram", "spineplot"))) {
+    legend_args[["pt.lwd"]] = legend_args[["pt.lwd"]] %||% 0
   }
-  
-  
-  if (is.null(legend_args[["legend"]])) {
-    legend_args[["legend"]] = lgnd_labs
-  } else if (length(lgnd_labs) != length(eval(legend_args[["legend"]]))) {
+
+  if (identical(type, "p")) {
+    legend_args[["pt.lwd"]] = legend_args[["pt.lwd"]] %||% lwd
+  }
+
+  if (identical(type, "n") && isFALSE(gradient)) {
+    legend_args[["pch"]] = legend_args[["pch"]] %||% par("pch")
+  }
+
+  if (identical(type, "spineplot")) {
+    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% legend_args[["col"]]
+  }
+
+  if (identical(type, "ridge") && isFALSE(gradient)) {
+    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
+  }
+
+  legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg
+
+  legend_args[["legend"]] = legend_args[["legend"]] %||% lgnd_labs
+  if (length(lgnd_labs) != length(eval(legend_args[["legend"]]))) {
     warning(
       "\nUser-supplied legend labels do not match the number of groups.\n",
       "Defaulting to automatic labels determined by the group splits in `by`,\n"

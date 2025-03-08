@@ -51,6 +51,7 @@
 #'
 #' * `adj.xlab`: Numeric value between 0 and 1 controlling the alignment of the x-axis label.
 #' * `adj.ylab`: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
+#' * `cairo`: Logical indicating whether \code{\link[grDevices]{cairo_pdf}} should be used when writing plots to PDF. If `FALSE`, then \code{\link[grDevices]{pdf}} will be used instead, with implications for embedding (non-standard) fonts. Only used if `tinyplot(..., file = "<filename>.pdf")` is called. Defaults to the value of `capabilities("cairo")`.
 #' * `dynmar`: Logical indicating whether `tinyplot` should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal `tinythemes()` logic and should _not_ be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 #' * `facet.bg`: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NULL` (none).
 #' * `facet.border`: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NA` (none).
@@ -66,8 +67,8 @@
 #' * `grid.lwd`: Non-negative numeric giving the line width of the panel grid lines. Defaults to `1`.
 #' * `grid`: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to `NULL`, which is equivalent to `FALSE`.
 #' * `lmar`: A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
-#' * `palette.qualitative`: Palette for qualitative colors. See the `palette` argumetn in `?tinyplot`.
-#' * `palette.sequential`: Palette for sequential colors. See the `palette` argumetn in `?tinyplot`.
+#' * `palette.qualitative`: Palette for qualitative colors. See the `palette` argument in `?tinyplot`.
+#' * `palette.sequential`: Palette for sequential colors. See the `palette` argument in `?tinyplot`.
 #' * `ribbon.alpha`: Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is `0.2`.
 #'
 #' @importFrom graphics par
@@ -219,6 +220,7 @@ known_tpar = c(
     "cex.ylab",
     "col.xaxs",
     "col.yaxs",
+    "cairo",
     "dynmar",
     "facet.bg",
     "facet.border",
@@ -263,6 +265,7 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.sub")
   assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.xlab")
   assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
+  assert_flag(.tpar[["cairo"]], name = "cairo")
   assert_flag(.tpar[["dynmar"]], null.ok = FALSE, name = "dynmar")
   assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE, name = "lmar")
   assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "ribbon.alpha")
@@ -315,6 +318,9 @@ init_tpar = function(rm_hook = FALSE) {
     }
   }
 
+  .tpar$cairo = if (is.null(getOption("tinyplot_cairo"))) capabilities("cairo") else as.logical(getOption("tinyplot_cairo"))
+  
+  
   .tpar$dynmar = if (is.null(getOption("tinyplot_dynmar"))) FALSE else as.logical(getOption("tinyplot_dynmar"))
   
   # Figure output options if written to file

@@ -17,8 +17,7 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
     fun = function(datapoints, col, bg, lty, lwd, palette, ribbon.alpha, xlab = NULL, ylab = NULL, xlim = NULL, ylim = ylim, yaxt, axes = TRUE, ...) {
 
         ## tabulate/aggregate datapoints
-        if (!is.factor(datapoints$x)) { #FIXME# should be "if (is.null(datapoints$y))" without need to re-switch x and y
-          datapoints$x = datapoints$y   #FIXME#
+        if (is.null(datapoints$y)) {
           xlab = ylab                   #FIXME#
           ylab = ""                     #FIXME#
           

@@ -732,7 +732,8 @@ tinyplot.default = function(
     # } else if (type %in% c("histogram", "function")) {
     } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
-    } else if (type != "histogram") {
+    # } else if (type != "histogram") {
+    } else if (!(type %in% c("histogram", "barplot"))) {
       y = x
       x = seq_along(x)
       if (is.null(xlab)) xlab = "Index"

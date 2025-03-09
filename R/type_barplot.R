@@ -14,7 +14,7 @@ type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL,
 
 #' @importFrom stats aggregate
 data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL) {
-    fun = function(datapoints, col, bg, lty, palette, ribbon.alpha, xlab = NULL, ylab = NULL, xlim = NULL, ylim = ylim, yaxt, axes = TRUE, ...) {
+    fun = function(datapoints, col, bg, lty, lwd, palette, ribbon.alpha, xlab = NULL, ylab = NULL, xlim = NULL, ylim = ylim, yaxt, axes = TRUE, ...) {
 
         ## tabulate/aggregate datapoints
         if (!is.factor(datapoints$x)) { #FIXME# should be "if (is.null(datapoints$y))" without need to re-switch x and y
@@ -56,6 +56,7 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
         }
 
         lty = tinyplot:::by_lty(ngrps = ngrps, type = "barplot", lty = lty) #FIXME# emulate by aesthetics because otherwise not available
+        lwd = tinyplot:::by_lwd(ngrps = ngrps, type = "barplot", lwd = lwd)
         col = tinyplot:::by_col(                                            #FIXME#
           ngrps = ngrps, col = col, palette = palette,                      #FIXME#
           gradient = FALSE, ordered = is.ordered(datapoints$by),            #FIXME#
@@ -65,7 +66,6 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
           by_continuous = FALSE, by_ordered = is.ordered(datapoints$by),    #FIXME#
           col = col, fill = NULL, palette = substitute(palette),            #FIXME#
           ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = "boxplot")     #FIXME#
-                                                                            #FIXME# lwd not available in type_data!
         
         out = list(
           datapoints = datapoints,
@@ -82,6 +82,7 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
             col = col,
             bg = bg,
             lty = lty,
+            lwd = lwd,
             axes = axes,
             yaxt = yaxt
           )
@@ -126,7 +127,7 @@ draw_barplot = function(width = 5/6) {
           border  = type_info$col[df$by],
           col     = type_info$bg[df$by],
           lty     = type_info$lty[df$by],
-          lwd     = ilwd)                  #FIXME# include lwd in type_info
+          lwd     = type_info$lwd[df$by])
         if (type_info[["axes"]]) {
           tinyplot:::tinyAxis(1:nx, side = if (flip) 2 else 1, at = 1L:nx, labels = levels(df$x), type = "labels")
           tinyplot:::tinyAxis(df$y, side = if (flip) 1 else 2, type = type_info[["yaxt"]])

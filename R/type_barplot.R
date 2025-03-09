@@ -18,8 +18,8 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
-          xlab = ylab                   #FIXME#
-          ylab = ""                     #FIXME#
+          xlab = ylab
+          ylab = "Count"
           
           datapoints$y = numeric(nrow(datapoints))          
           if (!is.null(FUN)) warning("without 'y' variable 'FUN' specification is ignored")

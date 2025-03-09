@@ -773,6 +773,7 @@ tinyplot.default = function(
       palette      = palette,
       ribbon.alpha = ribbon.alpha,
       xaxt         = xaxt,
+      xlab         = xlab,
       xlabs        = xlabs,
       xlim         = xlim,
       yaxt         = yaxt,

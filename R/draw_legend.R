@@ -165,7 +165,7 @@ draw_legend = function(
     legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% cex
   }
 
-  if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge")) || isTRUE(gradient)) {
+  if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge", "barplot")) || isTRUE(gradient)) {
     legend_args[["pch"]] = 22
     legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% 3.5
     legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25
@@ -188,7 +188,7 @@ draw_legend = function(
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% legend_args[["col"]]
   }
 
-  if (identical(type, "ridge") && isFALSE(gradient)) {
+  if (type %in%  c("ridge", "barplot") && isFALSE(gradient)) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
   }
 

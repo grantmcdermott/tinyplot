@@ -732,7 +732,8 @@ tinyplot.default = function(
     # } else if (type %in% c("histogram", "function")) {
     } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
-    } else if (type != "histogram") {
+    # } else if (type != "histogram") {
+    } else if (!(type %in% c("histogram", "barplot"))) {
       y = x
       x = seq_along(x)
       if (is.null(xlab)) xlab = "Index"
@@ -761,21 +762,24 @@ tinyplot.default = function(
 
   if (!is.null(type_data)) {
     fargs = list(
-      datapoints = datapoints,
-      bg = bg,
-      by = by,
-      col = col,
-      lty = lty,
-      facet = facet,
-      facet.args = facet.args,
-      palette = palette,
+      datapoints   = datapoints,
+      bg           = bg,
+      by           = by,
+      col          = col,
+      lty          = lty,
+      lwd          = lwd,
+      facet        = facet,
+      facet.args   = facet.args,
+      palette      = palette,
       ribbon.alpha = ribbon.alpha,
-      xaxt = xaxt,
-      xlabs = xlabs,
-      xlim = xlim,
-      yaxt = yaxt,
-      ylab = ylab,
-      ylim = ylim)
+      xaxt         = xaxt,
+      xlab         = xlab,
+      xlabs        = xlabs,
+      xlim         = xlim,
+      yaxt         = yaxt,
+      ylab         = ylab,
+      ylim         = ylim
+    )
     fargs = c(fargs, dots)
     list2env(do.call(type_data, fargs), environment())
   }

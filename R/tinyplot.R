@@ -761,21 +761,23 @@ tinyplot.default = function(
 
   if (!is.null(type_data)) {
     fargs = list(
-      datapoints = datapoints,
-      bg = bg,
-      by = by,
-      col = col,
-      lty = lty,
-      facet = facet,
-      facet.args = facet.args,
-      palette = palette,
+      datapoints   = datapoints,
+      bg           = bg,
+      by           = by,
+      col          = col,
+      lty          = lty,
+      lwd          = lwd,
+      facet        = facet,
+      facet.args   = facet.args,
+      palette      = palette,
       ribbon.alpha = ribbon.alpha,
-      xaxt = xaxt,
-      xlabs = xlabs,
-      xlim = xlim,
-      yaxt = yaxt,
-      ylab = ylab,
-      ylim = ylim)
+      xaxt         = xaxt,
+      xlabs        = xlabs,
+      xlim         = xlim,
+      yaxt         = yaxt,
+      ylab         = ylab,
+      ylim         = ylim
+    )
     fargs = c(fargs, dots)
     list2env(do.call(type_data, fargs), environment())
   }

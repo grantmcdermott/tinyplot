@@ -30,7 +30,7 @@ Bugs fixes:
 - The `tinyplot(..., col = <col>)` argument now accepts a numeric index.
   (#330 @grantmcdermott)
 - `type_text()` now accepts non-character labels. (#336 @grantmcdermott)
-- The `tinyplot(..., pch = <pch>)` argument now accepts a string literals, e.g.
+- The `tinyplot(..., pch = <pch>)` argument now accepts character literals, e.g.
   `pch = "."`. (#338 @grantmcdermott)
 
 Internals:

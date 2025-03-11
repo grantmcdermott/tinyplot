@@ -17,17 +17,21 @@ New features:
 
 Bugs fixes:
 
-- The `cex` argument should be respected when using `type="bg"`. Thanks to
-  @rjknell for report #307 and @vincentarelbundock for the fix.
-- The `lwd` argument is now correctly passed down to `pt.lwd` for type `"p"`,
-  which sets proper line weight for the border of pch symbols in legend. Report
-  in #319 and fix in #320 by @kscott-1.
+- The `tinyplot(..., cex = <cex>)` argument should be respected when using
+  `type = "b"`. Thanks to @rjknell for report #307 and @vincentarelbundock for
+  the fix.
+- The `tinyplot(..., lwd = <lwd>)` argument is now correctly passed down to
+  `pt.lwd` for type `"p"`, which sets proper line weight for the border of `pch`
+  symbols in legend. Report in #319 and fix in #320 by @kscott-1.
 - Passing `x` and/or `y` as character variables now triggers the same default
   plot type behaviour as factors, e.g. boxplots. (#323 @grantmcdermott)
 - Scatter plots (`type_points()`/`"p"`) now work even if `x` or `y` is a factor
   or character variable. (#323 @grantmcdermott)
-- The `col` argument now accepts a numeric index. (#330 @grantmcdermott)
-- `type_text()` now accepts non-character labels. (#336 @grantmcdermott) 
+- The `tinyplot(..., col = <col>)` argument now accepts a numeric index.
+  (#330 @grantmcdermott)
+- `type_text()` now accepts non-character labels. (#336 @grantmcdermott)
+- The `tinyplot(..., pch = <pch>)` argument now accepts character literals, e.g.
+  `pch = "."`. (#338 @grantmcdermott)
 
 Internals:
 

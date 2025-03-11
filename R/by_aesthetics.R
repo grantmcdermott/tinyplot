@@ -199,8 +199,9 @@ by_pch = function(ngrps, type, pch = NULL) {
   }
 
   if (!no_pch) {
-    if (!is.atomic(pch) || !is.vector(pch) || !is.numeric(pch) || (length(pch) != 1 && length(pch) != ngrps)) {
-      stop(sprintf("`pch` must be `NULL` or a numeric vector of length 1 or %s.", ngrps), call. = FALSE)
+    if (!is.atomic(pch) || !is.vector(pch) || !(is.numeric(pch) || is.character(pch)) || (length(pch) != 1 && length(pch) != ngrps)) {
+    # if (!is.atomic(pch) || !is.vector(pch) || !is.numeric(pch) || (length(pch) != 1 && length(pch) != ngrps)) {
+      stop(sprintf("`pch` must be `NULL`, or a numeric or character vector of length 1 or %s.", ngrps), call. = FALSE)
     }
 
     if (length(pch) == 1) {

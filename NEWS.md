@@ -27,6 +27,7 @@ Bugs fixes:
 - Scatter plots (`type_points()`/`"p"`) now work even if `x` or `y` is a factor
   or character variable. (#323 @grantmcdermott)
 - The `col` argument now accepts a numeric index. (#330 @grantmcdermott)
+- `type_text()` now accepts non-character labels. (#336 @grantmcdermott) 
 
 Internals:
 

@@ -28,7 +28,6 @@ type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, vfont = NULL,
 
 data_text = function(labels) {
   fun = function(datapoints, ...) {
-    assert_character(labels, name = "labels")
     if (length(labels) != 1 && length(labels) != nrow(datapoints)) {
       msg <- sprintf("`labels` must be of length 1 or %s.", nrow(datapoints))
       stop(msg, call. = FALSE)

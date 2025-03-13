@@ -130,7 +130,7 @@ draw_barplot = function(width = 5/6, dropzero = FALSE) {
         df = lapply(data_facet, as.data.frame) ## recombine all data in the current facet
         df = do.call("rbind", df)
 
-        if (facet_by) df = df[df$by == ifacet, , drop = FALSE]
+        if (facet_by) df = df[as.numeric(df$by) == ifacet, , drop = FALSE]
 
         if (flip) {
           xy <- which(names(df) %in% c("x", "y"))

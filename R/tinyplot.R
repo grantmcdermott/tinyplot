@@ -732,7 +732,8 @@ tinyplot.default = function(
     # } else if (type %in% c("histogram", "function")) {
     } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
-    } else if (type != "histogram") {
+    # } else if (type != "histogram") {
+    } else if (!(type %in% c("histogram", "barplot"))) {
       y = x
       x = seq_along(x)
       if (is.null(xlab)) xlab = "Index"
@@ -761,21 +762,24 @@ tinyplot.default = function(
 
   if (!is.null(type_data)) {
     fargs = list(
-      datapoints = datapoints,
-      bg = bg,
-      by = by,
-      col = col,
-      lty = lty,
-      facet = facet,
-      facet.args = facet.args,
-      palette = palette,
+      datapoints   = datapoints,
+      bg           = bg,
+      by           = by,
+      col          = col,
+      lty          = lty,
+      lwd          = lwd,
+      facet        = facet,
+      facet.args   = facet.args,
+      palette      = palette,
       ribbon.alpha = ribbon.alpha,
-      xaxt = xaxt,
-      xlabs = xlabs,
-      xlim = xlim,
-      yaxt = yaxt,
-      ylab = ylab,
-      ylim = ylim)
+      xaxt         = xaxt,
+      xlab         = xlab,
+      xlabs        = xlabs,
+      xlim         = xlim,
+      yaxt         = yaxt,
+      ylab         = ylab,
+      ylim         = ylim
+    )
     fargs = c(fargs, dots)
     list2env(do.call(type_data, fargs), environment())
   }
@@ -800,6 +804,9 @@ tinyplot.default = function(
       xaxt_cp = xaxt
       xaxt = yaxt
       yaxt = xaxt_cp
+      xaxs_cp = xaxs
+      xaxs = yaxs
+      yaxs = xaxs_cp
       if (!is.null(log)) {
         log = if (log == "x") "y" else if (log == "y") "x" else log
       }
@@ -815,7 +822,7 @@ tinyplot.default = function(
       datapoints[["xmax"]] = if (!is.null(datapoints[["ymax"]])) datapoints[["ymax"]] else NULL
       datapoints[["ymax"]] = if (!is.null(xmax_cp)) xmax_cp else NULL
       # clean up
-      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, x_cp, xmin_cp, xmax_cp)
+      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, xaxs_cp, x_cp, xmin_cp, xmax_cp)
     } else {
       # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
       # and just catch a few elements that we draw beforehand.

@@ -804,6 +804,9 @@ tinyplot.default = function(
       xaxt_cp = xaxt
       xaxt = yaxt
       yaxt = xaxt_cp
+      xaxs_cp = xaxs
+      xaxs = yaxs
+      yaxs = xaxs_cp
       if (!is.null(log)) {
         log = if (log == "x") "y" else if (log == "y") "x" else log
       }
@@ -819,7 +822,7 @@ tinyplot.default = function(
       datapoints[["xmax"]] = if (!is.null(datapoints[["ymax"]])) datapoints[["ymax"]] else NULL
       datapoints[["ymax"]] = if (!is.null(xmax_cp)) xmax_cp else NULL
       # clean up
-      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, x_cp, xmin_cp, xmax_cp)
+      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, xaxs_cp, x_cp, xmin_cp, xmax_cp)
     } else {
       # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
       # and just catch a few elements that we draw beforehand.

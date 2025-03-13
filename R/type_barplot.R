@@ -106,8 +106,8 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
           ylim = ylim,
           axes = FALSE,
           frame.plot = FALSE,
-          xaxs = "r",         #FIXME# include in if (isTRUE(flip)) logic in tinyplot
-          yaxs = "i",         #FIXME#
+          xaxs = "r",
+          yaxs = "i",
           type_info = list(
             beside = beside,
             col = col,

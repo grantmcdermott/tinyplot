@@ -83,13 +83,13 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
           bg = "by"
         }
 
-        lty = tinyplot:::by_lty(ngrps = ngrps, type = "barplot", lty = lty) #FIXME# emulate by aesthetics because otherwise not available
-        lwd = tinyplot:::by_lwd(ngrps = ngrps, type = "barplot", lwd = lwd)
-        col = tinyplot:::by_col(                                            #FIXME#
+        lty = by_lty(ngrps = ngrps, type = "barplot", lty = lty) #FIXME# emulate by aesthetics because otherwise not available
+        lwd = by_lwd(ngrps = ngrps, type = "barplot", lwd = lwd)
+        col = by_col(                                            #FIXME#
           ngrps = ngrps, col = col, palette = palette,                      #FIXME#
           gradient = FALSE, ordered = is.ordered(datapoints$by),            #FIXME#
           alpha = NULL)                                                     #FIXME#
-        bg = tinyplot:::by_bg(                                              #FIXME#
+        bg = by_bg(                                              #FIXME#
           adjustcolor = adjustcolor, alpha = NULL, bg = bg, by = by,        #FIXME#
           by_continuous = FALSE, by_ordered = is.ordered(datapoints$by),    #FIXME#
           col = col, fill = NULL, palette = substitute(palette),            #FIXME#
@@ -157,8 +157,8 @@ draw_barplot = function(width = 5/6) {
           lty     = type_info$lty[df$by],
           lwd     = type_info$lwd[df$by])
         if (type_info[["axes"]]) {
-          tinyplot:::tinyAxis(1:nx, side = if (flip) 2 else 1, at = 1L:nx, labels = levels(df$x), type = "labels")
-          tinyplot:::tinyAxis(df$y, side = if (flip) 1 else 2, type = type_info[["yaxt"]])
+          tinyAxis(1:nx, side = if (flip) 2 else 1, at = 1L:nx, labels = levels(df$x), type = "labels")
+          tinyAxis(df$y, side = if (flip) 1 else 2, type = type_info[["yaxt"]])
         }
       }
     }

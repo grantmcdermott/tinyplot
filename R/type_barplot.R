@@ -1,4 +1,34 @@
 #' Barplot type
+#'
+#' @description Type function for producing barplots. For formulas of type
+#'   `~ x` (without left-hand side) the barplot visualizes the counts (absolute
+#'   frequencies) of the levels of `x`. For formulas of type `y ~ x` the value
+#'   of `y` within each level of `x` is visualized, if necessary aggregated
+#'   using some function (default: mean).
+#'
+#' @param width numeric, optional vector of bar widths. (The distance between
+#'   the midpoints of the bars is always 1.)
+#' @param beside logical. In case of a `by` grouping variable, should bars be
+#'   juxtaposed? Default is to use stacked bars instead.
+#' @param FUN afunction to compute the summary statistic for `y` within each
+#'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
+#' @param xlevels a character or numeric vector specifying in which order the
+#'   levels of the `x` variable should be plotted.
+#'
+#' @examples
+#' # Basic examples of frequency tables (without y variable)
+#' tinyplot(~ cyl, data = mtcars, type = "barplot")
+#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
+#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
+#' 
+#' # Example for numeric y aggregated by x (default: FUN = mean)
+#' tinyplot(extra ~ ID | group, facet = "by", data = sleep, type = "barplot", beside = TRUE)
+#' 
+#' # Fancy frequency table:
+#' tinytheme("clean2")
+#' tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),
+#'   type = "barplot", facet.args = list(nrow = 1), flip = TRUE)
+#' tinytheme()
 #' 
 #' @export
 type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL) {
@@ -90,7 +120,7 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
     return(fun)
 }
 
-#' @importFrom grDevices rect
+#' @importFrom graphics rect
 draw_barplot = function(width = 5/6) {
     fun = function(data_facet, iby, ifacet, ilwd, flip, facet_by, type_info, ...) {
       if (iby == 1L) {

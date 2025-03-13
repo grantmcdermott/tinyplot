@@ -1,8 +1,7 @@
 #' Barplot type
 #' 
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, col = NULL) {
-  col = col
+type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL) {
   out = list(
     data = data_barplot(width = width, beside = beside, FUN = FUN, xlevels = xlevels),
     draw = draw_barplot(width = width),

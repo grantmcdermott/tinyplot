@@ -4,7 +4,13 @@
 \alias{type_barplot}
 \title{Barplot type}
 \usage{
-type_barplot(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
+type_barplot(
+  width = 5/6,
+  beside = FALSE,
+  FUN = NULL,
+  xlevels = NULL,
+  dropzero = FALSE
+)
 }
 \arguments{
 \item{width}{numeric, optional vector of bar widths. (The distance between
@@ -18,6 +24,10 @@ group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: me
 
 \item{xlevels}{a character or numeric vector specifying in which order the
 levels of the \code{x} variable should be plotted.}
+
+\item{dropzero}{logical. Should bars with zero height be dropped? If set
+to \code{FALSE} (default) a zero height bar is still drawn for which the border
+lines will still be visible.}
 }
 \description{
 Type function for producing barplots. For formulas of type

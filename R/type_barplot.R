@@ -14,6 +14,9 @@
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
 #' @param xlevels a character or numeric vector specifying in which order the
 #'   levels of the `x` variable should be plotted.
+#' @param dropzero logical. Should bars with zero height be dropped? If set
+#'   to `FALSE` (default) a zero height bar is still drawn for which the border
+#'   lines will still be visible.
 #'
 #' @examples
 #' # Basic examples of frequency tables (without y variable)
@@ -31,10 +34,10 @@
 #' tinytheme()
 #' 
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL) {
+type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, dropzero = FALSE) {
   out = list(
     data = data_barplot(width = width, beside = beside, FUN = FUN, xlevels = xlevels),
-    draw = draw_barplot(width = width),
+    draw = draw_barplot(width = width, dropzero = dropzero),
     name = "barplot"
   )
   class(out) = "tinyplot_type"
@@ -121,11 +124,13 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
 }
 
 #' @importFrom graphics rect
-draw_barplot = function(width = 5/6) {
+draw_barplot = function(width = 5/6, dropzero = FALSE) {
     fun = function(data_facet, iby, ifacet, ilwd, flip, facet_by, type_info, ...) {
       if (iby == 1L) {
         df = lapply(data_facet, as.data.frame) ## recombine all data in the current facet
         df = do.call("rbind", df)
+
+        if (facet_by) df = df[df$by == ifacet, , drop = FALSE]
 
         if (flip) {
           xy <- which(names(df) %in% c("x", "y"))
@@ -147,15 +152,27 @@ draw_barplot = function(width = 5/6) {
           yb = if (facet_by) 0 else unlist(lapply(cs, `[`, -(nb + 1L)))
           yt = if (facet_by) df$y else unlist(lapply(cs, `[`, -1L))
         }
+        
+        by = df$by
+        if (dropzero) {
+          yb = rep_len(yb, length(yt))
+          yok = abs(yt - yb) > 0
+          xl = xl[yok]
+          xr = xr[yok]
+          yb = yb[yok]
+          yt = yt[yok]
+          by = by[yok]
+        }
+        
         rect(
           xleft   = if (flip) yb else xl,
           ybottom = if (flip) xl else yb,
           xright  = if (flip) yt else xr,
           ytop    = if (flip) xr else yt,
-          border  = type_info$col[df$by],
-          col     = type_info$bg[df$by],
-          lty     = type_info$lty[df$by],
-          lwd     = type_info$lwd[df$by])
+          border  = type_info$col[by],
+          col     = type_info$bg[by],
+          lty     = type_info$lty[by],
+          lwd     = type_info$lwd[by])
         if (type_info[["axes"]]) {
           tinyAxis(1:nx, side = if (flip) 2 else 1, at = 1L:nx, labels = levels(df$x), type = "labels")
           tinyAxis(df$y, side = if (flip) 1 else 2, type = type_info[["yaxt"]])

@@ -69,11 +69,17 @@ tinyformula = function(formula, facet = NULL) {
   ))
 }
 
-tinyframe = function(formula, data, drop = FALSE) {
+tinyframe = function(formula, data, drop = FALSE, symbolic = TRUE) {
   ## input
   ## - formula: (sub-)formula
   ## - data: model.frame from full formula
   if (is.null(formula)) return(NULL)
-  names = sapply(attr(terms(formula), "variables")[-1L], deparse, width.cutoff = 500L)
+  if (symbolic) {
+    names = sapply(attr(terms(formula), "variables")[-1L], deparse, width.cutoff = 500L)
+  } else {
+    rhs = formula[[2L]]
+    names = deparse(rhs, width.cutoff = 500L)
+    data[[names]] = with(data, eval(rhs))
+  }
   data[, names, drop = drop]
 }

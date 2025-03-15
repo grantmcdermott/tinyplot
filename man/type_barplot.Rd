@@ -9,7 +9,7 @@ type_barplot(
   beside = FALSE,
   FUN = NULL,
   xlevels = NULL,
-  dropzero = FALSE
+  drop.zeros = FALSE
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: me
 \item{xlevels}{a character or numeric vector specifying in which order the
 levels of the \code{x} variable should be plotted.}
 
-\item{dropzero}{logical. Should bars with zero height be dropped? If set
+\item{drop.zeros}{logical. Should bars with zero height be dropped? If set
 to \code{FALSE} (default) a zero height bar is still drawn for which the border
 lines will still be visible.}
 }

@@ -14,7 +14,7 @@
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
 #' @param xlevels a character or numeric vector specifying in which order the
 #'   levels of the `x` variable should be plotted.
-#' @param dropzero logical. Should bars with zero height be dropped? If set
+#' @param drop.zeros logical. Should bars with zero height be dropped? If set
 #'   to `FALSE` (default) a zero height bar is still drawn for which the border
 #'   lines will still be visible.
 #'
@@ -44,10 +44,10 @@
 #' tinytheme()
 #' 
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, dropzero = FALSE) {
+type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE) {
   out = list(
     data = data_barplot(width = width, beside = beside, FUN = FUN, xlevels = xlevels),
-    draw = draw_barplot(width = width, dropzero = dropzero),
+    draw = draw_barplot(width = width, drop.zeros = drop.zeros),
     name = "barplot"
   )
   class(out) = "tinyplot_type"
@@ -134,7 +134,7 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
 }
 
 #' @importFrom graphics rect
-draw_barplot = function(width = 5/6, dropzero = FALSE) {
+draw_barplot = function(width = 5/6, drop.zeros = FALSE) {
     fun = function(data_facet, iby, ifacet, ilwd, flip, facet_by, type_info, ...) {
       if (iby == 1L) {
         df = lapply(data_facet, as.data.frame) ## recombine all data in the current facet
@@ -164,7 +164,7 @@ draw_barplot = function(width = 5/6, dropzero = FALSE) {
         }
         
         by = df$by
-        if (dropzero) {
+        if (drop.zeros) {
           yb = rep_len(yb, length(yt))
           yok = abs(yt - yb) > 0
           xl = xl[yok]

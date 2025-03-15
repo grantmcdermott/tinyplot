@@ -10,7 +10,7 @@
 #'   the midpoints of the bars is always 1.)
 #' @param beside logical. In case of a `by` grouping variable, should bars be
 #'   juxtaposed? Default is to use stacked bars instead.
-#' @param FUN afunction to compute the summary statistic for `y` within each
+#' @param FUN a function to compute the summary statistic for `y` within each
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
 #' @param xlevels a character or numeric vector specifying in which order the
 #'   levels of the `x` variable should be plotted.
@@ -24,13 +24,23 @@
 #' tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
 #' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
 #' 
-#' # Example for numeric y aggregated by x (default: FUN = mean)
-#' tinyplot(extra ~ ID | group, facet = "by", data = sleep, type = "barplot", beside = TRUE)
+#' tinytheme("clean2")
+#' 
+#' # Example for numeric y aggregated by x (default: FUN = mean) + facets
+#' tinyplot(extra ~ ID | group, facet = "by", data = sleep,
+#'   type = "barplot", beside = TRUE)
+#'   
+#' # Note: We used automatic argument passing for `beside = TRUE` above. But
+#' # this wouldn't work for `width`, since it would conflict with the top-level
+#' # `tinyplot(..., width = <width>)` argument. Safer to pass through the
+#' # `type_barplot()` functional equivalent.
+#' tinyplot(extra ~ ID | group, facet = "by", data = sleep,
+#'   type = type_barplot(beside = TRUE, width = .5))
 #' 
 #' # Fancy frequency table:
-#' tinytheme("clean2")
 #' tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),
 #'   type = "barplot", facet.args = list(nrow = 1), flip = TRUE)
+#'
 #' tinytheme()
 #' 
 #' @export

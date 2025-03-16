@@ -906,8 +906,8 @@ tinyplot.default = function(
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
   #   come later.
-  attributes(facet) = facet_attr ## TODO: better solution for restoring facet attributes?
-  fargs = facet_layout(facet = facet, facet.args = facet.args, add = add)
+  attributes(datapoints$facet) = facet_attr ## TODO: better solution for restoring facet attributes?
+  fargs = facet_layout(facet = datapoints$facet, facet.args = facet.args, add = add)
   list2env(fargs, environment())
 
   #
@@ -1119,7 +1119,7 @@ tinyplot.default = function(
 
   facet_window_args = draw_facet_window(
     add = add, asp = asp, axes = axes, cex_fct_adj = cex_fct_adj, dots = dots,
-    facet = facet, facet.args = facet.args, facet_newlines = facet_newlines,
+    facet = datapoints$facet, facet.args = facet.args, facet_newlines = facet_newlines,
     facet_rect = facet_rect, facet_text = facet_text, facet_font = facet_font,
     facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
     facets = facets, ifacet = ifacet,

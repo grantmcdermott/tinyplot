@@ -8,9 +8,15 @@ where the formatting is also better._
 
 New features:
 
+- New plot types:
+  - `type = "barplot"` / `type = type_barplot()` for bar plots. This closes out
+  one of the last remaining canonical base plot types that we wanted to provide
+  a native `tinyplot` equivalent for. (#305 @zeileis and @grantmcdermott) 
+
 - `tinyplot(..., file = "*.pdf")` will now default to using `cairo_pdf()` if
   cairo graphics are supported on the user's machine. This should help to ensure
   better fidelity of (non-standard) fonts in PDFs. (#311 @grantcdermott)
+
 - The palette argument now accepts a vector or list of manual colours, e.g.
   `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
   `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)

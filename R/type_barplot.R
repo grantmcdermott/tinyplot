@@ -48,7 +48,7 @@
 type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE) {
   out = list(
     data = data_barplot(width = width, beside = beside, FUN = FUN, xlevels = xlevels, drop.zeros = drop.zeros),
-    draw = draw_barplot(),
+    draw = draw_rect(),
     name = "barplot"
   )
   class(out) = "tinyplot_type"
@@ -159,25 +159,3 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL,
     return(fun)
 }
 
-#' @importFrom graphics rect
-draw_barplot = function() {
-    fun = function(data_facet, iby, ifacet, ilwd, flip, facet_by, type_info, ...) {
-      if (iby == 1L) {
-        df = lapply(data_facet, as.data.frame) ## recombine all data in the current facet
-        df = do.call("rbind", df)
-
-        if (facet_by) df = df[as.numeric(df$by) == ifacet, , drop = FALSE]
-        
-        rect(
-          xleft   = df$xmin,
-          ybottom = df$ymin,
-          xright  = df$xmax,
-          ytop    = df$ymax,
-          border  = type_info$col[df$by],
-          col     = type_info$bg[df$by],
-          lty     = type_info$lty[df$by],
-          lwd     = type_info$lwd[df$by])
-      }
-    }
-    return(fun)
-}

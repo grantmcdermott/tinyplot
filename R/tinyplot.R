@@ -873,13 +873,6 @@ tinyplot.default = function(
     by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette),
     ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type)
   
-  # Hack for type = "barplot", where we draw all groups once per facet... but
-  # could also be deployed to other vectorised types in the future
-  if (identical(type, "barplot")) type_info = modifyList(
-    type_info,
-    list(col = col, bg = bg, lwd = lwd, lty = lty), keep.null = TRUE
-  )
-
   ncolors = length(col)
   lgnd_labs = rep(NA, times = ncolors)
   if (isTRUE(by_continuous)) {

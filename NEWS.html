@@ -512,8 +512,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="dev-version">0.3.0.99 (dev version)</h2>
 <p>New features:</p>
 <ul>
-<li><code>tinyplot(..., file = "*.pdf")</code> will now default to using <code>cairo_pdf()</code> if cairo graphics are supported on the user’s machine. This should help to ensure better fidelity of (non-standard) fonts in PDFs. (<a href="https://github.com/grantmcdermott/tinyplot/issues/311">#311</a> <a href="https://github.com/grantcdermott"><span class="citation" data-cites="grantcdermott">@grantcdermott</span></a>)</li>
-<li>The palette argument now accepts a vector or list of manual colours, e.g. <code>tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))</code>, or <code>tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))</code> (<a href="https://github.com/grantmcdermott/tinyplot/issues/325">#325</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><p>New plot types:</p>
+<ul>
+<li><code>type = "barplot"</code> / <code>type = type_barplot()</code> for bar plots. This closes out one of the last remaining canonical base plot types that we wanted to provide a native <code>tinyplot</code> equivalent for. (<a href="https://github.com/grantmcdermott/tinyplot/issues/305">#305</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> and <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul></li>
+<li><p><code>tinyplot(..., file = "*.pdf")</code> will now default to using <code>cairo_pdf()</code> if cairo graphics are supported on the user’s machine. This should help to ensure better fidelity of (non-standard) fonts in PDFs. (<a href="https://github.com/grantmcdermott/tinyplot/issues/311">#311</a> <a href="https://github.com/grantcdermott"><span class="citation" data-cites="grantcdermott">@grantcdermott</span></a>)</p></li>
+<li><p>The palette argument now accepts a vector or list of manual colours, e.g. <code>tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))</code>, or <code>tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))</code> (<a href="https://github.com/grantmcdermott/tinyplot/issues/325">#325</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
 </ul>
 <p>Bugs fixes:</p>
 <ul>

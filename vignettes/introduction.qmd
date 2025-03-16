@@ -283,12 +283,11 @@ tinyplot(
 We have already seen several plot types above such as `"p"` (points), `"l"`
 (lines), and `"density"`. In general, **tinyplot** supports all of the primitive
 plot types/elements available in base R, as well as a number of additional plot
-types that can be a bit tedious to code up manually. The full list of supported
-plot types can be viewed in
-[this pinned GitHub issue](https://github.com/grantmcdermott/tinyplot/issues/97),
-or by checking the
+types that can be a bit tedious to code up manually. You can see the full list
+of supported plot types by checking the
 [`?tinyplot`](https://grantmcdermott.com/tinyplot/man/tinyplot.html#arguments)
-documentation.
+documentation, or by taking a look at the dedicated [Plot Types](types.qmd)
+vignette on this website.
 
 For example, **tinyplot** supports interval plots via the `"pointrange"`,
 `"errorbar"`, `"ribbon"`, and related type arguments. A canonical use-case is
@@ -352,10 +351,13 @@ tinyplot(
 ```
 
 We will see examples of more plot types below, including other model prediction
-types. Please also take a look at
-[the dedicated Plot Types vignette](types.qmd) for explicit details about all of
-the different plot types that **tinyplot** supports, as well as how to create
-your own custom types.
+types. Again, please also take a look at the dedicated 
+[Plot Types](types.qmd) vignette for explicit details about all of the different
+plot types that **tinyplot** supports, as well as how to create your own custom
+types. You can also request support for additional plot types, or see what's on
+our roadmap, by heading over to this
+[pinned issue](https://github.com/grantmcdermott/tinyplot/issues/97)
+on our GitHub repo.
 
 ## Facets
 
@@ -535,7 +537,7 @@ styles. In addition to convenience, themes have the added benefit of enabling
 dynamic adjustment of the plot regions, so that excess whitespace is reduced and
 long text strings (e.g., horizontal axis labels) are accounted for. Please see
 the `?tinytheme` help page, as well as the dedicated
-[Themes vignette](themes.qmd) for a detailed overview of **tinyplot**'s theming
+[Themes](themes.qmd) vignette for a detailed overview of **tinyplot**'s theming
 functionality. Here we provide a small taster by applying the "dark" theme to
 one of our earlier plots.
 

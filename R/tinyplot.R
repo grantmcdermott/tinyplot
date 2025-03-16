@@ -102,6 +102,7 @@
 #'       - `"segments"` / [`type_segments()`]: Draws line segments between pairs of points.
 #'       - `"text"` / [`type_text()`]: Add text annotations.
 #'     - Visualizations:
+#'       - `"barplot"` / [`type_barplot()`]: Creates a bar plot.
 #'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
 #'       - `"density"` / [`type_density()`]: Plots the density estimate of a variable.
 #'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.

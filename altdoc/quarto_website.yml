@@ -57,6 +57,8 @@ website:
             file: man/type_segments.qmd
         - section: "Visualizations"
           contents:
+          - text: type_barplot
+            file: man/type_barplot.qmd
           - text: type_boxplot
             file: man/type_boxplot.qmd
           - text: type_density

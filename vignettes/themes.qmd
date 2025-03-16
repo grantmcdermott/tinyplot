@@ -20,9 +20,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-The base R graphics aesthetic tends to divide option. Some people like the
+The base R aesthetic tends to divide option. Some people like the
 default minimalist look of base R plots and/or are happy to customize the (many)
-graphical parameters that are available to them. Others find base R plots ugly
+graphical parameters that are available to them. Others find base plots ugly
 and don't want to spend time endlessly tweaking different parameters. Similarly,
 the inherent "canvas" approach to drawing base R graphics, with fixed placement
 for plot elements, means that plots don't adjust dynamically and this can lead

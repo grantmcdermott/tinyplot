@@ -45,7 +45,7 @@
 #' tinytheme()
 #' 
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE, alpha = 1) {
+type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE) {
   out = list(
     data = data_barplot(width = width, beside = beside, FUN = FUN, xlevels = xlevels, drop.zeros = drop.zeros),
     draw = draw_barplot(width = width, drop.zeros = drop.zeros),
@@ -56,9 +56,8 @@ type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL,
 }
 
 #' @importFrom stats aggregate
-# data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL) {
 data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE) {
-    fun = function(datapoints, col, bg, lty, lwd, palette, ribbon.alpha, xlab = NULL, ylab = NULL, xlim = NULL, ylim = ylim, yaxt, axes = TRUE, facet_by, ...) {
+    fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = ylim, yaxt, axes = TRUE, facet_by, ...) {
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {

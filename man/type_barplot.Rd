@@ -9,8 +9,7 @@ type_barplot(
   beside = FALSE,
   FUN = NULL,
   xlevels = NULL,
-  drop.zeros = FALSE,
-  alpha = 1
+  drop.zeros = FALSE
 )
 }
 \arguments{

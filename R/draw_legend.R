@@ -188,7 +188,7 @@ draw_legend = function(
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% legend_args[["col"]]
   }
 
-  if (type %in%  c("ridge", "barplot") && isFALSE(gradient)) {
+  if (identical(type, "ridge") && isFALSE(gradient)) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
   }
 

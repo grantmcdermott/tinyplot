@@ -23,19 +23,20 @@
 #' tinyplot(~ cyl, data = mtcars, type = "barplot")
 #' tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
 #' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
+#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE, drop.zeros = TRUE)
 #' 
+#' # Note: Above we used automatic argument passing for `beside` and `drop.zeros`.
+#' # But this wouldn't work for `width`, since it would conflict with the
+#' # top-level `tinyplot(..., width = <width>)` argument. It's safer to pass
+#' # these args through the `type_barplot()` functional equivalent.
+#' tinyplot(~ cyl | vs, data = mtcars,
+#'   type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = .65))
+#'
 #' tinytheme("clean2")
 #' 
 #' # Example for numeric y aggregated by x (default: FUN = mean) + facets
 #' tinyplot(extra ~ ID | group, facet = "by", data = sleep,
 #'   type = "barplot", beside = TRUE)
-#'   
-#' # Note: We used automatic argument passing for `beside = TRUE` above. But
-#' # this wouldn't work for `width`, since it would conflict with the top-level
-#' # `tinyplot(..., width = <width>)` argument. Safer to pass through the
-#' # `type_barplot()` functional equivalent.
-#' tinyplot(extra ~ ID | group, facet = "by", data = sleep,
-#'   type = type_barplot(beside = TRUE, width = .5))
 #' 
 #' # Fancy frequency table:
 #' tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),
@@ -44,9 +45,9 @@
 #' tinytheme()
 #' 
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE) {
+type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE, alpha = 1) {
   out = list(
-    data = data_barplot(width = width, beside = beside, FUN = FUN, xlevels = xlevels),
+    data = data_barplot(width = width, beside = beside, FUN = FUN, xlevels = xlevels, drop.zeros = drop.zeros),
     draw = draw_barplot(width = width, drop.zeros = drop.zeros),
     name = "barplot"
   )
@@ -55,8 +56,9 @@ type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL,
 }
 
 #' @importFrom stats aggregate
-data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL) {
-    fun = function(datapoints, col, bg, lty, lwd, palette, ribbon.alpha, xlab = NULL, ylab = NULL, xlim = NULL, ylim = ylim, yaxt, axes = TRUE, ...) {
+# data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL) {
+data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE) {
+    fun = function(datapoints, col, bg, lty, lwd, palette, ribbon.alpha, xlab = NULL, ylab = NULL, xlim = NULL, ylim = ylim, yaxt, axes = TRUE, facet_by, ...) {
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
@@ -91,22 +93,51 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
         ngrps = length(unique(datapoints$by))
         if (ngrps == 1L && is.null(palette)) {
           if (is.null(col)) col = par("fg")
-          if (is.null(bg)) bg = "black"
+          if (is.null(bg)) bg = "grey"
         } else {
-          bg = "by"
+          if (is.null(bg)) bg = "by"
         }
 
-        lty = by_lty(ngrps = ngrps, type = "barplot", lty = lty) #FIXME# emulate by aesthetics because otherwise not available
-        lwd = by_lwd(ngrps = ngrps, type = "barplot", lwd = lwd)
-        col = by_col(                                            #FIXME#
-          ngrps = ngrps, col = col, palette = palette,                      #FIXME#
-          gradient = FALSE, ordered = is.ordered(datapoints$by),            #FIXME#
-          alpha = NULL)                                                     #FIXME#
-        bg = by_bg(                                              #FIXME#
-          adjustcolor = adjustcolor, alpha = NULL, bg = bg, by = by,        #FIXME#
-          by_continuous = FALSE, by_ordered = is.ordered(datapoints$by),    #FIXME#
-          col = col, fill = NULL, palette = substitute(palette),            #FIXME#
-          ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = "boxplot")     #FIXME#
+        ## calculate bar rectangles per facet 
+        sdat = split(datapoints, datapoints$facet)
+        datapoints = lapply(sdat, function(df)  {
+          
+          df = df[order(df$x), , drop = FALSE]
+          nx = length(levels(df$x))
+          nb = length(levels(df$by))
+          
+          if (beside) {        
+            xl = as.numeric(df$x) - width/2 + (as.numeric(df$by) - 1) * width/nb * as.numeric(!facet_by)
+            xr = if (facet_by) xl + width else xl + width/nb
+            yb = 0
+            yt = df$y
+          } else {
+            cs = tapply(df$y, df$x, function(z) cumsum(c(0, z)))
+            xl = as.numeric(df$x) - width/2
+            xr = xl + width
+            yb = if (facet_by) 0 else unlist(lapply(cs, `[`, -(nb + 1L)))
+            yt = if (facet_by) df$y else unlist(lapply(cs, `[`, -1L))
+          }
+          
+          df$xmin = xl
+          df$xmax = xr
+          df$ymin = yb
+          df$ymax = yt
+          df$nx = nx
+          
+          if (drop.zeros) {
+            yb = rep_len(yb, length(yt))
+            yok = abs(yt - yb) > 0
+            df = df[yok,  , drop = FALSE]
+          }
+          
+          return(df)
+        })
+        datapoints = do.call("rbind", datapoints)
+        nx = datapoints$nx[1]
+        datapoints$nx = NULL
+        xlabs = 1L:nx
+        names(xlabs) = levels(datapoints$x)
         
         out = list(
           datapoints = datapoints,
@@ -114,19 +145,16 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL)
           ylab = ylab,
           xlim = xlim,
           ylim = ylim,
-          axes = FALSE,
+          axes = FALSE, #FIXME
+          axes = TRUE,
+          xlabs = xlabs, 
           frame.plot = FALSE,
           xaxs = "r",
+          xaxt = "l",
           yaxs = "i",
-          type_info = list(
-            beside = beside,
-            col = col,
-            bg = bg,
-            lty = lty,
-            lwd = lwd,
-            axes = axes,
-            yaxt = yaxt
-          )
+          col = col,
+          bg = bg,
+          type_info = list()
         )
         return(out)
     }
@@ -141,52 +169,16 @@ draw_barplot = function(width = 5/6, drop.zeros = FALSE) {
         df = do.call("rbind", df)
 
         if (facet_by) df = df[as.numeric(df$by) == ifacet, , drop = FALSE]
-
-        if (flip) {
-          xy <- which(names(df) %in% c("x", "y"))
-          names(df)[xy] <- names(df)[xy[2L:1L]]
-        }
-        df = df[order(df$x), , drop = FALSE]
-        nx = length(levels(df$x))
-        nb = length(levels(df$by))
-        
-        if (type_info$beside) {        
-          xl = as.numeric(df$x) - width/2 + (as.numeric(df$by) - 1) * width/nb * as.numeric(!facet_by)
-          xr = if (facet_by) xl + width else xl + width/nb
-          yb = 0
-          yt = df$y
-        } else {
-          cs = tapply(df$y, df$x, function(z) cumsum(c(0, z)))
-          xl = as.numeric(df$x) - width/2
-          xr = xl + width
-          yb = if (facet_by) 0 else unlist(lapply(cs, `[`, -(nb + 1L)))
-          yt = if (facet_by) df$y else unlist(lapply(cs, `[`, -1L))
-        }
-        
-        by = df$by
-        if (drop.zeros) {
-          yb = rep_len(yb, length(yt))
-          yok = abs(yt - yb) > 0
-          xl = xl[yok]
-          xr = xr[yok]
-          yb = yb[yok]
-          yt = yt[yok]
-          by = by[yok]
-        }
         
         rect(
-          xleft   = if (flip) yb else xl,
-          ybottom = if (flip) xl else yb,
-          xright  = if (flip) yt else xr,
-          ytop    = if (flip) xr else yt,
-          border  = type_info$col[by],
-          col     = type_info$bg[by],
-          lty     = type_info$lty[by],
-          lwd     = type_info$lwd[by])
-        if (type_info[["axes"]]) {
-          tinyAxis(1:nx, side = if (flip) 2 else 1, at = 1L:nx, labels = levels(df$x), type = "labels")
-          tinyAxis(df$y, side = if (flip) 1 else 2, type = type_info[["yaxt"]])
-        }
+          xleft   = df$xmin,
+          ybottom = df$ymin,
+          xright  = df$xmax,
+          ytop    = df$ymax,
+          border  = type_info$col[df$by],
+          col     = type_info$bg[df$by],
+          lty     = type_info$lty[df$by],
+          lwd     = type_info$lwd[df$by])
       }
     }
     return(fun)

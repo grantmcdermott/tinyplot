@@ -1,5 +1,9 @@
 ---
 title: "Plot types"
+format:
+  html:
+    css: custom.css
+tbl-colwidths: [20,20,50,10]
 ---
 
 **tinyplot** is a lightweight extension of R's base plotting system, designed to
@@ -54,44 +58,55 @@ advanced visualizations. Each of these additional types are available either as
 a convenience string (with default behaviour) or a companion `type_*()` function
 (with options for customized behaviour).
 
-Shapes:
+#### Shapes
 
-- `"area"` / `type_area()`: Plots the area under the curve from `y` = 0 to `y` = f(`x`).
-- `"errorbar"` / `type_errorbar()`: Adds error bars to points; requires `ymin` and `ymax`.
-- `"pointrange"` / `type_pointrange()`: Combines points with error bars.
-- `"polygon"` / `type_polygon()`: Draws polygons.
-- `"polypath"` / `type_polypath()`: Draws a path whose vertices are given in `x` and `y`.
-- `"rect"` / `type_rect()`: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
-- `"ribbon"` / `type_ribbon()`: Creates a filled area between `ymin` and `ymax`.
-- `"segments"` / `type_segments()`: Draws line segments between pairs of points.
-- `"text"` / `type_text()`: Add text annotations to a plot.
+| string                | function            | description                                                    | docs |
+|-----------------------|---------------------|----------------------------------------------------------------|------|
+| `"area"`              | `type_area()`       | Plots the area under the curve from `y` = 0 to `y` = f(`x`).   | [link](/man/type_ribbon.qmd) |
+| `"errorbar"`          | `type_errorbar()`   | Adds error bars to points; requires `ymin` and `ymax`.         | [link](/man/type_errorbar.qmd) |
+| `"l"` / `"b"` / etc.  | `type_lines()`      | Draws lines and line-alike (same as base `"l"`, `"b"`, etc.)   | [link](/man/type_lines.qmd) |
+| `"pointrange"`        | `type_pointrange()` | Combines points with error bars.                               | [link](/man/type_errorbar.qmd) |
+| `"p"`                 | `type_points()`     | Draws points (same as base `"p"`).                             | [link](/man/type_points.qmd) |
+| `"polygon"`           | `type_polygon()`    | Draws polygons.                                                | [link](/man/type_polygon.qmd) |
+| `"polypath"`          | `type_polypath()`   | Draws a path whose vertices are given in `x` and `y`.          | [link](/man/type_polypath.qmd) |
+| `"rect"`              | `type_rect()`       | Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`. | [link](/man/type_rect.qmd) |
+| `"ribbon"`            | `type_ribbon()`     | Creates a filled area between `ymin` and `ymax`.               | [link](/man/type_ribbon.qmd) |
+| `"segments"`          | `type_segments()`   | Draws line segments between pairs of points.                   | [link](/man/type_segments.qmd) |
+| `"text"`              | `type_text()`       | Adds text annotations to a plot.                               | [link](/man/type_text.qmd) |
 
-Visualizations:
+#### Visualizations
 
-- `"barplot"` / `type_barplot()`: Creates a plot plot.
-- `"boxplot"` / `type_boxplot()`: Creates a box-and-whisker plot.
-- `"density"` / `type_density()`: Plots the density estimate of a variable.
-- `"histogram"` / `type_histogram()`: Creates a histogram of a single variable.
-- `"jitter"` / `type_jitter()`: Jittered points.
-- `"qq"` / `type_qq()`: Creates a quantile-quantile plot.
-- `"ridge"` / `type_ridge()`: Creates a ridgeline (aka joy) plot.
-- `"rug"` / `type_rug()`: Adds a rug to an existing plot.
-- `"spineplot"` / `type_spineplot()`: Creates a spineplot or spinogram.
+| string                     | function            | description                                    | docs |
+|----------------------------|---------------------|------------------------------------------------|------|
+| `"barplot"` / `"bar"`      | `type_barplot()`    | Creates a bar plot.                            | [link](/man/type_barplot.qmd) |
+| `"boxplot"` / `"box"`      | `type_boxplot()`    | Creates a box-and-whisker plot.                | [link](/man/type_boxplot.qmd) |
+| `"density"`                | `type_density()`    | Plots the density estimate of a variable.      | [link](/man/type_density.qmd) |
+| `"histogram"` / `"hist"`   | `type_histogram()`  | Creates a histogram of a single variable.      | [link](/man/type_histogram.qmd) |
+| `"jitter"` / `"j"`         | `type_jitter()`     | Jittered points.                               | [link](/man/type_jitter.qmd) |
+| `"qq"`                     | `type_qq()`         | Creates a quantile-quantile plot.              | [link](/man/type_qq.qmd) |
+| `"ridge"`                  | `type_ridge()`      | Creates a ridgeline (aka joy) plot.            | [link](/man/type_ridge.qmd) |
+| `"rug"`                    | `type_rug()`        | Adds a rug to an existing plot.                | [link](/man/type_rug.qmd) |
+| `"spineplot"` / `"spine"`  | `type_spineplot()`  | Creates a spine plot or spinogram.             | [link](/man/type_spineplot.qmd) |
+  
+#### Models
 
-Models:
+| string                | function           | description                              | docs |
+|-----------------------|--------------------|------------------------------------------|------|
+| `"loess"`             | `type_loess()`     | Local regression curve.                  | [link](/man/type_loess.qmd) |
+| `"lm"`                | `type_lm()`        | Linear regression line.                  | [link](/man/type_lm.qmd) |
+| `"glm"`               | `type_glm()`       | Generalized linear model fit.            | [link](/man/type_glm.qmd) |
+| `"spline"`            | `type_spline()`    | Cubic (or Hermite) spline interpolation. | [link](/man/type_spline.qmd) |
 
-- `"loess"` / `type_loess()`: Local regression curve.
-- `"lm"` / `type_lm()`: Linear regression line.
-- `"glm"` / `type_glm()`: Generalized linear model fit.
-- `"spline"` / `type_spline()`: Cubic (or Hermite) spline interpolation.
+#### Functions
 
-Functions:
+| string                | function           | description                              | docs |
+|-----------------------|--------------------|-----------------------------------------|------|
+| _(None)_              | `type_abline()`    | Line(s) with intercept and slope.       | [link](/man/type_abline.qmd) |
+| _(None)_              | `type_hline()`     | Horizontal line(s).                     | [link](/man/type_hline.qmd) |
+| _(None)_              | `type_vline()`     | Vertical line(s).                       | [link](/man/type_vline.qmd) |
+| _(None)_              | `type_function()`  | Arbitrary function.                     | [link](/man/type_function.qmd) |
+| _(None)_              | `type_summary()`   | Summarizes `y` by unique values of `x`. | [link](/man/type_summary.qmd) |
 
-- `type_abline()`: line(s) with intercept and slope.
-- `type_hline()`: horizontal line(s).
-- `type_vline()`: vertical line(s).
-- `type_function()`: arbitrary function.
-- `type_summary()`: summarize `y` by unique values of `x`.
 
 To see the difference between the convenience strings and their respective
 `type_*()` functional equivalents, let's quickly walk through two examples.

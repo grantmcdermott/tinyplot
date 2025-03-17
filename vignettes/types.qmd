@@ -64,7 +64,7 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 |-----------------------|---------------------|----------------------------------------------------------------|------|
 | `"area"`              | `type_area()`       | Plots the area under the curve from `y` = 0 to `y` = f(`x`).   | [link](/man/type_ribbon.qmd) |
 | `"errorbar"`          | `type_errorbar()`   | Adds error bars to points; requires `ymin` and `ymax`.         | [link](/man/type_errorbar.qmd) |
-| `"l"` / `"b"` / etc.  | `type_lines()`      | Draws lines and line-alike (same as base `"l"`, `"b"`, etc).   | [link](/man/type_lines.qmd) |
+| `"l"` / `"b"` / etc.  | `type_lines()`      | Draws lines and line-alike (same as base `"l"`, `"b"`, etc.)   | [link](/man/type_lines.qmd) |
 | `"pointrange"`        | `type_pointrange()` | Combines points with error bars.                               | [link](/man/type_errorbar.qmd) |
 | `"p"`                 | `type_points()`     | Draws points (same as base `"p"`).                             | [link](/man/type_points.qmd) |
 | `"polygon"`           | `type_polygon()`    | Draws polygons.                                                | [link](/man/type_polygon.qmd) |

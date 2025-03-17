@@ -69,11 +69,14 @@
 #'   features globally for all `tinyplot` plots.
 #' @param formula a \code{\link[stats]{formula}} that optionally includes
 #'   grouping variable(s) after a vertical bar, e.g. `y ~ x | z`. One-sided
-#'   formulae are also permitted, e.g. `~ y | z`. Multiple grouping variables
-#'   can be specified in different ways, e.g. `y ~ x | z1:z2` or
+#'   formulae are also permitted, e.g. `~ y | z`. Only a single `y` and `x`
+#'   variable (if any) must be specified but multiple grouping variables
+#'   can be included in different ways, e.g. `y ~ x | z1:z2` or
 #'   `y ~ x | z1 + z2`. (These two representations are treated as equivalent;
-#'   both are parsed as `interaction(z1, z2)` internally.) Note that the
-#'   `formula` and `x` arguments should not be specified in the same call.
+#'   both are parsed as `interaction(z1, z2)` internally.) If arithmetic
+#'   operators are used for transforming variables, they should be wrapped in
+#'   `I()`, e.g., `I(y1/y2) ~ x`. Note that the `formula` and `x` arguments
+#'   should not be specified in the same call.
 #' @param data a data.frame (or list) from which the variables in formula
 #'   should be taken. A matrix is converted to a data frame.
 #' @param type character string or call to a `type_*()` function giving the
@@ -1336,14 +1339,17 @@ tinyplot.formula = function(
   ## extract x
   x = tinyframe(tf$x, mf)
   xnam = names(x)[[1L]]
-  if (length(names(x)) != 1L) warning(paste("formula should specify exactly one x-variable, using:", xnam))
+  if (length(names(x)) != 1L) warning(
+    paste("formula should specify exactly one x-variable, using:", xnam),
+    "\nif you want to use arithmetic operators, make sure to wrap them inside I()")
   x = x[[xnam]]
 
   ## extract y (if any)
   y = tinyframe(tf$y, mf)
   if (!is.null(y)) {
     ynam = names(y)[[1L]]
-    if (length(names(y)) > 1L) warning(paste("formula should specify at most one y-variable, using:", ynam))
+    if (length(names(y)) > 1L) warning(paste("formula should specify at most one y-variable, using:", ynam),
+    "\nif you want to use arithmetic operators, make sure to wrap them inside I()")
     y = y[[ynam]]
   }
 

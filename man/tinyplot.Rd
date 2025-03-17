@@ -468,11 +468,14 @@ for the possible values.}
 
 \item{formula}{a \code{\link[stats]{formula}} that optionally includes
 grouping variable(s) after a vertical bar, e.g. \code{y ~ x | z}. One-sided
-formulae are also permitted, e.g. \code{~ y | z}. Multiple grouping variables
-can be specified in different ways, e.g. \code{y ~ x | z1:z2} or
+formulae are also permitted, e.g. \code{~ y | z}. Only a single \code{y} and \code{x}
+variable (if any) must be specified but multiple grouping variables
+can be included in different ways, e.g. \code{y ~ x | z1:z2} or
 \code{y ~ x | z1 + z2}. (These two representations are treated as equivalent;
-both are parsed as \code{interaction(z1, z2)} internally.) Note that the
-\code{formula} and \code{x} arguments should not be specified in the same call.}
+both are parsed as \code{interaction(z1, z2)} internally.) If arithmetic
+operators are used for transforming variables, they should be wrapped in
+\code{I()}, e.g., \code{I(y1/y2) ~ x}. Note that the \code{formula} and \code{x} arguments
+should not be specified in the same call.}
 
 \item{subset, na.action, drop.unused.levels}{arguments passed to \code{model.frame}
 when extracting the data from \code{formula} and \code{data}.}

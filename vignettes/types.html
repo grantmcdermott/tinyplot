@@ -102,6 +102,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="custom.css">
 </head>
 
 <body class="nav-sidebar floating nav-fixed">
@@ -556,45 +557,263 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="tinyplot-types" class="level2">
 <h2 class="anchored" data-anchor-id="tinyplot-types">tinyplot types</h2>
 <p>Beyond the base types, <strong>tinyplot</strong> introduces additional plot types for more advanced visualizations. Each of these additional types are available either as a convenience string (with default behaviour) or a companion <code>type_*()</code> function (with options for customized behaviour).</p>
-<p>Shapes:</p>
-<ul>
-<li><code>"area"</code> / <code>type_area()</code>: Plots the area under the curve from <code>y</code> = 0 to <code>y</code> = f(<code>x</code>).</li>
-<li><code>"errorbar"</code> / <code>type_errorbar()</code>: Adds error bars to points; requires <code>ymin</code> and <code>ymax</code>.</li>
-<li><code>"pointrange"</code> / <code>type_pointrange()</code>: Combines points with error bars.</li>
-<li><code>"polygon"</code> / <code>type_polygon()</code>: Draws polygons.</li>
-<li><code>"polypath"</code> / <code>type_polypath()</code>: Draws a path whose vertices are given in <code>x</code> and <code>y</code>.</li>
-<li><code>"rect"</code> / <code>type_rect()</code>: Draws rectangles; requires <code>xmin</code>, <code>xmax</code>, <code>ymin</code>, and <code>ymax</code>.</li>
-<li><code>"ribbon"</code> / <code>type_ribbon()</code>: Creates a filled area between <code>ymin</code> and <code>ymax</code>.</li>
-<li><code>"segments"</code> / <code>type_segments()</code>: Draws line segments between pairs of points.</li>
-<li><code>"text"</code> / <code>type_text()</code>: Add text annotations to a plot.</li>
-</ul>
-<p>Visualizations:</p>
-<ul>
-<li><code>"barplot"</code> / <code>type_barplot()</code>: Creates a plot plot.</li>
-<li><code>"boxplot"</code> / <code>type_boxplot()</code>: Creates a box-and-whisker plot.</li>
-<li><code>"density"</code> / <code>type_density()</code>: Plots the density estimate of a variable.</li>
-<li><code>"histogram"</code> / <code>type_histogram()</code>: Creates a histogram of a single variable.</li>
-<li><code>"jitter"</code> / <code>type_jitter()</code>: Jittered points.</li>
-<li><code>"qq"</code> / <code>type_qq()</code>: Creates a quantile-quantile plot.</li>
-<li><code>"ridge"</code> / <code>type_ridge()</code>: Creates a ridgeline (aka joy) plot.</li>
-<li><code>"rug"</code> / <code>type_rug()</code>: Adds a rug to an existing plot.</li>
-<li><code>"spineplot"</code> / <code>type_spineplot()</code>: Creates a spineplot or spinogram.</li>
-</ul>
-<p>Models:</p>
-<ul>
-<li><code>"loess"</code> / <code>type_loess()</code>: Local regression curve.</li>
-<li><code>"lm"</code> / <code>type_lm()</code>: Linear regression line.</li>
-<li><code>"glm"</code> / <code>type_glm()</code>: Generalized linear model fit.</li>
-<li><code>"spline"</code> / <code>type_spline()</code>: Cubic (or Hermite) spline interpolation.</li>
-</ul>
-<p>Functions:</p>
-<ul>
-<li><code>type_abline()</code>: line(s) with intercept and slope.</li>
-<li><code>type_hline()</code>: horizontal line(s).</li>
-<li><code>type_vline()</code>: vertical line(s).</li>
-<li><code>type_function()</code>: arbitrary function.</li>
-<li><code>type_summary()</code>: summarize <code>y</code> by unique values of <code>x</code>.</li>
-</ul>
+<section id="shapes" class="level4">
+<h4 class="anchored" data-anchor-id="shapes">Shapes</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 50%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>string</th>
+<th>function</th>
+<th>description</th>
+<th>docs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>"area"</code></td>
+<td><code>type_area()</code></td>
+<td>Plots the area under the curve from <code>y</code> = 0 to <code>y</code> = f(<code>x</code>).</td>
+<td><a href="../man/type_ribbon.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"errorbar"</code></td>
+<td><code>type_errorbar()</code></td>
+<td>Adds error bars to points; requires <code>ymin</code> and <code>ymax</code>.</td>
+<td><a href="../man/type_errorbar.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"l"</code> / <code>"b"</code> / etc.</td>
+<td><code>type_lines()</code></td>
+<td>Draws lines and line-alike (same as base <code>"l"</code>, <code>"b"</code>, etc.)</td>
+<td><a href="../man/type_lines.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"pointrange"</code></td>
+<td><code>type_pointrange()</code></td>
+<td>Combines points with error bars.</td>
+<td><a href="../man/type_errorbar.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"p"</code></td>
+<td><code>type_points()</code></td>
+<td>Draws points (same as base <code>"p"</code>).</td>
+<td><a href="../man/type_points.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"polygon"</code></td>
+<td><code>type_polygon()</code></td>
+<td>Draws polygons.</td>
+<td><a href="../man/type_polygon.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"polypath"</code></td>
+<td><code>type_polypath()</code></td>
+<td>Draws a path whose vertices are given in <code>x</code> and <code>y</code>.</td>
+<td><a href="../man/type_polypath.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"rect"</code></td>
+<td><code>type_rect()</code></td>
+<td>Draws rectangles; requires <code>xmin</code>, <code>xmax</code>, <code>ymin</code>, and <code>ymax</code>.</td>
+<td><a href="../man/type_rect.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"ribbon"</code></td>
+<td><code>type_ribbon()</code></td>
+<td>Creates a filled area between <code>ymin</code> and <code>ymax</code>.</td>
+<td><a href="../man/type_ribbon.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"segments"</code></td>
+<td><code>type_segments()</code></td>
+<td>Draws line segments between pairs of points.</td>
+<td><a href="../man/type_segments.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"text"</code></td>
+<td><code>type_text()</code></td>
+<td>Adds text annotations to a plot.</td>
+<td><a href="../man/type_text.html">link</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visualizations" class="level4">
+<h4 class="anchored" data-anchor-id="visualizations">Visualizations</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 50%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>string</th>
+<th>function</th>
+<th>description</th>
+<th>docs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>"barplot"</code> / <code>"bar"</code></td>
+<td><code>type_barplot()</code></td>
+<td>Creates a bar plot.</td>
+<td><a href="../man/type_barplot.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"boxplot"</code> / <code>"box"</code></td>
+<td><code>type_boxplot()</code></td>
+<td>Creates a box-and-whisker plot.</td>
+<td><a href="../man/type_boxplot.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"density"</code></td>
+<td><code>type_density()</code></td>
+<td>Plots the density estimate of a variable.</td>
+<td><a href="../man/type_density.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"histogram"</code> / <code>"hist"</code></td>
+<td><code>type_histogram()</code></td>
+<td>Creates a histogram of a single variable.</td>
+<td><a href="../man/type_histogram.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"jitter"</code> / <code>"j"</code></td>
+<td><code>type_jitter()</code></td>
+<td>Jittered points.</td>
+<td><a href="../man/type_jitter.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"qq"</code></td>
+<td><code>type_qq()</code></td>
+<td>Creates a quantile-quantile plot.</td>
+<td><a href="../man/type_qq.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"ridge"</code></td>
+<td><code>type_ridge()</code></td>
+<td>Creates a ridgeline (aka joy) plot.</td>
+<td><a href="../man/type_ridge.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"rug"</code></td>
+<td><code>type_rug()</code></td>
+<td>Adds a rug to an existing plot.</td>
+<td><a href="../man/type_rug.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"spineplot"</code> / <code>"spine"</code></td>
+<td><code>type_spineplot()</code></td>
+<td>Creates a spine plot or spinogram.</td>
+<td><a href="../man/type_spineplot.html">link</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="models" class="level4">
+<h4 class="anchored" data-anchor-id="models">Models</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 50%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>string</th>
+<th>function</th>
+<th>description</th>
+<th>docs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>"loess"</code></td>
+<td><code>type_loess()</code></td>
+<td>Local regression curve.</td>
+<td><a href="../man/type_loess.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"lm"</code></td>
+<td><code>type_lm()</code></td>
+<td>Linear regression line.</td>
+<td><a href="../man/type_lm.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"glm"</code></td>
+<td><code>type_glm()</code></td>
+<td>Generalized linear model fit.</td>
+<td><a href="../man/type_glm.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"spline"</code></td>
+<td><code>type_spline()</code></td>
+<td>Cubic (or Hermite) spline interpolation.</td>
+<td><a href="../man/type_spline.html">link</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions" class="level4">
+<h4 class="anchored" data-anchor-id="functions">Functions</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 50%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>string</th>
+<th>function</th>
+<th>description</th>
+<th>docs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>(None)</em></td>
+<td><code>type_abline()</code></td>
+<td>Line(s) with intercept and slope.</td>
+<td><a href="../man/type_abline.html">link</a></td>
+</tr>
+<tr class="even">
+<td><em>(None)</em></td>
+<td><code>type_hline()</code></td>
+<td>Horizontal line(s).</td>
+<td><a href="../man/type_hline.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><em>(None)</em></td>
+<td><code>type_vline()</code></td>
+<td>Vertical line(s).</td>
+<td><a href="../man/type_vline.html">link</a></td>
+</tr>
+<tr class="even">
+<td><em>(None)</em></td>
+<td><code>type_function()</code></td>
+<td>Arbitrary function.</td>
+<td><a href="../man/type_function.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><em>(None)</em></td>
+<td><code>type_summary()</code></td>
+<td>Summarizes <code>y</code> by unique values of <code>x</code>.</td>
+<td><a href="../man/type_summary.html">link</a></td>
+</tr>
+</tbody>
+</table>
 <p>To see the difference between the convenience strings and their respective <code>type_*()</code> functional equivalents, let’s quickly walk through two examples.</p>
 <p><strong>Example 1: jittering.</strong> We can add noise to data points using jittering. This allows us to avoid overplotting and can be useful to visualize discrete variables. On the left, we use the <code>"jitter</code> string shortcut with default settings. On the right, we use the <code>type_jitter()</code> function to reduce the amount of jittering.</p>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
@@ -649,6 +868,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+</section>
 </section>
 <section id="custom-types" class="level2">
 <h2 class="anchored" data-anchor-id="custom-types">Custom types</h2>

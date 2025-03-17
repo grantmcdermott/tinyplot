@@ -1141,7 +1141,7 @@ character specifying the style of the interval calculation used for the x-axis a
 <code id="formula">formula</code>
 </td>
 <td>
-a <code>formula</code> that optionally includes grouping variable(s) after a vertical bar, e.g.&nbsp;<code>y ~ x | z</code>. One-sided formulae are also permitted, e.g.&nbsp;<code>~ y | z</code>. Multiple grouping variables can be specified in different ways, e.g.&nbsp;<code>y ~ x | z1:z2</code> or <code>y ~ x | z1 + z2</code>. (These two representations are treated as equivalent; both are parsed as <code>interaction(z1, z2)</code> internally.) Note that the <code>formula</code> and <code>x</code> arguments should not be specified in the same call.
+a <code>formula</code> that optionally includes grouping variable(s) after a vertical bar, e.g.&nbsp;<code>y ~ x | z</code>. One-sided formulae are also permitted, e.g.&nbsp;<code>~ y | z</code>. Only a single <code>y</code> and <code>x</code> variable (if any) must be specified but multiple grouping variables can be included in different ways, e.g.&nbsp;<code>y ~ x | z1:z2</code> or <code>y ~ x | z1 + z2</code>. (These two representations are treated as equivalent; both are parsed as <code>interaction(z1, z2)</code> internally.) If arithmetic operators are used for transforming variables, they should be wrapped in <code>I()</code>, e.g., <code>I(y1/y2) ~ x</code>. Note that the <code>formula</code> and <code>x</code> arguments should not be specified in the same call.
 </td>
 </tr>
 <tr>

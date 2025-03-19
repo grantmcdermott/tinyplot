@@ -57,7 +57,7 @@ type_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL,
 
 #' @importFrom stats aggregate
 data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE) {
-    fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = ylim, yaxt, axes = TRUE, facet_by, ...) {
+    fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, xaxt = NULL, yaxt = NULL, axes = TRUE, facet_by = NULL, ...) {
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
@@ -149,7 +149,7 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL,
           xlabs = xlabs, 
           frame.plot = FALSE,
           xaxs = "r",
-          xaxt = "l",
+          xaxt = if (xaxt == "s") "l" else xaxt,
           yaxs = "i",
           col = col,
           bg = bg

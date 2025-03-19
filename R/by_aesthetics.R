@@ -1,14 +1,18 @@
-by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL, alpha = NULL) {
+by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL, alpha = NULL, nested = FALSE) {
+  gradient = isTRUE(gradient)
+  col_index = FALSE # flag for subsetting/index over colors
   if (is.null(ordered)) ordered = FALSE
   if (is.null(alpha)) alpha = 1
   if (is.null(gradient)) gradient = FALSE
-  if (isTRUE(gradient)) {
-    ngrps = 100L
-  }
+  if (gradient) ngrps = 100L
+  # if (gradient && nested) col = round(rescale_num(col, to = c(1,100)))
+  if (gradient && nested) col = NULL
+  
+  ncomp = if (gradient || !nested) ngrps else length(unique(col)) 
 
   if (is.null(palette)) {
     pal_qual = get_tpar("palette.qualitative", default = NULL)
-    if (ngrps <= max(c(length(pal_qual), 8))) {
+    if (ncomp <= max(c(length(pal_qual), 8))) {
       palette = pal_qual
     } else {
       palette = get_tpar("palette.sequential", default = NULL)
@@ -37,10 +41,15 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
     }
     if (isTRUE(gradient)) {
       col = rev(col)
-    } else if (!ordered && is.numeric(col)) {
-      col = palette()[col]
+    # } else if (!ordered && is.numeric(col)) {
+    #   col = palette()[col]
     }
-    if (anyNA(col) || is.character(col)) {
+    # if (anyNA(col) || is.character(col)) {
+    if (!gradient && nested && !ordered && is.numeric(col)) { ## double check this
+      if (is.null(palette)) palette = grDevices::palette
+      cidx = col
+      col_index = TRUE
+    } else if (anyNA(col) || is.character(col)) {
       if (alpha) col = adjustcolor(col, alpha.f = alpha)
       return(col)
     }
@@ -157,12 +166,18 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
       )
     }
   }
+  
+  # if (col_index && !is.null(args$n)) args$n = max(args$n, cidx)
+  if (col_index && !is.null(args$n)) args$n = max(cidx)
+  
 
   cols = tryCatch(
     do.call(palette_fun, args),
     error = function(e) do.call(eval(palette), args) # catch for bespoke palette generating funcs
   )
 
+  if (col_index) cols = cols[cidx]
+  
   if (length(cols) > ngrps) cols = cols[1:ngrps]
 
   # For gradient and ordered colors, we'll run high to low
@@ -307,7 +322,8 @@ by_bg = function(
     ngrps,
     palette,
     ribbon.alpha,
-    type) {
+    type,
+    nested = FALSE) {
   if (is.null(bg) && !is.null(fill)) bg = fill
   if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
     alpha = bg
@@ -320,7 +336,8 @@ by_bg = function(
       palette = palette,
       gradient = by_continuous,
       ordered = by_ordered,
-      alpha = alpha
+      alpha = alpha,
+      nested = nested
     )
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)

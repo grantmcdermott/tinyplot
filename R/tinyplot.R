@@ -961,7 +961,7 @@ tinyplot.default = function(
   if ((is.null(legend) || legend != "none") && isFALSE(add)) {
     if (isFALSE(by_continuous)) {
       if (nested) {
-        lgnd_labs = col_labs
+        lgnd_labs = nested_labs
       } else if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
       } else {
@@ -985,7 +985,7 @@ tinyplot.default = function(
       pch = pch,
       lty = lty,
       lwd = lwd,
-      col = col,
+      col = if (nested && !by_continuous) unique(col) else col,
       bg = bg,
       gradient = by_continuous,
       cex = cex * cex_fct_adj,

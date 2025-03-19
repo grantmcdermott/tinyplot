@@ -847,9 +847,30 @@ tinyplot.default = function(
   # split data
   by_ordered = FALSE
   by_continuous = !is.null(by) && inherits(datapoints$by, c("numeric", "integer"))
+  
+  nested = isTRUE(dots$nested)
+  if (nested) {
+    by_nested = col
+    if (inherits(by_nested, c("numeric", "integer"))) {
+      ngrps_nested = 100
+      by_continuous = TRUE
+      datapoints$col = col
+      
+    } else {
+      col = factor(tapply(col, by, FUN = `[[`, 1))  # grab group colours
+      nested_labs = levels(col)
+      col = as.integer(col)
+      ngrps_nested = length(col)
+    }
+    # need to solve by_continuous flag below...
+  }
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
-    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
-    by_continuous = FALSE
+    # warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    # by_continuous = FALSE
+    if (!nested) {  #TEMPORARY!!!
+      warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+      by_continuous = FALSE
+    }
   } else if (!is.null(by)) {
     by_ordered = is.ordered(by)
   }
@@ -866,16 +887,17 @@ tinyplot.default = function(
 
   # aesthetics by group: col, bg, etc.
   ngrps = if (is.null(by)) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by))
+  ngrps_col = if (!nested) ngrps else ngrps_nested
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
   col = by_col(
-    ngrps = ngrps, col = col, palette = palette,
-    gradient = by_continuous, ordered = by_ordered, alpha = alpha)
+    ngrps = ngrps_col, col = col, palette = palette,
+    gradient = by_continuous, ordered = by_ordered, alpha = alpha, nested = nested)
   bg = by_bg(
     adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous,
     by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette),
-    ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type)
+    ribbon.alpha = ribbon.alpha, ngrps = ngrps_col, type = type, nested = nested)
   
   ncolors = length(col)
   lgnd_labs = rep(NA, times = ncolors)
@@ -883,7 +905,7 @@ tinyplot.default = function(
     ## Identify the pretty break points for our labels
     nlabs = 5
     ncolors = length(col)
-    ubyvar = unique(by)
+    ubyvar = if (!nested) unique(by) else(unique(by_nested))
     byvar_range = range(ubyvar)
     pbyvar = pretty(byvar_range, n = nlabs)
     pbyvar = pbyvar[pbyvar >= byvar_range[1] & pbyvar <= byvar_range[2]]
@@ -929,7 +951,7 @@ tinyplot.default = function(
     legend_args[["x"]] = "none"
   }
 
-  if (is.null(by)) {
+  if (is.null(by) && !nested) {
     if (is.null(legend)) {
       legend = "none"
       legend_args[["x"]] = "none"
@@ -938,7 +960,9 @@ tinyplot.default = function(
 
   if ((is.null(legend) || legend != "none") && isFALSE(add)) {
     if (isFALSE(by_continuous)) {
-      if (ngrps > 1) {
+      if (nested) {
+        lgnd_labs = col_labs
+      } else if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
       } else {
         lgnd_labs = ylab
@@ -1153,9 +1177,17 @@ tinyplot.default = function(
     iby = idata[["by"]]
     if (!is.null(by)) { ## maybe all(iby=="")
       if (isTRUE(by_continuous)) {
-        idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
-        idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
-        idata = list(idata)
+        if (!nested) {
+          idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
+          idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
+          idata = list(idata)
+        } else {
+          idata[["bg"]] = bg[round(rescale_num(idata$col, from = range(datapoints$col), to = c(1, 100)))]
+          idata[["col"]] = col[round(rescale_num(idata$col, from = range(datapoints$col), to = c(1, 100)))]
+          idata = lapply(idata, split, iby)
+          idata = do.call(function(...) Map("list", ...), idata)
+        }
+        
       } else {
         idata = lapply(idata, split, iby)
         idata = do.call(function(...) Map("list", ...), idata)
@@ -1324,9 +1356,15 @@ tinyplot.formula = function(
 
   ## placeholder for legend title
   legend_args = list(x = NULL)
+  
+  ## catch of col passed as formula (e.g., for nested colors)
+  col_fml = NULL
+  if (!is.null(col) && inherits(col, "formula")) {
+    col_fml = col
+  }
 
   ## process all formulas
-  tf = tinyformula(formula, facet)
+  tf = tinyformula(formula, facet, col_fml)
 
   ## set up model frame
   m = match.call(expand.dots = FALSE)
@@ -1374,6 +1412,16 @@ tinyplot.formula = function(
       attr(facet, "facet_nrow") = length(unique(yfacet))
     }
   }
+  
+  ## extract col (if any)
+  nested = FALSE
+  if (!is.null(col_fml)) {
+    col = tinyframe(tf$col, mf)
+    colnam = names(col)
+    col = if (length(colnam) == 1L) col[[colnam]] else interaction(col, sep = ":")
+    # col = factor(tapply(col, by, FUN = `[[`, 1))  # grab group colours
+    nested = TRUE
+  }
 
   ## nice axis and legend labels
   dens_type = (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
@@ -1391,7 +1439,9 @@ tinyplot.formula = function(
     if (is.null(ylab)) ylab = ynam
     if (is.null(xlab)) xlab = xnam
   }
-  if (!is.null(by)) {
+  if (nested) {
+    legend_args[["title"]] = if (length(colnam) == 1L) colnam else sprintf("interaction(%s)", paste(colnam, collapse = ", "))
+  } else if (!is.null(by)) {
     legend_args[["title"]] = if (length(bynam) == 1L) bynam else sprintf("interaction(%s)", paste(bynam, collapse = ", "))
   }
 
@@ -1418,6 +1468,7 @@ tinyplot.formula = function(
     lty = lty,
     lwd = lwd,
     restore.par = restore.par,
+    nested = nested,
     ...
   )
 }

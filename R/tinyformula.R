@@ -1,9 +1,10 @@
 ## auxiliary functions for formula/facet parsing
 
-tinyformula = function(formula, facet = NULL) {
+tinyformula = function(formula, facet = NULL, col_fml = NULL) {
   ## input
   ## - formula:       y ~ x or y ~ x | z or ~ x or ~ x | z
   ## - facet:         ~ a or ~ a + b or b ~ a
+  ## - col:           ~ c
   ##
   ## output:
   ## - x:      ~ x
@@ -11,7 +12,8 @@ tinyformula = function(formula, facet = NULL) {
   ## - by:     NULL or ~ z or ~ z1 + z2 + ... (use interaction of all)
   ## - xfacet: NULL or ~ a or ~ a + b etc.
   ## - yfacet: NULL or ~ b
-  ## - full:   e.g. ~ x + y + z + a + b
+  ## - col:    NULL or ~ c
+  ## - full:   e.g. ~ x + y + z + a + b + c
 
   ## preliminaries
   if (!inherits(formula, "formula")) formula = as.formula(formula)
@@ -27,6 +29,11 @@ tinyformula = function(formula, facet = NULL) {
   } else {
     xfacet = ~ a
     yfacet = if (length(facet) == 2L) NULL else ~ b
+  }
+  if (is.null(col_fml) || !inherits(col_fml, "formula")) {
+    col = NULL
+  } else {
+    col = ~ c
   }
 
   ## fill with actual terms
@@ -50,6 +57,10 @@ tinyformula = function(formula, facet = NULL) {
     environment(yfacet) = environment(formula)
     yfacet[[2L]] = facet[[2L]]
   }
+  if (!is.null(col)) {
+    environment(col) = environment(formula)
+    col[[2L]] = col_fml[[2L]]
+  }
 
   ## combine everything
   full = x
@@ -57,6 +68,7 @@ tinyformula = function(formula, facet = NULL) {
   if (!is.null(by))     full[[2L]] = call("+", full[[2L]], by[[2L]])
   if (!is.null(xfacet)) full[[2L]] = call("+", full[[2L]], xfacet[[2L]])
   if (!is.null(yfacet)) full[[2L]] = call("+", full[[2L]], yfacet[[2L]])
+  if (!is.null(col))    full[[2L]] = call("+", full[[2L]], col[[2L]])
 
   ## return list of all formulas
   return(list(
@@ -65,6 +77,7 @@ tinyformula = function(formula, facet = NULL) {
     by = by,
     xfacet = xfacet,
     yfacet = yfacet,
+    col = col,
     full = full
   ))
 }

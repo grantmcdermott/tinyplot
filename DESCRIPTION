@@ -42,6 +42,7 @@ Depends:
 Imports: 
   graphics,
   grDevices,
+  methods,
   stats,
   tools,
   utils

@@ -733,7 +733,6 @@ tinyplot.default = function(
       y = rep(NA, length(x))
     } else if (type == "density") {
       if (is.null(ylab)) ylab = "Density"
-    # } else if (type %in% c("histogram", "function")) {
     } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
     # } else if (type != "histogram") {

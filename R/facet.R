@@ -183,9 +183,10 @@ draw_facet_window = function(grid, ...) {
           # extra whitespace bump on the y axis
           # yaxl = axTicks(2)
           yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
-          ## overrides for ridge and spineplot types
+          ## overrides for ridge, spineplot, and violin types ## FXIME
           if (type == "ridge") yaxl = levels(y)
           if (type == "spineplot") yaxl = ylabs
+          if (type == "violin") yaxl = names(ylabs)
           # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
           whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
           if (whtsbp > 0) {
@@ -244,9 +245,10 @@ draw_facet_window = function(grid, ...) {
         # extra whitespace bump on the y axis
         # yaxl = axTicks(2)
         yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
-        ## overrides for ridge and spineplot types
+        ## overrides for ridge, spineplot, and violin types ## FXIME
         if (type == "ridge") yaxl = levels(y)
         if (type == "spineplot") yaxl = ylabs
+        if (type == "violin") yaxl = names(ylabs)
         # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
         whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {

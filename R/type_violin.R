@@ -37,8 +37,9 @@ type_violin = function(
     kernel = match.arg(kernel)
     if (is.logical(joint.bw)) {
         joint.bw = ifelse(joint.bw, "mean", "none")
+    } else {
+        joint.bw = match.arg(joint.bw)
     }
-    joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
     out = list(
         data = data_violin(bw = bw, adjust = adjust, kernel = kernel, n = n,
                             joint.bw = joint.bw, alpha = alpha),

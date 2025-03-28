@@ -34,7 +34,7 @@ type_violin = function(
         # more args from density here?
         alpha = NULL
     ) {
-    kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
+    kernel = match.arg(kernel)
     if (is.logical(joint.bw)) {
         joint.bw = ifelse(joint.bw, "mean", "none")
     }

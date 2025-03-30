@@ -11,6 +11,7 @@ type_violin(
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   n = 512,
+  trim = FALSE,
   alpha = NULL
 )
 }
@@ -57,6 +58,9 @@ the version used by S.}
     always makes sense to specify \code{n} as a power of two.
   }
 
+\item{trim}{logical indicating whether the violins should be trimmed to the
+range of the data. Default is \code{FALSE}.}
+
 \item{alpha}{numeric value between 0 and 1 specifying the opacity of ribbon shading
 If no \code{alpha} value is provided, then will default to \code{tpar("ribbon.alpha")}
 (i.e., probably \code{0.2} unless this has been overridden by the user in their global
@@ -74,6 +78,11 @@ bandwidth selection and kernel types.
 \examples{
 # "violin" type convenience string
 tinyplot(count ~ spray, data = InsectSprays, type = "violin")
+
+# aside: to match the defaults of `ggplot2::geom_violin()`, use `trim = TRUE`
+# and `joint.bw = FALSE`
+tinyplot(count ~ spray, data = InsectSprays, type = "violin",
+    trim = TRUE, joint.bw = FALSE)
 
 # use flip = TRUE to reorient the axes
 tinyplot(count ~ spray, data = InsectSprays, type = "violin", flip = TRUE)

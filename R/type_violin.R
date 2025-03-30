@@ -5,6 +5,8 @@
 #'   plots for visualizing continuous distributions (by group) in the form of
 #'   mirrored densities.
 #' @inheritParams type_density
+#' @param  trim logical indicating whether the violins should be trimmed to the
+#'   range of the data. Default is `FALSE`.
 #' @inherit stats::density details
 #' @details See [`type_density`] for more details and considerations related to
 #'   bandwidth selection and kernel types.
@@ -12,6 +14,11 @@
 #' @examples
 #' # "violin" type convenience string
 #' tinyplot(count ~ spray, data = InsectSprays, type = "violin")
+#' 
+#' # aside: to match the defaults of `ggplot2::geom_violin()`, use `trim = TRUE`
+#' # and `joint.bw = FALSE`
+#' tinyplot(count ~ spray, data = InsectSprays, type = "violin",
+#'     trim = TRUE, joint.bw = FALSE)
 #' 
 #' # use flip = TRUE to reorient the axes
 #' tinyplot(count ~ spray, data = InsectSprays, type = "violin", flip = TRUE)
@@ -32,6 +39,7 @@ type_violin = function(
         kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"),
         n = 512,
         # more args from density here?
+        trim = FALSE,
         alpha = NULL
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
@@ -41,7 +49,7 @@ type_violin = function(
     joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
     out = list(
         data = data_violin(bw = bw, adjust = adjust, kernel = kernel, n = n,
-                            joint.bw = joint.bw, alpha = alpha),
+                            joint.bw = joint.bw, alpha = alpha, trim = trim),
         # draw = NULL,
         # name = "polygon"
         draw = draw_polygon(density = NULL),
@@ -52,7 +60,7 @@ type_violin = function(
 }
 
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
-                        joint.bw = "none", alpha = NULL) {
+                        joint.bw = "none", alpha = NULL, trim = FALSE) {
     fun = function(datapoints,  by, facet, ylab, col, bg, palette, ...) {
         
         # Convert x to factor if it's not already
@@ -112,6 +120,13 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             
             x = dens$y
             y = dens$x
+            
+            if (isTRUE(trim)) {
+                yrng = range(dat$y)
+                yridx = y >= yrng[1] & y <= yrng[2] 
+                x = x[yridx]
+                y = y[yridx]
+            }
     
             x = c(x, rev(-x))
             y = c(y, rev(y))

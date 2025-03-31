@@ -11,8 +11,7 @@ type_violin(
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   n = 512,
-  trim = FALSE,
-  alpha = NULL
+  trim = FALSE
 )
 }
 \arguments{
@@ -60,11 +59,6 @@ the version used by S.}
 
 \item{trim}{logical indicating whether the violins should be trimmed to the
 range of the data. Default is \code{FALSE}.}
-
-\item{alpha}{numeric value between 0 and 1 specifying the opacity of ribbon shading
-If no \code{alpha} value is provided, then will default to \code{tpar("ribbon.alpha")}
-(i.e., probably \code{0.2} unless this has been overridden by the user in their global
-settings.)}
 }
 \description{
 Type function for violin plots, which are an alternative to box

@@ -47,8 +47,7 @@ type_violin = function(
         kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"),
         n = 512,
         # more args from density here?
-        trim = FALSE,
-        alpha = NULL
+        trim = FALSE
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
     if (is.logical(joint.bw)) {
@@ -57,7 +56,7 @@ type_violin = function(
     joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
     out = list(
         data = data_violin(bw = bw, adjust = adjust, kernel = kernel, n = n,
-                            joint.bw = joint.bw, alpha = alpha, trim = trim),
+                            joint.bw = joint.bw, trim = trim),
         # draw = NULL,
         # name = "polygon"
         draw = draw_polygon(density = NULL),
@@ -68,7 +67,7 @@ type_violin = function(
 }
 
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
-                        joint.bw = "none", alpha = NULL, trim = FALSE) {
+                        joint.bw = "none", trim = FALSE) {
     fun = function(datapoints,  by, facet, ylab, col, bg, palette, ...) {
         
         # Handle ordering based on by and facet variables
@@ -84,6 +83,14 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             y_by = identical(datapoints$y, datapoints$by)
             if (!null_facet) facet_by = identical(datapoints$facet, datapoints$by)
         }
+        
+        ## FIXME: if we need to use this then gradient should be y_by not x_by
+        # if (x_by) {
+        #     gradient = TRUE
+        #     datapoints$by = ""
+        # } else if (y_by) {
+        #     datapoints$by = ""
+        # }
         
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
@@ -118,7 +125,6 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 
         
         datapoints = split(datapoints, list(datapoints$x, datapoints$by, datapoints$facet))
-        # datapoints = split(datapoints, list(datapoints$x, datapoints$facet))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
         
         if (joint.bw == "none" || is.numeric(bw)) {

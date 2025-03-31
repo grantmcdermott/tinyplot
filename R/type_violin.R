@@ -84,6 +84,15 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             if (!null_facet) facet_by = identical(datapoints$facet, datapoints$by)
         }
         
+        # FIXME (once we add support for gradient fill to draw_polygon)
+        if (y_by) {
+            warning("\n`y` == `by` is not currently supported for `type_violin`. We hope to support this in a future release, but for now `y` grouping will be turned off automatically.\n")
+            by = NULL
+            datapoints$by = ""
+            ngrps = 1
+            null_by = TRUE
+        }
+        
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
         if (x_by) datapoints$by = datapoints$x
@@ -177,8 +186,6 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         })
         datapoints = do.call(rbind, datapoints)
         datapoints = datapoints[1:(nrow(datapoints)-1), ]
-        # datapoints$ymax = datapoints$y
-        # datapoints$ymin = rep.int(0, nrow(datapoints))
         
         out = list(
             datapoints = datapoints,

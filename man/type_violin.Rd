@@ -90,7 +90,15 @@ tinyplot(count ~ spray, data = InsectSprays, type = "violin", flip = TRUE)
 # for flipped plots with long group labels, it's better to use a theme for
 # dynamic plot resizing
 tinytheme("clean")
-tinyplot(weight ~ feed, chickwts, type = "violin", flip = TRUE)
+tinyplot(weight ~ feed, data = chickwts, type = "violin", flip = TRUE)
+
+# you can group by the x var to add colour (here with the original orientation)
+tinyplot(weight ~ feed | feed, data = chickwts, type = "violin", legend = FALSE)
+
+# dodged grouped violin plot example (different dataset)
+tinyplot(len ~ dose | supp, data = ToothGrowth, type = "violin", fill = 0.2)
+
+# reset theme
 tinytheme()
 
 }

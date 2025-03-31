@@ -26,7 +26,15 @@
 #' # for flipped plots with long group labels, it's better to use a theme for
 #' # dynamic plot resizing
 #' tinytheme("clean")
-#' tinyplot(weight ~ feed, chickwts, type = "violin", flip = TRUE)
+#' tinyplot(weight ~ feed, data = chickwts, type = "violin", flip = TRUE)
+#' 
+#' # you can group by the x var to add colour (here with the original orientation)
+#' tinyplot(weight ~ feed | feed, data = chickwts, type = "violin", legend = FALSE)
+#' 
+#' # dodged grouped violin plot example (different dataset)
+#' tinyplot(len ~ dose | supp, data = ToothGrowth, type = "violin", fill = 0.2)
+#' 
+#' # reset theme
 #' tinytheme()
 #' 
 #' @importFrom stats density weighted.mean
@@ -63,8 +71,23 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", alpha = NULL, trim = FALSE) {
     fun = function(datapoints,  by, facet, ylab, col, bg, palette, ...) {
         
+        # Handle ordering based on by and facet variables
+        ngrps = length(unique(datapoints$by))
+        null_by = ngrps == 1
+        nfacets = length(unique(datapoints$facet))
+        null_facet = nfacets == 1
+        
+        #  catch for special cases
+        x_by = y_by = facet_by = FALSE
+        if (!null_by) {
+            x_by = identical(datapoints$x, datapoints$by)
+            y_by = identical(datapoints$y, datapoints$by)
+            if (!null_facet) facet_by = identical(datapoints$facet, datapoints$by)
+        }
+        
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
+        if (x_by) datapoints$by = datapoints$x
 
         # Handle factor levels and maintain order
         xlvls = levels(datapoints$x)
@@ -72,10 +95,6 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         names(xlabs) = xlvls
         # xlabs = levels(datapoints$x)
         datapoints$x = as.integer(datapoints$x)
-        
-        # Handle ordering based on by and facet variables
-        null_by = length(unique(datapoints$by)) == 1
-        null_facet = length(unique(datapoints$facet)) == 1
 
         if (null_by && null_facet) {
             xord = order(datapoints$x)
@@ -99,6 +118,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 
         
         datapoints = split(datapoints, list(datapoints$x, datapoints$by, datapoints$facet))
+        # datapoints = split(datapoints, list(datapoints$x, datapoints$facet))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
         
         if (joint.bw == "none" || is.numeric(bw)) {
@@ -131,8 +151,17 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             x = c(x, rev(-x))
             y = c(y, rev(y))
             
-            x = (x-min(x)) / max(x-min(x) * 1.1)
-            x = x + d - .5
+            xwidth = xwidth_orig = 0.9
+            # dodge groups (if any)
+            if (ngrps > 1  && isFALSE(x_by) && isFALSE(facet_by)) {
+                xwidth = xwidth_orig / ngrps - 0.01
+                x = rescale_num(x, to = c(0, xwidth))
+                x = x + as.numeric(sub("^([0-9]+)\\..*", "\\1", names(datapoints)[d])) - xwidth/2
+                x = x + seq(-((xwidth_orig - xwidth) / 2), ((xwidth_orig - xwidth) / 2), length.out = ngrps)[dat$by[1]]
+            } else {
+                x = rescale_num(x, to = c(0, xwidth))
+                x = x + d - xwidth/2
+            }
             
             x = c(x, NA)
             y = c(y, NA)

@@ -84,14 +84,6 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             if (!null_facet) facet_by = identical(datapoints$facet, datapoints$by)
         }
         
-        ## FIXME: if we need to use this then gradient should be y_by not x_by
-        # if (x_by) {
-        #     gradient = TRUE
-        #     datapoints$by = ""
-        # } else if (y_by) {
-        #     datapoints$by = ""
-        # }
-        
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
         if (x_by) datapoints$by = datapoints$x
@@ -159,11 +151,14 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             
             xwidth = xwidth_orig = 0.9
             # dodge groups (if any)
-            if (ngrps > 1  && isFALSE(x_by) && isFALSE(facet_by)) {
+            if ((ngrps > 1)  && isFALSE(x_by) && isFALSE(facet_by)) {
                 xwidth = xwidth_orig / ngrps - 0.01
                 x = rescale_num(x, to = c(0, xwidth))
                 x = x + as.numeric(sub("^([0-9]+)\\..*", "\\1", names(datapoints)[d])) - xwidth/2
                 x = x + seq(-((xwidth_orig - xwidth) / 2), ((xwidth_orig - xwidth) / 2), length.out = ngrps)[dat$by[1]]
+            } else if (nfacets > 1) {
+                x = rescale_num(x, to = c(0, xwidth))
+                x = x + as.numeric(sub("^([0-9]+)\\..*", "\\1", names(datapoints)[d])) - xwidth/2
             } else {
                 x = rescale_num(x, to = c(0, xwidth))
                 x = x + d - xwidth/2

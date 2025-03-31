@@ -68,7 +68,7 @@ type_violin = function(
 
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", trim = FALSE) {
-    fun = function(datapoints,  by, facet, ylab, col, bg, palette, ...) {
+    fun = function(datapoints,  by, facet, ylab, col, bg, palette, log, ...) {
         
         # Handle ordering based on by and facet variables
         ngrps = length(unique(datapoints$by))
@@ -143,18 +143,26 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         
         datapoints = lapply(seq_along(datapoints), function(d) {
             dat = datapoints[[d]]
-            dens = density(dat$y, bw = dens_bw, kernel = kernel, n = n)
+            if (trim) {
+                yrng = range(dat$y)
+                dens = density(dat$y, bw = dens_bw, kernel = kernel, n = n, from = yrng[1], to = yrng[2])
+            } else {
+                dens = density(dat$y, bw = dens_bw, kernel = kernel, n = n)
+            }
             
             x = dens$y
             y = dens$x
             
-            if (isTRUE(trim)) {
-                yrng = range(dat$y)
-                yridx = y >= yrng[1] & y <= yrng[2] 
-                x = x[yridx]
-                y = y[yridx]
+            
+            if (log %in% c("y", "xy")) {
+                if (x[1] <= 0) {
+                    warning("\nNon-positive density values have been trimmed as part of the logarthmic transformation.\n")
+                    xidx = x > 0
+                    x = x[xidx]
+                    y = y[xidx]
+                } 
             }
-    
+            
             x = c(x, rev(-x))
             y = c(y, rev(y))
             

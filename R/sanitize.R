@@ -39,6 +39,7 @@ sanitize_type = function(type, x, y, dots) {
     "spine", "spineplot",
     "spline",
     "text",
+    "violin",
     "vline"
   )
   assert_choice(type, known_types, null.ok = TRUE)
@@ -89,6 +90,7 @@ sanitize_type = function(type, x, y, dots) {
     "spineplot"  = type_spineplot,
     "spline"     = type_spline,
     "text"       = type_text,
+    "violin"     = type_violin,
     "vline"      = type_vline,
     type           # default case
   )

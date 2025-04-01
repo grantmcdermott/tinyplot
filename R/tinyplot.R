@@ -114,6 +114,7 @@
 #'       - `"ridge"` / [`type_ridge()`]: Creates a ridgeline (aka joy) plot.
 #'       - `"rug"` / [`type_rug()`]: Adds a rug to an existing plot.
 #'       - `"spineplot"` / [`type_spineplot()`]: Creates a spineplot or spinogram.
+#'       - `"violin"` / [`type_violin()`]: Creates a violin plot.
 #'     - Models:
 #'       - `"loess"` / [`type_loess()`]: Local regression curve.
 #'       - `"lm"` / [`type_lm()`]: Linear regression line.
@@ -733,7 +734,6 @@ tinyplot.default = function(
       y = rep(NA, length(x))
     } else if (type == "density") {
       if (is.null(ylab)) ylab = "Density"
-    # } else if (type %in% c("histogram", "function")) {
     } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
     # } else if (type != "histogram") {
@@ -770,6 +770,7 @@ tinyplot.default = function(
       bg           = bg,
       by           = by,
       col          = col,
+      log          = log,
       lty          = lty,
       lwd          = lwd,
       facet        = facet,

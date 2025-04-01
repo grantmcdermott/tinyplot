@@ -183,9 +183,10 @@ draw_facet_window = function(grid, ...) {
           # extra whitespace bump on the y axis
           # yaxl = axTicks(2)
           yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
-          ## overrides for ridge and spineplot types
+          ## overrides for ridge, spineplot, and violin types ## FXIME
           if (type == "ridge") yaxl = levels(y)
           if (type == "spineplot") yaxl = ylabs
+          if (type == "violin") yaxl = names(ylabs)
           # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
           whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
           if (whtsbp > 0) {
@@ -244,9 +245,10 @@ draw_facet_window = function(grid, ...) {
         # extra whitespace bump on the y axis
         # yaxl = axTicks(2)
         yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
-        ## overrides for ridge and spineplot types
+        ## overrides for ridge, spineplot, and violin types ## FXIME
         if (type == "ridge") yaxl = levels(y)
         if (type == "spineplot") yaxl = ylabs
+        if (type == "violin") yaxl = names(ylabs)
         # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
         whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {
@@ -328,8 +330,8 @@ draw_facet_window = function(grid, ...) {
           lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1),
           lty = get_tpar(c("lty.yaxs", "lty.axis"), 1)
         )
-        type_range_x = type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)
-        type_range_y = isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)
+        type_range_x = type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)
+        type_range_y = isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)
         if (type_range_x) {
           args_x = modifyList(args_x, list(at = xlabs, labels = names(xlabs)))
         }
@@ -368,12 +370,12 @@ draw_facet_window = function(grid, ...) {
           # Explicitly set (override) the current facet extent
           par(usr = fusr[[ii]])
           # if plot frame is true then print axes per normal...
-          if (type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(xlabs)) {
+          if (type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)) {
             tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
           } else {
             tinyAxis(xfree, side = xside, type = xaxt)
           }
-          if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p") && !is.null(ylabs)) {
+          if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
             tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
           } else {
             tinyAxis(yfree, side = yside, type = yaxt)

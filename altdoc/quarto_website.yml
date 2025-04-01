@@ -75,6 +75,8 @@ website:
             file: man/type_rug.qmd
           - text: type_spineplot
             file: man/type_spineplot.qmd
+          - text: type_violin
+            file: man/type_violin.qmd
         - section: "Models"
           contents:
           - text: type_glm

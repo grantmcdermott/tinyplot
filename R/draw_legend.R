@@ -170,7 +170,7 @@ draw_legend = function(
     legend_args[["lty"]] = 0
   }
   
-  if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge", "barplot")) || isTRUE(gradient)) {
+  if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge", "barplot", "violin")) || isTRUE(gradient)) {
     legend_args[["pch"]] = 22
     legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% 3.5
     legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25

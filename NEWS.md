@@ -6,22 +6,25 @@ where the formatting is also better._
 
 ## 0.3.0.99 (dev version)
 
-New features:
+### New features:
 
-- New plot types:
-  - `type = "barplot"` / `type = type_barplot()` for bar plots. This closes out
+#### New plot types
+
+- `type = "barplot"` / `type = type_barplot()` for bar plots. This closes out
   one of the last remaining canonical base plot types that we wanted to provide
   a native `tinyplot` equivalent for. (#305 @zeileis and @grantmcdermott) 
+- `type = "violin"` / `type = type_violin()` for violin plots. (#354 @grantmcdermott)
+
+#### Other new features
 
 - `tinyplot(..., file = "*.pdf")` will now default to using `cairo_pdf()` if
   cairo graphics are supported on the user's machine. This should help to ensure
-  better fidelity of (non-standard) fonts in PDFs. (#311 @grantcdermott)
-
+  better fidelity of (non-standard) fonts in PDFs. (#311 @grantmcdermott)
 - The palette argument now accepts a vector or list of manual colours, e.g.
   `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
   `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)
 
-Bugs fixes:
+### Bugs fixes:
 
 - The `tinyplot(..., cex = <cex>)` argument should be respected when using
   `type = "b"`. Thanks to @rjknell for report #307 and @vincentarelbundock for
@@ -39,7 +42,7 @@ Bugs fixes:
 - The `tinyplot(..., pch = <pch>)` argument now accepts character literals, e.g.
   `pch = "."`. (#338 @grantmcdermott)
 
-Internals:
+### Internals:
 
 - The order of the nested loop for drawing interior plot elements has been
   switched. We now loop over facets first (outer loop) before looping over
@@ -48,7 +51,8 @@ Internals:
   should simplify the creation of certain plot types. (#331 @grantmcdermott)
 
 
-Misc:
+### Misc:
+
 - Improved column spacing of Arguments in the References section of the website.
   (#328 thanks to @etiennebacher's upstream `altdoc` fix)
 

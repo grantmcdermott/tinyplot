@@ -87,6 +87,7 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 | `"ridge"`                  | `type_ridge()`      | Creates a ridgeline (aka joy) plot.            | [link](/man/type_ridge.qmd) |
 | `"rug"`                    | `type_rug()`        | Adds a rug to an existing plot.                | [link](/man/type_rug.qmd) |
 | `"spineplot"` / `"spine"`  | `type_spineplot()`  | Creates a spine plot or spinogram.             | [link](/man/type_spineplot.qmd) |
+| `"violin"`                 | `type_violin()`     | Creates a violin plot.                         | [link](/man/type_violin.qmd) |
   
 #### Models
 

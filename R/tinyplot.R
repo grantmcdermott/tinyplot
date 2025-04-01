@@ -114,6 +114,7 @@
 #'       - `"ridge"` / [`type_ridge()`]: Creates a ridgeline (aka joy) plot.
 #'       - `"rug"` / [`type_rug()`]: Adds a rug to an existing plot.
 #'       - `"spineplot"` / [`type_spineplot()`]: Creates a spineplot or spinogram.
+#'       - `"violin"` / [`type_violin()`]: Creates a violin plot.
 #'     - Models:
 #'       - `"loess"` / [`type_loess()`]: Local regression curve.
 #'       - `"lm"` / [`type_lm()`]: Linear regression line.

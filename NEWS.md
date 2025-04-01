@@ -41,6 +41,8 @@ where the formatting is also better._
 - `type_text()` now accepts non-character labels. (#336 @grantmcdermott)
 - The `tinyplot(..., pch = <pch>)` argument now accepts character literals, e.g.
   `pch = "."`. (#338 @grantmcdermott)
+- Line plots (`type_lines()`/`"l"`) now pass on the `bg` argument to the
+  drawing function. Thanks to @wviechtb for report #355 (@zeileis).
 
 ### Internals:
 

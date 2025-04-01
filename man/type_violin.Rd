@@ -11,7 +11,8 @@ type_violin(
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   n = 512,
-  trim = FALSE
+  trim = FALSE,
+  width = 0.9
 )
 }
 \arguments{
@@ -59,6 +60,9 @@ the version used by S.}
 
 \item{trim}{logical indicating whether the violins should be trimmed to the
 range of the data. Default is \code{FALSE}.}
+
+\item{width}{numeric (ideally in the range \verb{[0, 1]}, although this isn't
+enforced) giving the normalized width of the individual violins.}
 }
 \description{
 Type function for violin plots, which are an alternative to box
@@ -91,6 +95,13 @@ tinyplot(weight ~ feed | feed, data = chickwts, type = "violin", legend = FALSE)
 
 # dodged grouped violin plot example (different dataset)
 tinyplot(len ~ dose | supp, data = ToothGrowth, type = "violin", fill = 0.2)
+
+# note: above we relied on `...` argument passing alongside the "violin"
+# type convenience string. But this won't work for `width`, since it will
+# clash with the top-level `tinyplot(..., width = <width>)` arg. To ensure
+# correct arg passing, it's safer to use the formal `type_violin()` option.
+tinyplot(len ~ dose | supp, data = ToothGrowth, fill = 0.2,
+    type = type_violin(width = 0.8))
 
 # reset theme
 tinytheme()

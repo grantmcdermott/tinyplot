@@ -42,7 +42,9 @@ where the formatting is also better._
 - The `tinyplot(..., pch = <pch>)` argument now accepts character literals, e.g.
   `pch = "."`. (#338 @grantmcdermott)
 - Line plots (`type_lines()`/`"l"`) now pass on the `bg` argument to the
-  drawing function. Thanks to @wviechtb for report #355 (@zeileis).
+  drawing function. Thanks to @wviechtb for report in #355 (@zeileis).
+- Fixed dynamic LHS margin spacing for flipped `"boxplot"` and `"jitter"` types.
+  Thanks to @eddelbuettel for the report in #357 (@grantmcdermott).
 
 ### Internals:
 

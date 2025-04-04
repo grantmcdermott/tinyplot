@@ -10,6 +10,7 @@ type_barplot(
   center = FALSE,
   FUN = NULL,
   xlevels = NULL,
+  xaxlabels = NULL,
   drop.zeros = FALSE
 )
 }
@@ -33,6 +34,9 @@ group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: me
 
 \item{xlevels}{a character or numeric vector specifying in which order the
 levels of the \code{x} variable should be plotted.}
+
+\item{xaxlabels}{a character vector with the axis labels for the \code{x} variable,
+defaulting to the levels of \code{x}.}
 
 \item{drop.zeros}{logical. Should bars with zero height be dropped? If set
 to \code{FALSE} (default) a zero height bar is still drawn for which the border

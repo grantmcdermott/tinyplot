@@ -21,6 +21,8 @@
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
 #' @param xlevels a character or numeric vector specifying in which order the
 #'   levels of the `x` variable should be plotted.
+#' @param xaxlabels a character vector with the axis labels for the `x` variable,
+#'   defaulting to the levels of `x`.
 #' @param drop.zeros logical. Should bars with zero height be dropped? If set
 #'   to `FALSE` (default) a zero height bar is still drawn for which the border
 #'   lines will still be visible.
@@ -52,9 +54,9 @@
 #' tinytheme()
 #' 
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
   out = list(
-    data = data_barplot(width = width, beside = beside, center = center, FUN = FUN, xlevels = xlevels, drop.zeros = drop.zeros),
+    data = data_barplot(width = width, beside = beside, center = center, FUN = FUN, xlevels = xlevels, xaxlabels = xaxlabels, drop.zeros = drop.zeros),
     draw = draw_rect(),
     name = "barplot"
   )
@@ -63,7 +65,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 }
 
 #' @importFrom stats aggregate
-data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, drop.zeros = FALSE) {
+data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
     fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, xaxt = NULL, yaxt = NULL, axes = TRUE, facet_by = NULL, ...) {
 
         ## tabulate/aggregate datapoints
@@ -79,6 +81,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         }
         if (!is.factor(datapoints$x)) datapoints$x = factor(datapoints$x)
         if (!is.null(xlevels)) datapoints$x = factor(datapoints$x, levels = if(is.numeric(xlevels)) levels(x)[xlevels] else xlevels)
+        if (!is.null(xaxlabels)) levels(datapoints$x) <- xaxlabels
         datapoints = aggregate(datapoints[, "y", drop = FALSE], datapoints[, c("x", "by", "facet")], FUN = FUN, drop = FALSE)
         datapoints$y[is.na(datapoints$y)] = 0 #FIXME: always?#
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)

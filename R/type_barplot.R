@@ -77,10 +77,6 @@ data_barplot = function(width = 5/6, beside = FALSE, FUN = NULL, xlevels = NULL,
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
         
-        if (!beside && any(datapoints$y < 0)) {
-          warning("'beside' must be TRUE if there are negative 'y' values")
-          beside = TRUE
-        }
         if (is.null(xlim)) xlim = c(1, length(levels(datapoints$x))) + c(-0.5, 0.5) * width
         if (is.null(ylim)) ylim = if (beside || length(unique(datapoints$by)) == 1L) {
           c(pmin(0, min(datapoints$y, na.rm = TRUE) * 1.02), pmax(0, max(datapoints$y, na.rm = TRUE) * 1.02))

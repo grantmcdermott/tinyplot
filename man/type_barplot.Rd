@@ -61,7 +61,7 @@ tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE, fill = 0.2)
 # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
 # through the `type_barplot()` functional equivalent.
 tinyplot(~ cyl | vs, data = mtcars, fill = 0.2,
-  type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = .65))
+  type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65))
 
 tinytheme("clean2")
 
@@ -72,6 +72,13 @@ tinyplot(extra ~ ID | group, facet = "by", data = sleep,
 # Fancy frequency table:
 tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),
   type = "barplot", facet.args = list(nrow = 1), flip = TRUE, fill = 0.6)
+
+# Centered barplot for conditional proportions of hair color (black/brown vs.
+# red/blond) given eye color and sex
+tinytheme("clean2", palette.qualitative = c("black", "sienna", "indianred", "goldenrod"))
+hec <- as.data.frame(proportions(HairEyeColor, 2:3))
+tinyplot(Freq ~ Eye | Hair, facet = ~ Sex, data = hec, type = "barplot",
+  center = TRUE, flip = TRUE, facet.args = list(ncol = 1))
 
 tinytheme()
 

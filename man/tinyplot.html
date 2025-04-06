@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.43">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-831a6e13d34e89ab8943621a9b1bffba.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -521,25 +521,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 tinyplot(
   x = NULL,
   y = NULL,
+  xmin = NULL,
+  xmax = NULL,
+  ymin = NULL,
+  ymax = NULL,
   by = NULL,
   facet = NULL,
   facet.args = NULL,
   data = NULL,
   type = NULL,
-  xlim = NULL,
-  ylim = NULL,
-  log = "",
+  legend = NULL,
   main = NULL,
   sub = NULL,
   xlab = NULL,
   ylab = NULL,
   ann = par("ann"),
+  xlim = NULL,
+  ylim = NULL,
   axes = TRUE,
+  xaxt = NULL,
+  yaxt = NULL,
+  xaxs = NULL,
+  yaxs = NULL,
+  xaxl = NULL,
+  yaxl = NULL,
+  log = "",
+  flip = FALSE,
   frame.plot = NULL,
-  asp = NA,
   grid = NULL,
   palette = NULL,
-  legend = NULL,
   pch = NULL,
   lty = NULL,
   lwd = NULL,
@@ -548,22 +558,14 @@ tinyplot(
   fill = NULL,
   alpha = NULL,
   cex = 1,
-  restore.par = FALSE,
-  xmin = NULL,
-  xmax = NULL,
-  ymin = NULL,
-  ymax = NULL,
   add = FALSE,
   draw = NULL,
+  empty = FALSE,
+  restore.par = FALSE,
   file = NULL,
   width = NULL,
   height = NULL,
-  empty = FALSE,
-  xaxt = NULL,
-  yaxt = NULL,
-  flip = FALSE,
-  xaxs = NULL,
-  yaxs = NULL,
+  asp = NA,
   ...
 )
 
@@ -620,6 +622,14 @@ the x and y arguments provide the x and y coordinates for the plot. Any reasonab
 </td>
 <td>
 other graphical parameters. If <code>type</code> is a character specification (such as <code>“hist”</code>) then any argument names that match those from the corresponding <code style="white-space: pre;">type_*()</code> function (such as <code>type_hist</code>) are passed on to that. All remaining arguments from <code>…</code> can be further graphical parameters, see <code>par</code>).
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="xmin">xmin</code>, <code id="xmax">xmax</code>, <code id="ymin">ymin</code>, <code id="ymax">ymax</code>
+</td>
+<td>
+minimum and maximum coordinates of relevant area or interval plot types. Only used when the <code>type</code> argument is one of <code>“rect”</code> or <code>“segments”</code> (where all four min-max coordinates are required), or <code>“pointrange”</code>, <code>“errorbar”</code>, or <code>“ribbon”</code> (where only <code>ymin</code> and <code>ymax</code> required alongside <code>x</code>).
 </td>
 </tr>
 <tr>
@@ -838,26 +848,24 @@ a data.frame (or list) from which the variables in formula should be taken. A ma
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="xlim">xlim</code>
+<code id="legend">legend</code>
 </td>
 <td>
-the x limits (x1, x2) of the plot. Note that x1 &gt; x2 is allowed and leads to a ‘reversed axis’. The default value, NULL, indicates that the range of the <code>finite</code> values to be plotted should be used.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="ylim">ylim</code>
-</td>
-<td>
-the y limits of the plot.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="log">log</code>
-</td>
-<td>
-a character string which contains "x" if the x axis is to be logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if both axes are to be logarithmic.
+<p>one of the following options:</p>
+<ul>
+<li>
+<p>NULL (default), in which case the legend will be determined by the grouping variable. If there is no group variable (i.e., <code>by</code> is NULL) then no legend is drawn. If a grouping variable is detected, then an automatic legend is drawn to the <em>outer</em> right of the plotting area. Note that the legend title and categories will automatically be inferred from the <code>by</code> argument and underlying data.</p>
+</li>
+<li>
+<p>A convenience string indicating the legend position. The string should correspond to one of the position keywords supported by the base <code>legend</code> function, e.g.&nbsp;"right", "topleft", "bottom", etc. In addition, <code>tinyplot</code> supports adding a trailing exclamation point to these keywords, e.g. "right!", "topleft!", or "bottom!". This will place the legend <em>outside</em> the plotting area and adjust the margins of the plot accordingly. Finally, users can also turn off any legend printing by specifying "none".</p>
+</li>
+<li>
+<p>Logical value, where TRUE corresponds to the default case above (same effect as specifying NULL) and FALSE turns the legend off (same effect as specifying "none").</p>
+</li>
+<li>
+<p>A list or, equivalently, a dedicated <code>legend()</code> function with supported legend arguments, e.g.&nbsp;"bty", "horiz", and so forth.</p>
+</li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -902,6 +910,22 @@ a logical value indicating whether the default annotation (title and x and y axi
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="xlim">xlim</code>
+</td>
+<td>
+the x limits (x1, x2) of the plot. Note that x1 &gt; x2 is allowed and leads to a ‘reversed axis’. The default value, NULL, indicates that the range of the <code>finite</code> values to be plotted should be used.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="ylim">ylim</code>
+</td>
+<td>
+the y limits of the plot.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="axes">axes</code>
 </td>
 <td>
@@ -910,18 +934,50 @@ logical or character. Should axes be drawn (<code>TRUE</code> or <code>FALSE</co
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="frame.plot">frame.plot</code>
+<code id="xaxt">xaxt</code>, <code id="yaxt">yaxt</code>
 </td>
 <td>
-a logical indicating whether a box should be drawn around the plot. Can also use <code>frame</code> as an acceptable argument alias. The default is to draw a frame if both axis types (set via <code>axes</code>, <code>xaxt</code>, or <code>yaxt</code>) include axis lines.
+character specifying the type of x-axis and y-axis, respectively. See <code>axes</code> for the possible values.
 </td>
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="asp">asp</code>
+<code id="xaxs">xaxs</code>, <code id="yaxs">yaxs</code>
 </td>
 <td>
-the y/xy/x aspect ratio, see <code>plot.window</code>.
+character specifying the style of the interval calculation used for the x-axis and y-axis, respectively. See <code>par</code> for the possible values.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="xaxl">xaxl</code>, <code id="yaxl">yaxl</code>
+</td>
+<td>
+A formatting function (or character string) to apply to the x- or y-axis tick labels. This affects the <em>appearance</em> of the labels only, not the calculation or positioning of the tick marks. In addition to custom functions, users can supply one of several convenience strings for common formats: <code>“percent”</code>, <code>“comma”</code>, <code>“dollar”</code>, <code>“euro”</code>, or <code>“sterling”</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="log">log</code>
+</td>
+<td>
+a character string which contains "x" if the x axis is to be logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if both axes are to be logarithmic.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="flip">flip</code>
+</td>
+<td>
+logical. Should the plot orientation be flipped, so that the y-axis is on the horizontal plane and the x-axis is on the vertical plane? Default is FALSE.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="frame.plot">frame.plot</code>
+</td>
+<td>
+a logical indicating whether a box should be drawn around the plot. Can also use <code>frame</code> as an acceptable argument alias. The default is to draw a frame if both axis types (set via <code>axes</code>, <code>xaxt</code>, or <code>yaxt</code>) include axis lines.
 </td>
 </tr>
 <tr>
@@ -958,28 +1014,6 @@ the y/xy/x aspect ratio, see <code>plot.window</code>.
 </li>
 <li>
 <p>A vector or list of colours, e.g.&nbsp;<code>c(“darkorange”, “purple”, “cyan4”)</code>. If too few colours are provided for a discrete (qualitative) set of groups, then the colours will be recycled with a warning. For continuous (sequential) groups, a gradient palette will be interpolated.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="legend">legend</code>
-</td>
-<td>
-<p>one of the following options:</p>
-<ul>
-<li>
-<p>NULL (default), in which case the legend will be determined by the grouping variable. If there is no group variable (i.e., <code>by</code> is NULL) then no legend is drawn. If a grouping variable is detected, then an automatic legend is drawn to the <em>outer</em> right of the plotting area. Note that the legend title and categories will automatically be inferred from the <code>by</code> argument and underlying data.</p>
-</li>
-<li>
-<p>A convenience string indicating the legend position. The string should correspond to one of the position keywords supported by the base <code>legend</code> function, e.g.&nbsp;"right", "topleft", "bottom", etc. In addition, <code>tinyplot</code> supports adding a trailing exclamation point to these keywords, e.g. "right!", "topleft!", or "bottom!". This will place the legend <em>outside</em> the plotting area and adjust the margins of the plot accordingly. Finally, users can also turn off any legend printing by specifying "none".</p>
-</li>
-<li>
-<p>Logical value, where TRUE corresponds to the default case above (same effect as specifying NULL) and FALSE turns the legend off (same effect as specifying "none").</p>
-</li>
-<li>
-<p>A list or, equivalently, a dedicated <code>legend()</code> function with supported legend arguments, e.g.&nbsp;"bty", "horiz", and so forth.</p>
 </li>
 </ul>
 </td>
@@ -1059,22 +1093,6 @@ character expansion. A numerical vector (can be a single value) giving the amoun
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="restore.par">restore.par</code>
-</td>
-<td>
-a logical value indicating whether the <code>par</code> settings prior to calling <code>tinyplot</code> should be restored on exit. Defaults to FALSE, which makes it possible to add elements to the plot after it has been drawn. However, note the the outer margins of the graphics device may have been altered to make space for the <code>tinyplot</code> legend. Users can opt out of this persistent behaviour by setting to TRUE instead. See also get_saved_par for another option to recover the original <code>par</code> settings, as well as longer discussion about the trade-offs involved.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="xmin">xmin</code>, <code id="xmax">xmax</code>, <code id="ymin">ymin</code>, <code id="ymax">ymax</code>
-</td>
-<td>
-minimum and maximum coordinates of relevant area or interval plot types. Only used when the <code>type</code> argument is one of <code>“rect”</code> or <code>“segments”</code> (where all four min-max coordinates are required), or <code>“pointrange”</code>, <code>“errorbar”</code>, or <code>“ribbon”</code> (where only <code>ymin</code> and <code>ymax</code> required alongside <code>x</code>).
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="add">add</code>
 </td>
 <td>
@@ -1087,6 +1105,22 @@ logical. If TRUE, then elements are added to the current plot rather than drawin
 </td>
 <td>
 a function that draws directly on the plot canvas (before <code>x</code> and <code>y</code> are plotted). The <code>draw</code> argument is primarily useful for adding common elements to each facet of a faceted plot, e.g. <code>abline</code> or <code>text</code>. Note that this argument is somewhat experimental and that <em>no</em> internal checking is done for correctness; the provided argument is simply captured and evaluated as-is. See Examples.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="empty">empty</code>
+</td>
+<td>
+logical indicating whether the interior plot region should be left empty. The default is <code>FALSE</code>. Setting to <code>TRUE</code> has a similar effect to invoking <code>type = “n”</code> above, except that any legend artifacts owing to a particular plot type (e.g., lines for <code>type = “l”</code> or squares for <code>type = “area”</code>) will still be drawn correctly alongside the empty plot. In contrast,<code>type = “n”</code> implicitly assumes a scatterplot and so any legend will only depict points.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="restore.par">restore.par</code>
+</td>
+<td>
+a logical value indicating whether the <code>par</code> settings prior to calling <code>tinyplot</code> should be restored on exit. Defaults to FALSE, which makes it possible to add elements to the plot after it has been drawn. However, note the the outer margins of the graphics device may have been altered to make space for the <code>tinyplot</code> legend. Users can opt out of this persistent behaviour by setting to TRUE instead. See also get_saved_par for another option to recover the original <code>par</code> settings, as well as longer discussion about the trade-offs involved.
 </td>
 </tr>
 <tr>
@@ -1115,34 +1149,10 @@ numeric giving the plot height in inches. Same considerations as <code>width</co
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="empty">empty</code>
+<code id="asp">asp</code>
 </td>
 <td>
-logical indicating whether the interior plot region should be left empty. The default is <code>FALSE</code>. Setting to <code>TRUE</code> has a similar effect to invoking <code>type = “n”</code> above, except that any legend artifacts owing to a particular plot type (e.g., lines for <code>type = “l”</code> or squares for <code>type = “area”</code>) will still be drawn correctly alongside the empty plot. In contrast,<code>type = “n”</code> implicitly assumes a scatterplot and so any legend will only depict points.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="xaxt">xaxt</code>, <code id="yaxt">yaxt</code>
-</td>
-<td>
-character specifying the type of x-axis and y-axis, respectively. See <code>axes</code> for the possible values.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="flip">flip</code>
-</td>
-<td>
-logical. Should the plot orientation be flipped, so that the y-axis is on the horizontal plane and the x-axis is on the vertical plane? Default is FALSE.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="xaxs">xaxs</code>, <code id="yaxs">yaxs</code>
-</td>
-<td>
-character specifying the style of the interval calculation used for the x-axis and y-axis, respectively. See <code>par</code> for the possible values.
+the y/xy/x aspect ratio, see <code>plot.window</code>.
 </td>
 </tr>
 <tr>

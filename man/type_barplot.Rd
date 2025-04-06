@@ -7,8 +7,10 @@
 type_barplot(
   width = 5/6,
   beside = FALSE,
+  center = FALSE,
   FUN = NULL,
   xlevels = NULL,
+  xaxlabels = NULL,
   drop.zeros = FALSE
 )
 }
@@ -19,11 +21,22 @@ the midpoints of the bars is always 1.)}
 \item{beside}{logical. In case of a \code{by} grouping variable, should bars be
 juxtaposed? Default is to use stacked bars instead.}
 
+\item{center}{logical or numeric. In case of stacked barplots (\code{beside = FALSE})
+should the bars be centered (or all start at zero, default)? If set to
+\code{TRUE} the center is at the mid-point of the middle category (in case of
+uneven number of categories) or between the two middle categories (in case
+of an even number). Additionally it is possible to set \code{center = 2} or
+\code{center = 2.5} to indicate that centering should be after the second category
+or the mid-way in the third category, respectively.}
+
 \item{FUN}{a function to compute the summary statistic for \code{y} within each
 group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: mean).}
 
 \item{xlevels}{a character or numeric vector specifying in which order the
 levels of the \code{x} variable should be plotted.}
+
+\item{xaxlabels}{a character vector with the axis labels for the \code{x} variable,
+defaulting to the levels of \code{x}.}
 
 \item{drop.zeros}{logical. Should bars with zero height be dropped? If set
 to \code{FALSE} (default) a zero height bar is still drawn for which the border
@@ -48,7 +61,7 @@ tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE, fill = 0.2)
 # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
 # through the `type_barplot()` functional equivalent.
 tinyplot(~ cyl | vs, data = mtcars, fill = 0.2,
-  type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = .65))
+  type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65))
 
 tinytheme("clean2")
 
@@ -59,6 +72,13 @@ tinyplot(extra ~ ID | group, facet = "by", data = sleep,
 # Fancy frequency table:
 tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),
   type = "barplot", facet.args = list(nrow = 1), flip = TRUE, fill = 0.6)
+
+# Centered barplot for conditional proportions of hair color (black/brown vs.
+# red/blond) given eye color and sex
+tinytheme("clean2", palette.qualitative = c("black", "sienna", "indianred", "goldenrod"))
+hec = as.data.frame(proportions(HairEyeColor, 2:3))
+tinyplot(Freq ~ Eye | Hair, facet = ~ Sex, data = hec, type = "barplot",
+  center = TRUE, flip = TRUE, facet.args = list(ncol = 1))
 
 tinytheme()
 

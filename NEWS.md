@@ -12,7 +12,7 @@ where the formatting is also better._
 
 - `type = "barplot"` / `type = type_barplot()` for bar plots. This closes out
   one of the last remaining canonical base plot types that we wanted to provide
-  a native `tinyplot` equivalent for. (#305 @zeileis and @grantmcdermott) 
+  a native `tinyplot` equivalent for. (#305 and #360 @zeileis and @grantmcdermott) 
 - `type = "violin"` / `type = type_violin()` for violin plots. (#354 @grantmcdermott)
 
 #### Other new features

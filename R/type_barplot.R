@@ -54,7 +54,7 @@
 #' # Centered barplot for conditional proportions of hair color (black/brown vs.
 #' # red/blond) given eye color and sex
 #' tinytheme("clean2", palette.qualitative = c("black", "sienna", "indianred", "goldenrod"))
-#' hec <- as.data.frame(proportions(HairEyeColor, 2:3))
+#' hec = as.data.frame(proportions(HairEyeColor, 2:3))
 #' tinyplot(Freq ~ Eye | Hair, facet = ~ Sex, data = hec, type = "barplot",
 #'   center = TRUE, flip = TRUE, facet.args = list(ncol = 1))
 #'
@@ -73,7 +73,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 
 #' @importFrom stats aggregate
 data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
-    fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, xaxt = NULL, yaxt = NULL, axes = TRUE, facet_by = NULL, ...) {
+    fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, xaxl = NULL, xaxt = NULL, yaxt = NULL, axes = TRUE, facet_by = NULL, ...) {
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
@@ -169,6 +169,8 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         xlabs = 1L:nx
         names(xlabs) = levels(datapoints$x)
         
+        if (!isFALSE(center) && is.null(xaxl)) xaxl = abs 
+        
         out = list(
           datapoints = datapoints,
           xlab = xlab,
@@ -179,6 +181,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
           axes = TRUE,
           xlabs = xlabs, 
           frame.plot = FALSE,
+          xaxl = xaxl,
           xaxs = "r",
           xaxt = if (xaxt == "s") "l" else xaxt,
           yaxs = "i",

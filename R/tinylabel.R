@@ -1,7 +1,7 @@
 #' Format labels
 #' 
 #' @description Internal function for formatting label appearance, e.g. axis
-#' ticks labels. This is what the top-level [`xaxl`] and [`yaxl`] arguments
+#' ticks labels. This is what the top-level `xaxl` and `yaxl` arguments
 #' ultimately get passed to.
 #' @param x a numeric or character vector
 #' @param labeller a formatting function to be applied to `x`, e.g. `abs`,
@@ -33,11 +33,11 @@ labeller_fun = function(label = c("percent", "comma", "dollar", "euro", "sterlin
   }
   
   format_euro = function(x) {
-    paste0("€", prettyNum(x, big.mark = ",", scientific = FALSE))
+    paste0("\u20ac", prettyNum(x, big.mark = ",", scientific = FALSE))
   }
   
   format_sterling = function(x) {
-    paste0("£", prettyNum(x, big.mark = ",", scientific = FALSE))
+    paste0("\u00a3", prettyNum(x, big.mark = ",", scientific = FALSE))
   }
   
   switch(

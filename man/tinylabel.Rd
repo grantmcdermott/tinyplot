@@ -16,7 +16,7 @@ which common formatting transformations are provided: \code{"percent"},
 }
 \description{
 Internal function for formatting label appearance, e.g. axis
-ticks labels. This is what the top-level \code{\link{xaxl}} and \code{\link{yaxl}} arguments
+ticks labels. This is what the top-level \code{xaxl} and \code{yaxl} arguments
 ultimately get passed to.
 }
 \keyword{internal}

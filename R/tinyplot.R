@@ -172,6 +172,11 @@
 #' @param xaxs,yaxs character specifying the style of the interval calculation used
 #'   for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
 #'   for the possible values.
+#' @param xaxl,yaxl A formatting function (or character string) to apply to the
+#'   x- or y-axis tick labels. This affects the _appearance_ of the labels only,
+#'   not the calculation or positioning of the tick marks. In addition to custom
+#'   functions, users can supply one of several convenience strings for common
+#'   formats: `"percent"`, `"comma"`, `"dollar"`, `"euro"`, or `"sterling"`.
 #' @param log a character string which contains "x" if the x axis is to be
 #'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
 #'   both axes are to be logarithmic.
@@ -562,6 +567,8 @@ tinyplot.default = function(
     yaxt = NULL,
     xaxs = NULL,
     yaxs = NULL,
+    xaxl = NULL,
+    yaxl = NULL,
     log = "",
     flip = FALSE,
     frame.plot = NULL,
@@ -779,10 +786,12 @@ tinyplot.default = function(
       palette      = palette,
       ribbon.alpha = ribbon.alpha,
       xaxt         = xaxt,
+      xaxl         = xaxl,
       xlab         = xlab,
       xlabs        = xlabs,
       xlim         = xlim,
       yaxt         = yaxt,
+      yaxl         = yaxl,
       ylab         = ylab,
       ylim         = ylim
     )
@@ -813,6 +822,9 @@ tinyplot.default = function(
       xaxs_cp = xaxs
       xaxs = yaxs
       yaxs = xaxs_cp
+      xaxl_cp = xaxl
+      xaxl = yaxl
+      yaxl = xaxl_cp
       if (!is.null(log)) {
         log = if (log == "x") "y" else if (log == "y") "x" else log
       }
@@ -828,7 +840,7 @@ tinyplot.default = function(
       datapoints[["xmax"]] = if (!is.null(datapoints[["ymax"]])) datapoints[["ymax"]] else NULL
       datapoints[["ymax"]] = if (!is.null(xmax_cp)) xmax_cp else NULL
       # clean up
-      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, xaxs_cp, x_cp, xmin_cp, xmax_cp)
+      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, xaxs_cp, xaxl_cp, x_cp, xmin_cp, xmax_cp)
     } else {
       # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
       # and just catch a few elements that we draw beforehand.
@@ -1129,11 +1141,12 @@ tinyplot.default = function(
     y = datapoints$y,
     xmax = datapoints$xmax, xmin = datapoints$xmin,
     ymax = datapoints$ymax, ymin = datapoints$ymin,
-    xaxt = xaxt, xlabs = xlabs, xlim = xlim,
-    yaxt = yaxt, ylabs = ylabs, ylim = ylim,
+    xlabs = xlabs, xlim = xlim,
+    ylabs = ylabs, ylim = ylim,
+    xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+    yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
     flip = flip,
-    draw = draw,
-    xaxs = xaxs, yaxs = yaxs
+    draw = draw
   )
   list2env(facet_window_args, environment())
 

@@ -35,6 +35,8 @@ tinyplot(x, ...)
   yaxt = NULL,
   xaxs = NULL,
   yaxs = NULL,
+  xaxl = NULL,
+  yaxl = NULL,
   log = "",
   flip = FALSE,
   frame.plot = NULL,
@@ -291,6 +293,12 @@ See \code{axes} for the possible values.}
 \item{xaxs, yaxs}{character specifying the style of the interval calculation used
 for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
 for the possible values.}
+
+\item{xaxl, yaxl}{A formatting function (or character string) to apply to the
+x- or y-axis tick labels. This affects the \emph{appearance} of the labels only,
+not the calculation or positioning of the tick marks. In addition to custom
+functions, users can supply one of several convenience strings for common
+formats: \code{"percent"}, \code{"comma"}, \code{"dollar"}, \code{"euro"}, or \code{"sterling"}.}
 
 \item{log}{a character string which contains "x" if the x axis is to be
 logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if

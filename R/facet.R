@@ -181,18 +181,20 @@ draw_facet_window = function(grid, ...) {
       if (dynmar) {
         if (par("las") %in% 1:2) {
           # extra whitespace bump on the y axis
-          # yaxl = axTicks(2)
-          yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
           ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
           if (type == "ridge") {
-            yaxl = levels(y)
+            yaxlabs = levels(y)
           } else if (!is.null(ylabs)) {
-            yaxl = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
+            yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
           } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
-            yaxl = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
+            yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
+          } else {
+            # yaxl = axTicks(2)
+            yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
           }
+          if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
           # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
-          whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
+          whtsbp = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
           if (whtsbp > 0) {
             omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
             fmar[2] = fmar[2] + whtsbp * cex_fct_adj
@@ -200,10 +202,11 @@ draw_facet_window = function(grid, ...) {
         }
         if (par("las") %in% 2:3) {
           # extra whitespace bump on the x axis
-          # xaxl = axTicks(1)
-          xaxl = axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog"))
-          whtsbp = grconvertY(max(strwidth(xaxl, "figure")), from = "nfc", to = "lines") - 1
-          # whtsbp = grconvertY(max(strwidth(xaxl, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
+          # xaxlabs = axTicks(1)
+          xaxlabs = axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog"))
+          if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
+          whtsbp = grconvertY(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
+          # whtsbp = grconvertY(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
           if (whtsbp > 0) {
             omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
             fmar[1] = fmar[1] + whtsbp * cex_fct_adj
@@ -247,18 +250,20 @@ draw_facet_window = function(grid, ...) {
       if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
-        # yaxl = axTicks(2)
-        yaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
         ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
         if (type == "ridge") {
-          yaxl = levels(y)
+          yaxlabs = levels(y)
         } else if (!is.null(ylabs)) {
-          yaxl = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
+          yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
         } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
-          yaxl = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
+          yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
+        } else {
+          # yaxl = axTicks(2)
+          yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
         }
-        # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
-        whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
+        if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
+        # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") - 1
+        whtsbp = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {
           omar[2] = omar[2] + whtsbp
         }
@@ -266,9 +271,10 @@ draw_facet_window = function(grid, ...) {
       if (par("las") %in% 2:3) {
         # extra whitespace bump on the x axis
         # xaxl = axTicks(1)
-        xaxl = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("xlog"))
-        whtsbp = grconvertY(max(strwidth(xaxl, "figure")), from = "nfc", to = "lines") - 1
-        # whtsbp = grconvertY(max(strwidth(xaxl, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
+        xaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("xlog"))
+        if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
+        whtsbp = grconvertY(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
+        # whtsbp = grconvertY(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {
           omar[1] = omar[1] + whtsbp
         }
@@ -327,6 +333,7 @@ draw_facet_window = function(grid, ...) {
         args_x = list(x,
           side = xside,
           type = xaxt,
+          labeller = xaxl,
           cex = get_tpar(c("cex.xaxs", "cex.axis"), 0.8),
           lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 1),
           lty = get_tpar(c("lty.xaxs", "lty.axis"), 1)
@@ -334,6 +341,7 @@ draw_facet_window = function(grid, ...) {
         args_y = list(y,
           side = yside,
           type = yaxt,
+          labeller = yaxl,
           cex = get_tpar(c("cex.yaxs", "cex.axis"), 0.8),
           lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1),
           lty = get_tpar(c("lty.yaxs", "lty.axis"), 1)

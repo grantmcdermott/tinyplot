@@ -4,7 +4,7 @@
 \alias{tinyAxis}
 \title{auxiliary Axis() interface with different parameter combinations based on type}
 \usage{
-tinyAxis(x = NULL, ..., type = "standard")
+tinyAxis(x = NULL, ..., type = "standard", labeller = NULL)
 }
 \description{
 auxiliary Axis() interface with different parameter combinations based on type

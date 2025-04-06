@@ -73,7 +73,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 
 #' @importFrom stats aggregate
 data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
-    fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, xaxl = NULL, xaxt = NULL, yaxt = NULL, axes = TRUE, facet_by = NULL, ...) {
+    fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, xaxt = NULL, yaxl = NULL, yaxt = NULL, axes = TRUE, facet_by = NULL, ...) {
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
@@ -169,7 +169,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         xlabs = 1L:nx
         names(xlabs) = levels(datapoints$x)
         
-        if (!isFALSE(center) && is.null(xaxl)) xaxl = abs 
+        if (!isFALSE(center) && is.null(yaxl)) yaxl = abs 
         
         out = list(
           datapoints = datapoints,
@@ -181,9 +181,9 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
           axes = TRUE,
           xlabs = xlabs, 
           frame.plot = FALSE,
-          xaxl = xaxl,
           xaxs = "r",
           xaxt = if (xaxt == "s") "l" else xaxt,
+          yaxl = yaxl,
           yaxs = "i",
           col = col,
           bg = bg

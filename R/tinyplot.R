@@ -13,6 +13,11 @@
 #'   'Examples' section below, or the function
 #'   \code{\link[grDevices]{xy.coords}} for details. If supplied separately, `x`
 #'   and `y` must be of the same length.
+#' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
+#'   or interval plot types. Only used when the `type` argument is one of
+#'   `"rect"` or `"segments"` (where all four min-max coordinates are required),
+#'   or `"pointrange"`, `"errorbar"`, or `"ribbon"` (where only `ymin` and
+#'   `ymax` required alongside `x`).
 #' @param by grouping variable(s). The default behaviour is for groups to be
 #'   represented in the form of distinct colours, which will also trigger an
 #'   automatic legend. (See `legend` below for customization options.) However,
@@ -126,31 +131,35 @@
 #'       - [`type_vline()`]: vertical line(s).
 #'       - [`type_function()`]: arbitrary function.
 #'       - [`type_summary()`]: summarize `y` by unique values of `x`.
-#' @param xmin,xmax,ymin,ymax minimum and maximum coordinates of relevant area
-#'   or interval plot types. Only used when the `type` argument is one of
-#'   `"rect"` or `"segments"` (where all four min-max coordinates are required),
-#'   or `"pointrange"`, `"errorbar"`, or `"ribbon"` (where only `ymin` and
-#'   `ymax` required alongside `x`).
-#' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
-#'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
-#'   the range of the `finite` values to be plotted should be used.
-#' @param ylim the y limits of the plot.
-#' @param log a character string which contains "x" if the x axis is to be
-#'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
-#'   both axes are to be logarithmic.
-#' @param empty logical indicating whether the interior plot region should be
-#'  left empty. The default is `FALSE`. Setting to `TRUE` has a similar effect
-#'  to invoking `type = "n"` above, except that any legend artifacts owing to a
-#'  particular plot type (e.g., lines for `type = "l"` or squares for
-#'  `type = "area"`) will still be drawn correctly alongside the empty plot. In
-#'  contrast,`type = "n"` implicitly assumes a scatterplot and so any legend
-#'  will only depict points.
+#' @param legend one of the following options:
+#'    - NULL (default), in which case the legend will be determined by the
+#'    grouping variable. If there is no group variable (i.e., `by` is NULL) then
+#'    no legend is drawn. If a grouping variable is detected, then an automatic
+#'    legend is drawn to the _outer_ right of the plotting area. Note that the
+#'    legend title and categories will automatically be inferred from the `by`
+#'    argument and underlying data.
+#'    - A convenience string indicating the legend position. The string should
+#'    correspond to one of the position keywords supported by the base `legend`
+#'    function, e.g. "right", "topleft", "bottom", etc. In addition, `tinyplot`
+#'    supports adding a trailing exclamation point to these keywords, e.g.
+#'    "right!", "topleft!", or "bottom!". This will place the legend _outside_
+#'    the plotting area and adjust the margins of the plot accordingly. Finally,
+#'    users can also turn off any legend printing by specifying "none".
+#'    - Logical value, where TRUE corresponds to the default case above (same
+#'    effect as specifying NULL) and FALSE turns the legend off (same effect as
+#'    specifying "none").
+#'    - A list or, equivalently, a dedicated `legend()` function with supported
+#'    legend arguments, e.g. "bty", "horiz", and so forth.
 #' @param main a main title for the plot, see also `title`.
 #' @param sub a subtitle for the plot.
 #' @param xlab a label for the x axis, defaults to a description of x.
 #' @param ylab a label for the y axis, defaults to a description of y.
 #' @param ann a logical value indicating whether the default annotation (title
 #'   and x and y axis labels) should appear on the plot.
+#' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
+#'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
+#'   the range of the `finite` values to be plotted should be used.
+#' @param ylim the y limits of the plot.
 #' @param axes logical or character. Should axes be drawn (`TRUE` or `FALSE`)?
 #'   Or alternatively what type of axes should be drawn: `"standard"` (with
 #'   axis, ticks, and labels; equivalent to `TRUE`), `"none"` (no axes;
@@ -158,6 +167,22 @@
 #'   `"labels"` (only labels without ticks and axis line), `"axis"` (only axis
 #'   line and labels but no ticks). To control this separately for the two
 #'   axes, use the character specifications for `xaxt` and/or `yaxt`.
+#' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
+#'   See `axes` for the possible values.
+#' @param xaxs,yaxs character specifying the style of the interval calculation used
+#'   for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
+#'   for the possible values.
+#' @param xaxl,yaxl A formatting function (or character string) to apply to the
+#'   x- or y-axis tick labels. This affects the _appearance_ of the labels only,
+#'   not the calculation or positioning of the tick marks. In addition to custom
+#'   functions, users can supply one of several convenience strings for common
+#'   formats: `"percent"`, `"comma"`, `"dollar"`, `"euro"`, or `"sterling"`.
+#' @param log a character string which contains "x" if the x axis is to be
+#'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
+#'   both axes are to be logarithmic.
+#' @param flip logical. Should the plot orientation be flipped, so that the
+#'   y-axis is on the horizontal plane and the x-axis is on the vertical plane?
+#'   Default is FALSE.
 #' @param frame.plot a logical indicating whether a box should be drawn around
 #'   the plot. Can also use `frame` as an acceptable argument alias.
 #'   The default is to draw a frame if both axis types (set via `axes`, `xaxt`,
@@ -169,7 +194,6 @@
 #'   arguments from base `plot()` and tries to make the process more seamless
 #'   with better default behaviour. The default behaviour is determined by (and
 #'   can be set globally through) the value of `tpar("grid")`.
-#' @param asp the y/xy/x aspect ratio, see `plot.window`.
 #' @param palette one of the following options:
 #'    - NULL (default), in which case the palette will be chosen according to
 #'    the class and cardinality of the "by" grouping variable. For non-ordered
@@ -194,25 +218,6 @@
 #'    If too few colours are provided for a discrete (qualitative) set of
 #'    groups, then the colours will be recycled with a warning. For continuous
 #'    (sequential) groups, a gradient palette will be interpolated. 
-#' @param legend one of the following options:
-#'    - NULL (default), in which case the legend will be determined by the
-#'    grouping variable. If there is no group variable (i.e., `by` is NULL) then
-#'    no legend is drawn. If a grouping variable is detected, then an automatic
-#'    legend is drawn to the _outer_ right of the plotting area. Note that the
-#'    legend title and categories will automatically be inferred from the `by`
-#'    argument and underlying data.
-#'    - A convenience string indicating the legend position. The string should
-#'    correspond to one of the position keywords supported by the base `legend`
-#'    function, e.g. "right", "topleft", "bottom", etc. In addition, `tinyplot`
-#'    supports adding a trailing exclamation point to these keywords, e.g.
-#'    "right!", "topleft!", or "bottom!". This will place the legend _outside_
-#'    the plotting area and adjust the margins of the plot accordingly. Finally,
-#'    users can also turn off any legend printing by specifying "none".
-#'    - Logical value, where TRUE corresponds to the default case above (same
-#'    effect as specifying NULL) and FALSE turns the legend off (same effect as
-#'    specifying "none").
-#'    - A list or, equivalently, a dedicated `legend()` function with supported
-#'    legend arguments, e.g. "bty", "horiz", and so forth.
 #' @param col plotting color. Character, integer, or vector of length equal to
 #'   the number of categories in the `by` variable. See `col`. Note that the
 #'   default behaviour in `tinyplot` is to vary group colors along any variables
@@ -265,15 +270,6 @@
 #'   giving the amount by which plotting characters and symbols should be scaled
 #'   relative to the default. Note that NULL is equivalent to 1.0, while NA
 #'   renders the characters invisible.
-#' @param restore.par a logical value indicating whether the
-#'   \code{\link[graphics]{par}} settings prior to calling `tinyplot` should be
-#'   restored on exit. Defaults to FALSE, which makes it possible to add
-#'   elements to the plot after it has been drawn. However, note the the outer
-#'   margins of the graphics device may have been altered to make space for the
-#'   `tinyplot` legend. Users can opt out of this persistent behaviour by
-#'   setting to TRUE instead. See also [get_saved_par] for another option to
-#'   recover the original \code{\link[graphics]{par}} settings, as well as
-#'   longer discussion about the trade-offs involved.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param add logical. If TRUE, then elements are added to the current plot rather
@@ -288,9 +284,22 @@
 #'   this argument is somewhat experimental and that _no_ internal checking is
 #'   done for correctness; the provided argument is simply captured and
 #'   evaluated as-is. See Examples.
-#' @param flip logical. Should the plot orientation be flipped, so that the
-#'   y-axis is on the horizontal plane and the x-axis is on the vertical plane?
-#'   Default is FALSE.
+#' @param restore.par a logical value indicating whether the
+#'   \code{\link[graphics]{par}} settings prior to calling `tinyplot` should be
+#'   restored on exit. Defaults to FALSE, which makes it possible to add
+#'   elements to the plot after it has been drawn. However, note the the outer
+#'   margins of the graphics device may have been altered to make space for the
+#'   `tinyplot` legend. Users can opt out of this persistent behaviour by
+#'   setting to TRUE instead. See also [get_saved_par] for another option to
+#'   recover the original \code{\link[graphics]{par}} settings, as well as
+#'   longer discussion about the trade-offs involved.
+#' @param empty logical indicating whether the interior plot region should be
+#'  left empty. The default is `FALSE`. Setting to `TRUE` has a similar effect
+#'  to invoking `type = "n"` above, except that any legend artifacts owing to a
+#'  particular plot type (e.g., lines for `type = "l"` or squares for
+#'  `type = "area"`) will still be drawn correctly alongside the empty plot. In
+#'  contrast,`type = "n"` implicitly assumes a scatterplot and so any legend
+#'  will only depict points.
 #' @param file character string giving the file path for writing a plot to disk.
 #'   If specified, the plot will not be displayed interactively, but rather sent
 #'   to the appropriate external graphics device (i.e.,
@@ -319,11 +328,7 @@
 #' @param height numeric giving the plot height in inches. Same considerations as
 #'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
 #'  specified.
-#' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
-#'   See `axes` for the possible values.
-#' @param xaxs,yaxs character specifying the style of the interval calculation used
-#'   for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
-#'   for the possible values.
+#' @param asp the y/xy/x aspect ratio, see `plot.window`.
 #' @param ... other graphical parameters. If `type` is a character specification
 #'   (such as `"hist"`) then any argument names that match those from the corresponding
 #'   `type_*()` function (such as \code{\link{type_hist}}) are passed on to that.
@@ -340,7 +345,7 @@
 #' without causing unexpected changes to the output.
 #'
 #' @importFrom grDevices axisTicks adjustcolor cairo_pdf colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
-#' @importFrom graphics abline arrows axis Axis box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
+#' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit
 #' @importFrom tools file_ext
@@ -540,25 +545,35 @@ tinyplot =
 tinyplot.default = function(
     x = NULL,
     y = NULL,
+    xmin = NULL,
+    xmax = NULL,
+    ymin = NULL,
+    ymax = NULL,
     by = NULL,
     facet = NULL,
     facet.args = NULL,
     data = NULL,
     type = NULL,
-    xlim = NULL,
-    ylim = NULL,
-    log = "",
+    legend = NULL,
     main = NULL,
     sub = NULL,
     xlab = NULL,
     ylab = NULL,
     ann = par("ann"),
+    xlim = NULL,
+    ylim = NULL,
     axes = TRUE,
+    xaxt = NULL,
+    yaxt = NULL,
+    xaxs = NULL,
+    yaxs = NULL,
+    xaxl = NULL,
+    yaxl = NULL,
+    log = "",
+    flip = FALSE,
     frame.plot = NULL,
-    asp = NA,
     grid = NULL,
     palette = NULL,
-    legend = NULL,
     pch = NULL,
     lty = NULL,
     lwd = NULL,
@@ -567,22 +582,14 @@ tinyplot.default = function(
     fill = NULL,
     alpha = NULL,
     cex = 1,
-    restore.par = FALSE,
-    xmin = NULL,
-    xmax = NULL,
-    ymin = NULL,
-    ymax = NULL,
     add = FALSE,
     draw = NULL,
+    empty = FALSE,
+    restore.par = FALSE,
     file = NULL,
     width = NULL,
     height = NULL,
-    empty = FALSE,
-    xaxt = NULL,
-    yaxt = NULL,
-    flip = FALSE,
-    xaxs = NULL,
-    yaxs = NULL,
+    asp = NA,
     ...) {
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
@@ -779,10 +786,12 @@ tinyplot.default = function(
       palette      = palette,
       ribbon.alpha = ribbon.alpha,
       xaxt         = xaxt,
+      xaxl         = xaxl,
       xlab         = xlab,
       xlabs        = xlabs,
       xlim         = xlim,
       yaxt         = yaxt,
+      yaxl         = yaxl,
       ylab         = ylab,
       ylim         = ylim
     )
@@ -813,6 +822,9 @@ tinyplot.default = function(
       xaxs_cp = xaxs
       xaxs = yaxs
       yaxs = xaxs_cp
+      xaxl_cp = xaxl
+      xaxl = yaxl
+      yaxl = xaxl_cp
       if (!is.null(log)) {
         log = if (log == "x") "y" else if (log == "y") "x" else log
       }
@@ -828,7 +840,7 @@ tinyplot.default = function(
       datapoints[["xmax"]] = if (!is.null(datapoints[["ymax"]])) datapoints[["ymax"]] else NULL
       datapoints[["ymax"]] = if (!is.null(xmax_cp)) xmax_cp else NULL
       # clean up
-      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, xaxs_cp, x_cp, xmin_cp, xmax_cp)
+      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, xaxs_cp, xaxl_cp, x_cp, xmin_cp, xmax_cp)
     } else {
       # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
       # and just catch a few elements that we draw beforehand.
@@ -1129,11 +1141,12 @@ tinyplot.default = function(
     y = datapoints$y,
     xmax = datapoints$xmax, xmin = datapoints$xmin,
     ymax = datapoints$ymax, ymin = datapoints$ymin,
-    xaxt = xaxt, xlabs = xlabs, xlim = xlim,
-    yaxt = yaxt, ylabs = ylabs, ylim = ylim,
+    xlabs = xlabs, xlim = xlim,
+    ylabs = ylabs, ylim = ylim,
+    xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+    yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
     flip = flip,
-    draw = draw,
-    xaxs = xaxs, yaxs = yaxs
+    draw = draw
   )
   list2env(facet_window_args, environment())
 

@@ -74,6 +74,15 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "addTRUE")
 
+# formatting axis tick labels
+f = function() plt(
+  I(decrease/100) ~ treatment, data = OrchardSprays,
+  xaxl = tolower, yaxl = "percent"
+)
+expect_snapshot_plot(f, label = "xaxl_yaxl")
+
+
+# saving files (here: png)
 if (requireNamespace("png", quietly = TRUE)) {
   f = function() {
     tmp_path = tempfile(fileext = ".png")

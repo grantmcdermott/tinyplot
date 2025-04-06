@@ -18,9 +18,7 @@ tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL) {
       args$tick = TRUE
     }
     if (!is.null(labeller)) {
-      # if (is.character(labeller)) labeller = labeller_fun((labeller))
       if (!is.null(args$at)) {
-        # args$labels = if (!is.null(args$labels)) labeller(args$labels) else labeller(args$at)
         args$labels = if (!is.null(args$labels)) tinylabel(args$labels, labeller) else tinylabel(args$at, labeller)
       } else {
         args$at = axTicks(args$side) # FIXME: log ?
@@ -30,28 +28,3 @@ tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL) {
     do.call("Axis", args)
   }
 }
-
-
-# labeller_fun = function(label = c("percent", "comma", "dollar")) {
-#   label = match.arg(label)
-#   
-#   format_percent = function(x) {
-#     sprintf("%.0f%%", x * 100)
-#   }
-#   
-#   format_comma = function(x) {
-#     prettyNum(x, big.mark = ",", scientific = FALSE)
-#   }
-#   
-#   format_dollar = function(x) {
-#     paste0("$", prettyNum(x, big.mark = ",", scientific = FALSE))
-#   }
-#   
-#   switch(
-#     label,
-#     percent = format_percent,
-#     comma  = format_comma,
-#     dollar = format_dollar
-#   )
-# }
-

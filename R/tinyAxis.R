@@ -1,7 +1,7 @@
 #' auxiliary Axis() interface with different parameter combinations based on type
 #'
 #' @keywords internal
-tinyAxis = function(x = NULL, ..., type = "standard") {
+tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL) {
   type = match.arg(type, c("standard", "none", "labels", "ticks", "axis"))
   if (type == "none") {
     invisible(numeric(0L))
@@ -16,6 +16,14 @@ tinyAxis = function(x = NULL, ..., type = "standard") {
       args$lwd.ticks = 0
     } else {
       args$tick = TRUE
+    }
+    if (!is.null(labeller)) {
+      if (!is.null(args$at)) {
+        args$labels = if (!is.null(args$labels)) tinylabel(args$labels, labeller) else tinylabel(args$at, labeller)
+      } else {
+        args$at = axTicks(args$side) # FIXME: log ?
+        args$labels = tinylabel(args$at, labeller)
+      }
     }
     do.call("Axis", args)
   }

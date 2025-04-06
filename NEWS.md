@@ -23,6 +23,10 @@ where the formatting is also better._
 - The palette argument now accepts a vector or list of manual colours, e.g.
   `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
   `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)
+- The new top-level `xaxl` and `yaxl` arguments allow users to format the
+  appearance of their axis tick labels. Several convenience strings are
+  supported for common cases, e.g., `tinyplot(..., xaxl = "percent")` or
+  `tinyplot(..., yaxl = "dollar")`, etc. (#363 @grantmcdermott)
 
 ### Bugs fixes:
 

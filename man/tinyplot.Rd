@@ -13,25 +13,35 @@ tinyplot(x, ...)
 \method{tinyplot}{default}(
   x = NULL,
   y = NULL,
+  xmin = NULL,
+  xmax = NULL,
+  ymin = NULL,
+  ymax = NULL,
   by = NULL,
   facet = NULL,
   facet.args = NULL,
   data = NULL,
   type = NULL,
-  xlim = NULL,
-  ylim = NULL,
-  log = "",
+  legend = NULL,
   main = NULL,
   sub = NULL,
   xlab = NULL,
   ylab = NULL,
   ann = par("ann"),
+  xlim = NULL,
+  ylim = NULL,
   axes = TRUE,
+  xaxt = NULL,
+  yaxt = NULL,
+  xaxs = NULL,
+  yaxs = NULL,
+  xaxl = NULL,
+  yaxl = NULL,
+  log = "",
+  flip = FALSE,
   frame.plot = NULL,
-  asp = NA,
   grid = NULL,
   palette = NULL,
-  legend = NULL,
   pch = NULL,
   lty = NULL,
   lwd = NULL,
@@ -40,22 +50,14 @@ tinyplot(x, ...)
   fill = NULL,
   alpha = NULL,
   cex = 1,
-  restore.par = FALSE,
-  xmin = NULL,
-  xmax = NULL,
-  ymin = NULL,
-  ymax = NULL,
   add = FALSE,
   draw = NULL,
+  empty = FALSE,
+  restore.par = FALSE,
   file = NULL,
   width = NULL,
   height = NULL,
-  empty = FALSE,
-  xaxt = NULL,
-  yaxt = NULL,
-  flip = FALSE,
-  xaxs = NULL,
-  yaxs = NULL,
+  asp = NA,
   ...
 )
 
@@ -105,6 +107,12 @@ and \code{y} must be of the same length.}
 \verb{type_*()} function (such as \code{\link{type_hist}}) are passed on to that.
 All remaining arguments from \code{...} can be further graphical parameters, see
 \code{\link[graphics]{par}}).}
+
+\item{xmin, xmax, ymin, ymax}{minimum and maximum coordinates of relevant area
+or interval plot types. Only used when the \code{type} argument is one of
+\code{"rect"} or \code{"segments"} (where all four min-max coordinates are required),
+or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{ymin} and
+\code{ymax} required alongside \code{x}).}
 
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an
@@ -232,15 +240,27 @@ type of plot desired.
 }
 }}
 
-\item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
-and leads to a ‘reversed axis’. The default value, NULL, indicates that
-the range of the \code{finite} values to be plotted should be used.}
-
-\item{ylim}{the y limits of the plot.}
-
-\item{log}{a character string which contains "x" if the x axis is to be
-logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
-both axes are to be logarithmic.}
+\item{legend}{one of the following options:
+\itemize{
+\item NULL (default), in which case the legend will be determined by the
+grouping variable. If there is no group variable (i.e., \code{by} is NULL) then
+no legend is drawn. If a grouping variable is detected, then an automatic
+legend is drawn to the \emph{outer} right of the plotting area. Note that the
+legend title and categories will automatically be inferred from the \code{by}
+argument and underlying data.
+\item A convenience string indicating the legend position. The string should
+correspond to one of the position keywords supported by the base \code{legend}
+function, e.g. "right", "topleft", "bottom", etc. In addition, \code{tinyplot}
+supports adding a trailing exclamation point to these keywords, e.g.
+"right!", "topleft!", or "bottom!". This will place the legend \emph{outside}
+the plotting area and adjust the margins of the plot accordingly. Finally,
+users can also turn off any legend printing by specifying "none".
+\item Logical value, where TRUE corresponds to the default case above (same
+effect as specifying NULL) and FALSE turns the legend off (same effect as
+specifying "none").
+\item A list or, equivalently, a dedicated \code{legend()} function with supported
+legend arguments, e.g. "bty", "horiz", and so forth.
+}}
 
 \item{main}{a main title for the plot, see also \code{title}.}
 
@@ -253,6 +273,12 @@ both axes are to be logarithmic.}
 \item{ann}{a logical value indicating whether the default annotation (title
 and x and y axis labels) should appear on the plot.}
 
+\item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
+and leads to a ‘reversed axis’. The default value, NULL, indicates that
+the range of the \code{finite} values to be plotted should be used.}
+
+\item{ylim}{the y limits of the plot.}
+
 \item{axes}{logical or character. Should axes be drawn (\code{TRUE} or \code{FALSE})?
 Or alternatively what type of axes should be drawn: \code{"standard"} (with
 axis, ticks, and labels; equivalent to \code{TRUE}), \code{"none"} (no axes;
@@ -261,12 +287,31 @@ equivalent to \code{FALSE}), \code{"ticks"} (only ticks and labels without axis 
 line and labels but no ticks). To control this separately for the two
 axes, use the character specifications for \code{xaxt} and/or \code{yaxt}.}
 
+\item{xaxt, yaxt}{character specifying the type of x-axis and y-axis, respectively.
+See \code{axes} for the possible values.}
+
+\item{xaxs, yaxs}{character specifying the style of the interval calculation used
+for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
+for the possible values.}
+
+\item{xaxl, yaxl}{A formatting function (or character string) to apply to the
+x- or y-axis tick labels. This affects the \emph{appearance} of the labels only,
+not the calculation or positioning of the tick marks. In addition to custom
+functions, users can supply one of several convenience strings for common
+formats: \code{"percent"}, \code{"comma"}, \code{"dollar"}, \code{"euro"}, or \code{"sterling"}.}
+
+\item{log}{a character string which contains "x" if the x axis is to be
+logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
+both axes are to be logarithmic.}
+
+\item{flip}{logical. Should the plot orientation be flipped, so that the
+y-axis is on the horizontal plane and the x-axis is on the vertical plane?
+Default is FALSE.}
+
 \item{frame.plot}{a logical indicating whether a box should be drawn around
 the plot. Can also use \code{frame} as an acceptable argument alias.
 The default is to draw a frame if both axis types (set via \code{axes}, \code{xaxt},
 or \code{yaxt}) include axis lines.}
-
-\item{asp}{the y/xy/x aspect ratio, see \code{plot.window}.}
 
 \item{grid}{argument for plotting a background panel grid, one of either:
 \itemize{
@@ -303,28 +348,6 @@ groups.
 If too few colours are provided for a discrete (qualitative) set of
 groups, then the colours will be recycled with a warning. For continuous
 (sequential) groups, a gradient palette will be interpolated.
-}}
-
-\item{legend}{one of the following options:
-\itemize{
-\item NULL (default), in which case the legend will be determined by the
-grouping variable. If there is no group variable (i.e., \code{by} is NULL) then
-no legend is drawn. If a grouping variable is detected, then an automatic
-legend is drawn to the \emph{outer} right of the plotting area. Note that the
-legend title and categories will automatically be inferred from the \code{by}
-argument and underlying data.
-\item A convenience string indicating the legend position. The string should
-correspond to one of the position keywords supported by the base \code{legend}
-function, e.g. "right", "topleft", "bottom", etc. In addition, \code{tinyplot}
-supports adding a trailing exclamation point to these keywords, e.g.
-"right!", "topleft!", or "bottom!". This will place the legend \emph{outside}
-the plotting area and adjust the margins of the plot accordingly. Finally,
-users can also turn off any legend printing by specifying "none".
-\item Logical value, where TRUE corresponds to the default case above (same
-effect as specifying NULL) and FALSE turns the legend off (same effect as
-specifying "none").
-\item A list or, equivalently, a dedicated \code{legend()} function with supported
-legend arguments, e.g. "bty", "horiz", and so forth.
 }}
 
 \item{pch}{plotting "character", i.e., symbol to use. Character, integer, or
@@ -387,22 +410,6 @@ giving the amount by which plotting characters and symbols should be scaled
 relative to the default. Note that NULL is equivalent to 1.0, while NA
 renders the characters invisible.}
 
-\item{restore.par}{a logical value indicating whether the
-\code{\link[graphics]{par}} settings prior to calling \code{tinyplot} should be
-restored on exit. Defaults to FALSE, which makes it possible to add
-elements to the plot after it has been drawn. However, note the the outer
-margins of the graphics device may have been altered to make space for the
-\code{tinyplot} legend. Users can opt out of this persistent behaviour by
-setting to TRUE instead. See also \link{get_saved_par} for another option to
-recover the original \code{\link[graphics]{par}} settings, as well as
-longer discussion about the trade-offs involved.}
-
-\item{xmin, xmax, ymin, ymax}{minimum and maximum coordinates of relevant area
-or interval plot types. Only used when the \code{type} argument is one of
-\code{"rect"} or \code{"segments"} (where all four min-max coordinates are required),
-or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{ymin} and
-\code{ymax} required alongside \code{x}).}
-
 \item{add}{logical. If TRUE, then elements are added to the current plot rather
 than drawing a new plot window. Note that the automatic legend for the
 added elements will be turned off. See also \link{tinyplot_add}, which provides
@@ -416,6 +423,24 @@ elements to each facet of a faceted plot, e.g.
 this argument is somewhat experimental and that \emph{no} internal checking is
 done for correctness; the provided argument is simply captured and
 evaluated as-is. See Examples.}
+
+\item{empty}{logical indicating whether the interior plot region should be
+left empty. The default is \code{FALSE}. Setting to \code{TRUE} has a similar effect
+to invoking \code{type = "n"} above, except that any legend artifacts owing to a
+particular plot type (e.g., lines for \code{type = "l"} or squares for
+\code{type = "area"}) will still be drawn correctly alongside the empty plot. In
+contrast,\code{type = "n"} implicitly assumes a scatterplot and so any legend
+will only depict points.}
+
+\item{restore.par}{a logical value indicating whether the
+\code{\link[graphics]{par}} settings prior to calling \code{tinyplot} should be
+restored on exit. Defaults to FALSE, which makes it possible to add
+elements to the plot after it has been drawn. However, note the the outer
+margins of the graphics device may have been altered to make space for the
+\code{tinyplot} legend. Users can opt out of this persistent behaviour by
+setting to TRUE instead. See also \link{get_saved_par} for another option to
+recover the original \code{\link[graphics]{par}} settings, as well as
+longer discussion about the trade-offs involved.}
 
 \item{file}{character string giving the file path for writing a plot to disk.
 If specified, the plot will not be displayed interactively, but rather sent
@@ -448,24 +473,7 @@ graphics windows.}
 \code{width} (above) apply, e.g. will default to \code{tpar("file.height")} if not
 specified.}
 
-\item{empty}{logical indicating whether the interior plot region should be
-left empty. The default is \code{FALSE}. Setting to \code{TRUE} has a similar effect
-to invoking \code{type = "n"} above, except that any legend artifacts owing to a
-particular plot type (e.g., lines for \code{type = "l"} or squares for
-\code{type = "area"}) will still be drawn correctly alongside the empty plot. In
-contrast,\code{type = "n"} implicitly assumes a scatterplot and so any legend
-will only depict points.}
-
-\item{xaxt, yaxt}{character specifying the type of x-axis and y-axis, respectively.
-See \code{axes} for the possible values.}
-
-\item{flip}{logical. Should the plot orientation be flipped, so that the
-y-axis is on the horizontal plane and the x-axis is on the vertical plane?
-Default is FALSE.}
-
-\item{xaxs, yaxs}{character specifying the style of the interval calculation used
-for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
-for the possible values.}
+\item{asp}{the y/xy/x aspect ratio, see \code{plot.window}.}
 
 \item{formula}{a \code{\link[stats]{formula}} that optionally includes
 grouping variable(s) after a vertical bar, e.g. \code{y ~ x | z}. One-sided

@@ -79,6 +79,18 @@ expect_snapshot_plot(f, label = "tinytheme_dynamic_dark_facet")
 
 tinytheme()
 
+# variation with formatted tick labels
+f = function() {
+  tinytheme("clean")
+  plt(
+    I(decrease/100) ~ treatment, data = OrchardSprays,
+    yaxl = "percent"
+  )
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "tinytheme_dynamic_yaxl")
+
+
 # flipped jitter and boxplot use special internal logic (because of integer spacing)
 
 f = function() {

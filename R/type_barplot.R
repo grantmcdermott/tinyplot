@@ -56,7 +56,7 @@
 #' tinytheme("clean2", palette.qualitative = c("black", "sienna", "indianred", "goldenrod"))
 #' hec = as.data.frame(proportions(HairEyeColor, 2:3))
 #' tinyplot(Freq ~ Eye | Hair, facet = ~ Sex, data = hec, type = "barplot",
-#'   center = TRUE, flip = TRUE, facet.args = list(ncol = 1))
+#'   center = TRUE, flip = TRUE, facet.args = list(ncol = 1), yaxl = "percent")
 #'
 #' tinytheme()
 #' 
@@ -169,7 +169,13 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         xlabs = 1L:nx
         names(xlabs) = levels(datapoints$x)
         
-        if (!isFALSE(center) && is.null(yaxl)) yaxl = abs 
+        if (!isFALSE(center)) {
+          if (is.null(yaxl)) {
+            yaxl = abs
+          } else if (is.character(yaxl)) {
+            yaxl = paste0("abs_", yaxl)
+          }
+        }
         
         out = list(
           datapoints = datapoints,

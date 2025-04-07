@@ -5,7 +5,7 @@
 #' ultimately get passed to.
 #' @param x a numeric or character vector
 #' @param labeller a formatting function to be applied to `x`, e.g. `abs`,
-#'   `topper`, etc. Can also be one of the following convenience strings, for
+#'   `toupper`, etc. Can also be one of the following convenience strings, for
 #'   which common formatting transformations are provided: `"percent"`,
 #'   `"comma"`, `"dollar"`, `"euro"`, or `"sterling"`.
 #'
@@ -17,9 +17,17 @@ tinylabel = function(x, labeller = NULL) {
 }
 
 
-labeller_fun = function(label = c("percent", "comma", "dollar", "euro", "sterling")) {
-  label = match.arg(label)
-  
+labeller_fun = function(label = "percent") {
+  ## all labels plus absolute value version
+  labels = c("percent", "comma", "dollar", "euro", "sterling")
+  labels = c(labels, paste0("abs_", labels))
+
+  ## match full label first, then store abs_ info separately
+  label = match.arg(label, labels)
+  abs_ = substr(label, 1L, 4L) == "abs_"
+  if (abs_) label = substr(label, 5L, nchar(label))
+
+  ## actual formatting function
   format_percent = function(x) {
     sprintf("%.0f%%", x * 100)
   }
@@ -40,7 +48,7 @@ labeller_fun = function(label = c("percent", "comma", "dollar", "euro", "sterlin
     paste0("\u00a3", prettyNum(x, big.mark = ",", scientific = FALSE))
   }
   
-  switch(
+  fun = switch(
     label,
     percent  = format_percent,
     comma    = format_comma,
@@ -48,4 +56,7 @@ labeller_fun = function(label = c("percent", "comma", "dollar", "euro", "sterlin
     euro     = format_euro,
     sterling = format_sterling
   )
+
+  ## combine with absolute value if necessary
+  if (abs_) function(x) fun(abs(x)) else fun
 }

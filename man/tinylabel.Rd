@@ -10,7 +10,7 @@ tinylabel(x, labeller = NULL)
 \item{x}{a numeric or character vector}
 
 \item{labeller}{a formatting function to be applied to \code{x}, e.g. \code{abs},
-\code{topper}, etc. Can also be one of the following convenience strings, for
+\code{toupper}, etc. Can also be one of the following convenience strings, for
 which common formatting transformations are provided: \code{"percent"},
 \code{"comma"}, \code{"dollar"}, \code{"euro"}, or \code{"sterling"}.}
 }

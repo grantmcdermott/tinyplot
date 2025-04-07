@@ -78,7 +78,7 @@ tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),
 tinytheme("clean2", palette.qualitative = c("black", "sienna", "indianred", "goldenrod"))
 hec = as.data.frame(proportions(HairEyeColor, 2:3))
 tinyplot(Freq ~ Eye | Hair, facet = ~ Sex, data = hec, type = "barplot",
-  center = TRUE, flip = TRUE, facet.args = list(ncol = 1))
+  center = TRUE, flip = TRUE, facet.args = list(ncol = 1), yaxl = "percent")
 
 tinytheme()
 

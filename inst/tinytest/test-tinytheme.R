@@ -62,18 +62,29 @@ tinytheme("dark")
 f()
 expect_snapshot_plot(f, label = "tinytheme_dynamic_dark")
 
+# x-axis adjustment
+f = function() {
+  tinytheme('clean', las = 2)
+  tinyplot(weight ~ feed, data = chickwts, type = "boxplot",
+           main = "Dynamic plot adjustment and whitespace reduction",
+           sub = "Works for perpendicular x-axis labels too")
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "tinytheme_dynamic_x_boxplot")
+
+# facets
 f = function() {
   tinyplot(
-    I(mpg*1e3) ~ hp | disp, data = mtcars, facet = cyl ~ am,
+    I(mpg*1e3) ~ I(hp*1e2) | disp, data = mtcars, facet = cyl ~ am,
     main = "Dynamic plot adjustment and whitespace reduction",
     sub = "Works with facets too"
   )
 }
-tinytheme("clean")
+tinytheme("clean", las = 2)
 f()
 expect_snapshot_plot(f, label = "tinytheme_dynamic_clean_facet")
 
-tinytheme("dark")
+tinytheme("dark", las = 2)
 f()
 expect_snapshot_plot(f, label = "tinytheme_dynamic_dark_facet")
 

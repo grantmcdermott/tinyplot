@@ -94,7 +94,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
         
-        if (!beside && any(datapoints$y < 0)) {
+        if (!beside && any(datapoints$y < 0) && (length(levels(datapoints$by)) > 1L) && !isTRUE(facet_by)) {
           warning("'beside' must be TRUE if there are negative 'y' values")
           beside = TRUE
         }

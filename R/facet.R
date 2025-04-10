@@ -209,6 +209,7 @@ draw_facet_window = function(grid, ...) {
           # xaxlabs = axTicks(1)
           xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else 
             if (!is.null(names(xlabs))) names(xlabs) else xlabs
+          if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
           whtsbp = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
           if (whtsbp > 0) {
             omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj

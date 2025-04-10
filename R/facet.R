@@ -199,27 +199,31 @@ draw_facet_window = function(grid, ...) {
             omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
             fmar[2] = fmar[2] + whtsbp * cex_fct_adj
           }
+          # Extra reduction if no plot frame to reduce whitespace
+          if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+            fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
+          }
         }
         if (par("las") %in% 2:3) {
           # extra whitespace bump on the x axis
           # xaxlabs = axTicks(1)
-          xaxlabs = axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog"))
+          xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else 
+            if (!is.null(names(xlabs))) names(xlabs) else xlabs
           if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-          whtsbp = grconvertY(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
-          # whtsbp = grconvertY(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
+          whtsbp = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
           if (whtsbp > 0) {
             omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
             fmar[1] = fmar[1] + whtsbp * cex_fct_adj
+          }
+          # Extra reduction if no plot frame to reduce whitespace
+          if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+            fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
           }
         }
         # FIXME: Is this causing issues for lhs legends with facet_grid?
         # catch for missing rhs legend
         if (isTRUE(attr(facet, "facet_grid")) && !has_legend) {
           omar[4] = omar[4] + 1
-        }
-        # Extra reduction if no plot frame to reduce whitespace
-        if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
-          fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
         }
       }
 
@@ -271,10 +275,10 @@ draw_facet_window = function(grid, ...) {
       if (par("las") %in% 2:3) {
         # extra whitespace bump on the x axis
         # xaxl = axTicks(1)
-        xaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("xlog"))
+        xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else 
+          if (!is.null(names(xlabs))) names(xlabs) else xlabs
         if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-        whtsbp = grconvertY(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
-        # whtsbp = grconvertY(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - grconvertY(0, from = "nfc", to = "lines") - 1
+        whtsbp = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {
           omar[1] = omar[1] + whtsbp
         }

@@ -47,8 +47,10 @@ where the formatting is also better._
   `pch = "."`. (#338 @grantmcdermott)
 - Line plots (`type_lines()`/`"l"`) now pass on the `bg` argument to the
   drawing function. Thanks to @wviechtb for report in #355 (@zeileis).
-- Fixed dynamic LHS margin spacing for flipped `"boxplot"` and `"jitter"` types.
-  Thanks to @eddelbuettel for the report in #357 (@grantmcdermott).
+- Fixed dynamic y-axis margin spacing for flipped `"boxplot"` and `"jitter"`
+  types. Thanks to @eddelbuettel for the report in #357 (@grantmcdermott).
+- Fixed dynamic x-axis margin spacing for perpendicular (vertical) label text,
+  i.e. cases where `las = 2` or `las = 3`. #369 (@grantmcdermott).
 
 ### Internals:
 

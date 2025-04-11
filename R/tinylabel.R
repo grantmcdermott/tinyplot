@@ -5,9 +5,10 @@
 #' ultimately get passed to.
 #' @param x a numeric or character vector
 #' @param labeller a formatting function to be applied to `x`, e.g. `abs`,
-#'   `toupper`, etc. Can also be one of the following convenience strings, for
-#'   which common formatting transformations are provided: `"percent"`,
-#'   `"comma"`, `"dollar"`, `"euro"`, or `"sterling"`.
+#'   `toupper`, etc. Can also be one of the following convenience strings
+#'   (symbols), for which common formatting transformations are provided:
+#'   `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"` (`"$"`),
+#'   `"euro"` (`"€"`), or `"sterling"` (`"£"`).
 #'
 #' @keywords internal
 tinylabel = function(x, labeller = NULL) {
@@ -18,8 +19,18 @@ tinylabel = function(x, labeller = NULL) {
 
 
 labeller_fun = function(label = "percent") {
+  
+  labels = c(
+    "%"       = "percent",
+    ","       = "comma",
+    "$"       = "dollar",
+    "\u20ac"  = "euro",
+    "\u00a3"  = "sterling"
+  )
+  if (label %in% names(labels)) label = labels[label]
+  
   ## all labels plus absolute value version
-  labels = c("percent", "comma", "dollar", "euro", "sterling")
+  # labels = c("percent", "comma", "dollar", "euro", "sterling")
   labels = c(labels, paste0("abs_", labels))
 
   ## match full label first, then store abs_ info separately

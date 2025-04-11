@@ -45,7 +45,7 @@
 #' 
 #' # Example for numeric y aggregated by x (default: FUN = mean) + facets
 #' tinyplot(extra ~ ID | group, facet = "by", data = sleep,
-#'   type = "barplot", beside = TRUE, fill = 0.6)
+#'   type = "barplot", fill = 0.6)
 #' 
 #' # Fancy frequency table:
 #' tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),
@@ -73,8 +73,9 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 
 #' @importFrom stats aggregate
 data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
-    fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, xaxt = NULL, yaxl = NULL, yaxt = NULL, axes = TRUE, facet_by = NULL, ...) {
+    fun = function(datapoints, col, bg, lty, lwd, palette, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, xaxt = NULL, yaxl = NULL, yaxt = NULL, axes = TRUE, null_by, facet_by, ...) {
 
+        
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
           xlab = ylab
@@ -94,7 +95,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
         
-        if (!beside && any(datapoints$y < 0)) {
+        if (isFALSE(null_by) && isFALSE(facet_by) && !beside && any(datapoints$y < 0)) {
           warning("'beside' must be TRUE if there are negative 'y' values")
           beside = TRUE
         }

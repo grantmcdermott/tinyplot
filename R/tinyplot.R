@@ -699,11 +699,12 @@ tinyplot.default = function(
     deparse1(substitute(y))
   }
   by_dep = deparse1(substitute(by))
+  null_by = is.null(by)
 
   ## coerce character variables to factors
   if (!is.null(x) && is.character(x)) x = factor(x)
   if (!is.null(y) && is.character(y)) y = factor(y)
-  if (!is.null(by) && is.character(by)) by = factor(by)
+  if (!null_by && is.character(by)) by = factor(by)
 
   # flag if x==by (currently only used for "boxplot", "spineplot" and "ridges" types)
   x_by = identical(x, by)
@@ -722,6 +723,7 @@ tinyplot.default = function(
     }
   }
   facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
+  null_facet = is.null(facet)
 
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
@@ -764,7 +766,7 @@ tinyplot.default = function(
   if (nrow(datapoints) > 0) {
     datapoints[["rowid"]] = seq_len(nrow(datapoints))
     datapoints[["facet"]] = if (!is.null(facet)) facet else ""
-    datapoints[["by"]] = if (!is.null(by)) by else ""
+    datapoints[["by"]] = if (!null_by) by else ""
   }
 
   ## initialize empty list with information that type_data
@@ -783,6 +785,8 @@ tinyplot.default = function(
       facet        = facet,
       facet_by     = facet_by,
       facet.args   = facet.args,
+      null_by      = null_by,
+      null_facet   = null_facet,
       palette      = palette,
       ribbon.alpha = ribbon.alpha,
       xaxt         = xaxt,
@@ -859,11 +863,11 @@ tinyplot.default = function(
 
   # split data
   by_ordered = FALSE
-  by_continuous = !is.null(by) && inherits(datapoints$by, c("numeric", "integer"))
+  by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
     warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
     by_continuous = FALSE
-  } else if (!is.null(by)) {
+  } else if (!null_by) {
     by_ordered = is.ordered(by)
   }
 
@@ -878,7 +882,7 @@ tinyplot.default = function(
   }
 
   # aesthetics by group: col, bg, etc.
-  ngrps = if (is.null(by)) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by))
+  ngrps = if (null_by) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by))
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
@@ -942,7 +946,7 @@ tinyplot.default = function(
     legend_args[["x"]] = "none"
   }
 
-  if (is.null(by)) {
+  if (null_by) {
     if (is.null(legend)) {
       legend = "none"
       legend_args[["x"]] = "none"
@@ -1165,7 +1169,7 @@ tinyplot.default = function(
     # Split group-level data again to grab any "by" groups
     idata = split_data[[i]]
     iby = idata[["by"]]
-    if (!is.null(by)) { ## maybe all(iby=="")
+    if (!null_by) { ## maybe all(iby=="")
       if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
         idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]

@@ -94,7 +94,7 @@ draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewe
 
 
 data_boxplot = function() {
-    fun = function(datapoints, bg, col, palette, ...) {
+    fun = function(datapoints, bg, col, palette, null_by, null_facet, ...) {
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
 
@@ -103,10 +103,6 @@ data_boxplot = function() {
         xlabs = seq_along(xlvls)
         names(xlabs) = xlvls
         datapoints$x = as.integer(datapoints$x)
-
-        # Handle ordering based on by and facet variables
-        null_by = length(unique(datapoints$by)) == 1
-        null_facet = length(unique(datapoints$facet)) == 1
 
         if (null_by && null_facet) {
             xord = order(datapoints$x)

@@ -78,13 +78,11 @@ type_violin = function(
 
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", trim = FALSE, width = 0.9) {
-    fun = function(datapoints,  by, facet, ylab, col, bg, palette, log, ...) {
+    fun = function(datapoints,  by, facet, ylab, col, bg, palette, log, null_by, null_facet, ...) {
         
         # Handle ordering based on by and facet variables
-        ngrps = length(unique(datapoints$by))
-        null_by = ngrps == 1
-        nfacets = length(unique(datapoints$facet))
-        null_facet = nfacets == 1
+        ngrps = if (null_by) 1 else length(unique(datapoints$by))
+        nfacets = if (null_facet) 1 else length(unique(datapoints$facet))
         
         #  catch for special cases
         x_by = y_by = facet_by = FALSE

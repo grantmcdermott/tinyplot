@@ -72,7 +72,7 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
     fun = function(
       datapoints,
       by = NULL, col = NULL, bg = NULL, palette = NULL,
-      facet = NULL, facet.args = NULL, xlim = NULL, ylim = NULL, axes = TRUE, xaxt = NULL, yaxt = NULL,
+      facet = NULL, facet.args = NULL, xlim = NULL, ylim = NULL, axes = TRUE, xaxt = NULL, yaxt = NULL, null_by, null_facet,
       ...
     ) {
       
@@ -215,7 +215,7 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
         if (isTRUE(y_by)) datapoints$by = factor(rep(yaxlabels, length.out = nrow(datapoints)))
           
         ## grayscale flag
-        grayscale = length(unique(datapoints[["by"]])) == 1 && is.null(palette) && is.null(.tpar[["palette.qualitative"]])
+        grayscale = null_by && is.null(palette) && is.null(.tpar[["palette.qualitative"]])
         
         out = list(
           x = c(datapoints$xmin, datapoints$xmax), 
@@ -227,8 +227,8 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
           col = col,
           bg = bg,
           datapoints = datapoints,
-          by = if (length(unique(datapoints$by)) == 1) by else datapoints$by, 
-          facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet,
+          by = if (null_by) by else datapoints$by, 
+          facet = if (null_facet) facet else datapoints$facet,
           axes = FALSE,
           frame.plot = FALSE,
           xaxt = "n",

@@ -252,11 +252,11 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       col = NULL,
                       alpha = NULL
                       ) {
-  fun = function(datapoints, yaxt = NULL, ...) {
+  fun = function(datapoints, yaxt = NULL, null_by, ...) {
     #  catch for special cases
-    anyby = length(unique(datapoints$by)) != 1
-    x_by = identical(datapoints$x, datapoints$by)
-    y_by = identical(datapoints$y, datapoints$by)
+    anyby = !null_by
+    x_by = anyby && identical(datapoints$x, datapoints$by)
+    y_by = anyby && identical(datapoints$y, datapoints$by)
     if (x_by) {
       gradient = TRUE
       datapoints$by = ""

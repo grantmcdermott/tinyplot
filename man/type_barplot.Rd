@@ -67,7 +67,7 @@ tinytheme("clean2")
 
 # Example for numeric y aggregated by x (default: FUN = mean) + facets
 tinyplot(extra ~ ID | group, facet = "by", data = sleep,
-  type = "barplot", beside = TRUE, fill = 0.6)
+  type = "barplot", fill = 0.6)
 
 # Fancy frequency table:
 tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),

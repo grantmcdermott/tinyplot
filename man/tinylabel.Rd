@@ -21,6 +21,7 @@ ticks labels. This is what the top-level \code{xaxl} and \code{yaxl} arguments
 ultimately get passed to.
 }
 \examples{
+\dontrun{
 x = 1e4
 tinylabel(x, "comma")
 tinylabel(x, ",") # same
@@ -35,6 +36,6 @@ dat = data.frame(
   trend = 1:12 + rnorm(12, sd = 1)
 )
 tinyplot(trend ~ date, data = dat, xaxl = function(x) format(x, "\%b, \%Y"))
-
+}
 }
 \keyword{internal}

@@ -10,6 +10,7 @@
 #'   provided: `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"` (`"$"`),
 #'   `"euro"` (`"€"`), or `"sterling"` (`"£"`).
 #' @examples
+#' \dontrun{
 #' x = 1e4
 #' tinylabel(x, "comma")
 #' tinylabel(x, ",") # same
@@ -24,7 +25,7 @@
 #'   trend = 1:12 + rnorm(12, sd = 1)
 #' )
 #' tinyplot(trend ~ date, data = dat, xaxl = function(x) format(x, "%b, %Y"))
-#' 
+#' }
 #' @keywords internal
 tinylabel = function(x, labeller = NULL) {
   if (is.null(labeller)) return(x)

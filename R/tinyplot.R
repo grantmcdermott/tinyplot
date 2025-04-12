@@ -175,8 +175,9 @@
 #' @param xaxl,yaxl A formatting function (or character string) to apply to the
 #'   x- or y-axis tick labels. This affects the _appearance_ of the labels only,
 #'   not the calculation or positioning of the tick marks. In addition to custom
-#'   functions, users can supply one of several convenience strings for common
-#'   formats: `"percent"`, `"comma"`, `"dollar"`, `"euro"`, or `"sterling"`.
+#'   functions, users can supply one of several convenience strings (symbols)
+#'   for common formats: `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"`
+#'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`).
 #' @param log a character string which contains "x" if the x axis is to be
 #'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
 #'   both axes are to be logarithmic.

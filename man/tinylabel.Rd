@@ -10,13 +10,32 @@ tinylabel(x, labeller = NULL)
 \item{x}{a numeric or character vector}
 
 \item{labeller}{a formatting function to be applied to \code{x}, e.g. \code{abs},
-\code{toupper}, etc. Can also be one of the following convenience strings, for
-which common formatting transformations are provided: \code{"percent"},
-\code{"comma"}, \code{"dollar"}, \code{"euro"}, or \code{"sterling"}.}
+\code{toupper}, \code{format}, etc. Can also be one of the following convenience
+strings (symbols), for which common formatting transformations are
+provided: \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"dollar"} (\code{"$"}),
+\code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
 }
 \description{
 Internal function for formatting label appearance, e.g. axis
 ticks labels. This is what the top-level \code{xaxl} and \code{yaxl} arguments
 ultimately get passed to.
+}
+\examples{
+\dontrun{
+x = 1e4
+tinylabel(x, "comma")
+tinylabel(x, ",") # same
+tinylabel(x, "$") # or "dollar"
+
+# pass to xaxl/yaxl for adjusting axes tick labels in a tinyplot call
+tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "\%")
+
+# function example (here: date formatting)
+dat = data.frame(
+  date = seq(as.Date("2000/1/1"), by = "month", length.out = 12),
+  trend = 1:12 + rnorm(12, sd = 1)
+)
+tinyplot(trend ~ date, data = dat, xaxl = function(x) format(x, "\%b, \%Y"))
+}
 }
 \keyword{internal}

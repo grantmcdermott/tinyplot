@@ -297,8 +297,9 @@ for the possible values.}
 \item{xaxl, yaxl}{A formatting function (or character string) to apply to the
 x- or y-axis tick labels. This affects the \emph{appearance} of the labels only,
 not the calculation or positioning of the tick marks. In addition to custom
-functions, users can supply one of several convenience strings for common
-formats: \code{"percent"}, \code{"comma"}, \code{"dollar"}, \code{"euro"}, or \code{"sterling"}.}
+functions, users can supply one of several convenience strings (symbols)
+for common formats: \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"dollar"}
+(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
 
 \item{log}{a character string which contains "x" if the x axis is to be
 logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if

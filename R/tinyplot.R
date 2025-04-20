@@ -592,6 +592,7 @@ tinyplot.default = function(
     height = NULL,
     asp = NA,
     ...) {
+
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
 
@@ -1090,7 +1091,7 @@ tinyplot.default = function(
   }
 
   #
-  ## Facet windows
+  ## Exterior plot elements (plot and facet windows, axes, etc.)
   #
 
   omar = NULL # Placeholder variable for now, which we re-assign as part of facet margins
@@ -1130,28 +1131,59 @@ tinyplot.default = function(
   }
 
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
-  # Skip if adding to an existing plot
+  # Will be skipped if adding to an existing plot; see ?facet
 
-  facet_window_args = draw_facet_window(
-    add = add, asp = asp, axes = axes, cex_fct_adj = cex_fct_adj, dots = dots,
-    facet = datapoints$facet, facet.args = facet.args, facet_newlines = facet_newlines,
-    facet_rect = facet_rect, facet_text = facet_text, facet_font = facet_font,
-    facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
-    facets = facets, ifacet = ifacet,
-    nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows, nfacets = nfacets,
-    frame.plot = frame.plot, grid = grid,
-    has_legend = has_legend, log = log,
-    oxaxis = oxaxis, oyaxis = oyaxis, type = type,
-    x = datapoints$x,
-    y = datapoints$y,
-    xmax = datapoints$xmax, xmin = datapoints$xmin,
-    ymax = datapoints$ymax, ymin = datapoints$ymin,
-    xlabs = xlabs, xlim = xlim,
-    ylabs = ylabs, ylim = ylim,
-    xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
-    yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
-    flip = flip,
-    draw = draw
+  facet_window_args = recordGraphics(
+    draw_facet_window(
+      add = add,
+      # facet-specific args
+      cex_fct_adj = cex_fct_adj,
+      facet.args = facet.args,
+      facet_newlines = facet_newlines, facet_font = facet_font,
+      facet_rect = facet_rect, facet_text = facet_text,
+      facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
+      facet = facet,
+      facets = facets, ifacet = ifacet,
+      nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
+      # axes args
+      axes = axes, flip = flip, frame.plot = frame.plot,
+      oxaxis = oxaxis, oyaxis = oyaxis,
+      xlabs = xlabs, xlim = xlim, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      asp = asp, log = log,
+      # other args (in approx. alphabetical + group ordering)
+      dots = dots,
+      draw = draw,
+      grid = grid,
+      has_legend = has_legend,
+      type = type,
+      x = x, xmax = xmax, xmin = xmin,
+      y = y, ymax = ymax, ymin = ymin
+    ),
+    list = list(
+      add = add, 
+      cex_fct_adj = cex_fct_adj,
+      facet.args = facet.args,
+      facet_newlines = facet_newlines, facet_font = facet_font,
+      facet_rect = facet_rect, facet_text = facet_text,
+      facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
+      facet = datapoints$facet,
+      facets = facets, ifacet = ifacet,
+      nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
+      axes = axes, flip = flip, frame.plot = frame.plot,
+      oxaxis = oxaxis, oyaxis = oyaxis,
+      xlabs = xlabs, xlim = xlim, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      asp = asp, log = log,
+      dots = dots,
+      draw = draw,
+      grid = grid,
+      has_legend = has_legend,
+      type = type,
+      x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
+      y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin
+    ),
+    getNamespace("tinyplot")
   )
   list2env(facet_window_args, environment())
 
@@ -1288,7 +1320,7 @@ tinyplot.default = function(
       }
     }
   }
-
+  
   # save end pars for possible recall later
   apar = par(no.readonly = TRUE)
   set_saved_par(when = "after", apar)

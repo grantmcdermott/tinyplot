@@ -112,359 +112,379 @@ draw_legend = function(
     new_plot = TRUE
 ) {
   
-  if (is.null(lmar)) {
-    lmar = tpar("lmar")
-  } else {
-    if (!is.numeric(lmar) || length(lmar)!=2) stop ("lmar must be a numeric of length 2.")
-  }
+  # Note: We wrap everything in recordGraphics to preserve legend spacing if
+  # the plot is resized
+  recordGraphics(
+    {
   
-  soma = outer_right = outer_bottom = NULL
-  
-  #
-  ## legend args ----
-  
-  if (is.null(legend_args[["x"]])) {
-    if (is.null(legend)) {
-      legend_args[["x"]] = "right!"
-    } else if (is.character(legend)) {
-      legend_args = utils::modifyList(legend_args, list(x = legend))
-    } else if (class(legend) %in% c("call", "name")) {
-      largs = as.list(legend)
-      if (is.null(largs[["x"]])) {
-        lnms = names(largs)
-        # check second position b/c first will be a symbol 
-        if (is.null(lnms)) {
-          largs = stats::setNames(largs, c("", "x"))
-        } else if (length(largs)>=2 && lnms[2] == "") {
-          lnms[2] = "x"
-          largs = stats::setNames(largs, lnms)
-        } else {
-          largs[["x"]] = "right!"
+      if (is.null(lmar)) {
+        lmar = tpar("lmar")
+      } else {
+        if (!is.numeric(lmar) || length(lmar)!=2) stop ("lmar must be a numeric of length 2.")
+      }
+      
+      soma = outer_right = outer_bottom = NULL
+      
+      #
+      ## legend args ----
+      
+      if (is.null(legend_args[["x"]])) {
+        if (is.null(legend)) {
+          legend_args[["x"]] = "right!"
+        } else if (is.character(legend)) {
+          legend_args = utils::modifyList(legend_args, list(x = legend))
+        } else if (class(legend) %in% c("call", "name")) {
+          largs = as.list(legend)
+          if (is.null(largs[["x"]])) {
+            lnms = names(largs)
+            # check second position b/c first will be a symbol 
+            if (is.null(lnms)) {
+              largs = stats::setNames(largs, c("", "x"))
+            } else if (length(largs)>=2 && lnms[2] == "") {
+              lnms[2] = "x"
+              largs = stats::setNames(largs, lnms)
+            } else {
+              largs[["x"]] = "right!"
+            }
+          }
+          # Finally, combine with any pre-existing legend args (e.g., title from the by label)
+          legend_args = utils::modifyList(legend_args, largs, keep.null = TRUE)
         }
       }
-      # Finally, combine with any pre-existing legend args (e.g., title from the by label)
-      legend_args = utils::modifyList(legend_args, largs, keep.null = TRUE)
-    }
-  }
-  
-  ## Use `!exists` rather than `is.null` for title in case user specified no title
-  if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
-
-  legend_args[["pch"]] = legend_args[["pch"]] %||% pch
-  legend_args[["lty"]] = legend_args[["lty"]] %||% lty
-  legend_args[["col"]] = legend_args[["col"]] %||% col
-  legend_args[["bty"]] = legend_args[["bty"]] %||% "n"
-  legend_args[["horiz"]] = legend_args[["horiz"]] %||% FALSE
-  legend_args[["xpd"]] = legend_args[["xpd"]] %||% NA
-
-  if (!isTRUE(type %in% c("p", "ribbon", "polygon", "polypath"))) {
-    legend_args[["lwd"]] = legend_args[["lwd"]] %||% lwd
-  }
-
-  if (isTRUE(type %in% c("p", "pointrange", "errorbar")) && (length(col) == 1 || length(cex) == 1)) {
-    legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% cex
-  }
-
-  # turn off inner line for "barplot" type
-  if (identical(type, "barplot")) {
-    legend_args[["lty"]] = 0
-  }
-  
-  if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge", "barplot", "violin")) || isTRUE(gradient)) {
-    legend_args[["pch"]] = 22
-    legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% 3.5
-    legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25
-    legend_args[["seg.len"]] = legend_args[["seg.len"]] %||% 1.25
-  }
-
-  if (isTRUE(type %in% c("ribbon", "hist", "histogram", "spineplot"))) {
-    legend_args[["pt.lwd"]] = legend_args[["pt.lwd"]] %||% 0
-  }
-
-  if (identical(type, "p")) {
-    legend_args[["pt.lwd"]] = legend_args[["pt.lwd"]] %||% lwd
-  }
-
-  if (identical(type, "n") && isFALSE(gradient)) {
-    legend_args[["pch"]] = legend_args[["pch"]] %||% par("pch")
-  }
-
-  if (identical(type, "spineplot")) {
-    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% legend_args[["col"]]
-  }
-
-  if (identical(type, "ridge") && isFALSE(gradient)) {
-    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
-  }
-
-  legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg
-
-  legend_args[["legend"]] = legend_args[["legend"]] %||% lgnd_labs
-  if (length(lgnd_labs) != length(eval(legend_args[["legend"]]))) {
-    warning(
-      "\nUser-supplied legend labels do not match the number of groups.\n",
-      "Defaulting to automatic labels determined by the group splits in `by`,\n"
-    )
-    legend_args[["legend"]] = lgnd_labs
-  }
-  
-  #
-  ## legend placement ----
-  
-  ooma = par("oma")
-  omar = par("mar")
-  topmar_epsilon = 0.1
-  
-  # Catch to avoid recursive offsets, e.g. repeated tinyplot calls with
-  # "bottom!" legend position.
-  
-  ## restore inner margin defaults
-  ## (in case the plot region/margins were affected by the preceding tinyplot call)
-  dynmar = isTRUE(.tpar[["dynmar"]])
-  if (any(ooma != 0) && !dynmar) {
-    if ( ooma[1] != 0 & omar[1] == par("mgp")[1] + 1*par("cex.lab") ) omar[1] = 5.1
-    if ( ooma[2] != 0 & omar[2] == par("mgp")[1] + 1*par("cex.lab") ) omar[2] = 4.1
-    if ( ooma[3] == topmar_epsilon & omar[3] != 4.1 ) omar[3] = 4.1
-    if ( ooma[4] != 0 & omar[4] == 0 ) omar[4] = 2.1
-    par(mar = omar)
-  }
-  ## restore outer margin defaults
-  par(omd = c(0,1,0,1))
-  ooma = par("oma")
-  
-  ## Legend to outer side (either right or left) of plot
-  if (grepl("right!$|left!$", legend_args[["x"]])) {
+      
+      ## Use `!exists` rather than `is.null` for title in case user specified no title
+      if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
     
-    outer_right = grepl("right!$", legend_args[["x"]])
+      legend_args[["pch"]] = legend_args[["pch"]] %||% pch
+      legend_args[["lty"]] = legend_args[["lty"]] %||% lty
+      legend_args[["col"]] = legend_args[["col"]] %||% col
+      legend_args[["bty"]] = legend_args[["bty"]] %||% "n"
+      legend_args[["horiz"]] = legend_args[["horiz"]] %||% FALSE
+      legend_args[["xpd"]] = legend_args[["xpd"]] %||% NA
     
-    # extra bump for spineplot if outer_right legend (to accommodate secondary y-axis)
-    if (identical(type, "spineplot")) lmar[1] = lmar[1] + 1.1
+      if (!isTRUE(type %in% c("p", "ribbon", "polygon", "polypath"))) {
+        legend_args[["lwd"]] = legend_args[["lwd"]] %||% lwd
+      }
     
-    ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
-    if (outer_right) legend_args[["x"]] = gsub("right!$", "left", legend_args[["x"]])
-    if (!outer_right) legend_args[["x"]] = gsub("left!$", "right", legend_args[["x"]])
+      if (isTRUE(type %in% c("p", "pointrange", "errorbar")) && (length(col) == 1 || length(cex) == 1)) {
+        legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% cex
+      }
     
-    ## We have to set the inner margins of the plot before the (fake) legend is
-    ## drawn, otherwise the inset calculation---which is based in the legend
-    ## width---will be off the first time.
-    if (outer_right) {
-      omar[4] = 0
-    } else {
-      # For outer left we have to account for the y-axis label too, which
-      # requires additional space
-      omar[2] = par("mgp")[1] + 1*par("cex.lab")
-    }
-    par(mar = omar)
+      # turn off inner line for "barplot" type
+      if (identical(type, "barplot")) {
+        legend_args[["lty"]] = 0
+      }
+      
+      if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge", "barplot", "violin")) || isTRUE(gradient)) {
+        legend_args[["pch"]] = 22
+        legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% 3.5
+        legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25
+        legend_args[["seg.len"]] = legend_args[["seg.len"]] %||% 1.25
+      }
     
-    # if (isTRUE(new_plot)) plot.new()
-    if (isTRUE(new_plot)) {
-      plot.new()
-      # Experimental: For themed + dynamic plots, we need to make sure the
-      # adjusted plot margins for the legend are reinstated (after being
-      # overwritten by the before.plot.new hook.
-      if (dynmar) {
-        omar = par("mar")
+      if (isTRUE(type %in% c("ribbon", "hist", "histogram", "spineplot"))) {
+        legend_args[["pt.lwd"]] = legend_args[["pt.lwd"]] %||% 0
+      }
+    
+      if (identical(type, "p")) {
+        legend_args[["pt.lwd"]] = legend_args[["pt.lwd"]] %||% lwd
+      }
+    
+      if (identical(type, "n") && isFALSE(gradient)) {
+        legend_args[["pch"]] = legend_args[["pch"]] %||% par("pch")
+      }
+    
+      if (identical(type, "spineplot")) {
+        legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% legend_args[["col"]]
+      }
+    
+      if (identical(type, "ridge") && isFALSE(gradient)) {
+        legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
+      }
+    
+      legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg
+    
+      legend_args[["legend"]] = legend_args[["legend"]] %||% lgnd_labs
+      if (length(lgnd_labs) != length(eval(legend_args[["legend"]]))) {
+        warning(
+          "\nUser-supplied legend labels do not match the number of groups.\n",
+          "Defaulting to automatic labels determined by the group splits in `by`,\n"
+        )
+        legend_args[["legend"]] = lgnd_labs
+      }
+      
+      #
+      ## legend placement ----
+      
+      ooma = par("oma")
+      omar = par("mar")
+      topmar_epsilon = 0.1
+      
+      # Catch to avoid recursive offsets, e.g. repeated tinyplot calls with
+      # "bottom!" legend position.
+      
+      ## restore inner margin defaults
+      ## (in case the plot region/margins were affected by the preceding tinyplot call)
+      dynmar = isTRUE(.tpar[["dynmar"]])
+      if (any(ooma != 0) && !dynmar) {
+        if ( ooma[1] != 0 & omar[1] == par("mgp")[1] + 1*par("cex.lab") ) omar[1] = 5.1
+        if ( ooma[2] != 0 & omar[2] == par("mgp")[1] + 1*par("cex.lab") ) omar[2] = 4.1
+        if ( ooma[3] == topmar_epsilon & omar[3] != 4.1 ) omar[3] = 4.1
+        if ( ooma[4] != 0 & omar[4] == 0 ) omar[4] = 2.1
+        par(mar = omar)
+      }
+      ## restore outer margin defaults
+      par(omd = c(0,1,0,1))
+      ooma = par("oma")
+      
+      ## Legend to outer side (either right or left) of plot
+      if (grepl("right!$|left!$", legend_args[["x"]])) {
+        
+        outer_right = grepl("right!$", legend_args[["x"]])
+        
+        # extra bump for spineplot if outer_right legend (to accommodate secondary y-axis)
+        if (identical(type, "spineplot")) lmar[1] = lmar[1] + 1.1
+        
+        ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
+        if (outer_right) legend_args[["x"]] = gsub("right!$", "left", legend_args[["x"]])
+        if (!outer_right) legend_args[["x"]] = gsub("left!$", "right", legend_args[["x"]])
+        
+        ## We have to set the inner margins of the plot before the (fake) legend is
+        ## drawn, otherwise the inset calculation---which is based in the legend
+        ## width---will be off the first time.
         if (outer_right) {
           omar[4] = 0
         } else {
+          # For outer left we have to account for the y-axis label too, which
+          # requires additional space
           omar[2] = par("mgp")[1] + 1*par("cex.lab")
         }
         par(mar = omar)
-      }
-    }
-    
-    legend_args[["horiz"]] = FALSE
-    
-    # "draw" fake legend
-    fklgnd.args = modifyList(
-      legend_args,
-      list(x = 0, y = 0, plot = FALSE),
-      keep.null = TRUE
-    )
-    if (isTRUE(gradient)) {
-      lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
-      if (length(lgnd_labs_tmp) < 5L) {
-        nmore = 5L - length(lgnd_labs_tmp)
-        lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
+        
+        # if (isTRUE(new_plot)) plot.new()
+        if (isTRUE(new_plot)) {
+          plot.new()
+          # Experimental: For themed + dynamic plots, we need to make sure the
+          # adjusted plot margins for the legend are reinstated (after being
+          # overwritten by the before.plot.new hook.
+          if (dynmar) {
+            omar = par("mar")
+            if (outer_right) {
+              omar[4] = 0
+            } else {
+              omar[2] = par("mgp")[1] + 1*par("cex.lab")
+            }
+            par(mar = omar)
+          }
         }
-      fklgnd.args = modifyList(
-        fklgnd.args,
-        list(legend = lgnd_labs_tmp),
-        keep.null = TRUE
-      )
-    }
-    fklgnd = do.call("legend", fklgnd.args)
-    
-    # calculate outer margin width in lines
-    soma = grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines")
-    # Add legend margins to the outer margin
-    soma = soma + sum(lmar)
-    ## differing outer margin adjustments depending on side
-    if (outer_right) {
-      ooma[4] = soma
-    } else {
-      ooma[2] = soma
-    }
-    par(oma = ooma)
-    
-    # determine legend inset
-    inset = grconvertX(lmar[1], from="lines", to="npc") - grconvertX(0, from = "lines", to = "npc")
-    if (isFALSE(outer_right)) {
-      # extra space needed for "left!" b/c of lhs inner margin
-      inset_bump = grconvertX(par("mar")[2], from = "lines", to = "npc") - grconvertX(0, from = "lines", to = "npc")
-      inset = inset + inset_bump
-    }
-    # GM: The legend inset spacing only works _exactly_ if we refresh the plot
-    # area. I'm not sure why (and it works properly if we use the same
-    # parameters manually while debugging), but this hack seems to work.
-    ## v0.3.0 update: Using (temporary) hook instead of direct par(new = TRUE)
-    ## assignment to play nice with tinytheme logic.
-    oldhook = getHook("before.plot.new")
-    setHook("before.plot.new", function() par(new = TRUE), action = "append")
-    setHook("before.plot.new", function() par(mar = omar), action = "append")
-    plot.new()
-    setHook("before.plot.new", oldhook, action = "replace")
-    # Finally, set the inset as part of the legend args.
-    legend_args[["inset"]] = c(1+inset, 0)
-    
-    ## Legend at the outer top or bottom of plot
-  } else if (grepl("bottom!$|top!$", legend_args[["x"]])) {
-    
-    outer_bottom = grepl("bottom!$", legend_args[["x"]])
-    
-    ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
-    if (outer_bottom) legend_args[["x"]] = gsub("bottom!$", "top", legend_args[["x"]])
-    if (!outer_bottom) legend_args[["x"]] = gsub("top!$", "bottom", legend_args[["x"]])
-    
-    ## We have to set the inner margins of the plot before the (fake) legend is
-    ## drawn, otherwise the inset calculation---which is based in the legend
-    ## width---will be off the first time.
-    if (outer_bottom) {
-      omar[1] = par("mgp")[1] + 1*par("cex.lab")
-      if (isTRUE(has_sub) && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
-    } else {
-      ## For "top!", the logic is slightly different: We don't expand the outer
-      ## margin b/c we need the legend to come underneath the main title. So
-      ## we rather expand the existing inner margin.
-      ooma[3] = ooma[3] + topmar_epsilon
-      par(oma = ooma)
-    }
-    par(mar = omar)
-    
-    # if (isTRUE(new_plot)) plot.new()
-    if (isTRUE(new_plot)) {
-      plot.new()
-      # Experimental: For themed + dynamic plots, we need to make sure the
-      # adjusted plot margins for the legend are reinstated (after being
-      # overwritten by the before.plot.new hook.
-      if (dynmar) {
-        omar = par("mar")
+        
+        legend_args[["horiz"]] = FALSE
+        
+        # "draw" fake legend
+        fklgnd.args = modifyList(
+          legend_args,
+          list(x = 0, y = 0, plot = FALSE),
+          keep.null = TRUE
+        )
+        if (isTRUE(gradient)) {
+          lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
+          if (length(lgnd_labs_tmp) < 5L) {
+            nmore = 5L - length(lgnd_labs_tmp)
+            lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
+            }
+          fklgnd.args = modifyList(
+            fklgnd.args,
+            list(legend = lgnd_labs_tmp),
+            keep.null = TRUE
+          )
+        }
+        fklgnd = do.call("legend", fklgnd.args)
+        
+        # calculate outer margin width in lines
+        soma = grconvertX(fklgnd$rect$w, to="lines") - grconvertX(0, to="lines")
+        # Add legend margins to the outer margin
+        soma = soma + sum(lmar)
+        ## differing outer margin adjustments depending on side
+        if (outer_right) {
+          ooma[4] = soma
+        } else {
+          ooma[2] = soma
+        }
+        par(oma = ooma)
+        
+        # determine legend inset
+        inset = grconvertX(lmar[1], from="lines", to="npc") - grconvertX(0, from = "lines", to = "npc")
+        if (isFALSE(outer_right)) {
+          # extra space needed for "left!" b/c of lhs inner margin
+          inset_bump = grconvertX(par("mar")[2], from = "lines", to = "npc") - grconvertX(0, from = "lines", to = "npc")
+          inset = inset + inset_bump
+        }
+        # GM: The legend inset spacing only works _exactly_ if we refresh the plot
+        # area. I'm not sure why (and it works properly if we use the same
+        # parameters manually while debugging), but this hack seems to work.
+        ## v0.3.0 update: Using (temporary) hook instead of direct par(new = TRUE)
+        ## assignment to play nice with tinytheme logic.
+        oldhook = getHook("before.plot.new")
+        setHook("before.plot.new", function() par(new = TRUE), action = "append")
+        setHook("before.plot.new", function() par(mar = omar), action = "append")
+        plot.new()
+        setHook("before.plot.new", oldhook, action = "replace")
+        # Finally, set the inset as part of the legend args.
+        legend_args[["inset"]] = c(1+inset, 0)
+        
+        ## Legend at the outer top or bottom of plot
+      } else if (grepl("bottom!$|top!$", legend_args[["x"]])) {
+        
+        outer_bottom = grepl("bottom!$", legend_args[["x"]])
+        
+        ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
+        if (outer_bottom) legend_args[["x"]] = gsub("bottom!$", "top", legend_args[["x"]])
+        if (!outer_bottom) legend_args[["x"]] = gsub("top!$", "bottom", legend_args[["x"]])
+        
+        ## We have to set the inner margins of the plot before the (fake) legend is
+        ## drawn, otherwise the inset calculation---which is based in the legend
+        ## width---will be off the first time.
         if (outer_bottom) {
-          # omar[1] = par("mgp")[1] + 1*par("cex.lab")
-          omar[1] = theme_clean$mgp[1] + 1*par("cex.lab") ## bit of a hack
+          omar[1] = par("mgp")[1] + 1*par("cex.lab")
           if (isTRUE(has_sub) && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
         } else {
+          ## For "top!", the logic is slightly different: We don't expand the outer
+          ## margin b/c we need the legend to come underneath the main title. So
+          ## we rather expand the existing inner margin.
           ooma[3] = ooma[3] + topmar_epsilon
           par(oma = ooma)
         }
         par(mar = omar)
-      }
-    }
-    
-    legend_args[["horiz"]] = TRUE
-    
-    # Catch for horizontal ribbon legend spacing
-    if (type=="ribbon" && isTRUE(legend_args[["horiz"]])) {
-      if (legend_args[["pt.lwd"]] == 1) {
-        legend_args[["x.intersp"]] = 1
+        
+        # if (isTRUE(new_plot)) plot.new()
+        if (isTRUE(new_plot)) {
+          plot.new()
+          # Experimental: For themed + dynamic plots, we need to make sure the
+          # adjusted plot margins for the legend are reinstated (after being
+          # overwritten by the before.plot.new hook.
+          if (dynmar) {
+            omar = par("mar")
+            if (outer_bottom) {
+              # omar[1] = par("mgp")[1] + 1*par("cex.lab")
+              omar[1] = theme_clean$mgp[1] + 1*par("cex.lab") ## bit of a hack
+              if (isTRUE(has_sub) && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
+            } else {
+              ooma[3] = ooma[3] + topmar_epsilon
+              par(oma = ooma)
+            }
+            par(mar = omar)
+          }
+        }
+        
+        legend_args[["horiz"]] = TRUE
+        
+        # Catch for horizontal ribbon legend spacing
+        if (type=="ribbon" && isTRUE(legend_args[["horiz"]])) {
+          if (legend_args[["pt.lwd"]] == 1) {
+            legend_args[["x.intersp"]] = 1
+          } else {
+            legend_args[["x.intersp"]] = 0.5
+          }
+        } else if (isTRUE(gradient) && isTRUE(legend_args[["horiz"]])) {
+          legend_args[["x.intersp"]] = 0.5
+        }
+        
+        # "draw" fake legend
+        fklgnd.args = modifyList(
+          legend_args,
+          list(plot = FALSE),
+          keep.null = TRUE
+        )
+        if (isTRUE(gradient)) {
+          lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
+          if (length(lgnd_labs_tmp) < 5L) {
+            nmore = 5L - length(lgnd_labs_tmp)
+            lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
+          }
+          fklgnd.args = modifyList(
+            fklgnd.args,
+            list(legend = lgnd_labs_tmp, title = NULL),
+            keep.null = TRUE
+          )
+        }
+        fklgnd = do.call("legend", fklgnd.args)
+        
+        # calculate outer margin width in lines
+        soma = grconvertY(fklgnd$rect$h, to="lines") - grconvertY(0, to="lines")
+        # Add legend margins to outer margin
+        soma = soma + sum(lmar)
+        ## differing outer margin adjustments depending on side
+        if (outer_bottom) {
+          ooma[1] = soma
+        } else {
+          omar[3] = omar[3] + soma - topmar_epsilon
+          par(mar = omar)
+        }
+        par(oma = ooma)
+        
+        # determine legend inset
+        inset = grconvertY(lmar[1], from="lines", to="npc") - grconvertY(0, from="lines", to="npc")
+        if (isTRUE(outer_bottom)) {
+          # extra space needed for "bottom!" b/c of lhs inner margin
+          inset_bump = grconvertY(par("mar")[1], from="lines", to="npc") - grconvertY(0, from="lines", to="npc")
+          inset = inset + inset_bump
+        } else {
+          epsilon_bump = grconvertY(topmar_epsilon, from="lines", to="npc") - grconvertY(0, from="lines", to="npc")
+          inset = inset + epsilon_bump
+        }
+        # GM: The legend inset spacing only works _exactly_ if we refresh the plot
+        # area. I'm not sure why (and it works properly if we use the same
+        # parameters manually while debugging), but this hack seems to work.
+        ## v0.3.0 update: Using (temporary) hook instead of direct par(new = TRUE)
+        ## assignment to play nice with tinytheme logic.
+        oldhook = getHook("before.plot.new")
+        setHook("before.plot.new", function() par(new = TRUE), action = "append")
+        setHook("before.plot.new", function() par(mar = omar), action = "append") ## experimental dynmar
+        plot.new()
+        setHook("before.plot.new", oldhook, action = "replace")
+        # Finally, set the inset as part of the legend args.
+        legend_args[["inset"]] = c(0, 1+inset)
+        
       } else {
-        legend_args[["x.intersp"]] = 0.5
+        legend_args[["inset"]] = 0
+        if (isTRUE(new_plot)) plot.new()
       }
-    } else if (isTRUE(gradient) && isTRUE(legend_args[["horiz"]])) {
-      legend_args[["x.intersp"]] = 0.5
-    }
-    
-    # "draw" fake legend
-    fklgnd.args = modifyList(
-      legend_args,
-      list(plot = FALSE),
-      keep.null = TRUE
-    )
-    if (isTRUE(gradient)) {
-      lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
-      if (length(lgnd_labs_tmp) < 5L) {
-        nmore = 5L - length(lgnd_labs_tmp)
-        lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
+      
+      # Finally, plot the legend
+      if (isTRUE(gradient)) {
+        if (!more_than_n_unique(legend_args[["col"]], 1)) {
+          if (!is.null(legend_args[["pt.bg"]]) && length(legend_args[["pt.bg"]])==100) {
+            legend_args[["col"]] = legend_args[["pt.bg"]]
+          }
+        }
+        gradient_legend(legend_args = legend_args, lmar = lmar, outer_right = outer_right, outer_bottom = outer_bottom)
+      } else {
+        do.call("legend", legend_args)
       }
-      fklgnd.args = modifyList(
-        fklgnd.args,
-        list(legend = lgnd_labs_tmp, title = NULL),
-        keep.null = TRUE
-      )
-    }
-    fklgnd = do.call("legend", fklgnd.args)
+      
+    },
     
-    # calculate outer margin width in lines
-    soma = grconvertY(fklgnd$rect$h, to="lines") - grconvertY(0, to="lines")
-    # Add legend margins to outer margin
-    soma = soma + sum(lmar)
-    ## differing outer margin adjustments depending on side
-    if (outer_bottom) {
-      ooma[1] = soma
-    } else {
-      omar[3] = omar[3] + soma - topmar_epsilon
-      par(mar = omar)
-    }
-    par(oma = ooma)
+    list = list(
+      legend = legend,
+      legend_args = legend_args,
+      by_dep = by_dep,
+      lgnd_labs = lgnd_labs,
+      type = type,
+      pch = pch,
+      lty = lty,
+      lwd = lwd,
+      col = col,
+      bg = bg,
+      cex = cex,
+      gradient = gradient,
+      lmar = lmar,
+      has_sub = has_sub,
+      new_plot = new_plot
+    ),
     
-    # determine legend inset
-    inset = grconvertY(lmar[1], from="lines", to="npc") - grconvertY(0, from="lines", to="npc")
-    if (isTRUE(outer_bottom)) {
-      # extra space needed for "bottom!" b/c of lhs inner margin
-      inset_bump = grconvertY(par("mar")[1], from="lines", to="npc") - grconvertY(0, from="lines", to="npc")
-      inset = inset + inset_bump
-    } else {
-      epsilon_bump = grconvertY(topmar_epsilon, from="lines", to="npc") - grconvertY(0, from="lines", to="npc")
-      inset = inset + epsilon_bump
-    }
-    # GM: The legend inset spacing only works _exactly_ if we refresh the plot
-    # area. I'm not sure why (and it works properly if we use the same
-    # parameters manually while debugging), but this hack seems to work.
-    ## v0.3.0 update: Using (temporary) hook instead of direct par(new = TRUE)
-    ## assignment to play nice with tinytheme logic.
-    oldhook = getHook("before.plot.new")
-    setHook("before.plot.new", function() par(new = TRUE), action = "append")
-    setHook("before.plot.new", function() par(mar = omar), action = "append") ## experimental dynmar
-    plot.new()
-    setHook("before.plot.new", oldhook, action = "replace")
-    # Finally, set the inset as part of the legend args.
-    legend_args[["inset"]] = c(0, 1+inset)
-    
-  } else {
-    legend_args[["inset"]] = 0
-    if (isTRUE(new_plot)) plot.new()
-  }
+    getNamespace("tinyplot")
   
-  # Finally, plot the legend. Note that we use recordGraphics to preserve the
-  # legend spacing if the plot is resized.
-  if (isTRUE(gradient)) {
-    if (!more_than_n_unique(legend_args[["col"]], 1)) {
-      if (!is.null(legend_args[["pt.bg"]]) && length(legend_args[["pt.bg"]])==100) {
-        legend_args[["col"]] = legend_args[["pt.bg"]]
-      }
-    }
-    recordGraphics(
-      gradient_legend(legend_args = legend_args, lmar = lmar, outer_right = outer_right, outer_bottom = outer_bottom),
-      list(legend_args = legend_args, lmar = lmar, outer_right = outer_right, outer_bottom = outer_bottom),
-      getNamespace("tinyplot")
-    )
-  } else {
-    recordGraphics(
-      do.call("legend", legend_args),
-      list(legend_args = legend_args),
-      getNamespace("tinyplot")
-    )
-  }
+  )
   
 }
 

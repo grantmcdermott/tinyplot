@@ -477,32 +477,12 @@ draw_facet_window = function(
         if (isTRUE(grid)) {
           gnx = gny = NULL
           if (!any(c(par("xlog"), type == "boxplot"))) {
-            if (!inherits(x, c("POSIXt", "Date"))) {
-              xg = pretty(xlim)
-            } else {
-              # Catch for datetime (since xlim has been coerced to numeric)
-              tz = attributes(x)[["tzone"]]
-              if (inherits(x, "POSIXt")) {
-                xg = pretty(as.POSIXct(extendrange(xlim), tz = tz))
-              } else {
-                xg = pretty(as.Date(round(extendrange(xlim)), tz = tz))
-              }
-            }
+            xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
             abline(v = xg, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
             gnx = NA
           }
           if (!any(c(par("ylog"), type == "boxplot"))) {
-            if (!inherits(y, c("POSIXt", "Date"))) {
-              yg = pretty(ylim)
-            } else {
-              # Catch for datetime (since xlim has been coerced to numeric)
-              tz = attributes(y)[["tzone"]]
-              if (inherits(x, "POSIXt")) {
-                yg = pretty(as.POSIXct(extendrange(ylim), tz = tz))
-              } else {
-                yg = pretty(as.Date(extendrange(ylim), tz = tz))
-              }
-            }
+            yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
             abline(h = yg, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
             gny = NA
           }

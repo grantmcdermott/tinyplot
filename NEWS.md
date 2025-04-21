@@ -50,7 +50,9 @@ where the formatting is also better._
 - Fixed dynamic y-axis margin spacing for flipped `"boxplot"` and `"jitter"`
   types. Thanks to @eddelbuettel for the report in #357 (@grantmcdermott).
 - Fixed dynamic x-axis margin spacing for perpendicular (vertical) label text,
-  i.e. cases where `las = 2` or `las = 3`. #369 (@grantmcdermott).
+  i.e. cases where `las = 2` or `las = 3`. (#369 @grantmcdermott)
+- Better integration with the Positron IDE graphics pane. Thanks to @thomasp85
+  for the report and helpful suggestions. (#377 @grantmcdermott)
 
 ### Internals:
 

@@ -86,7 +86,7 @@ tinyplot(mpg ~ hp, data = mtcars, main = "Fuel efficiency vs. horsepower")
 ### Gallery
 
 We'll use the following running example to demonstrate the full gallery of
-built-in `tintheme()` themes.
+built-in `tinytheme()` themes.
 
 ```{r}
 p = function() {

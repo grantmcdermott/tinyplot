@@ -84,7 +84,7 @@
     "href": "vignettes/introduction.html#themes",
     "title": "Introduction to tinyplot",
     "section": "Themes",
-    "text": "Themes\nIn the examples thus far, we have adjusted our plot aesthetics manually by tweaking individual arguments and settings. A more convenient way to change the look of your plots is by calling the tinytheme() function. This will modify several graphical settings simultaneously to match a variety of pre-defined styles. In addition to convenience, themes have the added benefit of enabling dynamic adjustment of the plot regions, so that excess whitespace is reduced and long text strings (e.g., horizontal axis labels) are accounted for. Please see the ?tinytheme help page, as well as the dedicated Themes vignette for a detailed overview of tinyplot’s theming functionality. Here we provide a small taster by applying the “dark” theme to one of our earlier plots.\n\n# apply theme\ntinytheme(\"dark\")\n\n# plot\ntinyplot(\n  Temp ~ Wind | Ozone, data = aq,\n  main = \"An example of a tinytheme() in action\",\n  sub = \"Notice that the subtitle is above the plot\"\n)\n\n\n\n\n\n\n\n\n# reset theme to default\ntinytheme()",
+    "text": "Themes\nIn the examples thus far, we have adjusted our plot aesthetics manually by tweaking individual arguments and settings. A more convenient way to change the look of your plots is by calling the tinytheme() function. This will modify several graphical settings simultaneously to match a variety of pre-defined styles. In addition to convenience, themes have the added benefit of enabling dynamic adjustment of the plot regions, so that excess whitespace is reduced and long text strings (e.g., horizontal axis labels) are accounted for. Please see the ?tinytheme help page, as well as the dedicated Themes vignette for a detailed overview of tinyplot’s theming functionality. Here we provide a small taster by applying the “dark” theme to one of our earlier plots.\n\n# apply theme\ntinytheme(\"dark\")\n\n# plot\ntinyplot(\n  Temp ~ Wind | Ozone, data = aq,\n  main = \"An example of a tinytheme() in action\",\n  sub = \"Notice that the subtitle is above the plot\"\n)\n\n\n\n\n\n\n\n\n\n# reset theme to default\ntinytheme()",
     "crumbs": [
       "Introduction"
     ]
@@ -124,7 +124,7 @@
     "href": "vignettes/gallery.html",
     "title": "Gallery",
     "section": "",
-    "text": "Click on a plot to get the link to its code.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode",
+    "text": "Click on a plot to get the link to its code.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode\n\n\nCode",
     "crumbs": [
       "Gallery"
     ]

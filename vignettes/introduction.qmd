@@ -551,7 +551,8 @@ tinyplot(
   main = "An example of a tinytheme() in action",
   sub = "Notice that the subtitle is above the plot"
 )
-
+```
+```{r}
 # reset theme to default
 tinytheme()
 ```

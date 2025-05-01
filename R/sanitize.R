@@ -38,6 +38,7 @@ sanitize_type = function(type, x, y, dots) {
     "segments",
     "spine", "spineplot",
     "spline",
+    "summary",
     "text",
     "violin",
     "vline"
@@ -89,6 +90,7 @@ sanitize_type = function(type, x, y, dots) {
     "spine"      = type_spineplot,
     "spineplot"  = type_spineplot,
     "spline"     = type_spline,
+    "summary"    = type_summary,
     "text"       = type_text,
     "violin"     = type_violin,
     "vline"      = type_vline,

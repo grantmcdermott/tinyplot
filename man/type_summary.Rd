@@ -14,23 +14,24 @@ type_summary(fun = mean, ...)
 ex: \code{type="p"}, \code{col="pink"}.}
 }
 \description{
-Applies a summary function to \code{y} along unique values of \code{x}. This is useful,
-say, for quickly plotting mean values of your dataset. Internally,
+Applies a summary function to \code{y} along unique values of \code{x}. For example,
+plot the mean \code{y} value for each \code{x} value. Internally,
 \code{type_summary()} applies a thin wrapper around \code{\link[stats]{ave}} and
 then passes the result to \code{\link{type_lines}} for drawing.
 }
 \examples{
 # Plot the mean chick weight over time
-tinyplot(weight ~ Time, data = ChickWeight, type = type_summary())
+tinyplot(weight ~ Time, data = ChickWeight, type = "summary")
 
-# mean is the default function, so the above is equivalent to
-tinyplot(weight ~ Time, data = ChickWeight, type = type_summary(mean))
+# Note: "mean" is the default function, so these are also equivalent:
+# tinyplot(weight ~ Time, data = ChickWeight, type = type_summary())
+# tinyplot(weight ~ Time, data = ChickWeight, type = type_summary(mean))
 
 # Plot the median instead
 tinyplot(weight ~ Time, data = ChickWeight, type = type_summary(median))
 
 # Works with groups and/or facets too
-tinyplot(weight ~ Time | Diet, facet = "by", data = ChickWeight, type = type_summary())
+tinyplot(weight ~ Time | Diet, facet = "by", data = ChickWeight, type = "summary")
 
 # Custom/complex function example
 tinyplot(

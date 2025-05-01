@@ -1,9 +1,6 @@
-#' Trace a horizontal line on the plot
-#'
-#' @param h y-value(s) for horizontal line(s). Numeric of length 1 or equal to the number of facets.
-#' @examples
-#' tinyplot(mpg ~ hp | factor(cyl), facet = ~ factor(cyl), data = mtcars)
-#' tinyplot_add(type = type_hline(h = 12), col = "pink", lty = 3, lwd = 3)
+#' @rdname type_abline
+#' @param h y-value(s) for horizontal line(s). Numeric of length 1 or equal to
+#'   the number of facets.
 #' @export
 type_hline = function(h = 0) {
   data_hline = function(datapoints, ...) {

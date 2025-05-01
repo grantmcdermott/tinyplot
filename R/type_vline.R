@@ -1,15 +1,6 @@
-#' Trace a vertical line on the plot
-#'
-#' @param v x-value(s) for vertical line(s). Numeric of length 1 or equal to the number of facets.
-#' @examples
-#' tinyplot(mpg ~ hp, data = mtcars)
-#' tinyplot_add(type = type_vline(150))
-#'
-#' # facet-specify location and colors
-#' cols = c("black", "green", "orange")
-#' tinyplot(mpg ~ hp | factor(cyl), facet = ~ factor(cyl), data = mtcars, col = cols)
-#' tinyplot_add(type = type_vline(v = c(100, 150, 200)), lty = 3, lwd = 3)
-#'
+#' @param v x-value(s) for vertical line(s). Numeric of length 1 or equal to the
+#'   number of facets.
+#' @rdname type_abline
 #' @export
 type_vline = function(v = 0) {
   assert_numeric(v)

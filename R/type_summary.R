@@ -2,8 +2,8 @@
 #'
 #' @md
 #' @description
-#' Applies a summary function to `y` along unique values of `x`. This is useful,
-#' say, for quickly plotting mean values of your dataset. Internally,
+#' Applies a summary function to `y` along unique values of `x`. For example,
+#' plot the mean `y` value for each `x` value. Internally,
 #' `type_summary()` applies a thin wrapper around \code{\link[stats]{ave}} and
 #' then passes the result to [`type_lines`] for drawing.
 #'
@@ -15,16 +15,17 @@
 #'   scenes.
 #' @examples
 #' # Plot the mean chick weight over time
-#' tinyplot(weight ~ Time, data = ChickWeight, type = type_summary())
+#' tinyplot(weight ~ Time, data = ChickWeight, type = "summary")
 #' 
-#' # mean is the default function, so the above is equivalent to
-#' tinyplot(weight ~ Time, data = ChickWeight, type = type_summary(mean))
+#' # Note: "mean" is the default function, so these are also equivalent:
+#' # tinyplot(weight ~ Time, data = ChickWeight, type = type_summary())
+#' # tinyplot(weight ~ Time, data = ChickWeight, type = type_summary(mean))
 #' 
 #' # Plot the median instead
 #' tinyplot(weight ~ Time, data = ChickWeight, type = type_summary(median))
 #' 
 #' # Works with groups and/or facets too
-#' tinyplot(weight ~ Time | Diet, facet = "by", data = ChickWeight, type = type_summary())
+#' tinyplot(weight ~ Time | Diet, facet = "by", data = ChickWeight, type = "summary")
 #'
 #' # Custom/complex function example
 #' tinyplot(

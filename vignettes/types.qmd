@@ -102,11 +102,11 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 
 | string                | function           | description                              | docs |
 |-----------------------|--------------------|-----------------------------------------|------|
-| _(None)_              | `type_abline()`    | Line(s) with intercept and slope.       | [link](/man/type_abline.qmd) |
-| _(None)_              | `type_hline()`     | Horizontal line(s).                     | [link](/man/type_hline.qmd) |
-| _(None)_              | `type_vline()`     | Vertical line(s).                       | [link](/man/type_vline.qmd) |
-| _(None)_              | `type_function()`  | Arbitrary function.                     | [link](/man/type_function.qmd) |
-| _(None)_              | `type_summary()`   | Summarizes `y` by unique values of `x`. | [link](/man/type_summary.qmd) |
+| `"abline"`            | `type_abline()`    | Line(s) with intercept and slope.       | [link](/man/type_abline.qmd) |
+| `"hline"`             | `type_hline()`     | Horizontal line(s).                     | [link](/man/type_abline.qmd) |
+| `"vline"`             | `type_vline()`     | Vertical line(s).                       | [link](/man/type_abline.qmd) |
+| `"function"`          | `type_function()`  | Arbitrary function.                     | [link](/man/type_function.qmd) |
+| `"summary"`           | `type_summary()`   | Summarizes `y` by unique values of `x`. | [link](/man/type_summary.qmd) |
 
 
 To see the difference between the convenience strings and their respective

@@ -94,11 +94,11 @@ website:
           - text: type_function
             file: man/type_function.qmd
           - text: type_hline
-            file: man/type_hline.qmd
+            file: man/type_abline.qmd
           - text: type_summary
             file: man/type_summary.qmd
           - text: type_vline
-            file: man/type_vline.qmd
+            file: man/type_abline.qmd
         - section: "Options & Internals"
           contents:
           - text: tpar

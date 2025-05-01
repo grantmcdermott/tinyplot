@@ -414,7 +414,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_hline.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/type_abline.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_hline</span></a>
   </div>
 </li>
@@ -426,7 +426,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_vline.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/type_abline.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_vline</span></a>
   </div>
 </li>
@@ -512,7 +512,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="unnumbered anchored" data-anchor-id="plot-summary-values-of-y-at-unique-values-of-x">Plot summary values of <code>y</code> at unique values of <code>x</code></h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Applies a summary function to <code>y</code> along unique values of <code>x</code>. This is useful, say, for quickly plotting mean values of your dataset. Internally, <code>type_summary()</code> applies a thin wrapper around <code>ave</code> and then passes the result to <code>type_lines</code> for drawing.</p>
+<p>Applies a summary function to <code>y</code> along unique values of <code>x</code>. For example, plot the mean <code>y</code> value for each <code>x</code> value. Internally, <code>type_summary()</code> applies a thin wrapper around <code>ave</code> and then passes the result to <code>type_lines</code> for drawing.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -550,7 +550,7 @@ Additional arguments are passed to the <code>lines()</code> function, ex: <code>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the mean chick weight over time</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(weight <span class="sc">~</span> Time, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="fu">type_summary</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(weight <span class="sc">~</span> Time, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="st">"summary"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -558,20 +558,21 @@ Additional arguments are passed to the <code>lines()</code> function, ex: <code>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mean is the default function, so the above is equivalent to</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(weight <span class="sc">~</span> Time, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="fu">type_summary</span>(mean))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the median instead</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(weight <span class="sc">~</span> Time, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="fu">type_summary</span>(median))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Works with groups and/or facets too</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(weight <span class="sc">~</span> Time <span class="sc">|</span> Diet, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="fu">type_summary</span>())</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom/complex function example</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  weight <span class="sc">~</span> Time <span class="sc">|</span> Diet, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> ChickWeight,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_summary</span>(<span class="cf">function</span>(y) <span class="fu">quantile</span>(y, <span class="at">probs =</span> <span class="fl">0.9</span>)<span class="sc">/</span><span class="fu">max</span>(y))</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: "mean" is the default function, so these are also equivalent:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># tinyplot(weight ~ Time, data = ChickWeight, type = type_summary())</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># tinyplot(weight ~ Time, data = ChickWeight, type = type_summary(mean))</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the median instead</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(weight <span class="sc">~</span> Time, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="fu">type_summary</span>(median))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Works with groups and/or facets too</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(weight <span class="sc">~</span> Time <span class="sc">|</span> Diet, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="st">"summary"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom/complex function example</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  weight <span class="sc">~</span> Time <span class="sc">|</span> Diet, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> ChickWeight,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_summary</span>(<span class="cf">function</span>(y) <span class="fu">quantile</span>(y, <span class="at">probs =</span> <span class="fl">0.9</span>)<span class="sc">/</span><span class="fu">max</span>(y))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

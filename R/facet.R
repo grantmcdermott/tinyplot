@@ -310,14 +310,14 @@ draw_facet_window = function(
         par(usr = fusr[[ii]])
         # if plot frame is true then print axes per normal...
         if (type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)) {
-          tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
+          tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, labeller = xaxl)
         } else {
-          tinyAxis(xfree, side = xside, type = xaxt)
+          tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
         }
         if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
-          tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+          tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
         } else {
-          tinyAxis(yfree, side = yside, type = yaxt)
+          tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
         }
 
         # For fixed facets we can just reuse the same plot extent and axes limits

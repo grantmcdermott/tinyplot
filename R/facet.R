@@ -23,8 +23,8 @@ draw_facet_window = function(
     nfacets, nfacet_cols, nfacet_rows,
     # axes args
     axes, flip, frame.plot, oxaxis, oyaxis,
-    xlabs, xlim, xaxt, xaxs, xaxl,
-    ylabs, ylim, yaxt, yaxs, yaxl,
+    xlabs, xlim, xlim_user, xaxt, xaxs, xaxl,
+    ylabs, ylim, ylim_user, yaxt, yaxs, yaxl,
     asp, log,
     # other args (in approx. alphabetical + group ordering)
     dots,
@@ -293,8 +293,8 @@ draw_facet_window = function(
         # individual facet.
         xfree = split(c(x, xmin, xmax), facet)[[ii]]
         yfree = split(c(y, ymin, ymax), facet)[[ii]]
-        xlim = range(xfree, na.rm = TRUE)
-        ylim = range(yfree, na.rm = TRUE)
+        if (!xlim_user) xlim = range(xfree, na.rm = TRUE)
+        if (!ylim_user) ylim = range(yfree, na.rm = TRUE)
         xext = extendrange(xlim, f = 0.04)
         yext = extendrange(ylim, f = 0.04)
         # We'll save this in a special .fusr env var (list) that we'll re-use

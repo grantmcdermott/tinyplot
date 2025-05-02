@@ -1148,8 +1148,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1172,8 +1172,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
       asp = asp, log = log,
       dots = dots,
       draw = draw,

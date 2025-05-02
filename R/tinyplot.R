@@ -747,7 +747,6 @@ tinyplot.default = function(
       if (is.null(ylab)) ylab = "Density"
     } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
-    # } else if (type != "histogram") {
     } else if (!(type %in% c("histogram", "barplot"))) {
       y = x
       x = seq_along(x)
@@ -756,7 +755,6 @@ tinyplot.default = function(
   }
 
   if (is.null(xlab)) xlab = x_dep
-  # if (is.null(ylab)) ylab = y_dep
   if (is.null(ylab) && type != "histogram") ylab = y_dep
   
   # flag(s) indicating whether x/ylim was set by the user (needed later for

@@ -59,6 +59,7 @@
     "xaxt",
     "xlabs",
     "xlim",
+    "xlim_user",
     "xlvls",
     "xmax",
     "xmin",
@@ -68,6 +69,7 @@
     "yaxt",
     "ylabs",
     "ylim",
+    "ylim_user",
     "ymax",
     "ymin"
   ))

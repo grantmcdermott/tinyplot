@@ -747,7 +747,6 @@ tinyplot.default = function(
       if (is.null(ylab)) ylab = "Density"
     } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
-    # } else if (type != "histogram") {
     } else if (!(type %in% c("histogram", "barplot"))) {
       y = x
       x = seq_along(x)
@@ -756,8 +755,12 @@ tinyplot.default = function(
   }
 
   if (is.null(xlab)) xlab = x_dep
-  # if (is.null(ylab)) ylab = y_dep
   if (is.null(ylab) && type != "histogram") ylab = y_dep
+  
+  # flag(s) indicating whether x/ylim was set by the user (needed later for
+  # special case where facets are free but still want to set x/ylim manually)
+  xlim_user = !is.null(xlim)
+  ylim_user = !is.null(ylim)
 
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
@@ -1148,8 +1151,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1172,8 +1175,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
       asp = asp, log = log,
       dots = dots,
       draw = draw,

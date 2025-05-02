@@ -758,6 +758,11 @@ tinyplot.default = function(
   if (is.null(xlab)) xlab = x_dep
   # if (is.null(ylab)) ylab = y_dep
   if (is.null(ylab) && type != "histogram") ylab = y_dep
+  
+  # flag(s) indicating whether x/ylim was set by the user (needed later for
+  # special case where facets are free but still want to set x/ylim manually)
+  xlim_user = !is.null(xlim)
+  ylim_user = !is.null(ylim)
 
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill

@@ -596,18 +596,8 @@ tinyplot.default = function(
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
 
-  # save for tinyplot_add()
-  if (!isTRUE(add)) {
-    calls = sys.calls()
-    idx = grep("^tinyplot", sapply(calls, function(k) k[[1]]))
-    if (length(idx) > 0) {
-      options(tinyplot_last_call = calls[[idx[1]]])
-    }
-  }
-
-  ## TODO: remove the global option above and move to this when density is refactored
-  # cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
-  # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
+  cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
+  assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
 
   dots = list(...)
 

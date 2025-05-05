@@ -42,11 +42,8 @@
 #' @returns No return value, called for side effect of producing a plot.
 #'
 #' @export
-tinyplot_add = function(...) {
-  cal = getOption("tinyplot_last_call", default = NULL)
-
-  ## TODO: remove the global option above and move to this when density is refactored
-  # cal = get(".last_call", envir = get(".tinyplot_env", envir = parent.env(environment())))
+tinyplot_add <- function(...) {
+  cal = get(".last_call", envir = get(".tinyplot_env", envir = parent.env(environment())))
 
   if (is.null(cal)) {
     stop("No previous tinyplot call found.")

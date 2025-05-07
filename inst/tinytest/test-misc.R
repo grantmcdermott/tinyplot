@@ -23,6 +23,11 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "type_j")
 
+f = function() {
+  set.seed(42)
+  tinyplot(Species ~ Sepal.Length, data = iris, type = "j")
+}
+expect_snapshot_plot(f, label = "type_j_y")
 
 # log axes
 f = function() {

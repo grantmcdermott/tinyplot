@@ -270,7 +270,7 @@ draw_facet_window = function(
         lty = get_tpar(c("lty.yaxs", "lty.axis"), 1)
       )
       type_range_x = type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)
-      type_range_y = isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)
+      type_range_y = !is.null(ylabs) && (type == "p" || (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "violin")))
       if (type_range_x) {
         args_x = modifyList(args_x, list(at = xlabs, labels = names(xlabs)))
       }

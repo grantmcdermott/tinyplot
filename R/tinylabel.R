@@ -12,19 +12,40 @@
 #' @examples
 #' \dontrun{
 #' x = 1e4
-#' tinylabel(x, "comma")
-#' tinylabel(x, ",") # same
-#' tinylabel(x, "$") # or "dollar"
+#' tinyplot:::tinylabel(x, "comma")
+#' tinyplot:::tinylabel(x, ",") # same
+#' tinyplot:::tinylabel(x, "$") # or "dollar"
 #' 
 #' # pass to xaxl/yaxl for adjusting axes tick labels in a tinyplot call
 #' tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "%")
 #' 
-#' # function example (here: date formatting)
+#' # custom function example I: date formatting
 #' dat = data.frame(
 #'   date = seq(as.Date("2000/1/1"), by = "month", length.out = 12),
 #'   trend = 1:12 + rnorm(12, sd = 1)
 #' )
 #' tinyplot(trend ~ date, data = dat, xaxl = function(x) format(x, "%b, %Y"))
+#' 
+#' # custom function example II: string wrapping
+#' ## first create a "vectorised" version of `base::strwrap` that breaks long
+#' ## strings into new lines every 18 characters
+#' strwrap18 = function(x) sapply(
+#'   strwrap(x, width = 18, simplify = FALSE),
+#'   paste,
+#'   collapse = "\n"
+#' )
+#' ## now demonstrate on a dataset with long y-tick labels
+#' dat2 = data.frame(
+#'   x = rep(rnorm(100), 3),
+#'   y = c(
+#'     "tinyplot is a lightweight extension of the base R graphics system.",
+#'     "R is a language for statistical computing.",
+#'     "Data visualization is an essential skill."
+#'   )
+#' )
+#' tinytheme("bw")
+#' tinyplot(y ~ x, data = dat2, type = "j", yaxl = strwrap18)
+#' tinytheme()
 #' }
 #' @keywords internal
 tinylabel = function(x, labeller = NULL) {

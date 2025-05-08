@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
 <defs>
   <style type='text/css'><![CDATA[
     .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
@@ -11,6 +12,10 @@
     }
     .svglite text {
       white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
     }
   ]]></style>
 </defs>
@@ -1059,7 +1064,6 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDM5Ljg3fDU5LjA0fDQzMC41Ng==)'>
-<line x1='2.62' y1='430.56' x2='2.62' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='61.39' y1='430.56' x2='61.39' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='120.16' y1='430.56' x2='120.16' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='178.93' y1='430.56' x2='178.93' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
@@ -1067,13 +1071,10 @@
 <line x1='296.47' y1='430.56' x2='296.47' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='355.24' y1='430.56' x2='355.24' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='414.02' y1='430.56' x2='414.02' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
-<line x1='472.79' y1='430.56' x2='472.79' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
-<line x1='59.04' y1='467.14' x2='439.87' y2='467.14' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='59.04' y1='383.24' x2='439.87' y2='383.24' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='59.04' y1='299.34' x2='439.87' y2='299.34' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='59.04' y1='215.43' x2='439.87' y2='215.43' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='59.04' y1='131.53' x2='439.87' y2='131.53' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
-<line x1='59.04' y1='47.63' x2='439.87' y2='47.63' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='75.09' y1='317.57' x2='82.96' y2='289.49' style='stroke-width: 0.75; stroke: #4E79A7; stroke-opacity: 0.50;' />
 <line x1='89.03' y1='276.66' x2='92.52' y2='271.67' style='stroke-width: 0.75; stroke: #4E79A7; stroke-opacity: 0.50;' />
 <line x1='97.49' y1='272.93' x2='107.57' y2='359.31' style='stroke-width: 0.75; stroke: #4E79A7; stroke-opacity: 0.50;' />
@@ -1364,5 +1365,6 @@
 <circle cx='390.51' cy='257.39' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #59A14F; fill-opacity: 0.50;' />
 <circle cx='402.26' cy='249.00' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #59A14F; fill-opacity: 0.50;' />
 <circle cx='414.02' cy='316.12' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #59A14F; fill-opacity: 0.50;' />
+</g>
 </g>
 </svg>

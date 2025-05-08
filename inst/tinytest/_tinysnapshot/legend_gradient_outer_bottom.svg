@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
 <defs>
   <style type='text/css'><![CDATA[
     .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
@@ -11,6 +12,10 @@
     }
     .svglite text {
       white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
     }
   ]]></style>
 </defs>
@@ -25,10 +30,10 @@
 <text x='260.38' y='499.92' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>200</text>
 <text x='287.43' y='499.92' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>400</text>
 <text x='314.49' y='499.92' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>600</text>
-<text transform='translate(264.51,489.60) rotate(-90)' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.99px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text transform='translate(291.56,489.60) rotate(-90)' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.99px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text transform='translate(318.62,489.60) rotate(-90)' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.99px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='238.56' y='485.47' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='33.36px' lengthAdjust='spacingAndGlyphs'>depth </text>
+<text transform='translate(264.51,489.60) rotate(-90)' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text transform='translate(291.56,489.60) rotate(-90)' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text transform='translate(318.62,489.60) rotate(-90)' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text x='238.56' y='485.47' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='33.34px' lengthAdjust='spacingAndGlyphs'>depth </text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHw1MDQuMDB8MC4wMHw0NTUuNzY='>
@@ -36,7 +41,7 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw0NTUuNzY=)'>
-<text x='266.40' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='176.70px' lengthAdjust='spacingAndGlyphs'>Gradient legend (bottom!)</text>
+<text x='266.40' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='176.73px' lengthAdjust='spacingAndGlyphs'>Gradient legend (bottom!)</text>
 <text x='266.40' y='452.88' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='22.69px' lengthAdjust='spacingAndGlyphs'>long</text>
 <text transform='translate(12.96,228.60) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='12.67px' lengthAdjust='spacingAndGlyphs'>lat</text>
 </g>
@@ -1073,5 +1078,6 @@
 <circle cx='391.21' cy='177.62' r='2.70' style='stroke-width: 0.75; stroke: #00B982; fill: #00B982;' />
 <circle cx='452.76' cy='146.86' r='2.70' style='stroke-width: 0.75; stroke: #C2DE34; fill: #C2DE34;' />
 <circle cx='158.00' cy='194.07' r='2.70' style='stroke-width: 0.75; stroke: #4FCB68; fill: #4FCB68;' />
+</g>
 </g>
 </svg>

@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
 <defs>
   <style type='text/css'><![CDATA[
     .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
@@ -12,6 +13,10 @@
     .svglite text {
       white-space: pre;
     }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
   ]]></style>
 </defs>
 <rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
@@ -22,14 +27,14 @@
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <image width='18.00' height='95.04' x='61.92' y='332.64' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABkCAYAAABHLFpgAAAAo0lEQVQYlXWLS1LDQAwFW62yA2GRKk7BQTgPx8+CzGhYYDtxPptX/V5LfH/9DCsDS3GkWCkOY6FKsWdgVywDW4pN8ZKBF8XfBM8pnhVbBuIWd/U/2Il8JWQvWCliV29ivNrG4xabyIHEE2FtH/Uo4glZCFexbmHhKQo/o/AUHT8sPEbhexS+2fEQHQ9RC803tNbZhjO1bNMmpmg4ca0dp1ju/gCmb0eaNdB1fgAAAABJRU5ErkJggg=='/>
-<text x='79.92' y='407.81' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.36px' lengthAdjust='spacingAndGlyphs'> 200</text>
-<text x='79.92' y='378.05' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.36px' lengthAdjust='spacingAndGlyphs'> 400</text>
-<text x='79.92' y='348.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.36px' lengthAdjust='spacingAndGlyphs'> 600</text>
-<text x='79.92' y='407.81' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.99px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='79.92' y='378.05' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.99px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='79.92' y='348.29' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.99px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='61.92' y='318.24' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='30.03px' lengthAdjust='spacingAndGlyphs'>depth</text>
-<text x='266.40' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='197.50px' lengthAdjust='spacingAndGlyphs'>Gradient legend (bottom left)</text>
+<text x='79.92' y='407.81' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'> 200</text>
+<text x='79.92' y='378.05' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'> 400</text>
+<text x='79.92' y='348.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'> 600</text>
+<text x='79.92' y='407.81' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text x='79.92' y='378.05' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text x='79.92' y='348.29' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text x='61.92' y='318.24' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='30.02px' lengthAdjust='spacingAndGlyphs'>depth</text>
+<text x='266.40' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='197.53px' lengthAdjust='spacingAndGlyphs'>Gradient legend (bottom left)</text>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='22.69px' lengthAdjust='spacingAndGlyphs'>long</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='12.67px' lengthAdjust='spacingAndGlyphs'>lat</text>
 <line x1='62.94' y1='430.56' x2='404.89' y2='430.56' style='stroke-width: 0.75;' />
@@ -1064,5 +1069,6 @@
 <circle cx='391.21' cy='188.95' r='2.70' style='stroke-width: 0.75; stroke: #00B982; fill: #00B982;' />
 <circle cx='452.76' cy='155.25' r='2.70' style='stroke-width: 0.75; stroke: #C2DE34; fill: #C2DE34;' />
 <circle cx='158.00' cy='206.97' r='2.70' style='stroke-width: 0.75; stroke: #4FCB68; fill: #4FCB68;' />
+</g>
 </g>
 </svg>

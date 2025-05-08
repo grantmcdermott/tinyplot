@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
 <defs>
   <style type='text/css'><![CDATA[
     .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
@@ -12,6 +13,10 @@
     .svglite text {
       white-space: pre;
     }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
   ]]></style>
 </defs>
 <rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
@@ -22,7 +27,7 @@
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='12.00px' lengthAdjust='spacingAndGlyphs'>wt</text>
-<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='45.35px' lengthAdjust='spacingAndGlyphs'>[lwr, upr]</text>
+<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='45.34px' lengthAdjust='spacingAndGlyphs'>[lwr, upr]</text>
 <line x1='122.22' y1='430.56' x2='416.77' y2='430.56' style='stroke-width: 0.75;' />
 <line x1='122.22' y1='430.56' x2='122.22' y2='437.76' style='stroke-width: 0.75;' />
 <line x1='220.40' y1='430.56' x2='220.40' y2='437.76' style='stroke-width: 0.75;' />
@@ -40,11 +45,11 @@
 <line x1='59.04' y1='158.30' x2='51.84' y2='158.30' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='91.86' x2='51.84' y2='91.86' style='stroke-width: 0.75;' />
 <text transform='translate(41.76,424.08) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
-<text transform='translate(41.76,357.63) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>10</text>
-<text transform='translate(41.76,291.19) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>15</text>
-<text transform='translate(41.76,224.74) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>20</text>
-<text transform='translate(41.76,158.30) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>25</text>
-<text transform='translate(41.76,91.86) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>30</text>
+<text transform='translate(41.76,357.63) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text transform='translate(41.76,291.19) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>15</text>
+<text transform='translate(41.76,224.74) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>20</text>
+<text transform='translate(41.76,158.30) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>25</text>
+<text transform='translate(41.76,91.86) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>30</text>
 <polygon points='59.04,430.56 473.76,430.56 473.76,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -54,5 +59,6 @@
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
 <polygon points='74.40,132.21 84.41,138.11 106.02,150.93 115.83,156.81 135.96,168.96 141.85,172.55 153.63,179.79 167.87,188.66 183.09,198.32 197.82,207.89 198.80,208.53 208.13,214.74 235.13,233.41 237.09,234.81 239.06,236.22 241.51,237.99 263.11,253.99 263.60,254.36 263.60,254.36 263.60,254.36 265.57,255.85 271.46,260.36 276.37,264.16 276.37,264.16 292.08,276.51 296.98,280.43 302.88,285.17 303.37,285.57 325.46,303.62 441.32,402.04 450.64,410.09 458.40,416.80 458.40,343.73 450.64,339.22 441.32,333.78 325.46,264.59 303.37,250.68 302.88,250.37 296.98,246.58 292.08,243.40 276.37,233.03 276.37,233.03 271.46,229.72 265.57,225.71 263.60,224.36 263.60,224.36 263.60,224.36 263.11,224.02 241.51,208.77 239.06,206.99 237.09,205.55 235.13,204.12 208.13,183.73 198.80,176.44 197.82,175.66 183.09,163.93 167.87,151.57 153.63,139.84 141.85,130.04 135.96,125.11 115.83,108.14 106.02,99.81 84.41,81.38 74.40,72.80 ' style='stroke-width: 0.75; stroke: none; fill: #000000; fill-opacity: 0.20;' />
+</g>
 </g>
 </svg>

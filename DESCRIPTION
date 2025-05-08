@@ -50,7 +50,7 @@ Suggests:
   fontquiver,
   png,
   rsvg,
-  svglite,
+  svglite (>= 2.2.0),
   tinytest,
   tinysnapshot (>= 0.0.3),
   knitr

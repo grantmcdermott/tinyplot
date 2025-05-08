@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
 <defs>
   <style type='text/css'><![CDATA[
     .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
@@ -11,6 +12,10 @@
     }
     .svglite text {
       white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
     }
   ]]></style>
 </defs>
@@ -38,11 +43,11 @@
 <line x1='59.04' y1='224.19' x2='51.84' y2='224.19' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='141.90' x2='51.84' y2='141.90' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='59.62' x2='51.84' y2='59.62' style='stroke-width: 0.75;' />
-<text transform='translate(41.76,388.77) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>10</text>
-<text transform='translate(41.76,306.48) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>15</text>
-<text transform='translate(41.76,224.19) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>20</text>
-<text transform='translate(41.76,141.90) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>25</text>
-<text transform='translate(41.76,59.62) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>30</text>
+<text transform='translate(41.76,388.77) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text transform='translate(41.76,306.48) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>15</text>
+<text transform='translate(41.76,224.19) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>20</text>
+<text transform='translate(41.76,141.90) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>25</text>
+<text transform='translate(41.76,59.62) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>30</text>
 <polygon points='59.04,430.56 473.76,430.56 473.76,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -53,5 +58,6 @@
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
 <polygon points='74.40,72.80 84.41,81.77 106.02,101.12 115.83,109.92 135.96,127.95 141.85,133.23 153.63,143.78 167.87,156.54 183.09,170.17 197.82,183.36 198.80,184.24 208.13,192.60 235.13,216.79 237.09,218.54 239.06,220.30 241.51,222.50 263.11,241.85 263.60,242.29 263.60,242.29 263.60,242.29 265.57,244.05 271.46,249.33 276.37,253.73 276.37,253.73 292.08,267.80 296.98,272.20 302.88,277.48 303.37,277.92 325.46,297.71 441.32,401.50 450.64,409.85 458.40,416.80 458.40,416.80 450.64,409.85 441.32,401.50 325.46,297.71 303.37,277.92 302.88,277.48 296.98,272.20 292.08,267.80 276.37,253.73 276.37,253.73 271.46,249.33 265.57,244.05 263.60,242.29 263.60,242.29 263.60,242.29 263.11,241.85 241.51,222.50 239.06,220.30 237.09,218.54 235.13,216.79 208.13,192.60 198.80,184.24 197.82,183.36 183.09,170.17 167.87,156.54 153.63,143.78 141.85,133.23 135.96,127.95 115.83,109.92 106.02,101.12 84.41,81.77 74.40,72.80 ' style='stroke-width: 0.75; stroke: none; fill: #000000; fill-opacity: 0.20;' />
 <polyline points='74.40,72.80 84.41,81.77 106.02,101.12 115.83,109.92 135.96,127.95 141.85,133.23 153.63,143.78 167.87,156.54 183.09,170.17 197.82,183.36 198.80,184.24 208.13,192.60 235.13,216.79 237.09,218.54 239.06,220.30 241.51,222.50 263.11,241.85 263.60,242.29 263.60,242.29 263.60,242.29 265.57,244.05 271.46,249.33 276.37,253.73 276.37,253.73 292.08,267.80 296.98,272.20 302.88,277.48 303.37,277.92 325.46,297.71 441.32,401.50 450.64,409.85 458.40,416.80 ' style='stroke-width: 0.75;' />
+</g>
 </g>
 </svg>

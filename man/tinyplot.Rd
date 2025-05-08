@@ -287,19 +287,23 @@ equivalent to \code{FALSE}), \code{"ticks"} (only ticks and labels without axis 
 line and labels but no ticks). To control this separately for the two
 axes, use the character specifications for \code{xaxt} and/or \code{yaxt}.}
 
-\item{xaxt, yaxt}{character specifying the type of x-axis and y-axis, respectively.
-See \code{axes} for the possible values.}
+\item{xaxt, yaxt}{character specifying the type of x-axis and y-axis,
+respectively. See \code{axes} for the possible values.}
 
-\item{xaxs, yaxs}{character specifying the style of the interval calculation used
-for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
-for the possible values.}
+\item{xaxs, yaxs}{character specifying the style of the interval calculation
+used for the x-axis and y-axis, respectively. See
+\code{\link[graphics]{par}} for the possible values.}
 
-\item{xaxl, yaxl}{A formatting function (or character string) to apply to the
-x- or y-axis tick labels. This affects the \emph{appearance} of the labels only,
-not the calculation or positioning of the tick marks. In addition to custom
-functions, users can supply one of several convenience strings (symbols)
-for common formats: \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"dollar"}
-(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
+\item{xaxl, yaxl}{a function or a character keyword specifying the format of
+the x- or y-axis tick labels. Note that this is a post-processing step that
+affects the \emph{appearance} of the tick labels only; it does not affect the
+actual calculation or placement of the tick marks. In addition to
+user-supplied formatting functions (e.g., \code{\link{format}}, \code{\link{toupper}}, \code{\link{abs}},
+or other custom function), several convenience keywords (or their symbol
+equivalents) are available for common formatting transformations:
+\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"dollar"} (\code{"$"}), \code{"euro"}
+(\code{"€"}), and \code{"sterling"} (\code{"£"}). See the internal \code{?tinylabel}
+documentation for examples.}
 
 \item{log}{a character string which contains "x" if the x axis is to be
 logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
@@ -507,7 +511,6 @@ out existing \code{plot} calls for \code{tinyplot} (or its shorthand alias \code
 without causing unexpected changes to the output.
 }
 \examples{
-#'
 aq = transform(
   airquality,
   Month = factor(Month, labels = month.abb[unique(Month)])

@@ -167,17 +167,21 @@
 #'   `"labels"` (only labels without ticks and axis line), `"axis"` (only axis
 #'   line and labels but no ticks). To control this separately for the two
 #'   axes, use the character specifications for `xaxt` and/or `yaxt`.
-#' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
-#'   See `axes` for the possible values.
-#' @param xaxs,yaxs character specifying the style of the interval calculation used
-#'   for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
-#'   for the possible values.
-#' @param xaxl,yaxl A formatting function (or character string) to apply to the
-#'   x- or y-axis tick labels. This affects the _appearance_ of the labels only,
-#'   not the calculation or positioning of the tick marks. In addition to custom
-#'   functions, users can supply one of several convenience strings (symbols)
-#'   for common formats: `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"`
-#'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`).
+#' @param xaxt,yaxt character specifying the type of x-axis and y-axis,
+#'   respectively. See `axes` for the possible values.
+#' @param xaxs,yaxs character specifying the style of the interval calculation
+#'   used for the x-axis and y-axis, respectively. See
+#'   \code{\link[graphics]{par}} for the possible values.
+#' @param xaxl,yaxl a function or a character keyword specifying the format of
+#'   the x- or y-axis tick labels. Note that this is a post-processing step that
+#'   affects the _appearance_ of the tick labels only; it does not affect the
+#'   actual calculation or placement of the tick marks. In addition to
+#'   user-supplied formatting functions (e.g., [`format`], [`toupper`], [`abs`],
+#'   or other custom function), several convenience keywords (or their symbol
+#'   equivalents) are available for common formatting transformations:
+#'   `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"` (`"$"`), `"euro"`
+#'   (`"€"`), and `"sterling"` (`"£"`). See the internal `?tinylabel`
+#'   documentation for examples.
 #' @param log a character string which contains "x" if the x axis is to be
 #'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
 #'   both axes are to be logarithmic.
@@ -352,7 +356,6 @@
 #' @importFrom tools file_ext
 #'
 #' @examples
-#' #'
 #' aq = transform(
 #'   airquality,
 #'   Month = factor(Month, labels = month.abb[unique(Month)])

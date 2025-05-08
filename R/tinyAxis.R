@@ -1,5 +1,39 @@
-#' auxiliary Axis() interface with different parameter combinations based on type
-#'
+#' @title Generic function for adding an axis to a (tiny)plot
+#'   
+#' @description Internal function used for adding an axis to a [`tinyplot`]
+#'   call.
+#' @details `tinyAxis` provides a thin(ish) wrapper around
+#'   \code{\link[graphics]{Axis}}, but with enhanced flexibility to (i) match
+#'   parameter combinations based on the axis type and plotting theme, (ii)
+#'   provide better support for date-time variables, and (iii) enable convenient
+#'   formatting of axis tick labels.
+#' @inheritParams graphics::Axis
+#' @param type the type of axis to be drawn; inherited from the `xaxt` or `yaxt`
+#'   arguments of the parent [`tinyplot()`] call. One of either: `"standard"`
+#'   (default that draws the axis, ticks, and labels), `"none"` (no axes),
+#'   `"ticks"` (only ticks and labels without axis line), `"labels"` (only
+#'   labels without ticks and axis line), or `"axis"` (only axis line and labels
+#'   but no ticks). Partial matching is allowed, e.g. `type = "s"`.
+#' @param labeller a function or a character keyword specifying the format of
+#'   the x- or y-axis tick labels. Note that this is a post-processing step that
+#'   affects the _appearance_ of the tick labels only; it does not affect the
+#'   actual calculation or placement of the tick marks. In addition to
+#'   user-supplied formatting functions (e.g., [`format`], [`toupper`], [`abs`],
+#'   or other custom function), several convenience keywords (or their symbol
+#'   equivalents) are available for common formatting transformations:
+#'   `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"` (`"$"`), `"euro"`
+#'   (`"€"`), and `"sterling"` (`"£"`). See the internal `?tinylabel`
+#'   documentation for examples.
+#' @examples
+#' \dontrun{
+#' 
+#' # plot without axes
+#' tinyplot(0:10, axes = "n")
+#' # add x-axis (labels only)
+#' tinyplot:::tinyAxis(x = 0:10, side = 1, type = "l")
+#' # add y-axis (with custom label formatting)
+#' tinyplot:::tinyAxis(x = 0:10, side = 2, type = "s", labeller = "$")
+#' }
 #' @keywords internal
 tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL) {
   type = match.arg(type, c("standard", "none", "labels", "ticks", "axis"))

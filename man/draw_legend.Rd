@@ -25,7 +25,8 @@ draw_legend(
 \arguments{
 \item{legend}{Legend placement keyword or list, passed down from \link{tinyplot}.}
 
-\item{legend_args}{Additional legend arguments to be passed to \code{legend()}.}
+\item{legend_args}{Additional legend arguments to be passed to
+\code{\link[graphics]{legend}}.}
 
 \item{by_dep}{The (deparsed) "by" grouping variable name.}
 

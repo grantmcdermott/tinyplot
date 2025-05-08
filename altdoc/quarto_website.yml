@@ -99,14 +99,20 @@ website:
             file: man/type_summary.qmd
           - text: type_vline
             file: man/type_abline.qmd
-        - section: "Options & Internals"
+        - section: "Options"
           contents:
           - text: tpar
             file: man/tpar.qmd
           - text: get_saved_par
             file: man/get_saved_par.qmd
+        - section: "Internals"
+          contents:
           - text: draw_legend
             file: man/draw_legend.qmd
+          # - text: tinyAxis
+          #   file: man/tinyAxis.qmd
+          # - text: tinylabel
+          #   file: man/tinylabel.qmd
       - text: News
         file: $ALTDOC_NEWS
       - text: Changelog

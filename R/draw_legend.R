@@ -5,7 +5,8 @@
 #'   
 #' @md
 #' @param legend Legend placement keyword or list, passed down from [tinyplot].
-#' @param legend_args Additional legend arguments to be passed to `legend()`.
+#' @param legend_args Additional legend arguments to be passed to
+#'   \code{\link[graphics]{legend}}.
 #' @param by_dep The (deparsed) "by" grouping variable name.
 #' @param lgnd_labs The labels passed to `legend(legend = ...)`.
 #' @param type Plotting type(s), passed down from [tinyplot].

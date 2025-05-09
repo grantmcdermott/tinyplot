@@ -24,9 +24,10 @@ where the formatting is also better._
   `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
   `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)
 - The new top-level `xaxl` and `yaxl` arguments allow users to format the
-  appearance of their axis tick labels. Several convenience strings are
-  supported for common cases, e.g., `tinyplot(..., xaxl = "percent")` or
-  `tinyplot(..., yaxl = "dollar")`, etc. (#363 @grantmcdermott)
+  appearance of their axis tick labels. Several convenience strings (symbols)
+  supported for common cases, e.g., `tinyplot(..., yaxl = "percent")` or
+  `tinyplot(..., yaxl = "%")`, etc. More details are provided in the lower-level
+  `tinylabel` function documentation (#363, #391 @grantmcdermott)
 
 ### Bugs fixes:
 

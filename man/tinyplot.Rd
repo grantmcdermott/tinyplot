@@ -301,13 +301,13 @@ actual calculation or placement of the tick marks. In addition to
 user-supplied formatting functions (e.g., \code{\link{format}}, \code{\link{toupper}}, \code{\link{abs}},
 or other custom function), several convenience keywords (or their symbol
 equivalents) are available for common formatting transformations:
-\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"dollar"} (\code{"$"}), \code{"euro"}
-(\code{"€"}), and \code{"sterling"} (\code{"£"}). See the internal \code{?tinylabel}
-documentation for examples.}
+\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
+(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}). See the
+\code{\link{tinylabel}} documentation for examples.}
 
-\item{log}{a character string which contains "x" if the x axis is to be
-logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
-both axes are to be logarithmic.}
+\item{log}{a character string which contains \code{"x"} if the x axis is to be
+logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}
+if both axes are to be logarithmic.}
 
 \item{flip}{logical. Should the plot orientation be flipped, so that the
 y-axis is on the horizontal plane and the x-axis is on the vertical plane?

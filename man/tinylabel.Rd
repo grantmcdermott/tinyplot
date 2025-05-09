@@ -23,9 +23,9 @@ from \code{\link{tinyplot}} ultimately get passed to.
 }
 \examples{
 x = 1e4
-tinyplot:::tinylabel(x, "comma")
-tinyplot:::tinylabel(x, ",") # same
-tinyplot:::tinylabel(x, "$") # or "dollar"
+tinylabel(x, "comma")
+tinylabel(x, ",") # same
+tinylabel(x, "$") # or "dollar"
 
 # pass to xaxl/yaxl for adjusting axes tick labels in a tinyplot call
 tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "\%")

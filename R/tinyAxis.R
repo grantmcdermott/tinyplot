@@ -46,7 +46,7 @@ tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL) {
       if (!is.null(args$at)) {
         args$labels = if (!is.null(args$labels)) tinylabel(args$labels, labeller) else tinylabel(args$at, labeller)
       } else {
-        args$at = if (!inherits(x, c("POSIXt", "Date"))) axTicks(args$side) else axTicksDateTime(args$side)  
+        args$at = if (!inherits(x, c("POSIXt", "Date"))) axTicks(args$side) else axTicksDateTime(args$side, x = x)  
         args$labels = tinylabel(args$at, labeller)
       }
     }

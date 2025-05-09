@@ -13,7 +13,7 @@ tinylabel(x, labeller = NULL)
 \code{\link{toupper}}, \code{\link{abs}}, or other custom function (including from the popular
 \strong{scales} package). Can also be one of the following convenience strings
 (symbols), for which common formatting transformations are provided:
-\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"dollar"} (\code{"$"}), \code{"euro"}
+\verb{"log}, \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"dollar"} (\code{"$"}), \code{"euro"}
 (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
 }
 \description{
@@ -30,6 +30,9 @@ tinyplot:::tinylabel(x, "$") # or "dollar"
 
 # pass to xaxl/yaxl for adjusting axes tick labels in a tinyplot call
 tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "\%")
+
+# log example (combined with axis scaling)
+tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log")
 
 #
 ## custom function examples

@@ -8,7 +8,7 @@
 #'   [`toupper`], [`abs`], or other custom function (including from the popular
 #'   **scales** package). Can also be one of the following convenience strings
 #'   (symbols), for which common formatting transformations are provided:
-#'   `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"` (`"$"`), `"euro"`
+#'   `"log`, `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"` (`"$"`), `"euro"`
 #'   (`"€"`), or `"sterling"` (`"£"`).
 #' @examples
 #' \dontrun{
@@ -19,6 +19,9 @@
 #' 
 #' # pass to xaxl/yaxl for adjusting axes tick labels in a tinyplot call
 #' tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "%")
+#' 
+#' # log example (combined with axis scaling)
+#' tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log")
 #' 
 #' #
 #' ## custom function examples
@@ -71,7 +74,8 @@ labeller_fun = function(label = "percent") {
     ","       = "comma",
     "$"       = "dollar",
     "\u20ac"  = "euro",
-    "\u00a3"  = "sterling"
+    "\u00a3"  = "sterling",
+    "log"     = "log"
   )
   if (label %in% names(labels)) label = labels[label]
   
@@ -105,13 +109,18 @@ labeller_fun = function(label = "percent") {
     paste0("\u00a3", prettyNum(x, big.mark = ",", scientific = FALSE))
   }
   
+  format_log = function(x) {
+    parse(text = paste0(10, "^", format(log(x, base = 10), digits = 3)))
+  }
+  
   fun = switch(
     label,
     percent  = format_percent,
     comma    = format_comma,
     dollar   = format_dollar,
     euro     = format_euro,
-    sterling = format_sterling
+    sterling = format_sterling,
+    log      = format_log
   )
 
   ## combine with absolute value if necessary

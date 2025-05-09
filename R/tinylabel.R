@@ -8,8 +8,8 @@
 #'   [`toupper`], [`abs`], or other custom function (including from the popular
 #'   **scales** package). Can also be one of the following convenience strings
 #'   (symbols), for which common formatting transformations are provided:
-#'   `"log`, `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"` (`"$"`), `"euro"`
-#'   (`"€"`), or `"sterling"` (`"£"`).
+#'   `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`), `"dollar"`
+#'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`).
 #' @examples
 #' \dontrun{
 #' x = 1e4
@@ -21,7 +21,7 @@
 #' tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "%")
 #' 
 #' # log example (combined with axis scaling)
-#' tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log")
+#' tinyplot(y = 0:10, type = "b", log = "x", xaxl = "log")
 #' 
 #' #
 #' ## custom function examples
@@ -75,7 +75,7 @@ labeller_fun = function(label = "percent") {
     "$"       = "dollar",
     "\u20ac"  = "euro",
     "\u00a3"  = "sterling",
-    "log"     = "log"
+    "l"       = "log"
   )
   if (label %in% names(labels)) label = labels[label]
   
@@ -110,7 +110,7 @@ labeller_fun = function(label = "percent") {
   }
   
   format_log = function(x) {
-    parse(text = paste0(10, "^", format(log(x, base = 10), digits = 3)))
+    parse(text = paste0(10, "^", format(log10(x), digits = 3)))
   }
   
   fun = switch(

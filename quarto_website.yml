@@ -111,8 +111,8 @@ website:
             file: man/draw_legend.qmd
           # - text: tinyAxis
           #   file: man/tinyAxis.qmd
-          # - text: tinylabel
-          #   file: man/tinylabel.qmd
+          - text: tinylabel
+            file: man/tinylabel.qmd
       - text: News
         file: $ALTDOC_NEWS
       - text: Changelog

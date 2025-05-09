@@ -470,6 +470,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">draw_legend</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/tinylabel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tinylabel</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -555,7 +561,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>tinyplot(..., file = "*.pdf")</code> will now default to using <code>cairo_pdf()</code> if cairo graphics are supported on the user’s machine. This should help to ensure better fidelity of (non-standard) fonts in PDFs. (<a href="https://github.com/grantmcdermott/tinyplot/issues/311">#311</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>The palette argument now accepts a vector or list of manual colours, e.g. <code>tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))</code>, or <code>tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))</code> (<a href="https://github.com/grantmcdermott/tinyplot/issues/325">#325</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>The new top-level <code>xaxl</code> and <code>yaxl</code> arguments allow users to format the appearance of their axis tick labels. Several convenience strings are supported for common cases, e.g., <code>tinyplot(..., xaxl = "percent")</code> or <code>tinyplot(..., yaxl = "dollar")</code>, etc. (<a href="https://github.com/grantmcdermott/tinyplot/issues/363">#363</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>The new top-level <code>xaxl</code> and <code>yaxl</code> arguments allow users to format the appearance of their axis tick labels. Several convenience strings (symbols) supported for common cases, e.g., <code>tinyplot(..., yaxl = "percent")</code> or <code>tinyplot(..., yaxl = "%")</code>, etc. More details are provided in the lower-level <code>tinylabel</code> function documentation (<a href="https://github.com/grantmcdermott/tinyplot/issues/363">#363</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/391">#391</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 </section>

@@ -470,6 +470,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">draw_legend</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/tinylabel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tinylabel</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -966,7 +972,7 @@ character specifying the style of the interval calculation used for the x-axis a
 <code id="xaxl">xaxl</code>, <code id="yaxl">yaxl</code>
 </td>
 <td>
-a function or a character keyword specifying the format of the x- or y-axis tick labels. Note that this is a post-processing step that affects the <em>appearance</em> of the tick labels only; it does not affect the actual calculation or placement of the tick marks. In addition to user-supplied formatting functions (e.g., <code>format</code>, <code>toupper</code>, <code>abs</code>, or other custom function), several convenience keywords (or their symbol equivalents) are available for common formatting transformations: <code>“percent”</code> (<code>“%”</code>), <code>“comma”</code> (<code>“,”</code>), <code>“dollar”</code> (<code>“$”</code>), <code>“euro”</code> (<code>“€”</code>), and <code>“sterling”</code> (<code>“£”</code>). See the internal <code>?tinylabel</code> documentation for examples.
+a function or a character keyword specifying the format of the x- or y-axis tick labels. Note that this is a post-processing step that affects the <em>appearance</em> of the tick labels only; it does not affect the actual calculation or placement of the tick marks. In addition to user-supplied formatting functions (e.g., <code>format</code>, <code>toupper</code>, <code>abs</code>, or other custom function), several convenience keywords (or their symbol equivalents) are available for common formatting transformations: <code>“percent”</code> (<code>“%”</code>), <code>“comma”</code> (<code>“,”</code>), <code>“log”</code> (<code>“l”</code>), <code>“dollar”</code> (<code>“$”</code>), <code>“euro”</code> (<code>“€”</code>), or <code>“sterling”</code> (<code>“£”</code>). See the <code>tinylabel</code> documentation for examples.
 </td>
 </tr>
 <tr>
@@ -974,7 +980,7 @@ a function or a character keyword specifying the format of the x- or y-axis tick
 <code id="log">log</code>
 </td>
 <td>
-a character string which contains "x" if the x axis is to be logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if both axes are to be logarithmic.
+a character string which contains <code>“x”</code> if the x axis is to be logarithmic, <code>“y”</code> if the y axis is to be logarithmic and <code>“xy”</code> or <code>“yx”</code> if both axes are to be logarithmic.
 </td>
 </tr>
 <tr>

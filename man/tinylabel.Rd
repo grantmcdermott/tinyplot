@@ -17,12 +17,11 @@ tinylabel(x, labeller = NULL)
 (\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
 }
 \description{
-Internal function for formatting label appearance, e.g. axis
+Function for formatting label appearance, e.g. axis
 ticks labels. This is what the top-level \code{xaxl} and \code{yaxl} arguments
 from \code{\link{tinyplot}} ultimately get passed to.
 }
 \examples{
-\dontrun{
 x = 1e4
 tinyplot:::tinylabel(x, "comma")
 tinyplot:::tinylabel(x, ",") # same
@@ -32,7 +31,7 @@ tinyplot:::tinylabel(x, "$") # or "dollar"
 tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "\%")
 
 # log example (combined with axis scaling)
-tinyplot(y = 0:10, type = "b", log = "x", xaxl = "log")
+tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log")
 
 #
 ## custom function examples
@@ -70,5 +69,3 @@ tinytheme("bw")
 tinyplot(y ~ x, data = dat2, type = "j", yaxl = strwrap18)
 tinytheme()
 }
-}
-\keyword{internal}

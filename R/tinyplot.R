@@ -180,8 +180,8 @@
 #'   or other custom function), several convenience keywords (or their symbol
 #'   equivalents) are available for common formatting transformations:
 #'   `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`), `"dollar"`
-#'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`).
-#'   See the internal `?tinylabel` documentation for examples.
+#'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`). See the
+#'   [`tinylabel`] documentation for examples.
 #' @param log a character string which contains `"x"` if the x axis is to be
 #'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
 #'   if both axes are to be logarithmic.

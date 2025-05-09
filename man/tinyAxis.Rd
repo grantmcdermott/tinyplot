@@ -20,16 +20,12 @@ arguments of the parent \code{\link[=tinyplot]{tinyplot()}} call. One of either:
 labels without ticks and axis line), or \code{"axis"} (only axis line and labels
 but no ticks). Partial matching is allowed, e.g. \code{type = "s"}.}
 
-\item{labeller}{a function or a character keyword specifying the format of
-the x- or y-axis tick labels. Note that this is a post-processing step that
-affects the \emph{appearance} of the tick labels only; it does not affect the
-actual calculation or placement of the tick marks. In addition to
-user-supplied formatting functions (e.g., \code{\link{format}}, \code{\link{toupper}}, \code{\link{abs}},
-or other custom function), several convenience keywords (or their symbol
-equivalents) are available for common formatting transformations:
-\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"dollar"} (\code{"$"}), \code{"euro"}
-(\code{"€"}), and \code{"sterling"} (\code{"£"}). See the internal \code{?tinylabel}
-documentation for examples.}
+\item{labeller}{a formatting function to be applied to \code{x}, e.g. \code{\link{format}},
+\code{\link{toupper}}, \code{\link{abs}}, or other custom function (including from the popular
+\strong{scales} package). Can also be one of the following convenience strings
+(symbols), for which common formatting transformations are provided:
+\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
+(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
 }
 \description{
 Internal function used for adding an axis to a \code{\link{tinyplot}}

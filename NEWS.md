@@ -26,7 +26,8 @@ where the formatting is also better._
 - The new top-level `xaxl` and `yaxl` arguments allow users to format the
   appearance of their axis tick labels. Several convenience strings (symbols)
   supported for common cases, e.g., `tinyplot(..., yaxl = "percent")` or
-  `tinyplot(..., yaxl = "%")`, etc. (#363 @grantmcdermott)
+  `tinyplot(..., yaxl = "%")`, etc. More details are provided in the lower-level
+  `tinylabel` function documentation (#363, #391 @grantmcdermott)
 
 ### Bugs fixes:
 

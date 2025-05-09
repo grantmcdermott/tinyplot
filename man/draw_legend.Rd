@@ -67,7 +67,7 @@ No return value, called for side effect of producing a(n empty) plot
 with a legend in the margin.
 }
 \description{
-Internal function used to calculate the placement of (including
+Function used to calculate the placement of (including
 outside the plotting area) and drawing of legend.
 }
 \examples{

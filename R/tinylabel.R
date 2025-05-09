@@ -1,6 +1,6 @@
 #' Format labels
 #' 
-#' @description Internal function for formatting label appearance, e.g. axis
+#' @description Function for formatting label appearance, e.g. axis
 #' ticks labels. This is what the top-level `xaxl` and `yaxl` arguments
 #' from [`tinyplot`] ultimately get passed to.
 #' @param x a numeric or character vector
@@ -11,7 +11,6 @@
 #'   `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`), `"dollar"`
 #'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`).
 #' @examples
-#' \dontrun{
 #' x = 1e4
 #' tinyplot:::tinylabel(x, "comma")
 #' tinyplot:::tinylabel(x, ",") # same
@@ -21,7 +20,7 @@
 #' tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "%")
 #' 
 #' # log example (combined with axis scaling)
-#' tinyplot(y = 0:10, type = "b", log = "x", xaxl = "log")
+#' tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log")
 #' 
 #' #
 #' ## custom function examples
@@ -58,8 +57,7 @@
 #' tinytheme("bw")
 #' tinyplot(y ~ x, data = dat2, type = "j", yaxl = strwrap18)
 #' tinytheme()
-#' }
-#' @keywords internal
+#' @export
 tinylabel = function(x, labeller = NULL) {
   if (is.null(labeller)) return(x)
   if (is.character(labeller)) labeller = labeller_fun((labeller))

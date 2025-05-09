@@ -14,16 +14,7 @@
 #'   `"ticks"` (only ticks and labels without axis line), `"labels"` (only
 #'   labels without ticks and axis line), or `"axis"` (only axis line and labels
 #'   but no ticks). Partial matching is allowed, e.g. `type = "s"`.
-#' @param labeller a function or a character keyword specifying the format of
-#'   the x- or y-axis tick labels. Note that this is a post-processing step that
-#'   affects the _appearance_ of the tick labels only; it does not affect the
-#'   actual calculation or placement of the tick marks. In addition to
-#'   user-supplied formatting functions (e.g., [`format`], [`toupper`], [`abs`],
-#'   or other custom function), several convenience keywords (or their symbol
-#'   equivalents) are available for common formatting transformations:
-#'   `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"` (`"$"`), `"euro"`
-#'   (`"€"`), and `"sterling"` (`"£"`). See the internal `?tinylabel`
-#'   documentation for examples.
+#' @inheritParams tinylabel
 #' @examples
 #' \dontrun{
 #' 

@@ -302,8 +302,8 @@ user-supplied formatting functions (e.g., \code{\link{format}}, \code{\link{toup
 or other custom function), several convenience keywords (or their symbol
 equivalents) are available for common formatting transformations:
 \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
-(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).
-See the internal \code{?tinylabel} documentation for examples.}
+(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}). See the
+\code{\link{tinylabel}} documentation for examples.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be
 logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}

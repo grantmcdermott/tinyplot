@@ -23,6 +23,8 @@ website:
         file: vignettes/themes.qmd
       - text: Gallery
         file: vignettes/gallery.qmd
+      - text: Tips & Tricks
+        file: vignettes/tips_and_tricks.qmd
       - section: Reference
         contents:
         - text: tinyplot

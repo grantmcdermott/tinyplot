@@ -496,7 +496,15 @@ tinylegend = function(
         legend_args[["col"]] = legend_args[["pt.bg"]]
       }
     }
-    gradient_legend(legend_args = legend_args, lmar = lmar, outer_side = outer_side, outer_end = outer_end, outer_right = outer_right, outer_bottom = outer_bottom)
+    gradient_legend(
+      legend_args = legend_args,
+      fklgnd = fklgnd,
+      lmar = lmar,
+      outer_side = outer_side,
+      outer_end = outer_end,
+      outer_right = outer_right,
+      outer_bottom = outer_bottom
+    )
   } else {
     do.call("legend", legend_args)
   }
@@ -509,7 +517,7 @@ tinylegend = function(
 # For gradient (i.e., continuous color) legends, we'll role our own bespoke
 # legend function based on grDevices::as.raster
 
-gradient_legend = function(legend_args, lmar = NULL, outer_side, outer_end, outer_right = NULL, outer_bottom = NULL) {
+gradient_legend = function(legend_args, fklgnd, lmar = NULL, outer_side, outer_end, outer_right = NULL, outer_bottom = NULL) {
   if (is.null(lmar)) lmar = .tpar[["lmar"]]
   pal = legend_args[["col"]]
   lgnd_labs = legend_args[["legend"]]
@@ -536,18 +544,6 @@ gradient_legend = function(legend_args, lmar = NULL, outer_side, outer_end, oute
  
   if (inner) {
     
-    # "draw" fake legend
-    lgnd_labs_tmp = na.omit(legend_args[["legend"]])
-    if (length(lgnd_labs_tmp) < 5L) {
-      nmore = 5L - length(lgnd_labs_tmp)
-      lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
-    }
-    fklgnd.args = modifyList(
-      legend_args,
-      list(plot = FALSE, legend = lgnd_labs_tmp),
-      keep.null = TRUE
-    )
-    fklgnd = do.call("legend", fklgnd.args)
     fklgnd$rect$h = fklgnd$rect$h - (grconvertY(1.5 + 0.4, from="lines", to="user") - grconvertY(0, from="lines", to="user"))
     
     rasterbox[1] = fklgnd$rect$left

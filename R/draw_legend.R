@@ -28,6 +28,9 @@
 #'   keyword position is "bottom!", in which case we need to bump the legend
 #'   margin a bit further.
 #' @param new_plot Logical. Should we be calling plot.new internally?
+#' @param draw Logical. If `FALSE`, no legend is drawn but the sizes are
+#'   returned. Note that a new (blank) plot frame will still need to be started
+#'   in order to perform the calculations. 
 #' 
 #' @returns No return value, called for side effect of producing a(n empty) plot
 #'   with a legend in the margin.
@@ -110,7 +113,8 @@ draw_legend = function(
     gradient = FALSE,
     lmar = NULL,
     has_sub = FALSE,
-    new_plot = TRUE
+    new_plot = TRUE,
+    draw = TRUE
 ) {
   
     if (is.null(lmar)) {
@@ -118,6 +122,11 @@ draw_legend = function(
     } else {
       if (!is.numeric(lmar) || length(lmar)!=2) stop ("lmar must be a numeric of length 2.")
     }
+  
+    assert_logical(gradient)
+    assert_logical(has_sub)
+    assert_logical(new_plot)
+    assert_logical(draw)
     
     #
     ## legend args ----
@@ -169,7 +178,7 @@ draw_legend = function(
       legend_args[["lty"]] = 0
     }
     
-    if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge", "barplot", "violin")) || isTRUE(gradient)) {
+    if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge", "barplot", "violin")) || gradient) {
       legend_args[["pch"]] = 22
       legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% 3.5
       legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25
@@ -259,7 +268,7 @@ draw_legend = function(
       }
       par(mar = omar)
       
-      if (isTRUE(new_plot)) {
+      if (new_plot && draw) {
         plot.new()
         # For themed + dynamic plots, we need to make sure the adjusted plot
         # margins for the legend are reinstated (after being overwritten by
@@ -292,7 +301,7 @@ draw_legend = function(
       ## width---will be off the first time.
       if (outer_bottom) {
         omar[1] = par("mgp")[1] + 1*par("cex.lab")
-        if (isTRUE(has_sub) && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
+        if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
       } else {
         ## For "top!", the logic is slightly different: We don't expand the outer
         ## margin b/c we need the legend to come underneath the main title. So
@@ -302,7 +311,7 @@ draw_legend = function(
       }
       par(mar = omar)
 
-      if (isTRUE(new_plot)) {
+      if (new_plot && draw) {
         plot.new()
         # For themed + dynamic plots, we need to make sure the adjusted plot
         # margins for the legend are reinstated (after being overwritten by
@@ -312,7 +321,7 @@ draw_legend = function(
           if (outer_bottom) {
             # omar[1] = par("mgp")[1] + 1*par("cex.lab")
             omar[1] = theme_clean$mgp[1] + 1*par("cex.lab") ## bit of a hack
-            if (isTRUE(has_sub) && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
+            if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
           } else {
             ooma[3] = ooma[3] + topmar_epsilon
             par(oma = ooma)
@@ -330,14 +339,14 @@ draw_legend = function(
         } else {
           legend_args[["x.intersp"]] = 0.5
         }
-      } else if (isTRUE(gradient) && isTRUE(legend_args[["horiz"]])) {
+      } else if (gradient && isTRUE(legend_args[["horiz"]])) {
         legend_args[["x.intersp"]] = 0.5
       }
       
     } else {
       
       legend_args[["inset"]] = 0
-      if (isTRUE(new_plot)) plot.new()
+      if (new_plot && draw) plot.new()
       
     }
     
@@ -361,7 +370,8 @@ draw_legend = function(
           outer_right = outer_right,
           outer_end = outer_end,
           outer_bottom = outer_bottom,
-          gradient = gradient
+          gradient = gradient,
+          draw = draw
         ),
         list = list(
           legend_args = legend_args,
@@ -373,7 +383,8 @@ draw_legend = function(
           outer_right = outer_right,
           outer_end = outer_end,
           outer_bottom = outer_bottom,
-          gradient = gradient
+          gradient = gradient,
+          draw = draw
         ),
         env = getNamespace("tinyplot")
       )
@@ -392,7 +403,8 @@ tinylegend = function(
     legend_args,
     ooma, omar, lmar, topmar_epsilon,
     outer_side, outer_right, outer_end, outer_bottom,
-    gradient
+    gradient,
+    draw
 ) {
   
   #
@@ -404,7 +416,7 @@ tinylegend = function(
     keep.null = TRUE
   )
   
-  if (isTRUE(gradient)) {
+  if (gradient) {
     lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
     if (length(lgnd_labs_tmp) < 5L) {
       nmore = 5L - length(lgnd_labs_tmp)
@@ -417,7 +429,14 @@ tinylegend = function(
     )
     if (outer_end) fklgnd.args = modifyList(fklgnd.args, list(title = NULL), keep.null = TRUE)
   }
-  fklgnd = do.call("legend", fklgnd.args)
+  
+  if (draw) {
+    fklgnd = do.call("legend", fklgnd.args)
+  } else {
+    plot.new()
+    fklgnd = do.call("legend", fklgnd.args)
+    return(fklgnd)
+  }
   
   #
   ## Step 2: Calculate legend inset (for outer placement in plot region)
@@ -461,7 +480,7 @@ tinylegend = function(
     inset = c(1+inset, 0)
   } else if (outer_end) {
     inset = grconvertY(lmar[1], from="lines", to="npc") - grconvertY(0, from="lines", to="npc")
-    if (isTRUE(outer_bottom)) {
+    if (outer_bottom) {
       # extra space needed for "bottom!" b/c of lhs inner margin
       inset_bump = grconvertY(par("mar")[1], from="lines", to="npc") - grconvertY(0, from="lines", to="npc")
       inset = inset + inset_bump
@@ -489,7 +508,7 @@ tinylegend = function(
   #
   ## Step 3: Draw the legend
 
-  if (isTRUE(gradient)) {
+  if (gradient) {
     if (!more_than_n_unique(legend_args[["col"]], 1)) {
       if (!is.null(legend_args[["pt.bg"]]) && length(legend_args[["pt.bg"]])==100) {
         legend_args[["col"]] = legend_args[["pt.bg"]]
@@ -566,12 +585,12 @@ gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, out
    }
    rb4_adj = grconvertY(5+1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
    
-   if (isTRUE(outer_right)) {
+   if (outer_right) {
      rasterbox[1] = corners[2] + rb1_adj
      rasterbox[2] = rb2_adj 
      rasterbox[3] = rasterbox[1] + rb3_adj
      rasterbox[4] = rasterbox[2] + rb4_adj
-   } else if (isFALSE(outer_right)) {
+   } else {
      rb1_adj = rb1_adj + grconvertX(par("mar")[2] + 1, from="lines", to="user") - grconvertX(0, from="lines", to="user")
      rasterbox[1] = corners[1] - rb1_adj
      rasterbox[2] = rb2_adj 
@@ -586,7 +605,7 @@ gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, out
     rb2_adj = grconvertY(lmar[1], from="lines", to="user") - grconvertY(0, from="lines", to="user")
     rb4_adj = grconvertY(1.25, from="lines", to="user") - grconvertY(0, from="lines", to="user")
     
-    if (isTRUE(outer_bottom)) {
+    if (outer_bottom) {
       rb2_adj = rb2_adj + grconvertY(par("mar")[2], from="lines", to="user") - grconvertY(0, from="lines", to="user")
       rasterbox[1] = rb1_adj
       rasterbox[2] = corners[3] - rb2_adj 

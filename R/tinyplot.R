@@ -1167,7 +1167,7 @@ tinyplot.default = function(
       y = y, ymax = ymax, ymin = ymin
     ),
     list = list(
-      add = add, 
+      add = add,
       cex_fct_adj = cex_fct_adj,
       facet.args = facet.args,
       facet_newlines = facet_newlines, facet_font = facet_font,
@@ -1322,7 +1322,8 @@ tinyplot.default = function(
           ngrps = ngrps,
           flip = flip,
           type_info = type_info,
-          facet_window_args = facet_window_args)
+          facet_window_args = facet_window_args
+        )
       }
     }
   }
@@ -1330,6 +1331,7 @@ tinyplot.default = function(
   # save end pars for possible recall later
   apar = par(no.readonly = TRUE)
   set_saved_par(when = "after", apar)
+
 }
 
 

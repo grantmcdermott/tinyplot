@@ -516,8 +516,7 @@ tinylegend = function(
 # For gradient (i.e., continuous color) legends, we'll role our own bespoke
 # legend function based on grDevices::as.raster
 
-gradient_legend = function(legend_args, fklgnd, lmar = NULL, outer_side, outer_end, outer_right = NULL, outer_bottom = NULL) {
-  if (is.null(lmar)) lmar = .tpar[["lmar"]]
+gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, outer_right, outer_bottom) {
   pal = legend_args[["col"]]
   lgnd_labs = legend_args[["legend"]]
   if (!is.null(legend_args[["horiz"]])) horiz = legend_args[["horiz"]] else horiz = FALSE

@@ -400,7 +400,6 @@ tinylegend = function(
   
   fklgnd.args = modifyList(
     legend_args,
-    # list(x = 0, y = 0, plot = FALSE),
     list(plot = FALSE),
     keep.null = TRUE
   )

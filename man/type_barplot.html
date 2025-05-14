@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.30">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-85d6ed6ef93f7b75ae44cb4d7fc8909c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d7a985b111ba49d75886cb228fa7d15a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -610,34 +610,7 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic examples of frequency tables (without y variable)</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="fl">0.2</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Above we used automatic argument passing for `beside`. But this</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># wouldn't work for `width`, since it would conflict with the top-level</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># `tinyplot(..., width = &lt;width&gt;)` argument. It's safer to pass these args</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># through the `type_barplot()` functional equivalent.</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">fill =</span> <span class="fl">0.2</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">drop.zeros =</span> <span class="cn">TRUE</span>, <span class="at">width =</span> <span class="fl">0.65</span>))</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Example for numeric y aggregated by x (default: FUN = mean) + facets</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(extra <span class="sc">~</span> ID <span class="sc">|</span> group, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> sleep,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">fill =</span> <span class="fl">0.6</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Fancy frequency table:</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Freq <span class="sc">~</span> Sex <span class="sc">|</span> Survived, <span class="at">facet =</span> <span class="sc">~</span> Class, <span class="at">data =</span> <span class="fu">as.data.frame</span>(Titanic),</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>), <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="fl">0.6</span>)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Centered barplot for conditional proportions of hair color (black/brown vs.</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># red/blond) given eye color and sex</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"sienna"</span>, <span class="st">"indianred"</span>, <span class="st">"goldenrod"</span>))</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>hec <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">proportions</span>(HairEyeColor, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Freq <span class="sc">~</span> Eye <span class="sc">|</span> Hair, <span class="at">facet =</span> <span class="sc">~</span> Sex, <span class="at">data =</span> hec, <span class="at">type =</span> <span class="st">"barplot"</span>,</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">1</span>), <span class="at">yaxl =</span> <span class="st">"percent"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -645,7 +618,79 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Above we used automatic argument passing for `beside`. But this</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># wouldn't work for `width`, since it would conflict with the top-level</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `tinyplot(..., width = &lt;width&gt;)` argument. It's safer to pass these args</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># through the `type_barplot()` functional equivalent.</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">fill =</span> <span class="fl">0.2</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">drop.zeros =</span> <span class="cn">TRUE</span>, <span class="at">width =</span> <span class="fl">0.65</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Example for numeric y aggregated by x (default: FUN = mean) + facets</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(extra <span class="sc">~</span> ID <span class="sc">|</span> group, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> sleep,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">fill =</span> <span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fancy frequency table:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Freq <span class="sc">~</span> Sex <span class="sc">|</span> Survived, <span class="at">facet =</span> <span class="sc">~</span> Class, <span class="at">data =</span> <span class="fu">as.data.frame</span>(Titanic),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>), <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Centered barplot for conditional proportions of hair color (black/brown vs.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># red/blond) given eye color and sex</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"sienna"</span>, <span class="st">"indianred"</span>, <span class="st">"goldenrod"</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>hec <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">proportions</span>(HairEyeColor, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Freq <span class="sc">~</span> Eye <span class="sc">|</span> Hair, <span class="at">facet =</span> <span class="sc">~</span> Sex, <span class="at">data =</span> hec, <span class="at">type =</span> <span class="st">"barplot"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">1</span>), <span class="at">yaxl =</span> <span class="st">"percent"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.30">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-85d6ed6ef93f7b75ae44cb4d7fc8909c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d7a985b111ba49d75886cb228fa7d15a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -662,34 +662,58 @@ numeric value between 0 and 1 specifying the opacity of ribbon shading If no <co
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># "density" type convenience string</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"density"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># grouped density example</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"density"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># use `bg = "by"` (or, equivalent `fill = "by"`) to get filled densities</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"density"</span>, <span class="at">fill =</span> <span class="st">"by"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># use `type_density()` to pass extra arguments for customization</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_density</span>(<span class="at">bw =</span> <span class="st">"SJ"</span>),</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Bandwidth computed using Sheather &amp; Jones (1991)"</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># The default for grouped density plots is to use the mean of the</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># individual subgroup bandwidths (weighted by group size) as the</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># joint bandwidth. Alternatively, the bandwidth from the "full"</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># data or separate individual bandwidths ("none") can be used.</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris,</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.25</span>), <span class="at">type =</span> <span class="st">"density"</span>)        <span class="co"># mean (default)</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">joint.bw =</span> <span class="st">"full"</span>, <span class="at">lty =</span> <span class="dv">2</span>)        <span class="co"># full data</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">joint.bw =</span> <span class="st">"none"</span>, <span class="at">lty =</span> <span class="dv">3</span>)        <span class="co"># none (individual)</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Mean"</span>, <span class="st">"Full"</span>, <span class="st">"None"</span>), <span class="at">lty =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">title =</span> <span class="st">"Joint BW"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_density_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># grouped density example</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_density_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use `bg = "by"` (or, equivalent `fill = "by"`) to get filled densities</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"density"</span>, <span class="at">fill =</span> <span class="st">"by"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_density_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use `type_density()` to pass extra arguments for customization</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_density</span>(<span class="at">bw =</span> <span class="st">"SJ"</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Bandwidth computed using Sheather &amp; Jones (1991)"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_density_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The default for grouped density plots is to use the mean of the</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># individual subgroup bandwidths (weighted by group size) as the</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># joint bandwidth. Alternatively, the bandwidth from the "full"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># data or separate individual bandwidths ("none") can be used.</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.25</span>), <span class="at">type =</span> <span class="st">"density"</span>)        <span class="co"># mean (default)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">joint.bw =</span> <span class="st">"full"</span>, <span class="at">lty =</span> <span class="dv">2</span>)        <span class="co"># full data</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">joint.bw =</span> <span class="st">"none"</span>, <span class="at">lty =</span> <span class="dv">3</span>)        <span class="co"># none (individual)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Mean"</span>, <span class="st">"Full"</span>, <span class="st">"None"</span>), <span class="at">lty =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">title =</span> <span class="st">"Joint BW"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_density_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

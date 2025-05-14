@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.30">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-85d6ed6ef93f7b75ae44cb4d7fc8909c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d7a985b111ba49d75886cb228fa7d15a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -578,7 +578,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Line plots (<code>type_lines()</code>/<code>"l"</code>) now pass on the <code>bg</code> argument to the drawing function. Thanks to <a href="https://github.com/wviechtb"><span class="citation" data-cites="wviechtb">@wviechtb</span></a> for report in <a href="https://github.com/grantmcdermott/tinyplot/issues/355">#355</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>).</li>
 <li>Fixed dynamic y-axis margin spacing for flipped <code>"boxplot"</code> and <code>"jitter"</code> types. Thanks to <a href="https://github.com/eddelbuettel"><span class="citation" data-cites="eddelbuettel">@eddelbuettel</span></a> for the report in <a href="https://github.com/grantmcdermott/tinyplot/issues/357">#357</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>).</li>
 <li>Fixed dynamic x-axis margin spacing for perpendicular (vertical) label text, i.e.&nbsp;cases where <code>las = 2</code> or <code>las = 3</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/369">#369</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Better integration with the Positron IDE graphics pane. Thanks to <a href="https://github.com/thomasp85"><span class="citation" data-cites="thomasp85">@thomasp85</span></a> for the report and helpful suggestions. (<a href="https://github.com/grantmcdermott/tinyplot/issues/377">#377</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Better integration with the Positron IDE graphics pane. Thanks to <a href="https://github.com/thomasp85"><span class="citation" data-cites="thomasp85">@thomasp85</span></a> for the report and helpful suggestions. (<a href="https://github.com/grantmcdermott/tinyplot/issues/377">#377</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/394">#394</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)
+<ul>
+<li>The one remaining Positron issue at present is calling <code>plt_add()</code> on a faceted plot, but this appears to be an upstream limitation/bug (see https://github.com/posit-dev/positron/issues/7316)</li>
+</ul></li>
 <li>Fixed a bug that resulted in y-axis labels being coerced to numeric for <code>"p"</code>-alike plot types (including <code>"jitter"</code>) if <code>y</code> is a factor or character (<a href="https://github.com/grantmcdermott/tinyplot/issues/387">#387</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>).</li>
 </ul>
 </section>

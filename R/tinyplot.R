@@ -157,7 +157,7 @@
 #' @param ann a logical value indicating whether the default annotation (title
 #'   and x and y axis labels) should appear on the plot.
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
-#'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
+#'   and leads to a 'reversed axis'. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
 #' @param ylim the y limits of the plot.
 #' @param axes logical or character. Should axes be drawn (`TRUE` or `FALSE`)?
@@ -601,7 +601,11 @@ tinyplot.default = function(
 
   dots = list(...)
 
-  if (isTRUE(add)) legend = FALSE
+  if (isTRUE(add)) {
+    cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
+    assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
+    legend = FALSE
+  }
   draw = substitute(draw)
 
 

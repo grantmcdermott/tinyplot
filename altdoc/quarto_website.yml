@@ -9,15 +9,7 @@ website:
   image: man/figures/logo.png
   navbar:
     search: true
-    right:
-      - icon: github
-        href: $ALTDOC_PACKAGE_URL_GITHUB
-        aria-label: $ALTDOC_PACKAGE_NAME GitHub
-  sidebar:
-    collapse-level: 1
-    contents:
-      - text: Home
-        file: index.qmd
+    left:
       - text: Introduction
         file: vignettes/introduction.qmd
       - text: Plot types
@@ -26,14 +18,32 @@ website:
         file: vignettes/themes.qmd
       - text: Gallery
         file: vignettes/gallery.qmd
-      - section: Reference
-        contents:
-        - text: tinyplot
-          file: man/tinyplot.qmd
-        - text: tinyplot_add
-          file: man/tinyplot_add.qmd
-        - text: tinytheme
-          file: man/tinytheme.qmd
+      - text: Reference
+        file: man/tinyplot.qmd
+      - text: News
+        file: NEWS.md
+      - text: License
+        file: LICENSE.md
+      - text: Citation
+        file: CITATION.md
+    right:
+      - icon: github
+        href: $ALTDOC_PACKAGE_URL_GITHUB
+        aria-label: $ALTDOC_PACKAGE_NAME GitHub
+  sidebar:
+    - id: documentation
+      title: Reference
+      style: floating
+      collapse-level: 1
+      contents:
+        - section: Main functions
+          contents:
+          - text: tinyplot
+            file: man/tinyplot.qmd
+          - text: tinyplot_add
+            file: man/tinyplot_add.qmd
+          - text: tinytheme
+            file: man/tinytheme.qmd
         - section: "Shapes"
           contents:
           - text: type_area

@@ -129,3 +129,9 @@ website:
 format:
   html:
     toc: true
+    theme:
+      - cosmo
+      - custom.scss
+    fontsize: '110%'
+    fontcolor: "#000022"
+    linkcolor: "#f51459"

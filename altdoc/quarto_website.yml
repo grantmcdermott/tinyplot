@@ -4,6 +4,9 @@ project:
 
 website:
   title: "$ALTDOC_PACKAGE_NAME"
+  site-url: https://grantmcdermott.com/tinyplot/
+  favicon: favicon.png
+  image: man/figures/logo.png
   navbar:
     search: true
     right:

@@ -7,6 +7,7 @@ tbl-colwidths: [20,20,50,10]
 ---
 
 This page collects miscellaneous tips and tricks for **tinyplot**.
+Please feel free to suggest or add more tips via our [GitHub repo](https://github.com/grantmcdermott/tinyplot/issues).
 
 # Legend
 
@@ -34,10 +35,7 @@ tinyplot_add(empty = FALSE, alpha = .1)
 
 ## Axis label rotation
 
-
-When category labels are long or overlapping, users may want to rotate them for readability. Unfortunately, `tinyplot` does not currently support rotated axis labels out of the box. 
-
-A simple workaround is to take three steps:
+When category labels are long or overlapping, users may want to rotate them for readability. One option is fully perpendicular (90°) axis labels, which `tinyplot` supports via themes, e.g. `tinytheme("clean", las = 2)`. If a user wants finer control over the degree of rotation---say, 45°---this requires a bit more manual effort since we do not support custom rotation out of the box. The workaround involves three steps:
 
 1. Suppress the default x-axis with `xaxt = "n"`.
 2. Use `text()` to manually add rotated labels.
@@ -54,3 +52,5 @@ text(1:3, 0,
 ```
 
 Note that `adj` and `xpd` settings may require trial and error to position labels correctly. Also, removing the x-axis label by setting `ylab = ""` is unintuitive but currently necessary when using formulas like `~ cyl`.
+
+P.S. Another option for long axis labels is to wrap them at a designated character length. See the final example in the [`tinylabel`](https://grantmcdermott.com/tinyplot/man/tinylabel.html) documentation for an example.

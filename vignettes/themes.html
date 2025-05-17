@@ -130,7 +130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/types.html"> 
-<span class="menu-text">Plot types</span></a>
+<span class="menu-text">Types</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/themes.html" aria-current="page"> 
@@ -141,8 +141,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tips_and_tricks.qmd"> 
-<span class="menu-text">Tips &amp; tricks</span></a>
+    <a class="nav-link" href="../vignettes/tips.html"> 
+<span class="menu-text">Tips</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../man/tinyplot.html"> 
@@ -214,7 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The base R aesthetic tends to divide option. Some people like the default minimalist look of base R plots and/or are happy to customize the (many) graphical parameters that are available to them. Others find base plots ugly and don’t want to spend time endlessly tweaking different parameters. Similarly, the inherent “canvas” approach to drawing base R graphics, with fixed placement for plot elements, means that plots don’t adjust dynamically and this can lead to awkward whitespace artifacts unless the user explicitly accounts for them.</p>
+<p>The base R aesthetic tends to divide option. Some people like the default minimalist look of base R plots and/or are happy to customize the (many) graphical parameters that are available to them. Others find base plots ugly and don’t want to spend time endlessly tweaking different parameters. Moreover, the inherent “canvas” approach to drawing base R graphics, with fixed placement for plot elements, means that plots don’t adjust dynamically and this can lead to awkward whitespace artifacts unless the user explicitly accounts for them.</p>
 <p>Regardless of where you stand in this debate, the <strong>tinyplot</strong> view is that base R graphics should ideally combine flexibility and ease of use with aesthetically pleasing end results. One way that we enable this is via <em>themes</em>.</p>
 <section id="tinytheme" class="level2">
 <h2 class="anchored" data-anchor-id="tinytheme"><code>tinytheme()</code></h2>
@@ -245,9 +245,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">I</span>(Sepal.Width<span class="sc">*</span><span class="fl">1e5</span>) <span class="sc">~</span> Sepal.Length <span class="sc">|</span> Species,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="st">"by"</span>,</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> iris,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Title of the plot"</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sub =</span> <span class="st">"The left-margin adjusts to accomodate the long y-axis labels"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">yaxl =</span> <span class="st">","</span>,  <span class="co"># use comma format for the y-axis labels</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Title of the plot"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">sub =</span> <span class="st">"The left-margin adjusts to accomodate the long y-axis labels"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

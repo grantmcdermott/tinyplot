@@ -130,7 +130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/types.html"> 
-<span class="menu-text">Plot types</span></a>
+<span class="menu-text">Types</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/themes.html"> 
@@ -141,8 +141,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tips_and_tricks.qmd"> 
-<span class="menu-text">Tips &amp; tricks</span></a>
+    <a class="nav-link" href="../vignettes/tips.html"> 
+<span class="menu-text">Tips</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../man/tinyplot.html"> 
@@ -218,7 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The goal of this intro tutorial is to give you a sense of the main features and syntax of <strong>tinyplot</strong>, a lightweight extension of the base R graphics system. We don’t try to cover everything, but you should come away with a good understanding of how the package works and how it can integrate with your own projects.</p>
+<p><strong>tinyplot</strong> is a lightweight extension of the base R graphics system, designed to simplify and enhance data visualization. This tutorial provides a gentle introduction to the package’s core features and syntax. We won’t cover everything, but you should come away with a solid understanding of how <strong>tinyplot</strong> works and how it can integrate with your own projects.</p>
 <p>We start this tutorial by loading the package and a slightly modified version of the <code>airquality</code> dataset that comes bundled with base R.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
@@ -247,7 +247,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># reset layout</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Similarly, we can plot elements from a data frame using either the atomic or formula methods. Here’s a simple example using the <code>aq</code> dataset that we created earlier.</p>
+<p>Similarly, we can plot elements from a data frame using either the atomic or formula methods. Here is a simple example using the <code>aq</code> dataset that we created earlier.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># with(aq,  tinyplot(Day, Temp)) # atomic method (same as below)</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq)  <span class="co"># formula method</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -380,7 +380,7 @@ Tip: <code>plt()</code> shorthand alias
 </div>
 </div>
 </div>
-<p>However, this behaviour is easily customized via the <code>palette</code> argument. The default set of discrete colours are inherited from the user’s current global palette. (Most likely the “R4” set of colors; see <code>?palette</code>). However, all of the various palettes listed by <code>palette.pals()</code> and <code>hcl.pals()</code> are supported as convenience strings.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Note that case-insensitive, partial matching for these convenience string is allowed. For example:</p>
+<p>However, this behaviour is easily customized via the <code>palette</code> argument. The default set of discrete colours are inherited from the user’s current global palette. (Most likely the “R4” set of colors; see <code>?palette</code>). However, all of the various palettes listed by <code>palette.pals()</code> and <code>hcl.pals()</code> are supported as convenience strings.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Note that case-insensitive, partial matching for these convenience strings is allowed. For example:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq,</span>
@@ -395,7 +395,7 @@ Tip: <code>plt()</code> shorthand alias
 </div>
 </div>
 </div>
-<p>Beyond these convenience strings, users can also supply a valid palette-generating function for finer control and additional options.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> You can also use the <code>alpha</code> argument to adjust the (alpha) transparency of your colours:</p>
+<p>Beyond these convenience strings, users can also supply a valid palette-generating function for finer control and additional options.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> You can also use the <code>alpha</code> argument to adjust the (alpha) transparency of your colours.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq,</span>
@@ -419,7 +419,7 @@ Tip: <code>plt()</code> shorthand alias
 </section>
 <section id="legend" class="level2">
 <h2 class="anchored" data-anchor-id="legend">Legend</h2>
-<p>In all of the preceding plots, you will have noticed that we get an automatic legend. The legend position and look can be customized with the <code>legend</code> argument. At a minimum, you can pass the familiar legend position keywords as a convenience string (“topright”, “bottom”, “left”, etc.). Moreover, a key feature of <code>tinyplot</code> is that we can easily and elegantly place the legend <em>outside</em> the plot area by adding a trailing “!” to these keywords. (As you may have realised, the default legend position is “right!”.) Let’s demonstrate by moving the legend to the left of the plot:</p>
+<p>In all of the preceding plots, you will have noticed that we get an automatic legend. The legend position and look can be customized with the <code>legend</code> argument. At a minimum, you can pass the familiar legend position keywords as a convenience string (<code>"topright"</code>, <code>"bottom"</code>, etc.). Moreover, a key feature of <code>tinyplot</code> is that we can easily and elegantly place the legend <em>outside</em> the plot area by adding a trailing “!” to these keywords. (As you may have realised, the default legend position is <code>"right!"</code>.) Let’s demonstrate by moving the legend to the left of the plot.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq,</span>
@@ -434,7 +434,7 @@ Tip: <code>plt()</code> shorthand alias
 </div>
 </div>
 </div>
-<p>Beyond the convenience of these positional keywords, the <code>legend</code> argument also permits additional customization by passing an appropriate function (or, a list of arguments that will be passed on to the standard <code>legend()</code> function internally.) So you can change or turn off the legend title, remove the bounding box, switch the direction of the legend text to horizontal, etc. Here’s a grouped density plot example, where we also add some shading by specifying that the background colour should vary by groups too.</p>
+<p>Beyond the convenience of these positional keywords, the <code>legend</code> argument also permits additional customization in the form of a list of arguments, which will be passed on to the standard <code>legend()</code> function internally. So you can change or turn off the legend title, remove the bounding box, switch the direction of the legend text to horizontal, etc. Here is a grouped density plot example, where we also add some shading by specifying that the background colour should vary by groups too.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> Temp <span class="sc">|</span> Month,</span>
@@ -463,7 +463,7 @@ Tip: <code>plt()</code> shorthand alias
 </div>
 </div>
 </div>
-<p>Gradient legends (and plots) can be customized in an identical manner to discrete legends by adjusting the keyword positioning, palette choice, alpha transparency etc. Here is a quick adaptation of the previous plot to demonstrate. Note that here we pass a special convenience argument to <code>bg</code>/<code>fill</code>; if it detects a numeric in the range of <code>[0,1]</code>, then it automatically inherits the grouped colour mappings but with added transparency.</p>
+<p>Gradient legends (and plots) can be customized in an identical manner to discrete legends by adjusting the keyword positioning, palette choice, alpha transparency, etc. Here is a quick adaptation of the previous plot to demonstrate.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Wind <span class="sc">|</span> Ozone, <span class="at">data =</span> aq,</span>
@@ -480,11 +480,12 @@ Tip: <code>plt()</code> shorthand alias
 </div>
 </div>
 </div>
+<p>As an aside, note that we passed a numeric convenience argument to <code>fill</code> (alias <code>bg</code>) above. Specifically, when <code>fill</code> is given as a numeric in the range of <code>[0,1]</code> then it automatically inherits the grouped colour mappings, but with corresponding alpha transparency.</p>
 </section>
 <section id="more-plot-types" class="level2">
 <h2 class="anchored" data-anchor-id="more-plot-types">More plot types</h2>
-<p>We have already seen several plot types above such as <code>"p"</code> (points), <code>"l"</code> (lines), and <code>"density"</code>. In general, <strong>tinyplot</strong> supports all of the primitive plot types/elements available in base R, as well as a number of additional plot types that can be a bit tedious to code up manually. You can see the full list of supported plot types by checking the <a href="https://grantmcdermott.com/tinyplot/man/tinyplot.html#arguments"><code>?tinyplot</code></a> documentation, or by taking a look at the dedicated <a href="../vignettes/types.html">Plot Types</a> vignette on this website.</p>
-<p>For example, <strong>tinyplot</strong> supports interval plots via the <code>"pointrange"</code>, <code>"errorbar"</code>, <code>"ribbon"</code>, and related type arguments. A canonical use-case is coefficient plots:</p>
+<p>We’ve already seen several plot types, such as <code>"p"</code> (points), <code>"l"</code> (lines), and <code>"density"</code>. In general, <strong>tinyplot</strong> supports all the primitive plot types and elements available in base R, along with a number of additional types that can be tedious to code manually. You can find the full list of in the dedicated <a href="../vignettes/types.html">Plot Types</a> vignette. For the moment, we’ll content ourselves with a few illustrative examples.</p>
+<p>One such example is the family of “interval” plots provided by the <code>"pointrange"</code>,<code>"errorbar"</code>, <code>"ribbon"</code>, and related types. A canonical use-case is coefficient plots.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(Temp <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Month <span class="sc">/</span> Day, <span class="at">data =</span> aq)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -517,7 +518,7 @@ Tip: <code>plt()</code> shorthand alias
 </div>
 </div>
 </div>
-<p><strong>tinyplot</strong> also supports special types to fit models and display their predictions, along with confidence intervals. Here is a somewhat silly example where we fit a linear model to predict temperature by day of month.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p>Note that <strong>tinyplot</strong> also supports special types to fit models and display their predictions, along with confidence intervals. Here is a somewhat silly example where we fit a linear model to predict temperature by day of month.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq,</span>
@@ -533,12 +534,12 @@ Tip: <code>plt()</code> shorthand alias
 </div>
 </div>
 </div>
-<p>The default behaviour of these model types can be adjusted by passing appropriate arguments to the equivalent <em>functional</em> version of the type in question. These functional types all follow a <code>type_&lt;typename&gt;</code> syntax, so that <code>"lm"</code> is paired with <code>type_lm()</code>, etc. Below we illustrate an adapted generalised linear model, where we passing the binomial <a href="https://search.r-project.org/R/refmans/stats/html/family.html">family</a> argument and thus fit a logistic regression.</p>
+<p>The default behaviour of these model types can be adjusted by passing appropriate arguments to the equivalent <em>functional</em> version of the type in question. These functional types all follow a <code>type_&lt;typename&gt;</code> syntax, so that <code>"lm"</code> is paired with <code>type_lm()</code>, etc. Below we illustrate with an adapted generalised linear model, where we fit a logistic regression passing explicitly passing the binomial <a href="https://search.r-project.org/R/refmans/stats/html/family.html">family</a> argument.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">I</span>(Temp <span class="sc">&gt;</span> <span class="dv">80</span>) <span class="sc">~</span> Wind, aq,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">I</span>(Temp <span class="sc">&gt;</span> <span class="dv">75</span>) <span class="sc">~</span> Wind, aq,</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_glm</span>(<span class="at">family =</span> binomial),</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Logit model: Temps above 80 °F"</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Logit model: Temps above 75 °F"</span></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -605,16 +606,16 @@ Tip: <code>plt()</code> shorthand alias
 </div>
 </div>
 <p>The <code>facet.args</code> customizations can also be set globally via the <code>tpar()</code> function, or as part of a dedicated <code>tinytheme()</code>. We will revisit this idea in the <a href="#themes">Themes</a> section below.</p>
-<p>Finally, the <code>facet</code> argument also accepts a <em>two-sided</em> formula for arranging facets in a fixed grid layout. Here’s a simple (if contrived) example.</p>
+<p>Finally, the <code>facet</code> argument also accepts a <em>two-sided</em> formula for arranging facets in a fixed grid layout. Here is a simple (if contrived) example.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a> Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq,</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a> <span class="at">facet =</span> windy <span class="sc">~</span> hot,</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a> <span class="co"># the rest of these arguments are optional...</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a> <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">col =</span> <span class="st">"white"</span>, <span class="at">bg =</span> <span class="st">"black"</span>),</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a> <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>,</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a> <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>),</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a> <span class="at">main =</span> <span class="st">"Daily temperatures vs. wind"</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> windy <span class="sc">~</span> hot,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># the rest of these arguments are optional...</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">col =</span> <span class="st">"white"</span>, <span class="at">bg =</span> <span class="st">"black"</span>),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Temps versus wind"</span></span>
 <span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -629,7 +630,7 @@ Tip: <code>plt()</code> shorthand alias
 <h2 class="anchored" data-anchor-id="layers">Layers</h2>
 <p>In many contexts, it is convenient to build plots step-by-step, adding layers with different elements on top of a base. The <strong>tinyplot</strong> package offers a few ways to achieve this layering effect.</p>
 <p>Similar to many base plotting functions, users can invoke the <code>tinyplot(..., add=TRUE)</code> argument to draw a plot on top of an existing one, rather than opening a new window. However, while this argument is useful, it can become verbose since it requires users to make very similar successive calls, with many shared arguments.</p>
-<p>For this reason, the <strong>tinyplot</strong> package provides a special <code>tinyplot_add()</code> convenience function for adding layers to an existing tinyplot. The idea is that users need simply pass the <em>specific</em> arguments that they want to add or modify relative to the base layer, and all arguments will be inherited from the original.</p>
+<p>For this reason, <strong>tinyplot</strong> provides a special <code>tinyplot_add()</code> convenience function for adding layers to an existing tinyplot. The idea is that users need simply pass the <em>specific</em> arguments that they want to add or modify relative to the base layer; all others arguments will be inherited from the original call.</p>
 <p>An example may help to demonstrate. Here we first draw some faceted points with group colouring and various other aesthetic tweaks. Next, we add regression fits with a simple <code>tinyplot_add(type = "lm")</code> call. Notice that the original grouping, data and aesthetic options are all carried over correctly, without having to repeat ourselves.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
@@ -685,7 +686,7 @@ Tip: <code>plt_add()</code> shorthand alias
 </div>
 </div>
 <p>Compared to “manually” drawing these elements on a plot <em>ex post</em>—e.g., via a separate <code>abline()</code> call—there are several advantages to the idiomatic <strong>tinyplot</strong> interface. First, the <code>draw</code> argument is facet-aware and will ensure that each individual facet is correctly drawn upon. Second, you can leverage the special <code>ii</code> internal counter to draw programmatically across facets (see <a href="https://github.com/grantmcdermott/tinyplot/pull/245#issue-2642589951">here</a>). Third, the <code>draw</code> argument is fully generic and accepts <em>any</em> drawing/annotating function. You can combine multiple drawing functions by wrapping them with curly brackets<code>{}</code>, and even pass <code>tinyplot()</code> back towards itself.</p>
-<p>Here’s a slightly more complicated “spaghetti” plot example, where we pass multiple functions through <code>draw = {...}</code>, including drawing all of the lines in the background (of each facet) via a secondary <code>tinyplot()</code> call.</p>
+<p>Here is a slightly more complicated “spaghetti” plot example, where we pass multiple functions through <code>draw = {...}</code>, including drawing all of the lines in the background (of each facet) via a secondary <code>tinyplot()</code> call.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, aq, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">type =</span> <span class="st">"l"</span>,</span>
@@ -748,7 +749,8 @@ Tip: <code>plt_add()</code> shorthand alias
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>In summary, consider the <strong>tinyplot</strong> package if you are looking for base R <code>plot</code> functionality with added convenience features. You can use (nearly) the exact same syntax and all of your theme elements should carry over too. It has no dependencies other than base R itself and this should make it an attractive option for package developers, as well as situations where dependency management is expensive (e.g., production pipelines, continuous integration or an R application running in a browser via <a href="https://docs.r-wasm.org/webr/latest/">WebAssembly</a>).</p>
+<p>The goal of this tutorial has been to give you a clear sense of how <strong>tinyplot</strong> works and what it offers. The take-home pitch is simple: you get to use the same syntax as base R <code>plot()</code>, but with the added benefit of <em>many</em> additional plot types and user-friendly features. Finally, it’s worth noting that <strong>tinyplot</strong> has no dependencies other than base R itself. We hope that this makes it an attractive and lightweight option for package developers (and regular R users!) who want to create convenient, sophisticated plots with minimal overhead.</p>
+<p>Believe it or not, there’s still plenty of <strong>tinyplot</strong> functionality that we didn’t cover here. If you’d like to keep exploring, we recommend continuing with the <a href="../vignettes/types.html">Plot types</a> and <a href="../vignettes/themes.html">Themes</a> vignettes. Happy tinyplotting!</p>
 
 
 </section>

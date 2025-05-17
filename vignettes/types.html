@@ -131,7 +131,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/types.html" aria-current="page"> 
-<span class="menu-text">Plot types</span></a>
+<span class="menu-text">Types</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/themes.html"> 
@@ -142,8 +142,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tips_and_tricks.qmd"> 
-<span class="menu-text">Tips &amp; tricks</span></a>
+    <a class="nav-link" href="../vignettes/tips.html"> 
+<span class="menu-text">Tips</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../man/tinyplot.html"> 
@@ -212,7 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>tinyplot</strong> is a lightweight extension of R’s base plotting system, designed to simplify and enhance data visualization. One of its key features is the <code>type</code> argument, which allows you to specify different types of plots easily. This tutorial will guide you through the various plot types available in <strong>tinyplot</strong>, demonstrating how to use the <code>type</code> argument to create a wide range of visualizations.</p>
+<p>A key feature of <strong>tinyplot</strong> is the <code>type</code> argument, which allows you to specify different kinds of plots. This tutorial will guide you through the various plot types available in <strong>tinyplot</strong>, demonstrating how the <code>type</code> argument can be used to to create a wide range of visualizations.</p>
 <p>We will consider three categories of plot types:</p>
 <ol type="1">
 <li>Base types</li>
@@ -579,7 +579,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="custom-types" class="level2">
 <h2 class="anchored" data-anchor-id="custom-types">Custom types</h2>
 <p>It is easy to add custom types to <strong>tinyplot</strong>. Users who need highly customized plots, or developers who want to add support to their package or functions, only need to define three simple functions: <code>data_typename()</code>, <code>draw_typename()</code>, and <code>type_typename()</code>.</p>
-<p>In this section, we explain the role of each of these functions and present a minimalist example of a custom type. Interested readers may refer to <a href="https://github.com/grantmcdermott/tinyplot">the <strong>tinyplot</strong> source code</a> to see many more examples, since each <strong>tinyplot</strong> type is itself implemented as a custom type.</p>
+<p>In this section, we explain the role of each of these functions and present a minimalist example of a custom type. Interested readers may refer to the <strong>tinyplot</strong> <a href="https://github.com/grantmcdermott/tinyplot">source code</a> to see many more examples, since each <strong>tinyplot</strong> type is itself implemented as a custom type.</p>
 <p>The three functions that we need to define for a new type are:</p>
 <ol type="1">
 <li><code>data_*()</code>: Function factory.

@@ -40,7 +40,6 @@
 #' @importFrom utils modifyList
 #' 
 #' @examples
-#' 
 #' oldmar = par("mar")
 #' 
 #' draw_legend(

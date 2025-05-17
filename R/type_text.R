@@ -7,7 +7,6 @@
 #' @param font Font to be used, following [graphics::par()]
 #' @inheritParams graphics::text
 #' @examples
-#'
 #' tinyplot(mpg ~ hp | factor(cyl),
 #'   data = mtcars,
 #'   type = type_text(

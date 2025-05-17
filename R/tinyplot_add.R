@@ -22,8 +22,6 @@
 #' call.
 #'
 #' @examples
-#' library(tinyplot)
-#'
 #' tinyplot(Sepal.Width ~ Sepal.Length | Species,
 #'   facet = ~Species,
 #'   data = iris)

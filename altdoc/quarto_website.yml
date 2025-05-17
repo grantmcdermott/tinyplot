@@ -18,6 +18,8 @@ website:
         file: vignettes/themes.qmd
       - text: Gallery
         file: vignettes/gallery.qmd
+      - text: Tips & tricks
+        file: tips_and_tricks.qmd
       - text: Reference
         file: man/tinyplot.qmd
       - text: News

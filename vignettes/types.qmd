@@ -171,7 +171,7 @@ need to define three simple functions: `data_typename()`, `draw_typename()`, and
 
 In this section, we explain the role of each of these functions and present a
 minimalist example of a custom type. Interested readers may refer to
-[the **tinyplot** source code](https://github.com/grantmcdermott/tinyplot)
+the **tinyplot** [source code](https://github.com/grantmcdermott/tinyplot)
 to see many more examples, since each **tinyplot** type is itself implemented as a
 custom type.
 

@@ -6,12 +6,10 @@ format:
 tbl-colwidths: [20,20,50,10]
 ---
 
-**tinyplot** is a lightweight extension of R's base plotting system, designed to
-simplify and enhance data visualization. One of its key features is the `type`
-argument, which allows you to specify different types of plots easily. This
-tutorial will guide you through the various plot types available in
-**tinyplot**, demonstrating how to use the `type` argument to create a wide
-range of visualizations.
+A key feature of **tinyplot** is the `type` argument, which allows you to
+specify different kinds of plots. This tutorial will guide you through the
+various plot types available in **tinyplot**, demonstrating how the `type`
+argument can be used to to create a wide range of visualizations.
 
 We will consider three categories of plot types:
 

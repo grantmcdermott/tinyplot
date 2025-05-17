@@ -55,11 +55,20 @@ where the formatting is also better._
 - Better integration with the Positron IDE graphics pane. Thanks to @thomasp85
   for the report and helpful suggestions. (#377, #394 @grantmcdermott)
   - The one remaining Positron issue at present is calling `plt_add()` on a
-    faceted plot, but this appears to be an upstream limitation/bug (see
-    https://github.com/posit-dev/positron/issues/7316)
+    faceted plot, but this appears to be an upstream limitation/bug
+    [positron#7316](https://github.com/posit-dev/positron/issues/7316).
 - Fixed a bug that resulted in y-axis labels being coerced to numeric for
-  `"p"`-alike plot types (including `"jitter"`) if `y` is a factor or character
-  (#387 @grantmcdermott).
+  `"p"`-alike plot types (including `"jitter"`) if `y` is a factor or character.
+  (#387 @grantmcdermott)
+
+### Website:
+
+- Improved column spacing of Arguments in the References section of the website.
+  (#328 thanks to @etiennebacher's upstream `altdoc` fix)
+- Added a new "Ticks & tips" vignette for non-standard workarounds.
+  (#381 @vincentarelbundock)
+- Improved website theme and navigation layout, especially on mobile.
+  (#395 @zeileis)
 
 ### Internals:
 
@@ -68,12 +77,6 @@ where the formatting is also better._
   groups second (inner loop), rather than vice versa. The old/inverted nesting
   logic was mostly an artifact of development inertia and this new nesting logic
   should simplify the creation of certain plot types. (#331 @grantmcdermott)
-
-
-### Misc:
-
-- Improved column spacing of Arguments in the References section of the website.
-  (#328 thanks to @etiennebacher's upstream `altdoc` fix)
 
 ## 0.3.0
 

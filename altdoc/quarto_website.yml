@@ -4,17 +4,12 @@ project:
 
 website:
   title: "$ALTDOC_PACKAGE_NAME"
+  site-url: https://grantmcdermott.com/tinyplot/
+  favicon: favicon.png
+  image: man/figures/logo.png
   navbar:
     search: true
-    right:
-      - icon: github
-        href: $ALTDOC_PACKAGE_URL_GITHUB
-        aria-label: $ALTDOC_PACKAGE_NAME GitHub
-  sidebar:
-    collapse-level: 1
-    contents:
-      - text: Home
-        file: index.qmd
+    left:
       - text: Introduction
         file: vignettes/introduction.qmd
       - text: Plot types
@@ -23,105 +18,125 @@ website:
         file: vignettes/themes.qmd
       - text: Gallery
         file: vignettes/gallery.qmd
-      - text: Tips & Tricks
-        file: vignettes/tips_and_tricks.qmd
-      - section: Reference
-        contents:
-        - text: tinyplot
-          file: man/tinyplot.qmd
-        - text: tinyplot_add
-          file: man/tinyplot_add.qmd
-        - text: tinytheme
-          file: man/tinytheme.qmd
-        - section: "Shapes"
-          contents:
-          - text: type_area
-            file: man/type_ribbon.qmd
-          - text: type_errorbar
-            file: man/type_errorbar.qmd
-          - text: type_lines
-            file: man/type_lines.qmd
-          - text: type_pointrange
-            file: man/type_errorbar.qmd
-          - text: type_points
-            file: man/type_points.qmd
-          - text: type_polygon
-            file: man/type_polygon.qmd
-          - text: type_polypath
-            file: man/type_polypath.qmd
-          - text: type_rect
-            file: man/type_rect.qmd
-          - text: type_ribbon
-            file: man/type_ribbon.qmd
-          - text: type_text
-            file: man/type_text.qmd
-          - text: type_segments
-            file: man/type_segments.qmd
-        - section: "Visualizations"
-          contents:
-          - text: type_barplot
-            file: man/type_barplot.qmd
-          - text: type_boxplot
-            file: man/type_boxplot.qmd
-          - text: type_density
-            file: man/type_density.qmd
-          - text: type_histogram
-            file: man/type_histogram.qmd
-          - text: type_jitter
-            file: man/type_jitter.qmd
-          - text: type_qq
-            file: man/type_qq.qmd
-          - text: type_ridge
-            file: man/type_ridge.qmd
-          - text: type_rug
-            file: man/type_rug.qmd
-          - text: type_spineplot
-            file: man/type_spineplot.qmd
-          - text: type_violin
-            file: man/type_violin.qmd
-        - section: "Models"
-          contents:
-          - text: type_glm
-            file: man/type_glm.qmd
-          - text: type_loess
-            file: man/type_loess.qmd
-          - text: type_lm
-            file: man/type_lm.qmd
-          - text: type_spline
-            file: man/type_spline.qmd
-        - section: "Functions"
-          contents:
-          - text: type_abline
-            file: man/type_abline.qmd
-          - text: type_function
-            file: man/type_function.qmd
-          - text: type_hline
-            file: man/type_abline.qmd
-          - text: type_summary
-            file: man/type_summary.qmd
-          - text: type_vline
-            file: man/type_abline.qmd
-        - section: "Options & Internals"
-          contents:
-          - text: tpar
-            file: man/tpar.qmd
-          - text: get_saved_par
-            file: man/get_saved_par.qmd
-          - text: draw_legend
-            file: man/draw_legend.qmd
+      - text: Tips & tricks
+        file: tips_and_tricks.qmd
+      - text: Reference
+        file: man/tinyplot.qmd
       - text: News
         file: $ALTDOC_NEWS
-      - text: Changelog
-        file: $ALTDOC_CHANGELOG
       - text: License
         file: $ALTDOC_LICENSE
-      - text: Licence
-        file: $ALTDOC_LICENCE
-      - text: Code of conduct
-        file: $ALTDOC_CODE_OF_CONDUCT
       - text: Citation
         file: $ALTDOC_CITATION
+    right:
+      - icon: github
+        href: $ALTDOC_PACKAGE_URL_GITHUB
+        aria-label: $ALTDOC_PACKAGE_NAME GitHub
+  sidebar:
+    - id: documentation
+      title: Reference
+      style: floating
+      collapse-level: 1
+      contents:
+        - section: "Main functions"
+          contents:
+            - text: tinyplot
+              file: man/tinyplot.qmd
+            - text: tinyplot_add
+              file: man/tinyplot_add.qmd
+            - text: tinytheme
+              file: man/tinytheme.qmd
+        - section: "Plot types"
+          contents:
+          - section: Shapes
+            contents:
+              - text: type_area
+                file: man/type_ribbon.qmd
+              - text: type_errorbar
+                file: man/type_errorbar.qmd
+              - text: type_lines
+                file: man/type_lines.qmd
+              - text: type_pointrange
+                file: man/type_errorbar.qmd
+              - text: type_points
+                file: man/type_points.qmd
+              - text: type_polygon
+                file: man/type_polygon.qmd
+              - text: type_polypath
+                file: man/type_polypath.qmd
+              - text: type_rect
+                file: man/type_rect.qmd
+              - text: type_ribbon
+                file: man/type_ribbon.qmd
+              - text: type_text
+                file: man/type_text.qmd
+              - text: type_segments
+                file: man/type_segments.qmd
+          - section: "Visualizations"
+            contents:
+              - text: type_barplot
+                file: man/type_barplot.qmd
+              - text: type_boxplot
+                file: man/type_boxplot.qmd
+              - text: type_density
+                file: man/type_density.qmd
+              - text: type_histogram
+                file: man/type_histogram.qmd
+              - text: type_jitter
+                file: man/type_jitter.qmd
+              - text: type_qq
+                file: man/type_qq.qmd
+              - text: type_ridge
+                file: man/type_ridge.qmd
+              - text: type_rug
+                file: man/type_rug.qmd
+              - text: type_spineplot
+                file: man/type_spineplot.qmd
+              - text: type_violin
+                file: man/type_violin.qmd
+          - section: "Models"
+            contents:
+              - text: type_glm
+                file: man/type_glm.qmd
+              - text: type_loess
+                file: man/type_loess.qmd
+              - text: type_lm
+                file: man/type_lm.qmd
+              - text: type_spline
+                file: man/type_spline.qmd
+          - section: "Functions"
+            contents:
+              - text: type_abline
+                file: man/type_abline.qmd
+              - text: type_function
+                file: man/type_function.qmd
+              - text: type_hline
+                file: man/type_abline.qmd
+              - text: type_summary
+                file: man/type_summary.qmd
+              - text: type_vline
+                file: man/type_abline.qmd
+        - section: "Options"
+          contents:
+            - text: tpar
+              file: man/tpar.qmd
+            - text: get_saved_par
+              file: man/get_saved_par.qmd
+        - section: "Internals"
+          contents:
+            - text: draw_legend
+              file: man/draw_legend.qmd
+            # - text: tinyAxis
+            #   file: man/tinyAxis.qmd
+            - text: tinylabel
+              file: man/tinylabel.qmd
 
 format:
   html:
     toc: true
+    theme:
+      - cosmo
+      - custom.scss
+    fontsize: '110%'
+    fontcolor: "#000022"
+    linkcolor: "#f51459"

@@ -23,8 +23,8 @@ draw_facet_window = function(
     nfacets, nfacet_cols, nfacet_rows,
     # axes args
     axes, flip, frame.plot, oxaxis, oyaxis,
-    xlabs, xlim, xaxt, xaxs, xaxl,
-    ylabs, ylim, yaxt, yaxs, yaxl,
+    xlabs, xlim, xlim_user, xaxt, xaxs, xaxl,
+    ylabs, ylim, ylim_user, yaxt, yaxs, yaxl,
     asp, log,
     # other args (in approx. alphabetical + group ordering)
     dots,
@@ -270,7 +270,7 @@ draw_facet_window = function(
         lty = get_tpar(c("lty.yaxs", "lty.axis"), 1)
       )
       type_range_x = type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)
-      type_range_y = isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)
+      type_range_y = !is.null(ylabs) && (type == "p" || (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "violin")))
       if (type_range_x) {
         args_x = modifyList(args_x, list(at = xlabs, labels = names(xlabs)))
       }
@@ -293,8 +293,8 @@ draw_facet_window = function(
         # individual facet.
         xfree = split(c(x, xmin, xmax), facet)[[ii]]
         yfree = split(c(y, ymin, ymax), facet)[[ii]]
-        xlim = range(xfree, na.rm = TRUE)
-        ylim = range(yfree, na.rm = TRUE)
+        if (!xlim_user) xlim = range(xfree, na.rm = TRUE)
+        if (!ylim_user) ylim = range(yfree, na.rm = TRUE)
         xext = extendrange(xlim, f = 0.04)
         yext = extendrange(ylim, f = 0.04)
         # We'll save this in a special .fusr env var (list) that we'll re-use
@@ -310,14 +310,14 @@ draw_facet_window = function(
         par(usr = fusr[[ii]])
         # if plot frame is true then print axes per normal...
         if (type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)) {
-          tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt)
+          tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, labeller = xaxl)
         } else {
-          tinyAxis(xfree, side = xside, type = xaxt)
+          tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
         }
         if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
-          tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt)
+          tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
         } else {
-          tinyAxis(yfree, side = yside, type = yaxt)
+          tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
         }
 
         # For fixed facets we can just reuse the same plot extent and axes limits

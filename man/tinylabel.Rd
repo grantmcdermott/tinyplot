@@ -9,19 +9,19 @@ tinylabel(x, labeller = NULL)
 \arguments{
 \item{x}{a numeric or character vector}
 
-\item{labeller}{a formatting function to be applied to \code{x}, e.g. \code{abs},
-\code{toupper}, \code{format}, etc. Can also be one of the following convenience
-strings (symbols), for which common formatting transformations are
-provided: \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"dollar"} (\code{"$"}),
-\code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
+\item{labeller}{a formatting function to be applied to \code{x}, e.g. \code{\link{format}},
+\code{\link{toupper}}, \code{\link{abs}}, or other custom function (including from the popular
+\strong{scales} package). Can also be one of the following convenience strings
+(symbols), for which common formatting transformations are provided:
+\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
+(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
 }
 \description{
-Internal function for formatting label appearance, e.g. axis
+Function for formatting label appearance, e.g. axis
 ticks labels. This is what the top-level \code{xaxl} and \code{yaxl} arguments
-ultimately get passed to.
+from \code{\link{tinyplot}} ultimately get passed to.
 }
 \examples{
-\dontrun{
 x = 1e4
 tinylabel(x, "comma")
 tinylabel(x, ",") # same
@@ -30,12 +30,42 @@ tinylabel(x, "$") # or "dollar"
 # pass to xaxl/yaxl for adjusting axes tick labels in a tinyplot call
 tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "\%")
 
-# function example (here: date formatting)
+# log example (combined with axis scaling)
+tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log")
+
+#
+## custom function examples
+
+## example I: date formatting
+
 dat = data.frame(
   date = seq(as.Date("2000/1/1"), by = "month", length.out = 12),
   trend = 1:12 + rnorm(12, sd = 1)
 )
+
 tinyplot(trend ~ date, data = dat, xaxl = function(x) format(x, "\%b, \%Y"))
+
+## example II: string wrapping 
+
+# create a "vectorised" version of `base::strwrap` that breaks long
+# strings into new lines every 18 characters
+strwrap18 = function(x) sapply(
+  strwrap(x, width = 18, simplify = FALSE),
+  paste,
+  collapse = "\n"
+)
+
+# now demonstrate on a dataset with long y-tick labels
+dat2 = data.frame(
+  x = rep(rnorm(100), 3),
+  y = c(
+    "tinyplot is a lightweight extension of the base R graphics system.",
+    "R is a language for statistical computing.",
+    "Data visualization is an essential skill."
+  )
+)
+
+tinytheme("bw")
+tinyplot(y ~ x, data = dat2, type = "j", yaxl = strwrap18)
+tinytheme()
 }
-}
-\keyword{internal}

@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
 <defs>
   <style type='text/css'><![CDATA[
     .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
@@ -12,6 +13,10 @@
     .svglite text {
       white-space: pre;
     }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
   ]]></style>
 </defs>
 <rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
@@ -21,8 +26,8 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='86.07px' lengthAdjust='spacingAndGlyphs'>[100 + i, 150 + i]</text>
-<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='86.07px' lengthAdjust='spacingAndGlyphs'>[300 + i, 380 + i]</text>
+<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='86.03px' lengthAdjust='spacingAndGlyphs'>[100 + i, 150 + i]</text>
+<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='86.03px' lengthAdjust='spacingAndGlyphs'>[300 + i, 380 + i]</text>
 <line x1='74.40' y1='430.56' x2='415.73' y2='430.56' style='stroke-width: 0.75;' />
 <line x1='74.40' y1='430.56' x2='74.40' y2='437.76' style='stroke-width: 0.75;' />
 <line x1='159.73' y1='430.56' x2='159.73' y2='437.76' style='stroke-width: 0.75;' />
@@ -68,5 +73,6 @@
 <rect x='210.93' y='95.73' width='213.33' height='229.33' style='stroke-width: 0.75;' />
 <rect x='228.00' y='84.27' width='213.33' height='229.33' style='stroke-width: 0.75;' />
 <rect x='245.07' y='72.80' width='213.33' height='229.33' style='stroke-width: 0.75;' />
+</g>
 </g>
 </svg>

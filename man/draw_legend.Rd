@@ -19,13 +19,15 @@ draw_legend(
   gradient = FALSE,
   lmar = NULL,
   has_sub = FALSE,
-  new_plot = TRUE
+  new_plot = TRUE,
+  draw = TRUE
 )
 }
 \arguments{
 \item{legend}{Legend placement keyword or list, passed down from \link{tinyplot}.}
 
-\item{legend_args}{Additional legend arguments to be passed to \code{legend()}.}
+\item{legend_args}{Additional legend arguments to be passed to
+\code{\link[graphics]{legend}}.}
 
 \item{by_dep}{The (deparsed) "by" grouping variable name.}
 
@@ -60,13 +62,17 @@ keyword position is "bottom!", in which case we need to bump the legend
 margin a bit further.}
 
 \item{new_plot}{Logical. Should we be calling plot.new internally?}
+
+\item{draw}{Logical. If \code{FALSE}, no legend is drawn but the sizes are
+returned. Note that a new (blank) plot frame will still need to be started
+in order to perform the calculations.}
 }
 \value{
 No return value, called for side effect of producing a(n empty) plot
 with a legend in the margin.
 }
 \description{
-Internal function used to calculate the placement of (including
+Function used to calculate the placement of (including
 outside the plotting area) and drawing of legend.
 }
 \examples{

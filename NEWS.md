@@ -24,9 +24,10 @@ where the formatting is also better._
   `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
   `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)
 - The new top-level `xaxl` and `yaxl` arguments allow users to format the
-  appearance of their axis tick labels. Several convenience strings are
-  supported for common cases, e.g., `tinyplot(..., xaxl = "percent")` or
-  `tinyplot(..., yaxl = "dollar")`, etc. (#363 @grantmcdermott)
+  appearance of their axis tick labels. Several convenience strings (symbols)
+  supported for common cases, e.g., `tinyplot(..., yaxl = "percent")` or
+  `tinyplot(..., yaxl = "%")`, etc. More details are provided in the lower-level
+  `tinylabel` function documentation (#363, #391 @grantmcdermott)
 
 ### Bugs fixes:
 
@@ -52,7 +53,13 @@ where the formatting is also better._
 - Fixed dynamic x-axis margin spacing for perpendicular (vertical) label text,
   i.e. cases where `las = 2` or `las = 3`. (#369 @grantmcdermott)
 - Better integration with the Positron IDE graphics pane. Thanks to @thomasp85
-  for the report and helpful suggestions. (#377 @grantmcdermott)
+  for the report and helpful suggestions. (#377, #394 @grantmcdermott)
+  - The one remaining Positron issue at present is calling `plt_add()` on a
+    faceted plot, but this appears to be an upstream limitation/bug (see
+    https://github.com/posit-dev/positron/issues/7316)
+- Fixed a bug that resulted in y-axis labels being coerced to numeric for
+  `"p"`-alike plot types (including `"jitter"`) if `y` is a factor or character
+  (#387 @grantmcdermott).
 
 ### Internals:
 

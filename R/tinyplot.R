@@ -167,20 +167,24 @@
 #'   `"labels"` (only labels without ticks and axis line), `"axis"` (only axis
 #'   line and labels but no ticks). To control this separately for the two
 #'   axes, use the character specifications for `xaxt` and/or `yaxt`.
-#' @param xaxt,yaxt character specifying the type of x-axis and y-axis, respectively.
-#'   See `axes` for the possible values.
-#' @param xaxs,yaxs character specifying the style of the interval calculation used
-#'   for the x-axis and y-axis, respectively. See \code{\link[graphics]{par}}
-#'   for the possible values.
-#' @param xaxl,yaxl A formatting function (or character string) to apply to the
-#'   x- or y-axis tick labels. This affects the _appearance_ of the labels only,
-#'   not the calculation or positioning of the tick marks. In addition to custom
-#'   functions, users can supply one of several convenience strings (symbols)
-#'   for common formats: `"percent"` (`"%"`), `"comma"` (`","`), `"dollar"`
-#'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`).
-#' @param log a character string which contains "x" if the x axis is to be
-#'   logarithmic, "y" if the y axis is to be logarithmic and "xy" or "yx" if
-#'   both axes are to be logarithmic.
+#' @param xaxt,yaxt character specifying the type of x-axis and y-axis,
+#'   respectively. See `axes` for the possible values.
+#' @param xaxs,yaxs character specifying the style of the interval calculation
+#'   used for the x-axis and y-axis, respectively. See
+#'   \code{\link[graphics]{par}} for the possible values.
+#' @param xaxl,yaxl a function or a character keyword specifying the format of
+#'   the x- or y-axis tick labels. Note that this is a post-processing step that
+#'   affects the _appearance_ of the tick labels only; it does not affect the
+#'   actual calculation or placement of the tick marks. In addition to
+#'   user-supplied formatting functions (e.g., [`format`], [`toupper`], [`abs`],
+#'   or other custom function), several convenience keywords (or their symbol
+#'   equivalents) are available for common formatting transformations:
+#'   `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`), `"dollar"`
+#'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`). See the
+#'   [`tinylabel`] documentation for examples.
+#' @param log a character string which contains `"x"` if the x axis is to be
+#'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
+#'   if both axes are to be logarithmic.
 #' @param flip logical. Should the plot orientation be flipped, so that the
 #'   y-axis is on the horizontal plane and the x-axis is on the vertical plane?
 #'   Default is FALSE.
@@ -352,7 +356,6 @@
 #' @importFrom tools file_ext
 #'
 #' @examples
-#' #'
 #' aq = transform(
 #'   airquality,
 #'   Month = factor(Month, labels = month.abb[unique(Month)])
@@ -747,7 +750,6 @@ tinyplot.default = function(
       if (is.null(ylab)) ylab = "Density"
     } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
-    # } else if (type != "histogram") {
     } else if (!(type %in% c("histogram", "barplot"))) {
       y = x
       x = seq_along(x)
@@ -756,8 +758,12 @@ tinyplot.default = function(
   }
 
   if (is.null(xlab)) xlab = x_dep
-  # if (is.null(ylab)) ylab = y_dep
   if (is.null(ylab) && type != "histogram") ylab = y_dep
+  
+  # flag(s) indicating whether x/ylim was set by the user (needed later for
+  # special case where facets are free but still want to set x/ylim manually)
+  xlim_user = !is.null(xlim)
+  ylim_user = !is.null(ylim)
 
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
@@ -1148,8 +1154,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1161,7 +1167,7 @@ tinyplot.default = function(
       y = y, ymax = ymax, ymin = ymin
     ),
     list = list(
-      add = add, 
+      add = add,
       cex_fct_adj = cex_fct_adj,
       facet.args = facet.args,
       facet_newlines = facet_newlines, facet_font = facet_font,
@@ -1172,8 +1178,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
       asp = asp, log = log,
       dots = dots,
       draw = draw,
@@ -1316,7 +1322,8 @@ tinyplot.default = function(
           ngrps = ngrps,
           flip = flip,
           type_info = type_info,
-          facet_window_args = facet_window_args)
+          facet_window_args = facet_window_args
+        )
       }
     }
   }
@@ -1324,6 +1331,7 @@ tinyplot.default = function(
   # save end pars for possible recall later
   apar = par(no.readonly = TRUE)
   set_saved_par(when = "after", apar)
+
 }
 
 

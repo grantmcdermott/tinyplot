@@ -45,7 +45,6 @@ Type function for adding text annotations to a plot. This function allows
 you to draw text at specified (x,y) coordinates.
 }
 \examples{
-
 tinyplot(mpg ~ hp | factor(cyl),
   data = mtcars,
   type = type_text(

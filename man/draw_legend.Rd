@@ -76,7 +76,6 @@ Function used to calculate the placement of (including
 outside the plotting area) and drawing of legend.
 }
 \examples{
-
 oldmar = par("mar")
 
 draw_legend(

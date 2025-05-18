@@ -1388,6 +1388,12 @@ tinyplot.formula = function(
   ## placeholder for legend title
   legend_args = list(x = NULL)
 
+  ## turn facet into a formula if it does not evaluate successfully
+  if (inherits(try(facet, silent = TRUE), "try-error")) {
+    facet = as.formula(paste("~", deparse(substitute(facet))))
+    environment(facet) = environment(formula)
+  }
+
   ## process all formulas
   tf = tinyformula(formula, facet)
 

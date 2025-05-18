@@ -157,7 +157,7 @@
 #' @param ann a logical value indicating whether the default annotation (title
 #'   and x and y axis labels) should appear on the plot.
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
-#'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
+#'   and leads to a 'reversed axis'. The default value, NULL, indicates that
 #'   the range of the `finite` values to be plotted should be used.
 #' @param ylim the y limits of the plot.
 #' @param axes logical or character. Should axes be drawn (`TRUE` or `FALSE`)?
@@ -599,22 +599,16 @@ tinyplot.default = function(
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
 
-  # save for tinyplot_add()
-  if (!isTRUE(add)) {
-    calls = sys.calls()
-    idx = grep("^tinyplot", sapply(calls, function(k) k[[1]]))
-    if (length(idx) > 0) {
-      options(tinyplot_last_call = calls[[idx[1]]])
-    }
-  }
-
-  ## TODO: remove the global option above and move to this when density is refactored
-  # cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
-  # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
+  cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
+  assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
 
   dots = list(...)
 
-  if (isTRUE(add)) legend = FALSE
+  if (isTRUE(add)) {
+    cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
+    assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
+    legend = FALSE
+  }
   draw = substitute(draw)
 
 

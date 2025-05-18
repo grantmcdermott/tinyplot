@@ -23,8 +23,8 @@ draw_facet_window = function(
     nfacets, nfacet_cols, nfacet_rows,
     # axes args
     axes, flip, frame.plot, oxaxis, oyaxis,
-    xlabs, xlim, xlim_user, xaxt, xaxs, xaxl,
-    ylabs, ylim, ylim_user, yaxt, yaxs, yaxl,
+    xlabs, xlim, xlim_user, xaxt, xaxs, xaxb, xaxl,
+    ylabs, ylim, ylim_user, yaxt, yaxs, yaxb, yaxl,
     asp, log,
     # other args (in approx. alphabetical + group ordering)
     dots,
@@ -40,6 +40,10 @@ draw_facet_window = function(
   if (isTRUE(add)) {
     return(as.list(environment()))
   }
+  
+  # if breaks are provided use these (but only if x/ylabs are null)
+  if (!is.null(xaxb) && !is.null(xlabs)) xlabs = xaxb
+  if (!is.null(yaxb) && !is.null(ylabs)) ylabs = yaxb
   
   # draw background color only in the grid rectangle
   grid.bg = get_tpar("grid.bg")
@@ -269,6 +273,8 @@ draw_facet_window = function(
         lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1),
         lty = get_tpar(c("lty.yaxs", "lty.axis"), 1)
       )
+      if (!is.null(xaxb)) args_x$at = xaxb
+      if (!is.null(yaxb)) args_y$at = yaxb
       type_range_x = type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)
       type_range_y = !is.null(ylabs) && (type == "p" || (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "violin")))
       if (type_range_x) {
@@ -476,12 +482,18 @@ draw_facet_window = function(
         ## resort to using grid() which is likely better handled there.
         if (isTRUE(grid)) {
           gnx = gny = NULL
-          if (!any(c(par("xlog"), type == "boxplot"))) {
+          if (!is.null(xaxb)) {
+            abline(v = xaxb, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
+            gnx = NA
+          } else if (!any(c(par("xlog"), type == "boxplot"))) {
             xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
             abline(v = xg, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
             gnx = NA
           }
-          if (!any(c(par("ylog"), type == "boxplot"))) {
+          if (!is.null(yaxb)) {
+            abline(h = yaxb, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
+            gny = NA
+          } else if (!any(c(par("ylog"), type == "boxplot"))) {
             yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
             abline(h = yg, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
             gny = NA

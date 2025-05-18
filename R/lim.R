@@ -1,6 +1,6 @@
 # calculate limits of each plot
 
-lim_args = function(datapoints, xlim, ylim, type) {
+lim_args = function(datapoints, xlim, ylim, xaxb = NULL, yaxb = NULL, type) {
   
   xlim_user = ylim_user = TRUE
   if (is.null(xlim)) {
@@ -15,6 +15,9 @@ lim_args = function(datapoints, xlim, ylim, type) {
   if (identical(type, "boxplot")) {
     xlim = xlim + c(-0.5, 0.5)
   }
+  
+  if (!is.null(xaxb)) xlim = range(c(xlim, xaxb))
+  if (!is.null(yaxb)) ylim = range(c(ylim, yaxb))
 
   out = list(xlim = xlim, ylim = ylim)
   return(out)

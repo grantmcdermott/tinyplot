@@ -35,6 +35,8 @@ tinyplot(x, ...)
   yaxt = NULL,
   xaxs = NULL,
   yaxs = NULL,
+  xaxb = NULL,
+  yaxb = NULL,
   xaxl = NULL,
   yaxl = NULL,
   log = "",
@@ -294,15 +296,18 @@ respectively. See \code{axes} for the possible values.}
 used for the x-axis and y-axis, respectively. See
 \code{\link[graphics]{par}} for the possible values.}
 
+\item{xaxb, yaxb}{numeric vector (or character vector, if appropriate) giving
+the break points at which the axis tick-marks are to be drawn.}
+
 \item{xaxl, yaxl}{a function or a character keyword specifying the format of
 the x- or y-axis tick labels. Note that this is a post-processing step that
-affects the \emph{appearance} of the tick labels only; it does not affect the
-actual calculation or placement of the tick marks. In addition to
-user-supplied formatting functions (e.g., \code{\link{format}}, \code{\link{toupper}}, \code{\link{abs}},
-or other custom function), several convenience keywords (or their symbol
-equivalents) are available for common formatting transformations:
-\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
-(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}). See the
+affects the \emph{appearance} of the tick labels only; use in conjunction with
+\code{x/yaxb} if you would like to adjust the position of the tick marks too. In
+addition to user-supplied formatting functions (e.g., \code{\link{format}},
+\code{\link{toupper}}, \code{\link{abs}}, or other custom function), several convenience
+keywords (or their symbol equivalents) are available for common formatting
+transformations: \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}),
+\code{"dollar"} (\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}). See the
 \code{\link{tinylabel}} documentation for examples.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be

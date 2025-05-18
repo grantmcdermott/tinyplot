@@ -172,15 +172,17 @@
 #' @param xaxs,yaxs character specifying the style of the interval calculation
 #'   used for the x-axis and y-axis, respectively. See
 #'   \code{\link[graphics]{par}} for the possible values.
+#' @param xaxb,yaxb numeric vector (or character vector, if appropriate) giving
+#'   the break points at which the axis tick-marks are to be drawn.
 #' @param xaxl,yaxl a function or a character keyword specifying the format of
 #'   the x- or y-axis tick labels. Note that this is a post-processing step that
-#'   affects the _appearance_ of the tick labels only; it does not affect the
-#'   actual calculation or placement of the tick marks. In addition to
-#'   user-supplied formatting functions (e.g., [`format`], [`toupper`], [`abs`],
-#'   or other custom function), several convenience keywords (or their symbol
-#'   equivalents) are available for common formatting transformations:
-#'   `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`), `"dollar"`
-#'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`). See the
+#'   affects the _appearance_ of the tick labels only; use in conjunction with
+#'   `x/yaxb` if you would like to adjust the position of the tick marks too. In
+#'   addition to user-supplied formatting functions (e.g., [`format`],
+#'   [`toupper`], [`abs`], or other custom function), several convenience
+#'   keywords (or their symbol equivalents) are available for common formatting
+#'   transformations: `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`),
+#'   `"dollar"` (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`). See the
 #'   [`tinylabel`] documentation for examples.
 #' @param log a character string which contains `"x"` if the x axis is to be
 #'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
@@ -571,6 +573,8 @@ tinyplot.default = function(
     yaxt = NULL,
     xaxs = NULL,
     yaxs = NULL,
+    xaxb = NULL,
+    yaxb = NULL,
     xaxl = NULL,
     yaxl = NULL,
     log = "",
@@ -834,6 +838,9 @@ tinyplot.default = function(
       xaxs_cp = xaxs
       xaxs = yaxs
       yaxs = xaxs_cp
+      xaxb_cp = xaxb
+      xaxb = yaxb
+      yaxb = xaxb_cp
       xaxl_cp = xaxl
       xaxl = yaxl
       yaxl = xaxl_cp
@@ -852,7 +859,7 @@ tinyplot.default = function(
       datapoints[["xmax"]] = if (!is.null(datapoints[["ymax"]])) datapoints[["ymax"]] else NULL
       datapoints[["ymax"]] = if (!is.null(xmax_cp)) xmax_cp else NULL
       # clean up
-      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, xaxs_cp, xaxl_cp, x_cp, xmin_cp, xmax_cp)
+      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, xaxs_cp, xaxb_cp, xaxl_cp, x_cp, xmin_cp, xmax_cp)
     } else {
       # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
       # and just catch a few elements that we draw beforehand.
@@ -862,10 +869,25 @@ tinyplot.default = function(
       rm(xlab_cp)
     }
   }
-
-
+  
+  # For cases where x/yaxb is provided and corresponding x/ylabs is not null...
+  # We can subset these here to provide breaks
+  if (!is.null(xaxb) && !is.null(xlabs)) {
+    xlabs = xlabs[names(xlabs) %in% xaxb]
+    xaxb = NULL # don't need this any more
+  }
+  if (!is.null(yaxb) && !is.null(ylabs)) {
+    ylabs = ylabs[names(ylabs) %in% yaxb]
+    yaxb = NULL # don't need this any more
+  }
+  
   # plot limits
-  fargs = lim_args(datapoints = datapoints, xlim = xlim, ylim = ylim, type = type)
+  fargs = lim_args(
+    datapoints = datapoints,
+    xlim = xlim, ylim = ylim,
+    xaxb = xaxb, yaxb = yaxb,
+    type = type
+  )
   list2env(fargs, environment())
 
 
@@ -1154,8 +1176,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1178,8 +1200,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
       asp = asp, log = log,
       dots = dots,
       draw = draw,

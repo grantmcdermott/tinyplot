@@ -9,3 +9,10 @@ $sidebar-fg: #000022;
 $sidebar-hl: #f51459;
 $toc-color: #f51459;
 $toc-hl: #f51459;
+
+
+.nav-link:hover, .nav-link.active {
+	color: #fcb6cb !important;
+	border-bottom: 2px solid;
+	font-weight: bold;
+}

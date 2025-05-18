@@ -33,6 +33,11 @@ tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "\%")
 # log example (combined with axis scaling)
 tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log")
 
+# combine with `x/yaxb` to adjust the actual tick marks ("break points")
+# at the same time
+tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log",
+         xaxb = 10^c(1,3,5,7, 9))
+
 #
 ## custom function examples
 

@@ -1346,6 +1346,10 @@ tinyplot.formula = function(
     facet = NULL,
     facet.args = NULL,
     type = NULL,
+    xmin = NULL,
+    xmax = NULL,
+    ymin = NULL,
+    ymax = NULL,
     xlim = NULL,
     ylim = NULL,
     # log = "",
@@ -1389,7 +1393,7 @@ tinyplot.formula = function(
 
   ## set up model frame
   m = match.call(expand.dots = FALSE)
-  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
+  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels", "xmin", "xmax", "ymin", "ymax"), names(m), 0L))]
   m$formula = tf$full
   ## need stats:: for non-standard evaluation
   m[[1L]] = quote(stats::model.frame)
@@ -1459,6 +1463,10 @@ tinyplot.formula = function(
     facet = facet, facet.args = facet.args,
     data = data,
     type = type,
+    xmin = mf[["(xmin)"]],
+    xmax = mf[["(xmax)"]],
+    ymin = mf[["(ymin)"]],
+    ymax = mf[["(ymax)"]],
     xlim = xlim,
     ylim = ylim,
     # log = "",

@@ -21,9 +21,10 @@ is too light:
 
 ```{r}
 library(tinyplot)
-x = rnorm(1e6)
-y = x + rnorm(1e6)
-z = sample(c("a", "b"), 1e6, replace = TRUE)
+n = 50000
+x = rnorm(n)
+y = x + rnorm(n)
+z = sample(c("a", "b"), n, replace = TRUE)
 dat = data.frame(x, y, z)
 tinyplot(y ~ x | z, data = dat, alpha = .1, pch = 19)
 ```

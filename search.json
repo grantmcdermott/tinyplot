@@ -1016,7 +1016,7 @@
     "href": "vignettes/tips.html#legend",
     "title": "Tips & Tricks",
     "section": "Legend",
-    "text": "Legend\n\nOpacity (alpha)\nBy default, the legend inherits the opacity of the plotted elements. In some cases, this may be undesirable. For example, in the following plot, the legend is too light:\n\nlibrary(tinyplot)\nx = rnorm(1e6)\ny = x + rnorm(1e6)\nz = sample(c(\"a\", \"b\"), 1e6, replace = TRUE)\ndat = data.frame(x, y, z)\ntinyplot(y ~ x | z, data = dat, alpha = .1, pch = 19)\n\n\n\n\n\n\n\n\nOne solution is to draw our plot in two steps. First, we draw an empty plot with the desired (zero transparency) legend. Second, we add the transparent points on top of the existing canvas.\n\ntinyplot(y ~ x | z, data = dat, pch = 19, empty = TRUE)\ntinyplot_add(empty = FALSE, alpha = .1)"
+    "text": "Legend\n\nOpacity (alpha)\nBy default, the legend inherits the opacity of the plotted elements. In some cases, this may be undesirable. For example, in the following plot, the legend is too light:\n\nlibrary(tinyplot)\nn = 50000\nx = rnorm(n)\ny = x + rnorm(n)\nz = sample(c(\"a\", \"b\"), n, replace = TRUE)\ndat = data.frame(x, y, z)\ntinyplot(y ~ x | z, data = dat, alpha = .1, pch = 19)\n\n\n\n\n\n\n\n\nOne solution is to draw our plot in two steps. First, we draw an empty plot with the desired (zero transparency) legend. Second, we add the transparent points on top of the existing canvas.\n\ntinyplot(y ~ x | z, data = dat, pch = 19, empty = TRUE)\ntinyplot_add(empty = FALSE, alpha = .1)"
   },
   {
     "objectID": "vignettes/tips.html#labels",

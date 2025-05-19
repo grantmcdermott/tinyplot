@@ -86,6 +86,15 @@ f = function() plt(
 )
 expect_snapshot_plot(f, label = "xaxl_yaxl")
 
+# formatting axis breaks and tick labels at the same time
+f = function() plt(
+  I(decrease/100) ~ treatment, data = OrchardSprays,
+  xaxb = c("A", "C", "E", "G"), xaxl = tolower, 
+  yaxb = c(0, 0.2, 0.5, 1, 1.4), yaxl = "percent",
+  grid = TRUE
+)
+expect_snapshot_plot(f, label = "xaxb_yaxb_xaxl_yaxl")
+
 
 # saving files (here: png)
 if (requireNamespace("png", quietly = TRUE)) {

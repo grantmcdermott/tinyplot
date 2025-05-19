@@ -30,7 +30,7 @@ where the formatting is also better._
   `tinylabel` function documentation (#363, #391 @grantmcdermott)
 
 
-### Bugs fixes:
+### Bug fixes:
 
 - The `tinyplot(..., cex = <cex>)` argument should be respected when using
   `type = "b"`. Thanks to @rjknell for report #307 and @vincentarelbundock for

@@ -111,7 +111,7 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
 
         ## process y variable
         if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
-        if (!is.null(ylevels)) datapoints$y = factor(y, levels = if(is.numeric(ylevels)) levels(y)[ylevels] else ylevels)
+        # if (!is.null(ylevels)) datapoints$y = factor(datapoints$y, levels = if(is.numeric(ylevels)) levels(datapoints$y)[ylevels] else ylevels)
         if (is.null(ylim)) ylim = c(0, 1)
 
         ## adjust facet margins
@@ -119,12 +119,18 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
           facet.args[["fmar"]] = c(2, 2, 2, 2)
         }
         
+        x_by = identical(datapoints$x, datapoints$by)
+        y_by = identical(datapoints$y, datapoints$by)
+        
+        if (!is.null(ylevels)) {
+          datapoints$y = factor(datapoints$y, levels = if(is.numeric(ylevels)) levels(datapoints$y)[ylevels] else ylevels)
+          if (y_by) datapoints$by = datapoints$y
+        }
+        
         x.categorical = is.factor(datapoints$x)
         x = datapoints$x
         y = datapoints$y
         
-        x_by = identical(datapoints$x, datapoints$by)
-        y_by = identical(datapoints$y, datapoints$by)
         # if either x_by or y_by are TRUE, we'll only split by facets and then
         # use some simple logic to assign colouring on the backend
         if (isTRUE(x_by) || isTRUE(y_by)) {

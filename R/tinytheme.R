@@ -54,7 +54,6 @@
 #' @seealso [`tpar`] which does the heavy lifting under the hood.
 #'
 #' @examples
-#' 
 #' # Reusable plot function
 #' p = function() tinyplot(
 #'   lat ~ long | depth, data = quakes,

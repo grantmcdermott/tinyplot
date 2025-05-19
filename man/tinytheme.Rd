@@ -66,7 +66,6 @@ or main titles that contain "\\n").
 }
 }
 \examples{
-
 # Reusable plot function
 p = function() tinyplot(
   lat ~ long | depth, data = quakes,

@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 The base R aesthetic tends to divide option. Some people like the
 default minimalist look of base R plots and/or are happy to customize the (many)
 graphical parameters that are available to them. Others find base plots ugly
-and don't want to spend time endlessly tweaking different parameters. Similarly,
+and don't want to spend time endlessly tweaking different parameters. Moreover,
 the inherent "canvas" approach to drawing base R graphics, with fixed placement
 for plot elements, means that plots don't adjust dynamically and this can lead
 to awkward whitespace artifacts unless the user explicitly accounts for them.
@@ -63,6 +63,7 @@ tinyplot(
   I(Sepal.Width*1e5) ~ Sepal.Length | Species,
   facet = "by",
   data = iris,
+  yaxl = ",",  # use comma format for the y-axis labels
   main = "Title of the plot",
   sub = "The left-margin adjusts to accomodate the long y-axis labels"
 )

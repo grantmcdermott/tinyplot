@@ -39,8 +39,6 @@ arguments (\code{x}, \code{y}, etc.) are attached to your global R environment.)
 }
 
 \examples{
-library(tinyplot)
-
 tinyplot(Sepal.Width ~ Sepal.Length | Species,
   facet = ~Species,
   data = iris)

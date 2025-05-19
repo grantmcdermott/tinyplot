@@ -20,11 +20,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-The goal of this intro tutorial is to give you a sense of the main features and
-syntax of **tinyplot**, a lightweight extension of the base R graphics system.
-We don't try to cover everything, but you should come away with a good
-understanding of how the package works and how it can integrate with your own
-projects.
+**tinyplot** is a lightweight extension of the base R graphics system, designed
+to simplify and enhance data visualization. This tutorial provides a gentle
+introduction to the package's core features and syntax. We won’t cover
+everything, but you should come away with a solid understanding of how
+**tinyplot** works and how it can integrate with your own projects.
 
 We start this tutorial by loading the package and a slightly modified version
 of the `airquality` dataset that comes bundled with base R.
@@ -54,7 +54,7 @@ par(mfrow = c(1, 1)) # reset layout
 ```
 
 Similarly, we can plot elements from a data frame using either the atomic or
-formula methods. Here's a simple example using the `aq` dataset that we created
+formula methods. Here is a simple example using the `aq` dataset that we created
 earlier.
 
 ```{r tinyplot_simple}
@@ -178,7 +178,7 @@ as convenience strings.^[See the accompanying help pages of those two functions
 for more details on the available palettes, or read Zeileis & Murrell
 (2023, The R Journal, [doi:10.32614/RJ-2023-071](https://doi.org/10.32614/RJ-2023-071)).]
 Note that case-insensitive, partial matching for these convenience
-string is allowed. For example:
+strings is allowed. For example:
 
 ```{r palette_tableau}
 tinyplot(
@@ -194,7 +194,7 @@ example, if you have installed the **ggsci** package
 ([link](https://nanx.me/ggsci/index.html)) then you could use
 `palette = ggsci::pal_npg()` to generate a palette consistent with those used by
 the Nature Publishing Group.] You can also use the `alpha` argument to adjust
-the (alpha) transparency of your colours:
+the (alpha) transparency of your colours.
 
 ```{r}
 tinyplot(
@@ -220,11 +220,11 @@ palette("tableau")
 In all of the preceding plots, you will have noticed that we get an automatic
 legend. The legend position and look can be customized with the `legend`
 argument. At a minimum, you can pass the familiar legend position keywords as a
-convenience string ("topright", "bottom", "left", etc.). Moreover, a key feature
+convenience string (`"topright"`, `"bottom"`, etc.). Moreover, a key feature
 of `tinyplot` is that we can easily and elegantly place the legend _outside_ the
 plot area by adding a trailing "!" to these keywords. (As you may have realised,
-the default legend position is "right!".) Let's demonstrate by moving the legend
-to the left of the plot:
+the default legend position is `"right!"`.) Let's demonstrate by moving the
+legend to the left of the plot.
 
 ```{r legend_bottom}
 tinyplot(
@@ -235,12 +235,12 @@ tinyplot(
 ```
 
 Beyond the convenience of these positional keywords, the `legend` argument also
-permits additional customization by passing an appropriate function (or, a list
-of arguments that will be passed on to the standard `legend()` function
-internally.) So you can change or turn off the legend title, remove the bounding
-box, switch the direction of the legend text to horizontal, etc. Here's a
-grouped density plot example, where we also add some shading by specifying that
-the background colour should vary by groups too.
+permits additional customization in the form of a list of arguments, which will
+be passed on to the standard `legend()` function internally. So you can change
+or turn off the legend title, remove the bounding box, switch the direction of
+the legend text to horizontal, etc. Here is a grouped density plot example,
+where we also add some shading by specifying that the background colour should
+vary by groups too.
 
 ```{r density_topright}
 tinyplot(
@@ -263,10 +263,8 @@ tinyplot(Temp ~ Wind | Ozone, data = aq, pch = 19)
 
 Gradient legends (and plots) can be customized in an identical manner to
 discrete legends by adjusting the keyword positioning, palette choice, alpha
-transparency etc. Here is a quick adaptation of the previous plot to
-demonstrate. Note that here we pass a special convenience argument to
-`bg`/`fill`; if it detects a numeric in the range of `[0,1]`, then it
-automatically inherits the grouped colour mappings but with added transparency.
+transparency, etc. Here is a quick adaptation of the previous plot to
+demonstrate.
 
 ```{r legend_gradient2}
 tinyplot(
@@ -278,20 +276,23 @@ tinyplot(
 )
 ```
 
+As an aside, note that we passed a numeric convenience argument to `fill`
+(alias `bg`) above. Specifically, when `fill` is given as a numeric in the range
+of `[0,1]` then it automatically inherits the grouped colour mappings, but with
+corresponding alpha transparency.
+
 ## More plot types
 
-We have already seen several plot types above such as `"p"` (points), `"l"`
-(lines), and `"density"`. In general, **tinyplot** supports all of the primitive
-plot types/elements available in base R, as well as a number of additional plot
-types that can be a bit tedious to code up manually. You can see the full list
-of supported plot types by checking the
-[`?tinyplot`](https://grantmcdermott.com/tinyplot/man/tinyplot.html#arguments)
-documentation, or by taking a look at the dedicated [Plot Types](types.qmd)
-vignette on this website.
+We’ve already seen several plot types, such as `"p"` (points), `"l"` (lines),
+and `"density"`. In general, **tinyplot** supports all the primitive plot types
+and elements available in base R, along with a number of additional types that
+can be tedious to code manually. You can find the full list of in the dedicated
+[Plot Types](types.qmd) vignette. For the moment, we’ll content ourselves with
+a few illustrative examples.
 
-For example, **tinyplot** supports interval plots via the `"pointrange"`,
-`"errorbar"`, `"ribbon"`, and related type arguments. A canonical use-case is
-coefficient plots: 
+One such example is the family of "interval" plots provided by the
+`"pointrange"`,`"errorbar"`, `"ribbon"`, and related types. A canonical use-case
+is coefficient plots.
 
 ```{r pointrange, warning = FALSE}
 mod = lm(Temp ~ 0 + Month / Day, data = aq)
@@ -319,10 +320,10 @@ with(
 )
 ```
 
-**tinyplot** also supports special types to fit models and display their
-predictions, along with confidence intervals. Here is a somewhat silly example
-where we fit a linear model to predict temperature by day of month.^[The grouped
-setting here makes this visualization equivalent to
+Note that **tinyplot** also supports special types to fit models and display
+their predictions, along with confidence intervals. Here is a somewhat silly
+example where we fit a linear model to predict temperature by day of month.^[The
+grouped setting here makes this visualization equivalent to
 `predict(lm(Temp ~ 0 + Month / Day, data = aq), interval = "confidence")`.]
 
 ```{r ribbon_pred}
@@ -337,16 +338,17 @@ tinyplot(
 The default behaviour of these model types can be adjusted by passing
 appropriate arguments to the equivalent _functional_ version of the type in
 question. These functional types all follow a `type_<typename>` syntax, so that
-`"lm"` is paired with `type_lm()`, etc. Below we illustrate an adapted
-generalised linear model, where we passing the binomial
-[family](https://search.r-project.org/R/refmans/stats/html/family.html) argument
-and thus fit a logistic regression.
+`"lm"` is paired with `type_lm()`, etc. Below we illustrate with an adapted
+generalised linear model, where we fit a logistic regression passing explicitly
+passing the binomial
+[family](https://search.r-project.org/R/refmans/stats/html/family.html)
+argument.
 
 ```{r ribbon_pred_glm}
 tinyplot(
-  I(Temp > 80) ~ Wind, aq,
+  I(Temp > 75) ~ Wind, aq,
   type = type_glm(family = binomial),
-  main = "Logit model: Temps above 80 °F"
+  main = "Logit model: Temps above 75 °F"
 )
 ```
 
@@ -416,17 +418,17 @@ function, or as part of a dedicated `tinytheme()`. We will revisit this idea in
 the [Themes](#themes) section below.
 
 Finally, the `facet` argument also accepts a _two-sided_ formula for arranging
-facets in a fixed grid layout. Here's a simple (if contrived) example.
+facets in a fixed grid layout. Here is a simple (if contrived) example.
 
 ```{r facet_grid}
 tinyplot(
- Temp ~ Day, data = aq,
- facet = windy ~ hot,
- # the rest of these arguments are optional...
- facet.args = list(col = "white", bg = "black"),
- pch = 16, col = "dodgerblue",
- grid = TRUE, frame = FALSE, ylim = c(50, 100),
- main = "Daily temperatures vs. wind"
+  Temp ~ Day, data = aq,
+  facet = windy ~ hot,
+  # the rest of these arguments are optional...
+  facet.args = list(col = "white", bg = "black"),
+  pch = 16, col = "dodgerblue",
+  grid = TRUE, frame = FALSE, ylim = c(50, 100),
+  main = "Temps versus wind"
 )
 ```
 
@@ -442,11 +444,10 @@ rather than opening a new window. However, while this argument is useful, it can
 become verbose since it requires users to make very similar successive calls,
 with many shared arguments.
 
-For this reason, the **tinyplot** package provides a special
-`tinyplot_add()` convenience function for adding layers to
-an existing tinyplot. The idea is that users need simply pass the _specific_
-arguments that they want to add or modify relative to the base layer, and all
-arguments will be inherited from the original.
+For this reason, **tinyplot** provides a special `tinyplot_add()` convenience
+function for adding layers to an existing tinyplot. The idea is that users need
+simply pass the _specific_ arguments that they want to add or modify relative to
+the base layer; all others arguments will be inherited from the original call.
 
 An example may help to demonstrate. Here we first draw some faceted points with
 group colouring and various other aesthetic tweaks. Next, we add regression
@@ -510,7 +511,7 @@ drawing/annotating function. You can combine multiple drawing functions by
 wrapping them with curly brackets`{}`, and even pass `tinyplot()` back towards
 itself.
 
-Here's a slightly more complicated "spaghetti" plot example, where we pass
+Here is a slightly more complicated "spaghetti" plot example, where we pass
 multiple functions through `draw = {...}`, including drawing all of the
 lines in the background (of each facet) via a secondary `tinyplot()` call.
 
@@ -587,12 +588,15 @@ graphics parameters via `tpar()` and then using `file` to save a plot.
 
 ## Conclusion
 
-In summary, consider the **tinyplot** package if you are looking for base R `plot`
-functionality with added convenience features. You can use (nearly) the exact
-same syntax and all of your theme elements should carry over too. It has no
-dependencies other than base R itself and this should make it an attractive
-option for package developers, as well as situations where dependency management
-is expensive (e.g., production pipelines, continuous integration or an R
-application running in a browser via
-[WebAssembly](https://docs.r-wasm.org/webr/latest/)).
+The goal of this tutorial has been to give you a clear sense of how **tinyplot**
+works and what it offers. The take-home pitch is simple: you get to use the same
+syntax as base R `plot()`, but with the added benefit of _many_ additional plot
+types and user-friendly features. Finally, it's worth noting that **tinyplot**
+has no dependencies other than base R itself. We hope that this makes it an
+attractive and lightweight option for package developers (and regular R users!)
+who want to create convenient, sophisticated plots with minimal overhead.
 
+Believe it or not, there's still plenty of **tinyplot** functionality that we
+didn't cover here. If you’d like to keep exploring, we recommend continuing with
+the [Plot types](types.qmd) and [Themes](themes.qmd) vignettes. Happy
+tinyplotting!

@@ -29,7 +29,8 @@ where the formatting is also better._
   `tinyplot(..., yaxl = "%")`, etc. More details are provided in the lower-level
   `tinylabel` function documentation (#363, #391 @grantmcdermott)
 
-### Bugs fixes:
+
+### Bug fixes:
 
 - The `tinyplot(..., cex = <cex>)` argument should be respected when using
   `type = "b"`. Thanks to @rjknell for report #307 and @vincentarelbundock for
@@ -69,6 +70,12 @@ where the formatting is also better._
   (#381 @vincentarelbundock)
 - Improved website theme and navigation layout, especially on mobile.
   (#395 @zeileis)
+
+### Misc:
+
+- Simplify specification of `xmin`/`xmax`/`ymin`/`ymax` in formula method.
+  The arguments are now processed along with the `model.frame()` so that
+  `ymin = var` works if `var` is a variable in the `data`.
 
 ### Internals:
 

@@ -17,7 +17,8 @@
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   `"rect"` or `"segments"` (where all four min-max coordinates are required),
 #'   or `"pointrange"`, `"errorbar"`, or `"ribbon"` (where only `ymin` and
-#'   `ymax` required alongside `x`).
+#'   `ymax` required alongside `x`). In the formula method the arguments
+#'   can be specified as `ymin = var` if `var` is a variable in `data`.
 #' @param by grouping variable(s). The default behaviour is for groups to be
 #'   represented in the form of distinct colours, which will also trigger an
 #'   automatic legend. (See `legend` below for customization options.) However,
@@ -1346,6 +1347,10 @@ tinyplot.formula = function(
     facet = NULL,
     facet.args = NULL,
     type = NULL,
+    xmin = NULL,
+    xmax = NULL,
+    ymin = NULL,
+    ymax = NULL,
     xlim = NULL,
     ylim = NULL,
     # log = "",
@@ -1384,12 +1389,18 @@ tinyplot.formula = function(
   ## placeholder for legend title
   legend_args = list(x = NULL)
 
+  ## turn facet into a formula if it does not evaluate successfully
+  if (inherits(try(facet, silent = TRUE), "try-error")) {
+    facet = as.formula(paste("~", deparse(substitute(facet))))
+    environment(facet) = environment(formula)
+  }
+
   ## process all formulas
   tf = tinyformula(formula, facet)
 
   ## set up model frame
   m = match.call(expand.dots = FALSE)
-  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels"), names(m), 0L))]
+  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels", "xmin", "xmax", "ymin", "ymax"), names(m), 0L))]
   m$formula = tf$full
   ## need stats:: for non-standard evaluation
   m[[1L]] = quote(stats::model.frame)
@@ -1459,6 +1470,10 @@ tinyplot.formula = function(
     facet = facet, facet.args = facet.args,
     data = data,
     type = type,
+    xmin = mf[["(xmin)"]],
+    xmax = mf[["(xmax)"]],
+    ymin = mf[["(ymin)"]],
+    ymax = mf[["(ymax)"]],
     xlim = xlim,
     ylim = ylim,
     # log = "",

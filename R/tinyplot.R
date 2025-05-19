@@ -17,7 +17,8 @@
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   `"rect"` or `"segments"` (where all four min-max coordinates are required),
 #'   or `"pointrange"`, `"errorbar"`, or `"ribbon"` (where only `ymin` and
-#'   `ymax` required alongside `x`).
+#'   `ymax` required alongside `x`). In the formula method the arguments
+#'   can be specified as `ymin = var` if `var` is a variable in `data`.
 #' @param by grouping variable(s). The default behaviour is for groups to be
 #'   represented in the form of distinct colours, which will also trigger an
 #'   automatic legend. (See `legend` below for customization options.) However,

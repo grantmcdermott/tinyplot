@@ -116,7 +116,8 @@ All remaining arguments from \code{...} can be further graphical parameters, see
 or interval plot types. Only used when the \code{type} argument is one of
 \code{"rect"} or \code{"segments"} (where all four min-max coordinates are required),
 or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{ymin} and
-\code{ymax} required alongside \code{x}).}
+\code{ymax} required alongside \code{x}). In the formula method the arguments
+can be specified as \code{ymin = var} if \code{var} is a variable in \code{data}.}
 
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an

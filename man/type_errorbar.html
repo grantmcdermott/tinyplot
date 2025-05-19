@@ -564,10 +564,7 @@ length of the edges of the arrow head (in inches).
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>op <span class="ot">=</span> <span class="fu">tpar</span>(<span class="at">pch =</span> <span class="dv">19</span>)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># "errorbar" and "pointrange" type convenience strings</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  coefs,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(<span class="at">x =</span> term, <span class="at">y =</span> est, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">type =</span> <span class="st">"errorbar"</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(est <span class="sc">~</span> term, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">data =</span> coefs, <span class="at">type =</span> <span class="st">"errorbar"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -575,10 +572,7 @@ length of the edges of the arrow head (in inches).
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  coefs,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(<span class="at">x =</span> term, <span class="at">y =</span> est, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">type =</span> <span class="st">"pointrange"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(est <span class="sc">~</span> term, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">data =</span> coefs, <span class="at">type =</span> <span class="st">"pointrange"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -587,10 +581,7 @@ length of the edges of the arrow head (in inches).
 </div>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use `type_errorbar()` to pass extra arguments for customization</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  coefs,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(<span class="at">x =</span> term, <span class="at">y =</span> est, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">type =</span> <span class="fu">type_errorbar</span>(<span class="at">length =</span> <span class="fl">0.2</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(est <span class="sc">~</span> term, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">data =</span> coefs, <span class="at">type =</span> <span class="fu">type_errorbar</span>(<span class="at">length =</span> <span class="fl">0.2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

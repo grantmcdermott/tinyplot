@@ -597,6 +597,10 @@ tinyplot(
   facet = NULL,
   facet.args = NULL,
   type = NULL,
+  xmin = NULL,
+  xmax = NULL,
+  ymin = NULL,
+  ymax = NULL,
   xlim = NULL,
   ylim = NULL,
   main = NULL,
@@ -650,7 +654,7 @@ other graphical parameters. If <code>type</code> is a character specification (s
 <code id="xmin">xmin</code>, <code id="xmax">xmax</code>, <code id="ymin">ymin</code>, <code id="ymax">ymax</code>
 </td>
 <td>
-minimum and maximum coordinates of relevant area or interval plot types. Only used when the <code>type</code> argument is one of <code>“rect”</code> or <code>“segments”</code> (where all four min-max coordinates are required), or <code>“pointrange”</code>, <code>“errorbar”</code>, or <code>“ribbon”</code> (where only <code>ymin</code> and <code>ymax</code> required alongside <code>x</code>).
+minimum and maximum coordinates of relevant area or interval plot types. Only used when the <code>type</code> argument is one of <code>“rect”</code> or <code>“segments”</code> (where all four min-max coordinates are required), or <code>“pointrange”</code>, <code>“errorbar”</code>, or <code>“ribbon”</code> (where only <code>ymin</code> and <code>ymax</code> required alongside <code>x</code>). In the formula method the arguments can be specified as <code>ymin = var</code> if <code>var</code> is a variable in <code>data</code>.
 </td>
 </tr>
 <tr>

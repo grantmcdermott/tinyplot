@@ -188,16 +188,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#dev-version" id="toc-dev-version" class="nav-link" data-scroll-target="#dev-version">0.3.0.99 (dev version)</a>
   <ul class="collapse">
   <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features:</a></li>
-  <li><a href="#bugs-fixes" id="toc-bugs-fixes" class="nav-link" data-scroll-target="#bugs-fixes">Bugs fixes:</a></li>
+  <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes:</a></li>
   <li><a href="#website" id="toc-website" class="nav-link" data-scroll-target="#website">Website:</a></li>
+  <li><a href="#misc" id="toc-misc" class="nav-link" data-scroll-target="#misc">Misc:</a></li>
   <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals">Internals:</a></li>
   </ul></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.3.0</a>
   <ul class="collapse">
   <li><a href="#new-features-1" id="toc-new-features-1" class="nav-link" data-scroll-target="#new-features-1">New features</a></li>
   <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
-  <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
-  <li><a href="#misc" id="toc-misc" class="nav-link" data-scroll-target="#misc">Misc</a></li>
+  <li><a href="#bug-fixes-1" id="toc-bug-fixes-1" class="nav-link" data-scroll-target="#bug-fixes-1">Bug fixes</a></li>
+  <li><a href="#misc-1" id="toc-misc-1" class="nav-link" data-scroll-target="#misc-1">Misc</a></li>
   </ul></li>
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.2.1</a></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.2.0</a></li>
@@ -240,8 +241,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="bugs-fixes" class="level3">
-<h3 class="anchored" data-anchor-id="bugs-fixes">Bugs fixes:</h3>
+<section id="bug-fixes" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes:</h3>
 <ul>
 <li>The <code>tinyplot(..., cex = &lt;cex&gt;)</code> argument should be respected when using <code>type = "b"</code>. Thanks to <a href="https://github.com/rjknell"><span class="citation" data-cites="rjknell">@rjknell</span></a> for report <a href="https://github.com/grantmcdermott/tinyplot/issues/307">#307</a> and <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> for the fix.</li>
 <li>The <code>tinyplot(..., lwd = &lt;lwd&gt;)</code> argument is now correctly passed down to <code>pt.lwd</code> for type <code>"p"</code>, which sets proper line weight for the border of <code>pch</code> symbols in legend. Report in <a href="https://github.com/grantmcdermott/tinyplot/issues/319">#319</a> and fix in <a href="https://github.com/grantmcdermott/tinyplot/issues/320">#320</a> by <a href="https://github.com/kscott-1"><span class="citation" data-cites="kscott-1">@kscott-1</span></a>.</li>
@@ -266,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Improved column spacing of Arguments in the References section of the website. (<a href="https://github.com/grantmcdermott/tinyplot/issues/328">#328</a> thanks to <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a>’s upstream <code>altdoc</code> fix)</li>
 <li>Added a new “Ticks &amp; tips” vignette for non-standard workarounds. (<a href="https://github.com/grantmcdermott/tinyplot/issues/381">#381</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li>Improved website theme and navigation layout, especially on mobile. (<a href="https://github.com/grantmcdermott/tinyplot/issues/395">#395</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+</ul>
+</section>
+<section id="misc" class="level3">
+<h3 class="anchored" data-anchor-id="misc">Misc:</h3>
+<ul>
+<li>Simplify specification of <code>xmin</code>/<code>xmax</code>/<code>ymin</code>/<code>ymax</code> in formula method. The arguments are now processed along with the <code>model.frame()</code> so that <code>ymin = var</code> works if <code>var</code> is a variable in the <code>data</code>.</li>
 </ul>
 </section>
 <section id="internals" class="level3">
@@ -367,8 +374,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 </section>
-<section id="bug-fixes" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
+<section id="bug-fixes-1" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-1">Bug fixes</h3>
 <ul>
 <li>Better preserve facet attributes, thus avoiding misarrangement of facet grids for density and histogram types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/209">#209</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 <li>Plots of the form <code>plt(numeric ~ character)</code> now work correctly, with the character variable automatically being coerced to a factor. (<a href="https://github.com/grantmcdermott/tinyplot/issues/219">#219</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
@@ -379,8 +386,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Free axis scaling now works properly for faceted histograms. The new <code>type_histogram(free.breaks = &lt;logical&gt;, drop.zeros = &lt;logical&gt;)</code> arguments enable fine-grained control over this behaviour. (<a href="https://github.com/grantmcdermott/tinyplot/issues/228">#228</a> <a href="https://github.com/eleuven"><span class="citation" data-cites="eleuven">@eleuven</span></a> and <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="misc" class="level3">
-<h3 class="anchored" data-anchor-id="misc">Misc</h3>
+<section id="misc-1" class="level3">
+<h3 class="anchored" data-anchor-id="misc-1">Misc</h3>
 <ul>
 <li>Continued modularization/abstraction of the code logic. (<a href="https://github.com/grantmcdermott/tinyplot/issues/214">#214</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 <li>Major internal refactor of the type drawing and data processing. (<a href="https://github.com/grantmcdermott/tinyplot/issues/222">#222</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>

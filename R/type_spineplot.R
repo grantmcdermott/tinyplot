@@ -72,7 +72,10 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
     fun = function(
       datapoints,
       by = NULL, col = NULL, bg = NULL, palette = NULL,
-      facet = NULL, facet.args = NULL, xlim = NULL, ylim = NULL, axes = TRUE, xaxt = NULL, yaxt = NULL, null_by, null_facet,
+      facet = NULL, facet.args = NULL,
+      xlim = NULL, ylim = NULL,
+      axes = TRUE, xaxt = NULL, yaxt = NULL, xaxb = NULL, yaxb = NULL,
+      null_by, null_facet, 
       ...
     ) {
       
@@ -86,16 +89,16 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
         datapoints$weights = weights
         
         ## process x variable
-        if(is.factor(datapoints$x)) {
+        if (is.factor(datapoints$x)) {
             breaks = NULL
             off = if(is.null(off)) 0.02 else off/100
             if (is.null(xlim)) xlim = c(0, 1 + (nlevels(datapoints$x) - 1L) * off)
         } else {
             off = 0
             if (is.null(xlim)) xlim = c(0, 1)
-    	    x = as.numeric(datapoints$x)
+    	      x = as.numeric(datapoints$x)
             if (is.null(breaks)) {
-                breaks = if(is.null(weights)) nclass.Sturges(x) else ceiling(log2(sum(weights)) + 1)
+              breaks = if (!is.null(xaxb)) xaxb else if (is.null(weights)) nclass.Sturges(x) else ceiling(log2(sum(weights)) + 1)
 	    }
             breaks = as.numeric(breaks)
             if (length(breaks) == 1L) {
@@ -202,6 +205,12 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
       
         ## axis labels
         yaxlabels = if(is.null(yaxlabels)) levels(y) else rep_len(yaxlabels, ny)
+        if (!is.null(yaxb)) {
+          # yaxlabels = yaxlabels[yaxlabels %in% yaxb]
+          ## rather use the "" assignment workaround below, since otherwise we 
+          ## get a mismatch between the label names and ticks 
+          yaxlabels[!(yaxlabels %in% yaxb)] = ""
+        }
         if(x.categorical) {
           xaxlabels = if(is.null(xaxlabels)) {
             levels(x)

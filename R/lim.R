@@ -21,8 +21,8 @@ lim_args = function(
     xlim = xlim + c(-0.5, 0.5)
   }
   
-  if (!xlim_user && !is.null(xaxb)) xlim = range(c(xlim, xaxb))
-  if (!ylim_user && !is.null(yaxb)) ylim = range(c(ylim, yaxb))
+  if (!xlim_user && !is.null(xaxb) && type != "spineplot") xlim = range(c(xlim, xaxb))
+  if (!ylim_user && !is.null(yaxb) && type != "spineplot") ylim = range(c(ylim, yaxb))
 
   out = list(xlim = xlim, ylim = ylim)
   return(out)

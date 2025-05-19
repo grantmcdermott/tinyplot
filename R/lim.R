@@ -1,8 +1,13 @@
 # calculate limits of each plot
 
-lim_args = function(datapoints, xlim, ylim, xaxb = NULL, yaxb = NULL, type) {
+lim_args = function(
+    datapoints,
+    xlim, ylim,
+    xaxb = NULL, yaxb = NULL,
+    xlim_user = FALSE, ylim_user = FALSE,
+    type
+) {
   
-  xlim_user = ylim_user = TRUE
   if (is.null(xlim)) {
     xlim = range(c(datapoints[["x"]], datapoints[["xmin"]],
                    datapoints[["xmax"]]), finite = TRUE)
@@ -16,8 +21,8 @@ lim_args = function(datapoints, xlim, ylim, xaxb = NULL, yaxb = NULL, type) {
     xlim = xlim + c(-0.5, 0.5)
   }
   
-  if (!is.null(xaxb)) xlim = range(c(xlim, xaxb))
-  if (!is.null(yaxb)) ylim = range(c(ylim, yaxb))
+  if (!xlim_user && !is.null(xaxb)) xlim = range(c(xlim, xaxb))
+  if (!ylim_user && !is.null(yaxb)) ylim = range(c(ylim, yaxb))
 
   out = list(xlim = xlim, ylim = ylim)
   return(out)

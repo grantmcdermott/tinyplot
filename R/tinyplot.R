@@ -173,7 +173,9 @@
 #'   used for the x-axis and y-axis, respectively. See
 #'   \code{\link[graphics]{par}} for the possible values.
 #' @param xaxb,yaxb numeric vector (or character vector, if appropriate) giving
-#'   the break points at which the axis tick-marks are to be drawn.
+#'   the break points at which the axis tick-marks are to be drawn. Break points
+#'   outside the range of the data will be ignored if the associated axis
+#'   variable is categorical, or an explicit `x/ylim` range is given.
 #' @param xaxl,yaxl a function or a character keyword specifying the format of
 #'   the x- or y-axis tick labels. Note that this is a post-processing step that
 #'   affects the _appearance_ of the tick labels only; use in conjunction with
@@ -886,6 +888,7 @@ tinyplot.default = function(
     datapoints = datapoints,
     xlim = xlim, ylim = ylim,
     xaxb = xaxb, yaxb = yaxb,
+    xlim_user = xlim_user, ylim_user = ylim_user,
     type = type
   )
   list2env(fargs, environment())

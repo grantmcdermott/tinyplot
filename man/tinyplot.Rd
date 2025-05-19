@@ -297,7 +297,9 @@ used for the x-axis and y-axis, respectively. See
 \code{\link[graphics]{par}} for the possible values.}
 
 \item{xaxb, yaxb}{numeric vector (or character vector, if appropriate) giving
-the break points at which the axis tick-marks are to be drawn.}
+the break points at which the axis tick-marks are to be drawn. Break points
+outside the range of the data will be ignored if the associated axis
+variable is categorical, or an explicit \code{x/ylim} range is given.}
 
 \item{xaxl, yaxl}{a function or a character keyword specifying the format of
 the x- or y-axis tick labels. Note that this is a post-processing step that

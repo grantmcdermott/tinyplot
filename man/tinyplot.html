@@ -564,6 +564,8 @@ tinyplot(
   yaxt = NULL,
   xaxs = NULL,
   yaxs = NULL,
+  xaxb = NULL,
+  yaxb = NULL,
   xaxl = NULL,
   yaxl = NULL,
   log = "",
@@ -975,10 +977,18 @@ character specifying the style of the interval calculation used for the x-axis a
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="xaxb">xaxb</code>, <code id="yaxb">yaxb</code>
+</td>
+<td>
+numeric vector (or character vector, if appropriate) giving the break points at which the axis tick-marks are to be drawn. Break points outside the range of the data will be ignored if the associated axis variable is categorical, or an explicit <code>x/ylim</code> range is given.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="xaxl">xaxl</code>, <code id="yaxl">yaxl</code>
 </td>
 <td>
-a function or a character keyword specifying the format of the x- or y-axis tick labels. Note that this is a post-processing step that affects the <em>appearance</em> of the tick labels only; it does not affect the actual calculation or placement of the tick marks. In addition to user-supplied formatting functions (e.g., <code>format</code>, <code>toupper</code>, <code>abs</code>, or other custom function), several convenience keywords (or their symbol equivalents) are available for common formatting transformations: <code>“percent”</code> (<code>“%”</code>), <code>“comma”</code> (<code>“,”</code>), <code>“log”</code> (<code>“l”</code>), <code>“dollar”</code> (<code>“$”</code>), <code>“euro”</code> (<code>“€”</code>), or <code>“sterling”</code> (<code>“£”</code>). See the <code>tinylabel</code> documentation for examples.
+a function or a character keyword specifying the format of the x- or y-axis tick labels. Note that this is a post-processing step that affects the <em>appearance</em> of the tick labels only; use in conjunction with <code>x/yaxb</code> if you would like to adjust the position of the tick marks too. In addition to user-supplied formatting functions (e.g., <code>format</code>, <code>toupper</code>, <code>abs</code>, or other custom function), several convenience keywords (or their symbol equivalents) are available for common formatting transformations: <code>“percent”</code> (<code>“%”</code>), <code>“comma”</code> (<code>“,”</code>), <code>“log”</code> (<code>“l”</code>), <code>“dollar”</code> (<code>“$”</code>), <code>“euro”</code> (<code>“€”</code>), or <code>“sterling”</code> (<code>“£”</code>). See the <code>tinylabel</code> documentation for examples.
 </td>
 </tr>
 <tr>

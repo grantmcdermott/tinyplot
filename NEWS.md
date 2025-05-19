@@ -32,7 +32,10 @@ where the formatting is also better._
     `tinyplot(..., yaxl = "%")`, etc. (#363, #391 @grantmcdermott)
     
   The `x/yaxb` and `x/yaxl` arguments can be used in complementary fashion; see
-  the new (lower-level) `tinylabel` function documentation for examples.
+  the new (lower-level) `tinylabel` function documentation. For example:
+  ```r
+  tinyplot((0:10)/10, yaxl = "%", yaxb = c(.17, .33, .5, .67, .83))
+  ```
 
 ### Bugs fixes:
 

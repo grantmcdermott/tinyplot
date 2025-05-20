@@ -696,6 +696,11 @@ tinyplot.default = function(
 
   # catch for adding to existing facet plot
   if (!is.null(facet) && add) {
+    if (Sys.getenv("POSITRON") == 1) warning(
+      "Positron IDE detected.\n",
+      "Adding layers to a faceted tinyplot in Positron leads to known alignment errors. Please see:\n",
+      "https://github.com/posit-dev/positron/issues/7316"
+    )
     par(get_saved_par(when = "after"))
   }
 

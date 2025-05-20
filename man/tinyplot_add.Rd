@@ -28,9 +28,9 @@ layer on top of the existing plot. \code{plt_add()} is a shorthand alias for
 
 \itemize{
 \item \code{tinyplot_add()} works reliably only when adding to a plot originally
-created using the \link{tinyplot.formula} method with a valid \code{data} argument.
+created using the \code{\link{tinyplot.formula}} method with a valid \code{data} argument.
 We cannot guarantee correct behavior if the original plot was created with
-the atomic \link{tinyplot.default} method, due to potential environment
+the atomic \code{\link{tinyplot.default}} method, due to potential environment
 mismatches. (An exception is when the original plot arguments---\code{x}, \code{y},
 etc.---are located in the global environment.)
 \item There are two important limitations when adding layers to \emph{faceted} plots:
@@ -44,7 +44,7 @@ always fine, though. See:
 \item On Positron, specifically, alignment issues may occur even without
 resizing. A warning will be triggered when (i) Positron is detected and
 (ii) a user attempts to add layers to a faceted plot. Again, this issue
-is not present for non-facated plots. See the upstream bug report:
+is not present for non-faceted plots. See the upstream bug report:
 \url{https://github.com/posit-dev/positron/issues/7316}
 }
 \item Automatic legends for the added elements will be turned off.

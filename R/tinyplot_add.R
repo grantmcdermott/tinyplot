@@ -9,9 +9,9 @@
 #'
 #' @section Limitations:
 #' - `tinyplot_add()` works reliably only when adding to a plot originally
-#'   created using the [tinyplot.formula] method with a valid `data` argument.
+#'   created using the [`tinyplot.formula`] method with a valid `data` argument.
 #'   We cannot guarantee correct behavior if the original plot was created with
-#'   the atomic [tinyplot.default] method, due to potential environment
+#'   the atomic [`tinyplot.default`] method, due to potential environment
 #'   mismatches. (An exception is when the original plot arguments---`x`, `y`,
 #'   etc.---are located in the global environment.)
 #'
@@ -27,7 +27,7 @@
 #'   - On Positron, specifically, alignment issues may occur even without
 #'     resizing. A warning will be triggered when (i) Positron is detected and
 #'     (ii) a user attempts to add layers to a faceted plot. Again, this issue
-#'     is not present for non-facated plots. See the upstream bug report:
+#'     is not present for non-faceted plots. See the upstream bug report:
 #'     <https://github.com/posit-dev/positron/issues/7316>
 #' 
 #' - Automatic legends for the added elements will be turned off.

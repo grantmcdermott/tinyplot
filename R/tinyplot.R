@@ -606,22 +606,23 @@ tinyplot.default = function(
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
 
+  assert_logical(add)
+  
   # save for tinyplot_add()
-  if (!isTRUE(add)) {
+  if (!add) {
     calls = sys.calls()
     idx = grep("^tinyplot", sapply(calls, function(k) k[[1]]))
     if (length(idx) > 0) {
       options(tinyplot_last_call = calls[[idx[1]]])
     }
+    ## TODO: remove the global option above and move to this when density is refactored
+    # cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
+    # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
   }
-
-  ## TODO: remove the global option above and move to this when density is refactored
-  # cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
-  # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
 
   dots = list(...)
 
-  if (isTRUE(add)) legend = FALSE
+  if (add) legend = FALSE
   draw = substitute(draw)
 
 
@@ -694,7 +695,12 @@ tinyplot.default = function(
   set_saved_par(when = "before", opar)
 
   # catch for adding to existing facet plot
-  if (!is.null(facet) && isTRUE(add)) {
+  if (!is.null(facet) && add) {
+    if (Sys.getenv("POSITRON") == 1) warning(
+      "Positron IDE detected.\n",
+      "Adding layers to a faceted tinyplot in Positron leads to known alignment errors. Please see:\n",
+      "https://github.com/posit-dev/positron/issues/7316"
+    )
     par(get_saved_par(when = "after"))
   }
 
@@ -989,7 +995,7 @@ tinyplot.default = function(
     }
   }
 
-  if ((is.null(legend) || legend != "none") && isFALSE(add)) {
+  if ((is.null(legend) || legend != "none") && !add) {
     if (isFALSE(by_continuous)) {
       if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
@@ -1022,7 +1028,7 @@ tinyplot.default = function(
     )
 
     has_legend = TRUE
-  } else if (legend_args[["x"]] == "none" && isFALSE(add)) {
+  } else if (legend_args[["x"]] == "none" && !add) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1
@@ -1052,7 +1058,7 @@ tinyplot.default = function(
   }
 
   # Titles. Only draw these if add = FALSE
-  if (isFALSE(add)) {
+  if (!add) {
     # main title
     # Note that we include a special catch for the main title if legend is
     # "top!" (and main is specified in the first place).
@@ -1133,7 +1139,7 @@ tinyplot.default = function(
   # placeholders for facet_window_args() call
   facet_newlines = facet_text = facet_rect = facet_font = facet_col = facet_bg = facet_border = NULL
 
-  if (!is.null(facet) && isFALSE(add)) {
+  if (!is.null(facet) && !add) {
     if (is.null(omar)) omar = par("mar")
 
     # Grab some of the customizable facet args that we'll be using later
@@ -1356,9 +1362,11 @@ tinyplot.default = function(
     }
   }
   
-  # save end pars for possible recall later
-  apar = par(no.readonly = TRUE)
-  set_saved_par(when = "after", apar)
+  if (!add) {
+    # save end pars for possible recall later
+    apar = par(no.readonly = TRUE)
+    set_saved_par(when = "after", apar)
+  }
 
 }
 

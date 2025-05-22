@@ -1,62 +1,122 @@
 by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL, alpha = NULL) {
-  if (is.null(ordered)) ordered = FALSE
   if (is.null(alpha)) alpha = 1
+  if (is.null(ordered)) ordered = FALSE
   if (is.null(gradient)) gradient = FALSE
-  if (isTRUE(gradient)) {
+  assert_logical(ordered)
+  assert_logical(gradient)
+  if (gradient) {
     ngrps = 100L
   }
-
-  if (is.null(palette)) {
-    pal_qual = get_tpar("palette.qualitative", default = NULL)
-    if (ngrps <= max(c(length(pal_qual), 8))) {
-      palette = pal_qual
-    } else {
-      palette = get_tpar("palette.sequential", default = NULL)
-    }
-  }
+  
+  # pal_qual = get_tpar("palette.qualitative", default = NULL)
+  pal_theme = get_tpar("palette.qualitative", default = NULL)
+  theme_flag = !is.null(pal_theme)
 
   # palette = substitute(palette, env = parent.env(environment()))
 
   # special "by" convenience keyword (will treat as NULL & handle grouping below)
   if (!anyNA(col) && !is.null(col) && length(col) == 1 && col == "by") col = NULL
 
-  if (is.null(col) && is.null(palette)) {
-    col = seq_len(ngrps)
+  #
+  ## Base case: If no color or palette provided, pass colors as a sequence of
+  ## numbers (will inherit from / cycle over the user's default palette)
+  
+  if (is.null(col) && (is.null(palette) && !theme_flag)) {
+    if (ngrps <= length(palette())  && !ordered) {
+      col = palette()[seq_len(ngrps)]
+      if (alpha) col = adjustcolor(col, alpha.f = alpha)
+    } else {
+      # fallback to restricted viridis palette
+      col = colorRampPalette(
+        hcl.colors(n = 100, palette = "Viridis", alpha = alpha)[(100 * 0.1 + 1):(100 * 0.9)],
+        alpha = TRUE
+      )(ngrps)
+    }
+    if (gradient || ordered) col = rev(col)
+    return(col)
   }
+
+  #
+  ## Next simplest case: No palette, but color(s) provided directly. We do
+  ## some simple sanity checks, apply alpha transparency and return as-is.
 
   if (is.atomic(col) && is.vector(col)) {
     if (length(col) == 1) {
       col = rep(col, ngrps)
-    } else if (length(col) != ngrps) {
-      if (isFALSE(gradient)) {
-        stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
-      } else {
-        # interpolate gradient colors
+      if (alpha) col = adjustcolor(col, alpha.f = alpha)
+      return(col)
+    } else if (length(col) < ngrps) {
+      # if (!gradient) {
+      #   stop(sprintf("`col` must be of length 1, or greater than or equal to %s.", ngrps), call. = FALSE)
+      # } else {
+      #   # interpolate gradient colors
+      #   col = colorRampPalette(colors = col, alpha = TRUE)(ngrps)
+      # }
+      # if manual colours < ngrps, either (1) interpolate for gradient
+      # colors, or (2) recycle for discrete colours
+      if (gradient) {
         col = colorRampPalette(colors = col, alpha = TRUE)(ngrps)
+      } else {
+        ncolsstr = paste0("(", length(col), ")")
+        ngrpsstr = paste0("(", ngrps, ")")
+        warning(
+          "\nFewer colours ", ncolsstr, " provided than than there are groups ",
+          ngrpsstr, ". Recycling to make up the shortfall."
+        )
+        col = rep(col, length.out = ngrps)
       }
+  
     }
-    if (isTRUE(gradient)) {
+    if (gradient) {
       col = rev(col)
     } else if (!ordered && is.numeric(col)) {
-      col = palette()[col]
+      # col = palette()[col]
+      if (ngrps <= length(palette())) {
+        col = palette()[col]
+        # if (alpha) col = adjustcolor(col, alpha.f = alpha)
+      } else {
+        col = hcl.colors(max(col), alpha = alpha)[col]
+      }
     }
     if (anyNA(col) || is.character(col)) {
       if (alpha) col = adjustcolor(col, alpha.f = alpha)
       return(col)
     }
   }
+  
+  
+  #
+  ## Theme case: No palette provided, but fallback to tinytheme palette
 
+  # we need to fix palette string, determine if in palette.pals() and then
+  # determine no. of groups, before kicking over to sequential
+  if (is.null(palette) && theme_flag) {
+    if (length(pal_theme) == 1) {
+      qual_match = match_pal(pal_theme, palette.pals())
+      if (!is.na(qual_match)) {
+        if (ngrps >= get_pal_lens(pal_theme) || ordered) {
+          pal_theme = get_tpar("palette.sequential", default = NULL)
+        }
+      }
+    }
+    if (length(pal_theme) == 1) {
+      palette_fun = gen_pal_fun(pal = pal_theme, gradient = gradient, alpha = alpha)
+      args = list(n = ngrps, palette = pal_theme, alpha = alpha)
+    }
+    palette = pal_theme
+  }
+  
   if (is.null(palette)) {
-    if (ngrps <= length(palette()) && isFALSE(ordered) && isFALSE(gradient)) {
+    if (ngrps <= length(palette()) && !ordered && !gradient) {
       palette_fun = function(alpha) adjustcolor(palette(), alpha) # must be function to avoid arg ambiguity
       args = list(alpha = alpha)
     } else {
-      if (ngrps <= 8 && isFALSE(ordered)) { # ngrps < 100 so we know gradient is FALSE too
+      if (ngrps <= 8 && !ordered) { # ngrps < 100 so we know gradient is FALSE too
         palette = "R4"
         palette_fun = palette.colors
       } else {
         palette = "Viridis"
-        if (isFALSE(gradient) && isFALSE(ordered)) {
+        if (!gradient && !ordered) {
           palette_fun = hcl.colors
         } else {
           palette_fun_gradient = function(n, palette, from = 0.1, to = 0.9, alpha = 1) {
@@ -95,34 +155,20 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
           }
         }
       } else {
-        fx = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
-        pal_match = charmatch(fx(palette), fx(palette.pals()))
-        if (!is.na(pal_match)) {
-          if (pal_match < 1L) stop("'palette' is ambiguous")
-          palette_fun = palette.colors
-          if (isTRUE(gradient)) {
-            palette_fun2 = function(n, palette, alpha) colorRampPalette(palette.colors(palette = palette, alpha = alpha))(n)
-            palette_fun = palette_fun2
-          }
-        } else {
-          pal_match = charmatch(fx(palette), fx(hcl.pals()))
-          if (!is.na(pal_match)) {
-            if (pal_match < 1L) stop("'palette' is ambiguous")
-            palette_fun = hcl.colors
-          } else {
-            stop(
-              "\nPalette string not recogized. Must be a value produced by either",
-              "`palette.pals()` or `hcl.pals()`.\n",
-              call. = FALSE
-            )
-          }
-        }
+        palette_fun = gen_pal_fun(palette, gradient = gradient, alpha = alpha, n = ngrps)
         args = list(n = ngrps, palette = palette, alpha = alpha)
       }
     } else if (class(palette) %in% c("call", "name")) {
-      args = as.list(palette)
-      palette_fun = paste(args[[1]])
-      args[[1]] = NULL
+      # catch for when using passes palette as named object (e.g,
+      # pal26 = palette.colors("Alphabet"))
+      if (class(palette) == "name" && is.character(eval(palette))) {
+        args = as.list(eval(palette))
+        palette_fun = "c"
+      } else {
+        args = as.list(palette)
+        palette_fun = paste(args[[1]])
+        args[[1]] = NULL
+      }
       # catch for direct vector or list
       if (palette_fun %in% c("c", "list")) {
         if (palette_fun == "list") palette_fun = "c"
@@ -166,9 +212,59 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
   if (length(cols) > ngrps) cols = cols[1:ngrps]
 
   # For gradient and ordered colors, we'll run high to low
-  if (isTRUE(gradient) || isTRUE(ordered)) cols = rev(cols)
+  if (gradient || ordered) cols = rev(cols)
 
   return(cols)
+}
+
+# Some utility functions for palette matching, etc.
+
+match_pal = function(pal, pals) {
+  fx = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
+  charmatch(fx(pal), fx(pals))
+}
+
+get_pal_lens = function(pal) {
+  pal_lens = c(
+    R3 = 8L, R4 = 8L, ggplot2 = 8L, `Okabe-Ito` = 9L, Accent = 8L,
+    `Dark 2` = 8L, Paired = 12L, `Pastel 1` = 9L, `Pastel 2` = 8L, 
+    `Set 1` = 9L, `Set 2` = 8L, `Set 3` = 12L, `Tableau 10` = 10L, 
+    `Classic Tableau` = 10L, `Polychrome 36` = 36L, Alphabet = 26L
+  )
+  pal_lens[pal]
+}
+
+# take a character string, match to either palette.pals() pr hcl.pals(), and
+# generate the corresponding function factor with alpha transparency
+gen_pal_fun = function(pal, gradient = FALSE, alpha = NULL, n = NULL) {
+  pal_match = match_pal(pal, palette.pals())
+  if (!is.na(pal_match)) {
+    if (pal_match < 1L) stop("'palette' is ambiguous")
+    pal_fun = palette.colors
+    if (!is.null(n) && n >= get_pal_lens(pal_match)) {
+      warning(
+        "\nFewer colours ", get_pal_lens(pal_match), " provided than than there are groups ",
+        n, ". Recycling to make up the shortfall."
+      )
+      pal_fun = function(n, palette, alpha) palette.colors(n = n, palette = pal, alpha = alpha, recycle = TRUE)
+    }
+    if (gradient) {
+      pal_fun = function(n, palette, alpha) colorRampPalette(palette.colors(palette = pal, alpha = alpha))(n)
+    }
+  } else {
+    pal_match = match_pal(pal, hcl.pals())
+    if (!is.na(pal_match)) {
+      if (pal_match < 1L) stop("'palette' is ambiguous")
+      pal_fun = hcl.colors
+    } else {
+      stop(
+        "\nPalette string not recogized. Must be a value produced by either",
+        "`palette.pals()` or `hcl.pals()`.\n",
+        call. = FALSE
+      )
+    }
+  }
+  return(pal_fun)
 }
 
 

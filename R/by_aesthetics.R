@@ -45,9 +45,9 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
       col = rep(col, ngrps)
       if (alpha) col = adjustcolor(col, alpha.f = alpha)
       return(col)
-    } else if (length(col) != ngrps) {
+    } else if (length(col) < ngrps) {
       if (!gradient) {
-        stop(sprintf("`col` must be of length 1 or %s.", ngrps), call. = FALSE)
+        stop(sprintf("`col` must be of length 1, or greater or equal to %s.", ngrps), call. = FALSE)
       } else {
         # interpolate gradient colors
         col = colorRampPalette(colors = col, alpha = TRUE)(ngrps)

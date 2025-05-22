@@ -35,6 +35,8 @@ tinyplot(x, ...)
   yaxt = NULL,
   xaxs = NULL,
   yaxs = NULL,
+  xaxb = NULL,
+  yaxb = NULL,
   xaxl = NULL,
   yaxl = NULL,
   log = "",
@@ -67,6 +69,10 @@ tinyplot(x, ...)
   facet = NULL,
   facet.args = NULL,
   type = NULL,
+  xmin = NULL,
+  xmax = NULL,
+  ymin = NULL,
+  ymax = NULL,
   xlim = NULL,
   ylim = NULL,
   main = NULL,
@@ -112,7 +118,8 @@ All remaining arguments from \code{...} can be further graphical parameters, see
 or interval plot types. Only used when the \code{type} argument is one of
 \code{"rect"} or \code{"segments"} (where all four min-max coordinates are required),
 or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{ymin} and
-\code{ymax} required alongside \code{x}).}
+\code{ymax} required alongside \code{x}). In the formula method the arguments
+can be specified as \code{ymin = var} if \code{var} is a variable in \code{data}.}
 
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an
@@ -294,15 +301,20 @@ respectively. See \code{axes} for the possible values.}
 used for the x-axis and y-axis, respectively. See
 \code{\link[graphics]{par}} for the possible values.}
 
+\item{xaxb, yaxb}{numeric vector (or character vector, if appropriate) giving
+the break points at which the axis tick-marks are to be drawn. Break points
+outside the range of the data will be ignored if the associated axis
+variable is categorical, or an explicit \code{x/ylim} range is given.}
+
 \item{xaxl, yaxl}{a function or a character keyword specifying the format of
 the x- or y-axis tick labels. Note that this is a post-processing step that
-affects the \emph{appearance} of the tick labels only; it does not affect the
-actual calculation or placement of the tick marks. In addition to
-user-supplied formatting functions (e.g., \code{\link{format}}, \code{\link{toupper}}, \code{\link{abs}},
-or other custom function), several convenience keywords (or their symbol
-equivalents) are available for common formatting transformations:
-\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
-(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}). See the
+affects the \emph{appearance} of the tick labels only; use in conjunction with
+\code{x/yaxb} if you would like to adjust the position of the tick marks too. In
+addition to user-supplied formatting functions (e.g., \code{\link{format}},
+\code{\link{toupper}}, \code{\link{abs}}, or other custom function), several convenience
+keywords (or their symbol equivalents) are available for common formatting
+transformations: \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}),
+\code{"dollar"} (\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}). See the
 \code{\link{tinylabel}} documentation for examples.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be

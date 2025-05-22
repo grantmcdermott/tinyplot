@@ -23,13 +23,22 @@ where the formatting is also better._
 - The palette argument now accepts a vector or list of manual colours, e.g.
   `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
   `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)
-- The new top-level `xaxl` and `yaxl` arguments allow users to format the
-  appearance of their axis tick labels. Several convenience strings (symbols)
-  supported for common cases, e.g., `tinyplot(..., yaxl = "percent")` or
-  `tinyplot(..., yaxl = "%")`, etc. More details are provided in the lower-level
-  `tinylabel` function documentation (#363, #391 @grantmcdermott)
+- Two new sets of top-level arguments allow for greater axis customization:
+  - `xaxb`/`yaxb` control the manual break points of the axis tick marks, e.g.
+    `tinyplot(..., xaxb = c(1, 3, 7, 15))`. (#400 @grantmcdermott)
+  - `xaxl`/`yaxl` apply a formatting function to change the appearance of the
+    axis tick labels. Several convenience strings (symbols) are supported for
+    common cases, e.g., `tinyplot(..., yaxl = "percent")` or
+    `tinyplot(..., yaxl = "%")`, etc. (#363, #391 @grantmcdermott)
+    
+  The `x/yaxb` and `x/yaxl` arguments can be used in complementary fashion; see
+  the new (lower-level) `tinylabel` function documentation. For example:
+  ```r
+  tinyplot((0:10)/10, yaxl = "%", yaxb = c(.17, .33, .5, .67, .83))
+  ```
 
-### Bugs fixes:
+
+### Bug fixes:
 
 - The `tinyplot(..., cex = <cex>)` argument should be respected when using
   `type = "b"`. Thanks to @rjknell for report #307 and @vincentarelbundock for
@@ -69,6 +78,12 @@ where the formatting is also better._
   (#381 @vincentarelbundock)
 - Improved website theme and navigation layout, especially on mobile.
   (#395 @zeileis)
+
+### Misc:
+
+- Simplify specification of `xmin`/`xmax`/`ymin`/`ymax` in formula method.
+  The arguments are now processed along with the `model.frame()` so that
+  `ymin = var` works if `var` is a variable in the `data`.
 
 ### Internals:
 

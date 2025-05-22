@@ -307,16 +307,14 @@ monthcoefs = data.frame(
   subset(!grepl("Day", term))
 
 # plot
-with(
-  monthcoefs,
-  tinyplot(
-    x = term, y = estimate,
-    ymin = ci_low, ymax = ci_high,
-    type = "pointrange", # or: "errobar", "ribbon"
-    pch = 19, col = "dodgerblue",
-    grid = TRUE,
-    main = "Average Monthly Effect on Temperature"
-  )
+tinyplot(
+  estimate ~ term,
+  ymin = ci_low, ymax = ci_high,
+  data = monthcoefs,
+  type = "pointrange", # or: "errobar", "ribbon"
+  pch = 19, col = "dodgerblue",
+  grid = TRUE,
+  main = "Average Monthly Effect on Temperature"
 )
 ```
 

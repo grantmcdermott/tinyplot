@@ -8,6 +8,9 @@ website:
   favicon: favicon.png
   image: man/figures/logo.png
   navbar:
+    logo: tinyplot.svg
+    logo-alt: tinyplot
+    title: false
     search: true
     left:
       - text: Get started

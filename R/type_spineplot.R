@@ -72,7 +72,10 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
     fun = function(
       datapoints,
       by = NULL, col = NULL, bg = NULL, palette = NULL,
-      facet = NULL, facet.args = NULL, xlim = NULL, ylim = NULL, axes = TRUE, xaxt = NULL, yaxt = NULL, null_by, null_facet,
+      facet = NULL, facet.args = NULL,
+      xlim = NULL, ylim = NULL,
+      axes = TRUE, xaxt = NULL, yaxt = NULL, xaxb = NULL, yaxb = NULL,
+      null_by, null_facet, 
       ...
     ) {
       
@@ -86,16 +89,16 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
         datapoints$weights = weights
         
         ## process x variable
-        if(is.factor(datapoints$x)) {
+        if (is.factor(datapoints$x)) {
             breaks = NULL
             off = if(is.null(off)) 0.02 else off/100
             if (is.null(xlim)) xlim = c(0, 1 + (nlevels(datapoints$x) - 1L) * off)
         } else {
             off = 0
             if (is.null(xlim)) xlim = c(0, 1)
-    	    x = as.numeric(datapoints$x)
+    	      x = as.numeric(datapoints$x)
             if (is.null(breaks)) {
-                breaks = if(is.null(weights)) nclass.Sturges(x) else ceiling(log2(sum(weights)) + 1)
+              breaks = if (!is.null(xaxb)) xaxb else if (is.null(weights)) nclass.Sturges(x) else ceiling(log2(sum(weights)) + 1)
 	    }
             breaks = as.numeric(breaks)
             if (length(breaks) == 1L) {
@@ -111,7 +114,7 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
 
         ## process y variable
         if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
-        if (!is.null(ylevels)) datapoints$y = factor(y, levels = if(is.numeric(ylevels)) levels(y)[ylevels] else ylevels)
+        # if (!is.null(ylevels)) datapoints$y = factor(datapoints$y, levels = if(is.numeric(ylevels)) levels(datapoints$y)[ylevels] else ylevels)
         if (is.null(ylim)) ylim = c(0, 1)
 
         ## adjust facet margins
@@ -119,12 +122,18 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
           facet.args[["fmar"]] = c(2, 2, 2, 2)
         }
         
+        x_by = identical(datapoints$x, datapoints$by)
+        y_by = identical(datapoints$y, datapoints$by)
+        
+        if (!is.null(ylevels)) {
+          datapoints$y = factor(datapoints$y, levels = if(is.numeric(ylevels)) levels(datapoints$y)[ylevels] else ylevels)
+          if (y_by) datapoints$by = datapoints$y
+        }
+        
         x.categorical = is.factor(datapoints$x)
         x = datapoints$x
         y = datapoints$y
         
-        x_by = identical(datapoints$x, datapoints$by)
-        y_by = identical(datapoints$y, datapoints$by)
         # if either x_by or y_by are TRUE, we'll only split by facets and then
         # use some simple logic to assign colouring on the backend
         if (isTRUE(x_by) || isTRUE(y_by)) {
@@ -196,6 +205,12 @@ data_spineplot = function(off = NULL, breaks = NULL, ylevels = ylevels, xaxlabel
       
         ## axis labels
         yaxlabels = if(is.null(yaxlabels)) levels(y) else rep_len(yaxlabels, ny)
+        if (!is.null(yaxb)) {
+          # yaxlabels = yaxlabels[yaxlabels %in% yaxb]
+          ## rather use the "" assignment workaround below, since otherwise we 
+          ## get a mismatch between the label names and ticks 
+          yaxlabels[!(yaxlabels %in% yaxb)] = ""
+        }
         if(x.categorical) {
           xaxlabels = if(is.null(xaxlabels)) {
             levels(x)

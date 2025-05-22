@@ -8,13 +8,28 @@
 #' `tinyplot_add()`.
 #'
 #' @section Limitations:
-#' - Currently, `tinyplot_add` only works reliably if you are adding to a plot
-#' that was originally constructed with the [tinyplot.formula] method (and
-#' passed an appropriate `data` argument). In contrast, we cannot guarantee that
-#' using `tinyplot_add` will work correctly if your original plot was
-#' constructed with the atomic [tinyplot.default] method. The reason has to do
-#' with potential environment mismatches. (An exception is thus if your plot
-#' arguments (`x`, `y`, etc.) are attached to your global R environment.)
+#' - `tinyplot_add()` works reliably only when adding to a plot originally
+#'   created using the [`tinyplot.formula`] method with a valid `data` argument.
+#'   We cannot guarantee correct behavior if the original plot was created with
+#'   the atomic [`tinyplot.default`] method, due to potential environment
+#'   mismatches. (An exception is when the original plot arguments---`x`, `y`,
+#'   etc.---are located in the global environment.)
+#'
+#' - There are two important limitations when adding layers to _faceted_ plots:
+#'
+#'   - Avoid resizing the graphics window after the first layer is drawn, since
+#'     it will lead to any subsequent layers being misaligned. This is a
+#'     limitation of base R's `graphics` engine and cannot be reliably preempted
+#'     or corrected by `tinyplot`. Note that resizing non-faceted plots is
+#'     always fine, though. See:
+#'     <https://github.com/grantmcdermott/tinyplot/issues/313>
+#'
+#'   - On Positron, specifically, alignment issues may occur even without
+#'     resizing. A warning will be triggered when (i) Positron is detected and
+#'     (ii) a user attempts to add layers to a faceted plot. Again, this issue
+#'     is not present for non-faceted plots. See the upstream bug report:
+#'     <https://github.com/posit-dev/positron/issues/7316>
+#' 
 #' - Automatic legends for the added elements will be turned off.
 #'
 #' @param ... All named arguments override arguments from the previous calls.

@@ -11,20 +11,11 @@
 #' op = tpar(pch = 19)
 #'  
 #' # "errorbar" and "pointrange" type convenience strings
-#' with(
-#'   coefs,
-#'   tinyplot(x = term, y = est, ymin = lwr, ymax = upr, type = "errorbar")
-#' )
-#' with(
-#'   coefs,
-#'   tinyplot(x = term, y = est, ymin = lwr, ymax = upr, type = "pointrange")
-#' )
+#' tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "errorbar")
+#' tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "pointrange")
 #' 
 #' # Use `type_errorbar()` to pass extra arguments for customization
-#' with(
-#'   coefs,
-#'   tinyplot(x = term, y = est, ymin = lwr, ymax = upr, type = type_errorbar(length = 0.2))
-#' )
+#' tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = type_errorbar(length = 0.2))
 #' 
 #' tpar(op)
 #' 

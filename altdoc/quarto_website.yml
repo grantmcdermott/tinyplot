@@ -27,10 +27,10 @@ website:
           file: vignettes/tips.qmd
       - text: About
         menu:
-        - text: Citation
-          file: $ALTDOC_CITATION
         - text: News
           file: $ALTDOC_NEWS
+        - text: Citation
+          file: $ALTDOC_CITATION
         - text: License
           file: $ALTDOC_LICENSE
       - text: Reference

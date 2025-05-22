@@ -4,8 +4,26 @@ $link-color: #f51459;
 $code-color: #000022;
 $navbar-bg: #5195a3;
 $navbar-fg: #ffffff;
-$navbar-hl: #f51459;
+$navbar-hl: #ffffff;
 $sidebar-fg: #000022;
 $sidebar-hl: #f51459;
 $toc-color: #f51459;
 $toc-hl: #f51459;
+
+header {
+    nav {
+        ul {
+            &.navbar-nav {
+                li {
+                    a {
+                        border-bottom: 3px solid transparent;
+                        transition: border-bottom 0.5s;
+                        &:hover, &.active {
+                            border-color: $navbar-hl;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

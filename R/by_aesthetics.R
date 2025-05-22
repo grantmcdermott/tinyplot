@@ -46,12 +46,26 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
       if (alpha) col = adjustcolor(col, alpha.f = alpha)
       return(col)
     } else if (length(col) < ngrps) {
-      if (!gradient) {
-        stop(sprintf("`col` must be of length 1, or greater or equal to %s.", ngrps), call. = FALSE)
-      } else {
-        # interpolate gradient colors
+      # if (!gradient) {
+      #   stop(sprintf("`col` must be of length 1, or greater than or equal to %s.", ngrps), call. = FALSE)
+      # } else {
+      #   # interpolate gradient colors
+      #   col = colorRampPalette(colors = col, alpha = TRUE)(ngrps)
+      # }
+      # if manual colours < ngrps, either (1) interpolate for gradient
+      # colors, or (2) recycle for discrete colours
+      if (gradient) {
         col = colorRampPalette(colors = col, alpha = TRUE)(ngrps)
+      } else {
+        ncolsstr = paste0("(", length(col), ")")
+        ngrpsstr = paste0("(", ngrps, ")")
+        warning(
+          "\nFewer colours ", ncolsstr, " provided than than there are groups ",
+          ngrpsstr, ". Recycling to make up the shortfall."
+        )
+        col = rep(col, length.out = ngrps)
       }
+  
     }
     if (gradient) {
       col = rev(col)
@@ -145,9 +159,16 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         args = list(n = ngrps, palette = palette, alpha = alpha)
       }
     } else if (class(palette) %in% c("call", "name")) {
-      args = as.list(palette)
-      palette_fun = paste(args[[1]])
-      args[[1]] = NULL
+      # catch for when using passes palette as named object (e.g,
+      # pal26 = palette.colors("Alphabet"))
+      if (class(palette) == "name" && is.character(eval(palette))) {
+        args = as.list(eval(palette))
+        palette_fun = "c"
+      } else {
+        args = as.list(palette)
+        palette_fun = paste(args[[1]])
+        args[[1]] = NULL
+      }
       # catch for direct vector or list
       if (palette_fun %in% c("c", "list")) {
         if (palette_fun == "list") palette_fun = "c"

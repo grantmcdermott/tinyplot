@@ -1,0 +1,17 @@
+## R >= 2.8.0 passes package metadata to citation().
+if(!exists("meta") || is.null(meta)) meta <- packageDescription("tinyplot")
+
+title <- sprintf("{%s}: %s", meta$Package, meta$Title)
+author <- eval(parse(text = meta$`Authors@R`))
+author <- author[sapply(author$role, function(r) "aut" %in% r)]
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Manual",
+  title   = title,
+  author  = author,
+  year    = year,
+  note    = note,
+  doi     = "10.32614/CRAN.package.tinyplot",
+  header  = "To cite tinyplot in publications use:"
+)

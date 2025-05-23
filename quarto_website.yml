@@ -6,32 +6,48 @@ website:
   title: "$ALTDOC_PACKAGE_NAME"
   site-url: https://grantmcdermott.com/tinyplot/
   favicon: favicon.png
-  image: man/figures/logo.png
+  image: logo.png
   navbar:
+    logo: tinyplot.svg
+    logo-alt: tinyplot
+    title: false
     search: true
     left:
-      - text: Introduction
+      - text: Get started
         file: vignettes/introduction.qmd
-      - text: Types
-        file: vignettes/types.qmd
-      - text: Themes
-        file: vignettes/themes.qmd
-      - text: Gallery
-        file: vignettes/gallery.qmd
-      - text: Tips
-        file: vignettes/tips.qmd
+      - text: Articles
+        menu:
+        - text: Types
+          file: vignettes/types.qmd
+        - text: Themes
+          file: vignettes/themes.qmd
+        - text: Gallery
+          file: vignettes/gallery.qmd
+        - text: Tips & tricks
+          file: vignettes/tips.qmd
+      - text: About
+        menu:
+        - text: News
+          file: $ALTDOC_NEWS
+        - text: Citation
+          file: $ALTDOC_CITATION
+        - text: License
+          file: $ALTDOC_LICENSE
       - text: Reference
         file: man/tinyplot.qmd
-      - text: News
-        file: $ALTDOC_NEWS
-      - text: License
-        file: $ALTDOC_LICENSE
-      - text: Citation
-        file: $ALTDOC_CITATION
     right:
       - icon: github
         href: $ALTDOC_PACKAGE_URL_GITHUB
         aria-label: $ALTDOC_PACKAGE_NAME GitHub
+        target: _blank
+      - text: "{{< iconify fa6-brands:bluesky >}}"
+        href: https://bsky.app/profile/gmcd.bsky.social
+        aria-label: "@gmcd.bsky.social"
+        target: _blank
+      - icon: mastodon
+        href: https://mastodon.social/@gmcd
+        aria-label: "@gmcd@mastodon.social"
+        target: _blank
   sidebar:
     - id: documentation
       title: Reference

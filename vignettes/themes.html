@@ -75,7 +75,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-8ba676d4a32ccc75bb682effb38ee399.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-06613c00ea428acfda7eb0efa10feee9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/iconify-2.1.0/iconify-icon.min.js"></script>
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -114,8 +115,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">tinyplot</span>
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../tinyplot.svg" alt="tinyplot" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -126,44 +127,67 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/introduction.html"> 
-<span class="menu-text">Introduction</span></a>
+<span class="menu-text">Get started</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../vignettes/types.html"> 
-<span class="menu-text">Types</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../vignettes/types.html">
+ <span class="dropdown-text">Types</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="../vignettes/themes.html" aria-current="page"> 
-<span class="menu-text">Themes</span></a>
+        <li>
+    <a class="dropdown-item" href="../vignettes/themes.html">
+ <span class="dropdown-text">Themes</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../vignettes/gallery.html"> 
-<span class="menu-text">Gallery</span></a>
+        <li>
+    <a class="dropdown-item" href="../vignettes/gallery.html">
+ <span class="dropdown-text">Gallery</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../vignettes/tips.html"> 
-<span class="menu-text">Tips</span></a>
+        <li>
+    <a class="dropdown-item" href="../vignettes/tips.html">
+ <span class="dropdown-text">Tips &amp; tricks</span></a>
   </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-about" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">About</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-about">    
+        <li>
+    <a class="dropdown-item" href="../NEWS.html">
+ <span class="dropdown-text">News</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../CITATION.html">
+ <span class="dropdown-text">Citation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../LICENSE.html">
+ <span class="dropdown-text">License</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../man/tinyplot.html"> 
 <span class="menu-text">Reference</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../NEWS.html"> 
-<span class="menu-text">News</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../LICENSE.html"> 
-<span class="menu-text">License</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../CITATION.html"> 
-<span class="menu-text">Citation</span></a>
-  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/grantmcdermott/tinyplot"> <i class="bi bi-github" role="img" aria-label="tinyplot GitHub">
+    <a class="nav-link" href="https://github.com/grantmcdermott/tinyplot" target="_blank"> <i class="bi bi-github" role="img" aria-label="tinyplot GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://bsky.app/profile/gmcd.bsky.social" target="_blank"> 
+<span class="menu-text"><iconify-icon role="img" inline="" icon="fa6-brands:bluesky" aria-label="Icon bluesky from fa6-brands Iconify.design set." title="Icon bluesky from fa6-brands Iconify.design set."></iconify-icon></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://mastodon.social/@gmcd" target="_blank"> <i class="bi bi-mastodon" role="img" aria-label="@gmcd@mastodon.social">
 </i> 
 <span class="menu-text"></span></a>
   </li>  

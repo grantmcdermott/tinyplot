@@ -4,8 +4,47 @@ $link-color: #f51459;
 $code-color: #000022;
 $navbar-bg: #5195a3;
 $navbar-fg: #ffffff;
-$navbar-hl: #f51459;
+$navbar-hl: #ffffff;
 $sidebar-fg: #000022;
 $sidebar-hl: #f51459;
 $toc-color: #f51459;
 $toc-hl: #f51459;
+
+/*-- scss:rules --*/
+
+/*-- Increasing size of the navbar logo ("tinyplot" text logo) --*/
+.navbar-brand-container {
+    a {
+        &.navbar-brand-logo {
+            margin: 0;
+            padding: 0 1.5em 0 0;
+            img {
+                max-height: 2em;
+            }
+        }
+    }
+}
+
+header {
+    nav {
+        &.navbar {
+            background-image: url("navbar-dots.svg");
+            background-position: top left;
+            background-repeat: no-repeat;
+            background-size: 350px auto;
+        }
+        ul {
+            &.navbar-nav {
+                li {
+                    a {
+                        border-bottom: 3px solid transparent;
+                        transition: border-bottom 0.5s;
+                        &:hover, &.active {
+                            border-color: $navbar-hl;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -38,7 +38,7 @@ Description: Lightweight extension of the base R graphics system, with support
 License: Apache License (>= 2)
 Remotes: etiennebacher/altdoc
 Depends:
-  R (>= 4.0)
+  R (>= 4.1.0)
 Imports: 
   graphics,
   grDevices,

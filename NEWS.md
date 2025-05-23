@@ -4,7 +4,7 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## 0.3.0.99 (dev version)
+## 0.4.0
 
 ### New features:
 
@@ -20,24 +20,35 @@ where the formatting is also better._
 - `tinyplot(..., file = "*.pdf")` will now default to using `cairo_pdf()` if
   cairo graphics are supported on the user's machine. This should help to ensure
   better fidelity of (non-standard) fonts in PDFs. (#311 @grantmcdermott)
-- The palette argument now accepts a vector or list of manual colours, e.g.
+- The `palette` argument now accepts a vector or list of manual colours, e.g.
   `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
   `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)
 - Two new sets of top-level arguments allow for greater axis customization:
-  - `xaxb`/`yaxb` control the manual break points of the axis tick marks, e.g.
-    `tinyplot(..., xaxb = c(1, 3, 7, 15))`. (#400 @grantmcdermott)
+  - `xaxb`/`yaxb` control the manual break points of the axis tick marks. (#400 @grantmcdermott)
   - `xaxl`/`yaxl` apply a formatting function to change the appearance of the
-    axis tick labels. Several convenience strings (symbols) are supported for
-    common cases, e.g., `tinyplot(..., yaxl = "percent")` or
-    `tinyplot(..., yaxl = "%")`, etc. (#363, #391 @grantmcdermott)
+    axis tick labels. (#363, #391 @grantmcdermott)
     
-  The `x/yaxb` and `x/yaxl` arguments can be used in complementary fashion; see
-  the new (lower-level) `tinylabel` function documentation. For example:
+  These `x/yaxb` and `x/yaxl` arguments can be used in complementary fashion;
+  see the new (lower-level) `tinylabel` function documentation. For example:
   ```r
-  tinyplot((0:10)/10, yaxl = "%", yaxb = c(.17, .33, .5, .67, .83))
+  tinyplot((0:10)/10, yaxb = c(.17, .33, .5, .67, .83), yaxl = "%")
   ```
-
-
+- The `x/ymin` and `x/ymax` arguments can now be specified directly via the
+  `tinyplot.formula()` method thanks to better NSE processing. For example,
+  instead of having to write
+  ```r
+  with(dat, tinyplot(x = x, y = y, by = by ymin = lwr, ymax = upr))
+  ```
+  users can now do
+  ```r
+  tinyplot(y ~ x | by, dat, ymin = lwr, ymax = upr)
+  ```
+  
+  Underneath the hood, this works by processing these NSE arguments as part of
+  formula `model.frame()` and reference against the provided dataset. We plan to
+  extend the same logic to other top-level formula arguments such as `weights`
+  and `subset` in a future version of tinyplot.
+  
 ### Bug fixes:
 
 - The `tinyplot(..., cex = <cex>)` argument should be respected when using
@@ -69,6 +80,10 @@ where the formatting is also better._
 - Fixed a bug that resulted in y-axis labels being coerced to numeric for
   `"p"`-alike plot types (including `"jitter"`) if `y` is a factor or character.
   (#387 @grantmcdermott)
+- Fix a colour recycling regression introduced in v0.3.0. Coincidentally, we
+  have improved the consistency across `palette` and `col` arguments,
+  particularly with respect to recycling behaviour. Thanks to @eddelbuettel for
+  the report (#352) and @grantmcdermott for the fix (#410).
 
 ### Website:
 
@@ -78,12 +93,6 @@ where the formatting is also better._
   (#381 @vincentarelbundock)
 - Improved website theme and navigation layout, especially on mobile.
   (#395 @zeileis)
-
-### Misc:
-
-- Simplify specification of `xmin`/`xmax`/`ymin`/`ymax` in formula method.
-  The arguments are now processed along with the `model.frame()` so that
-  `ymin = var` works if `var` is a variable in the `data`.
 
 ### Internals:
 

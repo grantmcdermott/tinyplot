@@ -6,7 +6,7 @@ website:
   title: "$ALTDOC_PACKAGE_NAME"
   site-url: https://grantmcdermott.com/tinyplot/
   favicon: favicon.png
-  image: man/figures/logo.png
+  image: logo.png
   navbar:
     logo: tinyplot.svg
     logo-alt: tinyplot

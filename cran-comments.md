@@ -1,11 +1,7 @@
 ## Overview
 
-_Note: this is a resubmission after the previous CRAN precheck caught a minor
-issue related to author meta-information in the DESCRIPTION file._
-
-**tinyplot** v0.3.0 is a major release with many new features, including a
-revamped type processing system, support for additional plot types, and a new
-plotting theme framework.
+**tinyplot** v0.4.0 is a minor release that introduces several new features
+and addresses a variety of bugs.
 
 As per our earlier submissions, we continue to run a comprehensive test suite
 comprising hundreds of test snapshots (i.e., SVG images) as part of our CI

@@ -158,10 +158,10 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         palette_fun = gen_pal_fun(palette, gradient = gradient, alpha = alpha, n = ngrps)
         args = list(n = ngrps, palette = palette, alpha = alpha)
       }
-    } else if (class(palette) %in% c("call", "name")) {
+    } else if (inherits(palette, c("call", "name"))) {
       # catch for when using passes palette as named object (e.g,
       # pal26 = palette.colors("Alphabet"))
-      if (class(palette) == "name" && is.character(eval(palette))) {
+      if (inherits(palette, "name") && is.character(eval(palette))) {
         args = as.list(eval(palette))
         palette_fun = "c"
       } else {

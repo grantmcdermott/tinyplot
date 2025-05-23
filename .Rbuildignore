@@ -20,5 +20,5 @@ vignettes/
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
 inst/user2025
-inst/tinytest/
+#inst/tinytest/
 Makefile

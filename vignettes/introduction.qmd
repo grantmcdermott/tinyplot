@@ -192,7 +192,7 @@ Beyond these convenience strings, users can also supply a valid
 palette-generating function for finer control and additional options.^[For
 example, if you have installed the **ggsci** package
 ([link](https://nanx.me/ggsci/index.html)) then you could use
-`palette = ggsci::pal_npg()` to generate a palette consistent with those used by
+`palette = pal_npg()` to generate a palette consistent with those used by
 the Nature Publishing Group.] You can also use the `alpha` argument to adjust
 the (alpha) transparency of your colours.
 

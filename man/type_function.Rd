@@ -40,7 +40,8 @@ tinyplot(x = -4:4, type = type_function(
 ))
 
 # Custom function example
-# (Here using the `\()` anonymous function syntax introduced in R 4.1.0)
-tinyplot(x = -4:4, type = type_function(fun = \(x) 0.5 * exp(-abs(x))))
+## (Here using `function(x)`, but you could also use the shorter `\(x)`
+## anonymous function syntax introduced in R 4.1.0)
+tinyplot(x = -4:4, type = type_function(fun = function(x) 0.5 * exp(-abs(x))))
 
 }

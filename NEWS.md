@@ -9,7 +9,11 @@ where the formatting is also better._
 ### Bug fixes
 
 - Fix a narrow `tinytheme("ridge")` regression that was accidentally introduced in
-  v0.4.0, which was causing a palette mismatch for gradient legends. (#415 @grantmcdermott)  
+  v0.4.0, which was causing a palette mismatch for gradient legends. (#415 @grantmcdermott)
+
+### Misc
+
+- Revert minimum compatible R version to 4.0.0 (#416 @grantmcdermott)
 
 ## 0.4.0
 

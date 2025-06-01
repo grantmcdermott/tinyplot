@@ -75,7 +75,7 @@ tinytheme()
 ## by == x
 f = function() {
   tinyplot(Species ~ Sepal.Width | Sepal.Width, data = iris,
-           type = type_ridge(col = "white"), palette = "plasma")
+           type = type_ridge(col = "white"))
 }
 expect_snapshot_plot(f, label = "ridge_by_x")
 tinytheme("ridge")

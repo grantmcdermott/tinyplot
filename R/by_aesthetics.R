@@ -97,6 +97,9 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
         if (ngrps >= get_pal_lens(pal_theme) || ordered) {
           pal_theme = get_tpar("palette.sequential", default = NULL)
         }
+      # mostly a catch for x-gradient fills, e.g. type_ridge
+      } else if (gradient && !is.na(match_pal(pal_theme, hcl.pals()))) {
+          pal_theme = get_tpar("palette.sequential", default = NULL)
       }
     }
     if (length(pal_theme) == 1) {

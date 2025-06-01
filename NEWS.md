@@ -4,16 +4,23 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## 0.4.0.99 (development version)
+
+### Bug fixes
+
+- Fix a narrow `tinytheme("ridge")` regression that was accidentally introduced in
+  v0.4.0, which was causing a palette mismatch for gradient legends. (#415 @grantmcdermott)  
+
 ## 0.4.0
 
 ### New features:
 
 #### New plot types
 
-- `type = "barplot"` / `type = type_barplot()` for bar plots. This closes out
+- `"barplot"` / `type_barplot()` for bar plots. This closes out
   one of the last remaining canonical base plot types that we wanted to provide
   a native `tinyplot` equivalent for. (#305 and #360 @zeileis and @grantmcdermott) 
-- `type = "violin"` / `type = type_violin()` for violin plots. (#354 @grantmcdermott)
+- `"violin"` / `type_violin()` for violin plots. (#354 @grantmcdermott)
 
 #### Other new features
 
@@ -92,7 +99,7 @@ where the formatting is also better._
 - Added a new "Ticks & tips" vignette for non-standard workarounds.
   (#381 @vincentarelbundock)
 - Improved website theme and navigation layout, especially on mobile.
-  (#395 @zeileis)
+  (#395, #411, #413 @zeileis and @retostauffer)
 
 ### Internals:
 

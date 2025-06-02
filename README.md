@@ -92,9 +92,9 @@ tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)             # formu
 <img src="man/figures/README-quickstart2-1.png" style="width:70.0%" />
 
 If you would prefer to save on a few keystrokes, you can use the
-shorthand `plt()` alias instead instead of typing out `tinyplot()` in
-full. Here’s the same plot with this shorthand alias, plus a few
-aesthetic tweaks:
+shorthand `plt()` alias instead of typing out `tinyplot()` in full.
+Here’s the same plot with this shorthand alias, plus a few aesthetic
+tweaks:
 
 ``` r
 plt(
@@ -120,7 +120,7 @@ plt(Sepal.Length ~ Petal.Length | Species, data = iris)
 style="width:70.0%" />
 
 Themes are persistent and will be applied to subsequent plots. For
-example, here is a grouped grouped density plot:
+example, here is a grouped density plot:
 
 ``` r
 plt(

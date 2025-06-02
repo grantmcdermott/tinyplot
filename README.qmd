@@ -105,7 +105,7 @@ tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)             # formu
 ```
 
 If you would prefer to save on a few keystrokes, you can use the shorthand
-`plt()` alias instead instead of typing out `tinyplot()` in full. Here's the
+`plt()` alias instead of typing out `tinyplot()` in full. Here's the
 same plot with this shorthand alias, plus a few aesthetic tweaks:
 
 ```{r quickstart3}
@@ -127,7 +127,7 @@ plt(Sepal.Length ~ Petal.Length | Species, data = iris)
 ```
 
 Themes are persistent and will be applied to subsequent plots. For example, here
-is a grouped grouped density plot:
+is a grouped density plot:
 
 ```{r quickstart4}
 plt(

@@ -4,7 +4,7 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## 0.4.0.99 (development version)
+## 0.4.1
 
 ### Bug fixes
 

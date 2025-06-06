@@ -19,7 +19,7 @@ type_vline = function(v = 0) {
           msg = "Length of 'v' must be 1, or equal to the number of facets or number of groups."
           stop(msg, call. = FALSE)
         }
-        v = if (length(v) == nfacets) v[ifacet] else h[iby]
+        v = if (length(v) == nfacets) v[ifacet] else v[iby]
       } else if (by_continuous) {
         icol = 1
       }

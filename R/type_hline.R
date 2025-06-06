@@ -11,15 +11,16 @@ type_hline = function(h = 0) {
     return(list())
   }
   draw_hline = function() {
-    fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
-      nfacets = length(data_facet)
-
+    fun = function(ifacet, iby, data_facet, icol, ilty, ilwd, ngrps, nfacets, by_continuous, ...) {
+      
       if (length(h) != 1) {
-        if (length(h) != nfacets) {
-          msg = "Length of 'h' must be 1 or equal to the number of facets"
+        if (!length(h) %in% c(ngrps, nfacets)) {
+          msg = "Length of 'h' must be 1, or equal to the number of facets or number of groups."
           stop(msg, call. = FALSE)
         }
-        h = h[ifacet]
+        h = if (length(h) == nfacets) h[ifacet] else h[iby]
+      } else if (by_continuous) {
+        icol = 1
       }
 
       abline(h = h, col = icol, lty = ilty, lwd = ilwd)

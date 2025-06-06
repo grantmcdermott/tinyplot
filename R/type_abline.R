@@ -46,8 +46,7 @@ type_abline = function(a = 0, b = 1) {
     return(list())
   }
   draw_abline = function() {
-    fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
-      nfacets = length(data_facet)
+    fun = function(ifacet, data_facet, icol, ilty, ilwd, ngrps, nfacets, by_continuous, ...) {
 
       if (length(a) != 1) {
         if (!length(a) %in% c(ngrps, nfacets)) {

@@ -15,14 +15,15 @@ type_vline = function(v = 0) {
     fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
       nfacets = length(data_facet)
 
-      if (length(v) == 1) {
-        v = rep(v, nfacets)
-      } else if (length(v) != nfacets) {
-        msg = "Length of 'v' must be 1 or equal to the number of facets"
-        stop(msg, call. = FALSE)
+      if (length(v) != 1) {
+        if (length(v) != nfacets) {
+          msg = "Length of 'v' must be 1 or equal to the number of facets"
+          stop(msg, call. = FALSE)
+        }
+        v = v[ifacet]
       }
 
-      abline(v = v[ifacet], col = icol, lty = ilty, lwd = ilwd)
+      abline(v = v, col = icol, lty = ilty, lwd = ilwd)
     }
     return(fun)
   }

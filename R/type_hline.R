@@ -14,14 +14,15 @@ type_hline = function(h = 0) {
     fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
       nfacets = length(data_facet)
 
-      if (length(h) == 1) {
-        h = rep(h, nfacets)
-      } else if (length(h) != nfacets) {
-        msg = "Length of 'h' must be 1 or equal to the number of facets"
-        stop(msg, call. = FALSE)
+      if (length(h) != 1) {
+        if (length(h) != nfacets) {
+          msg = "Length of 'h' must be 1 or equal to the number of facets"
+          stop(msg, call. = FALSE)
+        }
+        h = h[ifacet]
       }
 
-      abline(h = h[ifacet], col = icol, lty = ilty, lwd = ilwd)
+      abline(h = h, col = icol, lty = ilty, lwd = ilwd)
     }
     return(fun)
   }

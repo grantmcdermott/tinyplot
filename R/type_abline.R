@@ -49,21 +49,22 @@ type_abline = function(a = 0, b = 1) {
     fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
       nfacets = length(data_facet)
 
-      if (length(a) == 1) {
-        a = rep(a, nfacets)
-      } else if (length(a) != nfacets) {
-        msg = "Length of 'a' must be 1 or equal to the number of facets"
-        stop(msg, call. = FALSE)
+      if (length(a) != 1) {
+        if (length(a) != nfacets) {
+          msg = "Length of 'a' must be 1 or equal to the number of facets"
+          stop(msg, call. = FALSE)
+        }
+        a = a[ifacet]
+      }
+      if (length(b) != 1) {
+        if (length(b) != nfacets) {
+          msg = "Length of 'b' must be 1 or equal to the number of facets"
+          stop(msg, call. = FALSE)
+        }
+        b = b[ifacet]
       }
 
-      if (length(b) == 1) {
-        b = rep(b, nfacets)
-      } else if (length(b) != nfacets) {
-        msg = "Length of 'b' must be 1 or equal to the number of facets"
-        stop(msg, call. = FALSE)
-      }
-
-      abline(a = a[ifacet], b = b[ifacet], col = icol, lty = ilty, lwd = ilwd)
+      abline(a = a, b = b, col = icol, lty = ilty, lwd = ilwd)
     }
     return(fun)
   }

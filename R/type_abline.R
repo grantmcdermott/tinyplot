@@ -46,24 +46,27 @@ type_abline = function(a = 0, b = 1) {
     return(list())
   }
   draw_abline = function() {
-    fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
-      nfacets = length(data_facet)
+    fun = function(ifacet, data_facet, icol, ilty, ilwd, ngrps, nfacets, by_continuous, ...) {
 
-      if (length(a) == 1) {
-        a = rep(a, nfacets)
-      } else if (length(a) != nfacets) {
-        msg = "Length of 'a' must be 1 or equal to the number of facets"
-        stop(msg, call. = FALSE)
+      if (length(a) != 1) {
+        if (!length(a) %in% c(ngrps, nfacets)) {
+          msg = "Length of 'a' must be 1, or equal to the number of facets or number of groups."
+          stop(msg, call. = FALSE)
+        }
+        a = if (length(a) == nfacets) a[ifacet] else a[iby]
       }
-
-      if (length(b) == 1) {
-        b = rep(b, nfacets)
-      } else if (length(b) != nfacets) {
-        msg = "Length of 'b' must be 1 or equal to the number of facets"
-        stop(msg, call. = FALSE)
+      
+      if (length(b) != 1) {
+        if (!length(b) %in% c(ngrps, nfacets)) {
+          msg = "Length of 'b' must be 1, or equal to the number of facets or number of groups."
+          stop(msg, call. = FALSE)
+        }
+        b = if (length(b) == nfacets) b[ifacet] else b[iby]
       }
+      
+      if (by_continuous && (length(a)==1 || length(b)==1)) icol = 1
 
-      abline(a = a[ifacet], b = b[ifacet], col = icol, lty = ilty, lwd = ilwd)
+      abline(a = a, b = b, col = icol, lty = ilty, lwd = ilwd)
     }
     return(fun)
   }

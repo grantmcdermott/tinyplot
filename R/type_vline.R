@@ -12,17 +12,20 @@ type_vline = function(v = 0) {
     return(list())
   }
   draw_vline = function() {
-    fun = function(ifacet, data_facet, icol, ilty, ilwd, ...) {
-      nfacets = length(data_facet)
+    fun = function(ifacet, data_facet, icol, ilty, ilwd, ngrps, nfacets, by_continuous, ...) {
 
-      if (length(v) == 1) {
-        v = rep(v, nfacets)
-      } else if (length(v) != nfacets) {
-        msg = "Length of 'v' must be 1 or equal to the number of facets"
-        stop(msg, call. = FALSE)
+      if (length(v) != 1) {
+        if (!length(v) %in% c(ngrps, nfacets)) {
+          msg = "Length of 'v' must be 1, or equal to the number of facets or number of groups."
+          stop(msg, call. = FALSE)
+        }
+        v = if (length(v) == nfacets) v[ifacet] else v[iby]
+      } else if (by_continuous) {
+        icol = 1
       }
+      
 
-      abline(v = v[ifacet], col = icol, lty = ilty, lwd = ilwd)
+      abline(v = v, col = icol, lty = ilty, lwd = ilwd)
     }
     return(fun)
   }

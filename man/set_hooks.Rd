@@ -19,15 +19,4 @@ a list of functions.}
 This interface wraps the base \code{\link[=setHook]{setHook()}} function to provide a return
 value that makes it easy to undo.
 }
-\examples{
-new1 <- list(before.plot.new = function() print("Plotted!"))
-new2 <- list(before.plot.new = function() print("Plotted Again!"))
-set_hooks(new1)
-set_hooks(new2)
-plot(1)
-remove_hooks(new1)
-plot(1)
-remove_hooks(new2)
-plot(1)
-}
 \keyword{internal}

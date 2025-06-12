@@ -12,16 +12,6 @@
 #'   a list of functions.
 #' @param action `"replace"`, `"append"` or `"prepend"`
 #' @keywords internal
-#' @examples
-#' new1 <- list(before.plot.new = function() print("Plotted!"))
-#' new2 <- list(before.plot.new = function() print("Plotted Again!"))
-#' set_hooks(new1)
-#' set_hooks(new2)
-#' plot(1)
-#' remove_hooks(new1)
-#' plot(1)
-#' remove_hooks(new2)
-#' plot(1)
 set_hooks <- function(hooks, action = "append") {
   old <- list()
   for (hook_name in names(hooks)) {

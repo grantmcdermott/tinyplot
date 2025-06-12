@@ -12,6 +12,7 @@
   set_environment_variable(".saved_par_after", NULL)
   set_environment_variable(".saved_par_first", NULL)
   set_environment_variable(".last_call", NULL)
+  set_environment_variable(".tpar_hooks", NULL)
 
   globalVariables(c(
     "add",

@@ -7,7 +7,8 @@
 #' layers via [`tinyplot_add`].
 #' 
 #' @param a,b the intercept (default: `a` = 0) and slope (default: `b` = 1)
-#'   terms. Numerics of length 1 or equal to the number of facets.
+#'   terms. Numerics of length 1, or equal to the number of groups or number of
+#'   facets.
 #' @examples
 #' #
 #' ## abline

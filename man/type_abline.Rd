@@ -14,21 +14,22 @@ type_vline(v = 0)
 }
 \arguments{
 \item{a, b}{the intercept (default: \code{a} = 0) and slope (default: \code{b} = 1)
-terms. Numerics of length 1 or equal to the number of facets.}
+terms. Numerics of length 1, or equal to the number of groups or number of
+facets.}
 
-\item{h}{y-value(s) for horizontal line(s). Numeric of length 1 or equal to
-the number of facets.}
+\item{h}{y-value(s) for horizontal line(s). Numeric of length 1, or equal to
+the number of groups or number of facets.}
 
-\item{v}{x-value(s) for vertical line(s). Numeric of length 1 or equal to the
-number of facets.}
+\item{v}{x-value(s) for vertical line(s). Numeric of length 1, or equal to
+the number of groups or number of facets.}
 }
 \description{
 These functions add straight line(s) through the current plot.
 }
 \details{
-Unlike most tinyplot types, \code{type_abline}, \code{type_hline}, and \code{type_vline}
-cannot be called as a base plot layer. Instead they \emph{must} called as a
-subsequent layer via \code{\link{tinyplot_add}}.
+While \code{type_abline}, \code{type_hline}, and \code{type_vline} can be called in a base
+plot layer, we expect that they will typically be called as subsequent
+layers via \code{\link{tinyplot_add}}.
 }
 \examples{
 #
@@ -41,6 +42,10 @@ tinyplot_add(type = "abline")
 
 # customize by passing bespoke intercept and slope values
 tinyplot_add(type = type_abline(a = -1, b = -0.5))
+
+# note that calling as abline & co. as a base plot layer will still lead to
+# axes limits that respect the range of the data
+tinyplot(x = -10:10, y = -10:10, grid = TRUE, type = "abline")
 
 #
 ## hline and vline

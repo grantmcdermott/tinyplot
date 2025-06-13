@@ -4,6 +4,16 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+# 0.4.1.99 (development version)
+
+### Bug fixes
+
+- Better recycling logic for the family of straight line types (`type_hline`,
+  `type_vline`, `type_abline`) addresses several shortcomings. For example,
+  these types now work correctly across non-`by` facets. Simultaneously, users
+  can also call them in a base plot layer, relaxing the requirement that they
+  must be called as part of a subsequent plot layer via `tinyplot_add()` (#422 @grantmcdermott)
+
 ## 0.4.1
 
 ### Bug fixes

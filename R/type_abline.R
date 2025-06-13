@@ -2,9 +2,9 @@
 #' @description
 #' These functions add straight line(s) through the current plot.
 #' @details
-#' Unlike most tinyplot types, `type_abline`, `type_hline`, and `type_vline`
-#' cannot be called as a base plot layer. Instead they *must* called as a
-#' subsequent layer via [`tinyplot_add`].
+#' While `type_abline`, `type_hline`, and `type_vline` can be called in a base
+#' plot layer, we expect that they will typically be called as subsequent
+#' layers via [`tinyplot_add`].
 #' 
 #' @param a,b the intercept (default: `a` = 0) and slope (default: `b` = 1)
 #'   terms. Numerics of length 1 or equal to the number of facets.
@@ -19,6 +19,10 @@
 #' 
 #' # customize by passing bespoke intercept and slope values
 #' tinyplot_add(type = type_abline(a = -1, b = -0.5))
+#' 
+#' # note that calling as abline & co. as a base plot layer will still lead to
+#' # axes limits that respect the range of the data
+#' tinyplot(x = -10:10, y = -10:10, grid = TRUE, type = "abline")
 #' 
 #' #
 #' ## hline and vline
@@ -38,22 +42,37 @@
 #' 
 #' @export
 type_abline = function(a = 0, b = 1) {
-  data_abline = function(datapoints, ...) {
+  data_abline = function(datapoints, lwd, lty, col, ...) {
     if (nrow(datapoints) == 0) {
       msg = "`type_abline() only works on existing plots with x and y data points."
       stop(msg, call. = FALSE)
     }
-    return(list())
+    # keep track of unique lty and lwd (needed for group catch / escape hatch
+    # later in draw_hline)
+    ul_lwd = length(unique(lwd))
+    ul_lty = length(unique(lty))
+    ul_col = length(unique(col))
+    return(list(type_info = list(ul_lty = ul_lty, ul_lwd = ul_lwd, ul_col = ul_col)))
   }
   draw_abline = function() {
-    fun = function(ifacet, data_facet, icol, ilty, ilwd, ngrps, nfacets, by_continuous, ...) {
+    fun = function(
+      ifacet, iby, data_facet, icol, ilty, ilwd,
+      ngrps, nfacets, by_continuous, facet_by,
+      type_info,
+      ...
+    ) {
 
       if (length(a) != 1) {
         if (!length(a) %in% c(ngrps, nfacets)) {
           msg = "Length of 'a' must be 1, or equal to the number of facets or number of groups."
           stop(msg, call. = FALSE)
         }
-        a = if (length(a) == nfacets) a[ifacet] else a[iby]
+        if (length(a) == nfacets) {
+          a = a[ifacet]
+          if (!facet_by && by_continuous) icol = 1
+        } else if (!by_continuous) {
+          a = a[iby]
+        }
       }
       
       if (length(b) != 1) {
@@ -61,10 +80,17 @@ type_abline = function(a = 0, b = 1) {
           msg = "Length of 'b' must be 1, or equal to the number of facets or number of groups."
           stop(msg, call. = FALSE)
         }
-        b = if (length(b) == nfacets) b[ifacet] else b[iby]
+        if (length(b) == nfacets) {
+          b = b[ifacet]
+          if (!facet_by && by_continuous) icol = 1
+        } else if (!by_continuous) {
+          b = b[iby]
+        }
       }
       
-      if (by_continuous && (length(a)==1 || length(b)==1)) icol = 1
+      if (type_info[["ul_col"]]!=1 && !(type_info[["ul_lty"]]==ngrps || type_info[["ul_lwd"]]==ngrps)) {
+        icol = 1
+      }
 
       abline(a = a, b = b, col = icol, lty = ilty, lwd = ilwd)
     }

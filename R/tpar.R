@@ -139,7 +139,12 @@ tpar = function(..., hook = FALSE) {
     base_par = opts[base_par]
     if (length(base_par) > 0) {
       if (isTRUE(hook)) {
-        setHook("before.plot.new", function() par(base_par), action = "replace")
+        # append new hook to existing ones
+        new_hooks = list("before.plot.new" = function() par(base_par))
+        set_hooks(new_hooks, action = "append")
+        # save new hook to tinyplot environment for later removal
+        old_hooks = get_environment_variable(".tpar_hooks")
+        set_environment_variable(".tpar_hooks", c(old_hooks, new_hooks))
       } else {
         par_names = names(par(no.readonly = TRUE))
         base_par = base_par[names(base_par) %in% par_names]
@@ -310,11 +315,10 @@ init_tpar = function(rm_hook = FALSE) {
   rm(list = names(.tpar), envir = .tpar)
 
   if (isTRUE(rm_hook)) {
-    hook = getHook("before.plot.new")
-    if (length(hook) > 0) {
-      # need weird function because of Quarto evaluate::evaluate failure
-      # setHook("before.plot.new", NULL, action = "replace")
-      setHook("before.plot.new", function() NULL, action = "replace")
+    old_hooks = get_environment_variable(".tpar_hooks")
+    if (length(old_hooks) > 0) {
+      remove_hooks(old_hooks)
+      set_environment_variable(".tpar_hooks", NULL)
     }
   }
 

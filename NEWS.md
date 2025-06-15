@@ -9,9 +9,9 @@ where the formatting is also better._
 ### Bug fixes
 
 - Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`
-  behaved inside loops, particularly for themed plots where only the final plot
+  behaves inside loops, particularly for themed plots where only the final plot
   was being drawn in Quarto/RMarkdown contexts. Special thanks to @hadley and @cderv
-  for helping us debug. (@vincentarelbundock #425)
+  for helping us to debug. (@vincentarelbundock #425)
 
 ## 0.4.1
 

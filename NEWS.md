@@ -8,8 +8,10 @@ where the formatting is also better._
 
 ### Bug fixes
 
-- Safer handling of pre-plot hooks. Fixes issues when plotting in loops, or in certain 
-  contexts like Rmarkdown/Quarto notebooks.
+- Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`
+  behaved inside loops, particularly for themed plots where only the final plot
+  was being drawn. Special thanks to @hadley and @cderv for helping us debug.
+  (@vincentarelbundock #425)
 
 ## 0.4.1
 

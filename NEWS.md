@@ -4,6 +4,15 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## Development
+
+### Bug fixes
+
+- Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`
+  behaves inside loops, particularly for themed plots where only the final plot
+  was being drawn in Quarto/RMarkdown contexts. Special thanks to @hadley and @cderv
+  for helping us to debug. (@vincentarelbundock #425)
+
 ## 0.4.1
 
 ### Bug fixes

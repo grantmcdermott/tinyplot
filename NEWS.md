@@ -6,6 +6,11 @@ where the formatting is also better._
 
 ## Development
 
+### New features
+
+- `type_text()` gains `xpd` and `srt` arguments for controlling text clipping
+  rotation, respectively. (#428 @grantmcdermott)
+
 ### Bug fixes
 
 - Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`

@@ -40,6 +40,54 @@ tinyplot_add(empty = FALSE, alpha = .1)
 
 ## Labels
 
+### Direct labels
+
+Direct labels can provide a nice alternative to a standard legend, particularly
+for grouped line plots. While `tinyplot` doesn't offer a "native" direct labels
+type, you can easily achieve the same end result using an idiomatic layering
+approach.
+
+```{r}
+library(tinyplot)
+tinytheme("clean2")
+
+aq = airquality
+aq$Month = factor(month.name[aq$Month], levels = month.name[5:9])
+
+# base layer
+plt(Temp ~ Day | Month, data = aq, type = "l", legend = FALSE)
+
+# for labels: subset to final dates for each month 
+aq2 = aq[aq$Day == ave(aq$Day, aq$Month, FUN = max), ]
+
+# add the labels with a type_text() layer
+plt_add(data = aq2, type = "text", labels = aq2$Month,
+        pos = 4, offset = 0.2, xpd = NA)
+```
+
+Hmmmm, can you see the problem? While we used `type_text(..., xpd = NA)` in the
+second layer above to avoid text clipping, the longer labels were still being
+cut off due to the limited RHS margin space of our `"clean2"` plotting theme.
+
+The good news is that there's an easy solution. Simply grab the theme's
+parameters, bump out the RHS margin by the longest label in our dataset, and
+then replot.
+
+```{r}
+# Fix: first grab the theme params and then adjust the RHS margin by
+# the longest label in the dataset
+parms = tinyplot:::theme_clean2
+parms$mar[4] = parms$mar[4] + max(strwidth(as.character(aq2$Month)))/2
+tinytheme("clean2", mar = parms$mar) # theme with adjust margins
+
+# Now plot both the base and direct label layers
+plt(Temp ~ Day | Month, data = aq, type = "l", legend = FALSE)
+plt_add(data = aq2, type = "text", labels = aq2$Month,
+        pos = 4, offset = 0.2, xpd = NA)
+# Reset the theme (optional, but recommended)
+tinytheme()
+```
+
 ### Axis label rotation
 
 When category labels are long or overlapping, users may want to rotate them for

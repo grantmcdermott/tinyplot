@@ -284,26 +284,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="direct-labels">Direct labels</h3>
 <p>Direct labels can provide a nice alternative to a standard legend, particularly for grouped line plots. While <code>tinyplot</code> doesn’t offer a “native” direct labels type, you can easily achieve the same end result using an idiomatic layering approach.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## dev note: we need to go through some eval -&gt; echo false trickery to get</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## around the fact that Quarto doesn't keep the same graphics device open...</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## which in turn is needed for strwidth(). The website will only display the</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## nicely formatted code that works in a live session, though.</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>aq <span class="ot">=</span> airquality</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>Month <span class="ot">=</span> <span class="fu">factor</span>(month.name[aq<span class="sc">$</span>Month], <span class="at">levels =</span> month.name[<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>])</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># base layer</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># for labels: subset to final dates for each month </span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>aq2 <span class="ot">=</span> aq[aq<span class="sc">$</span>Day <span class="sc">==</span> <span class="fu">ave</span>(aq<span class="sc">$</span>Day, aq<span class="sc">$</span>Month, <span class="at">FUN =</span> max), ]</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># add the labels with a type_text() layer</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">data =</span> aq2, <span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> aq2<span class="sc">$</span>Month,</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">offset =</span> <span class="fl">0.2</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>aq <span class="ot">=</span> airquality</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>Month <span class="ot">=</span> <span class="fu">factor</span>(month.name[aq<span class="sc">$</span>Month], <span class="at">levels =</span> month.name[<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># base layer</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># for labels: subset to final dates for each month </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>aq2 <span class="ot">=</span> aq[aq<span class="sc">$</span>Day <span class="sc">==</span> <span class="fu">ave</span>(aq<span class="sc">$</span>Day, aq<span class="sc">$</span>Month, <span class="at">FUN =</span> max), ]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># add the labels with a type_text() layer</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">data =</span> aq2, <span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> aq2<span class="sc">$</span>Month,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">offset =</span> <span class="fl">0.2</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -319,7 +314,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix: first grab the theme params and then adjust the RHS margin by</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the longest label in the dataset</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>longest_lab <span class="ot">=</span> <span class="fu">max</span>(<span class="fu">strwidth</span>(<span class="fu">as.character</span>(aq2<span class="sc">$</span>Month)))<span class="sc">/</span><span class="dv">2</span> <span class="co"># divide by 2 to get i.t.o. lines</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>longest_lab <span class="ot">=</span> <span class="fu">max</span>(<span class="fu">strwidth</span>(<span class="fu">as.character</span>(aq2<span class="sc">$</span>Month)))<span class="sc">/</span><span class="dv">2</span> <span class="co"># divide by 2 to get lines</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>parms <span class="ot">=</span> tinyplot<span class="sc">:::</span>theme_clean2</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>parms<span class="sc">$</span>mar[<span class="dv">4</span>] <span class="ot">=</span> parms<span class="sc">$</span>mar[<span class="dv">4</span>] <span class="sc">+</span> longest_lab</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>, <span class="at">mar =</span> parms<span class="sc">$</span>mar) <span class="co"># theme with adjusted margins</span></span>

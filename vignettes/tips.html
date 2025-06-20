@@ -214,7 +214,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#labels" id="toc-labels" class="nav-link" data-scroll-target="#labels">Labels</a>
   <ul class="collapse">
-  <li><a href="#axis-label-rotation" id="toc-axis-label-rotation" class="nav-link" data-scroll-target="#axis-label-rotation">Axis label rotation</a></li>
+  <li><a href="#direct-labels" id="toc-direct-labels" class="nav-link" data-scroll-target="#direct-labels">Direct labels</a></li>
+  <li><a href="#rotated-axis-labels" id="toc-rotated-axis-labels" class="nav-link" data-scroll-target="#rotated-axis-labels">Rotated axis labels</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -279,8 +280,71 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="labels" class="level2">
 <h2 class="anchored" data-anchor-id="labels">Labels</h2>
-<section id="axis-label-rotation" class="level3">
-<h3 class="anchored" data-anchor-id="axis-label-rotation">Axis label rotation</h3>
+<section id="direct-labels" class="level3">
+<h3 class="anchored" data-anchor-id="direct-labels">Direct labels</h3>
+<p>Direct labels can provide a nice alternative to a standard legend, particularly for grouped line plots. While <code>tinyplot</code> doesn’t offer a “native” direct labels type, you can easily achieve the same end result using an idiomatic layering approach.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## dev note: we need to go through some eval -&gt; echo false trickery to get</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## around the fact that Quarto doesn't keep the same graphics device open...</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## which in turn is needed for strwidth(). The website will only display the</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## nicely formatted code that works in a live session, though.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>aq <span class="ot">=</span> airquality</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>Month <span class="ot">=</span> <span class="fu">factor</span>(month.name[aq<span class="sc">$</span>Month], <span class="at">levels =</span> month.name[<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>])</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># base layer</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># for labels: subset to final dates for each month </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>aq2 <span class="ot">=</span> aq[aq<span class="sc">$</span>Day <span class="sc">==</span> <span class="fu">ave</span>(aq<span class="sc">$</span>Day, aq<span class="sc">$</span>Month, <span class="at">FUN =</span> max), ]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># add the labels with a type_text() layer</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">data =</span> aq2, <span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> aq2<span class="sc">$</span>Month,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">offset =</span> <span class="fl">0.2</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tips_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Hmmmm, can you see a problem? We used <code>type_text(..., xpd = NA)</code> in the second layer to avoid text clipping, but the longer labels are still being cut off due to the limited RHS margin space of our <code>"clean2"</code> plotting theme.</p>
+<p>The good news is that there’s an easy solution. Simply grab the theme’s parameters, bump out the RHS margin by the longest label in our dataset, and then replot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix: first grab the theme params and then adjust the RHS margin by</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the longest label in the dataset</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>longest_lab <span class="ot">=</span> <span class="fu">max</span>(<span class="fu">strwidth</span>(<span class="fu">as.character</span>(aq2<span class="sc">$</span>Month)))<span class="sc">/</span><span class="dv">2</span> <span class="co"># divide by 2 to get i.t.o. lines</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>parms <span class="ot">=</span> tinyplot<span class="sc">:::</span>theme_clean2</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>parms<span class="sc">$</span>mar[<span class="dv">4</span>] <span class="ot">=</span> parms<span class="sc">$</span>mar[<span class="dv">4</span>] <span class="sc">+</span> longest_lab</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>, <span class="at">mar =</span> parms<span class="sc">$</span>mar) <span class="co"># theme with adjusted margins</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Now plot both the base and direct label layers</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">data =</span> aq2, <span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> aq2<span class="sc">$</span>Month,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">offset =</span> <span class="fl">0.2</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tips_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset the theme (optional, but recommended)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="rotated-axis-labels" class="level3">
+<h3 class="anchored" data-anchor-id="rotated-axis-labels">Rotated axis labels</h3>
 <p>When category labels are long or overlapping, users may want to rotate them for readability. One option is fully perpendicular (90°) axis labels, which <code>tinyplot</code> supports via themes, e.g.&nbsp;<code>tinytheme("clean", las = 2)</code>. If a user wants finer control over the degree of rotation—say, 45°—this requires a bit more manual effort since we do not support custom rotation out of the box. The workaround involves three steps:</p>
 <ol type="1">
 <li>Suppress the default x-axis with <code>xaxt = "n"</code>.</li>
@@ -288,17 +352,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Optionally, clear the y-axis label by setting <code>ylab = ""</code>.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">0</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Four cylinders"</span>, <span class="st">"Six cylinders"</span>, <span class="st">"Eight cylinders"</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">srt =</span> <span class="dv">45</span>,          <span class="co"># rotate text 45 degrees</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">1.5</span>), <span class="co"># adjust text alignment</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">xpd =</span> <span class="cn">TRUE</span>)        <span class="co"># allow drawing outside plot region</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">0</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Four cylinders"</span>, <span class="st">"Six cylinders"</span>, <span class="st">"Eight cylinders"</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">srt =</span> <span class="dv">45</span>,          <span class="co"># rotate text 45 degrees</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">1.5</span>), <span class="co"># adjust text alignment</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">xpd =</span> <span class="cn">TRUE</span>)        <span class="co"># allow drawing outside plot region</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tips_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tips_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

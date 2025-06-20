@@ -88,7 +88,7 @@ plt_add(data = aq2, type = "text", labels = aq2$Month,
 tinytheme()
 ```
 
-### Axis label rotation
+### Rotated axis labels
 
 When category labels are long or overlapping, users may want to rotate them for
 readability. One option is fully perpendicular (90°) axis labels, which

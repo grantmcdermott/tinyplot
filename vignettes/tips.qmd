@@ -40,7 +40,102 @@ tinyplot_add(empty = FALSE, alpha = .1)
 
 ## Labels
 
-### Axis label rotation
+### Direct labels
+
+Direct labels can provide a nice alternative to a standard legend, particularly
+for grouped line plots. While `tinyplot` doesn't offer a "native" direct labels
+type, you can easily achieve the same end result using an idiomatic layering
+approach.
+
+```{r}
+#| eval: false
+
+## dev note: we need to go through some eval -> echo false trickery to get
+## around the fact that Quarto doesn't keep the same graphics device open...
+## which in turn is needed for strwidth(). The website will only display the
+## nicely formatted code that works in a live session, though.
+
+library(tinyplot)
+tinytheme("clean2")
+
+aq = airquality
+aq$Month = factor(month.name[aq$Month], levels = month.name[5:9])
+
+# base layer
+plt(Temp ~ Day | Month, data = aq, type = "l", legend = FALSE)
+
+# for labels: subset to final dates for each month 
+aq2 = aq[aq$Day == ave(aq$Day, aq$Month, FUN = max), ]
+
+# add the labels with a type_text() layer
+plt_add(data = aq2, type = "text", labels = aq2$Month,
+        pos = 4, offset = 0.2, xpd = NA)
+```
+
+```{r}
+#| echo: false
+library(tinyplot)
+tinytheme("clean2")
+
+aq = airquality
+aq$Month = factor(month.name[aq$Month], levels = month.name[5:9])
+
+# base layer
+plt(Temp ~ Day | Month, data = aq, type = "l", legend = FALSE)
+
+# for labels: subset to final dates for each month 
+aq2 = aq[aq$Day == ave(aq$Day, aq$Month, FUN = max), ]
+
+longest_lab = max(strwidth(as.character(aq2$Month)))/2
+
+# add the labels with a type_text() layer
+plt_add(data = aq2, type = "text", labels = aq2$Month,
+        pos = 4, offset = 0.2, xpd = NA)
+```
+
+Hmmmm, can you see a problem? We used `type_text(..., xpd = NA)` in the second
+layer to avoid text clipping, but the longer labels are still being cut off due
+to the limited RHS margin space of our `"clean2"` plotting theme.
+
+The good news is that there's an easy solution. Simply grab the theme's
+parameters, bump out the RHS margin by the longest label in our dataset, and
+then replot.
+
+```{r}
+#| eval: false
+
+# Fix: first grab the theme params and then adjust the RHS margin by
+# the longest label in the dataset
+longest_lab = max(strwidth(as.character(aq2$Month)))/2 # divide by 2 to get i.t.o. lines
+parms = tinyplot:::theme_clean2
+parms$mar[4] = parms$mar[4] + longest_lab
+tinytheme("clean2", mar = parms$mar) # theme with adjusted margins
+
+# Now plot both the base and direct label layers
+plt(Temp ~ Day | Month, data = aq, type = "l", legend = FALSE)
+plt_add(data = aq2, type = "text", labels = aq2$Month,
+        pos = 4, offset = 0.2, xpd = NA)
+```
+
+```{r}
+#| echo: false
+
+## dev note: This is the code that actually runs, using longest_lab from the
+## previous code chunk
+parms = tinyplot:::theme_clean2
+parms$mar[4] = parms$mar[4] + longest_lab
+tinytheme("clean2", mar = parms$mar)
+plt(Temp ~ Day | Month, data = aq, type = "l", legend = FALSE)
+plt_add(data = aq2, type = "text", labels = aq2$Month,
+        pos = 4, offset = 0.2, xpd = NA)
+```
+
+```{r}
+# Reset the theme (optional, but recommended)
+tinytheme()
+```
+
+### Rotated axis labels
 
 When category labels are long or overlapping, users may want to rotate them for
 readability. One option is fully perpendicular (90°) axis labels, which

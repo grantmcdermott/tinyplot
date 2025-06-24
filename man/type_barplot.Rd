@@ -34,7 +34,7 @@ group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: me
 
 \item{xlevels}{a character or numeric vector specifying the ordering of the
 levels of the \code{x} variable (if character) or the corresponding indexes
-(if numeric) should be plotted.}
+(if numeric) for the plot.}
 
 \item{xaxlabels}{a character vector with the axis labels for the \code{x} variable,
 defaulting to the levels of \code{x}.}

@@ -10,6 +10,8 @@ where the formatting is also better._
 
 - `type_text()` gains `xpd` and `srt` arguments for controlling text clipping
   rotation, respectively. (#428 @grantmcdermott)
+- Add `xlevels` (in addition to `ylevels`) in `type_spineplot()` for spine plots
+  with categorical `x` variable. (#431 @zeileis)
 
 ### Bug fixes
 

@@ -8,6 +8,7 @@ type_spineplot(
   breaks = NULL,
   tol.ylab = 0.05,
   off = NULL,
+  xlevels = NULL,
   ylevels = NULL,
   col = NULL,
   xaxlabels = NULL,
@@ -27,8 +28,9 @@ type_spineplot(
 \item{off}{vertical offset between the bars (in per cent). It is fixed to
     \code{0} for spinograms and defaults to \code{2} for spine plots.}
 
-\item{ylevels}{a character or numeric vector specifying in which order
-    the levels of the dependent variable should be plotted.}
+\item{xlevels, ylevels}{a character or numeric vector specifying the ordering of the
+levels of the \code{x} and \code{y} variables (if character) or the corresponding indexes
+(if numeric) for the plot.}
 
 \item{col}{a vector of fill colors of the same length as \code{levels(y)}.
     The default is to call \code{\link{gray.colors}}.}
@@ -90,6 +92,12 @@ tinyplot(
   Survived ~ Sex | Class, facet = "by", data = ttnc,
   type = type_spineplot(weights = ttnc$Freq),
   palette = "Dark 2", facet.args = list(nrow = 1), axes = "t"
+)
+
+# Reorder x and y variable categories either by their character levels or numeric indexes
+tinyplot(
+  Survived ~ Sex, facet = ~ Class, data = ttnc,
+  type = type_spineplot(weights = ttnc$Freq, xlevels = c("Female", "Male"), ylevels = 2:1)
 )
 
 # Note: It's possible to use "by" on its own (without faceting), but the

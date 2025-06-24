@@ -21,7 +21,7 @@
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
 #' @param xlevels a character or numeric vector specifying the ordering of the
 #'   levels of the `x` variable (if character) or the corresponding indexes
-#'   (if numeric) should be plotted.
+#'   (if numeric) for the plot.
 #' @param xaxlabels a character vector with the axis labels for the `x` variable,
 #'   defaulting to the levels of `x`.
 #' @param drop.zeros logical. Should bars with zero height be dropped? If set

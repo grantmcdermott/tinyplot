@@ -16,7 +16,9 @@ where the formatting is also better._
 - Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`
   behaves inside loops, particularly for themed plots where only the final plot
   was being drawn in Quarto/RMarkdown contexts. Special thanks to @hadley and @cderv
-  for helping us to debug. (@vincentarelbundock #425)
+  for helping us to debug. (#425 @vincentarelbundock)
+- The `xlevels` argument of `type_barplot()` could not handle numeric indexes correctly
+  (#431 @zeileis)
 
 ## 0.4.1
 

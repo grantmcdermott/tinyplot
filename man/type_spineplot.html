@@ -562,6 +562,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   breaks = NULL,
   tol.ylab = 0.05,
   off = NULL,
+  xlevels = NULL,
   ylevels = NULL,
   col = NULL,
   xaxlabels = NULL,
@@ -599,10 +600,10 @@ vertical offset between the bars (in per cent). It is fixed to <code>0</code> fo
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="ylevels">ylevels</code>
+<code id="xlevels">xlevels</code>, <code id="ylevels">ylevels</code>
 </td>
 <td>
-a character or numeric vector specifying in which order the levels of the dependent variable should be plotted.
+a character or numeric vector specifying the ordering of the levels of the <code>x</code> and <code>y</code> variables (if character) or the corresponding indexes (if numeric) for the plot.
 </td>
 </tr>
 <tr>
@@ -721,16 +722,28 @@ numeric. A vector of frequency weights for each observation in the data. If <cod
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: It's possible to use "by" on its own (without faceting), but the</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># overlaid result isn't great. We will likely overhaul this behaviour in a</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># future version of tinyplot...</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Survived <span class="sc">~</span> Sex <span class="sc">|</span> Class, <span class="at">data =</span> ttnc,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_spineplot</span>(<span class="at">weights =</span> ttnc<span class="sc">$</span>Freq), <span class="at">alpha =</span> <span class="fl">0.3</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder x and y variable categories either by their character levels or numeric indexes</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  Survived <span class="sc">~</span> Sex, <span class="at">facet =</span> <span class="sc">~</span> Class, <span class="at">data =</span> ttnc,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_spineplot</span>(<span class="at">weights =</span> ttnc<span class="sc">$</span>Freq, <span class="at">xlevels =</span> <span class="fu">c</span>(<span class="st">"Female"</span>, <span class="st">"Male"</span>), <span class="at">ylevels =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">1</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_spineplot_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: It's possible to use "by" on its own (without faceting), but the</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># overlaid result isn't great. We will likely overhaul this behaviour in a</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># future version of tinyplot...</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Survived <span class="sc">~</span> Sex <span class="sc">|</span> Class, <span class="at">data =</span> ttnc,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_spineplot</span>(<span class="at">weights =</span> ttnc<span class="sc">$</span>Freq), <span class="at">alpha =</span> <span class="fl">0.3</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_spineplot_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

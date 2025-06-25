@@ -260,12 +260,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="new-features">New features</h3>
 <ul>
 <li><code>type_text()</code> gains <code>xpd</code> and <code>srt</code> arguments for controlling text clipping rotation, respectively. (<a href="https://github.com/grantmcdermott/tinyplot/issues/428">#428</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Add <code>xlevels</code> (in addition to <code>ylevels</code>) in <code>type_spineplot()</code> for spine plots with categorical <code>x</code> variable. (<a href="https://github.com/grantmcdermott/tinyplot/issues/431">#431</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 </ul>
 </section>
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
-<li>Safer handling of pre-plot hooks. Resolves an issue affecting how <code>tinyplot</code> behaves inside loops, particularly for themed plots where only the final plot was being drawn in Quarto/RMarkdown contexts. Special thanks to <a href="https://github.com/hadley"><span class="citation" data-cites="hadley">@hadley</span></a> and <a href="https://github.com/cderv"><span class="citation" data-cites="cderv">@cderv</span></a> for helping us to debug. <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> <a href="https://github.com/grantmcdermott/tinyplot/issues/425">#425</a>)</li>
+<li>Safer handling of pre-plot hooks. Resolves an issue affecting how <code>tinyplot</code> behaves inside loops, particularly for themed plots where only the final plot was being drawn in Quarto/RMarkdown contexts. Special thanks to <a href="https://github.com/hadley"><span class="citation" data-cites="hadley">@hadley</span></a> and <a href="https://github.com/cderv"><span class="citation" data-cites="cderv">@cderv</span></a> for helping us to debug. (<a href="https://github.com/grantmcdermott/tinyplot/issues/425">#425</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
+<li>The <code>xlevels</code> argument of <code>type_barplot()</code> could not handle numeric indexes correctly. (<a href="https://github.com/grantmcdermott/tinyplot/issues/431">#431</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 </ul>
 </section>
 </section>

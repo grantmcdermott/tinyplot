@@ -168,8 +168,10 @@ draw_legend = function(
       legend_args[["lwd"]] = legend_args[["lwd"]] %||% lwd
     }
   
-    if (isTRUE(type %in% c("p", "pointrange", "errorbar")) && (length(col) == 1 || length(cex) == 1)) {
-      legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% cex
+    # browser()
+    # if (isTRUE(type %in% c("p", "pointrange", "errorbar")) && (length(col) == 1 || length(cex) == 1)) {
+    if (type %in% c("p", "pointrange", "errorbar")) {
+      legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% (cex %||% par("cex"))
     }
   
     # turn off inner line for "barplot" type

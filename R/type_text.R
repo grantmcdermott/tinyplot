@@ -57,14 +57,14 @@ data_text = function(labels) {
 
 draw_text = function(adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, font = NULL, xpd = NULL, srt = 0) {
   if (is.null(xpd)) xpd = par("xpd")
-  fun = function(ix, iy, ilabels, icol, cex, ...) {
+  fun = function(ix, iy, ilabels, icol, icex, ...) {
     text(
       x = ix, y = iy, labels = ilabels, col = icol,
       adj = adj, pos = pos, offset = offset,
       vfont = vfont, font = font,
       xpd = xpd,
       srt = srt,
-      cex = cex
+      cex = icex
     )
   }
 }

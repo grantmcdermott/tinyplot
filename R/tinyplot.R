@@ -592,7 +592,7 @@ tinyplot.default = function(
     bg = NULL,
     fill = NULL,
     alpha = NULL,
-    cex = 1,
+    cex = NULL,
     add = FALSE,
     draw = NULL,
     empty = FALSE,
@@ -620,6 +620,7 @@ tinyplot.default = function(
     # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
   }
 
+  # browser()
   dots = list(...)
 
   if (add) legend = FALSE
@@ -781,6 +782,9 @@ tinyplot.default = function(
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
 
+  # TEST bubble
+  bubble = FALSE
+
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)
@@ -803,6 +807,7 @@ tinyplot.default = function(
       log          = log,
       lty          = lty,
       lwd          = lwd,
+      cex          = cex,
       facet        = facet,
       facet_by     = facet_by,
       facet.args   = facet.args,
@@ -928,6 +933,11 @@ tinyplot.default = function(
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+  ## TEST
+  # browser()
+  cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
+  if (bubble) split_data[[1]][["cex"]] = cex ## check (maybe ngrps!=length(cex)?)
+  ## END TEST
   col = by_col(
     ngrps = ngrps, col = col, palette = palette,
     gradient = by_continuous, ordered = by_ordered, alpha = alpha)
@@ -1011,6 +1021,23 @@ tinyplot.default = function(
       legend_args[["lty"]] = 0
     }
 
+    # browser()
+    # l = draw_legend(
+    #   legend = legend,
+    #   legend_args = legend_args,
+    #   by_dep = by_dep,
+    #   lgnd_labs = lgnd_labs,
+    #   type = type,
+    #   pch = pch,
+    #   lty = lty,
+    #   lwd = lwd,
+    #   col = col,
+    #   bg = bg,
+    #   gradient = by_continuous,
+    #   cex = cex * cex_fct_adj,
+    #   has_sub = has_sub,
+    #   draw = FALSE
+    # )
     draw_legend(
       legend = legend,
       legend_args = legend_args,
@@ -1239,6 +1266,7 @@ tinyplot.default = function(
 
   ## Outer loop over the facets
   for (i in seq_along(split_data)) {
+    # browser()
     # Split group-level data again to grab any "by" groups
     idata = split_data[[i]]
     iby = idata[["by"]]
@@ -1246,6 +1274,15 @@ tinyplot.default = function(
       if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
         idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
+        # ## TEST
+        # if (cex_continuous) {
+        #   if (cex_by) { ## NEED TO CONSTRUCT ABOVE
+        #     idata[["cex"]] = cex[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 2.5)))]
+        #   } else { ## WHAT SHOULD THIS BE??
+        #     idata[["cex"]] = cex[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 2.5)))]
+        #   }
+        # }
+        # ## END TEST
         idata = list(idata)
       } else {
         idata = lapply(idata, split, iby)
@@ -1307,6 +1344,9 @@ tinyplot.default = function(
         ibg = idata[[ii]]$bg
       }
 
+      # browser() ## bubble test
+      icex = if (bubble) idata[[ii]][["cex"]] else cex[[ii]]
+
       # empty plot flag
       empty_plot = FALSE
       if (isTRUE(empty) || isTRUE(type == "n") || ((length(ix) == 0) && !(type %in% c("histogram", "hist", "rect", "segments", "spineplot")))) {
@@ -1345,7 +1385,8 @@ tinyplot.default = function(
           iymin = iymin,
           ilabels = ilabels,
           iz = iz,
-          cex = cex,
+          # cex = cex,
+          icex = icex,
           dots = dots,
           type = type,
           x_by = x_by,

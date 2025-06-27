@@ -170,7 +170,7 @@ draw_legend = function(
   
     # browser()
     # if (isTRUE(type %in% c("p", "pointrange", "errorbar")) && (length(col) == 1 || length(cex) == 1)) {
-    if (type %in% c("p", "pointrange", "errorbar")) {
+    if (type %in% c("p", "pointrange", "errorbar", "text")) {
       legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% (cex %||% par("cex"))
     }
   

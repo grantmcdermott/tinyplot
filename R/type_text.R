@@ -42,14 +42,34 @@ type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, vfont = NULL,
   return(out)
 }
 
-data_text = function(labels) {
-  fun = function(datapoints, ...) {
+data_text = function(labels, clim = c(0.5, 2.5)) {
+  fun = function(datapoints, cex = NULL, ...) {
     if (length(labels) != 1 && length(labels) != nrow(datapoints)) {
       msg <- sprintf("`labels` must be of length 1 or %s.", nrow(datapoints))
       stop(msg, call. = FALSE)
     }
     datapoints$labels = labels
-    out = list(datapoints = datapoints)
+    
+    # browser()
+    bubble = FALSE
+    bubble_cex = 1
+    if (!is.null(cex) && length(cex) == nrow(datapoints)) {
+      bubble = TRUE 
+      ## Identify the pretty break points for our bubble labels
+      bubble_labs = pretty(cex, n = 5)
+      len_labs = length(bubble_labs)
+      cex = rescale_num(c(bubble_labs, cex), to = clim)
+      bubble_cex = cex[1:len_labs]
+      cex = cex[(len_labs+1):length(cex)]
+      names(bubble_cex) = format(bubble_labs)
+    }
+
+    out = list(
+      datapoints = datapoints,
+      cex = cex,
+      bubble = bubble,
+      bubble_cex = bubble_cex
+    )
     return(out)
   }
   return(fun)

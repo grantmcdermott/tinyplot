@@ -985,7 +985,7 @@ tinyplot.default = function(
   # place and draw the legend
   
    # simple indicator variables for later use
-  # browser()
+  browser()
   has_legend = FALSE
   dual_legend = bubble && !null_by && !isFALSE(legend)
   lgnd_cex = NULL
@@ -1009,6 +1009,7 @@ tinyplot.default = function(
   if (null_by) {
     if (is.null(legend)) {
       ## TEST
+      # browser()
       # special case: bubble legend, no by legend
       if (bubble && !dual_legend) {
         legend_args[["title"]] = cex_dep ## rather by_dep?
@@ -1021,6 +1022,10 @@ tinyplot.default = function(
       ## END TEST
       # legend = "none"
       # legend_args[["x"]] = "none"
+    } else if (bubble && !dual_legend) {
+        legend_args[["title"]] = cex_dep ## rather by_dep?
+        lgnd_labs = names(bubble_cex)
+        lgnd_cex = bubble_cex * cex_fct_adj
     }
   }
 

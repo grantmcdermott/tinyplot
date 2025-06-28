@@ -985,7 +985,7 @@ tinyplot.default = function(
   # place and draw the legend
   
    # simple indicator variables for later use
-  browser()
+  # browser()
   has_legend = FALSE
   dual_legend = bubble && !null_by && !isFALSE(legend)
   lgnd_cex = NULL

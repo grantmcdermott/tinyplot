@@ -719,6 +719,7 @@ tinyplot.default = function(
   }
   by_dep = deparse1(substitute(by))
   null_by = is.null(by)
+  cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL
 
   ## coerce character variables to factors
   if (!is.null(x) && is.character(x)) x = factor(x)
@@ -935,6 +936,7 @@ tinyplot.default = function(
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
   ## TEST
   # browser()
+  # if (bubble) bubble_labs = cex ## need to do this in type_points...
   cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
   if (bubble) split_data[[1]][["cex"]] = cex ## check (maybe ngrps!=length(cex)?)
   ## END TEST
@@ -967,7 +969,7 @@ tinyplot.default = function(
     pidx = round(pidx)
     lgnd_labs[pidx] = pbyvar
   }
-
+  
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
@@ -981,7 +983,12 @@ tinyplot.default = function(
   #
 
   # place and draw the legend
-  has_legend = FALSE # simple indicator variable for later use
+  
+   # simple indicator variables for later use
+  # browser()
+  has_legend = FALSE
+  dual_legend = bubble && !null_by && !isFALSE(legend)
+  lgnd_cex = NULL
 
   if (!exists("legend_args")) {
     legend_args = dots[["legend_args"]]
@@ -996,17 +1003,30 @@ tinyplot.default = function(
   }
   if (!is.null(legend) && legend == "none") {
     legend_args[["x"]] = "none"
+    dual_legend = FALSE
   }
 
   if (null_by) {
     if (is.null(legend)) {
-      legend = "none"
-      legend_args[["x"]] = "none"
+      ## TEST
+      # special case: bubble legend, no by legend
+      if (bubble && !dual_legend) {
+        legend_args[["title"]] = cex_dep ## rather by_dep?
+        lgnd_labs = names(bubble_cex)
+        lgnd_cex = bubble_cex * cex_fct_adj
+      } else {
+        legend = "none"
+        legend_args[["x"]] = "none"
+      }
+      ## END TEST
+      # legend = "none"
+      # legend_args[["x"]] = "none"
     }
   }
 
-  if ((is.null(legend) || legend != "none") && !add) {
-    if (isFALSE(by_continuous)) {
+  if ((is.null(legend) || legend != "none" || bubble) && !add) {
+    # browser()
+    if (isFALSE(by_continuous) && !bubble) {
       if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
       } else {
@@ -1021,23 +1041,37 @@ tinyplot.default = function(
       legend_args[["lty"]] = 0
     }
 
-    # browser()
-    # l = draw_legend(
-    #   legend = legend,
-    #   legend_args = legend_args,
-    #   by_dep = by_dep,
-    #   lgnd_labs = lgnd_labs,
-    #   type = type,
-    #   pch = pch,
-    #   lty = lty,
-    #   lwd = lwd,
-    #   col = col,
-    #   bg = bg,
-    #   gradient = by_continuous,
-    #   cex = cex * cex_fct_adj,
-    #   has_sub = has_sub,
-    #   draw = FALSE
+    if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
+
+    if (dual_legend) {
+      l = draw_legend(
+        legend = legend,
+        legend_args = legend_args,
+        by_dep = by_dep,
+        lgnd_labs = lgnd_labs,
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = col,
+        bg = bg,
+        gradient = by_continuous,
+        # cex = cex * cex_fct_adj,
+        cex = lgnd_cex,
+        has_sub = has_sub,
+        draw = FALSE
+      )
+    }
+    # ## MANUAL BUBBLE TEST
+    # draw_legend(
+    #   legend = "right!",
+    #   legend_args = list(title = cex_dep),
+    #   lgnd_labs = names(bubble_cex),
+    #   type = type, pch = pch,
+    #   cex = bubble_cex * cex_fct_adj,
+    #   has_sub = has_sub
     # )
+    # ## END MANUAL TEST
     draw_legend(
       legend = legend,
       legend_args = legend_args,
@@ -1050,12 +1084,13 @@ tinyplot.default = function(
       col = col,
       bg = bg,
       gradient = by_continuous,
-      cex = cex * cex_fct_adj,
+      # cex = cex * cex_fct_adj,
+      cex = lgnd_cex,
       has_sub = has_sub
     )
 
     has_legend = TRUE
-  } else if (legend_args[["x"]] == "none" && !add) {
+    } else if (legend_args[["x"]] == "none" && !add) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1

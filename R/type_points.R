@@ -2,7 +2,7 @@
 #'
 #' @description Type function for plotting points, i.e. a scatter plot.
 #' @param clim Numeric giving the lower and upper limits of the character
-#'   expansion normalization for bubble charts.
+#'   expansion (`cex`) normalization for bubble charts.
 #' 
 #' @examples
 #' # "p" type convenience character string
@@ -54,9 +54,15 @@ data_points = function(clim = c(0.5, 2.5)) {
 
     # browser()
     bubble = FALSE
+    bubble_cex = 1
     if (!is.null(cex) && length(cex) == nrow(datapoints)) {
-      cex = rescale_num(cex, to = clim) 
-      bubble = TRUE
+      bubble = TRUE 
+      ## Identify the pretty break points for our bubble labels
+      bubble_labs = pretty(cex, n = 5)
+      cex = rescale_num(c(bubble_labs, cex), to = clim)
+      bubble_cex = cex[1:5]
+      cex = cex[(5+1):length(cex)]
+      names(bubble_cex) = format(bubble_labs)
     }
     
     out = list(
@@ -64,7 +70,8 @@ data_points = function(clim = c(0.5, 2.5)) {
       xlabs = xlabs,
       ylabs = ylabs,
       cex = cex,
-      bubble = bubble
+      bubble = bubble,
+      bubble_cex = bubble_cex
     )
     return(out)
   }

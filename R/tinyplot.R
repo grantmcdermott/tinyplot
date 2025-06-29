@@ -620,7 +620,6 @@ tinyplot.default = function(
     # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
   }
 
-  # browser()
   dots = list(...)
 
   if (add) legend = FALSE
@@ -783,7 +782,6 @@ tinyplot.default = function(
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
 
-  # TEST bubble
   bubble = FALSE
 
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
@@ -934,12 +932,8 @@ tinyplot.default = function(
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
-  ## TEST
-  # browser()
-  # if (bubble) bubble_labs = cex ## need to do this in type_points...
   cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
   if (bubble) split_data[[1]][["cex"]] = cex ## check (maybe ngrps!=length(cex)?)
-  ## END TEST
   col = by_col(
     ngrps = ngrps, col = col, palette = palette,
     gradient = by_continuous, ordered = by_ordered, alpha = alpha)
@@ -985,7 +979,6 @@ tinyplot.default = function(
   # place and draw the legend
   
    # simple indicator variables for later use
-  # browser()
   has_legend = FALSE
   dual_legend = bubble && !null_by && !isFALSE(legend)
   lgnd_cex = NULL
@@ -1008,8 +1001,6 @@ tinyplot.default = function(
 
   if (null_by) {
     if (is.null(legend)) {
-      ## TEST
-      # browser()
       # special case: bubble legend, no by legend
       if (bubble && !dual_legend) {
         legend_args[["title"]] = cex_dep ## rather by_dep?
@@ -1019,9 +1010,6 @@ tinyplot.default = function(
         legend = "none"
         legend_args[["x"]] = "none"
       }
-      ## END TEST
-      # legend = "none"
-      # legend_args[["x"]] = "none"
     } else if (bubble && !dual_legend) {
         legend_args[["title"]] = cex_dep ## rather by_dep?
         lgnd_labs = names(bubble_cex)
@@ -1030,7 +1018,6 @@ tinyplot.default = function(
   }
 
   if ((is.null(legend) || legend != "none" || bubble) && !add) {
-    # browser()
     if (isFALSE(by_continuous) && (!bubble || dual_legend)) {
       if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
@@ -1045,8 +1032,6 @@ tinyplot.default = function(
       legend_args[["pt.lwd"]] = par("lwd")
       legend_args[["lty"]] = 0
     }
-
-    # browser()
 
     if (!dual_legend) {
       ## simple case: single legend only
@@ -1113,7 +1098,6 @@ tinyplot.default = function(
       l1h = l1$rect$h
       l2h = l2$rect$h
       
-      # browser()
       # order depends on which legend is "wider"
       if (l1w > l2w) {
         # normal legend is wider; draw bubble first
@@ -1398,7 +1382,6 @@ tinyplot.default = function(
 
   ## Outer loop over the facets
   for (i in seq_along(split_data)) {
-    # browser()
     # Split group-level data again to grab any "by" groups
     idata = split_data[[i]]
     iby = idata[["by"]]
@@ -1406,15 +1389,6 @@ tinyplot.default = function(
       if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
         idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
-        # ## TEST
-        # if (cex_continuous) {
-        #   if (cex_by) { ## NEED TO CONSTRUCT ABOVE
-        #     idata[["cex"]] = cex[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 2.5)))]
-        #   } else { ## WHAT SHOULD THIS BE??
-        #     idata[["cex"]] = cex[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 2.5)))]
-        #   }
-        # }
-        # ## END TEST
         idata = list(idata)
       } else {
         idata = lapply(idata, split, iby)
@@ -1461,6 +1435,7 @@ tinyplot.default = function(
       ipch = pch[ii]
       ilty = lty[ii]
       ilwd = lwd[ii]
+      icex = if (bubble) idata[[ii]][["cex"]] else cex[[ii]]
       
       ix = idata[[ii]][["x"]]
       iy = idata[[ii]][["y"]]
@@ -1475,9 +1450,6 @@ tinyplot.default = function(
         icol = idata[[ii]]$col
         ibg = idata[[ii]]$bg
       }
-
-      # browser() ## bubble test
-      icex = if (bubble) idata[[ii]][["cex"]] else cex[[ii]]
 
       # empty plot flag
       empty_plot = FALSE

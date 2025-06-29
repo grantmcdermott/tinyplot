@@ -36,8 +36,8 @@
 #' @export
 type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, font = NULL, xpd = NULL, srt = 0, clim = c(0.5, 2.5)) {
   out = list(
-    draw = draw_text(adj = adj, pos = pos, offset = offset, vfont = vfont, font = font, xpd = xpd, srt = srt, clim = clim),
-    data = data_text(labels = labels),
+    draw = draw_text(adj = adj, pos = pos, offset = offset, vfont = vfont, font = font, xpd = xpd, srt = srt),
+    data = data_text(labels = labels, clim = clim),
     name = "text"
   )
   class(out) = "tinyplot_type"

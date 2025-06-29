@@ -1031,7 +1031,7 @@ tinyplot.default = function(
 
   if ((is.null(legend) || legend != "none" || bubble) && !add) {
     # browser()
-    if (isFALSE(by_continuous) && !bubble) {
+    if (isFALSE(by_continuous) && (!bubble || dual_legend)) {
       if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
       } else {
@@ -1046,10 +1046,12 @@ tinyplot.default = function(
       legend_args[["lty"]] = 0
     }
 
-    if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
+    # browser()
 
-    if (dual_legend) {
-      l = draw_legend(
+    if (!dual_legend) {
+      ## simple case: single legend only
+      if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
+      draw_legend(
         legend = legend,
         legend_args = legend_args,
         by_dep = by_dep,
@@ -1061,38 +1063,128 @@ tinyplot.default = function(
         col = col,
         bg = bg,
         gradient = by_continuous,
-        # cex = cex * cex_fct_adj,
         cex = lgnd_cex,
+        has_sub = has_sub
+      )
+    } else {
+      ## dual legend case...
+      ## FIXME: current logic only works for "right!" legend
+      legend = "bottomright!" # need bottom otherwise can't adjust inset vertically
+      
+      # legend 1: by grouping
+      l1 = draw_legend(
+        legend = legend,
+        legend_args = legend_args,
+        by_dep = by_dep,
+        lgnd_labs = lgnd_labs,
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = col,
+        bg = bg,
+        gradient = by_continuous,
+        cex = cex * cex_fct_adj,
+        # cex = lgnd_cex,
         has_sub = has_sub,
         draw = FALSE
       )
+      # legend 2: bubble
+      l2 = draw_legend(
+        legend = legend,
+        legend_args = modifyList(legend_args, list(title = cex_dep), keep.null = TRUE),
+        # by_dep = cex_dep,
+        lgnd_labs = names(bubble_cex),
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = col,
+        bg = bg,
+        gradient = by_continuous,
+        cex = bubble_cex * cex_fct_adj,
+        has_sub = has_sub,
+        draw = FALSE
+      )
+
+      # reposition and plot both legends
+      l1w = l1$rect$w
+      l2w = l2$rect$w
+      l1h = l1$rect$h
+      l2h = l2$rect$h
+      
+      # browser()
+      # order depends on which legend is "wider"
+      if (l1w > l2w) {
+        # normal legend is wider; draw bubble first
+        draw_legend(
+          legend = legend,
+          legend_args = modifyList(legend_args, list(title = cex_dep, inset = c((l2w-l1w)/2, .4-l2h/2)), keep.null = TRUE),
+          lgnd_labs = names(bubble_cex),
+          type = type,
+          pch = par("pch"),
+          lty = lty,
+          lwd = lwd,
+          col = par("col"),
+          bg = par("col"),
+          cex = bubble_cex * cex_fct_adj,
+          has_sub = has_sub
+        )
+        draw_legend(
+          legend = legend,#NULL,
+          legend_args = modifyList(legend_args, list(inset = c(0, .5+l1h/2)), keep.null = TRUE),
+          by_dep = by_dep,
+          lgnd_labs = lgnd_labs,
+          type = type,
+          pch = pch,
+          lty = lty,
+          lwd = lwd,
+          col = col,
+          bg = bg,
+          gradient = by_continuous,
+          cex = cex * cex_fct_adj,
+          # cex = lgnd_cex,
+          has_sub = has_sub,
+          new_plot = FALSE # NB!
+        )
+
+      } else {
+        draw_legend(
+          legend = legend, #NULL,
+          legend_args = modifyList(legend_args, list(inset = c((l1w-l2w)/2,.5+l1h/2)), keep.null = TRUE),
+          by_dep = by_dep,
+          lgnd_labs = lgnd_labs,
+          type = type,
+          pch = pch,
+          lty = lty,
+          lwd = lwd,
+          col = col,
+          bg = bg,
+          gradient = by_continuous,
+          cex = cex * cex_fct_adj,
+          # cex = lgnd_cex,
+          has_sub = has_sub
+        )
+        # draw l2
+        draw_legend(
+          legend = legend,
+          legend_args = modifyList(legend_args, list(title = cex_dep, inset = c(0, .4-l2h/2)), keep.null = TRUE),
+          lgnd_labs = names(bubble_cex),
+          type = type,
+          pch = par("pch"),
+          lty = lty,
+          lwd = lwd,
+          col = par("col"),
+          bg = par("col"),
+          # gradient = by_continuous,
+          cex = bubble_cex * cex_fct_adj,
+          has_sub = has_sub,
+          new_plot = FALSE # NB!
+        )
+        
+      }
+      
     }
-    # ## MANUAL BUBBLE TEST
-    # draw_legend(
-    #   legend = "right!",
-    #   legend_args = list(title = cex_dep),
-    #   lgnd_labs = names(bubble_cex),
-    #   type = type, pch = pch,
-    #   cex = bubble_cex * cex_fct_adj,
-    #   has_sub = has_sub
-    # )
-    # ## END MANUAL TEST
-    draw_legend(
-      legend = legend,
-      legend_args = legend_args,
-      by_dep = by_dep,
-      lgnd_labs = lgnd_labs,
-      type = type,
-      pch = pch,
-      lty = lty,
-      lwd = lwd,
-      col = col,
-      bg = bg,
-      gradient = by_continuous,
-      # cex = cex * cex_fct_adj,
-      cex = lgnd_cex,
-      has_sub = has_sub
-    )
 
     has_legend = TRUE
     } else if (legend_args[["x"]] == "none" && !add) {

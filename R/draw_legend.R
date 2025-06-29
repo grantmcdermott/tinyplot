@@ -504,7 +504,11 @@ tinylegend = function(
   setHook("before.plot.new", oldhook, action = "replace")
   
   # Finally, set the inset as part of the legend args.
-  legend_args[["inset"]] = inset
+  if (is.null(legend_args[["inset"]])) {
+    legend_args[["inset"]] = inset
+  } else {
+    legend_args[["inset"]] = legend_args[["inset"]] + inset
+  }
   
   #
   ## Step 3: Draw the legend

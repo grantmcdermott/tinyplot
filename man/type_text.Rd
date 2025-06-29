@@ -12,7 +12,8 @@ type_text(
   vfont = NULL,
   font = NULL,
   xpd = NULL,
-  srt = 0
+  srt = 0,
+  clim = c(0.5, 2.5)
 )
 }
 \arguments{
@@ -47,6 +48,9 @@ number of x,y coordinates.}
 \code{\link[graphics:par]{graphics::par()}}.}
 
 \item{srt}{Numeric giving the desired string rotation in degrees.}
+
+\item{clim}{Numeric giving the lower and upper limits of the character
+expansion (\code{cex}) normalization for bubble charts.}
 }
 \description{
 Type function for adding text annotations to a plot. This function allows

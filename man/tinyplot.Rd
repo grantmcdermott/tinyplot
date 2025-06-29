@@ -51,7 +51,7 @@ tinyplot(x, ...)
   bg = NULL,
   fill = NULL,
   alpha = NULL,
-  cex = 1,
+  cex = NULL,
   add = FALSE,
   draw = NULL,
   empty = FALSE,

@@ -592,7 +592,7 @@ tinyplot.default = function(
     bg = NULL,
     fill = NULL,
     alpha = NULL,
-    cex = 1,
+    cex = NULL,
     add = FALSE,
     draw = NULL,
     empty = FALSE,
@@ -718,6 +718,7 @@ tinyplot.default = function(
   }
   by_dep = deparse1(substitute(by))
   null_by = is.null(by)
+  cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL
 
   ## coerce character variables to factors
   if (!is.null(x) && is.character(x)) x = factor(x)
@@ -781,6 +782,8 @@ tinyplot.default = function(
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
 
+  bubble = FALSE
+
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)
@@ -803,6 +806,7 @@ tinyplot.default = function(
       log          = log,
       lty          = lty,
       lwd          = lwd,
+      cex          = cex,
       facet        = facet,
       facet_by     = facet_by,
       facet.args   = facet.args,
@@ -928,6 +932,8 @@ tinyplot.default = function(
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+  cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
+  if (bubble) split_data[[1]][["cex"]] = cex ## check (maybe ngrps!=length(cex)?)
   col = by_col(
     ngrps = ngrps, col = col, palette = palette,
     gradient = by_continuous, ordered = by_ordered, alpha = alpha)
@@ -957,7 +963,7 @@ tinyplot.default = function(
     pidx = round(pidx)
     lgnd_labs[pidx] = pbyvar
   }
-
+  
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
@@ -971,7 +977,11 @@ tinyplot.default = function(
   #
 
   # place and draw the legend
-  has_legend = FALSE # simple indicator variable for later use
+  
+   # simple indicator variables for later use
+  has_legend = FALSE
+  dual_legend = bubble && !null_by && !isFALSE(legend)
+  lgnd_cex = NULL
 
   if (!exists("legend_args")) {
     legend_args = dots[["legend_args"]]
@@ -986,17 +996,29 @@ tinyplot.default = function(
   }
   if (!is.null(legend) && legend == "none") {
     legend_args[["x"]] = "none"
+    dual_legend = FALSE
   }
 
   if (null_by) {
     if (is.null(legend)) {
-      legend = "none"
-      legend_args[["x"]] = "none"
+      # special case: bubble legend, no by legend
+      if (bubble && !dual_legend) {
+        legend_args[["title"]] = cex_dep ## rather by_dep?
+        lgnd_labs = names(bubble_cex)
+        lgnd_cex = bubble_cex * cex_fct_adj
+      } else {
+        legend = "none"
+        legend_args[["x"]] = "none"
+      }
+    } else if (bubble && !dual_legend) {
+        legend_args[["title"]] = cex_dep ## rather by_dep?
+        lgnd_labs = names(bubble_cex)
+        lgnd_cex = bubble_cex * cex_fct_adj
     }
   }
 
-  if ((is.null(legend) || legend != "none") && !add) {
-    if (isFALSE(by_continuous)) {
+  if ((is.null(legend) || legend != "none" || bubble) && !add) {
+    if (isFALSE(by_continuous) && (!bubble || dual_legend)) {
       if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
       } else {
@@ -1011,24 +1033,145 @@ tinyplot.default = function(
       legend_args[["lty"]] = 0
     }
 
-    draw_legend(
-      legend = legend,
-      legend_args = legend_args,
-      by_dep = by_dep,
-      lgnd_labs = lgnd_labs,
-      type = type,
-      pch = pch,
-      lty = lty,
-      lwd = lwd,
-      col = col,
-      bg = bg,
-      gradient = by_continuous,
-      cex = cex * cex_fct_adj,
-      has_sub = has_sub
-    )
+    if (!dual_legend) {
+      ## simple case: single legend only
+      if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
+      draw_legend(
+        legend = legend,
+        legend_args = legend_args,
+        by_dep = by_dep,
+        lgnd_labs = lgnd_labs,
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = col,
+        bg = bg,
+        gradient = by_continuous,
+        cex = lgnd_cex,
+        has_sub = has_sub
+      )
+    } else {
+      ## dual legend case...
+      ## FIXME: current logic only works for "right!" legend
+      legend = "bottomright!" # need bottom otherwise can't adjust inset vertically
+      
+      # legend 1: by grouping
+      l1 = draw_legend(
+        legend = legend,
+        legend_args = legend_args,
+        by_dep = by_dep,
+        lgnd_labs = lgnd_labs,
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = col,
+        bg = bg,
+        gradient = by_continuous,
+        cex = cex * cex_fct_adj,
+        # cex = lgnd_cex,
+        has_sub = has_sub,
+        draw = FALSE
+      )
+      # legend 2: bubble
+      l2 = draw_legend(
+        legend = legend,
+        legend_args = modifyList(legend_args, list(title = cex_dep), keep.null = TRUE),
+        # by_dep = cex_dep,
+        lgnd_labs = names(bubble_cex),
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = col,
+        bg = bg,
+        gradient = by_continuous,
+        cex = bubble_cex * cex_fct_adj,
+        has_sub = has_sub,
+        draw = FALSE
+      )
+
+      # reposition and plot both legends
+      l1w = l1$rect$w
+      l2w = l2$rect$w
+      l1h = l1$rect$h
+      l2h = l2$rect$h
+      
+      # order depends on which legend is "wider"
+      if (l1w > l2w) {
+        # normal legend is wider; draw bubble first
+        draw_legend(
+          legend = legend,
+          legend_args = modifyList(legend_args, list(title = cex_dep, inset = c((l2w-l1w)/2, .4-l2h/2)), keep.null = TRUE),
+          lgnd_labs = names(bubble_cex),
+          type = type,
+          pch = par("pch"),
+          lty = lty,
+          lwd = lwd,
+          col = par("col"),
+          bg = par("col"),
+          cex = bubble_cex * cex_fct_adj,
+          has_sub = has_sub
+        )
+        draw_legend(
+          legend = legend,#NULL,
+          legend_args = modifyList(legend_args, list(inset = c(0, .5+l1h/2)), keep.null = TRUE),
+          by_dep = by_dep,
+          lgnd_labs = lgnd_labs,
+          type = type,
+          pch = pch,
+          lty = lty,
+          lwd = lwd,
+          col = col,
+          bg = bg,
+          gradient = by_continuous,
+          cex = cex * cex_fct_adj,
+          # cex = lgnd_cex,
+          has_sub = has_sub,
+          new_plot = FALSE # NB!
+        )
+
+      } else {
+        draw_legend(
+          legend = legend, #NULL,
+          legend_args = modifyList(legend_args, list(inset = c((l1w-l2w)/2,.5+l1h/2)), keep.null = TRUE),
+          by_dep = by_dep,
+          lgnd_labs = lgnd_labs,
+          type = type,
+          pch = pch,
+          lty = lty,
+          lwd = lwd,
+          col = col,
+          bg = bg,
+          gradient = by_continuous,
+          cex = cex * cex_fct_adj,
+          # cex = lgnd_cex,
+          has_sub = has_sub
+        )
+        # draw l2
+        draw_legend(
+          legend = legend,
+          legend_args = modifyList(legend_args, list(title = cex_dep, inset = c(0, .4-l2h/2)), keep.null = TRUE),
+          lgnd_labs = names(bubble_cex),
+          type = type,
+          pch = par("pch"),
+          lty = lty,
+          lwd = lwd,
+          col = par("col"),
+          bg = par("col"),
+          # gradient = by_continuous,
+          cex = bubble_cex * cex_fct_adj,
+          has_sub = has_sub,
+          new_plot = FALSE # NB!
+        )
+        
+      }
+      
+    }
 
     has_legend = TRUE
-  } else if (legend_args[["x"]] == "none" && !add) {
+    } else if (legend_args[["x"]] == "none" && !add) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1
@@ -1292,6 +1435,7 @@ tinyplot.default = function(
       ipch = pch[ii]
       ilty = lty[ii]
       ilwd = lwd[ii]
+      icex = if (bubble) idata[[ii]][["cex"]] else cex[[ii]]
       
       ix = idata[[ii]][["x"]]
       iy = idata[[ii]][["y"]]
@@ -1345,7 +1489,8 @@ tinyplot.default = function(
           iymin = iymin,
           ilabels = ilabels,
           iz = iz,
-          cex = cex,
+          # cex = cex,
+          icex = icex,
           dots = dots,
           type = type,
           x_by = x_by,

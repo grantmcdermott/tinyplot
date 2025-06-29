@@ -4,7 +4,11 @@
 \alias{type_points}
 \title{Points plot type}
 \usage{
-type_points()
+type_points(clim = c(0.5, 2.5))
+}
+\arguments{
+\item{clim}{Numeric giving the lower and upper limits of the character
+expansion (\code{cex}) normalization for bubble charts.}
 }
 \description{
 Type function for plotting points, i.e. a scatter plot.

@@ -358,7 +358,6 @@ draw_legend = function(
     #
     # Note: We wrap everything in `recordGraphics()` to preserve legend spacing
     # if the plot is resized (also necessary for Positron graphics logic regardless)
-      recordGraphics(
         tinylegend(
           legend_args = legend_args,
           ooma = ooma,
@@ -371,22 +370,36 @@ draw_legend = function(
           outer_bottom = outer_bottom,
           gradient = gradient,
           draw = draw
-        ),
-        list = list(
-          legend_args = legend_args,
-          ooma = ooma,
-          omar = omar,
-          lmar = lmar,
-          topmar_epsilon = topmar_epsilon,
-          outer_side = outer_side,
-          outer_right = outer_right,
-          outer_end = outer_end,
-          outer_bottom = outer_bottom,
-          gradient = gradient,
-          draw = draw
-        ),
-        env = getNamespace("tinyplot")
-      )
+        )
+      # recordGraphics(
+      #   tinylegend(
+      #     legend_args = legend_args,
+      #     ooma = ooma,
+      #     omar = omar,
+      #     lmar = lmar,
+      #     topmar_epsilon = topmar_epsilon,
+      #     outer_side = outer_side,
+      #     outer_right = outer_right,
+      #     outer_end = outer_end,
+      #     outer_bottom = outer_bottom,
+      #     gradient = gradient,
+      #     draw = draw
+      #   ),
+      #   list = list(
+      #     legend_args = legend_args,
+      #     ooma = ooma,
+      #     omar = omar,
+      #     lmar = lmar,
+      #     topmar_epsilon = topmar_epsilon,
+      #     outer_side = outer_side,
+      #     outer_right = outer_right,
+      #     outer_end = outer_end,
+      #     outer_bottom = outer_bottom,
+      #     gradient = gradient,
+      #     draw = draw
+      #   ),
+      #   env = getNamespace("tinyplot")
+      # )
   
 }
 

@@ -641,6 +641,20 @@ tinyplot.default = function(
   draw = substitute(draw)
 
   # dots = list(...)
+
+  # recordGraphics({
+
+  # sanitize arguments
+
+  # type factories vs. strings
+  type = sanitize_type(type, x, y, dots)
+  if ("dots" %in% names(type)) dots = type$dots
+  
+  # retrieve type-specific data and drawing functions
+  type_data = type$data
+  type_draw = type$draw
+  type = type$name
+  
   # Capture deparsed expressions early, before x, y and by are evaluated
   x_dep = if (!is.null(x)) {
     deparse1(substitute(x))
@@ -681,20 +695,7 @@ tinyplot.default = function(
       ymax_dep = deparse(substitute(ymax))
       xmin_dep = deparse(substitute(xmin))
       xmax_dep = deparse(substitute(xmax))
-
-  # recordGraphics({
-
-  # sanitize arguments
-
-  # type factories vs. strings
-  type = sanitize_type(type, x, y, dots)
-  if ("dots" %in% names(type)) dots = type$dots
-  
-  # retrieve type-specific data and drawing functions
-  type_data = type$data
-  type_draw = type$draw
-  type = type$name
-  
+      
   # area flag (mostly for legend)
   was_area_type = identical(type, "area")
   # check flip flag is logical 
@@ -848,6 +849,12 @@ tinyplot.default = function(
     datapoints[["by"]] = if (!null_by) by else ""
   }
 
+  if (!exists("legend_args")) {
+    legend_args = dots[["legend_args"]]
+  }
+  if (is.null(legend_args)) legend_args = list(x = NULL)
+  legend = substitute(legend)
+  
   recordGraphics({
     
   # catch for adding to existing facet plot
@@ -1040,14 +1047,15 @@ tinyplot.default = function(
   ## Global plot elements (legend and titles)
   #
 
+    # browser()
   # place and draw the legend
   has_legend = FALSE # simple indicator variable for later use
 
-  if (!exists("legend_args")) {
-    legend_args = dots[["legend_args"]]
-  }
-  if (is.null(legend_args)) legend_args = list(x = NULL)
-  legend = substitute(legend)
+  # if (!exists("legend_args")) {
+  #   legend_args = dots[["legend_args"]]
+  # }
+  # if (is.null(legend_args)) legend_args = list(x = NULL)
+  # legend = substitute(legend)
 
   if (isFALSE(legend)) {
     legend = "none"
@@ -1512,6 +1520,7 @@ tinyplot.default = function(
     width = width,
     height = height,
     asp = asp,
+    opar = opar,
     dots = dots,
     x_dep = x_dep, y_dep = y_dep, by_dep = by_dep, facet_dep = facet_dep,
     xmin_dep = xmin_dep, xmax_dep = xmax_dep, ymin_dep = ymin_dep, ymax_dep = ymax_dep,
@@ -1524,6 +1533,7 @@ tinyplot.default = function(
     ygroup = ygroup,
     ribbon.alpha = ribbon.alpha,
     axes = axes, xaxt = xaxt, yaxt = yaxt,
+    legend_args = legend_args,
     facet_attr = facet_attr,
     datapoints = datapoints
   ),

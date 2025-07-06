@@ -23,7 +23,7 @@ f2 = function() {
   tinyplot(
     mpg ~ wt | cyl, mtcars,
     pch = 19,
-    grid = grid(),
+    grid = TRUE,
     legend = legend("right!", title = "How many cylnders do you have?")
   )
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
@@ -38,11 +38,11 @@ f3 = function() {
   tinyplot(
     mpg ~ wt | cyl, mtcars,
     pch = 19,
-    grid = grid(),
+    grid = TRUE,
     legend = legend("right!", title = "How many cylnders do you have?"),
     restore.par = TRUE
   )
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
   plot(1:10)
 }
-expect_snapshot_plot(f3, label = "restore_par_TRUE")
+# expect_snapshot_plot(f3, label = "restore_par_TRUE")

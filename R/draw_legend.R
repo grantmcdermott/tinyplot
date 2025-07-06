@@ -355,51 +355,20 @@ draw_legend = function(
     # Legend drawing is handled by the internal `tinylegend()` function, which:
     #   1. calculates appropriate insets for "outer" legend placement
     #   2. can draw gradient legends (via `gradient_legend()` below)
-    #
-    # Note: We wrap everything in `recordGraphics()` to preserve legend spacing
-    # if the plot is resized (also necessary for Positron graphics logic regardless)
-        tinylegend(
-          legend_args = legend_args,
-          ooma = ooma,
-          omar = omar,
-          lmar = lmar,
-          topmar_epsilon = topmar_epsilon,
-          outer_side = outer_side,
-          outer_right = outer_right,
-          outer_end = outer_end,
-          outer_bottom = outer_bottom,
-          gradient = gradient,
-          draw = draw
-        )
-      # recordGraphics(
-      #   tinylegend(
-      #     legend_args = legend_args,
-      #     ooma = ooma,
-      #     omar = omar,
-      #     lmar = lmar,
-      #     topmar_epsilon = topmar_epsilon,
-      #     outer_side = outer_side,
-      #     outer_right = outer_right,
-      #     outer_end = outer_end,
-      #     outer_bottom = outer_bottom,
-      #     gradient = gradient,
-      #     draw = draw
-      #   ),
-      #   list = list(
-      #     legend_args = legend_args,
-      #     ooma = ooma,
-      #     omar = omar,
-      #     lmar = lmar,
-      #     topmar_epsilon = topmar_epsilon,
-      #     outer_side = outer_side,
-      #     outer_right = outer_right,
-      #     outer_end = outer_end,
-      #     outer_bottom = outer_bottom,
-      #     gradient = gradient,
-      #     draw = draw
-      #   ),
-      #   env = getNamespace("tinyplot")
-      # )
+  
+    tinylegend(
+      legend_args = legend_args,
+      ooma = ooma,
+      omar = omar,
+      lmar = lmar,
+      topmar_epsilon = topmar_epsilon,
+      outer_side = outer_side,
+      outer_right = outer_right,
+      outer_end = outer_end,
+      outer_bottom = outer_bottom,
+      gradient = gradient,
+      draw = draw
+    )
   
 }
 

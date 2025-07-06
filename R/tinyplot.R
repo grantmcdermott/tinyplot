@@ -640,10 +640,6 @@ tinyplot.default = function(
   if (add) legend = FALSE
   draw = substitute(draw)
 
-  # dots = list(...)
-
-  # recordGraphics({
-
   # sanitize arguments
 
   # type factories vs. strings
@@ -691,10 +687,11 @@ tinyplot.default = function(
       facet.args[["nrow"]] = attr(facet, "facet_nrow")
     }
   }
-      ymin_dep = deparse(substitute(ymin))
-      ymax_dep = deparse(substitute(ymax))
-      xmin_dep = deparse(substitute(xmin))
-      xmax_dep = deparse(substitute(xmax))
+  
+  ymin_dep = deparse(substitute(ymin))
+  ymax_dep = deparse(substitute(ymax))
+  xmin_dep = deparse(substitute(xmin))
+  xmax_dep = deparse(substitute(xmax))
       
   # area flag (mostly for legend)
   was_area_type = identical(type, "area")
@@ -738,75 +735,12 @@ tinyplot.default = function(
   axes = any(c(xaxt, yaxt) != "n")
   if (is.null(frame.plot) || !is.logical(frame.plot)) frame.plot = all(c(xaxt, yaxt) %in% c("s", "a"))
 
-  # # Write plot to output file or window with fixed dimensions
-  # setup_device(file = file, width = width, height = height)
-  # if (!is.null(file)) on.exit(dev.off(), add = TRUE)
-
-  # # Save current graphical parameters
-  # opar = par(no.readonly = TRUE)
-  # if (restore.par || !is.null(facet)) {
-  #   if (!is.null(file) || !is.null(width) || !is.null(height)) {
-  #     opar$new = FALSE # catch for some interfaces
-  #   }
-  #   on.exit(par(opar), add = TRUE)
-  # }
-  # # set_orig_par(opar)
-  # set_saved_par(when = "before", opar)
-
-  # # catch for adding to existing facet plot
-  # if (!is.null(facet) && add) {
-  #   # if (Sys.getenv("POSITRON") == 1 && interactive()) warning(
-  #   #   "Positron IDE detected.\n",
-  #   #   "Adding layers to a faceted tinyplot in Positron leads to known alignment errors. Please see:\n",
-  #   #   "https://github.com/posit-dev/positron/issues/7316"
-  #   # )
-  #   par(get_saved_par(when = "after"))
-  # }
-
-  # # Capture deparsed expressions early, before x, y and by are evaluated
-  # x_dep = if (!is.null(x)) {
-  #   deparse1(substitute(x))
-  # } else if (type %in% c("rect", "segments")) {
-  #   x = NULL
-  #   NULL
-  # }
-  # y_dep = if (is.null(y)) {
-  #   deparse1(substitute(x))
-  # } else {
-  #   deparse1(substitute(y))
-  # }
-  # by_dep = deparse1(substitute(by))
-  # null_by = is.null(by)
-
-  # ## coerce character variables to factors
-  # if (!is.null(x) && is.character(x)) x = factor(x)
-  # if (!is.null(y) && is.character(y)) y = factor(y)
-  # if (!null_by && is.character(by)) by = factor(by)
-
-  # # flag if x==by (currently only used for "boxplot", "spineplot" and "ridges" types)
-  # x_by = identical(x, by)
-
-  # facet_dep = deparse1(substitute(facet))
-  # # flag if facet==by
-  # facet_by = FALSE
-  # if (!is.null(facet) && length(facet) == 1 && facet == "by") {
-  #   by = as.factor(by) ## if by==facet, then both need to be factors
-  #   facet = by
-  #   facet_by = TRUE
-  # } else if (!is.null(facet) && inherits(facet, "formula")) {
-  #   facet = get_facet_fml(facet, data = data)
-  #   if (isTRUE(attr(facet, "facet_grid"))) {
-  #     facet.args[["nrow"]] = attr(facet, "facet_nrow")
-  #   }
-  # }
   facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
   null_facet = is.null(facet)
 
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
     if (type %in% c("rect", "segments")) {
-      # xmin_dep = deparse(substitute(xmin))
-      # xmax_dep = deparse(substitute(xmax))
       x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")
       x = rep(NA, length(x))
     }
@@ -814,8 +748,6 @@ tinyplot.default = function(
   if (is.null(y)) {
     ## Special catch for area and interval plots without a specified y-var
     if (type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")) {
-      # ymin_dep = deparse(substitute(ymin))
-      # ymax_dep = deparse(substitute(ymax))
       y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
     } else if (type == "density") {
@@ -855,15 +787,16 @@ tinyplot.default = function(
   if (is.null(legend_args)) legend_args = list(x = NULL)
   legend = substitute(legend)
   
+  #
+  ## main drawing logic ----
+  
+  # Note: We wrap everything in `recordGraphics()` to preserve spacing of 
+  # dyanmic objects and measurements, e.g. if the plot is resized.
+  
   recordGraphics({
     
   # catch for adding to existing facet plot
   if (!is.null(facet) && add) {
-    # if (Sys.getenv("POSITRON") == 1 && interactive()) warning(
-    #   "Positron IDE detected.\n",
-    #   "Adding layers to a faceted tinyplot in Positron leads to known alignment errors. Please see:\n",
-    #   "https://github.com/posit-dev/positron/issues/7316"
-    # )
     par(get_saved_par(when = "after"))
   }
     
@@ -1047,15 +980,8 @@ tinyplot.default = function(
   ## Global plot elements (legend and titles)
   #
 
-    # browser()
   # place and draw the legend
   has_legend = FALSE # simple indicator variable for later use
-
-  # if (!exists("legend_args")) {
-  #   legend_args = dots[["legend_args"]]
-  # }
-  # if (is.null(legend_args)) legend_args = list(x = NULL)
-  # legend = substitute(legend)
 
   if (isFALSE(legend)) {
     legend = "none"
@@ -1274,59 +1200,7 @@ tinyplot.default = function(
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
       y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin
     )
-  # facet_window_args = recordGraphics(
-  #   draw_facet_window(
-  #     add = add,
-  #     # facet-specific args
-  #     cex_fct_adj = cex_fct_adj,
-  #     facet.args = facet.args,
-  #     facet_newlines = facet_newlines, facet_font = facet_font,
-  #     facet_rect = facet_rect, facet_text = facet_text,
-  #     facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
-  #     facet = facet,
-  #     facets = facets, ifacet = ifacet,
-  #     nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
-  #     # axes args
-  #     axes = axes, flip = flip, frame.plot = frame.plot,
-  #     oxaxis = oxaxis, oyaxis = oyaxis,
-  #     xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-  #     ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
-  #     asp = asp, log = log,
-  #     # other args (in approx. alphabetical + group ordering)
-  #     dots = dots,
-  #     draw = draw,
-  #     grid = grid,
-  #     has_legend = has_legend,
-  #     type = type,
-  #     x = x, xmax = xmax, xmin = xmin,
-  #     y = y, ymax = ymax, ymin = ymin
-  #   ),
-  #   list = list(
-  #     add = add,
-  #     cex_fct_adj = cex_fct_adj,
-  #     facet.args = facet.args,
-  #     facet_newlines = facet_newlines, facet_font = facet_font,
-  #     facet_rect = facet_rect, facet_text = facet_text,
-  #     facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
-  #     facet = datapoints$facet,
-  #     facets = facets, ifacet = ifacet,
-  #     nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
-  #     axes = axes, flip = flip, frame.plot = frame.plot,
-  #     oxaxis = oxaxis, oyaxis = oyaxis,
-  #     xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-  #     ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
-  #     asp = asp, log = log,
-  #     dots = dots,
-  #     draw = draw,
-  #     grid = grid,
-  #     has_legend = has_legend,
-  #     type = type,
-  #     x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
-  #     y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin
-  #   ),
-  #   getNamespace("tinyplot")
-  # )
-  # list2env(facet_window_args, environment())
+  list2env(facet_window_args, environment())
 
 
   #

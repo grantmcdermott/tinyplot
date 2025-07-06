@@ -351,7 +351,6 @@ draw_legend = function(
     
     #
     ## draw the legend ----
-    
     # Legend drawing is handled by the internal `tinylegend()` function, which:
     #   1. calculates appropriate insets for "outer" legend placement
     #   2. can draw gradient legends (via `gradient_legend()` below)

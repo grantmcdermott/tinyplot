@@ -15,6 +15,14 @@ where the formatting is also better._
 
 ### Bug fixes
 
+- Fixed a long-standing issue where resizing the plot window could cause
+  secondary plot layers---e.g., via `plt_add()`---to become misaligned in 
+  faceted plots (#313). This also resolves related alignment issues when adding
+  layers specifically within the Positron IDE
+  ([positron#7316](https://github.com/posit-dev/positron/issues/7316)).
+  **tinyplot** should now be fully compatible with Positron. (#438 @grantmcdermott)
+- Fixed a bug that resulted in y-axis labels being coerced to numeric for
+  `"p"`-alike plot types (including `"jitter"`) if `y` is a factor or character.
 - Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`
   behaves inside loops, particularly for themed plots where only the final plot
   was being drawn in Quarto/RMarkdown contexts. Special thanks to @hadley and @cderv

@@ -15,13 +15,13 @@ type_vline(v = 0)
 \arguments{
 \item{a, b}{the intercept (default: \code{a} = 0) and slope (default: \code{b} = 1)
 terms. Numerics of length 1, or equal to the number of groups or number of
-facets.}
+facets (or the product thereof).}
 
 \item{h}{y-value(s) for horizontal line(s). Numeric of length 1, or equal to
-the number of groups or number of facets.}
+the number of groups or number of facets (or the product thereof).}
 
 \item{v}{x-value(s) for vertical line(s). Numeric of length 1, or equal to
-the number of groups or number of facets.}
+the number of groups or number of facets (or the product thereof).}
 }
 \description{
 These functions add straight line(s) through the current plot.

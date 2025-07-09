@@ -1,5 +1,5 @@
 #' @param v x-value(s) for vertical line(s). Numeric of length 1, or equal to
-#'   the number of groups or number of facets.
+#'   the number of groups or number of facets (or the product thereof).
 #' @rdname type_abline
 #' @export
 type_vline = function(v = 0) {
@@ -25,13 +25,15 @@ type_vline = function(v = 0) {
     ) {
 
       if (length(v) != 1) {
-        if (!length(v) %in% c(ngrps, nfacets)) {
-          msg = "Length of 'v' must be 1, or equal to the number of facets or number of groups."
+        if (!length(v) %in% c(ngrps, nfacets, ngrps*nfacets)) {
+          msg = "Length of 'v' must be 1, or equal to the number of facets or number of groups (or product thereof)."
           stop(msg, call. = FALSE)
         }
         if (length(v) == nfacets) {
           v = v[ifacet]
           if (!facet_by && by_continuous) icol = 1
+        } else if (length(v) == ngrps * nfacets) {
+          v = v[ifacet * ngrps - c(ngrps - iby)]
         } else if (!by_continuous) {
           v = v[iby]
         }

@@ -1,6 +1,6 @@
 #' @rdname type_abline
 #' @param h y-value(s) for horizontal line(s). Numeric of length 1, or equal to
-#'   the number of groups or number of facets.
+#'   the number of groups or number of facets (or the product thereof).
 #' @export
 type_hline = function(h = 0) {
   assert_numeric(h)
@@ -26,13 +26,15 @@ type_hline = function(h = 0) {
       
       # browser()
       if (length(h) != 1) {
-        if (!length(h) %in% c(ngrps, nfacets)) {
-          msg = "Length of 'h' must be 1, or equal to the number of facets or number of groups."
+        if (!length(h) %in% c(ngrps, nfacets, ngrps*nfacets)) {
+          msg = "Length of 'h' must be 1, or equal to the number of facets or number of groups (or product thereof)."
           stop(msg, call. = FALSE)
         }
         if (length(h) == nfacets) {
           h = h[ifacet]
           if (!facet_by && by_continuous) icol = 1
+        } else if (length(h) == ngrps * nfacets) {
+          h = h[ifacet * ngrps - c(ngrps - iby)]
         } else if (!by_continuous) {
           h = h[iby]
         }

@@ -8,7 +8,7 @@
 #' 
 #' @param a,b the intercept (default: `a` = 0) and slope (default: `b` = 1)
 #'   terms. Numerics of length 1, or equal to the number of groups or number of
-#'   facets.
+#'   facets (or the product thereof).
 #' @examples
 #' #
 #' ## abline
@@ -64,26 +64,30 @@ type_abline = function(a = 0, b = 1) {
     ) {
 
       if (length(a) != 1) {
-        if (!length(a) %in% c(ngrps, nfacets)) {
-          msg = "Length of 'a' must be 1, or equal to the number of facets or number of groups."
+        if (!length(a) %in% c(ngrps, nfacets, ngrps*nfacets)) {
+          msg = "Length of 'a' must be 1, or equal to the number of facets or number of groups (or product thereof)."
           stop(msg, call. = FALSE)
         }
         if (length(a) == nfacets) {
           a = a[ifacet]
           if (!facet_by && by_continuous) icol = 1
+        } else if (length(a) == ngrps * nfacets) {
+          a = a[ifacet * ngrps - c(ngrps - iby)]
         } else if (!by_continuous) {
           a = a[iby]
         }
       }
       
       if (length(b) != 1) {
-        if (!length(b) %in% c(ngrps, nfacets)) {
-          msg = "Length of 'b' must be 1, or equal to the number of facets or number of groups."
+        if (!length(b) %in% c(ngrps, nfacets, ngrps*nfacets)) {
+          msg = "Length of 'b' must be 1, or equal to the number of facets or number of groups (or product thereof)."
           stop(msg, call. = FALSE)
         }
         if (length(b) == nfacets) {
           b = b[ifacet]
           if (!facet_by && by_continuous) icol = 1
+        } else if (length(b) == ngrps * nfacets) {
+          b = b[ifacet * ngrps - c(ngrps - iby)]
         } else if (!by_continuous) {
           b = b[iby]
         }

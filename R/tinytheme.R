@@ -157,7 +157,8 @@ tinytheme = function(
       # for default theme, we want to revert the original pars and turn off the
       # before.new.plot hook (otherwise manual par(x = y) changes won't work) 
       tpar(settings, hook = FALSE)
-      setHook("before.new.plot", NULL, "replace")
+      old_hooks = get_environment_variable(".tpar_hooks")
+      remove_hooks(old_hooks)
     } else {
       tpar(settings, hook = TRUE)
     }

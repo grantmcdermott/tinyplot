@@ -4,15 +4,36 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-# 0.4.1.99 (development version)
+## Development
+
+### New features
+
+- `type_text()` gains `xpd` and `srt` arguments for controlling text clipping
+  rotation, respectively. (#428 @grantmcdermott)
+- Add `xlevels` (in addition to `ylevels`) in `type_spineplot()` for spine plots
+  with categorical `x` variable. (#431 @zeileis)
 
 ### Bug fixes
 
+- Fixed a long-standing issue where resizing the plot window could cause
+  secondary plot layers---e.g., via `plt_add()`---to become misaligned in 
+  faceted plots (#313). This also resolves related alignment issues when adding
+  layers specifically within the Positron IDE
+  ([positron#7316](https://github.com/posit-dev/positron/issues/7316)).
+  **tinyplot** should now be fully compatible with Positron. (#438 @grantmcdermott)
+- Fixed a bug that resulted in y-axis labels being coerced to numeric for
+  `"p"`-alike plot types (including `"jitter"`) if `y` is a factor or character.
+- Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`
+  behaves inside loops, particularly for themed plots where only the final plot
+  was being drawn in Quarto/RMarkdown contexts. Special thanks to @hadley and @cderv
+  for helping us to debug. (#425 @vincentarelbundock)
+- The `xlevels` argument of `type_barplot()` could not handle numeric indexes correctly.
+  (#431 @zeileis)
 - Better recycling logic for the family of straight line types (`type_hline`,
   `type_vline`, `type_abline`) addresses several shortcomings. For example,
   these types now work correctly across non-`by` facets. Simultaneously, users
   can also call them in a base plot layer, relaxing the requirement that they
-  must be called as part of a subsequent plot layer via `tinyplot_add()` (#422 @grantmcdermott)
+  must be called as part of a subsequent plot layer via `tinyplot_add()`. (#422 @grantmcdermott)
 
 ## 0.4.1
 

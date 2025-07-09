@@ -10,11 +10,14 @@ type_text(
   pos = NULL,
   offset = 0.5,
   vfont = NULL,
-  font = NULL
+  font = NULL,
+  xpd = NULL,
+  srt = 0
 )
 }
 \arguments{
-\item{labels}{Character vector of length 1 or of the same length as the number of x,y coordinates.}
+\item{labels}{Character vector of length 1 or of the same length as the
+number of x,y coordinates.}
 
 \item{adj}{one or two values in \eqn{[0, 1]} which specify the x
     (and optionally y) adjustment (\sQuote{justification}) of the
@@ -38,7 +41,12 @@ type_text(
     the vector selects a typeface and the second element selects a
     style.  Ignored if \code{labels} is an expression.}
 
-\item{font}{Font to be used, following \code{\link[graphics:par]{graphics::par()}}}
+\item{font}{Font to be used, following \code{\link[graphics:par]{graphics::par()}}.}
+
+\item{xpd}{Logical value or \code{NA} denoting text clipping behaviour, following
+\code{\link[graphics:par]{graphics::par()}}.}
+
+\item{srt}{Numeric giving the desired string rotation in degrees.}
 }
 \description{
 Type function for adding text annotations to a plot. This function allows
@@ -50,6 +58,19 @@ tinyplot(mpg ~ hp | factor(cyl),
   type = type_text(
     labels = row.names(mtcars),
     font = 2,
-    adj = 0))
+    adj = 0
+  )
+)
+
+# to avoid clipping text at the plot region, we can use xpd = NA
+tinyplot(mpg ~ hp | factor(cyl),
+  data = mtcars,
+  type = type_text(
+    labels = row.names(mtcars),
+    font = 2,
+    adj = 0,
+    xpd = NA
+  )
+)
 
 }

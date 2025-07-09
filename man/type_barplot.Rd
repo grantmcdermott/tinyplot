@@ -32,8 +32,9 @@ or the mid-way in the third category, respectively.}
 \item{FUN}{a function to compute the summary statistic for \code{y} within each
 group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: mean).}
 
-\item{xlevels}{a character or numeric vector specifying in which order the
-levels of the \code{x} variable should be plotted.}
+\item{xlevels}{a character or numeric vector specifying the ordering of the
+levels of the \code{x} variable (if character) or the corresponding indexes
+(if numeric) for the plot.}
 
 \item{xaxlabels}{a character vector with the axis labels for the \code{x} variable,
 defaulting to the levels of \code{x}.}
@@ -55,6 +56,10 @@ tinyplot(~ cyl, data = mtcars, type = "barplot")
 tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
 tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
 tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE, fill = 0.2)
+
+# Reorder x variable categories either by their character levels or numeric indexes
+tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = c("8", "6", "4"))
+tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
 
 # Note: Above we used automatic argument passing for `beside`. But this
 # wouldn't work for `width`, since it would conflict with the top-level

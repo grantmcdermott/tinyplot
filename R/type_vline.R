@@ -24,6 +24,9 @@ type_vline = function(v = 0) {
       ...
     ) {
 
+      # flag for aesthetics by groups
+      grp_aes = type_info[["ul_col"]] == 1 || type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps
+      
       if (length(v) != 1) {
         if (!length(v) %in% c(ngrps, nfacets, ngrps*nfacets)) {
           msg = "Length of 'v' must be 1, or equal to the number of facets or number of groups (or product thereof)."
@@ -31,13 +34,17 @@ type_vline = function(v = 0) {
         }
         if (length(v) == nfacets) {
           v = v[ifacet]
-          if (!facet_by && by_continuous) icol = 1
-        } else if (length(v) == ngrps * nfacets) {
+          if (!grp_aes) {
+            icol = 1
+          } else if (!facet_by && by_continuous) {
+            icol = 1
+          }
+        } else if (!by_continuous && length(v) == ngrps * nfacets) {
           v = v[ifacet * ngrps - c(ngrps - iby)]
         } else if (!by_continuous) {
           v = v[iby]
         }
-      } else if (type_info[["ul_col"]]!=1 && !(type_info[["ul_lty"]]==ngrps || type_info[["ul_lwd"]]==ngrps)) {
+      } else if (!grp_aes) {
         icol = 1
       }
       

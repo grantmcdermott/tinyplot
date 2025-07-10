@@ -24,7 +24,9 @@ type_hline = function(h = 0) {
       ...
     ) {
       
-      # browser()
+      # flag for aesthetics by groups
+      grp_aes = type_info[["ul_col"]] == 1 || type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps
+      
       if (length(h) != 1) {
         if (!length(h) %in% c(ngrps, nfacets, ngrps*nfacets)) {
           msg = "Length of 'h' must be 1, or equal to the number of facets or number of groups (or product thereof)."
@@ -32,13 +34,17 @@ type_hline = function(h = 0) {
         }
         if (length(h) == nfacets) {
           h = h[ifacet]
-          if (!facet_by && by_continuous) icol = 1
-        } else if (length(h) == ngrps * nfacets) {
+          if (!grp_aes) {
+            icol = 1
+          } else if (!facet_by && by_continuous) {
+            icol = 1
+          }
+        } else if (!by_continuous && length(h) == ngrps * nfacets) {
           h = h[ifacet * ngrps - c(ngrps - iby)]
         } else if (!by_continuous) {
           h = h[iby]
         }
-      } else if (type_info[["ul_col"]]!=1 && !(type_info[["ul_lty"]]==ngrps || type_info[["ul_lwd"]]==ngrps)) {
+      } else if (!grp_aes) {
         icol = 1
       }
 

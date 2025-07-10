@@ -62,7 +62,10 @@ type_abline = function(a = 0, b = 1) {
       type_info,
       ...
     ) {
-
+      
+      # flag for aesthetics by groups
+      grp_aes = type_info[["ul_col"]] == 1 || type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps
+      
       if (length(a) != 1) {
         if (!length(a) %in% c(ngrps, nfacets, ngrps*nfacets)) {
           msg = "Length of 'a' must be 1, or equal to the number of facets or number of groups (or product thereof)."
@@ -70,12 +73,18 @@ type_abline = function(a = 0, b = 1) {
         }
         if (length(a) == nfacets) {
           a = a[ifacet]
-          if (!facet_by && by_continuous) icol = 1
-        } else if (length(a) == ngrps * nfacets) {
+          if (!grp_aes) {
+            icol = 1
+          } else if (!facet_by && by_continuous) {
+            icol = 1
+          }
+        } else if (!by_continuous && length(a) == ngrps * nfacets) {
           a = a[ifacet * ngrps - c(ngrps - iby)]
         } else if (!by_continuous) {
           a = a[iby]
         }
+      } else if (!grp_aes) {
+        icol = 1
       }
       
       if (length(b) != 1) {
@@ -85,12 +94,18 @@ type_abline = function(a = 0, b = 1) {
         }
         if (length(b) == nfacets) {
           b = b[ifacet]
-          if (!facet_by && by_continuous) icol = 1
-        } else if (length(b) == ngrps * nfacets) {
+          if (!grp_aes) {
+            icol = 1
+          } else if (!facet_by && by_continuous) {
+            icol = 1
+          }
+        } else if (!by_continuous && length(b) == ngrps * nfacets) {
           b = b[ifacet * ngrps - c(ngrps - iby)]
         } else if (!by_continuous) {
           b = b[iby]
         }
+      } else if (!grp_aes) {
+        icol = 1
       }
       
       if (type_info[["ul_col"]]!=1 && !(type_info[["ul_lty"]]==ngrps || type_info[["ul_lwd"]]==ngrps)) {

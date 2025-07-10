@@ -34,7 +34,7 @@ type_hline = function(h = 0) {
         }
         if (length(h) == nfacets) {
           h = h[ifacet]
-          if (!grp_aes) {
+          if (!grp_aes && type_info[["ul_col"]]!=ngrps) {
             icol = 1
           } else if (!facet_by && by_continuous) {
             icol = 1

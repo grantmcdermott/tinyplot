@@ -73,7 +73,7 @@ type_abline = function(a = 0, b = 1) {
         }
         if (length(a) == nfacets) {
           a = a[ifacet]
-          if (!grp_aes) {
+          if (!grp_aes && type_info[["ul_col"]]!=ngrps) {
             icol = 1
           } else if (!facet_by && by_continuous) {
             icol = 1
@@ -94,7 +94,7 @@ type_abline = function(a = 0, b = 1) {
         }
         if (length(b) == nfacets) {
           b = b[ifacet]
-          if (!grp_aes) {
+          if (!grp_aes && type_info[["ul_col"]]!=ngrps) {
             icol = 1
           } else if (!facet_by && by_continuous) {
             icol = 1

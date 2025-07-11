@@ -1,8 +1,8 @@
 Package: tinyplot
 Type: Package
 Title: Lightweight Extension of the Base R Graphics System
-Version: 0.4.1.99
-Date: 2025-06-02
+Version: 0.4.2
+Date: 2025-07-11
 Authors@R: 
   c(
     person(
@@ -36,7 +36,6 @@ Authors@R:
 Description: Lightweight extension of the base R graphics system, with support
       for automatic legends, facets, themes, and various other enhancements.
 License: Apache License (>= 2)
-Remotes: etiennebacher/altdoc
 Depends:
   R (>= 4.0.0)
 Imports: 
@@ -46,7 +45,7 @@ Imports:
   tools,
   utils
 Suggests:
-  altdoc (>= 0.5.0.9000),
+  altdoc,
   fontquiver,
   png,
   rsvg,

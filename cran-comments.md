@@ -1,9 +1,6 @@
 ## Overview
 
-**tinyplot** v0.4.1 is a hotfix / patch release that fixes a regression that we
-accidentally introduced in v0.4.0, which was affecting `"ridge"` plot legends.
-We apologize for the <1 month CRAN re-submission cadence, but felt that this was
-important enough to address quickly.
+**tinyplot** v0.4.2 a patch release that contains mostly bug fixes.
 
 ## Test environments
 Arch Linux (local)

@@ -5,6 +5,36 @@
 #' While `type_abline`, `type_hline`, and `type_vline` can be called in a base
 #' plot layer, we expect that they will typically be called as subsequent
 #' layers via [`tinyplot_add`].
+#' @section Recycling logic: 
+#' The recycling behaviour of the line parameters (i.e., `a`, `b`, `h`, or `v`)
+#' is adaptive, depending on whether `by` or `facet` grouping is detected. While
+#' this leads to different recycling scenarios, the underlying code logic
+#' follows sensible heuristics designed to match user expectations.
+#' 
+#' Parameter lengths must equal one of four options:
+#' 
+#' 1. Single value (i.e., length = 1), i.e. simplest case where the same line is
+#' applied uniformly across all groups and facets. Uses the default user colour
+#' (e.g. `"black"`, or `tpar("palette.qualitative")[1]` if a theme is set).
+#' 2. Number of `by` groups, i.e. one parameter per group. For example,
+#' `tinyplot(mpg ~ wt | factor(cyl), data = mtcars, type = type_hline(h = 21:23))`
+#' will give three horizontal lines, with colours matching the user's qualitative
+#' palette.
+#' 3. Number of `facet` groups, i.e. one parameter per facet panel. For example:
+#' `tinyplot(mpg ~ wt, facet = ~am, data = mtcars, type = type_hline(h = c(20,30)))`
+#' would give separate horizontal lines per facet, but both using the same
+#' default color.
+#' 4. Product of `by` and `facet` groups, i.e. one parameter for each unique
+#' by-facet combination. Orders over facets first and then, within that, by
+#' group. For example:
+#' `tinyplot(mpg ~ wt | factor(cyl), facet = ~am, data = mtcars, type = type_hline(h = 21:26))`
+#' will give six separate lines, with the first three (`21:23`) coloured by
+#' group in the first facet, and second three (`24:26`) coloured by by group
+#' in the second facet.
+#' 
+#' Alongside these general rules, we also try to accomodate special cases when
+#' other aesthetic parameters like `lwd` or `lty` are invoked by the user. See
+#' Examples.
 #' 
 #' @param a,b the intercept (default: `a` = 0) and slope (default: `b` = 1)
 #'   terms. Numerics of length 1, or equal to the number of groups or number of
@@ -40,6 +70,23 @@
 #' 
 #' # Similar idea for vline
 #' tinyplot_add(type = type_vline(with(mtcars, tapply(hp, cyl, mean))), lty = 2)
+#' 
+#' #
+#' ## Recycling logic
+#' 
+#' # length(h) == no. of groups
+#' tinyplot(mpg ~ wt | factor(cyl), data = mtcars, type = type_hline(h = 21:23))
+#' 
+#' # length(h) == no. of facets
+#' tinyplot(mpg ~ wt, facet = ~am, data = mtcars, type = type_hline(h = c(20, 30)))
+#' 
+#' # length(h) == no. of groups x no. of facets
+#' tinyplot(mpg ~ wt | factor(cyl), facet = ~am, data = mtcars,
+#'    type = type_hline(h = 21:26))
+#' 
+#' # special adjustment case (here: lwd by group)
+#' tinyplot(mpg ~ wt | factor(cyl), facet = ~am, data = mtcars,
+#'    type = type_hline(c(20, 30)), lwd = c(21, 14, 7))
 #' 
 #' @export
 type_abline = function(a = 0, b = 1) {

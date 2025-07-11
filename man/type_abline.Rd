@@ -31,6 +31,40 @@ While \code{type_abline}, \code{type_hline}, and \code{type_vline} can be called
 plot layer, we expect that they will typically be called as subsequent
 layers via \code{\link{tinyplot_add}}.
 }
+\section{Recycling logic}{
+
+The recycling behaviour of the line parameters (i.e., \code{a}, \code{b}, \code{h}, or \code{v})
+is adaptive, depending on whether \code{by} or \code{facet} grouping is detected. While
+this leads to different recycling scenarios, the underlying code logic
+follows sensible heuristics designed to match user expectations.
+
+Parameter lengths must equal one of four options:
+\enumerate{
+\item Single value (i.e., length = 1), i.e. simplest case where the same line is
+applied uniformly across all groups and facets. Uses the default user colour
+(e.g. \code{"black"}, or \code{tpar("palette.qualitative")[1]} if a theme is set).
+\item Number of \code{by} groups, i.e. one parameter per group. For example,
+\code{tinyplot(mpg ~ wt | factor(cyl), data = mtcars, type = type_hline(h = 21:23))}
+will give three horizontal lines, with colours matching the user's qualitative
+palette.
+\item Number of \code{facet} groups, i.e. one parameter per facet panel. For example:
+\code{tinyplot(mpg ~ wt, facet = ~am, data = mtcars, type = type_hline(h = c(20,30)))}
+would give separate horizontal lines per facet, but both using the same
+default color.
+\item Product of \code{by} and \code{facet} groups, i.e. one parameter for each unique
+by-facet combination. Orders over facets first and then, within that, by
+group. For example:
+\code{tinyplot(mpg ~ wt | factor(cyl), facet = ~am, data = mtcars, type = type_hline(h = 21:26))}
+will give six separate lines, with the first three (\code{21:23}) coloured by
+group in the first facet, and second three (\code{24:26}) coloured by by group
+in the second facet.
+}
+
+Alongside these general rules, we also try to accomodate special cases when
+other aesthetic parameters like \code{lwd} or \code{lty} are invoked by the user. See
+Examples.
+}
+
 \examples{
 #
 ## abline
@@ -62,5 +96,22 @@ tinyplot_add(type = type_hline(with(mtcars, tapply(mpg, cyl, mean))), lty = 2)
 
 # Similar idea for vline
 tinyplot_add(type = type_vline(with(mtcars, tapply(hp, cyl, mean))), lty = 2)
+
+#
+## Recycling logic
+
+# length(h) == no. of groups
+tinyplot(mpg ~ wt | factor(cyl), data = mtcars, type = type_hline(h = 21:23))
+
+# length(h) == no. of facets
+tinyplot(mpg ~ wt, facet = ~am, data = mtcars, type = type_hline(h = c(20, 30)))
+
+# length(h) == no. of groups x no. of facets
+tinyplot(mpg ~ wt | factor(cyl), facet = ~am, data = mtcars,
+   type = type_hline(h = 21:26))
+
+# special adjustment case (here: lwd by group)
+tinyplot(mpg ~ wt | factor(cyl), facet = ~am, data = mtcars,
+   type = type_hline(c(20, 30)), lwd = c(21, 14, 7))
 
 }

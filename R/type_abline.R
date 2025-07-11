@@ -71,11 +71,11 @@ type_abline = function(a = 0, b = 1) {
           msg = "Length of 'a' must be 1, or equal to the number of facets or number of groups (or product thereof)."
           stop(msg, call. = FALSE)
         }
-        if (length(a) == nfacets) {
+        if (!facet_by && length(a) == nfacets) {
           a = a[ifacet]
           if (!grp_aes && type_info[["ul_col"]]!=ngrps) {
             icol = 1
-          } else if (!facet_by && by_continuous) {
+          } else if (by_continuous) {
             icol = 1
           }
         } else if (!by_continuous && length(a) == ngrps * nfacets) {
@@ -92,11 +92,11 @@ type_abline = function(a = 0, b = 1) {
           msg = "Length of 'b' must be 1, or equal to the number of facets or number of groups (or product thereof)."
           stop(msg, call. = FALSE)
         }
-        if (length(b) == nfacets) {
+        if (!facet_by && length(b) == nfacets) {
           b = b[ifacet]
           if (!grp_aes && type_info[["ul_col"]]!=ngrps) {
             icol = 1
-          } else if (!facet_by && by_continuous) {
+          } else if (by_continuous) {
             icol = 1
           }
         } else if (!by_continuous && length(b) == ngrps * nfacets) {

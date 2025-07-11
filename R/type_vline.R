@@ -32,11 +32,11 @@ type_vline = function(v = 0) {
           msg = "Length of 'v' must be 1, or equal to the number of facets or number of groups (or product thereof)."
           stop(msg, call. = FALSE)
         }
-        if (length(v) == nfacets) {
+        if (!facet_by && length(v) == nfacets) {
           v = v[ifacet]
           if (!grp_aes && type_info[["ul_col"]]!=ngrps) {
             icol = 1
-          } else if (!facet_by && by_continuous) {
+          } else if (by_continuous) {
             icol = 1
           }
         } else if (!by_continuous && length(v) == ngrps * nfacets) {

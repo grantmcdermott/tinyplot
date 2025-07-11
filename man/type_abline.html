@@ -540,6 +540,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
+  <li><a href="#recycling-logic" id="toc-recycling-logic" class="nav-link" data-scroll-target="#recycling-logic">Recycling logic</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
@@ -574,7 +575,7 @@ type_vline(v = 0)
 <code id="a">a</code>, <code id="b">b</code>
 </td>
 <td>
-the intercept (default: <code>a</code> = 0) and slope (default: <code>b</code> = 1) terms. Numerics of length 1 or equal to the number of facets.
+the intercept (default: <code>a</code> = 0) and slope (default: <code>b</code> = 1) terms. Numerics of length 1, or equal to the number of groups or number of facets (or the product thereof).
 </td>
 </tr>
 <tr>
@@ -582,7 +583,7 @@ the intercept (default: <code>a</code> = 0) and slope (default: <code>b</code> =
 <code id="h">h</code>
 </td>
 <td>
-y-value(s) for horizontal line(s). Numeric of length 1 or equal to the number of facets.
+y-value(s) for horizontal line(s). Numeric of length 1, or equal to the number of groups or number of facets (or the product thereof).
 </td>
 </tr>
 <tr>
@@ -590,14 +591,34 @@ y-value(s) for horizontal line(s). Numeric of length 1 or equal to the number of
 <code id="v">v</code>
 </td>
 <td>
-x-value(s) for vertical line(s). Numeric of length 1 or equal to the number of facets.
+x-value(s) for vertical line(s). Numeric of length 1, or equal to the number of groups or number of facets (or the product thereof).
 </td>
 </tr>
 </tbody></table>
 </section>
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>Unlike most tinyplot types, <code>type_abline</code>, <code>type_hline</code>, and <code>type_vline</code> cannot be called as a base plot layer. Instead they <em>must</em> called as a subsequent layer via <code>tinyplot_add</code>.</p>
+<p>While <code>type_abline</code>, <code>type_hline</code>, and <code>type_vline</code> can be called in a base plot layer, we expect that they will typically be called as subsequent layers via <code>tinyplot_add</code>.</p>
+</section>
+<section id="recycling-logic" class="level3">
+<h3 class="anchored" data-anchor-id="recycling-logic">Recycling logic</h3>
+<p>The recycling behaviour of the line parameters (i.e., <code>a</code>, <code>b</code>, <code>h</code>, or <code>v</code>) is adaptive, depending on whether <code>by</code> or <code>facet</code> grouping is detected. While this leads to different recycling scenarios, the underlying code logic follows sensible heuristics designed to match user expectations.</p>
+<p>Parameter lengths must equal one of four options:</p>
+<ol>
+<li>
+<p>Single value (i.e., length = 1), i.e.&nbsp;simplest case where the same line is applied uniformly across all groups and facets. Uses the default user colour (e.g.&nbsp;<code>“black”</code>, or <code>tpar(“palette.qualitative”)[1]</code> if a theme is set).</p>
+</li>
+<li>
+<p>Number of <code>by</code> groups, i.e.&nbsp;one parameter per group. For example, <code>tinyplot(mpg ~ wt | factor(cyl), data = mtcars, type = type_hline(h = 21:23))</code> will give three horizontal lines, with colours matching the user’s qualitative palette.</p>
+</li>
+<li>
+<p>Number of <code>facet</code> groups, i.e.&nbsp;one parameter per facet panel. For example: <code>tinyplot(mpg ~ wt, facet = ~am, data = mtcars, type = type_hline(h = c(20,30)))</code> would give separate horizontal lines per facet, but both using the same default color.</p>
+</li>
+<li>
+<p>Product of <code>by</code> and <code>facet</code> groups, i.e.&nbsp;one parameter for each unique by-facet combination. Orders over facets first and then, within that, by group. For example: <code>tinyplot(mpg ~ wt | factor(cyl), facet = ~am, data = mtcars, type = type_hline(h = 21:26))</code> will give six separate lines, with the first three (<code>21:23</code>) coloured by group in the first facet, and second three (<code>24:26</code>) coloured by by group in the second facet.</p>
+</li>
+</ol>
+<p>Alongside these general rules, we also try to accomodate special cases when other aesthetic parameters like <code>lwd</code> or <code>lty</code> are invoked by the user. See Examples.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -621,25 +642,76 @@ x-value(s) for vertical line(s). Numeric of length 1 or equal to the number of f
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">## hline and vline</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Base plot layer</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp <span class="sc">|</span> cyl, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> mtcars, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">40</span>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Add horizontal lines at the (default) 0 y-intercept</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"hline"</span>, <span class="at">col =</span> <span class="st">"grey"</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that group+facet aesthetics will be inherited. We can use this to</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># add customized lines (here: the mean `mpg` for each `cyl` group)  </span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_hline</span>(<span class="fu">with</span>(mtcars, <span class="fu">tapply</span>(mpg, cyl, mean))), <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Similar idea for vline</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fu">with</span>(mtcars, <span class="fu">tapply</span>(hp, cyl, mean))), <span class="at">lty =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># note that calling as abline &amp; co. as a base plot layer will still lead to</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># axes limits that respect the range of the data</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">10</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">y =</span> <span class="sc">-</span><span class="dv">10</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">grid =</span> <span class="cn">TRUE</span>, <span class="at">type =</span> <span class="st">"abline"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_abline_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## hline and vline</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Base plot layer</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp <span class="sc">|</span> cyl, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> mtcars, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">40</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Add horizontal lines at the (default) 0 y-intercept</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"hline"</span>, <span class="at">col =</span> <span class="st">"grey"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that group+facet aesthetics will be inherited. We can use this to</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># add customized lines (here: the mean `mpg` for each `cyl` group)  </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_hline</span>(<span class="fu">with</span>(mtcars, <span class="fu">tapply</span>(mpg, cyl, mean))), <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Similar idea for vline</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fu">with</span>(mtcars, <span class="fu">tapply</span>(hp, cyl, mean))), <span class="at">lty =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_abline_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Recycling logic</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># length(h) == no. of groups</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="fu">type_hline</span>(<span class="at">h =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">23</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_abline_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># length(h) == no. of facets</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">facet =</span> <span class="sc">~</span>am, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="fu">type_hline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">30</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_abline_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># length(h) == no. of groups x no. of facets</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(cyl), <span class="at">facet =</span> <span class="sc">~</span>am, <span class="at">data =</span> mtcars,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">type =</span> <span class="fu">type_hline</span>(<span class="at">h =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">26</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_abline_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># special adjustment case (here: lwd by group)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(cyl), <span class="at">facet =</span> <span class="sc">~</span>am, <span class="at">data =</span> mtcars,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">type =</span> <span class="fu">type_hline</span>(<span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">30</span>)), <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">14</span>, <span class="dv">7</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_abline_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

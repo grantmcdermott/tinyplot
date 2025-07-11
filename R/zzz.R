@@ -38,6 +38,7 @@
     "flip",
     "frame.plot",
     "has_legend",
+    "iby",
     "ifacet",
     "nfacet_cols",
     "nfacet_rows",

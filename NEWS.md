@@ -29,6 +29,11 @@ where the formatting is also better._
   for helping us to debug. (#425 @vincentarelbundock)
 - The `xlevels` argument of `type_barplot()` could not handle numeric indexes correctly.
   (#431 @zeileis)
+- Better recycling logic for the family of straight line types (`type_hline`,
+  `type_vline`, `type_abline`) addresses several shortcomings. For example,
+  these types now work correctly across non-`by` facets. Simultaneously, users
+  can also call them in a base plot layer, relaxing the requirement that they
+  must be called as part of a subsequent plot layer via `tinyplot_add()`. (#422 @grantmcdermott)
 
 ## 0.4.1
 

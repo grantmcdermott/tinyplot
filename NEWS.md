@@ -16,7 +16,7 @@ where the formatting is also better._
 ### Bug fixes
 
 - Fixed a long-standing issue whereby resizing the plot window would cause
-  secondary plot layers, e.g. via `plt_add()`, to become misaligned in 
+  secondary plot layers, e.g. from `plt_add()`, to become misaligned in 
   faceted plots (#313). This also resolves a related alignment + layering issue
   specific to the Positron IDE
   ([positron#7316](https://github.com/posit-dev/positron/issues/7316)).
@@ -26,10 +26,10 @@ where the formatting is also better._
 - Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`
   behaves inside loops, particularly for themed plots where only the final plot
   was being drawn in Quarto/RMarkdown contexts. Special thanks to @hadley and @cderv
-  for helping us to debug. (#425 @vincentarelbundock)
+  for helping us debug. (#425 @vincentarelbundock)
 - The `xlevels` argument of `type_barplot()` could not handle numeric indexes correctly.
   (#431 @zeileis)
-- We address several shortcomings for the straight line family of types (`type_hline`,
+- Addressed several shortcomings of the straight line family of types (`type_hline`,
   `type_vline`, `type_abline`) through better recycling logic. For example,
   these types now work correctly across non-`by` facets. Simultaneously, users
   can also call them in a base plot layer, relaxing the requirement that they

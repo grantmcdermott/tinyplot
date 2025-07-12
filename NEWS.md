@@ -9,18 +9,18 @@ where the formatting is also better._
 ### New features
 
 - `type_text()` gains `xpd` and `srt` arguments for controlling text clipping
-  rotation, respectively. (#428 @grantmcdermott)
+  and rotation, respectively. (#428 @grantmcdermott)
 - Add `xlevels` (in addition to `ylevels`) in `type_spineplot()` for spine plots
   with categorical `x` variable. (#431 @zeileis)
 
 ### Bug fixes
 
-- Fixed a long-standing issue where resizing the plot window could cause
-  secondary plot layers---e.g., via `plt_add()`---to become misaligned in 
-  faceted plots (#313). This also resolves related alignment issues when adding
-  layers specifically within the Positron IDE
+- Fixed a long-standing issue whereby resizing the plot window would cause
+  secondary plot layers, e.g. via `plt_add()`, to become misaligned in 
+  faceted plots (#313). This also resolves a related alignment + layering issue
+  specific to the Positron IDE
   ([positron#7316](https://github.com/posit-dev/positron/issues/7316)).
-  **tinyplot** should now be fully compatible with Positron. (#438 @grantmcdermott)
+  As an aside, `tinyplot` should now be fully compatible with Positron. (#438 @grantmcdermott)
 - Fixed a bug that resulted in y-axis labels being coerced to numeric for
   `"p"`-alike plot types (including `"jitter"`) if `y` is a factor or character.
 - Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`
@@ -29,8 +29,8 @@ where the formatting is also better._
   for helping us to debug. (#425 @vincentarelbundock)
 - The `xlevels` argument of `type_barplot()` could not handle numeric indexes correctly.
   (#431 @zeileis)
-- Better recycling logic for the family of straight line types (`type_hline`,
-  `type_vline`, `type_abline`) addresses several shortcomings. For example,
+- We address several shortcomings for the straight line family of types (`type_hline`,
+  `type_vline`, `type_abline`) through better recycling logic. For example,
   these types now work correctly across non-`by` facets. Simultaneously, users
   can also call them in a base plot layer, relaxing the requirement that they
   must be called as part of a subsequent plot layer via `tinyplot_add()`. (#422 @grantmcdermott)

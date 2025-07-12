@@ -32,7 +32,7 @@ type_errorbar = function(length = 0.05) {
 
 
 draw_errorbar = function(length = 0.05) {
-    fun = function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, ilwd, cex, ...) {
+    fun = function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, ilwd, icex, ...) {
         arrows(
             x0 = ixmin,
             y0 = iymin,
@@ -44,7 +44,7 @@ draw_errorbar = function(length = 0.05) {
             angle = 90,
             code = 3
         )
-        draw_points()(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
+        draw_points()(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, icex = icex)
     }
     return(fun)
 }

@@ -34,9 +34,12 @@ jobs:
 
       - name: Dependencies
         run: ./run.sh install_all
-        with:
-          needs: website
-          cache: "always"
+      
+      - name: Altdoc from GitHub
+        run: ./run.sh install_github etiennebacher/altdoc
+
+      - name: Additional Altdoc Dependency
+        run: ./run.sh install_r future.apply
 
       - name: Build site
         run: |

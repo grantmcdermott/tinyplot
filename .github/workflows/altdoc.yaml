@@ -35,8 +35,8 @@ jobs:
       - name: Dependencies
         run: ./run.sh install_all
       
-      - name: Altdoc from GitHub
-        run: ./run.sh install_github etiennebacher/altdoc
+      - name: Altdoc from R-universe
+        run: Rscript -e 'install.packages("altdoc", repos = c("https://etiennebacher.r-universe.dev", getOption("repos")))'
 
       - name: Additional Altdoc Dependency
         run: ./run.sh install_r future.apply

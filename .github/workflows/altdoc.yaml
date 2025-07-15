@@ -34,15 +34,21 @@ jobs:
 
       - name: Dependencies
         run: ./run.sh install_all
+      
+      - name: Altdoc from GitHub
+        run: ./run.sh install_github etiennebacher/altdoc
+
+      - name: Additional Altdoc Dependency
+        run: ./run.sh install_r future.apply
 
       - name: Build site
         run: |
           # If parallel = TRUE in render_docs()
-          # future::plan(future::multicore)
+          future::plan(future::multicore)
           install.packages(".", repos = NULL, type = "source")
           install.packages("pkgload")
           pkgload::load_all()
-          altdoc::render_docs(parallel = FALSE, freeze = FALSE)
+          altdoc::render_docs(parallel = TRUE, freeze = FALSE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀

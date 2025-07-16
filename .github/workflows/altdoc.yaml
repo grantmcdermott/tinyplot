@@ -34,14 +34,18 @@ jobs:
 
       - name: Dependencies
         run: ./run.sh install_all
-      
-      - name: Altdoc from GitHub
+
+      - name: Altdoc deps
+        run: ./run.sh install_r future.apply gitcreds
+
+      - name: Setup GitHub creds for remotes
+        run: |
+          Rscript -e 'gitcreds::gitcreds_set(Sys.getenv("GH_TOKEN"))'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: ./run.sh install_github etiennebacher/altdoc
 
-      - name: Additional Altdoc Dependency
-        run: ./run.sh install_r future.apply
+      - name: Altdoc from GitHub
+        run: ./run.sh install_github etiennebacher/altdoc
 
       - name: Build site
         run: |

@@ -4,6 +4,14 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## Development
+
+### Internals
+
+- Move `altdoc` from `Suggests` to `Config/Needs/website`.
+  Thanks to @etiennebacher for the suggestion and to @eddelbuettel for help
+  with the CI implementation.
+
 ## 0.4.2
 
 ### New features

@@ -1,6 +1,8 @@
 #' Points plot type
 #'
 #' @description Type function for plotting points, i.e. a scatter plot.
+#' @param clim Numeric giving the lower and upper limits of the character
+#'   expansion (`cex`) normalization for bubble charts.
 #' 
 #' @examples
 #' # "p" type convenience character string
@@ -20,18 +22,18 @@
 #' tinyplot(Sepal.Length ~ Petal.Length | Sepal.Width, data = iris, pch = 19)
 #' 
 #' @export
-type_points = function() {
+type_points = function(clim = c(0.5, 2.5)) {
   out = list(
+    data = data_points(clim = clim),
     draw = draw_points(),
-    data = data_points(),
     name = "p"
   )
   class(out) = "tinyplot_type"
   return(out)
 }
 
-data_points = function() {
-  fun = function(datapoints, ...) {
+data_points = function(clim = c(0.5, 2.5)) {
+  fun = function(datapoints, cex = NULL, ...) {
     # catch for factors (we should still be able to "force" plot these with points)
     if (is.factor(datapoints$x)) {
       xlvls = levels(datapoints$x)
@@ -49,18 +51,37 @@ data_points = function() {
     } else {
       ylabs = NULL
     }
+
+    # browser()
+    bubble = FALSE
+    bubble_cex = 1
+    if (!is.null(cex) && length(cex) == nrow(datapoints)) {
+      bubble = TRUE 
+      ## Identify the pretty break points for our bubble labels
+      bubble_labs = pretty(cex, n = 5)
+      len_labs = length(bubble_labs)
+      # cex = rescale_num(c(bubble_labs, cex), to = clim)
+      cex = rescale_num(sqrt(c(bubble_labs, cex))/pi, to = clim)
+      bubble_cex = cex[1:len_labs]
+      cex = cex[(len_labs+1):length(cex)]
+      names(bubble_cex) = format(bubble_labs)
+    }
     
     out = list(
       datapoints = datapoints,
       xlabs = xlabs,
-      ylabs = ylabs
+      ylabs = ylabs,
+      cex = cex,
+      bubble = bubble,
+      bubble_cex = bubble_cex
     )
     return(out)
   }
 }
 
 draw_points = function() {
-    fun = function(ix, iy, icol, ibg, ipch, ilwd, cex, ...) {
+    fun = function(ix, iy, icol, ibg, ipch, ilwd, icex, ...) {
+    # browser()
         points(
             x = ix,
             y = iy,
@@ -69,7 +90,7 @@ draw_points = function() {
             type = "p",
             pch = ipch,
             lwd = ilwd,
-            cex = cex
+            cex = icex
         )
     }
     return(fun)

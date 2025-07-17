@@ -168,8 +168,8 @@ draw_legend = function(
       legend_args[["lwd"]] = legend_args[["lwd"]] %||% lwd
     }
   
-    if (isTRUE(type %in% c("p", "pointrange", "errorbar")) && (length(col) == 1 || length(cex) == 1)) {
-      legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% cex
+    if (is.null(type) || type %in% c("p", "pointrange", "errorbar", "text")) {
+      legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% (cex %||% par("cex"))
     }
   
     # turn off inner line for "barplot" type
@@ -502,7 +502,11 @@ tinylegend = function(
   setHook("before.plot.new", oldhook, action = "replace")
   
   # Finally, set the inset as part of the legend args.
-  legend_args[["inset"]] = inset
+  if (is.null(legend_args[["inset"]])) {
+    legend_args[["inset"]] = inset
+  } else {
+    legend_args[["inset"]] = legend_args[["inset"]] + inset
+  }
   
   #
   ## Step 3: Draw the legend

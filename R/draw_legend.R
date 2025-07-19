@@ -329,7 +329,9 @@ draw_legend = function(
         }
       }
 
-      legend_args[["horiz"]] = TRUE
+      # enforce horizontal legend if user hasn't specified ncol arg
+      # (exception: gradient legends at bottom/top are always horizontal)
+      if (is.null(legend_args[["ncol"]]) || gradient) legend_args[["horiz"]] = TRUE
 
       # tighter labeling
       # See: https://github.com/grantmcdermott/tinyplot/issues/434
@@ -340,7 +342,8 @@ draw_legend = function(
       }
 
       # Catch for horizontal ribbon legend spacing
-      if (type=="ribbon" && isTRUE(legend_args[["horiz"]])) {
+      # if (type=="ribbon" && isTRUE(legend_args[["horiz"]])) {
+      if (type=="ribbon") {
         if (legend_args[["pt.lwd"]] == 1) {
           legend_args[["x.intersp"]] = 1
         } else {

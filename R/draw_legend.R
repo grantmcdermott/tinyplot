@@ -333,31 +333,32 @@ draw_legend = function(
       # (exception: gradient legends at bottom/top are always horizontal)
       if (is.null(legend_args[["ncol"]]) || gradient) legend_args[["horiz"]] = TRUE
 
-      # tighter labeling
+    } else {
+      
+      legend_args[["inset"]] = 0
+      if (new_plot && draw) plot.new()
+      
+    }
+  
+    # Additional tweaks for horiz and/or multi-column legends
+    if (isTRUE(legend_args[["horiz"]]) ||  !is.null(legend_args[["ncol"]])) {
+      # tighter horizontal labelling
       # See: https://github.com/grantmcdermott/tinyplot/issues/434
       if (!gradient) {
         legend_args[["text.width"]] = NA
         nlabs = length(legend_args[["legend"]])
         legend_args[["legend"]][-nlabs] = paste(legend_args[["legend"]][-nlabs], " ")
       }
-
-      # Catch for horizontal ribbon legend spacing
-      # if (type=="ribbon" && isTRUE(legend_args[["horiz"]])) {
+      # catch for horizontal ribbon legend spacing
       if (type=="ribbon") {
         if (legend_args[["pt.lwd"]] == 1) {
           legend_args[["x.intersp"]] = 1
         } else {
           legend_args[["x.intersp"]] = 0.5
         }
-      } else if (gradient && isTRUE(legend_args[["horiz"]])) {
+      } else if (gradient) {
         legend_args[["x.intersp"]] = 0.5
       }
-      
-    } else {
-      
-      legend_args[["inset"]] = 0
-      if (new_plot && draw) plot.new()
-      
     }
     
     #

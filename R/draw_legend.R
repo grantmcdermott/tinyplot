@@ -331,6 +331,14 @@ draw_legend = function(
 
       legend_args[["horiz"]] = TRUE
 
+      # tighter labeling
+      # See: https://github.com/grantmcdermott/tinyplot/issues/434
+      if (!gradient) {
+        legend_args[["text.width"]] = NA
+        nlabs = length(legend_args[["legend"]])
+        legend_args[["legend"]][-nlabs] = paste(legend_args[["legend"]][-nlabs], " ")
+      }
+
       # Catch for horizontal ribbon legend spacing
       if (type=="ribbon" && isTRUE(legend_args[["horiz"]])) {
         if (legend_args[["pt.lwd"]] == 1) {

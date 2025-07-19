@@ -214,6 +214,10 @@ draw_legend = function(
       )
       legend_args[["legend"]] = lgnd_labs
     }
+  
+    if (isTRUE(gradient)) {
+      legend_args[["ncol"]] = NULL
+    }
     
     #
     ## legend placement ----
@@ -346,8 +350,11 @@ draw_legend = function(
       # See: https://github.com/grantmcdermott/tinyplot/issues/434
       if (!gradient) {
         legend_args[["text.width"]] = NA
+        # Add a space to all labs except the outer most right ones
         nlabs = length(legend_args[["legend"]])
-        legend_args[["legend"]][-nlabs] = paste(legend_args[["legend"]][-nlabs], " ")
+        nidx = nlabs
+        if (!is.null(legend_args[["ncol"]])) nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
+        legend_args[["legend"]][-nidx] = paste(legend_args[["legend"]][-nidx], " ")
       }
       # catch for horizontal ribbon legend spacing
       if (type=="ribbon") {

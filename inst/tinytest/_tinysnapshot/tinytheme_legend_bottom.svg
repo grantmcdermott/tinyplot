@@ -26,11 +26,11 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<circle cx='251.27' cy='488.32' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #4E79A7;' />
-<circle cx='279.54' cy='488.32' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #F28E2B;' />
+<circle cx='247.94' cy='488.32' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #4E79A7;' />
+<circle cx='282.87' cy='488.32' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #F28E2B;' />
 <text x='271.44' y='473.92' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='54.67px' lengthAdjust='spacingAndGlyphs'>factor(am)</text>
-<text x='262.07' y='492.45' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text x='290.34' y='492.45' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
+<text x='258.74' y='492.45' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>0  </text>
+<text x='293.67' y='492.45' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text x='47.52' y='31.68' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='209.14px' lengthAdjust='spacingAndGlyphs'>tinytheme("clean") + legend = "bottom!"</text>
 </g>
 <defs>

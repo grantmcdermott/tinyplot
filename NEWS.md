@@ -8,15 +8,46 @@ where the formatting is also better._
 
 ### New features
 
+- Improved horizontal legend spacing, as well as multicolumn legend support. A
+  new example in the "Tips & tricks" vignettes demonstrates the latter.
+  (#446 @grantmcdermott)
+
+### Internals
+
+- Move `altdoc` from `Suggests` to `Config/Needs/website`.
+  Thanks to @etiennebacher for the suggestion and to @eddelbuettel for help
+  with the CI implementation.
+
+## 0.4.2
+
+### New features
+
 - `type_text()` gains `xpd` and `srt` arguments for controlling text clipping
-  rotation, respectively. (#428 @grantmcdermott)
+  and rotation, respectively. (#428 @grantmcdermott)
+- Add `xlevels` (in addition to `ylevels`) in `type_spineplot()` for spine plots
+  with categorical `x` variable. (#431 @zeileis)
 
 ### Bug fixes
 
+- Fixed a long-standing issue whereby resizing the plot window would cause
+  secondary plot layers, e.g. from `plt_add()`, to become misaligned in 
+  faceted plots (#313). This also resolves a related alignment + layering issue
+  specific to the Positron IDE
+  ([positron#7316](https://github.com/posit-dev/positron/issues/7316)).
+  As an aside, `tinyplot` should now be fully compatible with Positron. (#438 @grantmcdermott)
+- Fixed a bug that resulted in y-axis labels being coerced to numeric for
+  `"p"`-alike plot types (including `"jitter"`) if `y` is a factor or character.
 - Safer handling of pre-plot hooks. Resolves an issue affecting how `tinyplot`
   behaves inside loops, particularly for themed plots where only the final plot
   was being drawn in Quarto/RMarkdown contexts. Special thanks to @hadley and @cderv
-  for helping us to debug. (@vincentarelbundock #425)
+  for helping us debug. (#425 @vincentarelbundock)
+- The `xlevels` argument of `type_barplot()` could not handle numeric indexes correctly.
+  (#431 @zeileis)
+- Addressed several shortcomings of the straight line family of types (`type_hline`,
+  `type_vline`, `type_abline`) through better recycling logic. For example,
+  these types now work correctly across non-`by` facets. Simultaneously, users
+  can also call them in a base plot layer, relaxing the requirement that they
+  must be called as part of a subsequent plot layer via `tinyplot_add()`. (#422 @grantmcdermott)
 
 ## 0.4.1
 

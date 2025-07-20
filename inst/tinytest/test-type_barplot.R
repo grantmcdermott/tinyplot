@@ -40,3 +40,8 @@ f = function() {
            type = "barplot", flip = TRUE, fill = 0.6, beside = TRUE)
 }
 expect_snapshot_plot(f, label = "barplot_flip_fancy")
+
+f = function() {
+  tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
+}
+expect_snapshot_plot(f, label = "barplot_xlevels_issue430")

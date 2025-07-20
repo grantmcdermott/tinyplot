@@ -6,6 +6,12 @@ where the formatting is also better._
 
 ## Development
 
+### New features
+
+- Improved horizontal legend spacing, as well as multicolumn legend support. A
+  new example in the "Tips & tricks" vignettes demonstrates the latter.
+  (#446 @grantmcdermott)
+
 ### Internals
 
 - Move `altdoc` from `Suggests` to `Config/Needs/website`.

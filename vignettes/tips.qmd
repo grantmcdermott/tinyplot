@@ -13,11 +13,11 @@ package. Please feel free to suggest or add more tips via our [GitHub repo](http
 
 ## Legend
 
-### Opacity (`alpha`)
+### Legend transparency
 
-By default, the legend inherits the opacity of the plotted elements. In some
-cases, this may be undesirable. For example, in the following plot, the legend
-is too light:
+By default, the legend inherits the transparency (`alpha`) of the plotted 
+elements. In some cases, this may be undesirable. For example, in the following
+plot, the legend is too light:
 
 ```{r}
 library(tinyplot)
@@ -37,6 +37,37 @@ top of the existing canvas.
 tinyplot(y ~ x | z, data = dat, pch = 19, empty = TRUE)
 tinyplot_add(empty = FALSE, alpha = .1)
 ```
+
+### Multicolumn legends
+
+For cases where we have many discrete groups, the default single column legend
+can overrun the plot limits. For example:
+
+```{r}
+library(tinyplot)
+
+plt(weight ~ Time | Chick, data = ChickWeight, type = "l")
+```
+
+To solve this undesirable behaviour, simply pass an approporiate `ncol`
+adjustment as part of your legend (list) argument:
+
+```{r}
+plt(weight ~ Time | Chick, data = ChickWeight, type = "l",
+    legend = list(ncol = 3))
+```
+
+The same trick works for horizontal legends and/or legends in other positions,
+as well for other plot types and themes. For example:
+
+```{r}
+plt(weight ~ Time | Chick, data = ChickWeight, type = "l",
+    legend = list("bottom!", ncol = 5))
+```
+
+(Admittedly, the end result is a bit compressed here because of the default 
+aspect ratio that we use for figures on our website. But for regular interactive 
+plots, or plots saved to disk, the aesthetic effect should be quite pleasing.)
 
 ## Labels
 

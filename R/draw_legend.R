@@ -214,6 +214,10 @@ draw_legend = function(
       )
       legend_args[["legend"]] = lgnd_labs
     }
+  
+    if (isTRUE(gradient)) {
+      legend_args[["ncol"]] = NULL
+    }
     
     #
     ## legend placement ----
@@ -329,24 +333,39 @@ draw_legend = function(
         }
       }
 
-      legend_args[["horiz"]] = TRUE
+      # enforce horizontal legend if user hasn't specified ncol arg
+      # (exception: gradient legends at bottom/top are always horizontal)
+      if (is.null(legend_args[["ncol"]]) || gradient) legend_args[["horiz"]] = TRUE
 
-      # Catch for horizontal ribbon legend spacing
-      if (type=="ribbon" && isTRUE(legend_args[["horiz"]])) {
-        if (legend_args[["pt.lwd"]] == 1) {
-          legend_args[["x.intersp"]] = 1
-        } else {
-          legend_args[["x.intersp"]] = 0.5
-        }
-      } else if (gradient && isTRUE(legend_args[["horiz"]])) {
-        legend_args[["x.intersp"]] = 0.5
-      }
-      
     } else {
       
       legend_args[["inset"]] = 0
       if (new_plot && draw) plot.new()
       
+    }
+  
+    # Additional tweaks for horiz and/or multi-column legends
+    if (isTRUE(legend_args[["horiz"]]) ||  !is.null(legend_args[["ncol"]])) {
+      # tighter horizontal labelling
+      # See: https://github.com/grantmcdermott/tinyplot/issues/434
+      if (!gradient) {
+        legend_args[["text.width"]] = NA
+        # Add a space to all labs except the outer most right ones
+        nlabs = length(legend_args[["legend"]])
+        nidx = nlabs
+        if (!is.null(legend_args[["ncol"]])) nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
+        legend_args[["legend"]][-nidx] = paste(legend_args[["legend"]][-nidx], " ")
+      }
+      # catch for horizontal ribbon legend spacing
+      if (type=="ribbon") {
+        if (legend_args[["pt.lwd"]] == 1) {
+          legend_args[["x.intersp"]] = 1
+        } else {
+          legend_args[["x.intersp"]] = 0.5
+        }
+      } else if (gradient) {
+        legend_args[["x.intersp"]] = 0.5
+      }
     }
     
     #

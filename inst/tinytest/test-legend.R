@@ -40,6 +40,28 @@ expect_snapshot_plot(f, label = "legend_keyword_outertopright")
 f = function() tinyplot(Temp ~ Day | Month, data = aq, legend = "bottomleft!")
 expect_snapshot_plot(f, label = "legend_keyword_outerbottomleft")
 
+# Horizontal and/or multicolumn legend spacing
+
+aq$Month2 = factor(month.name[aq$Month], levels = month.name[5:9])
+f = function() tinyplot(Temp ~ Day | Month2, data = aq, legend = "bottom!")
+expect_snapshot_plot(f, label = "legend_spacing_horiz_label_bottom")
+
+f = function() tinyplot(
+  weight ~ Time | Chick,
+  data = ChickWeight,
+  type = "ribbon", # not necessary for plot but helps to check some internal logic
+  legend = list("right!", ncol = 3)
+)
+expect_snapshot_plot(f, label = "legend_spacing_ncol_right")
+
+f = function() tinyplot(
+  weight ~ Time | Chick,
+  data = ChickWeight,
+  type = "l",
+  legend = list("bottom!", ncol = 5)
+)
+expect_snapshot_plot(f, label = "legend_spacing_ncol_bottom")
+
 # Long legend titles
 
 f = function() tinyplot(

@@ -38,7 +38,7 @@ tinyplot(y ~ x | z, data = dat, pch = 19, empty = TRUE)
 tinyplot_add(empty = FALSE, alpha = .1)
 ```
 
-### Mulitcolumn legends
+### Multicolumn legends
 
 For cases where we have many discrete groups, the default single column legend
 can overrun the plot limits. For example:

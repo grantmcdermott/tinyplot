@@ -211,11 +211,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#development" id="toc-development" class="nav-link" data-scroll-target="#development">Development</a>
   <ul class="collapse">
+  <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
   <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals">Internals</a></li>
   </ul></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.4.2</a>
   <ul class="collapse">
-  <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
+  <li><a href="#new-features-1" id="toc-new-features-1" class="nav-link" data-scroll-target="#new-features-1">New features</a></li>
   <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
   </ul></li>
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.4.1</a>
@@ -225,14 +226,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.4.0</a>
   <ul class="collapse">
-  <li><a href="#new-features-1" id="toc-new-features-1" class="nav-link" data-scroll-target="#new-features-1">New features:</a></li>
+  <li><a href="#new-features-2" id="toc-new-features-2" class="nav-link" data-scroll-target="#new-features-2">New features:</a></li>
   <li><a href="#bug-fixes-2" id="toc-bug-fixes-2" class="nav-link" data-scroll-target="#bug-fixes-2">Bug fixes:</a></li>
   <li><a href="#website" id="toc-website" class="nav-link" data-scroll-target="#website">Website:</a></li>
   <li><a href="#internals-1" id="toc-internals-1" class="nav-link" data-scroll-target="#internals-1">Internals:</a></li>
   </ul></li>
   <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">0.3.0</a>
   <ul class="collapse">
-  <li><a href="#new-features-2" id="toc-new-features-2" class="nav-link" data-scroll-target="#new-features-2">New features</a></li>
+  <li><a href="#new-features-3" id="toc-new-features-3" class="nav-link" data-scroll-target="#new-features-3">New features</a></li>
   <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
   <li><a href="#bug-fixes-3" id="toc-bug-fixes-3" class="nav-link" data-scroll-target="#bug-fixes-3">Bug fixes</a></li>
   <li><a href="#misc-1" id="toc-misc-1" class="nav-link" data-scroll-target="#misc-1">Misc</a></li>
@@ -260,6 +261,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>If you are viewing this file on CRAN, please check the <a href="https://grantmcdermott.com/tinyplot/NEWS.html">latest NEWS</a> on our website where the formatting is also better.</em></p>
 <section id="development" class="level2">
 <h2 class="anchored" data-anchor-id="development">Development</h2>
+<section id="new-features" class="level3">
+<h3 class="anchored" data-anchor-id="new-features">New features</h3>
+<ul>
+<li>Improved horizontal legend spacing, as well as multicolumn legend support. A new example in the “Tips &amp; tricks” vignettes demonstrates the latter. (<a href="https://github.com/grantmcdermott/tinyplot/issues/446">#446</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+</section>
 <section id="internals" class="level3">
 <h3 class="anchored" data-anchor-id="internals">Internals</h3>
 <ul>
@@ -269,8 +276,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="section" class="level2">
 <h2 class="anchored" data-anchor-id="section">0.4.2</h2>
-<section id="new-features" class="level3">
-<h3 class="anchored" data-anchor-id="new-features">New features</h3>
+<section id="new-features-1" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-1">New features</h3>
 <ul>
 <li><code>type_text()</code> gains <code>xpd</code> and <code>srt</code> arguments for controlling text clipping and rotation, respectively. (<a href="https://github.com/grantmcdermott/tinyplot/issues/428">#428</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Add <code>xlevels</code> (in addition to <code>ylevels</code>) in <code>type_spineplot()</code> for spine plots with categorical <code>x</code> variable. (<a href="https://github.com/grantmcdermott/tinyplot/issues/431">#431</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
@@ -304,8 +311,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="section-2" class="level2">
 <h2 class="anchored" data-anchor-id="section-2">0.4.0</h2>
-<section id="new-features-1" class="level3">
-<h3 class="anchored" data-anchor-id="new-features-1">New features:</h3>
+<section id="new-features-2" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-2">New features:</h3>
 <section id="new-plot-types" class="level4">
 <h4 class="anchored" data-anchor-id="new-plot-types">New plot types</h4>
 <ul>
@@ -371,8 +378,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="section-3" class="level2">
 <h2 class="anchored" data-anchor-id="section-3">0.3.0</h2>
-<section id="new-features-2" class="level3">
-<h3 class="anchored" data-anchor-id="new-features-2">New features</h3>
+<section id="new-features-3" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-3">New features</h3>
 <p><strong>tinyplot</strong> v0.3.0 is a big release with many new features, both internal and user-facing. Related updates are grouped below for easier navigation.</p>
 <section id="revamped-type-logic-and-functional-equivalents" class="level4">
 <h4 class="anchored" data-anchor-id="revamped-type-logic-and-functional-equivalents">Revamped <code>type</code> logic and functional equivalents</h4>

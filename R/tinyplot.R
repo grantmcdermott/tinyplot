@@ -1053,6 +1053,7 @@ tinyplot.default = function(
     } else {
       ## dual legend case...
       ## FIXME: current logic only works for "right!" legend
+      if (is.call(legend)) legend_args = modifyList(legend_args, as.list(legend), keep.null = TRUE)
       legend = "bottomright!" # need bottom otherwise can't adjust inset vertically
       
       # legend 1: by grouping
@@ -1076,7 +1077,7 @@ tinyplot.default = function(
       # legend 2: bubble
       l2 = draw_legend(
         legend = legend,
-        legend_args = modifyList(legend_args, list(title = cex_dep), keep.null = TRUE),
+        legend_args = modifyList(legend_args, list(title = cex_dep, ncol = 1), keep.null = TRUE),
         # by_dep = cex_dep,
         lgnd_labs = names(bubble_cex),
         type = type,
@@ -1102,7 +1103,7 @@ tinyplot.default = function(
         # normal legend is wider; draw bubble first
         draw_legend(
           legend = legend,
-          legend_args = modifyList(legend_args, list(title = cex_dep, inset = c((l2w-l1w)/2, .4-l2h/2)), keep.null = TRUE),
+          legend_args = modifyList(legend_args, list(title = cex_dep, ncol = 1, inset = c((l2w-l1w)/2, .4-l2h/2)), keep.null = TRUE),
           lgnd_labs = names(bubble_cex),
           type = type,
           pch = par("pch"),
@@ -1132,6 +1133,7 @@ tinyplot.default = function(
         )
 
       } else {
+        # bubble legend is wider; draw normal legend first
         draw_legend(
           legend = legend, #NULL,
           legend_args = modifyList(legend_args, list(inset = c((l1w-l2w)/2,.5+l1h/2)), keep.null = TRUE),
@@ -1151,7 +1153,7 @@ tinyplot.default = function(
         # draw l2
         draw_legend(
           legend = legend,
-          legend_args = modifyList(legend_args, list(title = cex_dep, inset = c(0, .4-l2h/2)), keep.null = TRUE),
+          legend_args = modifyList(legend_args, list(title = cex_dep, ncol = 1, inset = c(0, .4-l2h/2)), keep.null = TRUE),
           lgnd_labs = names(bubble_cex),
           type = type,
           pch = par("pch"),

@@ -218,7 +218,9 @@ draw_legend = function(
     if (isTRUE(gradient)) {
       legend_args[["ncol"]] = NULL
     }
-    
+    # flag for multicolumn legend
+    mcol_flag = !is.null(legend_args[["ncol"]]) && legend_args[["ncol"]] > 1
+  
     #
     ## legend placement ----
     
@@ -345,7 +347,7 @@ draw_legend = function(
     }
   
     # Additional tweaks for horiz and/or multi-column legends
-    if (isTRUE(legend_args[["horiz"]]) ||  !is.null(legend_args[["ncol"]])) {
+    if (isTRUE(legend_args[["horiz"]]) ||  mcol_flag) {
       # tighter horizontal labelling
       # See: https://github.com/grantmcdermott/tinyplot/issues/434
       if (!gradient) {
@@ -353,7 +355,7 @@ draw_legend = function(
         # Add a space to all labs except the outer most right ones
         nlabs = length(legend_args[["legend"]])
         nidx = nlabs
-        if (!is.null(legend_args[["ncol"]])) nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
+        if (mcol_flag) nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
         legend_args[["legend"]][-nidx] = paste(legend_args[["legend"]][-nidx], " ")
       }
       # catch for horizontal ribbon legend spacing

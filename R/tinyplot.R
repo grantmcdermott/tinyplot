@@ -1057,7 +1057,7 @@ tinyplot.default = function(
       legend = "bottomright!" # need bottom otherwise can't adjust inset vertically
       
       # legend 1: by grouping
-      l1 = draw_legend(
+      lgby = draw_legend(
         legend = legend,
         legend_args = legend_args,
         by_dep = by_dep,
@@ -1075,9 +1075,13 @@ tinyplot.default = function(
         draw = FALSE
       )
       # legend 2: bubble
-      l2 = draw_legend(
+      lgbub = draw_legend(
         legend = legend,
-        legend_args = modifyList(legend_args, list(title = cex_dep, ncol = 1), keep.null = TRUE),
+        legend_args = modifyList(
+          legend_args,
+          list(title = cex_dep, ncol = 1),
+          keep.null = TRUE
+        ),
         # by_dep = cex_dep,
         lgnd_labs = names(bubble_cex),
         type = type,
@@ -1092,18 +1096,30 @@ tinyplot.default = function(
         draw = FALSE
       )
 
-      # reposition and plot both legends
-      l1w = l1$rect$w
-      l2w = l2$rect$w
-      l1h = l1$rect$h
-      l2h = l2$rect$h
+      # grab respective legend dimensions
+      lgby_w = lgby$rect$w
+      lgby_h = lgby$rect$h
+      lgbub_w = lgbub$rect$w
+      lgbub_h = lgbub$rect$h
       
-      # order depends on which legend is "wider"
-      if (l1w > l2w) {
-        # normal legend is wider; draw bubble first
+      # Finally, reposition (via adjusted an `inset` arg) and draw both legends
+      # Note: the drawing order depends on which legend is "wider", since this
+      #   helps to correctly set the overall plot dimensions.
+
+      if (lgby_w > lgbub_w) {
+        # case I: by legend is wider; draw bubble first
+        ## first, draw bubble legend
         draw_legend(
           legend = legend,
-          legend_args = modifyList(legend_args, list(title = cex_dep, ncol = 1, inset = c((l2w-l1w)/2, .4-l2h/2)), keep.null = TRUE),
+          legend_args = modifyList(
+            legend_args,
+            list(
+              title = cex_dep,
+              ncol = 1,
+              inset = c((lgbub_w-lgby_w)/2, .4-lgbub_h/2)
+            ),
+            keep.null = TRUE
+          ),
           lgnd_labs = names(bubble_cex),
           type = type,
           pch = par("pch"),
@@ -1114,9 +1130,14 @@ tinyplot.default = function(
           cex = bubble_cex * cex_fct_adj,
           has_sub = has_sub
         )
+        ## next, draw by legend (with new_plot = FALSE)
         draw_legend(
           legend = legend,#NULL,
-          legend_args = modifyList(legend_args, list(inset = c(0, .5+l1h/2)), keep.null = TRUE),
+          legend_args = modifyList(
+            legend_args,
+            list(inset = c(0, .5+lgby_h/2)),
+            keep.null = TRUE
+          ),
           by_dep = by_dep,
           lgnd_labs = lgnd_labs,
           type = type,
@@ -1133,10 +1154,15 @@ tinyplot.default = function(
         )
 
       } else {
-        # bubble legend is wider; draw normal legend first
+        # Case II: bubble legend is wider; draw by legend first
+        ## first, draw by legend
         draw_legend(
           legend = legend, #NULL,
-          legend_args = modifyList(legend_args, list(inset = c((l1w-l2w)/2,.5+l1h/2)), keep.null = TRUE),
+          legend_args = modifyList(
+            legend_args,
+            list(inset = c((lgby_w-lgbub_w)/2,.5+lgby_h/2)),
+            keep.null = TRUE
+          ),
           by_dep = by_dep,
           lgnd_labs = lgnd_labs,
           type = type,
@@ -1150,10 +1176,18 @@ tinyplot.default = function(
           # cex = lgnd_cex,
           has_sub = has_sub
         )
-        # draw l2
+        ## next, draw bubble legend (with plot_new = FALSE)
         draw_legend(
           legend = legend,
-          legend_args = modifyList(legend_args, list(title = cex_dep, ncol = 1, inset = c(0, .4-l2h/2)), keep.null = TRUE),
+          legend_args = modifyList(
+            legend_args,
+            list(
+              title = cex_dep,
+              ncol = 1,
+              inset = c(0, .4-lgbub_h/2)
+            ),
+            keep.null = TRUE
+          ),
           lgnd_labs = names(bubble_cex),
           type = type,
           pch = par("pch"),

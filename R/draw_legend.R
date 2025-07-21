@@ -198,6 +198,9 @@ draw_legend = function(
     }
     # flag for multicolumn legend
     mcol_flag = !is.null(legend_args[["ncol"]]) && legend_args[["ncol"]] > 1
+    
+    # flag for (extra) user inset (also used for dual legends)
+    user_inset = !is.null(legend_args[["inset"]])
   
     #
     ## legend placement ----
@@ -368,6 +371,7 @@ draw_legend = function(
           outer_end = outer_end,
           outer_bottom = outer_bottom,
           gradient = gradient,
+          user_inset = user_inset,
           draw = draw
         ),
         list = list(
@@ -381,6 +385,7 @@ draw_legend = function(
           outer_end = outer_end,
           outer_bottom = outer_bottom,
           gradient = gradient,
+          user_inset = user_inset,
           draw = draw
         ),
         env = getNamespace("tinyplot")
@@ -401,6 +406,7 @@ tinylegend = function(
     ooma, omar, lmar, topmar_epsilon,
     outer_side, outer_right, outer_end, outer_bottom,
     gradient,
+    user_inset = FALSE,
     draw
 ) {
   
@@ -500,11 +506,7 @@ tinylegend = function(
   setHook("before.plot.new", oldhook, action = "replace")
   
   # Finally, set the inset as part of the legend args.
-  if (is.null(legend_args[["inset"]])) {
-    legend_args[["inset"]] = inset
-  } else {
-    legend_args[["inset"]] = legend_args[["inset"]] + inset
-  }
+  legend_args[["inset"]] = if (user_inset) legend_args[["inset"]] + inset else inset
   
   #
   ## Step 3: Draw the legend
@@ -522,7 +524,8 @@ tinylegend = function(
       outer_side = outer_side,
       outer_end = outer_end,
       outer_right = outer_right,
-      outer_bottom = outer_bottom
+      outer_bottom = outer_bottom,
+      user_inset = user_inset
     )
   } else {
     do.call("legend", legend_args)
@@ -536,7 +539,7 @@ tinylegend = function(
 # For gradient (i.e., continuous color) legends, we'll role our own bespoke
 # legend function based on grDevices::as.raster
 
-gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, outer_right, outer_bottom) {
+gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, outer_right, outer_bottom, user_inset = FALSE) {
   pal = legend_args[["col"]]
   lgnd_labs = legend_args[["legend"]]
   if (!is.null(legend_args[["horiz"]])) horiz = legend_args[["horiz"]] else horiz = FALSE
@@ -584,10 +587,12 @@ gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, out
        rb2_adj = corners[4] - (grconvertY(5+1 + 2.5, from="lines", to="user") - grconvertY(0, from="lines", to="user"))
      }
    }
+   if (user_inset) rb2_adj = rb2_adj + legend_args[["inset"]][2] + 0.05
    rb4_adj = grconvertY(5+1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
    
    if (outer_right) {
      rasterbox[1] = corners[2] + rb1_adj
+     if (user_inset) rasterbox[1] = rasterbox[1] - (corners[2] - legend_args[["inset"]][1])/2
      rasterbox[2] = rb2_adj 
      rasterbox[3] = rasterbox[1] + rb3_adj
      rasterbox[4] = rasterbox[2] + rb4_adj
@@ -705,6 +710,8 @@ gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, out
   }
 }
 
+
+# sanitize legend (helper function) ----
 
 sanitize_legend = function(legend, legend_args) {
   if (is.null(legend_args[["x"]])) {

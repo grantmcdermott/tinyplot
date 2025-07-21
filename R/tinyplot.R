@@ -1101,7 +1101,10 @@ tinyplot.default = function(
       lgby_h = lgby$rect$h
       lgbub_w = lgbub$rect$w
       lgbub_h = lgbub$rect$h
-      
+      # for inset adjustment, default to 0.5 unless one or more of the two
+      # legends is bigger than half the plot height.
+      lgby_inset = if (lgby_h > 0.5 || lgbub_h > 0.5) lgbub_h / (lgby_h + lgbub_h) else 0.5
+
       # Finally, reposition (via adjusted an `inset` arg) and draw both legends
       # Note: the drawing order depends on which legend is "wider", since this
       #   helps to correctly set the overall plot dimensions.
@@ -1110,13 +1113,14 @@ tinyplot.default = function(
         # case I: by legend is wider; draw bubble first
         ## first, draw bubble legend
         draw_legend(
-          legend = legend,
+          # legend = legend,
+          legend = "topright!",
           legend_args = modifyList(
             legend_args,
             list(
               title = cex_dep,
               ncol = 1,
-              inset = c((lgbub_w-lgby_w)/2, .4-lgbub_h/2)
+              inset = c((lgbub_w-lgby_w)/2, 1 - lgby_inset + 0.01)
             ),
             keep.null = TRUE
           ),
@@ -1135,7 +1139,7 @@ tinyplot.default = function(
           legend = legend,#NULL,
           legend_args = modifyList(
             legend_args,
-            list(inset = c(0, .5+lgby_h/2)),
+            list(inset = c(0, lgby_inset + 0.01)),
             keep.null = TRUE
           ),
           by_dep = by_dep,
@@ -1154,13 +1158,14 @@ tinyplot.default = function(
         )
 
       } else {
+        # browser()
         # Case II: bubble legend is wider; draw by legend first
         ## first, draw by legend
         draw_legend(
           legend = legend, #NULL,
           legend_args = modifyList(
             legend_args,
-            list(inset = c((lgby_w-lgbub_w)/2,.5+lgby_h/2)),
+            list(inset = c((lgby_w-lgbub_w)/2, lgby_inset + 0.01)),
             keep.null = TRUE
           ),
           by_dep = by_dep,
@@ -1178,13 +1183,14 @@ tinyplot.default = function(
         )
         ## next, draw bubble legend (with plot_new = FALSE)
         draw_legend(
-          legend = legend,
+          # legend = legend,
+          legend = "topright!",
           legend_args = modifyList(
             legend_args,
             list(
               title = cex_dep,
               ncol = 1,
-              inset = c(0, .4-lgbub_h/2)
+              inset = c(0, 1 - lgby_inset + 0.01)
             ),
             keep.null = TRUE
           ),

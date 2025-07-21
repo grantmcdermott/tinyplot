@@ -130,29 +130,7 @@ draw_legend = function(
     #
     ## legend args ----
     
-    if (is.null(legend_args[["x"]])) {
-      if (is.null(legend)) {
-        legend_args[["x"]] = "right!"
-      } else if (is.character(legend)) {
-        legend_args = utils::modifyList(legend_args, list(x = legend))
-      } else if (class(legend) %in% c("call", "name")) {
-        largs = as.list(legend)
-        if (is.null(largs[["x"]])) {
-          lnms = names(largs)
-          # check second position b/c first will be a symbol 
-          if (is.null(lnms)) {
-            largs = stats::setNames(largs, c("", "x"))
-          } else if (length(largs)>=2 && lnms[2] == "") {
-            lnms[2] = "x"
-            largs = stats::setNames(largs, lnms)
-          } else {
-            largs[["x"]] = "right!"
-          }
-        }
-        # Finally, combine with any pre-existing legend args (e.g., title from the by label)
-        legend_args = utils::modifyList(legend_args, largs, keep.null = TRUE)
-      }
-    }
+    legend_args = sanitize_legend(legend, legend_args)
     
     ## Use `!exists` rather than `is.null` for title in case user specified no title
     if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
@@ -728,3 +706,29 @@ gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, out
 }
 
 
+sanitize_legend = function(legend, legend_args) {
+  if (is.null(legend_args[["x"]])) {
+    if (is.null(legend)) {
+      legend_args[["x"]] = "right!"
+    } else if (is.character(legend)) {
+      legend_args = utils::modifyList(legend_args, list(x = legend))
+    } else if (class(legend) %in% c("call", "name")) {
+      largs = as.list(legend)
+      if (is.null(largs[["x"]])) {
+        lnms = names(largs)
+        # check second position b/c first will be a symbol 
+        if (is.null(lnms)) {
+          largs = stats::setNames(largs, c("", "x"))
+        } else if (length(largs)>=2 && lnms[2] == "") {
+          lnms[2] = "x"
+          largs = stats::setNames(largs, lnms)
+        } else {
+          largs[["x"]] = "right!"
+        }
+      }
+      # Finally, combine with any pre-existing legend args (e.g., title from the by label)
+      legend_args = utils::modifyList(legend_args, largs, keep.null = TRUE)
+    }
+  }
+  return(legend_args)
+}

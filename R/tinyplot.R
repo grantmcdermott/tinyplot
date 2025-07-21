@@ -1052,13 +1052,32 @@ tinyplot.default = function(
       )
     } else {
       ## dual legend case...
-      ## FIXME: current logic only works for "right!" legend
-      if (is.call(legend)) legend_args = modifyList(legend_args, as.list(legend), keep.null = TRUE)
-      legend = "bottomright!" # need bottom otherwise can't adjust inset vertically
+
+      ## FIXME: current logic only works for "right!"/"left!" legend
+      legend_args = sanitize_legend(legend, legend_args)
+      legend_pos = legend_args[["x"]]
+      legend_args[["x"]] = NULL
+      if (!grepl("right!$|left!$", legend_pos)) {
+        warning(
+          '\nDual legends currently only work with "right!" or "left!" keyword positioning.\n',
+          'Reverting to "right!" default\n'
+        )
+        legend_pos = "right!"
+        lgby_pos = "bottomright!"
+        lgbub_pos = "topright!"
+      } else if (grepl("right!$", legend_pos)) {
+        lgby_pos = "bottomright!"
+        lgbub_pos = "topright!"
+      } else if (grepl("left!$", legend_pos)) {
+        lgby_pos = "bottomleft!"
+        lgbub_pos = "topleft!"
+      }
       
+      # first we get the respective legend rect dimensions (i.e., draw = FALSE)
+
       # legend 1: by grouping
       lgby = draw_legend(
-        legend = legend,
+        legend = lgby_pos,
         legend_args = legend_args,
         by_dep = by_dep,
         lgnd_labs = lgnd_labs,
@@ -1076,7 +1095,7 @@ tinyplot.default = function(
       )
       # legend 2: bubble
       lgbub = draw_legend(
-        legend = legend,
+        legend = lgbub_pos,
         legend_args = modifyList(
           legend_args,
           list(title = cex_dep, ncol = 1),
@@ -1113,8 +1132,7 @@ tinyplot.default = function(
         # case I: by legend is wider; draw bubble first
         ## first, draw bubble legend
         draw_legend(
-          # legend = legend,
-          legend = "topright!",
+          legend = lgbub_pos,
           legend_args = modifyList(
             legend_args,
             list(
@@ -1136,7 +1154,7 @@ tinyplot.default = function(
         )
         ## next, draw by legend (with new_plot = FALSE)
         draw_legend(
-          legend = legend,#NULL,
+          legend = lgby_pos,
           legend_args = modifyList(
             legend_args,
             list(inset = c(0, lgby_inset + 0.01)),
@@ -1162,7 +1180,7 @@ tinyplot.default = function(
         # Case II: bubble legend is wider; draw by legend first
         ## first, draw by legend
         draw_legend(
-          legend = legend, #NULL,
+          legend = lgby_pos,
           legend_args = modifyList(
             legend_args,
             list(inset = c((lgby_w-lgbub_w)/2, lgby_inset + 0.01)),
@@ -1183,8 +1201,7 @@ tinyplot.default = function(
         )
         ## next, draw bubble legend (with plot_new = FALSE)
         draw_legend(
-          # legend = legend,
-          legend = "topright!",
+          legend = lgbub_pos,
           legend_args = modifyList(
             legend_args,
             list(
@@ -1207,7 +1224,7 @@ tinyplot.default = function(
           new_plot = FALSE # NB!
         )
         
-      }
+      } ## end dual legend case
       
     }
 

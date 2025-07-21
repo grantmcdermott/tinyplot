@@ -1169,8 +1169,8 @@ tinyplot.default = function(
           col = col,
           bg = bg,
           gradient = by_continuous,
-          cex = cex * cex_fct_adj,
-          # cex = lgnd_cex,
+          # cex = cex * cex_fct_adj,
+          cex = lgnd_cex,
           has_sub = has_sub,
           new_plot = FALSE # NB!
         )
@@ -1195,8 +1195,8 @@ tinyplot.default = function(
           col = col,
           bg = bg,
           gradient = by_continuous,
-          cex = cex * cex_fct_adj,
-          # cex = lgnd_cex,
+          # cex = cex * cex_fct_adj,
+          cex = lgnd_cex,
           has_sub = has_sub
         )
         ## next, draw bubble legend (with plot_new = FALSE)

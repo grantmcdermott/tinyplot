@@ -130,29 +130,7 @@ draw_legend = function(
     #
     ## legend args ----
     
-    if (is.null(legend_args[["x"]])) {
-      if (is.null(legend)) {
-        legend_args[["x"]] = "right!"
-      } else if (is.character(legend)) {
-        legend_args = utils::modifyList(legend_args, list(x = legend))
-      } else if (class(legend) %in% c("call", "name")) {
-        largs = as.list(legend)
-        if (is.null(largs[["x"]])) {
-          lnms = names(largs)
-          # check second position b/c first will be a symbol 
-          if (is.null(lnms)) {
-            largs = stats::setNames(largs, c("", "x"))
-          } else if (length(largs)>=2 && lnms[2] == "") {
-            lnms[2] = "x"
-            largs = stats::setNames(largs, lnms)
-          } else {
-            largs[["x"]] = "right!"
-          }
-        }
-        # Finally, combine with any pre-existing legend args (e.g., title from the by label)
-        legend_args = utils::modifyList(legend_args, largs, keep.null = TRUE)
-      }
-    }
+    legend_args = sanitize_legend(legend, legend_args)
     
     ## Use `!exists` rather than `is.null` for title in case user specified no title
     if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
@@ -168,8 +146,8 @@ draw_legend = function(
       legend_args[["lwd"]] = legend_args[["lwd"]] %||% lwd
     }
   
-    if (isTRUE(type %in% c("p", "pointrange", "errorbar")) && (length(col) == 1 || length(cex) == 1)) {
-      legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% cex
+    if (is.null(type) || type %in% c("p", "pointrange", "errorbar", "text")) {
+      legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% (cex %||% par("cex"))
     }
   
     # turn off inner line for "barplot" type
@@ -218,7 +196,12 @@ draw_legend = function(
     if (isTRUE(gradient)) {
       legend_args[["ncol"]] = NULL
     }
+    # flag for multicolumn legend
+    mcol_flag = !is.null(legend_args[["ncol"]]) && legend_args[["ncol"]] > 1
     
+    # flag for (extra) user inset (also used for dual legends)
+    user_inset = !is.null(legend_args[["inset"]])
+  
     #
     ## legend placement ----
     
@@ -345,7 +328,7 @@ draw_legend = function(
     }
   
     # Additional tweaks for horiz and/or multi-column legends
-    if (isTRUE(legend_args[["horiz"]]) ||  !is.null(legend_args[["ncol"]])) {
+    if (isTRUE(legend_args[["horiz"]]) ||  mcol_flag) {
       # tighter horizontal labelling
       # See: https://github.com/grantmcdermott/tinyplot/issues/434
       if (!gradient) {
@@ -353,7 +336,7 @@ draw_legend = function(
         # Add a space to all labs except the outer most right ones
         nlabs = length(legend_args[["legend"]])
         nidx = nlabs
-        if (!is.null(legend_args[["ncol"]])) nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
+        if (mcol_flag) nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
         legend_args[["legend"]][-nidx] = paste(legend_args[["legend"]][-nidx], " ")
       }
       # catch for horizontal ribbon legend spacing
@@ -370,7 +353,6 @@ draw_legend = function(
     
     #
     ## draw the legend ----
-    
     # Legend drawing is handled by the internal `tinylegend()` function, which:
     #   1. calculates appropriate insets for "outer" legend placement
     #   2. can draw gradient legends (via `gradient_legend()` below)
@@ -389,6 +371,7 @@ draw_legend = function(
           outer_end = outer_end,
           outer_bottom = outer_bottom,
           gradient = gradient,
+          user_inset = user_inset,
           draw = draw
         ),
         list = list(
@@ -402,6 +385,7 @@ draw_legend = function(
           outer_end = outer_end,
           outer_bottom = outer_bottom,
           gradient = gradient,
+          user_inset = user_inset,
           draw = draw
         ),
         env = getNamespace("tinyplot")
@@ -422,6 +406,7 @@ tinylegend = function(
     ooma, omar, lmar, topmar_epsilon,
     outer_side, outer_right, outer_end, outer_bottom,
     gradient,
+    user_inset = FALSE,
     draw
 ) {
   
@@ -521,7 +506,7 @@ tinylegend = function(
   setHook("before.plot.new", oldhook, action = "replace")
   
   # Finally, set the inset as part of the legend args.
-  legend_args[["inset"]] = inset
+  legend_args[["inset"]] = if (user_inset) legend_args[["inset"]] + inset else inset
   
   #
   ## Step 3: Draw the legend
@@ -539,7 +524,8 @@ tinylegend = function(
       outer_side = outer_side,
       outer_end = outer_end,
       outer_right = outer_right,
-      outer_bottom = outer_bottom
+      outer_bottom = outer_bottom,
+      user_inset = user_inset
     )
   } else {
     do.call("legend", legend_args)
@@ -553,7 +539,7 @@ tinylegend = function(
 # For gradient (i.e., continuous color) legends, we'll role our own bespoke
 # legend function based on grDevices::as.raster
 
-gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, outer_right, outer_bottom) {
+gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, outer_right, outer_bottom, user_inset = FALSE) {
   pal = legend_args[["col"]]
   lgnd_labs = legend_args[["legend"]]
   if (!is.null(legend_args[["horiz"]])) horiz = legend_args[["horiz"]] else horiz = FALSE
@@ -601,10 +587,12 @@ gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, out
        rb2_adj = corners[4] - (grconvertY(5+1 + 2.5, from="lines", to="user") - grconvertY(0, from="lines", to="user"))
      }
    }
+   if (user_inset) rb2_adj = rb2_adj + legend_args[["inset"]][2] + 0.05
    rb4_adj = grconvertY(5+1, from="lines", to="user") - grconvertY(0, from="lines", to="user")
    
    if (outer_right) {
      rasterbox[1] = corners[2] + rb1_adj
+     if (user_inset) rasterbox[1] = rasterbox[1] - (corners[2] - legend_args[["inset"]][1])/2
      rasterbox[2] = rb2_adj 
      rasterbox[3] = rasterbox[1] + rb3_adj
      rasterbox[4] = rasterbox[2] + rb4_adj
@@ -723,3 +711,31 @@ gradient_legend = function(legend_args, fklgnd, lmar, outer_side, outer_end, out
 }
 
 
+# sanitize legend (helper function) ----
+
+sanitize_legend = function(legend, legend_args) {
+  if (is.null(legend_args[["x"]])) {
+    if (is.null(legend)) {
+      legend_args[["x"]] = "right!"
+    } else if (is.character(legend)) {
+      legend_args = utils::modifyList(legend_args, list(x = legend))
+    } else if (class(legend) %in% c("call", "name")) {
+      largs = as.list(legend)
+      if (is.null(largs[["x"]])) {
+        lnms = names(largs)
+        # check second position b/c first will be a symbol 
+        if (is.null(lnms)) {
+          largs = stats::setNames(largs, c("", "x"))
+        } else if (length(largs)>=2 && lnms[2] == "") {
+          lnms[2] = "x"
+          largs = stats::setNames(largs, lnms)
+        } else {
+          largs[["x"]] = "right!"
+        }
+      }
+      # Finally, combine with any pre-existing legend args (e.g., title from the by label)
+      legend_args = utils::modifyList(legend_args, largs, keep.null = TRUE)
+    }
+  }
+  return(legend_args)
+}

@@ -13,7 +13,7 @@ type_pointrange = function() {
 
 
 draw_pointrange = function() {
-    fun = function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, ilwd, cex, ...) {
+    fun = function(ix, iy, ixmin, iymin, ixmax, iymax, icol, ibg, ipch, ilwd, icex, ...) {
         segments(
             x0 = ixmin,
             y0 = iymin,
@@ -22,7 +22,7 @@ draw_pointrange = function() {
             col = icol,
             lwd = ilwd
         )
-        draw_points()(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, cex = cex)
+        draw_points()(ix = ix, iy = iy, icol = icol, ibg = ibg, ipch = ipch, ilwd = ilwd, icex = icex)
     }
     return(fun)
 }

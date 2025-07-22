@@ -22,11 +22,11 @@
 #' @param by grouping variable(s). The default behaviour is for groups to be
 #'   represented in the form of distinct colours, which will also trigger an
 #'   automatic legend. (See `legend` below for customization options.) However,
-#'   groups can also be presented through other plot parameters (e.g., `pch` or
-#'   `lty`) by passing an appropriate "by" keyword; see Examples. Note that
-#'   continuous (i.e., gradient) colour legends are also supported if the user
-#'   passes a numeric or integer to `by`. To group by multiple variables, wrap
-#'   them with \code{\link[base]{interaction}}.
+#'   groups can also be presented through other plot parameters (e.g., `pch`,
+#'   `lty`, or `cex`) by passing an appropriate `"by"` keyword; see Examples.
+#'   Note that continuous (i.e., gradient) colour legends are also supported if
+#'   the user passes a numeric or integer to `by`. To group by multiple
+#'   variables, wrap them with \code{\link[base]{interaction}}.
 #' @param facet the faceting variable(s) that you want arrange separate plot
 #'   windows by. Can be specified in various ways:
 #'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in
@@ -253,7 +253,7 @@
 #'   can supply a special `lwd = "by"` convenience argument, in which case the
 #'   line width will automatically loop over the number of groups. This
 #'   automatic looping will be centered at the global line width value (i.e.,
-# `   par("lwd")`) and pad on either side of that.
+#'   `par("lwd")`) and pad on either side of that.
 #' @param bg background fill color for the open plot symbols 21:25 (see
 #'   `points.default`), as well as ribbon and area plot types.
 #'   Users can also supply either one of two special convenience arguments that
@@ -278,8 +278,18 @@
 #'   fractional values, e.g. `0.5` for semi-transparency.
 #' @param cex character expansion. A numerical vector (can be a single value)
 #'   giving the amount by which plotting characters and symbols should be scaled
-#'   relative to the default. Note that NULL is equivalent to 1.0, while NA
-#'   renders the characters invisible.
+#'   relative to the default. Note that `NULL` is equivalent to 1.0, while `NA`
+#'   renders the characters invisible. There are two additional considerations,
+#'   specifically for points-alike plot types (e.g. `"p"`):
+#'   
+#'   - users can also supply a special `cex = "by"` convenience argument, in
+#'     which case the character expansion will automatically adjust by group
+#'     too. The range of this character expansion is controlled by the `clim`
+#'     argument in the respective types; see [`type_points()`] for example.
+#'   - passing a `cex` vector of equal length to the main `x` and `y` variables
+#'     (e.g., another column in the same dataset) will yield a "bubble"plot with
+#'     its own dedicated legend. This can provide a useful way to visualize an
+#'     extra dimension of the data; see Examples.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param add logical. If TRUE, then elements are added to the current plot rather
@@ -399,6 +409,17 @@
 #'   pch = 16,
 #'   cex = 2
 #' )
+#' 
+#' # Use the special "by" convenience keyword if you would like to map these
+#' # aesthetic features over groups too (i.e., in addition to the default
+#' # colour grouping)
+#' 
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = "by",
+#'   cex = "by"
+#' )
 #'
 #' # We can add alpha transparency for overlapping points
 #'
@@ -412,7 +433,7 @@
 #'
 #' # To get filled points with a common solid background color, use an
 #' # appropriate plotting character (21:25) and combine with one of the special
-#' # `bg` convenience arguments.
+#' # `bg`/`fill` convenience arguments.
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
@@ -420,6 +441,18 @@
 #'   cex = 2,
 #'   bg = 0.3, # numeric in [0,1] adds a grouped background fill with transparency
 #'   col = "black" # override default color mapping; give all points a black border
+#' )
+#' 
+#' # Aside: For "bubble" plots, pass an appropriate vector to the `cex` arg.
+#' # This can be useful for depicting an additional dimension of the data (here:
+#' # Wind).
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = 21,
+#'   cex = aq$Wind, # map character size to another feature in the data
+#'   bg = 0.3,
+#'   col = "black"
 #' )
 #'
 #' # Converting to a grouped line plot is a simple matter of adjusting the

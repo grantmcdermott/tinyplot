@@ -124,11 +124,11 @@ can be specified as \code{ymin = var} if \code{var} is a variable in \code{data}
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an
 automatic legend. (See \code{legend} below for customization options.) However,
-groups can also be presented through other plot parameters (e.g., \code{pch} or
-\code{lty}) by passing an appropriate "by" keyword; see Examples. Note that
-continuous (i.e., gradient) colour legends are also supported if the user
-passes a numeric or integer to \code{by}. To group by multiple variables, wrap
-them with \code{\link[base]{interaction}}.}
+groups can also be presented through other plot parameters (e.g., \code{pch},
+\code{lty}, or \code{cex}) by passing an appropriate \code{"by"} keyword; see Examples.
+Note that continuous (i.e., gradient) colour legends are also supported if
+the user passes a numeric or integer to \code{by}. To group by multiple
+variables, wrap them with \code{\link[base]{interaction}}.}
 
 \item{facet}{the faceting variable(s) that you want arrange separate plot
 windows by. Can be specified in various ways:
@@ -385,7 +385,8 @@ recycle as necessary.}
 number of categories in the \code{by} variable. See \code{lwd}. In addition, users
 can supply a special \code{lwd = "by"} convenience argument, in which case the
 line width will automatically loop over the number of groups. This
-automatic looping will be centered at the global line width value (i.e.,}
+automatic looping will be centered at the global line width value (i.e.,
+\code{par("lwd")}) and pad on either side of that.}
 
 \item{col}{plotting color. Character, integer, or vector of length equal to
 the number of categories in the \code{by} variable. See \code{col}. Note that the
@@ -424,8 +425,19 @@ fractional values, e.g. \code{0.5} for semi-transparency.}
 
 \item{cex}{character expansion. A numerical vector (can be a single value)
 giving the amount by which plotting characters and symbols should be scaled
-relative to the default. Note that NULL is equivalent to 1.0, while NA
-renders the characters invisible.}
+relative to the default. Note that \code{NULL} is equivalent to 1.0, while \code{NA}
+renders the characters invisible. There are two additional considerations,
+specifically for points-alike plot types (e.g. \code{"p"}):
+\itemize{
+\item users can also supply a special \code{cex = "by"} convenience argument, in
+which case the character expansion will automatically adjust by group
+too. The range of this character expansion is controlled by the \code{clim}
+argument in the respective types; see \code{\link[=type_points]{type_points()}} for example.
+\item passing a \code{cex} vector of equal length to the main \code{x} and \code{y} variables
+(e.g., another column in the same dataset) will yield a "bubble"plot with
+its own dedicated legend. This can provide a useful way to visualize an
+extra dimension of the data; see Examples.
+}}
 
 \item{add}{logical. If TRUE, then elements are added to the current plot rather
 than drawing a new plot window. Note that the automatic legend for the
@@ -562,6 +574,17 @@ tinyplot(
   cex = 2
 )
 
+# Use the special "by" convenience keyword if you would like to map these
+# aesthetic features over groups too (i.e., in addition to the default
+# colour grouping)
+
+tinyplot(
+  Temp ~ Day | Month,
+  data = aq,
+  pch = "by",
+  cex = "by"
+)
+
 # We can add alpha transparency for overlapping points
 
 tinyplot(
@@ -574,7 +597,7 @@ tinyplot(
 
 # To get filled points with a common solid background color, use an
 # appropriate plotting character (21:25) and combine with one of the special
-# `bg` convenience arguments.
+# `bg`/`fill` convenience arguments.
 tinyplot(
   Temp ~ Day | Month,
   data = aq,
@@ -582,6 +605,18 @@ tinyplot(
   cex = 2,
   bg = 0.3, # numeric in [0,1] adds a grouped background fill with transparency
   col = "black" # override default color mapping; give all points a black border
+)
+
+# Aside: For "bubble" plots, pass an appropriate vector to the `cex` arg.
+# This can be useful for depicting an additional dimension of the data (here:
+# Wind).
+tinyplot(
+  Temp ~ Day | Month,
+  data = aq,
+  pch = 21,
+  cex = aq$Wind, # map character size to another feature in the data
+  bg = 0.3,
+  col = "black"
 )
 
 # Converting to a grouped line plot is a simple matter of adjusting the

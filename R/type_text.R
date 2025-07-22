@@ -45,7 +45,7 @@ type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, vfont = NULL,
 }
 
 data_text = function(labels, clim = c(0.5, 2.5)) {
-  fun = function(datapoints, cex = NULL, ...) {
+  fun = function(datapoints, legend_args, cex = NULL, ...) {
     if (length(labels) != 1 && length(labels) != nrow(datapoints)) {
       msg <- sprintf("`labels` must be of length 1 or %s.", nrow(datapoints))
       stop(msg, call. = FALSE)
@@ -65,6 +65,10 @@ data_text = function(labels, clim = c(0.5, 2.5)) {
       bubble_cex = cex[1:len_labs]
       cex = cex[(len_labs+1):length(cex)]
       names(bubble_cex) = format(bubble_labs)
+      if (max(clim) > 2.5) {
+        legend_args[["x.intersp"]] = max(clim) / 2.5
+        legend_args[["y.intersp"]] = sapply(bubble_cex / 2.5, max, 1)
+      }
     }
 
     out = list(

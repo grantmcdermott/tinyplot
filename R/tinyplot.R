@@ -675,6 +675,14 @@ tinyplot.default = function(
   # check flip flag is logical 
   assert_flag(flip)
 
+  # legend prep
+  if (!exists("legend_args")) {
+    legend_args = dots[["legend_args"]]
+    dots[["legend_args"]] = NULL
+  }
+  if (is.null(legend_args)) legend_args = list(x = NULL)
+  legend = substitute(legend)
+
   palette = substitute(palette)
 
   # themes
@@ -842,6 +850,7 @@ tinyplot.default = function(
       facet        = facet,
       facet_by     = facet_by,
       facet.args   = facet.args,
+      legend_args  = legend_args,
       null_by      = null_by,
       null_facet   = null_facet,
       palette      = palette,
@@ -1025,12 +1034,6 @@ tinyplot.default = function(
   dual_legend = bubble && !null_by && !isFALSE(legend)
   lgnd_cex = NULL
 
-  if (!exists("legend_args")) {
-    legend_args = dots[["legend_args"]]
-  }
-  if (is.null(legend_args)) legend_args = list(x = NULL)
-  legend = substitute(legend)
-
   if (isFALSE(legend)) {
     legend = "none"
   } else if (isTRUE(legend)) {
@@ -1121,7 +1124,11 @@ tinyplot.default = function(
       # legend 1: by grouping
       lgby = draw_legend(
         legend = lgby_pos,
-        legend_args = legend_args,
+        legend_args = modifyList(
+          legend_args,
+          list(x.intersp = 1, y.intersp = 1),
+          keep.null = TRUE
+        ),
         by_dep = by_dep,
         lgnd_labs = lgnd_labs,
         type = type,
@@ -1200,7 +1207,10 @@ tinyplot.default = function(
           legend = lgby_pos,
           legend_args = modifyList(
             legend_args,
-            list(inset = c(0, lgby_inset + 0.01)),
+            list(
+              inset = c(0, lgby_inset + 0.01),
+              x.intersp = 1, y.intersp = 1
+            ),
             keep.null = TRUE
           ),
           by_dep = by_dep,
@@ -1226,7 +1236,10 @@ tinyplot.default = function(
           legend = lgby_pos,
           legend_args = modifyList(
             legend_args,
-            list(inset = c((lgby_w-lgbub_w)/2, lgby_inset + 0.01)),
+            list(
+              inset = c((lgby_w-lgbub_w)/2, lgby_inset + 0.01),
+              x.intersp = 1, y.intersp = 1
+            ),
             keep.null = TRUE
           ),
           by_dep = by_dep,

@@ -33,7 +33,7 @@ type_points = function(clim = c(0.5, 2.5)) {
 }
 
 data_points = function(clim = c(0.5, 2.5)) {
-  fun = function(datapoints, cex = NULL, ...) {
+  fun = function(datapoints, legend_args, cex = NULL, ...) {
     # catch for factors (we should still be able to "force" plot these with points)
     if (is.factor(datapoints$x)) {
       xlvls = levels(datapoints$x)
@@ -63,6 +63,10 @@ data_points = function(clim = c(0.5, 2.5)) {
       bubble_cex = cex[1:len_labs]
       cex = cex[(len_labs+1):length(cex)]
       names(bubble_cex) = format(bubble_labs)
+      if (max(clim) > 2.5) {
+        legend_args[["x.intersp"]] = max(clim) / 2.5
+        legend_args[["y.intersp"]] = sapply(bubble_cex / 2.5, max, 1)
+      }
     }
     
     out = list(
@@ -71,7 +75,8 @@ data_points = function(clim = c(0.5, 2.5)) {
       ylabs = ylabs,
       cex = cex,
       bubble = bubble,
-      bubble_cex = bubble_cex
+      bubble_cex = bubble_cex,
+      legend_args = legend_args
     )
     return(out)
   }

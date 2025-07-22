@@ -21,6 +21,16 @@
 #' # Continuous grouping (with gradient legend)
 #' tinyplot(Sepal.Length ~ Petal.Length | Sepal.Width, data = iris, pch = 19)
 #' 
+#' # Bubble chart version
+#' tinyplot(Sepal.Length ~ Petal.Length, data = iris, cex = iris$Sepal.Width)
+#' 
+#' # Fancier version with dual legends and extra customization
+#' tinyplot(Sepal.Length ~ Petal.Length | Species,
+#'          data = iris,
+#'          cex = iris$Sepal.Width, clim = c(1, 5),
+#'          pch = 21, fill = 0.3)
+#' 
+#' 
 #' @export
 type_points = function(clim = c(0.5, 2.5)) {
   out = list(

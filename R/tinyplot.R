@@ -959,6 +959,16 @@ tinyplot.default = function(
     split_data = list(as.list(datapoints))
   }
 
+
+  # catch some simple aesthetics for bubble plots before the standard "by"
+  # grouping sanitizers (actually: will only be used for dual_legend plots but
+  # easiest to assign/determine now)
+  if (bubble) {
+    bubble_pch = if (!is.null(pch) && length(pch)==1) pch else par("pch")
+    bubble_alpha = if (!is.null(alpha)) alpha else 1
+    bubble_bg_alpha = if (!is.null(bg) && length(bg)==1 && is.numeric(bg) && bg > 0 && bg <=1) bg else 1
+  }
+  
   # aesthetics by group: col, bg, etc.
   ngrps = if (null_by) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by))
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
@@ -1177,11 +1187,11 @@ tinyplot.default = function(
           ),
           lgnd_labs = names(bubble_cex),
           type = type,
-          pch = par("pch"),
+          pch = bubble_pch,
           lty = lty,
           lwd = lwd,
-          col = par("col"),
-          bg = par("col"),
+          col = adjustcolor(par("col"), alpha.f = bubble_alpha),
+          bg = adjustcolor(par("col"), alpha.f = bubble_bg_alpha),
           cex = bubble_cex * cex_fct_adj,
           has_sub = has_sub
         )
@@ -1246,11 +1256,11 @@ tinyplot.default = function(
           ),
           lgnd_labs = names(bubble_cex),
           type = type,
-          pch = par("pch"),
+          pch = bubble_pch,
           lty = lty,
           lwd = lwd,
-          col = par("col"),
-          bg = par("col"),
+          col = adjustcolor(par("col"), alpha.f = bubble_alpha),
+          bg = adjustcolor(par("col"), alpha.f = bubble_bg_alpha),
           # gradient = by_continuous,
           cex = bubble_cex * cex_fct_adj,
           has_sub = has_sub,

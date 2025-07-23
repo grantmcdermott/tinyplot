@@ -63,7 +63,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
           "\nFewer colours ", ncolsstr, " provided than than there are groups ",
           ngrpsstr, ". Recycling to make up the shortfall."
         )
-        col = rep(col, length.out = ngrps)
+        col = rep_len(col, ngrps)
       }
   
     }
@@ -154,7 +154,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
               "\nFewer colours ", ncolsstr, " provided than than there are groups ",
               ngrpsstr, ". Recycling to make up the shortfall."
             )
-            args = rep(args, length.out = ngrps)
+            args = rep_len(args, ngrps)
           }
         }
       } else {
@@ -188,7 +188,7 @@ by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, order
               "\nFewer colours ", ncolsstr, " provided than than there are groups ",
               ngrpsstr, ". Recycling to make up the shortfall."
             )
-            args = rep(args, length.out = ngrps)
+            args = rep_len(args, ngrps)
           }
         }
       } else {

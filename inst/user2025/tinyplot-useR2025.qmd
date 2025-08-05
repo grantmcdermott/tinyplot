@@ -1,0 +1,291 @@
+---
+title: tinyplot
+subtitle: Lightweight extension of the base R graphics system
+format: clean-revealjs
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+execute:
+  echo: true
+author:
+  - name: Grant McDermott
+    orcid: 0000-0001-7883-8573
+    email: gmcd@mazon.com
+    affiliations: Amazon.com | University of Oregon
+date: last-modified
+bibliography: refs.bib
+---
+
+## Disclaimer
+
+All views expressed during this talk are my own, and do not necessarily reflect the views of my employer.
+
+# Motivating example {background-color="#40666e"}
+
+Everyone's favourite penguins...
+
+## `base::plot`
+
+### Simple scatter plot
+
+```{r}
+plot(bill_dep ~ bill_len, data = penguins)
+```
+
+## `base::plot`
+
+### Let's add some grouping?
+
+```{r}
+plot(bill_dep ~ bill_len, data = penguins, col = species)
+```
+
+Important: `col = species` works here because `species` is a factor.
+
+## `base::plot`
+
+### Add a legend
+
+```{r}
+plot(bill_dep ~ bill_len, data = penguins, col = species)
+legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1)
+```
+
+Did we cover over any points? Maybe check that later...
+
+## `base::plot`
+
+### How about a different plot type?
+
+```{r}
+plot(bill_dep ~ bill_len, data = penguins, col = species, type = 'b')
+```
+
+Ugh... our grouped coloring logic doesn't work for line components.
+
+## `base::plot`
+
+### Maybe a density plot?
+
+```{r}
+# with(penguins, plot(density(bill_len), col = species)) # need to omit NAs
+with(na.omit(penguins), plot(density(bill_len), col = species))
+```
+
+Nope. Grouping is ignored. (We can't use a formula either...)
+
+## `base::plot`
+
+### Actually, even our "working" scatterplot contains an error
+
+**Q:** Can you spot it?
+
+```{r}
+plot(bill_dep ~ bill_len, data = penguins, col = species)
+legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1)
+```
+
+## `base::plot`
+
+### Actually, even our "working" scatterplot contains an error
+
+ **A:** We should have used `levels(species)`, not `unique(species)`.
+
+```{r}
+plot(bill_dep ~ bill_len, data = penguins, col = species)
+legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1)
+```
+
+## `base::plot`
+
+### Problems and pitfalls of our base plot approach
+
+- How do we automate the legend mapping and avoid manual error?
+- What if we want to place the legend outside of the plot region?
+- How do we group by additional parameters (e.g., `pch`)?
+- What if we want groups with a different plot type (e.g, lines)?
+- What if we need to group by a continuous variable?
+- What if we need to facet by another variable?
+- What if we want to add a summary function, e.g. regression fit?
+- The plots are kind of ugly. Can we make them look better?
+- ...
+
+# Enter tinyplot
+
+```{r}
+library(tinyplot)
+```
+
+::: {.callout-tip}
+In the plots that follow, `plt(...)` is a shorthand alias for `tinyplot(...)`
+:::
+
+## `tinyplot::plt`
+
+### Simplest case: drop-in replacement for `base::plot`
+
+```{r}
+plt(bill_dep ~ bill_len, data = penguins)
+```
+
+::: {.fragment}
+But we can do a lot more than that...
+:::
+
+## `tinyplot::plt`
+
+### How do we automate the legend mapping?
+
+```{r}
+#| output-location: fragment
+
+plt(bill_dep ~ bill_len | species, data = penguins)
+```
+
+## `tinyplot::plt`
+
+### How do we group by additional parameters
+
+::: {.panel-tabset}
+
+### pch
+
+```{r}
+#| output-location: fragment
+
+plt(bill_dep ~ bill_len | species, data = penguins, pch = "by")
+```
+
+### Interaction
+
+```{r}
+plt(bill_dep ~ bill_len | sex + species, data = penguins, pch = "by")
+```
+
+:::
+
+## `tinyplot::plt`
+
+###  What if we want groups with a different plot type?
+
+::: {.panel-tabset}
+
+### lines
+
+```{r}
+#| output-location: fragment
+
+plt(bill_dep ~ bill_len | species, data = penguins, type = "b")
+```
+
+### density
+
+```{r}
+plt(~ bill_len | species, data = penguins, type = "density", fill = 0.3)
+```
+
+:::
+
+## `tinyplot::plt`
+
+### What if we need to group by a continuous variable?
+
+```{r}
+#| output-location: fragment
+
+plt(bill_dep ~ bill_len | body_mass, data = penguins)
+```
+
+## `tinyplot::plt`
+
+### What if we need to facet by another variable?
+
+::: {.panel-tabset}
+
+### one-sided
+
+```{r}
+#| output-location: fragment
+
+plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
+```
+
+### two-sided
+
+```{r}
+plt(bill_dep ~ bill_len | species, data = penguins, facet = sex ~ island)
+```
+
+:::
+
+
+## `tinyplot::plt`
+
+### What if we want to add a summary function, e.g. regression fit?
+
+```{r}
+#| output-location: fragment
+
+plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
+plt_add(type = "lm")
+```
+
+## `tinyplot::plt`
+
+### The plots are kind of ugly. Can we make them look better?
+
+::: {.panel-tabset}
+
+### clean
+
+```{r}
+#| output-location: fragment
+
+tinytheme("clean")
+plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
+plt_add(type = "lm")
+```
+
+### dark
+
+```{r}
+tinytheme("dark")
+plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
+plt_add(type = "lm")
+```
+
+:::
+
+# Background {background-color="#40666e"}
+
+## Background
+
+### grid vs graphics
+
+::: {.r-stack}
+![](/img/rgraphics.png)
+
+![](/img/rgraphics2.png){.fragment}
+:::
+
+Note: Adapted from @murrell2023updates.
+
+## Thanks
+
+### tinyplot would not be where it is today without...
+
+The R Core team:
+
+- Especially Paul Murrell, who has almost single-handedly built and maintained R's graphics foundations for everyone to enjoy.
+
+My wonderful **tinyplot** co-maintainers:
+
+- Vincent Arel-Bundock
+- Achim Zeileis
+
+Many other contributors, feedback providers, and a sources of inspiration.
+
+- etiennebacher, etc.
+- the ggplot2 team (Hadley, Thomas, Teun, etc.)
+
+## References

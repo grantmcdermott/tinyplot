@@ -112,12 +112,24 @@ legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1)
 
 # Enter tinyplot
 
-```{r}
-library(tinyplot)
+
+Install:
+
+```r
+install.packages("tinyplot")
+# install.packages("tinyplot", repos = "https://grantmcdermott.r-universe.dev") # dev
 ```
 
-::: {.callout-tip}
-In the plots that follow, `plt(...)` is a shorthand alias for `tinyplot(...)`
+Load:
+
+```{r}
+library("tinyplot")
+```
+
+\
+
+::: {.callout-tip .fragment}
+In the plots that follow, `plt(...)` is a shorthand alias for `tinyplot(...)`.
 :::
 
 ## `tinyplot::plt`
@@ -127,6 +139,8 @@ In the plots that follow, `plt(...)` is a shorthand alias for `tinyplot(...)`
 ```{r}
 plt(bill_dep ~ bill_len, data = penguins)
 ```
+
+
 
 ::: {.fragment}
 But we can do a lot more than that...
@@ -258,9 +272,29 @@ plt_add(type = "lm")
 
 # Background {background-color="#40666e"}
 
-## Background
+## Origin story
 
-### grid vs graphics
+### Package development
+
+As a developer, I was frustrated by the trade-offs for supporting basic visualization methods for my packages.
+
+- "I just need a simple errorbar here. Do I really have to finagle with `segments` in base plotting to make this work?"
+- "How do I automate a legend (but ensure that nothing gets overplotted)?"
+- Sure, I can import **ggplot2**... but that brings in a total of 24(!) extra/non-base deps.^[`rsetdiff(tools::package_dependencies("ggplot2", recursive = TRUE)[[1]], rownames(installed.packages(priority="base")))`]
+
+## Origin story
+
+### Teaching
+
+As a lecturer, I was frustrated that I had to trade off teaching simple visualization approaches versus scalability down the road.
+
+- Base plotting is great for simple plots... but quickly loses its appeal/intuitiveness for more complex plots.
+- Do you start with base and switch to **ggplot2** (or **lattice**) down the road?
+- Or, do you just dive straight into a more complex API... which, don't get me wrong, is amazing but requires non-trivial upfront investment?  
+
+## **grid** vs **graphics**
+
+### R's has two low-level graphics systems
 
 ::: {.r-stack}
 ![](/img/rgraphics.png)
@@ -269,6 +303,135 @@ plt_add(type = "lm")
 :::
 
 Note: Adapted from @murrell2023updates.
+
+## Base graphics in R
+
+### Very flexible... but tricksy
+
+
+::::: {.columns}
+
+:::: {.column width="60%"}
+
+You can do amazing things with base **graphics**.
+
+:::{.fragment fragment-index=1}
+- `plot()` is just an (opinionated) wrapper around lower-level functions. [@koncevicius2020baseplottingwrappers]
+:::
+
+:::{.fragment fragment-index=2}
+- This is very powerful in expert hands. [@mayakonda2022basegraphics]
+:::
+
+::::
+
+:::: {.column width="40%"}
+::: {.r-stack}
+![](img/karolis.png){.fragment fragment-index=1}
+
+![](img/poisonalien.png){.fragment fragment-index=2}
+:::
+::::
+
+:::::
+
+:::{.fragment fragment-index=3}
+But going beyond the defaults is often (much) more work that I want to do.
+:::
+
+
+## Benefits of tinyplot
+
+### The sales pitch
+
+- Concise
+- Consistent
+- Fast
+- Extensive
+- Lightweight
+
+## Concise
+
+### The formula API gives bang for buck
+
+![](/img/briggs.png)
+
+::: {.fragment}
+_P.S. Thanks to Ryan for letting me use this screenshot._
+:::
+
+## Concise
+
+### The formula API gives bang for buck
+
+Just focusing on the core plot components...
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```r
+ggplot(
+  simres,
+  aes(
+    x = true_effect, y = mean_loo_err,
+    color = factor(asym)
+    )
+  ) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~ exclude_ns)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```r
+plt(
+  mean_loo_err ~ true_effect | factor(asym),
+  data = simres,
+  type = "o",
+  facet = ~exlude_ns
+)
+```
+
+:::
+
+::::
+
+::: {.fragment}
+_(That's about a 1/3 fewer characters.)_
+:::
+
+## Concise
+
+### Even starker c.f. vanilla base plot
+
+:::: {.columns}
+
+::: {.column width="48%"}
+
+![](img/wolfgang1.png)
+
+:::
+
+::: {.column width="4%"}
+vs
+:::
+
+::: {.column width="48%"}
+
+![](img/wolfgang2.png)
+
+::: {.fragment}
+Adapted from @viechtbauer2025tinyplot.
+:::
+
+:::
+
+::::
+
 
 ## Thanks
 

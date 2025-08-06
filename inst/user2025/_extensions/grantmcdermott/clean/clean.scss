@@ -215,9 +215,13 @@ $selection-bg: #26351c !default;
   position: fixed !important;
   bottom: 0 !important;
   left: 10px !important;
-  max-width: 150px; // Adjust if necessary
-  max-height: 50px;
-  width: auto !important;
+  // max-width: 150px; // Adjust if necessary
+  // max-height: 50px;
+  // width: auto !important;
+  height: 150px !important;
+  // width: 150px !important;
+  max-width: unset !important;
+  max-height: unset !important;
   color: $body-color !important;
 }
 
@@ -348,4 +352,10 @@ $selection-bg: #26351c !default;
 }
 .reveal .columns6040 div.column:not(:first-child) {
   width: 40%;
-}      
+}
+
+// // inline title fig (https://stackoverflow.com/a/74100740/4115816)
+// .center{
+//   margin: 0!important;
+//   height: 1.4em;
+// }

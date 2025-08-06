@@ -2,6 +2,8 @@
 title: tinyplot
 subtitle: Lightweight extension of the base R graphics system
 format: clean-revealjs
+  # clean-revealjs:
+  #   logo: img/logo.svg
 html-math-method:
   method: mathjax
   url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
@@ -12,7 +14,7 @@ author:
     orcid: 0000-0001-7883-8573
     email: gmcd@mazon.com
     affiliations: Amazon.com | University of Oregon
-date: last-modified
+date: 2025-08-09 
 bibliography: refs.bib
 ---
 
@@ -20,7 +22,7 @@ bibliography: refs.bib
 
 All views expressed during this talk are my own, and do not necessarily reflect the views of my employer.
 
-# Motivating example {background-color="#40666e"}
+# Motivating example
 
 Everyone's favourite penguins...
 
@@ -78,23 +80,25 @@ Nope. Grouping is ignored. (We can't use a formula either...)
 
 ### Actually, even our "working" scatterplot contains an error
 
-**Q:** Can you spot it?
-
 ```{r}
 plot(bill_dep ~ bill_len, data = penguins, col = species)
 legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1)
 ```
 
+::: {.fragment}
+**Q:** Can you spot the error?
+:::
+
 ## `base::plot`
 
 ### Actually, even our "working" scatterplot contains an error
-
- **A:** We should have used `levels(species)`, not `unique(species)`.
 
 ```{r}
 plot(bill_dep ~ bill_len, data = penguins, col = species)
 legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1)
 ```
+
+ **A:** We should have used `levels(species)`, not `unique(species)`.
 
 ## `base::plot`
 
@@ -112,11 +116,18 @@ legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1)
 
 # Enter tinyplot
 
+![](img/logo.svg){height=250}
+
+## tinyplot
+
+### Get it
+
+Homepage: [grantmcdermott.com/tinyplot](https://grantmcdermott.com/tinyplot){preview-link="true"}
 
 Install:
 
 ```r
-install.packages("tinyplot")
+install.packages("tinyplot") # cran
 # install.packages("tinyplot", repos = "https://grantmcdermott.r-universe.dev") # dev
 ```
 
@@ -239,6 +250,7 @@ plt(bill_dep ~ bill_len | species, data = penguins, facet = sex ~ island)
 
 ```{r}
 #| output-location: fragment
+#| fragment-index: 1
 
 plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
 plt_add(type = "lm")
@@ -248,31 +260,24 @@ plt_add(type = "lm")
 
 ### The plots are kind of ugly. Can we make them look better?
 
-::: {.panel-tabset}
-
-### clean
-
 ```{r}
+#| out-width: "75%"
 #| output-location: fragment
+#| fragment-index: 1
 
-tinytheme("clean")
+tinytheme("clean") # or "clean2", "minimal", "ipsum", "dark", "tufte", ...
 plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
 plt_add(type = "lm")
 ```
 
-### dark
-
-```{r}
-tinytheme("dark")
-plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
-plt_add(type = "lm")
-```
-
+:::{.fragment fragment-index=2}
+**NB:** Themes are persistent; subsequent (tiny)plots will inherit this aesthetic.
 :::
 
-# Background {background-color="#40666e"}
 
-## Origin story
+# Background
+
+## Origin story 📦
 
 ### Package development
 
@@ -280,9 +285,9 @@ As a developer, I was frustrated by the trade-offs for supporting basic visualiz
 
 - "I just need a simple errorbar here. Do I really have to finagle with `segments` in base plotting to make this work?"
 - "How do I automate a legend (but ensure that nothing gets overplotted)?"
-- Sure, I can import **ggplot2**... but that brings in a total of 24(!) extra/non-base deps.^[`rsetdiff(tools::package_dependencies("ggplot2", recursive = TRUE)[[1]], rownames(installed.packages(priority="base")))`]
+- Sure, I can import **ggplot2**... but that brings in a total of 24 extra/non-base deps.^[`setdiff(tools::package_dependencies("ggplot2", recursive = TRUE)[[1]], rownames(installed.packages(priority = "base")))`]
 
-## Origin story
+## Origin story 🎓
 
 ### Teaching
 
@@ -340,7 +345,7 @@ But going beyond the defaults is often (much) more work that I want to do.
 :::
 
 
-## Benefits of tinyplot
+## Advantages of tinyplot
 
 ### The sales pitch
 
@@ -401,12 +406,12 @@ plt(
 ::::
 
 ::: {.fragment}
-_(That's about a 1/3 fewer characters.)_
+_(That's about 1/3 fewer characters.)_
 :::
 
 ## Concise
 
-### Even starker c.f. vanilla base plot
+### Concision is even starker vs. vanilla base plot
 
 :::: {.columns}
 
@@ -432,6 +437,46 @@ Adapted from @viechtbauer2025tinyplot.
 
 ::::
 
+
+## Disadvantages of tinyplot
+
+### What are the caveats
+
+- Layering gotches
+- Custom layout
+- Missing features
+- Saving plot instructions
+
+## Layering gotchas
+
+### Scaling is fixed by the first layer
+
+```{r}
+plt(body_mass ~ bill_len | species, penguins)
+plt_add(type = "lm")
+```
+
+::: {.fragment}
+This is a limitation of **graphics** 📦's "canvas" logic. (Change layer order or use `x/ylim` to fix.)
+::: 
+
+## Layering gotchas
+
+### Can't combine `file` with `plt_add` (yet)
+
+This doesn't work:
+
+```r
+plt(..., file = "myplot.png")
+plt_add(type = ...)
+```
+
+::: {.fragment}
+I'm hoping to provide a native solution in the future, but workarounds for now:
+
+- Use `plt(..., file = "myplot.png", draw = ...)`
+- Open/close the appropriate graphics device manually, e.g. `png("myplot.png"); plt(...); plt_add(...); dev.off() `
+::: 
 
 ## Thanks
 

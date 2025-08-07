@@ -126,13 +126,17 @@ legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1, title 
 
 # Enter tinyplot
 
-![](img/logo.svg){height=250}
 
-## tinyplot
+:::: {.columns}
 
-### Get it
+::: {.column width="20%"}
 
-Homepage: [grantmcdermott.com/tinyplot](https://grantmcdermott.com/tinyplot){preview-link="true"}
+![](img/logo.svg)
+
+:::
+::: {.column width="80%"}
+
+🌐 [grantmcdermott.com/tinyplot](https://grantmcdermott.com/tinyplot){preview-link="true"}
 
 Install:
 
@@ -146,6 +150,10 @@ Load:
 ```{r}
 library("tinyplot")
 ```
+
+:::
+
+::::
 
 \
 
@@ -359,7 +367,7 @@ But going beyond the defaults is often (much) more work that I want to do.
 
 
 ::: {.fragment}
-**tinyplot** aims to make base R graphics more user-friendly... and bring feature parity against newer (grid-based) 📦s like **ggplot2** and **lattice**.   
+**tinyplot** goals: 1) Make base R graphics more user-friendly. 2) Bring feature parity against newer, grid-based 📦s like **ggplot2** and **lattice**.   
 :::
 
 ## Origin story 🤝
@@ -370,17 +378,23 @@ A basic version of the core routine (then called "plot2.R") sat on my computer f
 
 I eventually packaged it up... and invited two key collaborators:
 
+::::: {.columns}
+
+:::: {.column width="45%"}
 ::: {layout-ncol=2}
 
-![Vincent Arel-Bundock](https://codehorizons.com/wp-content/uploads/2023/07/Arel-Bundock_website.png){height=300}
+![Vincent Arel-Bundock](https://codehorizons.com/wp-content/uploads/2023/07/Arel-Bundock_website.png){height=200}
 
-![Achim Zeileis](https://www.uibk.ac.at/media/filer_public_thumbnails/filer_public/2f/ab/2fabffd9-0389-4221-a340-195ddff82983/achim-zeileis.jpg__576x576_q85_crop_subsampling-2.jpg){height=300}
+![Achim Zeileis](https://www.uibk.ac.at/media/filer_public_thumbnails/filer_public/2f/ab/2fabffd9-0389-4221-a340-195ddff82983/achim-zeileis.jpg__576x576_q85_crop_subsampling-2.jpg){height=200}
 
 :::
-
+::::
+:::: {.column width="55%"}
 ::: {.fragment}
 [Vincent](https://arelbundock.com/) and [Achim](https://www.zeileis.org/) have helped push **tinyplot** _far_ beyond my original goals.
+::::
 :::
+:::::
 
 ## Advantages of tinyplot
 

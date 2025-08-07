@@ -16,6 +16,7 @@ author:
     affiliations: Amazon.com | University of Oregon
 date: 2025-08-09 
 bibliography: refs.bib
+extensions: iconify
 ---
 
 ## Disclaimer
@@ -136,7 +137,7 @@ legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1, title 
 :::
 ::: {.column width="80%"}
 
-🌐 [grantmcdermott.com/tinyplot](https://grantmcdermott.com/tinyplot){preview-link="true"}
+{{< iconify mdi:link-variant >}} [grantmcdermott.com/tinyplot](https://grantmcdermott.com/tinyplot){preview-link="true"}
 
 Install:
 
@@ -396,6 +397,8 @@ I eventually packaged it up... and invited two key collaborators:
 :::
 :::::
 
+# Concluding thoughts
+
 ## Advantages of tinyplot
 
 ### The sales pitch
@@ -488,6 +491,21 @@ Adapted from @viechtbauer2025tinyplot.
 
 ::::
 
+## Lightweight
+
+### Base R only
+
+**tinyplot** has _zero_ third-party dependencies.
+
+- Compares favourably against **lattice** (0 deps), **ggplot2** (24 deps), **tidyplots** (111 deps), etc.
+
+We've also kept the size of the install tarball down to a minimum (<1 MB).
+
+- All "data heavy" artifacts are reserved for the [**tinyplot** website](https://grantmcdermott.com/tinyplot/) (including a comprehensive test suite and set of vignettes).
+
+Very fast to install and play with in webR / WebAssembly. ([Try it!](https://webr.r-wasm.org/latest/))
+
+- Great for teaching or quick demos with colleagues.
 
 ## Disadvantages of tinyplot
 
@@ -559,5 +577,27 @@ Many other contributors, feedback providers, and a sources of inspiration.
 
 - etiennebacher, etc.
 - the ggplot2 team (Hadley, Thomas, Teun, etc.)
+
+## tinyplot
+
+### Learn more
+
+:::: {.columns}
+
+::: {.column width="20%"}
+
+![](img/logo.svg)
+
+:::
+::: {.column width="80%"}
+
+{{< iconify mdi:link-variant >}} [grantmcdermott.com/tinyplot](https://grantmcdermott.com/tinyplot){preview-link="true"}
+
+{{< iconify mdi:github >}} [grantmcdermott/tinyplot](https://github.comgrantmcdermott/tinyplot){preview-link="true"}
+
+
+:::
+
+::::
 
 ## References

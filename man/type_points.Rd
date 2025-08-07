@@ -4,7 +4,11 @@
 \alias{type_points}
 \title{Points plot type}
 \usage{
-type_points()
+type_points(clim = c(0.5, 2.5))
+}
+\arguments{
+\item{clim}{Numeric giving the lower and upper limits of the character
+expansion (\code{cex}) normalization for bubble charts.}
 }
 \description{
 Type function for plotting points, i.e. a scatter plot.
@@ -25,5 +29,15 @@ tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)
 
 # Continuous grouping (with gradient legend)
 tinyplot(Sepal.Length ~ Petal.Length | Sepal.Width, data = iris, pch = 19)
+
+# Bubble chart version
+tinyplot(Sepal.Length ~ Petal.Length, data = iris, cex = iris$Sepal.Width)
+
+# Fancier version with dual legends and extra customization
+tinyplot(Sepal.Length ~ Petal.Length | Species,
+         data = iris,
+         cex = iris$Sepal.Width, clim = c(1, 5),
+         pch = 21, fill = 0.3)
+
 
 }

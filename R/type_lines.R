@@ -24,7 +24,7 @@ type_lines = function(type = "l") {
 
 
 draw_lines = function(type = "l") {
-    fun = function(ix, iy, icol, ipch, ibg, ilty, ilwd, cex = 1, ...) {
+    fun = function(ix, iy, icol, ipch, ibg, ilty, ilwd, icex = 1, ...) {
         lines(
             x = ix,
             y = iy,
@@ -34,7 +34,7 @@ draw_lines = function(type = "l") {
             bg = ibg,
             lty = ilty,
             lwd = ilwd,
-            cex = cex
+            cex = icex
         )
     }
     return(fun)

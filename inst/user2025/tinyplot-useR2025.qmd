@@ -20,6 +20,8 @@ bibliography: refs.bib
 
 ## Disclaimer
 
+**tinyplot** was developed in my own time and does not relate to my position at Amazon.
+
 All views expressed during this talk are my own, and do not necessarily reflect the views of my employer.
 
 # Motivating example
@@ -36,13 +38,15 @@ plot(bill_dep ~ bill_len, data = penguins)
 
 ## `base::plot`
 
-### Let's add some grouping?
+### Let's add some grouping
 
 ```{r}
 plot(bill_dep ~ bill_len, data = penguins, col = species)
 ```
 
-Important: `col = species` works here because `species` is a factor.
+::: {.fragment}
+**NB:** `col = species` works here because `species` is a factor.
+:::
 
 ## `base::plot`
 
@@ -50,10 +54,12 @@ Important: `col = species` works here because `species` is a factor.
 
 ```{r}
 plot(bill_dep ~ bill_len, data = penguins, col = species)
-legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1)
+legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1, title = "Species")
 ```
 
-Did we cover over any points? Maybe check that later...
+::: {.fragment}
+Did we cover over any points? Uh, maybe check that later...
+:::
 
 ## `base::plot`
 
@@ -63,18 +69,22 @@ Did we cover over any points? Maybe check that later...
 plot(bill_dep ~ bill_len, data = penguins, col = species, type = 'b')
 ```
 
+::: {.fragment}
 Ugh... our grouped coloring logic doesn't work for line components.
+:::
 
 ## `base::plot`
 
-### Maybe a density plot?
+### Maybe a density plot will work?
 
 ```{r}
 # with(penguins, plot(density(bill_len), col = species)) # need to omit NAs
 with(na.omit(penguins), plot(density(bill_len), col = species))
 ```
 
-Nope. Grouping is ignored. (We can't use a formula either...)
+::: {.fragment}
+Nope. Grouping is still ignored. (We can't use a formula either...)
+:::
 
 ## `base::plot`
 
@@ -82,7 +92,7 @@ Nope. Grouping is ignored. (We can't use a formula either...)
 
 ```{r}
 plot(bill_dep ~ bill_len, data = penguins, col = species)
-legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1)
+legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1, title = "Species")
 ```
 
 ::: {.fragment}
@@ -95,7 +105,7 @@ legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1)
 
 ```{r}
 plot(bill_dep ~ bill_len, data = penguins, col = species)
-legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1)
+legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1, title = "Species")
 ```
 
  **A:** We should have used `levels(species)`, not `unique(species)`.
@@ -169,7 +179,7 @@ plt(bill_dep ~ bill_len | species, data = penguins)
 
 ## `tinyplot::plt`
 
-### How do we group by additional parameters
+### How do we group by additional parameters?
 
 ::: {.panel-tabset}
 
@@ -284,7 +294,7 @@ plt_add(type = "lm")
 As a developer, I was frustrated by the trade-offs for supporting basic visualization methods for my packages.
 
 - "I just need a simple errorbar here. Do I really have to finagle with `segments` in base plotting to make this work?"
-- "How do I automate a legend (but ensure that nothing gets overplotted)?"
+- "How do I automate a legend (and ensure that nothing gets overplotted)?"
 - Sure, I can import **ggplot2**... but that brings in a total of 24 extra/non-base deps.^[`setdiff(tools::package_dependencies("ggplot2", recursive = TRUE)[[1]], rownames(installed.packages(priority = "base")))`]
 
 ## Origin story 🎓
@@ -299,26 +309,19 @@ As a lecturer, I was frustrated that I had to trade off teaching simple visualiz
 
 ## **grid** vs **graphics**
 
-### R's has two low-level graphics systems
+### R has two low-level graphics systems
 
-::: {.r-stack}
-![](/img/rgraphics.png)
-
-![](/img/rgraphics2.png){.fragment}
-:::
-
-Note: Adapted from @murrell2023updates.
+![Note: Adapted from @murrell2023updates.](/img/rgraphics.png)
 
 ## Base graphics in R
 
 ### Very flexible... but tricksy
 
-
 ::::: {.columns}
 
 :::: {.column width="60%"}
 
-You can do amazing things with base **graphics**.
+Base **graphics** can produce amazing plots.
 
 :::{.fragment fragment-index=1}
 - `plot()` is just an (opinionated) wrapper around lower-level functions. [@koncevicius2020baseplottingwrappers]
@@ -344,6 +347,40 @@ You can do amazing things with base **graphics**.
 But going beyond the defaults is often (much) more work that I want to do.
 :::
 
+## **grid** vs **graphics** (redux)
+
+### R has two low-level graphics systems
+
+::: {.r-stack}
+![Note: Adapted from @murrell2023updates.](/img/rgraphics.png)
+
+![Note: Adapted from @murrell2023updates.](/img/rgraphics2.png){.fragment}
+:::
+
+
+::: {.fragment}
+**tinyplot** aims to make base R graphics more user-friendly... and bring feature parity against newer (grid-based) 📦s like **ggplot2** and **lattice**.   
+:::
+
+## Origin story 🤝
+
+### Collaboration
+
+A basic version of the core routine (then called "plot2.R") sat on my computer for a long time.
+
+I eventually packaged it up... and invited two key collaborators:
+
+::: {layout-ncol=2}
+
+![Vincent Arel-Bundock](https://codehorizons.com/wp-content/uploads/2023/07/Arel-Bundock_website.png){height=300}
+
+![Achim Zeileis](https://www.uibk.ac.at/media/filer_public_thumbnails/filer_public/2f/ab/2fabffd9-0389-4221-a340-195ddff82983/achim-zeileis.jpg__576x576_q85_crop_subsampling-2.jpg){height=300}
+
+:::
+
+::: {.fragment}
+[Vincent](https://arelbundock.com/) and [Achim](https://www.zeileis.org/) have helped push **tinyplot** _far_ beyond my original goals.
+:::
 
 ## Advantages of tinyplot
 
@@ -440,12 +477,11 @@ Adapted from @viechtbauer2025tinyplot.
 
 ## Disadvantages of tinyplot
 
-### What are the caveats
+### What are the caveats?
 
 - Layering gotches
 - Custom layout
 - Missing features
-- Saving plot instructions
 
 ## Layering gotchas
 
@@ -457,7 +493,7 @@ plt_add(type = "lm")
 ```
 
 ::: {.fragment}
-This is a limitation of **graphics** 📦's "canvas" logic. (Change layer order or use `x/ylim` to fix.)
+This is a limitation of **graphics** "canvas" logic. (Workarounds: Change layer order, or use `x/ylim`.)
 ::: 
 
 ## Layering gotchas
@@ -478,18 +514,32 @@ I'm hoping to provide a native solution in the future, but workarounds for now:
 - Open/close the appropriate graphics device manually, e.g. `png("myplot.png"); plt(...); plt_add(...); dev.off() `
 ::: 
 
-## Thanks
+## Missing features
+
+I hope that I have convinced you that **tinyplot** covers a _lot_ of ground.
+
+- The API should also be very stable. I expect few (if any) breaking changes from here on out.
+
+::: {.fragment}
+Still, **tinyplot**  a relatively young project and there are some features and plot types that we don't support (yet). Some things coming down the pike:
+
+- bubble plots ([#433](https://github.com/grantmcdermott/tinyplot/pull/433))
+- dodged elements ([#406](https://github.com/grantmcdermott/tinyplot/issues/406))
+- maps ([#210](https://github.com/grantmcdermott/tinyplot/issues/210))
+- other? Please [file an issue](https://github.com/grantmcdermott/tinyplot/issues)!
+:::
+
+## Acknowledgements
 
 ### tinyplot would not be where it is today without...
 
 The R Core team:
 
-- Especially Paul Murrell, who has almost single-handedly built and maintained R's graphics foundations for everyone to enjoy.
+- Especially [Paul Murrell](https://www.stat.auckland.ac.nz/~paul/), who has almost single-handedly built and maintained R's graphics foundations for everyone else.
 
 My wonderful **tinyplot** co-maintainers:
 
-- Vincent Arel-Bundock
-- Achim Zeileis
+- Vincent Arel-Bundock and Achim Zeileis
 
 Many other contributors, feedback providers, and a sources of inspiration.
 

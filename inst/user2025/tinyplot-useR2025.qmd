@@ -398,6 +398,117 @@ I eventually packaged it up... and invited two key collaborators:
 :::
 :::::
 
+# Gallery
+
+## Gallery
+### histogram
+
+```{r}
+#| output-location: column
+#| fig-height: 10
+
+pal = c("darkorange","purple","cyan4")
+
+plt(
+  ~flipper_len | species,
+  data = penguins, 
+  type = "hist",
+  breaks = 30,
+  palette = pal
+)
+```
+
+## Gallery
+### box plots
+
+```{r}
+#| output-location: column
+#| fig-height: 10
+
+plt(
+  body_mass ~ species | sex,
+  data = penguins,
+  type = "boxplot", 
+  yaxl = ",",
+  flip = TRUE
+)
+```
+
+## Gallery
+### violin plots
+
+```{r}
+#| output-location: column
+#| fig-height: 10
+
+plt(
+  body_mass ~ species | sex,
+  data = penguins,
+  type = "violin", 
+  yaxl = ",",
+  fill = 0.2
+)
+```
+
+## Gallery
+### rectangles
+
+```{r}
+#| output-location: column
+#| fig-height: 10
+
+i = 4*(0:10)
+
+plt(
+  xmin = 100+i, xmax = 150+i,
+  ymin = 300+i, ymax = 380+i,
+  by = i, fill = 0.2,
+  type = "rect"
+)
+```
+
+
+## Gallery
+### spineplot
+
+```{r}
+#| output-location: column
+#| fig-height: 10
+#| 
+ttnc = as.data.frame(Titanic)
+wts = ttnc$Freq
+
+plt(
+  Survived ~ Sex | Class, facet = "by",
+  data = ttnc,
+  type = type_spineplot(weights = wts)
+)
+```
+
+## Gallery
+### ridge plot
+
+```{r}
+#| output-location: column
+#| fig-height: 10
+#| 
+tinytheme("ridge2")
+
+aq = transform(
+  airquality,
+  Month = factor(
+    month.abb[Month],
+    levels = month.abb[5:9]
+  )
+)
+  
+plt(Month ~ Temp | Temp,
+  data = aq,
+  type = type_ridge(col = "white"),
+  main = "Temperatures by month"
+)
+```
+
 # Concluding thoughts
 
 ## Advantages of tinyplot

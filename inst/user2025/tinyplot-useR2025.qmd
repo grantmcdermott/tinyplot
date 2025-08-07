@@ -12,9 +12,10 @@ execute:
 author:
   - name: Grant McDermott
     orcid: 0000-0001-7883-8573
-    email: gmcd@mazon.com
-    affiliations: Amazon.com | University of Oregon
-date: 2025-08-09 
+    email: gmcd@amazon.com
+    # affiliations: Amazon.com | University of Oregon
+institute: "userR! 2025"
+date: 2025-08-09
 bibliography: refs.bib
 extensions: iconify
 ---

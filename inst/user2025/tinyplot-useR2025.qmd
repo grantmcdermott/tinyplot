@@ -72,20 +72,7 @@ plot(bill_dep ~ bill_len, data = penguins, col = species, type = 'b')
 ```
 
 ::: {.fragment}
-Ugh... our grouped coloring logic doesn't work for line components.
-:::
-
-## `base::plot`
-
-### Maybe a density plot will work?
-
-```{r}
-# with(penguins, plot(density(bill_len), col = species)) # need to omit NAs
-with(na.omit(penguins), plot(density(bill_len), col = species))
-```
-
-::: {.fragment}
-Nope. Grouping is still ignored. (We can't use a formula either...)
+Ugh... our grouped coloring logic only works for the "points" components.
 :::
 
 ## `base::plot`
@@ -200,23 +187,11 @@ plt(bill_dep ~ bill_len | sex + species, data = penguins, pch = "by")
 
 ###  What if we want groups with a different plot type?
 
-::: {.panel-tabset}
-
-### lines
-
 ```{r}
 #| output-location: fragment
 
 plt(bill_dep ~ bill_len | species, data = penguins, type = "b")
 ```
-
-### density
-
-```{r}
-plt(~ bill_len | species, data = penguins, type = "density", fill = 0.3)
-```
-
-:::
 
 ## `tinyplot::plt`
 
@@ -817,6 +792,14 @@ p()
 
 :::
 
+## Other features
+### Many other bells and whistles
+
+- Easily export plots with the `file` argument.
+- Easy alpha transparency with the `alpha` and `fill` arguments.
+- Transform axis labels (`x/yaxl`) and breaks (`x/yaxb`).
+- Custom types.
+- etc.
 
 # Quickfire gallery
 
@@ -872,6 +855,31 @@ plt(
   yaxl = ",",
   flip = TRUE,
   fill = 0.5
+)
+```
+
+## Quickfire gallery
+### error bars
+
+```{r}
+#| output-location: column
+#| fig-width: 6
+#| fig-asp: 1
+
+mod = lm(body_mass ~ species + sex,
+         data = penguins)
+coefs = data.frame(
+  names(coef(mod)),
+  coef(mod),
+  confint(mod)
+) |> setNames(c("term", "estimate",
+                "lwr", "upr"))
+
+plt(
+  estimate ~ term,
+  ymin = lwr, ymax = upr,
+  data = coefs,
+  type = "errorbar"
 )
 ```
 

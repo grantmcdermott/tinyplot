@@ -569,10 +569,10 @@ plt(
 ## tinyplot API
 ### types
 
-All tinyplot types can be passed as either:
+All tinyplot types can be passed as either a:
 
-- string: `"p"`, `"density`, `"lm"`, etc.
-- function: `type_points()`, `"type_density()"`, `type_lm()`, etc.
+- _string_ (`"p"`, `"density`, `"lm"`, ...), or
+- _function_ (`type_points()`, `"type_density()"`, `type_lm()`, ...)
 
 In general, the functional equivalents are denoted `"type_*()"` and support direct argument passing for customization, e.g.
 
@@ -600,8 +600,8 @@ Custom args can also be passed through `plt(...)`, so long as there isn't a top-
 plt(
   bill_dep ~ bill_len | species,
   data = penguins,
-  # type = type_lm(level = 0.8) # alt
-  type = "lm", level = 0.8
+  type = "lm", level = 0.8      # string
+  # type = type_lm(level = 0.8) # function
 )
 ```
 
@@ -616,8 +616,8 @@ plt(
 plt(
   ~ bill_len | species,
   data = penguins,
-  # type = type_density() # alt
-  type = "density"
+  type = "density"        # string
+  # type = type_density() # function
 )
 ```
 

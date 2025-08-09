@@ -913,32 +913,7 @@ plt(Month ~ Temp | Temp,
 )
 ```
 
-## Quickfire gallery
-### spagetti plot
-
-```{r}
-#| output-location: column
-#| fig-width: 6
-#| fig-asp: 1
-tinytheme("clean2")
-
-plt(
-  Temp ~ Day | Month,
-  data = aq,
-  facet = "by",
-  type = "l", lwd = 3,
-  legend = FALSE,
-  draw = plt(
-    Temp ~ Day | Month,
-    data = aq,
-    type = "l", 
-    col = "grey",
-    add = TRUE
-  )
-)
-```
-
-# Concluding thoughts
+# Conclusions
 
 ## Advantages of tinyplot {#sec-adv}
 
@@ -950,10 +925,7 @@ plt(
 - Extensive
 - Lightweight
 
-::: {.fragment}
 For the longer version: [[tinyplot pros]{.button}](#sec-pros)
-:::
-
 
 ## Disadvantages of tinyplot {#sec-disadv}
 
@@ -963,9 +935,7 @@ For the longer version: [[tinyplot pros]{.button}](#sec-pros)
 - Custom layout
 - Missing features
 
-::: {.fragment}
 For the longer version: [[tinyplot pros]{.button}](#sec-cons)
-:::
 
 ## Acknowledgements
 

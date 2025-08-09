@@ -1,12 +1,17 @@
 ---
-title: tinyplot
+# title: tinyplot
+# subtitle:  Lightweight extension of the base R graphics system
+# format: clean-revealjs
+title: "<br/><br/><br/>"
 subtitle: Lightweight extension of the base R graphics system
-format: clean-revealjs
+format:
+   clean-revealjs:
+     title-slide-attributes:
+       data-background-image: "img/background.png"
   # clean-revealjs:
-  #   logo: img/logo.svg
-html-math-method:
-  method: mathjax
-  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  # #   logo: img/logo.svg
+  #   title-slide-attributes:
+  #     data-background-image: "img/background.png"
 execute:
   echo: true
 author:
@@ -46,38 +51,11 @@ plot(bill_dep ~ bill_len, data = penguins)
 plot(bill_dep ~ bill_len, data = penguins, col = species)
 ```
 
-::: {.fragment}
 **NB:** `col = species` works here because `species` is a factor.
-:::
 
 ## `base::plot`
 
 ### Add a legend
-
-```{r}
-plot(bill_dep ~ bill_len, data = penguins, col = species)
-legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1, title = "Species")
-```
-
-::: {.fragment}
-Did we cover over any points? Um, maybe check that later...
-:::
-
-## `base::plot`
-
-### How about a different plot type?
-
-```{r}
-plot(bill_dep ~ bill_len, data = penguins, col = species, type = 'b')
-```
-
-::: {.fragment}
-Ugh... our grouped coloring logic only works for the "points" components.
-:::
-
-## `base::plot`
-
-### Actually, even our "working" scatterplot contains an error
 
 ```{r}
 plot(bill_dep ~ bill_len, data = penguins, col = species)
@@ -90,7 +68,7 @@ legend("topright", legend = unique(penguins$species), col = 1:3, pch = 1, title 
 
 ## `base::plot`
 
-### Actually, even our "working" scatterplot contains an error
+### Add a legend
 
 ```{r}
 plot(bill_dep ~ bill_len, data = penguins, col = species)
@@ -98,6 +76,17 @@ legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1, title 
 ```
 
  **A:** We should have used `levels(species)`, not `unique(species)`.
+
+
+## `base::plot`
+
+### How about a different plot type?
+
+```{r}
+plot(bill_dep ~ bill_len, data = penguins, col = species, type = 'b')
+```
+
+Ugh... our grouped coloring logic only works for the "points" components.
 
 ## `base::plot`
 
@@ -124,8 +113,6 @@ legend("topright", legend = levels(penguins$species), col = 1:3, pch = 1, title 
 
 :::
 ::: {.column width="80%"}
-
-{{< iconify mdi:link-variant >}} [grantmcdermott.com/tinyplot](https://grantmcdermott.com/tinyplot){preview-link="true"}
 
 Install:
 
@@ -168,8 +155,6 @@ But we can do a lot more than that...
 ### How do we automate the legend mapping?
 
 ```{r}
-#| output-location: fragment
-
 plt(bill_dep ~ bill_len | species, data = penguins)
 ```
 
@@ -178,8 +163,6 @@ plt(bill_dep ~ bill_len | species, data = penguins)
 ### How do we group by additional variables?
 
 ```{r}
-#| output-location: fragment
-
 plt(bill_dep ~ bill_len | sex + species, data = penguins, pch = "by")
 ```
 
@@ -188,8 +171,6 @@ plt(bill_dep ~ bill_len | sex + species, data = penguins, pch = "by")
 ###  What if we want groups with a different plot type?
 
 ```{r}
-#| output-location: fragment
-
 plt(bill_dep ~ bill_len | species, data = penguins, type = "b")
 ```
 
@@ -198,8 +179,6 @@ plt(bill_dep ~ bill_len | species, data = penguins, type = "b")
 ### What if we need to group by a continuous variable?
 
 ```{r}
-#| output-location: fragment
-
 plt(bill_dep ~ bill_len | body_mass, data = penguins)
 ```
 
@@ -208,8 +187,6 @@ plt(bill_dep ~ bill_len | body_mass, data = penguins)
 ### What if we need to facet by another variable?
 
 ```{r}
-#| output-location: fragment
-
 plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
 ```
 
@@ -218,9 +195,6 @@ plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
 ### What if we want to add a summary function, e.g. regression fit?
 
 ```{r}
-#| output-location: fragment
-#| fragment-index: 1
-
 plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
 plt_add(type = "lm")
 ```
@@ -231,15 +205,12 @@ plt_add(type = "lm")
 
 ```{r}
 #| out-width: "75%"
-#| output-location: fragment
-#| fragment-index: 1
-
 tinytheme("clean") # or "clean2", "minimal", "ipsum", "dark", "tufte", ...
 plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
 plt_add(type = "lm")
 ```
 
-:::{.fragment fragment-index=2}
+:::{.fragment}
 **NB:** Themes are persistent; subsequent (tiny)plots will inherit this aesthetic.
 :::
 
@@ -321,7 +292,7 @@ But going beyond the defaults is often (much) more work that I want to do.
 **tinyplot** goals:
 
 1. Make base R graphics more user-friendly.
-2. Bring feature parity against grid-based 📦s like **ggplot2** and **lattice**.   
+2. Improved feature parity vs. grid-based 📦s like **ggplot2** and **lattice**.   
 :::
 
 ## Origin story 🤝
@@ -344,9 +315,7 @@ I eventually packaged it up... and invited two key collaborators:
 :::
 ::::
 :::: {.column width="55%"}
-::: {.fragment}
 [Vincent](https://arelbundock.com/) and [Achim](https://www.zeileis.org/) have helped push **tinyplot** _far_ beyond my original goals.
-::::
 :::
 :::::
 
@@ -363,7 +332,7 @@ I eventually packaged it up... and invited two key collaborators:
 #| output-location: column
 #| fig-width: 6
 #| fig-asp: 0.8
-#| code-line-numbers: "|2"
+#| code-line-numbers: "2"
 
 plt(
   bill_dep ~ bill_len | species,
@@ -394,7 +363,7 @@ plt(
 #| output-location: column
 #| fig-width: 6
 #| fig-asp: 0.8
-#| code-line-numbers: "|4"
+#| code-line-numbers: "4"
 
 plt(
   bill_dep ~ bill_len | species,
@@ -412,13 +381,13 @@ Also works for `lwd`, `lty`, etc.
 
 ::: {.panel-tabset}
 
-### left!
+### "left!"
 
 ```{r}
 #| output-location: column
 #| fig-width: 6
 #| fig-asp: 0.8
-#| code-line-numbers: "|4"
+#| code-line-numbers: "4"
 
 plt(
   bill_dep ~ bill_len | species,
@@ -457,7 +426,7 @@ plt(
 )
 ```
 
-### false
+### FALSE
 
 ```{r}
 #| output-location: column
@@ -489,7 +458,7 @@ The `"!"` suffix places the legend _outside_ the plot area.
 #| output-location: column
 #| fig-width: 6
 #| fig-asp: 0.8
-#| code-line-numbers: "|4"
+#| code-line-numbers: "4"
 
 plt(
   bill_dep ~ bill_len | species,
@@ -534,7 +503,7 @@ plt(
 #| output-location: column
 #| fig-width: 6
 #| fig-asp: 0.8
-#| code-line-numbers: "6,7"
+#| code-line-numbers: "1,6,7"
 
 tinytheme("clean2")
 
@@ -572,9 +541,9 @@ plt(
 All tinyplot types can be passed as either a:
 
 - _string_ (`"p"`, `"density`, `"lm"`, ...), or
-- _function_ (`type_points()`, `"type_density()"`, `type_lm()`, ...)
+- _function_ (`type_points()`, `type_density()`, `type_lm()`, ...)
 
-In general, the functional equivalents are denoted `"type_*()"` and support direct argument passing for customization, e.g.
+In general, the functional equivalents are denoted `type_*()` and support direct argument passing for customization, e.g.
 
 ```{r}
 ?type_lm
@@ -595,7 +564,7 @@ Custom args can also be passed through `plt(...)`, so long as there isn't a top-
 #| output-location: column
 #| fig-width: 6
 #| fig-asp: 0.8
-#| code-line-numbers: "|4,5"
+#| code-line-numbers: "4,5"
 
 plt(
   bill_dep ~ bill_len | species,
@@ -634,7 +603,7 @@ plt(
 #| output-location: column
 #| fig-width: 6
 #| fig-asp: 0.8
-#| code-line-numbers: "|5"
+#| code-line-numbers: "5"
 
 plt(
   bill_dep ~ bill_len | species,
@@ -649,7 +618,7 @@ plt_add(type = "lm")
 #| output-location: column
 #| fig-width: 6
 #| fig-asp: 0.8
-#| code-line-numbers: "5"
+#| code-line-numbers: "6"
 
 plt(
   ~ bill_len | species,
@@ -783,7 +752,8 @@ p()
 tinytheme(
   "ipsum",
   pch = 19,
-  cex = 1.2, cex.main = 2, cex.sub = 1.5, cex.lab = 1.5,
+  cex = 1.2, cex.main = 2,
+  cex.sub = 1.5, cex.lab = 1.5,
   palette.sequential = "zissou",
   family ="HersheyScript"
 )
@@ -989,7 +959,7 @@ For the longer version: [[tinyplot pros]{.button}](#sec-pros)
 
 ### What are the caveats?
 
-- Layering gotches
+- Layering gotchas
 - Custom layout
 - Missing features
 
@@ -1011,7 +981,7 @@ My wonderful **tinyplot** co-maintainers:
 
 Many other contributors, feedback providers, and a sources of inspiration.
 
-- etiennebacher, etc.
+- Etienne Bacher, etc.
 - the ggplot2 team (Hadley, Thomas, Teun, etc.)
 
 ## tinyplot
@@ -1085,7 +1055,7 @@ plt(
   mean_loo_err ~ true_effect | factor(asym),
   data = simres,
   type = "o",
-  facet = ~exlude_ns
+  facet = ~ exlude_ns
 )
 ```
 
@@ -1185,12 +1155,11 @@ I hope that I have convinced you that **tinyplot** covers a _lot_ of ground.
 - The API should also be very stable. I expect few (if any) breaking changes from here on out.
 
 ::: {.fragment}
-Still, **tinyplot**  a relatively young project and there are some features and plot types that we don't support (yet). Some things coming down the pike:
+Still, **tinyplot**  is a relatively young project and there are some features and plot types that we don't support (yet). Some things coming down the pike:
 
 - bubble plots ([#433](https://github.com/grantmcdermott/tinyplot/pull/433))
 - dodged elements ([#406](https://github.com/grantmcdermott/tinyplot/issues/406))
 - maps ([#210](https://github.com/grantmcdermott/tinyplot/issues/210))
-- other? Please [file an issue](https://github.com/grantmcdermott/tinyplot/issues)!
 :::
 
 [[Back to main]{.button}](#sec-disadv)

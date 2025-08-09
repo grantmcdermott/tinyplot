@@ -620,8 +620,8 @@ plt_add(type = "rug")
 
 Themes provide a convenient way to set a preferred aesthetic for your plots.
 
-- Remember: `tinytheme(...)` is persistent, which is why we've had the "clean" theme enacted for most of this talk.
-- To revert back to the **graphics** default, call `tinytheme()` with no args.
+- Dynamic reduciton of whitespace, etc.
+- Remember: `tinytheme(...)` is persistent.
 
 Quick plotting function, which we'll re-use for showcasing some themes on the next slide:
 
@@ -906,7 +906,7 @@ plt(Month ~ Temp | Temp,
 
 - Concise
 - Consistent
-- Fast
+- Ergonomic
 - Extensive
 - Lightweight
 

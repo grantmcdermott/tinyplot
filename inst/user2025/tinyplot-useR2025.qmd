@@ -214,34 +214,26 @@ plt_add(type = "lm")
 
 # Background
 
-## Origin story 📦
+## Origin story
+### Two sources of frustration:
 
-### Package development
+#### Package development 📦
 
-As a developer, I was frustrated by the trade-offs for supporting basic visualization methods for my packages.
+- Annoying trade-offs for supporting basic viz. methods for my packages.
+- "I just need a simple errorbar here. Do I really have to finagle `segments` to make this work?" "What about a legend..?" 
 
-- "I just need a simple errorbar here. Do I really have to finagle with `segments` in base plotting to make this work?"
-- "How do I automate a legend (and ensure that nothing gets overplotted)?"
-- Sure, I can import **ggplot2**... but that brings in a total of 24 extra/non-base deps.^[`setdiff(tools::package_dependencies("ggplot2", recursive = TRUE)[[1]], rownames(installed.packages(priority = "base")))`]
+#### Teaching 🎓
 
-## Origin story 🎓
+- Teach simple viz. approaches vs. scalability down the road.
+- Base plotting is great for simple plots, but quickly loses its appeal for more complex plots. (And `ggplot2`/`lattice` have different APIs.)
 
-### Teaching
-
-As a lecturer, I was frustrated that I had to trade off teaching simple visualization approaches versus scalability down the road.
-
-- Base plotting is great for simple plots... but quickly loses its appeal/intuitiveness for more complex plots.
-- Do you start with base and switch to **ggplot2** (or **lattice**) down the road?
-- Or, do you just dive straight into a more complex API... which, don't get me wrong, is amazing but requires non-trivial upfront investment?  
 
 ## grid vs graphics
-
 ### R has two low-level graphics systems
 
 ![Note: Adapted from @murrell2023updates.](/img/rgraphics.png)
 
 ## Base graphics in R
-
 ### Very flexible... but tricksy
 
 ::::: {.columns}

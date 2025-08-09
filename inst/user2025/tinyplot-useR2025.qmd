@@ -133,7 +133,7 @@ library("tinyplot")
 
 \
 
-::: {.callout-tip .fragment}
+::: {.callout-tip}
 In the plots that follow, `plt(...)` is a shorthand alias for `tinyplot(...)`.
 :::
 
@@ -210,10 +210,7 @@ plt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)
 plt_add(type = "lm")
 ```
 
-:::{.fragment}
 **NB:** Themes are persistent; subsequent (tiny)plots will inherit this aesthetic.
-:::
-
 
 # Background
 
@@ -372,9 +369,7 @@ plt(
 )
 ```
 
-::: {.fragment}
 Also works for `lwd`, `lty`, etc.
-:::
 
 ## tinyplot API
 ### Legend can be moved, customized and turned off
@@ -443,9 +438,7 @@ plt(
 
 :::
 
-::: {.fragment}
-The `"!"` suffix places the legend _outside_ the plot area.
-:::
+A `"!"` suffix places the legend _outside_ the plot area.
 
 ## tinyplot API
 ### facets
@@ -549,7 +542,7 @@ In general, the functional equivalents are denoted `type_*()` and support direct
 ?type_lm
 args(type_lm)
 ```
-::: {.callout-note .fragment}
+::: {.callout-note}
 Custom args can also be passed through `plt(...)`, so long as there isn't a top-level clash.
 :::
 
@@ -989,9 +982,7 @@ Many other contributors, feedback providers, and a sources of inspiration.
 
 ![](/img/briggs.png)
 
-::: {.fragment}
 _P.S. Thanks to Ryan for letting me use this screenshot._
-:::
 
 ## Concise
 
@@ -1033,9 +1024,7 @@ plt(
 
 ::::
 
-::: {.fragment}
 _(That's about 1/3 fewer characters.)_
-:::
 
 ## Concise
 
@@ -1057,10 +1046,7 @@ vs
 
 ![](img/wolfgang2.png)
 
-::: {.fragment}
 Adapted from @viechtbauer2025tinyplot.
-:::
-
 
 :::
 

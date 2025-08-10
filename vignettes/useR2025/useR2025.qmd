@@ -231,7 +231,7 @@ plt_add(type = "lm")
 ## grid vs graphics
 ### R has two low-level graphics systems
 
-![Note: Adapted from @murrell2023updates.](/img/rgraphics.png)
+![Note: Adapted from @murrell2023updates.](img/rgraphics.png)
 
 ## Base graphics in R
 ### Very flexible... but tricksy
@@ -271,9 +271,9 @@ But going beyond the defaults is often (much) more work that I want to do.
 ### R has two low-level graphics systems
 
 ::: {.r-stack}
-![Note: Adapted from @murrell2023updates.](/img/rgraphics.png)
+![Note: Adapted from @murrell2023updates.](img/rgraphics.png)
 
-![Note: Adapted from @murrell2023updates.](/img/rgraphics2.png){.fragment}
+![Note: Adapted from @murrell2023updates.](img/rgraphics2.png){.fragment}
 :::
 
 
@@ -972,7 +972,7 @@ Many other contributors, feedback providers, and a sources of inspiration.
 
 ### The formula API gives bang for buck
 
-![](/img/briggs.png)
+![](img/briggs.png)
 
 _P.S. Thanks to Ryan for letting me use this screenshot._
 

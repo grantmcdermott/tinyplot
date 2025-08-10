@@ -25,6 +25,8 @@ website:
           file: vignettes/gallery.qmd
         - text: Tips & tricks
           file: vignettes/tips.qmd
+        - text: useR! 2025
+          file: vignettes/useR2025/useR2025.qmd
       - text: About
         menu:
         - text: News

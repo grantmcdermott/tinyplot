@@ -98,6 +98,349 @@
     "text": "Footnotes\n\n\nNote: If we simply specified the \"glm\" convenience string on its own, we’d get a linear fit since the default family is gaussian.↩︎"
   },
   {
+    "objectID": "vignettes/useR2025/useR2025.html#disclaimer",
+    "href": "vignettes/useR2025/useR2025.html#disclaimer",
+    "title": "",
+    "section": "Disclaimer",
+    "text": "Disclaimer\ntinyplot was developed in my own time and does not relate to my position at Amazon.\nAll views expressed during this talk are my own, and do not necessarily reflect the views of my employer."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#baseplot",
+    "href": "vignettes/useR2025/useR2025.html#baseplot",
+    "title": "",
+    "section": "base::plot",
+    "text": "base::plot\nSimple scatter plot\n\nplot(bill_dep ~ bill_len, data = penguins)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#baseplot-1",
+    "href": "vignettes/useR2025/useR2025.html#baseplot-1",
+    "title": "",
+    "section": "base::plot",
+    "text": "base::plot\nLet’s add some grouping\n\nplot(bill_dep ~ bill_len, data = penguins, col = species)\n\n\nNB: col = species works here because species is a factor."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#baseplot-2",
+    "href": "vignettes/useR2025/useR2025.html#baseplot-2",
+    "title": "",
+    "section": "base::plot",
+    "text": "base::plot\nAdd a legend\n\nplot(bill_dep ~ bill_len, data = penguins, col = species)\nlegend(\"topright\", legend = unique(penguins$species), col = 1:3, pch = 1, title = \"Species\")\n\n\n\nQ: Can you spot the error?"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#baseplot-3",
+    "href": "vignettes/useR2025/useR2025.html#baseplot-3",
+    "title": "",
+    "section": "base::plot",
+    "text": "base::plot\nAdd a legend\n\nplot(bill_dep ~ bill_len, data = penguins, col = species)\nlegend(\"topright\", legend = levels(penguins$species), col = 1:3, pch = 1, title = \"Species\")\n\n\nA: We should have used levels(species), not unique(species)."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#baseplot-4",
+    "href": "vignettes/useR2025/useR2025.html#baseplot-4",
+    "title": "",
+    "section": "base::plot",
+    "text": "base::plot\nHow about a different plot type?\n\nplot(bill_dep ~ bill_len, data = penguins, col = species, type = 'b')\n\n\nUgh… our grouped coloring logic only works for the “points” components."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#baseplot-5",
+    "href": "vignettes/useR2025/useR2025.html#baseplot-5",
+    "title": "",
+    "section": "base::plot",
+    "text": "base::plot\nProblems and pitfalls of our base plot approach\n\nHow do we automate the legend mapping and avoid manual error?\nWhat if we want to place the legend outside of the plot region?\nHow do we group by additional variables?\nWhat if we want groups with a different plot type (e.g, lines)?\nWhat if we need to group by a continuous variable?\nWhat if we need to facet by another variable?\nWhat if we want to add a summary function, e.g. regression fit?\nThe plots are kind of ugly. Can we make them look better?\n…"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplotplt",
+    "href": "vignettes/useR2025/useR2025.html#tinyplotplt",
+    "title": "",
+    "section": "tinyplot::plt",
+    "text": "tinyplot::plt\nSimplest case: drop-in replacement for base::plot\n\nplt(bill_dep ~ bill_len, data = penguins)\n\n\n\nBut we can do a lot more than that…"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplotplt-1",
+    "href": "vignettes/useR2025/useR2025.html#tinyplotplt-1",
+    "title": "",
+    "section": "tinyplot::plt",
+    "text": "tinyplot::plt\nHow do we automate the legend mapping?\n\nplt(bill_dep ~ bill_len | species, data = penguins)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplotplt-2",
+    "href": "vignettes/useR2025/useR2025.html#tinyplotplt-2",
+    "title": "",
+    "section": "tinyplot::plt",
+    "text": "tinyplot::plt\nHow do we group by additional variables?\n\nplt(bill_dep ~ bill_len | sex + species, data = penguins, pch = \"by\")"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplotplt-3",
+    "href": "vignettes/useR2025/useR2025.html#tinyplotplt-3",
+    "title": "",
+    "section": "tinyplot::plt",
+    "text": "tinyplot::plt\nWhat if we want groups with a different plot type?\n\nplt(bill_dep ~ bill_len | species, data = penguins, type = \"b\")"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplotplt-4",
+    "href": "vignettes/useR2025/useR2025.html#tinyplotplt-4",
+    "title": "",
+    "section": "tinyplot::plt",
+    "text": "tinyplot::plt\nWhat if we need to group by a continuous variable?\n\nplt(bill_dep ~ bill_len | body_mass, data = penguins)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplotplt-5",
+    "href": "vignettes/useR2025/useR2025.html#tinyplotplt-5",
+    "title": "",
+    "section": "tinyplot::plt",
+    "text": "tinyplot::plt\nWhat if we need to facet by another variable?\n\nplt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplotplt-6",
+    "href": "vignettes/useR2025/useR2025.html#tinyplotplt-6",
+    "title": "",
+    "section": "tinyplot::plt",
+    "text": "tinyplot::plt\nWhat if we want to add a summary function, e.g. regression fit?\n\nplt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)\nplt_add(type = \"lm\")"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplotplt-7",
+    "href": "vignettes/useR2025/useR2025.html#tinyplotplt-7",
+    "title": "",
+    "section": "tinyplot::plt",
+    "text": "tinyplot::plt\nThe plots are kind of ugly. Can we make them look better?\n\ntinytheme(\"clean\") # or \"clean2\", \"minimal\", \"ipsum\", \"dark\", \"tufte\", ...\nplt(bill_dep ~ bill_len | species, data = penguins, facet = ~island)\nplt_add(type = \"lm\")\n\n\nNB: Themes are persistent; subsequent (tiny)plots will inherit this aesthetic."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#origin-story",
+    "href": "vignettes/useR2025/useR2025.html#origin-story",
+    "title": "",
+    "section": "Origin story",
+    "text": "Origin story\nTwo sources of frustration:\nPackage development 📦\n\nAnnoying trade-offs for supporting basic viz. methods for my packages.\n“I just need a simple errorbar here. Do I really have to finagle segments to make this work?” “What about a legend..?”\n\nTeaching 🎓\n\nTeach simple viz. approaches vs. scalability down the road.\nBase plotting is great for simple plots, but quickly loses its appeal for more complex plots. (And ggplot2/lattice have different APIs.)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#grid-vs-graphics",
+    "href": "vignettes/useR2025/useR2025.html#grid-vs-graphics",
+    "title": "",
+    "section": "grid vs graphics",
+    "text": "grid vs graphics\nR has two low-level graphics systems\n\nNote: Adapted from Murrell (2023)."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#base-graphics-in-r",
+    "href": "vignettes/useR2025/useR2025.html#base-graphics-in-r",
+    "title": "",
+    "section": "Base graphics in R",
+    "text": "Base graphics in R\nVery flexible… but tricksy\n\n\nBase graphics can produce amazing plots.\n\n\nplot() is just an (opinionated) wrapper around lower-level functions. (Koncevičius 2022)\n\n\n\n\nThis is very powerful in expert hands. (Mayakonda 2022)\n\n\n\n\n\n\n\n\n\nBut going beyond the defaults is often (much) more work that I want to do."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#grid-vs-graphics-redux",
+    "href": "vignettes/useR2025/useR2025.html#grid-vs-graphics-redux",
+    "title": "",
+    "section": "grid vs graphics (redux)",
+    "text": "grid vs graphics (redux)\nR has two low-level graphics systems\n\n\n\n\nNote: Adapted from Murrell (2023).\n\n\n\n\n\nNote: Adapted from Murrell (2023).\n\n\n\n\ntinyplot goals:\n\nMake base R graphics more user-friendly.\nImproved feature parity vs. grid-based 📦s like ggplot2 and lattice."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#origin-story-1",
+    "href": "vignettes/useR2025/useR2025.html#origin-story-1",
+    "title": "",
+    "section": "Origin story 🤝",
+    "text": "Origin story 🤝\nCollaboration\nA basic version of the core routine (then called “plot2.R”) sat on my computer for a long time.\nI eventually packaged it up… and invited two key collaborators:\n\n\n\n\n\n\n\n\nVincent Arel-Bundock\n\n\n\n\n\n\n\nAchim Zeileis\n\n\n\n\n\n\nVincent and Achim have helped push tinyplot far beyond my original goals."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot-api-1",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot-api-1",
+    "title": "",
+    "section": "tinyplot API",
+    "text": "tinyplot API\nGroup(s) after the pipe |\n\none grouptwo groups\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\nplt(\n  bill_dep ~ bill_len | sex + species,\n  data = penguins\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot-api-2",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot-api-2",
+    "title": "",
+    "section": "tinyplot API",
+    "text": "tinyplot API\nGroups map to colors; use the \"by\" keyword for other mappings\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  pch = \"by\"\n)\n\n\n\n\n\n\n\n\n\nAlso works for lwd, lty, etc."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot-api-3",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot-api-3",
+    "title": "",
+    "section": "tinyplot API",
+    "text": "tinyplot API\nLegend can be moved, customized and turned off\n\n“left!”“bottom!”“bottomright”FALSE\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  legend = \"left!\"\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  legend = list(\"bottom!\", title = NULL)\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  legend = list(\"bottomright\", bty = \"o\")\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  legend = FALSE\n)\n\n\n\n\n\n\n\n\n\n\n\n\nA \"!\" suffix places the legend outside the plot area."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot-api-4",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot-api-4",
+    "title": "",
+    "section": "tinyplot API",
+    "text": "tinyplot API\nfacets\n\none-sidedone-sided (2)two-sidedouter-axesfree\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  facet = ~island\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  facet = ~ sex + island\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  facet = sex ~ island\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\ntinytheme(\"clean2\")\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  # frame = FALSE, ## non-theme option\n  facet = ~ sex + island\n)\n\n\n\n\n\n\n\n\ntinytheme('clean') # revert theme\n\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  facet = ~ sex + island,\n  facet.args = list(free = TRUE)\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot-api-5",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot-api-5",
+    "title": "",
+    "section": "tinyplot API",
+    "text": "tinyplot API\ntypes\nAll tinyplot types can be passed as either a:\n\nstring (\"p\", \"density, \"lm\", …), or\nfunction (type_points(), type_density(), type_lm(), …)\n\nIn general, the functional equivalents are denoted type_*() and support direct argument passing for customization, e.g.\n\n?type_lm\nargs(type_lm)\n\nfunction (se = TRUE, level = 0.95) \nNULL\n\n\n\n\n\n\n\n\nNote\n\n\nCustom args can also be passed through plt(...), so long as there isn’t a top-level clash."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot-api-6",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot-api-6",
+    "title": "",
+    "section": "tinyplot API",
+    "text": "tinyplot API\ntypes\n\n“lm”“density”\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins,\n  type = \"lm\", level = 0.8      # string\n  # type = type_lm(level = 0.8) # function\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\nplt(\n  ~ bill_len | species,\n  data = penguins,\n  type = \"density\"        # string\n  # type = type_density() # function\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot-api-7",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot-api-7",
+    "title": "",
+    "section": "tinyplot API",
+    "text": "tinyplot API\nLayers\n\n“p” + “lm”“density” + “rug”\n\n\n\n\nplt(\n  bill_dep ~ bill_len | species,\n  data = penguins\n)\nplt_add(type = \"lm\")\n\n\n\n\n\n\n\n\n\n\n\n\n\nplt(\n  ~ bill_len | species,\n  data = penguins,\n  type = \"density\"\n)\nplt_add(type = \"rug\")"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot-api-8",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot-api-8",
+    "title": "",
+    "section": "tinyplot API",
+    "text": "tinyplot API\nThemes\nThemes provide a convenient way to set a preferred aesthetic for your plots.\n\nDynamic reduction of whitespace, etc.\nRemember: tinytheme(...) is persistent.\n\nQuick plotting function, which we’ll re-use for showcasing some themes on the next slide:\n\np = function() plt(\n    body_mass ~ flipper_len | bill_len, penguins,\n    facet = ~sex, yaxl = \",\",\n    main = \"Palmer penguins\",\n    sub = \"Brought to you by tinyplot!\"\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot-api-9",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot-api-9",
+    "title": "",
+    "section": "tinyplot API",
+    "text": "tinyplot API\nThemes\n\n“default”“tufte”“classic”“clean”“clean2”“minimal”“ipsum”“dark”custom\n\n\n\n\ntinytheme()\np()\n\n\n\n\n\n\n\n\n\n\n\n\n\ntinytheme(\"tufte\")\np()\n\n\n\n\n\n\n\n\n\n\n\n\n\ntinytheme(\"classic\")\np()\n\n\n\n\n\n\n\n\n\n\n\n\n\ntinytheme(\"clean\")\np()\n\n\n\n\n\n\n\n\n\n\n\n\n\ntinytheme(\"clean2\")\np()\n\n\n\n\n\n\n\n\n\n\n\n\n\ntinytheme(\"minimal\")\np()\n\n\n\n\n\n\n\n\n\n\n\n\n\ntinytheme(\"ipsum\")\np()\n\n\n\n\n\n\n\n\n\n\n\n\n\ntinytheme(\"dark\")\np()\n\n\n\n\n\n\n\n\n\n\n\n\n\ntinytheme(\n  \"ipsum\",\n  pch = 19,\n  cex = 1.2, cex.main = 2,\n  cex.sub = 1.5, cex.lab = 1.5,\n  palette.sequential = \"zissou\",\n  family =\"HersheyScript\"\n)\np()"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#other-features",
+    "href": "vignettes/useR2025/useR2025.html#other-features",
+    "title": "",
+    "section": "Other features",
+    "text": "Other features\nMany other bells and whistles\n\nEasily export plots with the file argument.\nEasy alpha transparency with the alpha and fill arguments.\nTransform axis labels (x/yaxl) and breaks (x/yaxb).\nCustom types.\netc."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#quickfire-gallery-1",
+    "href": "vignettes/useR2025/useR2025.html#quickfire-gallery-1",
+    "title": "",
+    "section": "Quickfire gallery",
+    "text": "Quickfire gallery\nhistogram\n\n\ntinytheme(\"clean\")\npal = c(\"darkorange\",\"purple\",\"cyan4\")\n\nplt(\n  ~flipper_len | species,\n  data = penguins, \n  type = \"hist\",\n  breaks = 30,\n  palette = pal\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#quickfire-gallery-2",
+    "href": "vignettes/useR2025/useR2025.html#quickfire-gallery-2",
+    "title": "",
+    "section": "Quickfire gallery",
+    "text": "Quickfire gallery\nbox plots\n\n\nplt(\n  body_mass ~ species | sex,\n  data = penguins,\n  type = \"boxplot\", \n  yaxl = \",\",\n  flip = TRUE\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#quickfire-gallery-3",
+    "href": "vignettes/useR2025/useR2025.html#quickfire-gallery-3",
+    "title": "",
+    "section": "Quickfire gallery",
+    "text": "Quickfire gallery\nviolin plots\n\n\nplt(\n  body_mass ~ species | sex,\n  data = penguins,\n  type = \"violin\", \n  yaxl = \",\",\n  flip = TRUE,\n  fill = 0.5\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#quickfire-gallery-4",
+    "href": "vignettes/useR2025/useR2025.html#quickfire-gallery-4",
+    "title": "",
+    "section": "Quickfire gallery",
+    "text": "Quickfire gallery\nerror bars\n\n\nmod = lm(body_mass ~ species + sex,\n         data = penguins)\ncoefs = data.frame(\n  names(coef(mod)),\n  coef(mod),\n  confint(mod)\n) |&gt; setNames(c(\"term\", \"estimate\",\n                \"lwr\", \"upr\"))\n\nplt(\n  estimate ~ term,\n  ymin = lwr, ymax = upr,\n  data = coefs,\n  type = \"errorbar\"\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#quickfire-gallery-5",
+    "href": "vignettes/useR2025/useR2025.html#quickfire-gallery-5",
+    "title": "",
+    "section": "Quickfire gallery",
+    "text": "Quickfire gallery\nrectangles\n\n\ni = 4*(0:10)\n\nplt(\n  xmin = 100+i, xmax = 150+i,\n  ymin = 300+i, ymax = 380+i,\n  by = i, fill = 0.2,\n  type = \"rect\"\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#quickfire-gallery-6",
+    "href": "vignettes/useR2025/useR2025.html#quickfire-gallery-6",
+    "title": "",
+    "section": "Quickfire gallery",
+    "text": "Quickfire gallery\nspineplot\n\n\nttnc = as.data.frame(Titanic)\nwts = ttnc$Freq\n\nplt(\n  Survived ~ Sex | Class, facet = \"by\",\n  data = ttnc,\n  type = type_spineplot(weights = wts)\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#quickfire-gallery-7",
+    "href": "vignettes/useR2025/useR2025.html#quickfire-gallery-7",
+    "title": "",
+    "section": "Quickfire gallery",
+    "text": "Quickfire gallery\nridge plot\n\n\ntinytheme(\"ridge2\")\n\naq = transform(\n  airquality,\n  Month = factor(\n    month.abb[Month],\n    levels = month.abb[5:9]\n  )\n)\n  \nplt(Month ~ Temp | Temp,\n  data = aq,\n  type = type_ridge(col = \"white\")\n)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#sec-adv",
+    "href": "vignettes/useR2025/useR2025.html#sec-adv",
+    "title": "",
+    "section": "Advantages of tinyplot",
+    "text": "Advantages of tinyplot\nThe sales pitch summary\n\nConcise\nConsistent\nErgonomic\nExtensive\nLightweight\n\nFor the longer version: tinyplot pros"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#sec-disadv",
+    "href": "vignettes/useR2025/useR2025.html#sec-disadv",
+    "title": "",
+    "section": "Disadvantages of tinyplot",
+    "text": "Disadvantages of tinyplot\nWhat are the caveats?\n\nLayering gotchas\nCustom layout\nMissing features\n\nFor the longer version: tinyplot pros"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#acknowledgements",
+    "href": "vignettes/useR2025/useR2025.html#acknowledgements",
+    "title": "",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\ntinyplot would not be where it is today without…\nThe R Core team:\n\nEspecially Paul Murrell, who has almost single-handedly built and maintained R’s graphics foundations for everyone else.\n\nMy wonderful tinyplot co-maintainers:\n\nVincent Arel-Bundock and Achim Zeileis\n\nMany other contributors, feedback providers, and a sources of inspiration.\n\nEtienne Bacher, etc.\nthe ggplot2 team (Hadley, Thomas, Teun, etc.)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#tinyplot",
+    "href": "vignettes/useR2025/useR2025.html#tinyplot",
+    "title": "",
+    "section": "tinyplot",
+    "text": "tinyplot\nLearn more\n\n\n\n\n grantmcdermott.com/tinyplot\n grantmcdermott/tinyplot"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#references",
+    "href": "vignettes/useR2025/useR2025.html#references",
+    "title": "",
+    "section": "References",
+    "text": "References\n\n\nKoncevičius, Karolis. 2022. “R Base Plotting Without Wrappers.” http://karolis.koncevicius.lt/posts/r_base_plotting_without_wrappers/.\n\n\nMayakonda, Anand. 2022. “Base Graphics in R.” https://poisonalien.github.io/basegraphics/.\n\n\nMurrell, Paul. 2023. “Updates to the R Graphics Engine: One Person’s Chart Junk is Another’s Chart Treasure.” The R Journal 15: 257–76. https://doi.org/10.32614/RJ-2023-072.\n\n\nViechtbauer, Wolfgang. 2025. “Open Online R Stream: The tinyplot Package.” https://github.com/wviechtb/oor_stream/blob/master/2025_03_20_tinyplot_package/oor_stream_2025_03_20_code.r."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#concise",
+    "href": "vignettes/useR2025/useR2025.html#concise",
+    "title": "",
+    "section": "Concise",
+    "text": "Concise\nThe formula API gives bang for buck\n\nP.S. Thanks to Ryan for letting me use this screenshot."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#concise-1",
+    "href": "vignettes/useR2025/useR2025.html#concise-1",
+    "title": "",
+    "section": "Concise",
+    "text": "Concise\nThe formula API gives bang for buck\nJust focusing on the core plot components…\n\n\nggplot(\n  simres,\n  aes(\n    x = true_effect, y = mean_loo_err,\n    color = factor(asym)\n    )\n  ) +\n  geom_point() +\n  geom_line() +\n  facet_wrap(~ exclude_ns)\n\nplt(\n  mean_loo_err ~ true_effect | factor(asym),\n  data = simres,\n  type = \"o\",\n  facet = ~ exlude_ns\n)\n\n(That’s about 1/3 fewer characters.)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#concise-2",
+    "href": "vignettes/useR2025/useR2025.html#concise-2",
+    "title": "",
+    "section": "Concise",
+    "text": "Concise\nConcision is even starker vs. vanilla base plot\n\n\n\n\nvs\n\n\nAdapted from Viechtbauer (2025)."
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#lightweight",
+    "href": "vignettes/useR2025/useR2025.html#lightweight",
+    "title": "",
+    "section": "Lightweight",
+    "text": "Lightweight\nBase R only\ntinyplot has zero third-party dependencies.\n\nCompares favourably against lattice (0 deps), ggplot2 (24 deps), tidyplots (111 deps), etc.\n\nWe’ve also kept the size of the install tarball down to a minimum (&lt;1 MB).\n\nAll “data heavy” artifacts are reserved for the tinyplot website (including a comprehensive test suite and set of vignettes).\n\nVery fast to install and play with in webR / WebAssembly. (Try it!)\n\nGreat for teaching or quick demos with colleagues.\n\nBack to main"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#layering-gotchas",
+    "href": "vignettes/useR2025/useR2025.html#layering-gotchas",
+    "title": "",
+    "section": "Layering gotchas",
+    "text": "Layering gotchas\nScaling is fixed by the first layer\n\nplt(body_mass ~ bill_len | species, penguins)\nplt_add(type = \"lm\")\n\n\n\nThis is a limitation of graphics “canvas” logic. (Workarounds: Change layer order, or use x/ylim.)"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#layering-gotchas-1",
+    "href": "vignettes/useR2025/useR2025.html#layering-gotchas-1",
+    "title": "",
+    "section": "Layering gotchas",
+    "text": "Layering gotchas\nCan’t combine file with plt_add (yet)\nThis doesn’t work:\nplt(..., file = \"myplot.png\")\nplt_add(type = ...)\n\nI’m hoping to provide a native solution in the future, but workarounds for now:\n\nUse plt(..., file = \"myplot.png\", draw = ...)\nOpen/close the appropriate graphics device manually, e.g. png(\"myplot.png\"); plt(...); plt_add(...); dev.off()"
+  },
+  {
+    "objectID": "vignettes/useR2025/useR2025.html#missing-features",
+    "href": "vignettes/useR2025/useR2025.html#missing-features",
+    "title": "",
+    "section": "Missing features",
+    "text": "Missing features\nI hope that I have convinced you that tinyplot covers a lot of ground.\n\nThe API should also be very stable. I expect few (if any) breaking changes from here on out.\n\n\nStill, tinyplot is a relatively young project and there are some features and plot types that we don’t support (yet). Some things coming down the pike:\n\nbubble plots (#433)\ndodged elements (#406)\nmaps (#210)\n\n\nBack to main"
+  },
+  {
     "objectID": "vignettes/introduction.html",
     "href": "vignettes/introduction.html",
     "title": "Introduction to tinyplot",
@@ -1024,6 +1367,13 @@
       "Visualizations",
       "type_barplot"
     ]
+  },
+  {
+    "objectID": "vignettes/useR2025/abstract.html",
+    "href": "vignettes/useR2025/abstract.html",
+    "title": "tinyplot",
+    "section": "",
+    "text": "https://events.digital-research.academy/event/52/abstracts/128/\nAuthor: Grant McDermott Co-authors: Vincent Arel-Bundock, Achim Zeileis\nThe {tinyplot} package provides a lightweight extension of the base R graphics system. It aims to pair the concise syntax and flexibility of base R plotting, with the convenience features pioneered by newer ({grid}-based) visualization packages like {ggplot2} and {lattice}. This includes the ability to plot grouped data with automatic legends and/or facets, advanced visualization types, and easy customization via ready-made themes.\nThis talk will provide an introduction to {tinyplot} in the form of various plotting examples, describe its motivating use-cases, and also contrast its advantages (and disadvantages) compared to other R visualization libraries. The package is available on CRAN."
   },
   {
     "objectID": "vignettes/gallery.html",

@@ -620,7 +620,7 @@ plt_add(type = "rug")
 
 Themes provide a convenient way to set a preferred aesthetic for your plots.
 
-- Dynamic reduciton of whitespace, etc.
+- Dynamic reduction of whitespace, etc.
 - Remember: `tinytheme(...)` is persistent.
 
 Quick plotting function, which we'll re-use for showcasing some themes on the next slide:

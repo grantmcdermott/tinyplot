@@ -136,13 +136,13 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         x.categorical = is.factor(datapoints$x)
         if (!is.null(xlevels) && x.categorical) {
           xlevels = if(is.numeric(xlevels)) levels(datapoints$x)[xlevels] else xlevels
-          if (any(is.na(xlevels)) || !all(xlevels %in% levels(datapoints$x))) warning("not all 'xlevels' correspond to levels of 'x'")
+          if (anyNA(xlevels) || !all(xlevels %in% levels(datapoints$x))) warning("not all 'xlevels' correspond to levels of 'x'")
           datapoints$x = factor(datapoints$x, levels = xlevels)
           if (x_by) datapoints$by = datapoints$x
         }
         if (!is.null(ylevels)) {
           ylevels = if(is.numeric(ylevels)) levels(datapoints$y)[ylevels] else ylevels
-          if (any(is.na(ylevels)) || !all(ylevels %in% levels(datapoints$y))) warning("not all 'ylevels' correspond to levels of 'y'")
+          if (anyNA(ylevels) || !all(ylevels %in% levels(datapoints$y))) warning("not all 'ylevels' correspond to levels of 'y'")
           datapoints$y = factor(datapoints$y, levels = ylevels)
           if (y_by) datapoints$by = datapoints$y
         }
@@ -243,7 +243,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         
         # catch for x_by / y/by
         if (isTRUE(x_by)) datapoints$by = factor(rep(xaxlabels, each = ny)) # each x label extends over ny rows
-        if (isTRUE(y_by)) datapoints$by = factor(rep(yaxlabels, length.out = nrow(datapoints)))
+        if (isTRUE(y_by)) datapoints$by = factor(rep_len(yaxlabels, nrow(datapoints)))
           
         ## grayscale flag
         grayscale = null_by && is.null(palette) && is.null(.tpar[["palette.qualitative"]])

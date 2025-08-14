@@ -11,6 +11,10 @@ where the formatting is also better._
 - Improved horizontal legend spacing, as well as multicolumn legend support. A
   new example in the "Tips & tricks" vignettes demonstrates the latter.
   (#446 @grantmcdermott)
+- Univariate boxplots (without grouping variable) are now handled in
+  `tinyplot.default()`, so that `tinyplot(x, type = "boxplot")` and
+  `tinyplot(~ x, type = "boxplot")` essentially produce the same output as
+  `boxplot(x)`. (#454 @zeileis)
 
 ### Internals
 

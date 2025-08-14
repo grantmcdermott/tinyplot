@@ -762,6 +762,11 @@ tinyplot.default = function(
       if (is.null(ylab)) ylab = "Density"
     } else if (type == "function") {
       if (is.null(ylab)) ylab = "Frequency"
+    } else if (type == "boxplot") {
+      y = x
+      x = rep.int("", length(y))
+      xlab = ""
+      xaxt = "a"
     } else if (!(type %in% c("histogram", "barplot"))) {
       y = x
       x = seq_along(x)

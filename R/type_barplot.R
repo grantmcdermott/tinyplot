@@ -95,7 +95,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         if (!is.factor(datapoints$x)) datapoints$x = factor(datapoints$x)
         if (!is.null(xlevels)) {
           xlevels = if(is.numeric(xlevels)) levels(datapoints$x)[xlevels] else xlevels
-          if (any(is.na(xlevels)) || !all(xlevels %in% levels(datapoints$x))) warning("not all 'xlevels' correspond to levels of 'x'")
+          if (anyNA(xlevels) || !all(xlevels %in% levels(datapoints$x))) warning("not all 'xlevels' correspond to levels of 'x'")
           datapoints$x = factor(datapoints$x, levels = xlevels)
         }
         if (!is.null(xaxlabels)) levels(datapoints$x) <- xaxlabels
@@ -118,7 +118,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
           z[floor(mid) + 1L] = (mid - floor(mid)) * z[floor(mid) + 1L]
           sum(z[0L:floor(mid) + 1L], na.rm = TRUE)
         }
-        if (is.null(xlim)) xlim = c(1, length(levels(datapoints$x))) + c(-0.5, 0.5) * width
+        if (is.null(xlim)) xlim = c(1, nlevels(datapoints$x)) + c(-0.5, 0.5) * width
         if (is.null(ylim)) ylim = if (beside || length(unique(datapoints$by)) == 1L) {
           c(pmin(0, min(datapoints$y, na.rm = TRUE) * 1.02), pmax(0, max(datapoints$y, na.rm = TRUE) * 1.02))
         } else {
@@ -143,8 +143,8 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         datapoints = lapply(sdat, function(df)  {
           
           df = df[order(df$x), , drop = FALSE]
-          nx = length(levels(df$x))
-          nb = length(levels(df$by))
+          nx = nlevels(df$x)
+          nb = nlevels(df$by)
           
           if (beside) {        
             xl = as.numeric(df$x) - width/2 + (as.numeric(df$by) - 1) * width/nb * as.numeric(!facet_by)

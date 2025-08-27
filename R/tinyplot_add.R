@@ -63,7 +63,7 @@ tinyplot_add = function(...) {
   }
 
   cal[["add"]] = TRUE
-  eval(cal)
+  eval(cal, envir = parent.frame())
 }
 
 

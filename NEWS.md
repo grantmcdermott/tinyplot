@@ -16,6 +16,12 @@ where the formatting is also better._
   `tinyplot(~ x, type = "boxplot")` essentially produce the same output as
   `boxplot(x)`. (#454 @zeileis)
 
+### Bug fixes
+
+- `tinyplot_add()` now evaluates the additional call in the environment from
+  which `tinyplot_add()` is called so that it also works in non-base environments
+  such as in function definitions. (#460 @zeileis)
+
 ### Internals
 
 - Move `altdoc` from `Suggests` to `Config/Needs/website`.

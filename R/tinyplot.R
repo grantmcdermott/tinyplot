@@ -611,7 +611,7 @@ tinyplot.default = function(
   # save for tinyplot_add()
   if (!add) {
     calls = sys.calls()
-    idx = grep("^tinyplot", sapply(calls, function(k) k[[1]]))
+    idx = grep("(^tinyplot)|(^plt$)", sapply(calls, function(k) k[[1]]))
     if (length(idx) > 0) {
       options(tinyplot_last_call = calls[[idx[1]]])
     }

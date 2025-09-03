@@ -254,7 +254,8 @@ draw_legend = function(
       }
       par(mar = omar)
       
-      if (new_plot && draw) {
+      # if (new_plot && draw) {
+      if (new_plot) {
         plot.new()
         # For themed + dynamic plots, we need to make sure the adjusted plot
         # margins for the legend are reinstated (after being overwritten by
@@ -297,7 +298,8 @@ draw_legend = function(
       }
       par(mar = omar)
 
-      if (new_plot && draw) {
+      # if (new_plot && draw) {
+      if (new_plot) {
         plot.new()
         # For themed + dynamic plots, we need to make sure the adjusted plot
         # margins for the legend are reinstated (after being overwritten by
@@ -323,7 +325,8 @@ draw_legend = function(
     } else {
       
       legend_args[["inset"]] = 0
-      if (new_plot && draw) plot.new()
+      # if (new_plot && draw) plot.new()
+      if (new_plot) plot.new()
       
     }
   
@@ -433,13 +436,15 @@ tinylegend = function(
     if (outer_end) fklgnd.args = modifyList(fklgnd.args, list(title = NULL), keep.null = TRUE)
   }
   
-  if (draw) {
-    fklgnd = do.call("legend", fklgnd.args)
-  } else {
-    plot.new()
-    fklgnd = do.call("legend", fklgnd.args)
-    return(fklgnd)
-  }
+  # if (draw) {
+  #   fklgnd = do.call("legend", fklgnd.args)
+  # } else {
+  #   # plot.new()
+  #   fklgnd = do.call("legend", fklgnd.args)
+  #   return(fklgnd)
+  # }
+  fklgnd = do.call("legend", fklgnd.args)
+  if (!draw) return(fklgnd)
   
   #
   ## Step 2: Calculate legend inset (for outer placement in plot region)

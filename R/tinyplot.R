@@ -1118,7 +1118,7 @@ tinyplot.default = function(
         lgby_pos = "bottomleft!"
         lgbub_pos = "topleft!"
       }
-      
+
       # first we get the respective legend rect dimensions (i.e., draw = FALSE)
 
       # legend 1: by grouping
@@ -1157,12 +1157,13 @@ tinyplot.default = function(
         pch = pch,
         lty = lty,
         lwd = lwd,
-        col = col,
-        bg = bg,
+        col = "black",
+        # bg = bg,
         gradient = by_continuous,
         cex = bubble_cex * cex_fct_adj,
         has_sub = has_sub,
-        draw = FALSE
+        draw = FALSE,
+        new_plot = FALSE # NB!
       )
 
       # grab respective legend dimensions
@@ -1200,7 +1201,8 @@ tinyplot.default = function(
           col = adjustcolor(par("col"), alpha.f = bubble_alpha),
           bg = adjustcolor(par("col"), alpha.f = bubble_bg_alpha),
           cex = bubble_cex * cex_fct_adj,
-          has_sub = has_sub
+          has_sub = has_sub,
+          new_plot = FALSE # NB!
         )
         ## next, draw by legend (with new_plot = FALSE)
         draw_legend(
@@ -1253,7 +1255,8 @@ tinyplot.default = function(
           gradient = by_continuous,
           # cex = cex * cex_fct_adj,
           cex = lgnd_cex,
-          has_sub = has_sub
+          has_sub = has_sub,
+          new_plot = FALSE # NB!
         )
         ## next, draw bubble legend (with plot_new = FALSE)
         draw_legend(

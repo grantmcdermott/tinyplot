@@ -1099,31 +1099,11 @@ tinyplot.default = function(
     } else {
       ## dual legend case...
 
-      ## FIXME: current logic only works for "right!"/"left!" legend
       legend_args = sanitize_legend(legend, legend_args)
-      legend_pos = legend_args[["x"]]
-      legend_args[["x"]] = NULL
-      if (!grepl("right!$|left!$", legend_pos)) {
-        warning(
-          '\nDual legends currently only work with "right!" or "left!" keyword positioning.\n',
-          'Reverting to "right!" default\n'
-        )
-        legend_pos = "right!"
-        lgby_pos = "bottomright!"
-        lgbub_pos = "topright!"
-      } else if (grepl("right!$", legend_pos)) {
-        lgby_pos = "bottomright!"
-        lgbub_pos = "topright!"
-      } else if (grepl("left!$", legend_pos)) {
-        lgby_pos = "bottomleft!"
-        lgbub_pos = "topleft!"
-      }
 
-      # first we get the respective legend rect dimensions (i.e., draw = FALSE)
-
-      # legend 1: by grouping
-      lgby = draw_legend(
-        legend = lgby_pos,
+      # legend 1: by (grouping) key
+      lgby = list(
+        # legend = lgby_pos,
         legend_args = modifyList(
           legend_args,
           list(x.intersp = 1, y.intersp = 1),
@@ -1138,14 +1118,13 @@ tinyplot.default = function(
         col = col,
         bg = bg,
         gradient = by_continuous,
-        cex = cex * cex_fct_adj,
-        # cex = lgnd_cex,
-        has_sub = has_sub,
-        draw = FALSE
+        # cex = cex * cex_fct_adj,
+        cex = lgnd_cex,
+        has_sub = has_sub
       )
-      # legend 2: bubble
-      lgbub = draw_legend(
-        legend = lgbub_pos,
+      # legend 2: bubble (size) key
+      lgbub = list(
+        # legend = lgbub_pos,
         legend_args = modifyList(
           legend_args,
           list(title = cex_dep, ncol = 1),
@@ -1157,134 +1136,17 @@ tinyplot.default = function(
         pch = pch,
         lty = lty,
         lwd = lwd,
-        col = "black",
-        # bg = bg,
-        gradient = by_continuous,
+        col = adjustcolor(par("col"), alpha.f = bubble_alpha),
+        bg = adjustcolor(par("col"), alpha.f = bubble_bg_alpha),
+        # gradient = by_continuous,
         cex = bubble_cex * cex_fct_adj,
         has_sub = has_sub,
-        draw = FALSE,
-        new_plot = FALSE # NB!
+        draw = FALSE
       )
 
-      # grab respective legend dimensions
-      lgby_w = lgby$rect$w
-      lgby_h = lgby$rect$h
-      lgbub_w = lgbub$rect$w
-      lgbub_h = lgbub$rect$h
-      # for inset adjustment, default to 0.5 unless one or more of the two
-      # legends is bigger than half the plot height.
-      lgby_inset = if (lgby_h > 0.5 || lgbub_h > 0.5) lgbub_h / (lgby_h + lgbub_h) else 0.5
+      # draw dual legend
+      draw_multi_legend(list(lgby, lgbub), position = legend_args[["x"]])
 
-      # Finally, reposition (via adjusted an `inset` arg) and draw both legends
-      # Note: the drawing order depends on which legend is "wider", since this
-      #   helps to correctly set the overall plot dimensions.
-
-      if (lgby_w > lgbub_w) {
-        # case I: by legend is wider; draw bubble first
-        ## first, draw bubble legend
-        draw_legend(
-          legend = lgbub_pos,
-          legend_args = modifyList(
-            legend_args,
-            list(
-              title = cex_dep,
-              ncol = 1,
-              inset = c((lgbub_w-lgby_w)/2, 1 - lgby_inset + 0.01)
-            ),
-            keep.null = TRUE
-          ),
-          lgnd_labs = names(bubble_cex),
-          type = type,
-          pch = bubble_pch,
-          lty = lty,
-          lwd = lwd,
-          col = adjustcolor(par("col"), alpha.f = bubble_alpha),
-          bg = adjustcolor(par("col"), alpha.f = bubble_bg_alpha),
-          cex = bubble_cex * cex_fct_adj,
-          has_sub = has_sub,
-          new_plot = FALSE # NB!
-        )
-        ## next, draw by legend (with new_plot = FALSE)
-        draw_legend(
-          legend = lgby_pos,
-          legend_args = modifyList(
-            legend_args,
-            list(
-              inset = c(0, lgby_inset + 0.01),
-              x.intersp = 1, y.intersp = 1
-            ),
-            keep.null = TRUE
-          ),
-          by_dep = by_dep,
-          lgnd_labs = lgnd_labs,
-          type = type,
-          pch = pch,
-          lty = lty,
-          lwd = lwd,
-          col = col,
-          bg = bg,
-          gradient = by_continuous,
-          # cex = cex * cex_fct_adj,
-          cex = lgnd_cex,
-          has_sub = has_sub,
-          new_plot = FALSE # NB!
-        )
-
-      } else {
-        # browser()
-        # Case II: bubble legend is wider; draw by legend first
-        ## first, draw by legend
-        draw_legend(
-          legend = lgby_pos,
-          legend_args = modifyList(
-            legend_args,
-            list(
-              inset = c((lgby_w-lgbub_w)/2, lgby_inset + 0.01),
-              x.intersp = 1, y.intersp = 1
-            ),
-            keep.null = TRUE
-          ),
-          by_dep = by_dep,
-          lgnd_labs = lgnd_labs,
-          type = type,
-          pch = pch,
-          lty = lty,
-          lwd = lwd,
-          col = col,
-          bg = bg,
-          gradient = by_continuous,
-          # cex = cex * cex_fct_adj,
-          cex = lgnd_cex,
-          has_sub = has_sub,
-          new_plot = FALSE # NB!
-        )
-        ## next, draw bubble legend (with plot_new = FALSE)
-        draw_legend(
-          legend = lgbub_pos,
-          legend_args = modifyList(
-            legend_args,
-            list(
-              title = cex_dep,
-              ncol = 1,
-              inset = c(0, 1 - lgby_inset + 0.01)
-            ),
-            keep.null = TRUE
-          ),
-          lgnd_labs = names(bubble_cex),
-          type = type,
-          pch = bubble_pch,
-          lty = lty,
-          lwd = lwd,
-          col = adjustcolor(par("col"), alpha.f = bubble_alpha),
-          bg = adjustcolor(par("col"), alpha.f = bubble_bg_alpha),
-          # gradient = by_continuous,
-          cex = bubble_cex * cex_fct_adj,
-          has_sub = has_sub,
-          new_plot = FALSE # NB!
-        )
-        
-      } ## end dual legend case
-      
     }
 
     has_legend = TRUE

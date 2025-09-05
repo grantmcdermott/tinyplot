@@ -2,7 +2,7 @@
 #'   
 #' @description Internal function to draw multiple legends (e.g., bubble + color)
 #'   with automatic dimension calculation and positioning. This function handles
-#'   the internal gymnastics of required to determine the individual legend
+#'   the internal gymnastics required to determine the individual legend
 #'   dimensions, before drawing them in the optimal order and position.
 #'   
 #' @md

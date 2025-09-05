@@ -436,13 +436,6 @@ tinylegend = function(
     if (outer_end) fklgnd.args = modifyList(fklgnd.args, list(title = NULL), keep.null = TRUE)
   }
   
-  # if (draw) {
-  #   fklgnd = do.call("legend", fklgnd.args)
-  # } else {
-  #   # plot.new()
-  #   fklgnd = do.call("legend", fklgnd.args)
-  #   return(fklgnd)
-  # }
   fklgnd = do.call("legend", fklgnd.args)
   if (!draw) return(fklgnd)
   

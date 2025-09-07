@@ -15,6 +15,8 @@ where the formatting is also better._
   `tinyplot.default()`, so that `tinyplot(x, type = "boxplot")` and
   `tinyplot(~ x, type = "boxplot")` essentially produce the same output as
   `boxplot(x)`. (#454 @zeileis)
+- `type_errorbar()` and `type_point_range()` get a `dodge` argument.
+  (#406 @vincentarelbundock)
 
 ### Internals
 

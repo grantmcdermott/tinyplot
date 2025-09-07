@@ -12,7 +12,10 @@ type_pointrange(dodge = 0)
 \arguments{
 \item{length}{length of the edges of the arrow head (in inches).}
 
-\item{dodge}{Numeric value (>= 0) for dodging of overlapping points. Default is 0 (no dodging).}
+\item{dodge}{Numeric value (>= 0) for dodging of overlapping points. Dodging
+is scaled relative to the x-axis tick locations (i.e., unique levels of
+\code{x}). For example, \code{dodge = 0.5} would place the outermost dodged points
+exactly midway the between axis ticks. Default value is 0 (no dodging).}
 }
 \description{
 Type function(s) for producing error bar and pointrange plots.

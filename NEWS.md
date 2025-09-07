@@ -21,7 +21,7 @@ where the formatting is also better._
 - `tinyplot_add()` now evaluates the additional call in the environment from
   which `tinyplot_add()` is called so that it also works in non-base environments
   such as in function definitions. Additionally, the call matching is now more
-  precising, matching only `tinyplot()` or `plt()` or their fully-qualified
+  precise, matching only `tinyplot()` or `plt()` or their fully-qualified
   counterparts (with `tinyplot::` prefix). Finally, the internals where these
   calls are stored are streamlined, avoiding modifying the user-visible
   `options()`. (#460 @zeileis)

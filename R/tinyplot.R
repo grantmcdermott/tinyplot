@@ -613,7 +613,7 @@ tinyplot.default = function(
     calls = sys.calls()
     idx = grep("(^tinyplot)|(^plt$)", sapply(calls, function(k) k[[1]]))
     if (length(idx) > 0) {
-      set_environment_variable(".last_call", calls[[idx[1]]])
+      set_environment_variable(.last_call = calls[[idx[1]]])
     }
   }
 

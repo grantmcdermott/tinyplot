@@ -144,7 +144,7 @@ tpar = function(..., hook = FALSE) {
         set_hooks(new_hooks, action = "append")
         # save new hook to tinyplot environment for later removal
         old_hooks = get_environment_variable(".tpar_hooks")
-        set_environment_variable(".tpar_hooks", c(old_hooks, new_hooks))
+        set_environment_variable(.tpar_hooks = c(old_hooks, new_hooks))
       } else {
         par_names = names(par(no.readonly = TRUE))
         base_par = base_par[names(base_par) %in% par_names]
@@ -310,7 +310,6 @@ assert_tpar = function(.tpar) {
   }
 }
 
-
 init_tpar = function(rm_hook = FALSE) {
   rm(list = names(.tpar), envir = .tpar)
 
@@ -318,7 +317,7 @@ init_tpar = function(rm_hook = FALSE) {
     old_hooks = get_environment_variable(".tpar_hooks")
     if (length(old_hooks) > 0) {
       remove_hooks(old_hooks)
-      set_environment_variable(".tpar_hooks", NULL)
+      set_environment_variable(.tpar_hooks = NULL)
     }
   }
 
@@ -354,3 +353,7 @@ init_tpar = function(rm_hook = FALSE) {
   # Alpha fill (transparency) default for ribbon and area plots
   .tpar$ribbon.alpha = if (is.null(getOption("tinyplot_ribbon.alpha"))) 0.2 else as.numeric(getOption("tinyplot_ribbon.alpha"))
 }
+
+## initialize internal environment for tpar variables
+.tpar = new.env()
+init_tpar()

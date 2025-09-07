@@ -14,6 +14,7 @@
     "axes",
     "by_continuous",
     "by_ordered",
+    "bubble_cex",
     "cex_fct_adj",
     "dots",
     "draw",

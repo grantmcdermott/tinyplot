@@ -25,7 +25,7 @@ type_qq = function(distribution = qnorm) {
   }
 
   draw_qq = function() {
-    fun = function(ix, iy, icol, ibg, ipch, ilwd, ilty, cex, xlab, ...) {
+    fun = function(ix, iy, icol, ibg, ipch, ilwd, ilty, icex, xlab, ...) {
       points(
         x = ix,
         y = iy,
@@ -34,7 +34,7 @@ type_qq = function(distribution = qnorm) {
         type = "p",
         pch = ipch,
         lwd = ilwd,
-        cex = cex
+        cex = icex
       )
 
       if (!is.null(ilty)) {

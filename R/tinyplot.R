@@ -22,11 +22,11 @@
 #' @param by grouping variable(s). The default behaviour is for groups to be
 #'   represented in the form of distinct colours, which will also trigger an
 #'   automatic legend. (See `legend` below for customization options.) However,
-#'   groups can also be presented through other plot parameters (e.g., `pch` or
-#'   `lty`) by passing an appropriate "by" keyword; see Examples. Note that
-#'   continuous (i.e., gradient) colour legends are also supported if the user
-#'   passes a numeric or integer to `by`. To group by multiple variables, wrap
-#'   them with \code{\link[base]{interaction}}.
+#'   groups can also be presented through other plot parameters (e.g., `pch`,
+#'   `lty`, or `cex`) by passing an appropriate `"by"` keyword; see Examples.
+#'   Note that continuous (i.e., gradient) colour legends are also supported if
+#'   the user passes a numeric or integer to `by`. To group by multiple
+#'   variables, wrap them with \code{\link[base]{interaction}}.
 #' @param facet the faceting variable(s) that you want arrange separate plot
 #'   windows by. Can be specified in various ways:
 #'   - In "atomic" form, e.g. `facet = fvar`. To facet by multiple variables in
@@ -253,7 +253,7 @@
 #'   can supply a special `lwd = "by"` convenience argument, in which case the
 #'   line width will automatically loop over the number of groups. This
 #'   automatic looping will be centered at the global line width value (i.e.,
-# `   par("lwd")`) and pad on either side of that.
+#'   `par("lwd")`) and pad on either side of that.
 #' @param bg background fill color for the open plot symbols 21:25 (see
 #'   `points.default`), as well as ribbon and area plot types.
 #'   Users can also supply either one of two special convenience arguments that
@@ -278,8 +278,18 @@
 #'   fractional values, e.g. `0.5` for semi-transparency.
 #' @param cex character expansion. A numerical vector (can be a single value)
 #'   giving the amount by which plotting characters and symbols should be scaled
-#'   relative to the default. Note that NULL is equivalent to 1.0, while NA
-#'   renders the characters invisible.
+#'   relative to the default. Note that `NULL` is equivalent to 1.0, while `NA`
+#'   renders the characters invisible. There are two additional considerations,
+#'   specifically for points-alike plot types (e.g. `"p"`):
+#'   
+#'   - users can also supply a special `cex = "by"` convenience argument, in
+#'     which case the character expansion will automatically adjust by group
+#'     too. The range of this character expansion is controlled by the `clim`
+#'     argument in the respective types; see [`type_points()`] for example.
+#'   - passing a `cex` vector of equal length to the main `x` and `y` variables
+#'     (e.g., another column in the same dataset) will yield a "bubble"plot with
+#'     its own dedicated legend. This can provide a useful way to visualize an
+#'     extra dimension of the data; see Examples.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param add logical. If TRUE, then elements are added to the current plot rather
@@ -399,6 +409,17 @@
 #'   pch = 16,
 #'   cex = 2
 #' )
+#' 
+#' # Use the special "by" convenience keyword if you would like to map these
+#' # aesthetic features over groups too (i.e., in addition to the default
+#' # colour grouping)
+#' 
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = "by",
+#'   cex = "by"
+#' )
 #'
 #' # We can add alpha transparency for overlapping points
 #'
@@ -412,7 +433,7 @@
 #'
 #' # To get filled points with a common solid background color, use an
 #' # appropriate plotting character (21:25) and combine with one of the special
-#' # `bg` convenience arguments.
+#' # `bg`/`fill` convenience arguments.
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
@@ -420,6 +441,18 @@
 #'   cex = 2,
 #'   bg = 0.3, # numeric in [0,1] adds a grouped background fill with transparency
 #'   col = "black" # override default color mapping; give all points a black border
+#' )
+#' 
+#' # Aside: For "bubble" plots, pass an appropriate vector to the `cex` arg.
+#' # This can be useful for depicting an additional dimension of the data (here:
+#' # Wind).
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   pch = 21,
+#'   cex = aq$Wind, # map character size to another feature in the data
+#'   bg = 0.3,
+#'   col = "black"
 #' )
 #'
 #' # Converting to a grouped line plot is a simple matter of adjusting the
@@ -592,7 +625,7 @@ tinyplot.default = function(
     bg = NULL,
     fill = NULL,
     alpha = NULL,
-    cex = 1,
+    cex = NULL,
     add = FALSE,
     draw = NULL,
     empty = FALSE,
@@ -641,6 +674,14 @@ tinyplot.default = function(
   was_area_type = identical(type, "area")
   # check flip flag is logical 
   assert_flag(flip)
+
+  # legend prep
+  if (!exists("legend_args")) {
+    legend_args = dots[["legend_args"]]
+    dots[["legend_args"]] = NULL
+  }
+  if (is.null(legend_args)) legend_args = list(x = NULL)
+  legend = substitute(legend)
 
   palette = substitute(palette)
 
@@ -717,6 +758,7 @@ tinyplot.default = function(
   }
   by_dep = deparse1(substitute(by))
   null_by = is.null(by)
+  cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL
 
   ## coerce character variables to factors
   if (!is.null(x) && is.character(x)) x = factor(x)
@@ -785,6 +827,8 @@ tinyplot.default = function(
   # alias
   if (is.null(bg) && !is.null(fill)) bg = fill
 
+  bubble = FALSE
+
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)
@@ -807,9 +851,11 @@ tinyplot.default = function(
       log          = log,
       lty          = lty,
       lwd          = lwd,
+      cex          = cex,
       facet        = facet,
       facet_by     = facet_by,
       facet.args   = facet.args,
+      legend_args  = legend_args,
       null_by      = null_by,
       null_facet   = null_facet,
       palette      = palette,
@@ -927,11 +973,23 @@ tinyplot.default = function(
     split_data = list(as.list(datapoints))
   }
 
+
+  # catch some simple aesthetics for bubble plots before the standard "by"
+  # grouping sanitizers (actually: will only be used for dual_legend plots but
+  # easiest to assign/determine now)
+  if (bubble) {
+    bubble_pch = if (!is.null(pch) && length(pch)==1) pch else par("pch")
+    bubble_alpha = if (!is.null(alpha)) alpha else 1
+    bubble_bg_alpha = if (!is.null(bg) && length(bg)==1 && is.numeric(bg) && bg > 0 && bg <=1) bg else 1
+  }
+  
   # aesthetics by group: col, bg, etc.
   ngrps = if (null_by) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by))
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+  cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
+  if (bubble) split_data[[1]][["cex"]] = cex ## check (maybe ngrps!=length(cex)?)
   col = by_col(
     ngrps = ngrps, col = col, palette = palette,
     gradient = by_continuous, ordered = by_ordered, alpha = alpha)
@@ -961,7 +1019,7 @@ tinyplot.default = function(
     pidx = round(pidx)
     lgnd_labs[pidx] = pbyvar
   }
-
+  
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
@@ -975,13 +1033,11 @@ tinyplot.default = function(
   #
 
   # place and draw the legend
-  has_legend = FALSE # simple indicator variable for later use
-
-  if (!exists("legend_args")) {
-    legend_args = dots[["legend_args"]]
-  }
-  if (is.null(legend_args)) legend_args = list(x = NULL)
-  legend = substitute(legend)
+  
+   # simple indicator variables for later use
+  has_legend = FALSE
+  dual_legend = bubble && !null_by && !isFALSE(legend)
+  lgnd_cex = NULL
 
   if (isFALSE(legend)) {
     legend = "none"
@@ -990,17 +1046,29 @@ tinyplot.default = function(
   }
   if (!is.null(legend) && legend == "none") {
     legend_args[["x"]] = "none"
+    dual_legend = FALSE
   }
 
   if (null_by) {
     if (is.null(legend)) {
-      legend = "none"
-      legend_args[["x"]] = "none"
+      # special case: bubble legend, no by legend
+      if (bubble && !dual_legend) {
+        legend_args[["title"]] = cex_dep ## rather by_dep?
+        lgnd_labs = names(bubble_cex)
+        lgnd_cex = bubble_cex * cex_fct_adj
+      } else {
+        legend = "none"
+        legend_args[["x"]] = "none"
+      }
+    } else if (bubble && !dual_legend) {
+        legend_args[["title"]] = cex_dep ## rather by_dep?
+        lgnd_labs = names(bubble_cex)
+        lgnd_cex = bubble_cex * cex_fct_adj
     }
   }
 
-  if ((is.null(legend) || legend != "none") && !add) {
-    if (isFALSE(by_continuous)) {
+  if ((is.null(legend) || legend != "none" || bubble) && !add) {
+    if (isFALSE(by_continuous) && (!bubble || dual_legend)) {
       if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
       } else {
@@ -1015,24 +1083,79 @@ tinyplot.default = function(
       legend_args[["lty"]] = 0
     }
 
-    draw_legend(
-      legend = legend,
-      legend_args = legend_args,
-      by_dep = by_dep,
-      lgnd_labs = lgnd_labs,
-      type = type,
-      pch = pch,
-      lty = lty,
-      lwd = lwd,
-      col = col,
-      bg = bg,
-      gradient = by_continuous,
-      cex = cex * cex_fct_adj,
-      has_sub = has_sub
-    )
+    if (!dual_legend) {
+      ## simple case: single legend only
+      if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
+      draw_legend(
+        legend = legend,
+        legend_args = legend_args,
+        by_dep = by_dep,
+        lgnd_labs = lgnd_labs,
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = col,
+        bg = bg,
+        gradient = by_continuous,
+        cex = lgnd_cex,
+        has_sub = has_sub
+      )
+    } else {
+      ## dual legend case...
+
+      legend_args = sanitize_legend(legend, legend_args)
+
+      # legend 1: by (grouping) key
+      lgby = list(
+        # legend = lgby_pos,
+        legend_args = modifyList(
+          legend_args,
+          list(x.intersp = 1, y.intersp = 1),
+          keep.null = TRUE
+        ),
+        by_dep = by_dep,
+        lgnd_labs = lgnd_labs,
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = col,
+        bg = bg,
+        gradient = by_continuous,
+        # cex = cex * cex_fct_adj,
+        cex = lgnd_cex,
+        has_sub = has_sub
+      )
+      # legend 2: bubble (size) key
+      lgbub = list(
+        # legend = lgbub_pos,
+        legend_args = modifyList(
+          legend_args,
+          list(title = cex_dep, ncol = 1),
+          keep.null = TRUE
+        ),
+        # by_dep = cex_dep,
+        lgnd_labs = names(bubble_cex),
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = adjustcolor(par("col"), alpha.f = bubble_alpha),
+        bg = adjustcolor(par("col"), alpha.f = bubble_bg_alpha),
+        # gradient = by_continuous,
+        cex = bubble_cex * cex_fct_adj,
+        has_sub = has_sub,
+        draw = FALSE
+      )
+
+      # draw dual legend
+      draw_multi_legend(list(lgby, lgbub), position = legend_args[["x"]])
+
+    }
 
     has_legend = TRUE
-  } else if (legend_args[["x"]] == "none" && !add) {
+    } else if (legend_args[["x"]] == "none" && !add) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1
@@ -1296,6 +1419,7 @@ tinyplot.default = function(
       ipch = pch[ii]
       ilty = lty[ii]
       ilwd = lwd[ii]
+      icex = if (bubble) idata[[ii]][["cex"]] else cex[[ii]]
       
       ix = idata[[ii]][["x"]]
       iy = idata[[ii]][["y"]]
@@ -1349,7 +1473,8 @@ tinyplot.default = function(
           iymin = iymin,
           ilabels = ilabels,
           iz = iz,
-          cex = cex,
+          # cex = cex,
+          icex = icex,
           dots = dots,
           type = type,
           x_by = x_by,

@@ -984,7 +984,7 @@ tinyplot.default = function(
   }
   
   # aesthetics by group: col, bg, etc.
-  ngrps = if (null_by) 1L else if (is.factor(by)) length(levels(by)) else if (by_continuous) 100L else length(unique(by))
+  ngrps = if (null_by) 1L else if (is.factor(by)) nlevels(by) else if (by_continuous) 100L else length(unique(by))
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)

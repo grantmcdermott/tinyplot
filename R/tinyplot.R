@@ -736,6 +736,8 @@ tinyplot.default = function(
   } else {
     deparse1(substitute(y))
   }
+  xmin_dep = deparse1(substitute(xmin))
+  xmax_dep = deparse1(substitute(xmax))
   by_dep = deparse1(substitute(by))
   null_by = is.null(by)
   cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL
@@ -764,12 +766,15 @@ tinyplot.default = function(
   facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
   null_facet = is.null(facet)
 
+  xlab = sanitize_xlab(
+    xlab = xlab, type = type, y = y,
+    x_dep = x_dep, xmin_dep, xmax_dep)
+
+  # ylab = sanitize_ylab(ylab = ylab, y_dep = y_dep, type = type, y = y)
+
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
     if (type %in% c("rect", "segments")) {
-      xmin_dep = deparse(substitute(xmin))
-      xmax_dep = deparse(substitute(xmax))
-      x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")
       x = rep(NA, length(x))
     }
   }
@@ -787,16 +792,13 @@ tinyplot.default = function(
     } else if (type == "boxplot") {
       y = x
       x = rep.int("", length(y))
-      xlab = ""
       xaxt = "a"
     } else if (!(type %in% c("histogram", "barplot"))) {
       y = x
       x = seq_along(x)
-      if (is.null(xlab)) xlab = "Index"
     }
   }
 
-  if (is.null(xlab)) xlab = x_dep
   if (is.null(ylab) && type != "histogram") ylab = y_dep
   
   # flag(s) indicating whether x/ylim was set by the user (needed later for

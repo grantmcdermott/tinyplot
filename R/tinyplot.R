@@ -736,8 +736,8 @@ tinyplot.default = function(
   } else {
     deparse1(substitute(y))
   }
-  xmin_dep = deparse1(substitute(xmin))
-  xmax_dep = deparse1(substitute(xmax))
+  xmin_dep = if (is.null(xmin)) NULL else deparse1(substitute(xmin))
+  xmax_dep = if (is.null(xmax)) NULL else deparse1(substitute(xmax))
   by_dep = deparse1(substitute(by))
   null_by = is.null(by)
   cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL

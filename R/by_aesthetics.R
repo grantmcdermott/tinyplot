@@ -274,7 +274,7 @@ gen_pal_fun = function(pal, gradient = FALSE, alpha = NULL, n = NULL) {
 by_pch = function(ngrps, type, pch = NULL) {
   no_pch = FALSE
   if (identical(type, "text")) {
-    pch <- rep(15, ngrps)
+    pch = rep(15, ngrps)
   } else if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot", "qq")) {
     no_pch = TRUE
     pch = NULL

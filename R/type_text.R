@@ -21,7 +21,7 @@
 #'     adj = 0
 #'   )
 #' )
-#' 
+#'
 #' # to avoid clipping text at the plot region, we can use xpd = NA
 #' tinyplot(mpg ~ hp | factor(cyl),
 #'   data = mtcars,
@@ -47,23 +47,23 @@ type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, vfont = NULL,
 data_text = function(labels, clim = c(0.5, 2.5)) {
   fun = function(datapoints, legend_args, cex = NULL, ...) {
     if (length(labels) != 1 && length(labels) != nrow(datapoints)) {
-      msg <- sprintf("`labels` must be of length 1 or %s.", nrow(datapoints))
+      msg = sprintf("`labels` must be of length 1 or %s.", nrow(datapoints))
       stop(msg, call. = FALSE)
     }
     datapoints$labels = labels
-    
+
     # browser()
     bubble = FALSE
     bubble_cex = 1
     if (!is.null(cex) && length(cex) == nrow(datapoints)) {
-      bubble = TRUE 
+      bubble = TRUE
       ## Identify the pretty break points for our bubble labels
       bubble_labs = pretty(cex, n = 5)
       len_labs = length(bubble_labs)
       # cex = rescale_num(c(bubble_labs, cex), to = clim)
-      cex = rescale_num(sqrt(c(bubble_labs, cex))/pi, to = clim)
+      cex = rescale_num(sqrt(c(bubble_labs, cex)) / pi, to = clim)
       bubble_cex = cex[1:len_labs]
-      cex = cex[(len_labs+1):length(cex)]
+      cex = cex[(len_labs + 1):length(cex)]
       names(bubble_cex) = format(bubble_labs)
       if (max(clim) > 2.5) {
         legend_args[["x.intersp"]] = max(clim) / 2.5

@@ -12,10 +12,10 @@
 #'   a list of functions.
 #' @param action `"replace"`, `"append"` or `"prepend"`
 #' @keywords internal
-set_hooks <- function(hooks, action = "append") {
-  old <- list()
+set_hooks = function(hooks, action = "append") {
+  old = list()
   for (hook_name in names(hooks)) {
-    old[[hook_name]] <- getHook(hook_name)
+    old[[hook_name]] = getHook(hook_name)
     setHook(hook_name, hooks[[hook_name]], action = action)
   }
   invisible(old)
@@ -23,12 +23,12 @@ set_hooks <- function(hooks, action = "append") {
 
 #' @rdname set_hooks
 #' @keywords internal
-remove_hooks <- function(hooks) {
+remove_hooks = function(hooks) {
   for (hook_name in names(hooks)) {
-    hook <- getHook(hook_name)
+    hook = getHook(hook_name)
     if (length(hook) > 0) {
       for (fun in unlist(hooks[hook_name])) {
-        hook[sapply(hook, identical, fun)] <- NULL
+        hook[sapply(hook, identical, fun)] = NULL
       }
     }
     setHook(hook_name, hook, "replace")

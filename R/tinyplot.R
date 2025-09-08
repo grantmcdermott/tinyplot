@@ -644,13 +644,11 @@ tinyplot.default = function(
   # save for tinyplot_add()
   if (!add) {
     calls = sys.calls()
-    idx = grep("^tinyplot", sapply(calls, function(k) k[[1]]))
+    tinyplot_calls = "(^tinyplot$)|(^tinyplot::tinyplot$)|(^plt$)|(^tinyplot::plt)|(^tinyplot:::)"
+    idx = grep(tinyplot_calls, sapply(calls, function(k) k[[1]]))
     if (length(idx) > 0) {
-      options(tinyplot_last_call = calls[[idx[1]]])
+      set_environment_variable(.last_call = calls[[idx[1]]])
     }
-    ## TODO: remove the global option above and move to this when density is refactored
-    # cal = match.call(call = sys.call(sys.parent()), expand.dots = TRUE)
-    # assign(".last_call", cal, envir = get(".tinyplot_env", envir = parent.env(environment())))
   }
 
   dots = list(...)

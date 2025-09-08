@@ -18,6 +18,16 @@ where the formatting is also better._
 - `type_errorbar()` and `type_point_range()` get a `dodge` argument.
   (#406 @vincentarelbundock)
 
+### Bug fixes
+
+- `tinyplot_add()` now evaluates the additional call in the environment from
+  which `tinyplot_add()` is called so that it also works in non-base environments
+  such as in function definitions. Additionally, the call matching is now more
+  precise, matching only `tinyplot()` or `plt()` or their fully-qualified
+  counterparts (with `tinyplot::` prefix). Finally, the internals where these
+  calls are stored are streamlined, avoiding modifying the user-visible
+  `options()`. (#460 @zeileis)
+
 ### Internals
 
 - Move `altdoc` from `Suggests` to `Config/Needs/website`.

@@ -129,64 +129,42 @@ draw_legend = function(
     
     #
     ## legend args ----
-    
-    tmp = compute_legend_args(
-      legend = legend,
-      legend_args = legend_args,
-      by_dep = by_dep,
-      lgnd_labs = lgnd_labs,
-      type = type,
-      pch = pch,
-      lty = lty,
-      lwd = lwd,
-      col = col,
-      bg = bg,
-      cex = cex,
-      gradient = gradient
+
+    list2env(
+      compute_legend_args(
+        legend = legend,
+        legend_args = legend_args,
+        by_dep = by_dep,
+        lgnd_labs = lgnd_labs,
+        type = type,
+        pch = pch,
+        lty = lty,
+        lwd = lwd,
+        col = col,
+        bg = bg,
+        cex = cex,
+        gradient = gradient
+      ),
+      environment()
     )
-    legend_args = tmp$legend_args
-    mcol_flag = tmp$mcol_flag
-    user_inset = tmp$user_inset
   
     #
     ## legend placement ----
-    
-    # Note: "side" = left/right ; "end" = top/bottom
-    outer_side = outer_end = outer_right = outer_bottom = FALSE ## placeholders
-    
+    topmar_epsilon = 0.1
+    dynmar = isTRUE(.tpar[["dynmar"]])
+
+    ## restore margin defaults
+    ## (in case the plot region/margins were affected by the preceding tinyplot call)
+    restore_margin_outer()
+    if (!dynmar) restore_margin_inner(ooma)
+
     ooma = par("oma")
     omar = par("mar")
-    topmar_epsilon = 0.1
-    
-    # Catch to avoid recursive offsets, e.g. repeated tinyplot calls with
-    # "bottom!" legend position.
-    
-    ## restore inner margin defaults
-    ## (in case the plot region/margins were affected by the preceding tinyplot call)
-    dynmar = isTRUE(.tpar[["dynmar"]])
-    if (any(ooma != 0) && !dynmar) {
-      if ( ooma[1] != 0 & omar[1] == par("mgp")[1] + 1*par("cex.lab") ) omar[1] = 5.1
-      if ( ooma[2] != 0 & omar[2] == par("mgp")[1] + 1*par("cex.lab") ) omar[2] = 4.1
-      if ( ooma[3] == topmar_epsilon & omar[3] != 4.1 ) omar[3] = 4.1
-      if ( ooma[4] != 0 & omar[4] == 0 ) omar[4] = 2.1
-      par(mar = omar)
-    }
-    ## restore outer margin defaults
-    par(omd = c(0,1,0,1))
-    ooma = par("oma")
     
     ## Legend to outer side (either right or left) of plot
-    if (grepl("right!$|left!$", legend_args[["x"]])) {
-      
-      outer_side = TRUE
-      outer_right = grepl("right!$", legend_args[["x"]])
-      
+    if (outer_side) {
       # extra bump for spineplot if outer_right legend (to accommodate secondary y-axis)
       if (identical(type, "spineplot")) lmar[1] = lmar[1] + 1.1
-      
-      ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
-      if (outer_right) legend_args[["x"]] = gsub("right!$", "left", legend_args[["x"]])
-      if (!outer_right) legend_args[["x"]] = gsub("left!$", "right", legend_args[["x"]])
       
       ## We have to set the inner margins of the plot before the (fake) legend is
       ## drawn, otherwise the inset calculation---which is based in the legend
@@ -217,24 +195,17 @@ draw_legend = function(
         }
       }
       
-      legend_args[["horiz"]] = FALSE
-      
       ## Legend at the outer top or bottom of plot
-    } else if (grepl("bottom!$|top!$", legend_args[["x"]])) {
-
-      outer_end = TRUE
-      outer_bottom = grepl("bottom!$", legend_args[["x"]])
-
-      ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
-      if (outer_bottom) legend_args[["x"]] = gsub("bottom!$", "top", legend_args[["x"]])
-      if (!outer_bottom) legend_args[["x"]] = gsub("top!$", "bottom", legend_args[["x"]])
+    } else if (outer_end) {
 
       ## We have to set the inner margins of the plot before the (fake) legend is
       ## drawn, otherwise the inset calculation---which is based in the legend
       ## width---will be off the first time.
       if (outer_bottom) {
         omar[1] = par("mgp")[1] + 1*par("cex.lab")
-        if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) omar[1] = omar[1] + 1*par("cex.sub")
+        if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]]==1)) {
+          omar[1] = omar[1] + 1*par("cex.sub")
+        }
       } else {
         ## For "top!", the logic is slightly different: We don't expand the outer
         ## margin b/c we need the legend to come underneath the main title. So
@@ -264,42 +235,11 @@ draw_legend = function(
         }
       }
 
-      # enforce horizontal legend if user hasn't specified ncol arg
-      # (exception: gradient legends at bottom/top are always horizontal)
-      if (is.null(legend_args[["ncol"]]) || gradient) legend_args[["horiz"]] = TRUE
 
     } else {
-      
-      legend_args[["inset"]] = 0
-      # if (new_plot && draw) plot.new()
       if (new_plot) plot.new()
       
     }
-  
-    # Additional tweaks for horiz and/or multi-column legends
-    if (isTRUE(legend_args[["horiz"]]) ||  mcol_flag) {
-      # tighter horizontal labelling
-      # See: https://github.com/grantmcdermott/tinyplot/issues/434
-      if (!gradient) {
-        legend_args[["text.width"]] = NA
-        # Add a space to all labs except the outer most right ones
-        nlabs = length(legend_args[["legend"]])
-        nidx = nlabs
-        if (mcol_flag) nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
-        legend_args[["legend"]][-nidx] = paste(legend_args[["legend"]][-nidx], " ")
-      }
-      # catch for horizontal ribbon legend spacing
-      if (type=="ribbon") {
-        if (legend_args[["pt.lwd"]] == 1) {
-          legend_args[["x.intersp"]] = 1
-        } else {
-          legend_args[["x.intersp"]] = 0.5
-        }
-      } else if (gradient) {
-        legend_args[["x.intersp"]] = 0.5
-      }
-    }
-    
     #
     ## draw the legend ----
     # Legend drawing is handled by the internal `tinylegend()` function, which:

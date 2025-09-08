@@ -1,18 +1,28 @@
+restore_margin_outer = function() {
+  par(omd = c(0,1,0,1))
+}
+
+
 restore_margin_inner = function(ooma) {
+  ooma = par("oma")
+  omar = par("mar")
+
+  if (!any(ooma != 0)) return(invisible(NULL))
+
   ## restore inner margin defaults
   ## (in case the plot region/margins were affected by the preceding tinyplot call)
   if (any(ooma != 0)) {
     if (ooma[1] != 0 && omar[1] == par("mgp")[1] + 1 * par("cex.lab")) {
-    omar[1] = 5.1
+      omar[1] = 5.1
     }
     if (ooma[2] != 0 && omar[2] == par("mgp")[1] + 1 * par("cex.lab")) {
-    omar[2] = 4.1
+      omar[2] = 4.1
     }
     if (ooma[3] == topmar_epsilon && omar[3] != 4.1) {
-    omar[3] = 4.1
+      omar[3] = 4.1
     }
     if (ooma[4] != 0 && omar[4] == 0) {
-    omar[4] = 2.1
+      omar[4] = 2.1
     }
     par(mar = omar)
   }
@@ -21,6 +31,7 @@ restore_margin_inner = function(ooma) {
     par(omd = c(0, 1, 0, 1))
   }
 }
+
 
 compute_legend_args = function(
   legend,
@@ -92,5 +103,72 @@ compute_legend_args = function(
   mcol_flag = !is.null(legend_args[["ncol"]]) && legend_args[["ncol"]] > 1
   # flag for (extra) user inset (also used for dual legends)
   user_inset = !is.null(legend_args[["inset"]])
-  list(legend_args = legend_args, mcol_flag = mcol_flag, user_inset = user_inset)
+
+  # placement flags and anchor normalization (no par() calls here)
+  outer_side = outer_end = outer_right = outer_bottom = FALSE
+  if (grepl("right!$|left!$", legend_args[["x"]])) {
+    outer_side = TRUE
+    outer_right = grepl("right!$", legend_args[["x"]])
+  } else if (grepl("bottom!$|top!$", legend_args[["x"]])) {
+    outer_end = TRUE
+    outer_bottom = grepl("bottom!$", legend_args[["x"]])
+  }
+
+  ## Switch position anchor (we'll adjust relative to the _opposite_ side below)
+  if (outer_end) {
+    if (outer_bottom) {
+      legend_args[["x"]] = gsub("bottom!$", "top", legend_args[["x"]])
+    }
+    if (!outer_bottom) {
+      legend_args[["x"]] = gsub("top!$", "bottom", legend_args[["x"]])
+    }
+
+    # enforce horizontal legend if user hasn't specified ncol arg
+    # (exception: gradient legends at bottom/top are always horizontal)
+    if (is.null(legend_args[["ncol"]]) || gradient) legend_args[["horiz"]] = TRUE
+
+  } else if (outer_side) {
+    if (outer_right) {
+      legend_args[["x"]] = gsub("right!$", "left", legend_args[["x"]])
+    }
+    if (!outer_right) {
+      legend_args[["x"]] = gsub("left!$", "right", legend_args[["x"]])
+    }
+  } else {
+      legend_args[["inset"]] = 0
+  }
+
+  # Additional tweaks for horiz and/or multi-column legends
+  if (isTRUE(legend_args[["horiz"]]) ||  mcol_flag) {
+    # tighter horizontal labelling
+    # See: https://github.com/grantmcdermott/tinyplot/issues/434
+    if (!gradient) {
+      legend_args[["text.width"]] = NA
+      # Add a space to all labs except the outer most right ones
+      nlabs = length(legend_args[["legend"]])
+      nidx = nlabs
+      if (mcol_flag) nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
+      legend_args[["legend"]][-nidx] = paste(legend_args[["legend"]][-nidx], " ")
+    }
+    # catch for horizontal ribbon legend spacing
+    if (type=="ribbon") {
+      if (legend_args[["pt.lwd"]] == 1) {
+        legend_args[["x.intersp"]] = 1
+      } else {
+        legend_args[["x.intersp"]] = 0.5
+      }
+    } else if (gradient) {
+      legend_args[["x.intersp"]] = 0.5
+    }
+  }
+  
+  list(
+    legend_args = legend_args,
+    mcol_flag = mcol_flag,
+    user_inset = user_inset,
+    outer_side = outer_side,
+    outer_end = outer_end,
+    outer_right = outer_right,
+    outer_bottom = outer_bottom
+  )
 }

@@ -876,59 +876,30 @@ tinyplot.default = function(
 
 
   # swap x and y values if flip is TRUE
-  assert_flag(flip)
   # extra catch for boxplots
-  # now swap the values
+  assert_flag(flip)
   if (isTRUE(flip)) {
-    if (type != "boxplot") {
-      # limits, labs, etc.
-      xlim_cp = xlim
-      xlim = ylim
-      ylim = xlim_cp
-      xlab_cp = xlab
-      xlab = ylab
-      ylab = xlab_cp
-      xlabs_cp = xlabs
-      xlabs = ylabs
-      ylabs = xlabs_cp
-      xaxt_cp = xaxt
-      xaxt = yaxt
-      yaxt = xaxt_cp
-      xaxs_cp = xaxs
-      xaxs = yaxs
-      yaxs = xaxs_cp
-      xaxb_cp = xaxb
-      xaxb = yaxb
-      yaxb = xaxb_cp
-      xaxl_cp = xaxl
-      xaxl = yaxl
-      yaxl = xaxl_cp
-      if (!is.null(log)) {
-        log = if (log == "x") "y" else if (log == "y") "x" else log
-      }
-      # x/y vars
-      x_cp = datapoints[["x"]]
-      datapoints[["x"]] = datapoints[["y"]]
-      datapoints[["y"]] = x_cp
-      # x/y min and max vars
-      xmin_cp = if (!is.null(datapoints[["xmin"]])) datapoints[["xmin"]] else NULL
-      datapoints[["xmin"]] = if (!is.null(datapoints[["ymin"]])) datapoints[["ymin"]] else NULL
-      datapoints[["ymin"]] = if (!is.null(xmin_cp)) xmin_cp else NULL
-      xmax_cp = if (!is.null(datapoints[["xmax"]])) datapoints[["xmax"]] else NULL
-      datapoints[["xmax"]] = if (!is.null(datapoints[["ymax"]])) datapoints[["ymax"]] else NULL
-      datapoints[["ymax"]] = if (!is.null(xmax_cp)) xmax_cp else NULL
-      # clean up
-      rm(xlim_cp, xlab_cp, xlabs_cp, xaxt_cp, xaxs_cp, xaxb_cp, xaxl_cp, x_cp, xmin_cp, xmax_cp)
+    if (type == "boxplot") {
+      # boxplot: let horizontal=TRUE do most work; only swap labels
+      swap_variables(environment(), c("xlab", "ylab"))
     } else {
-      # We'll let boxplot(..., horizontal = TRUE) handle most of the adjustments
-      # and just catch a few elements that we draw beforehand.
-      xlab_cp = xlab
-      xlab = ylab
-      ylab = xlab_cp
-      rm(xlab_cp)
+      swap_variables(
+        environment(),
+        c("xlim", "ylim"),
+        c("xlab", "ylab"),
+        c("xlabs", "ylabs"),
+        c("xaxt", "yaxt"),
+        c("xaxs", "yaxs"),
+        c("xaxb", "yaxb"),
+        c("xaxl", "yaxl"))
+      if (!is.null(log)) log <- chartr("xy", "yx", log)
+      datapoints <- swap_columns(datapoints, "x", "y")
+      datapoints <- swap_columns(datapoints, "xmin", "ymin")
+      datapoints <- swap_columns(datapoints, "xmax", "ymax")
     }
   }
   
+
   # For cases where x/yaxb is provided and corresponding x/ylabs is not null...
   # We can subset these here to provide breaks
   if (!is.null(xaxb) && !is.null(xlabs)) {

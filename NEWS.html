@@ -216,22 +216,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#development" id="toc-development" class="nav-link" data-scroll-target="#development">Development</a>
   <ul class="collapse">
   <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
+  <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
   <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals">Internals</a></li>
   </ul></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.4.2</a>
   <ul class="collapse">
   <li><a href="#new-features-1" id="toc-new-features-1" class="nav-link" data-scroll-target="#new-features-1">New features</a></li>
-  <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
+  <li><a href="#bug-fixes-1" id="toc-bug-fixes-1" class="nav-link" data-scroll-target="#bug-fixes-1">Bug fixes</a></li>
   </ul></li>
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.4.1</a>
   <ul class="collapse">
-  <li><a href="#bug-fixes-1" id="toc-bug-fixes-1" class="nav-link" data-scroll-target="#bug-fixes-1">Bug fixes</a></li>
+  <li><a href="#bug-fixes-2" id="toc-bug-fixes-2" class="nav-link" data-scroll-target="#bug-fixes-2">Bug fixes</a></li>
   <li><a href="#misc" id="toc-misc" class="nav-link" data-scroll-target="#misc">Misc</a></li>
   </ul></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.4.0</a>
   <ul class="collapse">
   <li><a href="#new-features-2" id="toc-new-features-2" class="nav-link" data-scroll-target="#new-features-2">New features:</a></li>
-  <li><a href="#bug-fixes-2" id="toc-bug-fixes-2" class="nav-link" data-scroll-target="#bug-fixes-2">Bug fixes:</a></li>
+  <li><a href="#bug-fixes-3" id="toc-bug-fixes-3" class="nav-link" data-scroll-target="#bug-fixes-3">Bug fixes:</a></li>
   <li><a href="#website" id="toc-website" class="nav-link" data-scroll-target="#website">Website:</a></li>
   <li><a href="#internals-1" id="toc-internals-1" class="nav-link" data-scroll-target="#internals-1">Internals:</a></li>
   </ul></li>
@@ -239,7 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#new-features-3" id="toc-new-features-3" class="nav-link" data-scroll-target="#new-features-3">New features</a></li>
   <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
-  <li><a href="#bug-fixes-3" id="toc-bug-fixes-3" class="nav-link" data-scroll-target="#bug-fixes-3">Bug fixes</a></li>
+  <li><a href="#bug-fixes-4" id="toc-bug-fixes-4" class="nav-link" data-scroll-target="#bug-fixes-4">Bug fixes</a></li>
   <li><a href="#misc-1" id="toc-misc-1" class="nav-link" data-scroll-target="#misc-1">Misc</a></li>
   </ul></li>
   <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">0.2.1</a></li>
@@ -273,6 +274,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type_errorbar()</code> and <code>type_point_range()</code> get a <code>dodge</code> argument. (<a href="https://github.com/grantmcdermott/tinyplot/issues/406">#406</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 </ul>
 </section>
+<section id="bug-fixes" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
+<ul>
+<li><code>tinyplot_add()</code> now evaluates the additional call in the environment from which <code>tinyplot_add()</code> is called so that it also works in non-base environments such as in function definitions. Additionally, the call matching is now more precise, matching only <code>tinyplot()</code> or <code>plt()</code> or their fully-qualified counterparts (with <code>tinyplot::</code> prefix). Finally, the internals where these calls are stored are streamlined, avoiding modifying the user-visible <code>options()</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/460">#460</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+</ul>
+</section>
 <section id="internals" class="level3">
 <h3 class="anchored" data-anchor-id="internals">Internals</h3>
 <ul>
@@ -289,8 +296,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Add <code>xlevels</code> (in addition to <code>ylevels</code>) in <code>type_spineplot()</code> for spine plots with categorical <code>x</code> variable. (<a href="https://github.com/grantmcdermott/tinyplot/issues/431">#431</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 </ul>
 </section>
-<section id="bug-fixes" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
+<section id="bug-fixes-1" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-1">Bug fixes</h3>
 <ul>
 <li>Fixed a long-standing issue whereby resizing the plot window would cause secondary plot layers, e.g.&nbsp;from <code>plt_add()</code>, to become misaligned in faceted plots (<a href="https://github.com/grantmcdermott/tinyplot/issues/313">#313</a>). This also resolves a related alignment + layering issue specific to the Positron IDE (<a href="https://github.com/posit-dev/positron/issues/7316">positron#7316</a>). As an aside, <code>tinyplot</code> should now be fully compatible with Positron. (<a href="https://github.com/grantmcdermott/tinyplot/issues/438">#438</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Fixed a bug that resulted in y-axis labels being coerced to numeric for <code>"p"</code>-alike plot types (including <code>"jitter"</code>) if <code>y</code> is a factor or character.</li>
@@ -302,8 +309,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="section-1" class="level2">
 <h2 class="anchored" data-anchor-id="section-1">0.4.1</h2>
-<section id="bug-fixes-1" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-1">Bug fixes</h3>
+<section id="bug-fixes-2" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-2">Bug fixes</h3>
 <ul>
 <li>Fix a narrow <code>tinytheme("ridge")</code> regression that was accidentally introduced in v0.4.0, which was causing a palette mismatch for gradient legends. (<a href="https://github.com/grantmcdermott/tinyplot/issues/415">#415</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
@@ -346,8 +353,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="bug-fixes-2" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-2">Bug fixes:</h3>
+<section id="bug-fixes-3" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-3">Bug fixes:</h3>
 <ul>
 <li>The <code>tinyplot(..., cex = &lt;cex&gt;)</code> argument should be respected when using <code>type = "b"</code>. Thanks to <a href="https://github.com/rjknell"><span class="citation" data-cites="rjknell">@rjknell</span></a> for report <a href="https://github.com/grantmcdermott/tinyplot/issues/307">#307</a> and <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> for the fix.</li>
 <li>The <code>tinyplot(..., lwd = &lt;lwd&gt;)</code> argument is now correctly passed down to <code>pt.lwd</code> for type <code>"p"</code>, which sets proper line weight for the border of <code>pch</code> symbols in legend. Report in <a href="https://github.com/grantmcdermott/tinyplot/issues/319">#319</a> and fix in <a href="https://github.com/grantmcdermott/tinyplot/issues/320">#320</a> by <a href="https://github.com/kscott-1"><span class="citation" data-cites="kscott-1">@kscott-1</span></a>.</li>
@@ -474,8 +481,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 </section>
-<section id="bug-fixes-3" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-3">Bug fixes</h3>
+<section id="bug-fixes-4" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-4">Bug fixes</h3>
 <ul>
 <li>Better preserve facet attributes, thus avoiding misarrangement of facet grids for density and histogram types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/209">#209</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 <li>Plots of the form <code>plt(numeric ~ character)</code> now work correctly, with the character variable automatically being coerced to a factor. (<a href="https://github.com/grantmcdermott/tinyplot/issues/219">#219</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>

@@ -695,8 +695,10 @@ tinyplot.default = function(
   # will be overwritten by some type_data() functions and ignored by others
   ribbon.alpha = sanitize_ribbon.alpha(NULL)
 
-  tmp = sanitize_axes(axes, xaxt, yaxt, frame.plot)
-  list2env(tmp, environment())
+  # axes
+  list2env(
+    sanitize_axes(axes, xaxt, yaxt, frame.plot),
+    environment())
 
   # Write plot to output file or window with fixed dimensions
   setup_device(file = file, width = width, height = height)
@@ -759,11 +761,13 @@ tinyplot.default = function(
   facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
   null_facet = is.null(facet)
 
-  tmp = sanitize_xylab(
-    x = x, xlab = xlab, x_dep = x_dep, xmin_dep = xmin_dep, xmax_dep = xmax_dep,
-    y = y, ylab = ylab, y_dep = y_dep, ymin_dep = ymin_dep, ymax_dep = ymax_dep,
-    type = type)
-  list2env(tmp, environment())
+  # xlab & ylab
+  list2env(
+    sanitize_xylab(
+      x = x, xlab = xlab, x_dep = x_dep, xmin_dep = xmin_dep, xmax_dep = xmax_dep,
+      y = y, ylab = ylab, y_dep = y_dep, ymin_dep = ymin_dep, ymax_dep = ymax_dep,
+      type = type), 
+    environment())
 
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var

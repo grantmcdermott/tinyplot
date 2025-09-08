@@ -781,7 +781,7 @@ tinyplot.default = function(
       y = x
       x = rep.int("", length(y))
       xaxt = "a"
-    } else if (!(type %in% c("histogram", "barplot", "density"))) {
+    } else if (!(type %in% c("histogram", "barplot", "density", "function"))) {
       y = x
       x = seq_along(x)
     }

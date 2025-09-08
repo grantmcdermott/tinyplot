@@ -1,4 +1,4 @@
-sanitize_xylab <- function(
+sanitize_xylab = function(
     x, xlab = NULL, x_dep = NULL, xmin_dep = NULL, xmax_dep = NULL,
     y, ylab = NULL, y_dep = NULL, ymin_dep = NULL, ymax_dep = NULL,
     type = NULL) {
@@ -49,6 +49,6 @@ sanitize_xylab <- function(
     out_ylab = NULL
   }
 
-  out <- list(xlab = out_xlab, ylab = out_ylab)
+  out = list(xlab = out_xlab, ylab = out_ylab)
   return(out)
 }

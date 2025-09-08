@@ -98,7 +98,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
           if (anyNA(xlevels) || !all(xlevels %in% levels(datapoints$x))) warning("not all 'xlevels' correspond to levels of 'x'")
           datapoints$x = factor(datapoints$x, levels = xlevels)
         }
-        if (!is.null(xaxlabels)) levels(datapoints$x) <- xaxlabels
+        if (!is.null(xaxlabels)) levels(datapoints$x) = xaxlabels
         datapoints = aggregate(datapoints[, "y", drop = FALSE], datapoints[, c("x", "by", "facet")], FUN = FUN, drop = FALSE)
         datapoints$y[is.na(datapoints$y)] = 0 #FIXME: always?#
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)

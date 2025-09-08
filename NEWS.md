@@ -8,6 +8,11 @@ where the formatting is also better._
 
 ### New features
 
+- Added support for "bubble" scatter plots, allowing for point size scaling via
+  an appropriate `cex` argument (e.g., a continuous variable from your dataset).
+  The updated `?type_point` helpfile contains several examples. Simultaneously 
+  enables dual-legend support for combined size + color mappings.
+  (#433 @grantmcdermott)
 - Improved horizontal legend spacing, as well as multicolumn legend support. A
   new example in the "Tips & tricks" vignettes demonstrates the latter.
   (#446 @grantmcdermott)
@@ -16,7 +21,7 @@ where the formatting is also better._
   `tinyplot(~ x, type = "boxplot")` essentially produce the same output as
   `boxplot(x)`. (#454 @zeileis)
 - `type_errorbar()` and `type_point_range()` get a `dodge` argument.
-  (#406 @vincentarelbundock)
+  (#461 @vincentarelbundock)
 
 ### Bug fixes
 

@@ -725,19 +725,14 @@ tinyplot.default = function(
   }
 
   # Capture deparsed expressions early, before x, y and by are evaluated
-  x_dep = if (!is.null(x)) {
-    deparse1(substitute(x))
-  } else if (type %in% c("rect", "segments")) {
-    x = NULL
-    NULL
-  }
-  y_dep = if (is.null(y)) {
-    deparse1(substitute(x))
-  } else {
-    deparse1(substitute(y))
-  }
+  x_dep = if (is.null(x)) NULL else deparse1(substitute(x))
   xmin_dep = if (is.null(xmin)) NULL else deparse1(substitute(xmin))
   xmax_dep = if (is.null(xmax)) NULL else deparse1(substitute(xmax))
+
+  y_dep = if (is.null(y)) NULL else deparse1(substitute(y))
+  ymin_dep = if (is.null(ymin)) NULL else deparse1(substitute(ymin))
+  ymax_dep = if (is.null(ymax)) NULL else deparse1(substitute(ymax))
+
   by_dep = deparse1(substitute(by))
   null_by = is.null(by)
   cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL
@@ -766,11 +761,11 @@ tinyplot.default = function(
   facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
   null_facet = is.null(facet)
 
-  xlab = sanitize_xlab(
-    xlab = xlab, type = type, y = y,
-    x_dep = x_dep, xmin_dep, xmax_dep)
-
-  # ylab = sanitize_ylab(ylab = ylab, y_dep = y_dep, type = type, y = y)
+  tmp = sanitize_xylab(
+    x = x, xlab = xlab, x_dep = x_dep, xmin_dep = xmin_dep, xmax_dep = xmax_dep,
+    y = y, ylab = ylab, y_dep = y_dep, ymin_dep = ymin_dep, ymax_dep = ymax_dep,
+    type = type)
+  list2env(tmp, environment())
 
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
@@ -781,25 +776,16 @@ tinyplot.default = function(
   if (is.null(y)) {
     ## Special catch for area and interval plots without a specified y-var
     if (type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")) {
-      ymin_dep = deparse(substitute(ymin))
-      ymax_dep = deparse(substitute(ymax))
-      y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
-    } else if (type == "density") {
-      if (is.null(ylab)) ylab = "Density"
-    } else if (type == "function") {
-      if (is.null(ylab)) ylab = "Frequency"
     } else if (type == "boxplot") {
       y = x
       x = rep.int("", length(y))
       xaxt = "a"
-    } else if (!(type %in% c("histogram", "barplot"))) {
+    } else if (!(type %in% c("histogram", "barplot", "density"))) {
       y = x
       x = seq_along(x)
     }
   }
-
-  if (is.null(ylab) && type != "histogram") ylab = y_dep
   
   # flag(s) indicating whether x/ylim was set by the user (needed later for
   # special case where facets are free but still want to set x/ylim manually)

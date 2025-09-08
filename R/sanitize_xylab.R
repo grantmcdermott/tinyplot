@@ -5,30 +5,28 @@ sanitize_xylab <- function(
   out_xlab = NULL
   out_ylab = NULL
 
+  is_boxplot = type %in% c("boxplot")
+  is_density = type %in% c("density")
+  is_frequency = type %in% c("histogram", "barplot", "function")
+  is_function = type %in% c("function")
+  is_range = type %in% c("rect", "segments", "pointrange")
+  is_ribbon = type %in% c("ribbon")
+  is_index = !is_frequency && !is_ribbon && !is_density
+
   ##### xlab
   if (!is.null(xlab)) {
     out_xlab = xlab
+  } else if (!is.null(xmin_dep) && !is.null(xmax_dep)) {
+    out_xlab = sprintf("[%s, %s]", xmin_dep, xmax_dep)
+  } else if (is_boxplot && is.null(y)) {
+    out_xlab = ""
+  } else if (is_index && is.null(y) && !is.null(x)) {
+    out_xlab = "Index"
   } else {
     out_xlab = x_dep
   }
 
-  if (is.null(out_xlab)) {
-    if (!is.null(xmin_dep) && !is.null(xmax_dep)) {
-      out_xlab = sprintf("[%s, %s]", xmin_dep, xmax_dep)
-    } else if (is.null(y)) {
-      if (identical(type, "boxplot")) {
-        out_xlab = ""
-      } else if (!type %in% c("histogram", "barplot")) {
-        out_xlab = "Index"
-      }
-    }
-  }
-
   ##### ylab
-  is_density = type %in% c("density")
-  is_frequency = type %in% c("function", "histogram", "barplot")
-  is_range = type %in% c("rect", "segments", "pointrange", "ribbon")
-  is_ribbon = type %in% c("ribbon")
   if (!is.null(ylab)) {
     out_ylab = ylab
   } else if (is_frequency && is.null(y) && !is.null(x)) {
@@ -41,12 +39,12 @@ sanitize_xylab <- function(
     } else if (!is.null(ymin_dep) && !is.null(ymax_dep)) {
       out_ylab = sprintf("[%s, %s]", ymin_dep, ymax_dep)
     }
-  } else if (is_range && !is.null(ymin_dep) && !is.null(ymax_dep)) {
+  } else if ((is_range || is_ribbon) && !is.null(ymin_dep) && !is.null(ymax_dep)) {
     out_ylab = sprintf("[%s, %s]", ymin_dep, ymax_dep)
   } else if (!is.null(y_dep)) {
     out_ylab = y_dep
-  } else if (is.null(y) && !is.null(out_xlab)) {
-    out_ylab = out_xlab
+  } else if (is.null(y) && !is.null(x_dep)) {
+    out_ylab = x_dep
   } else {
     out_ylab = NULL
   }

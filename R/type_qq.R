@@ -38,10 +38,10 @@ type_qq = function(distribution = qnorm) {
       )
 
       if (!is.null(ilty)) {
-        iy <- quantile(iy, c(0.25, 0.75))
-        ix <- quantile(ix, c(0.25, 0.75))
-        slope <- diff(iy) / diff(ix)
-        intercept <- iy[1] - slope * ix[1]
+        iy = quantile(iy, c(0.25, 0.75))
+        ix = quantile(ix, c(0.25, 0.75))
+        slope = diff(iy) / diff(ix)
+        intercept = iy[1] - slope * ix[1]
         abline(a = intercept, b = slope, lty = ilty, col = icol, lwd = ilwd)
       }
     }

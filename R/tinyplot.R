@@ -695,28 +695,10 @@ tinyplot.default = function(
   # will be overwritten by some type_data() functions and ignored by others
   ribbon.alpha = sanitize_ribbon.alpha(NULL)
 
-  ## handle defaults of axes, xaxt, yaxt, frame.plot
-  ## - convert axes to character if necessary
-  ## - set defaults of xaxt/yaxt (if these are NULL) based on axes
-  ## - set logical axes based on xaxt/yaxt
-  ## - set frame.plot default based on xaxt/yaxt
-  if (isFALSE(axes)) {
-    axes = xaxt = yaxt = "none"
-  } else if (isTRUE(axes)) {
-    axes = "standard"
-    if (is.null(xaxt)) xaxt = get_tpar("xaxt", default = "standard")
-    if (is.null(yaxt)) yaxt = get_tpar("yaxt", default = "standard")
-  } else {
-    xaxt = yaxt = axes
-  }
-  axis_types = c("standard", "none", "labels", "ticks", "axis")
-  axes = match.arg(axes, axis_types)
-  xaxt = match.arg(xaxt, axis_types)
-  yaxt = match.arg(yaxt, axis_types)
-  xaxt = substr(match.arg(xaxt, axis_types), 1L, 1L)
-  yaxt = substr(match.arg(yaxt, axis_types), 1L, 1L)
-  axes = any(c(xaxt, yaxt) != "n")
-  if (is.null(frame.plot) || !is.logical(frame.plot)) frame.plot = all(c(xaxt, yaxt) %in% c("s", "a"))
+  # axes
+  list2env(
+    sanitize_axes(axes, xaxt, yaxt, frame.plot),
+    environment())
 
   # Write plot to output file or window with fixed dimensions
   setup_device(file = file, width = width, height = height)
@@ -743,17 +725,14 @@ tinyplot.default = function(
   }
 
   # Capture deparsed expressions early, before x, y and by are evaluated
-  x_dep = if (!is.null(x)) {
-    deparse1(substitute(x))
-  } else if (type %in% c("rect", "segments")) {
-    x = NULL
-    NULL
-  }
-  y_dep = if (is.null(y)) {
-    deparse1(substitute(x))
-  } else {
-    deparse1(substitute(y))
-  }
+  x_dep = if (is.null(x)) NULL else deparse1(substitute(x))
+  xmin_dep = if (is.null(xmin)) NULL else deparse1(substitute(xmin))
+  xmax_dep = if (is.null(xmax)) NULL else deparse1(substitute(xmax))
+
+  y_dep = if (is.null(y)) NULL else deparse1(substitute(y))
+  ymin_dep = if (is.null(ymin)) NULL else deparse1(substitute(ymin))
+  ymax_dep = if (is.null(ymax)) NULL else deparse1(substitute(ymax))
+
   by_dep = deparse1(substitute(by))
   null_by = is.null(by)
   cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL
@@ -782,40 +761,33 @@ tinyplot.default = function(
   facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
   null_facet = is.null(facet)
 
+  # xlab & ylab
+  list2env(
+    sanitize_xylab(
+      x = x, xlab = xlab, x_dep = x_dep, xmin_dep = xmin_dep, xmax_dep = xmax_dep,
+      y = y, ylab = ylab, y_dep = y_dep, ymin_dep = ymin_dep, ymax_dep = ymax_dep,
+      type = type), 
+    environment())
+
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
     if (type %in% c("rect", "segments")) {
-      xmin_dep = deparse(substitute(xmin))
-      xmax_dep = deparse(substitute(xmax))
-      x_dep = paste0("[", xmin_dep, ", ", xmax_dep, "]")
       x = rep(NA, length(x))
     }
   }
   if (is.null(y)) {
     ## Special catch for area and interval plots without a specified y-var
     if (type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")) {
-      ymin_dep = deparse(substitute(ymin))
-      ymax_dep = deparse(substitute(ymax))
-      y_dep = paste0("[", ymin_dep, ", ", ymax_dep, "]")
       y = rep(NA, length(x))
-    } else if (type == "density") {
-      if (is.null(ylab)) ylab = "Density"
-    } else if (type == "function") {
-      if (is.null(ylab)) ylab = "Frequency"
     } else if (type == "boxplot") {
       y = x
       x = rep.int("", length(y))
-      xlab = ""
       xaxt = "a"
-    } else if (!(type %in% c("histogram", "barplot"))) {
+    } else if (!(type %in% c("histogram", "barplot", "density", "function"))) {
       y = x
       x = seq_along(x)
-      if (is.null(xlab)) xlab = "Index"
     }
   }
-
-  if (is.null(xlab)) xlab = x_dep
-  if (is.null(ylab) && type != "histogram") ylab = y_dep
   
   # flag(s) indicating whether x/ylim was set by the user (needed later for
   # special case where facets are free but still want to set x/ylim manually)

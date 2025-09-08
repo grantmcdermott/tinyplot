@@ -27,13 +27,20 @@ sanitize_xylab <- function(
   ##### ylab
   is_density = type %in% c("density")
   is_frequency = type %in% c("function", "histogram", "barplot")
-  is_range = type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")
+  is_range = type %in% c("rect", "segments", "pointrange", "ribbon")
+  is_ribbon = type %in% c("ribbon")
   if (!is.null(ylab)) {
     out_ylab = ylab
   } else if (is_frequency && is.null(y) && !is.null(x)) {
     out_ylab = "Frequency"
   } else if (is_density && is.null(y) && !is.null(x)) {
     out_ylab = "Density"
+  } else if (is_ribbon) {
+    if (!is.null(y_dep)) {
+      out_ylab = y_dep
+    } else if (!is.null(ymin_dep) && !is.null(ymax_dep)) {
+      out_ylab = sprintf("[%s, %s]", ymin_dep, ymax_dep)
+    }
   } else if (is_range && !is.null(ymin_dep) && !is.null(ymax_dep)) {
     out_ylab = sprintf("[%s, %s]", ymin_dep, ymax_dep)
   } else if (!is.null(y_dep)) {

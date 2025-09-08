@@ -130,6 +130,7 @@ draw_legend = function(
     #
     ## legend args ----
 
+    outer_side = outer_end = outer_right = outer_bottom = FALSE
     list2env(
       compute_legend_args(
         legend = legend,
@@ -150,13 +151,16 @@ draw_legend = function(
   
     #
     ## legend placement ----
-    topmar_epsilon = 0.1
     dynmar = isTRUE(.tpar[["dynmar"]])
+
+    # flag for (extra) user inset (also used for dual legends)
+    user_inset = !is.null(legend_args[["inset"]])
 
     ## restore margin defaults
     ## (in case the plot region/margins were affected by the preceding tinyplot call)
+    topmar_epsilon = 0.1
     restore_margin_outer()
-    if (!dynmar) restore_margin_inner(ooma)
+    if (!dynmar) restore_margin_inner(ooma, topmar_epsilon = topmar_epsilon)
 
     ooma = par("oma")
     omar = par("mar")

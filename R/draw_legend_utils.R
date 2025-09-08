@@ -3,7 +3,7 @@ restore_margin_outer = function() {
 }
 
 
-restore_margin_inner = function(ooma) {
+restore_margin_inner = function(ooma, topmar_epsilon = 0.1) {
   ooma = par("oma")
   omar = par("mar")
 

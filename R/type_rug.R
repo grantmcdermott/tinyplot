@@ -42,7 +42,7 @@ type_rug = function(ticksize = 0.03, side = 1, quiet = getOption("warn") < 0, ji
   }
   draw_rug = function(.ticksize = ticksize, .side = side, .quiet = quiet, .jitter = jitter, .amount = amount) {
       fun = function(ix, iy, icol, ilwd, ...) {
-        lc = getOption("tinyplot_last_call", default = NULL)
+        lc = get_environment_variable(".last_call")
         swapy = !is.null(lc$type) && lc$type %in% c("density", "hist", "histogram")
         rugx = if (swapy) iy else if (side %in% c(1, 3)) ix else iy
         if (isTRUE(jitter)) rugx = jitter(rugx, amount = .amount)

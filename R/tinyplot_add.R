@@ -41,10 +41,7 @@
 #'
 #' @export
 tinyplot_add = function(...) {
-  cal = getOption("tinyplot_last_call", default = NULL)
-
-  ## TODO: remove the global option above and move to this when density is refactored
-  # cal = get(".last_call", envir = get(".tinyplot_env", envir = parent.env(environment())))
+  cal = get_environment_variable(".last_call")
 
   if (is.null(cal)) {
     stop("No previous tinyplot call found.")
@@ -63,7 +60,7 @@ tinyplot_add = function(...) {
   }
 
   cal[["add"]] = TRUE
-  eval(cal)
+  eval(cal, envir = parent.frame())
 }
 
 

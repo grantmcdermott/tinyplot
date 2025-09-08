@@ -5,12 +5,24 @@
 \alias{type_pointrange}
 \title{Error bar and pointrange plot types}
 \usage{
-type_errorbar(length = 0.05)
+type_errorbar(length = 0.05, dodge = 0, fixed.pos = FALSE)
 
-type_pointrange()
+type_pointrange(dodge = 0, fixed.pos = FALSE)
 }
 \arguments{
 \item{length}{length of the edges of the arrow head (in inches).}
+
+\item{dodge}{Numeric value (>= 0) for dodging of overlapping \code{by} groups.
+Dodging is scaled relative to the x-axis tick locations (i.e., unique
+levels of \code{x}). For example, \code{dodge = 0.5} would place the outermost dodged
+groups exactly midway the between axis ticks. Default value is 0 (no
+dodging).}
+
+\item{fixed.pos}{Logical indicating whether dodged groups should retain a
+fixed relative position based on their group value. Relevant for \code{x}
+categories that only have a subset of the total number of groups. Defaults
+to \code{FALSE}, in which case dodging is based on the number of unique groups
+present in that \code{x} category alone. See Examples.}
 }
 \description{
 Type function(s) for producing error bar and pointrange plots.
@@ -21,13 +33,46 @@ coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
 colnames(coefs) = c("term", "est", "lwr", "upr")
 
 op = tpar(pch = 19)
- 
+
 # "errorbar" and "pointrange" type convenience strings
 tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "errorbar")
 tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "pointrange")
 
 # Use `type_errorbar()` to pass extra arguments for customization
-tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = type_errorbar(length = 0.2))
+tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs,
+         type = type_errorbar(length = 0.2))
+
+# display three models side-by-side with dodging
+
+models = list(
+    "Model A" = lm(mpg ~ wt + cyl, data = mtcars),
+    "Model B" = lm(mpg ~ wt + hp + cyl, data = mtcars),
+    "Model C" = lm(mpg ~ wt, data = mtcars)
+)
+
+results = lapply(names(models), function(m) {
+    data.frame(
+        model = m,
+        term = names(coef(models[[m]])),
+        estimate = coef(models[[m]]),
+        setNames(data.frame(confint(models[[m]])), c("conf.low", "conf.high"))
+    )
+})
+results = do.call(rbind, results)
+
+tinyplot(estimate ~ term | model,
+         ymin = conf.low, ymax = conf.high,
+         data = results,
+         type = type_pointrange(dodge = 0.2))
+
+# Note that the default dodged position is based solely on the number of
+# groups (here: models) available to each coefficient term. To fix the
+# position consistently across all terms, use `fixed.pos = TRUE`.
+
+tinyplot(estimate ~ term | model,
+         ymin = conf.low, ymax = conf.high,
+         data = results,
+         type = type_pointrange(dodge = 0.2, fixed.pos = TRUE))
 
 tpar(op)
 

@@ -33,3 +33,27 @@ fun = function() {
       )
 }
 expect_snapshot_plot(fun, label = "pointrange_errorbar")
+
+
+# Issue #406: dodge pointrage and errorbar
+models = list(
+    "Model A" = lm(mpg ~ wt + cyl, data = mtcars),
+    "Model B" = lm(mpg ~ wt + hp + cyl, data = mtcars),
+    "Model C" = lm(mpg ~ wt, data = mtcars)
+)
+results = lapply(names(models), function(m) {
+    data.frame(
+        model = m,
+        term = names(coef(models[[m]])),
+        estimate = coef(models[[m]]),
+        setNames(data.frame(confint(models[[m]])), c("conf.low", "conf.high"))
+    )
+})
+results = do.call(rbind, results)
+fun = function() {
+  tinyplot(estimate ~ term | model,
+    ymin = conf.low, ymax = conf.high,
+    flip = TRUE, data = results,
+    type = type_pointrange(dodge = 0.2))
+}
+expect_snapshot_plot(fun, label = "pointrange_dodge_01")

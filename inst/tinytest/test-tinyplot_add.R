@@ -53,3 +53,23 @@ f = function() {
   tinyplot_add(type = "rug")
 }
 expect_snapshot_plot(f, label = "tinyplot_add_rug_density")
+
+
+# type = "rug" (adding to "density" should default to x variable)
+f = function() {
+  tinyplot( ~ eruptions, data = faithful, type = "density")
+  tinyplot_add(type = "rug")
+}
+expect_snapshot_plot(f, label = "tinyplot_add_rug_density")
+
+
+# use tinyplot_add() inside a custom function with local variables
+tinyplot_lollipop <- function(x, y) {
+  tinyplot(x, y, type = "h")
+  tinyplot_add(type = "p", pch = 19)
+  tinyplot_add(type = "hline")
+}
+f = function() {
+  tinyplot_lollipop(1:5, sin(1:5))
+}
+expect_snapshot_plot(f, label = "tinyplot_lollipop")

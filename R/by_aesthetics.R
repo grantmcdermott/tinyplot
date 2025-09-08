@@ -395,10 +395,6 @@ by_lwd = function(ngrps, type, lwd = NULL) {
 
 
 by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
-  # browser()
-  # cex_base = par("cex")
-  # lwd_floor = lwd_base / min(5, max((ngrps - 1), 1))
-  # lwd_ceiling = lwd_base * min(5, ngrps)
 
   no_cex = FALSE
   # special "by" convenience keyword
@@ -410,7 +406,7 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
     # cex = NULL
     # can't leave cex as NULL otherwise JIT cex_fct_adj adjustment in
     # draw_legend() won't work later 
-    cex = 1#par("cex")
+    cex = 1
     cex = rep(cex, ngrps)
   }
 
@@ -418,9 +414,6 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
   if (bubble) no_cex = TRUE
 
   if (!no_cex) {
-    # if (bubble) {
-    #   cex = rescale_num(cex, to = c(1, 2.5))
-    # } else if (!is.atomic(cex) || !is.vector(cex) || !is.numeric(cex) || (length(cex) != 1 && length(cex) != ngrps)) {
     if (!is.atomic(cex) || !is.vector(cex) || !is.numeric(cex) || (length(cex) != 1 && length(cex) != ngrps)) {
       stop(sprintf("`cex` must either be `NULL`, or a numeric vector of length 1 or %s (no. of groups).", ngrps), call. = FALSE)
     }

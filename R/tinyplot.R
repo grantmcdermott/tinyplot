@@ -864,10 +864,10 @@ tinyplot.default = function(
         c("xaxs", "yaxs"),
         c("xaxb", "yaxb"),
         c("xaxl", "yaxl"))
-      if (!is.null(log)) log <- chartr("xy", "yx", log)
-      datapoints <- swap_columns(datapoints, "x", "y")
-      datapoints <- swap_columns(datapoints, "xmin", "ymin")
-      datapoints <- swap_columns(datapoints, "xmax", "ymax")
+      if (!is.null(log)) log = chartr("xy", "yx", log)
+      datapoints = swap_columns(datapoints, "x", "y")
+      datapoints = swap_columns(datapoints, "xmin", "ymin")
+      datapoints = swap_columns(datapoints, "xmax", "ymax")
     }
   }
   

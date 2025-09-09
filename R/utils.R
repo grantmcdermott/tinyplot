@@ -50,19 +50,19 @@ bw_fun = function(kernel, x) {
 }
 
 
-swap_variables <- function(env, ...) {
-  pairs <- list(...)
+swap_variables = function(env, ...) {
+  pairs = list(...)
   for (p in pairs) {
-    tmp <- get(p[1], envir = env)
+    tmp = get(p[1], envir = env)
     assign(p[1], get(p[2], envir = env), envir = env)
     assign(p[2], tmp, envir = env)
   }
 }
 
-swap_columns <- function(dp, a, b) {
-  va <- dp[[a]]
-  vb <- dp[[b]]
-  dp[[a]] <- if (!is.null(vb)) vb else NULL
-  dp[[b]] <- if (!is.null(va)) va else NULL
+swap_columns = function(dp, a, b) {
+  va = dp[[a]]
+  vb = dp[[b]]
+  dp[[a]] = if (!is.null(vb)) vb else NULL
+  dp[[b]] = if (!is.null(va)) va else NULL
   dp
 }

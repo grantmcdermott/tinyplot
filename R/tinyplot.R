@@ -757,10 +757,7 @@ tinyplot.default = function(
 
   # axes
   tmp = sanitize_axes(axes, xaxt, yaxt, frame.plot)
-  axes = tmp$axes
-  xaxt = tmp$xaxt
-  yaxt = tmp$yaxt
-  frame.plot = tmp$frame.plot
+  list2env(tmp[c("axes", "xaxt", "yaxt", "frame.plot")], environment())
   rm("tmp")
 
   # xlab & ylab
@@ -817,7 +814,9 @@ tinyplot.default = function(
     }
   }
   
-  datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
+  datapoints = list(
+    x = x, xmin = xmin, xmax = xmax, 
+    y = y, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)
   if (nrow(datapoints) > 0) {
@@ -826,8 +825,12 @@ tinyplot.default = function(
     datapoints[["by"]] = if (!null_by) by else ""
   }
 
-  ## initialize empty list with information that type_data
-  ## can overwrite in order to pass on to type_draw
+
+  ########################################
+  # transform datapoints using type_data()
+  ########################################
+
+  # type_info: initialize channel from type_data() to type_draw()
   type_info = list()
 
   if (!is.null(type_data)) {
@@ -865,8 +868,8 @@ tinyplot.default = function(
   }
 
 
-  # swap x and y values if flip is TRUE
-  # extra catch for boxplots
+
+  # flip -> swap x and y, except for boxplots
   assert_flag(flip)
   if (isTRUE(flip)) {
     if (type == "boxplot") {
@@ -890,6 +893,27 @@ tinyplot.default = function(
   }
   
 
+
+
+  #############
+  # bubble plot
+  #############
+
+  # catch some simple aesthetics for bubble plots before the standard "by"
+  # grouping sanitizers (actually: will only be used for dual_legend plots but
+  # easiest to assign/determine now)
+  if (bubble) {
+    datapoints[["cex"]] = cex
+    bubble_pch = if (!is.null(pch) && length(pch)==1) pch else par("pch")
+    bubble_alpha = if (!is.null(alpha)) alpha else 1
+    bubble_bg_alpha = if (!is.null(bg) && length(bg)==1 && is.numeric(bg) && bg > 0 && bg <=1) bg else 1
+  }
+
+
+  ########################
+  # axis breaks and limits
+  ########################
+
   # For cases where x/yaxb is provided and corresponding x/ylabs is not null...
   # We can subset these here to provide breaks
   if (!is.null(xaxb) && !is.null(xlabs)) {
@@ -901,7 +925,7 @@ tinyplot.default = function(
     yaxb = NULL # don't need this any more
   }
   
-
+  # after yaxb
   fargs = lim_args(
     datapoints = datapoints,
     xlim = xlim, ylim = ylim,
@@ -909,10 +933,14 @@ tinyplot.default = function(
     xlim_user = xlim_user, ylim_user = ylim_user,
     type = type
   )
+  fargs = fargs[c("xlim", "ylim")]
   list2env(fargs, environment())
 
 
-  # split data
+  ################################################
+  # split and process data and aesthetics by group
+  ################################################
+
   by_ordered = FALSE
   by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
@@ -922,25 +950,6 @@ tinyplot.default = function(
     by_ordered = is.ordered(by)
   }
 
-  if (length(unique(datapoints$facet)) == 1) {
-    datapoints[["facet"]] = NULL
-  }
-  if (!is.null(datapoints$facet)) {
-    split_data = split(datapoints, datapoints$facet)
-    split_data = lapply(split_data, as.list)
-  } else {
-    split_data = list(as.list(datapoints))
-  }
-
-
-  # catch some simple aesthetics for bubble plots before the standard "by"
-  # grouping sanitizers (actually: will only be used for dual_legend plots but
-  # easiest to assign/determine now)
-  if (bubble) {
-    bubble_pch = if (!is.null(pch) && length(pch)==1) pch else par("pch")
-    bubble_alpha = if (!is.null(alpha)) alpha else 1
-    bubble_bg_alpha = if (!is.null(bg) && length(bg)==1 && is.numeric(bg) && bg > 0 && bg <=1) bg else 1
-  }
   
   # aesthetics by group: col, bg, etc.
   ngrps = if (null_by) 1L else if (is.factor(by)) nlevels(by) else if (by_continuous) 100L else length(unique(by))
@@ -948,7 +957,7 @@ tinyplot.default = function(
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
   cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
-  if (bubble) split_data[[1]][["cex"]] = cex ## check (maybe ngrps!=length(cex)?)
+
   col = by_col(
     ngrps = ngrps, col = col, palette = palette,
     gradient = by_continuous, ordered = by_ordered, alpha = alpha)
@@ -979,13 +988,19 @@ tinyplot.default = function(
     lgnd_labs[pidx] = pbyvar
   }
   
+
   # Determine the number and arrangement of facets.
   # Note: We're do this up front, so we can make some adjustments to legend cex
   #   next (if there are facets). But the actual drawing of the facets will only
   #   come later.
+  if (length(unique(datapoints$facet)) == 1) {
+    datapoints[["facet"]] = NULL
+  }
   attributes(datapoints$facet) = facet_attr ## TODO: better solution for restoring facet attributes?
   fargs = facet_layout(facet = datapoints$facet, facet.args = facet.args, add = add)
+  fargs = fargs[c("facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")]
   list2env(fargs, environment())
+
 
   #
   ## Global plot elements (legend and titles)
@@ -1308,6 +1323,12 @@ tinyplot.default = function(
   # We'll do this via a nested loops:
   #  1) Outer loop over facets
   #  2) Inner loop over groups
+  if (!is.null(datapoints$facet)) {
+    split_data = split(datapoints, datapoints$facet)
+    split_data = lapply(split_data, as.list)
+  } else {
+    split_data = list(as.list(datapoints))
+  }
 
   ## Outer loop over the facets
   for (i in seq_along(split_data)) {

@@ -636,12 +636,15 @@ tinyplot.default = function(
     asp = NA,
     ...) {
 
+
+  ###########################
+  # save parameters and calls 
+  ###########################
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
-
-  assert_logical(add)
   
   # save for tinyplot_add()
+  assert_logical(add)
   if (!add) {
     calls = sys.calls()
     tinyplot_calls = "(^tinyplot$)|(^tinyplot::tinyplot$)|(^plt$)|(^tinyplot::plt)|(^tinyplot:::)"
@@ -650,70 +653,6 @@ tinyplot.default = function(
       set_environment_variable(.last_call = calls[[idx[1]]])
     }
   }
-
-  dots = list(...)
-
-  if (add) legend = FALSE
-  draw = substitute(draw)
-
-
-  # sanitize arguments
-
-  # type factories vs. strings
-  type = sanitize_type(type, x, y, dots)
-  if ("dots" %in% names(type)) dots = type$dots
-  
-  # retrieve type-specific data and drawing functions
-  type_data = type$data
-  type_draw = type$draw
-  type = type$name
-  
-  # area flag (mostly for legend)
-  was_area_type = identical(type, "area")
-  # check flip flag is logical 
-  assert_flag(flip)
-
-  # legend prep
-  if (!exists("legend_args")) {
-    legend_args = dots[["legend_args"]]
-    dots[["legend_args"]] = NULL
-  }
-  if (is.null(legend_args)) legend_args = list(x = NULL)
-  legend = substitute(legend)
-
-  palette = substitute(palette)
-
-  # themes
-  if (is.null(palette)) palette = get_tpar("palette", default = NULL)
-  if (is.null(pch)) pch = get_tpar("pch", default = NULL)
-
-  xlabs = ylabs = NULL
-
-  # type_ridge()
-  ygroup = NULL
-
-  # will be overwritten by some type_data() functions and ignored by others
-  ribbon.alpha = sanitize_ribbon.alpha(NULL)
-
-  # axes
-  list2env(
-    sanitize_axes(axes, xaxt, yaxt, frame.plot),
-    environment())
-
-  # Write plot to output file or window with fixed dimensions
-  setup_device(file = file, width = width, height = height)
-  if (!is.null(file)) on.exit(dev.off(), add = TRUE)
-
-  # Save current graphical parameters
-  opar = par(no.readonly = TRUE)
-  if (restore.par || !is.null(facet)) {
-    if (!is.null(file) || !is.null(width) || !is.null(height)) {
-      opar$new = FALSE # catch for some interfaces
-    }
-    on.exit(par(opar), add = TRUE)
-  }
-  # set_orig_par(opar)
-  set_saved_par(when = "before", opar)
 
   # catch for adding to existing facet plot
   if (!is.null(facet) && add) {
@@ -724,29 +663,116 @@ tinyplot.default = function(
     )
   }
 
-  # Capture deparsed expressions early, before x, y and by are evaluated
+  # Save current graphical parameters
+  opar = par(no.readonly = TRUE)
+  if (restore.par || !is.null(facet)) {
+    if (!is.null(file) || !is.null(width) || !is.null(height)) {
+      opar$new = FALSE # catch for some interfaces
+    }
+    on.exit(par(opar), add = TRUE)
+  }
+  set_saved_par(when = "before", opar)
+
+
+  ###################
+  # devices and files
+  ###################
+  # Write plot to output file or window with fixed dimensions
+  setup_device(file = file, width = width, height = height)
+  if (!is.null(file)) on.exit(dev.off(), add = TRUE)
+
+
+  #################################
+  # deparsed expressions for labels
+  #################################
+
   x_dep = if (is.null(x)) NULL else deparse1(substitute(x))
   xmin_dep = if (is.null(xmin)) NULL else deparse1(substitute(xmin))
   xmax_dep = if (is.null(xmax)) NULL else deparse1(substitute(xmax))
-
   y_dep = if (is.null(y)) NULL else deparse1(substitute(y))
   ymin_dep = if (is.null(ymin)) NULL else deparse1(substitute(ymin))
   ymax_dep = if (is.null(ymax)) NULL else deparse1(substitute(ymax))
-
   by_dep = deparse1(substitute(by))
-  null_by = is.null(by)
   cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL
-
-  ## coerce character variables to factors
-  if (!is.null(x) && is.character(x)) x = factor(x)
-  if (!is.null(y) && is.character(y)) y = factor(y)
-  if (!null_by && is.character(by)) by = factor(by)
-
-  # flag if x==by (currently only used for "boxplot", "spineplot" and "ridges" types)
-  x_by = identical(x, by)
-
   facet_dep = deparse1(substitute(facet))
-  # flag if facet==by
+
+
+  ####################
+  # sanitize arguments
+  ####################
+
+  # init variables
+  xlabs = ylabs = NULL
+  ygroup = NULL # type_ridge()
+  bubble = FALSE
+
+  # ellipsis
+  dots = list(...)
+
+  # draw
+  draw = substitute(draw)
+
+  # type
+  type = sanitize_type(type, x, y, dots)
+  if ("dots" %in% names(type)) dots = type$dots
+  type_data = type$data
+  type_draw = type$draw
+  type = type$name
+  
+  # area flag (mostly for legend)
+  was_area_type = identical(type, "area")
+
+  # legend
+  if (add) legend = FALSE
+  if (!exists("legend_args")) {
+    legend_args = dots[["legend_args"]]
+    dots[["legend_args"]] = NULL
+  }
+  if (is.null(legend_args)) legend_args = list(x = NULL)
+  legend = substitute(legend)
+
+  # palette
+  palette = substitute(palette)
+
+  # themes
+  if (is.null(palette)) palette = get_tpar("palette", default = NULL)
+  if (is.null(pch)) pch = get_tpar("pch", default = NULL)
+
+  # alias: bg = fill
+  if (is.null(bg) && !is.null(fill)) bg = fill
+
+  # ribbon.alpha is overwritten by some type_data() functions
+  ribbon.alpha = sanitize_ribbon.alpha(NULL)
+
+  # by
+  null_by = is.null(by)
+  if (!null_by && is.character(by)) by = factor(by)
+  x_by = identical(x, by) # "boxplot", "spineplot" and "ridge"
+
+  # plot limits
+  # flag(s) indicating whether x/ylim was set by the user (needed later for
+  # special case where facets are free but still want to set x/ylim manually)
+  xlim_user = !is.null(xlim)
+  ylim_user = !is.null(ylim)
+
+  # axes
+  tmp = sanitize_axes(axes, xaxt, yaxt, frame.plot)
+  axes = tmp$axes
+  xaxt = tmp$xaxt
+  yaxt = tmp$yaxt
+  frame.plot = tmp$frame.plot
+  rm("tmp")
+
+  # xlab & ylab
+  tmp = sanitize_xylab(
+      x = x, xlab = xlab, x_dep = x_dep, xmin_dep = xmin_dep, xmax_dep = xmax_dep,
+      y = y, ylab = ylab, y_dep = y_dep, ymin_dep = ymin_dep, ymax_dep = ymax_dep,
+      type = type)
+  xlab = tmp$xlab
+  ylab = tmp$ylab
+  rm("tmp")
+
+  # facet
   facet_by = FALSE
   if (!is.null(facet) && length(facet) == 1 && facet == "by") {
     by = as.factor(by) ## if by==facet, then both need to be factors
@@ -758,16 +784,17 @@ tinyplot.default = function(
       facet.args[["nrow"]] = attr(facet, "facet_nrow")
     }
   }
-  facet_attr = attributes(facet) ## TODO: better solution for restoring facet attributes?
+  facet_attr = attributes(facet) # TODO: better way to restore facet attributes?
   null_facet = is.null(facet)
 
-  # xlab & ylab
-  list2env(
-    sanitize_xylab(
-      x = x, xlab = xlab, x_dep = x_dep, xmin_dep = xmin_dep, xmax_dep = xmax_dep,
-      y = y, ylab = ylab, y_dep = y_dep, ymin_dep = ymin_dep, ymax_dep = ymax_dep,
-      type = type), 
-    environment())
+
+  ########################
+  # datapoints: x, y, etc.
+  ########################
+
+  ## coerce character variables to factors
+  if (!is.null(x) && is.character(x)) x = factor(x)
+  if (!is.null(y) && is.character(y)) y = factor(y)
 
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var
@@ -775,6 +802,7 @@ tinyplot.default = function(
       x = rep(NA, length(x))
     }
   }
+
   if (is.null(y)) {
     ## Special catch for area and interval plots without a specified y-var
     if (type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")) {
@@ -789,16 +817,6 @@ tinyplot.default = function(
     }
   }
   
-  # flag(s) indicating whether x/ylim was set by the user (needed later for
-  # special case where facets are free but still want to set x/ylim manually)
-  xlim_user = !is.null(xlim)
-  ylim_user = !is.null(ylim)
-
-  # alias
-  if (is.null(bg) && !is.null(fill)) bg = fill
-
-  bubble = FALSE
-
   datapoints = list(x = x, y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, ygroup = ygroup)
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)
@@ -883,7 +901,7 @@ tinyplot.default = function(
     yaxb = NULL # don't need this any more
   }
   
-  # plot limits
+
   fargs = lim_args(
     datapoints = datapoints,
     xlim = xlim, ylim = ylim,

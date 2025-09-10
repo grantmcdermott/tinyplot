@@ -10,7 +10,7 @@
 #' @param ... Additional arguments are passed to the `lines()` function,
 #' ex: `type="p"`, `col="pink"`.
 #' @importFrom stats dnorm
-#' 
+#'
 #' @examples
 #' # Plot the normal density (default function)
 #' tinyplot(x = -4:4, type = "function")
@@ -26,7 +26,7 @@
 #'   fun = dnorm,
 #'   col = "pink", type = "p", pch = 3
 #' ))
-#' 
+#'
 #' # Custom function example
 #' ## (Here using `function(x)`, but you could also use the shorter `\(x)`
 #' ## anonymous function syntax introduced in R 4.1.0)
@@ -37,7 +37,9 @@ type_function = function(fun = dnorm, args = list(), n = 101, ...) {
   assert_function(fun)
   lines_args = list(...)
   data_function = function(args, fun) {
-    funky = function(xlim, ylim, datapoints, ...) {
+    funky = function(settings, ...) {
+      list2env(settings[c("xlim", "ylim", "datapoints")], environment())
+
       if (nrow(datapoints) == 0 || !"x" %in% names(datapoints)) {
         stop("Need to provide x values to plot the function.", call. = FALSE)
       }

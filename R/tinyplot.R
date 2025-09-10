@@ -705,9 +705,11 @@ tinyplot.default = function(
     y = y, ymax = ymax, ymin = ymin, ylab = ylab, ylabs = NULL,
     # axes
     axes = axes,
-    xaxt = xaxt,
-    yaxt = yaxt,
+    xaxt = xaxt, xaxb = xaxb, xaxl = xaxl,
+    yaxt = yaxt, yaxb = yaxb, yaxl = yaxl,
     frame.plot = frame.plot,
+    xlim = xlim,
+    ylim = ylim,
     # flags to check user input that is useful later on
     null_by = is.null(by),
     null_xlim = is.null(xlim),
@@ -716,6 +718,7 @@ tinyplot.default = function(
     # unevaluated expressions with side effects
     draw = substitute(draw),
     facet = facet,
+    facet.args = facet.args,
     palette = substitute(palette),
     legend = if (add) FALSE else substitute(legend),
     # aesthetics
@@ -835,7 +838,6 @@ tinyplot.default = function(
       list2env(do.call(type_data, fargs), environment())
     }
   }
-
 
 
   # flip -> swap x and y, except for boxplots (which has its own bespoke flip logic)

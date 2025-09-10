@@ -683,10 +683,8 @@ tinyplot.default = function(
   settings = list(
     # save call to check user input later
     call = match.call(),
-    # save to file
-    file = file,
-    width = width,
-    height = height,
+    # save to file & device dimensions
+    file = file, width = width, height = height,
     # deparsed input for use in labels
     by_dep = deparse1(substitute(by)),
     cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL,
@@ -698,24 +696,13 @@ tinyplot.default = function(
     ymax_dep = if (is.null(ymax)) NULL else deparse1(substitute(ymax)),
     ymin_dep = if (is.null(ymin)) NULL else deparse1(substitute(ymin)),
     # types
-    type = type,
-    type_data = NULL,
-    type_draw = NULL,
-    type_name = NULL,
-    # type-specific
+    type = type, type_data = NULL, type_draw = NULL, type_name = NULL,
+    # type-specific settings
     bubble = FALSE,
     ygroup = NULL, # for type_ridge()
     # data points and labels
-    x = x, 
-    xmax = xmax,
-    xmin = xmin,
-    xlab = xlab,
-    xlabs = NULL,
-    y = y, 
-    ymax = ymax,
-    ymin = ymin,
-    ylab = ylab,
-    ylabs = NULL,
+    x = x, xmax = xmax, xmin = xmin, xlab = xlab, xlabs = NULL,
+    y = y, ymax = ymax, ymin = ymin, ylab = ylab, ylabs = NULL,
     # axes
     axes = axes,
     xaxt = xaxt,
@@ -723,11 +710,17 @@ tinyplot.default = function(
     frame.plot = frame.plot,
     # flags to check user input that is useful later on
     null_by = is.null(by),
+    null_xlim = is.null(xlim),
+    null_ylim = is.null(ylim),
     was_area_type = identical(type, "area"), # mostly for legend
     # unevaluated expressions with side effects
     draw = substitute(draw),
     palette = substitute(palette),
     legend = if (add) FALSE else substitute(legend),
+    # aesthetics
+    lty = lty, lwd = lwd, col = col, bg = bg, 
+    fill = fill, alpha = alpha, cex = cex,
+    pch = if (is.null(pch)) get_tpar("pch", default = NULL) else pch, 
     # ribbon.alpha is overwritten by some type_data() functions
     # sanitize_ribbon.alpha: returns default alpha transparency value for ribbon-type plots
     ribbon.alpha = sanitize_ribbon.alpha(NULL),
@@ -744,15 +737,10 @@ tinyplot.default = function(
   setup_device(settings)
   if (!is.null(settings$file)) on.exit(dev.off(), add = TRUE)
 
+
   #
   ## sanitize arguments -----
   #
-
-  # sanitize_type: validates/converts type argument and returns list with name, data, and draw components
-  settings = sanitize_type(settings)
-  
-  # alias: bg = fill
-  if (is.null(bg) && !is.null(fill)) settings$bg = fill
 
   # extract legend_args from dots
   if ("legend_args" %in% names(dots)) {
@@ -762,19 +750,27 @@ tinyplot.default = function(
     settings$legend_args = list(x = NULL)
   }
 
-  # axes
-  # sanitize_axes: standardizes axis arguments and returns consistent axes, xaxt, yaxt, frame.plot values
+  # alias: bg = fill
+  if (is.null(bg) && !is.null(fill)) settings$bg = fill
+
+  # validate types and returns list with name, data, and draw components
+  settings = sanitize_type(settings)
+  
+  # standardize axis arguments and returns consistent axes, xaxt, yaxt, frame.plot
   settings = sanitize_axes(settings)
 
-  # sanitize xlab & ylab
-  # generates appropriate axis labels based on input data and plot type
+  # generate appropriate axis labels based on input data and plot type
   settings = sanitize_xylab(settings)
+
+  # palette default
+  if (is.null(settings$palette)) {
+    settings$palette = get_tpar("palette", default = NULL)
+  }
+
+
 
   list2env(settings, environment())
 
-  # themes
-  if (is.null(palette)) palette = get_tpar("palette", default = NULL)
-  if (is.null(pch)) pch = get_tpar("pch", default = NULL)
 
   # by
   if (!null_by && is.character(by)) by = factor(by)
@@ -783,10 +779,6 @@ tinyplot.default = function(
   # plot limits
   # flag(s) indicating whether x/ylim was set by the user (needed later for
   # special case where facets are free but still want to set x/ylim manually)
-  xlim_user = !is.null(xlim)
-  ylim_user = !is.null(ylim)
-
-
 
   # facet
   facet_by = FALSE # flag if facet=="by" (i.e., facet matches the grouping variable)
@@ -946,7 +938,7 @@ tinyplot.default = function(
     datapoints = datapoints,
     xlim = xlim, ylim = ylim,
     xaxb = xaxb, yaxb = yaxb,
-    xlim_user = xlim_user, ylim_user = ylim_user,
+    null_xlim = null_xlim, null_ylim = null_ylim,
     type = type
   )[c("xlim", "ylim")]
   list2env(fargs, environment())
@@ -1231,8 +1223,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1255,8 +1247,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
       asp = asp, log = log,
       dots = dots,
       draw = draw,

@@ -2,17 +2,17 @@
 #'
 #' @description Type function for plotting a linear model fit.
 #' Arguments are passed to \code{\link[stats]{lm}}.
-#'  
+#'
 #' @inheritParams type_glm
 #' @importFrom stats lm predict
 #' @examples
 #' # "lm" type convenience string
 #' tinyplot(Sepal.Width ~ Petal.Width, data = iris, type = "lm")
-#' 
+#'
 #' # Grouped model fits (here: illustrating an example of Simpson's paradox)
 #' tinyplot(Sepal.Width ~ Petal.Width | Species, data = iris, type = "lm")
 #' tinyplot_add(type = "p")
-#' 
+#'
 #' # Use `type_lm()` to pass extra arguments for customization
 #' tinyplot(Sepal.Width ~ Petal.Width, data = iris, type = type_lm(level = 0.8))
 #' @export
@@ -29,10 +29,13 @@ type_lm = function(se = TRUE, level = 0.95) {
 
 
 data_lm = function(se, level, ...) {
-    fun = function(datapoints, ...) {
+    fun = function(settings, ...) {
+        list2env(settings[c("datapoints")], environment())
         dat = split(datapoints, list(datapoints$facet, datapoints$by))
         dat = lapply(dat, function(x) {
-            if (nrow(x) == 0) return(x)
+            if (nrow(x) == 0) {
+                return(x)
+            }
             if (nrow(x) < 3) {
                 x$y = NA
                 return(x)
@@ -59,4 +62,3 @@ data_lm = function(se, level, ...) {
     }
     return(fun)
 }
-

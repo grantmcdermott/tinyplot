@@ -799,37 +799,41 @@ tinyplot.default = function(
   type_info = list()
 
   if (!is.null(type_data)) {
-    fargs = list(
-      datapoints   = datapoints,
-      bg           = bg,
-      by           = by,
-      col          = col,
-      log          = log,
-      lty          = lty,
-      lwd          = lwd,
-      cex          = cex,
-      facet        = facet,
-      facet_by     = facet_by,
-      facet.args   = facet.args,
-      legend_args  = legend_args,
-      null_by      = null_by,
-      null_facet   = null_facet,
-      palette      = palette,
-      ribbon.alpha = ribbon.alpha,
-      xaxt         = xaxt,
-      xaxb         = xaxb,
-      xaxl         = xaxl,
-      xlab         = xlab,
-      xlabs        = xlabs,
-      xlim         = xlim,
-      yaxt         = yaxt,
-      yaxb         = yaxb,
-      yaxl         = yaxl,
-      ylab         = ylab,
-      ylim         = ylim
-    )
-    fargs = c(fargs, dots)
-    list2env(do.call(type_data, fargs), environment())
+    if ("settings" %in% names(formals(type_data))) {
+      list2env(type_data(settings, ...), environment())
+    } else {
+      fargs = list(
+        datapoints   = datapoints,
+        bg           = bg,
+        by           = by,
+        col          = col,
+        log          = log,
+        lty          = lty,
+        lwd          = lwd,
+        cex          = cex,
+        facet        = facet,
+        facet_by     = facet_by,
+        facet.args   = facet.args,
+        legend_args  = legend_args,
+        null_by      = null_by,
+        null_facet   = null_facet,
+        palette      = palette,
+        ribbon.alpha = ribbon.alpha,
+        xaxt         = xaxt,
+        xaxb         = xaxb,
+        xaxl         = xaxl,
+        xlab         = xlab,
+        xlabs        = xlabs,
+        xlim         = xlim,
+        yaxt         = yaxt,
+        yaxb         = yaxb,
+        yaxl         = yaxl,
+        ylab         = ylab,
+        ylim         = ylim
+      )
+      fargs = c(fargs, dots)
+      list2env(do.call(type_data, fargs), environment())
+    }
   }
 
 

@@ -32,6 +32,13 @@ where the formatting is also better._
   counterparts (with `tinyplot::` prefix). Finally, the internals where these
   calls are stored are streamlined, avoiding modifying the user-visible
   `options()`. (#460 @zeileis)
+- Fixed several minor `tinylabel` bugs. (#468 @grantmcdermott)
+  - `tinylabel(x, "%")` is more precise, preserving unique levels of `x` through
+     automatic decimal level determination. Thanks to @etiennebacher for the
+     bug report in #449.
+  - Numeric labellers now work on appropriate `x`/`y` variables, even if the
+    plot type internally coerces it to factor (e.g., `"boxplot"`)
+
 
 ### Internals
 

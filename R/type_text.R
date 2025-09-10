@@ -51,6 +51,8 @@ data_text = function(labels, clim = c(0.5, 2.5)) {
       stop(msg, call. = FALSE)
     }
     datapoints$labels = labels
+    if (is.factor(datapoints$x)) datapoints$x = as.numeric(datapoints$x)
+    if (is.factor(datapoints$y)) datapoints$y = as.numeric(datapoints$y)
 
     # browser()
     bubble = FALSE

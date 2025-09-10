@@ -45,7 +45,9 @@ type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, vfont = NULL,
 }
 
 data_text = function(labels, clim = c(0.5, 2.5)) {
-  fun = function(datapoints, legend_args, cex = NULL, ...) {
+  fun = function(settings, ...) {
+    list2env(settings[c("datapoints", "legend_args", "cex")], environment())
+
     if (length(labels) != 1 && length(labels) != nrow(datapoints)) {
       msg = sprintf("`labels` must be of length 1 or %s.", nrow(datapoints))
       stop(msg, call. = FALSE)

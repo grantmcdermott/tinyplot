@@ -6,13 +6,20 @@ sanitize_ribbon.alpha = function(ribbon.alpha) {
 
 
 
-sanitize_type = function(type, x, y, dots) {
+sanitize_type = function(settings) {
+  list2env(settings, environment())
+
   if (inherits(type, "tinyplot_type")) {
-    return(type)
+    settings = modifyList(settings, list(
+      type = type$name,
+      type_draw = type$draw,
+      type_data = type$data
+    ), keep.null = TRUE)
+    return(settings)
   }
 
   known_types = c(
-    "p", "l", "o", "b", "c", "h", "j", "s", "S", "n", 
+    "p", "l", "o", "b", "c", "h", "j", "s", "S", "n",
     "abline",
     "area",
     "bar", "barplot",
@@ -57,57 +64,64 @@ sanitize_type = function(type, x, y, dots) {
     }
   }
 
-  if (is.character(type)) type = switch(type,
-    "abline"     = type_abline,
-    "area"       = type_area,
-    "bar"        = type_barplot,
-    "barplot"    = type_barplot,
-    "box"        = type_boxplot,
-    "boxplot"    = type_boxplot,
-    "density"    = type_density,
-    "errorbar"   = type_errorbar,
-    "function"   = type_function,
-    "glm"        = type_glm,
-    "hist"       = type_histogram,
-    "histogram"  = type_histogram,
-    "hline"      = type_hline,
-    "j"          = type_jitter,
-    "jitter"     = type_jitter,
-    "lines"      = type_lines,
-    "lm"         = type_lm,
-    "loess"      = type_loess,
-    "p"          = type_points,
-    "pointrange" = type_pointrange,
-    "points"     = type_points,
-    "polygon"    = type_polygon,
-    "polypath"   = type_polypath,
-    "qq"         = type_qq,
-    "rect"       = type_rect,
-    "ribbon"     = type_ribbon,
-    "ridge"      = type_ridge,
-    "rug"        = type_rug,
-    "segments"   = type_segments,
-    "spine"      = type_spineplot,
-    "spineplot"  = type_spineplot,
-    "spline"     = type_spline,
-    "summary"    = type_summary,
-    "text"       = type_text,
-    "violin"     = type_violin,
-    "vline"      = type_vline,
-    type           # default case
-  )
-  
+  if (is.character(type)) {
+    type = switch(type,
+      "abline"     = type_abline,
+      "area"       = type_area,
+      "bar"        = type_barplot,
+      "barplot"    = type_barplot,
+      "box"        = type_boxplot,
+      "boxplot"    = type_boxplot,
+      "density"    = type_density,
+      "errorbar"   = type_errorbar,
+      "function"   = type_function,
+      "glm"        = type_glm,
+      "hist"       = type_histogram,
+      "histogram"  = type_histogram,
+      "hline"      = type_hline,
+      "j"          = type_jitter,
+      "jitter"     = type_jitter,
+      "lines"      = type_lines,
+      "lm"         = type_lm,
+      "loess"      = type_loess,
+      "p"          = type_points,
+      "pointrange" = type_pointrange,
+      "points"     = type_points,
+      "polygon"    = type_polygon,
+      "polypath"   = type_polypath,
+      "qq"         = type_qq,
+      "rect"       = type_rect,
+      "ribbon"     = type_ribbon,
+      "ridge"      = type_ridge,
+      "rug"        = type_rug,
+      "segments"   = type_segments,
+      "spine"      = type_spineplot,
+      "spineplot"  = type_spineplot,
+      "spline"     = type_spline,
+      "summary"    = type_summary,
+      "text"       = type_text,
+      "violin"     = type_violin,
+      "vline"      = type_vline,
+      type # default case
+    )
+  }
+
   if (is.function(type)) {
     args = intersect(names(formals(type)), names(dots))
     args = if (length(args) >= 1L) dots[args] else list()
     type = do.call(type, args)
     type$dots = dots[setdiff(names(dots), names(args))]
   }
-  
-  if (inherits(type, "tinyplot_type")) return(type)
 
-  out = list(draw = NULL, data = NULL, name = type)
-  return(out)
+  if (inherits(type, "tinyplot_type")) {
+    settings = modifyList(settings, list(
+      type = type$name,
+      type_draw = type$draw,
+      type_data = type$data
+    ), keep.null = TRUE)
+  }
+
+  return(settings)
 }
 
 

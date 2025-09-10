@@ -676,53 +676,68 @@ tinyplot.default = function(
 
 
   #
+  ## settings container -----
+  #
+
+  settings = list(
+    # save call to check user input later
+    call = match.call(),
+    # save to file
+    file = file,
+    width = width,
+    height = height,
+    # deparsed input for use in labels
+    by_dep = deparse1(substitute(by)),
+    cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL,
+    facet_dep = deparse1(substitute(facet)),
+    x_dep = if (is.null(x)) NULL else deparse1(substitute(x)),
+    xmax_dep = if (is.null(xmax)) NULL else deparse1(substitute(xmax)),
+    xmin_dep = if (is.null(xmin)) NULL else deparse1(substitute(xmin)),
+    y_dep = if (is.null(y)) NULL else deparse1(substitute(y)),
+    ymax_dep = if (is.null(ymax)) NULL else deparse1(substitute(ymax)),
+    ymin_dep = if (is.null(ymin)) NULL else deparse1(substitute(ymin)),
+    # types
+    type = type,
+    type_data = NULL,
+    type_draw = NULL,
+    type_name = NULL,
+    # type-specific
+    bubble = FALSE,
+    ygroup = NULL, # for type_ridge()
+    # data points and labels
+    x = x, 
+    xmax = xmax,
+    xmin = xmin,
+    xlab = xlab,
+    xlabs = NULL,
+    y = y, 
+    ymax = ymax,
+    ymin = ymin,
+    ylab = ylab,
+    ylabs = NULL,
+    # unevaluated expressions with side effects
+    draw = substitute(draw),
+    # extra / unknown arguments
+    dots = list(...)
+  )
+  settings[["user_input"]] <- settings
+
+  #
   ## devices and files -----
   #
-
   # Write plot to output file or window with fixed dimensions
-  setup_device(file = file, width = width, height = height)
-  if (!is.null(file)) on.exit(dev.off(), add = TRUE)
-
-
-  #
-  ## deparsed expressions for labels -----
-  #
-
-  x_dep = if (is.null(x)) NULL else deparse1(substitute(x))
-  xmin_dep = if (is.null(xmin)) NULL else deparse1(substitute(xmin))
-  xmax_dep = if (is.null(xmax)) NULL else deparse1(substitute(xmax))
-  y_dep = if (is.null(y)) NULL else deparse1(substitute(y))
-  ymin_dep = if (is.null(ymin)) NULL else deparse1(substitute(ymin))
-  ymax_dep = if (is.null(ymax)) NULL else deparse1(substitute(ymax))
-  by_dep = deparse1(substitute(by))
-  cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL
-  facet_dep = deparse1(substitute(facet))
-
+  setup_device(settings)
+  if (!is.null(settings$file)) on.exit(dev.off(), add = TRUE)
 
   #
   ## sanitize arguments -----
   #
 
-  # init variables
-  xlabs = ylabs = NULL
-  ygroup = NULL # type_ridge()
-  bubble = FALSE
-
-  # ellipsis
-  dots = list(...)
-
-  # draw
-  draw = substitute(draw)
-
-  # type
   # sanitize_type: validates/converts type argument and returns list with name, data, and draw components
-  type = sanitize_type(type, x, y, dots)
-  if ("dots" %in% names(type)) dots = type$dots
-  type_data = type$data
-  type_draw = type$draw
-  type = type$name
+  settings = sanitize_type(settings)
+  list2env(settings, environment())
   
-  # area flag (mostly for legend)
+  # # area flag (mostly for legend)
   was_area_type = identical(type, "area")
 
   # legend

@@ -91,9 +91,17 @@ labeller_fun = function(label = "percent") {
   abs_ = substr(label, 1L, 4L) == "abs_"
   if (abs_) label = substr(label, 5L, nchar(label))
 
-  ## actual formatting function
+  ## actual formatting functions
+  
   format_percent = function(x) {
-    sprintf("%.0f%%", x * 100)
+    max_decimals = 5L
+    pct = x * 100
+    d = Find(
+      function(d) length(
+        unique(sprintf(paste0('%.', d, 'f%%'), pct))) == length(pct),
+        0:max_decimals
+    ) %||% max_decimals
+    sprintf(paste0('%.', d, 'f%%'), pct)
   }
   
   format_comma = function(x) {

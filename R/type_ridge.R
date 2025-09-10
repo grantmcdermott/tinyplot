@@ -252,7 +252,9 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       col = NULL,
                       alpha = NULL
                       ) {
-  fun = function(datapoints, yaxt = NULL, null_by, ...) {
+  fun = function(settings, ...) {
+    list2env(settings[c("datapoints", "yaxt", "xaxt", "null_by")], environment())
+
     #  catch for special cases
     anyby = !null_by
     x_by = anyby && identical(datapoints$x, datapoints$by)

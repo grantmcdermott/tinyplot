@@ -715,6 +715,7 @@ tinyplot.default = function(
     was_area_type = identical(type, "area"), # mostly for legend
     # unevaluated expressions with side effects
     draw = substitute(draw),
+    facet = facet,
     palette = substitute(palette),
     legend = if (add) FALSE else substitute(legend),
     # aesthetics
@@ -724,7 +725,8 @@ tinyplot.default = function(
     # ribbon.alpha is overwritten by some type_data() functions
     # sanitize_ribbon.alpha: returns default alpha transparency value for ribbon-type plots
     ribbon.alpha = sanitize_ribbon.alpha(NULL),
-    # extra / unknown arguments
+    # misc
+    by = by,
     dots = dots
   )
   settings[["raw_input"]] <- settings
@@ -753,7 +755,7 @@ tinyplot.default = function(
   # alias: bg = fill
   if (is.null(bg) && !is.null(fill)) settings$bg = fill
 
-  # validate types and returns list with name, data, and draw components
+  # validate types and returns a list with name, data, and draw components
   settings = sanitize_type(settings)
   
   # standardize axis arguments and returns consistent axes, xaxt, yaxt, frame.plot
@@ -767,34 +769,19 @@ tinyplot.default = function(
     settings$palette = get_tpar("palette", default = NULL)
   }
 
+  # by: coerce character groups to factor
+  if (!settings$null_by && is.character(settings$by)) {
+    settings$by = factor(settings$by)
+  }
 
+  # flag if x==by, currently only used for 
+  # "boxplot", "spineplot" and "ridges" types)
+  settings$x_by = identical(settings$x, settings$by) 
+
+  # facet: parse facet formula and prepares variables when facet==by
+  settings = sanitize_facet(settings)
 
   list2env(settings, environment())
-
-
-  # by
-  if (!null_by && is.character(by)) by = factor(by)
-  x_by = identical(x, by) # flag if x==by (currently only used for "boxplot", "spineplot" and "ridges" types)
-
-  # plot limits
-  # flag(s) indicating whether x/ylim was set by the user (needed later for
-  # special case where facets are free but still want to set x/ylim manually)
-
-  # facet
-  facet_by = FALSE # flag if facet=="by" (i.e., facet matches the grouping variable)
-  if (!is.null(facet) && length(facet) == 1 && facet == "by") {
-    by = as.factor(by) ## if by==facet, then both need to be factors
-    facet = by
-    facet_by = TRUE
-  } else if (!is.null(facet) && inherits(facet, "formula")) {
-    facet = get_facet_fml(facet, data = data)
-    if (isTRUE(attr(facet, "facet_grid"))) {
-      facet.args[["nrow"]] = attr(facet, "facet_nrow")
-    }
-  }
-  facet_attr = attributes(facet) # TODO: better way to restore facet attributes?
-  null_facet = is.null(facet)
-
 
   #
   ## datapoints: x, y, etc. -----

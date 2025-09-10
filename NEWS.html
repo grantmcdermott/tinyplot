@@ -279,6 +279,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
 <li><code>tinyplot_add()</code> now evaluates the additional call in the environment from which <code>tinyplot_add()</code> is called so that it also works in non-base environments such as in function definitions. Additionally, the call matching is now more precise, matching only <code>tinyplot()</code> or <code>plt()</code> or their fully-qualified counterparts (with <code>tinyplot::</code> prefix). Finally, the internals where these calls are stored are streamlined, avoiding modifying the user-visible <code>options()</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/460">#460</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Fixed several minor <code>tinylabel</code> bugs. (<a href="https://github.com/grantmcdermott/tinyplot/issues/468">#468</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)
+<ul>
+<li><code>tinylabel(x, "%")</code> is more precise, preserving unique levels of <code>x</code> through automatic decimal level determination. Thanks to <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a> for the bug report in <a href="https://github.com/grantmcdermott/tinyplot/issues/449">#449</a>.</li>
+<li>Numeric labellers now work on appropriate <code>x</code>/<code>y</code> variables, even if the plot type internally coerces it to factor (e.g., <code>"boxplot"</code>)</li>
+</ul></li>
 </ul>
 </section>
 <section id="internals" class="level3">

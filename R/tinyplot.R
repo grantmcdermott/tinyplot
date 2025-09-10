@@ -679,6 +679,7 @@ tinyplot.default = function(
   ## settings container -----
   #
 
+  dots = list(...)
   settings = list(
     # save call to check user input later
     call = match.call(),
@@ -715,12 +716,26 @@ tinyplot.default = function(
     ymin = ymin,
     ylab = ylab,
     ylabs = NULL,
+    # axes
+    axes = axes,
+    xaxt = xaxt,
+    yaxt = yaxt,
+    frame.plot = frame.plot,
+    # flags to check user input that is useful later on
+    null_by = is.null(by),
+    was_area_type = identical(type, "area"), # mostly for legend
     # unevaluated expressions with side effects
     draw = substitute(draw),
+    palette = substitute(palette),
+    legend = if (add) FALSE else substitute(legend),
+    # ribbon.alpha is overwritten by some type_data() functions
+    # sanitize_ribbon.alpha: returns default alpha transparency value for ribbon-type plots
+    ribbon.alpha = sanitize_ribbon.alpha(NULL),
     # extra / unknown arguments
-    dots = list(...)
+    dots = dots
   )
-  settings[["user_input"]] <- settings
+  settings[["raw_input"]] <- settings
+
 
   #
   ## devices and files -----
@@ -735,36 +750,33 @@ tinyplot.default = function(
 
   # sanitize_type: validates/converts type argument and returns list with name, data, and draw components
   settings = sanitize_type(settings)
-  list2env(settings, environment())
   
-  # # area flag (mostly for legend)
-  was_area_type = identical(type, "area")
+  # alias: bg = fill
+  if (is.null(bg) && !is.null(fill)) settings$bg = fill
 
-  # legend
-  if (add) legend = FALSE
-  if (!exists("legend_args")) {
-    legend_args = dots[["legend_args"]]
-    dots[["legend_args"]] = NULL
+  # extract legend_args from dots
+  if ("legend_args" %in% names(dots)) {
+    settings$legend_args = settings$dots[["legend_args"]]
+    settings$dots$legend_args = NULL # avoid passing both directly and via ...
+  } else {
+    settings$legend_args = list(x = NULL)
   }
-  if (is.null(legend_args)) legend_args = list(x = NULL)
-  legend = substitute(legend)
 
-  # palette
-  palette = substitute(palette)
+  # axes
+  # sanitize_axes: standardizes axis arguments and returns consistent axes, xaxt, yaxt, frame.plot values
+  settings = sanitize_axes(settings)
+
+  # sanitize xlab & ylab
+  # generates appropriate axis labels based on input data and plot type
+  settings = sanitize_xylab(settings)
+
+  list2env(settings, environment())
 
   # themes
   if (is.null(palette)) palette = get_tpar("palette", default = NULL)
   if (is.null(pch)) pch = get_tpar("pch", default = NULL)
 
-  # alias: bg = fill
-  if (is.null(bg) && !is.null(fill)) bg = fill
-
-  # ribbon.alpha is overwritten by some type_data() functions
-  # sanitize_ribbon.alpha: returns default alpha transparency value for ribbon-type plots
-  ribbon.alpha = sanitize_ribbon.alpha(NULL)
-
   # by
-  null_by = is.null(by)
   if (!null_by && is.character(by)) by = factor(by)
   x_by = identical(x, by) # flag if x==by (currently only used for "boxplot", "spineplot" and "ridges" types)
 
@@ -774,22 +786,7 @@ tinyplot.default = function(
   xlim_user = !is.null(xlim)
   ylim_user = !is.null(ylim)
 
-  # axes
-  # sanitize_axes: standardizes axis arguments and returns consistent axes, xaxt, yaxt, frame.plot values
-  tmp = sanitize_axes(axes, xaxt, yaxt, frame.plot)
-  list2env(tmp[c("axes", "xaxt", "yaxt", "frame.plot")], environment())
-  rm("tmp")
 
-  # xlab & ylab
-  # sanitize_xylab: generates appropriate axis labels based on input data and plot type
-  tmp = sanitize_xylab(
-      x = x, xlab = xlab, x_dep = x_dep, xmin_dep = xmin_dep, xmax_dep = xmax_dep,
-      y = y, ylab = ylab, y_dep = y_dep, ymin_dep = ymin_dep, ymax_dep = ymax_dep,
-      type = type
-  )
-  xlab = tmp$xlab
-  ylab = tmp$ylab
-  rm("tmp")
 
   # facet
   facet_by = FALSE # flag if facet=="by" (i.e., facet matches the grouping variable)

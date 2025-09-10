@@ -791,7 +791,6 @@ tinyplot.default = function(
   # combine x, y, xmax, by, facet etc. into a single `datapoints` data.frame
   settings = sanitize_datapoints(settings)
 
-
   list2env(settings, environment())
 
   #
@@ -802,9 +801,14 @@ tinyplot.default = function(
   type_info = list()
 
   if (!is.null(type_data)) {
-    if ("settings" %in% names(formals(type_data))) {
+    after_refactor = "settings" %in% names(formals(type_data))
+
+    if (after_refactor) {
       list2env(type_data(settings, ...), environment())
-    } else {
+    }
+
+    # the next long chunk would be remove after a full refactor
+    if (!after_refactor) {
       fargs = list(
         datapoints   = datapoints,
         bg           = bg,

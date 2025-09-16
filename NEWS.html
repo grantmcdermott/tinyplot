@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -68,14 +68,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="./favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-af6496ec5ff4a8a9b199cdb04d839dfd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e75bea168f641467c94e285523815dec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/iconify-2.1.0/iconify-icon.min.js"></script>
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -116,7 +117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./tinyplot.svg" alt="tinyplot" class="navbar-logo">
+    <img src="./tinyplot.svg" alt="tinyplot" class="navbar-logo light-content">
+    <img src="./tinyplot.svg" alt="tinyplot" class="navbar-logo dark-content">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -285,6 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Numeric labellers now work on appropriate <code>x</code>/<code>y</code> variables, even if the plot type internally coerces it to factor (e.g., <code>"boxplot"</code>)</li>
 </ul></li>
 <li><code>type_text()</code> can now also deal with factor <code>x</code>/<code>y</code> variables by converting them to numeric which helps to add text to barplots etc. (<a href="https://github.com/grantmcdermott/tinyplot/issues/470">#470</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Fix bug where sourced (non-interactive) scripts with <code>tinytheme()</code> calls were not inheriting the correct LHS margin spacing. (<a href="https://github.com/grantmcdermott/tinyplot/issues/475">#475</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 <section id="internals" class="level3">
@@ -351,11 +354,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>xaxl</code>/<code>yaxl</code> apply a formatting function to change the appearance of the axis tick labels. (<a href="https://github.com/grantmcdermott/tinyplot/issues/363">#363</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/391">#391</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>These <code>x/yaxb</code> and <code>x/yaxl</code> arguments can be used in complementary fashion; see the new (lower-level) <code>tinylabel</code> function documentation. For example:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>)<span class="sc">/</span><span class="dv">10</span>, <span class="at">yaxb =</span> <span class="fu">c</span>(.<span class="dv">17</span>, .<span class="dv">33</span>, .<span class="dv">5</span>, .<span class="dv">67</span>, .<span class="dv">83</span>), <span class="at">yaxl =</span> <span class="st">"%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>)<span class="sc">/</span><span class="dv">10</span>, <span class="at">yaxb =</span> <span class="fu">c</span>(.<span class="dv">17</span>, .<span class="dv">33</span>, .<span class="dv">5</span>, .<span class="dv">67</span>, .<span class="dv">83</span>), <span class="at">yaxl =</span> <span class="st">"%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>The <code>x/ymin</code> and <code>x/ymax</code> arguments can now be specified directly via the <code>tinyplot.formula()</code> method thanks to better NSE processing. For example, instead of having to write</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(dat, <span class="fu">tinyplot</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">by =</span> by <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(dat, <span class="fu">tinyplot</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">by =</span> by <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>users can now do</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> by, dat, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> by, dat, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Underneath the hood, this works by processing these NSE arguments as part of formula <code>model.frame()</code> and reference against the provided dataset. We plan to extend the same logic to other top-level formula arguments such as <code>weights</code> and <code>subset</code> in a future version of tinyplot.</p></li>
 </ul>
 </section>
@@ -407,15 +410,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>In addition to the standard character labels (<code>"p"</code>, <code>"density"</code>, etc.), the <code>type</code> argument now supports <em>functional</em> equivalents (<code>type_points()</code>, <code>type_density()</code>, etc.). These new functional types all take the form <code>type_*()</code>.</p></li>
 <li><p>The character and functional types are interchangeable. For example,</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="st">"hist"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="st">"hist"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>and</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="fu">type_hist</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="fu">type_hist</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>produce exactly the same result.</p></li>
 <li><p>The main advantage of the functional <code>type_*()</code> variants is that they offer much more flexibility and control beyond the default case(s). Users can pass appropriate arguments to existing types for customization and can even define their own <code>type_&lt;typename&gt;()</code> functions. More information is available in the dedicated help page for each type (e.g., <code>?type_hist</code>, <code>?type_lm</code>, etc.)</p></li>
 <li><p>On the development side, overhauling the <code>type</code> system has also allowed us to introduce a number of new plot types and features (see list below). We have also simplified our internal codebase, since explicit argument passing requires less guesswork on our end. Speaking of which, we now recommended that users explicitly pass ancillary type-specific arguments as part of the relevant <code>type_*()</code> call. For example,</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="fu">type_hist</span>(<span class="at">breaks =</span> <span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="fu">type_hist</span>(<span class="at">breaks =</span> <span class="dv">30</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>is preferable to</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="st">"hist"</span>, <span class="at">breaks =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Nile, <span class="at">type =</span> <span class="st">"hist"</span>, <span class="at">breaks =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>While the latter option will still work, we cannot guarantee that argument passing will work in every situation. (Reason: Passing ancillary type-specific arguments at the top level of the plot call only works if these do not conflict with the main arguments of the <code>tinyplot()</code> function itself; see <a href="https://github.com/grantmcdermott/tinyplot/issues/267">#267</a>.)</p></li>
 <li><p>Some minor breaking changes were unavoidable; see further below.</p></li>
 <li><p>For more details on the new <code>type</code> system, please see the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html">Plot types vignette</a> on the website.</p></li>
@@ -621,14 +624,14 @@ We don’t believe that these two arguments are much used in practice. So hopefu
 <li><code>par2()</code> is replaced by <code>tpar()</code>.</li>
 </ul>
 <p>So, where you used to write…</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plot2)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plot2)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot2</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>… you should now write:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Or, use the equivalent shorthand `plt` alias</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, iris)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The package URLs have been updated accordingly:</p>
 <ul>
 <li>GitHub: https://github.com/grantmcdermott/tinyplot</li>
@@ -774,13 +777,14 @@ We don’t believe that these two arguments are much used in practice. So hopefu
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

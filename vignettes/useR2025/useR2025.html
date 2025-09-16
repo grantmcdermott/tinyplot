@@ -7,9 +7,9 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/quarto-contrib/iconify-2.1.0/iconify-icon.min.js"></script><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.34">
+  <meta name="generator" content="quarto-1.8.24">
 
   <meta name="author" content="Grant McDermott">
   <meta name="dcterms.date" content="2025-08-09">
@@ -118,7 +118,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-020836758974c3a18be350d2179c7de4.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-e3fde6e4cc979c99a12849a47ceaecfc.css">
   <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -249,7 +249,7 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>base::plot</code></h2>
 <h3 id="simple-scatter-plot">Simple scatter plot</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"></section>
@@ -257,7 +257,7 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>base::plot</code></h2>
 <h3 id="lets-add-some-grouping">Let’s add some grouping</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins, <span class="at">col =</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins, <span class="at">col =</span> species)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-2-1.png" width="960" class="r-stretch"><p><strong>NB:</strong> <code>col = species</code> works here because <code>species</code> is a factor.</p>
@@ -266,8 +266,8 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>base::plot</code></h2>
 <h3 id="add-a-legend">Add a legend</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins, <span class="at">col =</span> species)</span>
-<span id="cb3-2"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">unique</span>(penguins<span class="sc">$</span>species), <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">title =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins, <span class="at">col =</span> species)</span>
+<span id="cb3-2"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">unique</span>(penguins<span class="sc">$</span>species), <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">title =</span> <span class="st">"Species"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"><div class="fragment">
@@ -278,8 +278,8 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>base::plot</code></h2>
 <h3 id="add-a-legend-1">Add a legend</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins, <span class="at">col =</span> species)</span>
-<span id="cb4-2"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(penguins<span class="sc">$</span>species), <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">title =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins, <span class="at">col =</span> species)</span>
+<span id="cb4-2"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(penguins<span class="sc">$</span>species), <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">title =</span> <span class="st">"Species"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"><p><strong>A:</strong> We should have used <code>levels(species)</code>, not <code>unique(species)</code>.</p>
@@ -288,7 +288,7 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>base::plot</code></h2>
 <h3 id="how-about-a-different-plot-type">How about a different plot type?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins, <span class="at">col =</span> species, <span class="at">type =</span> <span class="st">'b'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">plot</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins, <span class="at">col =</span> species, <span class="at">type =</span> <span class="st">'b'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"><p>Ugh… our grouped coloring logic only works for the “points” components.</p>
@@ -316,11 +316,11 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <p><img data-src="img/logo.svg"></p>
 </div><div class="column" style="width:80%;">
 <p>Install:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">install.packages</span>(<span class="st">"tinyplot"</span>) <span class="co"># cran</span></span>
-<span id="cb6-2"><a></a><span class="co"># install.packages("tinyplot", repos = "https://grantmcdermott.r-universe.dev") # dev</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">install.packages</span>(<span class="st">"tinyplot"</span>) <span class="co"># cran</span></span>
+<span id="cb6-2"><a></a><span class="co"># install.packages("tinyplot", repos = "https://grantmcdermott.r-universe.dev") # dev</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Load:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div></div>
 <p><br>
@@ -343,7 +343,7 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>tinyplot::plt</code></h2>
 <h3 id="simplest-case-drop-in-replacement-for-baseplot">Simplest case: drop-in replacement for <code>base::plot</code></h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len, <span class="at">data =</span> penguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"><div class="fragment">
@@ -354,7 +354,7 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>tinyplot::plt</code></h2>
 <h3 id="how-do-we-automate-the-legend-mapping">How do we automate the legend mapping?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species, <span class="at">data =</span> penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species, <span class="at">data =</span> penguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"></section>
@@ -362,7 +362,7 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>tinyplot::plt</code></h2>
 <h3 id="how-do-we-group-by-additional-variables">How do we group by additional variables?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> sex <span class="sc">+</span> species, <span class="at">data =</span> penguins, <span class="at">pch =</span> <span class="st">"by"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> sex <span class="sc">+</span> species, <span class="at">data =</span> penguins, <span class="at">pch =</span> <span class="st">"by"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"></section>
@@ -370,7 +370,7 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>tinyplot::plt</code></h2>
 <h3 id="what-if-we-want-groups-with-a-different-plot-type">What if we want groups with a different plot type?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species, <span class="at">data =</span> penguins, <span class="at">type =</span> <span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species, <span class="at">data =</span> penguins, <span class="at">type =</span> <span class="st">"b"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
@@ -378,7 +378,7 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>tinyplot::plt</code></h2>
 <h3 id="what-if-we-need-to-group-by-a-continuous-variable">What if we need to group by a continuous variable?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> body_mass, <span class="at">data =</span> penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> body_mass, <span class="at">data =</span> penguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"></section>
@@ -386,7 +386,7 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>tinyplot::plt</code></h2>
 <h3 id="what-if-we-need-to-facet-by-another-variable">What if we need to facet by another variable?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species, <span class="at">data =</span> penguins, <span class="at">facet =</span> <span class="sc">~</span>island)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species, <span class="at">data =</span> penguins, <span class="at">facet =</span> <span class="sc">~</span>island)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
@@ -394,8 +394,8 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>tinyplot::plt</code></h2>
 <h3 id="what-if-we-want-to-add-a-summary-function-e.g.-regression-fit">What if we want to add a summary function, e.g.&nbsp;regression fit?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species, <span class="at">data =</span> penguins, <span class="at">facet =</span> <span class="sc">~</span>island)</span>
-<span id="cb14-2"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species, <span class="at">data =</span> penguins, <span class="at">facet =</span> <span class="sc">~</span>island)</span>
+<span id="cb14-2"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
@@ -403,9 +403,9 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h2><code>tinyplot::plt</code></h2>
 <h3 id="the-plots-are-kind-of-ugly.-can-we-make-them-look-better">The plots are kind of ugly. Can we make them look better?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean"</span>) <span class="co"># or "clean2", "minimal", "ipsum", "dark", "tufte", ...</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean"</span>) <span class="co"># or "clean2", "minimal", "ipsum", "dark", "tufte", ...</span></span>
 <span id="cb15-2"><a></a><span class="fu">plt</span>(bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species, <span class="at">data =</span> penguins, <span class="at">facet =</span> <span class="sc">~</span>island)</span>
-<span id="cb15-3"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-3"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-14-1.png" style="width:75.0%" class="r-stretch"><p><strong>NB:</strong> Themes are persistent; subsequent (tiny)plots will inherit this aesthetic.</p>
@@ -470,11 +470,13 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <figcaption>Note: Adapted from <span class="citation" data-cites="murrell2023updates">Murrell (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>.</figcaption>
 </figure>
 </div>
+<div class="fragment">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/rgraphics2.png" class="fragment"></p>
+<p><img data-src="img/rgraphics2.png"></p>
 <figcaption>Note: Adapted from <span class="citation" data-cites="murrell2023updates">Murrell (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>.</figcaption>
 </figure>
+</div>
 </div>
 </div>
 <div class="fragment">
@@ -531,10 +533,10 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-1-1">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb16" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb16-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb16-3"><a></a>  <span class="at">data =</span> penguins</span>
-<span id="cb16-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-4"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -548,10 +550,10 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-1-2">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb17" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb17-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> sex <span class="sc">+</span> species,</span>
 <span id="cb17-3"><a></a>  <span class="at">data =</span> penguins</span>
-<span id="cb17-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-4"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -570,11 +572,11 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <h3 id="groups-map-to-colors-use-the-by-keyword-for-other-mappings">Groups map to colors; use the <code>"by"</code> keyword for other mappings</h3>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb18" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb18-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb18-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb18-4"><a></a>  <span class="at">pch =</span> <span class="st">"by"</span></span>
-<span id="cb18-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -595,11 +597,11 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-2-1">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb19" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb19-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb19-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb19-4"><a></a>  <span class="at">legend =</span> <span class="st">"left!"</span></span>
-<span id="cb19-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -613,11 +615,11 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-2-2">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb20" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb20-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb20-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb20-4"><a></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"bottom!"</span>, <span class="at">title =</span> <span class="cn">NULL</span>)</span>
-<span id="cb20-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -631,11 +633,11 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-2-3">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb21" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb21-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb21-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb21-4"><a></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"bottomright"</span>, <span class="at">bty =</span> <span class="st">"o"</span>)</span>
-<span id="cb21-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -649,11 +651,11 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-2-4">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb22" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb22-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb22-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb22-4"><a></a>  <span class="at">legend =</span> <span class="cn">FALSE</span></span>
-<span id="cb22-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -677,11 +679,11 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-3-1">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb23" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb23-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb23-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb23-4"><a></a>  <span class="at">facet =</span> <span class="sc">~</span>island</span>
-<span id="cb23-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -695,11 +697,11 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-3-2">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb24" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb24-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb24-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb24-4"><a></a>  <span class="at">facet =</span> <span class="sc">~</span> sex <span class="sc">+</span> island</span>
-<span id="cb24-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -713,11 +715,11 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-3-3">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb25" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb25-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb25-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb25-4"><a></a>  <span class="at">facet =</span> sex <span class="sc">~</span> island</span>
-<span id="cb25-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -731,14 +733,14 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <div id="tabset-3-4">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb26" data-code-line-numbers="1,6,7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" data-code-line-numbers="1,6,7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
 <span id="cb26-2"><a></a></span>
 <span id="cb26-3"><a></a><span class="fu">plt</span>(</span>
 <span id="cb26-4"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb26-5"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb26-6"><a></a>  <span class="co"># frame = FALSE, ## non-theme option</span></span>
 <span id="cb26-7"><a></a>  <span class="at">facet =</span> <span class="sc">~</span> sex <span class="sc">+</span> island</span>
-<span id="cb26-8"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-8"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -747,18 +749,18 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb27" data-code-line-numbers="1,6,7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">tinytheme</span>(<span class="st">'clean'</span>) <span class="co"># revert theme</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27" data-code-line-numbers="1,6,7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">tinytheme</span>(<span class="st">'clean'</span>) <span class="co"># revert theme</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </div>
 <div id="tabset-3-5">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb28" data-code-line-numbers="4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28" data-code-line-numbers="4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb28-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb28-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb28-4"><a></a>  <span class="at">facet =</span> <span class="sc">~</span> sex <span class="sc">+</span> island,</span>
 <span id="cb28-5"><a></a>  <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">free =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb28-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-6"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -782,8 +784,8 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 </ul>
 <p>In general, the functional equivalents are denoted <code>type_*()</code> and support direct argument passing for customization, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>?type_lm</span>
-<span id="cb29-2"><a></a><span class="fu">args</span>(type_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>?type_lm</span>
+<span id="cb29-2"><a></a><span class="fu">args</span>(type_lm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>function (se = TRUE, level = 0.95) 
 NULL</code></pre>
@@ -812,12 +814,12 @@ NULL</code></pre>
 <div id="tabset-4-1">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb31" data-code-line-numbers="4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31" data-code-line-numbers="4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb31-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb31-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb31-4"><a></a>  <span class="at">type =</span> <span class="st">"lm"</span>, <span class="at">level =</span> <span class="fl">0.8</span>      <span class="co"># string</span></span>
 <span id="cb31-5"><a></a>  <span class="co"># type = type_lm(level = 0.8) # function</span></span>
-<span id="cb31-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-6"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -831,12 +833,12 @@ NULL</code></pre>
 <div id="tabset-4-2">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb32" data-code-line-numbers="4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32" data-code-line-numbers="4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb32-2"><a></a>  <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb32-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb32-4"><a></a>  <span class="at">type =</span> <span class="st">"density"</span>        <span class="co"># string</span></span>
 <span id="cb32-5"><a></a>  <span class="co"># type = type_density() # function</span></span>
-<span id="cb32-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-6"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -859,11 +861,11 @@ NULL</code></pre>
 <div id="tabset-5-1">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb33" data-code-line-numbers="5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33" data-code-line-numbers="5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb33-2"><a></a>  bill_dep <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb33-3"><a></a>  <span class="at">data =</span> penguins</span>
 <span id="cb33-4"><a></a>)</span>
-<span id="cb33-5"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-5"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -877,12 +879,12 @@ NULL</code></pre>
 <div id="tabset-5-2">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb34" data-code-line-numbers="6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34" data-code-line-numbers="6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb34-2"><a></a>  <span class="sc">~</span> bill_len <span class="sc">|</span> species,</span>
 <span id="cb34-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb34-4"><a></a>  <span class="at">type =</span> <span class="st">"density"</span></span>
 <span id="cb34-5"><a></a>)</span>
-<span id="cb34-6"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"rug"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-6"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"rug"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -906,12 +908,12 @@ NULL</code></pre>
 </ul>
 <p>Quick plotting function, which we’ll re-use for showcasing some themes on the next slide:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>p <span class="ot">=</span> <span class="cf">function</span>() <span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>p <span class="ot">=</span> <span class="cf">function</span>() <span class="fu">plt</span>(</span>
 <span id="cb35-2"><a></a>    body_mass <span class="sc">~</span> flipper_len <span class="sc">|</span> bill_len, penguins,</span>
 <span id="cb35-3"><a></a>    <span class="at">facet =</span> <span class="sc">~</span>sex, <span class="at">yaxl =</span> <span class="st">","</span>,</span>
 <span id="cb35-4"><a></a>    <span class="at">main =</span> <span class="st">"Palmer penguins"</span>,</span>
 <span id="cb35-5"><a></a>    <span class="at">sub =</span> <span class="st">"Brought to you by tinyplot!"</span></span>
-<span id="cb35-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-6"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="tinyplot-api-9" class="slide level2">
@@ -923,8 +925,8 @@ NULL</code></pre>
 <div id="tabset-6-1">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">tinytheme</span>()</span>
-<span id="cb36-2"><a></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">tinytheme</span>()</span>
+<span id="cb36-2"><a></a><span class="fu">p</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -938,8 +940,8 @@ NULL</code></pre>
 <div id="tabset-6-2">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"tufte"</span>)</span>
-<span id="cb37-2"><a></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"tufte"</span>)</span>
+<span id="cb37-2"><a></a><span class="fu">p</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -953,8 +955,8 @@ NULL</code></pre>
 <div id="tabset-6-3">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"classic"</span>)</span>
-<span id="cb38-2"><a></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"classic"</span>)</span>
+<span id="cb38-2"><a></a><span class="fu">p</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -968,8 +970,8 @@ NULL</code></pre>
 <div id="tabset-6-4">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean"</span>)</span>
-<span id="cb39-2"><a></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean"</span>)</span>
+<span id="cb39-2"><a></a><span class="fu">p</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -983,8 +985,8 @@ NULL</code></pre>
 <div id="tabset-6-5">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
-<span id="cb40-2"><a></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
+<span id="cb40-2"><a></a><span class="fu">p</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -998,8 +1000,8 @@ NULL</code></pre>
 <div id="tabset-6-6">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"minimal"</span>)</span>
-<span id="cb41-2"><a></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"minimal"</span>)</span>
+<span id="cb41-2"><a></a><span class="fu">p</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1013,8 +1015,8 @@ NULL</code></pre>
 <div id="tabset-6-7">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"ipsum"</span>)</span>
-<span id="cb42-2"><a></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"ipsum"</span>)</span>
+<span id="cb42-2"><a></a><span class="fu">p</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1028,8 +1030,8 @@ NULL</code></pre>
 <div id="tabset-6-8">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"dark"</span>)</span>
-<span id="cb43-2"><a></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"dark"</span>)</span>
+<span id="cb43-2"><a></a><span class="fu">p</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1043,7 +1045,7 @@ NULL</code></pre>
 <div id="tabset-6-9">
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">tinytheme</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">tinytheme</span>(</span>
 <span id="cb44-2"><a></a>  <span class="st">"ipsum"</span>,</span>
 <span id="cb44-3"><a></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
 <span id="cb44-4"><a></a>  <span class="at">cex =</span> <span class="fl">1.2</span>, <span class="at">cex.main =</span> <span class="dv">2</span>,</span>
@@ -1051,7 +1053,7 @@ NULL</code></pre>
 <span id="cb44-6"><a></a>  <span class="at">palette.sequential =</span> <span class="st">"zissou"</span>,</span>
 <span id="cb44-7"><a></a>  <span class="at">family =</span><span class="st">"HersheyScript"</span></span>
 <span id="cb44-8"><a></a>)</span>
-<span id="cb44-9"><a></a><span class="fu">p</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb44-9"><a></a><span class="fu">p</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1086,7 +1088,7 @@ NULL</code></pre>
 <h3 id="histogram">histogram</h3>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"clean"</span>)</span>
 <span id="cb45-2"><a></a>pal <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"darkorange"</span>,<span class="st">"purple"</span>,<span class="st">"cyan4"</span>)</span>
 <span id="cb45-3"><a></a></span>
 <span id="cb45-4"><a></a><span class="fu">plt</span>(</span>
@@ -1095,7 +1097,7 @@ NULL</code></pre>
 <span id="cb45-7"><a></a>  <span class="at">type =</span> <span class="st">"hist"</span>,</span>
 <span id="cb45-8"><a></a>  <span class="at">breaks =</span> <span class="dv">30</span>,</span>
 <span id="cb45-9"><a></a>  <span class="at">palette =</span> pal</span>
-<span id="cb45-10"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-10"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1111,13 +1113,13 @@ NULL</code></pre>
 <h3 id="box-plots">box plots</h3>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb46-2"><a></a>  body_mass <span class="sc">~</span> species <span class="sc">|</span> sex,</span>
 <span id="cb46-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb46-4"><a></a>  <span class="at">type =</span> <span class="st">"boxplot"</span>, </span>
 <span id="cb46-5"><a></a>  <span class="at">yaxl =</span> <span class="st">","</span>,</span>
 <span id="cb46-6"><a></a>  <span class="at">flip =</span> <span class="cn">TRUE</span></span>
-<span id="cb46-7"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb46-7"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1133,14 +1135,14 @@ NULL</code></pre>
 <h3 id="violin-plots">violin plots</h3>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb47-2"><a></a>  body_mass <span class="sc">~</span> species <span class="sc">|</span> sex,</span>
 <span id="cb47-3"><a></a>  <span class="at">data =</span> penguins,</span>
 <span id="cb47-4"><a></a>  <span class="at">type =</span> <span class="st">"violin"</span>, </span>
 <span id="cb47-5"><a></a>  <span class="at">yaxl =</span> <span class="st">","</span>,</span>
 <span id="cb47-6"><a></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb47-7"><a></a>  <span class="at">fill =</span> <span class="fl">0.5</span></span>
-<span id="cb47-8"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb47-8"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1156,7 +1158,7 @@ NULL</code></pre>
 <h3 id="error-bars">error bars</h3>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>mod <span class="ot">=</span> <span class="fu">lm</span>(body_mass <span class="sc">~</span> species <span class="sc">+</span> sex,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>mod <span class="ot">=</span> <span class="fu">lm</span>(body_mass <span class="sc">~</span> species <span class="sc">+</span> sex,</span>
 <span id="cb48-2"><a></a>         <span class="at">data =</span> penguins)</span>
 <span id="cb48-3"><a></a>coefs <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
 <span id="cb48-4"><a></a>  <span class="fu">names</span>(<span class="fu">coef</span>(mod)),</span>
@@ -1170,7 +1172,7 @@ NULL</code></pre>
 <span id="cb48-12"><a></a>  <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr,</span>
 <span id="cb48-13"><a></a>  <span class="at">data =</span> coefs,</span>
 <span id="cb48-14"><a></a>  <span class="at">type =</span> <span class="st">"errorbar"</span></span>
-<span id="cb48-15"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb48-15"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1186,14 +1188,14 @@ NULL</code></pre>
 <h3 id="rectangles">rectangles</h3>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>i <span class="ot">=</span> <span class="dv">4</span><span class="sc">*</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>i <span class="ot">=</span> <span class="dv">4</span><span class="sc">*</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>)</span>
 <span id="cb49-2"><a></a></span>
 <span id="cb49-3"><a></a><span class="fu">plt</span>(</span>
 <span id="cb49-4"><a></a>  <span class="at">xmin =</span> <span class="dv">100</span><span class="sc">+</span>i, <span class="at">xmax =</span> <span class="dv">150</span><span class="sc">+</span>i,</span>
 <span id="cb49-5"><a></a>  <span class="at">ymin =</span> <span class="dv">300</span><span class="sc">+</span>i, <span class="at">ymax =</span> <span class="dv">380</span><span class="sc">+</span>i,</span>
 <span id="cb49-6"><a></a>  <span class="at">by =</span> i, <span class="at">fill =</span> <span class="fl">0.2</span>,</span>
 <span id="cb49-7"><a></a>  <span class="at">type =</span> <span class="st">"rect"</span></span>
-<span id="cb49-8"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb49-8"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1209,14 +1211,14 @@ NULL</code></pre>
 <h3 id="spineplot">spineplot</h3>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>ttnc <span class="ot">=</span> <span class="fu">as.data.frame</span>(Titanic)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>ttnc <span class="ot">=</span> <span class="fu">as.data.frame</span>(Titanic)</span>
 <span id="cb50-2"><a></a>wts <span class="ot">=</span> ttnc<span class="sc">$</span>Freq</span>
 <span id="cb50-3"><a></a></span>
 <span id="cb50-4"><a></a><span class="fu">plt</span>(</span>
 <span id="cb50-5"><a></a>  Survived <span class="sc">~</span> Sex <span class="sc">|</span> Class, <span class="at">facet =</span> <span class="st">"by"</span>,</span>
 <span id="cb50-6"><a></a>  <span class="at">data =</span> ttnc,</span>
 <span id="cb50-7"><a></a>  <span class="at">type =</span> <span class="fu">type_spineplot</span>(<span class="at">weights =</span> wts)</span>
-<span id="cb50-8"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-8"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1232,7 +1234,7 @@ NULL</code></pre>
 <h3 id="ridge-plot">ridge plot</h3>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"ridge2"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">tinytheme</span>(<span class="st">"ridge2"</span>)</span>
 <span id="cb51-2"><a></a></span>
 <span id="cb51-3"><a></a>aq <span class="ot">=</span> <span class="fu">transform</span>(</span>
 <span id="cb51-4"><a></a>  airquality,</span>
@@ -1245,7 +1247,7 @@ NULL</code></pre>
 <span id="cb51-11"><a></a><span class="fu">plt</span>(Month <span class="sc">~</span> Temp <span class="sc">|</span> Temp,</span>
 <span id="cb51-12"><a></a>  <span class="at">data =</span> aq,</span>
 <span id="cb51-13"><a></a>  <span class="at">type =</span> <span class="fu">type_ridge</span>(<span class="at">col =</span> <span class="st">"white"</span>)</span>
-<span id="cb51-14"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb51-14"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
@@ -1345,7 +1347,7 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 <p>Just focusing on the core plot components…</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="sourceCode" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">ggplot</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">ggplot</span>(</span>
 <span id="cb52-2"><a></a>  simres,</span>
 <span id="cb52-3"><a></a>  <span class="fu">aes</span>(</span>
 <span id="cb52-4"><a></a>    <span class="at">x =</span> true_effect, <span class="at">y =</span> mean_loo_err,</span>
@@ -1354,14 +1356,14 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 <span id="cb52-7"><a></a>  ) <span class="sc">+</span></span>
 <span id="cb52-8"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb52-9"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb52-10"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> exclude_ns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb52-10"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> exclude_ns)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column" style="width:50%;">
-<div class="sourceCode" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="fu">plt</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="fu">plt</span>(</span>
 <span id="cb53-2"><a></a>  mean_loo_err <span class="sc">~</span> true_effect <span class="sc">|</span> <span class="fu">factor</span>(asym),</span>
 <span id="cb53-3"><a></a>  <span class="at">data =</span> simres,</span>
 <span id="cb53-4"><a></a>  <span class="at">type =</span> <span class="st">"o"</span>,</span>
 <span id="cb53-5"><a></a>  <span class="at">facet =</span> <span class="sc">~</span> exlude_ns</span>
-<span id="cb53-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb53-6"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 <p><em>(That’s about 1/3 fewer characters.)</em></p>
 </section>
@@ -1404,8 +1406,8 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 <h2>Layering gotchas</h2>
 <h3 id="scaling-is-fixed-by-the-first-layer">Scaling is fixed by the first layer</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">plt</span>(body_mass <span class="sc">~</span> bill_len <span class="sc">|</span> species, penguins)</span>
-<span id="cb54-2"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">plt</span>(body_mass <span class="sc">~</span> bill_len <span class="sc">|</span> species, penguins)</span>
+<span id="cb54-2"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="useR2025_files/figure-revealjs/unnamed-chunk-49-1.png" width="960" class="r-stretch"><div class="fragment">
@@ -1416,8 +1418,8 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 <h2>Layering gotchas</h2>
 <h3 id="cant-combine-file-with-plt_add-yet">Can’t combine <code>file</code> with <code>plt_add</code> (yet)</h3>
 <p>This doesn’t work:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">plt</span>(..., <span class="at">file =</span> <span class="st">"myplot.png"</span>)</span>
-<span id="cb55-2"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">plt</span>(..., <span class="at">file =</span> <span class="st">"myplot.png"</span>)</span>
+<span id="cb55-2"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> ...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="fragment">
 <p>I’m hoping to provide a native solution in the future, but workarounds for now:</p>
 <ul>
@@ -1633,7 +1635,7 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1745,13 +1747,14 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

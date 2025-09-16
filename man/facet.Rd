@@ -54,7 +54,7 @@ draw_facet_window(
   y,
   ymax,
   ymin,
-  dynmar = NULL
+  tpars = NULL
 )
 
 facet_layout(facet, add = FALSE, facet.args = list())

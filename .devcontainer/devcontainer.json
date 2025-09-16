@@ -1,0 +1,24 @@
+{
+  "name": "tinyplot devcontainer",
+  "image": "rocker/r2u:24.04",
+  
+  "containerEnv": {
+    "NOT_CRAN": "true"
+  },
+  
+  "postCreateCommand": "R -e \"install.packages(c('devtools', 'tinytest', 'tinysnapshot'))\" && R -e \"install.packages('httpgd', repos = c('https://community.r-multiverse.org', 'https://cloud.r-project.org'))\" && Rscript -e 'read.dcf(\"DESCRIPTION\", c(\"Imports\", \"Suggests\")) |> tools:::.split_dependencies() |> names() |> setdiff(tools:::.get_standard_package_names()$base) |> install.packages()'",
+  
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "REditorSupport.r",
+        "quarto.quarto"
+      ],
+      "settings": {
+        "r.plot.useHttpgd": true
+      }
+    }
+  },
+  
+  "remoteUser": "root"
+}

@@ -33,7 +33,8 @@ draw_facet_window = function(
     has_legend,
     type,
     x, xmax, xmin,
-    y, ymax, ymin
+    y, ymax, ymin,
+    dynmar = NULL
     ) {
   
   # if add is TRUE, just return inputs without any calculations
@@ -53,7 +54,8 @@ draw_facet_window = function(
   }
 
   ## dynamic margins flag
-  dynmar = isTRUE(.tpar[["dynmar"]])
+  if (is.null(dynmar)) dynmar = get_tpar("dynmar")
+  dynmar = isTRUE(dynmar)
   
   ## optionally allow to modify the style of axis interval calculation
   if (!is.null(xaxs)) par(xaxs = xaxs)

@@ -49,6 +49,7 @@ where the formatting is also better._
 - Move `altdoc` from `Suggests` to `Config/Needs/website`.
   Thanks to @etiennebacher for the suggestion and to @eddelbuettel for help
   with the CI implementation.
+- Add a `devcontainer.json` file for remote testing. (#480 @grantmcdermott) 
 
 ## 0.4.2
 

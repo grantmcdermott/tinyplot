@@ -18,6 +18,7 @@
     "cex_fct_adj",
     "dots",
     "draw",
+    "dynmar",
     "facet_bg",
     "facet_border",
     "facet_col",

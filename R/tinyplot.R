@@ -1229,7 +1229,8 @@ tinyplot.default = function(
       has_legend = has_legend,
       type = type,
       x = x, xmax = xmax, xmin = xmin,
-      y = y, ymax = ymax, ymin = ymin
+      y = y, ymax = ymax, ymin = ymin,
+      dynmar = dynmar
     ),
     list = list(
       add = add,
@@ -1252,7 +1253,8 @@ tinyplot.default = function(
       has_legend = has_legend,
       type = type,
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
-      y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin
+      y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin,
+      dynmar = get_tpar("dynmar") # https://github.com/grantmcdermott/tinyplot/issues/474
     ),
     getNamespace("tinyplot")
   )

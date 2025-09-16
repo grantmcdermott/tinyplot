@@ -54,7 +54,7 @@ Suggests:
   knitr
 Config/Needs/website: etiennebacher/altdoc, future.apply
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 URL: https://grantmcdermott.com/tinyplot/
 BugReports: https://github.com/grantmcdermott/tinyplot/issues
 Roxygen: list(markdown = TRUE)

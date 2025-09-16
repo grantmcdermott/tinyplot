@@ -10,7 +10,7 @@ where the formatting is also better._
 
 - Added support for "bubble" scatter plots, allowing for point size scaling via
   an appropriate `cex` argument (e.g., a continuous variable from your dataset).
-  The updated `?type_point` helpfile contains several examples. Simultaneously 
+  The updated `?type_points` helpfile contains several examples. Simultaneously 
   enables dual-legend support for combined size + color mappings.
   (#433 @grantmcdermott)
 - Improved horizontal legend spacing, as well as multicolumn legend support. A

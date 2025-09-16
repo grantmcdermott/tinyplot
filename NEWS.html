@@ -271,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="new-features" class="level3">
 <h3 class="anchored" data-anchor-id="new-features">New features</h3>
 <ul>
-<li>Added support for “bubble” scatter plots, allowing for point size scaling via an appropriate <code>cex</code> argument (e.g., a continuous variable from your dataset). The updated <code>?type_point</code> helpfile contains several examples. Simultaneously enables dual-legend support for combined size + color mappings. (<a href="https://github.com/grantmcdermott/tinyplot/issues/433">#433</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Added support for “bubble” scatter plots, allowing for point size scaling via an appropriate <code>cex</code> argument (e.g., a continuous variable from your dataset). The updated <code>?type_points</code> helpfile contains several examples. Simultaneously enables dual-legend support for combined size + color mappings. (<a href="https://github.com/grantmcdermott/tinyplot/issues/433">#433</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Improved horizontal legend spacing, as well as multicolumn legend support. A new example in the “Tips &amp; tricks” vignettes demonstrates the latter. (<a href="https://github.com/grantmcdermott/tinyplot/issues/446">#446</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Univariate boxplots (without grouping variable) are now handled in <code>tinyplot.default()</code>, so that <code>tinyplot(x, type = "boxplot")</code> and <code>tinyplot(~ x, type = "boxplot")</code> essentially produce the same output as <code>boxplot(x)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/454">#454</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 <li><code>type_errorbar()</code> and <code>type_point_range()</code> get a <code>dodge</code> argument. (<a href="https://github.com/grantmcdermott/tinyplot/issues/461">#461</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
@@ -294,6 +294,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="internals">Internals</h3>
 <ul>
 <li>Move <code>altdoc</code> from <code>Suggests</code> to <code>Config/Needs/website</code>. Thanks to <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a> for the suggestion and to <a href="https://github.com/eddelbuettel"><span class="citation" data-cites="eddelbuettel">@eddelbuettel</span></a> for help with the CI implementation.</li>
+<li>Add a <code>devcontainer.json</code> file for remote testing. (<a href="https://github.com/grantmcdermott/tinyplot/issues/480">#480</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 </section>

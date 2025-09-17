@@ -1230,7 +1230,7 @@ tinyplot.default = function(
       type = type,
       x = x, xmax = xmax, xmin = xmin,
       y = y, ymax = ymax, ymin = ymin,
-      dynmar = dynmar
+      tpars = tpars
     ),
     list = list(
       add = add,
@@ -1254,7 +1254,7 @@ tinyplot.default = function(
       type = type,
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
       y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin,
-      dynmar = get_tpar("dynmar") # https://github.com/grantmcdermott/tinyplot/issues/474
+      tpars = tpar() # https://github.com/grantmcdermott/tinyplot/issues/474
     ),
     getNamespace("tinyplot")
   )

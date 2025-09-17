@@ -108,9 +108,11 @@ for (thm in thms) {
   tinytheme(thm)
   tinyplot(
     I(Sepal.Length*1e4) ~ Petal.Length | Species, facet = "by", data = iris,
-    main = "Demonstration of tinyplot themes",
-    sub = paste0('tinytheme("', thm, '")')
+    yaxl = ",", 
+    main = paste0('tinytheme("', thm, '")'),
+    sub = "A subtitle"
   )
+  box("outer", lty = 2)
 }
 
 # Reset

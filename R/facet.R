@@ -34,8 +34,10 @@ draw_facet_window = function(
     type,
     x, xmax, xmin,
     y, ymax, ymin,
-    dynmar = NULL
+    tpars = NULL
     ) {
+  
+  if (is.null(tpars)) tpars = tpar()
   
   # if add is TRUE, just return inputs without any calculations
   if (isTRUE(add)) {
@@ -47,15 +49,14 @@ draw_facet_window = function(
   if (!is.null(yaxb) && !is.null(ylabs)) ylabs = yaxb
   
   # draw background color only in the grid rectangle
-  grid.bg = get_tpar("grid.bg")
+  grid.bg = get_tpar("grid.bg", tpar_list = tpars)
   if (!is.null(grid.bg)) {
     corners = par("usr")
     rect(corners[1], corners[3], corners[2], corners[4], col = grid.bg, border = NA)
   }
 
   ## dynamic margins flag
-  if (is.null(dynmar)) dynmar = get_tpar("dynmar")
-  dynmar = isTRUE(dynmar)
+  dynmar = isTRUE(get_tpar("dynmar", tpar_list = tpars))
   
   ## optionally allow to modify the style of axis interval calculation
   if (!is.null(xaxs)) par(xaxs = xaxs)
@@ -263,17 +264,17 @@ draw_facet_window = function(
         side = xside,
         type = xaxt,
         labeller = xaxl,
-        cex = get_tpar(c("cex.xaxs", "cex.axis"), 0.8),
-        lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 1),
-        lty = get_tpar(c("lty.xaxs", "lty.axis"), 1)
+        cex = get_tpar(c("cex.xaxs", "cex.axis"), 0.8, tpar_list = tpars),
+        lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 1, tpar_list = tpars),
+        lty = get_tpar(c("lty.xaxs", "lty.axis"), 1, tpar_list = tpars)
       )
       args_y = list(y,
         side = yside,
         type = yaxt,
         labeller = yaxl,
-        cex = get_tpar(c("cex.yaxs", "cex.axis"), 0.8),
-        lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1),
-        lty = get_tpar(c("lty.yaxs", "lty.axis"), 1)
+        cex = get_tpar(c("cex.yaxs", "cex.axis"), 0.8, tpar_list = tpars),
+        lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1, tpar_list = tpars),
+        lty = get_tpar(c("lty.yaxs", "lty.axis"), 1, tpar_list = tpars)
       )
       if (!is.null(xaxb)) args_x$at = xaxb
       if (!is.null(yaxb)) args_y$at = yaxb
@@ -475,7 +476,7 @@ draw_facet_window = function(
     if (frame.plot) box()
 
     # panel grid lines
-    if (is.null(grid)) grid = .tpar[["grid"]]
+    if (is.null(grid)) grid = get_tpar("grid", tpar_list = tpars)
     if (!is.null(grid)) {
       if (is.logical(grid)) {
         ## If grid is TRUE create a default grid. Rather than just calling the default grid()
@@ -485,22 +486,22 @@ draw_facet_window = function(
         if (isTRUE(grid)) {
           gnx = gny = NULL
           if (!is.null(xaxb)) {
-            abline(v = xaxb, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
+            abline(v = xaxb, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
             gnx = NA
           } else if (!any(c(par("xlog"), type == "boxplot"))) {
             xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
-            abline(v = xg, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
+            abline(v = xg, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
             gnx = NA
           }
           if (!is.null(yaxb)) {
-            abline(h = yaxb, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
+            abline(h = yaxb, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
             gny = NA
           } else if (!any(c(par("ylog"), type == "boxplot"))) {
             yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
-            abline(h = yg, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
+            abline(h = yg, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
             gny = NA
           }
-          grid(nx = gnx, ny = gny, col = .tpar[["grid.col"]], lty = .tpar[["grid.lty"]], lwd = .tpar[["grid.lwd"]])
+          grid(nx = gnx, ny = gny, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
         }
       } else {
         grid

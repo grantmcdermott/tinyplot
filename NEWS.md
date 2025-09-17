@@ -40,8 +40,10 @@ where the formatting is also better._
     plot type internally coerces it to factor (e.g., `"boxplot"`)
 - `type_text()` can now also deal with factor `x`/`y` variables by converting
   them to numeric which helps to add text to barplots etc. (#470 @zeileis)
-- Fix bug where sourced (non-interactive) scripts with `tinytheme()` calls were
-  not inheriting the correct parameters and spacing. (#475, #481 @grantmcdermott)
+- Fixed some `tinytheme()` bugs.
+  - Sourced (non-interactive) scripts with `tinytheme()` calls now inherit the
+    correct parameters and spacing. (#475, #481 @grantmcdermott)
+  - Custom `cex` theme settings are now reset correctly. (#482 @grantmcdermott)
 
 
 ### Internals

@@ -623,6 +623,7 @@ tinyplot(
   width = NULL,
   height = NULL,
   asp = NA,
+  theme = NULL,
   ...
 )
 
@@ -1230,6 +1231,14 @@ numeric giving the plot height in inches. Same considerations as <code>width</co
 </td>
 <td>
 the y/xy/x aspect ratio, see <code>plot.window</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="theme">theme</code>
+</td>
+<td>
+keyword string (e.g.&nbsp;<code>“clean”</code>) or list defining a theme. Passed on to <code>tinytheme</code>, but reset upon exit so that the theme effect is only temporary. Useful for invoking ephemeral themes.
 </td>
 </tr>
 <tr>

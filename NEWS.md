@@ -10,8 +10,8 @@ where the formatting is also better._
 
 - Added support for "bubble" scatter plots, allowing for point size scaling via
   an appropriate `cex` argument (e.g., a continuous variable from your dataset).
-  The updated `?type_points` helpfile contains several examples. Simultaneously 
-  enables dual-legend support for combined size + color mappings.
+  Simultaneously enables dual-legend support for combined size + color mappings.
+  The updated `?type_points` helpfile contains several examples.
   (#433 @grantmcdermott)
 - Improved horizontal legend spacing, as well as multicolumn legend support. A
   new example in the "Tips & tricks" vignettes demonstrates the latter.
@@ -24,7 +24,7 @@ where the formatting is also better._
   (#461 @vincentarelbundock)
 - The new `tinyplot(..., theme = <theme>)` argument enables users to invoke
   ephemeral themes as an alternative to the persistent themes that follow
-  `tinytheme(<theme>)`. (#483 @grantmcdermott)
+  `tinytheme(<theme>)`. (#484 @grantmcdermott)
 
 ### Bug fixes
 

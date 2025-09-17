@@ -34,8 +34,11 @@
 #' @details
 #' Sets a list of graphical parameters using `tpar()`
 #'
+#' Note that themes are persistent and will be applied to all subsequent plots.
 #' To reset the theme to default settings (no customization), call `tinytheme()`
-#' without arguments.
+#' without arguments. Altenatively, invoke the `tinyplot(..., theme = <theme>)`
+#' argument for an ephemeral theme that is automatically reset at the end of the
+#' plot call.
 #' 
 #' **Caveat emptor:** Themes are a somewhat experimental feature of `tinyplot`.
 #' While we feel confident that themes should work as expected for most
@@ -65,6 +68,9 @@
 #' # Set a theme
 #' tinytheme("bw")
 #' p()
+#' 
+#' #  A set theme is persistent and will apply to subsequent plots
+#' tinyplot(0:10)
 #'
 #' # Try a different theme
 #' tinytheme("dark")
@@ -85,6 +91,10 @@
 #' # Reset the theme
 #' tinytheme()
 #' p()
+#' 
+#' # For an ephemeral theme, use `tinyplot(..., theme = <theme>)` directly
+#' tinyplot(0:10, theme = "clean", main = "This theme is ephemeral")
+#' tinyplot(10:0, main = "See, no more theme")
 #' 
 #' # Themes showcase
 #' ## We'll use a slightly more intricate plot (long y-axis labs and facets)

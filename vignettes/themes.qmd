@@ -83,6 +83,20 @@ tinytheme()
 tinyplot(mpg ~ hp, data = mtcars, main = "Fuel efficiency vs. horsepower")
 ```
 
+### Aside: ephemeral themes
+
+We expect that users will generally want to set a persistent theme for all
+(most) of their plots. But it is also possible to set a ephemeral theme for a
+particular plot by calling the `tinyplot(..., theme = <theme>)` argument
+directly.
+
+```{r}
+#| layout-ncol: 2
+tinyplot(mpg ~ hp, data = mtcars, main = "Ephemeral theme", theme = "clean")
+tinyplot(mpg ~ hp, data = mtcars, main = "Back to the default")
+```
+
+
 
 ### Gallery
 

@@ -22,6 +22,9 @@ where the formatting is also better._
   `boxplot(x)`. (#454 @zeileis)
 - `type_errorbar()` and `type_point_range()` get a `dodge` argument.
   (#461 @vincentarelbundock)
+- The new `tinyplot(..., theme = <theme>)` argument enables users to invoke
+  ephemeral themes as an alternative to the persistent themes that follow
+  `tinytheme(<theme>)`. (#483 @grantmcdermott)
 
 ### Bug fixes
 

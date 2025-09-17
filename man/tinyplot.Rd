@@ -60,6 +60,7 @@ tinyplot(x, ...)
   width = NULL,
   height = NULL,
   asp = NA,
+  theme = NULL,
   ...
 )
 
@@ -503,6 +504,10 @@ graphics windows.}
 specified.}
 
 \item{asp}{the y/xy/x aspect ratio, see \code{plot.window}.}
+
+\item{theme}{keyword string (e.g. \code{"clean"}) or list defining a theme. Passed
+on to \code{\link{tinytheme}}, but reset upon exit so that the theme effect is only
+temporary. Useful for invoking ephemeral themes.}
 
 \item{formula}{a \code{\link[stats]{formula}} that optionally includes
 grouping variable(s) after a vertical bar, e.g. \code{y ~ x | z}. One-sided

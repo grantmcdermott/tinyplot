@@ -3,7 +3,6 @@ using("tinysnapshot")
 
 tinytheme()
 
-
 thms = eval(formals(tinytheme)$theme)
 
 for (thm in thms) {
@@ -152,3 +151,19 @@ expect_snapshot_plot(f, label = "tinytheme_dynamic_clean_spineplot")
 ## reset
 
 tinytheme()
+
+
+#
+## ephemeral theme
+
+f = function() {
+  opar = par(mfrow = c(1, 2))
+  plt(Sepal.Length ~ Petal.Length | Species, data = iris,
+      main = "Ephemeral theme", theme = "clean", legend = FALSE)
+  plt_add(type = "lm")
+  plt(Sepal.Length ~ Petal.Length | Species, data = iris,
+      main = "Revert to old theme", legend = FALSE)
+  plt_add(type = "lm")
+  par(opar)
+}
+expect_snapshot_plot(f, label = "tinytheme_ephemeral")

@@ -349,6 +349,9 @@
 #'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
 #'  specified.
 #' @param asp the y/xy/x aspect ratio, see `plot.window`.
+#' @param theme keyword string (e.g. `"clean"`) or list defining a theme. Passed
+#'  on to [`tinytheme`], but reset upon exit so that the theme effect is only
+#'  temporary. Useful for invoking ephemeral themes. 
 #' @param ... other graphical parameters. If `type` is a character specification
 #'   (such as `"hist"`) then any argument names that match those from the corresponding
 #'   `type_*()` function (such as \code{\link{type_hist}}) are passed on to that.
@@ -634,6 +637,7 @@ tinyplot.default = function(
     width = NULL,
     height = NULL,
     asp = NA,
+    theme = NULL,
     ...) {
 
 
@@ -673,6 +677,22 @@ tinyplot.default = function(
     on.exit(par(opar), add = TRUE)
   }
   set_saved_par(when = "before", opar)
+
+  # Ephemeral theme
+  if (!is.null(theme)) {
+    # browser()
+    if (is.character(theme) && length(theme) == 1) {
+      tinytheme(theme)
+    } else if (is.list(theme)) {
+      do.call(tinytheme, theme)
+    } else {
+      warning('Argument `theme` must be a character of length 1 (e.g. "clean"), or a list. Ignoring.')
+    }
+    dtheme = theme_default
+    otheme = opar[names(dtheme)]
+
+    on.exit(do.call(tinytheme, otheme), add = TRUE)
+  }
 
 
   #

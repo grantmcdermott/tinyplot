@@ -183,6 +183,7 @@ theme_default = list(
   adj.sub = par("adj"), # 0.5,
   bg = "white", # par("bg") # "white"
   bty = par("bty"), #"o",
+  cex = par("cex"), #1,
   cex.axis = par("cex.axis"), #1,
   cex.main = par("cex.main"), #1.2,
   cex.xlab = par("cex.axis"), #1,

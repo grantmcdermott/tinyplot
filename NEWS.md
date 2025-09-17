@@ -41,7 +41,7 @@ where the formatting is also better._
 - `type_text()` can now also deal with factor `x`/`y` variables by converting
   them to numeric which helps to add text to barplots etc. (#470 @zeileis)
 - Fix bug where sourced (non-interactive) scripts with `tinytheme()` calls were
-  not inheriting the correct LHS margin spacing. (#475 @grantmcdermott)
+  not inheriting the correct parameters and spacing. (#475, #481 @grantmcdermott)
 
 
 ### Internals

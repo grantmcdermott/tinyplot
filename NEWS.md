@@ -48,6 +48,11 @@ where the formatting is also better._
     correct parameters and spacing. (#475, #481 @grantmcdermott)
   - Custom `cex` theme settings are now reset correctly. (#482 @grantmcdermott)
 
+### Documentation
+
+- @grantmcdermott's _useR! 2025_ **tinyplot** presentation has been added to the
+  website as a standalone
+  [vignette](https://grantmcdermott.com/tinyplot/vignettes/useR2025/useR2025.html).
 
 ### Internals
 

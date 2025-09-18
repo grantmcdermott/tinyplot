@@ -659,15 +659,6 @@ tinyplot.default = function(
     }
   }
 
-  # catch for adding to existing facet plot
-  if (!is.null(facet) && add) {
-    recordGraphics(
-      par(get_saved_par(when = "after")),
-      list = list(),
-      env = getNamespace('tinyplot')
-    )
-  }
-
   # Save current graphical parameters
   opar = par(no.readonly = TRUE)
   if (restore.par || !is.null(facet)) {
@@ -677,6 +668,15 @@ tinyplot.default = function(
     on.exit(par(opar), add = TRUE)
   }
   set_saved_par(when = "before", opar)
+
+  # Catch for adding to existing facet plot
+  if (!is.null(facet) && add) {
+    recordGraphics(
+      par(get_saved_par(when = "after")),
+      list = list(),
+      env = getNamespace('tinyplot')
+    )
+  }
 
   # Ephemeral theme
   if (!is.null(theme)) {

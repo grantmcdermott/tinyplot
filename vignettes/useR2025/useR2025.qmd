@@ -265,19 +265,24 @@ But going beyond the defaults is often (much) more work that I want to do.
 
 ### R has two low-level graphics systems
 
-::: {.r-stack}
-![Note: Adapted from @murrell2023updates.](img/rgraphics.png)
+![](img/rgraphics.png)
 
-![Note: Adapted from @murrell2023updates.](img/rgraphics2.png){.fragment}
-:::
+## grid vs graphics (redux) {visibility="uncounted" auto-animate=true}
 
+### R has two low-level graphics systems
 
-::: {.fragment}
+![](img/rgraphics2.png)
+
+## grid vs graphics (redux) {visibility="uncounted" auto-animate=true}
+
+### R has two low-level graphics systems
+
+![](img/rgraphics2.png)
+
 **tinyplot** goals:
 
 1. Make base R graphics more user-friendly.
-2. Improved feature parity vs. grid-based 📦s like **ggplot2** and **lattice**.   
-:::
+2. Improved feature parity vs. grid-based 📦s like **ggplot2** and **lattice**.
 
 ## Origin story 🤝
 

@@ -1113,12 +1113,10 @@ I hope that I have convinced you that **tinyplot** covers a _lot_ of ground.
 
 - The API should also be very stable. I expect few (if any) breaking changes from here on out.
 
-::: {.fragment}
 Still, **tinyplot**  is a relatively young project and there are some features and plot types that we don't support (yet). Some things coming down the pike:
 
 - bubble plots ([#433](https://github.com/grantmcdermott/tinyplot/pull/433))
 - dodged elements ([#406](https://github.com/grantmcdermott/tinyplot/issues/406))
 - maps ([#210](https://github.com/grantmcdermott/tinyplot/issues/210))
-:::
 
 [[Back to main]{.button}](#sec-disadv)

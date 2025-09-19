@@ -920,7 +920,7 @@ For the longer version: [[tinyplot pros]{.button}](#sec-pros)
 - Custom layout
 - Missing features
 
-For the longer version: [[tinyplot pros]{.button}](#sec-cons)
+For the longer version: [[tinyplot cons]{.button}](#sec-cons)
 
 ## Acknowledgements
 

@@ -977,9 +977,9 @@ Many other contributors, feedback providers, and a sources of inspiration.
 ::: {#refs}
 :::
 
-# Bonus: Tinyplot pros {#sec-pros}
+# Bonus: Tinyplot pros {#sec-pros visibility="uncounted"}
 
-## Concise
+## Concise {visibility="uncounted"}
 
 ### The formula API gives bang for buck
 
@@ -987,7 +987,7 @@ Many other contributors, feedback providers, and a sources of inspiration.
 
 _P.S. Thanks to Ryan for letting me use this screenshot._
 
-## Concise
+## Concise {visibility="uncounted"}
 
 ### The formula API gives bang for buck
 
@@ -1029,7 +1029,7 @@ plt(
 
 _(That's about 1/3 fewer characters.)_
 
-## Concise
+## Concise {visibility="uncounted"}
 
 ### Concision is even starker vs. vanilla base plot
 
@@ -1055,7 +1055,7 @@ Adapted from @viechtbauer2025tinyplot.
 
 ::::
 
-## Lightweight
+## Lightweight {visibility="uncounted"}
 
 ### Base R only
 
@@ -1074,9 +1074,9 @@ Very fast to install and play with in webR / WebAssembly. ([Try it!](https://web
 [[Back to main]{.button}](#sec-adv)
 
 
-# Bonus: Tinyplot cons {#sec-cons}
+# Bonus: Tinyplot cons {#sec-cons visibility="uncounted"}
 
-## Layering gotchas
+## Layering gotchas {visibility="uncounted"}
 
 ### Scaling is fixed by the first layer
 
@@ -1089,7 +1089,7 @@ plt_add(type = "lm")
 This is a limitation of **graphics** "canvas" logic. (Workarounds: Change layer order, or use `x/ylim`.)
 ::: 
 
-## Layering gotchas
+## Layering gotchas {visibility="uncounted"}
 
 ### Can't combine `file` with `plt_add` (yet)
 
@@ -1107,7 +1107,7 @@ I'm hoping to provide a native solution in the future, but workarounds for now:
 - Open/close the appropriate graphics device manually, e.g. `png("myplot.png"); plt(...); plt_add(...); dev.off() `
 ::: 
 
-## Missing features
+## Missing features {visibility="uncounted"}
 
 I hope that I have convinced you that **tinyplot** covers a _lot_ of ground.
 

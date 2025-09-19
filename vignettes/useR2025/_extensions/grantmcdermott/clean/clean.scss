@@ -277,16 +277,21 @@ $selection-bg: #26351c !default;
 .reveal table th,
 .reveal table td {
   border: none; /* Remove internal row lines */
-  padding: .23em; /* Adjust padding as needed */
+  padding: .23em .46em; /* Adjust padding as needed */
   text-align: left; /* Adjust text alignment as needed */
   font-weight: lighter; /* Lighter font weight for main table text */
 }
 
-/* Adds a bottom border to the table header row for distinction */
+/* Add top border to first row and bottom border to last row only */
+.reveal table thead th,
+.reveal .slides table tr:first-child td {
+  border-top: 2px solid #D3D3D3;
+}
+
 .reveal table thead th,
 .reveal .slides table tr:last-child td,
 .reveal .slides table {
-  border-bottom: 2px solid #D3D3D3; /* Dark grey color for the bottom border */
+  border-bottom: 2px solid #D3D3D3;
 }
 
 /* Make column headers bold */

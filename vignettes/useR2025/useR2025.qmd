@@ -518,19 +518,23 @@ plt(
 ## tinyplot API
 ### types
 
-All tinyplot types can be passed as either a:
+tinyplot types can be passed as either a _string_ or _function_:
 
-- _string_ (`"p"`, `"density`, `"lm"`, ...), or
-- _function_ (`type_points()`, `type_density()`, `type_lm()`, ...)
+|     |     |     |     |     |
+|-----|:----|:----|:----|:----|
+| _string_ | `"p"` | `"density"` | `"lm"` | `"<name>"` |
+| _function_ | `type_points()` | `type_density()` | `type_lm()` | `type_<name>()` |
 
-In general, the functional equivalents are denoted `type_*()` and support direct argument passing for customization, e.g.
+::: {.fragment}
+The function variants all take the form `type_<name>` and support type-specific
+argument passing for customization, e.g.
 
 ```{r}
-?type_lm
-args(type_lm)
+# ?type_lm   # full documentation
+str(type_lm) # available args
 ```
-::: {.callout-note}
-Custom args can also be passed through `plt(...)`, so long as there isn't a top-level clash.
+
+P.S. Type args can also be passed via `plt(...)` _if_ there's no top-level clash.
 :::
 
 ## tinyplot API

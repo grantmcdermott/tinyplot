@@ -893,6 +893,11 @@ plt(Month ~ Temp | Temp,
 )
 ```
 
+```{r}
+#| include: false
+tinytheme()
+```
+
 # Conclusions
 
 ## Advantages of tinyplot {#sec-adv}

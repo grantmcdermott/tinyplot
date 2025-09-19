@@ -530,6 +530,8 @@ tinyplot types can be passed as either a _string_ or _function_:
 | _string_ | `"p"` | `"density"` | `"lm"` | `"<name>"` |
 | _function_ | `type_points()` | `type_density()` | `type_lm()` | `type_<name>()` |
 
+\
+
 ::: {.fragment}
 The function variants all take the form `type_<name>` and support type-specific
 argument passing for customization, e.g.
@@ -825,8 +827,8 @@ plt(
 #| fig-width: 6
 #| fig-asp: 1
 
-mod = lm(body_mass ~ species + sex,
-         data = penguins)
+mod = lm(weight ~ 0 + Time + Diet,
+         data = ChickWeight)
 coefs = data.frame(
   names(coef(mod)),
   coef(mod),

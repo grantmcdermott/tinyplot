@@ -219,6 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
   <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
+  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
   <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals">Internals</a></li>
   </ul></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.4.2</a>
@@ -271,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="new-features" class="level3">
 <h3 class="anchored" data-anchor-id="new-features">New features</h3>
 <ul>
-<li>Added support for “bubble” scatter plots, allowing for point size scaling via an appropriate <code>cex</code> argument (e.g., a continuous variable from your dataset). Simultaneously enables dual-legend support for combined size + color mappings. The updated <code>?type_points</code> helpfile contains several examples. (<a href="https://github.com/grantmcdermott/tinyplot/issues/433">#433</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Added support for “bubble” scatter plots, allowing for point size scaling via an appropriate <code>cex</code> argument (e.g., a continuous variable from your dataset). Simultaneously enables dual-legend support for combined size + color mappings. The updated <code>?type_points</code> documentation contains several examples. (<a href="https://github.com/grantmcdermott/tinyplot/issues/433">#433</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Improved horizontal legend spacing, as well as multicolumn legend support. A new example in the “Tips &amp; tricks” vignettes demonstrates the latter. (<a href="https://github.com/grantmcdermott/tinyplot/issues/446">#446</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Univariate boxplots (without grouping variable) are now handled in <code>tinyplot.default()</code>, so that <code>tinyplot(x, type = "boxplot")</code> and <code>tinyplot(~ x, type = "boxplot")</code> essentially produce the same output as <code>boxplot(x)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/454">#454</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 <li><code>type_errorbar()</code> and <code>type_point_range()</code> get a <code>dodge</code> argument. (<a href="https://github.com/grantmcdermott/tinyplot/issues/461">#461</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
@@ -293,6 +294,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Sourced (non-interactive) scripts with <code>tinytheme()</code> calls now inherit the correct parameters and spacing. (<a href="https://github.com/grantmcdermott/tinyplot/issues/475">#475</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/481">#481</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Custom <code>cex</code> theme settings are now reset correctly. (<a href="https://github.com/grantmcdermott/tinyplot/issues/482">#482</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
+</ul>
+</section>
+<section id="documentation" class="level3">
+<h3 class="anchored" data-anchor-id="documentation">Documentation</h3>
+<ul>
+<li><a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>’s <em>useR! 2025</em> <strong>tinyplot</strong> presentation has been added to the website as a standalone <a href="https://grantmcdermott.com/tinyplot/vignettes/useR2025/useR2025.html">vignette</a>.</li>
 </ul>
 </section>
 <section id="internals" class="level3">

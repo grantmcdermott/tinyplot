@@ -118,7 +118,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-e3fde6e4cc979c99a12849a47ceaecfc.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-58e1629c250c39591447ef80488d10ef.css">
   <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -215,7 +215,7 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" data-background-image="img/background.png" class="quarto-title-block center">
+<section id="title-slide" data-background-image="img/background.png" data-background-size="contain" class="quarto-title-block center">
   <h1 class="title"><br><br><br></h1>
   <p class="subtitle">Lightweight extension of the base R graphics system</p>
 
@@ -463,30 +463,22 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <section id="grid-vs-graphics-redux" class="slide level2">
 <h2>grid vs graphics (redux)</h2>
 <h3 id="r-has-two-low-level-graphics-systems-1">R has two low-level graphics systems</h3>
-<div class="r-stack">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/rgraphics.png"></p>
-<figcaption>Note: Adapted from <span class="citation" data-cites="murrell2023updates">Murrell (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>.</figcaption>
-</figure>
-</div>
-<div class="fragment">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/rgraphics2.png"></p>
-<figcaption>Note: Adapted from <span class="citation" data-cites="murrell2023updates">Murrell (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="fragment">
-<p><strong>tinyplot</strong> goals:</p>
+
+<img data-src="img/rgraphics.png" class="r-stretch"></section>
+<section id="grid-vs-graphics-redux-1" class="slide level2" data-visibility="uncounted" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">grid vs graphics (redux)</h2>
+<h3 id="r-has-two-low-level-graphics-systems-2">R has two low-level graphics systems</h3>
+
+<img data-src="img/rgraphics2.png" class="r-stretch"></section>
+<section id="grid-vs-graphics-redux-2" class="slide level2" data-visibility="uncounted" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">grid vs graphics (redux)</h2>
+<h3 id="r-has-two-low-level-graphics-systems-3">R has two low-level graphics systems</h3>
+
+<img data-src="img/rgraphics2.png" class="r-stretch"><p><strong>tinyplot</strong> goals:</p>
 <ol type="1">
 <li>Make base R graphics more user-friendly.</li>
-<li>Improved feature parity vs.&nbsp;grid-based 📦s like <strong>ggplot2</strong> and <strong>lattice</strong>.<br>
-</li>
+<li>Improved feature parity vs.&nbsp;grid-based 📦s like <strong>ggplot2</strong> and <strong>lattice</strong>.</li>
 </ol>
-</div>
 </section>
 <section id="origin-story-1" class="slide level2">
 <h2>Origin story 🤝</h2>
@@ -777,32 +769,44 @@ Grant McDermott <a href="https://orcid.org/0000-0001-7883-8573" class="quarto-ti
 <section id="tinyplot-api-5" class="slide level2">
 <h2>tinyplot API</h2>
 <h3 id="types">types</h3>
-<p>All tinyplot types can be passed as either a:</p>
-<ul>
-<li><em>string</em> (<code>"p"</code>, <code>"density</code>, <code>"lm"</code>, …), or</li>
-<li><em>function</em> (<code>type_points()</code>, <code>type_density()</code>, <code>type_lm()</code>, …)</li>
-</ul>
-<p>In general, the functional equivalents are denoted <code>type_*()</code> and support direct argument passing for customization, e.g.</p>
+<p>tinyplot types can be passed as either a <em>string</em> or <em>function</em>:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><em>string</em></td>
+<td style="text-align: left;"><code>"p"</code></td>
+<td style="text-align: left;"><code>"density"</code></td>
+<td style="text-align: left;"><code>"lm"</code></td>
+<td style="text-align: left;"><code>"&lt;name&gt;"</code></td>
+</tr>
+<tr class="even">
+<td><em>function</em></td>
+<td style="text-align: left;"><code>type_points()</code></td>
+<td style="text-align: left;"><code>type_density()</code></td>
+<td style="text-align: left;"><code>type_lm()</code></td>
+<td style="text-align: left;"><code>type_&lt;name&gt;()</code></td>
+</tr>
+</tbody>
+</table>
+<p><br>
+</p>
+<div class="fragment">
+<p>The function variants all take the form <code>type_&lt;name&gt;</code> and support type-specific argument passing for customization, e.g.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>?type_lm</span>
-<span id="cb29-2"><a></a><span class="fu">args</span>(type_lm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="co"># ?type_lm   # full documentation</span></span>
+<span id="cb29-2"><a></a><span class="fu">str</span>(type_lm) <span class="co"># available args</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>function (se = TRUE, level = 0.95) 
-NULL</code></pre>
+<pre><code>function (se = TRUE, level = 0.95)  </code></pre>
 </div>
 </div>
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
-</div>
-<div class="callout-content">
-<p>Custom args can also be passed through <code>plt(...)</code>, so long as there isn’t a top-level clash.</p>
-</div>
-</div>
+<p>P.S. Type args can also be passed via <code>plt(...)</code> <em>if</em> there’s no top-level clash.</p>
 </div>
 </section>
 <section id="tinyplot-api-6" class="slide level2">
@@ -1158,8 +1162,8 @@ NULL</code></pre>
 <h3 id="error-bars">error bars</h3>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>mod <span class="ot">=</span> <span class="fu">lm</span>(body_mass <span class="sc">~</span> species <span class="sc">+</span> sex,</span>
-<span id="cb48-2"><a></a>         <span class="at">data =</span> penguins)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>mod <span class="ot">=</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Time <span class="sc">+</span> Diet,</span>
+<span id="cb48-2"><a></a>         <span class="at">data =</span> ChickWeight)</span>
 <span id="cb48-3"><a></a>coefs <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
 <span id="cb48-4"><a></a>  <span class="fu">names</span>(<span class="fu">coef</span>(mod)),</span>
 <span id="cb48-5"><a></a>  <span class="fu">coef</span>(mod),</span>
@@ -1283,7 +1287,7 @@ NULL</code></pre>
 <li>Custom layout</li>
 <li>Missing features</li>
 </ul>
-<p>For the longer version: <a href="#/sec-cons"><span class="button">tinyplot pros</span></a></p>
+<p>For the longer version: <a href="#/sec-cons"><span class="button">tinyplot cons</span></a></p>
 </section>
 <section id="acknowledgements" class="slide level2">
 <h2>Acknowledgements</h2>
@@ -1331,17 +1335,17 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 </div>
 </section></section>
 <section>
-<section id="sec-pros" class="title-slide slide level1 center">
+<section id="sec-pros" class="title-slide slide level1 center" data-visibility="uncounted">
 <h1>Bonus: Tinyplot pros</h1>
 
 </section>
-<section id="concise" class="slide level2">
+<section id="concise" class="slide level2" data-visibility="uncounted">
 <h2>Concise</h2>
 <h3 id="the-formula-api-gives-bang-for-buck">The formula API gives bang for buck</h3>
 
 <img data-src="img/briggs.png" class="r-stretch"><p><em>P.S. Thanks to Ryan for letting me use this screenshot.</em></p>
 </section>
-<section id="concise-1" class="slide level2">
+<section id="concise-1" class="slide level2" data-visibility="uncounted">
 <h2>Concise</h2>
 <h3 id="the-formula-api-gives-bang-for-buck-1">The formula API gives bang for buck</h3>
 <p>Just focusing on the core plot components…</p>
@@ -1367,7 +1371,7 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 </div></div>
 <p><em>(That’s about 1/3 fewer characters.)</em></p>
 </section>
-<section id="concise-2" class="slide level2">
+<section id="concise-2" class="slide level2" data-visibility="uncounted">
 <h2>Concise</h2>
 <h3 id="concision-is-even-starker-vs.-vanilla-base-plot">Concision is even starker vs.&nbsp;vanilla base plot</h3>
 <div class="columns">
@@ -1380,7 +1384,7 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 <p>Adapted from <span class="citation" data-cites="viechtbauer2025tinyplot">Viechtbauer (<a href="#/references" role="doc-biblioref" onclick="">2025</a>)</span>.</p>
 </div></div>
 </section>
-<section id="lightweight" class="slide level2">
+<section id="lightweight" class="slide level2" data-visibility="uncounted">
 <h2>Lightweight</h2>
 <h3 id="base-r-only">Base R only</h3>
 <p><strong>tinyplot</strong> has <em>zero</em> third-party dependencies.</p>
@@ -1398,11 +1402,11 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 <p><a href="#/sec-adv"><span class="button">Back to main</span></a></p>
 </section></section>
 <section>
-<section id="sec-cons" class="title-slide slide level1 center">
+<section id="sec-cons" class="title-slide slide level1 center" data-visibility="uncounted">
 <h1>Bonus: Tinyplot cons</h1>
 
 </section>
-<section id="layering-gotchas" class="slide level2">
+<section id="layering-gotchas" class="slide level2" data-visibility="uncounted">
 <h2>Layering gotchas</h2>
 <h3 id="scaling-is-fixed-by-the-first-layer">Scaling is fixed by the first layer</h3>
 <div class="cell">
@@ -1410,11 +1414,11 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 <span id="cb54-2"><a></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="useR2025_files/figure-revealjs/unnamed-chunk-49-1.png" width="960" class="r-stretch"><div class="fragment">
+<img data-src="useR2025_files/figure-revealjs/unnamed-chunk-50-1.png" width="960" class="r-stretch"><div class="fragment">
 <p>This is a limitation of <strong>graphics</strong> “canvas” logic. (Workarounds: Change layer order, or use <code>x/ylim</code>.)</p>
 </div>
 </section>
-<section id="layering-gotchas-1" class="slide level2">
+<section id="layering-gotchas-1" class="slide level2" data-visibility="uncounted">
 <h2>Layering gotchas</h2>
 <h3 id="cant-combine-file-with-plt_add-yet">Can’t combine <code>file</code> with <code>plt_add</code> (yet)</h3>
 <p>This doesn’t work:</p>
@@ -1428,20 +1432,18 @@ Viechtbauer, Wolfgang. 2025. <span>“<span class="nocase">Open Online R Stream:
 </ul>
 </div>
 </section>
-<section id="missing-features" class="slide level2">
+<section id="missing-features" class="slide level2" data-visibility="uncounted">
 <h2>Missing features</h2>
 <p>I hope that I have convinced you that <strong>tinyplot</strong> covers a <em>lot</em> of ground.</p>
 <ul>
 <li>The API should also be very stable. I expect few (if any) breaking changes from here on out.</li>
 </ul>
-<div class="fragment">
 <p>Still, <strong>tinyplot</strong> is a relatively young project and there are some features and plot types that we don’t support (yet). Some things coming down the pike:</p>
 <ul>
 <li>bubble plots (<a href="https://github.com/grantmcdermott/tinyplot/pull/433">#433</a>)</li>
 <li>dodged elements (<a href="https://github.com/grantmcdermott/tinyplot/issues/406">#406</a>)</li>
 <li>maps (<a href="https://github.com/grantmcdermott/tinyplot/issues/210">#210</a>)</li>
 </ul>
-</div>
 <p><a href="#/sec-disadv"><span class="button">Back to main</span></a></p>
 
 

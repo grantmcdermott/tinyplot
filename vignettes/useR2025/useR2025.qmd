@@ -1,17 +1,12 @@
 ---
 # title: tinyplot
-# subtitle:  Lightweight extension of the base R graphics system
-# format: clean-revealjs
 title: "<br/><br/><br/>"
 subtitle: Lightweight extension of the base R graphics system
 format:
    clean-revealjs:
      title-slide-attributes:
        data-background-image: "img/background.png"
-  # clean-revealjs:
-  # #   logo: img/logo.svg
-  #   title-slide-attributes:
-  #     data-background-image: "img/background.png"
+       data-background-size: contain
 execute:
   echo: true
 author:

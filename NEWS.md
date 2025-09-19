@@ -11,7 +11,7 @@ where the formatting is also better._
 - Added support for "bubble" scatter plots, allowing for point size scaling via
   an appropriate `cex` argument (e.g., a continuous variable from your dataset).
   Simultaneously enables dual-legend support for combined size + color mappings.
-  The updated `?type_points` helpfile contains several examples.
+  The updated `?type_points` documentation contains several examples.
   (#433 @grantmcdermott)
 - Improved horizontal legend spacing, as well as multicolumn legend support. A
   new example in the "Tips & tricks" vignettes demonstrates the latter.
@@ -48,6 +48,11 @@ where the formatting is also better._
     correct parameters and spacing. (#475, #481 @grantmcdermott)
   - Custom `cex` theme settings are now reset correctly. (#482 @grantmcdermott)
 
+### Documentation
+
+- @grantmcdermott's _useR! 2025_ **tinyplot** presentation has been added to the
+  website as a standalone
+  [vignette](https://grantmcdermott.com/tinyplot/vignettes/useR2025/useR2025.html).
 
 ### Internals
 

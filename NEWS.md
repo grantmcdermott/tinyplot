@@ -25,6 +25,11 @@ where the formatting is also better._
 - The new `tinyplot(..., theme = <theme>)` argument enables users to invoke
   ephemeral themes as an alternative to the persistent themes that follow
   `tinytheme(<theme>)`. (#484 @grantmcdermott)
+- Similarly to how the `x/yaxl` arguments allow for axes label adjustment, users
+  can now adjust the legend labels too with
+  `tinyplot(..., legend = list(labeller = <labeller>))`. The `labeller` argument
+  is passed to `tinylabel`; see the latter's help documentation for examples.
+  (#488 @grantmcdermott)
 
 ### Bug fixes
 

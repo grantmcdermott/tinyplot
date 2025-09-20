@@ -25,17 +25,23 @@
 #' tinylabel(x, "comma")
 #' tinylabel(x, ",") # same
 #' tinylabel(x, "$") # or "dollar"
-#'
-#' # pass to xaxl/yaxl for adjusting axes tick labels in a tinyplot call
-#' tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "%")
+#' 
+#' # invoke tinylabel from a parent tinyplot call...
+#' #   => x/yaxl for adjusting axes tick labels
+#' #   => legend = list(labeller = ...) for adjusting the legend labels
+#' s77 = transform(data.frame(state.x77), Illiteracy = Illiteracy / 100)
+#' tinyplot(Life.Exp ~ Illiteracy | Income, data = s77,
+#'          xaxl = '%',
+#'          legend = list(labeller = '$'))
 #'
 #' # log example (combined with axis scaling)
-#' tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log")
+#' tinyplot(x = 10^c(10:0), y = 0:10, type = "b",
+#'          log = "x", xaxl = "log")
 #'
 #' # combine with `x/yaxb` to adjust the actual tick marks ("break points")
 #' # at the same time
-#' tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log",
-#'          xaxb = 10^c(1,3,5,7,9))
+#' tinyplot(x = 10^c(10:0), y = 0:10, type = "b",
+#'          log = "x", xaxl = "log", xaxb = 10^c(1,3,5,7,9))
 #'
 #' #
 #' ## custom function examples

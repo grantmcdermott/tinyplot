@@ -574,6 +574,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   legend_args = NULL,
   by_dep = NULL,
   lgnd_labs = NULL,
+  labeller = NULL,
   type = NULL,
   pch = NULL,
   lty = NULL,
@@ -622,6 +623,14 @@ The (deparsed) "by" grouping variable name.
 </td>
 <td>
 The labels passed to <code>legend(legend = …)</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="labeller">labeller</code>
+</td>
+<td>
+Character or function for formatting the labels (<code>lgnd_labs</code>). Passed down to <code>tinylabel</code>.
 </td>
 </tr>
 <tr>

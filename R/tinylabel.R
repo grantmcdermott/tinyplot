@@ -96,12 +96,14 @@ labeller_fun = function(label = "percent") {
   format_percent = function(x) {
     max_decimals = 5L
     pct = as.numeric(x) * 100
+    pidx = which(!is.na(x))
     d = Find(
       function(d) length(
-        unique(sprintf(paste0('%.', d, 'f%%'), pct))) == length(pct),
+        unique(sprintf(paste0('%.', d, 'f%%'), pct[pidx]))) == length(pidx),
         0:max_decimals
     ) %||% max_decimals
-    sprintf(paste0('%.', d, 'f%%'), pct)
+    pct[pidx] = sprintf(paste0('%.', d, 'f%%'), pct[pidx])
+    return(pct)
   }
   
   format_comma = function(x) {

@@ -95,7 +95,13 @@ tinylabel = function(x, labeller = NULL, na.ignore = TRUE, na.rm = TRUE) {
   if (is.character(labeller)) {
     labeller = labeller_fun((labeller))
   }
-  x[xidx] = labeller(x[xidx])
+  # don't need to subset if everything is being used. DateTime also require
+  # exception logic (e.g., date format needs to be consistent for whole vector)
+  if (length(xidx) == length(x) || inherits(x, c("POSIXt", "Date"))) {
+    x = labeller(x)
+  } else {
+    x[xidx] = labeller(x[xidx])
+  }
   return(x)
 }
 

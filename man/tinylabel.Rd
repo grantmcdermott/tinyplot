@@ -4,7 +4,7 @@
 \alias{tinylabel}
 \title{Format labels}
 \usage{
-tinylabel(x, labeller = NULL)
+tinylabel(x, labeller = NULL, na.ignore = TRUE, na.rm = TRUE)
 }
 \arguments{
 \item{x}{a numeric or character vector}
@@ -15,6 +15,18 @@ tinylabel(x, labeller = NULL)
 (symbols), for which common formatting transformations are provided:
 \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
 (\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
+
+\item{na.ignore}{logical indicating whether the labelling function should
+ignore \code{NA} values in \code{x}. In other words, should the \code{NA} values be left
+as-is? Default is \code{TRUE}.}
+
+\item{na.rm}{logical indicating whether \code{NA} values should be removed from
+\code{x} and thus the return object too. Default is \code{TRUE}, but only evaluated
+if \code{na.ignore} is \code{FALSE}.}
+}
+\value{
+a character vector of the same length as \code{x} with the transformed
+labels.
 }
 \description{
 Function for formatting label appearance, e.g. axis
@@ -50,7 +62,7 @@ dat = data.frame(
 
 tinyplot(trend ~ date, data = dat, xaxl = function(x) format(x, "\%b, \%Y"))
 
-## example II: string wrapping 
+## example II: string wrapping
 
 # create a "vectorised" version of `base::strwrap` that breaks long
 # strings into new lines every 18 characters
@@ -73,4 +85,7 @@ dat2 = data.frame(
 tinytheme("bw")
 tinyplot(y ~ x, data = dat2, type = "j", yaxl = strwrap18)
 tinytheme()
+}
+\seealso{
+\code{\link{tinyplot}}
 }

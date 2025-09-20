@@ -66,7 +66,8 @@ dat = data.frame(
   trend = 1:12 + rnorm(12, sd = 1)
 )
 
-tinyplot(trend ~ date, data = dat, xaxl = function(x) format(x, "\%b, \%Y"))
+tinyplot(trend ~ date, data = dat,
+         xaxl = function(x) format(x, "\%b, \%Y"))
 
 ## example II: string wrapping
 
@@ -88,9 +89,9 @@ dat2 = data.frame(
   )
 )
 
-tinytheme("bw")
-tinyplot(y ~ x, data = dat2, type = "j", yaxl = strwrap18)
-tinytheme()
+tinyplot(y ~ x, data = dat2, type = "j",
+         yaxl = strwrap18,
+         theme = "bw") # use theme for horizontal labels + dynamic margin
 }
 \seealso{
 \code{\link{tinyplot}}

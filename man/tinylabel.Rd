@@ -43,9 +43,9 @@ tinylabel(x, "$") # or "dollar"
 #   => x/yaxl for adjusting axes tick labels
 #   => legend = list(labeller = ...) for adjusting the legend labels
 s77 = transform(data.frame(state.x77), Illiteracy = Illiteracy / 100)
-tinyplot(Life.Exp ~ Illiteracy | Income, data = s77,
-         xaxl = '\%',
-         legend = list(labeller = '$'))
+tinyplot(Life.Exp ~ Income | Illiteracy, data = s77,
+         xaxl = '$',
+         legend = list(labeller = '\%'))
 
 # log example (combined with axis scaling)
 tinyplot(x = 10^c(10:0), y = 0:10, type = "b",

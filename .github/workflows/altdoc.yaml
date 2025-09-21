@@ -17,8 +17,8 @@ jobs:
     # Only restrict concurrency for non-PR jobs
     concurrency:
       group: altdoc-${{ github.event_name != 'pull_request' || github.run_id }}
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    # env:
+    #   GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: write
     steps:
@@ -35,13 +35,13 @@ jobs:
       - name: Dependencies
         run: ./run.sh install_all
 
-      - name: Altdoc deps
-        run: ./run.sh install_r future.apply
+      - name: Altdoc and deps
+        run: ./run.sh install_r altdoc future.apply
 
-      - name: Altdoc from GitHub
-        run: |
-          export GITHUB_PAT=${{ secrets.GH_TOKEN }}
-          ./run.sh install_github etiennebacher/altdoc
+      # - name: Altdoc from GitHub
+      #   run: |
+      #     export GITHUB_PAT=${{ secrets.GH_TOKEN }}
+      #     ./run.sh install_github etiennebacher/altdoc
 
       - name: Build site
         run: |

@@ -4,7 +4,7 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## Development
+## 0.5.0
 
 ### New features
 
@@ -14,7 +14,7 @@ where the formatting is also better._
   The updated `?type_points` documentation contains several examples.
   (#433 @grantmcdermott)
 - Improved horizontal legend spacing, as well as multicolumn legend support. A
-  new example in the "Tips & tricks" vignettes demonstrates the latter.
+  new example in the "Tips & tricks" vignette demonstrates the latter.
   (#446 @grantmcdermott)
 - Univariate boxplots (without grouping variable) are now handled in
   `tinyplot.default()`, so that `tinyplot(x, type = "boxplot")` and

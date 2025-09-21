@@ -52,7 +52,7 @@ Suggests:
   tinytest,
   tinysnapshot (>= 0.0.3),
   knitr
-Config/Needs/website: etiennebacher/altdoc, future.apply
+Config/Needs/website: altdoc (>= 0.6.0), future.apply
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 URL: https://grantmcdermott.com/tinyplot/

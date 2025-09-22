@@ -22,108 +22,106 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_01.R){target='_blank'}"
-#| file: "gallery_figs/gallery_01.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/points-by-iris.R){target='_blank'}"
+#| file: "gallery_figs/points-by-iris.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_02.R){target='_blank'}"
-#| file: "gallery_figs/gallery_02.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/points-by-facet-iris.R){target='_blank'}"
+#| file: "gallery_figs/points-by-facet-iris.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_03.R){target='_blank'}"
-#| file: "gallery_figs/gallery_03.R"
-#| fig-asp: .5
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/density-by-iris.R){target='_blank'}"
+#| file: "gallery_figs/density-by-iris.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_04.R){target='_blank'}"
-#| file: "gallery_figs/gallery_04.R"
-#| fig-asp: .5
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/hist-by-iris.R){target='_blank'}"
+#| file: "gallery_figs/hist-by-iris.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_05.R){target='_blank'}"
-#| file: "gallery_figs/gallery_05.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-lm-iris.R){target='_blank'}"
+#| file: "gallery_figs/add-lm-iris.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_06.R){target='_blank'}"
-#| file: "gallery_figs/gallery_06.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-points-rug-faithful.R){target='_blank'}"
+#| file: "gallery_figs/add-points-rug-faithful.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_07.R){target='_blank'}"
-#| file: "gallery_figs/gallery_07.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/errorbar-mtcars.R){target='_blank'}"
+#| file: "gallery_figs/errorbar-mtcars.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_08.R){target='_blank'}"
-#| file: "gallery_figs/gallery_08.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/polygons.R){target='_blank'}"
+#| file: "gallery_figs/polygons.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_09.R){target='_blank'}"
-#| file: "gallery_figs/gallery_09.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/rect-by.R){target='_blank'}"
+#| file: "gallery_figs/rect-by.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_10.R){target='_blank'}"
-#| file: "gallery_figs/gallery_10.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spineplot-titanic.R){target='_blank'}"
+#| file: "gallery_figs/spineplot-titanic.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_11.R){target='_blank'}"
-#| file: "gallery_figs/gallery_11.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ridge-aq.R){target='_blank'}"
+#| file: "gallery_figs/ridge-aq.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_12.R){target='_blank'}"
-#| file: "gallery_figs/gallery_12.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/boxplot-by-toothgrowth.R){target='_blank'}"
+#| file: "gallery_figs/boxplot-by-toothgrowth.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_13.R){target='_blank'}"
-#| file: "gallery_figs/gallery_13.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-text-mtcars.R){target='_blank'}"
+#| file: "gallery_figs/add-text-mtcars.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_14.R){target='_blank'}"
-#| file: "gallery_figs/gallery_14.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-ablines.R){target='_blank'}"
+#| file: "gallery_figs/add-ablines.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/gallery_15.R){target='_blank'}"
-#| file: "gallery_figs/gallery_15.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/density-part-shading.R){target='_blank'}"
+#| file: "gallery_figs/density-part-shading.R"
 ```
 
 :::

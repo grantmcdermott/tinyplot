@@ -92,8 +92,8 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/boxplot-by-toothgrowth.R){target='_blank'}"
-#| file: "gallery_figs/boxplot-by-toothgrowth.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/boxplot-by-penguins.R){target='_blank'}"
+#| file: "gallery_figs/boxplot-by-penguins.R"
 ```
 
 ```{r}

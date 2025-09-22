@@ -1,6 +1,6 @@
 ## Overview
 
-**tinyplot** v0.4.2 a patch release that contains mostly bug fixes.
+**tinyplot** v0.5.0 a minor release with some new features and bug fixes. 
 
 ## Test environments
 Arch Linux (local)

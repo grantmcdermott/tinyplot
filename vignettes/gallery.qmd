@@ -36,13 +36,6 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/density-by-iris.R){target='_blank'}"
-#| file: "gallery_figs/density-by-iris.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/hist-by-iris.R){target='_blank'}"
 #| file: "gallery_figs/hist-by-iris.R"
 ```
@@ -50,8 +43,22 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-lm-iris.R){target='_blank'}"
-#| file: "gallery_figs/add-lm-iris.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/bubble-penguins.R){target='_blank'}"
+#| file: "gallery_figs/bubble-penguins.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spineplot-titanic.R){target='_blank'}"
+#| file: "gallery_figs/spineplot-titanic.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ridge-aq.R){target='_blank'}"
+#| file: "gallery_figs/ridge-aq.R"
 ```
 
 ```{r}
@@ -80,20 +87,6 @@ Click on a plot to get the link to its code.
 #|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/rect-by.R){target='_blank'}"
 #| file: "gallery_figs/rect-by.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spineplot-titanic.R){target='_blank'}"
-#| file: "gallery_figs/spineplot-titanic.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ridge-aq.R){target='_blank'}"
-#| file: "gallery_figs/ridge-aq.R"
 ```
 
 ```{r}

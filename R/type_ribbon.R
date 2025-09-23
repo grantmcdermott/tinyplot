@@ -1,51 +1,51 @@
 #' Ribbon and area plot types
-#' 
+#'
 #' @param alpha numeric value between 0 and 1 specifying the opacity of ribbon shading
-#'   If no `alpha` value is provided, then will default to `tpar("ribbon.alpha")` 
-#'   (i.e., probably `0.2` unless this has been overridden by the user in their global 
+#'   If no `alpha` value is provided, then will default to `tpar("ribbon.alpha")`
+#'   (i.e., probably `0.2` unless this has been overridden by the user in their global
 #'   settings.)
 #'
-#' @description Type constructor functions for producing polygon ribbons, which 
+#' @description Type constructor functions for producing polygon ribbons, which
 #' define a `y` interval (usually spanning from `ymin` to `ymax`) for each
 #' `x` value. Area plots are a special case of ribbon plot where `ymin` is
 #' set to 0 and `ymax` is set to `y`.
-#' 
+#'
 #' @examples
-#' x = 1:100/10
+#' x = 1:100 / 10
 #' y = sin(x)
-#' 
+#'
 #' #
 #' ## Ribbon plots
-#' 
+#'
 #' # "ribbon" convenience string
-#' tinyplot(x = x, ymin = y-1, ymax = y+1, type = "ribbon")
+#' tinyplot(x = x, ymin = y - 1, ymax = y + 1, type = "ribbon")
 
 #' # Same result with type_ribbon()
 #' tinyplot(x = x, ymin = y-1, ymax = y+1, type = type_ribbon())
-#' 
+#'
 #' # y will be added as a line if it is specified
 #' tinyplot(x = x, y = y, ymin = y-1, ymax = y+1, type = "ribbon")
 #'
 #' #
 #' ## Area plots
-#'   
+#'
 #' # "area" type convenience string
 #' tinyplot(x, y, type = "area")
-#' 
+#'
 #' # Same result with type_area()
 #' tinyplot(x, y, type = type_area())
-#' 
+#'
 #' # Area plots are often used for time series charts
 #' tinyplot(AirPassengers, type = "area")
 #' @export
 type_ribbon = function(alpha = NULL) {
-  out = list(
-    draw = draw_ribbon(),
-    data = data_ribbon(ribbon.alpha = alpha),
-    name = "ribbon"
-  )
-  class(out) = "tinyplot_type"
-  return(out)
+    out = list(
+        draw = draw_ribbon(),
+        data = data_ribbon(ribbon.alpha = alpha),
+        name = "ribbon"
+    )
+    class(out) = "tinyplot_type"
+    return(out)
 }
 
 
@@ -92,10 +92,10 @@ data_ribbon = function(ribbon.alpha = NULL) {
         }
 
         # Reorder x, y, ymin, and ymax based on the order determined
-        datapoints = datapoints[xord,]
+        datapoints = datapoints[xord, ]
 
-        # Catch for missing ymin and ymax 
-        if (is.null(datapoints$ymin)) datapoints$ymin = datapoints$y 
+        # Catch for missing ymin and ymax
+        if (is.null(datapoints$ymin)) datapoints$ymin = datapoints$y
         if (is.null(datapoints$ymax)) datapoints$ymax = datapoints$y
 
         out = list(

@@ -16,30 +16,33 @@
 #' @examples
 #' # Plot the mean chick weight over time
 #' tinyplot(weight ~ Time, data = ChickWeight, type = "summary")
-#' 
+#'
 #' # Note: "mean" is the default function, so these are also equivalent:
 #' # tinyplot(weight ~ Time, data = ChickWeight, type = type_summary())
 #' # tinyplot(weight ~ Time, data = ChickWeight, type = type_summary(mean))
-#' 
+#'
 #' # Plot the median instead
 #' tinyplot(weight ~ Time, data = ChickWeight, type = type_summary(median))
-#' 
+#'
 #' # Works with groups and/or facets too
 #' tinyplot(weight ~ Time | Diet, facet = "by", data = ChickWeight, type = "summary")
 #'
 #' # Custom/complex function example
 #' tinyplot(
-#'   weight ~ Time | Diet, facet = "by", data = ChickWeight,
-#'   type = type_summary(function(y) quantile(y, probs = 0.9)/max(y))
+#'   weight ~ Time | Diet,
+#'   facet = "by", data = ChickWeight,
+#'   type = type_summary(function(y) quantile(y, probs = 0.9) / max(y))
 #' )
-#' 
+#'
 #' @importFrom stats ave
 #' @export
 type_summary = function(fun = mean, ...) {
   assert_function(fun)
   lines_args = list(...)
   data_summary = function(fun) {
-    funky = function(datapoints, ...) {
+    funky = function(settings, ...) {
+      list2env(settings, environment())
+
       datapoints = split(datapoints, list(datapoints$facet, datapoints$by), drop = TRUE)
       datapoints = lapply(datapoints, function(dat) {
         newy = ave(dat$y, dat$x, FUN = fun)

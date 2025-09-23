@@ -9,6 +9,8 @@ colnames(coefs) = c("term", "est", "lwr", "upr")
 tinyplot(
     est ~ term, data = coefs,
     ymin = lwr, ymax = upr,
-    type = type_errorbar(length = 0.1),
-    theme = "minimal"
+    type = "errorbar",
+    flip = TRUE,
+    draw = abline(v = 0, lty = 2, col = "grey50"),
+    theme = "classic"
 )

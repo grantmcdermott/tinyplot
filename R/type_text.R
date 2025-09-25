@@ -66,6 +66,11 @@ data_text = function(labels, clim = c(0.5, 2.5)) {
       cex = rescale_num(sqrt(c(bubble_labs, cex)) / pi, to = clim)
       bubble_cex = cex[1:len_labs]
       cex = cex[(len_labs + 1):length(cex)]
+      # catch for cases where pretty breaks leads to smallest category of 0
+      if (bubble_labs[1] == 0) {
+        bubble_labs = bubble_labs[-1]
+        bubble_cex = bubble_cex[-1]
+      }
       names(bubble_cex) = format(bubble_labs)
       if (max(clim) > 2.5) {
         legend_args[["x.intersp"]] = max(clim) / 2.5

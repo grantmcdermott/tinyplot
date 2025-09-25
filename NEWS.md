@@ -4,6 +4,15 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## Dev version
+
+### Bug fixes
+
+- For bubble plots, we now drop the minimum legend category (label) if it is
+  equal to 0. The previous behaviour was just an artifact of the `pretty` breaks
+  algorithm that we use to create discrete legend categories. The interior plot
+  elements, e.g. bubble points, are unaffected. (#498 @grantmcdermott)
+
 ## 0.5.0
 
 ### New features

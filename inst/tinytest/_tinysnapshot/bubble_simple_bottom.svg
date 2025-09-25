@@ -26,19 +26,17 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<circle cx='143.04' cy='488.16' r='1.35' style='stroke-width: 0.75;' />
-<circle cx='187.97' cy='488.16' r='3.76' style='stroke-width: 0.75;' />
-<circle cx='232.90' cy='488.16' r='4.77' style='stroke-width: 0.75;' />
-<circle cx='277.83' cy='488.16' r='5.53' style='stroke-width: 0.75;' />
-<circle cx='322.76' cy='488.16' r='6.18' style='stroke-width: 0.75;' />
-<circle cx='367.68' cy='488.16' r='6.75' style='stroke-width: 0.75;' />
+<circle cx='165.51' cy='488.16' r='3.76' style='stroke-width: 0.75;' />
+<circle cx='210.44' cy='488.16' r='4.77' style='stroke-width: 0.75;' />
+<circle cx='255.36' cy='488.16' r='5.53' style='stroke-width: 0.75;' />
+<circle cx='300.29' cy='488.16' r='6.18' style='stroke-width: 0.75;' />
+<circle cx='345.22' cy='488.16' r='6.75' style='stroke-width: 0.75;' />
 <text x='266.40' y='473.76' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='83.36px' lengthAdjust='spacingAndGlyphs'>iris$Petal.Width</text>
-<text x='153.84' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.33px' lengthAdjust='spacingAndGlyphs'>0.0  </text>
-<text x='198.77' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.33px' lengthAdjust='spacingAndGlyphs'>0.5  </text>
-<text x='243.70' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.33px' lengthAdjust='spacingAndGlyphs'>1.0  </text>
-<text x='288.63' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.33px' lengthAdjust='spacingAndGlyphs'>1.5  </text>
-<text x='333.56' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.33px' lengthAdjust='spacingAndGlyphs'>2.0  </text>
-<text x='378.48' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.5</text>
+<text x='176.31' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.33px' lengthAdjust='spacingAndGlyphs'>0.5  </text>
+<text x='221.24' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.33px' lengthAdjust='spacingAndGlyphs'>1.0  </text>
+<text x='266.16' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.33px' lengthAdjust='spacingAndGlyphs'>1.5  </text>
+<text x='311.09' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.33px' lengthAdjust='spacingAndGlyphs'>2.0  </text>
+<text x='356.02' y='492.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.5</text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHw1MDQuMDB8MC4wMHw0NDQuOTY='>

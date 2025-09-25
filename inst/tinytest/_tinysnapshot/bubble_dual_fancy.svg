@@ -26,40 +26,29 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-</g>
-<defs>
-  <clipPath id='cpNTcuNjB8NDczLjc2fDU5LjA0fDQzMC41Ng=='>
-    <rect x='57.60' y='59.04' width='416.16' height='371.52' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpNTcuNjB8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-</g>
-<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<image width='-18.00' height='86.40' x='54.25' y='103.02' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABkCAYAAABHLFpgAAAAo0lEQVQYlXWLS1LDQAwFW62yA2GRKk7BQTgPx8+CzGhYYDtxPptX/V5LfH/9DCsDS3GkWCkOY6FKsWdgVywDW4pN8ZKBF8XfBM8pnhVbBuIWd/U/2Il8JWQvWCliV29ivNrG4xabyIHEE2FtH/Uo4glZCFexbmHhKQo/o/AUHT8sPEbhexS+2fEQHQ9RC803tNbZhjO1bNMmpmg4ca0dp1ju/gCmb0eaNdB1fgAAAABJRU5ErkJggg=='/>
-<text x='54.25' y='193.55' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 2.0</text>
-<text x='54.25' y='175.23' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 2.5</text>
-<text x='54.25' y='157.77' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 3.0</text>
-<text x='54.25' y='139.44' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 3.5</text>
-<text x='54.25' y='121.99' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 4.0</text>
-<text x='54.25' y='193.55' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='54.25' y='175.23' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='54.25' y='157.77' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='54.25' y='139.44' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='54.25' y='121.99' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='74.25' y='88.62' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='64.69px' lengthAdjust='spacingAndGlyphs'>Sepal.Width</text>
-<rect x='24.60' y='222.55' width='4.79' height='4.79' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
-<rect x='19.25' y='233.72' width='15.49' height='15.49' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
-<rect x='17.03' y='252.81' width='19.92' height='19.92' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
-<rect x='15.33' y='277.13' width='23.32' height='23.32' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
-<rect x='13.90' y='305.49' width='26.19' height='26.19' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
-<rect x='12.63' y='337.26' width='28.71' height='28.71' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
-<text x='45.59' y='210.54' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='83.36px' lengthAdjust='spacingAndGlyphs'>iris$Petal.Width</text>
-<text x='52.91' y='229.07' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>0.0</text>
-<text x='52.91' y='245.59' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>0.5</text>
-<text x='52.91' y='266.90' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.0</text>
-<text x='52.91' y='292.92' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.5</text>
-<text x='52.91' y='322.71' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.0</text>
-<text x='52.91' y='355.75' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.5</text>
+<image width='-18.00' height='86.40' x='54.25' y='151.52' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABkCAYAAABHLFpgAAAAo0lEQVQYlXWLS1LDQAwFW62yA2GRKk7BQTgPx8+CzGhYYDtxPptX/V5LfH/9DCsDS3GkWCkOY6FKsWdgVywDW4pN8ZKBF8XfBM8pnhVbBuIWd/U/2Il8JWQvWCliV29ivNrG4xabyIHEE2FtH/Uo4glZCFexbmHhKQo/o/AUHT8sPEbhexS+2fEQHQ9RC803tNbZhjO1bNMmpmg4ca0dp1ju/gCmb0eaNdB1fgAAAABJRU5ErkJggg=='/>
+<text x='54.25' y='242.05' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 2.0</text>
+<text x='54.25' y='223.72' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 2.5</text>
+<text x='54.25' y='206.27' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 3.0</text>
+<text x='54.25' y='187.94' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 3.5</text>
+<text x='54.25' y='170.49' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 4.0</text>
+<text x='54.25' y='242.05' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text x='54.25' y='223.72' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text x='54.25' y='206.27' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text x='54.25' y='187.94' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text x='54.25' y='170.49' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<text x='74.25' y='137.12' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='64.69px' lengthAdjust='spacingAndGlyphs'>Sepal.Width</text>
+<rect x='19.25' y='275.93' width='15.49' height='15.49' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
+<rect x='17.03' y='295.02' width='19.92' height='19.92' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
+<rect x='15.33' y='319.34' width='23.32' height='23.32' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
+<rect x='13.90' y='347.70' width='26.19' height='26.19' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
+<rect x='12.63' y='379.48' width='28.71' height='28.71' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.30;' />
+<text x='45.59' y='262.92' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='83.36px' lengthAdjust='spacingAndGlyphs'>iris$Petal.Width</text>
+<text x='52.91' y='287.80' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>0.5</text>
+<text x='52.91' y='309.11' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.0</text>
+<text x='52.91' y='335.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.5</text>
+<text x='52.91' y='364.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.0</text>
+<text x='52.91' y='397.97' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.5</text>
 </g>
 <defs>
   <clipPath id='cpMTA0LjM3fDUwNC4wMHwwLjAwfDUwNC4wMA=='>

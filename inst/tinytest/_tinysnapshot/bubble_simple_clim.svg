@@ -26,19 +26,17 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<circle cx='439.58' cy='183.62' r='2.70' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
-<circle cx='439.58' cy='200.14' r='8.74' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
-<circle cx='439.58' cy='221.45' r='11.24' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
-<circle cx='439.58' cy='247.47' r='13.16' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
-<circle cx='439.58' cy='277.26' r='14.77' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
-<circle cx='439.58' cy='310.30' r='16.20' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
-<text x='458.18' y='169.22' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='83.36px' lengthAdjust='spacingAndGlyphs'>iris$Petal.Width</text>
-<text x='465.50' y='187.75' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>0.0</text>
-<text x='465.50' y='204.27' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>0.5</text>
-<text x='465.50' y='225.58' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.0</text>
-<text x='465.50' y='251.60' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.5</text>
-<text x='465.50' y='281.39' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.0</text>
-<text x='465.50' y='314.43' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.5</text>
+<circle cx='439.58' cy='195.06' r='8.74' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
+<circle cx='439.58' cy='216.37' r='11.24' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
+<circle cx='439.58' cy='242.39' r='13.16' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
+<circle cx='439.58' cy='272.18' r='14.77' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
+<circle cx='439.58' cy='305.22' r='16.20' style='stroke-width: 0.75; stroke: #000000; stroke-opacity: 0.30; fill: #000000; fill-opacity: 0.30;' />
+<text x='458.18' y='174.30' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='83.36px' lengthAdjust='spacingAndGlyphs'>iris$Petal.Width</text>
+<text x='465.50' y='199.19' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>0.5</text>
+<text x='465.50' y='220.50' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.0</text>
+<text x='465.50' y='246.52' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.5</text>
+<text x='465.50' y='276.31' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.0</text>
+<text x='465.50' y='309.35' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.5</text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHwzOTkuNDB8MC4wMHw1MDQuMDA='>

@@ -8,8 +8,10 @@ where the formatting is also better._
 
 ### Bug fixes
 
-- Bubble plot legends drop minimum levels equal to zero, since these are usually
-  just an artifact of the pretty breaks algorithm. (#498 @grantmcdermott)
+- For bubble plots, we now drop the minimum legend category (label) if it is
+  equal to 0. The previous behaviour was just an artifact of the `pretty` breaks
+  algorithm that we use to create discrete legend categories. The interior plot
+  elements, e.g. bubble points, are unaffected. (#498 @grantmcdermott)
 
 ## 0.5.0
 

@@ -4,6 +4,13 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## Dev version
+
+### Bug fixes
+
+- Bubble plot legends drop minimum levels equal to zero, since these are usually
+  just an artifact of the pretty breaks algorithm. (#498 @grantmcdermott)
+
 ## 0.5.0
 
 ### New features

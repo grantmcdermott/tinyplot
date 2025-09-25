@@ -68,6 +68,7 @@ data_points = function(clim = c(0.5, 2.5)) {
       bubble = TRUE 
       ## Identify the pretty break points for our bubble labels
       bubble_labs = pretty(cex, n = 5)
+      if (bubble_labs[1] == 0) bubble_labs = bubble_labs[-1]
       len_labs = length(bubble_labs)
       cex = rescale_num(sqrt(c(bubble_labs, cex))/pi, to = clim)
       bubble_cex = cex[1:len_labs]

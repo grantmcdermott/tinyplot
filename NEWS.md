@@ -8,8 +8,8 @@ where the formatting is also better._
 
 ### New features
 
-- `type_text()` gains a `family` argument for (separately) controlling the font
-  family versus to the main plot text elements. (#494 @grantmcdermott)
+- `type_text()` gains a `family` argument for controlling the font family,
+  separate to the main plot text elements. (#494 @grantmcdermott)
 
 ### Bug fixes
 
@@ -17,8 +17,8 @@ where the formatting is also better._
   equal to 0. The previous behaviour was just an artifact of the `pretty` breaks
   algorithm that we use to create discrete legend categories. The interior plot
   elements, e.g. bubble points, are unaffected. (#498 @grantmcdermott)
-- `type_text()` now defaults to displaying `y` values if an explicit `label` arg
-  is not provided, mirroring the behaviour of the base `text()` function.
+- `type_text()` now defaults to displaying `y` values if an explicit `labels`
+  arg is not provided, mirroring the behaviour of the base `text()` function.
   (#501 @grantmcdermott) 
 
 ## 0.5.0

@@ -593,17 +593,18 @@ window.Quarto = {
 <h2 class="unnumbered anchored" data-anchor-id="text-annotations-plot-type">Text annotations plot type</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Type function for adding text annotations to a plot. This function allows you to draw text at specified (x,y) coordinates.</p>
+<p>Type function for adding text annotations to a plot at the specified (<code>x</code>,<code>y</code>) coordinates.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">type_text(
-  labels,
+  labels = NULL,
   adj = NULL,
   pos = NULL,
   offset = 0.5,
-  vfont = NULL,
+  family = NULL,
   font = NULL,
+  vfont = NULL,
   xpd = NULL,
   srt = 0,
   clim = c(0.5, 2.5)
@@ -618,7 +619,7 @@ window.Quarto = {
 <code id="labels">labels</code>
 </td>
 <td>
-Character vector of length 1 or of the same length as the number of x,y coordinates.
+Character vector of length <code>1</code> or the same length as the number of <code>x</code>,<code>y</code> coordinates. If left as <code>NULL</code>, then the labels will automatically inherit the corresponding <code>y</code> values. See Examples.
 </td>
 </tr>
 <tr>
@@ -647,6 +648,22 @@ when <code>pos</code> is specified, this value controls the distance (â€˜offsetâ
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="family">family</code>
+</td>
+<td>
+The name of a font family. Default of <code>NULL</code> means that the family will be the same as the main plot text, following <code>par</code>. Note that if a <code>family</code> argument is provided, then <code>vfont</code> (below) will automatically be ignored.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="font">font</code>
+</td>
+<td>
+Integer giving the font face to be used, following <code>par</code>. On most devices, the mapping is: <code>1</code> = regular, <code>2</code> = bold, <code>3</code> = italic, <code>4</code> = bold italic, and <code>5</code> = symbol.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="vfont">vfont</code>
 </td>
 <td>
@@ -655,18 +672,10 @@ when <code>pos</code> is specified, this value controls the distance (â€˜offsetâ
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="font">font</code>
-</td>
-<td>
-Font to be used, following <code>graphics::par()</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="xpd">xpd</code>
 </td>
 <td>
-Logical value or <code>NA</code> denoting text clipping behaviour, following <code>graphics::par()</code>.
+Logical value or <code>NA</code> denoting text clipping behaviour, following <code>par</code>.
 </td>
 </tr>
 <tr>
@@ -692,14 +701,8 @@ Numeric giving the lower and upper limits of the character expansion (<code>cex<
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp <span class="sc">|</span> <span class="fu">factor</span>(cyl),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mtcars,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_text</span>(</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">row.names</span>(mtcars),</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">font =</span> <span class="dv">2</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="dv">0</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># simplest case (no labels), will auto revert to y labels</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">type =</span> <span class="st">"text"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -707,20 +710,57 @@ Numeric giving the lower and upper limits of the character expansion (<code>cex<
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># to avoid clipping text at the plot region, we can use xpd = NA</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp <span class="sc">|</span> <span class="fu">factor</span>(cyl),</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mtcars,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_text</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">row.names</span>(mtcars),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">font =</span> <span class="dv">2</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="dv">0</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">xpd =</span> <span class="cn">NA</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pass explicit `labels` arg if you want specific text</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> month.abb)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_text_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for advanced customization, it's safer to pass args through `type_text()`</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">type =</span> <span class="fu">type_text</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> month.abb, <span class="at">family =</span> <span class="st">"HersheyScript"</span>, <span class="at">srt =</span> <span class="sc">-</span><span class="dv">20</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_text_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same principles apply to grouped and/or facet data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp <span class="sc">|</span> <span class="fu">factor</span>(cyl),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mtcars,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_text</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">row.names</span>(mtcars),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="st">"HersheySans"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">font =</span> <span class="dv">2</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="dv">0</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_text_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tip: use `xpd = NA` to avoid clipping text at the plot region</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> hp <span class="sc">|</span> <span class="fu">factor</span>(cyl),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mtcars,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_text</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">row.names</span>(mtcars),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="st">"HersheySans"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">font =</span> <span class="dv">2</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="dv">0</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">xpd =</span> <span class="cn">NA</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_text_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

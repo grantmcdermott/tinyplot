@@ -1,13 +1,19 @@
 #' Text annotations plot type
 #'
-#' @description Type function for adding text annotations to a plot. This function allows
-#' you to draw text at specified (x,y) coordinates.
-#'
+#' @description Type function for adding text annotations to a plot at the
+#' specified (`x`,`y`) coordinates.
+#' 
 #' @param labels Character vector of length 1 or of the same length as the
 #'  number of x,y coordinates.
-#' @param font Font to be used, following [graphics::par()].
+#' @param family The name of a font family. Default of `NULL` means that the
+#' family will be the same as the main plot text, following
+#' \code{\link[graphics]{par}}. Note that if a `family` argument is provided,
+#' then `vfont` (below) will automatically be ignored.
+#' @param font Integer giving the font face to be used,
+#' following \code{\link[graphics]{par}}. On most devices, the mapping is: `1` =
+#' regular, `2` = bold, `3` = italic, `4` = bold italic, and `5` = symbol.
 #' @param xpd Logical value or `NA` denoting text clipping behaviour, following
-#'  [graphics::par()].
+#'  \code{\link[graphics]{par}}.
 #' @param srt Numeric giving the desired string rotation in degrees.
 #' @param clim Numeric giving the lower and upper limits of the character
 #'   expansion (`cex`) normalization for bubble charts.
@@ -34,9 +40,9 @@
 #' )
 #'
 #' @export
-type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, font = NULL, xpd = NULL, srt = 0, clim = c(0.5, 2.5)) {
+type_text = function(labels, adj = NULL, pos = NULL, offset = 0.5, family = NULL, font = NULL, vfont = NULL, xpd = NULL, srt = 0, clim = c(0.5, 2.5)) {
   out = list(
-    draw = draw_text(adj = adj, pos = pos, offset = offset, vfont = vfont, font = font, xpd = xpd, srt = srt),
+    draw = draw_text(adj = adj, pos = pos, offset = offset, vfont = vfont, family = family, font = font, xpd = xpd, srt = srt),
     data = data_text(labels = labels, clim = clim),
     name = "text"
   )
@@ -89,13 +95,16 @@ data_text = function(labels, clim = c(0.5, 2.5)) {
   return(fun)
 }
 
-draw_text = function(adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, font = NULL, xpd = NULL, srt = 0) {
+draw_text = function(adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, family = NULL, font = NULL, xpd = NULL, srt = 0) {
   if (is.null(xpd)) xpd = par("xpd")
+  if (!is.null(family)) vfont = NULL
   fun = function(ix, iy, ilabels, icol, icex, ...) {
     text(
       x = ix, y = iy, labels = ilabels, col = icol,
       adj = adj, pos = pos, offset = offset,
-      vfont = vfont, font = font,
+      family = family,
+      font = font,
+      vfont = vfont,
       xpd = xpd,
       srt = srt,
       cex = icex

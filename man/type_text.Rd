@@ -10,6 +10,7 @@ type_text(
   pos = NULL,
   offset = 0.5,
   vfont = NULL,
+  family = NULL,
   font = NULL,
   xpd = NULL,
   srt = 0,
@@ -42,10 +43,17 @@ number of x,y coordinates.}
     the vector selects a typeface and the second element selects a
     style.  Ignored if \code{labels} is an expression.}
 
-\item{font}{Font to be used, following \code{\link[graphics:par]{graphics::par()}}.}
+\item{family}{The name of a font family. Default of \code{NULL} means that the
+family will be the same as the main plot text, following
+\code{\link[graphics]{par}}. Note that if a \code{family} argument is provided,
+then \code{vfont} (below) will automatically be ignored.}
+
+\item{font}{Integer giving the font face to be used,
+following \code{\link[graphics]{par}}. On most devices, the mapping is: \code{1} =
+regular, \code{2} = bold, \code{3} = italic, \code{4} = bold italic, and \code{5} = symbol.}
 
 \item{xpd}{Logical value or \code{NA} denoting text clipping behaviour, following
-\code{\link[graphics:par]{graphics::par()}}.}
+\code{\link[graphics]{par}}.}
 
 \item{srt}{Numeric giving the desired string rotation in degrees.}
 
@@ -53,8 +61,8 @@ number of x,y coordinates.}
 expansion (\code{cex}) normalization for bubble charts.}
 }
 \description{
-Type function for adding text annotations to a plot. This function allows
-you to draw text at specified (x,y) coordinates.
+Type function for adding text annotations to a plot at the
+specified (\code{x},\code{y}) coordinates.
 }
 \examples{
 tinyplot(mpg ~ hp | factor(cyl),

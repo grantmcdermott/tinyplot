@@ -2,7 +2,7 @@
 #'
 #' @description Type function for adding text annotations to a plot at the
 #' specified (`x`,`y`) coordinates.
-#' 
+#'
 #' @param labels Character vector of length `1` or the same length as the
 #'   number of `x`,`y` coordinates. If left as `NULL`, then the labels will
 #'   automatically inherit the corresponding `y` values. See Examples.
@@ -22,14 +22,14 @@
 #' @examples
 #' # simplest case (no labels), will auto revert to y labels
 #' tinyplot(1:12, type = "text")
-#' 
+#'
 #' # pass explicit `labels` arg if you want specific text
 #' tinyplot(1:12, type = "text", labels = month.abb)
-#' 
+#'
 #' # for advanced customization, it's safer to pass args through `type_text()`
 #' tinyplot(1:12, type = type_text(
 #'   labels = month.abb, family = "HersheyScript", srt = -20))
-#' 
+#'
 #' # same principles apply to grouped and/or facet data
 #' tinyplot(mpg ~ hp | factor(cyl),
 #'   data = mtcars,
@@ -54,9 +54,29 @@
 #' )
 #'
 #' @export
-type_text = function(labels = NULL, adj = NULL, pos = NULL, offset = 0.5, family = NULL, font = NULL, vfont = NULL, xpd = NULL, srt = 0, clim = c(0.5, 2.5)) {
+type_text = function(
+  labels = NULL,
+  adj = NULL,
+  pos = NULL,
+  offset = 0.5,
+  family = NULL,
+  font = NULL,
+  vfont = NULL,
+  xpd = NULL,
+  srt = 0,
+  clim = c(0.5, 2.5)
+) {
   out = list(
-    draw = draw_text(adj = adj, pos = pos, offset = offset, vfont = vfont, family = family, font = font, xpd = xpd, srt = srt),
+    draw = draw_text(
+      adj = adj,
+      pos = pos,
+      offset = offset,
+      vfont = vfont,
+      family = family,
+      font = font,
+      xpd = xpd,
+      srt = srt
+    ),
     data = data_text(labels = labels, clim = clim),
     name = "text"
   )
@@ -66,14 +86,20 @@ type_text = function(labels = NULL, adj = NULL, pos = NULL, offset = 0.5, family
 
 data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
   fun = function(datapoints, legend_args, cex = NULL, ...) {
-    if (is.null(labels)) labels = datapoints$y
+    if (is.null(labels)) {
+      labels = datapoints$y
+    }
     if (length(labels) != 1 && length(labels) != nrow(datapoints)) {
       msg = sprintf("`labels` must be of length 1 or %s.", nrow(datapoints))
       stop(msg, call. = FALSE)
     }
     datapoints$labels = labels
-    if (is.factor(datapoints$x)) datapoints$x = as.numeric(datapoints$x)
-    if (is.factor(datapoints$y)) datapoints$y = as.numeric(datapoints$y)
+    if (is.factor(datapoints$x)) {
+      datapoints$x = as.numeric(datapoints$x)
+    }
+    if (is.factor(datapoints$y)) {
+      datapoints$y = as.numeric(datapoints$y)
+    }
 
     bubble = FALSE
     bubble_cex = 1
@@ -109,13 +135,31 @@ data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
   return(fun)
 }
 
-draw_text = function(adj = NULL, pos = NULL, offset = 0.5, vfont = NULL, family = NULL, font = NULL, xpd = NULL, srt = 0) {
-  if (is.null(xpd)) xpd = par("xpd")
-  if (!is.null(family)) vfont = NULL
+draw_text = function(
+  adj = NULL,
+  pos = NULL,
+  offset = 0.5,
+  vfont = NULL,
+  family = NULL,
+  font = NULL,
+  xpd = NULL,
+  srt = 0
+) {
+  if (is.null(xpd)) {
+    xpd = par("xpd")
+  }
+  if (!is.null(family)) {
+    vfont = NULL
+  }
   fun = function(ix, iy, ilabels, icol, icex, ...) {
     text(
-      x = ix, y = iy, labels = ilabels, col = icol,
-      adj = adj, pos = pos, offset = offset,
+      x = ix,
+      y = iy,
+      labels = ilabels,
+      col = icol,
+      adj = adj,
+      pos = pos,
+      offset = offset,
       family = family,
       font = font,
       vfont = vfont,

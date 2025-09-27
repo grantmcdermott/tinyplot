@@ -5,7 +5,7 @@
 #' 
 #' @param labels Character vector of length `1` or the same length as the
 #'   number of `x`,`y` coordinates. If left as `NULL`, then the labels will
-#'   automatically inherit the corresponding `y` values.
+#'   automatically inherit the corresponding `y` values. See Examples.
 #' @param family The name of a font family. Default of `NULL` means that the
 #' family will be the same as the main plot text, following
 #' \code{\link[graphics]{par}}. Note that if a `family` argument is provided,
@@ -20,20 +20,33 @@
 #'   expansion (`cex`) normalization for bubble charts.
 #' @inheritParams graphics::text
 #' @examples
+#' # simplest case (no labels), will auto revert to y labels
+#' tinyplot(1:12, type = "text")
+#' 
+#' # pass explicit `labels` arg if you want specific text
+#' tinyplot(1:12, type = "text", labels = month.abb)
+#' 
+#' # for advanced customization, it's safer to pass args through `type_text()`
+#' tinyplot(1:12, type = type_text(
+#'   labels = month.abb, family = "HersheyScript", srt = -20))
+#' 
+#' # same principles apply to grouped and/or facet data
 #' tinyplot(mpg ~ hp | factor(cyl),
 #'   data = mtcars,
 #'   type = type_text(
 #'     labels = row.names(mtcars),
+#'     family = "HersheySans",
 #'     font = 2,
 #'     adj = 0
 #'   )
 #' )
 #'
-#' # to avoid clipping text at the plot region, we can use xpd = NA
+#' # tip: use `xpd = NA` to avoid clipping text at the plot region
 #' tinyplot(mpg ~ hp | factor(cyl),
 #'   data = mtcars,
 #'   type = type_text(
 #'     labels = row.names(mtcars),
+#'     family = "HersheySans",
 #'     font = 2,
 #'     adj = 0,
 #'     xpd = NA

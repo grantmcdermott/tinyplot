@@ -6,12 +6,20 @@ where the formatting is also better._
 
 ## Dev version
 
+### New features
+
+- `type_text()` gains a `family` argument for (separately) controlling the font
+  family versus to the main plot text elements. (#494 @grantmcdermott)
+
 ### Bug fixes
 
 - For bubble plots, we now drop the minimum legend category (label) if it is
   equal to 0. The previous behaviour was just an artifact of the `pretty` breaks
   algorithm that we use to create discrete legend categories. The interior plot
   elements, e.g. bubble points, are unaffected. (#498 @grantmcdermott)
+- `type_text()` now defaults to displaying `y` values if an explicit `label` arg
+  is not provided, mirroring the behaviour of the base `text()` function.
+  (#501 @grantmcdermott) 
 
 ## 0.5.0
 

@@ -19,7 +19,12 @@ where the formatting is also better._
   elements, e.g. bubble points, are unaffected. (#498 @grantmcdermott)
 - `type_text()` now defaults to displaying `y` values if an explicit `labels`
   arg is not provided, mirroring the behaviour of the base `text()` function.
-  (#501 @grantmcdermott) 
+  (#501 @grantmcdermott)
+
+### Documentation
+
+- Add a "recession bars" section to the `Tips & tricks` vignette.
+  (#503 @grantmcdermott)
 
 ## 0.5.0
 

@@ -214,7 +214,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#legend" id="toc-legend" class="nav-link active" data-scroll-target="#legend">Legend</a>
+  <li><a href="#annotations" id="toc-annotations" class="nav-link active" data-scroll-target="#annotations">Annotations</a>
+  <ul class="collapse">
+  <li><a href="#recession-bars" id="toc-recession-bars" class="nav-link" data-scroll-target="#recession-bars">Recession bars</a></li>
+  </ul></li>
+  <li><a href="#legend" id="toc-legend" class="nav-link" data-scroll-target="#legend">Legend</a>
   <ul class="collapse">
   <li><a href="#legend-transparency" id="toc-legend-transparency" class="nav-link" data-scroll-target="#legend-transparency">Legend transparency</a></li>
   <li><a href="#multicolumn-legends" id="toc-multicolumn-legends" class="nav-link" data-scroll-target="#multicolumn-legends">Multicolumn legends</a></li>
@@ -250,19 +254,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This page collects miscellaneous tips and tricks for <strong>tinyplot</strong>. By definition, these are workarounds—i.e., techniques that fall outside of standard use cases or features that aren’t (yet) natively supported by the package. Please feel free to suggest or add more tips via our <a href="https://github.com/grantmcdermott/tinyplot/issues">GitHub repo</a>.</p>
-<section id="legend" class="level2">
-<h2 class="anchored" data-anchor-id="legend">Legend</h2>
-<section id="legend-transparency" class="level3">
-<h3 class="anchored" data-anchor-id="legend-transparency">Legend transparency</h3>
-<p>By default, the legend inherits the transparency (<code>alpha</code>) of the plotted elements. In some cases, this may be undesirable. For example, in the following plot, the legend is too light:</p>
+<section id="annotations" class="level2">
+<h2 class="anchored" data-anchor-id="annotations">Annotations</h2>
+<section id="recession-bars" class="level3">
+<h3 class="anchored" data-anchor-id="recession-bars">Recession bars</h3>
+<p>In finance and economics, it is common practice to annotate time-series plots by highlighting recessions and other periods of interest. While we don’t provide a dedicated recession bar (“recbar”?) type, achieving this effect in <strong>tinyplot</strong> is easily done with a standard <code>rect()</code> call. Here’s a simple example where we highlight the window between 5.5 and 8:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">50000</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(x, y, z)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> z, <span class="at">data =</span> dat, <span class="at">alpha =</span> .<span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">19</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">type =</span> <span class="st">"b"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">draw =</span> <span class="fu">rect</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">xleft =</span> <span class="fl">5.5</span>, <span class="at">ybottom =</span> <span class="fu">par</span>(<span class="st">"usr"</span>)[<span class="dv">3</span>], <span class="at">xright =</span> <span class="dv">8</span>, <span class="at">ytop =</span> <span class="fu">par</span>(<span class="st">"usr"</span>)[<span class="dv">4</span>],</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"hotpink"</span>, <span class="fl">0.3</span>), <span class="at">border =</span> <span class="cn">NA</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -271,14 +276,95 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>One solution is to draw our plot in two steps. First, we draw an empty plot with the desired (zero transparency) legend. Second, we add the transparent points on top of the existing canvas.</p>
+<p>The only real trick here is optimizing the height of the rectangle by passing <code>ybottom = par("usr")[3]</code> and <code>ytop = par("usr")[4]</code>. This effectively tells R to maximize the rectangle height so that it extends across the full plotting area regardless of the y-axis numbers.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> (Convenient!)</p>
+<p>The cool thing about this approach is that it is fully generalizable (and vectorised). So we could pass a vector of, say, recession start and end dates to highlight multiple recessions. You could even roll it into a simple <code>recbar()</code> function, which is a light wrapper around <code>rect()</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> z, <span class="at">data =</span> dat, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">empty =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">empty =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> .<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>recbar <span class="ot">=</span> <span class="cf">function</span>(start, end, <span class="at">col =</span> <span class="st">"hotpink"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">border =</span> <span class="cn">NA</span>) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  col <span class="ot">=</span> <span class="fu">adjustcolor</span>(col, alpha)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rect</span>(start, <span class="fu">par</span>(<span class="st">'usr'</span>)[<span class="dv">3</span>], end, <span class="fu">par</span>(<span class="st">'usr'</span>)[<span class="dv">4</span>], <span class="at">col =</span> col, <span class="at">border =</span> border)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  GNP <span class="sc">~</span> Year, <span class="at">data =</span> longley, <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">draw =</span> <span class="fu">recbar</span>(<span class="fu">c</span>(<span class="dv">1948</span>, <span class="dv">1953</span>, <span class="dv">1957</span>), <span class="fu">c</span>(<span class="dv">1949</span>, <span class="dv">1954</span>, <span class="dv">1958</span>))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="tips_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s end this tip with a more sophisticated example using real-life US GDP data from <a href="https://fred.stlouisfed.org/series/GDPC1">FRED</a>. As a bonus, we’ll pair our simple <code>recbar()</code> function with another <code>get_rec_dates()</code> function that calculates recession dates according to the standard definition of two consecutive quarters of negative growth.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get 1980+ US GDP data from FRED</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">=</span> <span class="st">"https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPC1&amp;cosd=1980-01-01"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>gdp <span class="ot">=</span> <span class="fu">read.csv</span>(url) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"gdp"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># function to automatically calculate recession start and end dates, based on</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># gdp data and window definition of 2 periods (quarters) of negative growth</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>get_rec_dates <span class="ot">=</span> <span class="cf">function</span>(gdp, dates, <span class="at">window =</span> <span class="dv">2</span>) {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  streaks <span class="ot">=</span> <span class="fu">rle</span>(<span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">0</span> <span class="sc">&gt;</span> <span class="fu">diff</span>(gdp)))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  rec_flag <span class="ot">=</span> streaks<span class="sc">$</span>lengths<span class="sc">&gt;=</span>window <span class="sc">&amp;</span> streaks<span class="sc">$</span>values<span class="sc">==</span><span class="cn">TRUE</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  end <span class="ot">=</span> <span class="fu">cumsum</span>(streaks<span class="sc">$</span>lengths)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  start <span class="ot">=</span> end <span class="sc">-</span> streaks<span class="sc">$</span>lengths <span class="co"># + 1 ## dropping the +1 looks better on a plot</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  start <span class="ot">=</span> dates[start[rec_flag]]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  end <span class="ot">=</span> dates[end[rec_flag]]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">data.frame</span>(<span class="at">start =</span> start, <span class="at">end =</span> end))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># finally, grab the recession dates and plot</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>rec_dates <span class="ot">=</span> <span class="fu">get_rec_dates</span>(gdp<span class="sc">$</span>gdp, gdp<span class="sc">$</span>date)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  gdp <span class="sc">~</span> date, <span class="at">data =</span> gdp, <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">draw =</span> <span class="fu">recbar</span>(rec_dates<span class="sc">$</span>start, rec_dates<span class="sc">$</span>end),</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"US Gross Domestic Product (1980 to present)"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">sub =</span> <span class="st">"Note: Shaded regions denote recessions"</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Date"</span>, <span class="at">ylab =</span> <span class="st">"Billions of $US (2017)"</span>, <span class="at">yaxl =</span> <span class="st">"$"</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="st">"classic"</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tips_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="legend" class="level2">
+<h2 class="anchored" data-anchor-id="legend">Legend</h2>
+<section id="legend-transparency" class="level3">
+<h3 class="anchored" data-anchor-id="legend-transparency">Legend transparency</h3>
+<p>By default, the legend inherits the transparency (<code>alpha</code>) of the plotted elements. In some cases, this may be undesirable. For example, in the following plot, the legend is too light:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">50000</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(x, y, z)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> z, <span class="at">data =</span> dat, <span class="at">alpha =</span> .<span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">19</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tips_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>One solution is to draw our plot in two steps. First, we draw an empty plot with the desired (zero transparency) legend. Second, we add the transparent points on top of the existing canvas.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> z, <span class="at">data =</span> dat, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">empty =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">empty =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> .<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tips_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -288,37 +374,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="multicolumn-legends">Multicolumn legends</h3>
 <p>For cases where we have many discrete groups, the default single column legend can overrun the plot limits. For example:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(weight <span class="sc">~</span> Time <span class="sc">|</span> Chick, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="st">"l"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(weight <span class="sc">~</span> Time <span class="sc">|</span> Chick, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="st">"l"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tips_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tips_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>To solve this undesirable behaviour, simply pass an approporiate <code>ncol</code> adjustment as part of your legend (list) argument:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(weight <span class="sc">~</span> Time <span class="sc">|</span> Chick, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="st">"l"</span>,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(weight <span class="sc">~</span> Time <span class="sc">|</span> Chick, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tips_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tips_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The same trick works for horizontal legends and/or legends in other positions, as well for other plot types and themes. For example:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(weight <span class="sc">~</span> Time <span class="sc">|</span> Chick, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="st">"l"</span>,</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"bottom!"</span>, <span class="at">ncol =</span> <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(weight <span class="sc">~</span> Time <span class="sc">|</span> Chick, <span class="at">data =</span> ChickWeight, <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"bottom!"</span>, <span class="at">ncol =</span> <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tips_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tips_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -332,27 +418,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="direct-labels">Direct labels</h3>
 <p>Direct labels can provide a nice alternative to a standard legend, particularly for grouped line plots. While <code>tinyplot</code> doesn’t offer a “native” direct labels type, you can easily achieve the same end result using an idiomatic layering approach.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>aq <span class="ot">=</span> airquality</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>Month <span class="ot">=</span> <span class="fu">factor</span>(month.name[aq<span class="sc">$</span>Month], <span class="at">levels =</span> month.name[<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>])</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># base layer</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># for labels: subset to final dates for each month </span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>aq2 <span class="ot">=</span> aq[aq<span class="sc">$</span>Day <span class="sc">==</span> <span class="fu">ave</span>(aq<span class="sc">$</span>Day, aq<span class="sc">$</span>Month, <span class="at">FUN =</span> max), ]</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># add the labels with a type_text() layer</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">data =</span> aq2, <span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> aq2<span class="sc">$</span>Month,</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">offset =</span> <span class="fl">0.2</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>aq <span class="ot">=</span> airquality</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>aq<span class="sc">$</span>Month <span class="ot">=</span> <span class="fu">factor</span>(month.name[aq<span class="sc">$</span>Month], <span class="at">levels =</span> month.name[<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>])</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># base layer</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># for labels: subset to final dates for each month </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>aq2 <span class="ot">=</span> aq[aq<span class="sc">$</span>Day <span class="sc">==</span> <span class="fu">ave</span>(aq<span class="sc">$</span>Day, aq<span class="sc">$</span>Month, <span class="at">FUN =</span> max), ]</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># add the labels with a type_text() layer</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">data =</span> aq2, <span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> aq2<span class="sc">$</span>Month,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">offset =</span> <span class="fl">0.2</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tips_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tips_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -360,30 +446,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Hmmmm, can you see a problem? We used <code>type_text(..., xpd = NA)</code> in the second layer to avoid text clipping, but the longer labels are still being cut off due to the limited RHS margin space of our <code>"clean2"</code> plotting theme.</p>
 <p>The good news is that there’s an easy solution. Simply grab the theme’s parameters, bump out the RHS margin by the longest label in our dataset, and then replot.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix: first grab the theme params and then adjust the RHS margin by</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the longest label in the dataset</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>longest_lab <span class="ot">=</span> <span class="fu">max</span>(<span class="fu">strwidth</span>(<span class="fu">as.character</span>(aq2<span class="sc">$</span>Month)))<span class="sc">/</span><span class="dv">2</span> <span class="co"># divide by 2 to get lines</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>parms <span class="ot">=</span> tinyplot<span class="sc">:::</span>theme_clean2</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>parms<span class="sc">$</span>mar[<span class="dv">4</span>] <span class="ot">=</span> parms<span class="sc">$</span>mar[<span class="dv">4</span>] <span class="sc">+</span> longest_lab</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>, <span class="at">mar =</span> parms<span class="sc">$</span>mar) <span class="co"># theme with adjusted margins</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Now plot both the base and direct label layers</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">data =</span> aq2, <span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> aq2<span class="sc">$</span>Month,</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">offset =</span> <span class="fl">0.2</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix: first grab the theme params and then adjust the RHS margin by</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the longest label in the dataset</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>longest_lab <span class="ot">=</span> <span class="fu">max</span>(<span class="fu">strwidth</span>(<span class="fu">as.character</span>(aq2<span class="sc">$</span>Month)))<span class="sc">/</span><span class="dv">2</span> <span class="co"># divide by 2 to get lines</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>parms <span class="ot">=</span> tinyplot<span class="sc">:::</span>theme_clean2</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>parms<span class="sc">$</span>mar[<span class="dv">4</span>] <span class="ot">=</span> parms<span class="sc">$</span>mar[<span class="dv">4</span>] <span class="sc">+</span> longest_lab</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>, <span class="at">mar =</span> parms<span class="sc">$</span>mar) <span class="co"># theme with adjusted margins</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Now plot both the base and direct label layers</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">data =</span> aq2, <span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> aq2<span class="sc">$</span>Month,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">offset =</span> <span class="fl">0.2</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tips_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tips_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset the theme (optional, but recommended)</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset the theme (optional, but recommended)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="rotated-axis-labels" class="level3">
@@ -395,17 +481,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Optionally, clear the y-axis label by setting <code>ylab = ""</code>.</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">0</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Four cylinders"</span>, <span class="st">"Six cylinders"</span>, <span class="st">"Eight cylinders"</span>),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">srt =</span> <span class="dv">45</span>,          <span class="co"># rotate text 45 degrees</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">1.5</span>), <span class="co"># adjust text alignment</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">xpd =</span> <span class="cn">TRUE</span>)        <span class="co"># allow drawing outside plot region</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">0</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Four cylinders"</span>, <span class="st">"Six cylinders"</span>, <span class="st">"Eight cylinders"</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">srt =</span> <span class="dv">45</span>,          <span class="co"># rotate text 45 degrees</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">1.5</span>), <span class="co"># adjust text alignment</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">xpd =</span> <span class="cn">TRUE</span>)        <span class="co"># allow drawing outside plot region</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tips_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tips_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -417,7 +503,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p> As an side, I’m passing the annotation layer through <code>draw = rect(...)</code>, rather than <code>plt_add()</code> because I want the shading to be drawn <em>under</em> (before) the main plot line. This isn’t strictly necessary, but a nice aesthetic touch. See the <a href="https://grantmcdermott.com/tinyplot/vignettes/introduction.html#layers">Layers section</a> of the intro tutorial for more.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

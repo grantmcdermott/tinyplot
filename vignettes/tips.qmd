@@ -11,6 +11,92 @@ definition, these are workarounds---i.e., techniques that fall outside of
 standard use cases or features that aren't (yet) natively supported by the
 package. Please feel free to suggest or add more tips via our [GitHub repo](https://github.com/grantmcdermott/tinyplot/issues).
 
+## Annotations
+
+### Recession bars
+
+In finance and economics, it is common practice to annotate time-series plots
+by highlighting recessions and other periods of interest. While we don't provide
+a dedicated recession bar ("recbar"?) type, achieving this effect in
+**tinyplot** is easily done with a standard `rect()` call. Here's
+a simple example where we highlight the window between 5.5 and 8:
+
+```{r}
+library(tinyplot)
+plt(
+  1:10, type = "b",
+  draw = rect(
+    xleft = 5.5, ybottom = par("usr")[3], xright = 8, ytop = par("usr")[4],
+    col = adjustcolor("hotpink", 0.3), border = NA
+  )
+)
+```
+
+The only real trick here is optimizing the height of the rectangle by passing
+`ybottom = par("usr")[3]` and `ytop = par("usr")[4]`. This effectively tells R
+to maximize the rectangle height so that it extends across the full plotting
+area regardless of the y-axis numbers.^[
+As an side, I'm passing the annotation layer through `draw = rect(...)`, rather
+than `plt_add()` because I want the shading to be drawn _under_ (before) the
+main plot line. This isn't strictly necessary, but a nice aesthetic touch. See 
+the [Layers section](https://grantmcdermott.com/tinyplot/vignettes/introduction.html#layers)
+of the intro tutorial for more.
+] (Convenient!)
+
+The cool thing about this approach is that it is fully generalizable (and
+vectorised). So we could pass a vector of, say, recession start and end dates to
+highlight multiple recessions. You could even roll it into a simple `recbar()`
+function, which is a light wrapper around `rect()`:
+
+```{r}
+recbar = function(start, end, col = "hotpink", alpha = 0.3, border = NA) {
+  col = adjustcolor(col, alpha)
+  rect(start, par('usr')[3], end, par('usr')[4], col = col, border = border)
+}
+
+plt(
+  GNP ~ Year, data = longley, type = "l",
+  draw = recbar(c(1948, 1953, 1957), c(1949, 1954, 1958))
+)
+```
+
+Let's end this tip with a more sophisticated example using real-life US GDP data
+from [FRED](https://fred.stlouisfed.org/series/GDPC1). As a bonus, we'll pair
+our simple `recbar()` function with another `get_rec_dates()` function that
+calculates recession dates according to the standard definition of two
+consecutive quarters of negative growth.
+
+```{r}
+# get 1980+ US GDP data from FRED
+url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPC1&cosd=1980-01-01"
+gdp = read.csv(url) |>
+  setNames(c("date", "gdp")) |>
+  transform(date = as.Date(date))
+
+# function to automatically calculate recession start and end dates, based on
+# gdp data and window definition of 2 periods (quarters) of negative growth
+get_rec_dates = function(gdp, dates, window = 2) {
+  streaks = rle(c(NA, 0 > diff(gdp)))
+  rec_flag = streaks$lengths>=window & streaks$values==TRUE
+  end = cumsum(streaks$lengths)
+  start = end - streaks$lengths # + 1 ## dropping the +1 looks better on a plot
+  start = dates[start[rec_flag]]
+  end = dates[end[rec_flag]]
+  return(data.frame(start = start, end = end))
+}
+
+# finally, grab the recession dates and plot
+rec_dates = get_rec_dates(gdp$gdp, gdp$date)
+plt(
+  gdp ~ date, data = gdp, type = "l",
+  draw = recbar(rec_dates$start, rec_dates$end),
+  main = "US Gross Domestic Product (1980 to present)",
+  sub = "Note: Shaded regions denote recessions",
+  xlab = "Date", ylab = "Billions of $US (2017)", yaxl = "$",
+  theme = "classic"
+)
+```
+
 ## Legend
 
 ### Legend transparency

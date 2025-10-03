@@ -518,6 +518,7 @@ draw_facet_window = function(
 
 #' @rdname facet
 #' @keywords internal
+#' @param settings A list of settings as created by `tinyplot()`.
 facet_layout = function(settings) {
   # Extract needed variables from settings
   add = settings$add

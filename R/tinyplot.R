@@ -834,7 +834,6 @@ tinyplot.default = function(
   # grouping sanitizers (actually: will only be used for dual_legend plots but
   # easiest to assign/determine now)
   settings = prep_bubble(settings)
-  list2env(settings, environment())
 
 
   #
@@ -842,15 +841,8 @@ tinyplot.default = function(
   #
   
   # do this after computing yaxb because limits will depend on the previous calculations
-  fargs = lim_args(
-    datapoints = datapoints,
-    xlabs = xlabs, ylabs = ylabs,
-    xlim = xlim, ylim = ylim,
-    xaxb = xaxb, yaxb = yaxb,
-    null_xlim = null_xlim, null_ylim = null_ylim,
-    type = type
-  )
-  list2env(fargs, environment())
+  settings = lim_args(settings)
+  list2env(settings, environment())
 
 
   #

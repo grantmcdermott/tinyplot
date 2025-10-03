@@ -22,14 +22,14 @@ define a \code{y} interval (usually spanning from \code{ymin} to \code{ymax}) fo
 set to 0 and \code{ymax} is set to \code{y}.
 }
 \examples{
-x = 1:100/10
+x = 1:100 / 10
 y = sin(x)
 
 #
 ## Ribbon plots
 
 # "ribbon" convenience string
-tinyplot(x = x, ymin = y-1, ymax = y+1, type = "ribbon")
+tinyplot(x = x, ymin = y - 1, ymax = y + 1, type = "ribbon")
 # Same result with type_ribbon()
 tinyplot(x = x, ymin = y-1, ymax = y+1, type = type_ribbon())
 
@@ -38,7 +38,7 @@ tinyplot(x = x, y = y, ymin = y-1, ymax = y+1, type = "ribbon")
 
 #
 ## Area plots
-  
+
 # "area" type convenience string
 tinyplot(x, y, type = "area")
 

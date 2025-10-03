@@ -1,4 +1,39 @@
-by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL, alpha = NULL) {
+by_aesthetics = function(settings) {
+  list2env(settings, environment())
+  by_ordered = FALSE
+  by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
+  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
+    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    by_continuous = FALSE
+  } else if (!null_by) {
+    by_ordered = is.ordered(by)
+  }
+
+  ngrps = if (null_by) 1L else if (is.factor(by)) nlevels(by) else if (by_continuous) 100L else length(unique(by))
+  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
+  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
+  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+  cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
+  out = list(
+    by_continuous = by_continuous,
+    by_ordered = by_ordered,
+    ngrps = ngrps,
+    pch = pch,
+    lty = lty,
+    lwd = lwd,
+    cex = cex
+  )
+  out = modify_list(settings, out)
+  return(out)
+}
+
+
+by_col = function(settings) {
+  list2env(settings, environment())
+  palette = settings$palette # not sure why we need this
+  ordered = by_ordered
+  gradient = by_continuous
+
   if (is.null(alpha)) alpha = 1
   if (is.null(ordered)) ordered = FALSE
   if (is.null(gradient)) gradient = FALSE
@@ -427,33 +462,20 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
 
 
 
-by_bg = function(
-    adjustcolor,
-    alpha,
-    bg,
-    by,
-    by_continuous,
-    by_ordered,
-    col,
-    fill,
-    ngrps,
-    palette,
-    ribbon.alpha,
-    type) {
-  if (is.null(bg) && !is.null(fill)) bg = fill
+by_bg = function(adjustcolor, settings) {
+  list2env(settings, environment())
+  palette = settings$palette # not sure why we need this
+
+
+  if (is.null(bg) && !is.null(fill)) settings$bg = bg = fill
   if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
     alpha = bg
     bg = "by"
   }
   if (!is.null(bg) && length(bg) == 1 && bg == "by") {
-    bg = by_col(
-      ngrps = ngrps,
-      col = NULL,
-      palette = palette,
-      gradient = by_continuous,
-      ordered = by_ordered,
-      alpha = alpha
-    )
+    # use by_col processing, but with the bg-specific colors
+    bg_colors = list(col = NULL, bg = bg, alpha = alpha, palette = palette)
+    bg = by_col(settings = modify_list(settings, bg_colors))
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)
   }

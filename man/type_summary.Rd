@@ -35,8 +35,9 @@ tinyplot(weight ~ Time | Diet, facet = "by", data = ChickWeight, type = "summary
 
 # Custom/complex function example
 tinyplot(
-  weight ~ Time | Diet, facet = "by", data = ChickWeight,
-  type = type_summary(function(y) quantile(y, probs = 0.9)/max(y))
+  weight ~ Time | Diet,
+  facet = "by", data = ChickWeight,
+  type = type_summary(function(y) quantile(y, probs = 0.9) / max(y))
 )
 
 }

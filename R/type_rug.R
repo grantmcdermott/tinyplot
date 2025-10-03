@@ -33,12 +33,15 @@
 #' @importFrom graphics rug
 #' @export
 type_rug = function(ticksize = 0.03, side = 1, quiet = getOption("warn") < 0, jitter = FALSE, amount = NULL) {
-  data_rug = function(datapoints, ...) {
+  data_rug = function(settings, ...) {
+    list2env(settings["datapoints"], envir = environment())
     if (nrow(datapoints) == 0) {
       msg = "`type_rug() only works on existing plots with x and y data points."
       stop(msg, call. = FALSE)
     }
-    return(datapoints)
+
+    out = modifyList(settings, list(datapoints = datapoints), keep.null = TRUE)
+    return(out)
   }
   draw_rug = function(.ticksize = ticksize, .side = side, .quiet = quiet, .jitter = jitter, .amount = amount) {
       fun = function(ix, iy, icol, ilwd, ...) {

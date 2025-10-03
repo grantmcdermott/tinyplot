@@ -85,7 +85,8 @@ type_text = function(
 }
 
 data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
-  fun = function(datapoints, legend_args, cex = NULL, ...) {
+  fun = function(settings, cex = NULL, ...) {
+    list2env(settings, envir = environment())
     if (is.null(labels)) {
       labels = datapoints$y
     }
@@ -130,6 +131,7 @@ data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
       bubble = bubble,
       bubble_cex = bubble_cex
     )
+    out = modify_list(settings, out)
     return(out)
   }
   return(fun)

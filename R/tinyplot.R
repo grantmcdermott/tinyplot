@@ -680,7 +680,6 @@ tinyplot.default = function(
 
   # Ephemeral theme
   if (!is.null(theme)) {
-    # browser()
     if (is.character(theme) && length(theme) == 1) {
       tinytheme(theme)
     } else if (is.list(theme)) {

@@ -761,6 +761,8 @@ tinyplot.default = function(
     null_xlim     = is.null(xlim),
     null_ylim     = is.null(ylim),
     was_area_type = identical(type, "area"),  # mostly for legend
+    x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridges"
+
 
     # unevaluated expressions with side effects
     draw          = substitute(draw),
@@ -836,8 +838,7 @@ tinyplot.default = function(
   }
 
   # flag if x==by, currently only used for 
-  # "boxplot", "spineplot" and "ridges" types)
-  settings$x_by = identical(settings$x, settings$by) 
+  # 
 
   # facet: parse facet formula and prepares variables when facet==by
   settings = sanitize_facet(settings)
@@ -883,6 +884,14 @@ tinyplot.default = function(
 
 
   #
+  ## facets: count -----
+  #
+
+  # facet_layout processes facet simplification, attribute restoration, and layout
+  settings = facet_layout(settings)
+
+
+  #
   ## aesthetics by group -----
   #
 
@@ -898,20 +907,6 @@ tinyplot.default = function(
     by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette),
     ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type
   )
-  
-
-  #
-  ## facets: count -----
-  #
-
-  # before legend becase it requires `cex_fct_adj`
-  if (length(unique(datapoints$facet)) == 1) {
-    datapoints[["facet"]] = NULL
-  }
-  attributes(datapoints$facet) = facet_attr ## TODO: better solution for restoring facet attributes?
-  fargs = facet_layout(facet = datapoints$facet, facet.args = facet.args, add = add)
-  fargs = fargs[c("facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")]
-  list2env(fargs, environment())
 
 
   #

@@ -518,7 +518,26 @@ draw_facet_window = function(
 
 #' @rdname facet
 #' @keywords internal
-facet_layout = function(facet, add = FALSE, facet.args = list()) {
+facet_layout = function(settings) {
+  # Extract needed variables from settings
+  add = settings$add
+  facet.args = settings$facet.args
+  datapoints = settings$datapoints
+  facet_attr = settings$facet_attr
+
+  # Simplify facet if only one unique value
+  facet = datapoints$facet
+  if (!is.null(facet) && length(unique(facet)) == 1) {
+    facet = NULL
+    datapoints$facet = NULL
+  }
+
+  # Restore facet attributes
+  if (!is.null(facet)) {
+    attributes(facet) = facet_attr
+    attributes(datapoints$facet) = facet_attr
+  }
+
   nfacet_rows = 1
   nfacet_cols = 1
   if (!is.null(facet)) {
@@ -565,7 +584,9 @@ facet_layout = function(facet, add = FALSE, facet.args = list()) {
     cex_fct_adj = 1
   }
 
-  list(
+  # Update settings with new values
+  new = list(
+    datapoints = datapoints,
     facets = facets,
     ifacet = ifacet,
     nfacets = nfacets,
@@ -575,6 +596,9 @@ facet_layout = function(facet, add = FALSE, facet.args = list()) {
     oyaxis = oyaxis,
     cex_fct_adj = cex_fct_adj
   )
+  settings = modify_list(settings, new)
+
+  return(settings)
 }
 
 

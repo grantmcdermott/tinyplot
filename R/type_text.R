@@ -131,6 +131,7 @@ data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
       bubble = bubble,
       bubble_cex = bubble_cex
     )
+    out = modify_list(settings, out)
     return(out)
   }
   return(fun)

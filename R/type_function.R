@@ -55,6 +55,7 @@ type_function = function(fun = dnorm, args = list(), n = 101, ...) {
         ylim = c(min(tmp), max(tmp))
       }
       out = list(xlim = xlim, ylim = ylim)
+      out = modify_list(settings, out)
       return(out)
     }
   }

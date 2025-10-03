@@ -410,6 +410,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         alpha = alpha
       )
     )
+    out = modify_list(settings, out)
     return(out)
   }
   return(fun)

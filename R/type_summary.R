@@ -52,6 +52,7 @@ type_summary = function(fun = mean, ...) {
       })
       datapoints = do.call(rbind, datapoints)
       out = list(datapoints = datapoints)
+      out = modify_list(settings, out)
       return(out)
     }
     return(funky)

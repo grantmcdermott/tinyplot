@@ -280,6 +280,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
           facet.args = facet.args
         )
         
+        out = modify_list(settings, out)
         return(out)
         
     }

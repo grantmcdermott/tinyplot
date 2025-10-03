@@ -141,6 +141,7 @@ data_boxplot = function() {
         if (length(unique(datapoints$by)) > 1) out[["by"]] = datapoints$by
         if (length(unique(datapoints$facet)) > 1) out[["facet"]] = datapoints$facet
 
+        out = modify_list(settings, out)
         return(out)
     }
     return(fun)

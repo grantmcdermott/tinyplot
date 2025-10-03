@@ -66,3 +66,9 @@ swap_columns = function(dp, a, b) {
   dp[[b]] = if (!is.null(va)) va else NULL
   dp
 }
+
+
+modify_list = function(a, b) {
+  a = a[setdiff(names(a), names(b))]
+  c(a, b)
+}

@@ -54,6 +54,7 @@ data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
         })
         datapoints = do.call(rbind, datapoints)
         out = list(datapoints = datapoints)
+        out = modify_list(settings, out)
         return(out)
     }
     return(fun)

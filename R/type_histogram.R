@@ -159,6 +159,9 @@ data_histogram = function(breaks = "Sturges",
             by = if (length(unique(datapoints$by)) == 1) by else datapoints$by,
             facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
         )
+        # browser()
+        out = modify_list(settings, out)
+        # out = modify_list(settings, out)
         return(out)
     }
     return(fun)

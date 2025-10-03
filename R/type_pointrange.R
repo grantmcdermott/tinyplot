@@ -98,6 +98,7 @@ data_pointrange = function(dodge, fixed.pos) {
       datapoints = datapoints
     )
 
+    out = modify_list(settings, out)
     return(out)
   }
   return(fun)

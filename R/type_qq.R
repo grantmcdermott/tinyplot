@@ -22,6 +22,7 @@ type_qq = function(distribution = qnorm) {
       datapoints$x = x
       datapoints$y = y
       out = list(datapoints = datapoints)
+      out = modify_list(settings, out)
       return(out)
     }
   }

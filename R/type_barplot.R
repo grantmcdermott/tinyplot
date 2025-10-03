@@ -204,6 +204,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
           col = col,
           bg = bg
         )
+        out = modify_list(settings, out)
         return(out)
     }
     return(fun)

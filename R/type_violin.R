@@ -215,6 +215,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             col = col,
             bg = bg
         )
+        out = modify_list(settings, out)
         return(out)
     }
     return(fun)

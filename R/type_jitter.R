@@ -58,6 +58,7 @@ data_jitter = function(factor, amount) {
             xlabs = xlabs,
             ylabs = ylabs
         )
+        out = modify_list(settings, out)
         return(out)
     }
 }

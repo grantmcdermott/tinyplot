@@ -810,19 +810,21 @@ tinyplot.default = function(
   # combine x, y, xmax, by, facet etc. into a single `datapoints` data.frame
   settings = sanitize_datapoints(settings)
 
-  list2env(settings, environment())
 
   #
   ## transform datapoints using type_data() -----
   #
 
   # type_info: initialize a list to pass type-specific information from type_data() to type_draw()
-  type_info = list()
+  settings$type_info = list()
 
-  if (!is.null(type_data)) {
-    list2env(type_data(settings, ...), environment())
+  if (!is.null(settings$type_data)) {
+    settings = settings$type_data(settings, ...)
   }
 
+
+
+  list2env(settings, environment())
 
   # flip -> swap x and y, except for boxplots (which has its own bespoke flip logic)
   assert_flag(flip)

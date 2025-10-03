@@ -24,6 +24,7 @@ data_area = function(alpha = alpha) {
             type = "ribbon",
             ribbon.alpha = ribbon.alpha
         )
+        out = modify_list(settings, out)
         return(out)
     }
     return(fun)

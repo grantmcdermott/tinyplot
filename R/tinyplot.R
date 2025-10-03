@@ -894,20 +894,12 @@ tinyplot.default = function(
   #
   ## aesthetics by group -----
   #
-
   settings = by_aesthetics(settings)
+
+  settings$col = by_col(settings = settings)
+  settings$bg = by_bg(adjustcolor = adjustcolor, settings = settings)
+
   list2env(settings, environment())
-
-  col = by_col(
-    ngrps = ngrps, col = col, palette = palette,
-    gradient = by_continuous, ordered = by_ordered, alpha = alpha
-  )
-  bg = by_bg(
-    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous,
-    by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette),
-    ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type
-  )
-
 
   #
   ## legends -----

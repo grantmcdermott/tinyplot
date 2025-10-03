@@ -28,7 +28,12 @@ by_aesthetics = function(settings) {
 }
 
 
-by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL, alpha = NULL) {
+by_col = function(settings) {
+  list2env(settings, environment())
+  palette = settings$palette # not sure why we need this
+  ordered = by_ordered
+  gradient = by_continuous
+
   if (is.null(alpha)) alpha = 1
   if (is.null(ordered)) ordered = FALSE
   if (is.null(gradient)) gradient = FALSE
@@ -457,33 +462,20 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
 
 
 
-by_bg = function(
-    adjustcolor,
-    alpha,
-    bg,
-    by,
-    by_continuous,
-    by_ordered,
-    col,
-    fill,
-    ngrps,
-    palette,
-    ribbon.alpha,
-    type) {
-  if (is.null(bg) && !is.null(fill)) bg = fill
+by_bg = function(adjustcolor, settings) {
+  list2env(settings, environment())
+  palette = settings$palette # not sure why we need this
+
+
+  if (is.null(bg) && !is.null(fill)) settings$bg = bg = fill
   if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
     alpha = bg
     bg = "by"
   }
   if (!is.null(bg) && length(bg) == 1 && bg == "by") {
-    bg = by_col(
-      ngrps = ngrps,
-      col = NULL,
-      palette = palette,
-      gradient = by_continuous,
-      ordered = by_ordered,
-      alpha = alpha
-    )
+    # use by_col processing, but with the bg-specific colors
+    bg_colors = list(col = NULL, bg = bg, alpha = alpha, palette = palette)
+    bg = by_col(settings = modify_list(settings, bg_colors))
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)
   }

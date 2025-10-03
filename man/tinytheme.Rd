@@ -49,8 +49,11 @@ whitespace.
 \details{
 Sets a list of graphical parameters using \code{tpar()}
 
+Note that themes are persistent and will be applied to all subsequent plots.
 To reset the theme to default settings (no customization), call \code{tinytheme()}
-without arguments.
+without arguments. Altenatively, invoke the \verb{tinyplot(..., theme = <theme>)}
+argument for an ephemeral theme that is automatically reset at the end of the
+plot call.
 
 \strong{Caveat emptor:} Themes are a somewhat experimental feature of \code{tinyplot}.
 While we feel confident that themes should work as expected for most
@@ -78,6 +81,9 @@ p()
 tinytheme("bw")
 p()
 
+#  A set theme is persistent and will apply to subsequent plots
+tinyplot(0:10)
+
 # Try a different theme
 tinytheme("dark")
 p()
@@ -98,6 +104,10 @@ tinyplot(I(cut(lat, 10)) ~ depth, data = quakes, type = "ridge")
 tinytheme()
 p()
 
+# For an ephemeral theme, use `tinyplot(..., theme = <theme>)` directly
+tinyplot(0:10, theme = "clean", main = "This theme is ephemeral")
+tinyplot(10:0, main = "See, no more theme")
+
 # Themes showcase
 ## We'll use a slightly more intricate plot (long y-axis labs and facets)
 ## to demonstrate dynamic margin adjustment etc.
@@ -108,9 +118,11 @@ for (thm in thms) {
   tinytheme(thm)
   tinyplot(
     I(Sepal.Length*1e4) ~ Petal.Length | Species, facet = "by", data = iris,
-    main = "Demonstration of tinyplot themes",
-    sub = paste0('tinytheme("', thm, '")')
+    yaxl = ",", 
+    main = paste0('tinytheme("', thm, '")'),
+    sub = "A subtitle"
   )
+  box("outer", lty = 2)
 }
 
 # Reset

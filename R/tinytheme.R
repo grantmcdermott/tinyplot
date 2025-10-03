@@ -34,8 +34,11 @@
 #' @details
 #' Sets a list of graphical parameters using `tpar()`
 #'
+#' Note that themes are persistent and will be applied to all subsequent plots.
 #' To reset the theme to default settings (no customization), call `tinytheme()`
-#' without arguments.
+#' without arguments. Altenatively, invoke the `tinyplot(..., theme = <theme>)`
+#' argument for an ephemeral theme that is automatically reset at the end of the
+#' plot call.
 #' 
 #' **Caveat emptor:** Themes are a somewhat experimental feature of `tinyplot`.
 #' While we feel confident that themes should work as expected for most
@@ -65,6 +68,9 @@
 #' # Set a theme
 #' tinytheme("bw")
 #' p()
+#' 
+#' #  A set theme is persistent and will apply to subsequent plots
+#' tinyplot(0:10)
 #'
 #' # Try a different theme
 #' tinytheme("dark")
@@ -86,6 +92,10 @@
 #' tinytheme()
 #' p()
 #' 
+#' # For an ephemeral theme, use `tinyplot(..., theme = <theme>)` directly
+#' tinyplot(0:10, theme = "clean", main = "This theme is ephemeral")
+#' tinyplot(10:0, main = "See, no more theme")
+#' 
 #' # Themes showcase
 #' ## We'll use a slightly more intricate plot (long y-axis labs and facets)
 #' ## to demonstrate dynamic margin adjustment etc.
@@ -96,9 +106,11 @@
 #'   tinytheme(thm)
 #'   tinyplot(
 #'     I(Sepal.Length*1e4) ~ Petal.Length | Species, facet = "by", data = iris,
-#'     main = "Demonstration of tinyplot themes",
-#'     sub = paste0('tinytheme("', thm, '")')
+#'     yaxl = ",", 
+#'     main = paste0('tinytheme("', thm, '")'),
+#'     sub = "A subtitle"
 #'   )
+#'   box("outer", lty = 2)
 #' }
 #' 
 #' # Reset
@@ -181,6 +193,7 @@ theme_default = list(
   adj.sub = par("adj"), # 0.5,
   bg = "white", # par("bg") # "white"
   bty = par("bty"), #"o",
+  cex = par("cex"), #1,
   cex.axis = par("cex.axis"), #1,
   cex.main = par("cex.main"), #1.2,
   cex.xlab = par("cex.axis"), #1,

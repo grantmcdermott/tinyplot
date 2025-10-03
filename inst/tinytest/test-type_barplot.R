@@ -45,3 +45,11 @@ f = function() {
   tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
 }
 expect_snapshot_plot(f, label = "barplot_xlevels_issue430")
+
+f = function() {
+  tab = as.data.frame(xtabs(~ cyl, data = mtcars))
+  tinyplot(Freq ~ cyl, data = tab, type = "barplot")
+  tinyplot_add(type = "text", labels = tab$Freq, pos = 3, xpd = TRUE)
+}
+expect_snapshot_plot(f, label = "barplot_text_issue469")
+

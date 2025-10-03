@@ -4,7 +4,7 @@
 \alias{tinylabel}
 \title{Format labels}
 \usage{
-tinylabel(x, labeller = NULL)
+tinylabel(x, labeller = NULL, na.ignore = TRUE, na.rm = TRUE)
 }
 \arguments{
 \item{x}{a numeric or character vector}
@@ -15,6 +15,18 @@ tinylabel(x, labeller = NULL)
 (symbols), for which common formatting transformations are provided:
 \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
 (\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
+
+\item{na.ignore}{logical indicating whether the labelling function should
+ignore \code{NA} values in \code{x}. In other words, should the \code{NA} values be left
+as-is? Default is \code{TRUE}.}
+
+\item{na.rm}{logical indicating whether \code{NA} values should be removed from
+\code{x} and thus the return object too. Default is \code{TRUE}, but only evaluated
+if \code{na.ignore} is \code{FALSE}.}
+}
+\value{
+a character vector of the same length as \code{x} with the transformed
+labels.
 }
 \description{
 Function for formatting label appearance, e.g. axis
@@ -27,16 +39,22 @@ tinylabel(x, "comma")
 tinylabel(x, ",") # same
 tinylabel(x, "$") # or "dollar"
 
-# pass to xaxl/yaxl for adjusting axes tick labels in a tinyplot call
-tinyplot(I(mpg/hp) ~ hp, data = mtcars, yaxl = "\%")
+# invoke tinylabel from a parent tinyplot call...
+#   => x/yaxl for adjusting axes tick labels
+#   => legend = list(labeller = ...) for adjusting the legend labels
+s77 = transform(data.frame(state.x77), Illiteracy = Illiteracy / 100)
+tinyplot(Life.Exp ~ Income | Illiteracy, data = s77,
+         xaxl = '$',
+         legend = list(labeller = '\%'))
 
 # log example (combined with axis scaling)
-tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log")
+tinyplot(x = 10^c(10:0), y = 0:10, type = "b",
+         log = "x", xaxl = "log")
 
 # combine with `x/yaxb` to adjust the actual tick marks ("break points")
 # at the same time
-tinyplot(x = 10^c(10:0), y = 0:10, type = "b", log = "x", xaxl = "log",
-         xaxb = 10^c(1,3,5,7,9))
+tinyplot(x = 10^c(10:0), y = 0:10, type = "b",
+         log = "x", xaxl = "log", xaxb = 10^c(1,3,5,7,9))
 
 #
 ## custom function examples
@@ -48,9 +66,10 @@ dat = data.frame(
   trend = 1:12 + rnorm(12, sd = 1)
 )
 
-tinyplot(trend ~ date, data = dat, xaxl = function(x) format(x, "\%b, \%Y"))
+tinyplot(trend ~ date, data = dat,
+         xaxl = function(x) format(x, "\%b, \%Y"))
 
-## example II: string wrapping 
+## example II: string wrapping
 
 # create a "vectorised" version of `base::strwrap` that breaks long
 # strings into new lines every 18 characters
@@ -70,7 +89,10 @@ dat2 = data.frame(
   )
 )
 
-tinytheme("bw")
-tinyplot(y ~ x, data = dat2, type = "j", yaxl = strwrap18)
-tinytheme()
+tinyplot(y ~ x, data = dat2, type = "j",
+         yaxl = strwrap18,
+         theme = "bw") # use theme for horizontal labels + dynamic margin
+}
+\seealso{
+\code{\link{tinyplot}}
 }

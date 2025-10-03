@@ -197,11 +197,12 @@ tpar = function(..., hook = FALSE) {
 
 
 # Two levels of priority: .tpar[["name"]] -> par("name")
-get_tpar = function(opts, default = NULL) {
+get_tpar = function(opts, default = NULL, tpar_list = NULL) {
+  if (is.null(tpar_list)) tpar_list = .tpar
   # parameter priority
   # .tpar[["name"]] -> par("name")
   for (o in opts) {
-    tp = .tpar[[o]]
+    tp = tpar_list[[o]]
     if (!is.null(tp)) {
       return(tp)
     } else {

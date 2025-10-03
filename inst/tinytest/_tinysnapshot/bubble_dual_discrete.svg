@@ -26,15 +26,6 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-</g>
-<defs>
-  <clipPath id='cpNTkuMDR8NTA0LjAwfDU5LjA0fDQzMC41Ng=='>
-    <rect x='59.04' y='59.04' width='444.96' height='371.52' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpNTkuMDR8NTA0LjAwfDU5LjA0fDQzMC41Ng==)'>
-</g>
-<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <circle cx='430.57' cy='197.88' r='2.70' style='stroke-width: 0.75;' />
 <circle cx='430.57' cy='212.28' r='2.70' style='stroke-width: 0.75; stroke: #DF536B;' />
 <circle cx='430.57' cy='226.68' r='2.70' style='stroke-width: 0.75; stroke: #61D04F;' />
@@ -42,19 +33,17 @@
 <text x='441.37' y='202.01' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <text x='441.37' y='216.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
 <text x='441.37' y='230.81' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>
-<circle cx='447.31' cy='277.32' r='1.35' style='stroke-width: 0.75;' />
-<circle cx='447.31' cy='291.72' r='3.76' style='stroke-width: 0.75;' />
-<circle cx='447.31' cy='306.12' r='4.77' style='stroke-width: 0.75;' />
-<circle cx='447.31' cy='320.52' r='5.53' style='stroke-width: 0.75;' />
-<circle cx='447.31' cy='334.92' r='6.18' style='stroke-width: 0.75;' />
-<circle cx='447.31' cy='349.32' r='6.75' style='stroke-width: 0.75;' />
+<circle cx='447.31' cy='277.32' r='3.76' style='stroke-width: 0.75;' />
+<circle cx='447.31' cy='291.72' r='4.77' style='stroke-width: 0.75;' />
+<circle cx='447.31' cy='306.12' r='5.53' style='stroke-width: 0.75;' />
+<circle cx='447.31' cy='320.52' r='6.18' style='stroke-width: 0.75;' />
+<circle cx='447.31' cy='334.92' r='6.75' style='stroke-width: 0.75;' />
 <text x='458.35' y='262.92' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='83.36px' lengthAdjust='spacingAndGlyphs'>iris$Petal.Width</text>
-<text x='458.11' y='281.44' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>0.0</text>
-<text x='458.11' y='295.84' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>0.5</text>
-<text x='458.11' y='310.24' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.0</text>
-<text x='458.11' y='324.64' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.5</text>
-<text x='458.11' y='339.04' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.0</text>
-<text x='458.11' y='353.44' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.5</text>
+<text x='458.11' y='281.44' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>0.5</text>
+<text x='458.11' y='295.84' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.0</text>
+<text x='458.11' y='310.24' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>1.5</text>
+<text x='458.11' y='324.64' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.0</text>
+<text x='458.11' y='339.04' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>2.5</text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHwzOTkuNTd8MC4wMHw1MDQuMDA='>

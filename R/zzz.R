@@ -42,6 +42,7 @@
     "oyaxis",
     "ribbon.alpha",
     "split_data",
+    "tpars",
     "type",
     "x",
     "xaxl",

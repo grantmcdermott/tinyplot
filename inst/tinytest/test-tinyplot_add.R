@@ -73,3 +73,14 @@ f = function() {
   tinyplot_lollipop(1:5, sin(1:5))
 }
 expect_snapshot_plot(f, label = "tinyplot_lollipop")
+
+
+# check that we are avoiding recursive margins for facets, by properly restoring
+# the original state
+f = function() {
+  tinyplot(Sepal.Length ~ Petal.Length, facet = ~Species, data = iris)
+  tinyplot_add(type = "lm")
+  tinyplot(Sepal.Width ~ Sepal.Length, facet = ~Species, data = iris)
+  tinyplot_add(type = "lm")
+}
+expect_snapshot_plot(f, label = "tinyplot_add_no_recursive_margins")

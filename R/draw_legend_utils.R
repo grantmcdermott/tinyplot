@@ -38,6 +38,7 @@ compute_legend_args = function(
   legend_args,
   by_dep,
   lgnd_labs,
+  labeller = NULL,
   type,
   pch,
   lty,
@@ -95,6 +96,11 @@ compute_legend_args = function(
       "Defaulting to automatic labels determined by the group splits in `by`,\n"
     )
     legend_args[["legend"]] = lgnd_labs
+  }
+  if (!is.null(legend_args[["labeller"]])) {
+    labeller = legend_args[["labeller"]]
+    legend_args[["labeller"]] = NULL
+    legend_args[["legend"]] = tinylabel(legend_args[["legend"]], labeller = labeller)
   }
   if (isTRUE(gradient)) {
     legend_args[["ncol"]] = NULL

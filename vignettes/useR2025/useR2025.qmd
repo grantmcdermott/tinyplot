@@ -1,17 +1,12 @@
 ---
 # title: tinyplot
-# subtitle:  Lightweight extension of the base R graphics system
-# format: clean-revealjs
 title: "<br/><br/><br/>"
 subtitle: Lightweight extension of the base R graphics system
 format:
    clean-revealjs:
      title-slide-attributes:
        data-background-image: "img/background.png"
-  # clean-revealjs:
-  # #   logo: img/logo.svg
-  #   title-slide-attributes:
-  #     data-background-image: "img/background.png"
+       data-background-size: contain
 execute:
   echo: true
 author:
@@ -270,19 +265,24 @@ But going beyond the defaults is often (much) more work that I want to do.
 
 ### R has two low-level graphics systems
 
-::: {.r-stack}
-![Note: Adapted from @murrell2023updates.](img/rgraphics.png)
+![](img/rgraphics.png)
 
-![Note: Adapted from @murrell2023updates.](img/rgraphics2.png){.fragment}
-:::
+## grid vs graphics (redux) {visibility="uncounted" auto-animate=true}
 
+### R has two low-level graphics systems
 
-::: {.fragment}
+![](img/rgraphics2.png)
+
+## grid vs graphics (redux) {visibility="uncounted" auto-animate=true}
+
+### R has two low-level graphics systems
+
+![](img/rgraphics2.png)
+
 **tinyplot** goals:
 
 1. Make base R graphics more user-friendly.
-2. Improved feature parity vs. grid-based 📦s like **ggplot2** and **lattice**.   
-:::
+2. Improved feature parity vs. grid-based 📦s like **ggplot2** and **lattice**.
 
 ## Origin story 🤝
 
@@ -523,19 +523,25 @@ plt(
 ## tinyplot API
 ### types
 
-All tinyplot types can be passed as either a:
+tinyplot types can be passed as either a _string_ or _function_:
 
-- _string_ (`"p"`, `"density`, `"lm"`, ...), or
-- _function_ (`type_points()`, `type_density()`, `type_lm()`, ...)
+|     |     |     |     |     |
+|-----|:----|:----|:----|:----|
+| _string_ | `"p"` | `"density"` | `"lm"` | `"<name>"` |
+| _function_ | `type_points()` | `type_density()` | `type_lm()` | `type_<name>()` |
 
-In general, the functional equivalents are denoted `type_*()` and support direct argument passing for customization, e.g.
+\
+
+::: {.fragment}
+The function variants all take the form `type_<name>` and support type-specific
+argument passing for customization, e.g.
 
 ```{r}
-?type_lm
-args(type_lm)
+# ?type_lm   # full documentation
+str(type_lm) # available args
 ```
-::: {.callout-note}
-Custom args can also be passed through `plt(...)`, so long as there isn't a top-level clash.
+
+P.S. Type args can also be passed via `plt(...)` _if_ there's no top-level clash.
 :::
 
 ## tinyplot API
@@ -821,8 +827,8 @@ plt(
 #| fig-width: 6
 #| fig-asp: 1
 
-mod = lm(body_mass ~ species + sex,
-         data = penguins)
+mod = lm(weight ~ 0 + Time + Diet,
+         data = ChickWeight)
 coefs = data.frame(
   names(coef(mod)),
   coef(mod),
@@ -898,6 +904,11 @@ plt(Month ~ Temp | Temp,
 )
 ```
 
+```{r}
+#| include: false
+tinytheme()
+```
+
 # Conclusions
 
 ## Advantages of tinyplot {#sec-adv}
@@ -920,7 +931,7 @@ For the longer version: [[tinyplot pros]{.button}](#sec-pros)
 - Custom layout
 - Missing features
 
-For the longer version: [[tinyplot pros]{.button}](#sec-cons)
+For the longer version: [[tinyplot cons]{.button}](#sec-cons)
 
 ## Acknowledgements
 
@@ -966,9 +977,9 @@ Many other contributors, feedback providers, and a sources of inspiration.
 ::: {#refs}
 :::
 
-# Bonus: Tinyplot pros {#sec-pros}
+# Bonus: Tinyplot pros {#sec-pros visibility="uncounted"}
 
-## Concise
+## Concise {visibility="uncounted"}
 
 ### The formula API gives bang for buck
 
@@ -976,7 +987,7 @@ Many other contributors, feedback providers, and a sources of inspiration.
 
 _P.S. Thanks to Ryan for letting me use this screenshot._
 
-## Concise
+## Concise {visibility="uncounted"}
 
 ### The formula API gives bang for buck
 
@@ -1018,7 +1029,7 @@ plt(
 
 _(That's about 1/3 fewer characters.)_
 
-## Concise
+## Concise {visibility="uncounted"}
 
 ### Concision is even starker vs. vanilla base plot
 
@@ -1044,7 +1055,7 @@ Adapted from @viechtbauer2025tinyplot.
 
 ::::
 
-## Lightweight
+## Lightweight {visibility="uncounted"}
 
 ### Base R only
 
@@ -1063,9 +1074,9 @@ Very fast to install and play with in webR / WebAssembly. ([Try it!](https://web
 [[Back to main]{.button}](#sec-adv)
 
 
-# Bonus: Tinyplot cons {#sec-cons}
+# Bonus: Tinyplot cons {#sec-cons visibility="uncounted"}
 
-## Layering gotchas
+## Layering gotchas {visibility="uncounted"}
 
 ### Scaling is fixed by the first layer
 
@@ -1078,7 +1089,7 @@ plt_add(type = "lm")
 This is a limitation of **graphics** "canvas" logic. (Workarounds: Change layer order, or use `x/ylim`.)
 ::: 
 
-## Layering gotchas
+## Layering gotchas {visibility="uncounted"}
 
 ### Can't combine `file` with `plt_add` (yet)
 
@@ -1096,18 +1107,16 @@ I'm hoping to provide a native solution in the future, but workarounds for now:
 - Open/close the appropriate graphics device manually, e.g. `png("myplot.png"); plt(...); plt_add(...); dev.off() `
 ::: 
 
-## Missing features
+## Missing features {visibility="uncounted"}
 
 I hope that I have convinced you that **tinyplot** covers a _lot_ of ground.
 
 - The API should also be very stable. I expect few (if any) breaking changes from here on out.
 
-::: {.fragment}
 Still, **tinyplot**  is a relatively young project and there are some features and plot types that we don't support (yet). Some things coming down the pike:
 
 - bubble plots ([#433](https://github.com/grantmcdermott/tinyplot/pull/433))
 - dodged elements ([#406](https://github.com/grantmcdermott/tinyplot/issues/406))
 - maps ([#210](https://github.com/grantmcdermott/tinyplot/issues/210))
-:::
 
 [[Back to main]{.button}](#sec-disadv)

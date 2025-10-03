@@ -10,7 +10,6 @@ aq = transform(
   
 tinyplot(Month ~ Temp | Temp,
   data = aq,
-  type = type_ridge(col = "white")
+  type = type_ridge(col = "white"),
+  theme = "ridge2"
 )
-
-tinytheme() # reset theme (optional)

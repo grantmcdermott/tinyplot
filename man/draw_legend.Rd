@@ -9,6 +9,7 @@ draw_legend(
   legend_args = NULL,
   by_dep = NULL,
   lgnd_labs = NULL,
+  labeller = NULL,
   type = NULL,
   pch = NULL,
   lty = NULL,
@@ -32,6 +33,9 @@ draw_legend(
 \item{by_dep}{The (deparsed) "by" grouping variable name.}
 
 \item{lgnd_labs}{The labels passed to \code{legend(legend = ...)}.}
+
+\item{labeller}{Character or function for formatting the labels (\code{lgnd_labs}).
+Passed down to \code{\link{tinylabel}}.}
 
 \item{type}{Plotting type(s), passed down from \link{tinyplot}.}
 

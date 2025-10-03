@@ -4,17 +4,39 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## Development
+## Dev version
+
+### New features
+
+- `type_text()` gains a `family` argument for controlling the font family,
+  separate to the main plot text elements. (#494 @grantmcdermott)
+
+### Bug fixes
+
+- For bubble plots, we now drop the minimum legend category (label) if it is
+  equal to 0. The previous behaviour was just an artifact of the `pretty` breaks
+  algorithm that we use to create discrete legend categories. The interior plot
+  elements, e.g. bubble points, are unaffected. (#498 @grantmcdermott)
+- `type_text()` now defaults to displaying `y` values if an explicit `labels`
+  arg is not provided, mirroring the behaviour of the base `text()` function.
+  (#501 @grantmcdermott)
+
+### Documentation
+
+- Add a "recession bars" section to the `Tips & tricks` vignette.
+  (#503 @grantmcdermott)
+
+## 0.5.0
 
 ### New features
 
 - Added support for "bubble" scatter plots, allowing for point size scaling via
   an appropriate `cex` argument (e.g., a continuous variable from your dataset).
-  The updated `?type_point` helpfile contains several examples. Simultaneously 
-  enables dual-legend support for combined size + color mappings.
+  Simultaneously enables dual-legend support for combined size + color mappings.
+  The updated `?type_points` documentation contains several examples.
   (#433 @grantmcdermott)
 - Improved horizontal legend spacing, as well as multicolumn legend support. A
-  new example in the "Tips & tricks" vignettes demonstrates the latter.
+  new example in the "Tips & tricks" vignette demonstrates the latter.
   (#446 @grantmcdermott)
 - Univariate boxplots (without grouping variable) are now handled in
   `tinyplot.default()`, so that `tinyplot(x, type = "boxplot")` and
@@ -22,6 +44,14 @@ where the formatting is also better._
   `boxplot(x)`. (#454 @zeileis)
 - `type_errorbar()` and `type_point_range()` get a `dodge` argument.
   (#461 @vincentarelbundock)
+- The new `tinyplot(..., theme = <theme>)` argument enables users to invoke
+  ephemeral themes as an alternative to the persistent themes that follow
+  `tinytheme(<theme>)`. (#484 @grantmcdermott)
+- Similarly to how the `x/yaxl` arguments allow for axes label adjustment, users
+  can now adjust the legend labels too with
+  `tinyplot(..., legend = list(labeller = <labeller>))`. The `labeller` argument
+  is passed to `tinylabel`; see the latter's help documentation for examples.
+  (#488 @grantmcdermott)
 
 ### Bug fixes
 
@@ -32,12 +62,31 @@ where the formatting is also better._
   counterparts (with `tinyplot::` prefix). Finally, the internals where these
   calls are stored are streamlined, avoiding modifying the user-visible
   `options()`. (#460 @zeileis)
+- Fixed several minor `tinylabel` bugs. (#468 @grantmcdermott)
+  - `tinylabel(x, "%")` is more precise, preserving unique levels of `x` through
+     automatic decimal level determination. Thanks to @etiennebacher for the
+     bug report in #449.
+  - Numeric labellers now work on appropriate `x`/`y` variables, even if the
+    plot type internally coerces it to factor (e.g., `"boxplot"`)
+- `type_text()` can now also deal with factor `x`/`y` variables by converting
+  them to numeric which helps to add text to barplots etc. (#470 @zeileis)
+- Fixed some `tinytheme()` bugs.
+  - Sourced (non-interactive) scripts with `tinytheme()` calls now inherit the
+    correct parameters and spacing. (#475, #481 @grantmcdermott)
+  - Custom `cex` theme settings are now reset correctly. (#482 @grantmcdermott)
+
+### Documentation
+
+- @grantmcdermott's _useR! 2025_ **tinyplot** presentation has been added to the
+  website as a standalone
+  [vignette](https://grantmcdermott.com/tinyplot/vignettes/useR2025/useR2025.html).
 
 ### Internals
 
 - Move `altdoc` from `Suggests` to `Config/Needs/website`.
   Thanks to @etiennebacher for the suggestion and to @eddelbuettel for help
   with the CI implementation.
+- Add a `devcontainer.json` file for remote testing. (#480 @grantmcdermott) 
 
 ## 0.4.2
 

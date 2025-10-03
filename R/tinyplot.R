@@ -741,7 +741,7 @@ tinyplot.default = function(
     palette = substitute(palette),
     legend = if (add) FALSE else substitute(legend),
     # aesthetics
-    lty = lty, lwd = lwd, col = col, bg = bg, 
+    lty = lty, lwd = lwd, col = col, bg = bg, log = log,
     fill = fill, alpha = alpha, cex = cex,
     pch = if (is.null(pch)) get_tpar("pch", default = NULL) else pch, 
     # ribbon.alpha is overwritten by some type_data() functions
@@ -820,46 +820,7 @@ tinyplot.default = function(
   type_info = list()
 
   if (!is.null(type_data)) {
-    after_refactor = "settings" %in% names(formals(type_data))
-
-    if (after_refactor) {
-      list2env(type_data(settings, ...), environment())
-    }
-
-    # the next long chunk would be remove after a full refactor
-    if (!after_refactor) {
-      fargs = list(
-        datapoints   = datapoints,
-        bg           = bg,
-        by           = by,
-        col          = col,
-        log          = log,
-        lty          = lty,
-        lwd          = lwd,
-        cex          = cex,
-        facet        = facet,
-        facet_by     = facet_by,
-        facet.args   = facet.args,
-        legend_args  = legend_args,
-        null_by      = null_by,
-        null_facet   = null_facet,
-        palette      = palette,
-        ribbon.alpha = ribbon.alpha,
-        xaxt         = xaxt,
-        xaxb         = xaxb,
-        xaxl         = xaxl,
-        xlab         = xlab,
-        xlabs        = xlabs,
-        xlim         = xlim,
-        yaxt         = yaxt,
-        yaxb         = yaxb,
-        yaxl         = yaxl,
-        ylab         = ylab,
-        ylim         = ylim
-      )
-      fargs = c(fargs, dots)
-      list2env(do.call(type_data, fargs), environment())
-    }
+    list2env(type_data(settings, ...), environment())
   }
 
 

@@ -78,7 +78,10 @@ type_violin = function(
 
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", trim = FALSE, width = 0.9) {
-    fun = function(datapoints,  by, facet, ylab, col, bg, palette, log, null_by, null_facet, ...) {
+    fun = function(settings, ...) {
+        list2env(settings[c("datapoints", "by", "raw_input", "facet", "ylab", "col", "bg", "log", "null_by", "null_facet")], 
+            environment())
+
         
         # Handle ordering based on by and facet variables
         ngrps = if (null_by) 1 else length(unique(datapoints$by))
@@ -122,7 +125,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             xord = order(datapoints$by, datapoints$facet, datapoints$x)
         }
 
-        if (length(unique(datapoints[["by"]])) == 1 && is.null(palette)) {
+        if (length(unique(datapoints[["by"]])) == 1 && is.null(raw_input$palette)) {
             if (is.null(col)) col = par("fg")
             if (is.null(bg)) bg = "lightgray"
         } else if (is.null(bg)) {

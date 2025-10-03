@@ -826,22 +826,16 @@ tinyplot.default = function(
   # flip -> swap x and y after type_data, except for boxplots (which has its own bespoke flip logic)
   settings = flip_datapoints(settings)
 
-  list2env(settings, environment())
-
 
   #
   ## bubble plot -----
   #
-
   # catch some simple aesthetics for bubble plots before the standard "by"
   # grouping sanitizers (actually: will only be used for dual_legend plots but
   # easiest to assign/determine now)
-  if (bubble) {
-    datapoints[["cex"]] = cex
-    bubble_pch = if (!is.null(pch) && length(pch)==1) pch else par("pch")
-    bubble_alpha = if (!is.null(alpha)) alpha else 1
-    bubble_bg_alpha = if (!is.null(bg) && length(bg)==1 && is.numeric(bg) && bg > 0 && bg <=1) bg else 1
-  }
+  settings = prep_bubble(settings)
+  list2env(settings, environment())
+
 
   #
   ## axis breaks and limits -----

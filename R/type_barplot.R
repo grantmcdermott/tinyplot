@@ -193,7 +193,6 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
           ylab = ylab,
           xlim = xlim,
           ylim = ylim,
-          axes = FALSE, #FIXME
           axes = TRUE,
           xlabs = xlabs, 
           frame.plot = FALSE,

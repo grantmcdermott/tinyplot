@@ -1,3 +1,33 @@
+by_aesthetics = function(settings) {
+  list2env(settings, environment())
+  by_ordered = FALSE
+  by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
+  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
+    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    by_continuous = FALSE
+  } else if (!null_by) {
+    by_ordered = is.ordered(by)
+  }
+
+  ngrps = if (null_by) 1L else if (is.factor(by)) nlevels(by) else if (by_continuous) 100L else length(unique(by))
+  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
+  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
+  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+  cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
+  out = list(
+    by_continuous = by_continuous,
+    by_ordered = by_ordered,
+    ngrps = ngrps,
+    pch = pch,
+    lty = lty,
+    lwd = lwd,
+    cex = cex
+  )
+  out = modify_list(settings, out)
+  return(out)
+}
+
+
 by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL, alpha = NULL) {
   if (is.null(alpha)) alpha = 1
   if (is.null(ordered)) ordered = FALSE

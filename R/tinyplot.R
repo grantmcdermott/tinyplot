@@ -842,27 +842,14 @@ tinyplot.default = function(
   
   # do this after computing yaxb because limits will depend on the previous calculations
   settings = lim_args(settings)
-  list2env(settings, environment())
 
 
   #
   ## aesthetics by group -----
   #
 
-  by_ordered = FALSE
-  by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
-  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
-    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
-    by_continuous = FALSE
-  } else if (!null_by) {
-    by_ordered = is.ordered(by)
-  }
-  
-  ngrps = if (null_by) 1L else if (is.factor(by)) nlevels(by) else if (by_continuous) 100L else length(unique(by))
-  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
-  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
-  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
-  cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
+  settings = by_aesthetics(settings)
+  list2env(settings, environment())
 
   col = by_col(
     ngrps = ngrps, col = col, palette = palette,

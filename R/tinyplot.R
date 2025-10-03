@@ -840,26 +840,16 @@ tinyplot.default = function(
   #
   ## axis breaks and limits -----
   #
-
-  # For cases where x/yaxb is provided and corresponding x/ylabs is not null...
-  # We can subset these here to provide breaks
-  if (!is.null(xaxb) && !is.null(xlabs)) {
-    xlabs = xlabs[names(xlabs) %in% xaxb]
-    xaxb = NULL # don't need this any more
-  }
-  if (!is.null(yaxb) && !is.null(ylabs)) {
-    ylabs = ylabs[names(ylabs) %in% yaxb]
-    yaxb = NULL # don't need this any more
-  }
   
   # do this after computing yaxb because limits will depend on the previous calculations
   fargs = lim_args(
     datapoints = datapoints,
+    xlabs = xlabs, ylabs = ylabs,
     xlim = xlim, ylim = ylim,
     xaxb = xaxb, yaxb = yaxb,
     null_xlim = null_xlim, null_ylim = null_ylim,
     type = type
-  )[c("xlim", "ylim")]
+  )
   list2env(fargs, environment())
 
 

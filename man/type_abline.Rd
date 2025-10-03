@@ -91,7 +91,7 @@ tinyplot(mpg ~ hp | cyl, facet = "by", data = mtcars, ylim = c(0, 40))
 tinyplot_add(type = "hline", col = "grey")
 
 # Note that group+facet aesthetics will be inherited. We can use this to
-# add customized lines (here: the mean `mpg` for each `cyl` group)  
+# add customized lines (here: the mean `mpg` for each `cyl` group)
 tinyplot_add(type = type_hline(with(mtcars, tapply(mpg, cyl, mean))), lty = 2)
 
 # Similar idea for vline
@@ -107,11 +107,13 @@ tinyplot(mpg ~ wt | factor(cyl), data = mtcars, type = type_hline(h = 21:23))
 tinyplot(mpg ~ wt, facet = ~am, data = mtcars, type = type_hline(h = c(20, 30)))
 
 # length(h) == no. of groups x no. of facets
-tinyplot(mpg ~ wt | factor(cyl), facet = ~am, data = mtcars,
-   type = type_hline(h = 21:26))
+tinyplot(mpg ~ wt | factor(cyl),
+  facet = ~am, data = mtcars,
+  type = type_hline(h = 21:26))
 
 # special adjustment case (here: lwd by group)
-tinyplot(mpg ~ wt | factor(cyl), facet = ~am, data = mtcars,
-   type = type_hline(c(20, 30)), lwd = c(21, 14, 7))
+tinyplot(mpg ~ wt | factor(cyl),
+  facet = ~am, data = mtcars,
+  type = type_hline(c(20, 30)), lwd = c(21, 14, 7))
 
 }

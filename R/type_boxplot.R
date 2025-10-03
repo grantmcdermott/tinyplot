@@ -94,7 +94,8 @@ draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewe
 
 
 data_boxplot = function() {
-    fun = function(datapoints, bg, col, palette, null_by, null_facet, ...) {
+    fun = function(settings, ...) {
+        list2env(settings, envir = environment())
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
 
@@ -114,11 +115,13 @@ data_boxplot = function() {
             xord = order(datapoints$by, datapoints$facet, datapoints$x)
         }
 
-        if (length(unique(datapoints[["by"]])) == 1 && is.null(palette)) {
+        # Check if user provided palette from raw_input (before substitute)
+        user_palette = raw_input$palette
+        if (length(unique(datapoints[["by"]])) == 1 && is.null(user_palette)) {
             if (is.null(col)) col = par("fg")
             if (is.null(bg)) bg = "lightgray"
         } else {
-            bg = "by"
+            if (is.null(bg)) bg = "by"
         }
 
         # Reorder x, y, ymin, and ymax based on the order determined

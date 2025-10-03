@@ -789,7 +789,7 @@ tinyplot.default = function(
 
   # palette default
   if (is.null(settings$palette)) {
-    settings$palette = get_tpar("palette", default = NULL)
+    settings = modifyList(settings, list(palette = get_tpar("palette", default = NULL)))
   }
 
   # by: coerce character groups to factor

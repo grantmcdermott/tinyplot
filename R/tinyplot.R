@@ -724,8 +724,8 @@ tinyplot.default = function(
     y = y, ymax = ymax, ymin = ymin, ylab = ylab, ylabs = NULL,
     # axes
     axes = axes,
-    xaxt = xaxt, xaxb = xaxb, xaxl = xaxl,
-    yaxt = yaxt, yaxb = yaxb, yaxl = yaxl,
+    xaxt = xaxt, xaxb = xaxb, xaxl = xaxl, xaxs = xaxs,
+    yaxt = yaxt, yaxb = yaxb, yaxl = yaxl, yaxs = yaxs,
     frame.plot = frame.plot,
     xlim = xlim,
     ylim = ylim,
@@ -748,6 +748,7 @@ tinyplot.default = function(
     # sanitize_ribbon.alpha: returns default alpha transparency value for ribbon-type plots
     ribbon.alpha = sanitize_ribbon.alpha(NULL),
     # misc
+    flip = flip,
     by = by,
     dots = dots
   )
@@ -822,32 +823,11 @@ tinyplot.default = function(
     settings = settings$type_data(settings, ...)
   }
 
-
+  # flip -> swap x and y after type_data, except for boxplots (which has its own bespoke flip logic)
+  settings = flip_datapoints(settings)
 
   list2env(settings, environment())
 
-  # flip -> swap x and y, except for boxplots (which has its own bespoke flip logic)
-  assert_flag(flip)
-  if (isTRUE(flip)) {
-    if (type == "boxplot") {
-      # boxplot: let horizontal=TRUE do most work; only swap labels
-      swap_variables(environment(), c("xlab", "ylab"))
-    } else {
-      swap_variables(
-        environment(),
-        c("xlim", "ylim"),
-        c("xlab", "ylab"),
-        c("xlabs", "ylabs"),
-        c("xaxt", "yaxt"),
-        c("xaxs", "yaxs"),
-        c("xaxb", "yaxb"),
-        c("xaxl", "yaxl"))
-      if (!is.null(log)) log = chartr("xy", "yx", log)
-      datapoints = swap_columns(datapoints, "x", "y")
-      datapoints = swap_columns(datapoints, "xmin", "ymin")
-      datapoints = swap_columns(datapoints, "xmax", "ymax")
-    }
-  }
 
   #
   ## bubble plot -----

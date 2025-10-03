@@ -861,6 +861,26 @@ tinyplot.default = function(
     ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type
   )
   
+
+  #
+  ## facets: count -----
+  #
+
+  # before legend becase it requires `cex_fct_adj`
+  if (length(unique(datapoints$facet)) == 1) {
+    datapoints[["facet"]] = NULL
+  }
+  attributes(datapoints$facet) = facet_attr ## TODO: better solution for restoring facet attributes?
+  fargs = facet_layout(facet = datapoints$facet, facet.args = facet.args, add = add)
+  fargs = fargs[c("facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")]
+  list2env(fargs, environment())
+
+
+  #
+  ## legends -----
+  #
+  
+  # legend labels
   ncolors = length(col)
   lgnd_labs = rep(NA, times = ncolors)
   if (isTRUE(by_continuous)) {
@@ -882,25 +902,6 @@ tinyplot.default = function(
     pidx = round(pidx)
     lgnd_labs[pidx] = pbyvar
   }
-  
-
-  #
-  ## facets: count -----
-  #
-
-  # before legend becase it requires `cex_fct_adj`
-  if (length(unique(datapoints$facet)) == 1) {
-    datapoints[["facet"]] = NULL
-  }
-  attributes(datapoints$facet) = facet_attr ## TODO: better solution for restoring facet attributes?
-  fargs = facet_layout(facet = datapoints$facet, facet.args = facet.args, add = add)
-  fargs = fargs[c("facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")]
-  list2env(fargs, environment())
-
-
-  #
-  ## legends -----
-  #
   
   # simple indicator variables for later use
   has_legend = FALSE

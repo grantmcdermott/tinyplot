@@ -699,59 +699,97 @@ tinyplot.default = function(
   #
 
   dots = list(...)
+
   settings = list(
     # save call to check user input later
-    call = match.call(),
+    call          = match.call(),
+
     # save to file & device dimensions
-    file = file, width = width, height = height,
+    file          = file,
+    width         = width,
+    height        = height,
+
     # deparsed input for use in labels
-    by_dep = deparse1(substitute(by)),
-    cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL,
-    facet_dep = deparse1(substitute(facet)),
-    x_dep = if (is.null(x)) NULL else deparse1(substitute(x)),
-    xmax_dep = if (is.null(xmax)) NULL else deparse1(substitute(xmax)),
-    xmin_dep = if (is.null(xmin)) NULL else deparse1(substitute(xmin)),
-    y_dep = if (is.null(y)) NULL else deparse1(substitute(y)),
-    ymax_dep = if (is.null(ymax)) NULL else deparse1(substitute(ymax)),
-    ymin_dep = if (is.null(ymin)) NULL else deparse1(substitute(ymin)),
+    by_dep        = deparse1(substitute(by)),
+    cex_dep       = if (!is.null(cex)) deparse1(substitute(cex)) else NULL,
+    facet_dep     = deparse1(substitute(facet)),
+    x_dep         = if (is.null(x))    NULL else deparse1(substitute(x)),
+    xmax_dep      = if (is.null(xmax)) NULL else deparse1(substitute(xmax)),
+    xmin_dep      = if (is.null(xmin)) NULL else deparse1(substitute(xmin)),
+    y_dep         = if (is.null(y))    NULL else deparse1(substitute(y)),
+    ymax_dep      = if (is.null(ymax)) NULL else deparse1(substitute(ymax)),
+    ymin_dep      = if (is.null(ymin)) NULL else deparse1(substitute(ymin)),
+
     # types
-    type = type, type_data = NULL, type_draw = NULL, type_name = NULL,
+    type          = type,
+    type_data     = NULL,
+    type_draw     = NULL,
+    type_name     = NULL,
+
     # type-specific settings
-    bubble = FALSE,
-    ygroup = NULL, # for type_ridge()
+    bubble        = FALSE,
+    ygroup        = NULL,  # for type_ridge()
+
     # data points and labels
-    x = x, xmax = xmax, xmin = xmin, xlab = xlab, xlabs = NULL,
-    y = y, ymax = ymax, ymin = ymin, ylab = ylab, ylabs = NULL,
+    x             = x,
+    xmax          = xmax,
+    xmin          = xmin,
+    xlab          = xlab,
+    xlabs         = NULL,
+    y             = y,
+    ymax          = ymax,
+    ymin          = ymin,
+    ylab          = ylab,
+    ylabs         = NULL,
+
     # axes
-    axes = axes,
-    xaxt = xaxt, xaxb = xaxb, xaxl = xaxl, xaxs = xaxs,
-    yaxt = yaxt, yaxb = yaxb, yaxl = yaxl, yaxs = yaxs,
-    frame.plot = frame.plot,
-    xlim = xlim,
-    ylim = ylim,
-    # flags to check user input that is useful later on
-    null_by = is.null(by),
-    null_xlim = is.null(xlim),
-    null_ylim = is.null(ylim),
-    was_area_type = identical(type, "area"), # mostly for legend
+    axes          = axes,
+    xaxt          = xaxt,
+    xaxb          = xaxb,
+    xaxl          = xaxl,
+    xaxs          = xaxs,
+    yaxt          = yaxt,
+    yaxb          = yaxb,
+    yaxl          = yaxl,
+    yaxs          = yaxs,
+    frame.plot    = frame.plot,
+    xlim          = xlim,
+    ylim          = ylim,
+
+    # flags to check user input (useful later on)
+    null_by       = is.null(by),
+    null_xlim     = is.null(xlim),
+    null_ylim     = is.null(ylim),
+    was_area_type = identical(type, "area"),  # mostly for legend
+
     # unevaluated expressions with side effects
-    draw = substitute(draw),
-    facet = facet,
-    facet.args = facet.args,
-    palette = substitute(palette),
-    legend = if (add) FALSE else substitute(legend),
+    draw          = substitute(draw),
+    facet         = facet,
+    facet.args    = facet.args,
+    palette       = substitute(palette),
+    legend        = if (add) FALSE else substitute(legend),
+
     # aesthetics
-    lty = lty, lwd = lwd, col = col, bg = bg, log = log,
-    fill = fill, alpha = alpha, cex = cex,
-    pch = if (is.null(pch)) get_tpar("pch", default = NULL) else pch, 
-    # ribbon.alpha is overwritten by some type_data() functions
-    # sanitize_ribbon.alpha: returns default alpha transparency value for ribbon-type plots
-    ribbon.alpha = sanitize_ribbon.alpha(NULL),
+    lty           = lty,
+    lwd           = lwd,
+    col           = col,
+    bg            = bg,
+    log           = log,
+    fill          = fill,
+    alpha         = alpha,
+    cex           = cex,
+    pch           = if (is.null(pch)) get_tpar("pch", default = NULL) else pch,
+
+    # ribbon.alpha overwritten by some type_data() functions
+    # sanitize_ribbon.alpha: returns default alpha transparency for ribbon-type plots
+    ribbon.alpha  = sanitize_ribbon.alpha(NULL),
+
     # misc
-    flip = flip,
-    by = by,
-    dots = dots
+    flip          = flip,
+    by            = by,
+    dots          = dots
   )
+
   settings[["raw_input"]] = settings
 
 
@@ -833,7 +871,7 @@ tinyplot.default = function(
   # catch some simple aesthetics for bubble plots before the standard "by"
   # grouping sanitizers (actually: will only be used for dual_legend plots but
   # easiest to assign/determine now)
-  settings = prep_bubble(settings)
+  settings = sanitize_bubble(settings)
 
 
   #

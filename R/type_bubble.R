@@ -1,4 +1,4 @@
-prep_bubble = function(settings) {
+sanitize_bubble = function(settings) {
   list2env(settings, environment())
   if (bubble) {
     datapoints[["cex"]] = cex

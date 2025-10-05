@@ -14,6 +14,7 @@ by_aesthetics = function(settings) {
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
   cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
+
   out = list(
     by_continuous = by_continuous,
     by_ordered = by_ordered,
@@ -24,6 +25,10 @@ by_aesthetics = function(settings) {
     cex = cex
   )
   out = modify_list(settings, out)
+
+  out$col = by_col(settings = out)
+  out$bg = by_bg(adjustcolor = adjustcolor, settings = out)
+
   return(out)
 }
 

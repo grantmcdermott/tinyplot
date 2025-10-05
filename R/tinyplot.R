@@ -896,8 +896,6 @@ tinyplot.default = function(
   #
   settings = by_aesthetics(settings)
 
-  settings$col = by_col(settings = settings)
-  settings$bg = by_bg(adjustcolor = adjustcolor, settings = settings)
 
   list2env(settings, environment())
 

@@ -9,32 +9,61 @@ by_aesthetics = function(settings) {
     by_ordered = is.ordered(by)
   }
 
-  ngrps = if (null_by) 1L else if (is.factor(by)) nlevels(by) else if (by_continuous) 100L else length(unique(by))
+  if (null_by) {
+    ngrps = 1L
+  } else if (is.factor(by)) {
+    ngrps = nlevels(by)
+  } else if (by_continuous) {
+    ngrps = 100L
+  } else {
+    ngrps = length(unique(by))
+  }
+
   pch = by_pch(ngrps = ngrps, type = type, pch = pch)
   lty = by_lty(ngrps = ngrps, type = type, lty = lty)
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
   cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
 
-  out = update_settings(settings,
+  col = by_col(
+    col = col,
+    palette = settings$palette, # must use unevaluated palette
+    alpha = alpha,
+    by_ordered = by_ordered,
+    by_continuous = by_continuous,
+    ngrps = ngrps,
+    adjustcolor = adjustcolor
+  )
+
+  bg = by_bg(
+    bg = bg,
+    fill = fill,
+    col = col,
+    palette = settings$palette, # must use unevaluated palette
+    alpha = alpha,
+    by_ordered = by_ordered,
+    by_continuous = by_continuous,
+    ngrps = ngrps,
+    type = type,
+    by = by,
+    ribbon.alpha = ribbon.alpha,
+    adjustcolor = adjustcolor
+  )
+
+  update_settings(settings,
     by_continuous = by_continuous,
     by_ordered = by_ordered,
     ngrps = ngrps,
     pch = pch,
     lty = lty,
     lwd = lwd,
-    cex = cex
+    cex = cex,
+    col = col,
+    bg = bg
   )
-
-  out$col = by_col(settings = out)
-  out$bg = by_bg(adjustcolor = adjustcolor, settings = out)
-
-  out
 }
 
 
-by_col = function(settings) {
-  list2env(settings, environment())
-  palette = settings$palette # not sure why we need this
+by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustcolor) {
   ordered = by_ordered
   gradient = by_continuous
 
@@ -466,19 +495,23 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
 
 
 
-by_bg = function(adjustcolor, settings) {
-  list2env(settings, environment())
-  palette = settings$palette # not sure why we need this
-
-
-  if (is.null(bg) && !is.null(fill)) settings$bg = bg = fill
+by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps, type, by, ribbon.alpha, adjustcolor) {
+  if (is.null(bg) && !is.null(fill)) bg = fill
   if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
     alpha = bg
     bg = "by"
   }
   if (!is.null(bg) && length(bg) == 1 && bg == "by") {
     # use by_col processing, but with the bg-specific colors
-    bg = by_col(settings = update_settings(settings, col = NULL, bg = bg, alpha = alpha, palette = palette))
+    bg = by_col(
+      col = NULL,
+      palette = palette,
+      alpha = alpha,
+      by_ordered = by_ordered,
+      by_continuous = by_continuous,
+      ngrps = ngrps,
+      adjustcolor = adjustcolor
+    )
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)
   }
@@ -490,5 +523,5 @@ by_bg = function(adjustcolor, settings) {
     }
   }
 
-  return(bg)
+  bg
 }

@@ -20,6 +20,10 @@ where the formatting is also better._
 - `type_text()` now defaults to displaying `y` values if an explicit `labels`
   arg is not provided, mirroring the behaviour of the base `text()` function.
   (#501 @grantmcdermott)
+- Determining the last call of the `tinyplot()` generic in preparation for
+  `tinyplot_add()` is now more robust so that it is compatible with `do.call()`
+  again (reported by @FlorianSchwendinger). This is achieved by inspecting
+  the functions called rather than just their names. (#504 @zeileis)
 
 ### Documentation
 

@@ -75,6 +75,15 @@ f = function() {
 expect_snapshot_plot(f, label = "tinyplot_lollipop")
 
 
+# use tinyplot_add() after do.call(tinyplot)
+f = function() {
+  d = data.frame(x = 1:5, y = sin(1:5))
+  do.call(tinyplot, list(y ~ x, data = d))
+  do.call(tinyplot_add, list(type = "h"))
+}
+expect_snapshot_plot(f, label = "tinyplot_do_call")
+
+
 # check that we are avoiding recursive margins for facets, by properly restoring
 # the original state
 f = function() {

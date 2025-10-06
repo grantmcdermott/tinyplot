@@ -125,14 +125,12 @@ data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
       }
     }
 
-    out = list(
+    update_settings(settings,
       datapoints = datapoints,
       cex = cex,
       bubble = bubble,
       bubble_cex = bubble_cex
     )
-    out = modify_list(settings, out)
-    return(out)
   }
   return(fun)
 }

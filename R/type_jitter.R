@@ -51,14 +51,12 @@ data_jitter = function(factor, amount) {
         datapoints$x = x
         datapoints$y = y
 
-        out = list(
+        update_settings(settings,
             datapoints = datapoints,
             x = x,
             y = y,
             xlabs = xlabs,
             ylabs = ylabs
         )
-        out = modify_list(settings, out)
-        return(out)
     }
 }

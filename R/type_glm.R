@@ -61,9 +61,7 @@ data_glm = function(family, se, level, type, ...) {
         })
         datapoints = do.call(rbind, dat)
         datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), ]
-        out = list(datapoints = datapoints)
-        out = modify_list(settings, out)
-        return(out)
+        update_settings(settings, datapoints = datapoints)
     }
     return(fun)
 }

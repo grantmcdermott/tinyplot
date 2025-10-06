@@ -391,7 +391,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     
     if (is.null(col) && (!anyby || x_by)) col = "black"
 
-    out = list(
+    update_settings(settings,
       datapoints = datapoints,
       yaxt = "n",
       ylim = c(min(datapoints$ymin), max(datapoints$ymax)),
@@ -410,8 +410,6 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         alpha = alpha
       )
     )
-    out = modify_list(settings, out)
-    return(out)
   }
   return(fun)
 }

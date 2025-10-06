@@ -32,7 +32,5 @@ lim_args = function(settings) {
   if (null_xlim && !is.null(xaxb) && type != "spineplot") xlim = range(c(xlim, xaxb))
   if (null_ylim && !is.null(yaxb) && type != "spineplot") ylim = range(c(ylim, yaxb))
 
-  out = list(xlim = xlim, ylim = ylim, xlabs = xlabs, ylabs = ylabs, xaxb = xaxb, yaxb = yaxb)
-  out = modify_list(settings, out)
-  return(out)
+  update_settings(settings, xlim = xlim, ylim = ylim, xlabs = xlabs, ylabs = ylabs, xaxb = xaxb, yaxb = yaxb)
 }

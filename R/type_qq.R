@@ -21,9 +21,7 @@ type_qq = function(distribution = qnorm) {
       x = distribution(ppoints(x))
       datapoints$x = x
       datapoints$y = y
-      out = list(datapoints = datapoints)
-      out = modify_list(settings, out)
-      return(out)
+      update_settings(settings, datapoints = datapoints)
     }
   }
 

@@ -15,7 +15,7 @@ by_aesthetics = function(settings) {
   lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
   cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
 
-  out = list(
+  out = update_settings(settings,
     by_continuous = by_continuous,
     by_ordered = by_ordered,
     ngrps = ngrps,
@@ -24,12 +24,11 @@ by_aesthetics = function(settings) {
     lwd = lwd,
     cex = cex
   )
-  out = modify_list(settings, out)
 
   out$col = by_col(settings = out)
   out$bg = by_bg(adjustcolor = adjustcolor, settings = out)
 
-  return(out)
+  out
 }
 
 
@@ -479,8 +478,7 @@ by_bg = function(adjustcolor, settings) {
   }
   if (!is.null(bg) && length(bg) == 1 && bg == "by") {
     # use by_col processing, but with the bg-specific colors
-    bg_colors = list(col = NULL, bg = bg, alpha = alpha, palette = palette)
-    bg = by_col(settings = modify_list(settings, bg_colors))
+    bg = by_col(settings = update_settings(settings, col = NULL, bg = bg, alpha = alpha, palette = palette))
   } else if (length(bg) != ngrps) {
     bg = rep(bg, ngrps)
   }

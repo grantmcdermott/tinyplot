@@ -17,15 +17,13 @@ data_area = function(alpha = alpha) {
         list2env(settings[c("datapoints")], environment())
         datapoints$ymax = datapoints$y
         datapoints$ymin = rep.int(0, nrow(datapoints))
-        out = list(
+        update_settings(settings,
             datapoints = datapoints,
             ymax = datapoints$ymax,
             ymin = datapoints$ymin,
             type = "ribbon",
             ribbon.alpha = ribbon.alpha
         )
-        out = modify_list(settings, out)
-        return(out)
     }
     return(fun)
 }

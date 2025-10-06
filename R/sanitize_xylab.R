@@ -54,7 +54,5 @@ sanitize_xylab = function(settings) {
     out_ylab = NULL
   }
 
-  out = list(xlab = out_xlab, ylab = out_ylab)
-  settings = modify_list(settings, out)
-  return(settings)
+  update_settings(settings, xlab = out_xlab, ylab = out_ylab)
 }

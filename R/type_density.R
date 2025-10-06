@@ -151,17 +151,15 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         dtype = if (!is.null(bg)) "ribbon" else "l"
         dwas_area_type = !is.null(bg)
         
-        out = list(
+        update_settings(settings,
             ylab = ylab,
             type = dtype,
             was_area_type = dwas_area_type,
             ribbon.alpha = ribbon.alpha,
             datapoints = datapoints,
-            by = if (length(unique(datapoints$by)) == 1) by else datapoints$by, 
+            by = if (length(unique(datapoints$by)) == 1) by else datapoints$by,
             facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
         )
-        out = modify_list(settings, out)
-        return(out)
     }
     return(fun)
 }

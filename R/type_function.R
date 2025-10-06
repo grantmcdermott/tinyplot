@@ -54,9 +54,7 @@ type_function = function(fun = dnorm, args = list(), n = 101, ...) {
         tmp = do.call(fun, tmp)
         ylim = c(min(tmp), max(tmp))
       }
-      out = list(xlim = xlim, ylim = ylim)
-      out = modify_list(settings, out)
-      return(out)
+      update_settings(settings, xlim = xlim, ylim = ylim)
     }
   }
   draw_function = function() {

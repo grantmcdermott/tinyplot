@@ -16,9 +16,7 @@ type_vline = function(v = 0) {
     ul_lty = length(unique(lty))
     ul_col = length(unique(col))
 
-    out = list(type_info = list(ul_lty = ul_lty, ul_lwd = ul_lwd, ul_col = ul_col))
-    out = modify_list(settings, out)
-    return(out)
+    update_settings(settings, type_info = list(ul_lty = ul_lty, ul_lwd = ul_lwd, ul_col = ul_col))
   }
   draw_vline = function() {
     fun = function(ifacet, iby, data_facet, icol, ilty, ilwd,

@@ -85,7 +85,7 @@ data_points = function(clim = c(0.5, 2.5)) {
       }
     }
 
-    out = list(
+    update_settings(settings,
       datapoints = datapoints,
       xlabs = xlabs,
       ylabs = ylabs,
@@ -94,8 +94,6 @@ data_points = function(clim = c(0.5, 2.5)) {
       bubble_cex = bubble_cex,
       legend_args = legend_args
     )
-    out = modify_list(settings, out)
-    return(out)
   }
 }
 

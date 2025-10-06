@@ -585,8 +585,7 @@ facet_layout = function(settings) {
     cex_fct_adj = 1
   }
 
-  # Update settings with new values
-  new = list(
+  update_settings(settings,
     datapoints = datapoints,
     facets = facets,
     ifacet = ifacet,
@@ -597,9 +596,6 @@ facet_layout = function(settings) {
     oyaxis = oyaxis,
     cex_fct_adj = cex_fct_adj
   )
-  settings = modify_list(settings, new)
-
-  return(settings)
 }
 
 

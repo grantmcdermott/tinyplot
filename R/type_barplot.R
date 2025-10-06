@@ -187,14 +187,14 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
           }
         }
         
-        out = list(
+        update_settings(settings,
           datapoints = datapoints,
           xlab = xlab,
           ylab = ylab,
           xlim = xlim,
           ylim = ylim,
           axes = TRUE,
-          xlabs = xlabs, 
+          xlabs = xlabs,
           frame.plot = FALSE,
           xaxs = "r",
           xaxt = if (xaxt == "s") "l" else xaxt,
@@ -203,8 +203,6 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
           col = col,
           bg = bg
         )
-        out = modify_list(settings, out)
-        return(out)
     }
     return(fun)
 }

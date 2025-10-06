@@ -68,7 +68,8 @@ swap_columns = function(dp, a, b) {
 }
 
 
-modify_list = function(a, b) {
-  a = a[setdiff(names(a), names(b))]
-  c(a, b)
+update_settings = function(settings, ...) {
+  new = list(...)
+  settings = settings[setdiff(names(settings), names(new))]
+  c(settings, new)
 }

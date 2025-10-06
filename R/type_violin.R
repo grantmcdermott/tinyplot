@@ -206,17 +206,15 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         datapoints = do.call(rbind, datapoints)
         datapoints = datapoints[1:(nrow(datapoints)-1), ]
         
-        out = list(
+        update_settings(settings,
             datapoints = datapoints,
-            by = if (length(unique(datapoints$by)) == 1) by else datapoints$by, 
+            by = if (length(unique(datapoints$by)) == 1) by else datapoints$by,
             facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet,
             ylab = ylab,
             xlabs = xlabs,
             col = col,
             bg = bg
         )
-        out = modify_list(settings, out)
-        return(out)
     }
     return(fun)
 }

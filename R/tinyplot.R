@@ -789,7 +789,8 @@ tinyplot.default = function(
     # misc
     flip          = flip,
     by            = by,
-    dots          = dots
+    dots          = dots,
+    type_info     = list() # pass type-specific info from type_data to type_draw
   )
 
   settings[["raw_input"]] = settings
@@ -854,9 +855,6 @@ tinyplot.default = function(
   #
   ## transform datapoints using type_data() -----
   #
-
-  # type_info: initialize a list to pass type-specific information from type_data() to type_draw()
-  settings$type_info = list()
 
   if (!is.null(settings$type_data)) {
     settings = settings$type_data(settings, ...)

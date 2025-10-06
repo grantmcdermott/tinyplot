@@ -73,14 +73,15 @@ tinyplot(Nile, type = type_histogram(breaks = 30, freq = FALSE))
 
 # Grouped histogram example
 tinyplot(
-    ~Petal.Width | Species,
+    ~ Petal.Width | Species,
     type = "histogram",
     data = iris
 )
 
 # Faceted version
 tinyplot(
-    ~Petal.Width, facet = ~Species,
+    ~Petal.Width,
+    facet = ~Species,
     type = "histogram",
     data = iris
 )
@@ -91,14 +92,16 @@ tinyplot(
 
 # free facet scales + shared histogram breaks, versus...
 tinyplot(
-    ~Petal.Width, facet = ~Species,
+    ~Petal.Width,
+    facet = ~Species,
     facet.args = list(free = TRUE),
     type = type_histogram(),
     data = iris
 )
 # ... free facet scales + free histogram breaks
 tinyplot(
-    ~Petal.Width, facet = ~Species,
+    ~Petal.Width,
+    facet = ~Species,
     facet.args = list(free = TRUE),
     type = type_histogram(free = TRUE),
     data = iris

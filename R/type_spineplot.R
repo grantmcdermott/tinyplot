@@ -78,15 +78,8 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 
 #' @importFrom grDevices nclass.Sturges
 data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL) {
-    fun = function(
-      datapoints,
-      by = NULL, col = NULL, bg = NULL, palette = NULL,
-      facet = NULL, facet.args = NULL,
-      xlim = NULL, ylim = NULL,
-      axes = TRUE, xaxt = NULL, yaxt = NULL, xaxb = NULL, yaxb = NULL,
-      null_by, null_facet, 
-      ...
-    ) {
+    fun = function(settings, ...) {
+        list2env(settings, environment())
       
         ## process weights
         if (!is.null(weights)) {
@@ -246,19 +239,19 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         if (isTRUE(y_by)) datapoints$by = factor(rep_len(yaxlabels, nrow(datapoints)))
           
         ## grayscale flag
-        grayscale = null_by && is.null(palette) && is.null(.tpar[["palette.qualitative"]])
+        grayscale = null_by && is.null(raw_input$palette) && is.null(.tpar[["palette.qualitative"]])
         
-        out = list(
-          x = c(datapoints$xmin, datapoints$xmax), 
+        update_settings(settings,
+          x = c(datapoints$xmin, datapoints$xmax),
           y = c(datapoints$ymin, datapoints$ymax),
-          ymin = datapoints$ymin, 
-          ymax = datapoints$ymax, 
-          xmin = datapoints$xmin, 
-          xmax = datapoints$xmax, 
+          ymin = datapoints$ymin,
+          ymax = datapoints$ymax,
+          xmin = datapoints$xmin,
+          xmax = datapoints$xmax,
           col = col,
           bg = bg,
           datapoints = datapoints,
-          by = if (null_by) by else datapoints$by, 
+          by = if (null_by) by else datapoints$by,
           facet = if (null_facet) facet else datapoints$facet,
           axes = FALSE,
           frame.plot = FALSE,
@@ -278,7 +271,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
             yaxlabels = yaxlabels,
             breaks = breaks,
             axes = axes,
-            xaxt = xaxt, 
+            xaxt = xaxt,
             yaxt = yaxt,
             grayscale = grayscale,
             x_by = x_by,
@@ -286,8 +279,6 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
           ),
           facet.args = facet.args
         )
-        
-        return(out)
         
     }
     return(fun)

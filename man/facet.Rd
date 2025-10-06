@@ -29,14 +29,14 @@ draw_facet_window(
   oyaxis,
   xlabs,
   xlim,
-  xlim_user,
+  null_xlim,
   xaxt,
   xaxs,
   xaxb,
   xaxl,
   ylabs,
   ylim,
-  ylim_user,
+  null_ylim,
   yaxt,
   yaxs,
   yaxb,
@@ -57,7 +57,10 @@ draw_facet_window(
   tpars = NULL
 )
 
-facet_layout(facet, add = FALSE, facet.args = list())
+facet_layout(settings)
+}
+\arguments{
+\item{settings}{A list of settings as created by \code{tinyplot()}.}
 }
 \description{
 Internal functions called from \code{tinyplot} in order to draw the

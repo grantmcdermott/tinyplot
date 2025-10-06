@@ -178,11 +178,11 @@ custom type.
 The three functions that we need to define for a new type are:
 
 1. `data_*()`: Function factory.
-    - Accepts a list of internal objects
+    - Accepts `...` and a named list called `settings` which holds many internal objects
         - Inputs must include `...`
-        - `datapoints` Is the most important object. It is a data frame with the datapoints to plot. 
-        - Other objects that can be modified by `data_*()` include: `by`, `facet`, `ylab`, `palette`
-    - Returns a named list with modified versions of those objects.
+        - `settings$datapoints` Is the most important object. It is a data frame with the datapoints to plot. 
+        - Other objects that can be modified by `data_*()` include: `settings$by`, `settings$facet`, `settings$ylab`, `settings$palette`
+    - Returns a named list with modified versions of the `settings` values.
 2. `draw_*()`: Function factory.
     - Accepts information about data point values and aesthetics. 
         - Inputs must include `...`
@@ -202,11 +202,13 @@ plots lines.
 type_log = function(base = exp(1)) {
 
   data_log = function() {
-    fun = function(datapoints, ...) {
+    fun = function(settings, ...) {
+      datapoints = settings$datapoints
       datapoints$x = log(datapoints$x, base = base)
       datapoints$y = log(datapoints$y, base = base)
       datapoints = datapoints[order(datapoints$x), ]
-      return(list(datapoints = datapoints, ...))
+      settings$datapoints = datapoints
+      return(settings)
     }
     return(fun)
   }

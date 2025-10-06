@@ -66,3 +66,10 @@ swap_columns = function(dp, a, b) {
   dp[[b]] = if (!is.null(va)) va else NULL
   dp
 }
+
+
+update_settings = function(settings, ...) {
+  new = list(...)
+  settings = settings[setdiff(names(settings), names(new))]
+  c(settings, new)
+}

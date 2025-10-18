@@ -303,7 +303,8 @@
 #'   \code{\link[graphics]{abline}} or \code{\link[graphics]{text}}. Note that
 #'   this argument is somewhat experimental and that _no_ internal checking is
 #'   done for correctness; the provided argument is simply captured and
-#'   evaluated as-is. See Examples.
+#'   evaluated as-is within `tinyplot()` and thus has access to the local
+#'   definition of all variables such as `x`, `y`, etc. See Examples.
 #' @param restore.par a logical value indicating whether the
 #'   \code{\link[graphics]{par}} settings prior to calling `tinyplot` should be
 #'   restored on exit. Defaults to FALSE, which makes it possible to add

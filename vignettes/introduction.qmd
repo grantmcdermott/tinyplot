@@ -500,8 +500,8 @@ tinyplot(
 )
 ```
 
-This works becaause the `draw` argument is facet-aware and will
-ensure that each individual facet is correctly drawn upon. Moreover, you can
+This works because the `draw` argument is facet-aware and will
+ensure that each individual facet is correctly drawn upon. Moreover, with `draw` you can
 leverage the special `ii` internal counter to draw programmatically across
 facets (see
 [here](https://github.com/grantmcdermott/tinyplot/pull/245#issue-2642589951)).

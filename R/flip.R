@@ -2,11 +2,11 @@ swap_elements = function(lst, a, b) {
   if (any(!c(a, b) %in% names(lst))) {
     out = lst
   } else if (all(c(a, b) %in% names(lst))) {
-    out = do.call(update_settings, c(list(lst), stats::setNames(lst[c(b, a)], c(a, b))))
+    out = do.call(update_settings, c(list(lst), setNames(lst[c(b, a)], c(a, b))))
   } else if (a %in% names(lst)) {
-    out = do.call(update_settings, c(list(lst), stats::setNames(list(NULL, lst[[a]]), c(a, b))))
+    out = do.call(update_settings, c(list(lst), setNames(list(NULL, lst[[a]]), c(a, b))))
   } else if (b %in% names(lst)) {
-    out = do.call(update_settings, c(list(lst), stats::setNames(list(NULL, lst[[b]]), c(b, a))))
+    out = do.call(update_settings, c(list(lst), setNames(list(NULL, lst[[b]]), c(b, a))))
   }
   out
 }
@@ -47,4 +47,3 @@ flip_datapoints = function(settings) {
   }
   return(settings)
 }
-

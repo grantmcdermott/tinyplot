@@ -652,7 +652,7 @@ tinyplot.default = function(
   assert_logical(add)
   if (!add) {
     calls = sys.calls()
-    is_tinyplot_call <- function(x) identical(tinyplot, try(eval(x[[1L]]), silent = TRUE))
+    is_tinyplot_call = function(x) identical(tinyplot, try(eval(x[[1L]]), silent = TRUE))
     idx = which(vapply(calls, is_tinyplot_call, FALSE))
     if (length(idx) > 0) {
       set_environment_variable(.last_call = calls[[idx[1L]]])

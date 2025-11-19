@@ -875,14 +875,13 @@ tinyplot.default = function(
   # easiest to assign/determine now)
   sanitize_bubble(settings)
 
-  settings = as.list(settings, all.names = TRUE)
 
   #
   ## axis breaks and limits -----
   #
   
   # do this after computing yaxb because limits will depend on the previous calculations
-  settings = lim_args(settings)
+  lim_args(settings)
 
 
   #
@@ -890,8 +889,9 @@ tinyplot.default = function(
   #
 
   # facet_layout processes facet simplification, attribute restoration, and layout
-  settings = facet_layout(settings)
+  facet_layout(settings)
 
+  settings = as.list(settings, all.names = TRUE)
 
   #
   ## aesthetics by group -----

@@ -65,7 +65,7 @@ draw_ribbon = function() {
 
 
 data_ribbon = function(ribbon.alpha = NULL) {
-    ribbon.alpha = sanitize_ribbon.alpha(ribbon.alpha)
+    ribbon.alpha = sanitize_ribbon_alpha(ribbon.alpha)
     fun = function(settings, ...) {
         list2env(settings[c("datapoints", "xlabs", "null_by", "null_facet")], environment())
         # Convert x to factor if it's not already

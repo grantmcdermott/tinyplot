@@ -785,8 +785,8 @@ tinyplot.default = function(
     pch           = if (is.null(pch)) get_tpar("pch", default = NULL) else pch,
 
     # ribbon.alpha overwritten by some type_data() functions
-    # sanitize_ribbon.alpha: returns default alpha transparency for ribbon-type plots
-    ribbon.alpha  = sanitize_ribbon.alpha(NULL),
+    # sanitize_ribbon_alpha: returns default alpha transparency for ribbon-type plots
+    ribbon.alpha  = sanitize_ribbon_alpha(NULL),
 
     # misc
     flip          = flip,

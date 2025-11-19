@@ -59,6 +59,7 @@ swap_variables = function(env, ...) {
   }
 }
 
+
 swap_columns = function(dp, a, b) {
   va = dp[[a]]
   vb = dp[[b]]
@@ -68,8 +69,11 @@ swap_columns = function(dp, a, b) {
 }
 
 
-update_settings = function(settings, ...) {
-  new = list(...)
-  settings = settings[setdiff(names(settings), names(new))]
-  c(settings, new)
+env2env <- function(source_env, target_env, keys = NULL) {
+  if (is.null(keys)) {
+    keys <- ls(source_env, all.names = TRUE)
+  }
+  for (nm in keys) {
+    assign(nm, source_env[[nm]], envir = target_env)
+  }
 }

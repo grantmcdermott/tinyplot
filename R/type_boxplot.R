@@ -115,9 +115,8 @@ data_boxplot = function() {
             xord = order(datapoints$by, datapoints$facet, datapoints$x)
         }
 
-        # Check if user provided palette from raw_input (before substitute)
-        user_palette = raw_input$palette
-        if (length(unique(datapoints[["by"]])) == 1 && is.null(user_palette)) {
+        # Check if user provided palette before substitute)
+        if (length(unique(datapoints[["by"]])) == 1 && null_palette) {
             if (is.null(col)) col = par("fg")
             if (is.null(bg)) bg = "lightgray"
         } else {

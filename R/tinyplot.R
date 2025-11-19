@@ -760,6 +760,8 @@ tinyplot.default = function(
     null_by       = is.null(by),
     null_xlim     = is.null(xlim),
     null_ylim     = is.null(ylim),
+    # when palette functions need pre-processing this check raises error
+    null_palette  = tryCatch(is.null(palette), error = function(e) FALSE),
     was_area_type = identical(type, "area"),  # mostly for legend
     x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridges"
 
@@ -792,8 +794,6 @@ tinyplot.default = function(
     dots          = dots,
     type_info     = list() # pass type-specific info from type_data to type_draw
   )
-
-  settings[["raw_input"]] = settings
 
 
   #

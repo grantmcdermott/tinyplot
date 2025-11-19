@@ -239,7 +239,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         if (isTRUE(y_by)) datapoints$by = factor(rep_len(yaxlabels, nrow(datapoints)))
           
         ## grayscale flag
-        grayscale = null_by && is.null(raw_input$palette) && is.null(.tpar[["palette.qualitative"]])
+        grayscale = null_by && null_palette && is.null(.tpar[["palette.qualitative"]])
         
         update_settings(settings,
           x = c(datapoints$xmin, datapoints$xmax),

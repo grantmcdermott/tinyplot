@@ -60,7 +60,6 @@
     "oxaxis",
     "oyaxis",
     "pch",
-    "raw_input",
     "ribbon.alpha",
     "split_data",
     "tpars",

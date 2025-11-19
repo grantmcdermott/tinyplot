@@ -79,7 +79,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 #' @importFrom stats aggregate
 data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
     fun = function(settings, ...) {
-        list2env(settings[c("datapoints", "xlab", "ylab", "null_by", "facet_by", "xlim", "ylim", "raw_input", "col", "bg", "yaxl", "xaxt")], environment())
+        list2env(settings[c("datapoints", "xlab", "ylab", "null_by", "facet_by", "xlim", "ylim", "null_palette", "col", "bg", "yaxl", "xaxt")], environment())
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
@@ -131,7 +131,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 
         ## default color palette
         ngrps = length(unique(datapoints$by))
-        if (ngrps == 1L && is.null(raw_input$palette)) {
+        if (ngrps == 1L && null_palette) {
           if (is.null(col)) col = par("fg")
           if (is.null(bg)) bg = "grey"
         } else {

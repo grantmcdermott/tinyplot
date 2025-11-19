@@ -33,7 +33,7 @@ where the formatting is also better._
   `tinyplot_add()` is now more robust so that it is compatible with `do.call()`
   again (reported by @FlorianSchwendinger). This is achieved by inspecting
   the functions called rather than just their names. (#504 @zeileis)
-- Legend labels are now correct if `by` is logical. Thanks to @@TCornulier for
+- Legend labels are now correct if `by` is logical. Thanks to @TCornulier for
   the report. (#512 @grantmcdermott)
 
 ### Documentation

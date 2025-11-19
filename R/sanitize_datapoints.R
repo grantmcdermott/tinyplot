@@ -1,10 +1,21 @@
 sanitize_datapoints = function(settings) {
   # potentially useful variables
-  env2env(settings, environment(), c("x", "xmin", "xmax", "xaxt", "y", "ymin", "ymax", "ygroup", "facet", "null_by", "by", "type"))
+  env2env(
+    settings,
+    environment(),
+    c(
+      "x", "xmin", "xmax", "xaxt",
+      "y", "ymin", "ymax", "ygroup",
+      "facet", "null_by", "by", "type"
+    )
+  )
 
-  ## coerce character variables to factors
+  ## coerce character and logical variables to factors
+  ## (aside: we won't risk converting x and y logicals to factors b/c it can
+  ##  mess up types that rely on predict underneath the hood, e.g type_lm)
   if (!is.null(x) && is.character(x)) x = factor(x)
   if (!is.null(y) && is.character(y)) y = factor(y)
+  if (!null_by && is.logical(by)) by = factor(by)
 
   if (is.null(x)) {
     ## Special catch for rect and segment plots without a specified y-var

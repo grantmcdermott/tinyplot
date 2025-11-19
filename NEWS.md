@@ -34,6 +34,10 @@ where the formatting is also better._
 - Add a "recession bars" section to the `Tips & tricks` vignette.
   (#503 @grantmcdermott)
 
+- Point out more explicitly how the `draw` argument is evaluated within
+  `tinyplot()` and that it thus has access to the local definition to all
+  variables such as `x` and `y` etc. (#507 @zeileis)
+
 ## 0.5.0
 
 ### New features

@@ -127,7 +127,7 @@ data_boxplot = function() {
         datapoints = datapoints[xord,]
 
         # Return the result as a list called 'out'
-        out = list(
+        update_settings(settings,
             x = datapoints$x,
             y = datapoints$y,
             ymin = datapoints$ymin,
@@ -135,12 +135,9 @@ data_boxplot = function() {
             xlabs = xlabs,
             datapoints = datapoints,
             col = col,
-            bg = bg)
-
-        if (length(unique(datapoints$by)) > 1) out[["by"]] = datapoints$by
-        if (length(unique(datapoints$facet)) > 1) out[["facet"]] = datapoints$facet
-
-        do.call(update_settings, c(list(settings), out))
+            bg = bg,
+            by = if (length(unique(datapoints$by)) > 1) datapoints$by else by,
+            by = if (length(unique(datapoints$facet)) > 1) datapoints$facet else facet)
     }
     return(fun)
 }

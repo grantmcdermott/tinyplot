@@ -891,15 +891,18 @@ tinyplot.default = function(
   # facet_layout processes facet simplification, attribute restoration, and layout
   facet_layout(settings)
 
-  settings = as.list(settings, all.names = TRUE)
 
   #
   ## aesthetics by group -----
   #
-  settings = by_aesthetics(settings)
+  by_aesthetics(settings)
 
 
-  list2env(settings, environment())
+  #
+  ## make settings available in the environment directly -----
+  #
+  env2env(settings, environment())
+
 
   #
   ## legends -----

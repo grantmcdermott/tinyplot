@@ -178,13 +178,13 @@ custom type.
 The three functions that we need to define for a new type are:
 
 1. `data_*()`: Function factory.
-    - Accepts `...` and a named list called `settings` which holds many internal objects
+    - Accepts `...` and an environment called `settings` which holds many internal parameters
         - Inputs must include `...`
-        - `settings$datapoints` Is the most important object. It is a data frame with the datapoints to plot. 
-        - Other objects that can be modified by `data_*()` include: `settings$by`, `settings$facet`, `settings$ylab`, `settings$palette`
-    - Returns a named list with modified versions of the `settings` values.
+        - `settings` is an R environment containing many useful parameters that can be read or modified
+        - Key parameters include: `datapoints` (data frame), `by`, `facet`, `xlab`, `ylab`, `xlim`, `ylim`, `palette`, and many more
+    - Modifies the `settings` environment in-place; does not need to return anything
 2. `draw_*()`: Function factory.
-    - Accepts information about data point values and aesthetics. 
+    - Accepts information about data point values and aesthetics.
         - Inputs must include `...`
         - The `i` prefix in argument names indicates that we are operating on a subgroup of the data, identified by `facet` or using the `|` operator in a formula.
         - Available arguments are: `ibg`, `icol`, `ilty`, `ilwd`, `ipch`, `ix`, `ixmax`, `ixmin`, `iy`, `iymax`, `iymin`, `cex`, `dots`, `type`, `x_by`, `i`, `facet_by`, `by_data`, `facet_data`, `flip`
@@ -194,8 +194,11 @@ The three functions that we need to define for a new type are:
     - `data`
     - `name`
 
+### A minimal example
+
 Here is a minimalist example of a custom type that logs both `x` and `y` and
-plots lines.
+plots points. Note how we use `env2env()` to extract variables from the `settings`
+environment, modify them, and copy the modified values back:
 
 ```{r}
 #| layout-ncol: 2
@@ -203,12 +206,16 @@ type_log = function(base = exp(1)) {
 
   data_log = function() {
     fun = function(settings, ...) {
+      # Extract datapoints from settings environment
       datapoints = settings$datapoints
+
+      # Transform the data
       datapoints$x = log(datapoints$x, base = base)
       datapoints$y = log(datapoints$y, base = base)
       datapoints = datapoints[order(datapoints$x), ]
+
+      # Copy modified datapoints back to settings
       settings$datapoints = datapoints
-      return(settings)
     }
     return(fun)
   }
@@ -240,6 +247,8 @@ tinyplot(mpg ~ wt | factor(am), data = mtcars,
   type = type_log(base = 10), main = "Log 10")
 ```
 
+### More examples
+
 To underscore what we said above, the **tinyplot**
 [source code](https://github.com/grantmcdermott/tinyplot/tree/main/R)
 contains many examples of type constructor functions that should provide a
@@ -248,3 +257,33 @@ team are always happy to help guide users on how to create their own types and
 re-purpose existing **tinyplot** code. Just let us know by
 [raising an issue](https://github.com/grantmcdermott/tinyplot/issues)
 on our GitHub repo.
+
+
+### Available settings
+
+To see what parameters are available in the `settings` environment, we can create
+a simple `type_error()` that stops with the names of all available settings:
+
+```{r}
+#| error: true
+type_error = function() {
+  data_error = function() {
+    fun = function(settings, ...) {
+      stop(paste(names(settings), collapse = ", "))
+    }
+    return(fun)
+  }
+
+  out = list(
+    data = data_error()
+  )
+  class(out) = "tinyplot_type"
+  return(out)
+}
+
+tinyplot(mpg ~ wt, data = mtcars, type = type_error())
+```
+
+As we can see, the `settings` environment contains many parameters that custom
+types can use as inputs or modify as needed.
+

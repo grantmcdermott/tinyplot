@@ -166,8 +166,8 @@ tinyplot(Temp ~ Wind | Month, data = aq, facet = "by", type = "lm")
 
 It is easy to add custom types to **tinyplot**. Users who need highly customized
 plots, or developers who want to add support to their package or functions, only
-need to define three simple functions: `data_typename()`, `draw_typename()`, and
-`type_typename()`.
+need to define three simple functions: `data_<type>()`, `draw_<type>()`, and
+`type_<type>()`.
 
 In this section, we explain the role of each of these functions and present a
 minimalist example of a custom type. Interested readers may refer to
@@ -177,26 +177,25 @@ custom type.
 
 The three functions that we need to define for a new type are:
 
-1. `data_*()`: Function factory.
-    - Accepts `...` and an environment called `settings` which holds many internal parameters
-        - Inputs must include `...`
-        - `settings` is an R environment containing many useful parameters that can be read or modified
-        - Key parameters include: `datapoints` (data frame), `by`, `facet`, `xlab`, `ylab`, `xlim`, `ylim`, `palette`, and many more
-    - Modifies the `settings` environment in-place; does not need to return anything
-2. `draw_*()`: Function factory.
+1. `data_<type>()`: Data function factory.
+    - Must take two arguments:
+        - `settings` is a special internal environment containing useful parameters that can be read or modified by `tinyplot` functions, including `datapoints`, `by`, `facet`, `xlab`, `ylab`, `xlim`, `ylim`, `palette`, and many more (see below)
+        - `...`
+    - Defines the data that will be passed on to the plotting functions (including any necessary transformations). Note that this function should modify the `settings` environment in-place; it does not need to return anything
+2. `draw_<type>()`: Drawing function factory.
     - Accepts information about data point values and aesthetics.
         - Inputs must include `...`
         - The `i` prefix in argument names indicates that we are operating on a subgroup of the data, identified by `facet` or using the `|` operator in a formula.
         - Available arguments are: `ibg`, `icol`, `ilty`, `ilwd`, `ipch`, `ix`, `ixmax`, `ixmin`, `iy`, `iymax`, `iymin`, `cex`, `dots`, `type`, `x_by`, `i`, `facet_by`, `by_data`, `facet_data`, `flip`
     - Returns a function which can call base R to draw the plot.
-3. `type_*()`: A wrapper function that returns a named list with three elements:
+3. `type_<type>()`: A wrapper function that returns a named list with three elements:
     - `draw`
     - `data`
     - `name`
 
 ### A minimal example
 
-Here is a minimalist example of a custom type that logs both `x` and `y` and
+Here is a minimal example of a custom type that logs both `x` and `y` and
 plots points. Note how we use `env2env()` to extract variables from the `settings`
 environment, modify them, and copy the modified values back:
 
@@ -214,7 +213,7 @@ type_log = function(base = exp(1)) {
       datapoints$y = log(datapoints$y, base = base)
       datapoints = datapoints[order(datapoints$x), ]
 
-      # Copy modified datapoints back to settings
+      # Assign (inject) modified datapoints back to settings
       settings$datapoints = datapoints
     }
     return(fun)
@@ -249,7 +248,7 @@ tinyplot(mpg ~ wt | factor(am), data = mtcars,
 
 ### More examples
 
-To underscore what we said above, the **tinyplot**
+The **tinyplot**
 [source code](https://github.com/grantmcdermott/tinyplot/tree/main/R)
 contains many examples of type constructor functions that should provide a
 helpful starting point for custom plot types. Failing that, the **tinyplot**

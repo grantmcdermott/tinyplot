@@ -1,3 +1,7 @@
+#
+## orchestration function -----
+#
+
 by_aesthetics = function(settings) {
   list2env(settings, environment())
   by_ordered = FALSE
@@ -62,6 +66,10 @@ by_aesthetics = function(settings) {
   )
 }
 
+
+#
+## subsidiary functions -----
+#
 
 by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustcolor) {
   ordered = by_ordered
@@ -339,6 +347,38 @@ gen_pal_fun = function(pal, gradient = FALSE, alpha = NULL, n = NULL) {
 }
 
 
+by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps, type, by, ribbon.alpha, adjustcolor) {
+  if (is.null(bg) && !is.null(fill)) bg = fill
+  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
+    alpha = bg
+    bg = "by"
+  }
+  if (!is.null(bg) && length(bg) == 1 && bg == "by") {
+    # use by_col processing, but with the bg-specific colors
+    bg = by_col(
+      col = NULL,
+      palette = palette,
+      alpha = alpha,
+      by_ordered = by_ordered,
+      by_continuous = by_continuous,
+      ngrps = ngrps,
+      adjustcolor = adjustcolor
+    )
+  } else if (length(bg) != ngrps) {
+    bg = rep(bg, ngrps)
+  }
+  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
+    if (!is.null(bg)) {
+      bg = adjustcolor(bg, ribbon.alpha)
+    } else if (!is.null(col)) {
+      bg = adjustcolor(col, ribbon.alpha)
+    }
+  }
+
+  bg
+}
+
+
 by_pch = function(ngrps, type, pch = NULL) {
   no_pch = FALSE
   if (identical(type, "text")) {
@@ -495,33 +535,3 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
 
 
 
-by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps, type, by, ribbon.alpha, adjustcolor) {
-  if (is.null(bg) && !is.null(fill)) bg = fill
-  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
-    alpha = bg
-    bg = "by"
-  }
-  if (!is.null(bg) && length(bg) == 1 && bg == "by") {
-    # use by_col processing, but with the bg-specific colors
-    bg = by_col(
-      col = NULL,
-      palette = palette,
-      alpha = alpha,
-      by_ordered = by_ordered,
-      by_continuous = by_continuous,
-      ngrps = ngrps,
-      adjustcolor = adjustcolor
-    )
-  } else if (length(bg) != ngrps) {
-    bg = rep(bg, ngrps)
-  }
-  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
-    if (!is.null(bg)) {
-      bg = adjustcolor(bg, ribbon.alpha)
-    } else if (!is.null(col)) {
-      bg = adjustcolor(col, ribbon.alpha)
-    }
-  }
-
-  bg
-}

@@ -478,13 +478,17 @@ keystrokes by typing `plt_add()` instead of `tinyplot_add()`:
 #| eval: false
 plt_add(type = "lm")
 ```
+
 :::
 
 A related---but distinct---concept to adding plot layers is _drawing_ on a plot.
 The canonical use case is annotating your plot with text or some other
 function-based (rather than data-based) logic. For example, you may want to
-demarcate some threshold values with horizontal or vertical lines, or simply
-annotate your plot with text. The **tinyplot** way to do this is by passing the
+demarcate some threshold values with horizontal or vertical lines using `abline()`, or simply
+annotate your plot using `text()`. This works as usual with a regular plots, but not with 
+facetted plots because `text()`, `abline()`, `rect()`, etc. are not facet aware. 
+
+The **tinyplot** way of adding common elements to facetted plots is by passing the
 `tinyplot(..., draw = <draw_function>)` argument. Here we demonstrate with a
 simplified version of our facet grid example from earlier.
 
@@ -497,10 +501,8 @@ tinyplot(
 )
 ```
 
-Compared to "manually" drawing these elements on a plot _ex post_---e.g., via a
-separate `abline()` call---there are several advantages to the idiomatic
-**tinyplot** interface. First, the `draw` argument is facet-aware and will
-ensure that each individual facet is correctly drawn upon. Second, you can
+This works because the `draw` argument is facet-aware and will
+ensure that each individual facet is correctly drawn upon. Moreover, with `draw` you can
 leverage the special `ii` internal counter to draw programmatically across
 facets (see
 [here](https://github.com/grantmcdermott/tinyplot/pull/245#issue-2642589951)).

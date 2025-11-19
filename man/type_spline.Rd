@@ -70,6 +70,7 @@ The inputs can contain missing values which are deleted, so at least
 tinyplot(dist ~ speed, data = cars, type = "spline")
 
 # Use `type_spline()` to pass extra arguments for customization
-tinyplot(dist ~ speed, data = cars, type = type_spline(method = "natural", n = 25),
+tinyplot(dist ~ speed,
+    data = cars, type = type_spline(method = "natural", n = 25),
     add = TRUE, lty = 2)
 }

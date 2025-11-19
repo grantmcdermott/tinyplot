@@ -23,8 +23,8 @@ draw_facet_window = function(
     nfacets, nfacet_cols, nfacet_rows,
     # axes args
     axes, flip, frame.plot, oxaxis, oyaxis,
-    xlabs, xlim, xlim_user, xaxt, xaxs, xaxb, xaxl,
-    ylabs, ylim, ylim_user, yaxt, yaxs, yaxb, yaxl,
+    xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl,
+    ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl,
     asp, log,
     # other args (in approx. alphabetical + group ordering)
     dots,
@@ -302,8 +302,8 @@ draw_facet_window = function(
         # individual facet.
         xfree = split(c(x, xmin, xmax), facet)[[ii]]
         yfree = split(c(y, ymin, ymax), facet)[[ii]]
-        if (!xlim_user) xlim = range(xfree, na.rm = TRUE)
-        if (!ylim_user) ylim = range(yfree, na.rm = TRUE)
+        if (null_xlim) xlim = range(xfree, na.rm = TRUE)
+        if (null_ylim) ylim = range(yfree, na.rm = TRUE)
         xext = extendrange(xlim, f = 0.04)
         yext = extendrange(ylim, f = 0.04)
         # We'll save this in a special .fusr env var (list) that we'll re-use
@@ -518,7 +518,27 @@ draw_facet_window = function(
 
 #' @rdname facet
 #' @keywords internal
-facet_layout = function(facet, add = FALSE, facet.args = list()) {
+#' @param settings A list of settings as created by `tinyplot()`.
+facet_layout = function(settings) {
+  # Extract needed variables from settings
+  add = settings$add
+  facet.args = settings$facet.args
+  datapoints = settings$datapoints
+  facet_attr = settings$facet_attr
+
+  # Simplify facet if only one unique value
+  facet = datapoints$facet
+  if (!is.null(facet) && length(unique(facet)) == 1) {
+    facet = NULL
+    datapoints$facet = NULL
+  }
+
+  # Restore facet attributes
+  if (!is.null(facet)) {
+    attributes(facet) = facet_attr
+    attributes(datapoints$facet) = facet_attr
+  }
+
   nfacet_rows = 1
   nfacet_cols = 1
   if (!is.null(facet)) {
@@ -565,15 +585,11 @@ facet_layout = function(facet, add = FALSE, facet.args = list()) {
     cex_fct_adj = 1
   }
 
-  list(
-    facets = facets,
-    ifacet = ifacet,
-    nfacets = nfacets,
-    nfacet_rows = nfacet_rows,
-    nfacet_cols = nfacet_cols,
-    oxaxis = oxaxis,
-    oyaxis = oyaxis,
-    cex_fct_adj = cex_fct_adj
+  # update settings
+  env2env(
+    environment(),
+    settings,
+    c("datapoints", "facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")
   )
 }
 

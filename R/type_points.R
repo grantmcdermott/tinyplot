@@ -3,34 +3,33 @@
 #' @description Type function for plotting points, i.e. a scatter plot.
 #' @param clim Numeric giving the lower and upper limits of the character
 #'   expansion (`cex`) normalization for bubble charts.
-#' 
+#'
 #' @examples
 #' # "p" type convenience character string
 #' tinyplot(Sepal.Length ~ Petal.Length, data = iris, type = "p")
-#' 
+#'
 #' # Same result with type_points()
 #' tinyplot(Sepal.Length ~ Petal.Length, data = iris, type = type_points())
-#' 
+#'
 #' # Note: Specifying the type here is redundant. Like base plot, tinyplot
 #' # automatically produces a scatter plot if x and y are numeric
 #' tinyplot(Sepal.Length ~ Petal.Length, data = iris)
-#' 
+#'
 #' # Grouped scatter plot example
 #' tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)
-#' 
+#'
 #' # Continuous grouping (with gradient legend)
 #' tinyplot(Sepal.Length ~ Petal.Length | Sepal.Width, data = iris, pch = 19)
-#' 
+#'
 #' # Bubble chart version
 #' tinyplot(Sepal.Length ~ Petal.Length, data = iris, cex = iris$Sepal.Width)
-#' 
+#'
 #' # Fancier version with dual legends and extra customization
 #' tinyplot(Sepal.Length ~ Petal.Length | Species,
-#'          data = iris,
-#'          cex = iris$Sepal.Width, clim = c(1, 5),
-#'          pch = 21, fill = 0.3)
-#' 
-#' 
+#'   data = iris,
+#'   cex = iris$Sepal.Width, clim = c(1, 5),
+#'   pch = 21, fill = 0.3)
+#'
 #' @export
 type_points = function(clim = c(0.5, 2.5)) {
   out = list(
@@ -43,7 +42,9 @@ type_points = function(clim = c(0.5, 2.5)) {
 }
 
 data_points = function(clim = c(0.5, 2.5)) {
-  fun = function(datapoints, legend_args, cex = NULL, ...) {
+  fun = function(settings, cex = NULL, ...) {
+    env2env(settings, environment(), c("datapoints", "cex", "legend_args"))
+
     # catch for factors (we should still be able to "force" plot these with points)
     if (is.factor(datapoints$x)) {
       xlvls = levels(datapoints$x)
@@ -65,11 +66,11 @@ data_points = function(clim = c(0.5, 2.5)) {
     bubble = FALSE
     bubble_cex = 1
     if (!is.null(cex) && length(cex) == nrow(datapoints)) {
-      bubble = TRUE 
+      bubble = TRUE
       ## Identify the pretty break points for our bubble labels
       bubble_labs = pretty(cex, n = 5)
       len_labs = length(bubble_labs)
-      cex = rescale_num(sqrt(c(bubble_labs, cex))/pi, to = clim)
+      cex = rescale_num(sqrt(c(bubble_labs, cex)) / pi, to = clim)
       bubble_cex = cex[1:len_labs]
       cex = cex[(len_labs+1):length(cex)]
       # catch for cases where pretty breaks leads to smallest category of 0
@@ -83,34 +84,32 @@ data_points = function(clim = c(0.5, 2.5)) {
         legend_args[["y.intersp"]] = sapply(bubble_cex / 2.5, max, 1)
       }
     }
-    
-    out = list(
-      datapoints = datapoints,
-      xlabs = xlabs,
-      ylabs = ylabs,
-      cex = cex,
-      bubble = bubble,
-      bubble_cex = bubble_cex,
-      legend_args = legend_args
-    )
-    return(out)
+
+    env2env(environment(), settings, c(
+      "datapoints",
+      "xlabs",
+      "ylabs",
+      "cex",
+      "bubble",
+      "bubble_cex",
+      "legend_args"
+    ))
   }
 }
 
 draw_points = function() {
-    fun = function(ix, iy, icol, ibg, ipch, ilwd, icex, ...) {
+  fun = function(ix, iy, icol, ibg, ipch, ilwd, icex, ...) {
     # browser()
-        points(
-            x = ix,
-            y = iy,
-            col = icol,
-            bg = ibg,
-            type = "p",
-            pch = ipch,
-            lwd = ilwd,
-            cex = icex
-        )
-    }
-    return(fun)
+    points(
+      x = ix,
+      y = iy,
+      col = icol,
+      bg = ibg,
+      type = "p",
+      pch = ipch,
+      lwd = ilwd,
+      cex = icex
+    )
+  }
+  return(fun)
 }
-

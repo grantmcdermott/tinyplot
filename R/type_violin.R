@@ -78,7 +78,9 @@ type_violin = function(
 
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", trim = FALSE, width = 0.9) {
-    fun = function(datapoints,  by, facet, ylab, col, bg, palette, log, null_by, null_facet, ...) {
+    fun = function(settings, ...) {
+        env2env(settings, environment(), c("datapoints", "by", "null_palette", "facet", "ylab", "col", "bg", "log", "null_by", "null_facet"))
+
         
         # Handle ordering based on by and facet variables
         ngrps = if (null_by) 1 else length(unique(datapoints$by))
@@ -122,7 +124,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             xord = order(datapoints$by, datapoints$facet, datapoints$x)
         }
 
-        if (length(unique(datapoints[["by"]])) == 1 && is.null(palette)) {
+        if (length(unique(datapoints[["by"]])) == 1 && null_palette) {
             if (is.null(col)) col = par("fg")
             if (is.null(bg)) bg = "lightgray"
         } else if (is.null(bg)) {
@@ -202,17 +204,18 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         })
         datapoints = do.call(rbind, datapoints)
         datapoints = datapoints[1:(nrow(datapoints)-1), ]
-        
-        out = list(
-            datapoints = datapoints,
-            by = if (length(unique(datapoints$by)) == 1) by else datapoints$by, 
-            facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet,
-            ylab = ylab,
-            xlabs = xlabs,
-            col = col,
-            bg = bg
-        )
-        return(out)
+
+        by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
+        facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
+        env2env(environment(), settings, c(
+            "datapoints",
+            "by",
+            "facet",
+            "ylab",
+            "xlabs",
+            "col",
+            "bg"
+        ))
     }
     return(fun)
 }

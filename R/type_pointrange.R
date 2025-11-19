@@ -16,19 +16,18 @@ type_pointrange = function(dodge = 0, fixed.pos = FALSE) {
 
 draw_pointrange = function() {
   fun = function(
-    ix,
-    iy,
-    ixmin,
-    iymin,
-    ixmax,
-    iymax,
-    icol,
-    ibg,
-    ipch,
-    ilwd,
-    icex,
-    ...
-  ) {
+      ix,
+      iy,
+      ixmin,
+      iymin,
+      ixmax,
+      iymax,
+      icol,
+      ibg,
+      ipch,
+      ilwd,
+      icex,
+      ...) {
     segments(
       x0 = ixmin,
       y0 = iymin,
@@ -52,7 +51,9 @@ draw_pointrange = function() {
 
 
 data_pointrange = function(dodge, fixed.pos) {
-  fun = function(datapoints, xlabs, ...) {
+  fun = function(settings, ...) {
+    env2env(settings, environment(), c("datapoints", "xlabs"))
+
     if (is.character(datapoints$x)) {
       datapoints$x = as.factor(datapoints$x)
     }
@@ -91,13 +92,12 @@ data_pointrange = function(dodge, fixed.pos) {
       }
     }
 
-    out = list(
-      x = datapoints$x,
-      xlabs = xlabs,
-      datapoints = datapoints
-    )
-
-    return(out)
+    x = datapoints$x
+    env2env(environment(), settings, c(
+      "x",
+      "xlabs",
+      "datapoints"
+    ))
   }
   return(fun)
 }

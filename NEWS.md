@@ -6,6 +6,10 @@ where the formatting is also better._
 
 ## Dev version
 
+### Breaking change
+
+- Internal settings and parameters are now stored in an environment called `settings`, which can be accessed and modified by type-specific functions. This may require changes to users' custom type functions that previously accessed settings as passed arguments. This change was necessary to improve the modularity and maintainability of the codebase, and to add flexibility. (#473 @vincentarelbundock and @grantmcdermott)
+
 ### New features
 
 - `type_text()` gains a `family` argument for controlling the font family,
@@ -20,11 +24,19 @@ where the formatting is also better._
 - `type_text()` now defaults to displaying `y` values if an explicit `labels`
   arg is not provided, mirroring the behaviour of the base `text()` function.
   (#501 @grantmcdermott)
+- Determining the last call of the `tinyplot()` generic in preparation for
+  `tinyplot_add()` is now more robust so that it is compatible with `do.call()`
+  again (reported by @FlorianSchwendinger). This is achieved by inspecting
+  the functions called rather than just their names. (#504 @zeileis)
 
 ### Documentation
 
 - Add a "recession bars" section to the `Tips & tricks` vignette.
   (#503 @grantmcdermott)
+
+- Point out more explicitly how the `draw` argument is evaluated within
+  `tinyplot()` and that it thus has access to the local definition to all
+  variables such as `x` and `y` etc. (#507 @zeileis)
 
 ## 0.5.0
 

@@ -452,7 +452,8 @@ elements to each facet of a faceted plot, e.g.
 \code{\link[graphics]{abline}} or \code{\link[graphics]{text}}. Note that
 this argument is somewhat experimental and that \emph{no} internal checking is
 done for correctness; the provided argument is simply captured and
-evaluated as-is. See Examples.}
+evaluated as-is within \code{tinyplot()} and thus has access to the local
+definition of all variables such as \code{x}, \code{y}, etc. See Examples.}
 
 \item{empty}{logical indicating whether the interior plot region should be
 left empty. The default is \code{FALSE}. Setting to \code{TRUE} has a similar effect

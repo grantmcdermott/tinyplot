@@ -882,8 +882,9 @@ tinyplot.default = function(
   #
   
   # do this after computing yaxb because limits will depend on the previous calculations
-  lim_args(settings)
-
+  if (!add) {
+    lim_args(settings)
+  }
 
   #
   ## facets: count -----

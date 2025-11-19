@@ -252,7 +252,9 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       col = NULL,
                       alpha = NULL
                       ) {
-  fun = function(datapoints, yaxt = NULL, null_by, ...) {
+  fun = function(settings, ...) {
+    env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by"))
+
     #  catch for special cases
     anyby = !null_by
     x_by = anyby && identical(datapoints$x, datapoints$by)
@@ -389,26 +391,30 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     
     if (is.null(col) && (!anyby || x_by)) col = "black"
 
-    out = list(
-      datapoints = datapoints,
-      yaxt = "n",
-      ylim = c(min(datapoints$ymin), max(datapoints$ymax)),
-      type_info = list(
-        gradient = gradient,
-        palette = palette,
-        breaks = breaks,
-        probs = probs,
-        manbreaks = manbreaks,
-        yaxt = yaxt,
-        raster = raster,
-        x_by = x_by,
-        y_by = y_by,
-        fill_by = fill_by,
-        col = col,
-        alpha = alpha
-      )
+    # Save original yaxt for type_info before overwriting
+    yaxt_orig = yaxt
+    yaxt = "n"
+    ylim = c(min(datapoints$ymin), max(datapoints$ymax))
+    type_info = list(
+      gradient = gradient,
+      palette = palette,
+      breaks = breaks,
+      probs = probs,
+      manbreaks = manbreaks,
+      yaxt = yaxt_orig,
+      raster = raster,
+      x_by = x_by,
+      y_by = y_by,
+      fill_by = fill_by,
+      col = col,
+      alpha = alpha
     )
-    return(out)
+    env2env(environment(), settings, c(
+      "datapoints",
+      "yaxt",
+      "ylim",
+      "type_info"
+    ))
   }
   return(fun)
 }

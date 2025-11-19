@@ -8,23 +8,25 @@
 #' @examples
 #' # "jitter" type convenience string
 #' tinyplot(Sepal.Length ~ Species, data = iris, type = "jitter")
-#' 
+#'
 #' # Use `type_jitter()` to pass extra arguments for customization
 #' tinyplot(Sepal.Length ~ Species, data = iris, type = type_jitter(factor = 0.5))
 #' @export
 type_jitter = function(factor = 1, amount = NULL) {
-  out = list(
-    draw = draw_points(),
-    data = data_jitter(factor = factor, amount = amount),
-    name = "p"
-  )
-  class(out) = "tinyplot_type"
-  return(out)
+    out = list(
+        draw = draw_points(),
+        data = data_jitter(factor = factor, amount = amount),
+        name = "p"
+    )
+    class(out) = "tinyplot_type"
+    return(out)
 }
 
 
 data_jitter = function(factor, amount) {
-    fun = function(datapoints, ...) {
+    fun = function(settings, ...) {
+        env2env(settings, environment(), "datapoints")
+
         x = datapoints$x
         y = datapoints$y
         if (is.factor(x)) {
@@ -49,14 +51,12 @@ data_jitter = function(factor, amount) {
         datapoints$x = x
         datapoints$y = y
 
-        out = list(
-            datapoints = datapoints,
-            x = x,
-            y = y,
-            xlabs = xlabs,
-            ylabs = ylabs
-        )
-        return(out)
+        env2env(environment(), settings, c(
+            "datapoints",
+            "x",
+            "y",
+            "xlabs",
+            "ylabs"
+        ))
     }
 }
-

@@ -370,7 +370,7 @@
 #' @importFrom grDevices axisTicks adjustcolor cairo_pdf colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
 #' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
-#' @importFrom stats na.omit
+#' @importFrom stats na.omit setNames
 #' @importFrom tools file_ext
 #'
 #' @examples
@@ -680,7 +680,6 @@ tinyplot.default = function(
 
   # Ephemeral theme
   if (!is.null(theme)) {
-    # browser()
     if (is.character(theme) && length(theme) == 1) {
       tinytheme(theme)
     } else if (is.list(theme)) {
@@ -696,299 +695,220 @@ tinyplot.default = function(
 
 
   #
+  ## settings container -----
+  #
+
+  dots = list(...)
+
+  settings_list = list(
+    # save call to check user input later
+    call          = match.call(),
+
+    # save to file & device dimensions
+    file          = file,
+    width         = width,
+    height        = height,
+
+    # deparsed input for use in labels
+    by_dep        = deparse1(substitute(by)),
+    cex_dep       = if (!is.null(cex)) deparse1(substitute(cex)) else NULL,
+    facet_dep     = deparse1(substitute(facet)),
+    x_dep         = if (is.null(x))    NULL else deparse1(substitute(x)),
+    xmax_dep      = if (is.null(xmax)) NULL else deparse1(substitute(xmax)),
+    xmin_dep      = if (is.null(xmin)) NULL else deparse1(substitute(xmin)),
+    y_dep         = if (is.null(y))    NULL else deparse1(substitute(y)),
+    ymax_dep      = if (is.null(ymax)) NULL else deparse1(substitute(ymax)),
+    ymin_dep      = if (is.null(ymin)) NULL else deparse1(substitute(ymin)),
+
+    # types
+    type          = type,
+    type_data     = NULL,
+    type_draw     = NULL,
+    type_name     = NULL,
+
+    # type-specific settings
+    bubble        = FALSE,
+    ygroup        = NULL,  # for type_ridge()
+
+    # data points and labels
+    x             = x,
+    xmax          = xmax,
+    xmin          = xmin,
+    xlab          = xlab,
+    xlabs         = NULL,
+    y             = y,
+    ymax          = ymax,
+    ymin          = ymin,
+    ylab          = ylab,
+    ylabs         = NULL,
+
+    # axes
+    axes          = axes,
+    xaxt          = xaxt,
+    xaxb          = xaxb,
+    xaxl          = xaxl,
+    xaxs          = xaxs,
+    yaxt          = yaxt,
+    yaxb          = yaxb,
+    yaxl          = yaxl,
+    yaxs          = yaxs,
+    frame.plot    = frame.plot,
+    xlim          = xlim,
+    ylim          = ylim,
+
+    # flags to check user input (useful later on)
+    null_by       = is.null(by),
+    null_xlim     = is.null(xlim),
+    null_ylim     = is.null(ylim),
+    # when palette functions need pre-processing this check raises error
+    null_palette  = tryCatch(is.null(palette), error = function(e) FALSE),
+    was_area_type = identical(type, "area"),  # mostly for legend
+    x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridges"
+
+
+    # unevaluated expressions with side effects
+    draw          = substitute(draw),
+    facet         = facet,
+    facet.args    = facet.args,
+    palette       = substitute(palette),
+    legend        = if (add) FALSE else substitute(legend),
+
+    # aesthetics
+    lty           = lty,
+    lwd           = lwd,
+    col           = col,
+    bg            = bg,
+    log           = log,
+    fill          = fill,
+    alpha         = alpha,
+    cex           = cex,
+    pch           = if (is.null(pch)) get_tpar("pch", default = NULL) else pch,
+
+    # ribbon.alpha overwritten by some type_data() functions
+    # sanitize_ribbon_alpha: returns default alpha transparency for ribbon-type plots
+    ribbon.alpha  = sanitize_ribbon_alpha(NULL),
+
+    # misc
+    flip          = flip,
+    by            = by,
+    dots          = dots,
+    type_info     = list() # pass type-specific info from type_data to type_draw
+  )
+
+  settings = new.env()
+  list2env(settings_list, settings)
+
+  #
   ## devices and files -----
   #
-
   # Write plot to output file or window with fixed dimensions
-  setup_device(file = file, width = width, height = height)
-  if (!is.null(file)) on.exit(dev.off(), add = TRUE)
-
-
-  #
-  ## deparsed expressions for labels -----
-  #
-
-  x_dep = if (is.null(x)) NULL else deparse1(substitute(x))
-  xmin_dep = if (is.null(xmin)) NULL else deparse1(substitute(xmin))
-  xmax_dep = if (is.null(xmax)) NULL else deparse1(substitute(xmax))
-  y_dep = if (is.null(y)) NULL else deparse1(substitute(y))
-  ymin_dep = if (is.null(ymin)) NULL else deparse1(substitute(ymin))
-  ymax_dep = if (is.null(ymax)) NULL else deparse1(substitute(ymax))
-  by_dep = deparse1(substitute(by))
-  cex_dep = if (!is.null(cex)) deparse1(substitute(cex)) else NULL
-  facet_dep = deparse1(substitute(facet))
+  setup_device(settings)
+  if (!is.null(settings$file)) on.exit(dev.off(), add = TRUE)
 
 
   #
   ## sanitize arguments -----
   #
 
-  # init variables
-  xlabs = ylabs = NULL
-  ygroup = NULL # type_ridge()
-  bubble = FALSE
-
-  # ellipsis
-  dots = list(...)
-
-  # draw
-  draw = substitute(draw)
-
-  # type
-  # sanitize_type: validates/converts type argument and returns list with name, data, and draw components
-  type = sanitize_type(type, x, y, dots)
-  if ("dots" %in% names(type)) dots = type$dots
-  type_data = type$data
-  type_draw = type$draw
-  type = type$name
-  
-  # area flag (mostly for legend)
-  was_area_type = identical(type, "area")
-
-  # legend
-  if (add) legend = FALSE
-  if (!exists("legend_args")) {
-    legend_args = dots[["legend_args"]]
-    dots[["legend_args"]] = NULL
+  # extract legend_args from dots
+  if ("legend_args" %in% names(dots)) {
+    settings$legend_args = settings$dots[["legend_args"]]
+    settings$dots$legend_args = NULL # avoid passing both directly and via ...
+  } else {
+    settings$legend_args = list(x = NULL)
   }
-  if (is.null(legend_args)) legend_args = list(x = NULL)
-  legend = substitute(legend)
-
-  # palette
-  palette = substitute(palette)
-
-  # themes
-  if (is.null(palette)) palette = get_tpar("palette", default = NULL)
-  if (is.null(pch)) pch = get_tpar("pch", default = NULL)
 
   # alias: bg = fill
-  if (is.null(bg) && !is.null(fill)) bg = fill
+  if (is.null(bg) && !is.null(fill)) settings$bg = fill
 
-  # ribbon.alpha is overwritten by some type_data() functions
-  # sanitize_ribbon.alpha: returns default alpha transparency value for ribbon-type plots
-  ribbon.alpha = sanitize_ribbon.alpha(NULL)
-
-  # by
-  null_by = is.null(by)
-  if (!null_by && is.character(by)) by = factor(by)
-  x_by = identical(x, by) # flag if x==by (currently only used for "boxplot", "spineplot" and "ridges" types)
-
-  # plot limits
-  # flag(s) indicating whether x/ylim was set by the user (needed later for
-  # special case where facets are free but still want to set x/ylim manually)
-  xlim_user = !is.null(xlim)
-  ylim_user = !is.null(ylim)
-
-  # axes
-  # sanitize_axes: standardizes axis arguments and returns consistent axes, xaxt, yaxt, frame.plot values
-  tmp = sanitize_axes(axes, xaxt, yaxt, frame.plot)
-  list2env(tmp[c("axes", "xaxt", "yaxt", "frame.plot")], environment())
-  rm("tmp")
-
-  # xlab & ylab
-  # sanitize_xylab: generates appropriate axis labels based on input data and plot type
-  tmp = sanitize_xylab(
-      x = x, xlab = xlab, x_dep = x_dep, xmin_dep = xmin_dep, xmax_dep = xmax_dep,
-      y = y, ylab = ylab, y_dep = y_dep, ymin_dep = ymin_dep, ymax_dep = ymax_dep,
-      type = type
-  )
-  xlab = tmp$xlab
-  ylab = tmp$ylab
-  rm("tmp")
-
-  # facet
-  facet_by = FALSE # flag if facet=="by" (i.e., facet matches the grouping variable)
-  if (!is.null(facet) && length(facet) == 1 && facet == "by") {
-    by = as.factor(by) ## if by==facet, then both need to be factors
-    facet = by
-    facet_by = TRUE
-  } else if (!is.null(facet) && inherits(facet, "formula")) {
-    facet = get_facet_fml(facet, data = data)
-    if (isTRUE(attr(facet, "facet_grid"))) {
-      facet.args[["nrow"]] = attr(facet, "facet_nrow")
-    }
-  }
-  facet_attr = attributes(facet) # TODO: better way to restore facet attributes?
-  null_facet = is.null(facet)
-
-
-  #
-  ## datapoints: x, y, etc. -----
-  #
-
-  ## coerce character variables to factors
-  if (!is.null(x) && is.character(x)) x = factor(x)
-  if (!is.null(y) && is.character(y)) y = factor(y)
-
-  if (is.null(x)) {
-    ## Special catch for rect and segment plots without a specified y-var
-    if (type %in% c("rect", "segments")) {
-      x = rep(NA, length(x))
-    }
-  }
-
-  if (is.null(y)) {
-    ## Special catch for area and interval plots without a specified y-var
-    if (type %in% c("rect", "segments", "pointrange", "errorbar", "ribbon")) {
-      y = rep(NA, length(x))
-    } else if (type == "boxplot") {
-      y = x
-      x = rep.int("", length(y))
-      xaxt = "a"
-    } else if (!(type %in% c("histogram", "barplot", "density", "function"))) {
-      y = x
-      x = seq_along(x)
-    }
-  }
+  # validate types and returns a list with name, data, and draw components
+  sanitize_type(settings)
   
-  datapoints = list(
-    x = x, xmin = xmin, xmax = xmax, 
-    y = y, ymin = ymin, ymax = ymax, ygroup = ygroup
-  )
-  datapoints = Filter(function(z) length(z) > 0, datapoints)
-  datapoints = data.frame(datapoints)
-  if (nrow(datapoints) > 0) {
-    datapoints[["rowid"]] = seq_len(nrow(datapoints))
-    datapoints[["facet"]] = if (!is.null(facet)) facet else ""
-    datapoints[["by"]] = if (!null_by) by else ""
+  # standardize axis arguments and returns consistent axes, xaxt, yaxt, frame.plot
+  sanitize_axes(settings)
+
+  # generate appropriate axis labels based on input data and plot type
+  sanitize_xylab(settings)
+
+  # palette default
+  if (is.null(settings$palette)) {
+    settings$palette = get_tpar("palette", default = NULL)
   }
+
+  # by: coerce character groups to factor
+  if (!settings$null_by && is.character(settings$by)) {
+    settings$by = factor(settings$by)
+  }
+
+  # flag if x==by, currently only used for 
+  # 
+
+
+  # facet: parse facet formula and prepares variables when facet==by
+  sanitize_facet(settings)
+
+  # x / y processing
+  # convert characters to factors
+  # set x automatically when omitted (ex: rect)
+  # set y automatically when omitted (ex: boxplots)
+  # combine x, y, xmax, by, facet etc. into a single `datapoints` data.frame
+  sanitize_datapoints(settings)
 
 
   #
   ## transform datapoints using type_data() -----
   #
 
-  # type_info: initialize a list to pass type-specific information from type_data() to type_draw()
-  type_info = list()
-
-  if (!is.null(type_data)) {
-    fargs = list(
-      datapoints   = datapoints,
-      bg           = bg,
-      by           = by,
-      col          = col,
-      log          = log,
-      lty          = lty,
-      lwd          = lwd,
-      cex          = cex,
-      facet        = facet,
-      facet_by     = facet_by,
-      facet.args   = facet.args,
-      legend_args  = legend_args,
-      null_by      = null_by,
-      null_facet   = null_facet,
-      palette      = palette,
-      ribbon.alpha = ribbon.alpha,
-      xaxt         = xaxt,
-      xaxb         = xaxb,
-      xaxl         = xaxl,
-      xlab         = xlab,
-      xlabs        = xlabs,
-      xlim         = xlim,
-      yaxt         = yaxt,
-      yaxb         = yaxb,
-      yaxl         = yaxl,
-      ylab         = ylab,
-      ylim         = ylim
-    )
-    fargs = c(fargs, dots)
-    list2env(do.call(type_data, fargs), environment())
+  if (!is.null(settings$type_data)) {
+    settings$type_data(settings, ...)
   }
 
+  # flip -> swap x and y after type_data, except for boxplots (which has its own bespoke flip logic)
+  flip_datapoints(settings)
 
-
-  # flip -> swap x and y, except for boxplots (which has its own bespoke flip logic)
-  assert_flag(flip)
-  if (isTRUE(flip)) {
-    if (type == "boxplot") {
-      # boxplot: let horizontal=TRUE do most work; only swap labels
-      swap_variables(environment(), c("xlab", "ylab"))
-    } else {
-      swap_variables(
-        environment(),
-        c("xlim", "ylim"),
-        c("xlab", "ylab"),
-        c("xlabs", "ylabs"),
-        c("xaxt", "yaxt"),
-        c("xaxs", "yaxs"),
-        c("xaxb", "yaxb"),
-        c("xaxl", "yaxl"))
-      if (!is.null(log)) log = chartr("xy", "yx", log)
-      datapoints = swap_columns(datapoints, "x", "y")
-      datapoints = swap_columns(datapoints, "xmin", "ymin")
-      datapoints = swap_columns(datapoints, "xmax", "ymax")
-    }
-  }
 
   #
   ## bubble plot -----
   #
-
   # catch some simple aesthetics for bubble plots before the standard "by"
   # grouping sanitizers (actually: will only be used for dual_legend plots but
   # easiest to assign/determine now)
-  if (bubble) {
-    datapoints[["cex"]] = cex
-    bubble_pch = if (!is.null(pch) && length(pch)==1) pch else par("pch")
-    bubble_alpha = if (!is.null(alpha)) alpha else 1
-    bubble_bg_alpha = if (!is.null(bg) && length(bg)==1 && is.numeric(bg) && bg > 0 && bg <=1) bg else 1
-  }
+  sanitize_bubble(settings)
+
 
   #
   ## axis breaks and limits -----
   #
-
-  # For cases where x/yaxb is provided and corresponding x/ylabs is not null...
-  # We can subset these here to provide breaks
-  if (!is.null(xaxb) && !is.null(xlabs)) {
-    xlabs = xlabs[names(xlabs) %in% xaxb]
-    xaxb = NULL # don't need this any more
-  }
-  if (!is.null(yaxb) && !is.null(ylabs)) {
-    ylabs = ylabs[names(ylabs) %in% yaxb]
-    yaxb = NULL # don't need this any more
-  }
   
   # do this after computing yaxb because limits will depend on the previous calculations
-  fargs = lim_args(
-    datapoints = datapoints,
-    xlim = xlim, ylim = ylim,
-    xaxb = xaxb, yaxb = yaxb,
-    xlim_user = xlim_user, ylim_user = ylim_user,
-    type = type
-  )[c("xlim", "ylim")]
-  list2env(fargs, environment())
+  lim_args(settings)
+
+
+  #
+  ## facets: count -----
+  #
+
+  # facet_layout processes facet simplification, attribute restoration, and layout
+  facet_layout(settings)
 
 
   #
   ## aesthetics by group -----
   #
+  by_aesthetics(settings)
 
-  by_ordered = FALSE
-  by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
-  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
-    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
-    by_continuous = FALSE
-  } else if (!null_by) {
-    by_ordered = is.ordered(by)
-  }
-  
-  ngrps = if (null_by) 1L else if (is.factor(by)) nlevels(by) else if (by_continuous) 100L else length(unique(by))
-  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
-  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
-  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
-  cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
 
-  col = by_col(
-    ngrps = ngrps, col = col, palette = palette,
-    gradient = by_continuous, ordered = by_ordered, alpha = alpha
-  )
-  bg = by_bg(
-    adjustcolor = adjustcolor, alpha = alpha, bg = bg, by = by, by_continuous = by_continuous,
-    by_ordered = by_ordered, col = col, fill = fill, palette = substitute(palette),
-    ribbon.alpha = ribbon.alpha, ngrps = ngrps, type = type
-  )
+  #
+  ## make settings available in the environment directly -----
+  #
+  env2env(settings, environment())
+
+
+  #
+  ## legends -----
+  #
   
+  # legend labels
   ncolors = length(col)
   lgnd_labs = rep(NA, times = ncolors)
   if (isTRUE(by_continuous)) {
@@ -1010,25 +930,6 @@ tinyplot.default = function(
     pidx = round(pidx)
     lgnd_labs[pidx] = pbyvar
   }
-  
-
-  #
-  ## facets: count -----
-  #
-
-  # before legend becase it requires `cex_fct_adj`
-  if (length(unique(datapoints$facet)) == 1) {
-    datapoints[["facet"]] = NULL
-  }
-  attributes(datapoints$facet) = facet_attr ## TODO: better solution for restoring facet attributes?
-  fargs = facet_layout(facet = datapoints$facet, facet.args = facet.args, add = add)
-  fargs = fargs[c("facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")]
-  list2env(fargs, environment())
-
-
-  #
-  ## legends -----
-  #
   
   # simple indicator variables for later use
   has_legend = FALSE
@@ -1239,8 +1140,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1264,8 +1165,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, xlim_user = xlim_user, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, ylim_user = ylim_user, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
       asp = asp, log = log,
       dots = dots,
       draw = draw,

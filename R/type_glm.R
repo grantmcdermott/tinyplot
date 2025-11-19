@@ -1,8 +1,8 @@
 #' Generalized linear model plot type
-#' 
+#'
 #' @description Type function for plotting a generalized model fit.
 #' Arguments are passed to \code{\link[stats]{glm}}.
-#' 
+#'
 #' @param se logical. If TRUE, confidence intervals are drawn.
 #' @inheritParams stats::glm
 #' @inheritParams stats::predict.glm
@@ -11,7 +11,7 @@
 #' @examples
 #' # "glm" type convenience string
 #' tinyplot(am ~ mpg, data = mtcars, type = "glm")
-#' 
+#'
 #' # Use `type_glm()` to pass extra arguments for customization
 #' tinyplot(am ~ mpg, data = mtcars, type = type_glm(family = "binomial"))
 #' @export
@@ -28,10 +28,13 @@ type_glm = function(family = "gaussian", se = TRUE, level = 0.95, type = "respon
 
 
 data_glm = function(family, se, level, type, ...) {
-    fun = function(datapoints, ...) {
+    fun = function(settings, ...) {
+        env2env(settings, environment(), "datapoints")
         dat = split(datapoints, list(datapoints$facet, datapoints$by))
         dat = lapply(dat, function(x) {
-            if (nrow(x) == 0) return(x)
+            if (nrow(x) == 0) {
+                return(x)
+            }
             if (nrow(x) < 3) {
                 x$y = NA
                 return(x)
@@ -47,7 +50,6 @@ data_glm = function(family, se, level, type, ...) {
                     nd$y = p$estimate
                     nd$ymax = p$conf.high
                     nd$ymin = p$conf.low
-
                 } else {
                     nd$y = predict(fit, newdata = nd, type = type)
                     nd = ci(nd$y, nd$se, level, fit$df.residual, backtransform = stats::family(fit)$linkinv)
@@ -59,8 +61,7 @@ data_glm = function(family, se, level, type, ...) {
         })
         datapoints = do.call(rbind, dat)
         datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), ]
-        out = list(datapoints = datapoints)
-        return(out)
+        env2env(environment(), settings, "datapoints")
     }
     return(fun)
 }

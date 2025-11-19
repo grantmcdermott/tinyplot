@@ -1,4 +1,83 @@
-by_col = function(ngrps = 1L, col = NULL, palette = NULL, gradient = NULL, ordered = NULL, alpha = NULL) {
+#
+## orchestration function -----
+#
+
+by_aesthetics = function(settings) {
+  env2env(
+    settings,
+    environment(),
+    c(
+      "datapoints", "by", "type", "null_by", "pch", "bg", "lty", "lwd",
+      "bubble", "cex", "alpha", "col", "fill", "ribbon.alpha"
+    )
+  )
+
+  by_ordered = FALSE
+  by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
+  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
+    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    by_continuous = FALSE
+  } else if (!null_by) {
+    by_ordered = is.ordered(by)
+  }
+
+  if (null_by) {
+    ngrps = 1L
+  } else if (is.factor(by)) {
+    ngrps = nlevels(by)
+  } else if (by_continuous) {
+    ngrps = 100L
+  } else {
+    ngrps = length(unique(by))
+  }
+
+  pch = by_pch(ngrps = ngrps, type = type, pch = pch)
+  lty = by_lty(ngrps = ngrps, type = type, lty = lty)
+  lwd = by_lwd(ngrps = ngrps, type = type, lwd = lwd)
+  cex = by_cex(ngrps = ngrps, type = type, bubble = bubble, cex = cex)
+
+  col = by_col(
+    col = col,
+    palette = settings$palette, # must use unevaluated palette
+    alpha = alpha,
+    by_ordered = by_ordered,
+    by_continuous = by_continuous,
+    ngrps = ngrps,
+    adjustcolor = adjustcolor
+  )
+
+  bg = by_bg(
+    bg = bg,
+    fill = fill,
+    col = col,
+    palette = settings$palette, # must use unevaluated palette
+    alpha = alpha,
+    by_ordered = by_ordered,
+    by_continuous = by_continuous,
+    ngrps = ngrps,
+    type = type,
+    by = by,
+    ribbon.alpha = ribbon.alpha,
+    adjustcolor = adjustcolor
+  )
+
+  # update settings
+  env2env(
+    environment(),
+    settings,
+    c("by_continuous", "by_ordered", "ngrps", "pch", "lty", "lwd", "cex", "col", "bg")
+  )
+}
+
+
+#
+## subsidiary functions -----
+#
+
+by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustcolor) {
+  ordered = by_ordered
+  gradient = by_continuous
+
   if (is.null(alpha)) alpha = 1
   if (is.null(ordered)) ordered = FALSE
   if (is.null(gradient)) gradient = FALSE
@@ -271,6 +350,38 @@ gen_pal_fun = function(pal, gradient = FALSE, alpha = NULL, n = NULL) {
 }
 
 
+by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps, type, by, ribbon.alpha, adjustcolor) {
+  if (is.null(bg) && !is.null(fill)) bg = fill
+  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
+    alpha = bg
+    bg = "by"
+  }
+  if (!is.null(bg) && length(bg) == 1 && bg == "by") {
+    # use by_col processing, but with the bg-specific colors
+    bg = by_col(
+      col = NULL,
+      palette = palette,
+      alpha = alpha,
+      by_ordered = by_ordered,
+      by_continuous = by_continuous,
+      ngrps = ngrps,
+      adjustcolor = adjustcolor
+    )
+  } else if (length(bg) != ngrps) {
+    bg = rep(bg, ngrps)
+  }
+  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
+    if (!is.null(bg)) {
+      bg = adjustcolor(bg, ribbon.alpha)
+    } else if (!is.null(col)) {
+      bg = adjustcolor(col, ribbon.alpha)
+    }
+  }
+
+  bg
+}
+
+
 by_pch = function(ngrps, type, pch = NULL) {
   no_pch = FALSE
   if (identical(type, "text")) {
@@ -427,43 +538,3 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
 
 
 
-by_bg = function(
-    adjustcolor,
-    alpha,
-    bg,
-    by,
-    by_continuous,
-    by_ordered,
-    col,
-    fill,
-    ngrps,
-    palette,
-    ribbon.alpha,
-    type) {
-  if (is.null(bg) && !is.null(fill)) bg = fill
-  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
-    alpha = bg
-    bg = "by"
-  }
-  if (!is.null(bg) && length(bg) == 1 && bg == "by") {
-    bg = by_col(
-      ngrps = ngrps,
-      col = NULL,
-      palette = palette,
-      gradient = by_continuous,
-      ordered = by_ordered,
-      alpha = alpha
-    )
-  } else if (length(bg) != ngrps) {
-    bg = rep(bg, ngrps)
-  }
-  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
-    if (!is.null(bg)) {
-      bg = adjustcolor(bg, ribbon.alpha)
-    } else if (!is.null(col)) {
-      bg = adjustcolor(col, ribbon.alpha)
-    }
-  }
-
-  return(bg)
-}

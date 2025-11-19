@@ -1,4 +1,6 @@
-setup_device = function(file, width, height) {
+setup_device = function(settings) {
+  env2env(settings, environment(), c("file", "width", "height"))
+
   # write to file
   if (!is.null(file)) {
     filepath = file
@@ -30,7 +32,7 @@ setup_device = function(file, width, height) {
     dop$new = FALSE # catch for some interfaces
     par(dop)
 
-  # interactive plot with user-specified width/height
+    # interactive plot with user-specified width/height
   } else if (!is.null(width) || !is.null(height)) {
     devwidth = width
     devheight = height

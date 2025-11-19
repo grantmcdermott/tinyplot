@@ -13,14 +13,15 @@
 #' @export
 type_qq = function(distribution = qnorm) {
   data_qq = function(distribution) {
-    fun = function(datapoints, ...) {
+    fun = function(settings, ...) {
+      env2env(settings, environment(), "datapoints")
+
       y = sort(datapoints$y)
       x = datapoints$x
       x = distribution(ppoints(x))
       datapoints$x = x
       datapoints$y = y
-      out = list(datapoints = datapoints)
-      return(out)
+      env2env(environment(), settings, "datapoints")
     }
   }
 

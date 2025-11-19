@@ -1,28 +1,27 @@
 #' Spline plot type
-#' 
+#'
 #' @description Type function for plotting a cubic (or Hermite) spline interpolation.
 #' Arguments are passed to \code{\link[stats]{spline}}; see this latter function
 #' for default argument values.
-#' 
+#'
 #' @inheritParams stats::spline
 #' @inherit stats::spline details
 #' @importFrom stats spline
 #' @examples
 #' # "spline" type convenience string
 #' tinyplot(dist ~ speed, data = cars, type = "spline")
-#' 
+#'
 #' # Use `type_spline()` to pass extra arguments for customization
-#' tinyplot(dist ~ speed, data = cars, type = type_spline(method = "natural", n = 25),
+#' tinyplot(dist ~ speed,
+#'     data = cars, type = type_spline(method = "natural", n = 25),
 #'     add = TRUE, lty = 2)
 #' @export
-type_spline = function(
-        n = NULL,
-        method = "fmm",
-        xmin = NULL,
-        xmax = NULL,
-        xout = NULL,
-        ties = mean
-    ) {
+type_spline = function(n = NULL,
+                       method = "fmm",
+                       xmin = NULL,
+                       xmax = NULL,
+                       xout = NULL,
+                       ties = mean) {
     out = list(
         draw = draw_lines(),
         data = data_spline(method = method, ties = ties, n = n, xmin = xmin, xmax = xmax, xout = xout),
@@ -34,10 +33,12 @@ type_spline = function(
 
 
 data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
-    fun = function(datapoints, ...) {
+    fun = function(settings, ...) {
+        env2env(settings, environment(), "datapoints")
+
         datapoints = split(datapoints, list(datapoints$facet, datapoints$by), drop = TRUE)
         datapoints = lapply(datapoints, function(dat) {
-            if (is.null(n)) n = 3*length(dat$x)
+            if (is.null(n)) n = 3 * length(dat$x)
             if (is.null(xmax)) xmax = max(dat$x)
             if (is.null(xmin)) xmin = min(dat$x)
             if (is.null(xout)) {
@@ -52,9 +53,7 @@ data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
             return(fit)
         })
         datapoints = do.call(rbind, datapoints)
-        out = list(datapoints = datapoints)
-        return(out)
+        env2env(environment(), settings, "datapoints")
     }
     return(fun)
 }
-

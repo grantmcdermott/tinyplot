@@ -478,6 +478,7 @@ keystrokes by typing `plt_add()` instead of `tinyplot_add()`:
 #| eval: false
 plt_add(type = "lm")
 ```
+
 :::
 
 A related---but distinct---concept to adding plot layers is _drawing_ on a plot.

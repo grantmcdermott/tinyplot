@@ -94,7 +94,8 @@ draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewe
 
 
 data_boxplot = function() {
-    fun = function(datapoints, bg, col, palette, null_by, null_facet, ...) {
+    fun = function(settings, ...) {
+        env2env(settings, environment(), c("datapoints", "by", "facet", "null_facet", "null_palette", "x", "col", "bg", "null_by"))
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
 
@@ -114,31 +115,35 @@ data_boxplot = function() {
             xord = order(datapoints$by, datapoints$facet, datapoints$x)
         }
 
-        if (length(unique(datapoints[["by"]])) == 1 && is.null(palette)) {
+        # Check if user provided palette before substitute)
+        if (length(unique(datapoints[["by"]])) == 1 && null_palette) {
             if (is.null(col)) col = par("fg")
             if (is.null(bg)) bg = "lightgray"
         } else {
-            bg = "by"
+            if (is.null(bg)) bg = "by"
         }
 
         # Reorder x, y, ymin, and ymax based on the order determined
         datapoints = datapoints[xord,]
 
         # Return the result as a list called 'out'
-        out = list(
-            x = datapoints$x,
-            y = datapoints$y,
-            ymin = datapoints$ymin,
-            ymax = datapoints$ymax,
-            xlabs = xlabs,
-            datapoints = datapoints,
-            col = col,
-            bg = bg)
-
-        if (length(unique(datapoints$by)) > 1) out[["by"]] = datapoints$by
-        if (length(unique(datapoints$facet)) > 1) out[["facet"]] = datapoints$facet
-
-        return(out)
+        x = datapoints$x
+        y = datapoints$y
+        ymin = datapoints$ymin
+        ymax = datapoints$ymax
+        by = if (length(unique(datapoints$by)) > 1) datapoints$by else by
+        facet = if (length(unique(datapoints$facet)) > 1) datapoints$facet else facet
+        env2env(environment(), settings, c(
+            "x",
+            "y",
+            "ymin",
+            "ymax",
+            "xlabs",
+            "datapoints",
+            "col",
+            "bg",
+            "by",
+            "facet"))
     }
     return(fun)
 }

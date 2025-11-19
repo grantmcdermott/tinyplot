@@ -707,10 +707,10 @@ sanitize_legend = function(legend, legend_args) {
         lnms = names(largs)
         # check second position b/c first will be a symbol
         if (is.null(lnms)) {
-          largs = stats::setNames(largs, c("", "x"))
+          largs = setNames(largs, c("", "x"))
         } else if (length(largs) >= 2 && lnms[2] == "") {
           lnms[2] = "x"
-          largs = stats::setNames(largs, lnms)
+          largs = setNames(largs, lnms)
         } else {
           largs[["x"]] = "right!"
         }

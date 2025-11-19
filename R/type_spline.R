@@ -34,7 +34,7 @@ type_spline = function(n = NULL,
 
 data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
     fun = function(settings, ...) {
-        list2env(settings, environment())
+        list2env(settings["datapoints"], environment())
 
         datapoints = split(datapoints, list(datapoints$facet, datapoints$by), drop = TRUE)
         datapoints = lapply(datapoints, function(dat) {

@@ -52,7 +52,7 @@ draw_pointrange = function() {
 
 data_pointrange = function(dodge, fixed.pos) {
   fun = function(settings, ...) {
-    list2env(settings, environment())
+    list2env(settings[c("datapoints", "xlabs")], environment())
 
     if (is.character(datapoints$x)) {
       datapoints$x = as.factor(datapoints$x)

@@ -43,7 +43,7 @@ type_points = function(clim = c(0.5, 2.5)) {
 
 data_points = function(clim = c(0.5, 2.5)) {
   fun = function(settings, cex = NULL, ...) {
-    list2env(settings, environment())
+    list2env(settings[c("datapoints", "cex", "legend_args")], environment())
 
     # catch for factors (we should still be able to "force" plot these with points)
     if (is.factor(datapoints$x)) {

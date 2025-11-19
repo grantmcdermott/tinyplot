@@ -95,7 +95,7 @@ draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewe
 
 data_boxplot = function() {
     fun = function(settings, ...) {
-        list2env(settings, envir = environment())
+        list2env(settings[c("datapoints", "by", "facet", "null_facet", "null_palette", "x", "col", "bg", "null_by")], envir = environment())
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
 

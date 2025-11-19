@@ -86,7 +86,7 @@ type_text = function(
 
 data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
   fun = function(settings, cex = NULL, ...) {
-    list2env(settings, envir = environment())
+    list2env(settings[c("datapoints")], envir = environment())
     if (is.null(labels)) {
       labels = datapoints$y
     }

@@ -79,7 +79,7 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 #' @importFrom grDevices nclass.Sturges
 data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL) {
     fun = function(settings, ...) {
-        list2env(settings, environment())
+        list2env(settings[c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "null_palette", ".tpar", "col", "bg", "axes", "xaxt", "yaxt")], environment())
       
         ## process weights
         if (!is.null(weights)) {

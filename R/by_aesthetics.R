@@ -3,7 +3,7 @@
 #
 
 by_aesthetics = function(settings) {
-  list2env(settings, environment())
+  list2env(settings[c("datapoints", "by", "type", "null_by", "pch", "bg", "lty", "lwd", "bubble", "cex", "alpha", "col", "fill", "ribbon.alpha")], environment())
   by_ordered = FALSE
   by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {

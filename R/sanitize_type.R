@@ -1,5 +1,5 @@
 sanitize_type = function(settings) {
-  list2env(settings, environment())
+  list2env(settings[c("type", "dots", "x", "y")], environment())
 
   if (inherits(type, "tinyplot_type")) {
     settings = update_settings(settings, 

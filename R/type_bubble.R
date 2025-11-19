@@ -1,5 +1,5 @@
 sanitize_bubble = function(settings) {
-  list2env(settings, environment())
+  list2env(settings[c("datapoints", "pch", "alpha", "bg", "cex", "bubble")], environment())
   if (bubble) {
     datapoints[["cex"]] = cex
     bubble_pch = if (!is.null(pch) && length(pch)==1) pch else par("pch")

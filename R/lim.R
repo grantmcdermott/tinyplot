@@ -1,7 +1,7 @@
 # calculate limits of each plot
 
 lim_args = function(settings) {
-  list2env(settings, environment())
+  list2env(settings[c("xaxb", "xlabs", "yaxb", "ylabs", "xlim", "ylim", "datapoints", "type", "null_xlim", "null_ylim")], environment())
 
   # For cases where x/yaxb is provided and corresponding x/ylabs is not null...
   # We can subset these here to provide breaks

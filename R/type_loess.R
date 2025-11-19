@@ -33,7 +33,7 @@ type_loess = function(
 
 data_loess = function(span, degree, family, control, se, level, ...) {
     fun = function(settings, ...) {
-        list2env(settings, environment())
+        list2env(settings[c("datapoints")], environment())
         datapoints = split(datapoints, list(datapoints$facet, datapoints$by))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
         datapoints = lapply(datapoints, function(dat) {

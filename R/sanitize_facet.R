@@ -1,5 +1,5 @@
 sanitize_facet = function(settings) {
-  list2env(settings, environment())
+  list2env(settings[c("facet", "by", "null_facet", "facet_attr", "facet_by")], environment())
 
   # flag if facet=="by" (i.e., facet matches the grouping variable)
   facet_by = FALSE

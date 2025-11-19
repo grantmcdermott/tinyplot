@@ -101,7 +101,7 @@ data_histogram = function(breaks = "Sturges",
     hright = right
 
     fun = function(settings, .breaks = hbreaks, .freebreaks = hfree.breaks, .freq = hfreq, .right = hright, .drop.zeros = hdrop.zeros, ...) {
-        list2env(settings, environment())
+        list2env(settings[c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha")], environment())
 
         hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 

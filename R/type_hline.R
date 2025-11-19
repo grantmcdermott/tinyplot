@@ -5,7 +5,7 @@
 type_hline = function(h = 0) {
   assert_numeric(h)
   data_hline = function(settings, ...) {
-    list2env(settings, environment())
+    list2env(settings[c("lwd", "lty", "col", "datapoints")], environment())
 
     if (nrow(datapoints) == 0) {
       msg = "`type_hline() only works on existing plots with x and y data points."

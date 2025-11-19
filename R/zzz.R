@@ -55,6 +55,7 @@
     "ngrps",
     "null_by",
     "null_facet",
+    "null_palette",
     "null_xlim",
     "null_ylim",
     "oxaxis",

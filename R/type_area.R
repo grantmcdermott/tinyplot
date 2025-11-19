@@ -20,6 +20,10 @@ data_area = function(alpha = alpha) {
         ymax = datapoints$ymax
         ymin = datapoints$ymin
         type = "ribbon"
+
+        # ribbon.alpha comes from parent scope, so assign it locally
+        ribbon.alpha = ribbon.alpha
+
         env2env(environment(), settings, c(
             "datapoints",
             "ymax",

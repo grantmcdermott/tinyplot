@@ -3,7 +3,14 @@
 #
 
 by_aesthetics = function(settings) {
-  env2env(settings, environment(), c("datapoints", "by", "type", "null_by", "pch", "bg", "lty", "lwd", "bubble", "cex", "alpha", "col", "fill", "ribbon.alpha"))
+  env2env(
+    settings,
+    environment(),
+    c(
+      "datapoints", "by", "type", "null_by", "pch", "bg", "lty", "lwd",
+      "bubble", "cex", "alpha", "col", "fill", "ribbon.alpha"
+    )
+  )
 
   by_ordered = FALSE
   by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
@@ -54,7 +61,12 @@ by_aesthetics = function(settings) {
     adjustcolor = adjustcolor
   )
 
-  env2env(environment(), settings, c("by_continuous", "by_ordered", "ngrps", "pch", "lty", "lwd", "cex", "col", "bg"))
+  # update settings
+  env2env(
+    environment(),
+    settings,
+    c("by_continuous", "by_ordered", "ngrps", "pch", "lty", "lwd", "cex", "col", "bg")
+  )
 }
 
 

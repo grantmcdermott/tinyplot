@@ -585,7 +585,12 @@ facet_layout = function(settings) {
     cex_fct_adj = 1
   }
 
-  env2env(environment(), settings, c("datapoints", "facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj"))
+  # update settings
+  env2env(
+    environment(),
+    settings,
+    c("datapoints", "facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")
+  )
 }
 
 

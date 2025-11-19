@@ -1,7 +1,15 @@
 # calculate limits of each plot
 
 lim_args = function(settings) {
-  env2env(settings, environment(), c("xaxb", "xlabs", "yaxb", "ylabs", "xlim", "ylim", "datapoints", "type", "null_xlim", "null_ylim"))
+  env2env(
+    settings,
+    environment(),
+    c(
+      "xaxb", "xlabs", "xlim", "null_xlim", 
+      "yaxb", "ylabs", "ylim", "null_ylim",
+      "datapoints", "type"
+    )
+  )
 
   # For cases where x/yaxb is provided and corresponding x/ylabs is not null...
   # We can subset these here to provide breaks
@@ -32,5 +40,10 @@ lim_args = function(settings) {
   if (null_xlim && !is.null(xaxb) && type != "spineplot") xlim = range(c(xlim, xaxb))
   if (null_ylim && !is.null(yaxb) && type != "spineplot") ylim = range(c(ylim, yaxb))
 
-  env2env(environment(), settings, c("xlim", "ylim", "xlabs", "ylabs", "xaxb", "yaxb"))
+  # update settings
+  env2env(
+    environment(),
+    settings,
+    c("xlim", "ylim", "xlabs", "ylabs", "xaxb", "yaxb")
+  )
 }

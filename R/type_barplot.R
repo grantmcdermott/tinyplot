@@ -79,7 +79,15 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 #' @importFrom stats aggregate
 data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
     fun = function(settings, ...) {
-        env2env(settings, environment(), c("datapoints", "xlab", "ylab", "null_by", "facet_by", "xlim", "ylim", "null_palette", "col", "bg", "yaxl", "xaxt"))
+        env2env(
+          settings,
+          environment(),
+          c(
+            "datapoints", "null_by", "facet_by",
+            "xlab", "ylab", "xlim", "ylim", "yaxl", "xaxt",
+            "null_palette", "col", "bg"
+          )
+        )
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {

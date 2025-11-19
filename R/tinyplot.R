@@ -652,10 +652,10 @@ tinyplot.default = function(
   assert_logical(add)
   if (!add) {
     calls = sys.calls()
-    tinyplot_calls = "(^tinyplot$)|(^tinyplot::tinyplot$)|(^plt$)|(^tinyplot::plt)|(^tinyplot:::)"
-    idx = grep(tinyplot_calls, sapply(calls, function(k) k[[1]]))
+    is_tinyplot_call = function(x) identical(tinyplot, try(eval(x[[1L]]), silent = TRUE))
+    idx = which(vapply(calls, is_tinyplot_call, FALSE))
     if (length(idx) > 0) {
-      set_environment_variable(.last_call = calls[[idx[1]]])
+      set_environment_variable(.last_call = calls[[idx[1L]]])
     }
   }
 

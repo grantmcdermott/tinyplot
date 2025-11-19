@@ -40,7 +40,7 @@ type_rug = function(ticksize = 0.03, side = 1, quiet = getOption("warn") < 0, ji
       stop(msg, call. = FALSE)
     }
 
-    out = modifyList(settings, list(datapoints = datapoints), keep.null = TRUE)
+    out = update_settings(settings, datapoints = datapoints)
     return(out)
   }
   draw_rug = function(.ticksize = ticksize, .side = side, .quiet = quiet, .jitter = jitter, .amount = amount) {

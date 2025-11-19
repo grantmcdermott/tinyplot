@@ -2,11 +2,11 @@ sanitize_type = function(settings) {
   list2env(settings, environment())
 
   if (inherits(type, "tinyplot_type")) {
-    settings = modifyList(settings, list(
+    settings = update_settings(settings, 
       type = type$name,
       type_draw = type$draw,
       type_data = type$data
-    ), keep.null = TRUE)
+    )
     return(settings)
   }
 
@@ -106,11 +106,11 @@ sanitize_type = function(settings) {
   }
 
   if (inherits(type, "tinyplot_type")) {
-    settings = modifyList(settings, list(
+    settings = update_settings(settings, 
       type = type$name,
       type_draw = type$draw,
       type_data = type$data
-    ), keep.null = TRUE)
+    )
   }
 
   return(settings)

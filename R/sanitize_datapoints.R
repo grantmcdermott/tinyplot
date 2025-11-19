@@ -42,7 +42,6 @@ sanitize_datapoints = function(settings) {
   }
 
   # potentially modified variables
-  new = list(x = x, y = y, xaxt = xaxt, datapoints = datapoints)
-  settings = modifyList(settings, new, keep.null = TRUE)
+  settings = update_settings(settings, x = x, y = y, xaxt = xaxt, datapoints = datapoints)
   return(settings)
 }

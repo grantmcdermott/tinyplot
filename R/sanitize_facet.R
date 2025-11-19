@@ -15,12 +15,11 @@ sanitize_facet = function(settings) {
   }
   facet_attr = attributes(facet) # TODO: better way to restore facet attributes?
   null_facet = is.null(facet)
-  new = list(
+  settings = update_settings(settings, 
     facet = facet,
     null_facet = null_facet,
     facet_attr = facet_attr,
     facet_by = facet_by,
     by = by)
-  settings = modifyList(settings, new, keep.null = TRUE)
   return(settings)
 }

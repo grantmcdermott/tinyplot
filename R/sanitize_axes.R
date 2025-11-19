@@ -24,7 +24,6 @@ sanitize_axes = function(settings) {
   if (is.null(frame.plot) || !is.logical(frame.plot)) frame.plot = all(c(xaxt, yaxt) %in% c("s", "a"))
 
 
-  new = list(axes = axes, xaxt = xaxt, yaxt = yaxt, frame.plot = frame.plot)
-  settings = modifyList(settings, new, keep.null = TRUE)
+  settings = update_settings(settings, axes = axes, xaxt = xaxt, yaxt = yaxt, frame.plot = frame.plot)
   return(settings)
 }

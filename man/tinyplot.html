@@ -1178,7 +1178,7 @@ logical. If TRUE, then elements are added to the current plot rather than drawin
 <code id="draw">draw</code>
 </td>
 <td>
-a function that draws directly on the plot canvas (before <code>x</code> and <code>y</code> are plotted). The <code>draw</code> argument is primarily useful for adding common elements to each facet of a faceted plot, e.g. <code>abline</code> or <code>text</code>. Note that this argument is somewhat experimental and that <em>no</em> internal checking is done for correctness; the provided argument is simply captured and evaluated as-is. See Examples.
+a function that draws directly on the plot canvas (before <code>x</code> and <code>y</code> are plotted). The <code>draw</code> argument is primarily useful for adding common elements to each facet of a faceted plot, e.g. <code>abline</code> or <code>text</code>. Note that this argument is somewhat experimental and that <em>no</em> internal checking is done for correctness; the provided argument is simply captured and evaluated as-is within <code>tinyplot()</code> and thus has access to the local definition of all variables such as <code>x</code>, <code>y</code>, etc. See Examples.
 </td>
 </tr>
 <tr>

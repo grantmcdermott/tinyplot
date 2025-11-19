@@ -863,9 +863,8 @@ tinyplot.default = function(
     settings$type_data(settings, ...)
   }
 
-  settings = as.list(settings, all.names = TRUE)
   # flip -> swap x and y after type_data, except for boxplots (which has its own bespoke flip logic)
-  settings = flip_datapoints(settings)
+  flip_datapoints(settings)
 
 
   #
@@ -874,8 +873,9 @@ tinyplot.default = function(
   # catch some simple aesthetics for bubble plots before the standard "by"
   # grouping sanitizers (actually: will only be used for dual_legend plots but
   # easiest to assign/determine now)
-  settings = sanitize_bubble(settings)
+  sanitize_bubble(settings)
 
+  settings = as.list(settings, all.names = TRUE)
 
   #
   ## axis breaks and limits -----

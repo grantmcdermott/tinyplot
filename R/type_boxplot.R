@@ -95,7 +95,7 @@ draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewe
 
 data_boxplot = function() {
     fun = function(settings, ...) {
-        list2env(settings[c("datapoints", "by", "facet", "null_facet", "null_palette", "x", "col", "bg", "null_by")], envir = environment())
+        env2env(settings, environment(), c("datapoints", "by", "facet", "null_facet", "null_palette", "x", "col", "bg", "null_by"))
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
 
@@ -127,17 +127,23 @@ data_boxplot = function() {
         datapoints = datapoints[xord,]
 
         # Return the result as a list called 'out'
-        update_settings(settings,
-            x = datapoints$x,
-            y = datapoints$y,
-            ymin = datapoints$ymin,
-            ymax = datapoints$ymax,
-            xlabs = xlabs,
-            datapoints = datapoints,
-            col = col,
-            bg = bg,
-            by = if (length(unique(datapoints$by)) > 1) datapoints$by else by,
-            by = if (length(unique(datapoints$facet)) > 1) datapoints$facet else facet)
+        x = datapoints$x
+        y = datapoints$y
+        ymin = datapoints$ymin
+        ymax = datapoints$ymax
+        by = if (length(unique(datapoints$by)) > 1) datapoints$by else by
+        facet = if (length(unique(datapoints$facet)) > 1) datapoints$facet else facet
+        env2env(environment(), settings, c(
+            "x",
+            "y",
+            "ymin",
+            "ymax",
+            "xlabs",
+            "datapoints",
+            "col",
+            "bg",
+            "by",
+            "facet"))
     }
     return(fun)
 }

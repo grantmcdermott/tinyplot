@@ -86,7 +86,7 @@ type_text = function(
 
 data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
   fun = function(settings, cex = NULL, ...) {
-    list2env(settings[c("datapoints")], envir = environment())
+    env2env(settings, environment(), "datapoints")
     if (is.null(labels)) {
       labels = datapoints$y
     }
@@ -125,12 +125,12 @@ data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
       }
     }
 
-    update_settings(settings,
-      datapoints = datapoints,
-      cex = cex,
-      bubble = bubble,
-      bubble_cex = bubble_cex
-    )
+    env2env(environment(), settings, c(
+      "datapoints",
+      "cex",
+      "bubble",
+      "bubble_cex"
+    ))
   }
   return(fun)
 }

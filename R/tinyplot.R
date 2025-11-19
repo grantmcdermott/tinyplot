@@ -700,7 +700,7 @@ tinyplot.default = function(
 
   dots = list(...)
 
-  settings = list(
+  settings_list = list(
     # save call to check user input later
     call          = match.call(),
 
@@ -795,6 +795,8 @@ tinyplot.default = function(
     type_info     = list() # pass type-specific info from type_data to type_draw
   )
 
+  settings = new.env()
+  list2env(settings_list, settings)
 
   #
   ## devices and files -----
@@ -820,17 +822,17 @@ tinyplot.default = function(
   if (is.null(bg) && !is.null(fill)) settings$bg = fill
 
   # validate types and returns a list with name, data, and draw components
-  settings = sanitize_type(settings)
+  sanitize_type(settings)
   
   # standardize axis arguments and returns consistent axes, xaxt, yaxt, frame.plot
-  settings = sanitize_axes(settings)
+  sanitize_axes(settings)
 
   # generate appropriate axis labels based on input data and plot type
-  settings = sanitize_xylab(settings)
+  sanitize_xylab(settings)
 
   # palette default
   if (is.null(settings$palette)) {
-    settings = modifyList(settings, list(palette = get_tpar("palette", default = NULL)))
+    settings$palette = get_tpar("palette", default = NULL)
   }
 
   # by: coerce character groups to factor
@@ -841,15 +843,16 @@ tinyplot.default = function(
   # flag if x==by, currently only used for 
   # 
 
+
   # facet: parse facet formula and prepares variables when facet==by
-  settings = sanitize_facet(settings)
+  sanitize_facet(settings)
 
   # x / y processing
   # convert characters to factors
   # set x automatically when omitted (ex: rect)
   # set y automatically when omitted (ex: boxplots)
   # combine x, y, xmax, by, facet etc. into a single `datapoints` data.frame
-  settings = sanitize_datapoints(settings)
+  sanitize_datapoints(settings)
 
 
   #
@@ -857,9 +860,10 @@ tinyplot.default = function(
   #
 
   if (!is.null(settings$type_data)) {
-    settings = settings$type_data(settings, ...)
+    settings$type_data(settings, ...)
   }
 
+  settings = as.list(settings, all.names = TRUE)
   # flip -> swap x and y after type_data, except for boxplots (which has its own bespoke flip logic)
   settings = flip_datapoints(settings)
 

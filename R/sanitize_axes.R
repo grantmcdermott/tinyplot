@@ -1,5 +1,5 @@
 sanitize_axes = function(settings) {
-  list2env(settings[c("axes", "xaxt", "yaxt", "frame.plot")], environment())
+  env2env(settings, environment(), c("axes", "xaxt", "yaxt", "frame.plot"))
   ## handle defaults of axes, xaxt, yaxt, frame.plot
   ## - convert axes to character if necessary
   ## - set defaults of xaxt/yaxt (if these are NULL) based on axes
@@ -24,6 +24,5 @@ sanitize_axes = function(settings) {
   if (is.null(frame.plot) || !is.logical(frame.plot)) frame.plot = all(c(xaxt, yaxt) %in% c("s", "a"))
 
 
-  settings = update_settings(settings, axes = axes, xaxt = xaxt, yaxt = yaxt, frame.plot = frame.plot)
-  return(settings)
+  env2env(environment(), settings, c("axes", "xaxt", "yaxt", "frame.plot"))
 }

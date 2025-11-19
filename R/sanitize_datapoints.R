@@ -1,8 +1,6 @@
 sanitize_datapoints = function(settings) {
   # potentially useful variables
-  list2env(
-    settings[c("x", "xmin", "xmax", "xaxt", "y", "ymin", "ymax", "ygroup", "facet", "null_by", "by", "type")],
-    environment())
+  env2env(settings, environment(), c("x", "xmin", "xmax", "xaxt", "y", "ymin", "ymax", "ygroup", "facet", "null_by", "by", "type"))
 
   ## coerce character variables to factors
   if (!is.null(x) && is.character(x)) x = factor(x)
@@ -42,6 +40,5 @@ sanitize_datapoints = function(settings) {
   }
 
   # potentially modified variables
-  settings = update_settings(settings, x = x, y = y, xaxt = xaxt, datapoints = datapoints)
-  return(settings)
+  env2env(environment(), settings, c("x", "y", "xaxt", "datapoints"))
 }

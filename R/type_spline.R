@@ -34,7 +34,7 @@ type_spline = function(n = NULL,
 
 data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
     fun = function(settings, ...) {
-        list2env(settings["datapoints"], environment())
+        env2env(settings, environment(), "datapoints")
 
         datapoints = split(datapoints, list(datapoints$facet, datapoints$by), drop = TRUE)
         datapoints = lapply(datapoints, function(dat) {
@@ -53,7 +53,7 @@ data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
             return(fit)
         })
         datapoints = do.call(rbind, datapoints)
-        update_settings(settings, datapoints = datapoints)
+        env2env(environment(), settings, "datapoints")
     }
     return(fun)
 }

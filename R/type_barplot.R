@@ -79,7 +79,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 #' @importFrom stats aggregate
 data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
     fun = function(settings, ...) {
-        list2env(settings[c("datapoints", "xlab", "ylab", "null_by", "facet_by", "xlim", "ylim", "null_palette", "col", "bg", "yaxl", "xaxt")], environment())
+        env2env(settings, environment(), c("datapoints", "xlab", "ylab", "null_by", "facet_by", "xlim", "ylim", "null_palette", "col", "bg", "yaxl", "xaxt"))
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
@@ -186,23 +186,28 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
             yaxl = paste0("abs_", yaxl)
           }
         }
-        
-        update_settings(settings,
-          datapoints = datapoints,
-          xlab = xlab,
-          ylab = ylab,
-          xlim = xlim,
-          ylim = ylim,
-          axes = TRUE,
-          xlabs = xlabs,
-          frame.plot = FALSE,
-          xaxs = "r",
-          xaxt = if (xaxt == "s") "l" else xaxt,
-          yaxl = yaxl,
-          yaxs = "i",
-          col = col,
-          bg = bg
-        )
+
+        axes = TRUE
+        frame.plot = FALSE
+        xaxs = "r"
+        xaxt = if (xaxt == "s") "l" else xaxt
+        yaxs = "i"
+        env2env(environment(), settings, c(
+          "datapoints",
+          "xlab",
+          "ylab",
+          "xlim",
+          "ylim",
+          "axes",
+          "xlabs",
+          "frame.plot",
+          "xaxs",
+          "xaxt",
+          "yaxl",
+          "yaxs",
+          "col",
+          "bg"
+        ))
     }
     return(fun)
 }

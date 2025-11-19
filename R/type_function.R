@@ -38,7 +38,7 @@ type_function = function(fun = dnorm, args = list(), n = 101, ...) {
   lines_args = list(...)
   data_function = function(args, fun) {
     funky = function(settings, ...) {
-      list2env(settings[c("xlim", "ylim", "datapoints")], environment())
+      env2env(settings, environment(), c("xlim", "ylim", "datapoints"))
 
       if (nrow(datapoints) == 0 || !"x" %in% names(datapoints)) {
         stop("Need to provide x values to plot the function.", call. = FALSE)
@@ -54,7 +54,7 @@ type_function = function(fun = dnorm, args = list(), n = 101, ...) {
         tmp = do.call(fun, tmp)
         ylim = c(min(tmp), max(tmp))
       }
-      update_settings(settings, xlim = xlim, ylim = ylim)
+      env2env(environment(), settings, c("xlim", "ylim"))
     }
   }
   draw_function = function() {

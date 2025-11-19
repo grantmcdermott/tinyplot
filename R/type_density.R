@@ -112,7 +112,7 @@ type_density = function(
 data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", alpha = NULL) {
     fun = function(settings, ...) {
-        list2env(settings[c("by", "bg", "facet", "ylab", "col", "ribbon.alpha", "datapoints")], environment())
+        env2env(settings, environment(), c("by", "bg", "facet", "ylab", "col", "ribbon.alpha", "datapoints"))
         ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)
         
         if (is.null(ylab)) ylab = "Density"
@@ -150,16 +150,20 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         # flags for legend and fill
         dtype = if (!is.null(bg)) "ribbon" else "l"
         dwas_area_type = !is.null(bg)
-        
-        update_settings(settings,
-            ylab = ylab,
-            type = dtype,
-            was_area_type = dwas_area_type,
-            ribbon.alpha = ribbon.alpha,
-            datapoints = datapoints,
-            by = if (length(unique(datapoints$by)) == 1) by else datapoints$by,
-            facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
-        )
+
+        type = dtype
+        was_area_type = dwas_area_type
+        by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
+        facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
+        env2env(environment(), settings, c(
+            "ylab",
+            "type",
+            "was_area_type",
+            "ribbon.alpha",
+            "datapoints",
+            "by",
+            "facet"
+        ))
     }
     return(fun)
 }

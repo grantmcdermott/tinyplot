@@ -79,8 +79,7 @@ type_violin = function(
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", trim = FALSE, width = 0.9) {
     fun = function(settings, ...) {
-        list2env(settings[c("datapoints", "by", "null_palette", "facet", "ylab", "col", "bg", "log", "null_by", "null_facet")], 
-            environment())
+        env2env(settings, environment(), c("datapoints", "by", "null_palette", "facet", "ylab", "col", "bg", "log", "null_by", "null_facet"))
 
         
         # Handle ordering based on by and facet variables
@@ -205,16 +204,18 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         })
         datapoints = do.call(rbind, datapoints)
         datapoints = datapoints[1:(nrow(datapoints)-1), ]
-        
-        update_settings(settings,
-            datapoints = datapoints,
-            by = if (length(unique(datapoints$by)) == 1) by else datapoints$by,
-            facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet,
-            ylab = ylab,
-            xlabs = xlabs,
-            col = col,
-            bg = bg
-        )
+
+        by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
+        facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
+        env2env(environment(), settings, c(
+            "datapoints",
+            "by",
+            "facet",
+            "ylab",
+            "xlabs",
+            "col",
+            "bg"
+        ))
     }
     return(fun)
 }

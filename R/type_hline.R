@@ -5,7 +5,7 @@
 type_hline = function(h = 0) {
   assert_numeric(h)
   data_hline = function(settings, ...) {
-    list2env(settings[c("lwd", "lty", "col", "datapoints")], environment())
+    env2env(settings, environment(), c("lwd", "lty", "col", "datapoints"))
 
     if (nrow(datapoints) == 0) {
       msg = "`type_hline() only works on existing plots with x and y data points."
@@ -16,7 +16,8 @@ type_hline = function(h = 0) {
     ul_lwd = length(unique(lwd))
     ul_lty = length(unique(lty))
     ul_col = length(unique(col))
-    update_settings(settings, type_info = list(ul_lty = ul_lty, ul_lwd = ul_lwd, ul_col = ul_col))
+    type_info = list(ul_lty = ul_lty, ul_lwd = ul_lwd, ul_col = ul_col)
+    env2env(environment(), settings, "type_info")
   }
   draw_hline = function() {
     fun = function(ifacet, iby, data_facet, icol, ilty, ilwd,

@@ -41,7 +41,7 @@ type_summary = function(fun = mean, ...) {
   lines_args = list(...)
   data_summary = function(fun) {
     funky = function(settings, ...) {
-      list2env(settings[c("datapoints", "by", "facet")], environment())
+      env2env(settings, environment(), c("datapoints", "by", "facet"))
 
       datapoints = split(datapoints, list(datapoints$facet, datapoints$by), drop = TRUE)
       datapoints = lapply(datapoints, function(dat) {
@@ -51,7 +51,7 @@ type_summary = function(fun = mean, ...) {
         return(dat)
       })
       datapoints = do.call(rbind, datapoints)
-      update_settings(settings, datapoints = datapoints)
+      env2env(environment(), settings, "datapoints")
     }
     return(funky)
   }

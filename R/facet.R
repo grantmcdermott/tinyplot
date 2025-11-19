@@ -585,17 +585,11 @@ facet_layout = function(settings) {
     cex_fct_adj = 1
   }
 
-  update_settings(settings,
-    datapoints = datapoints,
-    facets = facets,
-    ifacet = ifacet,
-    nfacets = nfacets,
-    nfacet_rows = nfacet_rows,
-    nfacet_cols = nfacet_cols,
-    oxaxis = oxaxis,
-    oyaxis = oyaxis,
-    cex_fct_adj = cex_fct_adj
-  )
+  settings[c("datapoints", "facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")] =
+    list(datapoints = datapoints, facets = facets, ifacet = ifacet, nfacets = nfacets,
+         nfacet_rows = nfacet_rows, nfacet_cols = nfacet_cols, oxaxis = oxaxis,
+         oyaxis = oyaxis, cex_fct_adj = cex_fct_adj)
+  settings
 }
 
 

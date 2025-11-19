@@ -29,7 +29,7 @@ type_glm = function(family = "gaussian", se = TRUE, level = 0.95, type = "respon
 
 data_glm = function(family, se, level, type, ...) {
     fun = function(settings, ...) {
-        list2env(settings[c("datapoints")], environment())
+        env2env(settings, environment(), "datapoints")
         dat = split(datapoints, list(datapoints$facet, datapoints$by))
         dat = lapply(dat, function(x) {
             if (nrow(x) == 0) {
@@ -61,7 +61,7 @@ data_glm = function(family, se, level, type, ...) {
         })
         datapoints = do.call(rbind, dat)
         datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), ]
-        update_settings(settings, datapoints = datapoints)
+        env2env(environment(), settings, "datapoints")
     }
     return(fun)
 }

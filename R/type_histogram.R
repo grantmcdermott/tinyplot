@@ -101,7 +101,7 @@ data_histogram = function(breaks = "Sturges",
     hright = right
 
     fun = function(settings, .breaks = hbreaks, .freebreaks = hfree.breaks, .freq = hfreq, .right = hright, .drop.zeros = hdrop.zeros, ...) {
-        list2env(settings[c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha")], environment())
+        env2env(settings, environment(), c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha"))
 
         hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 
@@ -146,20 +146,28 @@ data_histogram = function(breaks = "Sturges",
         }
 
         # browser()
-        update_settings(settings,
-            x = c(datapoints$xmin, datapoints$xmax),
-            y = c(datapoints$ymin, datapoints$ymax),
-            ymin = datapoints$ymin,
-            ymax = datapoints$ymax,
-            xmin = datapoints$xmin,
-            xmax = datapoints$xmax,
-            ylab = ylab,
-            col = col,
-            bg = bg,
-            datapoints = datapoints,
-            by = if (length(unique(datapoints$by)) == 1) by else datapoints$by,
-            facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
-        )
+        x = c(datapoints$xmin, datapoints$xmax)
+        y = c(datapoints$ymin, datapoints$ymax)
+        ymin = datapoints$ymin
+        ymax = datapoints$ymax
+        xmin = datapoints$xmin
+        xmax = datapoints$xmax
+        by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
+        facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
+        env2env(environment(), settings, c(
+            "x",
+            "y",
+            "ymin",
+            "ymax",
+            "xmin",
+            "xmax",
+            "ylab",
+            "col",
+            "bg",
+            "datapoints",
+            "by",
+            "facet"
+        ))
     }
     return(fun)
 }

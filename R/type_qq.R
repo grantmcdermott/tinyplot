@@ -14,14 +14,14 @@
 type_qq = function(distribution = qnorm) {
   data_qq = function(distribution) {
     fun = function(settings, ...) {
-      list2env(settings[c("datapoints")], environment())
+      env2env(settings, environment(), "datapoints")
 
       y = sort(datapoints$y)
       x = datapoints$x
       x = distribution(ppoints(x))
       datapoints$x = x
       datapoints$y = y
-      update_settings(settings, datapoints = datapoints)
+      env2env(environment(), settings, "datapoints")
     }
   }
 

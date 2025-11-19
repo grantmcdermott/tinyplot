@@ -34,14 +34,13 @@
 #' @export
 type_rug = function(ticksize = 0.03, side = 1, quiet = getOption("warn") < 0, jitter = FALSE, amount = NULL) {
   data_rug = function(settings, ...) {
-    list2env(settings["datapoints"], envir = environment())
+    env2env(settings, environment(), "datapoints")
     if (nrow(datapoints) == 0) {
       msg = "`type_rug() only works on existing plots with x and y data points."
       stop(msg, call. = FALSE)
     }
 
-    out = update_settings(settings, datapoints = datapoints)
-    return(out)
+    env2env(environment(), settings, "datapoints")
   }
   draw_rug = function(.ticksize = ticksize, .side = side, .quiet = quiet, .jitter = jitter, .amount = amount) {
       fun = function(ix, iy, icol, ilwd, ...) {

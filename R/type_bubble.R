@@ -6,9 +6,10 @@ sanitize_bubble = function(settings) {
     bubble_alpha = if (!is.null(alpha)) alpha else 1
     bubble_bg_alpha = if (!is.null(bg) && length(bg)==1 && is.numeric(bg) && bg > 0 && bg <=1) bg else 1
   }
-  settings$datapoints = datapoints
-  settings$bubble_pch = if (bubble) bubble_pch else NULL
-  settings$bubble_alpha = if (bubble) bubble_alpha else NULL
-  settings$bubble_bg_alpha = if (bubble) bubble_bg_alpha else NULL
+  settings[c("datapoints", "bubble_pch", "bubble_alpha", "bubble_bg_alpha")] =
+    list(datapoints = datapoints,
+         bubble_pch = if (bubble) bubble_pch else NULL,
+         bubble_alpha = if (bubble) bubble_alpha else NULL,
+         bubble_bg_alpha = if (bubble) bubble_bg_alpha else NULL)
   settings
 }

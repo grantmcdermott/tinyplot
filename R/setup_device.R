@@ -1,5 +1,5 @@
 setup_device = function(settings) {
-  list2env(settings[c("file", "width", "height")], environment())
+  env2env(settings, environment(), c("file", "width", "height"))
 
   # write to file
   if (!is.null(file)) {

@@ -79,7 +79,7 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 #' @importFrom grDevices nclass.Sturges
 data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL) {
     fun = function(settings, ...) {
-        list2env(settings[c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "null_palette", ".tpar", "col", "bg", "axes", "xaxt", "yaxt")], environment())
+        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "null_palette", "col", "bg", "axes", "xaxt", "yaxt"))
       
         ## process weights
         if (!is.null(weights)) {
@@ -240,45 +240,50 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
           
         ## grayscale flag
         grayscale = null_by && null_palette && is.null(.tpar[["palette.qualitative"]])
-        
-        update_settings(settings,
-          x = c(datapoints$xmin, datapoints$xmax),
-          y = c(datapoints$ymin, datapoints$ymax),
-          ymin = datapoints$ymin,
-          ymax = datapoints$ymax,
-          xmin = datapoints$xmin,
-          xmax = datapoints$xmax,
-          col = col,
-          bg = bg,
-          datapoints = datapoints,
-          by = if (null_by) by else datapoints$by,
-          facet = if (null_facet) facet else datapoints$facet,
-          axes = FALSE,
-          frame.plot = FALSE,
-          xaxt = "n",
-          yaxt = "n",
-          xaxs = "i",
-          yaxs = "i",
-          ylabs = yaxlabels,
-          type_info = list(
-            off = off,
-            x.categorical = x.categorical,
-            nx = nx,
-            ny = ny,
-            xat = xat,
-            yat = yat,
-            xaxlabels = xaxlabels,
-            yaxlabels = yaxlabels,
-            breaks = breaks,
-            axes = axes,
-            xaxt = xaxt,
-            yaxt = yaxt,
-            grayscale = grayscale,
-            x_by = x_by,
-            y_by = y_by
-          ),
-          facet.args = facet.args
+
+        x = c(datapoints$xmin, datapoints$xmax)
+        y = c(datapoints$ymin, datapoints$ymax)
+        ymin = datapoints$ymin
+        ymax = datapoints$ymax
+        xmin = datapoints$xmin
+        xmax = datapoints$xmax
+        by = if (null_by) by else datapoints$by
+        facet = if (null_facet) facet else datapoints$facet
+
+        # Save original values for type_info before overwriting
+        axes_orig = axes
+        xaxt_orig = xaxt
+        yaxt_orig = yaxt
+
+        axes = FALSE
+        frame.plot = FALSE
+        xaxt = "n"
+        yaxt = "n"
+        xaxs = "i"
+        yaxs = "i"
+        ylabs = yaxlabels
+        type_info = list(
+          off = off,
+          x.categorical = x.categorical,
+          nx = nx,
+          ny = ny,
+          xat = xat,
+          yat = yat,
+          xaxlabels = xaxlabels,
+          yaxlabels = yaxlabels,
+          breaks = breaks,
+          axes = axes_orig,
+          xaxt = xaxt_orig,
+          yaxt = yaxt_orig,
+          grayscale = grayscale,
+          x_by = x_by,
+          y_by = y_by
         )
+        env2env(environment(), settings, c(
+          "x", "y", "ymin", "ymax", "xmin", "xmax", "col", "bg", "datapoints",
+          "by", "facet", "axes", "frame.plot", "xaxt", "yaxt", "xaxs", "yaxs",
+          "ylabs", "type_info", "facet.args"
+        ))
         
     }
     return(fun)

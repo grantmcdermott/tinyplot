@@ -14,16 +14,19 @@ type_area = function(alpha = NULL) {
 data_area = function(alpha = alpha) {
     ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)
     fun = function(settings, ...) {
-        list2env(settings[c("datapoints")], environment())
+        env2env(settings, environment(), "datapoints")
         datapoints$ymax = datapoints$y
         datapoints$ymin = rep.int(0, nrow(datapoints))
-        update_settings(settings,
-            datapoints = datapoints,
-            ymax = datapoints$ymax,
-            ymin = datapoints$ymin,
-            type = "ribbon",
-            ribbon.alpha = ribbon.alpha
-        )
+        ymax = datapoints$ymax
+        ymin = datapoints$ymin
+        type = "ribbon"
+        env2env(environment(), settings, c(
+            "datapoints",
+            "ymax",
+            "ymin",
+            "type",
+            "ribbon.alpha"
+        ))
     }
     return(fun)
 }

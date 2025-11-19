@@ -1,13 +1,11 @@
 sanitize_type = function(settings) {
-  list2env(settings[c("type", "dots", "x", "y")], environment())
+  env2env(settings, environment(), c("type", "dots", "x", "y"))
 
   if (inherits(type, "tinyplot_type")) {
-    settings = update_settings(settings, 
-      type = type$name,
-      type_draw = type$draw,
-      type_data = type$data
-    )
-    return(settings)
+    settings$type = type$name
+    settings$type_draw = type$draw
+    settings$type_data = type$data
+    return(invisible(NULL))
   }
 
   known_types = c(
@@ -106,12 +104,8 @@ sanitize_type = function(settings) {
   }
 
   if (inherits(type, "tinyplot_type")) {
-    settings = update_settings(settings, 
-      type = type$name,
-      type_draw = type$draw,
-      type_data = type$data
-    )
+    settings$type = type$name
+    settings$type_draw = type$draw
+    settings$type_data = type$data
   }
-
-  return(settings)
 }

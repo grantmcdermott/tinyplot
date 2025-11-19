@@ -30,7 +30,7 @@ type_lm = function(se = TRUE, level = 0.95) {
 
 data_lm = function(se, level, ...) {
     fun = function(settings, ...) {
-        list2env(settings[c("datapoints")], environment())
+        env2env(settings, environment(), "datapoints")
         dat = split(datapoints, list(datapoints$facet, datapoints$by))
         dat = lapply(dat, function(x) {
             if (nrow(x) == 0) {
@@ -57,7 +57,7 @@ data_lm = function(se, level, ...) {
         })
         datapoints = do.call(rbind, dat)
         datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), ]
-        update_settings(settings, datapoints = datapoints)
+        env2env(environment(), settings, "datapoints")
     }
     return(fun)
 }

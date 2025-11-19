@@ -52,7 +52,7 @@ draw_pointrange = function() {
 
 data_pointrange = function(dodge, fixed.pos) {
   fun = function(settings, ...) {
-    list2env(settings[c("datapoints", "xlabs")], environment())
+    env2env(settings, environment(), c("datapoints", "xlabs"))
 
     if (is.character(datapoints$x)) {
       datapoints$x = as.factor(datapoints$x)
@@ -92,11 +92,12 @@ data_pointrange = function(dodge, fixed.pos) {
       }
     }
 
-    update_settings(settings,
-      x = datapoints$x,
-      xlabs = xlabs,
-      datapoints = datapoints
-    )
+    x = datapoints$x
+    env2env(environment(), settings, c(
+      "x",
+      "xlabs",
+      "datapoints"
+    ))
   }
   return(fun)
 }

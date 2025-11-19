@@ -67,7 +67,7 @@ draw_ribbon = function() {
 data_ribbon = function(ribbon.alpha = NULL) {
     ribbon.alpha = sanitize_ribbon_alpha(ribbon.alpha)
     fun = function(settings, ...) {
-        list2env(settings[c("datapoints", "xlabs", "null_by", "null_facet")], environment())
+        env2env(settings, environment(), c("datapoints", "xlabs", "null_by", "null_facet"))
         # Convert x to factor if it's not already
         if (is.character(datapoints$x)) {
             datapoints$x = as.factor(datapoints$x)
@@ -99,19 +99,21 @@ data_ribbon = function(ribbon.alpha = NULL) {
         if (is.null(datapoints$ymin)) datapoints$ymin = datapoints$y
         if (is.null(datapoints$ymax)) datapoints$ymax = datapoints$y
 
-        out = list(
-            x = datapoints$x,
-            y = datapoints$y,
-            ymin = datapoints$ymin,
-            ymax = datapoints$ymax,
-            xlabs = xlabs,
-            datapoints = datapoints,
-            ribbon.alpha = ribbon.alpha)
+        x = datapoints$x
+        y = datapoints$y
+        ymin = datapoints$ymin
+        ymax = datapoints$ymax
+        by = if (length(unique(datapoints$by)) > 1) datapoints$by else NULL
+        facet = if (length(unique(datapoints$facet)) > 1) datapoints$facet else NULL
 
-        if (length(unique(datapoints$by)) > 1) out[["by"]] = datapoints$by
-        if (length(unique(datapoints$facet)) > 1) out[["facet"]] = datapoints$facet
+        # ribbon.alpha comes from parent scope, so assign it locally
+        ribbon.alpha = ribbon.alpha
 
-        do.call(update_settings, c(list(settings), out))
+        vars_to_copy = c("x", "y", "ymin", "ymax", "xlabs", "datapoints", "ribbon.alpha")
+        if (!is.null(by)) vars_to_copy = c(vars_to_copy, "by")
+        if (!is.null(facet)) vars_to_copy = c(vars_to_copy, "facet")
+
+        env2env(environment(), settings, vars_to_copy)
     }
     return(fun)
 }

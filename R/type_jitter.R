@@ -25,7 +25,7 @@ type_jitter = function(factor = 1, amount = NULL) {
 
 data_jitter = function(factor, amount) {
     fun = function(settings, ...) {
-        list2env(settings["datapoints"], environment())
+        env2env(settings, environment(), "datapoints")
 
         x = datapoints$x
         y = datapoints$y
@@ -51,12 +51,12 @@ data_jitter = function(factor, amount) {
         datapoints$x = x
         datapoints$y = y
 
-        update_settings(settings,
-            datapoints = datapoints,
-            x = x,
-            y = y,
-            xlabs = xlabs,
-            ylabs = ylabs
-        )
+        env2env(environment(), settings, c(
+            "datapoints",
+            "x",
+            "y",
+            "xlabs",
+            "ylabs"
+        ))
     }
 }

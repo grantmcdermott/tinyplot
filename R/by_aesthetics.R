@@ -53,17 +53,10 @@ by_aesthetics = function(settings) {
     adjustcolor = adjustcolor
   )
 
-  update_settings(settings,
-    by_continuous = by_continuous,
-    by_ordered = by_ordered,
-    ngrps = ngrps,
-    pch = pch,
-    lty = lty,
-    lwd = lwd,
-    cex = cex,
-    col = col,
-    bg = bg
-  )
+  settings[c("by_continuous", "by_ordered", "ngrps", "pch", "lty", "lwd", "cex", "col", "bg")] =
+    list(by_continuous = by_continuous, by_ordered = by_ordered, ngrps = ngrps,
+         pch = pch, lty = lty, lwd = lwd, cex = cex, col = col, bg = bg)
+  settings
 }
 
 

@@ -1,5 +1,5 @@
 sanitize_xylab = function(settings) {
-  list2env(settings[c("type", "x", "xlab", "x_dep", "xmin_dep", "xmax_dep", "y", "ylab", "y_dep", "ymin_dep", "ymax_dep")], environment())
+  env2env(settings, environment(), c("type", "x", "xlab", "x_dep", "xmin_dep", "xmax_dep", "y", "ylab", "y_dep", "ymin_dep", "ymax_dep"))
 
   out_xlab = NULL
   out_ylab = NULL
@@ -48,5 +48,6 @@ sanitize_xylab = function(settings) {
     out_ylab = NULL
   }
 
-  update_settings(settings, xlab = out_xlab, ylab = out_ylab)
+  settings$xlab = out_xlab
+  settings$ylab = out_ylab
 }

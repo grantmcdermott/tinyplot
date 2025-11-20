@@ -175,3 +175,16 @@ expect_snapshot_plot(f, label = "legend_lmar_top")
 
 # reset par
 par(op)
+
+
+# custom legend for new tinyplot.foo s3 method
+f = function() {
+  foo = data.frame(x = 1:2, y = 1:2, grp = c("A", "B"))
+  class(foo) = c("foo", "data.frame")
+  tinyplot.foo = function(x, ...) {
+    legend = list(title = 'New Title')
+    plt(y ~ x | grp, data = x, legend = legend, ...)
+  }
+  plt(foo) 
+}
+expect_snapshot_plot(f, label = "legend_custom_s3")

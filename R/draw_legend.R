@@ -701,6 +701,9 @@ sanitize_legend = function(legend, legend_args) {
       legend_args[["x"]] = "right!"
     } else if (is.character(legend)) {
       legend_args = utils::modifyList(legend_args, list(x = legend))
+    } else if (is.list(legend)) {
+      if (is.null(legend[["x"]])) legend[["x"]] = "right!"
+      legend_args = modifyList(legend_args, legend, keep.null = TRUE)
     } else if (class(legend) %in% c("call", "name")) {
       largs = as.list(legend)
       if (is.null(largs[["x"]])) {
@@ -716,7 +719,7 @@ sanitize_legend = function(legend, legend_args) {
         }
       }
       # Finally, combine with any pre-existing legend args (e.g., title from the by label)
-      legend_args = utils::modifyList(legend_args, largs, keep.null = TRUE)
+      legend_args = modifyList(legend_args, largs, keep.null = TRUE)
     }
   }
   return(legend_args)

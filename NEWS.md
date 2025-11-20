@@ -37,7 +37,10 @@ where the formatting is also better._
   the report. (#512 @grantmcdermott)
 - Axis limits are now correctly calculated for factor (and character) variables,
   by coercing to numeric first. We also avoid the redundancy of re-calculating
-  axis limits for secondary plot layers. (#513 @grantmcdermott) 
+  axis limits for secondary plot layers. (#513 @grantmcdermott)
+- Fixed lazy evaluation bug where `legend` passed as a symbol through S3 methods
+  (e.g., `tinyplot.foo`) would fail. (#515 @grantmcdermott)
+
 
 ### Documentation
 

@@ -34,8 +34,19 @@ fun = function() {
 }
 expect_snapshot_plot(fun, label = "pointrange_errorbar")
 
+# issue 511: adding hline to coefplot
+fun = function() {
+  tinyplot(
+    y ~ x, ymin = ymin, ymax = ymax,
+    data = coefs,
+    type = "pointrange",
+    theme = "basic"
+  )
+  tinyplot_add(type = "hline", lty = 2)
+}
+expect_snapshot_plot(fun, label = "pointrange_with_hline")
 
-# Issue #406: dodge pointrage and errorbar
+# Issue #406: dodge pointrange and errorbar
 models = list(
     "Model A" = lm(mpg ~ wt + cyl, data = mtcars),
     "Model B" = lm(mpg ~ wt + hp + cyl, data = mtcars),

@@ -641,11 +641,15 @@ tinyplot.default = function(
     theme = NULL,
     ...) {
 
+  # Force evaluation of legend if it's a symbol to avoid downstream promise
+  # issues. Let sanitize_legend handle it
+  if (!missing(legend) && is.symbol(substitute(legend))) {
+    legend = legend
+  }
 
   #
   ## save parameters and calls -----
   #
-
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
   
@@ -909,6 +913,7 @@ tinyplot.default = function(
   #
   ## legends -----
   #
+  # browser()
   
   # legend labels
   ncolors = length(col)
@@ -943,30 +948,23 @@ tinyplot.default = function(
   } else if (isTRUE(legend)) {
     legend = NULL
   }
-  if (!is.null(legend) && legend == "none") {
+  if (!is.null(legend) && is.character(legend) && legend == "none") {
     legend_args[["x"]] = "none"
     dual_legend = FALSE
   }
 
   if (null_by) {
-    if (is.null(legend)) {
-      # special case: bubble legend, no by legend
-      if (bubble && !dual_legend) {
-        legend_args[["title"]] = cex_dep ## rather by_dep?
-        lgnd_labs = names(bubble_cex)
-        lgnd_cex = bubble_cex * cex_fct_adj
-      } else {
-        legend = "none"
-        legend_args[["x"]] = "none"
-      }
-    } else if (bubble && !dual_legend) {
-        legend_args[["title"]] = cex_dep ## rather by_dep?
-        lgnd_labs = names(bubble_cex)
-        lgnd_cex = bubble_cex * cex_fct_adj
+    if (bubble && !dual_legend) {
+      legend_args[["title"]] = cex_dep
+      lgnd_labs = names(bubble_cex)
+      lgnd_cex = bubble_cex * cex_fct_adj
+    } else if (is.null(legend)) {
+      legend = "none"
+      legend_args[["x"]] = "none"
     }
   }
 
-  if ((is.null(legend) || legend != "none" || bubble) && !add) {
+  if ((is.null(legend) || !is.character(legend) || legend != "none" || bubble) && !add) {
     if (isFALSE(by_continuous) && (!bubble || dual_legend)) {
       if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
@@ -1399,6 +1397,7 @@ tinyplot.formula = function(
 
   ## placeholder for legend title
   legend_args = list(x = NULL)
+  # browser()
 
   ## turn facet into a formula if it does not evaluate successfully
   if (inherits(try(facet, silent = TRUE), "try-error")) {

@@ -641,6 +641,8 @@ tinyplot.default = function(
     theme = NULL,
     ...) {
 
+  # Force evaluation of legend to avoid downstream symbol (promise) issues
+  if (!missing(legend)) legend = legend
 
   #
   ## save parameters and calls -----
@@ -909,6 +911,7 @@ tinyplot.default = function(
   #
   ## legends -----
   #
+  # browser()
   
   # legend labels
   ncolors = length(col)
@@ -1399,6 +1402,7 @@ tinyplot.formula = function(
 
   ## placeholder for legend title
   legend_args = list(x = NULL)
+  # browser()
 
   ## turn facet into a formula if it does not evaluate successfully
   if (inherits(try(facet, silent = TRUE), "try-error")) {

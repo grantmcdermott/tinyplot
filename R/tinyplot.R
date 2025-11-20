@@ -954,20 +954,13 @@ tinyplot.default = function(
   }
 
   if (null_by) {
-    if (is.null(legend)) {
-      # special case: bubble legend, no by legend
-      if (bubble && !dual_legend) {
-        legend_args[["title"]] = cex_dep ## rather by_dep?
-        lgnd_labs = names(bubble_cex)
-        lgnd_cex = bubble_cex * cex_fct_adj
-      } else {
-        legend = "none"
-        legend_args[["x"]] = "none"
-      }
-    } else if (bubble && !dual_legend) {
-        legend_args[["title"]] = cex_dep ## rather by_dep?
-        lgnd_labs = names(bubble_cex)
-        lgnd_cex = bubble_cex * cex_fct_adj
+    if (bubble && !dual_legend) {
+      legend_args[["title"]] = cex_dep
+      lgnd_labs = names(bubble_cex)
+      lgnd_cex = bubble_cex * cex_fct_adj
+    } else if (is.null(legend)) {
+      legend = "none"
+      legend_args[["x"]] = "none"
     }
   }
 

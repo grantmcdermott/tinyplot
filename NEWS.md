@@ -35,6 +35,9 @@ where the formatting is also better._
   the functions called rather than just their names. (#504 @zeileis)
 - Legend labels are now correct if `by` is logical. Thanks to @TCornulier for
   the report. (#512 @grantmcdermott)
+- Axis limits are now correctly calculated for factor (and character) variables,
+  by coercing to numeric first. We also avoid the redundancy of re-calculating
+  axis limits for secondary plot layers. (#513 @grantmcdermott) 
 
 ### Documentation
 

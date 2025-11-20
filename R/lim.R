@@ -23,14 +23,14 @@ lim_args = function(settings) {
   }
 
   if (is.null(xlim)) {
-    xlim = range(c(
+    xlim = range(as.numeric(c(
       datapoints[["x"]], datapoints[["xmin"]],
-      datapoints[["xmax"]]), finite = TRUE)
+      datapoints[["xmax"]])), finite = TRUE)
   }
   if (is.null(ylim)) {
-    ylim = range(c(
+    ylim = range(as.numeric(c(
       datapoints[["y"]], datapoints[["ymin"]],
-      datapoints[["ymax"]]), finite = TRUE)
+      datapoints[["ymax"]])), finite = TRUE)
   }
 
   if (identical(type, "boxplot")) {

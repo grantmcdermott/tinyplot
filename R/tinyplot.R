@@ -641,13 +641,15 @@ tinyplot.default = function(
     theme = NULL,
     ...) {
 
-  # Force evaluation of legend to avoid downstream symbol (promise) issues
-  if (!missing(legend)) legend = legend
+  # Force evaluation of legend if it's a symbol to avoid downstream promise
+  # issues. Let sanitize_legend handle it
+  if (!missing(legend) && is.symbol(substitute(legend))) {
+    legend = legend
+  }
 
   #
   ## save parameters and calls -----
   #
-
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
   
@@ -946,7 +948,7 @@ tinyplot.default = function(
   } else if (isTRUE(legend)) {
     legend = NULL
   }
-  if (!is.null(legend) && legend == "none") {
+  if (!is.null(legend) && is.character(legend) && legend == "none") {
     legend_args[["x"]] = "none"
     dual_legend = FALSE
   }
@@ -969,7 +971,7 @@ tinyplot.default = function(
     }
   }
 
-  if ((is.null(legend) || legend != "none" || bubble) && !add) {
+  if ((is.null(legend) || !is.character(legend) || legend != "none" || bubble) && !add) {
     if (isFALSE(by_continuous) && (!bubble || dual_legend)) {
       if (ngrps > 1) {
         lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)

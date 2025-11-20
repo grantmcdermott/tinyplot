@@ -9,7 +9,7 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
     legend_eval = tryCatch(paste0(legend)[[2]], error = function(e) NULL)
   }
 
-  adj_title = !is.null(legend) && (legend == "top!" || (!is.null(legend_args[["x"]]) && legend_args[["x"]] == "top!") || (is.list(legend_eval) && legend_eval[[1]] == "top!"))
+  adj_title = !is.null(legend) && ((is.character(legend) && legend == "top!") || (!is.null(legend_args[["x"]]) && legend_args[["x"]] == "top!") || (is.list(legend_eval) && legend_eval[[1]] == "top!"))
 
   # For the "top!" legend case, bump main title up to make space for the
   # legend beneath it: Take the normal main title line gap (i.e., 1.7 lines)

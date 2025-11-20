@@ -5,6 +5,12 @@ sanitize_legend = function(legend, legend_args) {
     } else if (is.character(legend)) {
       legend_args = modifyList(legend_args, list(x = legend))
     } else if (is.list(legend)) {
+      # Check if first element is unnamed and character (position keyword)
+      if (is.null(names(legend)) || names(legend)[1] == "") {
+        if (length(legend) >= 1 && is.character(legend[[1]])) {
+          names(legend)[1] = "x"
+        }
+      }
       if (is.null(legend[["x"]])) legend[["x"]] = "right!"
       legend_args = modifyList(legend_args, legend, keep.null = TRUE)
     } else if (class(legend) %in% c("call", "name")) {

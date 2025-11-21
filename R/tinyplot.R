@@ -1196,12 +1196,14 @@ tinyplot.default = function(
     # aside: we need some extra accounting for flipped plots (x -> y)
     if (!flip) {
       labs_orig = "xlabs"
-      labs_new = xlabs
-      dp_var = "x"
+      labs_layer = xlabs
+      dp_var = "x"  
+      dp_ovars = c("rowid", "xmin", "xmax")
     } else {
       labs_orig = "ylabs"
-      labs_new = ylabs
+      labs_layer = ylabs
       dp_var = "y"
+      dp_ovars = c("rowid", "ymin", "ymax")
     }
     # retrieve the relevant axis labs from the original layer (and we only care
     # if it's not null)
@@ -1215,17 +1217,23 @@ tinyplot.default = function(
             datapoints[[dp_var]]
           }
         )
-      } else if (!is.null(names(labs_new))) {
+      } else if (!is.null(names(labs_layer))) {
         # case 2: match implicit integer -> label mapping (e.g., lines added to errorbars)
-        if (setequal(names(labs_new), names(labs_orig))) {
-          datapoints[[dp_var]] = labs_orig[names(labs_new)[datapoints[[dp_var]]]]
+        if (setequal(names(labs_layer), names(labs_orig))) {
+          orig_order = labs_orig[names(labs_layer)[datapoints[[dp_var]]]]
+          dp_var_layer = datapoints[[dp_var]]
+          datapoints[[dp_var]] = orig_order
+          # it's a bit of a pain, but we also have to adjust some ancillary vars
+          for (dov in dp_ovars) {
+            if (identical(datapoints[[dov]], dp_var_layer)) datapoints[[dov]] = orig_order
+          }
           datapoints = datapoints[order(datapoints[[dp_var]]), ]
         }
       }
     }
   }
 
-  
+
   #
   ## split and draw datapoints -----
   #

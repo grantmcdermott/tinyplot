@@ -40,7 +40,7 @@ where the formatting is also better._
   axis limits for secondary plot layers. (#513 @grantmcdermott)
 - Fixed lazy evaluation bug where `legend` passed as a symbol through S3 methods
   (e.g., `tinyplot.foo`) would fail. (#515 @grantmcdermott)
-- Add layers, particularly from `tinyplot_add()`, should now respect the x-axis
+- Added layers, particularly from `tinyplot_add()`, should now respect the x-axis
   order of the original plot layer. This should ensure that we don't end up with
   misaligned layers. For example, when adding a ribbon on top of an errorbar
   plot. (#517 @grantmcdermott)

@@ -913,7 +913,6 @@ tinyplot.default = function(
   #
   ## legends -----
   #
-  # browser()
   
   # legend labels
   ncolors = length(col)
@@ -1183,6 +1182,59 @@ tinyplot.default = function(
 
 
   #
+  ## layering axis alignment -----
+  #
+
+  # ensure added layers respect the x-axis order of the original plot layer
+  #   (e.g., when adding lines or ribbons on top of errorbars)
+  if (!add) {
+    # keep track of the x(y)labs from the original (1st) layer
+    assign("xlabs", xlabs, envir = get(".tinyplot_env", envir = parent.env(environment())))
+    assign("ylabs", ylabs, envir = get(".tinyplot_env", envir = parent.env(environment())))
+  } else {
+    # check whether we need to adjust any added layers
+    # aside: we need some extra accounting for flipped plots (x -> y)
+    if (!flip) {
+      labs_orig = "xlabs"
+      labs_layer = xlabs
+      dp_var = "x"  
+      dp_ovars = c("rowid", "xmin", "xmax")
+    } else {
+      labs_orig = "ylabs"
+      labs_layer = ylabs
+      dp_var = "y"
+      dp_ovars = c("rowid", "ymin", "ymax")
+    }
+    # retrieve the relevant axis labs from the original layer (and we only care
+    # if it's not null)
+    labs_orig = get(labs_orig, envir = get(".tinyplot_env", envir = parent.env(environment())))
+    if (!is.null(names(labs_orig))) {
+      if (is.factor(datapoints[[dp_var]])) {
+        # case 1: relevel a factor (e.g., ribbon added to errorbars)
+        datapoints[[dp_var]] = tryCatch(
+          factor(datapoints[[dp_var]], levels = names(labs_orig)),
+          error = function(e) {
+            datapoints[[dp_var]]
+          }
+        )
+      } else if (!is.null(names(labs_layer))) {
+        # case 2: match implicit integer -> label mapping (e.g., lines added to errorbars)
+        if (setequal(names(labs_layer), names(labs_orig))) {
+          orig_order = labs_orig[names(labs_layer)[datapoints[[dp_var]]]]
+          dp_var_layer = datapoints[[dp_var]]
+          datapoints[[dp_var]] = orig_order
+          # it's a bit of a pain, but we also have to adjust some ancillary vars
+          for (dov in dp_ovars) {
+            if (identical(datapoints[[dov]], dp_var_layer)) datapoints[[dov]] = orig_order
+          }
+          datapoints = datapoints[order(datapoints[[dp_var]]), ]
+        }
+      }
+    }
+  }
+
+
+  #
   ## split and draw datapoints -----
   #
 
@@ -1397,7 +1449,6 @@ tinyplot.formula = function(
 
   ## placeholder for legend title
   legend_args = list(x = NULL)
-  # browser()
 
   ## turn facet into a formula if it does not evaluate successfully
   if (inherits(try(facet, silent = TRUE), "try-error")) {

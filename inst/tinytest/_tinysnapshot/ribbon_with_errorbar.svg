@@ -34,9 +34,9 @@
 <line x1='330.40' y1='430.56' x2='330.40' y2='437.76' style='stroke-width: 0.75;' />
 <line x1='458.40' y1='430.56' x2='458.40' y2='437.76' style='stroke-width: 0.75;' />
 <text x='74.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='54.67px' lengthAdjust='spacingAndGlyphs'>(Intercept)</text>
-<text x='202.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>hp</text>
-<text x='330.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='59.34px' lengthAdjust='spacingAndGlyphs'>factor(cyl)6</text>
-<text x='458.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='59.34px' lengthAdjust='spacingAndGlyphs'>factor(cyl)8</text>
+<text x='202.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='59.34px' lengthAdjust='spacingAndGlyphs'>factor(cyl)6</text>
+<text x='330.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='59.34px' lengthAdjust='spacingAndGlyphs'>factor(cyl)8</text>
+<text x='458.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>hp</text>
 <line x1='59.04' y1='391.79' x2='59.04' y2='87.28' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='391.79' x2='51.84' y2='391.79' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='315.66' x2='51.84' y2='315.66' style='stroke-width: 0.75;' />
@@ -68,15 +68,24 @@
 <line x1='59.04' y1='239.54' x2='473.76' y2='239.54' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='59.04' y1='163.41' x2='473.76' y2='163.41' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='59.04' y1='87.28' x2='473.76' y2='87.28' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<polygon points='74.40,122.32 202.40,386.65 330.40,416.80 458.40,316.09 458.40,315.60 330.40,344.26 202.40,335.53 74.40,72.80 ' style='stroke-width: 0.75; stroke: none; fill: #000000; fill-opacity: 0.20;' />
+<polyline points='74.40,97.56 202.40,361.09 330.40,380.53 458.40,315.84 ' style='stroke-width: 0.75;' />
 <line x1='74.40' y1='122.32' x2='74.40' y2='72.80' style='stroke-width: 0.75;' />
-<line x1='202.40' y1='316.09' x2='202.40' y2='315.60' style='stroke-width: 0.75;' />
-<line x1='330.40' y1='386.65' x2='330.40' y2='335.53' style='stroke-width: 0.75;' />
-<line x1='458.40' y1='416.80' x2='458.40' y2='344.26' style='stroke-width: 0.75;' />
+<polyline points='70.80,122.32 74.40,122.32 78.00,122.32 ' style='stroke-width: 0.75;' />
+<polyline points='78.00,72.80 74.40,72.80 70.80,72.80 ' style='stroke-width: 0.75;' />
+<line x1='202.40' y1='386.65' x2='202.40' y2='335.53' style='stroke-width: 0.75;' />
+<polyline points='198.80,386.65 202.40,386.65 206.00,386.65 ' style='stroke-width: 0.75;' />
+<polyline points='206.00,335.53 202.40,335.53 198.80,335.53 ' style='stroke-width: 0.75;' />
+<line x1='330.40' y1='416.80' x2='330.40' y2='344.26' style='stroke-width: 0.75;' />
+<polyline points='326.80,416.80 330.40,416.80 334.00,416.80 ' style='stroke-width: 0.75;' />
+<polyline points='334.00,344.26 330.40,344.26 326.80,344.26 ' style='stroke-width: 0.75;' />
+<line x1='458.40' y1='316.09' x2='458.40' y2='315.60' style='stroke-width: 0.75;' />
+<polyline points='454.80,316.09 458.40,316.09 462.00,316.09 ' style='stroke-width: 0.75;' />
+<polyline points='462.00,315.60 458.40,315.60 454.80,315.60 ' style='stroke-width: 0.75;' />
 <circle cx='74.40' cy='97.56' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
-<circle cx='202.40' cy='315.84' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
-<circle cx='330.40' cy='361.09' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
-<circle cx='458.40' cy='380.53' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
-<line x1='59.04' y1='315.66' x2='473.76' y2='315.66' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
+<circle cx='202.40' cy='361.09' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='330.40' cy='380.53' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='458.40' cy='315.84' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 </g>
 </g>
 </svg>

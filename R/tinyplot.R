@@ -1225,6 +1225,7 @@ tinyplot.default = function(
     }
   }
 
+  
   #
   ## split and draw datapoints -----
   #

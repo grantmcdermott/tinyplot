@@ -76,6 +76,8 @@
 <circle cx='202.40' cy='315.84' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 <circle cx='330.40' cy='361.09' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 <circle cx='458.40' cy='380.53' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<polygon points='74.40,122.32 202.40,316.09 330.40,386.65 458.40,416.80 458.40,344.26 330.40,335.53 202.40,315.60 74.40,72.80 ' style='stroke-width: 0.75; stroke: none; fill: #000000; fill-opacity: 0.20;' />
+<polyline points='74.40,97.56 202.40,315.84 330.40,361.09 458.40,380.53 ' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='315.66' x2='473.76' y2='315.66' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
 </g>
 </g>

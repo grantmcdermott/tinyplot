@@ -1217,6 +1217,7 @@ tinyplot.default = function(
             datapoints[[dp_var]]
           }
         )
+        datapoints = datapoints[order(datapoints[[dp_var]]), ]
       } else if (!is.null(names(labs_layer))) {
         # case 2: match implicit integer -> label mapping (e.g., lines added to errorbars)
         if (setequal(names(labs_layer), names(labs_orig))) {

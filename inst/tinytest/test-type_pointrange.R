@@ -94,3 +94,15 @@ fun = function() {
     type = type_pointrange(dodge = 0.2))
 }
 expect_snapshot_plot(fun, label = "pointrange_dodge_01")
+
+# issue #519 layer on top of grouped plots
+# (don't care about dodge yet; revist when #493 resolved)
+
+fun = function() {
+  tinyplot(estimate ~ term | model,
+    ymin = conf.low, ymax = conf.high,
+    data = results,
+    type = type_pointrange())
+  tinyplot_add(type = 'l')
+}
+expect_snapshot_plot(fun, label = "pointrange_with_layers_grouped")

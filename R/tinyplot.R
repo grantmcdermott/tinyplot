@@ -1182,11 +1182,11 @@ tinyplot.default = function(
 
 
   #
-  ## split and draw datapoints -----
+  ## layering axis alignment -----
   #
 
-  # layering gotcha for ordered factors along the x-axis (e.g., when adding
-  # lines or ribbons on top of errorbars)
+  # ensure added layers respect the x-axis order of the original plot layer
+  #   (e.g., when adding lines or ribbons on top of errorbars)
   if (!add) {
     # keep track of the x(y)labs from the original (1st) layer
     assign("xlabs", xlabs, envir = get(".tinyplot_env", envir = parent.env(environment())))
@@ -1224,6 +1224,10 @@ tinyplot.default = function(
       }
     }
   }
+
+  #
+  ## split and draw datapoints -----
+  #
 
   # Finally, we can draw all of the plot elements (points, lines, etc.)
   # We'll do this via a nested loops:

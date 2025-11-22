@@ -46,7 +46,7 @@ where the formatting is also better._
 - Added layers, particularly from `tinyplot_add()`, should now respect the
   x-axis order of the original plot layer. This should ensure that we don't end
   up with misaligned layers. For example, when adding a ribbon on top of an
-  errorbar plot. (#517, #520 @grantmcdermott)
+  errorbar plot. (#517, #520, #523 @grantmcdermott)
 
 
 ### Documentation

@@ -4,12 +4,7 @@
 \alias{dodge_positions}
 \title{Dodge positions for grouped data}
 \usage{
-dodge_positions(
-  datapoints,
-  dodge,
-  fixed.pos = TRUE,
-  cols = c("x", "xmin", "xmax")
-)
+dodge_positions(datapoints, dodge, fixed.pos = TRUE, cols = NULL)
 }
 \arguments{
 \item{datapoints}{Data frame containing plot data with at least \code{x} and \code{by}
@@ -22,8 +17,8 @@ performed.}
 number of groups in \code{by}. If \code{FALSE}, dodge positions are calculated
 separately for each unique x value.}
 
-\item{cols}{Character vector of column names to dodge. Defaults to
-\code{c("x", "xmin", "xmax")}.}
+\item{cols}{Character vector of column names to dodge. If \code{NULL} (default),
+automatically detects and dodges \code{x}, \code{xmin}, and \code{xmax} if they exist.}
 }
 \value{
 Modified \code{datapoints} data frame with dodged positions.
@@ -37,5 +32,8 @@ When \code{fixed.pos = TRUE}, all groups are dodged by the same amount across al
 x values, which is useful when x is categorical. When \code{fixed.pos = FALSE},
 dodging is calculated independently for each x value, which is useful when
 the number of groups varies across x values.
+
+If \code{cols} is not specified, the function automatically dodges \code{x} and any
+\code{xmin}/\code{xmax} columns that exist in the data.
 }
 \keyword{internal}

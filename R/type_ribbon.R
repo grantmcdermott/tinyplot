@@ -4,11 +4,20 @@
 #'   If no `alpha` value is provided, then will default to `tpar("ribbon.alpha")`
 #'   (i.e., probably `0.2` unless this has been overridden by the user in their global
 #'   settings.)
+#' @inheritParams type_errorbar
 #'
 #' @description Type constructor functions for producing polygon ribbons, which
 #' define a `y` interval (usually spanning from `ymin` to `ymax`) for each
 #' `x` value. Area plots are a special case of ribbon plot where `ymin` is
 #' set to 0 and `ymax` is set to `y`.
+#' 
+#' @section Dodging ribbon plots:
+#' 
+#' We support dodging for grouped ribbon plots, enabling similar functionality
+#' to dodged errorbar and pointrange plots. However, it is strongly recommended
+#' that dodging is only implemented for cases where the x-axis comprises a
+#' limited number of discrete cases (e.g., coefficient or event-study plots).
+#' See Examples.
 #'
 #' @examples
 #' x = 1:100 / 10
@@ -37,11 +46,45 @@
 #'
 #' # Area plots are often used for time series charts
 #' tinyplot(AirPassengers, type = "area")
+#' 
+#' #
+#' ## Dodged ribbon/area plots
+#' 
+#' # Dodged ribbon or area plots can be useful in cases where there is strong
+#' # overlap across groups (and a limited number of discrete x-axis values).
+#' 
+#' dat = data.frame(
+#'   x = rep(c("Before", "After"), each = 2),
+#'   grp = rep(c("A", "B"), 2),
+#'   y = c(10, 10.5, 15, 15.3),
+#'   lwr = c(8, 8.5, 13, 13.3),
+#'   upr = c(12, 12.5, 17, 17.3)
+#' )
+#' 
+#' tinyplot(
+#'   y ~ x | grp,
+#'   data = dat,
+#'   ymin = lwr, ymax = upr,
+#'   type = type_ribbon(),
+#'   main = "Overlappling ribbons"
+#' )
+#' 
+#' tinyplot(
+#'   y ~ x | grp,
+#'   data = dat,
+#'   ymin = lwr, ymax = upr,
+#'   type = type_ribbon(dodge = 0.1),
+#'   main = "Dodged ribbons"
+#' )
+#' 
 #' @export
-type_ribbon = function(alpha = NULL) {
+type_ribbon = function(alpha = NULL, dodge = 0, fixed.pos = FALSE) {
+    assert_numeric(dodge, len = 1, lower = 0)
+    assert_logical(fixed.pos)
+    
     out = list(
         draw = draw_ribbon(),
-        data = data_ribbon(ribbon.alpha = alpha),
+        data = data_ribbon(ribbon.alpha = alpha, dodge = dodge, fixed.pos = fixed.pos),
         name = "ribbon"
     )
     class(out) = "tinyplot_type"
@@ -64,7 +107,7 @@ draw_ribbon = function() {
 }
 
 
-data_ribbon = function(ribbon.alpha = NULL) {
+data_ribbon = function(ribbon.alpha = NULL, dodge = 0, fixed.pos = FALSE) {
     ribbon.alpha = sanitize_ribbon_alpha(ribbon.alpha)
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "xlabs", "null_by", "null_facet"))
@@ -80,6 +123,11 @@ data_ribbon = function(ribbon.alpha = NULL) {
             datapoints$x = as.integer(datapoints$x)
         } else {
             xlabs = NULL
+        }
+        
+        # dodge (auto-detects x, xmin, xmax columns)
+        if (dodge != 0) {
+            datapoints = dodge_positions(datapoints, dodge, fixed.pos)
         }
 
         if (null_by && null_facet) {

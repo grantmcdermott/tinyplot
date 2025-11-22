@@ -19,6 +19,9 @@ where the formatting is also better._
 
 - `type_text()` gains a `family` argument for controlling the font family,
   separate to the main plot text elements. (#494 @grantmcdermott)
+- `type_ribbon()` gains a `dodge` argument, supporting similar functionality to
+  `type_errorbar()` and `type_pointrange()` for dodging overlapping groups.
+  (#522 @grantmcdermott)
 
 ### Bug fixes
 

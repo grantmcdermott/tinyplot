@@ -586,7 +586,7 @@ numeric value between 0 and 1 specifying the opacity of ribbon shading If no <co
 <code id="dodge">dodge</code>
 </td>
 <td>
-Numeric value (&gt;= 0) for dodging of overlapping <code>by</code> groups. Dodging is scaled relative to the x-axis tick locations (i.e., unique levels of <code>x</code>). For example, <code>dodge = 0.5</code> would place the outermost dodged groups exactly midway the between axis ticks. Default value is 0 (no dodging).
+Numeric value in the range <code style="white-space: pre;">[0,1)</code>, or logical. If numeric, values are scaled relative to x-axis break spacing (e.g., <code>dodge = 0.1</code> places outermost groups one-tenth of the way to adjacent breaks; <code>dodge = 0.5</code> places them midway between breaks; etc.). Values &lt; 0.5 are recommended. If <code>TRUE</code>, dodge width is calculated automatically based on the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If <code>FALSE</code> or 0, no dodging is performed. Default is 0.
 </td>
 </tr>
 <tr>

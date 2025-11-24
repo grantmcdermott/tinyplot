@@ -19,9 +19,10 @@ where the formatting is also better._
 
 - `type_text()` gains a `family` argument for controlling the font family,
   separate to the main plot text elements. (#494 @grantmcdermott)
-- `type_ribbon()` gains a `dodge` argument, supporting similar functionality to
-  `type_errorbar()` and `type_pointrange()` for dodging overlapping groups.
-  (#522 @grantmcdermott)
+- Expanded `dodge` argument capabilities and consistency for overlapping groups:
+  - Logical `dodge = TRUE` gives automatic width spacing based on the number
+    of groups (#525 @grantmcdermott)
+  - `dodge` argument now supported in `type_ribbon()` (#522 @grantmcdermott)
 
 ### Bug fixes
 
@@ -45,8 +46,8 @@ where the formatting is also better._
   (e.g., `tinyplot.foo`) would fail. (#515 @grantmcdermott)
 - Added layers, particularly from `tinyplot_add()`, should now respect the
   x-axis order of the original plot layer. This should ensure that we don't end
-  up with misaligned layers. For example, when adding a ribbon on top of an
-  errorbar plot. (#517, #520, #523 @grantmcdermott)
+  up with misaligned layers. For example, when ribbon is added on top of an
+  errorbar plot. (#517, #520, #523, #526 @grantmcdermott)
 
 
 ### Documentation

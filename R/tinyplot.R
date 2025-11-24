@@ -795,6 +795,7 @@ tinyplot.default = function(
 
     # misc
     flip          = flip,
+    dodge         = NULL,
     by            = by,
     dots          = dots,
     type_info     = list() # pass type-specific info from type_data to type_draw

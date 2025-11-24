@@ -4,7 +4,13 @@
 \alias{dodge_positions}
 \title{Dodge positions for grouped data}
 \usage{
-dodge_positions(datapoints, dodge, fixed.pos = TRUE, cols = NULL)
+dodge_positions(
+  datapoints,
+  dodge,
+  fixed.pos = TRUE,
+  cols = NULL,
+  settings = NULL
+)
 }
 \arguments{
 \item{datapoints}{Data frame containing plot data with at least \code{x} and \code{by}
@@ -19,6 +25,9 @@ separately for each unique x value.}
 
 \item{cols}{Character vector of column names to dodge. If \code{NULL} (default),
 automatically detects and dodges \code{x}, \code{xmin}, and \code{xmax} if they exist.}
+
+\item{settings}{Environment containing plot settings. If \code{NULL} (default),
+retrieved from the calling environment.}
 }
 \value{
 Modified \code{datapoints} data frame with dodged positions.

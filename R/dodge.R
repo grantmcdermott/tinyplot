@@ -12,6 +12,8 @@
 #'   separately for each unique x value.
 #' @param cols Character vector of column names to dodge. If `NULL` (default),
 #'   automatically detects and dodges `x`, `xmin`, and `xmax` if they exist.
+#' @param settings Environment containing plot settings. If `NULL` (default),
+#'   retrieved from the calling environment.
 #'
 #' @return Modified `datapoints` data frame with dodged positions.
 #'
@@ -29,11 +31,17 @@ dodge_positions = function(
   datapoints,
   dodge,
   fixed.pos = TRUE,
-  cols = NULL
+  cols = NULL,
+  settings = NULL
 ) {
+  if (is.null(settings)) {
+    settings = get("settings", envir = parent.frame())
+  }
+  
   if (dodge == 0) {
     return(datapoints)
   }
+  settings$dodge = dodge
   
   # Auto-detect columns to dodge if not specified
   if (is.null(cols)) {
@@ -64,3 +72,4 @@ dodge_positions = function(
 
   datapoints
 }
+

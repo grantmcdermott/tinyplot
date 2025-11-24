@@ -29,12 +29,13 @@ align_layer = function(settings) {
         }
         settings$datapoints[["x"]] = x_new
         # Adjust ancillary variables
-        for (v in c("rowid", "xmin", "xmax")) {
-          if (identical(settings$datapoints[[v]], x_layer)) {
+        for (v in c("xmin", "xmax")) {
+          if (identical(settings$datapoints[[v]], unname(x_layer))) {
             settings$datapoints[[v]] = x_new
           }
         }
         settings$datapoints = settings$datapoints[order(settings$datapoints[["x"]]), ]
+        settings$datapoints[["rowid"]] = seq_len(nrow(settings$datapoints))
       }
     }
   }

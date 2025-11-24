@@ -1,9 +1,6 @@
 #' @rdname type_errorbar
 #' @export
 type_pointrange = function(dodge = 0, fixed.pos = FALSE) {
-  assert_numeric(dodge, len = 1, lower = 0)
-  assert_logical(fixed.pos)
-
   out = list(
     draw = draw_pointrange(),
     data = data_pointrange(dodge = dodge, fixed.pos = fixed.pos),

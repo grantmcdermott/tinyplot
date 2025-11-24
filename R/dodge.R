@@ -5,11 +5,18 @@
 #'
 #' @param datapoints Data frame containing plot data with at least `x` and `by`
 #'   columns.
-#' @param dodge Numeric value specifying the dodge amount. If 0, no dodging is
-#'   performed.
-#' @param fixed.pos Logical. If `TRUE`, dodge positions are fixed based on the
-#'   number of groups in `by`. If `FALSE`, dodge positions are calculated
-#'   separately for each unique x value.
+#' @param dodge Numeric value in the range `[0,1)`, or logical. If numeric,
+#'   values are scaled relative to x-axis break spacing (e.g., `dodge = 0.1`
+#'   places outermost groups one-tenth of the way to adjacent breaks;
+#'   `dodge = 0.5` places them midway between breaks; etc.). Values < 0.5 are
+#'   recommended. If `TRUE`, dodge width is calculated automatically based on
+#'   the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If
+#'   `FALSE` or 0, no dodging is performed. Default is 0.
+#' @param fixed.pos Logical indicating whether dodged groups should retain a
+#'   fixed relative position based on their group value. Relevant for `x`
+#'   categories that only have a subset of the total number of groups. Defaults
+#'   to `FALSE`, in which case dodging is based on the number of unique groups
+#'   present in that `x` category alone. See Examples.
 #' @param cols Character vector of column names to dodge. If `NULL` (default),
 #'   automatically detects and dodges `x`, `xmin`, and `xmax` if they exist.
 #' @param settings Environment containing plot settings. If `NULL` (default),
@@ -38,8 +45,28 @@ dodge_positions = function(
     settings = get("settings", envir = parent.frame())
   }
   
+  if (is.logical(dodge)) {
+    if (isTRUE(dodge)) {
+      n = nlevels(datapoints$by)
+      dodge = if (n == 1) 0 else if (n <= 5) (n - 1) * 0.1 else 0.45
+    } else {
+      dodge = 0
+    }
+  }
+
+  assert_numeric(dodge, len = 1, lower = 0, upper = 1)
+  if (dodge >= 1) {
+  stop("`dodge` must be in the range [0,1).", call. = FALSE)
+  }
+  assert_logical(fixed.pos)
+  
   if (dodge == 0) {
     return(datapoints)
+  } else if (dodge > 0.5) {
+    warning(
+      "Argument `dodge = ", dodge, "` exceeds 0.5. ",
+      "Large dodge values may position outer groups closer to neighboring axis breaks."
+    )
   }
   settings$dodge = dodge
   

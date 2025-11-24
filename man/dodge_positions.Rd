@@ -16,12 +16,19 @@ dodge_positions(
 \item{datapoints}{Data frame containing plot data with at least \code{x} and \code{by}
 columns.}
 
-\item{dodge}{Numeric value specifying the dodge amount. If 0, no dodging is
-performed.}
+\item{dodge}{Numeric value in the range \verb{[0,1)}, or logical. If numeric,
+values are scaled relative to x-axis break spacing (e.g., \code{dodge = 0.1}
+places outermost groups one-tenth of the way to adjacent breaks;
+\code{dodge = 0.5} places them midway between breaks; etc.). Values < 0.5 are
+recommended. If \code{TRUE}, dodge width is calculated automatically based on
+the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If
+\code{FALSE} or 0, no dodging is performed. Default is 0.}
 
-\item{fixed.pos}{Logical. If \code{TRUE}, dodge positions are fixed based on the
-number of groups in \code{by}. If \code{FALSE}, dodge positions are calculated
-separately for each unique x value.}
+\item{fixed.pos}{Logical indicating whether dodged groups should retain a
+fixed relative position based on their group value. Relevant for \code{x}
+categories that only have a subset of the total number of groups. Defaults
+to \code{FALSE}, in which case dodging is based on the number of unique groups
+present in that \code{x} category alone. See Examples.}
 
 \item{cols}{Character vector of column names to dodge. If \code{NULL} (default),
 automatically detects and dodges \code{x}, \code{xmin}, and \code{xmax} if they exist.}

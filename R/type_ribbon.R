@@ -79,9 +79,6 @@
 #' 
 #' @export
 type_ribbon = function(alpha = NULL, dodge = 0, fixed.pos = FALSE) {
-    assert_numeric(dodge, len = 1, lower = 0)
-    assert_logical(fixed.pos)
-    
     out = list(
         draw = draw_ribbon(),
         data = data_ribbon(ribbon.alpha = alpha, dodge = dodge, fixed.pos = fixed.pos),

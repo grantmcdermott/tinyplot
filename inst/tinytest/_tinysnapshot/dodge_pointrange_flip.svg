@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA='>
+    <rect x='0.00' y='0.00' width='504.00' height='504.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<circle cx='443.00' cy='237.60' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='443.00' cy='252.00' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
+<circle cx='443.00' cy='266.40' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #61D04F;' />
+<text x='468.05' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.69px' lengthAdjust='spacingAndGlyphs'>model</text>
+<text x='453.80' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='43.36px' lengthAdjust='spacingAndGlyphs'>Model A</text>
+<text x='453.80' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Model B</text>
+<text x='453.80' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.69px' lengthAdjust='spacingAndGlyphs'>Model C</text>
+</g>
+<defs>
+  <clipPath id='cpMC4wMHw0MTYuNDd8MC4wMHw1MDQuMDA='>
+    <rect x='0.00' y='0.00' width='416.47' height='504.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw0MTYuNDd8MC4wMHw1MDQuMDA=)'>
+<text x='237.76' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='45.34px' lengthAdjust='spacingAndGlyphs'>estimate</text>
+<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='24.00px' lengthAdjust='spacingAndGlyphs'>term</text>
+</g>
+<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<line x1='115.49' y1='430.56' x2='381.96' y2='430.56' style='stroke-width: 0.75;' />
+<line x1='115.49' y1='430.56' x2='115.49' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='182.11' y1='430.56' x2='182.11' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='248.72' y1='430.56' x2='248.72' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='315.34' y1='430.56' x2='315.34' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='381.96' y1='430.56' x2='381.96' y2='437.76' style='stroke-width: 0.75;' />
+<text x='115.49' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='182.11' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text x='248.72' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>20</text>
+<text x='315.34' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>30</text>
+<text x='381.96' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>40</text>
+<line x1='59.04' y1='405.70' x2='59.04' y2='72.80' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='405.70' x2='51.84' y2='405.70' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='294.74' x2='51.84' y2='294.74' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='183.77' x2='51.84' y2='183.77' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='72.80' x2='51.84' y2='72.80' style='stroke-width: 0.75;' />
+<text transform='translate(41.76,405.70) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='54.67px' lengthAdjust='spacingAndGlyphs'>(Intercept)</text>
+<text transform='translate(41.76,294.74) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='12.00px' lengthAdjust='spacingAndGlyphs'>wt</text>
+<text transform='translate(41.76,183.77) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='14.67px' lengthAdjust='spacingAndGlyphs'>cyl</text>
+<text transform='translate(41.76,72.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>hp</text>
+<polygon points='59.04,430.56 416.47,430.56 416.47,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
+</g>
+<defs>
+  <clipPath id='cpNTkuMDR8NDE2LjQ3fDU5LjA0fDQzMC41Ng=='>
+    <rect x='59.04' y='59.04' width='357.43' height='371.52' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNTkuMDR8NDE2LjQ3fDU5LjA0fDQzMC41Ng==)'>
+<line x1='115.49' y1='430.56' x2='115.49' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='182.11' y1='430.56' x2='182.11' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='248.72' y1='430.56' x2='248.72' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='315.34' y1='430.56' x2='315.34' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='381.96' y1='430.56' x2='381.96' y2='59.04' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='59.04' y1='405.70' x2='416.47' y2='405.70' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='59.04' y1='350.22' x2='416.47' y2='350.22' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='59.04' y1='294.74' x2='416.47' y2='294.74' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='59.04' y1='239.25' x2='416.47' y2='239.25' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='59.04' y1='183.77' x2='416.47' y2='183.77' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='59.04' y1='128.28' x2='416.47' y2='128.28' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='59.04' y1='72.80' x2='416.47' y2='72.80' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
+<line x1='356.50' y1='416.80' x2='403.23' y2='416.80' style='stroke-width: 0.75;' />
+<line x1='83.92' y1='305.83' x2='104.54' y2='305.83' style='stroke-width: 0.75;' />
+<line x1='99.79' y1='189.32' x2='111.09' y2='189.32' style='stroke-width: 0.75;' />
+<circle cx='379.87' cy='416.80' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='94.23' cy='305.83' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='105.44' cy='189.32' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<line x1='349.26' y1='405.70' x2='398.03' y2='405.70' style='stroke-width: 0.75; stroke: #DF536B;' />
+<line x1='84.28' y1='294.74' x2='104.50' y2='294.74' style='stroke-width: 0.75; stroke: #DF536B;' />
+<line x1='115.21' y1='72.80' x2='115.53' y2='72.80' style='stroke-width: 0.75; stroke: #DF536B;' />
+<line x1='101.70' y1='178.22' x2='116.73' y2='178.22' style='stroke-width: 0.75; stroke: #DF536B;' />
+<circle cx='373.64' cy='405.70' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
+<circle cx='94.39' cy='294.74' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
+<circle cx='115.37' cy='72.80' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
+<circle cx='109.22' cy='178.22' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
+<line x1='338.33' y1='394.61' x2='389.42' y2='394.61' style='stroke-width: 0.75; stroke: #61D04F;' />
+<line x1='72.28' y1='283.64' x2='87.49' y2='283.64' style='stroke-width: 0.75; stroke: #61D04F;' />
+<circle cx='363.87' cy='394.61' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #61D04F;' />
+<circle cx='79.88' cy='283.64' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #61D04F;' />
+</g>
+</g>
+</svg>

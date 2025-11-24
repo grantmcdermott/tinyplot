@@ -8,20 +8,29 @@ where the formatting is also better._
 
 ### Breaking change
 
-- Internal settings and parameters are now stored in an environment called
-  `settings`, which can be accessed and modified by type-specific functions.
-  This may require changes to users' custom type functions that previously
-  accessed settings as passed arguments. This change was necessary to improve
-  the modularity and maintainability of the codebase, and also to add downstream
-  flexibility. (#473 @vincentarelbundock and @grantmcdermott)
+- "Breaking" change for internal development and custom types only:
+  The plot settings and parameters from individual `tinyplot` calls are now
+  stored in a dedicated (temporary) internal environment called `settings`,
+  which can be accessed and modified by type-specific functions. This change
+  will enable various internal enhancements, from improving the modularity and
+  maintainability of the `tinyplot` codebase, to reducing memory overhead and
+  performance (since we require fewer object copies). Looking ahead, we also
+  expect that it will make it easier to support new features and integration 
+  with downstream packages. Most `tinyplot` users should be unaffected by these
+  internal changes. However, users who have defined their own custom types will
+  need to make some adjustments to match the new `settings` logic; details are
+  provided in the updated `Types` vignette. (#473 @vincentarelbundock and @grantmcdermott)
 
 ### New features
 
 - `type_text()` gains a `family` argument for controlling the font family,
   separate to the main plot text elements. (#494 @grantmcdermott)
-- `type_ribbon()` gains a `dodge` argument, supporting similar functionality to
-  `type_errorbar()` and `type_pointrange()` for dodging overlapping groups.
-  (#522 @grantmcdermott)
+- Expanded `dodge` argument capabilities and consistency for overlapping groups:
+  - Logical `dodge = TRUE` gives automatic width spacing based on the number
+    of groups. (#525 @grantmcdermott)
+  - We now enforce that numeric `dodge` values must be in the range `[0,1)`.
+    (#526 @grantmcdermott)
+  - `dodge` argument now supported in `type_ribbon()` (#522 @grantmcdermott)
 
 ### Bug fixes
 
@@ -45,8 +54,8 @@ where the formatting is also better._
   (e.g., `tinyplot.foo`) would fail. (#515 @grantmcdermott)
 - Added layers, particularly from `tinyplot_add()`, should now respect the
   x-axis order of the original plot layer. This should ensure that we don't end
-  up with misaligned layers. For example, when adding a ribbon on top of an
-  errorbar plot. (#517, #520, #523 @grantmcdermott)
+  up with misaligned layers. For example, when ribbon is added on top of an
+  errorbar plot. (#517, #520, #523, #526 @grantmcdermott)
 
 
 ### Documentation

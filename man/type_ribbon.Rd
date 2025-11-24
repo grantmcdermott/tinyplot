@@ -15,11 +15,13 @@ If no \code{alpha} value is provided, then will default to \code{tpar("ribbon.al
 (i.e., probably \code{0.2} unless this has been overridden by the user in their global
 settings.)}
 
-\item{dodge}{Numeric value (>= 0) for dodging of overlapping \code{by} groups.
-Dodging is scaled relative to the x-axis tick locations (i.e., unique
-levels of \code{x}). For example, \code{dodge = 0.5} would place the outermost dodged
-groups exactly midway the between axis ticks. Default value is 0 (no
-dodging).}
+\item{dodge}{Numeric value in the range \verb{[0,1)}, or logical. If numeric,
+values are scaled relative to x-axis break spacing (e.g., \code{dodge = 0.1}
+places outermost groups one-tenth of the way to adjacent breaks;
+\code{dodge = 0.5} places them midway between breaks; etc.). Values < 0.5 are
+recommended. If \code{TRUE}, dodge width is calculated automatically based on
+the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If
+\code{FALSE} or 0, no dodging is performed. Default is 0.}
 
 \item{fixed.pos}{Logical indicating whether dodged groups should retain a
 fixed relative position based on their group value. Relevant for \code{x}

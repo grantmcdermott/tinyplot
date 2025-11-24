@@ -2,16 +2,7 @@
 #'
 #' @description Type function(s) for producing error bar and pointrange plots.
 #'
-#' @param dodge Numeric value (>= 0) for dodging of overlapping `by` groups.
-#'   Dodging is scaled relative to the x-axis tick locations (i.e., unique
-#'   levels of `x`). For example, `dodge = 0.5` would place the outermost dodged
-#'   groups exactly midway the between axis ticks. Default value is 0 (no
-#'   dodging).
-#' @param fixed.pos Logical indicating whether dodged groups should retain a
-#'   fixed relative position based on their group value. Relevant for `x`
-#'   categories that only have a subset of the total number of groups. Defaults
-#'   to `FALSE`, in which case dodging is based on the number of unique groups
-#'   present in that `x` category alone. See Examples.
+#' @inheritParams dodge_positions
 #' @inheritParams graphics::arrows
 #' @examples
 #' mod = lm(mpg ~ wt * factor(am), mtcars)

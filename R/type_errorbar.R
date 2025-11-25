@@ -74,7 +74,7 @@
 #' # Aside 2: layering
 #' #  For layering on top of dodged plots, rather pass the dodging arguments
 #' #  through the top-level call if you'd like the dodging behaviour to be
-#' #  inherited automatically by the add layers.
+#' #  inherited automatically by the added layers.
 #'
 #' tinyplot(estimate ~ term | model,
 #'          ymin = conf.low, ymax = conf.high,

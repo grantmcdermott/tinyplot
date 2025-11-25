@@ -1463,17 +1463,23 @@ tinyplot.formula = function(
   }
 
   ## nice axis and legend labels
-  dens_type = (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
-  hist_type = (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
-  if (!is.null(type) && dens_type) {
+  dens_type = !is.null(type) && (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
+  hist_type = !is.null(type) && (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
+  barp_type = !is.null(type) &&  (is.atomic(type) && identical(type, "barplot")) || (!is.atomic(type) && identical(type$name, "barplot"))
+  if (dens_type) {
     # if (is.null(ylab)) ylab = "Density" ## rather assign ylab as part of internal type_density() logic
     if (is.null(xlab)) xlab = xnam
-  } else if (!is.null(type) && hist_type) {
+  } else if (hist_type) {
     # if (is.null(ylab)) ylab = "Frequency" ## rather assign ylab as part of internal type_histogram() logic
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {
-    if (is.null(ylab)) ylab = xnam
-    if (is.null(xlab)) xlab = "Index"
+    if (!barp_type) {
+      if (is.null(ylab)) ylab = xnam
+      if (is.null(xlab)) xlab = "Index"
+    } else {
+      if (is.null(ylab)) ylab = "Count"
+      if (is.null(xlab)) xlab = xnam
+    }
   } else {
     if (is.null(ylab)) ylab = ynam
     if (is.null(xlab)) xlab = xnam

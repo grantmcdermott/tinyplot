@@ -91,9 +91,8 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
-          xlab = ylab
-          ylab = "Count"
-          
+          if (is.null(xlab) || xlab == "Index") xlab = ylab
+          if (is.null(settings$y_dep) && is.null(ylab)) ylab = "Count"
           datapoints$y = numeric(nrow(datapoints))          
           if (!is.null(FUN)) warning("without 'y' variable 'FUN' specification is ignored")
           FUN = length

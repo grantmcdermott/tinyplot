@@ -1,9 +1,9 @@
 #' @rdname type_errorbar
 #' @export
-type_pointrange = function(dodge = 0, fixed.pos = FALSE) {
+type_pointrange = function(dodge = 0, fixed.dodge = FALSE) {
   out = list(
     draw = draw_pointrange(),
-    data = data_pointrange(dodge = dodge, fixed.pos = fixed.pos),
+    data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge),
     name = "p"
   )
   class(out) = "tinyplot_type"
@@ -47,7 +47,7 @@ draw_pointrange = function() {
 }
 
 
-data_pointrange = function(dodge, fixed.pos) {
+data_pointrange = function(dodge, fixed.dodge) {
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "xlabs"))
 
@@ -67,7 +67,7 @@ data_pointrange = function(dodge, fixed.pos) {
 
     # dodge
     if (dodge != 0) {
-      datapoints = dodge_positions(datapoints, dodge, fixed.pos)
+      datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
     }
 
     x = datapoints$x

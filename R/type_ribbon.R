@@ -78,10 +78,10 @@
 #' )
 #' 
 #' @export
-type_ribbon = function(alpha = NULL, dodge = 0, fixed.pos = FALSE) {
+type_ribbon = function(alpha = NULL, dodge = 0, fixed.dodge = FALSE) {
     out = list(
         draw = draw_ribbon(),
-        data = data_ribbon(ribbon.alpha = alpha, dodge = dodge, fixed.pos = fixed.pos),
+        data = data_ribbon(ribbon.alpha = alpha, dodge = dodge, fixed.dodge = fixed.dodge),
         name = "ribbon"
     )
     class(out) = "tinyplot_type"
@@ -104,7 +104,7 @@ draw_ribbon = function() {
 }
 
 
-data_ribbon = function(ribbon.alpha = NULL, dodge = 0, fixed.pos = FALSE) {
+data_ribbon = function(ribbon.alpha = NULL, dodge = 0, fixed.dodge = FALSE) {
     ribbon.alpha = sanitize_ribbon_alpha(ribbon.alpha)
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "xlabs", "null_by", "null_facet"))
@@ -124,7 +124,7 @@ data_ribbon = function(ribbon.alpha = NULL, dodge = 0, fixed.pos = FALSE) {
         
         # dodge (auto-detects x, xmin, xmax columns)
         if (dodge != 0) {
-            datapoints = dodge_positions(datapoints, dodge, fixed.pos)
+            datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
         }
 
         if (null_by && null_facet) {

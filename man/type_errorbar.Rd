@@ -5,26 +5,34 @@
 \alias{type_pointrange}
 \title{Error bar and pointrange plot types}
 \usage{
-type_errorbar(length = 0.05, dodge = 0, fixed.pos = FALSE)
+type_errorbar(length = 0.05, dodge = 0, fixed.dodge = FALSE)
 
-type_pointrange(dodge = 0, fixed.pos = FALSE)
+type_pointrange(dodge = 0, fixed.dodge = FALSE)
 }
 \arguments{
 \item{length}{length of the edges of the arrow head (in inches).}
 
-\item{dodge}{Numeric value in the range \verb{[0,1)}, or logical. If numeric,
-values are scaled relative to x-axis break spacing (e.g., \code{dodge = 0.1}
-places outermost groups one-tenth of the way to adjacent breaks;
-\code{dodge = 0.5} places them midway between breaks; etc.). Values < 0.5 are
-recommended. If \code{TRUE}, dodge width is calculated automatically based on
+\item{dodge}{Adjustment parameter for dodging overlapping points or ranges in
+grouped plots along the x-axis (or y-axis for flipped plots). Either:
+\itemize{
+\item numeric value in the range \verb{[0,1)}. Note that values are scaled
+relative to the spacing of x-axis breaks, e.g. \code{dodge = 0.1} places the
+outermost groups one-tenth of the way to adjacent breaks, \code{dodge = 0.5}
+places them midway between breaks, etc. Values < 0.5 are recommended.
+\item logical. If \code{TRUE}, the dodge width is calculated automatically based on
 the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If
-\code{FALSE} or 0, no dodging is performed. Default is 0.}
+\code{FALSE} or 0, no dodging is performed.
+}
 
-\item{fixed.pos}{Logical indicating whether dodged groups should retain a
-fixed relative position based on their group value. Relevant for \code{x}
-categories that only have a subset of the total number of groups. Defaults
-to \code{FALSE}, in which case dodging is based on the number of unique groups
-present in that \code{x} category alone. See Examples.}
+Default value is 0 (no dodging). While we do not check, it is \emph{strongly}
+recommended that dodging only be used in cases where the x-axis comprises a
+limited number of discrete breaks.}
+
+\item{fixed.dodge}{Logical. If \code{FALSE} (default), dodge positions are
+calculated independently for each \code{x} value, based only on the groups
+present at that position. If \code{TRUE}, dodge positions are based on all
+groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
+groups are missing for a particular \code{x} value).}
 }
 \description{
 Type function(s) for producing error bar and pointrange plots.
@@ -69,12 +77,12 @@ tinyplot(estimate ~ term | model,
 
 # Note that the default dodged position is based solely on the number of
 # groups (here: models) available to each coefficient term. To fix the
-# position consistently across all terms, use `fixed.pos = TRUE`.
+# position consistently across all terms, use `fixed.dodge = TRUE`.
 
 tinyplot(estimate ~ term | model,
          ymin = conf.low, ymax = conf.high,
          data = results,
-         type = type_pointrange(dodge = 0.2, fixed.pos = TRUE))
+         type = type_pointrange(dodge = 0.2, fixed.dodge = TRUE))
 
 tpar(op)
 

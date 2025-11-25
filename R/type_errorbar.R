@@ -44,20 +44,20 @@
 #'
 #' # Note that the default dodged position is based solely on the number of
 #' # groups (here: models) available to each coefficient term. To fix the
-#' # position consistently across all terms, use `fixed.pos = TRUE`.
+#' # position consistently across all terms, use `fixed.dodge = TRUE`.
 #'
 #' tinyplot(estimate ~ term | model,
 #'          ymin = conf.low, ymax = conf.high,
 #'          data = results,
-#'          type = type_pointrange(dodge = 0.2, fixed.pos = TRUE))
+#'          type = type_pointrange(dodge = 0.2, fixed.dodge = TRUE))
 #'
 #' tpar(op)
 #'
 #' @export
-type_errorbar = function(length = 0.05, dodge = 0, fixed.pos = FALSE) {
+type_errorbar = function(length = 0.05, dodge = 0, fixed.dodge = FALSE) {
     out = list(
         draw = draw_errorbar(length = length),
-        data = data_pointrange(dodge = dodge, fixed.pos = fixed.pos),
+        data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge),
         name = "p"
     )
     class(out) = "tinyplot_type"

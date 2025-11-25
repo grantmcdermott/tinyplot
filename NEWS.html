@@ -217,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#dev-version" id="toc-dev-version" class="nav-link" data-scroll-target="#dev-version">Dev version</a>
   <ul class="collapse">
-  <li><a href="#breaking-change" id="toc-breaking-change" class="nav-link" data-scroll-target="#breaking-change">Breaking change</a></li>
+  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
   <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
   <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
   <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
@@ -249,7 +249,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">0.3.0</a>
   <ul class="collapse">
   <li><a href="#new-features-4" id="toc-new-features-4" class="nav-link" data-scroll-target="#new-features-4">New features</a></li>
-  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
+  <li><a href="#breaking-changes-1" id="toc-breaking-changes-1" class="nav-link" data-scroll-target="#breaking-changes-1">Breaking changes</a></li>
   <li><a href="#bug-fixes-5" id="toc-bug-fixes-5" class="nav-link" data-scroll-target="#bug-fixes-5">Bug fixes</a></li>
   <li><a href="#misc-1" id="toc-misc-1" class="nav-link" data-scroll-target="#misc-1">Misc</a></li>
   </ul></li>
@@ -276,21 +276,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>If you are viewing this file on CRAN, please check the <a href="https://grantmcdermott.com/tinyplot/NEWS.html">latest NEWS</a> on our website where the formatting is also better.</em></p>
 <section id="dev-version" class="level2">
 <h2 class="anchored" data-anchor-id="dev-version">Dev version</h2>
-<section id="breaking-change" class="level3">
-<h3 class="anchored" data-anchor-id="breaking-change">Breaking change</h3>
+<section id="breaking-changes" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h3>
 <ul>
 <li>“Breaking” change for internal development and custom types only: The plot settings and parameters from individual <code>tinyplot</code> calls are now stored in a dedicated (temporary) internal environment called <code>settings</code>, which can be accessed and modified by type-specific functions. This change will enable various internal enhancements, from improving the modularity and maintainability of the <code>tinyplot</code> codebase, to reducing memory overhead and performance (since we require fewer object copies). Looking ahead, we also expect that it will make it easier to support new features and integration with downstream packages. Most <code>tinyplot</code> users should be unaffected by these internal changes. However, users who have defined their own custom types will need to make some adjustments to match the new <code>settings</code> logic; details are provided in the updated <code>Types</code> vignette. (<a href="https://github.com/grantmcdermott/tinyplot/issues/473">#473</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>The ancillary <code>fixed.pos</code> argument for dodged plots has been renamed to <code>fixed.dodge</code> to avoid ambiguity, especially when passed down from a top-level <code>tinyplot(...)</code> call. (<a href="https://github.com/grantmcdermott/tinyplot/issues/528">#528</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 <section id="new-features" class="level3">
 <h3 class="anchored" data-anchor-id="new-features">New features</h3>
 <ul>
 <li><code>type_text()</code> gains a <code>family</code> argument for controlling the font family, separate to the main plot text elements. (<a href="https://github.com/grantmcdermott/tinyplot/issues/494">#494</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Expanded <code>dodge</code> argument capabilities and consistency for overlapping groups:
+<li>Expanded <code>dodge</code> argument capabilities and consistency for dealing with overlapping groups:
 <ul>
-<li>Logical <code>dodge = TRUE</code> gives automatic width spacing based on the number of groups. (<a href="https://github.com/grantmcdermott/tinyplot/issues/525">#525</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>dodge</code> argument now also supported by <code>type_lines()</code>, <code>type_points()</code>, and <code>type_ribbon()</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/522">#522</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/528">#528</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>We now enforce that numeric <code>dodge</code> values must be in the range <code>[0,1)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/526">#526</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li><code>dodge</code> argument now supported in <code>type_ribbon()</code> (<a href="https://github.com/grantmcdermott/tinyplot/issues/522">#522</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Alongside numeric values, we now support a logical <code>dodge = TRUE</code> argument, which gives automatic width spacing based on the number of groups. (<a href="https://github.com/grantmcdermott/tinyplot/issues/525">#525</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Renamed ancillary argument <code>fixed.pos</code> -&gt; <code>fixed.dodge</code>, per the breaking change above. (<a href="https://github.com/grantmcdermott/tinyplot/issues/528">#528</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
 </ul>
 </section>
@@ -539,8 +541,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="breaking-changes" class="level3">
-<h3 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h3>
+<section id="breaking-changes-1" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-changes-1">Breaking changes</h3>
 <ul>
 <li>There are a few breaking changes to grouped density plots.
 <ul>

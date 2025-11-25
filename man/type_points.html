@@ -564,7 +564,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_points(clim = c(0.5, 2.5))
+<pre><code class="language-R">type_points(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -576,6 +576,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </td>
 <td>
 Numeric giving the lower and upper limits of the character expansion (<code>cex</code>) normalization for bubble charts.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="dodge">dodge</code>
+</td>
+<td>
+<p>Adjustment parameter for dodging overlapping points or ranges in grouped plots along the x-axis (or y-axis for flipped plots). Either:</p>
+<ul>
+<li>
+<p>numeric value in the range <code style="white-space: pre;">[0,1)</code>. Note that values are scaled relative to the spacing of x-axis breaks, e.g.&nbsp;<code>dodge = 0.1</code> places the outermost groups one-tenth of the way to adjacent breaks, <code>dodge = 0.5</code> places them midway between breaks, etc. Values &lt; 0.5 are recommended.</p>
+</li>
+<li>
+<p>logical. If <code>TRUE</code>, the dodge width is calculated automatically based on the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If <code>FALSE</code> or 0, no dodging is performed.</p>
+</li>
+</ul>
+Default value is 0 (no dodging). While we do not check, it is <em>strongly</em> recommended that dodging only be used in cases where the x-axis comprises a limited number of discrete breaks.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="fixed.dodge">fixed.dodge</code>
+</td>
+<td>
+Logical. If <code>FALSE</code> (default), dodge positions are calculated independently for each <code>x</code> value, based only on the groups present at that position. If <code>TRUE</code>, dodge positions are based on all groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some groups are missing for a particular <code>x</code> value).
 </td>
 </tr>
 </tbody></table>

@@ -564,9 +564,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_errorbar(length = 0.05, dodge = 0, fixed.pos = FALSE)
+<pre><code class="language-R">type_errorbar(length = 0.05, dodge = 0, fixed.dodge = FALSE)
 
-type_pointrange(dodge = 0, fixed.pos = FALSE)
+type_pointrange(dodge = 0, fixed.dodge = FALSE)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -585,15 +585,24 @@ length of the edges of the arrow head (in inches).
 <code id="dodge">dodge</code>
 </td>
 <td>
-Numeric value in the range <code style="white-space: pre;">[0,1)</code>, or logical. If numeric, values are scaled relative to x-axis break spacing (e.g., <code>dodge = 0.1</code> places outermost groups one-tenth of the way to adjacent breaks; <code>dodge = 0.5</code> places them midway between breaks; etc.). Values &lt; 0.5 are recommended. If <code>TRUE</code>, dodge width is calculated automatically based on the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If <code>FALSE</code> or 0, no dodging is performed. Default is 0.
+<p>Adjustment parameter for dodging overlapping points or ranges in grouped plots along the x-axis (or y-axis for flipped plots). Either:</p>
+<ul>
+<li>
+<p>numeric value in the range <code style="white-space: pre;">[0,1)</code>. Note that values are scaled relative to the spacing of x-axis breaks, e.g.&nbsp;<code>dodge = 0.1</code> places the outermost groups one-tenth of the way to adjacent breaks, <code>dodge = 0.5</code> places them midway between breaks, etc. Values &lt; 0.5 are recommended.</p>
+</li>
+<li>
+<p>logical. If <code>TRUE</code>, the dodge width is calculated automatically based on the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If <code>FALSE</code> or 0, no dodging is performed.</p>
+</li>
+</ul>
+Default value is 0 (no dodging). While we do not check, it is <em>strongly</em> recommended that dodging only be used in cases where the x-axis comprises a limited number of discrete breaks.
 </td>
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="fixed.pos">fixed.pos</code>
+<code id="fixed.dodge">fixed.dodge</code>
 </td>
 <td>
-Logical indicating whether dodged groups should retain a fixed relative position based on their group value. Relevant for <code>x</code> categories that only have a subset of the total number of groups. Defaults to <code>FALSE</code>, in which case dodging is based on the number of unique groups present in that <code>x</code> category alone. See Examples.
+Logical. If <code>FALSE</code> (default), dodge positions are calculated independently for each <code>x</code> value, based only on the groups present at that position. If <code>TRUE</code>, dodge positions are based on all groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some groups are missing for a particular <code>x</code> value).
 </td>
 </tr>
 </tbody></table>
@@ -603,14 +612,17 @@ Logical indicating whether dodged groups should retain a fixed relative position
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">*</span> <span class="fu">factor</span>(am), mtcars)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">names</span>(<span class="fu">coef</span>(mod)), <span class="fu">coef</span>(mod), <span class="fu">confint</span>(mod))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(coefs) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"term"</span>, <span class="st">"est"</span>, <span class="st">"lwr"</span>, <span class="st">"upr"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>op <span class="ot">=</span> <span class="fu">tpar</span>(<span class="at">pch =</span> <span class="dv">19</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># "errorbar" and "pointrange" type convenience strings</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(est <span class="sc">~</span> term, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">data =</span> coefs, <span class="at">type =</span> <span class="st">"errorbar"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"basic"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Basic coefficient plot(s)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">*</span> <span class="fu">factor</span>(am), mtcars)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">names</span>(<span class="fu">coef</span>(mod)), <span class="fu">coef</span>(mod), <span class="fu">confint</span>(mod))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(coefs) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"term"</span>, <span class="st">"est"</span>, <span class="st">"lwr"</span>, <span class="st">"upr"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># "errorbar" and "pointrange" type convenience strings</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(est <span class="sc">~</span> term, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">data =</span> coefs, <span class="at">type =</span> <span class="st">"errorbar"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -636,28 +648,14 @@ Logical indicating whether dodged groups should retain a fixed relative position
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># display three models side-by-side with dodging</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>models <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model A"</span> <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> cyl, <span class="at">data =</span> mtcars),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model B"</span> <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> cyl, <span class="at">data =</span> mtcars),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model C"</span> <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">lapply</span>(<span class="fu">names</span>(models), <span class="cf">function</span>(m) {</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> m,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">term =</span> <span class="fu">names</span>(<span class="fu">coef</span>(models[[m]])),</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">estimate =</span> <span class="fu">coef</span>(models[[m]]),</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">setNames</span>(<span class="fu">data.frame</span>(<span class="fu">confint</span>(models[[m]])), <span class="fu">c</span>(<span class="st">"conf.low"</span>, <span class="st">"conf.high"</span>))</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">do.call</span>(rbind, results)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(estimate <span class="sc">~</span> term <span class="sc">|</span> model,</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high,</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> results,</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">type_pointrange</span>(<span class="at">dodge =</span> <span class="fl">0.2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Flipped plots</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># For flipped errobar / pointrange plots, it is recommended to use a dynamic</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># theme that applies horizontal axis tick labels</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(est <span class="sc">~</span> term, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">data =</span> coefs, <span class="at">type =</span> <span class="st">"errorbar"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">theme =</span> <span class="st">"classic"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">'vline'</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -665,14 +663,31 @@ Logical indicating whether dodged groups should retain a fixed relative position
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that the default dodged position is based solely on the number of</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># groups (here: models) available to each coefficient term. To fix the</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># position consistently across all terms, use `fixed.pos = TRUE`.</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(estimate <span class="sc">~</span> term <span class="sc">|</span> model,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> results,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">type_pointrange</span>(<span class="at">dodge =</span> <span class="fl">0.2</span>, <span class="at">fixed.pos =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Dodging groups</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>models <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model A"</span> <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model B"</span> <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> cyl, <span class="at">data =</span> mtcars),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model C"</span> <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> cyl <span class="sc">+</span> hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>models <span class="ot">=</span> <span class="fu">do.call</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  rbind,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="fu">names</span>(models), <span class="cf">function</span>(m) {</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">model =</span> m,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">term =</span> <span class="fu">names</span>(<span class="fu">coef</span>(models[[m]])),</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">estimate =</span> <span class="fu">coef</span>(models[[m]]),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">setNames</span>(<span class="fu">data.frame</span>(<span class="fu">confint</span>(models[[m]])), <span class="fu">c</span>(<span class="st">"conf.low"</span>, <span class="st">"conf.high"</span>))</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(estimate <span class="sc">~</span> term <span class="sc">|</span> model,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> models,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">type_pointrange</span>(<span class="at">dodge =</span> <span class="fl">0.1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -680,7 +695,41 @@ Logical indicating whether dodged groups should retain a fixed relative position
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tpar</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aside 1: relative vs fixed dodge</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  The default dodge position is based on the unique groups (here: models)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  available to each x value (here: coefficient term). To "fix" the dodge</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  position across all x values, use `fixed.dodge = TRUE`.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(estimate <span class="sc">~</span> term <span class="sc">|</span> model,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> models,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">type_pointrange</span>(<span class="at">dodge =</span> <span class="fl">0.1</span>, <span class="at">fixed.dodge =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_errorbar_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aside 2: layering</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  For layering on top of dodged plots, rather pass the dodging arguments</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  through the top-level call if you'd like the dodging behaviour to be</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  inherited automatically by the add layers.</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(estimate <span class="sc">~</span> term <span class="sc">|</span> model,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> models,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="st">"pointrange"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">dodge =</span> <span class="fl">0.1</span>, <span class="at">fixed.dodge =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_errorbar_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>() <span class="co"># reset theme</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 

@@ -83,6 +83,17 @@ fun = function() {
 expect_snapshot_plot(fun, label = "dodge_errorbar_add_ribbon")
 
 
+fun = function() {
+  tinyplot(estimate ~ term | model,
+    ymin = conf.low, ymax = conf.high,
+    data = results,
+    type = "errorbar",
+    dodge = 0.1,
+    theme = "basic")
+  tinyplot_add(type = "l", lty = 2)
+}
+expect_snapshot_plot(fun, label = "dodge_errorbar_add_lines")
+
 #
 ## Warning and errors
 

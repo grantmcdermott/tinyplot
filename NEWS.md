@@ -4,7 +4,7 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## Dev version
+## v0.6.0
 
 ### Breaking changes
 
@@ -76,7 +76,7 @@ where the formatting is also better._
   `tinyplot()` and that it thus has access to the local definition to all
   variables such as `x` and `y` etc. (#507 @zeileis)
 
-## 0.5.0
+## v0.5.0
 
 ### New features
 
@@ -138,7 +138,7 @@ where the formatting is also better._
   with the CI implementation.
 - Add a `devcontainer.json` file for remote testing. (#480 @grantmcdermott) 
 
-## 0.4.2
+## v0.4.2
 
 ### New features
 
@@ -169,7 +169,7 @@ where the formatting is also better._
   can also call them in a base plot layer, relaxing the requirement that they
   must be called as part of a subsequent plot layer via `tinyplot_add()`. (#422 @grantmcdermott)
 
-## 0.4.1
+## v0.4.1
 
 ### Bug fixes
 
@@ -180,7 +180,7 @@ where the formatting is also better._
 
 - Revert minimum compatible R version to 4.0.0 (#416 @grantmcdermott)
 
-## 0.4.0
+## v0.4.0
 
 ### New features:
 
@@ -278,7 +278,7 @@ where the formatting is also better._
   logic was mostly an artifact of development inertia and this new nesting logic
   should simplify the creation of certain plot types. (#331 @grantmcdermott)
 
-## 0.3.0
+## v0.3.0
 
 ### New features
 
@@ -453,7 +453,7 @@ grouping variables (thanks to @strengjacke for reporting #213).
   - The new functional type processing system also means that each type now
     has its own help page (e.g. `?type_hist`, `type_ridge`, etc.)
 
-## 0.2.1
+## v0.2.1
 
 New Features:
 
@@ -502,7 +502,7 @@ Internals:
 - Revamped formula processing that allows for better sanity checking and
 edge-case logic. (#197 @zeileis)
 
-## 0.2.0
+## v0.2.0
 
 New features:
 
@@ -530,7 +530,7 @@ Misc:
 
 - Various documentation improvements.
 
-## 0.1.0
+## v0.1.0
 
 Our first CRAN submission! This v0.1.0 release includes the following new
 features and updates:
@@ -626,7 +626,7 @@ approach). (#145 @vincentarelbundock & @grantmcdermott)
 calculates `density` grid coords. (#150 @grantmcdermott)
 
 
-## 0.0.5
+## v0.0.5
 
 **IMPORTANT BREAKING CHANGE:**
 
@@ -670,7 +670,7 @@ see the following GitHub comment, as well as the discussion that preceded it:
 https://github.com/grantmcdermott/plot2/issues/22#issuecomment-1928472754
 
 
-##  0.0.4
+##  v0.0.4
 
 Website:
 
@@ -727,7 +727,7 @@ outer gap to outside of the graphics device unchanged. (#94 @grantmcdermott)
 - Fix bug where grid wasn't auto-expanding correctly for area plots. (#92
 @grantmcdermott)
 
-##  0.0.3
+##  v0.0.3
 
 Breaking changes:
 
@@ -765,7 +765,7 @@ Bug fixes:
 - Setting a global palette, e.g. `palette("ggplot2")` is now respected. (#44
 @grantmcdermott)
 
-##  0.0.2
+##  v0.0.2
 
 Breaking changes:
 
@@ -792,6 +792,6 @@ Project:
 - @vincentarelbundock and @zeileis have joined the project as core contributors.
 🎉
 
-##  0.0.1
+##  v0.0.1
 
 * Initial release on GitHub.

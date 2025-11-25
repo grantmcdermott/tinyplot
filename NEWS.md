@@ -56,6 +56,8 @@ where the formatting is also better._
   x-axis order of the original plot layer. This should ensure that we don't end
   up with misaligned layers. For example, when ribbon is added on top of an
   errorbar plot. (#517, #520, #523, #526 @grantmcdermott)
+- Custom axis titles work properly for one-sided (formula) bar plots. Thanks to
+  @lbelzile for the report in #423. (#527 @grantmcdermott)
 
 
 ### Documentation

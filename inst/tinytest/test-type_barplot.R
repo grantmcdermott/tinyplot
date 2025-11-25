@@ -53,3 +53,24 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "barplot_text_issue469")
 
+#
+## Custom axis titles for one-sided barplots (issue #423)
+
+f = function() {
+  set.seed(2025)
+  n = 100L
+  grp = factor(sample(0:1, size = n, replace = TRUE))
+  x = rpois(n, 5)
+  plt(~ x | grp, type = "barplot", beside = TRUE, xlab = "Custom x title")   
+}
+expect_snapshot_plot(f, label = "barplot_custom_xtitle")
+
+# issue #423
+f = function() {
+  set.seed(2025)
+  n = 100L
+  grp = factor(sample(0:1, size = n, replace = TRUE))
+  x = rpois(n, 5)
+  plt(~ x | grp, type = "barplot", beside = TRUE, ylab = "Custom y title")   
+}
+expect_snapshot_plot(f, label = "barplot_custom_ytitle")

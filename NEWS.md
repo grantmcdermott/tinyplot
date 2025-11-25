@@ -6,7 +6,7 @@ where the formatting is also better._
 
 ## Dev version
 
-### Breaking change
+### Breaking changes
 
 - "Breaking" change for internal development and custom types only:
   The plot settings and parameters from individual `tinyplot` calls are now
@@ -20,18 +20,24 @@ where the formatting is also better._
   internal changes. However, users who have defined their own custom types will
   need to make some adjustments to match the new `settings` logic; details are
   provided in the updated `Types` vignette. (#473 @vincentarelbundock and @grantmcdermott)
+- The ancillary `fixed.pos` argument for dodged plots has been renamed to
+  `fixed.dodge` to avoid ambiguity, especially when passed down from a top-level
+  `tinyplot(...)` call. (#528 @grantmcdermott) 
 
 ### New features
 
 - `type_text()` gains a `family` argument for controlling the font family,
   separate to the main plot text elements. (#494 @grantmcdermott)
-- Expanded `dodge` argument capabilities and consistency for overlapping groups:
-  - `dodge` argument now supported by `type_lines()`, `type_points()`, and
+- Expanded `dodge` argument capabilities and consistency for dealing with
+  overlapping groups:
+  - `dodge` argument now also supported by `type_lines()`, `type_points()`, and
     `type_ribbon()`. (#522, #528 @grantmcdermott)
   - We now enforce that numeric `dodge` values must be in the range `[0,1)`.
     (#526 @grantmcdermott)
   - Alongside numeric values, we now support a logical `dodge = TRUE` argument,
     which gives automatic width spacing based on the number of groups. (#525 @grantmcdermott)
+  - Renamed ancillary argument `fixed.pos` -> `fixed.dodge`, per the breaking
+    change above. (#528 @grantmcdermott)
 
 ### Bug fixes
 

@@ -26,11 +26,12 @@ where the formatting is also better._
 - `type_text()` gains a `family` argument for controlling the font family,
   separate to the main plot text elements. (#494 @grantmcdermott)
 - Expanded `dodge` argument capabilities and consistency for overlapping groups:
-  - Logical `dodge = TRUE` gives automatic width spacing based on the number
-    of groups. (#525 @grantmcdermott)
+  - `dodge` argument now supported by `type_lines()`, `type_points()`, and
+    `type_ribbon()`. (#522, #528 @grantmcdermott)
   - We now enforce that numeric `dodge` values must be in the range `[0,1)`.
     (#526 @grantmcdermott)
-  - `dodge` argument now supported in `type_ribbon()` (#522 @grantmcdermott)
+  - Alongside numeric values, we now support a logical `dodge = TRUE` argument,
+    which gives automatic width spacing based on the number of groups. (#525 @grantmcdermott)
 
 ### Bug fixes
 

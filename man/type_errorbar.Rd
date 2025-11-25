@@ -5,36 +5,47 @@
 \alias{type_pointrange}
 \title{Error bar and pointrange plot types}
 \usage{
-type_errorbar(length = 0.05, dodge = 0, fixed.pos = FALSE)
+type_errorbar(length = 0.05, dodge = 0, fixed.dodge = FALSE)
 
-type_pointrange(dodge = 0, fixed.pos = FALSE)
+type_pointrange(dodge = 0, fixed.dodge = FALSE)
 }
 \arguments{
 \item{length}{length of the edges of the arrow head (in inches).}
 
-\item{dodge}{Numeric value in the range \verb{[0,1)}, or logical. If numeric,
-values are scaled relative to x-axis break spacing (e.g., \code{dodge = 0.1}
-places outermost groups one-tenth of the way to adjacent breaks;
-\code{dodge = 0.5} places them midway between breaks; etc.). Values < 0.5 are
-recommended. If \code{TRUE}, dodge width is calculated automatically based on
+\item{dodge}{Adjustment parameter for dodging overlapping points or ranges in
+grouped plots along the x-axis (or y-axis for flipped plots). Either:
+\itemize{
+\item numeric value in the range \verb{[0,1)}. Note that values are scaled
+relative to the spacing of x-axis breaks, e.g. \code{dodge = 0.1} places the
+outermost groups one-tenth of the way to adjacent breaks, \code{dodge = 0.5}
+places them midway between breaks, etc. Values < 0.5 are recommended.
+\item logical. If \code{TRUE}, the dodge width is calculated automatically based on
 the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If
-\code{FALSE} or 0, no dodging is performed. Default is 0.}
+\code{FALSE} or 0, no dodging is performed.
+}
 
-\item{fixed.pos}{Logical indicating whether dodged groups should retain a
-fixed relative position based on their group value. Relevant for \code{x}
-categories that only have a subset of the total number of groups. Defaults
-to \code{FALSE}, in which case dodging is based on the number of unique groups
-present in that \code{x} category alone. See Examples.}
+Default value is 0 (no dodging). While we do not check, it is \emph{strongly}
+recommended that dodging only be used in cases where the x-axis comprises a
+limited number of discrete breaks.}
+
+\item{fixed.dodge}{Logical. If \code{FALSE} (default), dodge positions are
+calculated independently for each \code{x} value, based only on the groups
+present at that position. If \code{TRUE}, dodge positions are based on all
+groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
+groups are missing for a particular \code{x} value).}
 }
 \description{
 Type function(s) for producing error bar and pointrange plots.
 }
 \examples{
+tinytheme("basic")
+
+#
+## Basic coefficient plot(s)
+
 mod = lm(mpg ~ wt * factor(am), mtcars)
 coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
 colnames(coefs) = c("term", "est", "lwr", "upr")
-
-op = tpar(pch = 19)
 
 # "errorbar" and "pointrange" type convenience strings
 tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "errorbar")
@@ -44,38 +55,64 @@ tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "pointrange")
 tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs,
          type = type_errorbar(length = 0.2))
 
-# display three models side-by-side with dodging
+#
+## Flipped plots
+
+# For flipped errobar / pointrange plots, it is recommended to use a dynamic
+# theme that applies horizontal axis tick labels
+tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "errorbar",
+         flip = TRUE, theme = "classic")
+tinyplot_add(type = 'vline', lty = 2)
+
+
+#
+## Dodging groups
 
 models = list(
-    "Model A" = lm(mpg ~ wt + cyl, data = mtcars),
-    "Model B" = lm(mpg ~ wt + hp + cyl, data = mtcars),
-    "Model C" = lm(mpg ~ wt, data = mtcars)
+    "Model A" = lm(mpg ~ wt, data = mtcars),
+    "Model B" = lm(mpg ~ wt + cyl, data = mtcars),
+    "Model C" = lm(mpg ~ wt + cyl + hp, data = mtcars)
 )
 
-results = lapply(names(models), function(m) {
+models = do.call(
+  rbind,
+  lapply(names(models), function(m) {
     data.frame(
-        model = m,
-        term = names(coef(models[[m]])),
-        estimate = coef(models[[m]]),
-        setNames(data.frame(confint(models[[m]])), c("conf.low", "conf.high"))
+      model = m,
+      term = names(coef(models[[m]])),
+      estimate = coef(models[[m]]),
+      setNames(data.frame(confint(models[[m]])), c("conf.low", "conf.high"))
     )
-})
-results = do.call(rbind, results)
+  })
+)
 
 tinyplot(estimate ~ term | model,
          ymin = conf.low, ymax = conf.high,
-         data = results,
-         type = type_pointrange(dodge = 0.2))
+         data = models,
+         type = type_pointrange(dodge = 0.1))
 
-# Note that the default dodged position is based solely on the number of
-# groups (here: models) available to each coefficient term. To fix the
-# position consistently across all terms, use `fixed.pos = TRUE`.
+# Aside 1: relative vs fixed dodge
+#  The default dodge position is based on the unique groups (here: models)
+#  available to each x value (here: coefficient term). To "fix" the dodge
+#  position across all x values, use `fixed.dodge = TRUE`.
 
 tinyplot(estimate ~ term | model,
          ymin = conf.low, ymax = conf.high,
-         data = results,
-         type = type_pointrange(dodge = 0.2, fixed.pos = TRUE))
+         data = models,
+         type = type_pointrange(dodge = 0.1, fixed.dodge = TRUE))
 
-tpar(op)
+# Aside 2: layering
+#  For layering on top of dodged plots, rather pass the dodging arguments
+#  through the top-level call if you'd like the dodging behaviour to be
+#  inherited automatically by the add layers.
+
+tinyplot(estimate ~ term | model,
+         ymin = conf.low, ymax = conf.high,
+         data = models,
+         type = "pointrange",
+         dodge = 0.1, fixed.dodge = TRUE)
+tinyplot_add(type = "l", lty = 2)
+
+tinytheme() # reset theme
 
 }

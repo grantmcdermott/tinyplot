@@ -3,6 +3,7 @@
 #' @description Type function for plotting points, i.e. a scatter plot.
 #' @param clim Numeric giving the lower and upper limits of the character
 #'   expansion (`cex`) normalization for bubble charts.
+#' @inheritParams dodge_positions
 #'
 #' @examples
 #' # "p" type convenience character string
@@ -31,9 +32,9 @@
 #'   pch = 21, fill = 0.3)
 #'
 #' @export
-type_points = function(clim = c(0.5, 2.5)) {
+type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
   out = list(
-    data = data_points(clim = clim),
+    data = data_points(clim = clim, dodge = dodge, fixed.dodge = fixed.dodge),
     draw = draw_points(),
     name = "p"
   )
@@ -41,7 +42,7 @@ type_points = function(clim = c(0.5, 2.5)) {
   return(out)
 }
 
-data_points = function(clim = c(0.5, 2.5)) {
+data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
   fun = function(settings, cex = NULL, ...) {
     env2env(settings, environment(), c("datapoints", "cex", "legend_args"))
 
@@ -61,6 +62,11 @@ data_points = function(clim = c(0.5, 2.5)) {
       datapoints$y = as.integer(datapoints$y)
     } else {
       ylabs = NULL
+    }
+
+    # dodge
+    if (dodge != 0) {
+      datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
     }
 
     bubble = FALSE

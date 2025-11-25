@@ -71,6 +71,7 @@ sanitize_type = function(settings) {
       "hline"      = type_hline,
       "j"          = type_jitter,
       "jitter"     = type_jitter,
+      "l"          = type_lines,
       "lines"      = type_lines,
       "lm"         = type_lm,
       "loess"      = type_loess,
@@ -95,7 +96,7 @@ sanitize_type = function(settings) {
       type # default case
     )
   }
-
+# browser()
   if (is.function(type)) {
     args = intersect(names(formals(type)), names(dots))
     args = if (length(args) >= 1L) dots[args] else list()

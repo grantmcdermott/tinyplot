@@ -27,10 +27,13 @@
 #' 
 #' # For flipped errobar / pointrange plots, it is recommended to use a dynamic
 #' # theme that applies horizontal axis tick labels
+#'
+#' tinytheme("classic")
 #' tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "errorbar",
-#'          flip = TRUE, theme = "classic")
+#'          flip = TRUE)
 #' tinyplot_add(type = 'vline', lty = 2)
 #' 
+#' tinytheme("basic") # back to basic theme for the remaining examples
 #' 
 #' #
 #' ## Dodging groups
@@ -71,7 +74,7 @@
 #' # Aside 2: layering
 #' #  For layering on top of dodged plots, rather pass the dodging arguments
 #' #  through the top-level call if you'd like the dodging behaviour to be
-#' #  inherited automatically by the add layers.
+#' #  inherited automatically by the added layers.
 #'
 #' tinyplot(estimate ~ term | model,
 #'          ymin = conf.low, ymax = conf.high,

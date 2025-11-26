@@ -871,7 +871,7 @@ tinyplot.default = function(
 
   # ensure axis aligment of any added layers
   if (!add) {
-    assign("xlabs", settings[["xlabs"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
+    assign("xlabs_orig", settings[["xlabs"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
   } else {
     align_layer(settings)
   }
@@ -1340,6 +1340,14 @@ tinyplot.default = function(
   #
 
   if (!add) {
+    # Capture device and usr before recordGraphics (in current plot context)
+    current_dev = dev.cur()
+    current_usr = if (isTRUE(settings$flip)) par("usr")[c(3,4,1,2)] else par("usr")
+    
+    # Store usr and dev for validating layer alignment
+    assign("usr_orig", current_usr, envir = get(".tinyplot_env", envir = parent.env(environment())))
+    assign("dev_orig", current_dev, envir = get(".tinyplot_env", envir = parent.env(environment())))
+    
     recordGraphics(
       {
         apar = par(no.readonly = TRUE)

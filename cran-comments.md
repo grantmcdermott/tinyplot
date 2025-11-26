@@ -1,6 +1,10 @@
 ## Overview
 
-**tinyplot** v0.6.0 a minor release containing mostly bug fixes. 
+**tinyplot** v0.6.0 a minor release containing mostly bug fixes.
+
+_Note:_ This is a re-submission that fixes a regression discovered by CRAN's
+revdep checks (specific to the **parttree** package). Apologies for missing it
+the first time around.
 
 ## Test environments
 Arch Linux (local)

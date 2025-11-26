@@ -368,7 +368,7 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'
-#' @importFrom grDevices axisTicks adjustcolor cairo_pdf colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.off dev.new dev.list
+#' @importFrom grDevices axisTicks adjustcolor cairo_pdf colorRampPalette extendrange palette palette.colors palette.pals hcl.colors hcl.pals xy.coords png jpeg pdf svg dev.cur dev.off dev.new dev.list
 #' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit setNames

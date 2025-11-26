@@ -64,10 +64,10 @@ fun = function() {
     y ~ x, ymin = ymin, ymax = ymax,
     data = coefs,
     type = "pointrange",
-    theme = "basic",
+    theme = "classic",
     flip = TRUE
   )
   tinyplot_add(type = "ribbon")
-  tinyplot_add(type = "hline", lty = 2)
+  tinyplot_add(type = "vline", lty = 2)
 }
 expect_snapshot_plot(fun, label = "pointrange_with_layers_flipped")

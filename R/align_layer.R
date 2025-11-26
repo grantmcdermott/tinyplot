@@ -3,7 +3,10 @@
 align_layer = function(settings) {
   # Retrieve xlabs from current and original layers
   xlabs_layer = settings[["xlabs"]]
-  xlabs_orig = get("xlabs", envir = get(".tinyplot_env", envir = parent.env(environment())))
+  xlabs_orig = tryCatch(
+    get("xlabs", envir = get(".tinyplot_env", envir = parent.env(environment()))),
+    error = function(e) NULL
+  )
   
   # Only adjust if original layer has named xlabs
   if (!is.null(names(xlabs_orig))) {

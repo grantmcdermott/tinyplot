@@ -1,9 +1,24 @@
 # Ensure added layers respect the x-axis order of the original plot layer
 # (e.g., when adding lines or ribbons on top of errorbars)
 align_layer = function(settings) {
-  # Retrieve xlabs from current and original layers
+  # Retrieve xlabs and plot/device metadata from original layer
+  tinyplot_env = get(".tinyplot_env", envir = parent.env(environment()))
+  xlabs_orig = tryCatch(get("xlabs_orig", envir = tinyplot_env), error = function(e) NULL)
+  usr_orig = tryCatch(get("usr_orig", envir = tinyplot_env), error = function(e) NULL)
+  dev_orig = tryCatch(get("dev_orig", envir = tinyplot_env), error = function(e) NULL)
+  
+  # Validate that we're adding to the same plot (not a stale xlabs from previous plot)
+  if (is.null(usr_orig) || is.null(dev_orig) || dev_orig != dev.cur()) {
+    return(invisible())
+  }
+  # Normalize current usr for comparison (accounting for flipped plots)
+  usr_layer = if (isTRUE(settings$flip)) par("usr")[c(3,4,1,2)] else par("usr")
+  if (!identical(usr_orig, usr_layer)) {
+    return(invisible())
+  }
+  
+  # xlabs of current layer
   xlabs_layer = settings[["xlabs"]]
-  xlabs_orig = get("xlabs", envir = get(".tinyplot_env", envir = parent.env(environment())))
   
   # Only adjust if original layer has named xlabs
   if (!is.null(names(xlabs_orig))) {

@@ -93,8 +93,8 @@ tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris)             # formu
 
 If you would prefer to save on a few keystrokes, you can use the
 shorthand `plt()` alias instead of typing out `tinyplot()` in full.
-Here’s the same plot with this shorthand alias, plus a few aesthetic
-tweaks:
+Here’s the same plot with this shorthand `plt()` alias, as well as an
+added `"lm"` layer and a few aesthetic tweaks:
 
 ``` r
 plt(
@@ -103,6 +103,7 @@ plt(
   palette = "dark", pch = 16,
   grid = TRUE, frame = FALSE
 )
+plt_add(type = "lm")
 ```
 
 <img src="man/figures/README-quickstart3-1.png" style="width:70.0%" />
@@ -114,6 +115,7 @@ built-in themes for convenient plot customization:
 tinytheme("clean2")
 
 plt(Sepal.Length ~ Petal.Length | Species, data = iris)
+plt_add(type = "lm")
 ```
 
 <img src="man/figures/README-quickstart_theme-1.png"

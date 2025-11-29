@@ -60,7 +60,7 @@ compute_legend_args = function(
   if (!isTRUE(type %in% c("p", "ribbon", "polygon", "polypath"))) {
     legend_args[["lwd"]] = legend_args[["lwd"]] %||% lwd
   }
-  if (is.null(type) || type %in% c("p", "pointrange", "errorbar", "text")) {
+  if (is.null(type) || type %in% c("p", "text")) {
     legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% (cex %||% par("cex"))
   }
   if (isTRUE(type %in% c("rect", "ribbon", "boxplot", "hist", "histogram", "spineplot", "ridge", "violin")) || gradient) {

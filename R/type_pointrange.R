@@ -49,7 +49,7 @@ draw_pointrange = function() {
 
 data_pointrange = function(dodge, fixed.dodge) {
   fun = function(settings, ...) {
-    env2env(settings, environment(), c("datapoints", "xlabs"))
+    env2env(settings, environment(), c("datapoints", "xlabs", "cex"))
 
     if (is.character(datapoints$x)) {
       datapoints$x = as.factor(datapoints$x)
@@ -71,6 +71,9 @@ data_pointrange = function(dodge, fixed.dodge) {
     }
 
     x = datapoints$x
+    
+    settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% (cex %||% par("cex"))
+    
     env2env(environment(), settings, c(
       "x",
       "xlabs",

@@ -72,6 +72,7 @@ data_pointrange = function(dodge, fixed.dodge) {
 
     x = datapoints$x
     
+    # legend customizations
     settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% (cex %||% par("cex"))
     
     env2env(environment(), settings, c(

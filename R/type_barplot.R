@@ -200,6 +200,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         xaxt = if (xaxt == "s") "l" else xaxt
         yaxs = "i"
         
+        # legend customizations
         settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% 0
         settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
         settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5

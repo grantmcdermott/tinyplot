@@ -33,6 +33,7 @@ type_polypath = function(rule = "winding") {
 
 data_polypath = function() {
   fun = function(settings, ...) {
+    # legend customizations
     settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
     settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
     settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25

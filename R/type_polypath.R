@@ -21,27 +21,39 @@
 #' )
 #' @export
 type_polypath = function(rule = "winding") {
-    draw_polypath = function() {
-        fun =  function(ix, iy, icol, ibg, ilty, ilwd, dots, ...) {
-            polypath(
-                x = ix,
-                y = iy,
-                border = icol,
-                col = ibg,
-                lty = ilty,
-                lwd = ilwd,
-                rule = rule
-            )
-        }
-        return(fun)
-    }
-
     out = list(
-        draw = draw_polypath(),
-        data = NULL,
+        draw = draw_polypath(rule = rule),
+        data = data_polypath(),
         name = "polypath"
     )
     class(out) = "tinyplot_type"
     return(out)
+}
+
+
+data_polypath = function() {
+  fun = function(settings, ...) {
+    settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+    settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+    settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
+    settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
+  }
+  return(fun)
+}
+
+
+draw_polypath = function(rule = "winding") {
+    fun =  function(ix, iy, icol, ibg, ilty, ilwd, dots, ...) {
+        polypath(
+            x = ix,
+            y = iy,
+            border = icol,
+            col = ibg,
+            lty = ilty,
+            lwd = ilwd,
+            rule = rule
+        )
+    }
+    return(fun)
 }
 

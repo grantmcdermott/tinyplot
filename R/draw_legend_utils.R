@@ -63,7 +63,7 @@ compute_legend_args = function(
   if (is.null(type) || type %in% c("p", "pointrange", "errorbar", "text")) {
     legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% (cex %||% par("cex"))
   }
-  if (isTRUE(type %in% c("rect", "ribbon", "polygon", "polypath", "boxplot", "hist", "histogram", "spineplot", "ridge", "violin")) || gradient) {
+  if (isTRUE(type %in% c("rect", "ribbon", "boxplot", "hist", "histogram", "spineplot", "ridge", "violin")) || gradient) {
     legend_args[["pch"]] = 22
     legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% 3.5
     legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25

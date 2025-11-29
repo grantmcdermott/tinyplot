@@ -957,18 +957,18 @@ tinyplot.default = function(
     legend = NULL
   }
   if (!is.null(legend) && is.character(legend) && legend == "none") {
-    legend_args[["x"]] = "none"
+    settings$legend_args[["x"]] = "none"
     dual_legend = FALSE
   }
 
   if (null_by) {
     if (bubble && !dual_legend) {
-      legend_args[["title"]] = cex_dep
+      settings$legend_args[["title"]] = cex_dep
       lgnd_labs = names(bubble_cex)
       lgnd_cex = bubble_cex * cex_fct_adj
     } else if (is.null(legend)) {
       legend = "none"
-      legend_args[["x"]] = "none"
+      settings$legend_args[["x"]] = "none"
     }
   }
 
@@ -984,8 +984,8 @@ tinyplot.default = function(
     has_sub = !is.null(sub)
 
     if (isTRUE(was_area_type) || isTRUE(type %in% c("area", "rect", "hist", "histogram"))) {
-      legend_args[["pt.lwd"]] = par("lwd")
-      legend_args[["lty"]] = 0
+      settings$legend_args[["pt.lwd"]] = par("lwd")
+      settings$legend_args[["lty"]] = 0
     }
 
     if (!dual_legend) {
@@ -993,7 +993,7 @@ tinyplot.default = function(
       if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
       draw_legend(
         legend = legend,
-        legend_args = legend_args,
+        legend_args = settings$legend_args,
         by_dep = by_dep,
         lgnd_labs = lgnd_labs,
         type = type,
@@ -1010,7 +1010,7 @@ tinyplot.default = function(
       ## dual legend case...
 
       # sanitize_legend: processes legend arguments and returns standardized legend_args list
-      legend_args = sanitize_legend(legend, legend_args)
+      legend_args = sanitize_legend(legend, settings$legend_args)
 
       # legend 1: by (grouping) key
       lgby = list(
@@ -1061,7 +1061,7 @@ tinyplot.default = function(
     }
 
     has_legend = TRUE
-    } else if (legend_args[["x"]] == "none" && !add) {
+    } else if (settings$legend_args[["x"]] == "none" && !add) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1

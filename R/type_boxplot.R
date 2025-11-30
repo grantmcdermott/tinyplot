@@ -133,6 +133,13 @@ data_boxplot = function() {
         ymax = datapoints$ymax
         by = if (length(unique(datapoints$by)) > 1) datapoints$by else by
         facet = if (length(unique(datapoints$facet)) > 1) datapoints$facet else facet
+        
+        # legend customizations
+        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
+        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
+        
         env2env(environment(), settings, c(
             "x",
             "y",

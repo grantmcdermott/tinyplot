@@ -207,6 +207,13 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 
         by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
         facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
+        
+        # legend customizations
+        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
+        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
+        
         env2env(environment(), settings, c(
             "datapoints",
             "by",

@@ -279,6 +279,14 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
           x_by = x_by,
           y_by = y_by
         )
+        
+        # legend customizations
+        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% 0
+        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
+        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
+        
         env2env(environment(), settings, c(
           "x", "y", "ymin", "ymax", "xmin", "xmax", "col", "bg", "datapoints",
           "by", "facet", "axes", "frame.plot", "xaxt", "yaxt", "xaxs", "yaxs",

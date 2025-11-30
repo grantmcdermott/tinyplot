@@ -767,7 +767,6 @@ tinyplot.default = function(
     null_ylim     = is.null(ylim),
     # when palette functions need pre-processing this check raises error
     null_palette  = tryCatch(is.null(palette), error = function(e) FALSE),
-    was_area_type = identical(type, "area"),  # mostly for legend
     x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridges"
 
 
@@ -982,11 +981,6 @@ tinyplot.default = function(
     }
 
     has_sub = !is.null(sub)
-
-    if (isTRUE(was_area_type)) {
-      settings$legend_args[["pt.lwd"]] = par("lwd")
-      settings$legend_args[["lty"]] = 0
-    }
 
     if (!dual_legend) {
       ## simple case: single legend only

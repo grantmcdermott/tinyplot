@@ -983,7 +983,7 @@ tinyplot.default = function(
 
     has_sub = !is.null(sub)
 
-    if (isTRUE(was_area_type) || isTRUE(type %in% c("area", "rect", "hist", "histogram"))) {
+    if (isTRUE(was_area_type) || isTRUE(type %in% c("area", "rect"))) {
       settings$legend_args[["pt.lwd"]] = par("lwd")
       settings$legend_args[["lty"]] = 0
     }

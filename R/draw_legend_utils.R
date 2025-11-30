@@ -78,13 +78,14 @@ compute_legend_args = function(
   if (identical(type, "n") && isFALSE(gradient)) {
     legend_args[["pch"]] = legend_args[["pch"]] %||% par("pch")
   }
+  # Special pt.bg handling for types that need color-based fills
   if (identical(type, "spineplot")) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% legend_args[["col"]]
-  }
-  if (identical(type, "ridge") && isFALSE(gradient)) {
+  } else if (identical(type, "ridge") && isFALSE(gradient)) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
+  } else {
+    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg
   }
-  legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg
   legend_args[["legend"]] = legend_args[["legend"]] %||% lgnd_labs
   if (length(lgnd_labs) != length(eval(legend_args[["legend"]]))) {
     warning(

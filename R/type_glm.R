@@ -61,6 +61,15 @@ data_glm = function(family, se, level, type, ...) {
         })
         datapoints = do.call(rbind, dat)
         datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), ]
+        
+        # legend customizations - same as ribbon but add line through square
+        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% 0
+        settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% par("lty")
+        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
+        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
+        
         env2env(environment(), settings, "datapoints")
     }
     return(fun)

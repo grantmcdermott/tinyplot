@@ -767,8 +767,7 @@ tinyplot.default = function(
     null_ylim     = is.null(ylim),
     # when palette functions need pre-processing this check raises error
     null_palette  = tryCatch(is.null(palette), error = function(e) FALSE),
-    x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridges"
-
+    x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridge"
 
     # unevaluated expressions with side effects
     draw          = substitute(draw),

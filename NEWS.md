@@ -6,6 +6,11 @@ where the formatting is also better._
 
 ## Development version
 
+### Aesthetic changes
+
+- The legend plot characters for the `"pointrange"` and `"errorbar"` types now
+  include a line, to better resemble the actual plot elements (#532 @grantmcdermott)
+
 ### Internals
 
 - We now encourage type-specific legend customizations within the individual

@@ -908,12 +908,14 @@ tinyplot.default = function(
   #
   ## aesthetics by group -----
   #
+  
   by_aesthetics(settings)
 
 
   #
   ## make settings available in the environment directly -----
   #
+
   env2env(settings, environment())
 
 
@@ -955,18 +957,18 @@ tinyplot.default = function(
     legend = NULL
   }
   if (!is.null(legend) && is.character(legend) && legend == "none") {
-    settings$legend_args[["x"]] = "none"
+    legend_args[["x"]] = "none"
     dual_legend = FALSE
   }
 
   if (null_by) {
     if (bubble && !dual_legend) {
-      settings$legend_args[["title"]] = cex_dep
+      legend_args[["title"]] = cex_dep
       lgnd_labs = names(bubble_cex)
       lgnd_cex = bubble_cex * cex_fct_adj
     } else if (is.null(legend)) {
       legend = "none"
-      settings$legend_args[["x"]] = "none"
+      legend_args[["x"]] = "none"
     }
   }
 
@@ -986,7 +988,7 @@ tinyplot.default = function(
       if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
       draw_legend(
         legend = legend,
-        legend_args = settings$legend_args,
+        legend_args = legend_args,
         by_dep = by_dep,
         lgnd_labs = lgnd_labs,
         type = type,
@@ -1003,7 +1005,7 @@ tinyplot.default = function(
       ## dual legend case...
 
       # sanitize_legend: processes legend arguments and returns standardized legend_args list
-      legend_args = sanitize_legend(legend, settings$legend_args)
+      legend_args = sanitize_legend(legend, legend_args)
 
       # legend 1: by (grouping) key
       lgby = list(
@@ -1054,7 +1056,7 @@ tinyplot.default = function(
     }
 
     has_legend = TRUE
-    } else if (settings$legend_args[["x"]] == "none" && !add) {
+    } else if (legend_args[["x"]] == "none" && !add) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1

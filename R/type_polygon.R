@@ -16,11 +16,23 @@
 type_polygon = function(density = NULL, angle = 45) {
   out = list(
     draw = draw_polygon(density = density, angle = angle),
-    data = NULL,
+    data = data_polygon(),
     name = "polygon"
   )
   class(out) = "tinyplot_type"
   return(out)
+}
+
+
+data_polygon = function() {
+  fun = function(settings, ...) {
+    # legend customizations
+    settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+    settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+    settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
+    settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
+  }
+  return(fun)
 }
 
 

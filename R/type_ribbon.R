@@ -154,6 +154,13 @@ data_ribbon = function(ribbon.alpha = NULL, dodge = 0, fixed.dodge = FALSE) {
         # ribbon.alpha comes from parent scope, so assign it locally
         ribbon.alpha = ribbon.alpha
 
+        # legend customizations
+        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% 0
+        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
+        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
+
         vars_to_copy = c("x", "y", "ymin", "ymax", "xlabs", "datapoints", "ribbon.alpha")
         if (!is.null(by)) vars_to_copy = c(vars_to_copy, "by")
         if (!is.null(facet)) vars_to_copy = c(vars_to_copy, "facet")

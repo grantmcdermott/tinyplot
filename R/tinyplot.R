@@ -733,6 +733,9 @@ tinyplot.default = function(
 
     # type-specific settings
     bubble        = FALSE,
+    bubble_pch    = NULL,
+    bubble_alpha  = NULL,
+    bubble_bg_alpha = NULL,
     ygroup        = NULL,  # for type_ridge()
 
     # data points and labels
@@ -767,9 +770,7 @@ tinyplot.default = function(
     null_ylim     = is.null(ylim),
     # when palette functions need pre-processing this check raises error
     null_palette  = tryCatch(is.null(palette), error = function(e) FALSE),
-    was_area_type = identical(type, "area"),  # mostly for legend
-    x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridges"
-
+    x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridge"
 
     # unevaluated expressions with side effects
     draw          = substitute(draw),
@@ -884,10 +885,10 @@ tinyplot.default = function(
   ## bubble plot -----
   #
   
-  # catch some simple aesthetics for bubble plots before the standard "by"
-  # grouping sanitizers (actually: will only be used for dual_legend plots but
-  # easiest to assign/determine now)
-  sanitize_bubble(settings)
+  # Transform cex values for bubble charts. Handles size transformation, legend
+  # gotchas, and aesthetic sanitization.
+  # Currently limited to "p" and "text" types, but could expand to others.
+  bubble(settings)
 
 
   #
@@ -910,12 +911,14 @@ tinyplot.default = function(
   #
   ## aesthetics by group -----
   #
+  
   by_aesthetics(settings)
 
 
   #
   ## make settings available in the environment directly -----
   #
+
   env2env(settings, environment())
 
 
@@ -982,11 +985,6 @@ tinyplot.default = function(
     }
 
     has_sub = !is.null(sub)
-
-    if (isTRUE(was_area_type) || isTRUE(type %in% c("area", "rect", "hist", "histogram"))) {
-      legend_args[["pt.lwd"]] = par("lwd")
-      legend_args[["lty"]] = 0
-    }
 
     if (!dual_legend) {
       ## simple case: single legend only

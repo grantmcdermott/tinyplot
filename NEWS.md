@@ -4,6 +4,21 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## Development version
+
+### Internals
+
+- We now encourage type-specific legend customizations within the individual
+  `type_<type>` constructors. (#531 @grantmcdermott)
+
+### Documentation
+
+- Improved guidance for
+  [custom types](https://grantmcdermott.com/tinyplot/vignettes/types.html#custom-types)
+  in the `Types` vignette. (#531 @grantmcdermott)
+
+### Breaking changes
+
 ## v0.6.0
 
 ### Breaking changes

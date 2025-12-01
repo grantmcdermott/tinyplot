@@ -166,59 +166,35 @@ tinyplot(Temp ~ Wind | Month, data = aq, facet = "by", type = "lm")
 
 It is easy to add custom types to **tinyplot**. Users who need highly customized
 plots, or developers who want to add support to their package or functions, only
-need to define three simple functions: `data_<type>()`, `draw_<type>()`, and
-`type_<type>()`.
-
-In this section, we explain the role of each of these functions and present a
-minimalist example of a custom type. Interested readers may refer to
-the **tinyplot** [source code](https://github.com/grantmcdermott/tinyplot)
-to see many more examples, since each **tinyplot** type is itself implemented as a
-custom type.
-
-The three functions that we need to define for a new type are:
-
-1. `data_<type>()`: Data function factory.
-    - Must take two arguments:
-        - `settings` is a special internal environment containing useful parameters that can be read or modified by `tinyplot` functions, including `datapoints`, `by`, `facet`, `xlab`, `ylab`, `xlim`, `ylim`, `palette`, and many more (see below)
-        - `...`
-    - Defines the data that will be passed on to the plotting functions (including any necessary transformations). Note that this function should modify the `settings` environment in-place; it does not need to return anything
-2. `draw_<type>()`: Drawing function factory.
-    - Accepts information about data point values and aesthetics.
-        - Inputs must include `...`
-        - The `i` prefix in argument names indicates that we are operating on a subgroup of the data, identified by `facet` or using the `|` operator in a formula.
-        - Available arguments are: `ibg`, `icol`, `ilty`, `ilwd`, `ipch`, `ix`, `ixmax`, `ixmin`, `iy`, `iymax`, `iymin`, `cex`, `dots`, `type`, `x_by`, `i`, `facet_by`, `by_data`, `facet_data`, `flip`
-    - Returns a function which can call base R to draw the plot.
-3. `type_<type>()`: A wrapper function that returns a named list with three elements:
-    - `draw`
-    - `data`
-    - `name`
+need to define their own `type_<type>()` function. Let's start with a simple
+example to see how this works in practice.
 
 ### A minimal example
 
-Here is a minimal example of a custom type that logs both `x` and `y` and
-plots points. Note how we use `env2env()` to extract variables from the `settings`
-environment, modify them, and copy the modified values back:
+Here is a minimal example of a custom `type_log()` that logs both `x` and `y`
+before plotting points.
 
 ```{r}
-#| layout-ncol: 2
 type_log = function(base = exp(1)) {
 
+  # data tranformation function
   data_log = function() {
     fun = function(settings, ...) {
-      # Extract datapoints from settings environment
+      # extract raw datapoints from settings environment
       datapoints = settings$datapoints
 
-      # Transform the data
+      # transform (log) the data
       datapoints$x = log(datapoints$x, base = base)
       datapoints$y = log(datapoints$y, base = base)
       datapoints = datapoints[order(datapoints$x), ]
 
-      # Assign (inject) modified datapoints back to settings
+      # re-assign modified datapoints back to settings
       settings$datapoints = datapoints
     }
     return(fun)
   }
 
+  # drawing function
   draw_log = function() {
     fun = function(ix, iy, icol, ...) {
       points(
@@ -230,45 +206,165 @@ type_log = function(base = exp(1)) {
     return(fun)
   }
 
+  # return object (list)
   out = list(
-    draw = draw_log(),
     data = data_log(),
+    draw = draw_log(),
+    name = "p" # fallback behaviour same as "p" type (e.g., legend defaults)
+  )
+  class(out) = "tinyplot_type"
+  return(out)
+
+}
+```
+
+To use, simply pass to `type = type_log(<args>)` as per as normal.
+
+```{r}
+#| layout-ncol: 2
+tinyplot(mpg ~ wt | factor(am), data = mtcars,
+  type = type_log(), main = "Ln (natural logarithm)")
+
+tinyplot(mpg ~ wt | factor(am), data = mtcars,
+  type = type_log(base = 10), main = "Log (base 10)")
+```
+
+### How it works
+
+As illustrated by our minimal example, custom **tinyplot** types require three
+key functions:
+
+1. **`type_<type>()`**: The main wrapper function that users will call. It
+   should accept any type-specific arguments that users will need to adjust the
+   final plot (e.g., here: `base`). More importantly, it _must_ return a list
+   of class `"tinyplot_type"` and contain three elements:
+    - `data`: A data transformation function (see below)
+    - `draw`: A drawing function (see below)
+    - `name`: The name of the underlying plot type (this can be anything, but
+      think of it as a convenient way to inherit default/fallback behaviour from
+      an existing plot type)
+
+2. **`data_<type>()`**: A function factory that returns a data transformation
+   function:
+    - **Required arguments**: `settings` and `...`
+    - `settings` is an environment containing plot data and parameters,
+       including `datapoints` (a data frame with `x`, `y`, `by`, etc.),
+       `legend_args` (a list of legend customizations), and many other internal
+       parameters (see [Appendix: Available settings](#appendix-available-settings)
+       below for a complete list).
+    - Should modify `settings` in-place (e.g., `settings$datapoints = ...`)
+    - Does not need to return anything
+
+3. **`draw_<type>()`**: A function factory that returns a drawing function:
+    - **Required arguments**: `...`
+    - **Available arguments**: `ix`, `iy`, `ixmin`, `ixmax`, `iymin`, `iymax`,
+      `icol`, `ibg`, `ipch`, `ilty`, `ilwd`, `icex`, and others
+    - The `i` prefix indicates data for a single group (when using `|` grouping
+      or facets)
+    - Should call base R graphics functions (e.g., `points()`, `lines()`,
+      `polygon()`) to render the plot
+
+The key insight is that `data_*()` transforms the data once, while `draw_*()`
+is called repeatedly for each group or facet.
+
+### Pro tip: Re-use existing plot types
+
+Rather than code up all of the internals for a custom type from scratch, users
+are strongly encouraged to re-use the scaffolding for existing types. One of the
+easiest ways to do this---which we use repeatedly in the main **tinyplot**
+codebase---is by "delegating" to an existing type at the end of the
+`data_<type>` function. Again, this is perhaps easier seen than explained, so
+consider an alternate version of our previous `type_log()` function.
+
+```{r}
+type_log_redux = function(base = exp(1)) {
+
+  # data tranformation function
+  data_log = function() {
+    fun = function(settings, ...) {
+      datapoints = settings$datapoints
+
+      datapoints$x = log(datapoints$x, base = base)
+      datapoints$y = log(datapoints$y, base = base)
+      datapoints = datapoints[order(datapoints$x), ]
+
+      settings$datapoints = datapoints
+
+      # re-assign/delegate to "p" type
+      settings$type = "p"
+    }
+    return(fun)
+  }
+
+  # return object (list)
+  out = list(
+    data = data_log(),
+    draw = NULL, # NULL => fall back to default type (now "p") drawing function
     name = "log"
   )
   class(out) = "tinyplot_type"
   return(out)
+
 }
-
-tinyplot(mpg ~ wt | factor(am), data = mtcars,
-  type = type_log(), main = "Ln")
-
-tinyplot(mpg ~ wt | factor(am), data = mtcars,
-  type = type_log(base = 10), main = "Log 10")
 ```
+
+The key differences from our original `type_log` function are:
+
+- `settings$type = "p"` (re-assign the type at the end of `data_log()`)
+- `draw = NULL` (drop the dedicated `draw_log()` function entirely; will fall back to `draw_points()` internally now)
+
+This "redux" version is obviously shorter than our original version, since we
+can skip the custom `draw_log()` section. But re-using existing **tinyplot**
+scaffolding brings added benefits beyond code concision. In particular, it
+guarantees that all of the functionality from an existing `type` will be made
+available to your custom type. For example, in our first `type_log()` function
+we didn't account for the fact that users might want to adjust groups by other
+aesthetics (e.g, `pch`), whereas we get this for free in `type_log_redux()`.
+
+```{r}
+#| layout-ncol: 2
+tinyplot(mpg ~ wt | factor(am), data = mtcars,
+  pch = "by",
+  type = type_log(), main = "type_log")
+
+tinyplot(mpg ~ wt | factor(am), data = mtcars,
+  pch = "by",
+  type = type_log_redux(), main = "type_log_redux")
+```
+
+Moral of the story: be lazy and re-use existing **tinyplot** scaffolding
+wherever possible; especially drawing functions.
 
 ### More examples
 
 The **tinyplot**
 [source code](https://github.com/grantmcdermott/tinyplot/tree/main/R)
 contains many examples of type constructor functions that should provide a
-helpful starting point for custom plot types. Failing that, the **tinyplot**
-team are always happy to help guide users on how to create their own types and
-re-purpose existing **tinyplot** code. Just let us know by
+helpful starting point for custom plot types. Each built-in **tinyplot** type
+is itself implemented as a custom type, so you can see real-world examples of
+varying complexity. For example, take a look at the
+[`type_points.R`](https://github.com/grantmcdermott/tinyplot/blob/main/R/type_points.R) or
+[`type_area.R`](https://github.com/grantmcdermott/tinyplot/blob/main/R/type_area.R)
+code. (The latter provides an example where we delegate to the `type_ribbon`
+drawing code.)
+
+Beyond that, the **tinyplot** team are always happy to help guide users on how
+to create their own types. Just let us know by
 [raising an issue](https://github.com/grantmcdermott/tinyplot/issues)
 on our GitHub repo.
 
+## Appendix: Available settings {#appendix-available-settings}
 
-### Available settings
-
-To see what parameters are available in the `settings` environment, we can create
-a simple `type_error()` that stops with the names of all available settings:
+To see what objects and parameters are available in the `settings` environment,
+we can create a simple `type_error()` function that stops with the names of all
+available settings:
 
 ```{r}
 #| error: true
 type_error = function() {
   data_error = function() {
     fun = function(settings, ...) {
-      stop(paste(names(settings), collapse = ", "))
+      stop(paste(sort(names(settings)), collapse = ", "))
     }
     return(fun)
   }

@@ -43,8 +43,11 @@ type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
 }
 
 data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
-  fun = function(settings, cex = NULL, ...) {
-    env2env(settings, environment(), c("datapoints", "cex", "legend_args"))
+  fun = function(settings, ...) {
+    env2env(settings, environment(), "datapoints")
+
+    # Store clim for bubble() function
+    settings$clim = clim
 
     # catch for factors (we should still be able to "force" plot these with points)
     if (is.factor(datapoints$x)) {
@@ -69,36 +72,13 @@ data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
       datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
     }
 
-    bubble = FALSE
-    bubble_cex = 1
-    if (!is.null(cex) && length(cex) == nrow(datapoints)) {
-      bubble = TRUE
-      ## Identify the pretty break points for our bubble labels
-      bubble_labs = pretty(cex, n = 5)
-      len_labs = length(bubble_labs)
-      cex = rescale_num(sqrt(c(bubble_labs, cex)) / pi, to = clim)
-      bubble_cex = cex[1:len_labs]
-      cex = cex[(len_labs+1):length(cex)]
-      # catch for cases where pretty breaks leads to smallest category of 0
-      if (bubble_labs[1] == 0) {
-        bubble_labs = bubble_labs[-1]
-        bubble_cex = bubble_cex[-1]
-      }
-      names(bubble_cex) = format(bubble_labs)
-      if (max(clim) > 2.5) {
-        legend_args[["x.intersp"]] = max(clim) / 2.5
-        legend_args[["y.intersp"]] = sapply(bubble_cex / 2.5, max, 1)
-      }
-    }
+    # legend customizations
+    settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% settings$lwd
 
     env2env(environment(), settings, c(
       "datapoints",
       "xlabs",
-      "ylabs",
-      "cex",
-      "bubble",
-      "bubble_cex",
-      "legend_args"
+      "ylabs"
     ))
   }
 }

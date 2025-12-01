@@ -145,7 +145,6 @@ data_histogram = function(breaks = "Sturges",
             ylab = ifelse(datapoints$freq[1], "Frequency", "Density")
         }
 
-        # browser()
         x = c(datapoints$xmin, datapoints$xmax)
         y = c(datapoints$ymin, datapoints$ymax)
         ymin = datapoints$ymin
@@ -154,6 +153,15 @@ data_histogram = function(breaks = "Sturges",
         xmax = datapoints$xmax
         by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
         facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
+        
+        # legend customizations
+        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% par("lwd")
+        settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% 0
+        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
+        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
+        
         env2env(environment(), settings, c(
             "x",
             "y",

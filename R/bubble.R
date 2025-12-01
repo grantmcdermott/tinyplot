@@ -29,6 +29,10 @@ bubble = function(settings) {
     settings$legend_args[["x.intersp"]] = max(clim) / 2.5
     settings$legend_args[["y.intersp"]] = sapply(bubble_cex / 2.5, max, 1)
   }
+
+  ## fixme: can't assign pt.cex here b/c of dual legend gotcha (don't want to
+  ##   override the "normal" pt.cex too) 
+  # legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% (settings[["cex"]] %||% par("cex"))
   
   # Must update settings with bubble/bubble_cex/cex before calling sanitize_bubble
   env2env(environment(), settings, c("bubble", "bubble_cex", "cex"))

@@ -57,9 +57,9 @@ compute_legend_args = function(
   legend_args[["bty"]] = legend_args[["bty"]] %||% "n"
   legend_args[["horiz"]] = legend_args[["horiz"]] %||% FALSE
   legend_args[["xpd"]] = legend_args[["xpd"]] %||% NA
-  if (!isTRUE(type %in% c("p", "ribbon", "polygon", "polypath"))) {
-    legend_args[["lwd"]] = legend_args[["lwd"]] %||% lwd
-  }
+  legend_args[["lwd"]] = legend_args[["lwd"]] %||% lwd
+  # special handling of pt.cex for bubble plots
+  # (fixme: can't handle ahead of time in bubble.R b/c of dual legend gotcha)
   if (is.null(type) || type %in% c("p", "text")) {
     legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% (cex %||% par("cex"))
   }
@@ -68,9 +68,6 @@ compute_legend_args = function(
     legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% 3.5
     legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25
     legend_args[["seg.len"]] = legend_args[["seg.len"]] %||% 1.25
-  }
-  if (identical(type, "p")) {
-    legend_args[["pt.lwd"]] = legend_args[["pt.lwd"]] %||% lwd
   }
   if (identical(type, "n") && isFALSE(gradient)) {
     legend_args[["pch"]] = legend_args[["pch"]] %||% par("pch")

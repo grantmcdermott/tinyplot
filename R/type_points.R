@@ -72,6 +72,9 @@ data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
       datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
     }
 
+    # legend customizations
+    settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% settings$lwd
+
     env2env(environment(), settings, c(
       "datapoints",
       "xlabs",

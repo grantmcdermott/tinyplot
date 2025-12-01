@@ -219,9 +219,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#custom-types" id="toc-custom-types" class="nav-link" data-scroll-target="#custom-types">Custom types</a>
   <ul class="collapse">
   <li><a href="#a-minimal-example" id="toc-a-minimal-example" class="nav-link" data-scroll-target="#a-minimal-example">A minimal example</a></li>
+  <li><a href="#how-it-works" id="toc-how-it-works" class="nav-link" data-scroll-target="#how-it-works">How it works</a></li>
+  <li><a href="#pro-tip-re-use-existing-plot-types" id="toc-pro-tip-re-use-existing-plot-types" class="nav-link" data-scroll-target="#pro-tip-re-use-existing-plot-types">Pro tip: Re-use existing plot types</a></li>
   <li><a href="#more-examples" id="toc-more-examples" class="nav-link" data-scroll-target="#more-examples">More examples</a></li>
-  <li><a href="#available-settings" id="toc-available-settings" class="nav-link" data-scroll-target="#available-settings">Available settings</a></li>
   </ul></li>
+  <li><a href="#appendix-available-settings" id="toc-appendix-available-settings" class="nav-link" data-scroll-target="#appendix-available-settings">Appendix: Available settings</a></li>
   </ul>
 </nav>
     </div>
@@ -613,124 +615,187 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="custom-types" class="level2">
 <h2 class="anchored" data-anchor-id="custom-types">Custom types</h2>
-<p>It is easy to add custom types to <strong>tinyplot</strong>. Users who need highly customized plots, or developers who want to add support to their package or functions, only need to define three simple functions: <code>data_&lt;type&gt;()</code>, <code>draw_&lt;type&gt;()</code>, and <code>type_&lt;type&gt;()</code>.</p>
-<p>In this section, we explain the role of each of these functions and present a minimalist example of a custom type. Interested readers may refer to the <strong>tinyplot</strong> <a href="https://github.com/grantmcdermott/tinyplot">source code</a> to see many more examples, since each <strong>tinyplot</strong> type is itself implemented as a custom type.</p>
-<p>The three functions that we need to define for a new type are:</p>
-<ol type="1">
-<li><code>data_&lt;type&gt;()</code>: Data function factory.
-<ul>
-<li>Must take two arguments:
-<ul>
-<li><code>settings</code> is a special internal environment containing useful parameters that can be read or modified by <code>tinyplot</code> functions, including <code>datapoints</code>, <code>by</code>, <code>facet</code>, <code>xlab</code>, <code>ylab</code>, <code>xlim</code>, <code>ylim</code>, <code>palette</code>, and many more (see below)</li>
-<li><code>...</code></li>
-</ul></li>
-<li>Defines the data that will be passed on to the plotting functions (including any necessary transformations). Note that this function should modify the <code>settings</code> environment in-place; it does not need to return anything</li>
-</ul></li>
-<li><code>draw_&lt;type&gt;()</code>: Drawing function factory.
-<ul>
-<li>Accepts information about data point values and aesthetics.
-<ul>
-<li>Inputs must include <code>...</code></li>
-<li>The <code>i</code> prefix in argument names indicates that we are operating on a subgroup of the data, identified by <code>facet</code> or using the <code>|</code> operator in a formula.</li>
-<li>Available arguments are: <code>ibg</code>, <code>icol</code>, <code>ilty</code>, <code>ilwd</code>, <code>ipch</code>, <code>ix</code>, <code>ixmax</code>, <code>ixmin</code>, <code>iy</code>, <code>iymax</code>, <code>iymin</code>, <code>cex</code>, <code>dots</code>, <code>type</code>, <code>x_by</code>, <code>i</code>, <code>facet_by</code>, <code>by_data</code>, <code>facet_data</code>, <code>flip</code></li>
-</ul></li>
-<li>Returns a function which can call base R to draw the plot.</li>
-</ul></li>
-<li><code>type_&lt;type&gt;()</code>: A wrapper function that returns a named list with three elements:
-<ul>
-<li><code>draw</code></li>
-<li><code>data</code></li>
-<li><code>name</code></li>
-</ul></li>
-</ol>
+<p>It is easy to add custom types to <strong>tinyplot</strong>. Users who need highly customized plots, or developers who want to add support to their package or functions, only need to define their own <code>type_&lt;type&gt;()</code> function. Let’s start with a simple example to see how this works in practice.</p>
 <section id="a-minimal-example" class="level3">
 <h3 class="anchored" data-anchor-id="a-minimal-example">A minimal example</h3>
-<p>Here is a minimal example of a custom type that logs both <code>x</code> and <code>y</code> and plots points. Note how we use <code>env2env()</code> to extract variables from the <code>settings</code> environment, modify them, and copy the modified values back:</p>
+<p>Here is a minimal example of a custom <code>type_log()</code> that logs both <code>x</code> and <code>y</code> before plotting points.</p>
+<div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>type_log <span class="ot">=</span> <span class="cf">function</span>(<span class="at">base =</span> <span class="fu">exp</span>(<span class="dv">1</span>)) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  data_log <span class="ot">=</span> <span class="cf">function</span>() {</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Extract datapoints from settings environment</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      datapoints <span class="ot">=</span> settings<span class="sc">$</span>datapoints</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Transform the data</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      datapoints<span class="sc">$</span>x <span class="ot">=</span> <span class="fu">log</span>(datapoints<span class="sc">$</span>x, <span class="at">base =</span> base)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      datapoints<span class="sc">$</span>y <span class="ot">=</span> <span class="fu">log</span>(datapoints<span class="sc">$</span>y, <span class="at">base =</span> base)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      datapoints <span class="ot">=</span> datapoints[<span class="fu">order</span>(datapoints<span class="sc">$</span>x), ]</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Assign (inject) modified datapoints back to settings</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      settings<span class="sc">$</span>datapoints <span class="ot">=</span> datapoints</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fun)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  draw_log <span class="ot">=</span> <span class="cf">function</span>() {</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(ix, iy, icol, ...) {</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">points</span>(</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> ix,</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> iy,</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> icol</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fun)</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">draw =</span> <span class="fu">draw_log</span>(),</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">data_log</span>(),</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"log"</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class</span>(out) <span class="ot">=</span> <span class="st">"tinyplot_type"</span></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars,</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_log</span>(), <span class="at">main =</span> <span class="st">"Ln"</span>)</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars,</span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_log</span>(<span class="at">base =</span> <span class="dv">10</span>), <span class="at">main =</span> <span class="st">"Log 10"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data tranformation function</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  data_log <span class="ot">=</span> <span class="cf">function</span>() {</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      <span class="co"># extract raw datapoints from settings environment</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      datapoints <span class="ot">=</span> settings<span class="sc">$</span>datapoints</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># transform (log) the data</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      datapoints<span class="sc">$</span>x <span class="ot">=</span> <span class="fu">log</span>(datapoints<span class="sc">$</span>x, <span class="at">base =</span> base)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      datapoints<span class="sc">$</span>y <span class="ot">=</span> <span class="fu">log</span>(datapoints<span class="sc">$</span>y, <span class="at">base =</span> base)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      datapoints <span class="ot">=</span> datapoints[<span class="fu">order</span>(datapoints<span class="sc">$</span>x), ]</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># re-assign modified datapoints back to settings</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      settings<span class="sc">$</span>datapoints <span class="ot">=</span> datapoints</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fun)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># drawing function</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  draw_log <span class="ot">=</span> <span class="cf">function</span>() {</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(ix, iy, icol, ...) {</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">points</span>(</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> ix,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> iy,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> icol</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fun)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># return object (list)</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">data_log</span>(),</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">draw =</span> <span class="fu">draw_log</span>(),</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"p"</span> <span class="co"># fallback behaviour same as "p" type (e.g., legend defaults)</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class</span>(out) <span class="ot">=</span> <span class="st">"tinyplot_type"</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>To use, simply pass to <code>type = type_log(&lt;args&gt;)</code> as per as normal.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_log</span>(), <span class="at">main =</span> <span class="st">"Ln (natural logarithm)"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_log</span>(<span class="at">base =</span> <span class="dv">10</span>), <span class="at">main =</span> <span class="st">"Log (base 10)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="types_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<p><img src="types_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="types_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+<p><img src="types_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </div>
+</section>
+<section id="how-it-works" class="level3">
+<h3 class="anchored" data-anchor-id="how-it-works">How it works</h3>
+<p>As illustrated by our minimal example, custom <strong>tinyplot</strong> types require three key functions:</p>
+<ol type="1">
+<li><strong><code>type_&lt;type&gt;()</code></strong>: The main wrapper function that users will call. It should accept any type-specific arguments that users will need to adjust the final plot (e.g., here: <code>base</code>). More importantly, it <em>must</em> return a list of class <code>"tinyplot_type"</code> and contain three elements:
+<ul>
+<li><code>data</code>: A data transformation function (see below)</li>
+<li><code>draw</code>: A drawing function (see below)</li>
+<li><code>name</code>: The name of the underlying plot type (this can be anything, but think of it as a convenient way to inherit default/fallback behaviour from an existing plot type)</li>
+</ul></li>
+<li><strong><code>data_&lt;type&gt;()</code></strong>: A function factory that returns a data transformation function:
+<ul>
+<li><strong>Required arguments</strong>: <code>settings</code> and <code>...</code></li>
+<li><code>settings</code> is an environment containing plot data and parameters, including <code>datapoints</code> (a data frame with <code>x</code>, <code>y</code>, <code>by</code>, etc.), <code>legend_args</code> (a list of legend customizations), and many other internal parameters (see <a href="#appendix-available-settings">Appendix: Available settings</a> below for a complete list).</li>
+<li>Should modify <code>settings</code> in-place (e.g., <code>settings$datapoints = ...</code>)</li>
+<li>Does not need to return anything</li>
+</ul></li>
+<li><strong><code>draw_&lt;type&gt;()</code></strong>: A function factory that returns a drawing function:
+<ul>
+<li><strong>Required arguments</strong>: <code>...</code></li>
+<li><strong>Available arguments</strong>: <code>ix</code>, <code>iy</code>, <code>ixmin</code>, <code>ixmax</code>, <code>iymin</code>, <code>iymax</code>, <code>icol</code>, <code>ibg</code>, <code>ipch</code>, <code>ilty</code>, <code>ilwd</code>, <code>icex</code>, and others</li>
+<li>The <code>i</code> prefix indicates data for a single group (when using <code>|</code> grouping or facets)</li>
+<li>Should call base R graphics functions (e.g., <code>points()</code>, <code>lines()</code>, <code>polygon()</code>) to render the plot</li>
+</ul></li>
+</ol>
+<p>The key insight is that <code>data_*()</code> transforms the data once, while <code>draw_*()</code> is called repeatedly for each group or facet.</p>
+</section>
+<section id="pro-tip-re-use-existing-plot-types" class="level3">
+<h3 class="anchored" data-anchor-id="pro-tip-re-use-existing-plot-types">Pro tip: Re-use existing plot types</h3>
+<p>Rather than code up all of the internals for a custom type from scratch, users are strongly encouraged to re-use the scaffolding for existing types. One of the easiest ways to do this—which we use repeatedly in the main <strong>tinyplot</strong> codebase—is by “delegating” to an existing type at the end of the <code>data_&lt;type&gt;</code> function. Again, this is perhaps easier seen than explained, so consider an alternate version of our previous <code>type_log()</code> function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>type_log_redux <span class="ot">=</span> <span class="cf">function</span>(<span class="at">base =</span> <span class="fu">exp</span>(<span class="dv">1</span>)) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data tranformation function</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  data_log <span class="ot">=</span> <span class="cf">function</span>() {</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      datapoints <span class="ot">=</span> settings<span class="sc">$</span>datapoints</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      datapoints<span class="sc">$</span>x <span class="ot">=</span> <span class="fu">log</span>(datapoints<span class="sc">$</span>x, <span class="at">base =</span> base)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      datapoints<span class="sc">$</span>y <span class="ot">=</span> <span class="fu">log</span>(datapoints<span class="sc">$</span>y, <span class="at">base =</span> base)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      datapoints <span class="ot">=</span> datapoints[<span class="fu">order</span>(datapoints<span class="sc">$</span>x), ]</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      settings<span class="sc">$</span>datapoints <span class="ot">=</span> datapoints</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># re-assign/delegate to "p" type</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>      settings<span class="sc">$</span>type <span class="ot">=</span> <span class="st">"p"</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fun)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># return object (list)</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">data_log</span>(),</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">draw =</span> <span class="cn">NULL</span>, <span class="co"># NULL =&gt; fall back to default type (now "p") drawing function</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"log"</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class</span>(out) <span class="ot">=</span> <span class="st">"tinyplot_type"</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The key differences from our original <code>type_log</code> function are:</p>
+<ul>
+<li><code>settings$type = "p"</code> (re-assign the type at the end of <code>data_log()</code>)</li>
+<li><code>draw = NULL</code> (drop the dedicated <code>draw_log()</code> function entirely; will fall back to <code>draw_points()</code> internally now)</li>
+</ul>
+<p>This “redux” version is obviously shorter than our original version, since we can skip the custom <code>draw_log()</code> section. But re-using existing <strong>tinyplot</strong> scaffolding brings added benefits beyond code concision. In particular, it guarantees that all of the functionality from an existing <code>type</code> will be made available to your custom type. For example, in our first <code>type_log()</code> function we didn’t account for the fact that users might want to adjust groups by other aesthetics (e.g, <code>pch</code>), whereas we get this for free in <code>type_log_redux()</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="st">"by"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_log</span>(), <span class="at">main =</span> <span class="st">"type_log"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="st">"by"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_log_redux</span>(), <span class="at">main =</span> <span class="st">"type_log_redux"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="types_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="types_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<p>Moral of the story: be lazy and re-use existing <strong>tinyplot</strong> scaffolding wherever possible; especially drawing functions.</p>
 </section>
 <section id="more-examples" class="level3">
 <h3 class="anchored" data-anchor-id="more-examples">More examples</h3>
-<p>The <strong>tinyplot</strong> <a href="https://github.com/grantmcdermott/tinyplot/tree/main/R">source code</a> contains many examples of type constructor functions that should provide a helpful starting point for custom plot types. Failing that, the <strong>tinyplot</strong> team are always happy to help guide users on how to create their own types and re-purpose existing <strong>tinyplot</strong> code. Just let us know by <a href="https://github.com/grantmcdermott/tinyplot/issues">raising an issue</a> on our GitHub repo.</p>
+<p>The <strong>tinyplot</strong> <a href="https://github.com/grantmcdermott/tinyplot/tree/main/R">source code</a> contains many examples of type constructor functions that should provide a helpful starting point for custom plot types. Each built-in <strong>tinyplot</strong> type is itself implemented as a custom type, so you can see real-world examples of varying complexity. For example, take a look at the <a href="https://github.com/grantmcdermott/tinyplot/blob/main/R/type_points.R"><code>type_points.R</code></a> or <a href="https://github.com/grantmcdermott/tinyplot/blob/main/R/type_area.R"><code>type_area.R</code></a> code. (The latter provides an example where we delegate to the <code>type_ribbon</code> drawing code.)</p>
+<p>Beyond that, the <strong>tinyplot</strong> team are always happy to help guide users on how to create their own types. Just let us know by <a href="https://github.com/grantmcdermott/tinyplot/issues">raising an issue</a> on our GitHub repo.</p>
 </section>
-<section id="available-settings" class="level3">
-<h3 class="anchored" data-anchor-id="available-settings">Available settings</h3>
-<p>To see what parameters are available in the <code>settings</code> environment, we can create a simple <code>type_error()</code> that stops with the names of all available settings:</p>
+</section>
+<section id="appendix-available-settings" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-available-settings">Appendix: Available settings</h2>
+<p>To see what objects and parameters are available in the <code>settings</code> environment, we can create a simple <code>type_error()</code> function that stops with the names of all available settings:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>type_error <span class="ot">=</span> <span class="cf">function</span>() {</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  data_error <span class="ot">=</span> <span class="cf">function</span>() {</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="fu">paste</span>(<span class="fu">names</span>(settings), <span class="at">collapse =</span> <span class="st">", "</span>))</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fun)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">data_error</span>()</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class</span>(out) <span class="ot">=</span> <span class="st">"tinyplot_type"</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="fu">type_error</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>type_error <span class="ot">=</span> <span class="cf">function</span>() {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  data_error <span class="ot">=</span> <span class="cf">function</span>() {</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="fu">paste</span>(<span class="fu">sort</span>(<span class="fu">names</span>(settings)), <span class="at">collapse =</span> <span class="st">", "</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fun)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">data_error</span>()</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class</span>(out) <span class="ot">=</span> <span class="st">"tinyplot_type"</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="fu">type_error</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
-<pre><code>Error in settings$type_data(settings, ...): type_info, y_dep, xlabs, type_data, legend, xaxb, yaxb, xlim, ylim, ygroup, col, facet, lty, xmin, by_dep, xaxl, null_ylim, ymin, dodge, yaxl, null_xlim, file, ylabs, ymin_dep, ribbon.alpha, width, draw, null_facet, xaxs, ymax_dep, xmax, ymax, yaxs, palette, xaxt, yaxt, alpha, fill, facet_by, bg, datapoints, type, axes, type_draw, null_by, facet_dep, lwd, log, null_palette, legend_args, cex_dep, height, x_by, bubble, xmin_dep, x_dep, xmax_dep, by, frame.plot, cex, call, pch, x, dots, flip, y, facet_attr, xlab, was_area_type, ylab, type_name, facet.args</code></pre>
+<pre><code>Error in settings$type_data(settings, ...): alpha, axes, bg, bubble, bubble_alpha, bubble_bg_alpha, bubble_pch, by, by_dep, call, cex, cex_dep, col, datapoints, dodge, dots, draw, facet, facet_attr, facet_by, facet_dep, facet.args, file, fill, flip, frame.plot, height, legend, legend_args, log, lty, lwd, null_by, null_facet, null_palette, null_xlim, null_ylim, palette, pch, ribbon.alpha, type, type_data, type_draw, type_info, type_name, width, x, x_by, x_dep, xaxb, xaxl, xaxs, xaxt, xlab, xlabs, xlim, xmax, xmax_dep, xmin, xmin_dep, y, y_dep, yaxb, yaxl, yaxs, yaxt, ygroup, ylab, ylabs, ylim, ymax, ymax_dep, ymin, ymin_dep</code></pre>
 </div>
 </div>
 <p>As we can see, the <code>settings</code> environment contains many parameters that custom types can use as inputs or modify as needed.</p>
 
 
-</section>
 </section>
 
 

@@ -733,6 +733,9 @@ tinyplot.default = function(
 
     # type-specific settings
     bubble        = FALSE,
+    bubble_pch    = NULL,
+    bubble_alpha  = NULL,
+    bubble_bg_alpha = NULL,
     ygroup        = NULL,  # for type_ridge()
 
     # data points and labels
@@ -882,10 +885,10 @@ tinyplot.default = function(
   ## bubble plot -----
   #
   
-  # catch some simple aesthetics for bubble plots before the standard "by"
-  # grouping sanitizers (actually: will only be used for dual_legend plots but
-  # easiest to assign/determine now)
-  sanitize_bubble(settings)
+  # Transform cex values for bubble charts. Handles size transformation, legend
+  # gotchas, and aesthetic sanitization.
+  # Currently limited to "p" and "text" types, but could expand to others.
+  bubble(settings)
 
 
   #

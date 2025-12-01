@@ -267,7 +267,7 @@ key functions:
 The key insight is that `data_*()` transforms the data once, while `draw_*()`
 is called repeatedly for each group or facet.
 
-### Pro-tip: Re-use existing plot types and scaffolding
+### Pro tip: Re-use existing plot types
 
 Rather than code up all of the internals for a custom type from scratch, users
 are strongly encouraged to re-use the scaffolding for existing types. One of the

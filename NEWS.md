@@ -9,7 +9,7 @@ where the formatting is also better._
 ### Aesthetic changes
 
 - The legend plot characters for the `"pointrange"` and `"errorbar"` types now
-  include a line, to better resemble the actual plot elements (#532 @grantmcdermott)
+  include a line, to better resemble the actual plot elements (#533 @grantmcdermott)
 
 ### Internals
 

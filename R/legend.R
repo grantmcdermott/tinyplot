@@ -1,15 +1,3 @@
-# LEGEND SYSTEM
-#
-# This file consolidates all legend-related functionality for tinyplot.
-# Previously spread across 5 files, now organized into logical sections:
-#
-# 1. Input Sanitization
-# 2. Legend Context & Preparation
-# 3. Single Legend Rendering
-# 4. Gradient Legend Rendering
-# 5. Multi-Legend Rendering
-
-
 #
 ## Helper Functions -----
 #
@@ -28,17 +16,19 @@ lines_to_user_y = function(val) {
 }
 
 # Adjust margins for outer legend placement
-legend_outer_margins_prepare = function(outer_side, outer_end, outer_right,
-                                           outer_bottom, omar, ooma, has_sub,
-                                           topmar_epsilon, type, lmar, new_plot, dynmar) {
-  if (outer_side) {
+legend_outer_margins_prepare = function(spec) {
+  omar = spec$margins$omar
+  ooma = spec$margins$ooma
+  lmar = spec$margins$lmar
+
+  if (spec$flags$outer_side) {
     # Extra bump for spineplot if outer_right legend (to accommodate secondary y-axis)
-    if (identical(type, "spineplot")) {
+    if (identical(spec$meta$type, "spineplot")) {
       lmar[1] = lmar[1] + 1.1
     }
 
     # Set inner margins before fake legend is drawn
-    if (outer_right) {
+    if (spec$flags$outer_right) {
       omar[4] = 0
     } else {
       # For outer left we have to account for the y-axis label too
@@ -46,12 +36,12 @@ legend_outer_margins_prepare = function(outer_side, outer_end, outer_right,
     }
     par(mar = omar)
 
-    if (new_plot) {
+    if (spec$meta$new_plot) {
       plot.new()
       # For themed + dynamic plots, reinstate adjusted plot margins
-      if (dynmar) {
+      if (spec$meta$dynmar) {
         omar = par("mar")
-        if (outer_right) {
+        if (spec$flags$outer_right) {
           omar[4] = 0
         } else {
           omar[2] = par("mgp")[1] + 1 * par("cex.lab")
@@ -60,66 +50,65 @@ legend_outer_margins_prepare = function(outer_side, outer_end, outer_right,
       }
     }
 
-  } else if (outer_end) {
+  } else if (spec$flags$outer_end) {
     # Set inner margins before fake legend is drawn
-    if (outer_bottom) {
+    if (spec$flags$outer_bottom) {
       omar[1] = par("mgp")[1] + 1 * par("cex.lab")
-      if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
+      if (spec$meta$has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
         omar[1] = omar[1] + 1 * par("cex.sub")
       }
     } else {
       # For "top!", expand existing inner margin rather than outer margin
-      ooma[3] = ooma[3] + topmar_epsilon
+      ooma[3] = ooma[3] + spec$meta$topmar_epsilon
       par(oma = ooma)
     }
     par(mar = omar)
 
-    if (new_plot) {
+    if (spec$meta$new_plot) {
       plot.new()
       # For themed + dynamic plots, reinstate adjusted plot margins
-      if (dynmar) {
+      if (spec$meta$dynmar) {
         omar = par("mar")
-        if (outer_bottom) {
+        if (spec$flags$outer_bottom) {
           omar[1] = theme_clean$mgp[1] + 1 * par("cex.lab")
-          if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
+          if (spec$meta$has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
             omar[1] = omar[1] + 1 * par("cex.sub")
           }
         } else {
-          ooma[3] = ooma[3] + topmar_epsilon
+          ooma[3] = ooma[3] + spec$meta$topmar_epsilon
           par(oma = ooma)
         }
         par(mar = omar)
       }
     }
   } else {
-    if (new_plot) plot.new()
+    if (spec$meta$new_plot) plot.new()
   }
 
   list(omar = omar, ooma = ooma, lmar = lmar)
 }
 
 # Calculate legend inset for outer placement
-calculate_legend_inset = function(outer_side, outer_end, outer_right, outer_bottom,
-                                  lmar, omar, topmar_epsilon) {
-  if (outer_side) {
-    inset_val = lines_to_npc(lmar[1])
+measure_legend_inset = function(spec) {
+  if (spec$flags$outer_side) {
+    inset_val = lines_to_npc(spec$margins$lmar[1])
     # Extra space needed for "left!" because of lhs inner margin
-    if (!outer_right) {
+    if (!spec$flags$outer_right) {
       inset_val = inset_val + lines_to_npc(par("mar")[2])
     }
     c(1 + inset_val, 0)
 
-  } else if (outer_end) {
+  } else if (spec$flags$outer_end) {
     # Note: Y-direction uses grconvertY (not lines_to_npc which is X-only)
-    inset_val = grconvertY(lmar[1], from = "lines", to = "npc") -
+    inset_val = grconvertY(spec$margins$lmar[1], from = "lines", to = "npc") -
                 grconvertY(0, from = "lines", to = "npc")
-    if (outer_bottom) {
+    if (spec$flags$outer_bottom) {
       # Extra space needed for "bottom!" because of lhs inner margin
       inset_bump = grconvertY(par("mar")[1], from = "lines", to = "npc") -
                    grconvertY(0, from = "lines", to = "npc")
       inset_val = inset_val + inset_bump
     } else {
-      epsilon_bump = grconvertY(topmar_epsilon, from = "lines", to = "npc") -
+      epsilon_bump = grconvertY(spec$meta$topmar_epsilon, from = "lines", to = "npc") -
                      grconvertY(0, from = "lines", to = "npc")
       inset_val = inset_val + epsilon_bump
     }
@@ -131,14 +120,14 @@ calculate_legend_inset = function(outer_side, outer_end, outer_right, outer_bott
 }
 
 # Measure legend dimensions using a fake (non-plotted) legend
-measure_fake_legend = function(legend_args, gradient, outer_end) {
+measure_fake_legend = function(spec) {
   fklgnd.args = modifyList(
-    legend_args,
+    spec$args,
     list(plot = FALSE),
     keep.null = TRUE
   )
 
-  if (gradient) {
+  if (spec$flags$gradient) {
     lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
     if (length(lgnd_labs_tmp) < 5L) {
       nmore = 5L - length(lgnd_labs_tmp)
@@ -149,7 +138,7 @@ measure_fake_legend = function(legend_args, gradient, outer_end) {
       list(legend = lgnd_labs_tmp),
       keep.null = TRUE
     )
-    if (outer_end) {
+    if (spec$flags$outer_end) {
       fklgnd.args = modifyList(
         fklgnd.args,
         list(title = NULL),
@@ -162,129 +151,34 @@ measure_fake_legend = function(legend_args, gradient, outer_end) {
 }
 
 # Calculate and apply soma (outer margin size) based on legend dimensions
-legend_outer_margins_apply = function(fklgnd, outer_side, outer_end, outer_right,
-                                    outer_bottom, lmar, ooma, omar, topmar_epsilon) {
+legend_outer_margins_apply = function(spec) {
   # Calculate size
-  soma = if (outer_side) {
-    grconvertX(fklgnd$rect$w, to = "lines") - grconvertX(0, to = "lines")
-  } else if (outer_end) {
-    grconvertY(fklgnd$rect$h, to = "lines") - grconvertY(0, to = "lines")
+  soma = if (spec$flags$outer_side) {
+    grconvertX(spec$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
+  } else if (spec$flags$outer_end) {
+    grconvertY(spec$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
   } else {
     0
   }
-  soma = soma + sum(lmar)
+  soma = soma + sum(spec$margins$lmar)
 
   # Apply to appropriate margin
-  if (outer_side) {
-    ooma[if (outer_right) 4 else 2] = soma
-  } else if (outer_end) {
-    if (outer_bottom) {
+  ooma = spec$margins$ooma
+  omar = spec$margins$omar
+
+  if (spec$flags$outer_side) {
+    ooma[if (spec$flags$outer_right) 4 else 2] = soma
+  } else if (spec$flags$outer_end) {
+    if (spec$flags$outer_bottom) {
       ooma[1] = soma
     } else {
-      omar[3] = omar[3] + soma - topmar_epsilon
+      omar[3] = omar[3] + soma - spec$meta$topmar_epsilon
       par(mar = omar)
     }
   }
   par(oma = ooma)
 
   list(ooma = ooma, omar = omar)
-}
-
-
-#
-## Legend Spec Pipeline -----
-#
-
-#' Calculate legend layout (inset and rasterbox)
-#'
-#' @description Fourth stage of pipeline: calculates inset for positioning
-#'   and rasterbox coordinates for gradient legends.
-#'
-#' @param spec Legend specification object
-#' @param draw Logical indicating if this is for actual drawing (vs measurement)
-#'
-#' @returns Modified spec with layout populated
-#'
-#' @keywords internal
-legend_spec_layout = function(spec, draw = TRUE) {
-  if (!draw) {
-    return(spec)
-  }
-
-  # Calculate and apply soma (outer margin adjustment)
-  margin_result = legend_outer_margins_apply(
-    spec$dims,
-    spec$flags$outer_side,
-    spec$flags$outer_end,
-    spec$flags$outer_right,
-    spec$flags$outer_bottom,
-    spec$margins$lmar,
-    spec$margins$ooma,
-    spec$margins$omar,
-    spec$meta$topmar_epsilon
-  )
-  spec$margins$ooma = margin_result$ooma
-  spec$margins$omar = margin_result$omar
-
-  # Calculate inset
-  spec$layout$inset = calculate_legend_inset(
-    spec$flags$outer_side,
-    spec$flags$outer_end,
-    spec$flags$outer_right,
-    spec$flags$outer_bottom,
-    spec$margins$lmar,
-    spec$margins$omar,
-    spec$meta$topmar_epsilon
-  )
-
-  # Refresh plot area for exact inset spacing
-  oldhook = getHook("before.plot.new")
-  setHook("before.plot.new", function() par(new = TRUE), action = "append")
-  setHook("before.plot.new", function() par(mar = spec$margins$omar), action = "append")
-  plot.new()
-  setHook("before.plot.new", oldhook, action = "replace")
-
-  # Set the inset in args
-  spec$args[["inset"]] = if (spec$flags$user_inset) {
-    spec$args[["inset"]] + spec$layout$inset
-  } else {
-    spec$layout$inset
-  }
-
-  spec
-}
-
-#' Draw legend from specification
-#'
-#' @description Final stage of pipeline: draws the actual legend.
-#'
-#' @param spec Legend specification object
-#'
-#' @returns NULL (called for side effect of drawing legend)
-#'
-#' @keywords internal
-legend_spec_draw = function(spec) {
-  if (spec$flags$gradient) {
-    # Ensure col is set correctly for gradients
-    if (!more_than_n_unique(spec$args[["col"]], 1)) {
-      if (!is.null(spec$args[["pt.bg"]]) && length(spec$args[["pt.bg"]]) == 100) {
-        spec$args[["col"]] = spec$args[["pt.bg"]]
-      }
-    }
-
-    draw_gradient_swatch(
-      legend_args = spec$args,
-      fklgnd = spec$dims,
-      lmar = spec$margins$lmar,
-      outer_side = spec$flags$outer_side,
-      outer_end = spec$flags$outer_end,
-      outer_right = spec$flags$outer_right,
-      outer_bottom = spec$flags$outer_bottom,
-      user_inset = spec$flags$user_inset
-    )
-  } else {
-    do.call("legend", spec$args)
-  }
 }
 
 
@@ -831,38 +725,63 @@ draw_legend = function(
   spec$margins$lmar = tpar("lmar")
 
   # Adjust margins for outer placement
-  margin_result = legend_outer_margins_prepare(
-    spec$flags$outer_side,
-    spec$flags$outer_end,
-    spec$flags$outer_right,
-    spec$flags$outer_bottom,
-    spec$margins$omar,
-    spec$margins$ooma,
-    spec$meta$has_sub,
-    spec$meta$topmar_epsilon,
-    spec$meta$type,
-    spec$margins$lmar,
-    spec$meta$new_plot,
-    spec$meta$dynmar
-  )
+  margin_result = legend_outer_margins_prepare(spec)
   spec$margins = modifyList(spec$margins, margin_result)
 
   # Measure dimensions with fake legend
-  spec$dims = measure_fake_legend(
-    spec$args,
-    spec$flags$gradient,
-    spec$flags$outer_end
-  )
+  spec$dims = measure_fake_legend(spec)
 
   if (!draw) {
     return(spec$dims)
   }
 
-  spec = legend_spec_layout(spec, draw = draw)
+  # Calculate and apply soma (outer margin adjustment)
+  margin_result = legend_outer_margins_apply(spec)
+  spec$margins$ooma = margin_result$ooma
+  spec$margins$omar = margin_result$omar
+
+  # Calculate inset
+  spec$layout$inset = measure_legend_inset(spec)
+
+  # Refresh plot area for exact inset spacing
+  oldhook = getHook("before.plot.new")
+  setHook("before.plot.new", function() par(new = TRUE), action = "append")
+  setHook("before.plot.new", function() par(mar = spec$margins$omar), action = "append")
+  plot.new()
+  setHook("before.plot.new", oldhook, action = "replace")
+
+  # Set the inset in args
+  spec$args[["inset"]] = if (spec$flags$user_inset) {
+    spec$args[["inset"]] + spec$layout$inset
+  } else {
+    spec$layout$inset
+  }
 
   # Draw wrapped in recordGraphics() to preserve spacing if plot is resized
   recordGraphics(
-    legend_spec_draw(spec),
+    {
+      if (spec$flags$gradient) {
+        # Ensure col is set correctly for gradients
+        if (!more_than_n_unique(spec$args[["col"]], 1)) {
+          if (!is.null(spec$args[["pt.bg"]]) && length(spec$args[["pt.bg"]]) == 100) {
+            spec$args[["col"]] = spec$args[["pt.bg"]]
+          }
+        }
+
+        draw_gradient_swatch(
+          legend_args = spec$args,
+          fklgnd = spec$dims,
+          lmar = spec$margins$lmar,
+          outer_side = spec$flags$outer_side,
+          outer_end = spec$flags$outer_end,
+          outer_right = spec$flags$outer_right,
+          outer_bottom = spec$flags$outer_bottom,
+          user_inset = spec$flags$user_inset
+        )
+      } else {
+        do.call("legend", spec$args)
+      }
+    },
     list = list(spec = spec),
     env = getNamespace("tinyplot")
   )

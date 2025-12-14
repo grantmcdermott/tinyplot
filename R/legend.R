@@ -11,6 +11,282 @@
 
 
 #
+## Helper Functions -----
+#
+
+# Unit conversion helpers (used extensively throughout legend positioning)
+lines_to_npc = function(val) {
+  grconvertX(val, from = "lines", to = "npc") - grconvertX(0, from = "lines", to = "npc")
+}
+
+lines_to_user_x = function(val) {
+  grconvertX(val, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+}
+
+lines_to_user_y = function(val) {
+  grconvertY(val, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+}
+
+# Adjust margins for outer legend placement
+adjust_margins_for_outer_legend = function(outer_side, outer_end, outer_right,
+                                           outer_bottom, omar, ooma, has_sub,
+                                           topmar_epsilon, type, lmar, new_plot, dynmar) {
+  if (outer_side) {
+    # Extra bump for spineplot if outer_right legend (to accommodate secondary y-axis)
+    if (identical(type, "spineplot")) {
+      lmar[1] = lmar[1] + 1.1
+    }
+
+    # Set inner margins before fake legend is drawn
+    if (outer_right) {
+      omar[4] = 0
+    } else {
+      # For outer left we have to account for the y-axis label too
+      omar[2] = par("mgp")[1] + 1 * par("cex.lab")
+    }
+    par(mar = omar)
+
+    if (new_plot) {
+      plot.new()
+      # For themed + dynamic plots, reinstate adjusted plot margins
+      if (dynmar) {
+        omar = par("mar")
+        if (outer_right) {
+          omar[4] = 0
+        } else {
+          omar[2] = par("mgp")[1] + 1 * par("cex.lab")
+        }
+        par(mar = omar)
+      }
+    }
+
+  } else if (outer_end) {
+    # Set inner margins before fake legend is drawn
+    if (outer_bottom) {
+      omar[1] = par("mgp")[1] + 1 * par("cex.lab")
+      if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
+        omar[1] = omar[1] + 1 * par("cex.sub")
+      }
+    } else {
+      # For "top!", expand existing inner margin rather than outer margin
+      ooma[3] = ooma[3] + topmar_epsilon
+      par(oma = ooma)
+    }
+    par(mar = omar)
+
+    if (new_plot) {
+      plot.new()
+      # For themed + dynamic plots, reinstate adjusted plot margins
+      if (dynmar) {
+        omar = par("mar")
+        if (outer_bottom) {
+          omar[1] = theme_clean$mgp[1] + 1 * par("cex.lab")
+          if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
+            omar[1] = omar[1] + 1 * par("cex.sub")
+          }
+        } else {
+          ooma[3] = ooma[3] + topmar_epsilon
+          par(oma = ooma)
+        }
+        par(mar = omar)
+      }
+    }
+  } else {
+    if (new_plot) plot.new()
+  }
+
+  list(omar = omar, ooma = ooma, lmar = lmar)
+}
+
+# Calculate legend inset for outer placement
+calculate_legend_inset = function(outer_side, outer_end, outer_right, outer_bottom,
+                                  lmar, omar, topmar_epsilon) {
+  if (outer_side) {
+    inset_val = lines_to_npc(lmar[1])
+    # Extra space needed for "left!" because of lhs inner margin
+    if (!outer_right) {
+      inset_val = inset_val + lines_to_npc(par("mar")[2])
+    }
+    c(1 + inset_val, 0)
+
+  } else if (outer_end) {
+    # Note: Y-direction uses grconvertY (not lines_to_npc which is X-only)
+    inset_val = grconvertY(lmar[1], from = "lines", to = "npc") -
+                grconvertY(0, from = "lines", to = "npc")
+    if (outer_bottom) {
+      # Extra space needed for "bottom!" because of lhs inner margin
+      inset_bump = grconvertY(par("mar")[1], from = "lines", to = "npc") -
+                   grconvertY(0, from = "lines", to = "npc")
+      inset_val = inset_val + inset_bump
+    } else {
+      epsilon_bump = grconvertY(topmar_epsilon, from = "lines", to = "npc") -
+                     grconvertY(0, from = "lines", to = "npc")
+      inset_val = inset_val + epsilon_bump
+    }
+    c(0, 1 + inset_val)
+
+  } else {
+    0
+  }
+}
+
+# Transform outer position string (e.g., "right!" -> "left" for positioning logic)
+transform_outer_position = function(pos, outer_side, outer_end, outer_right, outer_bottom) {
+  if (outer_end) {
+    if (outer_bottom) return(gsub("bottom!$", "top", pos))
+    return(gsub("top!$", "bottom", pos))
+  } else if (outer_side) {
+    if (outer_right) return(gsub("right!$", "left", pos))
+    return(gsub("left!$", "right", pos))
+  }
+  pos
+}
+
+# Prepare fake legend arguments for dimension measurement
+prepare_fake_legend_args = function(legend_args, gradient, outer_end) {
+  fklgnd.args = modifyList(
+    legend_args,
+    list(plot = FALSE),
+    keep.null = TRUE
+  )
+
+  if (gradient) {
+    lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
+    if (length(lgnd_labs_tmp) < 5L) {
+      nmore = 5L - length(lgnd_labs_tmp)
+      lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
+    }
+    fklgnd.args = modifyList(
+      fklgnd.args,
+      list(legend = lgnd_labs_tmp),
+      keep.null = TRUE
+    )
+    if (outer_end) {
+      fklgnd.args = modifyList(
+        fklgnd.args,
+        list(title = NULL),
+        keep.null = TRUE
+      )
+    }
+  }
+
+  fklgnd.args
+}
+
+# Calculate and apply soma (outer margin size) based on legend dimensions
+calculate_and_apply_soma = function(fklgnd, outer_side, outer_end, outer_right,
+                                    outer_bottom, lmar, ooma, omar, topmar_epsilon) {
+  # Calculate size
+  soma = if (outer_side) {
+    grconvertX(fklgnd$rect$w, to = "lines") - grconvertX(0, to = "lines")
+  } else if (outer_end) {
+    grconvertY(fklgnd$rect$h, to = "lines") - grconvertY(0, to = "lines")
+  } else {
+    0
+  }
+  soma = soma + sum(lmar)
+
+  # Apply to appropriate margin
+  if (outer_side) {
+    ooma[if (outer_right) 4 else 2] = soma
+  } else if (outer_end) {
+    if (outer_bottom) {
+      ooma[1] = soma
+    } else {
+      omar[3] = omar[3] + soma - topmar_epsilon
+      par(mar = omar)
+    }
+  }
+  par(oma = ooma)
+
+  list(ooma = ooma, omar = omar)
+}
+
+# Draw vertical gradient legend labels, ticks, and title
+draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inner, outer_right) {
+  labs_idx = !is.na(lgnd_labs)
+  lgnd_labs[labs_idx] = paste0(" ", format(lgnd_labs[labs_idx]))
+
+  # Determine anchors based on position
+  if (!inner && !outer_right) {
+    lbl_x_anchor = rasterbox[1]
+    ttl_x_anchor = rasterbox[1] + max(strwidth(lgnd_labs[labs_idx]))
+    lbl_adj = c(0, 0.5)
+    ttl_adj = c(1, 0)
+  } else {
+    lbl_x_anchor = rasterbox[3]
+    ttl_x_anchor = rasterbox[1]
+    lbl_adj = c(0, 0.5)
+    ttl_adj = c(0, 0)
+  }
+
+  # Draw labels
+  text(
+    x = lbl_x_anchor,
+    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
+    labels = lgnd_labs,
+    xpd = NA,
+    adj = lbl_adj
+  )
+
+  # Draw tick marks (white dashes)
+  lgnd_ticks = lgnd_labs
+  lgnd_ticks[labs_idx] = "-   -"
+  text(
+    x = lbl_x_anchor,
+    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
+    labels = lgnd_ticks,
+    col = "white",
+    xpd = NA,
+    adj = c(1, 0.5)
+  )
+
+  # Draw title
+  text(
+    x = ttl_x_anchor,
+    y = rasterbox[4] + lines_to_user_y(1),
+    labels = legend_args[["title"]],
+    xpd = NA,
+    adj = ttl_adj
+  )
+}
+
+# Draw horizontal gradient legend labels, ticks, and title
+draw_gradient_labels_horizontal = function(rasterbox, lgnd_labs, legend_args) {
+  # Legend labels
+  text(
+    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
+    y = rasterbox[4],
+    labels = lgnd_labs,
+    xpd = NA,
+    adj = c(0.5, 1.25)
+  )
+
+  # Legend tick marks (white dashes)
+  lgnd_ticks = lgnd_labs
+  lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
+  text(
+    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
+    y = rasterbox[4],
+    labels = lgnd_ticks,
+    col = "white",
+    xpd = NA,
+    adj = c(0, 0.5),
+    srt = 90
+  )
+
+  # Legend title
+  text(
+    x = rasterbox[1],
+    y = rasterbox[4],
+    labels = paste0(legend_args[["title"]], " "),
+    xpd = NA,
+    adj = c(1, -0.5)
+  )
+}
+
+
+#
 ## Input Sanitization -----
 #
 
@@ -375,23 +651,15 @@ build_legend_spec = function(
   }
 
   # Adjust position anchor (we'll position relative to opposite side)
+  legend_args[["x"]] = transform_outer_position(
+    legend_args[["x"]], outer_side, outer_end, outer_right, outer_bottom
+  )
+
+  # Additional positioning adjustments
   if (outer_end) {
-    if (outer_bottom) {
-      legend_args[["x"]] = gsub("bottom!$", "top", legend_args[["x"]])
-    }
-    if (!outer_bottom) {
-      legend_args[["x"]] = gsub("top!$", "bottom", legend_args[["x"]])
-    }
     # Enforce horizontal legend if user hasn't specified ncol arg
     if (is.null(legend_args[["ncol"]]) || gradient) legend_args[["horiz"]] = TRUE
-  } else if (outer_side) {
-    if (outer_right) {
-      legend_args[["x"]] = gsub("right!$", "left", legend_args[["x"]])
-    }
-    if (!outer_right) {
-      legend_args[["x"]] = gsub("left!$", "right", legend_args[["x"]])
-    }
-  } else {
+  } else if (!outer_side) {
     legend_args[["inset"]] = 0
   }
 
@@ -604,69 +872,13 @@ draw_legend = function(
   omar = par("mar")
 
   # Adjust margins for outer legends
-  if (outer_side) {
-    # Extra bump for spineplot if outer_right legend (to accommodate secondary y-axis)
-    if (identical(type, "spineplot")) {
-      lmar[1] = lmar[1] + 1.1
-    }
-
-    # Set inner margins before fake legend is drawn
-    if (outer_right) {
-      omar[4] = 0
-    } else {
-      # For outer left we have to account for the y-axis label too
-      omar[2] = par("mgp")[1] + 1 * par("cex.lab")
-    }
-    par(mar = omar)
-
-    if (new_plot) {
-      plot.new()
-      # For themed + dynamic plots, reinstate adjusted plot margins
-      if (dynmar) {
-        omar = par("mar")
-        if (outer_right) {
-          omar[4] = 0
-        } else {
-          omar[2] = par("mgp")[1] + 1 * par("cex.lab")
-        }
-        par(mar = omar)
-      }
-    }
-
-  } else if (outer_end) {
-    # Set inner margins before fake legend is drawn
-    if (outer_bottom) {
-      omar[1] = par("mgp")[1] + 1 * par("cex.lab")
-      if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
-        omar[1] = omar[1] + 1 * par("cex.sub")
-      }
-    } else {
-      # For "top!", expand existing inner margin rather than outer margin
-      ooma[3] = ooma[3] + topmar_epsilon
-      par(oma = ooma)
-    }
-    par(mar = omar)
-
-    if (new_plot) {
-      plot.new()
-      # For themed + dynamic plots, reinstate adjusted plot margins
-      if (dynmar) {
-        omar = par("mar")
-        if (outer_bottom) {
-          omar[1] = theme_clean$mgp[1] + 1 * par("cex.lab")
-          if (has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
-            omar[1] = omar[1] + 1 * par("cex.sub")
-          }
-        } else {
-          ooma[3] = ooma[3] + topmar_epsilon
-          par(oma = ooma)
-        }
-        par(mar = omar)
-      }
-    }
-  } else {
-    if (new_plot) plot.new()
-  }
+  margin_result = adjust_margins_for_outer_legend(
+    outer_side, outer_end, outer_right, outer_bottom,
+    omar, ooma, has_sub, topmar_epsilon, type, lmar, new_plot, dynmar
+  )
+  omar = margin_result$omar
+  ooma = margin_result$ooma
+  lmar = margin_result$lmar
 
   # Draw the legend using internal function
   # Wrapped in recordGraphics() to preserve spacing if plot is resized
@@ -742,32 +954,7 @@ draw_legend_positioned = function(
   ## Step 1: Draw fake legend to measure dimensions
   #
 
-  fklgnd.args = modifyList(
-    legend_args,
-    list(plot = FALSE),
-    keep.null = TRUE
-  )
-
-  if (gradient) {
-    lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
-    if (length(lgnd_labs_tmp) < 5L) {
-      nmore = 5L - length(lgnd_labs_tmp)
-      lgnd_labs_tmp = c(lgnd_labs_tmp, rep("", nmore))
-    }
-    fklgnd.args = modifyList(
-      fklgnd.args,
-      list(legend = lgnd_labs_tmp),
-      keep.null = TRUE
-    )
-    if (outer_end) {
-      fklgnd.args = modifyList(
-        fklgnd.args,
-        list(title = NULL),
-        keep.null = TRUE
-      )
-    }
-  }
-
+  fklgnd.args = prepare_fake_legend_args(legend_args, gradient, outer_end)
   fklgnd = do.call("legend", fklgnd.args)
   if (!draw) {
     return(fklgnd)
@@ -777,60 +964,19 @@ draw_legend_positioned = function(
   ## Step 2: Calculate legend inset (for outer placement)
   #
 
-  # Calculate outer margin width in lines
-  soma = 0
-  if (outer_side) {
-    soma = grconvertX(fklgnd$rect$w, to = "lines") - grconvertX(0, to = "lines")
-  } else if (outer_end) {
-    soma = grconvertY(fklgnd$rect$h, to = "lines") - grconvertY(0, to = "lines")
-  }
-  # Add legend margins to the outer margin
-  soma = soma + sum(lmar)
-
-  # Adjust outer margins depending on side
-  if (outer_side) {
-    if (outer_right) {
-      ooma[4] = soma
-    } else {
-      ooma[2] = soma
-    }
-  } else if (outer_end) {
-    if (outer_bottom) {
-      ooma[1] = soma
-    } else {
-      omar[3] = omar[3] + soma - topmar_epsilon
-      par(mar = omar)
-    }
-  }
-  par(oma = ooma)
+  # Calculate and apply soma (outer margin size)
+  margin_result = calculate_and_apply_soma(
+    fklgnd, outer_side, outer_end, outer_right, outer_bottom,
+    lmar, ooma, omar, topmar_epsilon
+  )
+  ooma = margin_result$ooma
+  omar = margin_result$omar
 
   # Determine legend inset
-  inset = 0
-  if (outer_side) {
-    inset = grconvertX(lmar[1], from = "lines", to = "npc") -
-      grconvertX(0, from = "lines", to = "npc")
-    # Extra space needed for "left!" because of lhs inner margin
-    if (!outer_right) {
-      inset_bump = grconvertX(par("mar")[2], from = "lines", to = "npc") -
-        grconvertX(0, from = "lines", to = "npc")
-      inset = inset + inset_bump
-    }
-    inset = c(1 + inset, 0)
-  } else if (outer_end) {
-    inset = grconvertY(lmar[1], from = "lines", to = "npc") -
-      grconvertY(0, from = "lines", to = "npc")
-    if (outer_bottom) {
-      # Extra space needed for "bottom!" because of lhs inner margin
-      inset_bump = grconvertY(par("mar")[1], from = "lines", to = "npc") -
-        grconvertY(0, from = "lines", to = "npc")
-      inset = inset + inset_bump
-    } else {
-      epsilon_bump = grconvertY(topmar_epsilon, from = "lines", to = "npc") -
-        grconvertY(0, from = "lines", to = "npc")
-      inset = inset + epsilon_bump
-    }
-    inset = c(0, 1 + inset)
-  }
+  inset = calculate_legend_inset(
+    outer_side, outer_end, outer_right, outer_bottom,
+    lmar, omar, topmar_epsilon
+  )
 
   # Refresh plot area for exact inset spacing
   # Using temporary hook instead of direct par(new = TRUE)
@@ -936,65 +1082,44 @@ draw_gradient_swatch = function(
 
   # Calculate raster box coordinates based on position
   if (inner) {
-    fklgnd$rect$h = fklgnd$rect$h -
-      (grconvertY(1.5 + 0.4, from = "lines", to = "user") -
-        grconvertY(0, from = "lines", to = "user"))
+    fklgnd$rect$h = fklgnd$rect$h - lines_to_user_y(1.5 + 0.4)
 
     rasterbox[1] = fklgnd$rect$left
     if (isFALSE(inner_right)) {
-      rasterbox[1] = rasterbox[1] +
-        (grconvertX(0.2, from = "lines", to = "user") -
-          grconvertX(0, from = "lines", to = "user"))
+      rasterbox[1] = rasterbox[1] + lines_to_user_x(0.2)
     }
-    rasterbox[2] = fklgnd$rect$top -
-      fklgnd$rect$h -
-      (grconvertY(1.5 + 0.2, from = "lines", to = "user") -
-        grconvertY(0, from = "lines", to = "user"))
-    rasterbox[3] = rasterbox[1] +
-      (grconvertX(1.25, from = "lines", to = "user") -
-        grconvertX(0, from = "lines", to = "user"))
+    rasterbox[2] = fklgnd$rect$top - fklgnd$rect$h - lines_to_user_y(1.5 + 0.2)
+    rasterbox[3] = rasterbox[1] + lines_to_user_x(1.25)
     rasterbox[4] = rasterbox[2] + fklgnd$rect$h
 
   } else if (outer_side) {
-    rb1_adj = grconvertX(lmar[1] + 0.2, from = "lines", to = "user") -
-      grconvertX(0, from = "lines", to = "user")
-    rb3_adj = grconvertX(1.25, from = "lines", to = "user") -
-      grconvertX(0, from = "lines", to = "user")
-    rb2_adj = (corners[4] -
-      corners[3] -
-      (grconvertY(5 + 1 + 2.5, from = "lines", to = "user") -
-        grconvertY(0, from = "lines", to = "user"))) /
-      2
+    rb1_adj = lines_to_user_x(lmar[1] + 0.2)
+    rb3_adj = lines_to_user_x(1.25)
+    rb2_adj = (corners[4] - corners[3] - lines_to_user_y(5 + 1 + 2.5)) / 2
     # Override if top or bottom
     if (!is.null(legend_args[["x"]])) {
       if (grepl("^bottom", legend_args[["x"]])) {
         rb2_adj = corners[3]
       }
       if (grepl("^top", legend_args[["x"]])) {
-        rb2_adj = corners[4] -
-          (grconvertY(5 + 1 + 2.5, from = "lines", to = "user") -
-            grconvertY(0, from = "lines", to = "user"))
+        rb2_adj = corners[4] - lines_to_user_y(5 + 1 + 2.5)
       }
     }
     if (user_inset) {
       rb2_adj = rb2_adj + legend_args[["inset"]][2] + 0.05
     }
-    rb4_adj = grconvertY(5 + 1, from = "lines", to = "user") -
-      grconvertY(0, from = "lines", to = "user")
+    rb4_adj = lines_to_user_y(5 + 1)
 
     if (outer_right) {
       rasterbox[1] = corners[2] + rb1_adj
       if (user_inset) {
-        rasterbox[1] = rasterbox[1] -
-          (corners[2] - legend_args[["inset"]][1]) / 2
+        rasterbox[1] = rasterbox[1] - (corners[2] - legend_args[["inset"]][1]) / 2
       }
       rasterbox[2] = rb2_adj
       rasterbox[3] = rasterbox[1] + rb3_adj
       rasterbox[4] = rasterbox[2] + rb4_adj
     } else {
-      rb1_adj = rb1_adj +
-        grconvertX(par("mar")[2] + 1, from = "lines", to = "user") -
-        grconvertX(0, from = "lines", to = "user")
+      rb1_adj = rb1_adj + lines_to_user_x(par("mar")[2] + 1)
       rasterbox[1] = corners[1] - rb1_adj
       rasterbox[2] = rb2_adj
       rasterbox[3] = rasterbox[1] - rb3_adj
@@ -1045,82 +1170,9 @@ draw_gradient_swatch = function(
 
   # Add labels, tick marks, and title
   if (isFALSE(horiz)) {
-    # Vertical gradient legend
-    labs_idx = !is.na(lgnd_labs)
-    lgnd_labs[labs_idx] = paste0(" ", format(lgnd_labs[labs_idx]))
-    lbl_x_anchor = rasterbox[3]
-    ttl_x_anchor = rasterbox[1]
-    lbl_adj = c(0, 0.5)
-    tck_adj = c(1, 0.5)
-    ttl_adj = c(0, 0)
-    if (!inner && !outer_right) {
-      lbl_x_anchor = rasterbox[1]
-      ttl_x_anchor = ttl_x_anchor + max(strwidth(lgnd_labs[labs_idx]))
-      ttl_adj = c(1, 0)
-    }
-    text(
-      x = lbl_x_anchor,
-      y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
-      labels = lgnd_labs,
-      xpd = NA,
-      adj = lbl_adj
-    )
-    # Legend tick marks
-    lgnd_ticks = lgnd_labs
-    lgnd_ticks[labs_idx] = "-   -"
-    text(
-      x = lbl_x_anchor,
-      y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
-      labels = lgnd_ticks,
-      col = "white",
-      xpd = NA,
-      adj = tck_adj
-    )
-    # Legend title
-    text(
-      x = ttl_x_anchor,
-      y = rasterbox[4] +
-        grconvertY(1, from = "lines", to = "user") -
-        grconvertY(0, from = "lines", to = "user"),
-      labels = legend_args[["title"]],
-      xpd = NA,
-      adj = ttl_adj
-    )
+    draw_gradient_labels_vertical(rasterbox, lgnd_labs, legend_args, inner, outer_right)
   } else {
-    # Horizontal gradient legend
-    lbl_y_anchor = rasterbox[4]
-    ttl_y_anchor = rasterbox[4]
-    lbl_adj = c(0.5, 1.25)
-    tck_adj = c(0, 0.5)
-    ttl_adj = c(1, -0.5)
-    # Legend labs
-    text(
-      x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
-      y = lbl_y_anchor,
-      labels = lgnd_labs,
-      xpd = NA,
-      adj = lbl_adj
-    )
-    # Legend tick marks
-    lgnd_ticks = lgnd_labs
-    lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
-    text(
-      x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
-      y = lbl_y_anchor,
-      labels = lgnd_ticks,
-      col = "white",
-      xpd = NA,
-      adj = tck_adj,
-      srt = 90
-    )
-    # Legend title
-    text(
-      x = rasterbox[1],
-      y = ttl_y_anchor,
-      labels = paste0(legend_args[["title"]], " "),
-      xpd = NA,
-      adj = ttl_adj
-    )
+    draw_gradient_labels_horizontal(rasterbox, lgnd_labs, legend_args)
   }
 }
 

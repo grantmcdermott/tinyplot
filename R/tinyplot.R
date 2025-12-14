@@ -919,7 +919,7 @@ tinyplot.default = function(
   ## legends -----
   #
   
-  prepare_legend_context(settings)
+  prepare_legend(settings)
 
   #
   ## make settings available in the environment directly -----
@@ -948,7 +948,7 @@ tinyplot.default = function(
       )
     } else {
       ## multi-legend case...
-      prepare_multi_legend(settings)
+      prepare_legend_multi(settings)
       env2env(settings, environment(), c("legend_args", "lgby", "lgbub"))
       # draw multi-legend
       draw_multi_legend(list(lgby, lgbub), position = legend_args[["x"]])

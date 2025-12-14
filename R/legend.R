@@ -27,67 +27,6 @@ lines_to_user_y = function(val) {
   grconvertY(val, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
 }
 
-#' Create legend specification object
-#'
-#' @description Creates a structured specification object that flows through
-#'   the legend rendering pipeline, eliminating redundant state and parameter passing.
-#'
-#' @param legend_args List of legend arguments (x, legend, col, etc.)
-#' @param type Plot type (for type-specific adjustments)
-#' @param gradient Logical indicating if this is a gradient legend
-#' @param has_sub Logical indicating if plot has subtitle
-#' @param new_plot Logical indicating if new plot should be created
-#' @param dynmar Logical indicating if dynamic margins are enabled
-#'
-#' @returns A legend_spec object containing args, flags, margins, dims, layout, and meta
-#'
-#' @keywords internal
-create_legend_spec = function(legend_args, type, gradient, has_sub, new_plot, dynmar) {
-  structure(
-    list(
-      # User-facing arguments
-      args = legend_args,
-
-      # Positioning flags (set during build phase)
-      flags = list(
-        outer_side   = FALSE,
-        outer_end    = FALSE,
-        outer_right  = FALSE,
-        outer_bottom = FALSE,
-        mcol         = FALSE,
-        user_inset   = FALSE,
-        gradient     = gradient
-      ),
-
-      # Margins (set during margin adjustment phase)
-      margins = list(
-        lmar = NULL,
-        omar = NULL,
-        ooma = NULL
-      ),
-
-      # Dimensions from fake legend (set during measure phase)
-      dims = NULL,
-
-      # Calculated layout (set during layout phase)
-      layout = list(
-        inset = NULL,
-        rasterbox = NULL
-      ),
-
-      # Metadata
-      meta = list(
-        type = type,
-        has_sub = has_sub,
-        new_plot = new_plot,
-        dynmar = dynmar,
-        topmar_epsilon = 0.1
-      )
-    ),
-    class = "legend_spec"
-  )
-}
-
 # Adjust margins for outer legend placement
 adjust_margins_for_outer_legend = function(outer_side, outer_end, outer_right,
                                            outer_bottom, omar, ooma, has_sub,
@@ -191,8 +130,8 @@ calculate_legend_inset = function(outer_side, outer_end, outer_right, outer_bott
   }
 }
 
-# Prepare fake legend arguments for dimension measurement
-prepare_fake_legend_args = function(legend_args, gradient, outer_end) {
+# Measure legend dimensions using a fake (non-plotted) legend
+measure_fake_legend = function(legend_args, gradient, outer_end) {
   fklgnd.args = modifyList(
     legend_args,
     list(plot = FALSE),
@@ -219,7 +158,7 @@ prepare_fake_legend_args = function(legend_args, gradient, outer_end) {
     }
   }
 
-  fklgnd.args
+  do.call("legend", fklgnd.args)
 }
 
 # Calculate and apply soma (outer margin size) based on legend dimensions
@@ -537,7 +476,7 @@ sanitize_legend = function(legend, legend_args) {
 #' @returns NULL (modifies settings environment in-place)
 #'
 #' @keywords internal
-prepare_legend_context = function(settings) {
+prepare_legend = function(settings) {
   env2env(
     settings,
     environment(),
@@ -648,7 +587,7 @@ prepare_legend_context = function(settings) {
 #' @returns NULL (modifies settings environment in-place)
 #'
 #' @keywords internal
-prepare_multi_legend = function(settings) {
+prepare_legend_multi = function(settings) {
   env2env(
     settings,
     environment(),
@@ -1054,33 +993,48 @@ draw_legend = function(
   }
 
   # Create spec object and populate from build_legend_spec results
-  spec = create_legend_spec(
-    legend_args = legend_build$legend_args,
-    type = type,
-    gradient = gradient,
-    has_sub = has_sub,
-    new_plot = new_plot,
-    dynmar = dynmar
+  spec = structure(
+    list(
+      args = legend_build$legend_args,
+      flags = list(
+        outer_side   = legend_build$outer_side,
+        outer_end    = legend_build$outer_end,
+        outer_right  = legend_build$outer_right,
+        outer_bottom = legend_build$outer_bottom,
+        mcol         = legend_build$mcol_flag,
+        user_inset   = legend_build$user_inset,
+        gradient     = gradient
+      ),
+      margins = list(
+        lmar = NULL,
+        omar = NULL,
+        ooma = NULL
+      ),
+      dims = NULL,
+      layout = list(
+        inset = NULL,
+        rasterbox = NULL
+      ),
+      meta = list(
+        type = type,
+        has_sub = has_sub,
+        new_plot = new_plot,
+        dynmar = dynmar,
+        topmar_epsilon = 0.1
+      )
+    ),
+    class = "legend_spec"
   )
-
-  # Populate flags from build_legend_spec output (which already parsed positioning)
-  spec$flags$outer_side = legend_build$outer_side
-  spec$flags$outer_end = legend_build$outer_end
-  spec$flags$outer_right = legend_build$outer_right
-  spec$flags$outer_bottom = legend_build$outer_bottom
-  spec$flags$mcol = legend_build$mcol_flag
-  spec$flags$user_inset = legend_build$user_inset
 
   # Run pipeline stages (skip build since build_legend_spec already did that work)
   spec = legend_spec_apply_margins(spec)
 
   # Measure dimensions with fake legend
-  fklgnd_args = prepare_fake_legend_args(
+  spec$dims = measure_fake_legend(
     spec$args,
     spec$flags$gradient,
     spec$flags$outer_end
   )
-  spec$dims = do.call("legend", fklgnd_args)
 
   if (!draw) {
     return(spec$dims)

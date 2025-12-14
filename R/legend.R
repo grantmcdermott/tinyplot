@@ -356,15 +356,14 @@ prepare_legend = function(settings) {
 }
 
 
-#' Build legend specification
+#' Build legend arguments list
 #'
-#' @description Constructs a complete legend_args list by:
-#'   - Creating and initializing the legend environment
+#' @description Constructs and configures the legend_args list by:
 #'   - Sanitizing legend input
 #'   - Setting defaults for all legend parameters
-#'   - Computing positioning flags (outer_side, outer_right, etc.)
+#'   - Computing positioning flags from original position (before transformation)
+#'   - Adjusting position anchors for outer legends
 #'   - Adjusting for special cases (gradient, horizontal, multi-column)
-#'   - Initializing margins and dimensions
 #'
 #' @param legend Legend placement keyword or list
 #' @param legend_args Additional legend arguments
@@ -379,14 +378,12 @@ prepare_legend = function(settings) {
 #' @param bg Background fill color(s)
 #' @param cex Character expansion(s)
 #' @param gradient Logical indicating gradient legend
-#' @param lmar Legend margins (inner, outer)
-#' @param has_sub Logical indicating presence of sub-caption
-#' @param new_plot Logical indicating if plot.new should be called
 #'
-#' @returns Environment with complete legend specification
+#' @returns List with: args (legend_args list), mcol, user_inset, outer_side,
+#'   outer_end, outer_right, outer_bottom
 #'
 #' @keywords internal
-build_legend_spec = function(
+build_legend_args = function(
   # Legend specification
   legend,
   legend_args,
@@ -406,21 +403,8 @@ build_legend_spec = function(
   cex,
 
   # Configuration
-  gradient,
-  lmar,
-  has_sub = FALSE,
-  new_plot = TRUE
+  gradient
 ) {
-  # Create legend environment
-  legend_env = new.env(parent = emptyenv())
-
-  # Initialize metadata
-  legend_env$gradient = gradient
-  legend_env$type = type
-  legend_env$has_sub = has_sub
-  legend_env$new_plot = new_plot
-  legend_env$dynmar = isTRUE(.tpar[["dynmar"]])
-  legend_env$topmar_epsilon = 0.1
   legend_args = sanitize_legend(legend, legend_args)
 
   # Set defaults
@@ -480,11 +464,7 @@ build_legend_spec = function(
     legend_args[["ncol"]] = NULL
   }
 
-  # Flags
-  mcol_flag = !is.null(legend_args[["ncol"]]) && legend_args[["ncol"]] > 1
-  user_inset = !is.null(legend_args[["inset"]])
-
-  # Determine positioning
+  # Determine positioning flags for anchor adjustment
   outer_side = outer_end = outer_right = outer_bottom = FALSE
   if (grepl("right!$|left!$", legend_args[["x"]])) {
     outer_side = TRUE
@@ -518,6 +498,9 @@ build_legend_spec = function(
   }
 
   # Additional tweaks for horizontal and/or multi-column legends
+  mcol_flag = !is.null(legend_args[["ncol"]]) && legend_args[["ncol"]] > 1
+  user_inset = !is.null(legend_args[["inset"]])
+
   if (isTRUE(legend_args[["horiz"]]) || mcol_flag) {
     # Tighter horizontal labelling
     if (!gradient) {
@@ -540,14 +523,108 @@ build_legend_spec = function(
     }
   }
 
-  # Populate legend environment
-  legend_env$args = legend_args
-  legend_env$mcol = mcol_flag
-  legend_env$user_inset = user_inset
-  legend_env$outer_side = outer_side
-  legend_env$outer_end = outer_end
-  legend_env$outer_right = outer_right
-  legend_env$outer_bottom = outer_bottom
+  # Return args and positioning flags
+  list(
+    args = legend_args,
+    mcol = mcol_flag,
+    user_inset = user_inset,
+    outer_side = outer_side,
+    outer_end = outer_end,
+    outer_right = outer_right,
+    outer_bottom = outer_bottom
+  )
+}
+
+
+#' Build legend environment
+#'
+#' @description Creates the legend environment by:
+#'   - Initializing environment with metadata
+#'   - Calling build_legend_args() to construct legend arguments
+#'   - Populating environment with arguments and positioning flags
+#'   - Initializing margins and dimensions
+#'
+#' @param legend Legend placement keyword or list
+#' @param legend_args Additional legend arguments
+#' @param by_dep The (deparsed) "by" grouping variable name
+#' @param lgnd_labs The legend labels
+#' @param labeller Character or function for formatting labels
+#' @param type Plot type
+#' @param pch Plotting character(s)
+#' @param lty Line type(s)
+#' @param lwd Line width(s)
+#' @param col Color(s)
+#' @param bg Background fill color(s)
+#' @param cex Character expansion(s)
+#' @param gradient Logical indicating gradient legend
+#' @param lmar Legend margins (inner, outer)
+#' @param has_sub Logical indicating presence of sub-caption
+#' @param new_plot Logical indicating if plot.new should be called
+#'
+#' @returns Environment with complete legend specification
+#'
+#' @keywords internal
+build_legend_env = function(
+  # Legend specification
+  legend,
+  legend_args,
+
+  # Labels and grouping
+  by_dep,
+  lgnd_labs,
+  labeller = NULL,
+
+  # Visual aesthetics
+  type,
+  pch,
+  lty,
+  lwd,
+  col,
+  bg,
+  cex,
+
+  # Configuration
+  gradient,
+  lmar,
+  has_sub = FALSE,
+  new_plot = TRUE
+) {
+  # Create legend environment
+  legend_env = new.env(parent = emptyenv())
+
+  # Initialize metadata
+  legend_env$gradient = gradient
+  legend_env$type = type
+  legend_env$has_sub = has_sub
+  legend_env$new_plot = new_plot
+  legend_env$dynmar = isTRUE(.tpar[["dynmar"]])
+  legend_env$topmar_epsilon = 0.1
+
+  # Build legend arguments and get positioning flags
+  legend_spec = build_legend_args(
+    legend = legend,
+    legend_args = legend_args,
+    by_dep = by_dep,
+    lgnd_labs = lgnd_labs,
+    labeller = labeller,
+    type = type,
+    pch = pch,
+    lty = lty,
+    lwd = lwd,
+    col = col,
+    bg = bg,
+    cex = cex,
+    gradient = gradient
+  )
+
+  # Populate environment with args and flags
+  legend_env$args = legend_spec$args
+  legend_env$mcol = legend_spec$mcol
+  legend_env$user_inset = legend_spec$user_inset
+  legend_env$outer_side = legend_spec$outer_side
+  legend_env$outer_end = legend_spec$outer_end
+  legend_env$outer_right = legend_spec$outer_right
+  legend_env$outer_bottom = legend_spec$outer_bottom
 
   # Initialize margins
   legend_env$omar = par("mar")
@@ -710,7 +787,7 @@ draw_legend = function(
   }
 
   # Build legend environment
-  legend_env = build_legend_spec(
+  legend_env = build_legend_env(
     # Legend specification
     legend = legend,
     legend_args = legend_args,

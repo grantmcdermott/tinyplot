@@ -1127,30 +1127,19 @@ draw_gradient_swatch = function(
     }
 
   } else if (outer_end) {
-    rb1_adj = (corners[2] -
-      corners[1] -
-      (grconvertX(5 + 1, from = "lines", to = "user") -
-        grconvertX(0, from = "lines", to = "user"))) /
-      2
-    rb3_adj = grconvertX(5 + 1, from = "lines", to = "user") -
-      grconvertX(0, from = "lines", to = "user")
-    rb2_adj = grconvertY(lmar[1], from = "lines", to = "user") -
-      grconvertY(0, from = "lines", to = "user")
-    rb4_adj = grconvertY(1.25, from = "lines", to = "user") -
-      grconvertY(0, from = "lines", to = "user")
+    rb1_adj = (corners[2] - corners[1] - lines_to_user_x(5 + 1)) / 2
+    rb3_adj = lines_to_user_x(5 + 1)
+    rb2_adj = lines_to_user_y(lmar[1])
+    rb4_adj = lines_to_user_y(1.25)
 
     if (outer_bottom) {
-      rb2_adj = rb2_adj +
-        grconvertY(par("mar")[2], from = "lines", to = "user") -
-        grconvertY(0, from = "lines", to = "user")
+      rb2_adj = rb2_adj + lines_to_user_y(par("mar")[2])
       rasterbox[1] = rb1_adj
       rasterbox[2] = corners[3] - rb2_adj
       rasterbox[3] = rasterbox[1] + rb3_adj
       rasterbox[4] = rasterbox[2] - rb4_adj
     } else {
-      rb2_adj = rb2_adj +
-        grconvertY(1.25 + 1, from = "lines", to = "user") -
-        grconvertY(0, from = "lines", to = "user")
+      rb2_adj = rb2_adj + lines_to_user_y(1.25 + 1)
       rasterbox[1] = rb1_adj
       rasterbox[2] = corners[4] + rb2_adj
       rasterbox[3] = rasterbox[1] + rb3_adj

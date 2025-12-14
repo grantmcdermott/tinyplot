@@ -5,6 +5,7 @@
 \title{Build legend specification}
 \usage{
 build_legend_spec(
+  spec,
   legend,
   legend_args,
   by_dep,

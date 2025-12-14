@@ -81,3 +81,57 @@ swap_columns = function(dp, a, b) {
   dp[[b]] = if (!is.null(va)) va else NULL
   dp
 }
+
+
+#' Restore outer margin defaults
+#'
+#' @description Resets the outer margin display (omd) to default full device.
+#'   Used to clean up after legend drawing that may have adjusted margins.
+#'
+#' @returns NULL (called for side effect of resetting par("omd"))
+#'
+#' @keywords internal
+restore_margin_outer = function() {
+  par(omd = c(0, 1, 0, 1))
+}
+
+
+#' Restore inner margin defaults
+#'
+#' @description Resets inner margins that may have been adjusted for legend
+#'   placement. Handles special cases for each margin side and checks for
+#'   custom mfrow layouts.
+#'
+#' @param ooma Outer margins (from par("oma"))
+#' @param topmar_epsilon Small epsilon value for top margin adjustment (default 0.1)
+#'
+#' @returns NULL (called for side effect of resetting par("mar"))
+#'
+#' @keywords internal
+restore_margin_inner = function(ooma, topmar_epsilon = 0.1) {
+  ooma = par("oma")
+  omar = par("mar")
+
+  if (!any(ooma != 0)) return(invisible(NULL))
+
+  # Restore inner margin defaults (in case affected by preceding tinyplot call)
+  if (any(ooma != 0)) {
+    if (ooma[1] != 0 && omar[1] == par("mgp")[1] + 1 * par("cex.lab")) {
+      omar[1] = 5.1
+    }
+    if (ooma[2] != 0 && omar[2] == par("mgp")[1] + 1 * par("cex.lab")) {
+      omar[2] = 4.1
+    }
+    if (ooma[3] == topmar_epsilon && omar[3] != 4.1) {
+      omar[3] = 4.1
+    }
+    if (ooma[4] != 0 && omar[4] == 0) {
+      omar[4] = 2.1
+    }
+    par(mar = omar)
+  }
+  # Restore outer margin defaults (with a catch for custom mfrow plots)
+  if (all(par("mfrow") == c(1, 1))) {
+    par(omd = c(0, 1, 0, 1))
+  }
+}

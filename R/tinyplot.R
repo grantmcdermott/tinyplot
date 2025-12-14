@@ -916,76 +916,18 @@ tinyplot.default = function(
 
 
   #
+  ## legends -----
+  #
+  
+  prepare_legend_context(settings)
+
+  #
   ## make settings available in the environment directly -----
   #
 
   env2env(settings, environment())
 
-
-  #
-  ## legends -----
-  #
-  
-  # legend labels
-  ncolors = length(col)
-  lgnd_labs = rep(NA, times = ncolors)
-  if (isTRUE(by_continuous)) {
-    ## Identify the pretty break points for our labels
-    nlabs = 5
-    ncolors = length(col)
-    ubyvar = unique(by)
-    byvar_range = range(ubyvar)
-    pbyvar = pretty(byvar_range, n = nlabs)
-    pbyvar = pbyvar[pbyvar >= byvar_range[1] & pbyvar <= byvar_range[2]]
-    # optional thinning
-    if (length(ubyvar) == 2 && all(ubyvar %in% pbyvar)) {
-      pbyvar = ubyvar
-    } else if (length(pbyvar) > nlabs) {
-      pbyvar = pbyvar[seq_along(pbyvar) %% 2 == 0]
-    }
-    ## Find the (approximate) location of our pretty labels
-    pidx = rescale_num(c(byvar_range, pbyvar), to = c(1, ncolors))[-c(1:2)]
-    pidx = round(pidx)
-    lgnd_labs[pidx] = pbyvar
-  }
-  
-  # simple indicator variables for later use
-  has_legend = FALSE
-  dual_legend = bubble && !null_by && !isFALSE(legend)
-  lgnd_cex = NULL
-
-  if (isFALSE(legend)) {
-    legend = "none"
-  } else if (isTRUE(legend)) {
-    legend = NULL
-  }
-  if (!is.null(legend) && is.character(legend) && legend == "none") {
-    legend_args[["x"]] = "none"
-    dual_legend = FALSE
-  }
-
-  if (null_by) {
-    if (bubble && !dual_legend) {
-      legend_args[["title"]] = cex_dep
-      lgnd_labs = names(bubble_cex)
-      lgnd_cex = bubble_cex * cex_fct_adj
-    } else if (is.null(legend)) {
-      legend = "none"
-      legend_args[["x"]] = "none"
-    }
-  }
-
-  if ((is.null(legend) || !is.character(legend) || legend != "none" || bubble) && !add) {
-    if (isFALSE(by_continuous) && (!bubble || dual_legend)) {
-      if (ngrps > 1) {
-        lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
-      } else {
-        lgnd_labs = ylab
-      }
-    }
-
-    has_sub = !is.null(sub)
-
+  if (legend_draw_flag) {
     if (!dual_legend) {
       ## simple case: single legend only
       if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
@@ -1006,60 +948,15 @@ tinyplot.default = function(
       )
     } else {
       ## dual legend case...
-
-      # sanitize_legend: processes legend arguments and returns standardized legend_args list
-      legend_args = sanitize_legend(legend, legend_args)
-
-      # legend 1: by (grouping) key
-      lgby = list(
-        # legend = lgby_pos,
-        legend_args = modifyList(
-          legend_args,
-          list(x.intersp = 1, y.intersp = 1),
-          keep.null = TRUE
-        ),
-        by_dep = by_dep,
-        lgnd_labs = lgnd_labs,
-        type = type,
-        pch = pch,
-        lty = lty,
-        lwd = lwd,
-        col = col,
-        bg = bg,
-        gradient = by_continuous,
-        # cex = cex * cex_fct_adj,
-        cex = lgnd_cex,
-        has_sub = has_sub
-      )
-      # legend 2: bubble (size) key
-      lgbub = list(
-        # legend = lgbub_pos,
-        legend_args = modifyList(
-          legend_args,
-          list(title = cex_dep, ncol = 1),
-          keep.null = TRUE
-        ),
-        # by_dep = cex_dep,
-        lgnd_labs = names(bubble_cex),
-        type = type,
-        pch = pch,
-        lty = lty,
-        lwd = lwd,
-        col = adjustcolor(par("col"), alpha.f = bubble_alpha),
-        bg = adjustcolor(par("col"), alpha.f = bubble_bg_alpha),
-        # gradient = by_continuous,
-        cex = bubble_cex * cex_fct_adj,
-        has_sub = has_sub,
-        draw = FALSE
-      )
-
+      prepare_dual_legend(settings)
+      env2env(settings, environment(), c("legend_args", "lgby", "lgbub"))
       # draw dual legend
       draw_multi_legend(list(lgby, lgbub), position = legend_args[["x"]])
 
     }
 
     has_legend = TRUE
-    } else if (legend_args[["x"]] == "none" && !add) {
+    } else if (legend_args[["x"]] == "none" && !isTRUE(add)) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1

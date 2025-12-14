@@ -28,7 +28,7 @@ lines_to_user_y = function(val) {
 }
 
 # Adjust margins for outer legend placement
-adjust_margins_for_outer_legend = function(outer_side, outer_end, outer_right,
+legend_outer_margins_prepare = function(outer_side, outer_end, outer_right,
                                            outer_bottom, omar, ooma, has_sub,
                                            topmar_epsilon, type, lmar, new_plot, dynmar) {
   if (outer_side) {
@@ -162,7 +162,7 @@ measure_fake_legend = function(legend_args, gradient, outer_end) {
 }
 
 # Calculate and apply soma (outer margin size) based on legend dimensions
-calculate_and_apply_soma = function(fklgnd, outer_side, outer_end, outer_right,
+legend_outer_margins_apply = function(fklgnd, outer_side, outer_end, outer_right,
                                     outer_bottom, lmar, ooma, omar, topmar_epsilon) {
   # Calculate size
   soma = if (outer_side) {
@@ -190,129 +190,10 @@ calculate_and_apply_soma = function(fklgnd, outer_side, outer_end, outer_right,
   list(ooma = ooma, omar = omar)
 }
 
-# Draw vertical gradient legend labels, ticks, and title
-draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inner, outer_right) {
-  labs_idx = !is.na(lgnd_labs)
-  lgnd_labs[labs_idx] = paste0(" ", format(lgnd_labs[labs_idx]))
-
-  # Determine anchors based on position
-  if (!inner && !outer_right) {
-    lbl_x_anchor = rasterbox[1]
-    ttl_x_anchor = rasterbox[1] + max(strwidth(lgnd_labs[labs_idx]))
-    lbl_adj = c(0, 0.5)
-    ttl_adj = c(1, 0)
-  } else {
-    lbl_x_anchor = rasterbox[3]
-    ttl_x_anchor = rasterbox[1]
-    lbl_adj = c(0, 0.5)
-    ttl_adj = c(0, 0)
-  }
-
-  # Draw labels
-  text(
-    x = lbl_x_anchor,
-    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
-    labels = lgnd_labs,
-    xpd = NA,
-    adj = lbl_adj
-  )
-
-  # Draw tick marks (white dashes)
-  lgnd_ticks = lgnd_labs
-  lgnd_ticks[labs_idx] = "-   -"
-  text(
-    x = lbl_x_anchor,
-    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
-    labels = lgnd_ticks,
-    col = "white",
-    xpd = NA,
-    adj = c(1, 0.5)
-  )
-
-  # Draw title
-  text(
-    x = ttl_x_anchor,
-    y = rasterbox[4] + lines_to_user_y(1),
-    labels = legend_args[["title"]],
-    xpd = NA,
-    adj = ttl_adj
-  )
-}
-
-# Draw horizontal gradient legend labels, ticks, and title
-draw_gradient_labels_horizontal = function(rasterbox, lgnd_labs, legend_args) {
-  # Legend labels
-  text(
-    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
-    y = rasterbox[4],
-    labels = lgnd_labs,
-    xpd = NA,
-    adj = c(0.5, 1.25)
-  )
-
-  # Legend tick marks (white dashes)
-  lgnd_ticks = lgnd_labs
-  lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
-  text(
-    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
-    y = rasterbox[4],
-    labels = lgnd_ticks,
-    col = "white",
-    xpd = NA,
-    adj = c(0, 0.5),
-    srt = 90
-  )
-
-  # Legend title
-  text(
-    x = rasterbox[1],
-    y = rasterbox[4],
-    labels = paste0(legend_args[["title"]], " "),
-    xpd = NA,
-    adj = c(1, -0.5)
-  )
-}
-
 
 #
 ## Legend Spec Pipeline -----
 #
-
-#' Apply margin adjustments for outer legends
-#'
-#' @description Second stage of pipeline: initializes margins and adjusts
-#'   them for outer legend placement.
-#'
-#' @param spec Legend specification object
-#'
-#' @returns Modified spec with margins populated
-#'
-#' @keywords internal
-legend_spec_apply_margins = function(spec) {
-  # Get current margins
-  spec$margins$omar = par("mar")
-  spec$margins$ooma = par("oma")
-  spec$margins$lmar = tpar("lmar")
-
-  # Adjust for outer placement
-  margin_result = adjust_margins_for_outer_legend(
-    spec$flags$outer_side,
-    spec$flags$outer_end,
-    spec$flags$outer_right,
-    spec$flags$outer_bottom,
-    spec$margins$omar,
-    spec$margins$ooma,
-    spec$meta$has_sub,
-    spec$meta$topmar_epsilon,
-    spec$meta$type,
-    spec$margins$lmar,
-    spec$meta$new_plot,
-    spec$meta$dynmar
-  )
-
-  spec$margins = modifyList(spec$margins, margin_result)
-  spec
-}
 
 #' Calculate legend layout (inset and rasterbox)
 #'
@@ -331,7 +212,7 @@ legend_spec_layout = function(spec, draw = TRUE) {
   }
 
   # Calculate and apply soma (outer margin adjustment)
-  margin_result = calculate_and_apply_soma(
+  margin_result = legend_outer_margins_apply(
     spec$dims,
     spec$flags$outer_side,
     spec$flags$outer_end,
@@ -573,88 +454,6 @@ prepare_legend = function(settings) {
       "has_sub"
     )
   )
-}
-
-
-#' Prepare multi-legend specifications
-#'
-#' @description Sets up multiple legend specifications for multi-legends
-#'   (e.g., color grouping + bubble size). Creates `lgby` and `lgbub` objects
-#'   that will be passed to draw_multi_legend().
-#'
-#' @param settings Settings environment from tinyplot
-#'
-#' @returns NULL (modifies settings environment in-place)
-#'
-#' @keywords internal
-prepare_legend_multi = function(settings) {
-  env2env(
-    settings,
-    environment(),
-    c(
-      "legend",
-      "legend_args",
-      "by_dep",
-      "lgnd_labs",
-      "type",
-      "pch",
-      "lty",
-      "lwd",
-      "col",
-      "bg",
-      "by_continuous",
-      "lgnd_cex",
-      "cex_dep",
-      "bubble_cex",
-      "cex_fct_adj",
-      "bubble_alpha",
-      "bubble_bg_alpha",
-      "has_sub"
-    )
-  )
-
-  legend_args = sanitize_legend(legend, legend_args)
-
-  # Legend for grouping variable (by)
-  lgby = list(
-    legend_args = modifyList(
-      legend_args,
-      list(x.intersp = 1, y.intersp = 1),
-      keep.null = TRUE
-    ),
-    by_dep = by_dep,
-    lgnd_labs = lgnd_labs,
-    type = type,
-    pch = pch,
-    lty = lty,
-    lwd = lwd,
-    col = col,
-    bg = bg,
-    gradient = by_continuous,
-    cex = lgnd_cex,
-    has_sub = has_sub
-  )
-
-  # Legend for bubble sizes
-  lgbub = list(
-    legend_args = modifyList(
-      legend_args,
-      list(title = cex_dep, ncol = 1),
-      keep.null = TRUE
-    ),
-    lgnd_labs = names(bubble_cex),
-    type = type,
-    pch = pch,
-    lty = lty,
-    lwd = lwd,
-    col = adjustcolor(par("col"), alpha.f = bubble_alpha),
-    bg = adjustcolor(par("col"), alpha.f = bubble_bg_alpha),
-    cex = bubble_cex * cex_fct_adj,
-    has_sub = has_sub,
-    draw = FALSE
-  )
-
-  env2env(environment(), settings, c("legend_args", "lgby", "lgbub"))
 }
 
 
@@ -1026,8 +825,27 @@ draw_legend = function(
     class = "legend_spec"
   )
 
-  # Run pipeline stages (skip build since build_legend_spec already did that work)
-  spec = legend_spec_apply_margins(spec)
+  # Initialize margins
+  spec$margins$omar = par("mar")
+  spec$margins$ooma = par("oma")
+  spec$margins$lmar = tpar("lmar")
+
+  # Adjust margins for outer placement
+  margin_result = legend_outer_margins_prepare(
+    spec$flags$outer_side,
+    spec$flags$outer_end,
+    spec$flags$outer_right,
+    spec$flags$outer_bottom,
+    spec$margins$omar,
+    spec$margins$ooma,
+    spec$meta$has_sub,
+    spec$meta$topmar_epsilon,
+    spec$meta$type,
+    spec$margins$lmar,
+    spec$meta$new_plot,
+    spec$meta$dynmar
+  )
+  spec$margins = modifyList(spec$margins, margin_result)
 
   # Measure dimensions with fake legend
   spec$dims = measure_fake_legend(
@@ -1048,289 +866,4 @@ draw_legend = function(
     list = list(spec = spec),
     env = getNamespace("tinyplot")
   )
-}
-
-
-#
-## Gradient Legend Rendering -----
-#
-
-#' Draw gradient (continuous) legend swatch
-#'
-#' @description For gradient legends, we draw a custom color swatch using
-#'   grDevices::as.raster and add labels, tick marks, and title manually.
-#'
-#' @param legend_args Legend arguments list
-#' @param fklgnd Fake legend object (from drawing with plot=FALSE)
-#' @param lmar Legend margins
-#' @param outer_side Logical flag for outer side placement
-#' @param outer_end Logical flag for outer end placement
-#' @param outer_right Logical flag for outer right placement
-#' @param outer_bottom Logical flag for outer bottom placement
-#' @param user_inset Logical flag indicating user-supplied inset
-#'
-#' @returns NULL (draws gradient legend as side effect)
-#'
-#' @keywords internal
-draw_gradient_swatch = function(
-  legend_args,
-  fklgnd,
-  lmar,
-  outer_side,
-  outer_end,
-  outer_right,
-  outer_bottom,
-  user_inset = FALSE
-) {
-  pal = legend_args[["col"]]
-  lgnd_labs = legend_args[["legend"]]
-  if (!is.null(legend_args[["horiz"]])) {
-    horiz = legend_args[["horiz"]]
-  } else {
-    horiz = FALSE
-  }
-
-  # Create raster color swatch
-  if (isTRUE(horiz)) {
-    rasterlgd = as.raster(matrix(pal, nrow = 1))
-  } else {
-    rasterlgd = as.raster(matrix(rev(pal), ncol = 1))
-  }
-
-  corners = par("usr")
-  rasterbox = rep(NA_real_, 4)
-
-  # Determine positioning flags
-  inner = !any(c(outer_side, outer_end))
-  inner_right = inner_bottom = FALSE
-  if (inner) {
-    if (!is.null(legend_args[["x"]]) && grepl("left$|right$", legend_args[["x"]])) {
-      inner_right = grepl("right$", legend_args[["x"]])
-    }
-    if (!is.null(legend_args[["x"]]) && grepl("^bottoml|^top", legend_args[["x"]])) {
-      inner_bottom = grepl("^bottom", legend_args[["x"]])
-    }
-  }
-
-  # Calculate raster box coordinates based on position
-  if (inner) {
-    fklgnd$rect$h = fklgnd$rect$h - lines_to_user_y(1.5 + 0.4)
-
-    rasterbox[1] = fklgnd$rect$left
-    if (isFALSE(inner_right)) {
-      rasterbox[1] = rasterbox[1] + lines_to_user_x(0.2)
-    }
-    rasterbox[2] = fklgnd$rect$top - fklgnd$rect$h - lines_to_user_y(1.5 + 0.2)
-    rasterbox[3] = rasterbox[1] + lines_to_user_x(1.25)
-    rasterbox[4] = rasterbox[2] + fklgnd$rect$h
-
-  } else if (outer_side) {
-    rb1_adj = lines_to_user_x(lmar[1] + 0.2)
-    rb3_adj = lines_to_user_x(1.25)
-    rb2_adj = (corners[4] - corners[3] - lines_to_user_y(5 + 1 + 2.5)) / 2
-    # Override if top or bottom
-    if (!is.null(legend_args[["x"]])) {
-      if (grepl("^bottom", legend_args[["x"]])) {
-        rb2_adj = corners[3]
-      }
-      if (grepl("^top", legend_args[["x"]])) {
-        rb2_adj = corners[4] - lines_to_user_y(5 + 1 + 2.5)
-      }
-    }
-    if (user_inset) {
-      rb2_adj = rb2_adj + legend_args[["inset"]][2] + 0.05
-    }
-    rb4_adj = lines_to_user_y(5 + 1)
-
-    if (outer_right) {
-      rasterbox[1] = corners[2] + rb1_adj
-      if (user_inset) {
-        rasterbox[1] = rasterbox[1] - (corners[2] - legend_args[["inset"]][1]) / 2
-      }
-      rasterbox[2] = rb2_adj
-      rasterbox[3] = rasterbox[1] + rb3_adj
-      rasterbox[4] = rasterbox[2] + rb4_adj
-    } else {
-      rb1_adj = rb1_adj + lines_to_user_x(par("mar")[2] + 1)
-      rasterbox[1] = corners[1] - rb1_adj
-      rasterbox[2] = rb2_adj
-      rasterbox[3] = rasterbox[1] - rb3_adj
-      rasterbox[4] = rasterbox[2] + rb4_adj
-    }
-
-  } else if (outer_end) {
-    rb1_adj = (corners[2] - corners[1] - lines_to_user_x(5 + 1)) / 2
-    rb3_adj = lines_to_user_x(5 + 1)
-    rb2_adj = lines_to_user_y(lmar[1])
-    rb4_adj = lines_to_user_y(1.25)
-
-    if (outer_bottom) {
-      rb2_adj = rb2_adj + lines_to_user_y(par("mar")[2])
-      rasterbox[1] = rb1_adj
-      rasterbox[2] = corners[3] - rb2_adj
-      rasterbox[3] = rasterbox[1] + rb3_adj
-      rasterbox[4] = rasterbox[2] - rb4_adj
-    } else {
-      rb2_adj = rb2_adj + lines_to_user_y(1.25 + 1)
-      rasterbox[1] = rb1_adj
-      rasterbox[2] = corners[4] + rb2_adj
-      rasterbox[3] = rasterbox[1] + rb3_adj
-      rasterbox[4] = rasterbox[2] - rb4_adj
-    }
-  }
-
-  # Draw the gradient swatch
-  rasterImage(
-    rasterlgd,
-    rasterbox[1], #x1
-    rasterbox[2], #y1
-    rasterbox[3], #x2
-    rasterbox[4], #y2
-    xpd = NA
-  )
-
-  # Add labels, tick marks, and title
-  if (isFALSE(horiz)) {
-    draw_gradient_labels_vertical(rasterbox, lgnd_labs, legend_args, inner, outer_right)
-  } else {
-    draw_gradient_labels_horizontal(rasterbox, lgnd_labs, legend_args)
-  }
-}
-
-
-#
-## Multi-Legend Rendering -----
-#
-
-#' Draw multiple legends with automatic positioning
-#'
-#' @description Handles multiple legends (e.g., color grouping + bubble size) by:
-#'   1. Extracting dimensions from fake legends
-#'   2. Calculating sub-positioning based on dimensions
-#'   3. Drawing legends in ascending order of width (widest last)
-#'
-#' @md
-#' @param legend_list A list of legend arguments, where each element is itself a
-#'   list of arguments that can be passed on to [draw_legend]. Legends will be
-#'   drawn vertically (top to bottom) in the order that they are provided. Note
-#'   that we currently only support 2 legends, i.e. the top-level list has a
-#'   maximum length of 2.
-#' @param position String indicating the base keyword position for the
-#'   multi-legend. Currently only `"right!"` and `"left!"` are supported.
-#'
-#' @returns No return value, called for side effect of drawing multiple legends.
-#'
-#' @seealso [draw_legend]
-#'
-#' @keywords internal
-#'
-#' @examples
-#' \dontrun{
-#' oldmar = par("mar")
-#'
-#' # Multi-legend example (color + bubble)
-#'
-#' l1 = list(
-#'   lgnd_labs = c("Red", "Blue", "Green"),
-#'   legend_args = list(title = "Colors"),
-#'   pch = 16,
-#'   col = c("red", "blue", "green"),
-#'   type = "p"
-#' )
-#'
-#' l2 = list(
-#'   lgnd_labs = c("Tiny", "Small", "Medium", "Large", "Huge"),
-#'   legend_args = list(title = "Size"),
-#'   pch = 16,
-#'   col = "black",
-#'   cex = seq(0.5, 2.5, length.out = 5),
-#'   type = "p"
-#' )
-#'
-#' # Draw together
-#' draw_multi_legend(list(l1, l2), position = "right!")
-#'
-#' par(mar = oldmar)
-#' }
-#'
-#' @keywords internal
-draw_multi_legend = function(
-    legend_list,
-    position = "right!"
-) {
-
-  # Validate inputs
-  if (!is.list(legend_list) || length(legend_list) != 2) {
-    stop("Currently only 2 legends are supported in multi-legend mode")
-  }
-
-  # Currently only support right!/left! positioning
-  if (!grepl("right!$|left!$", position)) {
-    warning(
-      '\nMulti-legends currently only work with "right!" or "left!" keyword positioning.\n',
-      'Reverting to "right!" default\n'
-    )
-    position = "right!"
-  }
-
-  # Determine sub-positions based on main position
-  if (grepl("right!$", position)) {
-    sub_positions = c("bottomright!", "topright!")
-  } else if (grepl("left!$", position)) {
-    sub_positions = c("bottomleft!", "topleft!")
-  }
-
-  # Assign positions of individual legends
-  for (ll in seq_along(legend_list)) {
-    legend_list[[ll]][["legend"]] = sub_positions[ll]
-    legend_list[[ll]][["legend_args"]][["x"]] = NULL
-  }
-
-  #
-  ## Step 1: Extract legend dimensions (by drawing fake legends)
-  #
-
-  legend_dims = vector("list", length(legend_list))
-  for (ll in seq_along(legend_list)) {
-    legend_ll = legend_list[[ll]]
-    legend_ll$new_plot = ll == 1  # Only draw new plot for first legend
-    legend_ll$draw = FALSE
-    legend_dims[[ll]] = do.call(draw_legend, legend_ll)
-  }
-
-  #
-  ## Step 2: Calculate sub-positioning based on dimensions
-  #
-
-  # Extract dimensions
-  lwidths = sapply(legend_dims, function(x) x$rect$w)
-  lheights = sapply(legend_dims, function(x) x$rect$h)
-  # For inset adjustment, default to 0.5 unless one or more of the two legends
-  # is bigger than half the plot height.
-  linset = if (any(lheights > 0.5)) lheights[2] / sum(lheights) else 0.5
-
-  #
-  ## Step 3: Reposition (via adjusted inset arg) and draw legends
-  #
-
-  # Note: we draw the legends in ascending order of width (i.e., widest legend
-  #   last) in order to correctly set the overall plot dimensions.
-  width_order = order(lwidths)
-
-  # Quick idx for original order (needed for vertical legend placement)
-  for (i in seq_along(legend_list)) legend_list[[i]]$idx = i
-
-  for (o in seq_along(width_order)) {
-    io = width_order[o]
-    legend_o = legend_list[[io]]
-    legend_o$new_plot = FALSE
-    legend_o$draw = TRUE
-    legend_o$legend_args$inset = c(0, 0)
-    legend_o$legend_args$inset[1] = if (o == 1) -abs(diff(lwidths)) / 2 else 0
-    legend_o$legend_args$inset[2] = if (legend_o$idx == 1) linset + 0.01 else 1 - linset + 0.01
-    legend_o$idx = NULL
-    do.call(draw_legend, legend_o)
-  }
-
-  invisible(NULL)
 }

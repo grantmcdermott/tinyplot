@@ -10,7 +10,7 @@ draw_multi_legend(legend_list, position = "right!")
 \item{legend_list}{A list of legend arguments, where each element is itself a
 list of arguments that can be passed on to \link{draw_legend}. Legends will be
 drawn vertically (top to bottom) in the order that they are provided. Note
-that we currently only support dual legends, i.e. the top-level list has a
+that we currently only support 2 legends, i.e. the top-level list has a
 maximum length of 2.}
 
 \item{position}{String indicating the base keyword position for the
@@ -20,7 +20,7 @@ multi-legend. Currently only \code{"right!"} and \code{"left!"} are supported.}
 No return value, called for side effect of drawing multiple legends.
 }
 \description{
-Handles dual legends (e.g., color grouping + bubble size) by:
+Handles multiple legends (e.g., color grouping + bubble size) by:
 \enumerate{
 \item Extracting dimensions from fake legends
 \item Calculating sub-positioning based on dimensions
@@ -31,7 +31,7 @@ Handles dual legends (e.g., color grouping + bubble size) by:
 \dontrun{
 oldmar = par("mar")
 
-# Dual legend example (color + bubble)
+# Multi-legend example (color + bubble)
 
 l1 = list(
   lgnd_labs = c("Red", "Blue", "Green"),

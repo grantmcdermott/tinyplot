@@ -27,6 +27,67 @@ lines_to_user_y = function(val) {
   grconvertY(val, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
 }
 
+#' Create legend specification object
+#'
+#' @description Creates a structured specification object that flows through
+#'   the legend rendering pipeline, eliminating redundant state and parameter passing.
+#'
+#' @param legend_args List of legend arguments (x, legend, col, etc.)
+#' @param type Plot type (for type-specific adjustments)
+#' @param gradient Logical indicating if this is a gradient legend
+#' @param has_sub Logical indicating if plot has subtitle
+#' @param new_plot Logical indicating if new plot should be created
+#' @param dynmar Logical indicating if dynamic margins are enabled
+#'
+#' @returns A legend_spec object containing args, flags, margins, dims, layout, and meta
+#'
+#' @keywords internal
+create_legend_spec = function(legend_args, type, gradient, has_sub, new_plot, dynmar) {
+  structure(
+    list(
+      # User-facing arguments
+      args = legend_args,
+
+      # Positioning flags (set during build phase)
+      flags = list(
+        outer_side   = FALSE,
+        outer_end    = FALSE,
+        outer_right  = FALSE,
+        outer_bottom = FALSE,
+        mcol         = FALSE,
+        user_inset   = FALSE,
+        gradient     = gradient
+      ),
+
+      # Margins (set during margin adjustment phase)
+      margins = list(
+        lmar = NULL,
+        omar = NULL,
+        ooma = NULL
+      ),
+
+      # Dimensions from fake legend (set during measure phase)
+      dims = NULL,
+
+      # Calculated layout (set during layout phase)
+      layout = list(
+        inset = NULL,
+        rasterbox = NULL
+      ),
+
+      # Metadata
+      meta = list(
+        type = type,
+        has_sub = has_sub,
+        new_plot = new_plot,
+        dynmar = dynmar,
+        topmar_epsilon = 0.1
+      )
+    ),
+    class = "legend_spec"
+  )
+}
+
 # Adjust margins for outer legend placement
 adjust_margins_for_outer_legend = function(outer_side, outer_end, outer_right,
                                            outer_bottom, omar, ooma, has_sub,
@@ -128,18 +189,6 @@ calculate_legend_inset = function(outer_side, outer_end, outer_right, outer_bott
   } else {
     0
   }
-}
-
-# Transform outer position string (e.g., "right!" -> "left" for positioning logic)
-transform_outer_position = function(pos, outer_side, outer_end, outer_right, outer_bottom) {
-  if (outer_end) {
-    if (outer_bottom) return(gsub("bottom!$", "top", pos))
-    return(gsub("top!$", "bottom", pos))
-  } else if (outer_side) {
-    if (outer_right) return(gsub("right!$", "left", pos))
-    return(gsub("left!$", "right", pos))
-  }
-  pos
 }
 
 # Prepare fake legend arguments for dimension measurement
@@ -287,6 +336,139 @@ draw_gradient_labels_horizontal = function(rasterbox, lgnd_labs, legend_args) {
 
 
 #
+## Legend Spec Pipeline -----
+#
+
+#' Apply margin adjustments for outer legends
+#'
+#' @description Second stage of pipeline: initializes margins and adjusts
+#'   them for outer legend placement.
+#'
+#' @param spec Legend specification object
+#'
+#' @returns Modified spec with margins populated
+#'
+#' @keywords internal
+legend_spec_apply_margins = function(spec) {
+  # Get current margins
+  spec$margins$omar = par("mar")
+  spec$margins$ooma = par("oma")
+  spec$margins$lmar = tpar("lmar")
+
+  # Adjust for outer placement
+  margin_result = adjust_margins_for_outer_legend(
+    spec$flags$outer_side,
+    spec$flags$outer_end,
+    spec$flags$outer_right,
+    spec$flags$outer_bottom,
+    spec$margins$omar,
+    spec$margins$ooma,
+    spec$meta$has_sub,
+    spec$meta$topmar_epsilon,
+    spec$meta$type,
+    spec$margins$lmar,
+    spec$meta$new_plot,
+    spec$meta$dynmar
+  )
+
+  spec$margins = modifyList(spec$margins, margin_result)
+  spec
+}
+
+#' Calculate legend layout (inset and rasterbox)
+#'
+#' @description Fourth stage of pipeline: calculates inset for positioning
+#'   and rasterbox coordinates for gradient legends.
+#'
+#' @param spec Legend specification object
+#' @param draw Logical indicating if this is for actual drawing (vs measurement)
+#'
+#' @returns Modified spec with layout populated
+#'
+#' @keywords internal
+legend_spec_layout = function(spec, draw = TRUE) {
+  if (!draw) {
+    return(spec)
+  }
+
+  # Calculate and apply soma (outer margin adjustment)
+  margin_result = calculate_and_apply_soma(
+    spec$dims,
+    spec$flags$outer_side,
+    spec$flags$outer_end,
+    spec$flags$outer_right,
+    spec$flags$outer_bottom,
+    spec$margins$lmar,
+    spec$margins$ooma,
+    spec$margins$omar,
+    spec$meta$topmar_epsilon
+  )
+  spec$margins$ooma = margin_result$ooma
+  spec$margins$omar = margin_result$omar
+
+  # Calculate inset
+  spec$layout$inset = calculate_legend_inset(
+    spec$flags$outer_side,
+    spec$flags$outer_end,
+    spec$flags$outer_right,
+    spec$flags$outer_bottom,
+    spec$margins$lmar,
+    spec$margins$omar,
+    spec$meta$topmar_epsilon
+  )
+
+  # Refresh plot area for exact inset spacing
+  oldhook = getHook("before.plot.new")
+  setHook("before.plot.new", function() par(new = TRUE), action = "append")
+  setHook("before.plot.new", function() par(mar = spec$margins$omar), action = "append")
+  plot.new()
+  setHook("before.plot.new", oldhook, action = "replace")
+
+  # Set the inset in args
+  spec$args[["inset"]] = if (spec$flags$user_inset) {
+    spec$args[["inset"]] + spec$layout$inset
+  } else {
+    spec$layout$inset
+  }
+
+  spec
+}
+
+#' Draw legend from specification
+#'
+#' @description Final stage of pipeline: draws the actual legend.
+#'
+#' @param spec Legend specification object
+#'
+#' @returns NULL (called for side effect of drawing legend)
+#'
+#' @keywords internal
+legend_spec_draw = function(spec) {
+  if (spec$flags$gradient) {
+    # Ensure col is set correctly for gradients
+    if (!more_than_n_unique(spec$args[["col"]], 1)) {
+      if (!is.null(spec$args[["pt.bg"]]) && length(spec$args[["pt.bg"]]) == 100) {
+        spec$args[["col"]] = spec$args[["pt.bg"]]
+      }
+    }
+
+    draw_gradient_swatch(
+      legend_args = spec$args,
+      fklgnd = spec$dims,
+      lmar = spec$margins$lmar,
+      outer_side = spec$flags$outer_side,
+      outer_end = spec$flags$outer_end,
+      outer_right = spec$flags$outer_right,
+      outer_bottom = spec$flags$outer_bottom,
+      user_inset = spec$flags$user_inset
+    )
+  } else {
+    do.call("legend", spec$args)
+  }
+}
+
+
+#
 ## Input Sanitization -----
 #
 
@@ -347,7 +529,7 @@ sanitize_legend = function(legend, legend_args) {
 #' @description Main orchestrator that determines:
 #'   - Whether to draw legend
 #'   - Legend labels and formatting
-#'   - Whether dual legend is needed (for bubble charts)
+#'   - Whether multi-legend is needed (for bubble charts)
 #'   - Gradient legend setup for continuous grouping
 #'
 #' @param settings Settings environment from tinyplot
@@ -399,7 +581,7 @@ prepare_legend_context = function(settings) {
   }
 
   has_legend = FALSE
-  dual_legend = bubble && !null_by && !isFALSE(legend)
+  multi_legend = bubble && !null_by && !isFALSE(legend)
   lgnd_cex = NULL
 
   # Normalize legend argument
@@ -411,12 +593,12 @@ prepare_legend_context = function(settings) {
 
   if (!is.null(legend) && is.character(legend) && legend == "none") {
     legend_args[["x"]] = "none"
-    dual_legend = FALSE
+    multi_legend = FALSE
   }
 
   # Handle bubble-only legend (no grouping)
   if (null_by) {
-    if (bubble && !dual_legend) {
+    if (bubble && !multi_legend) {
       legend_args[["title"]] = cex_dep
       lgnd_labs = names(bubble_cex)
       lgnd_cex = bubble_cex * cex_fct_adj
@@ -430,7 +612,7 @@ prepare_legend_context = function(settings) {
   has_sub = !is.null(sub)
 
   # Generate labels for discrete legends
-  if (legend_draw_flag && isFALSE(by_continuous) && (!bubble || dual_legend)) {
+  if (legend_draw_flag && isFALSE(by_continuous) && (!bubble || multi_legend)) {
     if (ngrps > 1) {
       lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
     } else {
@@ -444,7 +626,7 @@ prepare_legend_context = function(settings) {
     c(
       "lgnd_labs",
       "has_legend",
-      "dual_legend",
+      "multi_legend",
       "lgnd_cex",
       "legend",
       "legend_args",
@@ -455,9 +637,9 @@ prepare_legend_context = function(settings) {
 }
 
 
-#' Prepare dual legend specifications
+#' Prepare multi-legend specifications
 #'
-#' @description Sets up two separate legend specifications for dual legends
+#' @description Sets up multiple legend specifications for multi-legends
 #'   (e.g., color grouping + bubble size). Creates `lgby` and `lgbub` objects
 #'   that will be passed to draw_multi_legend().
 #'
@@ -466,7 +648,7 @@ prepare_legend_context = function(settings) {
 #' @returns NULL (modifies settings environment in-place)
 #'
 #' @keywords internal
-prepare_dual_legend = function(settings) {
+prepare_multi_legend = function(settings) {
   env2env(
     settings,
     environment(),
@@ -651,9 +833,19 @@ build_legend_spec = function(
   }
 
   # Adjust position anchor (we'll position relative to opposite side)
-  legend_args[["x"]] = transform_outer_position(
-    legend_args[["x"]], outer_side, outer_end, outer_right, outer_bottom
-  )
+  if (outer_end) {
+    if (outer_bottom) {
+      legend_args[["x"]] = gsub("bottom!$", "top", legend_args[["x"]])
+    } else {
+      legend_args[["x"]] = gsub("top!$", "bottom", legend_args[["x"]])
+    }
+  } else if (outer_side) {
+    if (outer_right) {
+      legend_args[["x"]] = gsub("right!$", "left", legend_args[["x"]])
+    } else {
+      legend_args[["x"]] = gsub("left!$", "right", legend_args[["x"]])
+    }
+  }
 
   # Additional positioning adjustments
   if (outer_end) {
@@ -837,185 +1029,71 @@ draw_legend = function(
   assert_logical(new_plot)
   assert_logical(draw)
 
-  # Build complete legend specification
-  outer_side = outer_end = outer_right = outer_bottom = FALSE
-  list2env(
-    build_legend_spec(
-      legend = legend,
-      legend_args = legend_args,
-      by_dep = by_dep,
-      lgnd_labs = lgnd_labs,
-      labeller = labeller,
-      type = type,
-      pch = pch,
-      lty = lty,
-      lwd = lwd,
-      col = col,
-      bg = bg,
-      cex = cex,
-      gradient = gradient
-    ),
-    environment()
+  # Build complete legend arguments from inputs
+  legend_build = build_legend_spec(
+    legend = legend,
+    legend_args = legend_args,
+    by_dep = by_dep,
+    lgnd_labs = lgnd_labs,
+    labeller = labeller,
+    type = type,
+    pch = pch,
+    lty = lty,
+    lwd = lwd,
+    col = col,
+    bg = bg,
+    cex = cex,
+    gradient = gradient
   )
 
   # Restore margin defaults
   dynmar = isTRUE(.tpar[["dynmar"]])
-  topmar_epsilon = 0.1
-  user_inset = !is.null(legend_args[["inset"]])
-
   restore_margin_outer()
   if (!dynmar) {
-    restore_margin_inner(par("oma"), topmar_epsilon = topmar_epsilon)
+    restore_margin_inner(par("oma"), topmar_epsilon = 0.1)
   }
 
-  ooma = par("oma")
-  omar = par("mar")
-
-  # Adjust margins for outer legends
-  margin_result = adjust_margins_for_outer_legend(
-    outer_side, outer_end, outer_right, outer_bottom,
-    omar, ooma, has_sub, topmar_epsilon, type, lmar, new_plot, dynmar
+  # Create spec object and populate from build_legend_spec results
+  spec = create_legend_spec(
+    legend_args = legend_build$legend_args,
+    type = type,
+    gradient = gradient,
+    has_sub = has_sub,
+    new_plot = new_plot,
+    dynmar = dynmar
   )
-  omar = margin_result$omar
-  ooma = margin_result$ooma
-  lmar = margin_result$lmar
 
-  # Draw the legend using internal function
-  # Wrapped in recordGraphics() to preserve spacing if plot is resized
+  # Populate flags from build_legend_spec output (which already parsed positioning)
+  spec$flags$outer_side = legend_build$outer_side
+  spec$flags$outer_end = legend_build$outer_end
+  spec$flags$outer_right = legend_build$outer_right
+  spec$flags$outer_bottom = legend_build$outer_bottom
+  spec$flags$mcol = legend_build$mcol_flag
+  spec$flags$user_inset = legend_build$user_inset
+
+  # Run pipeline stages (skip build since build_legend_spec already did that work)
+  spec = legend_spec_apply_margins(spec)
+
+  # Measure dimensions with fake legend
+  fklgnd_args = prepare_fake_legend_args(
+    spec$args,
+    spec$flags$gradient,
+    spec$flags$outer_end
+  )
+  spec$dims = do.call("legend", fklgnd_args)
+
+  if (!draw) {
+    return(spec$dims)
+  }
+
+  spec = legend_spec_layout(spec, draw = draw)
+
+  # Draw wrapped in recordGraphics() to preserve spacing if plot is resized
   recordGraphics(
-    draw_legend_positioned(
-      legend_args = legend_args,
-      ooma = ooma,
-      omar = omar,
-      lmar = lmar,
-      topmar_epsilon = topmar_epsilon,
-      outer_side = outer_side,
-      outer_right = outer_right,
-      outer_end = outer_end,
-      outer_bottom = outer_bottom,
-      gradient = gradient,
-      user_inset = user_inset,
-      draw = draw
-    ),
-    list = list(
-      legend_args = legend_args,
-      ooma = ooma,
-      omar = omar,
-      lmar = lmar,
-      topmar_epsilon = topmar_epsilon,
-      outer_side = outer_side,
-      outer_right = outer_right,
-      outer_end = outer_end,
-      outer_bottom = outer_bottom,
-      gradient = gradient,
-      user_inset = user_inset,
-      draw = draw
-    ),
+    legend_spec_draw(spec),
+    list = list(spec = spec),
     env = getNamespace("tinyplot")
   )
-}
-
-
-#' Internal legend drawing with positioning
-#'
-#' @description Internal workhorse that draws the legend in three steps:
-#'   1. Draw a fake legend (plot = FALSE) to measure dimensions
-#'   2. Calculate required inset and adjust plot margins
-#'   3. Draw the real legend
-#'
-#' @inheritParams draw_legend
-#' @param ooma Outer margins
-#' @param omar Inner margins
-#' @param topmar_epsilon Small epsilon for top margin adjustment
-#' @param outer_side Logical flag for outer side placement
-#' @param outer_right Logical flag for outer right placement
-#' @param outer_end Logical flag for outer end placement
-#' @param outer_bottom Logical flag for outer bottom placement
-#' @param user_inset Logical flag indicating user-supplied inset
-#'
-#' @returns Legend dimensions (from fake legend) if draw=FALSE, otherwise NULL
-#'
-#' @keywords internal
-draw_legend_positioned = function(
-  legend_args,
-  ooma,
-  omar,
-  lmar,
-  topmar_epsilon,
-  outer_side,
-  outer_right,
-  outer_end,
-  outer_bottom,
-  gradient,
-  user_inset = FALSE,
-  draw
-) {
-  #
-  ## Step 1: Draw fake legend to measure dimensions
-  #
-
-  fklgnd.args = prepare_fake_legend_args(legend_args, gradient, outer_end)
-  fklgnd = do.call("legend", fklgnd.args)
-  if (!draw) {
-    return(fklgnd)
-  }
-
-  #
-  ## Step 2: Calculate legend inset (for outer placement)
-  #
-
-  # Calculate and apply soma (outer margin size)
-  margin_result = calculate_and_apply_soma(
-    fklgnd, outer_side, outer_end, outer_right, outer_bottom,
-    lmar, ooma, omar, topmar_epsilon
-  )
-  ooma = margin_result$ooma
-  omar = margin_result$omar
-
-  # Determine legend inset
-  inset = calculate_legend_inset(
-    outer_side, outer_end, outer_right, outer_bottom,
-    lmar, omar, topmar_epsilon
-  )
-
-  # Refresh plot area for exact inset spacing
-  # Using temporary hook instead of direct par(new = TRUE)
-  oldhook = getHook("before.plot.new")
-  setHook("before.plot.new", function() par(new = TRUE), action = "append")
-  setHook("before.plot.new", function() par(mar = omar), action = "append")
-  plot.new()
-  setHook("before.plot.new", oldhook, action = "replace")
-
-  # Set the inset as part of the legend args
-  legend_args[["inset"]] = if (user_inset) {
-    legend_args[["inset"]] + inset
-  } else {
-    inset
-  }
-
-  #
-  ## Step 3: Draw the real legend
-  #
-
-  if (gradient) {
-    if (!more_than_n_unique(legend_args[["col"]], 1)) {
-      if (!is.null(legend_args[["pt.bg"]]) && length(legend_args[["pt.bg"]]) == 100) {
-        legend_args[["col"]] = legend_args[["pt.bg"]]
-      }
-    }
-    draw_gradient_swatch(
-      legend_args = legend_args,
-      fklgnd = fklgnd,
-      lmar = lmar,
-      outer_side = outer_side,
-      outer_end = outer_end,
-      outer_right = outer_right,
-      outer_bottom = outer_bottom,
-      user_inset = user_inset
-    )
-  } else {
-    do.call("legend", legend_args)
-  }
 }
 
 
@@ -1172,7 +1250,7 @@ draw_gradient_swatch = function(
 
 #' Draw multiple legends with automatic positioning
 #'
-#' @description Handles dual legends (e.g., color grouping + bubble size) by:
+#' @description Handles multiple legends (e.g., color grouping + bubble size) by:
 #'   1. Extracting dimensions from fake legends
 #'   2. Calculating sub-positioning based on dimensions
 #'   3. Drawing legends in ascending order of width (widest last)
@@ -1181,7 +1259,7 @@ draw_gradient_swatch = function(
 #' @param legend_list A list of legend arguments, where each element is itself a
 #'   list of arguments that can be passed on to [draw_legend]. Legends will be
 #'   drawn vertically (top to bottom) in the order that they are provided. Note
-#'   that we currently only support dual legends, i.e. the top-level list has a
+#'   that we currently only support 2 legends, i.e. the top-level list has a
 #'   maximum length of 2.
 #' @param position String indicating the base keyword position for the
 #'   multi-legend. Currently only `"right!"` and `"left!"` are supported.
@@ -1196,7 +1274,7 @@ draw_gradient_swatch = function(
 #' \dontrun{
 #' oldmar = par("mar")
 #'
-#' # Dual legend example (color + bubble)
+#' # Multi-legend example (color + bubble)
 #'
 #' l1 = list(
 #'   lgnd_labs = c("Red", "Blue", "Green"),

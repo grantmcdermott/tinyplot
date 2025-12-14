@@ -17,7 +17,7 @@ Main orchestrator that determines:
 \itemize{
 \item Whether to draw legend
 \item Legend labels and formatting
-\item Whether dual legend is needed (for bubble charts)
+\item Whether multi-legend is needed (for bubble charts)
 \item Gradient legend setup for continuous grouping
 }
 }

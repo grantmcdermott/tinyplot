@@ -928,7 +928,7 @@ tinyplot.default = function(
   env2env(settings, environment())
 
   if (legend_draw_flag) {
-    if (!dual_legend) {
+    if (!multi_legend) {
       ## simple case: single legend only
       if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
       draw_legend(
@@ -947,10 +947,10 @@ tinyplot.default = function(
         has_sub = has_sub
       )
     } else {
-      ## dual legend case...
-      prepare_dual_legend(settings)
+      ## multi-legend case...
+      prepare_multi_legend(settings)
       env2env(settings, environment(), c("legend_args", "lgby", "lgbub"))
-      # draw dual legend
+      # draw multi-legend
       draw_multi_legend(list(lgby, lgbub), position = legend_args[["x"]])
 
     }

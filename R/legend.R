@@ -364,7 +364,9 @@ prepare_legend = function(settings) {
 #'   - Computing positioning flags from original position (before transformation)
 #'   - Adjusting position anchors for outer legends
 #'   - Adjusting for special cases (gradient, horizontal, multi-column)
+#'   - Populating legend_env with args and positioning flags
 #'
+#' @param legend_env Legend environment to populate
 #' @param legend Legend placement keyword or list
 #' @param legend_args Additional legend arguments
 #' @param by_dep The (deparsed) "by" grouping variable name
@@ -379,11 +381,12 @@ prepare_legend = function(settings) {
 #' @param cex Character expansion(s)
 #' @param gradient Logical indicating gradient legend
 #'
-#' @returns List with: args (legend_args list), mcol, user_inset, outer_side,
-#'   outer_end, outer_right, outer_bottom
+#' @returns NULL (modifies legend_env in-place)
 #'
 #' @keywords internal
 build_legend_args = function(
+  legend_env,
+
   # Legend specification
   legend,
   legend_args,
@@ -523,16 +526,14 @@ build_legend_args = function(
     }
   }
 
-  # Return args and positioning flags
-  list(
-    args = legend_args,
-    mcol = mcol_flag,
-    user_inset = user_inset,
-    outer_side = outer_side,
-    outer_end = outer_end,
-    outer_right = outer_right,
-    outer_bottom = outer_bottom
-  )
+  # Populate legend environment with args and flags
+  legend_env$args = legend_args
+  legend_env$mcol = mcol_flag
+  legend_env$user_inset = user_inset
+  legend_env$outer_side = outer_side
+  legend_env$outer_end = outer_end
+  legend_env$outer_right = outer_right
+  legend_env$outer_bottom = outer_bottom
 }
 
 
@@ -600,8 +601,9 @@ build_legend_env = function(
   legend_env$dynmar = isTRUE(.tpar[["dynmar"]])
   legend_env$topmar_epsilon = 0.1
 
-  # Build legend arguments and get positioning flags
-  legend_spec = build_legend_args(
+  # Build legend arguments (modifies legend_env in-place)
+  build_legend_args(
+    legend_env = legend_env,
     legend = legend,
     legend_args = legend_args,
     by_dep = by_dep,
@@ -616,15 +618,6 @@ build_legend_env = function(
     cex = cex,
     gradient = gradient
   )
-
-  # Populate environment with args and flags
-  legend_env$args = legend_spec$args
-  legend_env$mcol = legend_spec$mcol
-  legend_env$user_inset = legend_spec$user_inset
-  legend_env$outer_side = legend_spec$outer_side
-  legend_env$outer_end = legend_spec$outer_end
-  legend_env$outer_right = legend_spec$outer_right
-  legend_env$outer_bottom = legend_spec$outer_bottom
 
   # Initialize margins
   legend_env$omar = par("mar")

@@ -1431,7 +1431,6 @@ tinyplot.formula = function(
 
   ## extract x (if any)
   x = tinyframe(tf$x, mf)
-  xnam = names(x)[[1L]]
   if (!is.null(x)) {
     xnam = names(x)[[1L]]
     if (length(names(x)) > 1L) warning(paste("formula should specify at most one x-variable, using:", xnam),

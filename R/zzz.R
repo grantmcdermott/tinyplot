@@ -1,5 +1,6 @@
 #' Operations on package load
 #' @importFrom utils globalVariables
+#' @importFrom graphics legend
 #' @param libname library name
 #' @param pkgname package name name
 #' @keywords internal
@@ -57,7 +58,17 @@
     "null_facet",
     "null_palette",
     "null_xlim",
+    "multi_legend",
+    "legend",
+    "lgnd_labs",
+    "lgnd_cex",
+    "has_sub",
+    "legend_draw_flag",
+    "multi_legend",
+    "legend_args",
     "null_ylim",
+    "lgby",
+    "lgbub",
     "oxaxis",
     "oyaxis",
     "pch",

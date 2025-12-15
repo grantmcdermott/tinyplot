@@ -1429,13 +1429,15 @@ tinyplot.formula = function(
   m[[1L]] = quote(stats::model.frame)
   mf = eval.parent(m)
 
-  ## extract x
+  ## extract x (if any)
   x = tinyframe(tf$x, mf)
   xnam = names(x)[[1L]]
-  if (length(names(x)) != 1L) warning(
-    paste("formula should specify exactly one x-variable, using:", xnam),
+  if (!is.null(x)) {
+    xnam = names(x)[[1L]]
+    if (length(names(x)) > 1L) warning(paste("formula should specify at most one x-variable, using:", xnam),
     "\nif you want to use arithmetic operators, make sure to wrap them inside I()")
-  x = x[[xnam]]
+    x = x[[xnam]]
+  }
 
   ## extract y (if any)
   y = tinyframe(tf$y, mf)

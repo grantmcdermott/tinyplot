@@ -87,18 +87,52 @@ is_by_keyword = function(x) {
   is.character(x) && length(x) == 1 && !is.na(x) && identical(x, "by")
 }
 
-resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcolor) {
-  # Not manual colors - defer to palette handling
+warn_recycle_colors = function(ncols, ngrps) {
+  warning(
+    "\nFewer colours (", ncols, ") provided than there are groups (",
+    ngrps, "). Recycling to make up the shortfall."
+  )
+}
 
+expand_colors_to_ngrps = function(values, ngrps, gradient) {
+  if (length(values) == 1) {
+    return(rep(values, ngrps))
+  }
+  if (length(values) >= ngrps) {
+    return(values[seq_len(ngrps)])
+  }
+  if (gradient) {
+    return(colorRampPalette(colors = values, alpha = TRUE)(ngrps))
+  }
+  warn_recycle_colors(length(values), ngrps)
+  rep_len(values, ngrps)
+}
+
+assert_len_1_or_ngrps = function(x, ngrps, name, allow_character = FALSE) {
+  types = if (allow_character) "numeric or character" else "numeric"
+  valid_type = is.numeric(x) || (allow_character && is.character(x))
+  valid = is.atomic(x) && is.vector(x) && valid_type && (length(x) == 1 || length(x) == ngrps)
+  if (!valid) {
+    stop(sprintf("`%s` must be `NULL`, or a %s vector of length 1 or %s.", name, types, ngrps), call. = FALSE)
+  }
+}
+
+match_palette_name = function(name, candidates) {
+  normalize = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
+  charmatch(normalize(name), normalize(candidates))
+}
+
+resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcolor) {
+  # Returns NULL if not manual colors, otherwise returns the resolved colors
   if (is.null(col) || !is.atomic(col) || !is.vector(col)) {
-    return(list(handled = FALSE, cols = NULL))
+    return(NULL)
   }
 
   cols = col
   if (length(cols) == 1) {
     cols = rep(cols, ngrps)
   } else if (length(cols) < ngrps) {
-    cols = expand_colors(cols, ngrps, gradient)
+    cols = expand_colors_to_ngrps(cols, ngrps, gradient)
   }
 
   # Map numeric indices to palette colors (unless ordered)
@@ -107,16 +141,12 @@ resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcol
     cols = if (ngrps <= length(base_pal)) {
       base_pal[cols]
     } else {
-      grDevices::hcl.colors(max(cols), alpha = alpha)[cols]
+      grDevices::hcl.colors(max(cols))[cols]
     }
   }
 
-  if (gradient) {
-    cols = rev(cols)
-  }
-
-  cols = apply_alpha(cols, alpha, adjustcolor)
-  list(handled = TRUE, cols = cols)
+  if (gradient) cols = rev(cols)
+  apply_alpha(cols, alpha, adjustcolor)
 }
 
 resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradient, alpha, adjustcolor) {
@@ -128,12 +158,12 @@ resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradie
     if (length(theme_palette) == 1) {
       # Check if theme palette needs to switch to sequential
       use_sequential = FALSE
-      idx = match_pal(theme_palette, palette.pals())
+      idx = match_palette_name(theme_palette, palette.pals())
       if (!is.na(idx) && idx >= 1L) {
         max_colors = length(palette.colors(palette = palette.pals()[idx]))
         use_sequential = ngrps >= max_colors || ordered
       } else {
-        idx = match_pal(theme_palette, hcl.pals())
+        idx = match_palette_name(theme_palette, hcl.pals())
         use_sequential = !is.na(idx) && idx >= 1L && gradient
       }
       if (use_sequential) {
@@ -160,7 +190,7 @@ resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradie
     }
     cols = apply_alpha(cols, alpha, adjustcolor)
   } else {
-    cols = palette_from_spec(
+    cols = resolve_palette_spec(
       palette = palette_choice,
       ngrps = ngrps,
       gradient = gradient,
@@ -174,7 +204,7 @@ resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradie
   cols
 }
 
-palette_from_spec = function(palette, ngrps, gradient, ordered, alpha, adjustcolor) {
+resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjustcolor) {
   cols = NULL
   palette_fun = NULL
   args = NULL
@@ -186,7 +216,7 @@ palette_from_spec = function(palette, ngrps, gradient, ordered, alpha, adjustcol
     cols = palette
   } else if (is.character(palette)) {
     # Named palette string
-    palette_fun = gen_pal_fun(palette, gradient = gradient, alpha = NULL, n = ngrps)
+    palette_fun = resolve_palette_function(palette, gradient = gradient, alpha = NULL, n = ngrps)
     args = list(n = ngrps, palette = palette, alpha = NULL)
   } else if (inherits(palette, c("call", "name"))) {
     # Expression or symbol
@@ -226,51 +256,15 @@ palette_from_spec = function(palette, ngrps, gradient, ordered, alpha, adjustcol
   }
 
   # Uniform post-processing
-  cols = expand_colors(cols, ngrps, gradient)
+  cols = expand_colors_to_ngrps(cols, ngrps, gradient)
   apply_alpha(cols, alpha, adjustcolor)
 }
 
-warn_recycle_colors = function(ncols, ngrps) {
-  warning(
-    "\nFewer colours (", ncols, ") provided than there are groups (",
-    ngrps, "). Recycling to make up the shortfall."
-  )
-}
-
-expand_colors = function(values, ngrps, gradient) {
-  if (length(values) == 1) {
-    return(rep(values, ngrps))
-  }
-  if (length(values) >= ngrps) {
-    return(values[seq_len(ngrps)])
-  }
-  if (gradient) {
-    return(colorRampPalette(colors = values, alpha = TRUE)(ngrps))
-  }
-  warn_recycle_colors(length(values), ngrps)
-  rep_len(values, ngrps)
-}
-
-validate_len_1_or_ngrps = function(x, ngrps, name, allow_character = FALSE) {
-  types = if (allow_character) "numeric or character" else "numeric"
-  valid_type = is.numeric(x) || (allow_character && is.character(x))
-  valid = is.atomic(x) && is.vector(x) && valid_type && (length(x) == 1 || length(x) == ngrps)
-  if (!valid) {
-    stop(sprintf("`%s` must be `NULL`, or a %s vector of length 1 or %s.", name, types, ngrps), call. = FALSE)
-  }
-}
-
-# Fuzzy match palette name against candidate list
-match_pal = function(name, candidates) {
-  normalize = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
-  charmatch(normalize(name), normalize(candidates))
-}
-
 # Resolve a palette string to its function, handling fuzzy matching and recycling
-gen_pal_fun = function(pal, gradient = FALSE, alpha = NULL, n = NULL) {
+resolve_palette_function = function(pal, gradient = FALSE, alpha = NULL, n = NULL) {
   # Try palette.pals() first (discrete palettes)
   discrete_pals = palette.pals()
-  idx = match_pal(pal, discrete_pals)
+  idx = match_palette_name(pal, discrete_pals)
 
   if (!is.na(idx)) {
     if (idx < 1L) stop("'palette' is ambiguous")
@@ -293,7 +287,7 @@ gen_pal_fun = function(pal, gradient = FALSE, alpha = NULL, n = NULL) {
 
   # Try hcl.pals() (continuous palettes)
   hcl_pals = hcl.pals()
-  idx = match_pal(pal, hcl_pals)
+  idx = match_palette_name(pal, hcl_pals)
 
   if (!is.na(idx)) {
     if (idx < 1L) stop("'palette' is ambiguous")
@@ -323,17 +317,8 @@ by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustc
 
   if (is_by_keyword(col)) col = NULL
 
-  manual = resolve_manual_colors(
-    col = col,
-    ngrps = ngrps,
-    gradient = gradient,
-    ordered = ordered,
-    alpha = alpha,
-    adjustcolor = adjustcolor
-  )
-  if (manual$handled) {
-    return(manual$cols)
-  }
+  cols = resolve_manual_colors(col, ngrps, gradient, ordered, alpha, adjustcolor)
+  if (!is.null(cols)) return(cols)
 
   pal_theme = get_tpar("palette.qualitative", default = NULL)
   cols = resolve_palette_colors(
@@ -407,7 +392,7 @@ by_pch = function(ngrps, type, pch = NULL) {
   }
 
   if (!no_pch) {
-    validate_len_1_or_ngrps(pch, ngrps, "pch", allow_character = TRUE)
+    assert_len_1_or_ngrps(pch, ngrps, "pch", allow_character = TRUE)
     if (length(pch) == 1) pch = rep(pch, ngrps)
   }
 
@@ -452,7 +437,7 @@ by_lty = function(ngrps, type, lty = NULL) {
 
     # atomic vector: sanity check length
   } else if (is.atomic(lty) && is.vector(lty)) {
-    validate_len_1_or_ngrps(lty, ngrps, "lty")
+    assert_len_1_or_ngrps(lty, ngrps, "lty")
     if (length(lty) == 1) lty = rep(lty, ngrps)
   }
 
@@ -476,7 +461,7 @@ by_lwd = function(ngrps, type, lwd = NULL) {
   }
 
   if (!no_lwd) {
-    validate_len_1_or_ngrps(lwd, ngrps, "lwd")
+    assert_len_1_or_ngrps(lwd, ngrps, "lwd")
     if (length(lwd) == 1) lwd = rep(lwd, ngrps)
   }
 
@@ -503,7 +488,7 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
   if (bubble) no_cex = TRUE
 
   if (!no_cex) {
-    validate_len_1_or_ngrps(cex, ngrps, "cex")
+    assert_len_1_or_ngrps(cex, ngrps, "cex")
     if (length(cex) == 1) cex = rep(cex, ngrps)
   }
 

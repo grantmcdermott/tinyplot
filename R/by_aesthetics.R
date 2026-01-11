@@ -122,8 +122,8 @@ match_palette_name = function(name, candidates) {
   charmatch(normalize(name), normalize(candidates))
 }
 
+## Handle direct color input via `col` arg. Returns colors or NULL if not applicable.
 resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcolor) {
-  # Returns NULL if not manual colors, otherwise returns the resolved colors
   if (is.null(col) || !is.atomic(col) || !is.vector(col)) {
     return(NULL)
   }
@@ -149,6 +149,7 @@ resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcol
   apply_alpha(cols, alpha, adjustcolor)
 }
 
+## High-level palette resolution: theme fallback, defaults, then delegate to resolve_palette_spec.
 resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradient, alpha, adjustcolor) {
   palette_choice = palette
 
@@ -204,20 +205,44 @@ resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradie
   cols
 }
 
+## Parse palette arg (vector, string, call, or function) into colors.
 resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjustcolor) {
   cols = NULL
-  palette_fun = NULL
-  args = NULL
-
-  # Determine colors or palette function based on spec type
-  # Note: alpha is NOT passed to palette functions; it's applied uniformly at the end
   if (is.character(palette) && length(palette) > 1) {
     # Direct color vector
     cols = palette
   } else if (is.character(palette)) {
-    # Named palette string
-    palette_fun = resolve_palette_function(palette, gradient = gradient, alpha = NULL, n = ngrps)
-    args = list(n = ngrps, palette = palette, alpha = NULL)
+    # Named palette string - try palette.pals() then hcl.pals()
+    discrete_pals = palette.pals()
+    idx = match_palette_name(palette, discrete_pals)
+
+    if (!is.na(idx)) {
+      if (idx < 1L) stop("'palette' is ambiguous")
+      matched_name = discrete_pals[idx]
+      max_colors = length(palette.colors(palette = matched_name))
+
+      if (gradient) {
+        cols = colorRampPalette(palette.colors(palette = matched_name))(ngrps)
+      } else if (ngrps >= max_colors) {
+        warn_recycle_colors(max_colors, ngrps)
+        cols = palette.colors(n = ngrps, palette = matched_name, recycle = TRUE)
+      } else {
+        cols = palette.colors(n = ngrps, palette = matched_name)
+      }
+    } else {
+      hcl_pals = hcl.pals()
+      idx = match_palette_name(palette, hcl_pals)
+      if (!is.na(idx)) {
+        if (idx < 1L) stop("'palette' is ambiguous")
+        cols = hcl.colors(n = ngrps, palette = palette)
+      } else {
+        stop(
+          "\nPalette string not recognized. Must be a value produced by either ",
+          "`palette.pals()` or `hcl.pals()`.\n",
+          call. = FALSE
+        )
+      }
+    }
   } else if (inherits(palette, c("call", "name"))) {
     # Expression or symbol
     if (inherits(palette, "name")) {
@@ -228,18 +253,21 @@ resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjust
     }
     if (is.null(cols)) {
       args = as.list(palette)
-      palette_fun = paste(args[[1]])
+      fun_name = paste(args[[1]])
       args[[1]] = NULL
-      if (palette_fun %in% c("c", "list")) {
+      if (fun_name %in% c("c", "list")) {
         cols = unlist(args, recursive = TRUE, use.names = FALSE)
       } else {
         args[["n"]] = ngrps
         if (any(names(args) == "")) args[which(names(args) == "")] = NULL
+        cols = tryCatch(
+          do.call(fun_name, args),
+          error = function(e) do.call(eval(palette), args)
+        )
       }
     }
   } else if (inherits(palette, "function")) {
-    palette_fun = palette
-    args = list()
+    cols = palette(ngrps)
   } else {
     stop(
       "\nInvalid palette argument. Must be a recognized keyword, or a ",
@@ -247,58 +275,9 @@ resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjust
     )
   }
 
-  # Generate colors from palette function if needed
-  if (is.null(cols) && !is.null(palette_fun)) {
-    cols = tryCatch(
-      do.call(palette_fun, args),
-      error = function(e) do.call(eval(palette), args)
-    )
-  }
-
   # Uniform post-processing
   cols = expand_colors_to_ngrps(cols, ngrps, gradient)
   apply_alpha(cols, alpha, adjustcolor)
-}
-
-# Resolve a palette string to its function, handling fuzzy matching and recycling
-resolve_palette_function = function(pal, gradient = FALSE, alpha = NULL, n = NULL) {
-  # Try palette.pals() first (discrete palettes)
-  discrete_pals = palette.pals()
-  idx = match_palette_name(pal, discrete_pals)
-
-  if (!is.na(idx)) {
-    if (idx < 1L) stop("'palette' is ambiguous")
-    matched_name = discrete_pals[idx]
-    max_colors = length(palette.colors(palette = matched_name))
-
-    if (gradient) {
-      return(function(n, palette, alpha) {
-        colorRampPalette(palette.colors(palette = matched_name, alpha = alpha))(n)
-      })
-    }
-    if (!is.null(n) && n >= max_colors) {
-      warn_recycle_colors(max_colors, n)
-      return(function(n, palette, alpha) {
-        palette.colors(n = n, palette = matched_name, alpha = alpha, recycle = TRUE)
-      })
-    }
-    return(palette.colors)
-  }
-
-  # Try hcl.pals() (continuous palettes)
-  hcl_pals = hcl.pals()
-  idx = match_palette_name(pal, hcl_pals)
-
-  if (!is.na(idx)) {
-    if (idx < 1L) stop("'palette' is ambiguous")
-    return(hcl.colors)
-  }
-
-  stop(
-    "\nPalette string not recognized. Must be a value produced by either ",
-    "`palette.pals()` or `hcl.pals()`.\n",
-    call. = FALSE
-  )
 }
 
 
@@ -318,7 +297,9 @@ by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustc
   if (is_by_keyword(col)) col = NULL
 
   cols = resolve_manual_colors(col, ngrps, gradient, ordered, alpha, adjustcolor)
-  if (!is.null(cols)) return(cols)
+  if (!is.null(cols)) {
+    return(cols)
+  }
 
   pal_theme = get_tpar("palette.qualitative", default = NULL)
   cols = resolve_palette_colors(

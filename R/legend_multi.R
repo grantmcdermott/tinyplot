@@ -197,6 +197,7 @@ draw_multi_legend = function(
 
   # Note: we draw the legends in ascending order of width (i.e., widest legend
   #   last) in order to correctly set the overall plot dimensions.
+  ## FIXME: current logic only works for "right!"/"left!" legend
   width_order = order(lwidths)
 
   # Quick idx for original order (needed for vertical legend placement)

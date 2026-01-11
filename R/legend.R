@@ -55,7 +55,7 @@ sanitize_legend = function(legend, legend_args) {
 #
 
 # Unit conversion helpers (used extensively throughout legend positioning)
-lines_to_npc = function(val) {
+lines_to_npc_x = function(val) {
   grconvertX(val, from = "lines", to = "npc") - grconvertX(0, from = "lines", to = "npc")
 }
 
@@ -176,15 +176,15 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
 # Calculate legend inset for outer placement
 measure_legend_inset = function(legend_env) {
   if (legend_env$outer_side) {
-    inset_val = lines_to_npc(legend_env$lmar[1])
+    inset_val = lines_to_npc_x(legend_env$lmar[1])
     # Extra space needed for "left!" because of lhs inner margin
     if (!legend_env$outer_right) {
-      inset_val = inset_val + lines_to_npc(par("mar")[2])
+      inset_val = inset_val + lines_to_npc_x(par("mar")[2])
     }
     c(1 + inset_val, 0)
 
   } else if (legend_env$outer_end) {
-    # Note: Y-direction uses grconvertY (not lines_to_npc which is X-only)
+    # Note: Y-direction uses grconvertY (not lines_to_npc_x which is X-only)
     inset_val = grconvertY(legend_env$lmar[1], from = "lines", to = "npc") -
                 grconvertY(0, from = "lines", to = "npc")
     if (legend_env$outer_bottom) {
@@ -261,20 +261,20 @@ prepare_legend = function(settings) {
     settings,
     environment(),
     c(
-      "col",
-      "by_continuous",
-      "by",
+      "add",
       "bubble",
-      "null_by",
+      "bubble_cex",
+      "by",
+      "by_continuous",
+      "cex_dep",
+      "cex_fct_adj",
+      "col",
+      "datapoints",
       "legend",
       "legend_args",
-      "bubble_cex",
-      "cex_fct_adj",
-      "cex_dep",
-      "add",
-      "sub",
       "ngrps",
-      "datapoints",
+      "null_by",
+      "sub",
       "ylab"
     )
   )

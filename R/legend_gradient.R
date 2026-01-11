@@ -1,91 +1,3 @@
-# Draw vertical gradient legend labels, ticks, and title
-draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inner, outer_right) {
-  labs_idx = !is.na(lgnd_labs)
-  lgnd_labs[labs_idx] = paste0(" ", format(lgnd_labs[labs_idx]))
-
-  # Determine anchors based on position
-  if (!inner && !outer_right) {
-    lbl_x_anchor = rasterbox[1]
-    ttl_x_anchor = rasterbox[1] + max(strwidth(lgnd_labs[labs_idx]))
-    lbl_adj = c(0, 0.5)
-    ttl_adj = c(1, 0)
-  } else {
-    lbl_x_anchor = rasterbox[3]
-    ttl_x_anchor = rasterbox[1]
-    lbl_adj = c(0, 0.5)
-    ttl_adj = c(0, 0)
-  }
-
-  # Draw labels
-  text(
-    x = lbl_x_anchor,
-    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
-    labels = lgnd_labs,
-    xpd = NA,
-    adj = lbl_adj
-  )
-
-  # Draw tick marks (white dashes)
-  lgnd_ticks = lgnd_labs
-  lgnd_ticks[labs_idx] = "-   -"
-  text(
-    x = lbl_x_anchor,
-    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
-    labels = lgnd_ticks,
-    col = "white",
-    xpd = NA,
-    adj = c(1, 0.5)
-  )
-
-  # Draw title
-  text(
-    x = ttl_x_anchor,
-    y = rasterbox[4] + lines_to_user_y(1),
-    labels = legend_args[["title"]],
-    xpd = NA,
-    adj = ttl_adj
-  )
-}
-
-# Draw horizontal gradient legend labels, ticks, and title
-draw_gradient_labels_horizontal = function(rasterbox, lgnd_labs, legend_args) {
-  # Legend labels
-  text(
-    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
-    y = rasterbox[4],
-    labels = lgnd_labs,
-    xpd = NA,
-    adj = c(0.5, 1.25)
-  )
-
-  # Legend tick marks (white dashes)
-  lgnd_ticks = lgnd_labs
-  lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
-  text(
-    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
-    y = rasterbox[4],
-    labels = lgnd_ticks,
-    col = "white",
-    xpd = NA,
-    adj = c(0, 0.5),
-    srt = 90
-  )
-
-  # Legend title
-  text(
-    x = rasterbox[1],
-    y = rasterbox[4],
-    labels = paste0(legend_args[["title"]], " "),
-    xpd = NA,
-    adj = c(1, -0.5)
-  )
-}
-
-
-#
-## Gradient Legend Rendering -----
-#
-
 #' Draw gradient (continuous) legend swatch
 #'
 #' @description For gradient legends, we draw a custom color swatch using
@@ -226,4 +138,88 @@ draw_gradient_swatch = function(
   } else {
     draw_gradient_labels_horizontal(rasterbox, lgnd_labs, legend_args)
   }
+}
+
+
+# Draw vertical gradient legend labels, ticks, and title
+draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inner, outer_right) {
+  labs_idx = !is.na(lgnd_labs)
+  lgnd_labs[labs_idx] = paste0(" ", format(lgnd_labs[labs_idx]))
+
+  # Determine anchors based on position
+  if (!inner && !outer_right) {
+    lbl_x_anchor = rasterbox[1]
+    ttl_x_anchor = rasterbox[1] + max(strwidth(lgnd_labs[labs_idx]))
+    lbl_adj = c(0, 0.5)
+    ttl_adj = c(1, 0)
+  } else {
+    lbl_x_anchor = rasterbox[3]
+    ttl_x_anchor = rasterbox[1]
+    lbl_adj = c(0, 0.5)
+    ttl_adj = c(0, 0)
+  }
+
+  # Draw labels
+  text(
+    x = lbl_x_anchor,
+    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
+    labels = lgnd_labs,
+    xpd = NA,
+    adj = lbl_adj
+  )
+
+  # Draw tick marks (white dashes)
+  lgnd_ticks = lgnd_labs
+  lgnd_ticks[labs_idx] = "-   -"
+  text(
+    x = lbl_x_anchor,
+    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
+    labels = lgnd_ticks,
+    col = "white",
+    xpd = NA,
+    adj = c(1, 0.5)
+  )
+
+  # Draw title
+  text(
+    x = ttl_x_anchor,
+    y = rasterbox[4] + lines_to_user_y(1),
+    labels = legend_args[["title"]],
+    xpd = NA,
+    adj = ttl_adj
+  )
+}
+
+# Draw horizontal gradient legend labels, ticks, and title
+draw_gradient_labels_horizontal = function(rasterbox, lgnd_labs, legend_args) {
+  # Legend labels
+  text(
+    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
+    y = rasterbox[4],
+    labels = lgnd_labs,
+    xpd = NA,
+    adj = c(0.5, 1.25)
+  )
+
+  # Legend tick marks (white dashes)
+  lgnd_ticks = lgnd_labs
+  lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
+  text(
+    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
+    y = rasterbox[4],
+    labels = lgnd_ticks,
+    col = "white",
+    xpd = NA,
+    adj = c(0, 0.5),
+    srt = 90
+  )
+
+  # Legend title
+  text(
+    x = rasterbox[1],
+    y = rasterbox[4],
+    labels = paste0(legend_args[["title"]], " "),
+    xpd = NA,
+    adj = c(1, -0.5)
+  )
 }

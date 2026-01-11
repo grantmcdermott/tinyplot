@@ -137,11 +137,11 @@ resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcol
 
   # Map numeric indices to palette colors (unless ordered)
   if (!ordered && is.numeric(cols)) {
-    base_pal = grDevices::palette()
+    base_pal = palette()
     cols = if (ngrps <= length(base_pal)) {
       base_pal[cols]
     } else {
-      grDevices::hcl.colors(max(cols))[cols]
+      hcl.colors(max(cols))[cols]
     }
   }
 
@@ -175,17 +175,17 @@ resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradie
 
   if (is.null(palette_choice)) {
     # Default palette selection (alpha applied at end)
-    base_pal = grDevices::palette()
+    base_pal = palette()
     if (ngrps <= length(base_pal) && !ordered && !gradient) {
       cols = base_pal[seq_len(ngrps)]
     } else if (ngrps <= 8 && !ordered) {
-      cols = grDevices::palette.colors(n = ngrps, palette = "R4")
+      cols = palette.colors(n = ngrps, palette = "R4")
     } else if (!gradient && !ordered) {
-      cols = grDevices::hcl.colors(n = ngrps, palette = "Viridis")
+      cols = hcl.colors(n = ngrps, palette = "Viridis")
     } else {
       # Restricted viridis for gradient/ordered (excludes extreme ends)
       cols = colorRampPalette(
-        grDevices::hcl.colors(n = 100, palette = "Viridis")[11:90],
+        hcl.colors(n = 100, palette = "Viridis")[11:90],
         alpha = TRUE
       )(ngrps)
     }

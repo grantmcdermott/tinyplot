@@ -205,6 +205,85 @@ measure_legend_inset = function(legend_env) {
 }
 
 
+# Internal workhorse function for legend rendering
+# This function is called inside recordGraphics() so that all coordinate-dependent
+# calculations are re-executed when the plot window is resized
+tinylegend = function(legend_env) {
+  # Reset to base values (before soma/inset were applied)
+  # This is necessary because legend_env is passed by reference and modifications
+  # persist across recordGraphics() replays
+  legend_env$omar = legend_env$omar_base
+  legend_env$ooma = legend_env$ooma_base
+  legend_env$args[["inset"]] = legend_env$inset_base
+
+  # Re-measure legend dimensions (device size may have changed on resize)
+  legend_env$dims = measure_fake_legend(legend_env)
+
+  # Calculate and apply soma (outer margin adjustment based on legend size)
+  soma = if (legend_env$outer_side) {
+    grconvertX(legend_env$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
+  } else if (legend_env$outer_end) {
+    grconvertY(legend_env$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
+  } else {
+    0
+  }
+  soma = soma + sum(legend_env$lmar)
+
+  if (legend_env$outer_side) {
+    legend_env$ooma[if (legend_env$outer_right) 4 else 2] = soma
+  } else if (legend_env$outer_end) {
+    if (legend_env$outer_bottom) {
+      legend_env$ooma[1] = soma
+    } else {
+      legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+      par(mar = legend_env$omar)
+    }
+  }
+  par(oma = legend_env$ooma)
+
+  # Calculate inset for legend positioning
+  legend_env$inset = measure_legend_inset(legend_env)
+
+  # Refresh plot area for exact inset spacing
+  # (Uses hook to preserve existing plot with par(new = TRUE))
+  oldhook = getHook("before.plot.new")
+  setHook("before.plot.new", function() par(new = TRUE), action = "append")
+  setHook("before.plot.new", function() par(mar = legend_env$omar), action = "append")
+  plot.new()
+  setHook("before.plot.new", oldhook, action = "replace")
+
+  # Set the inset in legend args
+  legend_env$args[["inset"]] = if (legend_env$user_inset) {
+    legend_env$args[["inset"]] + legend_env$inset
+  } else {
+    legend_env$inset
+  }
+
+  # Draw the legend
+  if (legend_env$gradient) {
+    # Ensure col is set correctly for gradients
+    if (!more_than_n_unique(legend_env$args[["col"]], 1)) {
+      if (!is.null(legend_env$args[["pt.bg"]]) && length(legend_env$args[["pt.bg"]]) == 100) {
+        legend_env$args[["col"]] = legend_env$args[["pt.bg"]]
+      }
+    }
+
+    draw_gradient_swatch(
+      legend_args = legend_env$args,
+      fklgnd = legend_env$dims,
+      lmar = legend_env$lmar,
+      outer_side = legend_env$outer_side,
+      outer_end = legend_env$outer_end,
+      outer_right = legend_env$outer_right,
+      outer_bottom = legend_env$outer_bottom,
+      user_inset = legend_env$user_inset
+    )
+  } else {
+    do.call("legend", legend_env$args)
+  }
+}
+
+
 # Measure legend dimensions using a fake (non-plotted) legend
 measure_fake_legend = function(legend_env) {
   fklgnd.args = modifyList(
@@ -806,55 +885,23 @@ draw_legend = function(
     new_plot = new_plot
   )
 
-  # Adjust margins for outer placement, measure, and optionally apply
-  legend_outer_margins(legend_env, apply = draw)
+  # Initial setup: adjust margins, call plot.new, and measure (but don't apply soma yet)
+  legend_outer_margins(legend_env, apply = FALSE)
 
   if (!draw) {
     return(legend_env$dims)
   }
 
-  # Calculate inset
-  legend_env$inset = measure_legend_inset(legend_env)
+  # Store base values AFTER legend_outer_margins setup (before soma/inset are applied)
+  # These are needed so tinylegend() can reset to them on each recordGraphics replay
+  legend_env$omar_base = legend_env$omar
+  legend_env$ooma_base = legend_env$ooma
+  legend_env$inset_base = legend_env$args[["inset"]]
 
-  # Refresh plot area for exact inset spacing
-  oldhook = getHook("before.plot.new")
-  setHook("before.plot.new", function() par(new = TRUE), action = "append")
-  setHook("before.plot.new", function() par(mar = legend_env$omar), action = "append")
-  plot.new()
-  setHook("before.plot.new", oldhook, action = "replace")
-
-  # Set the inset in args
-  legend_env$args[["inset"]] = if (legend_env$user_inset) {
-    legend_env$args[["inset"]] + legend_env$inset
-  } else {
-    legend_env$inset
-  }
-
-  # Draw wrapped in recordGraphics() to preserve spacing if plot is resized
+  # Wrap margin application, inset calculation, and drawing in recordGraphics()
+  # so everything recalculates correctly when the plot window is resized
   recordGraphics(
-    {
-      if (legend_env$gradient) {
-        # Ensure col is set correctly for gradients
-        if (!more_than_n_unique(legend_env$args[["col"]], 1)) {
-          if (!is.null(legend_env$args[["pt.bg"]]) && length(legend_env$args[["pt.bg"]]) == 100) {
-            legend_env$args[["col"]] = legend_env$args[["pt.bg"]]
-          }
-        }
-
-        draw_gradient_swatch(
-          legend_args = legend_env$args,
-          fklgnd = legend_env$dims,
-          lmar = legend_env$lmar,
-          outer_side = legend_env$outer_side,
-          outer_end = legend_env$outer_end,
-          outer_right = legend_env$outer_right,
-          outer_bottom = legend_env$outer_bottom,
-          user_inset = legend_env$user_inset
-        )
-      } else {
-        do.call("legend", legend_env$args)
-      }
-    },
+    tinylegend(legend_env),
     list = list(legend_env = legend_env),
     env = getNamespace("tinyplot")
   )

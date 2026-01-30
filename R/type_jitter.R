@@ -23,6 +23,21 @@ type_jitter = function(factor = 1, amount = NULL) {
 }
 
 
+jitter_restore = function(obj, factor, amount) {
+    if (inherits(obj, "POSIXlt")) {
+        obj = as.POSIXct(obj)
+    }
+    if (inherits(obj, c("Date", "POSIXt", "yearmon", "yearqtr"))) {
+        obj_attrs = attributes(obj)
+        out = jitter(unclass(obj), factor = factor, amount = amount)
+        attributes(out) = obj_attrs
+    } else {
+        out = jitter(obj, factor = factor, amount = amount)
+    }
+    return(out)
+}
+
+
 data_jitter = function(factor, amount) {
     fun = function(settings, ...) {
         env2env(settings, environment(), "datapoints")
@@ -45,8 +60,8 @@ data_jitter = function(factor, amount) {
         } else {
             ylabs = NULL
         }
-        x = jitter(x, factor = factor, amount = amount)
-        y = jitter(y, factor = factor, amount = amount)
+        x = jitter_restore(x, factor = factor, amount = amount)
+        y = jitter_restore(y, factor = factor, amount = amount)
 
         datapoints$x = x
         datapoints$y = y

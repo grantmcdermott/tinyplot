@@ -58,9 +58,18 @@ draw_facet_window = function(
   ## dynamic margins flag
   dynmar = isTRUE(get_tpar("dynmar", tpar_list = tpars))
   
-  ## optionally allow to modify the style of axis interval calculation
-  if (!is.null(xaxs)) par(xaxs = xaxs)
-  if (!is.null(yaxs)) par(yaxs = yaxs)
+  ## optionally allow to modify and restore the style of axis interval calculation
+  if (!is.null(xaxs) || !is.null(yaxs)) {
+    op = par()
+    if (!is.null(xaxs)) {
+      par(xaxs = xaxs)
+      on.exit(par(xaxs = op$xaxs), add = TRUE)
+    }
+    if (!is.null(yaxs)) {
+      par(yaxs = yaxs)
+      on.exit(par(yaxs = op$yaxs), add = TRUE)
+    }
+  }
 
   if (nfacets > 1) {
     # Set facet margins (i.e., gaps between facets)

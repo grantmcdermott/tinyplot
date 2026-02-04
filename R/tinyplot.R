@@ -574,7 +574,16 @@
 #' )
 #' # reset the theme
 #' tinytheme()
-#'
+#' 
+#' # tinyplot can be used with pipes without specifying the data argument,
+#' # as long as a formula is provided:
+#' 
+#' \dontrun{
+#' aq |> 
+#'   subset(Month == "May") |> 
+#'   tinyplot(Temp ~ Wind)
+#' }
+#' 
 #' # For more examples and a detailed walkthrough, please see the introductory
 #' # tinyplot tutorial available online:
 #' # https://grantmcdermott.com/tinyplot/vignettes/introduction.html
@@ -1487,6 +1496,15 @@ tinyplot.density = function(
   
   do.call(tinyplot.default, args = dots)
   
+}
+
+#' @rdname tinyplot
+#' @importFrom methods is
+#' @export
+tinyplot.data.frame <- function(x = NULL, formula = NULL, ...) {
+    pars <- as.list(match.call()[-1])
+    if(!is(pars$formula, "call")) {  stop("If the first argument to tinyplot is a data frame, then the second must be a formula.") }
+    tinyplot(formula, x, ...)
 }
 
 

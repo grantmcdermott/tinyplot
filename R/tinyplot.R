@@ -1436,6 +1436,8 @@ tinyplot.formula = function(
     if (length(names(x)) > 1L) warning(paste("formula should specify at most one x-variable, using:", xnam),
     "\nif you want to use arithmetic operators, make sure to wrap them inside I()")
     x = x[[xnam]]
+  } else {
+    xnam = NULL
   }
 
   ## extract y (if any)
@@ -1445,6 +1447,8 @@ tinyplot.formula = function(
     if (length(names(y)) > 1L) warning(paste("formula should specify at most one y-variable, using:", ynam),
     "\nif you want to use arithmetic operators, make sure to wrap them inside I()")
     y = y[[ynam]]
+  } else {
+    ynam = NULL
   }
 
   ## extract by (if any)

@@ -22,6 +22,11 @@ where the formatting is also better._
   [custom types](https://grantmcdermott.com/tinyplot/vignettes/types.html#custom-types)
   in the `Types` vignette. (#531 @grantmcdermott)
 
+### Bugs
+
+- Fixed Issue #545 where xaxs/yaxs were not restored when set by an internal function.
+  (#545 @zeileis)
+
 ### Breaking changes
 
 ## v0.6.0

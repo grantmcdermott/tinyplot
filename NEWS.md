@@ -11,6 +11,11 @@ where the formatting is also better._
 - The legend plot characters for the `"pointrange"` and `"errorbar"` types now
   include a line, to better resemble the actual plot elements (#533 @grantmcdermott)
 
+### Bug fixes
+
+- Jittered plots now support Date/POSIXt axes. Thanks to @wachtermh for the bug
+  report and @vincentarelbundock for the code contribution. (#327)
+
 ### Internals
 
 - We now encourage type-specific legend customizations within the individual

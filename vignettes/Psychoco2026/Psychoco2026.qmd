@@ -1,0 +1,338 @@
+---
+# title: tinyplot
+title: "<br/><br/><br/>"
+subtitle: Convenient and Customizable Base R Plots
+format:
+   clean-revealjs:
+     title-slide-attributes:
+       data-background-image: "../useR2025/img/background.png"
+       data-background-size: contain
+execute:
+  echo: true
+  fig-height: 4.8
+  fig-width: 6.4
+  out-width: 60%
+author:
+  - name: Grant McDermott
+    orcid: 0000-0001-7883-8573
+  - name: Vincent Arel-Bundock
+    orcid: 0000-0003-1995-6531
+  - name: Achim Zeileis
+    orcid: 0000-0003-0918-3766
+institute: "Psychoco 2026"
+date: 2026-02-06
+extensions: iconify
+---
+
+## Motivation
+
+::: {.callout-tip}
+# Ross Ihaka & Robert Gentleman (1996)
+R: A Language for Data Analysis _and Graphics_
+:::
+
+
+**Engines:** Base `graphics` vs. newer flexible `grid` (enabling `ggplot2` and `lattice`).
+
+**Core of base graphics:** `plot()` generic function and corresponding methods.
+
+**Default method:** Handles many basic plotting elements like points, lines, etc.
+
+**Formula method:** Handles various `y ~ x` setups.
+
+- Scatterplots (numeric `y` vs. numeric `x`).
+- Boxplots (numeric `y` vs. categorical `x`).
+- Spineplots/spinograms (categorical `y`).
+
+
+
+## Motivation
+
+**Illustration:** Determinants of student performance in end-term exam of an
+introductory mathematics course for business and economics students at Universität Innsbruck.
+
+. . .
+
+```{r}
+data("MathExam14W", package = "psychotools")
+math <- MathExam14W |>
+  transform(
+    attempt = factor(attempt, ordered = FALSE),
+    points = rowSums(as.matrix(credits)^2 * (-1)^as.matrix(credits))
+  ) |>
+  transform(
+    pass = factor(points >= 26, labels = c("fail", "pass")),
+    score = points/52
+  ) |>
+  subset(select = c("score", "pass", "tests", "attempt", "gender"))
+```
+
+
+## Motivation
+
+**Dependent variables:**
+
+- Numeric `score` (proportion of points).
+- Binary indicator for `pass`-ing the exam (`score >= 0.5`).
+
+**Explanatory variables:** Points from previous online `tests`, `attempt`, `gender`.
+
+```{r}
+summary(math)
+```
+
+
+## Motivation: numeric ~ numeric
+
+```{r}
+plot(score ~ tests, data = math)
+```
+
+
+## Motivation: numeric ~ categorical
+
+```{r}
+plot(score ~ attempt, data = math)
+```
+
+
+## Motivation: categorical ~ numeric
+
+```{r}
+plot(pass ~ tests, data = math)
+```
+
+
+## Motivation: categorical ~ categorical
+
+```{r}
+plot(pass ~ attempt, data = math)
+```
+
+
+## Motivation: Limitations
+
+**So far:**
+
+- Nifty data visualizations.
+- Intuitive, concise syntax.
+
+**Possible customizations:**
+
+- Groups via shading, symbols, line types, etc.
+- Legends, axes, annotation.
+- Grid of faceted displays.
+- Layers with additional elements.
+
+**But:**
+
+- Requires low-level drawing of such elements.
+- Tedious without intuitive, concise syntax.
+
+
+## tinyplot
+
+:::: {.columns}
+
+::: {.column width="73%"}
+
+Install:
+
+```{r}
+#| eval: false
+install.packages("tinyplot") #or#
+install.packages("tinyplot",
+  repos = "https://grantmcdermott.R-universe.dev")
+```
+
+Load:
+
+```{r}
+library("tinyplot")
+```
+
+:::
+
+::: {.column width="20%"}
+
+![](../../altdoc/logo.png)
+
+:::
+
+::::
+
+
+::: {.callout-tip}
+# Starting point
+`tinyplot()` or its shorthand `plt()` as drop-in replacement for `plot()`.
+:::
+
+
+## tinyplot
+
+```{r}
+tinyplot(score ~ tests, data = math)
+```
+
+
+## tinyplot: Features
+
+**Core ideas:**
+
+- Preservation of strengths of base R graphics.
+- Lightweight extension with convenience features.
+- No strong dependencies on non-base packages.
+- Improved feature parity vs. `grid`-based `ggplot2` and `lattice`.
+- Grouped plots with automatic legends and/or facets.
+- Advanced visualization types.
+- Customization via themes.
+
+**Here:**
+
+```{r}
+tinytheme("clean2")
+```
+
+
+## tinyplot: Themes
+
+```{r}
+tinyplot(score ~ tests, data = math)
+```
+
+
+## tinyplot: More plot types
+
+```{r}
+tinyplot(score ~ tests, data = math, type = "jitter")
+```
+
+## tinyplot: Alpha transparency
+
+```{r}
+tinyplot(score ~ tests, data = math, alpha = 0.4)
+```
+
+## tinyplot: Axis labels
+
+```{r}
+tinyplot(score ~ tests, data = math, alpha = 0.4, yaxl = "%")
+```
+
+## tinyplot: Add layers
+
+```{r}
+tinyplot(score ~ tests, data = math, alpha = 0.4, yaxl = "%")
+tinyplot_add(type = "loess")
+```
+
+## tinyplot: Grouped plots with legends
+
+```{r}
+tinyplot(score ~ tests | attempt, data = math, pch = "by", type = "jitter")
+```
+
+## tinyplot: Facets
+
+```{r}
+#| fig-height: 5.4
+#| fig-width: 8.1
+tinyplot(score ~ tests | attempt, data = math, pch = "by", facet = "by")
+```
+
+## tinyplot: Facets
+
+```{r}
+#| fig-height: 4
+#| fig-width: 12
+#| out-width: 100%
+tinyplot(pass ~ tests | attempt, data = math, facet = "by",
+  breaks = c(9, 17, 20, 23, 26), facet.args = list(nrow = 1))
+```
+
+## tinyplot: Facets
+
+```{r}
+#| fig-height: 5.4
+#| fig-width: 11
+#| out-width: 94%
+tinyplot(score ~ tests | attempt, data = math, facet = gender ~ attempt)
+```
+
+## tinyplot: More plot types
+
+```{r}
+#| fig-height: 6
+#| fig-width: 8.1
+tinyplot(score ~ attempt | attempt, data = math,
+  type = "violin", flip = TRUE, alpha = 0.4)
+```
+
+## tinyplot: More plot types
+
+```{r}
+#| fig-height: 6
+#| fig-width: 8.1
+tinyplot(attempt ~ score, data = math, bg = "white",
+  type = type_ridge(gradient = TRUE, col = "white"))
+```
+
+## tinyplot: More plot types
+
+**Interface:** Types can be passed as either a _string_ or _function_.
+
+|            |                 |                |                |            |
+|------------|:----------------|:---------------|:---------------|:-----------|
+| _String_   | `"p"`           | `"ridge"`      | `"loess"`      | ...        |
+| _Function_ | `type_points()` | `type_ridge()` | `type_loess()` | ...        |
+
+
+**Arguments:** Can always be passed through the `type` function.
+
+```{r}
+#| eval: false
+tinyplot(..., type = type_ridge(gradient = TRUE))
+```
+
+**Alternatively:** Through `tinyplot()` if there is no clash with top-level arguments.
+
+```{r}
+#| eval: false
+tinyplot(..., type = "ridge", gradient = TRUE)
+```
+
+
+## Use cases
+
+**Teaching and interactive usage:**
+
+- Start with simple visualizations and fundamental principles in base graphics.
+- Proceed to more complex display using the same type of interface.
+
+**Package development:**
+
+- Create flexible visualizations without introducing numerous dependencies.
+
+**Web R:**
+
+- Engine for appealing graphics without adding much overhead.
+
+---
+
+## References
+
+McDermott G, Arel-Bundock V, Zeileis A (2025).
+  _tinyplot: Lightweight Extension of the Base R Graphics System_.
+  R package version 0.6.0.
+  [`doi:10.32614/CRAN.package.tinyplot`](https://doi.org/10.32614/CRAN.package.tinyplot)
+
+Zeileis A (2025).
+  "Examining Exams Using Rasch Models and Assessment of Measurement Invariance."
+  _Austrian Journal of Statistics_, **54**(3), 9-26.
+  [`doi:10.17713/ajs.v54i3.2055`](https://doi.org/10.17713/ajs.v54i3.2055)
+
+{{< iconify mdi mastodon >}} [`@zeileis@fosstodon.org`](https://fosstodon.org/@zeileis)
+
+{{< iconify fa6-brands bluesky >}} [`@zeileis.org`](https://bsky.app/profile/zeileis.org)
+
+{{< iconify mdi link-variant >}} [`https://www.zeileis.org/`](https://www.zeileis.org/)

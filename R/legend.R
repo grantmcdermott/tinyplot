@@ -407,7 +407,7 @@ prepare_legend = function(settings) {
   }
 
   legend_draw_flag = (is.null(legend) || !is.character(legend) || legend != "none" || bubble) && !isTRUE(add)
-  has_sub = !is.null(sub)
+  has_sub = text_line_count(sub) > 0L
 
   # Generate labels for discrete legends
   if (legend_draw_flag && isFALSE(by_continuous) && (!bubble || multi_legend)) {

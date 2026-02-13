@@ -31,8 +31,12 @@ draw_facet_window = function(
     draw,
     grid,
     has_legend,
+    main,
+    sub,
     type,
+    xlab,
     x, xmax, xmin,
+    ylab,
     y, ymax, ymin,
     tpars = NULL
     ) {
@@ -155,6 +159,20 @@ draw_facet_window = function(
           fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
         }
       }
+
+      # Adjust margins for missing and multi-line annotation strings.
+      xlab_lines = text_line_count(xlab)
+      ylab_lines = text_line_count(ylab)
+      main_lines = text_line_count(main)
+
+      if (xlab_lines == 0) omar[1] = omar[1] - 1
+      if (ylab_lines == 0) omar[2] = omar[2] - 1
+      if (main_lines == 0) omar[3] = omar[3] - 1
+
+      if (xlab_lines > 1) omar[1] = omar[1] + (xlab_lines - 1) * par("cex.lab")
+      if (ylab_lines > 1) omar[2] = omar[2] + (ylab_lines - 1) * par("cex.lab")
+      if (main_lines > 1) omar[3] = omar[3] + (main_lines - 1) * par("cex.main")
+
       # FIXME: Is this causing issues for lhs legends with facet_grid?
       # catch for missing rhs legend
       if (isTRUE(attr(facet, "facet_grid")) && !has_legend) {
@@ -218,6 +236,20 @@ draw_facet_window = function(
         omar[1] = omar[1] + whtsbp
       }
     }
+
+    # Adjust margins for missing and multi-line annotation strings.
+    xlab_lines = text_line_count(xlab)
+    ylab_lines = text_line_count(ylab)
+    main_lines = text_line_count(main)
+
+    if (xlab_lines == 0) omar[1] = omar[1] - 1
+    if (ylab_lines == 0) omar[2] = omar[2] - 1
+    if (main_lines == 0) omar[3] = omar[3] - 1
+
+    if (xlab_lines > 1) omar[1] = omar[1] + (xlab_lines - 1) * par("cex.lab")
+    if (ylab_lines > 1) omar[2] = omar[2] + (ylab_lines - 1) * par("cex.lab")
+    if (main_lines > 1) omar[3] = omar[3] + (main_lines - 1) * par("cex.main")
+
      par(mar = omar)
   }
 

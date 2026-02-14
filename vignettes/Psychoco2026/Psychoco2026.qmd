@@ -162,6 +162,9 @@ library("tinyplot")
 ::::
 
 
+&nbsp;
+
+
 ::: {.callout-tip}
 # Starting point
 `tinyplot()` or its shorthand `plt()` as drop-in replacement for `plot()`.
@@ -331,8 +334,8 @@ Zeileis A (2025).
   _Austrian Journal of Statistics_, **54**(3), 9-26.
   [`doi:10.17713/ajs.v54i3.2055`](https://doi.org/10.17713/ajs.v54i3.2055)
 
-{{< iconify mdi mastodon >}} [`@zeileis@fosstodon.org`](https://fosstodon.org/@zeileis)
+{{< iconify mdi mastodon >}} &nbsp; [`@zeileis@fosstodon.org`](https://fosstodon.org/@zeileis)
 
-{{< iconify fa6-brands bluesky >}} [`@zeileis.org`](https://bsky.app/profile/zeileis.org)
+{{< iconify fa6-brands bluesky >}} &nbsp; [`@zeileis.org`](https://bsky.app/profile/zeileis.org)
 
-{{< iconify mdi link-variant >}} [`https://www.zeileis.org/`](https://www.zeileis.org/)
+{{< iconify mdi link-variant >}} &nbsp; [`https://www.zeileis.org/`](https://www.zeileis.org/)

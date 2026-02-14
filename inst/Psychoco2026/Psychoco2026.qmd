@@ -4,8 +4,9 @@ title: "<br/><br/><br/>"
 subtitle: Convenient and Customizable Base R Plots
 format:
    clean-revealjs:
+     embed-resources: true
      title-slide-attributes:
-       data-background-image: "../useR2025/img/background.png"
+       data-background-image: "../../vignettes/useR2025/img/background.png"
        data-background-size: contain
 execute:
   echo: true

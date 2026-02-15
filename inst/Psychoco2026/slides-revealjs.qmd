@@ -3,11 +3,32 @@
 title: "<br/><br/><br/>"
 subtitle: Convenient and Customizable Base R Plots
 format:
-   clean-revealjs:
-     embed-resources: true
-     title-slide-attributes:
-       data-background-image: "../../vignettes/useR2025/img/background.png"
-       data-background-size: contain
+  clean-revealjs:
+    width: 1150
+    embed-resources: true
+    code-line-numbers: false
+    highlight-style: monochrome
+    title-slide-attributes:
+      data-background-image: "../../vignettes/useR2025/img/background.png"
+      data-background-size: contain
+    include-in-header:
+      - text: |
+          <style>
+          .reveal h2 {
+            font-weight: normal;
+            color: #999999;
+          }
+          .reveal p {
+            margin-top: 1.15em;
+          }
+          .reveal ul li {
+            margin-top: 0.15em !important;
+            margin-bottom: 0.15em !important;
+          }
+          .reveal table {
+            margin-left: 0;
+          }
+          </style>
 execute:
   echo: true
   fig-height: 4.8
@@ -52,9 +73,9 @@ R: A Language for Data Analysis _and Graphics_
 **Illustration:** Determinants of student performance in end-term exam of an
 introductory mathematics course for business and economics students at Universität Innsbruck.
 
-. . .
-
-```{r}
+```{r Prepr}
+#| code-fold: true
+#| code-summary: "Data preparation"
 data("MathExam14W", package = "psychotools")
 math <- MathExam14W |>
   transform(
@@ -118,12 +139,16 @@ plot(pass ~ attempt, data = math)
 - Nifty data visualizations.
 - Intuitive, concise syntax.
 
+<span style="display: block; margin-bottom: -20px;"></span>
+
 **Possible customizations:**
 
 - Groups via shading, symbols, line types, etc.
 - Legends, axes, annotation.
 - Grid of faceted displays.
 - Layers with additional elements.
+
+<span style="display: block; margin-bottom: -20px;"></span>
 
 **But:**
 
@@ -137,7 +162,7 @@ plot(pass ~ attempt, data = math)
 
 ::: {.column width="73%"}
 
-Install:
+**Install:**
 
 ```{r}
 #| eval: false
@@ -146,11 +171,15 @@ install.packages("tinyplot",
   repos = "https://grantmcdermott.R-universe.dev")
 ```
 
-Load:
+**Load:**
 
 ```{r}
 library("tinyplot")
 ```
+
+:::
+
+::: {.column width="7%"}
 
 :::
 
@@ -291,12 +320,16 @@ tinyplot(attempt ~ score, data = math, bg = "white",
 | _Function_ | `type_points()` | `type_ridge()` | `type_loess()` | ...        |
 
 
+<span style="display: block; height: 4px;"></span>
+
 **Arguments:** Can always be passed through the `type` function.
 
 ```{r}
 #| eval: false
 tinyplot(..., type = type_ridge(gradient = TRUE))
 ```
+
+<span style="display: block; height: 4px;"></span>
 
 **Alternatively:** Through `tinyplot()` if there is no clash with top-level arguments.
 
@@ -334,6 +367,7 @@ Zeileis A (2025).
   "Examining Exams Using Rasch Models and Assessment of Measurement Invariance."
   _Austrian Journal of Statistics_, **54**(3), 9-26.
   [`doi:10.17713/ajs.v54i3.2055`](https://doi.org/10.17713/ajs.v54i3.2055)
+
 
 {{< iconify mdi mastodon >}} &nbsp; [`@zeileis@fosstodon.org`](https://fosstodon.org/@zeileis)
 

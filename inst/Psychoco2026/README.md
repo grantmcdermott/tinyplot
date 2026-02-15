@@ -1,6 +1,12 @@
-tinyplot: Lightweight Extension of the Base R Graphics System
+## tinyplot: Lightweight Extension of the Base R Graphics System
 
-Grant McDermott, Vincent Arel-Bundock, Achim Zeileis
+_Grant McDermott, Vincent Arel-Bundock, Achim Zeileis_
+
+**Presented at:** Psychoco 2026 - International Workshop on Psychometric Computing, Università di Padova, Italy, February 5-6.
+
+**PDF slides:** <https://www.zeileis.org/papers/Psychoco-2026.pdf>
+
+**Abstract:**
 
 The base R graphics system provides a lot of powerful infrastructure for drawing
 data visualizations. At the core is the `plot()` generic function with its
@@ -26,3 +32,10 @@ visualization examples, highlighting strengths and weaknesses compared to other
 packages. The package is available from CRAN
 (<https://doi.org/10.32614/CRAN.package.tinyplot>) and has many more galleries
 and tutorials at <https://grantmcdermott.com/tinyplot/>.
+
+**Notes:**
+
+- The source file for the PDF slides is `slides-beamer.qmd`. This requires that
+  the [UIBK beamer class](https://git.uibk.ac.at/uibklatex/beamer_letter) is installed.
+- As an alternative a similar HTML version of the slides can be created from
+  `slides-revealjs.qmd`.

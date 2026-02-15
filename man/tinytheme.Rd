@@ -64,8 +64,6 @@ behaviour to our GitHub repo:
 Known current limitations include:
 \itemize{
 \item Themes do not work well when \code{legend = "top!"}.
-\item Dynamic margin spacing does not account for multi-line strings (e.g., axes
-or main titles that contain "\\n").
 }
 }
 \examples{

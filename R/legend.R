@@ -124,7 +124,7 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
       if (legend_env$dynmar) {
         omar = par("mar")
         if (legend_env$outer_bottom) {
-          omar[1] = theme_clean$mgp[1] + 1 * par("cex.lab")
+          omar[1] = theme_dynamic$mgp[1] + 1 * par("cex.lab")
           if (legend_env$has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
             omar[1] = omar[1] + 1 * par("cex.sub")
           }

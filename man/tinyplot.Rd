@@ -5,6 +5,7 @@
 \alias{tinyplot.default}
 \alias{tinyplot.formula}
 \alias{tinyplot.density}
+\alias{tinyplot.data.frame}
 \alias{plt}
 \title{Lightweight extension of the base R plotting function}
 \usage{
@@ -98,6 +99,8 @@ tinyplot(x, ...)
 )
 
 \method{tinyplot}{density}(x = NULL, type = c("l", "area"), ...)
+
+\method{tinyplot}{data.frame}(x = NULL, formula = NULL, ...)
 
 plt(x, ...)
 }
@@ -740,6 +743,15 @@ tinyplot(
 )
 # reset the theme
 tinytheme()
+
+# tinyplot can be used with pipes without specifying the data argument,
+# as long as a formula is provided:
+
+\dontrun{
+aq |> 
+  subset(Month == "May") |> 
+  tinyplot(Temp ~ Wind)
+}
 
 # For more examples and a detailed walkthrough, please see the introductory
 # tinyplot tutorial available online:

@@ -8,15 +8,6 @@ swap_elements = function(env, a, b) {
 }
 
 
-swap_columns = function(dp, a, b) {
-  va = dp[[a]]
-  vb = dp[[b]]
-  dp[[a]] = if (!is.null(vb)) vb else NULL
-  dp[[b]] = if (!is.null(va)) va else NULL
-  dp
-}
-
-
 flip_datapoints = function(settings) {
   env2env(settings, environment(), c("flip", "type", "datapoints", "log"))
 

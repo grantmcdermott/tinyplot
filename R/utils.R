@@ -3,6 +3,18 @@ if (getRversion() <= "4.4.0") {
   `%||%` = function(x, y) if (is.null(x)) y else x
 }
 
+# Count text lines. Returns 0 for absent text and 1 for expression objects.
+text_line_count = function(x) {
+  if (is.null(x)) return(0L)
+  if (identical(x, NA) || identical(x, NA_character_)) return(0L)
+  if (!is.character(x)) return(1L)
+  if (!length(x)) return(0L)
+  keep = !is.na(x) & nzchar(x)
+  if (!any(keep)) return(0L)
+  x = x[which(keep)[1L]]
+  as.integer(1L + nchar(gsub("[^\n]", "", x)))
+}
+
 
 ## Function that computes an appropriate bandwidth kernel based on a string
 ## input

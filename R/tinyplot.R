@@ -1051,8 +1051,12 @@ tinyplot.default = function(
       draw = draw,
       grid = grid,
       has_legend = has_legend,
+      main = main,
+      sub = sub,
       type = type,
+      xlab = xlab,
       x = x, xmax = xmax, xmin = xmin,
+      ylab = ylab,
       y = y, ymax = ymax, ymin = ymin,
       tpars = tpars
     ),
@@ -1075,15 +1079,18 @@ tinyplot.default = function(
       draw = draw,
       grid = grid,
       has_legend = has_legend,
+      main = main,
+      sub = sub,
       type = type,
+      xlab = xlab,
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
+      ylab = ylab,
       y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin,
       tpars = tpar() # https://github.com/grantmcdermott/tinyplot/issues/474
     ),
     getNamespace("tinyplot")
   )
   list2env(facet_window_args, environment())
-
 
   #
   ## split and draw datapoints -----

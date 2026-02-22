@@ -26,7 +26,7 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
 
   if (!is.null(sub)) {
     if (isTRUE(get_tpar("side.sub", 1) == 3)) {
-      if (is.null(line_main)) line_main = par("mgp")[3] + 1.7 - .1
+      if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 1.7 - .1
       line_main = line_main + 1.2
     }
   }
@@ -56,7 +56,7 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
     if (main_lines > 1L) {
       # Keep line 1 aligned with single-line titles by shifting the centered
       # multi-line block downward by half its extra line height.
-      if (is.null(line_main)) line_main = par("mgp")[3] + 1.1
+      if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 1.1
       line_main = line_main - (main_lines - 1) / 2
     }
     adj_main = get_tpar(c("adj.main", "adj"), 3)
@@ -94,7 +94,7 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
   if (ylab_lines > 1L) {
     # Keep multi-line ylab centered around the default label line so outer
     # lines do not get pushed off-device in tighter layouts (e.g., mfrow 2x2).
-    line_ylab = par("mgp")[1] - (ylab_lines - 1)
+    line_ylab = get_tpar("mgp")[1] - (ylab_lines - 1)
     cex_ylab = get_tpar(c("cex.ylab", "cex.lab"), 1)
     csi = par("csi")
     left_margin_in = par("mai")[2]

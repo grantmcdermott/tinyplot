@@ -169,9 +169,9 @@ draw_facet_window = function(
       if (ylab_lines == 0) omar[2] = omar[2] - 1
       if (main_lines == 0) omar[3] = omar[3] - 1
 
-      if (xlab_lines > 1) omar[1] = omar[1] + (xlab_lines - 1) * par("cex.lab")
-      if (ylab_lines > 1) omar[2] = omar[2] + (ylab_lines - 1) * par("cex.lab")
-      if (main_lines > 1) omar[3] = omar[3] + (main_lines - 1) * par("cex.main")
+      if (xlab_lines > 1) omar[1] = omar[1] + (xlab_lines - 1) * get_tpar(c("cex.xlab", "cex.lab"), tpar_list = tpars)
+      if (ylab_lines > 1) omar[2] = omar[2] + (ylab_lines - 1) * get_tpar(c("cex.ylab", "cex.lab"), tpar_list = tpars)
+      if (main_lines > 1) omar[3] = omar[3] + (main_lines - 1) * get_tpar("cex.main", tpar_list = tpars)
 
       # FIXME: Is this causing issues for lhs legends with facet_grid?
       # catch for missing rhs legend
@@ -246,9 +246,9 @@ draw_facet_window = function(
     if (ylab_lines == 0) omar[2] = omar[2] - 1
     if (main_lines == 0) omar[3] = omar[3] - 1
 
-    if (xlab_lines > 1) omar[1] = omar[1] + (xlab_lines - 1) * par("cex.lab")
-    if (ylab_lines > 1) omar[2] = omar[2] + (ylab_lines - 1) * par("cex.lab")
-    if (main_lines > 1) omar[3] = omar[3] + (main_lines - 1) * par("cex.main")
+    if (xlab_lines > 1) omar[1] = omar[1] + (xlab_lines - 1) * get_tpar(c("cex.xlab", "cex.lab"), tpar_list = tpars)
+    if (ylab_lines > 1) omar[2] = omar[2] + (ylab_lines - 1) * get_tpar(c("cex.ylab", "cex.lab"), tpar_list = tpars)
+    if (main_lines > 1) omar[3] = omar[3] + (main_lines - 1) * get_tpar("cex.main", tpar_list = tpars)
 
      par(mar = omar)
   }

@@ -20,6 +20,7 @@ where the formatting is also better._
 
 - We now encourage type-specific legend customizations within the individual
   `type_<type>` constructors. (#531 @grantmcdermott)
+- Change maintainer email.
 
 ### Documentation
 

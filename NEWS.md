@@ -6,6 +6,13 @@ where the formatting is also better._
 
 ## Development version
 
+### New features
+
+- New dedicated `tinyplot()` method for `ts` time series. Internally, this sets
+  up a long data frame with columns `Time`, `Value`, and `Series` and then calls
+  the formula method with different possible specifications for the `by` and `facet`
+  variables. (#558 @zeileis)
+
 ### Aesthetic changes
 
 - The legend plot characters for the `"pointrange"` and `"errorbar"` types now

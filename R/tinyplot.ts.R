@@ -27,13 +27,14 @@
 #' tinyplot(EuStockMarkets, facet.args = NULL) ## multiple, same color, same scale
 #' tinyplot(EuStockMarkets, facet = "by")      ## multiple, separate colors, free scales
 #' tinyplot(EuStockMarkets, facet = NULL)      ## single, separate colors
-#' 
+#'
 #' ## further variations
 #' tinyplot(EuStockMarkets, facet = "by", facet.args = NULL)
 #' tinyplot(EuStockMarkets, facet.args = list(free = TRUE, ncol = 1))
-#' 
+#'
 #' tinytheme() ## reset
-#' 
+#'
+#' @importFrom stats time
 #' @export
 tinyplot.ts = function(x, facet, type = "l", facet.args = list(free = TRUE), ylab = "", ...) {
   ## basic object properties

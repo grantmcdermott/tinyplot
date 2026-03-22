@@ -3,6 +3,7 @@
 S3method(tinyplot,default)
 S3method(tinyplot,density)
 S3method(tinyplot,formula)
+S3method(tinyplot,ts)
 export(draw_legend)
 export(get_saved_par)
 export(plt)

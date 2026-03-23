@@ -34,6 +34,8 @@ align_layer = function(settings) {
     } else if (!is.null(names(xlabs_layer))) {
       # Case 2: match implicit integer -> label mapping (e.g., lines added to errorbars)
       if (setequal(names(xlabs_layer), names(xlabs_orig))) {
+        # If mappings already agree and no dodge, no realignment needed
+        if (identical(xlabs_layer, xlabs_orig) && is.null(settings$dodge)) return(invisible())
         orig_order = xlabs_orig[names(xlabs_layer)[settings$datapoints[["x"]]]]
         x_layer = settings$datapoints[["x"]]
         if (is.null(settings$dodge)) {
@@ -55,4 +57,3 @@ align_layer = function(settings) {
     }
   }
 }
-

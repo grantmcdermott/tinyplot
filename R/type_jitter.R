@@ -40,7 +40,7 @@ jitter_restore = function(obj, factor, amount) {
 
 data_jitter = function(factor, amount) {
     fun = function(settings, ...) {
-        env2env(settings, environment(), "datapoints")
+        env2env(settings, environment(), c("datapoints", "add"))
 
         x = datapoints$x
         y = datapoints$y
@@ -60,6 +60,21 @@ data_jitter = function(factor, amount) {
         } else {
             ylabs = NULL
         }
+
+        # Apply group offsets from base layer (e.g., boxplot, violin)
+        group_offsets = get_environment_variable(".group_offsets")
+        if (isTRUE(add) && !is.null(group_offsets) && is.factor(datapoints$by)) {
+            # Ensure x uses integer factor codes to match the base layer
+            if (is.null(xlabs)) {
+                xf = as.factor(x)
+                xlvls = levels(xf)
+                xlabs = seq_along(xlvls)
+                names(xlabs) = xlvls
+                x = as.integer(xf)
+            }
+            x = x + group_offsets[as.integer(datapoints$by)]
+        }
+
         x = jitter_restore(x, factor = factor, amount = amount)
         y = jitter_restore(y, factor = factor, amount = amount)
 

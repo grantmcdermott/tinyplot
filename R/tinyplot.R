@@ -795,10 +795,12 @@ tinyplot.default = function(
     ribbon.alpha  = sanitize_ribbon_alpha(NULL),
 
     # misc
-    flip          = flip,
-    dodge         = NULL,
+    add           = add,
     by            = by,
+    dodge         = NULL,
     dots          = dots,
+    flip          = flip,
+    group_offsets = NULL,
     type_info     = list() # pass type-specific info from type_data to type_draw
   )
 
@@ -873,6 +875,7 @@ tinyplot.default = function(
   # ensure axis aligment of any added layers
   if (!add) {
     assign("xlabs_orig", settings[["xlabs"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
+    assign(".group_offsets", settings[["group_offsets"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
   } else {
     align_layer(settings)
   }

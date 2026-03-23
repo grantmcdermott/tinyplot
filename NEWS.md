@@ -14,7 +14,7 @@ where the formatting is also better._
   (factor) produces a barplot, `~ x` (factor) produces a barplot, and `~ x`
   (numeric) produces a scatterplot against the index. The `~ 0` form is useful
   for types that don't require x/y, such as `segments` and `rect`. Thanks to
-  @brock for suggestion and discussion. (#534 @zeileis, @grantmcdermott)
+  @katrinabrock for the suggestion. (#534 @zeileis, @grantmcdermott)
 
 ### Aesthetic changes
 
@@ -30,7 +30,7 @@ where the formatting is also better._
 
 - We now encourage type-specific legend customizations within the individual
   `type_<type>` constructors. (#531 @grantmcdermott)
-- Change maintainer email.
+- Change maintainer email address.
 
 ### Documentation
 

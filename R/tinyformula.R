@@ -74,6 +74,8 @@ tinyframe = function(formula, data, drop = FALSE) {
   ## - formula: (sub-)formula
   ## - data: model.frame from full formula
   if (is.null(formula)) return(NULL)
-  names = sapply(attr(terms(formula), "variables")[-1L], deparse, width.cutoff = 500L)
+  vars = attr(terms(formula), "variables")[-1L]
+  if (is.null(vars)) return(NULL)
+  names = sapply(vars, deparse, width.cutoff = 500L)
   data[, names, drop = drop]
 }

@@ -6,6 +6,16 @@ where the formatting is also better._
 
 ## Development version
 
+### New features
+
+- Support for univariate formulas, e.g., `y ~ 1`, `~ x`, and `~ 0`. These are
+  translated to `x = NULL` or `y = NULL` in the default method call, with
+  automatic type inference: `y ~ 1` (numeric) produces a histogram, `y ~ 1`
+  (factor) produces a barplot, `~ x` (factor) produces a barplot, and `~ x`
+  (numeric) produces a scatterplot against the index. The `~ 0` form is useful
+  for types that don't require x/y, such as `segments` and `rect`. Thanks to
+  @brock for suggestion and discussion. (#534 @zeileis, @grantmcdermott)
+
 ### Aesthetic changes
 
 - The legend plot characters for the `"pointrange"` and `"errorbar"` types now

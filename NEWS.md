@@ -23,10 +23,13 @@ where the formatting is also better._
 
 ### Bug fixes
 
-- Jittered plots now support Date/POSIXt axes. Thanks to @wachtermh for the bug
-  report and @vincentarelbundock for the code contribution. (#327)
-- `tinyplot_add(type = "jitter")` no longer errors when layered on top of
-  boxplot, violin, or similar categorical plot types. (#560 @grantmcdermott)
+- Several improvements/fixes to jittered plots and layering:
+  - Jittered plots now support Date/POSIXt axes. Thanks to @wachtermh for the
+     bug report and @vincentarelbundock for the code contribution. (#327)
+  - `tinyplot_add(type = "jitter")` no longer errors when layered on top of
+    boxplot, violin, or similar categorical plot types. (#560 @grantmcdermott)
+  - Jitter layers added via `tinyplot_add()` now align correctly with grouped
+    (offset) boxplot, violin, and ridge base layers. (#493 @grantmcdermott)
 
 ### Internals
 

@@ -43,7 +43,8 @@ where the formatting is also better._
 - Fixed Issue #545 where xaxs/yaxs were not restored when set by an internal function.
   (#545 @zeileis)
 
-### Breaking changes
+- Fixed Issue #553 where `facet.args = list(free = TRUE)` lead to an error when used
+  used without facets. Thanks to @katrinabrock for the report. (#554 @zeileis)
 
 ## v0.6.0
 

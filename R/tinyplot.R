@@ -1374,19 +1374,26 @@ tinyplot.formula = function(
   dens_type = !is.null(type) && (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
   hist_type = !is.null(type) && (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
   barp_type = !is.null(type) &&  (is.atomic(type) && identical(type, "barplot")) || (!is.atomic(type) && identical(type$name, "barplot"))
-  if (dens_type) {
+  if (is.null(x) && is.null(y)) {
+    # Both x and y NULL (e.g., ~ 0 with type = "segments"): let
+    # sanitize_xylab() determine labels from xmin/xmax/ymin/ymax deps.
+  } else if (is.null(x) && !is.null(y)) {
+    # Univariate y ~ 1 formulas: sanitize_type() will swap x/y and infer the
+    # type (histogram or barplot). Set xlab from the variable name and let
+    # sanitize_xylab() determine ylab after the type is known.
+    if (is.null(xlab)) xlab = ynam
+  } else if (dens_type) {
     # if (is.null(ylab)) ylab = "Density" ## rather assign ylab as part of internal type_density() logic
     if (is.null(xlab)) xlab = xnam
   } else if (hist_type) {
     # if (is.null(ylab)) ylab = "Frequency" ## rather assign ylab as part of internal type_histogram() logic
     if (is.null(xlab)) xlab = xnam
   } else if (is.null(y)) {
-    if (!barp_type) {
+    if (is.factor(x) || is.character(x) || barp_type) {
+      if (is.null(xlab)) xlab = xnam
+    } else {
       if (is.null(ylab)) ylab = xnam
       if (is.null(xlab)) xlab = "Index"
-    } else {
-      if (is.null(ylab)) ylab = "Count"
-      if (is.null(xlab)) xlab = xnam
     }
   } else {
     if (is.null(ylab)) ylab = ynam

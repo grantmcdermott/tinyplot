@@ -290,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="new-features" class="level3">
 <h3 class="anchored" data-anchor-id="new-features">New features</h3>
 <ul>
-<li>Support for univariate formulas, e.g., <code>y ~ 1</code>, <code>~ x</code>, and <code>~ 0</code>. These are translated to <code>x = NULL</code> or <code>y = NULL</code> in the default method call, with automatic type inference: <code>y ~ 1</code> (numeric) produces a histogram, <code>y ~ 1</code> (factor) produces a barplot, <code>~ x</code> (factor) produces a barplot, and <code>~ x</code> (numeric) produces a scatterplot against the index. The <code>~ 0</code> form is useful for types that don’t require x/y, such as <code>segments</code> and <code>rect</code>. Thanks to <a href="https://github.com/brock"><span class="citation" data-cites="brock">@brock</span></a> for suggestion and discussion. (<a href="https://github.com/grantmcdermott/tinyplot/issues/534">#534</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>, <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Support for univariate formulas, e.g., <code>y ~ 1</code>, <code>~ x</code>, and <code>~ 0</code>. These are translated to <code>x = NULL</code> or <code>y = NULL</code> in the default method call, with automatic type inference: <code>y ~ 1</code> (numeric) produces a histogram, <code>y ~ 1</code> (factor) produces a barplot, <code>~ x</code> (factor) produces a barplot, and <code>~ x</code> (numeric) produces a scatterplot against the index. The <code>~ 0</code> form is useful for types that don’t require x/y, such as <code>segments</code> and <code>rect</code>. Thanks to <a href="https://github.com/katrinabrock"><span class="citation" data-cites="katrinabrock">@katrinabrock</span></a> for the suggestion. (<a href="https://github.com/grantmcdermott/tinyplot/issues/534">#534</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>, <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 <section id="aesthetic-changes" class="level3">
@@ -309,7 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="internals">Internals</h3>
 <ul>
 <li>We now encourage type-specific legend customizations within the individual <code>type_&lt;type&gt;</code> constructors. (<a href="https://github.com/grantmcdermott/tinyplot/issues/531">#531</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Change maintainer email.</li>
+<li>Change maintainer email address.</li>
 </ul>
 </section>
 <section id="documentation" class="level3">

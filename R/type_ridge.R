@@ -332,6 +332,11 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     }
     datapoints = do.call(rbind, lapply(datapoints, offset_z))
 
+    # Store y-level offsets for added layers (e.g., jitter)
+    ylevs = unique(datapoints$y)
+    group_offsets = setNames(seq_along(ylevs) - 1L, ylevs)
+    offsets_axis = "y"
+
     if (y_by) {
       datapoints$y = factor(datapoints$y)
       datapoints$by = factor(datapoints$y, levels = rev(levels(datapoints$y)))
@@ -420,7 +425,9 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       "datapoints",
       "yaxt",
       "ylim",
-      "type_info"
+      "type_info",
+      "group_offsets",
+      "offsets_axis"
     ))
   }
   return(fun)

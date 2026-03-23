@@ -302,8 +302,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
+<li>Several improvements/fixes to jittered plots and layering:
+<ul>
 <li>Jittered plots now support Date/POSIXt axes. Thanks to <a href="https://github.com/wachtermh"><span class="citation" data-cites="wachtermh">@wachtermh</span></a> for the bug report and <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> for the code contribution. (<a href="https://github.com/grantmcdermott/tinyplot/issues/327">#327</a>)</li>
 <li><code>tinyplot_add(type = "jitter")</code> no longer errors when layered on top of boxplot, violin, or similar categorical plot types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/560">#560</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Jitter layers added via <code>tinyplot_add()</code> now align correctly with grouped (offset) boxplot, violin, and ridge base layers. (<a href="https://github.com/grantmcdermott/tinyplot/issues/493">#493</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul></li>
 </ul>
 </section>
 <section id="internals" class="level3">

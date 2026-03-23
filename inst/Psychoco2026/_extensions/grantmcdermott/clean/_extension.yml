@@ -1,0 +1,13 @@
+title: clean
+author: Grant McDermott
+version: 1.3.0
+quarto-required: ">=1.3.0"
+contributes:
+  formats:
+    revealjs:
+      theme: [default, clean.scss]
+      menu:
+        side: left
+      slide-number: true
+      date-format: long
+

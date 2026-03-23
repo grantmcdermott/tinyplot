@@ -16,7 +16,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Grant McDermott \email{gmcd@amazon.com} (\href{https://orcid.org/0000-0001-7883-8573}{ORCID})
+\strong{Maintainer}: Grant McDermott \email{contact@grantmcdermott.com} (\href{https://orcid.org/0000-0001-7883-8573}{ORCID})
 
 Authors:
 \itemize{

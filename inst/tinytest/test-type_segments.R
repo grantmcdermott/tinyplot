@@ -52,3 +52,11 @@ f = function() {
 expect_snapshot_plot(f, label = "segments_by_yequal")
 
 rm(x, y, i, s, grp)
+
+
+# univariate formula: ~ 0 with xmin/xmax/ymin/ymax
+f = function() {
+  df = data.frame(x0 = c(0, .1), y0 = c(.2, 1), x1 = c(1, .9), y1 = c(.75, 0))
+  tinyplot(~ 0, xmin = x0, ymin = y0, xmax = x1, ymax = y1, data = df, type = "segments")
+}
+expect_snapshot_plot(f, label = "segments_formula_null")

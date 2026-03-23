@@ -93,3 +93,12 @@ f = function() {
   tinyplot_add(type = "lm")
 }
 expect_snapshot_plot(f, label = "tinyplot_add_no_recursive_margins")
+
+
+# jitter layer on top of boxplot (#559)
+set.seed(42)
+f = function() {
+  tinyplot(Sepal.Length ~ Species, data = iris, type = "violin")
+  tinyplot_add(type = "jitter", cex = 0.5, alpha = 0.3)
+}
+expect_snapshot_plot(f, label = "tinyplot_add_jitter_on_violin")

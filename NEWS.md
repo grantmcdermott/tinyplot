@@ -25,6 +25,8 @@ where the formatting is also better._
 
 - Jittered plots now support Date/POSIXt axes. Thanks to @wachtermh for the bug
   report and @vincentarelbundock for the code contribution. (#327)
+- `tinyplot_add(type = "jitter")` no longer errors when layered on top of
+  boxplot, violin, or similar categorical plot types. (#560 @grantmcdermott)
 
 ### Internals
 

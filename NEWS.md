@@ -33,9 +33,7 @@ where the formatting is also better._
   (#545 @zeileis)
 
 - Fixed Issue #553 where `facet.args = list(free = TRUE)` lead to an error when used
-  used without facets (#554 @zeileis)
-
-### Breaking changes
+  used without facets. Thanks to @katrinabrock for the report. (#554 @zeileis)
 
 ## v0.6.0
 

@@ -162,6 +162,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         } else {
             group_offsets = rep(0, max(ngrps, 1))
         }
+        offsets_axis = "x"
 
         datapoints = lapply(seq_along(datapoints), function(d) {
             dat = datapoints[[d]]
@@ -234,7 +235,8 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             "xlabs",
             "col",
             "bg",
-            "group_offsets"
+            "group_offsets",
+            "offsets_axis"
         ))
     }
     return(fun)

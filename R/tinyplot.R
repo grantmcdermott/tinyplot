@@ -801,6 +801,7 @@ tinyplot.default = function(
     dots          = dots,
     flip          = flip,
     group_offsets = NULL,
+    offsets_axis  = NULL,
     type_info     = list() # pass type-specific info from type_data to type_draw
   )
 
@@ -876,6 +877,7 @@ tinyplot.default = function(
   if (!add) {
     assign("xlabs_orig", settings[["xlabs"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
     assign(".group_offsets", settings[["group_offsets"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
+    assign(".offsets_axis", settings[["offsets_axis"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
   } else {
     align_layer(settings)
   }

@@ -142,6 +142,7 @@ data_boxplot = function(boxwex = 0.8) {
         } else {
             group_offsets = rep(0, max(ngrps, 1))
         }
+        offsets_axis = "x"
 
         # legend customizations
         settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
@@ -160,7 +161,9 @@ data_boxplot = function(boxwex = 0.8) {
             "bg",
             "by",
             "facet",
-            "group_offsets"))
+            "group_offsets",
+            "offsets_axis"
+        ))
     }
     return(fun)
 }

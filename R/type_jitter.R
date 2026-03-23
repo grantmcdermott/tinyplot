@@ -61,18 +61,32 @@ data_jitter = function(factor, amount) {
             ylabs = NULL
         }
 
-        # Apply group offsets from base layer (e.g., boxplot, violin)
+        # Apply group offsets from base layer (e.g., boxplot, violin, ridge)
         group_offsets = get_environment_variable(".group_offsets")
-        if (isTRUE(add) && !is.null(group_offsets) && is.factor(datapoints$by)) {
-            # Ensure x uses integer factor codes to match the base layer
-            if (is.null(xlabs)) {
-                xf = as.factor(x)
-                xlvls = levels(xf)
-                xlabs = seq_along(xlvls)
-                names(xlabs) = xlvls
-                x = as.integer(xf)
+        offsets_axis = get_environment_variable(".offsets_axis")
+        if (isTRUE(add) && !is.null(group_offsets)) {
+            if (identical(offsets_axis, "x") && is.factor(datapoints$by)) {
+                # x-axis offsets (boxplot, violin): keyed by group level
+                if (is.null(xlabs)) {
+                    xf = as.factor(x)
+                    xlvls = levels(xf)
+                    xlabs = seq_along(xlvls)
+                    names(xlabs) = xlvls
+                    x = as.integer(xf)
+                }
+                x = x + group_offsets[as.integer(datapoints$by)]
+            } else if (identical(offsets_axis, "y")) {
+                # y-axis offsets (ridge): keyed by y-level name
+                if (is.null(ylabs)) {
+                    yf = as.factor(y)
+                    ylvls = levels(yf)
+                    ylabs = seq_along(ylvls)
+                    names(ylabs) = ylvls
+                    y = as.integer(yf)
+                }
+                y_labels = names(ylabs)[y]
+                y = group_offsets[y_labels]
             }
-            x = x + group_offsets[as.integer(datapoints$by)]
         }
 
         x = jitter_restore(x, factor = factor, amount = amount)

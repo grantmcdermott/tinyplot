@@ -225,11 +225,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals">Internals</a></li>
   <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
   <li><a href="#bugs" id="toc-bugs" class="nav-link" data-scroll-target="#bugs">Bugs</a></li>
-  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
   </ul></li>
   <li><a href="#v0.6.0" id="toc-v0.6.0" class="nav-link" data-scroll-target="#v0.6.0">v0.6.0</a>
   <ul class="collapse">
-  <li><a href="#breaking-changes-1" id="toc-breaking-changes-1" class="nav-link" data-scroll-target="#breaking-changes-1">Breaking changes</a></li>
+  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
   <li><a href="#new-features-1" id="toc-new-features-1" class="nav-link" data-scroll-target="#new-features-1">New features</a></li>
   <li><a href="#bug-fixes-1" id="toc-bug-fixes-1" class="nav-link" data-scroll-target="#bug-fixes-1">Bug fixes</a></li>
   <li><a href="#documentation-1" id="toc-documentation-1" class="nav-link" data-scroll-target="#documentation-1">Documentation</a></li>
@@ -261,7 +260,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#v0.3.0" id="toc-v0.3.0" class="nav-link" data-scroll-target="#v0.3.0">v0.3.0</a>
   <ul class="collapse">
   <li><a href="#new-features-5" id="toc-new-features-5" class="nav-link" data-scroll-target="#new-features-5">New features</a></li>
-  <li><a href="#breaking-changes-2" id="toc-breaking-changes-2" class="nav-link" data-scroll-target="#breaking-changes-2">Breaking changes</a></li>
+  <li><a href="#breaking-changes-1" id="toc-breaking-changes-1" class="nav-link" data-scroll-target="#breaking-changes-1">Breaking changes</a></li>
   <li><a href="#bug-fixes-6" id="toc-bug-fixes-6" class="nav-link" data-scroll-target="#bug-fixes-6">Bug fixes</a></li>
   <li><a href="#misc-1" id="toc-misc-1" class="nav-link" data-scroll-target="#misc-1">Misc</a></li>
   </ul></li>
@@ -322,17 +321,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bugs" class="level3">
 <h3 class="anchored" data-anchor-id="bugs">Bugs</h3>
 <ul>
-<li>Fixed Issue <a href="https://github.com/grantmcdermott/tinyplot/issues/545">#545</a> where xaxs/yaxs were not restored when set by an internal function. (<a href="https://github.com/grantmcdermott/tinyplot/issues/545">#545</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li><p>Fixed Issue <a href="https://github.com/grantmcdermott/tinyplot/issues/545">#545</a> where xaxs/yaxs were not restored when set by an internal function. (<a href="https://github.com/grantmcdermott/tinyplot/issues/545">#545</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</p></li>
+<li><p>Fixed Issue <a href="https://github.com/grantmcdermott/tinyplot/issues/553">#553</a> where <code>facet.args = list(free = TRUE)</code> lead to an error when used used without facets. Thanks to <a href="https://github.com/katrinabrock"><span class="citation" data-cites="katrinabrock">@katrinabrock</span></a> for the report. (<a href="https://github.com/grantmcdermott/tinyplot/issues/554">#554</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</p></li>
 </ul>
-</section>
-<section id="breaking-changes" class="level3">
-<h3 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h3>
 </section>
 </section>
 <section id="v0.6.0" class="level2">
 <h2 class="anchored" data-anchor-id="v0.6.0">v0.6.0</h2>
-<section id="breaking-changes-1" class="level3">
-<h3 class="anchored" data-anchor-id="breaking-changes-1">Breaking changes</h3>
+<section id="breaking-changes" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h3>
 <ul>
 <li>“Breaking” change for internal development and custom types only: The plot settings and parameters from individual <code>tinyplot</code> calls are now stored in a dedicated (temporary) internal environment called <code>settings</code>, which can be accessed and modified by type-specific functions. This change will enable various internal enhancements, from improving the modularity and maintainability of the <code>tinyplot</code> codebase, to reducing memory overhead and performance (since we require fewer object copies). Looking ahead, we also expect that it will make it easier to support new features and integration with downstream packages. Most <code>tinyplot</code> users should be unaffected by these internal changes. However, users who have defined their own custom types will need to make some adjustments to match the new <code>settings</code> logic; details are provided in the updated <code>Types</code> vignette. (<a href="https://github.com/grantmcdermott/tinyplot/issues/473">#473</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>The ancillary <code>fixed.pos</code> argument for dodged plots has been renamed to <code>fixed.dodge</code> to avoid ambiguity, especially when passed down from a top-level <code>tinyplot(...)</code> call. (<a href="https://github.com/grantmcdermott/tinyplot/issues/528">#528</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
@@ -596,8 +593,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="breaking-changes-2" class="level3">
-<h3 class="anchored" data-anchor-id="breaking-changes-2">Breaking changes</h3>
+<section id="breaking-changes-1" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-changes-1">Breaking changes</h3>
 <ul>
 <li>There are a few breaking changes to grouped density plots.
 <ul>

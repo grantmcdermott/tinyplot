@@ -1333,45 +1333,73 @@ tinyplot.formula = function(
 
   ## extract x (if any)
   x = tinyframe(tf$x, mf)
-  if (!is.null(x)) {
+  if (!is.null(x) && ncol(x) > 0L) {
     xnam = names(x)[[1L]]
     if (length(names(x)) > 1L) warning(paste("formula should specify at most one x-variable, using:", xnam),
     "\nif you want to use arithmetic operators, make sure to wrap them inside I()")
     x = x[[xnam]]
   } else {
+    x = NULL
     xnam = NULL
   }
 
   ## extract y (if any)
   y = tinyframe(tf$y, mf)
-  if (!is.null(y)) {
+  if (!is.null(y) && ncol(y) > 0L) {
     ynam = names(y)[[1L]]
     if (length(names(y)) > 1L) warning(paste("formula should specify at most one y-variable, using:", ynam),
     "\nif you want to use arithmetic operators, make sure to wrap them inside I()")
     y = y[[ynam]]
   } else {
+    y = NULL
     ynam = NULL
   }
 
   ## extract by (if any)
   by = tinyframe(tf$by, mf)
-  if (!is.null(by)) {
+  if (!is.null(by) && ncol(by) > 0L) {
     bynam = names(by)
     by = if (length(bynam) == 1L) by[[bynam]] else interaction(by, sep = ":")
+  } else {
+    by = NULL
   }
 
   ## extract x/y facet (if formula)
   if (!is.null(tf$xfacet) || !is.null(tf$yfacet)) {
+    ## xfacet/yfacet can be either:
+    ## - no formula: NULL
+    ## - formula without variables: empty (zero-column) data
+    ## - formula with variable(s): data frame
     xfacet = tinyframe(tf$xfacet, mf)
     yfacet = tinyframe(tf$yfacet, mf)
-    if (!is.null(xfacet)) xfacet = if (ncol(xfacet) == 1L) xfacet[[1L]] else interaction(xfacet, sep = ":")
-    if (!is.null(yfacet)) yfacet = if (ncol(yfacet) == 1L) yfacet[[1L]] else interaction(yfacet, sep = ":")
-    if (is.null(yfacet)) {
-      facet = xfacet
+    xtype = if (is.null(xfacet)) "none" else if (ncol(xfacet) == 0L) "empty" else "data"
+    ytype = if (is.null(yfacet)) "none" else if (ncol(yfacet) == 0L) "empty" else "data"
+    
+    ## turn data frame (if specified) into a single factor
+    if (xtype == "data") xfacet = if (ncol(xfacet) == 1L) xfacet[[1L]] else interaction(xfacet, sep = ":")
+    if (ytype == "data") yfacet = if (ncol(yfacet) == 1L) yfacet[[1L]] else interaction(yfacet, sep = ":")
+
+    ## set up actual facet, potentially with grid information
+    if (xtype %in% c("none", "empty") && ytype %in% c("none", "empty")) {
+      facet = NULL
     } else {
-      facet = interaction(xfacet, yfacet, sep = "~")
-      attr(facet, "facet_grid") = TRUE
-      attr(facet, "facet_nrow") = length(unique(yfacet))
+      if (xtype %in% c("none", "empty")) {
+        facet = yfacet
+        if (xtype == "empty") {
+          attr(facet, "facet_grid") = TRUE
+          attr(facet, "facet_nrow") = length(unique(yfacet))
+        }
+      } else if (ytype %in% c("none", "empty")) {
+        facet = xfacet
+        if (ytype == "empty") {
+          attr(facet, "facet_grid") = TRUE
+          attr(facet, "facet_nrow") = 1L
+        }
+      } else {
+        facet = interaction(xfacet, yfacet, sep = "~")
+        attr(facet, "facet_grid") = TRUE
+        attr(facet, "facet_nrow") = length(unique(yfacet))
+      }
     }
   }
 

@@ -396,6 +396,16 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     
     if (is.null(col) && (!anyby || x_by)) col = "black"
 
+    # For ridge themes without groups, a numeric bg (e.g. bg = 0.2) should
+    # produce transparent gray, not a transparent palette colour. (#547)
+    ridge_theme = identical(.tpar[["tinytheme"]], "ridge") || identical(.tpar[["tinytheme"]], "ridge2")
+    if (ridge_theme && !anyby) {
+      ubg = settings[["bg"]]
+      if (!is.null(ubg) && length(ubg) == 1 && is.numeric(ubg) && ubg >= 0 && ubg <= 1) {
+        settings[["bg"]] = adjustcolor("gray", alpha.f = ubg)
+      }
+    }
+
     # Save original yaxt for type_info before overwriting
     yaxt_orig = yaxt
     yaxt = "n"
@@ -408,6 +418,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       manbreaks = manbreaks,
       yaxt = yaxt_orig,
       raster = raster,
+      ridge_theme = ridge_theme,
       x_by = x_by,
       y_by = y_by,
       fill_by = fill_by,
@@ -438,7 +449,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 ## Underlying draw_ridge function
 draw_ridge = function() {
   fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info, ...) {
-    ridge_theme = identical(.tpar[["tinytheme"]], "ridge") || identical(.tpar[["tinytheme"]], "ridge2")
+    ridge_theme = isTRUE(type_info[["ridge_theme"]])
     d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
     dsplit = split(d, d$y)
     if (!is.null(type_info[["col"]])) icol = type_info[["col"]]

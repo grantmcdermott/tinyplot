@@ -36,6 +36,7 @@ where the formatting is also better._
 - We now encourage type-specific legend customizations within the individual
   `type_<type>` constructors. (#531 @grantmcdermott)
 - Change maintainer email address.
+- Add `.CLAUDE.md` context file for AI-assisted development. (#563 @grantmcdermott)
 
 ### Documentation
 

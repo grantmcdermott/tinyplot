@@ -26,3 +26,4 @@ inst/Psychoco2026
 Makefile
 ^.devcontainer
 Rplots.pdf
+^\.CLAUDE\.md$

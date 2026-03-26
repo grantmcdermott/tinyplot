@@ -42,7 +42,7 @@ website:
         href: $ALTDOC_PACKAGE_URL_GITHUB
         aria-label: $ALTDOC_PACKAGE_NAME GitHub
         target: _blank
-      - text: "{{< iconify fa6-brands:bluesky >}}"
+      - icon: bluesky
         href: https://bsky.app/profile/gmcd.bsky.social
         aria-label: "@gmcd.bsky.social"
         target: _blank

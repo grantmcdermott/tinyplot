@@ -31,6 +31,9 @@ where the formatting is also better._
   - Jitter layers added via `tinyplot_add()` now align correctly with grouped
     (offset) boxplot, violin, and ridge base layers. (#493 @grantmcdermott)
 
+- Fixed `type_ridge()` fill errors for themes that set a qualitative palette,
+  e.g. `"clean2"`. (#564 @grantmcdermott)
+
 ### Internals
 
 - We now encourage type-specific legend customizations within the individual

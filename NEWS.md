@@ -34,6 +34,10 @@ where the formatting is also better._
 - Fixed `type_ridge()` fill errors for themes that set a qualitative palette,
   e.g. `"clean2"`. (#564 @grantmcdermott)
 
+- Fixed plot clipping when using ephemeral `theme = "default"` with a legend
+  and `tinyplot_add()`. Thanks to @katrinabrock for the report in #557.
+  (#565 @grantmcdermott)
+
 ### Internals
 
 - We now encourage type-specific legend customizations within the individual

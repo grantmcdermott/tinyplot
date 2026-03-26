@@ -167,3 +167,10 @@ f = function() {
   par(opar)
 }
 expect_snapshot_plot(f, label = "tinytheme_ephemeral")
+
+# Ephemeral "default" theme with by + plt_add should not clip (#557)
+f = function() {
+  plt(1:3, c(1, 1, 1), by = c("a", "a", "a"), theme = "default", type = "n")
+  plt_add(type = "b")
+}
+expect_snapshot_plot(f, label = "ephemeral_default_theme_add")

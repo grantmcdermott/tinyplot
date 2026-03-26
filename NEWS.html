@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8445db86a5b35484f9c62ea2c88c15b0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-630302e598c0d3e00bf554f6d255ca46.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/iconify-2.1.0/iconify-icon.min.js"></script>
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -302,13 +302,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
-<li>Several improvements/fixes to jittered plots and layering:
+<li><p>Several improvements/fixes to jittered plots and layering:</p>
 <ul>
 <li>Jittered plots now support Date/POSIXt axes. Thanks to <a href="https://github.com/wachtermh"><span class="citation" data-cites="wachtermh">@wachtermh</span></a> for the bug report and <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> for the code contribution. (<a href="https://github.com/grantmcdermott/tinyplot/issues/327">#327</a>)</li>
 <li><code>tinyplot_add(type = "jitter")</code> no longer errors when layered on top of boxplot, violin, or similar categorical plot types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/560">#560</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Jitter layers added via <code>tinyplot_add()</code> now align correctly with grouped (offset) boxplot, violin, and ridge base layers. (<a href="https://github.com/grantmcdermott/tinyplot/issues/493">#493</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
-<li>Fixed <code>type_ridge()</code> fill errors for themes that set a qualitative palette, e.g.&nbsp;<code>"clean2"</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/564">#564</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><p>Fixed <code>type_ridge()</code> fill errors for themes that set a qualitative palette, e.g.&nbsp;<code>"clean2"</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/564">#564</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
+<li><p>Fixed plot clipping when using ephemeral <code>theme = "default"</code> with a legend and <code>tinyplot_add()</code>. Thanks to <a href="https://github.com/katrinabrock"><span class="citation" data-cites="katrinabrock">@katrinabrock</span></a> for the report in <a href="https://github.com/grantmcdermott/tinyplot/issues/557">#557</a>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/565">#565</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
 </ul>
 </section>
 <section id="internals" class="level3">

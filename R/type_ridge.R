@@ -396,6 +396,16 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     
     if (is.null(col) && (!anyby || x_by)) col = "black"
 
+    # For ridge themes without groups, a numeric bg (e.g. bg = 0.2) should
+    # produce transparent gray, not a transparent palette colour. (#547)
+    ridge_theme = identical(.tpar[["tinytheme"]], "ridge") || identical(.tpar[["tinytheme"]], "ridge2")
+    if (ridge_theme && !anyby) {
+      ubg = settings[["bg"]]
+      if (!is.null(ubg) && length(ubg) == 1 && is.numeric(ubg) && ubg >= 0 && ubg <= 1) {
+        settings[["bg"]] = adjustcolor("gray", alpha.f = ubg)
+      }
+    }
+
     # Save original yaxt for type_info before overwriting
     yaxt_orig = yaxt
     yaxt = "n"
@@ -408,6 +418,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       manbreaks = manbreaks,
       yaxt = yaxt_orig,
       raster = raster,
+      ridge_theme = ridge_theme,
       x_by = x_by,
       y_by = y_by,
       fill_by = fill_by,
@@ -438,17 +449,25 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 ## Underlying draw_ridge function
 draw_ridge = function() {
   fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info, ...) {
-    ridge_theme = identical(.tpar[["tinytheme"]], "ridge") || identical(.tpar[["tinytheme"]], "ridge2")
+    ridge_theme = isTRUE(type_info[["ridge_theme"]])
     d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
     dsplit = split(d, d$y)
+    if (!is.null(type_info[["col"]])) icol = type_info[["col"]]
     if (is.null(ibg)) {
-      default_bg = if (!ridge_theme && !is.null(.tpar[["palette.qualitative"]])) seq_palette(by_col(), n = 2)[2] else "gray"
+      pal_q = .tpar[["palette.qualitative"]]
+      # For non-ridge themes with a palette, derive fill from the first palette
+      # colour. We need palette.colors() here because the palette is still just
+      # a string name at this point (not yet resolved to colours). (#547)
+      default_bg = if (!ridge_theme && !is.null(pal_q)) {
+        seq_palette(palette.colors(1, palette = pal_q), n = 2)[2]
+      } else {
+        "gray"
+      }
       ibg = if (isTRUE(type_info[["fill_by"]])) seq_palette(icol, n = 2)[2] else default_bg
     }
     if (!is.null(type_info[["alpha"]]) && is.null(type_info[["palette"]])) {
       ibg = adjustcolor(ibg, alpha.f = type_info[["alpha"]])
     }
-    if (!is.null(type_info[["col"]])) icol = type_info[["col"]]
     lab = if (is.factor(d$y)) levels(d$y) else unique(d$y)
     if (isTRUE(type_info[["y_by"]])) {
       # avoid duplicating the y-axis labs for the special y==by case

@@ -148,3 +148,15 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "ridge_gradient_facet_raster_alpha")
+
+# Issue #547: ridge with themed palette should not error
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", theme = "clean2")
+}
+expect_snapshot_plot(f, label = "ridge_theme_palette")
+
+# Issue #547: numeric bg with ridge theme should produce transparent gray
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", theme = "ridge2", bg = 0.2)
+}
+expect_snapshot_plot(f, label = "ridge_theme_bg_numeric")

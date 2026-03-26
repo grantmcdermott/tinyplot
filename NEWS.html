@@ -79,7 +79,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-630302e598c0d3e00bf554f6d255ca46.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="site_libs/quarto-contrib/iconify-2.1.0/iconify-icon.min.js"></script>
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -190,9 +189,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </i> 
 <span class="menu-text"></span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://bsky.app/profile/gmcd.bsky.social" target="_blank"> 
-<span class="menu-text"><iconify-icon role="img" inline="" icon="fa6-brands:bluesky" aria-label="Icon bluesky from fa6-brands Iconify.design set." title="Icon bluesky from fa6-brands Iconify.design set."></iconify-icon></span></a>
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://bsky.app/profile/gmcd.bsky.social" target="_blank"> <i class="bi bi-bluesky" role="img" aria-label="@gmcd.bsky.social">
+</i> 
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://mastodon.social/@gmcd" target="_blank"> <i class="bi bi-mastodon" role="img" aria-label="@gmcd@mastodon.social">
@@ -219,12 +219,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#development-version" id="toc-development-version" class="nav-link" data-scroll-target="#development-version">Development version</a>
   <ul class="collapse">
-  <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
   <li><a href="#aesthetic-changes" id="toc-aesthetic-changes" class="nav-link" data-scroll-target="#aesthetic-changes">Aesthetic changes</a></li>
+  <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
   <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
-  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals">Internals</a></li>
   <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
-  <li><a href="#bugs" id="toc-bugs" class="nav-link" data-scroll-target="#bugs">Bugs</a></li>
+  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals">Internals</a></li>
   </ul></li>
   <li><a href="#v0.6.0" id="toc-v0.6.0" class="nav-link" data-scroll-target="#v0.6.0">v0.6.0</a>
   <ul class="collapse">
@@ -287,37 +286,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>If you are viewing this file on CRAN, please check the <a href="https://grantmcdermott.com/tinyplot/NEWS.html">latest NEWS</a> on our website where the formatting is also better.</em></p>
 <section id="development-version" class="level2">
 <h2 class="anchored" data-anchor-id="development-version">Development version</h2>
-<section id="new-features" class="level3">
-<h3 class="anchored" data-anchor-id="new-features">New features</h3>
-<ul>
-<li>Support for univariate formulas, e.g., <code>y ~ 1</code>, <code>~ x</code>, and <code>~ 0</code>. These are translated to <code>x = NULL</code> or <code>y = NULL</code> in the default method call, with automatic type inference: <code>y ~ 1</code> (numeric) produces a histogram, <code>y ~ 1</code> (factor) produces a barplot, <code>~ x</code> (factor) produces a barplot, and <code>~ x</code> (numeric) produces a scatterplot against the index. The <code>~ 0</code> form is useful for types that don’t require x/y, such as <code>segments</code> and <code>rect</code>. Thanks to <a href="https://github.com/katrinabrock"><span class="citation" data-cites="katrinabrock">@katrinabrock</span></a> for the suggestion. (<a href="https://github.com/grantmcdermott/tinyplot/issues/534">#534</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>, <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-</ul>
-</section>
 <section id="aesthetic-changes" class="level3">
 <h3 class="anchored" data-anchor-id="aesthetic-changes">Aesthetic changes</h3>
 <ul>
 <li>The legend plot characters for the <code>"pointrange"</code> and <code>"errorbar"</code> types now include a line, to better resemble the actual plot elements (<a href="https://github.com/grantmcdermott/tinyplot/issues/533">#533</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
+<section id="new-features" class="level3">
+<h3 class="anchored" data-anchor-id="new-features">New features</h3>
+<ul>
+<li>Support for univariate formulas, e.g., <code>y ~ 1</code>, <code>~ x</code>, and <code>~ 0</code>. These are translated to <code>x = NULL</code> or <code>y = NULL</code> in the default method call, with automatic type inference: <code>y ~ 1</code> (numeric) produces a histogram, <code>y ~ 1</code> (factor) produces a barplot, <code>~ x</code> (factor) produces a barplot, and <code>~ x</code> (numeric) produces a scatterplot against the index. The <code>~ 0</code> form is useful for types that don’t require x/y, such as <code>segments</code> and <code>rect</code>. Thanks to <a href="https://github.com/katrinabrock"><span class="citation" data-cites="katrinabrock">@katrinabrock</span></a> for the suggestion. (<a href="https://github.com/grantmcdermott/tinyplot/issues/534">#534</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>, <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+</section>
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
-<li><p>Several improvements/fixes to jittered plots and layering:</p>
+<li>Fixed Issue <a href="https://github.com/grantmcdermott/tinyplot/issues/545">#545</a> where xaxs/yaxs were not restored when set by an internal function. (<a href="https://github.com/grantmcdermott/tinyplot/issues/545">#545</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Fixed Issue <a href="https://github.com/grantmcdermott/tinyplot/issues/553">#553</a> where <code>facet.args = list(free = TRUE)</code> lead to an error when used used without facets. Thanks to <a href="https://github.com/katrinabrock"><span class="citation" data-cites="katrinabrock">@katrinabrock</span></a> for the report. (<a href="https://github.com/grantmcdermott/tinyplot/issues/554">#554</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
+<li>Fixed <code>type_ridge()</code> fill errors for themes that set a qualitative palette, e.g.&nbsp;<code>"clean2"</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/564">#564</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Fixed plot clipping when using ephemeral <code>theme = "default"</code> with a legend and <code>tinyplot_add()</code>. Thanks to <a href="https://github.com/katrinabrock"><span class="citation" data-cites="katrinabrock">@katrinabrock</span></a> for the report in <a href="https://github.com/grantmcdermott/tinyplot/issues/557">#557</a>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/565">#565</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Several improvements/fixes to jittered plots and layering:
 <ul>
 <li>Jittered plots now support Date/POSIXt axes. Thanks to <a href="https://github.com/wachtermh"><span class="citation" data-cites="wachtermh">@wachtermh</span></a> for the bug report and <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> for the code contribution. (<a href="https://github.com/grantmcdermott/tinyplot/issues/327">#327</a>)</li>
 <li><code>tinyplot_add(type = "jitter")</code> no longer errors when layered on top of boxplot, violin, or similar categorical plot types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/560">#560</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Jitter layers added via <code>tinyplot_add()</code> now align correctly with grouped (offset) boxplot, violin, and ridge base layers. (<a href="https://github.com/grantmcdermott/tinyplot/issues/493">#493</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Jitter layers added via <code>tinyplot_add()</code> now align correctly with grouped (offset) boxplot, violin, and ridge base layers. (<a href="https://github.com/grantmcdermott/tinyplot/issues/561">#561</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
-<li><p>Fixed <code>type_ridge()</code> fill errors for themes that set a qualitative palette, e.g.&nbsp;<code>"clean2"</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/564">#564</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
-<li><p>Fixed plot clipping when using ephemeral <code>theme = "default"</code> with a legend and <code>tinyplot_add()</code>. Thanks to <a href="https://github.com/katrinabrock"><span class="citation" data-cites="katrinabrock">@katrinabrock</span></a> for the report in <a href="https://github.com/grantmcdermott/tinyplot/issues/557">#557</a>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/565">#565</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
-</ul>
-</section>
-<section id="internals" class="level3">
-<h3 class="anchored" data-anchor-id="internals">Internals</h3>
-<ul>
-<li>We now encourage type-specific legend customizations within the individual <code>type_&lt;type&gt;</code> constructors. (<a href="https://github.com/grantmcdermott/tinyplot/issues/531">#531</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li>Change maintainer email address.</li>
-<li>Add <code>.CLAUDE.md</code> context file for AI-assisted development. (<a href="https://github.com/grantmcdermott/tinyplot/issues/563">#563</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 <section id="documentation" class="level3">
@@ -326,11 +319,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Improved guidance for <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html#custom-types">custom types</a> in the <code>Types</code> vignette. (<a href="https://github.com/grantmcdermott/tinyplot/issues/531">#531</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="bugs" class="level3">
-<h3 class="anchored" data-anchor-id="bugs">Bugs</h3>
+<section id="internals" class="level3">
+<h3 class="anchored" data-anchor-id="internals">Internals</h3>
 <ul>
-<li><p>Fixed Issue <a href="https://github.com/grantmcdermott/tinyplot/issues/545">#545</a> where xaxs/yaxs were not restored when set by an internal function. (<a href="https://github.com/grantmcdermott/tinyplot/issues/545">#545</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</p></li>
-<li><p>Fixed Issue <a href="https://github.com/grantmcdermott/tinyplot/issues/553">#553</a> where <code>facet.args = list(free = TRUE)</code> lead to an error when used used without facets. Thanks to <a href="https://github.com/katrinabrock"><span class="citation" data-cites="katrinabrock">@katrinabrock</span></a> for the report. (<a href="https://github.com/grantmcdermott/tinyplot/issues/554">#554</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</p></li>
+<li>We now encourage type-specific legend customizations within the individual <code>type_&lt;type&gt;</code> constructors. (<a href="https://github.com/grantmcdermott/tinyplot/issues/531">#531</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Change maintainer email address.</li>
+<li>Add <code>.CLAUDE.md</code> context file for AI-assisted development. (<a href="https://github.com/grantmcdermott/tinyplot/issues/563">#563</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Quality of life website improvements. (<a href="https://github.com/grantmcdermott/tinyplot/issues/566">#566</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)
+<ul>
+<li>Fix Makefile website target (remove circular dep, fix comment)</li>
+<li>Enable parallel + freeze for faster local builds</li>
+<li>Replace iconify extension with native Bootstrap icon for Bluesky</li>
+</ul></li>
 </ul>
 </section>
 </section>

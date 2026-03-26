@@ -692,6 +692,12 @@ tinyplot.default = function(
     } else {
       warning('Argument `theme` must be a character of length 1 (e.g. "clean"), or a list. Ignoring.')
     }
+    # Reset mar to pre-theme value so legend margin adjustment isn't
+    # clobbered. Only needed for "default" theme which uses hook = FALSE
+    # and thus sets par(mar) immediately. (#557)
+    if (is.character(theme) && theme == "default") {
+      par(mar = opar$mar)
+    }
     dtheme = theme_default
     otheme = opar[names(dtheme)]
 

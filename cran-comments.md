@@ -9,7 +9,10 @@ Win Builder
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
+
+Note: New maintainer email address (contact@grantmcdermott.com). This is the same
+person, just a different email.
 
 P.S. We continue to run a comprehensive test suite comprising hundreds of test
 snapshots (i.e., SVG images) as part of our CI development workflow. See:

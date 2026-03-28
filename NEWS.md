@@ -4,7 +4,7 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## Development version
+## v0.6.1
 
 ### Aesthetic changes
 
@@ -57,6 +57,8 @@ where the formatting is also better._
   - Fix Makefile website target (remove circular dep, fix comment)
   - Enable parallel + freeze for faster local builds
   - Replace iconify extension with native Bootstrap icon for Bluesky
+- Add GitHub Actions workflow for reverse dependency checks. Triggered by
+  pushing a `revdep*` branch. (#567 @grantmcdermott)
 
 ## v0.6.0
 

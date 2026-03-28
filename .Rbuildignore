@@ -27,3 +27,4 @@ Makefile
 ^.devcontainer
 Rplots.pdf
 ^\.CLAUDE\.md$
+^revdep$

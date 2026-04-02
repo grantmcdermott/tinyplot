@@ -311,8 +311,9 @@ draw_facet_window = function(
         # individual facet.
         xfree = if (!is.null(facet)) split(c(x, xmin, xmax), facet)[[ii]] else c(x, xmin, xmax)
         yfree = if (!is.null(facet)) split(c(y, ymin, ymax), facet)[[ii]] else c(y, ymin, ymax)
-        if (null_xlim) xlim = range(xfree, na.rm = TRUE)
-        if (null_ylim) ylim = range(yfree, na.rm = TRUE)
+        lim = calc_lim(range(xfree, na.rm = TRUE), range(yfree, na.rm = TRUE), asp)
+        if (null_xlim) xlim = lim$xlim
+        if (null_ylim) ylim = lim$ylim
         xext = extendrange(xlim, f = 0.04)
         yext = extendrange(ylim, f = 0.04)
         # We'll save this in a special .fusr env var (list) that we'll re-use

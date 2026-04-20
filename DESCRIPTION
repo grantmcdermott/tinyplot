@@ -1,15 +1,15 @@
 Package: tinyplot
 Type: Package
 Title: Lightweight Extension of the Base R Graphics System
-Version: 0.6.99
-Date: 2025-11-26
+Version: 0.6.1
+Date: 2026-03-28
 Authors@R: 
   c(
     person(
       given = "Grant",
       family = "McDermott",
       role = c("aut", "cre"),
-      email = "gmcd@amazon.com",
+      email = "contact@grantmcdermott.com",
       comment = c(ORCID = "0000-0001-7883-8573")
     ),
     person(
@@ -52,7 +52,7 @@ Suggests:
   tinytest,
   tinysnapshot (>= 0.0.3),
   knitr
-Config/Needs/website: altdoc (>= 0.6.0), future.apply
+Config/Needs/website: altdoc (>= 0.7.2), future.apply
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 URL: https://grantmcdermott.com/tinyplot/

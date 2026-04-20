@@ -74,3 +74,16 @@ f = function() {
   plt(~ x | grp, type = "barplot", beside = TRUE, ylab = "Custom y title")   
 }
 expect_snapshot_plot(f, label = "barplot_custom_ytitle")
+
+
+# univariate formula: factor(y) ~ 1 infers barplot
+f = function() {
+  tinyplot(Species ~ 1, data = iris)
+}
+expect_snapshot_plot(f, label = "barplot_formula_y1")
+
+# univariate formula: ~ factor(x) infers barplot
+f = function() {
+  tinyplot(~ Species, data = iris)
+}
+expect_snapshot_plot(f, label = "barplot_formula_univariate")

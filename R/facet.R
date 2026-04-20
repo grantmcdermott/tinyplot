@@ -341,8 +341,8 @@ draw_facet_window = function(
       if (isTRUE(facet.args[["free"]])) {
         # First, we need to calculate the plot extent and axes range of each
         # individual facet.
-        xfree = split(c(x, xmin, xmax), facet)[[ii]]
-        yfree = split(c(y, ymin, ymax), facet)[[ii]]
+        xfree = if (!is.null(facet)) split(c(x, xmin, xmax), facet)[[ii]] else c(x, xmin, xmax)
+        yfree = if (!is.null(facet)) split(c(y, ymin, ymax), facet)[[ii]] else c(y, ymin, ymax)
         if (null_xlim) xlim = range(xfree, na.rm = TRUE)
         if (null_ylim) ylim = range(yfree, na.rm = TRUE)
         xext = extendrange(xlim, f = 0.04)

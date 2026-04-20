@@ -4,22 +4,42 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## Development version
+## v0.6.1
 
 ### Aesthetic changes
 
 - The legend plot characters for the `"pointrange"` and `"errorbar"` types now
   include a line, to better resemble the actual plot elements (#533 @grantmcdermott)
 
+### New features
+
+- Support for univariate formulas, e.g., `y ~ 1`, `~ x`, and `~ 0`. These are
+  translated to `x = NULL` or `y = NULL` in the default method call, with
+  automatic type inference: `y ~ 1` (numeric) produces a histogram, `y ~ 1`
+  (factor) produces a barplot, `~ x` (factor) produces a barplot, and `~ x`
+  (numeric) produces a scatterplot against the index. The `~ 0` form is useful
+  for types that don't require x/y, such as `segments` and `rect`. Thanks to
+  @katrinabrock for the suggestion. (#534 @zeileis, @grantmcdermott)
+
 ### Bug fixes
 
-- Jittered plots now support Date/POSIXt axes. Thanks to @wachtermh for the bug
-  report and @vincentarelbundock for the code contribution. (#327)
-
-### Internals
-
-- We now encourage type-specific legend customizations within the individual
-  `type_<type>` constructors. (#531 @grantmcdermott)
+- Fixed Issue #545 where xaxs/yaxs were not restored when set by an internal
+  function. (#545 @zeileis)
+- Fixed Issue #553 where `facet.args = list(free = TRUE)` lead to an error
+  when used used without facets. Thanks to @katrinabrock for the report.
+  (#554 @zeileis)
+- Fixed `type_ridge()` fill errors for themes that set a qualitative palette,
+  e.g. `"clean2"`. (#564 @grantmcdermott)
+- Fixed plot clipping when using ephemeral `theme = "default"` with a legend
+  and `tinyplot_add()`. Thanks to @katrinabrock for the report in #557.
+  (#565 @grantmcdermott)
+- Several improvements/fixes to jittered plots and layering:
+  - Jittered plots now support Date/POSIXt axes. Thanks to @wachtermh for the
+     bug report and @vincentarelbundock for the code contribution. (#327)
+  - `tinyplot_add(type = "jitter")` no longer errors when layered on top of
+    boxplot, violin, or similar categorical plot types. (#560 @grantmcdermott)
+  - Jitter layers added via `tinyplot_add()` now align correctly with grouped
+    (offset) boxplot, violin, and ridge base layers. (#561 @grantmcdermott)
 
 ### Documentation
 
@@ -27,12 +47,18 @@ where the formatting is also better._
   [custom types](https://grantmcdermott.com/tinyplot/vignettes/types.html#custom-types)
   in the `Types` vignette. (#531 @grantmcdermott)
 
-### Bugs
+### Internals
 
-- Fixed Issue #545 where xaxs/yaxs were not restored when set by an internal function.
-  (#545 @zeileis)
-
-### Breaking changes
+- We now encourage type-specific legend customizations within the individual
+  `type_<type>` constructors. (#531 @grantmcdermott)
+- Change maintainer email address.
+- Add `.CLAUDE.md` context file for AI-assisted development. (#563 @grantmcdermott)
+- Quality of life website improvements. (#566 @grantmcdermott)
+  - Fix Makefile website target (remove circular dep, fix comment)
+  - Enable parallel + freeze for faster local builds
+  - Replace iconify extension with native Bootstrap icon for Bluesky
+- Add GitHub Actions workflow for reverse dependency checks. Triggered by
+  pushing a `revdep*` branch. (#567 @grantmcdermott)
 
 ## v0.6.0
 

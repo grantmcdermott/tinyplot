@@ -85,3 +85,10 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "hist_facet_free_breaks_free")
+
+
+# univariate formula: y ~ 1 infers histogram
+f = function() {
+  tinyplot(Sepal.Length ~ 1, data = iris)
+}
+expect_snapshot_plot(f, label = "hist_formula_y1")

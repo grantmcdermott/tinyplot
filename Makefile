@@ -10,15 +10,14 @@ testall: ## tinytest::build_install_test()
 testone: install ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
-document: ## altdoc::render_docs()
+document: ## devtools::document()
 	Rscript -e "devtools::document()"
 
 check: document ## devtools::check()
 	Rscript -e "devtools::check()"
 
-website: website ## altdoc::render_docs()
-	Rscript -e "pkgload::load_all();altdoc::render_docs()"
+website: ## altdoc::render_docs(parallel, freeze)
+	Rscript -e "future::plan(future::multisession);pkgload::load_all();altdoc::render_docs(parallel=TRUE,freeze=TRUE)"
 
 install: document ## devtools::install(dependencies = FALSE)
 	R CMD INSTALL .
-

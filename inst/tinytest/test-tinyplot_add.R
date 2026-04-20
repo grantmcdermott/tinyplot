@@ -93,3 +93,28 @@ f = function() {
   tinyplot_add(type = "lm")
 }
 expect_snapshot_plot(f, label = "tinyplot_add_no_recursive_margins")
+
+
+# jitter layer on top of violin (#559)
+f = function() {
+  set.seed(42)
+  tinyplot(Sepal.Length ~ Species, data = iris, type = "violin")
+  tinyplot_add(type = "jitter", cex = 0.5, alpha = 0.3)
+}
+expect_snapshot_plot(f, label = "tinyplot_add_jitter_on_violin")
+
+# jitter layer on top of grouped boxplot (#493)
+f = function() {
+  set.seed(42)
+  tinyplot(len ~ dose | supp, data = ToothGrowth, type = "boxplot")
+  tinyplot_add(type = "jitter", cex = 0.5, alpha = 0.3)
+}
+expect_snapshot_plot(f, label = "tinyplot_add_jitter_on_grouped_boxplot")
+
+# jitter layer on top of grouped violin (#493)
+f = function() {
+  set.seed(42)
+  tinyplot(len ~ dose | supp, data = ToothGrowth, type = "violin", bg = 0.2)
+  tinyplot_add(type = "jitter", cex = 0.5, alpha = 0.3)
+}
+expect_snapshot_plot(f, label = "tinyplot_add_jitter_on_grouped_violin")

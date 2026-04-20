@@ -151,6 +151,19 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             }
         }
         
+        # Compute group offsets for multi-group violins
+        if (ngrps > 1 && isFALSE(x_by) && isFALSE(facet_by)) {
+            xwidth_grp = width / ngrps - 0.01
+            group_offsets = seq(
+                -((width - xwidth_grp) / 2),
+                ((width - xwidth_grp) / 2),
+                length.out = ngrps
+            )
+        } else {
+            group_offsets = rep(0, max(ngrps, 1))
+        }
+        offsets_axis = "x"
+
         datapoints = lapply(seq_along(datapoints), function(d) {
             dat = datapoints[[d]]
             if (trim) {
@@ -182,7 +195,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                 xwidth = xwidth_orig / ngrps - 0.01
                 x = rescale_num(x, to = c(0, xwidth))
                 x = x + as.numeric(sub("^([0-9]+)\\..*", "\\1", names(datapoints)[d])) - xwidth/2
-                x = x + seq(-((xwidth_orig - xwidth) / 2), ((xwidth_orig - xwidth) / 2), length.out = ngrps)[dat$by[1]]
+                x = x + group_offsets[dat$by[1]]
             } else if (nfacets > 1) {
                 x = rescale_num(x, to = c(0, xwidth))
                 x = x + as.numeric(sub("^([0-9]+)\\..*", "\\1", names(datapoints)[d])) - xwidth/2
@@ -221,9 +234,10 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             "ylab",
             "xlabs",
             "col",
-            "bg"
+            "bg",
+            "group_offsets",
+            "offsets_axis"
         ))
     }
     return(fun)
 }
-

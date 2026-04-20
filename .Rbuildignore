@@ -21,7 +21,10 @@ vignettes/
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
 inst/user2025
+inst/Psychoco2026
 #inst/tinytest/
 Makefile
 ^.devcontainer
 Rplots.pdf
+^\.CLAUDE\.md$
+^revdep$

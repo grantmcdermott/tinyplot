@@ -129,3 +129,22 @@ f = function() {
   tinyplot(1:10, pch = 19, cex = 2, main = "dots not cut off")
 }
 expect_snapshot_plot(f, label = "issue_545_xaxs_yaxs_restoration")
+
+
+# univariate formula: ~ x (numeric) gives scatterplot against index
+f = function() {
+  tinyplot(~ Sepal.Length, data = iris)
+}
+expect_snapshot_plot(f, label = "formula_univariate_num")
+
+# univariate formula: y ~ 1 with by grouping
+f = function() {
+  tinyplot(Sepal.Length ~ 1 | Species, data = iris)
+}
+expect_snapshot_plot(f, label = "formula_y1")
+
+# univariate formula: user-supplied labels override defaults
+f = function() {
+  tinyplot(Sepal.Length ~ 1, data = iris, xlab = "My X", ylab = "My Y")
+}
+expect_snapshot_plot(f, label = "formula_y1_cust_lab")

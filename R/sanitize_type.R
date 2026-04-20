@@ -43,10 +43,23 @@ sanitize_type = function(settings) {
   assert_choice(type, known_types, null.ok = TRUE)
 
   if (is.null(type)) {
-    if (!is.null(x) && (is.factor(x) || is.character(x)) && !(is.factor(y) || is.character(y))) {
+    if (is.null(x) && !(is.factor(y) || is.character(y))) {
+      # enforce histogram type for y ~ 1
+      settings$x = y
+      settings$y = NULL
+      type = type_hist
+    } else if (is.null(x) && (is.factor(y) || is.character(y))) {
+      # enforce barplot type for factor(y) ~ 1
+      settings$x = y
+      settings$y = NULL
+      type = type_barplot
+    } else if ((is.factor(x) || is.character(x)) && is.null(y)) {
+      # enforce barplot type for ~ factor(y)
+      type = type_barplot
+    } else if (!is.null(x) && (is.factor(x) || is.character(x)) && !(is.factor(y) || is.character(y))) {
       # enforce boxplot type for y ~ factor(x)
       type = type_boxplot
-    } else if (is.factor(y) || is.character(y)) {
+    } else if (!is.null(x) && (is.factor(y) || is.character(y))) {
       # enforce spineplot type for factor(y) ~ x
       type = type_spineplot
     } else {

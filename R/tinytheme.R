@@ -278,16 +278,12 @@ theme_void = modifyList(theme_default, list(
 
 theme_dynamic = modifyList(theme_basic, list(
   ## Notes:
-  ##  - 1. Reduce axis title gap by 0.5 lines and also reduce tcl to 0.3 lines.
-  ##  - 2. Sub moves to top.
-  ##  - 3. Also want to remove excess white on rhs of plot margin (when no legend).
-  ##  - Together, 1, 2, and 3 imply that...
-  ##    -- mgp[1] should be adjusted by 0.8 (= 0.5 + 0.3)
-  ##    -- mgp[2] should be adjusted by 0.3
-  ##    -- mar[1] should be adjusted by 1.8 (= 1 (no sub) + 0.5 + 0.3 (tighter axis labs))
-  ##    -- mar[2] should be adjusted by 0.8 (= 0.5 + 0.3)
-  ##    -- mar[3] should remain unchanged (main + sub will adjust automatically)
-  ##    -- mar[4] should be adjusted by 1.5 (relative to 2.1)
+  ##  - Dynamic themes start from an (almost) zero `mar` baseline. The
+  ##    `draw_facet_window()` helper builds each side's margin up from this
+  ##    pad, adding only what the plot actually needs (tick row, axis label,
+  ##    main, sub). See `dynmar_side()` in utils.R.
+  ##  - `side.sub = 3` moves the sub-caption above the plot (below main).
+  ##  - `tcl = -0.3` tightens axis tick marks relative to the base default.
   ##
   tinytheme = "dynamic",
   adj.main = 0,
@@ -295,7 +291,7 @@ theme_dynamic = modifyList(theme_basic, list(
   dynmar = TRUE,
   grid = FALSE,
   las = 1,
-  mar = c(5.1, 4.1, 4.1, 2.1) - c(1+0.5+0.3, 0.5+0.3, 0, 1.5), ## test
+  mar = c(0.1, 0.1, 0.1, 0.1),
   mgp = c(3, 1, 0) - c(0.5+0.3, 0.3, 0), # i.e., subtract 0.5 lines + the (abs) value of the tcl adjustment
   side.sub = 3,
   tcl = -0.3

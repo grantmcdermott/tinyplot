@@ -15,6 +15,59 @@ text_line_count = function(x) {
   as.integer(1L + nchar(gsub("[^\n]", "", x)))
 }
 
+# Compute additive margin "build" for a given side under dynmar.
+# Starts from a tiny pad and adds only what the plot actually needs. The tick
+# row and the axis-label row occupy overlapping vertical space (tick row
+# ends at ~|tcl| + mgp[2] + 1, axis label baseline sits at mgp[1]), so the
+# margin is the max of:
+#   - tick-row height (|tcl| + mgp[2] + 1), when the axis is drawn
+#   - axis-label extent (mgp[1] + (N - 1) * cex + 1 line for asc/desc), when present
+# Main/sub sit above/below the plot box on the top/bottom side and add to the
+# margin additively.
+# Tick-label *width* for sides 2/4 (and *height* for 1/3 under las 2:3) is
+# handled separately by the existing whtsbp logic in draw_facet_window().
+# `pad` is the baseline breathing room added to every side (in line units);
+# 0.3 is a good visual default for dynamic themes. 0.4 is also reasonable if
+# a little more whitespace is desired.
+dynmar_side = function(side, label, main = NULL, sub = NULL,
+                      side.sub = 3, axis_on = TRUE, tpars = NULL,
+                      pad = 0.3) {
+  mgp = get_tpar("mgp", tpar_list = tpars)
+  tcl = get_tpar("tcl", tpar_list = tpars, default = par("tcl"))
+  tick_extent = if (side %in% 1:2 && isTRUE(axis_on)) {
+    max(0, -tcl) + mgp[2] + 1
+  } else 0
+  label_extent = 0
+  lines = text_line_count(label)
+  if (side %in% 1:2 && lines >= 1L) {
+    cex_lab = get_tpar(
+      if (side == 1L) c("cex.xlab", "cex.lab") else c("cex.ylab", "cex.lab"),
+      tpar_list = tpars, default = 1
+    )
+    # Last-line baseline sits at mgp[1] + (N-1)*cex (after line-shift in
+    # draw_title); add a full line to cover ascender+descender so the text
+    # doesn't clip against the device edge.
+    label_extent = mgp[1] + (lines - 1) * cex_lab + 1
+  }
+  mar = pad + max(tick_extent, label_extent)
+  if (side == 3L) {
+    mlines = text_line_count(main)
+    if (mlines >= 1L) {
+      cex_main = get_tpar("cex.main", tpar_list = tpars, default = 1.2)
+      # Main baseline sits at `mgp[3] + 0.7` (+1.2 further up if sub is also
+      # on top, applied via the sub branch below). Add half a line for
+      # ascender so the top of the text stays within the device.
+      mar = mar + 0.7 + (mlines - 1) * cex_main + 0.5
+    }
+  }
+  slines = text_line_count(sub)
+  if (slines >= 1L && side == side.sub && side %in% c(1L, 3L)) {
+    cex_sub = get_tpar("cex.sub", tpar_list = tpars, default = 1)
+    mar = mar + 1.2 + (slines - 1) * cex_sub
+  }
+  mar
+}
+
 
 ## Function that computes an appropriate bandwidth kernel based on a string
 ## input

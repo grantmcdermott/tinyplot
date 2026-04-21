@@ -24,16 +24,16 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
     line_main = NULL
   }
 
-  if (!is.null(sub)) {
-    if (isTRUE(get_tpar("side.sub", 1) == 3)) {
-      if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 1.7 - .1
-      line_main = line_main + 1.2
-    }
+  # When sub sits on top (side.sub == 3), push main up by the sub row height
+  # so main is above sub rather than overlapping it.
+  if (!is.null(sub) && isTRUE(get_tpar("side.sub", 1) == 3)) {
+    if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 0.7 - .1
+    line_main = line_main + 1.2
   }
 
   if (!is.null(sub)) {
     if (isTRUE(get_tpar("side.sub", 1) == 3)) {
-      line_sub = get_tpar("line.sub", 1.7)
+      line_sub = get_tpar("line.sub", 0.7)
     } else {
       line_sub = get_tpar("line.sub", 4)
     }
@@ -59,52 +59,34 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
       if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 1.1
       line_main = line_main - (main_lines - 1) / 2
     }
-    adj_main = get_tpar(c("adj.main", "adj"), 3)
-    ylab_lines = text_line_count(ylab)
-    # dynmar can expand left margin for multi-line ylab after title draw; apply
-    # a compensating right shift so main stays aligned with the plot box.
-    if (ylab_lines > 1L && isTRUE(get_tpar("dynmar", FALSE))) {
-      delta_in = (ylab_lines - 1) * par("csi") * par("cex.lab")
-      if (is.finite(par("pin")[1]) && par("pin")[1] > 0) {
-        multi_panel = prod(par("mfrow")) > 1 || prod(par("mfcol")) > 1
-        panel_boost = if (isTRUE(multi_panel)) 2 else 1
-        adj_main = adj_main + panel_boost * (delta_in / par("pin")[1])
-      }
-      adj_main = min(1, max(0, adj_main))
-    }
     args = list(
       main = main,
       line = line_main,
       cex.main = get_tpar("cex.main", 1.4),
       col.main = get_tpar("col.main", "black"),
       font.main = get_tpar("font.main", 2),
-      adj = adj_main)
+      adj = get_tpar(c("adj.main", "adj"), 3))
     args = Filter(function(x) !is.null(x), args)
     do.call(title, args)
   }
 
 
-  # Axis titles
+  # Axis titles. For multi-line labels, base R places line 1 at
+  # `line = mgp[1] - (N-1)*cex`, which pushes line 1 up into the tick-label
+  # zone. Shift `line` down so line 1 aligns with where a single-line xlab
+  # would be (and the extra lines extend below).
   args = list(xlab = xlab)
+  xlab_lines = text_line_count(xlab)
+  if (xlab_lines > 1L) {
+    cex_xlab = get_tpar(c("cex.xlab", "cex.lab"), 1)
+    args[["line"]] = get_tpar("mgp")[1] + (xlab_lines - 1) * cex_xlab
+  }
   args[["adj"]] = get_tpar(c("adj.xlab", "adj"))
   do.call(title, args)
 
+  # ylab: base R already places multi-line text correctly (outermost line at
+  # mgp[1], subsequent lines closer to the plot), so no line shift needed.
   args = list(ylab = ylab)
-  ylab_lines = text_line_count(ylab)
-  if (ylab_lines > 1L) {
-    # Keep multi-line ylab centered around the default label line so outer
-    # lines do not get pushed off-device in tighter layouts (e.g., mfrow 2x2).
-    line_ylab = get_tpar("mgp")[1] - (ylab_lines - 1)
-    cex_ylab = get_tpar(c("cex.ylab", "cex.lab"), 1)
-    csi = par("csi")
-    left_margin_in = par("mai")[2]
-    # Keep roughly one glyph-width of room from the left device edge to avoid
-    # clipping of the outermost ylab line on compact multi-panel layouts.
-    edge_pad_in = 0.75 * csi * cex_ylab
-    max_line = (left_margin_in - edge_pad_in) / csi
-    line_ylab = min(line_ylab, max_line)
-    args[["line"]] = max(0, line_ylab)
-  }
   args[["adj"]] = get_tpar(c("adj.ylab", "adj"))
   do.call(title, args)
 }

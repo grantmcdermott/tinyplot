@@ -118,6 +118,20 @@ draw_facet_window = function(
     
     ## Dynamic plot margin adjustments
     if (dynmar) {
+      # Build each side's margin additively from a zero-ish baseline: pad +
+      # tick row (when axis on) + axis label (when present) + main/sub.
+      side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
+      omar[1] = dynmar_side(1, xlab, main = main, sub = sub,
+                            side.sub = side.sub,
+                            axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
+                            tpars = tpars)
+      omar[2] = dynmar_side(2, ylab,
+                            axis_on = !identical(yaxt, "none") && !identical(yaxt, "n"),
+                            tpars = tpars)
+      omar[3] = dynmar_side(3, NULL, main = main, sub = sub,
+                            side.sub = side.sub, tpars = tpars)
+      omar[4] = dynmar_side(4, NULL, tpars = tpars)
+
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
         ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
@@ -160,18 +174,7 @@ draw_facet_window = function(
         }
       }
 
-      # Adjust margins for missing and multi-line annotation strings.
-      xlab_lines = text_line_count(xlab)
-      ylab_lines = text_line_count(ylab)
-      main_lines = text_line_count(main)
-
-      if (xlab_lines == 0) omar[1] = omar[1] - 1
-      if (ylab_lines == 0) omar[2] = omar[2] - 1
-      if (main_lines == 0) omar[3] = omar[3] - 1
-
-      if (xlab_lines > 1) omar[1] = omar[1] + (xlab_lines - 1) * get_tpar(c("cex.xlab", "cex.lab"), tpar_list = tpars)
-      if (ylab_lines > 1) omar[2] = omar[2] + (ylab_lines - 1) * get_tpar(c("cex.ylab", "cex.lab"), tpar_list = tpars)
-      if (main_lines > 1) omar[3] = omar[3] + (main_lines - 1) * get_tpar("cex.main", tpar_list = tpars)
+      if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
 
       # FIXME: Is this causing issues for lhs legends with facet_grid?
       # catch for missing rhs legend
@@ -201,9 +204,20 @@ draw_facet_window = function(
     # on our earlier calculations.
     par(mfrow = c(nfacet_rows, nfacet_cols))
   } else if (dynmar) {
-    # Dynamic plot margin adjustments
-    omar = par("mar")
-    omar = omar - c(0, 0, 1, 0) # reduce top whitespace since no facet (title)
+    # Dynamic plot margin adjustments (no facets): build each side additively
+    # from a tiny pad. Tick-label *width/height* (whtsbp) is added below.
+    side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
+    omar = c(
+      dynmar_side(1, xlab, main = main, sub = sub, side.sub = side.sub,
+                  axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
+                  tpars = tpars),
+      dynmar_side(2, ylab,
+                  axis_on = !identical(yaxt, "none") && !identical(yaxt, "n"),
+                  tpars = tpars),
+      dynmar_side(3, NULL, main = main, sub = sub, side.sub = side.sub,
+                  tpars = tpars),
+      dynmar_side(4, NULL, tpars = tpars)
+    )
     if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
@@ -236,19 +250,6 @@ draw_facet_window = function(
         omar[1] = omar[1] + whtsbp
       }
     }
-
-    # Adjust margins for missing and multi-line annotation strings.
-    xlab_lines = text_line_count(xlab)
-    ylab_lines = text_line_count(ylab)
-    main_lines = text_line_count(main)
-
-    if (xlab_lines == 0) omar[1] = omar[1] - 1
-    if (ylab_lines == 0) omar[2] = omar[2] - 1
-    if (main_lines == 0) omar[3] = omar[3] - 1
-
-    if (xlab_lines > 1) omar[1] = omar[1] + (xlab_lines - 1) * get_tpar(c("cex.xlab", "cex.lab"), tpar_list = tpars)
-    if (ylab_lines > 1) omar[2] = omar[2] + (ylab_lines - 1) * get_tpar(c("cex.ylab", "cex.lab"), tpar_list = tpars)
-    if (main_lines > 1) omar[3] = omar[3] + (main_lines - 1) * get_tpar("cex.main", tpar_list = tpars)
 
      par(mar = omar)
   }

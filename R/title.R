@@ -20,6 +20,11 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
 
   if (isTRUE(adj_title)) {
     line_main = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1
+  } else if (isTRUE(get_tpar("dynmar", FALSE))) {
+    # Anchor main at a fixed line above the plot box so it stays in the same
+    # position regardless of whether sub is also present (the sub branch
+    # below adds a +1.2 shift on top of this baseline when needed).
+    line_main = get_tpar("mgp")[3] + 0.7 - 0.1
   } else {
     line_main = NULL
   }
@@ -27,7 +32,7 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
   # When sub sits on top (side.sub == 3), push main up by the sub row height
   # so main is above sub rather than overlapping it.
   if (!is.null(sub) && isTRUE(get_tpar("side.sub", 1) == 3)) {
-    if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 0.7 - .1
+    if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 0.7 - 0.1
     line_main = line_main + 1.2
   }
 

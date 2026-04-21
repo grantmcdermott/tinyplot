@@ -58,13 +58,10 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
   }
 
   if (!is.null(main)) {
-    main_lines = text_line_count(main)
-    if (main_lines > 1L) {
-      # Keep line 1 aligned with single-line titles by shifting the centered
-      # multi-line block downward by half its extra line height.
-      if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 1.1
-      line_main = line_main - (main_lines - 1) / 2
-    }
+    # title() stacks multi-line main *above* `line_main` (line N at
+    # `line_main`, extra lines extend upward). The reserved top margin
+    # already accounts for (N-1)*cex_main extra lines, so no line-shift
+    # adjustment is needed here.
     args = list(
       main = main,
       line = line_main,

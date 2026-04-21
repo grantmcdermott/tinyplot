@@ -118,19 +118,21 @@ draw_facet_window = function(
     
     ## Dynamic plot margin adjustments
     if (dynmar) {
-      # Build each side's margin additively from a zero-ish baseline: pad +
-      # tick row (when axis on) + axis label (when present) + main/sub.
+      # Build each side's margin additively. The theme's `mar` acts as a
+      # baseline padding (via pmax) and dynmar_side() adds enough space for
+      # tick rows, axis labels, main, and sub when present.
       side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
-      omar[1] = dynmar_side(1, xlab, main = main, sub = sub,
-                            side.sub = side.sub,
-                            axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
-                            tpars = tpars)
-      omar[2] = dynmar_side(2, ylab,
-                            axis_on = !identical(yaxt, "none") && !identical(yaxt, "n"),
-                            tpars = tpars)
-      omar[3] = dynmar_side(3, NULL, main = main, sub = sub,
-                            side.sub = side.sub, tpars = tpars)
-      omar[4] = dynmar_side(4, NULL, tpars = tpars)
+      omar = pmax(omar, c(
+        dynmar_side(1, xlab, main = main, sub = sub, side.sub = side.sub,
+                    axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
+                    tpars = tpars),
+        dynmar_side(2, ylab,
+                    axis_on = !identical(yaxt, "none") && !identical(yaxt, "n"),
+                    tpars = tpars),
+        dynmar_side(3, NULL, main = main, sub = sub, side.sub = side.sub,
+                    tpars = tpars),
+        dynmar_side(4, NULL, tpars = tpars)
+      ))
 
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
@@ -204,10 +206,12 @@ draw_facet_window = function(
     # on our earlier calculations.
     par(mfrow = c(nfacet_rows, nfacet_cols))
   } else if (dynmar) {
-    # Dynamic plot margin adjustments (no facets): build each side additively
-    # from a tiny pad. Tick-label *width/height* (whtsbp) is added below.
+    # Dynamic plot margin adjustments (no facets). The theme's `mar` acts
+    # as a baseline padding (via pmax); dynmar_side() adds enough space
+    # for tick rows, axis labels, main, and sub when present. Tick-label
+    # *width/height* (whtsbp) is added further below.
     side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
-    omar = c(
+    omar = pmax(par("mar"), c(
       dynmar_side(1, xlab, main = main, sub = sub, side.sub = side.sub,
                   axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
                   tpars = tpars),
@@ -217,7 +221,7 @@ draw_facet_window = function(
       dynmar_side(3, NULL, main = main, sub = sub, side.sub = side.sub,
                   tpars = tpars),
       dynmar_side(4, NULL, tpars = tpars)
-    )
+    ))
     if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis

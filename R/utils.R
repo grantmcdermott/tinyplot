@@ -16,7 +16,7 @@ text_line_count = function(x) {
 }
 
 # Compute additive margin "build" for a given side under dynmar.
-# Starts from a tiny pad and adds only what the plot actually needs. The tick
+# Starts from zero and adds only what the plot actually needs. The tick
 # row and the axis-label row occupy overlapping vertical space (tick row
 # ends at ~|tcl| + mgp[2] + 1, axis label baseline sits at mgp[1]), so the
 # margin is the max of:
@@ -26,12 +26,10 @@ text_line_count = function(x) {
 # margin additively.
 # Tick-label *width* for sides 2/4 (and *height* for 1/3 under las 2:3) is
 # handled separately by the existing whtsbp logic in draw_facet_window().
-# `pad` is the baseline breathing room added to every side (in line units);
-# 0.3 is a good visual default for dynamic themes. 0.4 is also reasonable if
-# a little more whitespace is desired.
+# The caller is expected to take max(theme_mar[side], dynmar_side(...)) so
+# that the theme's starting `mar` acts as a baseline padding.
 dynmar_side = function(side, label, main = NULL, sub = NULL,
-                      side.sub = 3, axis_on = TRUE, tpars = NULL,
-                      pad = 0.3) {
+                      side.sub = 3, axis_on = TRUE, tpars = NULL) {
   mgp = get_tpar("mgp", tpar_list = tpars)
   tcl = get_tpar("tcl", tpar_list = tpars, default = par("tcl"))
   tick_extent = if (side %in% 1:2 && isTRUE(axis_on)) {
@@ -49,22 +47,29 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
     # doesn't clip against the device edge.
     label_extent = mgp[1] + (lines - 1) * cex_lab + 1
   }
-  mar = pad + max(tick_extent, label_extent)
+  mar = max(tick_extent, label_extent)
   if (side == 3L) {
     mlines = text_line_count(main)
     if (mlines >= 1L) {
       cex_main = get_tpar("cex.main", tpar_list = tpars, default = 1.2)
-      # Main baseline sits at `mgp[3] + 0.7`; each extra line adds cex_main
-      # of vertical space; plus ~half a line for the ascender so the top
-      # of the text stays within the device.
-      mar = mar + 0.7 + (mlines - 1) * cex_main + 0.5
+      # Main last-line baseline sits 0.7 lines above the box. Additional
+      # lines stack upward at cex_main per row. The top line's visible
+      # extent reaches ~0.6 * cex_main above its baseline (empirical from
+      # strheight("X") / csi).
+      mar = mar + 0.7 + (mlines - 1 + 0.6) * cex_main
     }
   }
   slines = text_line_count(sub)
   if (slines >= 1L && side == side.sub && side %in% c(1L, 3L)) {
     cex_sub = get_tpar("cex.sub", tpar_list = tpars, default = 1.2)
     # First sub row gets a 0.2-line extra bump; extra lines add cex_sub.
-    mar = mar + (cex_sub + 0.2) + (slines - 1) * cex_sub
+    # The top line's visible extent reaches ~0.6 * cex_sub above baseline.
+    # If main is ALSO present on the same side, its ascender already covers
+    # the top — the sub contribution is just the stacked sub row height.
+    # Otherwise, add the sub's own ascender.
+    has_main_here = side == 3L && text_line_count(main) >= 1L
+    asc = if (has_main_here) 0 else 0.6 * cex_sub
+    mar = mar + (cex_sub + 0.2) + (slines - 1) * cex_sub + asc
   }
   mar
 }

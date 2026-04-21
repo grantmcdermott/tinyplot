@@ -996,14 +996,15 @@ tinyplot.default = function(
     # relative to the plot region (not the default [0,1,0,1] figure region).
     if (isTRUE(get_tpar("dynmar"))) {
       .side.sub = get_tpar("side.sub", default = 3)
-      par(mar = c(
+      .theme_mar = par("mar")
+      par(mar = pmax(.theme_mar, c(
         dynmar_side(1, xlab, main = main, sub = sub, side.sub = .side.sub,
                     axis_on = !identical(xaxt, "none") && !identical(xaxt, "n")),
         dynmar_side(2, ylab,
                     axis_on = !identical(yaxt, "none") && !identical(yaxt, "n")),
         dynmar_side(3, NULL, main = main, sub = sub, side.sub = .side.sub),
         dynmar_side(4, NULL)
-      ))
+      )))
       # Establish user coordinates so title/mtext adj is measured against the
       # plot region. draw_facet_window() will call plot.window() again with
       # final asp/log etc., but that's idempotent for alignment purposes.

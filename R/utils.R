@@ -54,16 +54,17 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
     mlines = text_line_count(main)
     if (mlines >= 1L) {
       cex_main = get_tpar("cex.main", tpar_list = tpars, default = 1.2)
-      # Main baseline sits at `mgp[3] + 0.7` (+1.2 further up if sub is also
-      # on top, applied via the sub branch below). Add half a line for
-      # ascender so the top of the text stays within the device.
+      # Main baseline sits at `mgp[3] + 0.7`; each extra line adds cex_main
+      # of vertical space; plus ~half a line for the ascender so the top
+      # of the text stays within the device.
       mar = mar + 0.7 + (mlines - 1) * cex_main + 0.5
     }
   }
   slines = text_line_count(sub)
   if (slines >= 1L && side == side.sub && side %in% c(1L, 3L)) {
-    cex_sub = get_tpar("cex.sub", tpar_list = tpars, default = 1)
-    mar = mar + 1.2 + (slines - 1) * cex_sub
+    cex_sub = get_tpar("cex.sub", tpar_list = tpars, default = 1.2)
+    # First sub row gets a 0.2-line extra bump; extra lines add cex_sub.
+    mar = mar + (cex_sub + 0.2) + (slines - 1) * cex_sub
   }
   mar
 }

@@ -31,10 +31,13 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
 
   # When sub sits on top (side.sub == 3), push main up by the sub row height
   # so main is above sub rather than overlapping it. Treat NA/empty sub as
-  # absent so main stays at its normal position.
-  if (text_line_count(sub) > 0L && isTRUE(get_tpar("side.sub", 1) == 3)) {
+  # absent so main stays at its normal position. Scale the bump with the
+  # number of sub lines.
+  sub_lines = text_line_count(sub)
+  if (sub_lines > 0L && isTRUE(get_tpar("side.sub", 1) == 3)) {
     if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 0.7 - 0.1
-    line_main = line_main + 1.2
+    cex_sub = get_tpar("cex.sub", 1.2)
+    line_main = line_main + 1.2 + (sub_lines - 1) * cex_sub
   }
 
   if (!is.null(sub)) {

@@ -133,6 +133,17 @@ draw_facet_window = function(
                     tpars = tpars),
         dynmar_side(4, NULL, tpars = tpars)
       ))
+      # Under facets, main/sub sit ABOVE the top facet strip. Bump the
+      # outer top margin by the strip height so sub doesn't collide with
+      # the strip. fmar[3] already captures facet_newlines and the
+      # facet_grid adjustment; add back the 0.5 line that was stripped
+      # when frame.plot is FALSE (that reduction is meant to tighten
+      # inter-panel gaps, not the top strip).
+      strip_bump = fmar[3]
+      if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+        strip_bump = strip_bump + 0.5
+      }
+      omar[3] = omar[3] + strip_bump
 
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis

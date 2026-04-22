@@ -1,4 +1,5 @@
-draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
+draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar,
+                      ylab_line_offset = 0) {
   # main title
   # Note that we include a special catch for the main title if legend is
   # "top!" (and main is specified in the first place).
@@ -93,6 +94,9 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
   # ylab: base R already places multi-line text correctly (outermost line at
   # mgp[1], subsequent lines closer to the plot), so no line shift needed.
   args = list(ylab = ylab)
+  if (ylab_line_offset != 0) {
+    args[["line"]] = get_tpar("mgp")[1] + ylab_line_offset
+  }
   args[["adj"]] = get_tpar(c("adj.ylab", "adj"))
   do.call(title, args)
 }

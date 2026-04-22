@@ -513,6 +513,22 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_grid")
 
+f = function() {
+  tinyplot(
+    y ~ x,
+    facet = ~group,
+    facet.args = list(free = TRUE),
+    data = data.frame(
+      y = rep(c(1, 1, 2, 2, 1, 1.5, 1.5), 2),
+      x = rep(c(2, 1, 1, 2, 2, 2, 11), 2),
+      group = c(rep("A", 7), rep("B", 7))
+    ),
+    type = "l",
+    asp = 1
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_asp_1")
+
 #
 # restore original par settings
 #

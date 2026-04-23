@@ -29,7 +29,7 @@
 #'
 #'
 #' @export
-type_mean_se = function(conf.int = .95, na.rm = TRUE, errorbar = TRUE...) {
+type_mean_se = function(conf.int = .95, na.rm = TRUE, errorbar = TRUE, ...) {
   pointrange_args = list(...)
 
   # function to get mean_se out of two vectors
@@ -92,7 +92,7 @@ type_mean_se = function(conf.int = .95, na.rm = TRUE, errorbar = TRUE...) {
       datapoints = do.call(rbind, datapoints)
       
       xlvls <- levels(factor(datapoints$x))
-      datapoints$x = as.integer(factor(datapoints$x, levels = xlvls))
+      datapoints$x = factor(datapoints$x, levels = xlvls)
       xlabs <- seq_along(xlvls)
       names(xlabs) <- xlvls
       datapoints$x <- as.integer(datapoints$x)

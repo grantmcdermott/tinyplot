@@ -10,6 +10,9 @@
 #' @param conf.int confidence error to plot the standard error. Defaults to .95
 #' @param na.rm a logical evaluating to TRUE or FALSE indicating whether NA
 #' values should be stripped before the computation proceeds Defaults to TRUE.
+#' @param errorbar a logical evaluating to TRUE or FALSE indicating whether 
+#' errorbars should be drawn. If FALSE, it will draw a pointrange. Defaults to
+#' TRUE
 #' @param ... Additional arguments are passed to the `lines()` function,
 #' ex: `col="pink"`.
 #' @examples
@@ -26,7 +29,7 @@
 #'
 #'
 #' @export
-type_mean_se = function(conf.int = .95, na.rm = TRUE, ...) {
+type_mean_se = function(conf.int = .95, na.rm = TRUE, errorbar = TRUE...) {
   pointrange_args = list(...)
 
   # function to get mean_se out of two vectors
@@ -100,11 +103,21 @@ type_mean_se = function(conf.int = .95, na.rm = TRUE, ...) {
     }
     return(funky)
   }
-  out = list(
-    draw = draw_pointrange(...),
-    data = data_mean_se(fun = fun),
-    name = "l"
-  )
+  if (errorbar) {
+    out = list(
+      draw = draw_errorbar(...),
+      data = data_mean_se(fun = fun),
+      name = "l"
+    )
+  }
+  else {
+    out = list(
+      draw = draw_pointrange(...),
+      data = data_mean_se(fun = fun),
+      name = "l"
+    )
+  }
+
   class(out) = "tinyplot_type"
   return(out)
 }

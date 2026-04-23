@@ -244,6 +244,8 @@ type of plot desired.
 \item \code{\link[=type_vline]{type_vline()}}: vertical line(s).
 \item \code{\link[=type_function]{type_function()}}: arbitrary function.
 \item \code{\link[=type_summary]{type_summary()}}: summarize \code{y} by unique values of \code{x}.
+\item \code{\link[=type_meanse]{type_meanse()}}: return mean and standard error of \code{y} by
+uniue values of \code{x}
 }
 }
 }}

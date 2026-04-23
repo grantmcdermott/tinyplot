@@ -4,7 +4,14 @@
 \alias{type_mean_se}
 \title{Plot mean and standard error of \code{y} at unique values of \code{x}}
 \usage{
-type_mean_se(conf.int = 0.95, na.rm = TRUE, errorbar = TRUE...)
+type_mean_se(
+  conf.int = 0.95,
+  na.rm = TRUE,
+  errorbar = TRUE,
+  dodge = 0,
+  fixed.dodge = FALSE,
+  ...
+)
 }
 \arguments{
 \item{conf.int}{confidence error to plot the standard error. Defaults to .95}
@@ -16,14 +23,11 @@ values should be stripped before the computation proceeds Defaults to TRUE.}
 errorbars should be drawn. If FALSE, it will draw a pointrange. Defaults to
 TRUE}
 
-\item{...}{Additional arguments are passed to the \code{lines()} function,
-ex: \code{col="pink"}.}
+\item{...}{Additional arguments are passed to the \code{draw_pointrange()}
+or \code{draw_errorbar()} function, ex: \code{col="pink"}.}
 }
 \description{
-Applies a summary function to \code{y} along unique values of \code{x}. For example,
-plot the mean \code{y} value for each \code{x} value. Internally,
-\code{type_summary()} applies a thin wrapper around \code{\link[stats]{ave}} and
-then passes the result to \code{\link{type_lines}} for drawing.
+Plots the mean + standard error of a numeric variable by a grouping variable.
 }
 \examples{
 # Plot the mean and standard error of miles per gallon by cylinders

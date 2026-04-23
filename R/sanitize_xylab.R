@@ -4,8 +4,16 @@ sanitize_xylab = function(settings) {
     environment(),
     c(
       "type",
-      "x", "xlab", "x_dep", "xmin_dep", "xmax_dep",
-      "y", "ylab", "y_dep", "ymin_dep", "ymax_dep"
+      "x",
+      "xlab",
+      "x_dep",
+      "xmin_dep",
+      "xmax_dep",
+      "y",
+      "ylab",
+      "y_dep",
+      "ymin_dep",
+      "ymax_dep"
     )
   )
 
@@ -46,7 +54,9 @@ sanitize_xylab = function(settings) {
     } else if (!is.null(ymin_dep) && !is.null(ymax_dep)) {
       out_ylab = sprintf("[%s, %s]", ymin_dep, ymax_dep)
     }
-  } else if ((is_range || is_ribbon) && !is.null(ymin_dep) && !is.null(ymax_dep)) {
+  } else if (
+    (is_range || is_ribbon) && !is.null(ymin_dep) && !is.null(ymax_dep)
+  ) {
     out_ylab = sprintf("[%s, %s]", ymin_dep, ymax_dep)
   } else if (!is.null(y_dep)) {
     out_ylab = y_dep

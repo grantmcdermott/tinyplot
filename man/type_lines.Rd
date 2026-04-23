@@ -8,9 +8,8 @@ type_lines(type = "l", dodge = 0, fixed.dodge = FALSE)
 }
 \arguments{
 \item{type}{1-character string giving the type of plot desired.  The
-    following values are possible, for details, see \code{\link[base]{plot}}:
-    \code{"p"} for points,
-    \code{"l"} for lines,
+    following values are possible, for details, see \code{\link[graphics]{plot}}:
+    \code{"p"} for points, \code{"l"} for lines,
     \code{"b"} for both points and lines,
     \code{"c"} for empty points joined by lines,
     \code{"o"} for overplotted points and lines,

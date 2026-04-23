@@ -3,23 +3,36 @@
 align_layer = function(settings) {
   # Retrieve xlabs and plot/device metadata from original layer
   tinyplot_env = get(".tinyplot_env", envir = parent.env(environment()))
-  xlabs_orig = tryCatch(get("xlabs_orig", envir = tinyplot_env), error = function(e) NULL)
-  usr_orig = tryCatch(get("usr_orig", envir = tinyplot_env), error = function(e) NULL)
-  dev_orig = tryCatch(get("dev_orig", envir = tinyplot_env), error = function(e) NULL)
-  
+  xlabs_orig = tryCatch(
+    get("xlabs_orig", envir = tinyplot_env),
+    error = function(e) NULL
+  )
+  usr_orig = tryCatch(
+    get("usr_orig", envir = tinyplot_env),
+    error = function(e) NULL
+  )
+  dev_orig = tryCatch(
+    get("dev_orig", envir = tinyplot_env),
+    error = function(e) NULL
+  )
+
   # Validate that we're adding to the same plot (not a stale xlabs from previous plot)
   if (is.null(usr_orig) || is.null(dev_orig) || dev_orig != dev.cur()) {
     return(invisible())
   }
   # Normalize current usr for comparison (accounting for flipped plots)
-  usr_layer = if (isTRUE(settings$flip)) par("usr")[c(3,4,1,2)] else par("usr")
+  usr_layer = if (isTRUE(settings$flip)) {
+    par("usr")[c(3, 4, 1, 2)]
+  } else {
+    par("usr")
+  }
   if (!identical(usr_orig, usr_layer)) {
     return(invisible())
   }
-  
+
   # xlabs of current layer
   xlabs_layer = settings[["xlabs"]]
-  
+
   # Only adjust if original layer has named xlabs
   if (!is.null(names(xlabs_orig))) {
     if (is.factor(settings$datapoints[["x"]])) {
@@ -30,16 +43,20 @@ align_layer = function(settings) {
           settings$datapoints[["x"]]
         }
       )
-      settings$datapoints = settings$datapoints[order(settings$datapoints[["x"]]), ]
+      settings$datapoints = settings$datapoints[
+        order(settings$datapoints[["x"]]),
+      ]
     } else if (!is.null(names(xlabs_layer))) {
       # Case 2: match implicit integer -> label mapping (e.g., lines added to errorbars)
       if (setequal(names(xlabs_layer), names(xlabs_orig))) {
         # If mappings already agree and no dodge, no realignment needed
-        if (identical(xlabs_layer, xlabs_orig) && is.null(settings$dodge)) return(invisible())
+        if (identical(xlabs_layer, xlabs_orig) && is.null(settings$dodge)) {
+          return(invisible())
+        }
         orig_order = xlabs_orig[names(xlabs_layer)[settings$datapoints[["x"]]]]
         x_layer = settings$datapoints[["x"]]
         if (is.null(settings$dodge)) {
-          x_new = x_layer[orig_order] 
+          x_new = x_layer[orig_order]
         } else {
           names(x_layer) = names(xlabs_layer)[round(x_layer)]
           x_new = x_layer + (xlabs_orig[names(round(x_layer))] - round(x_layer))
@@ -51,7 +68,9 @@ align_layer = function(settings) {
             settings$datapoints[[v]] = x_new
           }
         }
-        settings$datapoints = settings$datapoints[order(settings$datapoints[["x"]]), ]
+        settings$datapoints = settings$datapoints[
+          order(settings$datapoints[["x"]]),
+        ]
         settings$datapoints[["rowid"]] = seq_len(nrow(settings$datapoints))
       }
     }

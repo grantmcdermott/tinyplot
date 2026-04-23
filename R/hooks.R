@@ -1,8 +1,6 @@
 # Copied from https://raw.githubusercontent.com/r-lib/evaluate/refs/heads/main/R/hooks.R
 # license: MIT + file LICENSE
 
-
-
 #' Set and remove hooks
 #'
 #' This interface wraps the base [setHook()] function to provide a return

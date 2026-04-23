@@ -64,7 +64,6 @@ tinyplot_add = function(...) {
 }
 
 
-
 #' @export
 #' @name plt_add
 #' @rdname tinyplot_add

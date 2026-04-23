@@ -5,9 +5,16 @@ lim_args = function(settings) {
     settings,
     environment(),
     c(
-      "xaxb", "xlabs", "xlim", "null_xlim", 
-      "yaxb", "ylabs", "ylim", "null_ylim",
-      "datapoints", "type"
+      "xaxb",
+      "xlabs",
+      "xlim",
+      "null_xlim",
+      "yaxb",
+      "ylabs",
+      "ylim",
+      "null_ylim",
+      "datapoints",
+      "type"
     )
   )
 
@@ -23,22 +30,36 @@ lim_args = function(settings) {
   }
 
   if (is.null(xlim)) {
-    xlim = range(as.numeric(c(
-      datapoints[["x"]], datapoints[["xmin"]],
-      datapoints[["xmax"]])), finite = TRUE)
+    xlim = range(
+      as.numeric(c(
+        datapoints[["x"]],
+        datapoints[["xmin"]],
+        datapoints[["xmax"]]
+      )),
+      finite = TRUE
+    )
   }
   if (is.null(ylim)) {
-    ylim = range(as.numeric(c(
-      datapoints[["y"]], datapoints[["ymin"]],
-      datapoints[["ymax"]])), finite = TRUE)
+    ylim = range(
+      as.numeric(c(
+        datapoints[["y"]],
+        datapoints[["ymin"]],
+        datapoints[["ymax"]]
+      )),
+      finite = TRUE
+    )
   }
 
   if (identical(type, "boxplot")) {
     xlim = xlim + c(-0.5, 0.5)
   }
 
-  if (null_xlim && !is.null(xaxb) && type != "spineplot") xlim = range(c(xlim, xaxb))
-  if (null_ylim && !is.null(yaxb) && type != "spineplot") ylim = range(c(ylim, yaxb))
+  if (null_xlim && !is.null(xaxb) && type != "spineplot") {
+    xlim = range(c(xlim, xaxb))
+  }
+  if (null_ylim && !is.null(yaxb) && type != "spineplot") {
+    ylim = range(c(ylim, yaxb))
+  }
 
   # update settings
   env2env(

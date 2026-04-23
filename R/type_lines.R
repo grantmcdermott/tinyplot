@@ -1,17 +1,17 @@
 #' Lines plot type
 #'
 #' @description Type function for plotting lines.
-#' 
+#'
 #' @inheritParams graphics::plot.default
 #' @inheritParams dodge_positions
-#' 
+#'
 #' @examples
 #' # "l" type convenience character string
 #' tinyplot(circumference ~ age | Tree, data = Orange, type = "l")
-#' 
+#'
 #' # Use `type_lines()` to pass extra arguments for customization
 #' tinyplot(circumference ~ age | Tree, data = Orange, type = type_lines(type = "s"))
-#' 
+#'
 #' @export
 type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE) {
   out = list(
@@ -25,7 +25,9 @@ type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE) {
 
 
 data_lines = function(dodge = 0, fixed.dodge = FALSE) {
-  if (is.null(dodge) || dodge == 0) return(NULL)
+  if (is.null(dodge) || dodge == 0) {
+    return(NULL)
+  }
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "xlabs"))
 
@@ -46,29 +48,33 @@ data_lines = function(dodge = 0, fixed.dodge = FALSE) {
     }
 
     x = datapoints$x
-    env2env(environment(), settings, c(
-      "x",
-      "xlabs",
-      "datapoints"
-    ))
+    env2env(
+      environment(),
+      settings,
+      c(
+        "x",
+        "xlabs",
+        "datapoints"
+      )
+    )
   }
   fun
 }
 
 
 draw_lines = function(type = "l") {
-    fun = function(ix, iy, icol, ipch, ibg, ilty, ilwd, icex = 1, ...) {
-        lines(
-            x = ix,
-            y = iy,
-            col = icol,
-            type = type,
-            pch = ipch,
-            bg = ibg,
-            lty = ilty,
-            lwd = ilwd,
-            cex = icex
-        )
-    }
-    return(fun)
+  fun = function(ix, iy, icol, ipch, ibg, ilty, ilwd, icex = 1, ...) {
+    lines(
+      x = ix,
+      y = iy,
+      col = icol,
+      type = type,
+      pch = ipch,
+      bg = ibg,
+      lty = ilty,
+      lwd = ilwd,
+      cex = icex
+    )
+  }
+  return(fun)
 }

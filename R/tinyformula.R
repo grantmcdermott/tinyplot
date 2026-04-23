@@ -14,19 +14,27 @@ tinyformula = function(formula, facet = NULL) {
   ## - full:   e.g. ~ x + y + z + a + b
 
   ## preliminaries
-  if (!inherits(formula, "formula")) formula = as.formula(formula)
+  if (!inherits(formula, "formula")) {
+    formula = as.formula(formula)
+  }
   nf = length(formula)
 
   ## basic formula types
-  x     = ~ x
-  y     = if (nf == 2L) NULL else ~ y
-  by    = if (!inherits(formula[[nf]], "call") || formula[[nf]][[1L]] != as.name("|")) NULL else ~ z
+  x = ~x
+  y = if (nf == 2L) NULL else ~y
+  by = if (
+    !inherits(formula[[nf]], "call") || formula[[nf]][[1L]] != as.name("|")
+  ) {
+    NULL
+  } else {
+    ~z
+  }
   if (is.null(facet) || !inherits(facet, "formula")) {
     xfacet = NULL
     yfacet = NULL
   } else {
-    xfacet = ~ a
-    yfacet = if (length(facet) == 2L) NULL else ~ b
+    xfacet = ~a
+    yfacet = if (length(facet) == 2L) NULL else ~b
   }
 
   ## fill with actual terms
@@ -53,10 +61,18 @@ tinyformula = function(formula, facet = NULL) {
 
   ## combine everything
   full = x
-  if (!is.null(y))      full[[2L]] = call("+", full[[2L]], y[[2L]])
-  if (!is.null(by))     full[[2L]] = call("+", full[[2L]], by[[2L]])
-  if (!is.null(xfacet)) full[[2L]] = call("+", full[[2L]], xfacet[[2L]])
-  if (!is.null(yfacet)) full[[2L]] = call("+", full[[2L]], yfacet[[2L]])
+  if (!is.null(y)) {
+    full[[2L]] = call("+", full[[2L]], y[[2L]])
+  }
+  if (!is.null(by)) {
+    full[[2L]] = call("+", full[[2L]], by[[2L]])
+  }
+  if (!is.null(xfacet)) {
+    full[[2L]] = call("+", full[[2L]], xfacet[[2L]])
+  }
+  if (!is.null(yfacet)) {
+    full[[2L]] = call("+", full[[2L]], yfacet[[2L]])
+  }
 
   ## return list of all formulas
   return(list(
@@ -73,9 +89,13 @@ tinyframe = function(formula, data, drop = FALSE) {
   ## input
   ## - formula: (sub-)formula
   ## - data: model.frame from full formula
-  if (is.null(formula)) return(NULL)
+  if (is.null(formula)) {
+    return(NULL)
+  }
   vars = attr(terms(formula), "variables")[-1L]
-  if (is.null(vars)) return(NULL)
+  if (is.null(vars)) {
+    return(NULL)
+  }
   names = sapply(vars, deparse, width.cutoff = 500L)
   data[, names, drop = drop]
 }

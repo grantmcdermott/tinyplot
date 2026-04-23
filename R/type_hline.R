@@ -20,12 +20,24 @@ type_hline = function(h = 0) {
     env2env(environment(), settings, "type_info")
   }
   draw_hline = function() {
-    fun = function(ifacet, iby, data_facet, icol, ilty, ilwd,
-                   ngrps, nfacets, by_continuous, facet_by,
-                   type_info,
-                   ...) {
+    fun = function(
+      ifacet,
+      iby,
+      data_facet,
+      icol,
+      ilty,
+      ilwd,
+      ngrps,
+      nfacets,
+      by_continuous,
+      facet_by,
+      type_info,
+      ...
+    ) {
       # flag for aesthetics by groups
-      grp_aes = type_info[["ul_col"]] == 1 || type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps
+      grp_aes = type_info[["ul_col"]] == 1 ||
+        type_info[["ul_lty"]] == ngrps ||
+        type_info[["ul_lwd"]] == ngrps
 
       if (length(h) != 1) {
         if (!length(h) %in% c(ngrps, nfacets, ngrps * nfacets)) {

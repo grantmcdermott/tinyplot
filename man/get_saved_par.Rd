@@ -38,7 +38,7 @@ Of course, users may prefer to manually capture and reset graphical
 parameters, as per the standard method described in the
 \code{\link[graphics]{par}} documentation. For example:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{op = par(no.readonly = TRUE)  # save current par settings 
+\if{html}{\out{<div class="sourceCode">}}\preformatted{op = par(no.readonly = TRUE)  # save current par settings
 # <do lots of (tiny)plotting>
 par(op)                       # reset original pars
 }\if{html}{\out{</div>}}

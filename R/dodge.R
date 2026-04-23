@@ -7,7 +7,7 @@
 #'   columns.
 #' @param dodge Adjustment parameter for dodging overlapping points or ranges in
 #'   grouped plots along the x-axis (or y-axis for flipped plots). Either:
-#' 
+#'
 #'   - numeric value in the range `[0,1)`. Note that values are scaled
 #'   relative to the spacing of x-axis breaks, e.g. `dodge = 0.1` places the
 #'   outermost groups one-tenth of the way to adjacent breaks, `dodge = 0.5`
@@ -15,7 +15,7 @@
 #'   - logical. If `TRUE`, the dodge width is calculated automatically based on
 #'   the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If
 #'   `FALSE` or 0, no dodging is performed.
-#' 
+#'
 #'   Default value is 0 (no dodging). While we do not check, it is _strongly_
 #'   recommended that dodging only be used in cases where the x-axis comprises a
 #'   limited number of discrete breaks.
@@ -51,11 +51,17 @@ dodge_positions = function(
   if (is.null(settings)) {
     settings = get("settings", envir = parent.frame())
   }
-  
+
   if (is.logical(dodge)) {
     if (isTRUE(dodge)) {
       n = nlevels(datapoints$by)
-      dodge = if (n == 1) 0 else if (n <= 5) (n - 1) * 0.1 else 0.45
+      dodge = if (n == 1) {
+        0
+      } else if (n <= 5) {
+        (n - 1) * 0.1
+      } else {
+        0.45
+      }
     } else {
       dodge = 0
     }
@@ -63,20 +69,22 @@ dodge_positions = function(
 
   assert_numeric(dodge, len = 1, lower = 0, upper = 1)
   if (dodge >= 1) {
-  stop("`dodge` must be in the range [0,1).", call. = FALSE)
+    stop("`dodge` must be in the range [0,1).", call. = FALSE)
   }
   assert_logical(fixed.dodge)
-  
+
   if (dodge == 0) {
     return(datapoints)
   } else if (dodge > 0.5) {
     warning(
-      "Argument `dodge = ", dodge, "` exceeds 0.5. ",
+      "Argument `dodge = ",
+      dodge,
+      "` exceeds 0.5. ",
       "Large dodge values may position outer groups closer to neighboring axis breaks."
     )
   }
   settings$dodge = dodge
-  
+
   # Auto-detect columns to dodge if not specified
   if (is.null(cols)) {
     cols = c("x", "xmin", "xmax")
@@ -106,4 +114,3 @@ dodge_positions = function(
 
   datapoints
 }
-

@@ -13,94 +13,98 @@
 #' tinyplot(Sepal.Length ~ Species, data = iris, type = type_jitter(factor = 0.5))
 #' @export
 type_jitter = function(factor = 1, amount = NULL) {
-    out = list(
-        draw = draw_points(),
-        data = data_jitter(factor = factor, amount = amount),
-        name = "p"
-    )
-    class(out) = "tinyplot_type"
-    return(out)
+  out = list(
+    draw = draw_points(),
+    data = data_jitter(factor = factor, amount = amount),
+    name = "p"
+  )
+  class(out) = "tinyplot_type"
+  return(out)
 }
 
 
 jitter_restore = function(obj, factor, amount) {
-    if (inherits(obj, "POSIXlt")) {
-        obj = as.POSIXct(obj)
-    }
-    if (inherits(obj, c("Date", "POSIXt", "yearmon", "yearqtr"))) {
-        obj_attrs = attributes(obj)
-        out = jitter(unclass(obj), factor = factor, amount = amount)
-        attributes(out) = obj_attrs
-    } else {
-        out = jitter(obj, factor = factor, amount = amount)
-    }
-    return(out)
+  if (inherits(obj, "POSIXlt")) {
+    obj = as.POSIXct(obj)
+  }
+  if (inherits(obj, c("Date", "POSIXt", "yearmon", "yearqtr"))) {
+    obj_attrs = attributes(obj)
+    out = jitter(unclass(obj), factor = factor, amount = amount)
+    attributes(out) = obj_attrs
+  } else {
+    out = jitter(obj, factor = factor, amount = amount)
+  }
+  return(out)
 }
 
 
 data_jitter = function(factor, amount) {
-    fun = function(settings, ...) {
-        env2env(settings, environment(), c("datapoints", "add"))
+  fun = function(settings, ...) {
+    env2env(settings, environment(), c("datapoints", "add"))
 
-        x = datapoints$x
-        y = datapoints$y
-        if (is.factor(x)) {
-            xlvls = levels(x)
-            xlabs = seq_along(xlvls)
-            names(xlabs) = xlvls
-            x = as.integer(x)
-        } else {
-            xlabs = NULL
-        }
-        if (is.factor(y)) {
-            ylvls = levels(y)
-            ylabs = seq_along(ylvls)
-            names(ylabs) = ylvls
-            y = as.integer(y)
-        } else {
-            ylabs = NULL
-        }
-
-        # Apply group offsets from base layer (e.g., boxplot, violin, ridge)
-        group_offsets = get_environment_variable(".group_offsets")
-        offsets_axis = get_environment_variable(".offsets_axis")
-        if (isTRUE(add) && !is.null(group_offsets)) {
-            if (identical(offsets_axis, "x") && is.factor(datapoints$by)) {
-                # x-axis offsets (boxplot, violin): keyed by group level
-                if (is.null(xlabs)) {
-                    xf = as.factor(x)
-                    xlvls = levels(xf)
-                    xlabs = seq_along(xlvls)
-                    names(xlabs) = xlvls
-                    x = as.integer(xf)
-                }
-                x = x + group_offsets[as.integer(datapoints$by)]
-            } else if (identical(offsets_axis, "y")) {
-                # y-axis offsets (ridge): keyed by y-level name
-                if (is.null(ylabs)) {
-                    yf = as.factor(y)
-                    ylvls = levels(yf)
-                    ylabs = seq_along(ylvls)
-                    names(ylabs) = ylvls
-                    y = as.integer(yf)
-                }
-                y_labels = names(ylabs)[y]
-                y = group_offsets[y_labels]
-            }
-        }
-
-        x = jitter_restore(x, factor = factor, amount = amount)
-        y = jitter_restore(y, factor = factor, amount = amount)
-
-        datapoints$x = x
-        datapoints$y = y
-
-        env2env(environment(), settings, c(
-            "datapoints",
-            "x",
-            "y",
-            "xlabs",
-            "ylabs"
-        ))
+    x = datapoints$x
+    y = datapoints$y
+    if (is.factor(x)) {
+      xlvls = levels(x)
+      xlabs = seq_along(xlvls)
+      names(xlabs) = xlvls
+      x = as.integer(x)
+    } else {
+      xlabs = NULL
     }
+    if (is.factor(y)) {
+      ylvls = levels(y)
+      ylabs = seq_along(ylvls)
+      names(ylabs) = ylvls
+      y = as.integer(y)
+    } else {
+      ylabs = NULL
+    }
+
+    # Apply group offsets from base layer (e.g., boxplot, violin, ridge)
+    group_offsets = get_environment_variable(".group_offsets")
+    offsets_axis = get_environment_variable(".offsets_axis")
+    if (isTRUE(add) && !is.null(group_offsets)) {
+      if (identical(offsets_axis, "x") && is.factor(datapoints$by)) {
+        # x-axis offsets (boxplot, violin): keyed by group level
+        if (is.null(xlabs)) {
+          xf = as.factor(x)
+          xlvls = levels(xf)
+          xlabs = seq_along(xlvls)
+          names(xlabs) = xlvls
+          x = as.integer(xf)
+        }
+        x = x + group_offsets[as.integer(datapoints$by)]
+      } else if (identical(offsets_axis, "y")) {
+        # y-axis offsets (ridge): keyed by y-level name
+        if (is.null(ylabs)) {
+          yf = as.factor(y)
+          ylvls = levels(yf)
+          ylabs = seq_along(ylvls)
+          names(ylabs) = ylvls
+          y = as.integer(yf)
+        }
+        y_labels = names(ylabs)[y]
+        y = group_offsets[y_labels]
+      }
+    }
+
+    x = jitter_restore(x, factor = factor, amount = amount)
+    y = jitter_restore(y, factor = factor, amount = amount)
+
+    datapoints$x = x
+    datapoints$y = y
+
+    env2env(
+      environment(),
+      settings,
+      c(
+        "datapoints",
+        "x",
+        "y",
+        "xlabs",
+        "ylabs"
+      )
+    )
+  }
 }

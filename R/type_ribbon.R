@@ -10,9 +10,9 @@
 #' define a `y` interval (usually spanning from `ymin` to `ymax`) for each
 #' `x` value. Area plots are a special case of ribbon plot where `ymin` is
 #' set to 0 and `ymax` is set to `y`.
-#' 
+#'
 #' @section Dodging ribbon plots:
-#' 
+#'
 #' We support dodging for grouped ribbon plots, enabling similar functionality
 #' to dodged errorbar and pointrange plots. However, it is strongly recommended
 #' that dodging is only implemented for cases where the x-axis comprises a
@@ -46,13 +46,13 @@
 #'
 #' # Area plots are often used for time series charts
 #' tinyplot(AirPassengers, type = "area")
-#' 
+#'
 #' #
 #' ## Dodged ribbon/area plots
-#' 
+#'
 #' # Dodged ribbon or area plots can be useful in cases where there is strong
 #' # overlap across groups (and a limited number of discrete x-axis values).
-#' 
+#'
 #' dat = data.frame(
 #'   x = rep(c("Before", "After"), each = 2),
 #'   grp = rep(c("A", "B"), 2),
@@ -60,7 +60,7 @@
 #'   lwr = c(8, 8.5, 13, 13.3),
 #'   upr = c(12, 12.5, 17, 17.3)
 #' )
-#' 
+#'
 #' tinyplot(
 #'   y ~ x | grp,
 #'   data = dat,
@@ -68,7 +68,7 @@
 #'   type = type_ribbon(),
 #'   main = "Overlappling ribbons"
 #' )
-#' 
+#'
 #' tinyplot(
 #'   y ~ x | grp,
 #'   data = dat,
@@ -76,96 +76,153 @@
 #'   type = type_ribbon(dodge = 0.1),
 #'   main = "Dodged ribbons"
 #' )
-#' 
+#'
 #' @export
 type_ribbon = function(alpha = NULL, dodge = 0, fixed.dodge = FALSE) {
-    out = list(
-        draw = draw_ribbon(),
-        data = data_ribbon(ribbon.alpha = alpha, dodge = dodge, fixed.dodge = fixed.dodge),
-        name = "ribbon"
-    )
-    class(out) = "tinyplot_type"
-    return(out)
+  out = list(
+    draw = draw_ribbon(),
+    data = data_ribbon(
+      ribbon.alpha = alpha,
+      dodge = dodge,
+      fixed.dodge = fixed.dodge
+    ),
+    name = "ribbon"
+  )
+  class(out) = "tinyplot_type"
+  return(out)
 }
 
 
 draw_ribbon = function() {
-    fun = function(ix, iy, ixmin, ixmax, iymin, iymax, ibg, ilty, ilwd, icol, ipch, i, flip = FALSE, ...) {
-        polyg = type_polygon()$draw
-        lin = type_lines()$draw
-        if (isFALSE(flip)) {
-            polyg(ix = c(ix, rev(ix)), iy = c(iymin, rev(iymax)), icol = NA, ibg = ibg)
-        } else {
-            polyg(c(ixmin, rev(ixmax)), iy = c(iy, rev(iy)), icol = NA, ibg = ibg)
-        }
-        lin(ix = ix, iy = iy, icol = icol, ipch = ipch, ibg = ibg, ilty = ilty, ilwd = ilwd, type = "l")
+  fun = function(
+    ix,
+    iy,
+    ixmin,
+    ixmax,
+    iymin,
+    iymax,
+    ibg,
+    ilty,
+    ilwd,
+    icol,
+    ipch,
+    i,
+    flip = FALSE,
+    ...
+  ) {
+    polyg = type_polygon()$draw
+    lin = type_lines()$draw
+    if (isFALSE(flip)) {
+      polyg(
+        ix = c(ix, rev(ix)),
+        iy = c(iymin, rev(iymax)),
+        icol = NA,
+        ibg = ibg
+      )
+    } else {
+      polyg(c(ixmin, rev(ixmax)), iy = c(iy, rev(iy)), icol = NA, ibg = ibg)
     }
-    return(fun)
+    lin(
+      ix = ix,
+      iy = iy,
+      icol = icol,
+      ipch = ipch,
+      ibg = ibg,
+      ilty = ilty,
+      ilwd = ilwd,
+      type = "l"
+    )
+  }
+  return(fun)
 }
 
 
 data_ribbon = function(ribbon.alpha = NULL, dodge = 0, fixed.dodge = FALSE) {
-    ribbon.alpha = sanitize_ribbon_alpha(ribbon.alpha)
-    fun = function(settings, ...) {
-        env2env(settings, environment(), c("datapoints", "xlabs", "null_by", "null_facet"))
-        # Convert x to factor if it's not already
-        if (is.character(datapoints$x)) {
-            datapoints$x = as.factor(datapoints$x)
-        }
-
-        if (is.factor(datapoints$x)) {
-            xlvls = levels(datapoints$x)
-            xlabs = seq_along(xlvls)
-            names(xlabs) = xlvls
-            datapoints$x = as.integer(datapoints$x)
-        } else {
-            xlabs = NULL
-        }
-        
-        # dodge (auto-detects x, xmin, xmax columns)
-        if (dodge != 0) {
-            datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
-        }
-
-        if (null_by && null_facet) {
-            xord = order(datapoints$x)
-        } else if (null_facet) {
-            xord = order(datapoints$by, datapoints$x)
-        } else if (null_by) {
-            xord = order(datapoints$facet, datapoints$x)
-        } else {
-            xord = order(datapoints$by, datapoints$facet, datapoints$x)
-        }
-
-        # Reorder x, y, ymin, and ymax based on the order determined
-        datapoints = datapoints[xord, ]
-
-        # Catch for missing ymin and ymax
-        if (is.null(datapoints$ymin)) datapoints$ymin = datapoints$y
-        if (is.null(datapoints$ymax)) datapoints$ymax = datapoints$y
-
-        x = datapoints$x
-        y = datapoints$y
-        ymin = datapoints$ymin
-        ymax = datapoints$ymax
-        by = if (length(unique(datapoints$by)) > 1) datapoints$by else NULL
-        facet = if (length(unique(datapoints$facet)) > 1) datapoints$facet else NULL
-
-        # ribbon.alpha comes from parent scope, so assign it locally
-        ribbon.alpha = ribbon.alpha
-
-        # legend customizations
-        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
-        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
-        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% 0
-        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
-        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
-
-        vars_to_copy = c("x", "y", "ymin", "ymax", "xlabs", "datapoints", "ribbon.alpha")
-        if (!is.null(by)) vars_to_copy = c(vars_to_copy, "by")
-        if (!is.null(facet)) vars_to_copy = c(vars_to_copy, "facet")
-
-        env2env(environment(), settings, vars_to_copy)
+  ribbon.alpha = sanitize_ribbon_alpha(ribbon.alpha)
+  fun = function(settings, ...) {
+    env2env(
+      settings,
+      environment(),
+      c("datapoints", "xlabs", "null_by", "null_facet")
+    )
+    # Convert x to factor if it's not already
+    if (is.character(datapoints$x)) {
+      datapoints$x = as.factor(datapoints$x)
     }
-    return(fun)
+
+    if (is.factor(datapoints$x)) {
+      xlvls = levels(datapoints$x)
+      xlabs = seq_along(xlvls)
+      names(xlabs) = xlvls
+      datapoints$x = as.integer(datapoints$x)
+    } else {
+      xlabs = NULL
+    }
+
+    # dodge (auto-detects x, xmin, xmax columns)
+    if (dodge != 0) {
+      datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
+    }
+
+    if (null_by && null_facet) {
+      xord = order(datapoints$x)
+    } else if (null_facet) {
+      xord = order(datapoints$by, datapoints$x)
+    } else if (null_by) {
+      xord = order(datapoints$facet, datapoints$x)
+    } else {
+      xord = order(datapoints$by, datapoints$facet, datapoints$x)
+    }
+
+    # Reorder x, y, ymin, and ymax based on the order determined
+    datapoints = datapoints[xord, ]
+
+    # Catch for missing ymin and ymax
+    if (is.null(datapoints$ymin)) {
+      datapoints$ymin = datapoints$y
+    }
+    if (is.null(datapoints$ymax)) {
+      datapoints$ymax = datapoints$y
+    }
+
+    x = datapoints$x
+    y = datapoints$y
+    ymin = datapoints$ymin
+    ymax = datapoints$ymax
+    by = if (length(unique(datapoints$by)) > 1) datapoints$by else NULL
+    facet = if (length(unique(datapoints$facet)) > 1) datapoints$facet else NULL
+
+    # ribbon.alpha comes from parent scope, so assign it locally
+    ribbon.alpha = ribbon.alpha
+
+    # legend customizations
+    settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+    settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+    settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% 0
+    settings$legend_args[["y.intersp"]] = settings$legend_args[[
+      "y.intersp"
+    ]] %||%
+      1.25
+    settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||%
+      1.25
+
+    vars_to_copy = c(
+      "x",
+      "y",
+      "ymin",
+      "ymax",
+      "xlabs",
+      "datapoints",
+      "ribbon.alpha"
+    )
+    if (!is.null(by)) {
+      vars_to_copy = c(vars_to_copy, "by")
+    }
+    if (!is.null(facet)) {
+      vars_to_copy = c(vars_to_copy, "facet")
+    }
+
+    env2env(environment(), settings, vars_to_copy)
+  }
+  return(fun)
 }

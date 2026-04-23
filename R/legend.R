@@ -15,7 +15,6 @@
 #' @keywords internal
 sanitize_legend = function(legend, legend_args) {
   if (is.null(legend_args[["x"]])) {
-
     # Normalize legend to a list
     largs = if (is.null(legend)) {
       list(x = "right!")
@@ -23,24 +22,32 @@ sanitize_legend = function(legend, legend_args) {
       list(x = legend)
     } else if (is.list(legend)) {
       # Handle unnamed first element as position
-      if (length(legend) >= 1 && is.character(legend[[1]]) &&
-          (is.null(names(legend)) || names(legend)[1] == "")) {
+      if (
+        length(legend) >= 1 &&
+          is.character(legend[[1]]) &&
+          (is.null(names(legend)) || names(legend)[1] == "")
+      ) {
         names(legend)[1] = "x"
       }
       legend
     } else if (inherits(legend, c("call", "name"))) {
       # Convert call to list and handle unnamed first arg as position
-      new_legend = as.list(legend)[-1]  # Remove function name
-      if (length(new_legend) >= 1 && (is.null(names(new_legend)) || names(new_legend)[1] == "")) {
+      new_legend = as.list(legend)[-1] # Remove function name
+      if (
+        length(new_legend) >= 1 &&
+          (is.null(names(new_legend)) || names(new_legend)[1] == "")
+      ) {
         names(new_legend)[1] = "x"
       }
       new_legend
     } else {
-      list(x = "right!")  # Fallback
+      list(x = "right!") # Fallback
     }
 
     # Ensure position exists
-    if (is.null(largs[["x"]])) largs[["x"]] = "right!"
+    if (is.null(largs[["x"]])) {
+      largs[["x"]] = "right!"
+    }
 
     # Merge
     legend_args = modifyList(legend_args, largs, keep.null = TRUE)
@@ -56,15 +63,18 @@ sanitize_legend = function(legend, legend_args) {
 
 # Unit conversion helpers (used extensively throughout legend positioning)
 lines_to_npc_x = function(val) {
-  grconvertX(val, from = "lines", to = "npc") - grconvertX(0, from = "lines", to = "npc")
+  grconvertX(val, from = "lines", to = "npc") -
+    grconvertX(0, from = "lines", to = "npc")
 }
 
 lines_to_user_x = function(val) {
-  grconvertX(val, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+  grconvertX(val, from = "lines", to = "user") -
+    grconvertX(0, from = "lines", to = "user")
 }
 
 lines_to_user_y = function(val) {
-  grconvertY(val, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+  grconvertY(val, from = "lines", to = "user") -
+    grconvertY(0, from = "lines", to = "user")
 }
 
 
@@ -103,12 +113,14 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
         par(mar = omar)
       }
     }
-
   } else if (legend_env$outer_end) {
     # Set inner margins before fake legend is drawn
     if (legend_env$outer_bottom) {
       omar[1] = par("mgp")[1] + 1 * par("cex.lab")
-      if (legend_env$has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
+      if (
+        legend_env$has_sub &&
+          (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)
+      ) {
         omar[1] = omar[1] + 1 * par("cex.sub")
       }
     } else {
@@ -125,7 +137,10 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
         omar = par("mar")
         if (legend_env$outer_bottom) {
           omar[1] = theme_clean$mgp[1] + 1 * par("cex.lab")
-          if (legend_env$has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
+          if (
+            legend_env$has_sub &&
+              (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)
+          ) {
             omar[1] = omar[1] + 1 * par("cex.sub")
           }
         } else {
@@ -150,9 +165,11 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
   # Step 3: Apply soma if drawing
   if (apply) {
     soma = if (legend_env$outer_side) {
-      grconvertX(legend_env$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
+      grconvertX(legend_env$dims$rect$w, to = "lines") -
+        grconvertX(0, to = "lines")
     } else if (legend_env$outer_end) {
-      grconvertY(legend_env$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
+      grconvertY(legend_env$dims$rect$h, to = "lines") -
+        grconvertY(0, to = "lines")
     } else {
       0
     }
@@ -164,7 +181,9 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
       if (legend_env$outer_bottom) {
         legend_env$ooma[1] = soma
       } else {
-        legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+        legend_env$omar[3] = legend_env$omar[3] +
+          soma -
+          legend_env$topmar_epsilon
         par(mar = legend_env$omar)
       }
     }
@@ -182,23 +201,25 @@ measure_legend_inset = function(legend_env) {
       inset_val = inset_val + lines_to_npc_x(par("mar")[2])
     }
     c(1 + inset_val, 0)
-
   } else if (legend_env$outer_end) {
     # Note: Y-direction uses grconvertY (not lines_to_npc_x which is X-only)
     inset_val = grconvertY(legend_env$lmar[1], from = "lines", to = "npc") -
-                grconvertY(0, from = "lines", to = "npc")
+      grconvertY(0, from = "lines", to = "npc")
     if (legend_env$outer_bottom) {
       # Extra space needed for "bottom!" because of lhs inner margin
       inset_bump = grconvertY(par("mar")[1], from = "lines", to = "npc") -
-                   grconvertY(0, from = "lines", to = "npc")
+        grconvertY(0, from = "lines", to = "npc")
       inset_val = inset_val + inset_bump
     } else {
-      epsilon_bump = grconvertY(legend_env$topmar_epsilon, from = "lines", to = "npc") -
-                     grconvertY(0, from = "lines", to = "npc")
+      epsilon_bump = grconvertY(
+        legend_env$topmar_epsilon,
+        from = "lines",
+        to = "npc"
+      ) -
+        grconvertY(0, from = "lines", to = "npc")
       inset_val = inset_val + epsilon_bump
     }
     c(0, 1 + inset_val)
-
   } else {
     0
   }
@@ -221,9 +242,11 @@ tinylegend = function(legend_env) {
 
   # Calculate and apply soma (outer margin adjustment based on legend size)
   soma = if (legend_env$outer_side) {
-    grconvertX(legend_env$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
+    grconvertX(legend_env$dims$rect$w, to = "lines") -
+      grconvertX(0, to = "lines")
   } else if (legend_env$outer_end) {
-    grconvertY(legend_env$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
+    grconvertY(legend_env$dims$rect$h, to = "lines") -
+      grconvertY(0, to = "lines")
   } else {
     0
   }
@@ -248,7 +271,11 @@ tinylegend = function(legend_env) {
   # (Uses hook to preserve existing plot with par(new = TRUE))
   oldhook = getHook("before.plot.new")
   setHook("before.plot.new", function() par(new = TRUE), action = "append")
-  setHook("before.plot.new", function() par(mar = legend_env$omar), action = "append")
+  setHook(
+    "before.plot.new",
+    function() par(mar = legend_env$omar),
+    action = "append"
+  )
   plot.new()
   setHook("before.plot.new", oldhook, action = "replace")
 
@@ -263,7 +290,10 @@ tinylegend = function(legend_env) {
   if (legend_env$gradient) {
     # Ensure col is set correctly for gradients
     if (!more_than_n_unique(legend_env$args[["col"]], 1)) {
-      if (!is.null(legend_env$args[["pt.bg"]]) && length(legend_env$args[["pt.bg"]]) == 100) {
+      if (
+        !is.null(legend_env$args[["pt.bg"]]) &&
+          length(legend_env$args[["pt.bg"]]) == 100
+      ) {
         legend_env$args[["col"]] = legend_env$args[["pt.bg"]]
       }
     }
@@ -314,8 +344,6 @@ measure_fake_legend = function(legend_env) {
 
   do.call("legend", fklgnd.args)
 }
-
-
 
 
 #
@@ -406,13 +434,21 @@ prepare_legend = function(settings) {
     }
   }
 
-  legend_draw_flag = (is.null(legend) || !is.character(legend) || legend != "none" || bubble) && !isTRUE(add)
+  legend_draw_flag = (is.null(legend) ||
+    !is.character(legend) ||
+    legend != "none" ||
+    bubble) &&
+    !isTRUE(add)
   has_sub = !is.null(sub)
 
   # Generate labels for discrete legends
   if (legend_draw_flag && isFALSE(by_continuous) && (!bubble || multi_legend)) {
     if (ngrps > 1) {
-      lgnd_labs = if (is.factor(datapoints$by)) levels(datapoints$by) else unique(datapoints$by)
+      lgnd_labs = if (is.factor(datapoints$by)) {
+        levels(datapoints$by)
+      } else {
+        unique(datapoints$by)
+      }
     } else {
       lgnd_labs = ylab
     }
@@ -490,7 +526,9 @@ build_legend_args = function(
   legend_args = sanitize_legend(legend, legend_args)
 
   # Set defaults
-  if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
+  if (!exists("title", where = legend_args)) {
+    legend_args[["title"]] = by_dep
+  }
   legend_args[["pch"]] = legend_args[["pch"]] %||% pch
   legend_args[["lty"]] = legend_args[["lty"]] %||% lty
   legend_args[["col"]] = legend_args[["col"]] %||% col
@@ -520,7 +558,8 @@ build_legend_args = function(
   if (identical(type, "spineplot")) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% legend_args[["col"]]
   } else if (identical(type, "ridge") && isFALSE(gradient)) {
-    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
+    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||%
+      sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
   } else {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg
   }
@@ -539,7 +578,10 @@ build_legend_args = function(
   if (!is.null(legend_args[["labeller"]])) {
     labeller = legend_args[["labeller"]]
     legend_args[["labeller"]] = NULL
-    legend_args[["legend"]] = tinylabel(legend_args[["legend"]], labeller = labeller)
+    legend_args[["legend"]] = tinylabel(
+      legend_args[["legend"]],
+      labeller = labeller
+    )
   }
 
   if (isTRUE(gradient)) {
@@ -574,7 +616,9 @@ build_legend_args = function(
   # Additional positioning adjustments
   if (outer_end) {
     # Enforce horizontal legend if user hasn't specified ncol arg
-    if (is.null(legend_args[["ncol"]]) || gradient) legend_args[["horiz"]] = TRUE
+    if (is.null(legend_args[["ncol"]]) || gradient) {
+      legend_args[["horiz"]] = TRUE
+    }
   } else if (!outer_side) {
     legend_args[["inset"]] = 0
   }
@@ -590,8 +634,13 @@ build_legend_args = function(
       # Add a space to all labs except the outermost right ones
       nlabs = length(legend_args[["legend"]])
       nidx = nlabs
-      if (mcol_flag) nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
-      legend_args[["legend"]][-nidx] = paste(legend_args[["legend"]][-nidx], " ")
+      if (mcol_flag) {
+        nidx = tail(1:nlabs, (nlabs %/% legend_args[["ncol"]]))
+      }
+      legend_args[["legend"]][-nidx] = paste(
+        legend_args[["legend"]][-nidx],
+        " "
+      )
     }
     # Catch for horizontal ribbon legend spacing
     if (type == "ribbon") {

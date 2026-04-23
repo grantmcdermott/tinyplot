@@ -189,7 +189,7 @@ tinyplot(Month2 ~ Temp, data = aq, type = "ridge")
 # further below)
 
 tinyplot(Month ~ Temp, data = aq, type = type_ridge(scale = 1))
-  
+
 ## by grouping is also supported. two special cases of interest:
 
 # 1) by == y (color by y groups)
@@ -250,7 +250,7 @@ tinyplot(Month ~ Temp | Late, data = aq,
   type = type_ridge(scale = 1))
 tinyplot(Month ~ Temp | Late, data = aq,
   type = type_ridge(scale = 1, joint.max = "by"))
-  
+
 # restore the default theme
 tinytheme()
 

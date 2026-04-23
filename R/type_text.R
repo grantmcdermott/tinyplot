@@ -87,10 +87,10 @@ type_text = function(
 data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
   fun = function(settings, ...) {
     env2env(settings, environment(), "datapoints")
-    
+
     # Store clim for bubble() function
     settings$clim = clim
-    
+
     if (is.null(labels)) {
       labels = datapoints$y
     }

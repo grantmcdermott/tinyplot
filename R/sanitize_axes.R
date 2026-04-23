@@ -9,7 +9,9 @@ sanitize_axes = function(settings) {
     axes = xaxt = yaxt = "none"
   } else if (isTRUE(axes)) {
     axes = "standard"
-    if (is.null(xaxt)) xaxt = get_tpar("xaxt", default = "standard")
+    if (is.null(xaxt)) {
+      xaxt = get_tpar("xaxt", default = "standard")
+    }
     if (is.null(yaxt)) yaxt = get_tpar("yaxt", default = "standard")
   } else {
     xaxt = yaxt = axes
@@ -21,8 +23,9 @@ sanitize_axes = function(settings) {
   xaxt = substr(match.arg(xaxt, axis_types), 1L, 1L)
   yaxt = substr(match.arg(yaxt, axis_types), 1L, 1L)
   axes = any(c(xaxt, yaxt) != "n")
-  if (is.null(frame.plot) || !is.logical(frame.plot)) frame.plot = all(c(xaxt, yaxt) %in% c("s", "a"))
-
+  if (is.null(frame.plot) || !is.logical(frame.plot)) {
+    frame.plot = all(c(xaxt, yaxt) %in% c("s", "a"))
+  }
 
   env2env(environment(), settings, c("axes", "xaxt", "yaxt", "frame.plot"))
 }

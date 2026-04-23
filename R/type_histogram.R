@@ -71,19 +71,26 @@
 #' )
 #'
 #' @export
-type_histogram = function(breaks = "Sturges",
-                          freq = NULL, right = TRUE,
-                          free.breaks = FALSE, drop.zeros = TRUE) {
-    out = list(
-        data = data_histogram(
-            breaks = breaks,
-            free.breaks = free.breaks, drop.zeros = drop.zeros,
-            freq = freq, right = right),
-        draw = draw_rect(),
-        name = "histogram"
-    )
-    class(out) = "tinyplot_type"
-    return(out)
+type_histogram = function(
+  breaks = "Sturges",
+  freq = NULL,
+  right = TRUE,
+  free.breaks = FALSE,
+  drop.zeros = TRUE
+) {
+  out = list(
+    data = data_histogram(
+      breaks = breaks,
+      free.breaks = free.breaks,
+      drop.zeros = drop.zeros,
+      freq = freq,
+      right = right
+    ),
+    draw = draw_rect(),
+    name = "histogram"
+  )
+  class(out) = "tinyplot_type"
+  return(out)
 }
 #' @export
 #' @name type_hist
@@ -91,91 +98,146 @@ type_histogram = function(breaks = "Sturges",
 type_hist = type_histogram
 
 
-data_histogram = function(breaks = "Sturges",
-                          free.breaks = FALSE, drop.zeros = TRUE,
-                          freq = NULL, right = TRUE) {
-    hbreaks = breaks
-    hfree.breaks = free.breaks
-    hdrop.zeros = drop.zeros
-    hfreq = freq
-    hright = right
+data_histogram = function(
+  breaks = "Sturges",
+  free.breaks = FALSE,
+  drop.zeros = TRUE,
+  freq = NULL,
+  right = TRUE
+) {
+  hbreaks = breaks
+  hfree.breaks = free.breaks
+  hdrop.zeros = drop.zeros
+  hfreq = freq
+  hright = right
 
-    fun = function(settings, .breaks = hbreaks, .freebreaks = hfree.breaks, .freq = hfreq, .right = hright, .drop.zeros = hdrop.zeros, ...) {
-        env2env(settings, environment(), c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha"))
+  fun = function(
+    settings,
+    .breaks = hbreaks,
+    .freebreaks = hfree.breaks,
+    .freq = hfreq,
+    .right = hright,
+    .drop.zeros = hdrop.zeros,
+    ...
+  ) {
+    env2env(
+      settings,
+      environment(),
+      c(
+        "palette",
+        "bg",
+        "col",
+        "plot",
+        "datapoints",
+        "ymin",
+        "ymax",
+        "xmin",
+        "xmax",
+        "freq",
+        "ylab",
+        "xlab",
+        "facet",
+        "ribbon.alpha"
+      )
+    )
 
-        hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
+    hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 
-        if (is.null(by) && is.null(palette)) {
-            if (is.null(col)) col = par("fg")
-            if (is.null(bg)) bg = "lightgray"
-        } else {
-            if (is.null(bg)) bg = ribbon.alpha
-        }
-
-        if (!.freebreaks) xbreaks = hist(datapoints$x, breaks = hbreaks, right = .right, plot = FALSE)$breaks
-        datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
-        datapoints = Filter(function(k) nrow(k) > 0, datapoints)
-
-        datapoints = lapply(datapoints, function(k) {
-            if (.freebreaks) xbreaks = breaks
-            h = hist(k$x, breaks = xbreaks, right = .right, plot = FALSE)
-            # zero count cases
-            if (.drop.zeros) {
-                nzidx = which(h$counts > 0)
-                h$density = h$density[nzidx]
-                h$counts = h$counts[nzidx]
-                h$breaks = h$breaks[c(1, nzidx + 1)]
-                h$mids = h$mids[nzidx]
-            }
-            freq = if (!is.null(.freq)) .freq else is.null(.freq) && h$equidist
-            out = data.frame(
-                by = k$by[1], # already split
-                facet = k$facet[1], # already split
-                ymin = 0,
-                ymax = if (freq) h$counts else h$density,
-                xmin = h$breaks[-1],
-                xmax = h$mids + (h$mids - h$breaks[-1]),
-                freq = freq
-            )
-            return(out)
-        })
-        datapoints = do.call(rbind, datapoints)
-
-        if (is.null(ylab)) {
-            ylab = ifelse(datapoints$freq[1], "Frequency", "Density")
-        }
-
-        x = c(datapoints$xmin, datapoints$xmax)
-        y = c(datapoints$ymin, datapoints$ymax)
-        ymin = datapoints$ymin
-        ymax = datapoints$ymax
-        xmin = datapoints$xmin
-        xmax = datapoints$xmax
-        by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
-        facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
-        
-        # legend customizations
-        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
-        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
-        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% par("lwd")
-        settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% 0
-        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
-        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
-        
-        env2env(environment(), settings, c(
-            "x",
-            "y",
-            "ymin",
-            "ymax",
-            "xmin",
-            "xmax",
-            "ylab",
-            "col",
-            "bg",
-            "datapoints",
-            "by",
-            "facet"
-        ))
+    if (is.null(by) && is.null(palette)) {
+      if (is.null(col)) {
+        col = par("fg")
+      }
+      if (is.null(bg)) bg = "lightgray"
+    } else {
+      if (is.null(bg)) bg = ribbon.alpha
     }
-    return(fun)
+
+    if (!.freebreaks) {
+      xbreaks = hist(
+        datapoints$x,
+        breaks = hbreaks,
+        right = .right,
+        plot = FALSE
+      )$breaks
+    }
+    datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
+    datapoints = Filter(function(k) nrow(k) > 0, datapoints)
+
+    datapoints = lapply(datapoints, function(k) {
+      if (.freebreaks) {
+        xbreaks = breaks
+      }
+      h = hist(k$x, breaks = xbreaks, right = .right, plot = FALSE)
+      # zero count cases
+      if (.drop.zeros) {
+        nzidx = which(h$counts > 0)
+        h$density = h$density[nzidx]
+        h$counts = h$counts[nzidx]
+        h$breaks = h$breaks[c(1, nzidx + 1)]
+        h$mids = h$mids[nzidx]
+      }
+      freq = if (!is.null(.freq)) .freq else is.null(.freq) && h$equidist
+      out = data.frame(
+        by = k$by[1], # already split
+        facet = k$facet[1], # already split
+        ymin = 0,
+        ymax = if (freq) h$counts else h$density,
+        xmin = h$breaks[-1],
+        xmax = h$mids + (h$mids - h$breaks[-1]),
+        freq = freq
+      )
+      return(out)
+    })
+    datapoints = do.call(rbind, datapoints)
+
+    if (is.null(ylab)) {
+      ylab = ifelse(datapoints$freq[1], "Frequency", "Density")
+    }
+
+    x = c(datapoints$xmin, datapoints$xmax)
+    y = c(datapoints$ymin, datapoints$ymax)
+    ymin = datapoints$ymin
+    ymax = datapoints$ymax
+    xmin = datapoints$xmin
+    xmax = datapoints$xmax
+    by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
+    facet = if (length(unique(datapoints$facet)) == 1) {
+      facet
+    } else {
+      datapoints$facet
+    }
+
+    # legend customizations
+    settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+    settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+    settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||%
+      par("lwd")
+    settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% 0
+    settings$legend_args[["y.intersp"]] = settings$legend_args[[
+      "y.intersp"
+    ]] %||%
+      1.25
+    settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||%
+      1.25
+
+    env2env(
+      environment(),
+      settings,
+      c(
+        "x",
+        "y",
+        "ymin",
+        "ymax",
+        "xmin",
+        "xmax",
+        "ylab",
+        "col",
+        "bg",
+        "datapoints",
+        "by",
+        "facet"
+      )
+    )
+  }
+  return(fun)
 }

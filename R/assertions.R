@@ -10,11 +10,18 @@ check_dependency = function(library_name) {
 
 assert_dependency = function(library_name) {
   flag = check_dependency(library_name)
-  if (!isTRUE(flag)) stop(flag, call. = FALSE)
+  if (!isTRUE(flag)) {
+    stop(flag, call. = FALSE)
+  }
   return(invisible())
 }
 
-assert_choice = function(x, choice, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_choice = function(
+  x,
+  choice,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(TRUE)
   }
@@ -56,7 +63,11 @@ check_string = function(x, null.ok = FALSE) {
   return(FALSE)
 }
 
-assert_string = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_string = function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   msg = sprintf("`%s` must be a string.", name)
   if (!isTRUE(check_string(x, null.ok = null.ok))) {
     stop(msg, call. = FALSE)
@@ -80,17 +91,30 @@ assert_flag = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
   }
 }
 
-assert_length = function(x, len = 1, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_length = function(
+  x,
+  len = 1,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
-  msg = sprintf("`%s` must be one of these lengths: %s", name, paste(len, collapse = ", "))
+  msg = sprintf(
+    "`%s` must be one of these lengths: %s",
+    name,
+    paste(len, collapse = ", ")
+  )
   if (!length(x) %in% len) {
     stop(msg, call. = FALSE)
   }
 }
 
-assert_logical = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_logical = function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
@@ -99,7 +123,13 @@ assert_logical = function(x, null.ok = FALSE, name = as.character(substitute(x))
 }
 
 
-check_integerish = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TRUE) {
+check_integerish = function(
+  x,
+  len = NULL,
+  lower = NULL,
+  upper = NULL,
+  null.ok = TRUE
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(TRUE)
   }
@@ -122,23 +152,62 @@ check_integerish = function(x, len = NULL, lower = NULL, upper = NULL, null.ok =
   return(TRUE)
 }
 
-assert_integerish = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_integerish = function(
+  x,
+  len = NULL,
+  lower = NULL,
+  upper = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible())
   }
   msg = sprintf("`%s` must be integer-ish", name)
-  if (is.null(x) && !isTRUE(null.ok)) stop(sprintf("%s should not be NULL.", name), call. = FALSE)
-  if (!isTRUE(check_integerish(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
-    if (!is.numeric(x)) msg = paste0(msg, "; it is not numeric")
-    if (!is.null(len) && length(x) != len) msg = paste0(msg, sprintf("; its length must be %s", len))
-    if (!is.null(lower) && any(x < lower)) msg = paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
-    if (!is.null(upper) && any(x > upper)) msg = paste0(msg, sprintf("; all values must be less than or equal to %s", upper))
-    if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5))) msg = paste0(msg, "; all values must be close to integers")
+  if (is.null(x) && !isTRUE(null.ok)) {
+    stop(sprintf("%s should not be NULL.", name), call. = FALSE)
+  }
+  if (
+    !isTRUE(check_integerish(
+      x,
+      len = len,
+      lower = lower,
+      upper = upper,
+      null.ok = null.ok
+    ))
+  ) {
+    if (!is.numeric(x)) {
+      msg = paste0(msg, "; it is not numeric")
+    }
+    if (!is.null(len) && length(x) != len) {
+      msg = paste0(msg, sprintf("; its length must be %s", len))
+    }
+    if (!is.null(lower) && any(x < lower)) {
+      msg = paste0(
+        msg,
+        sprintf("; all values must be greater than or equal to %s", lower)
+      )
+    }
+    if (!is.null(upper) && any(x > upper)) {
+      msg = paste0(
+        msg,
+        sprintf("; all values must be less than or equal to %s", upper)
+      )
+    }
+    if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5))) {
+      msg = paste0(msg, "; all values must be close to integers")
+    }
     stop(msg, call. = FALSE)
   }
 }
 
-check_numeric = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TRUE) {
+check_numeric = function(
+  x,
+  len = NULL,
+  lower = NULL,
+  upper = NULL,
+  null.ok = TRUE
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(TRUE)
   }
@@ -157,27 +226,72 @@ check_numeric = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TR
   return(TRUE)
 }
 
-assert_numeric = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_numeric = function(
+  x,
+  len = NULL,
+  lower = NULL,
+  upper = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   msg = sprintf("`%s` must be numeric", name)
-  if (!isTRUE(check_numeric(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
-    if (!is.null(len) && length(x) != len) msg = paste0(msg, sprintf("; its length must be %s", len))
-    if (!is.null(lower) && any(x < lower)) msg = paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
-    if (!is.null(upper) && any(x > upper)) msg = paste0(msg, sprintf("; all values must be less than or equal to %s", upper))
+  if (
+    !isTRUE(check_numeric(
+      x,
+      len = len,
+      lower = lower,
+      upper = upper,
+      null.ok = null.ok
+    ))
+  ) {
+    if (!is.null(len) && length(x) != len) {
+      msg = paste0(msg, sprintf("; its length must be %s", len))
+    }
+    if (!is.null(lower) && any(x < lower)) {
+      msg = paste0(
+        msg,
+        sprintf("; all values must be greater than or equal to %s", lower)
+      )
+    }
+    if (!is.null(upper) && any(x > upper)) {
+      msg = paste0(
+        msg,
+        sprintf("; all values must be less than or equal to %s", upper)
+      )
+    }
     stop(msg, call. = FALSE)
   }
 }
 
-assert_data_frame = function(x, min_rows = 0, min_cols = 0, name = as.character(substitute(x))) {
+assert_data_frame = function(
+  x,
+  min_rows = 0,
+  min_cols = 0,
+  name = as.character(substitute(x))
+) {
   msg = sprintf("`%s` must be a data.frame.", name)
-  if (!is.data.frame(x)) stop(msg, call. = FALSE)
+  if (!is.data.frame(x)) {
+    stop(msg, call. = FALSE)
+  }
   msg = sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
-  if (nrow(x) < min_rows) stop(msg, call. = FALSE)
-  msg = sprintf("Number of columns in `%s` must be at least `%s`", name, min_cols)
+  if (nrow(x) < min_rows) {
+    stop(msg, call. = FALSE)
+  }
+  msg = sprintf(
+    "Number of columns in `%s` must be at least `%s`",
+    name,
+    min_cols
+  )
   if (ncol(x) < min_cols) stop(msg, call. = FALSE)
 }
 
 
-check_character = function(x, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+check_character = function(
+  x,
+  len = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(TRUE)
   } else if (!is.character(x)) {
@@ -190,7 +304,12 @@ check_character = function(x, len = NULL, null.ok = FALSE, name = as.character(s
   return(TRUE)
 }
 
-assert_character = function(x, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_character = function(
+  x,
+  len = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   flag = check_character(x, len = len, null.ok = null.ok, name = name)
   if (!isTRUE(flag)) {
     stop(flag, call. = FALSE)
@@ -199,11 +318,19 @@ assert_character = function(x, len = NULL, null.ok = FALSE, name = as.character(
   }
 }
 
-assert_list = function(x, named = FALSE, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_list = function(
+  x,
+  named = FALSE,
+  len = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
   }
-  if (!is.list(x)) stop("Input is not a list.", call. = FALSE)
+  if (!is.list(x)) {
+    stop("Input is not a list.", call. = FALSE)
+  }
   if (isTRUE(named)) {
     if (is.null(names(x))) {
       stop(sprintf("`%s` should be named list.", name), call. = FALSE)
@@ -216,7 +343,11 @@ assert_list = function(x, named = FALSE, len = NULL, null.ok = FALSE, name = as.
   }
 }
 
-assert_function = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_function = function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
   }
@@ -226,7 +357,11 @@ assert_function = function(x, null.ok = FALSE, name = as.character(substitute(x)
   }
 }
 
-check_atomic_vector = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+check_atomic_vector = function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
   }
@@ -243,7 +378,11 @@ check_atomic_vector = function(x, null.ok = FALSE, name = as.character(substitut
   return(out)
 }
 
-assert_atomic_vector = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_atomic_vector = function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   flag = check_atomic_vector(x, null.ok = null.ok, name = name)
   if (!isTRUE(flag)) {
     stop(flag, call. = FALSE)
@@ -258,4 +397,3 @@ assert_class = function(x, classname) {
     stop(msg, call. = FALSE)
   }
 }
-

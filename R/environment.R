@@ -4,7 +4,9 @@
 ## query environment
 get_environment_variable = function(name = NULL) {
   ## either one 'name' or entire environment as list
-  if(is.null(name)) return(as.list(.tinyplot_env))
+  if (is.null(name)) {
+    return(as.list(.tinyplot_env))
+  }
   name = as.character(name)[1L]
   return(.tinyplot_env[[name]])
 }
@@ -13,16 +15,16 @@ get_environment_variable = function(name = NULL) {
 set_environment_variable = function(...) {
   ## check for unnamed arguments
   dots = list(...)
-  if(is.null(names(dots))) {
+  if (is.null(names(dots))) {
     stop("arguments must be named")
-  } else if(any(names(dots) == "")) {
+  } else if (any(names(dots) == "")) {
     warning("ignoring unnamed arguments")
     dots = dots[names != ""]
   }
-  
+
   ## set environment variables
-  if(length(dots) > 0L) {
-    for(i in names(dots)) {
+  if (length(dots) > 0L) {
+    for (i in names(dots)) {
       .tinyplot_env[[i]] = dots[[i]]
     }
   }

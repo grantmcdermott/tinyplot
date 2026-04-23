@@ -43,7 +43,11 @@ type_summary = function(fun = mean, ...) {
     funky = function(settings, ...) {
       env2env(settings, environment(), c("datapoints", "by", "facet"))
 
-      datapoints = split(datapoints, list(datapoints$facet, datapoints$by), drop = TRUE)
+      datapoints = split(
+        datapoints,
+        list(datapoints$facet, datapoints$by),
+        drop = TRUE
+      )
       datapoints = lapply(datapoints, function(dat) {
         newy = ave(dat$y, dat$x, FUN = fun)
         dat$y = newy

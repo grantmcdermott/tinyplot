@@ -107,12 +107,24 @@ type_abline = function(a = 0, b = 1) {
     env2env(environment(), settings, "type_info")
   }
   draw_abline = function() {
-    fun = function(ifacet, iby, data_facet, icol, ilty, ilwd,
-                   ngrps, nfacets, by_continuous, facet_by,
-                   type_info,
-                   ...) {
+    fun = function(
+      ifacet,
+      iby,
+      data_facet,
+      icol,
+      ilty,
+      ilwd,
+      ngrps,
+      nfacets,
+      by_continuous,
+      facet_by,
+      type_info,
+      ...
+    ) {
       # flag for aesthetics by groups
-      grp_aes = type_info[["ul_col"]] == 1 || type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps
+      grp_aes = type_info[["ul_col"]] == 1 ||
+        type_info[["ul_lty"]] == ngrps ||
+        type_info[["ul_lwd"]] == ngrps
 
       if (length(a) != 1) {
         if (!length(a) %in% c(ngrps, nfacets, ngrps * nfacets)) {
@@ -156,7 +168,10 @@ type_abline = function(a = 0, b = 1) {
         icol = 1
       }
 
-      if (type_info[["ul_col"]] != 1 && !(type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps)) {
+      if (
+        type_info[["ul_col"]] != 1 &&
+          !(type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps)
+      ) {
         icol = 1
       }
 

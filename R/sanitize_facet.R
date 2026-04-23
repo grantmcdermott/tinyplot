@@ -19,7 +19,7 @@ sanitize_facet = function(settings) {
   }
   facet_attr = attributes(facet) # TODO: better way to restore facet attributes?
   null_facet = is.null(facet)
-  
+
   # update settings
   env2env(
     environment(),

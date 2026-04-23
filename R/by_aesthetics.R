@@ -7,16 +7,33 @@ by_aesthetics = function(settings) {
     settings,
     environment(),
     c(
-      "datapoints", "by", "type", "null_by", "pch", "bg", "lty", "lwd",
-      "bubble", "cex", "alpha", "col", "fill", "ribbon.alpha"
+      "datapoints",
+      "by",
+      "type",
+      "null_by",
+      "pch",
+      "bg",
+      "lty",
+      "lwd",
+      "bubble",
+      "cex",
+      "alpha",
+      "col",
+      "fill",
+      "ribbon.alpha"
     )
   )
 
   # Detect grouping characteristics
   by_ordered = FALSE
   by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
-  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")) {
-    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+  if (
+    isTRUE(by_continuous) &&
+      type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot")
+  ) {
+    warning(
+      "\nContinuous legends not supported for this plot type. Reverting to discrete legend."
+    )
     by_continuous = FALSE
   } else if (!null_by) {
     by_ordered = is.ordered(by)
@@ -66,7 +83,17 @@ by_aesthetics = function(settings) {
   env2env(
     environment(),
     settings,
-    c("by_continuous", "by_ordered", "ngrps", "pch", "lty", "lwd", "cex", "col", "bg")
+    c(
+      "by_continuous",
+      "by_ordered",
+      "ngrps",
+      "pch",
+      "lty",
+      "lwd",
+      "cex",
+      "col",
+      "bg"
+    )
   )
 }
 
@@ -74,7 +101,6 @@ by_aesthetics = function(settings) {
 #
 ## helper functions -----
 #
-
 
 apply_alpha = function(cols, alpha, adjustcolor) {
   if (is.null(cols) || is.null(alpha) || identical(alpha, 0)) {
@@ -89,8 +115,11 @@ is_by_keyword = function(x) {
 
 warn_recycle_colors = function(ncols, ngrps) {
   warning(
-    "\nFewer colours (", ncols, ") provided than there are groups (",
-    ngrps, "). Recycling to make up the shortfall."
+    "\nFewer colours (",
+    ncols,
+    ") provided than there are groups (",
+    ngrps,
+    "). Recycling to make up the shortfall."
   )
 }
 
@@ -111,9 +140,20 @@ expand_colors_to_ngrps = function(values, ngrps, gradient) {
 assert_len_1_or_ngrps = function(x, ngrps, name, allow_character = FALSE) {
   types = if (allow_character) "numeric or character" else "numeric"
   valid_type = is.numeric(x) || (allow_character && is.character(x))
-  valid = is.atomic(x) && is.vector(x) && valid_type && (length(x) == 1 || length(x) == ngrps)
+  valid = is.atomic(x) &&
+    is.vector(x) &&
+    valid_type &&
+    (length(x) == 1 || length(x) == ngrps)
   if (!valid) {
-    stop(sprintf("`%s` must be `NULL`, or a %s vector of length 1 or %s.", name, types, ngrps), call. = FALSE)
+    stop(
+      sprintf(
+        "`%s` must be `NULL`, or a %s vector of length 1 or %s.",
+        name,
+        types,
+        ngrps
+      ),
+      call. = FALSE
+    )
   }
 }
 
@@ -123,7 +163,14 @@ match_palette_name = function(name, candidates) {
 }
 
 ## Handle direct color input via `col` arg. Returns colors or NULL if not applicable.
-resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcolor) {
+resolve_manual_colors = function(
+  col,
+  ngrps,
+  gradient,
+  ordered,
+  alpha,
+  adjustcolor
+) {
   if (is.null(col) || !is.atomic(col) || !is.vector(col)) {
     return(NULL)
   }
@@ -145,12 +192,22 @@ resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcol
     }
   }
 
-  if (gradient) cols = rev(cols)
+  if (gradient) {
+    cols = rev(cols)
+  }
   apply_alpha(cols, alpha, adjustcolor)
 }
 
 ## High-level palette resolution: theme fallback, defaults, then delegate to resolve_palette_spec.
-resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradient, alpha, adjustcolor) {
+resolve_palette_colors = function(
+  palette,
+  theme_palette,
+  ngrps,
+  ordered,
+  gradient,
+  alpha,
+  adjustcolor
+) {
   palette_choice = palette
 
   # Pick theme palette if no explicit palette provided
@@ -201,12 +258,21 @@ resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradie
     )
   }
 
-  if (gradient || ordered) cols = rev(cols)
+  if (gradient || ordered) {
+    cols = rev(cols)
+  }
   cols
 }
 
 ## Parse palette arg (vector, string, call, or function) into colors.
-resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjustcolor) {
+resolve_palette_spec = function(
+  palette,
+  ngrps,
+  gradient,
+  ordered,
+  alpha,
+  adjustcolor
+) {
   cols = NULL
   if (is.character(palette) && length(palette) > 1) {
     # Direct color vector
@@ -217,7 +283,9 @@ resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjust
     idx = match_palette_name(palette, discrete_pals)
 
     if (!is.na(idx)) {
-      if (idx < 1L) stop("'palette' is ambiguous")
+      if (idx < 1L) {
+        stop("'palette' is ambiguous")
+      }
       matched_name = discrete_pals[idx]
       max_colors = length(palette.colors(palette = matched_name))
 
@@ -233,7 +301,9 @@ resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjust
       hcl_pals = hcl.pals()
       idx = match_palette_name(palette, hcl_pals)
       if (!is.na(idx)) {
-        if (idx < 1L) stop("'palette' is ambiguous")
+        if (idx < 1L) {
+          stop("'palette' is ambiguous")
+        }
         cols = hcl.colors(n = ngrps, palette = palette)
       } else {
         stop(
@@ -259,7 +329,9 @@ resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjust
         cols = unlist(args, recursive = TRUE, use.names = FALSE)
       } else {
         args[["n"]] = ngrps
-        if (any(names(args) == "")) args[which(names(args) == "")] = NULL
+        if (any(names(args) == "")) {
+          args[which(names(args) == "")] = NULL
+        }
         cols = tryCatch(
           do.call(fun_name, args),
           error = function(e) do.call(eval(palette), args)
@@ -285,18 +357,39 @@ resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjust
 ## subsidiary functions -----
 #
 
-by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustcolor) {
+by_col = function(
+  col,
+  palette,
+  alpha,
+  by_ordered,
+  by_continuous,
+  ngrps,
+  adjustcolor
+) {
   ordered = if (is.null(by_ordered)) FALSE else by_ordered
   gradient = if (is.null(by_continuous)) FALSE else by_continuous
   assert_logical(ordered)
   assert_logical(gradient)
 
-  if (is.null(alpha)) alpha = 1
-  if (gradient) ngrps = 100L
+  if (is.null(alpha)) {
+    alpha = 1
+  }
+  if (gradient) {
+    ngrps = 100L
+  }
 
-  if (is_by_keyword(col)) col = NULL
+  if (is_by_keyword(col)) {
+    col = NULL
+  }
 
-  cols = resolve_manual_colors(col, ngrps, gradient, ordered, alpha, adjustcolor)
+  cols = resolve_manual_colors(
+    col,
+    ngrps,
+    gradient,
+    ordered,
+    alpha,
+    adjustcolor
+  )
   if (!is.null(cols)) {
     return(cols)
   }
@@ -316,8 +409,23 @@ by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustc
 }
 
 
-by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps, type, by, ribbon.alpha, adjustcolor) {
-  if (is.null(bg) && !is.null(fill)) bg = fill
+by_bg = function(
+  bg,
+  fill,
+  col,
+  palette,
+  alpha,
+  by_ordered,
+  by_continuous,
+  ngrps,
+  type,
+  by,
+  ribbon.alpha,
+  adjustcolor
+) {
+  if (is.null(bg) && !is.null(fill)) {
+    bg = fill
+  }
   if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
     alpha = bg
     bg = "by"
@@ -351,7 +459,9 @@ by_pch = function(ngrps, type, pch = NULL) {
   no_pch = FALSE
   if (identical(type, "text")) {
     pch = rep(15, ngrps)
-  } else if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot", "qq")) {
+  } else if (
+    !type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot", "qq")
+  ) {
     no_pch = TRUE
     pch = NULL
 
@@ -383,7 +493,27 @@ by_pch = function(ngrps, type, pch = NULL) {
 
 by_lty = function(ngrps, type, lty = NULL) {
   # We only care about line types, otherwise return NULL
-  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon", "barplot", "boxplot", "rect", "segments", "qq", "abline", "hline", "vline")) {
+  if (
+    !type %in%
+      c(
+        "l",
+        "b",
+        "o",
+        "c",
+        "h",
+        "s",
+        "S",
+        "ribbon",
+        "barplot",
+        "boxplot",
+        "rect",
+        "segments",
+        "qq",
+        "abline",
+        "hline",
+        "vline"
+      )
+  ) {
     lty = NULL
 
     # special "by" convenience keyword
@@ -466,7 +596,9 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
   }
 
   # placehodler
-  if (bubble) no_cex = TRUE
+  if (bubble) {
+    no_cex = TRUE
+  }
 
   if (!no_cex) {
     assert_len_1_or_ngrps(cex, ngrps, "cex")

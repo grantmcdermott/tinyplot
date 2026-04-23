@@ -2,19 +2,16 @@
 #'
 #' @md
 #' @description
-#' Applies a summary function to `y` along unique values of `x`. For example,
-#' plot the mean `y` value for each `x` value. Internally,
-#' `type_summary()` applies a thin wrapper around \code{\link[stats]{ave}} and
-#' then passes the result to [`type_lines`] for drawing.
-#'
+#' Plots the mean + standard error of a numeric variable by a grouping variable.
+
 #' @param conf.int confidence error to plot the standard error. Defaults to .95
 #' @param na.rm a logical evaluating to TRUE or FALSE indicating whether NA
 #' values should be stripped before the computation proceeds Defaults to TRUE.
 #' @param errorbar a logical evaluating to TRUE or FALSE indicating whether 
 #' errorbars should be drawn. If FALSE, it will draw a pointrange. Defaults to
 #' TRUE
-#' @param ... Additional arguments are passed to the `lines()` function,
-#' ex: `col="pink"`.
+#' @param ... Additional arguments are passed to the `draw_pointrange()`
+#' or `draw_errorbar()` function, ex: `col="pink"`.
 #' @examples
 #' # Plot the mean and standard error of miles per gallon by cylinders
 #' tinyplot(mpg ~ cyl, data = mtcars, data = mtcars, type = "mean_se")
@@ -29,7 +26,8 @@
 #'
 #'
 #' @export
-type_mean_se = function(conf.int = .95, na.rm = TRUE, errorbar = TRUE, ...) {
+type_mean_se = function(conf.int = .95, na.rm = TRUE, errorbar = TRUE, 
+                        dodge = 0, fixed.dodge = FALSE, ...) {
   pointrange_args = list(...)
 
   # function to get mean_se out of two vectors
@@ -91,30 +89,66 @@ type_mean_se = function(conf.int = .95, na.rm = TRUE, errorbar = TRUE, ...) {
       })
       datapoints = do.call(rbind, datapoints)
       
-      xlvls <- levels(factor(datapoints$x))
-      datapoints$x = factor(datapoints$x, levels = xlvls)
-      xlabs <- seq_along(xlvls)
-      names(xlabs) <- xlvls
-      datapoints$x <- as.integer(datapoints$x)
-      datapoints$xmin <- datapoints$x
-      datapoints$xmax <- datapoints$x
       
-      env2env(environment(), settings, c("datapoints", "xlabs"))
+      if (is.character(datapoints$x)) {
+        datapoints$x = as.factor(datapoints$x)
+      }
+      if (is.factor(datapoints$x)) {
+        ## original data (i.e., no new sorting by factor)
+        xlvls = unique(datapoints$x)
+        datapoints$x = factor(datapoints$x, levels = xlvls)
+        xlabs = seq_along(xlvls)
+        names(xlabs) = xlvls
+        datapoints$x = as.integer(datapoints$x)
+      }
+      datapoints$xmin = datapoints$x
+      datapoints$xmax = datapoints$x
+      
+      if (is.character(datapoints$x)) {
+        datapoints$x = as.factor(datapoints$x)
+      }
+      if (is.factor(datapoints$x)) {
+        ## original data (i.e., no new sorting by factor)
+        xlvls = unique(datapoints$x)
+        datapoints$x = factor(datapoints$x, levels = xlvls)
+        xlabs = seq_along(xlvls)
+        names(xlabs) = xlvls
+        datapoints$x = as.integer(datapoints$x)
+      }
+      datapoints$xmin = datapoints$x
+      datapoints$xmax = datapoints$x
+      
+      # dodge
+      if (dodge != 0) {
+        datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
+      }
+
+      
+      x = datapoints$x
+      
+
+      env2env(environment(), settings, c(
+        "x",
+        "xlabs",
+        "datapoints"
+      ))
     }
+      
+    
     return(funky)
   }
   if (errorbar) {
     out = list(
       draw = draw_errorbar(...),
       data = data_mean_se(fun = fun),
-      name = "l"
+      name = "p"
     )
   }
   else {
     out = list(
       draw = draw_pointrange(...),
       data = data_mean_se(fun = fun),
-      name = "l"
+      name = "p"
     )
   }
 

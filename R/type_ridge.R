@@ -67,12 +67,12 @@
 #' transparency of the density fills. In most cases, will default to a value of
 #' 1, i.e. fully opaque. But for some `by` grouped plots (excepting the special
 #' cases where `by==y` or `by==x`), will default to 0.6.
-#' 
+#'
 #' @section Technical note on gradient fills:
-#' 
+#'
 #' `tinyplot` uses two basic approaches for drawing gradient fills in ridge line
 #' plots, e.g., if `type_ridge(gradient = TRUE)`.
-#' 
+#'
 #' The first (and default) polygon-based approach involves dividing up the main
 #' density region into many smaller polygons along the x-axis. Each of these
 #' smaller polygons inherits a different color "segment" from the underlying
@@ -82,9 +82,9 @@
 #' is thus efficient from a plotting perspective and generally also performs
 #' well from an aesthetic perspective. However, it can occasionally produce
 #' undesirable plotting artifacts on some graphics devices---e.g., thin but
-#' visible vertical lines---if alpha transparency is being used at the same 
+#' visible vertical lines---if alpha transparency is being used at the same
 #' time.
-#' 
+#'
 #' For this reason, we also offer an alternative raster-based approach for
 #' gradient fills that users can invoke via
 #' `type_ridge(gradient = TRUE, raster = TRUE)`. The essential idea is that we
@@ -93,7 +93,7 @@
 #' color interpolation. The trade-off this time is potential smoothness
 #' artifacts around the top of the ridge densities at high resolutions, since we
 #' have converted a vector object into a raster object.
-#' 
+#'
 #' Again, we expect that the choice between these two approaches will only
 #' matter for ridge plots that combine gradient fills with alpha transparency
 #' (and on certain graphics devices). We recommend that users experiment to
@@ -106,29 +106,29 @@
 #'   Month2 = factor(month.name[Month], levels = month.name[5:9]),
 #'   Late = ifelse(Day > 15, "Late", "Early")
 #'   )
-#' 
+#'
 #' # default ridge plot (using the "ridge" convenience string)
 #' tinyplot(Month ~ Temp, data = aq, type = "ridge")
-#' 
+#'
 #' # for ridge plots, we recommend pairing with the dedicated theme(s), which
 #' # facilitate nicer y-axis labels, grid lines, etc.
-#' 
+#'
 #' tinytheme("ridge")
 #' tinyplot(Month ~ Temp, data = aq, type = "ridge")
-#' 
+#'
 #' tinytheme("ridge2") # removes the plot frame (but keeps x-axis line)
 #' tinyplot(Month ~ Temp, data = aq, type = "ridge")
-#' 
+#'
 #' # the "ridge(2)" themes are especially helpful for long y labels, due to
 #' # dyanmic plot adjustment
 #' tinyplot(Month2 ~ Temp, data = aq, type = "ridge")
-#' 
+#'
 #' # pass customization arguments through type_ridge()... for example, use
 #' # the scale argument to change/avoid overlap of densities (more on scaling
 #' # further below)
-#' 
+#'
 #' tinyplot(Month ~ Temp, data = aq, type = type_ridge(scale = 1))
-#'   
+#'
 #' ## by grouping is also supported. two special cases of interest:
 #'
 #' # 1) by == y (color by y groups)
@@ -143,13 +143,13 @@
 #'
 #' # gradient coloring along the x-axis can also be invoked manually without
 #' # a legend (the next two tinyplot calls are equivalent)
-#' 
+#'
 #' # tinyplot(Month ~ Temp, data = aq, type = type_ridge(gradient = "agsunset"))
 #' tinyplot(Month ~ Temp, data = aq, type = type_ridge(gradient = TRUE))
-#' 
+#'
 #' # aside: when combining gradient fill with alpha transparency, it may be
 #' # better to use the raster-based approach (test on your graphics device)
-#' 
+#'
 #' tinyplot(Month ~ Temp, data = aq,
 #'   type = type_ridge(gradient = TRUE, alpha = 0.5),
 #'   main = "polygon fill (default)")
@@ -170,49 +170,67 @@
 #'
 #' # faceting also works, although we recommend switching (back) to the "ridge"
 #' # theme for faceted ridge plots
-#' 
+#'
 #' tinytheme("ridge")
 #' tinyplot(Month ~ Ozone, facet = ~ Late, data = aq,
 #'   type = type_ridge(gradient = TRUE))
-#' 
+#'
 #' ## use the joint.max argument to vary the maximum density used for
 #' ## determining relative scaling...
-#' 
+#'
 #' # jointly across all densities (default) vs. per facet
 #' tinyplot(Month ~ Temp, facet = ~ Late, data = aq,
 #'   type = type_ridge(scale = 1))
 #' tinyplot(Month ~ Temp, facet = ~ Late, data = aq,
 #'   type = type_ridge(scale = 1, joint.max = "facet"))
-#' 
+#'
 #' # jointly across all densities (default) vs. per by row
 #' tinyplot(Month ~ Temp | Late, data = aq,
 #'   type = type_ridge(scale = 1))
 #' tinyplot(Month ~ Temp | Late, data = aq,
 #'   type = type_ridge(scale = 1, joint.max = "by"))
-#'   
+#'
 #' # restore the default theme
 #' tinytheme()
 #'
 #' @export
 type_ridge = function(
-    scale = 1.5,
-    joint.max = c("all", "facet", "by"),
-    breaks = NULL,
-    probs = NULL,
-    ylevels = NULL,
-    bw = "nrd0",
-    joint.bw =  c("mean", "full", "none"),
-    adjust = 1,
-    kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"),
-    n = 512,
-    # more args from density here?
-    gradient = FALSE,
-    raster = FALSE,
-    col = NULL,
-    alpha = NULL
-    ) {
-  
-  kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
+  scale = 1.5,
+  joint.max = c("all", "facet", "by"),
+  breaks = NULL,
+  probs = NULL,
+  ylevels = NULL,
+  bw = "nrd0",
+  joint.bw = c("mean", "full", "none"),
+  adjust = 1,
+  kernel = c(
+    "gaussian",
+    "epanechnikov",
+    "rectangular",
+    "triangular",
+    "biweight",
+    "cosine",
+    "optcosine"
+  ),
+  n = 512,
+  # more args from density here?
+  gradient = FALSE,
+  raster = FALSE,
+  col = NULL,
+  alpha = NULL
+) {
+  kernel = match.arg(
+    kernel,
+    c(
+      "gaussian",
+      "epanechnikov",
+      "rectangular",
+      "triangular",
+      "biweight",
+      "cosine",
+      "optcosine"
+    )
+  )
   if (is.logical(joint.bw)) {
     joint.bw = ifelse(joint.bw, "mean", "none")
   }
@@ -220,18 +238,22 @@ type_ridge = function(
 
   out = list(
     draw = draw_ridge(),
-    data = data_ridge(bw = bw, adjust = adjust, kernel = kernel, n = n,
-                      joint.bw = joint.bw,
-                      scale = scale,
-                      joint.max = joint.max,
-                      gradient = gradient,
-                      breaks = breaks,
-                      probs = probs,
-                      ylevels = ylevels,
-                      raster = raster,
-                      col = col,
-                      alpha = alpha
-                      ),
+    data = data_ridge(
+      bw = bw,
+      adjust = adjust,
+      kernel = kernel,
+      n = n,
+      joint.bw = joint.bw,
+      scale = scale,
+      joint.max = joint.max,
+      gradient = gradient,
+      breaks = breaks,
+      probs = probs,
+      ylevels = ylevels,
+      raster = raster,
+      col = col,
+      alpha = alpha
+    ),
     name = "ridge"
   )
   class(out) = "tinyplot_type"
@@ -240,18 +262,22 @@ type_ridge = function(
 
 #
 ## Underlying data_ridge function
-data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
-                      joint.bw = "mean",
-                      scale = 1.5,
-                      joint.max = "all",
-                      gradient = FALSE,
-                      breaks = NULL,
-                      probs = NULL,
-                      ylevels = NULL,
-                      raster = FALSE,
-                      col = NULL,
-                      alpha = NULL
-                      ) {
+data_ridge = function(
+  bw = "nrd0",
+  adjust = 1,
+  kernel = "gaussian",
+  n = 512,
+  joint.bw = "mean",
+  scale = 1.5,
+  joint.max = "all",
+  gradient = FALSE,
+  breaks = NULL,
+  probs = NULL,
+  ylevels = NULL,
+  raster = FALSE,
+  col = NULL,
+  alpha = NULL
+) {
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by"))
 
@@ -269,30 +295,44 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     }
     # flag for (non-gradient) interior fill adjustment
     fill_by = anyby || y_by
-    if (isTRUE(x_by)) fill_by = FALSE
+    if (isTRUE(x_by)) {
+      fill_by = FALSE
+    }
     # if (isTRUE(anyby) && is.null(alpha)) alpha = 0.6
 
     ## reorder levels of y-variable if requested
     if (!is.null(ylevels)) {
-      if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
-      datapoints$y = factor(datapoints$y, levels = if(is.numeric(ylevels)) levels(datapoints$y)[ylevels] else ylevels)
+      if (!is.factor(datapoints$y)) {
+        datapoints$y = factor(datapoints$y)
+      }
+      datapoints$y = factor(
+        datapoints$y,
+        levels = if (is.numeric(ylevels)) {
+          levels(datapoints$y)[ylevels]
+        } else {
+          ylevels
+        }
+      )
       if (y_by) datapoints$by = datapoints$y
     }
 
     ##
-    datapoints = split(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
+    datapoints = split(
+      datapoints,
+      list(datapoints$y, datapoints$by, datapoints$facet)
+    )
 
     if (joint.bw == "none" || is.numeric(bw)) {
-        dens_bw = bw
+      dens_bw = bw
     } else {
-        if (joint.bw == "mean") {
-            # Use weighted mean of subgroup bandwidths
-            bws = sapply(datapoints, function(dat) bw_fun(kernel = bw, dat$x))
-            ws = sapply(datapoints, nrow)
-            dens_bw = weighted.mean(bws, ws)
-        } else if (joint.bw == "full") {
-            dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
-        }
+      if (joint.bw == "mean") {
+        # Use weighted mean of subgroup bandwidths
+        bws = sapply(datapoints, function(dat) bw_fun(kernel = bw, dat$x))
+        ws = sapply(datapoints, nrow)
+        dens_bw = weighted.mean(bws, ws)
+      } else if (joint.bw == "full") {
+        dens_bw = bw_fun(kernel = bw, unlist(sapply(datapoints, `[[`, "x")))
+      }
     }
 
     datapoints = lapply(datapoints, function(dat) {
@@ -311,7 +351,8 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 
     if (is.character(joint.max)) {
       joint.max = match.arg(joint.max, c("all", "facet", "by"))
-      joint.max = switch(joint.max,
+      joint.max = switch(
+        joint.max,
         "all" = rep.int(1, nrow(datapoints)),
         "facet" = datapoints$facet,
         "by" = interaction(datapoints$facet, datapoints$y)
@@ -354,7 +395,9 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         warning("only one of 'breaks' and 'quantile' must be specified")
         probs = NULL
       } else {
-        if (probs[1L] > 0) probs = c(0, probs)
+        if (probs[1L] > 0) {
+          probs = c(0, probs)
+        }
         if (probs[length(probs)] < 1) probs = c(probs, 1)
       }
     }
@@ -363,13 +406,21 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       palette = if (!is.null(dotspal)) dotspal else gradient
       gradient = TRUE
       if (isTRUE(palette)) {
-        palette = if (!is.null(.tpar[["palette.sequential"]])) .tpar[["palette.sequential"]] else "viridis"
+        palette = if (!is.null(.tpar[["palette.sequential"]])) {
+          .tpar[["palette.sequential"]]
+        } else {
+          "viridis"
+        }
       }
 
       if (length(palette) > 1L || !is.character(palette)) {
         ## color vector already given
         if (is.null(breaks) && is.null(probs)) {
-          breaks = seq(from = xlim[1L], to = xlim[2L], length.out = length(palette) + 1L)
+          breaks = seq(
+            from = xlim[1L],
+            to = xlim[2L],
+            length.out = length(palette) + 1L
+          )
         } else {
           npal = pmax(length(breaks), length(probs)) - 1L
           if (length(palette) != npal) {
@@ -380,9 +431,15 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         }
       } else {
         ## only palette name given
-        npal = if (is.null(breaks) && is.null(probs)) 512L else pmax(length(breaks), length(probs)) - 1L
+        npal = if (is.null(breaks) && is.null(probs)) {
+          512L
+        } else {
+          pmax(length(breaks), length(probs)) - 1L
+        }
         palette = hcl.colors(npal, palette = palette)
-        if (is.null(breaks) && is.null(probs)) breaks = seq(from = xlim[1L], to = xlim[2L], length.out = npal + 1L)
+        if (is.null(breaks) && is.null(probs)) {
+          breaks = seq(from = xlim[1L], to = xlim[2L], length.out = npal + 1L)
+        }
         if (isTRUE(raster)) raster = npal > 20L
       }
     } else {
@@ -393,15 +450,24 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       breaks[1L] = pmin(breaks[1L], xlim[1L])
       breaks[length(breaks)] = pmax(breaks[length(breaks)], xlim[2L])
     }
-    
-    if (is.null(col) && (!anyby || x_by)) col = "black"
+
+    if (is.null(col) && (!anyby || x_by)) {
+      col = "black"
+    }
 
     # For ridge themes without groups, a numeric bg (e.g. bg = 0.2) should
     # produce transparent gray, not a transparent palette colour. (#547)
-    ridge_theme = identical(.tpar[["tinytheme"]], "ridge") || identical(.tpar[["tinytheme"]], "ridge2")
+    ridge_theme = identical(.tpar[["tinytheme"]], "ridge") ||
+      identical(.tpar[["tinytheme"]], "ridge2")
     if (ridge_theme && !anyby) {
       ubg = settings[["bg"]]
-      if (!is.null(ubg) && length(ubg) == 1 && is.numeric(ubg) && ubg >= 0 && ubg <= 1) {
+      if (
+        !is.null(ubg) &&
+          length(ubg) == 1 &&
+          is.numeric(ubg) &&
+          ubg >= 0 &&
+          ubg <= 1
+      ) {
         settings[["bg"]] = adjustcolor("gray", alpha.f = ubg)
       }
     }
@@ -425,21 +491,29 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       col = col,
       alpha = alpha
     )
-    
+
     # legend customizations
     settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
     settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
-    settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
-    settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
-    
-    env2env(environment(), settings, c(
-      "datapoints",
-      "yaxt",
-      "ylim",
-      "type_info",
-      "group_offsets",
-      "offsets_axis"
-    ))
+    settings$legend_args[["y.intersp"]] = settings$legend_args[[
+      "y.intersp"
+    ]] %||%
+      1.25
+    settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||%
+      1.25
+
+    env2env(
+      environment(),
+      settings,
+      c(
+        "datapoints",
+        "yaxt",
+        "ylim",
+        "type_info",
+        "group_offsets",
+        "offsets_axis"
+      )
+    )
   }
   return(fun)
 }
@@ -452,7 +526,9 @@ draw_ridge = function() {
     ridge_theme = isTRUE(type_info[["ridge_theme"]])
     d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
     dsplit = split(d, d$y)
-    if (!is.null(type_info[["col"]])) icol = type_info[["col"]]
+    if (!is.null(type_info[["col"]])) {
+      icol = type_info[["col"]]
+    }
     if (is.null(ibg)) {
       pal_q = .tpar[["palette.qualitative"]]
       # For non-ridge themes with a palette, derive fill from the first palette
@@ -463,7 +539,11 @@ draw_ridge = function() {
       } else {
         "gray"
       }
-      ibg = if (isTRUE(type_info[["fill_by"]])) seq_palette(icol, n = 2)[2] else default_bg
+      ibg = if (isTRUE(type_info[["fill_by"]])) {
+        seq_palette(icol, n = 2)[2]
+      } else {
+        default_bg
+      }
     }
     if (!is.null(type_info[["alpha"]]) && is.null(type_info[["palette"]])) {
       ibg = adjustcolor(ibg, alpha.f = type_info[["alpha"]])
@@ -478,35 +558,67 @@ draw_ridge = function() {
     } else {
       val = cumsum(rep(1, length(lab))) - 1
     }
-    if (ridge_theme) abline(h = val, col = .tpar[["grid.col"]])
-    draw_segments = if (type_info[["raster"]]) segmented_raster else segmented_polygon
+    if (ridge_theme) {
+      abline(h = val, col = .tpar[["grid.col"]])
+    }
+    draw_segments = if (type_info[["raster"]]) {
+      segmented_raster
+    } else {
+      segmented_polygon
+    }
     for (i in rev(seq_along(dsplit))) {
       if (type_info[["gradient"]]) {
         with(
           dsplit[[i]],
           draw_segments(
-            x, ymax, ymin = ymin[1L],
+            x,
+            ymax,
+            ymin = ymin[1L],
             breaks = type_info[["breaks"]],
             probs = type_info[["probs"]],
             manbreaks = type_info[["manbreaks"]],
-            col = if (is.null(type_info[["palette"]])) ibg else type_info[["palette"]],
+            col = if (is.null(type_info[["palette"]])) {
+              ibg
+            } else {
+              type_info[["palette"]]
+            },
             # border = if (is.null(type_info[["palette"]])) icol else "transparent",
             alpha = type_info[["alpha"]]
           )
         )
       }
-      with(dsplit[[i]], polygon(x, ymax, col = if (type_info[["gradient"]]) "transparent" else ibg, border = NA))
+      with(
+        dsplit[[i]],
+        polygon(
+          x,
+          ymax,
+          col = if (type_info[["gradient"]]) "transparent" else ibg,
+          border = NA
+        )
+      )
       with(dsplit[[i]], lines(x, ymax, col = icol))
     }
     # tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]], padj = padj)
     if (ridge_theme) {
-      tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
-               padj = 0,
-               mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
-               tcl = 0)
+      tinyAxis(
+        x = d$y,
+        side = 2,
+        at = val,
+        labels = lab,
+        type = type_info[["yaxt"]],
+        padj = 0,
+        mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
+        tcl = 0
+      )
       if (identical(.tpar[["tinytheme"]], "ridge2")) axis(1, labels = FALSE)
     } else {
-      tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
+      tinyAxis(
+        x = d$y,
+        side = 2,
+        at = val,
+        labels = lab,
+        type = type_info[["yaxt"]]
+      )
     }
   }
   return(fun)
@@ -517,20 +629,33 @@ draw_ridge = function() {
 ## Auxiliary functions
 
 ## auxiliary function for drawing shaded segmented polygon
-segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, manbreaks = FALSE, col = "lightgray", border = "transparent", alpha = NULL) {
-
+segmented_polygon = function(
+  x,
+  y,
+  ymin = 0,
+  breaks = range(x),
+  probs = NULL,
+  manbreaks = FALSE,
+  col = "lightgray",
+  border = "transparent",
+  alpha = NULL
+) {
   if (!is.null(probs)) {
     ## map quantiles to breaks
-    if (!(missing(breaks) || is.null(breaks))) stop("only one of 'breaks' and 'probs' must be specified")
+    if (!(missing(breaks) || is.null(breaks))) {
+      stop("only one of 'breaks' and 'probs' must be specified")
+    }
     breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
   }
 
   ## sanity check
-  if (breaks[1L] > x[1L] || breaks[length(breaks)] < x[length(x)]) stop("'breaks' do no span range of 'x'")
+  if (breaks[1L] > x[1L] || breaks[length(breaks)] < x[length(x)]) {
+    stop("'breaks' do no span range of 'x'")
+  }
 
   # ## recycle color (if necessary) rather use colorRampPalette below
   # col = rep_len(col, length(breaks) - 1L)
-  
+
   # Create individual polygons
   if (isFALSE(manbreaks)) {
     # Special case for length(breaks)==length(x). We can take a fully vectorised
@@ -540,83 +665,122 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, ma
   } else {
     # For other cases, we'll do a bit more work to make sure that the polygons
     # overlap
-    bvals = do.call(c, sapply(seq_along(breaks[-1]), function(b) tail(x[x<breaks[b]], 1)))
+    bvals = do.call(
+      c,
+      sapply(seq_along(breaks[-1]), function(b) tail(x[x < breaks[b]], 1))
+    )
     bidx = match(bvals, x)
     bidx = c(1, bidx, length(x))
-    xx = do.call(c, sapply(
-      seq_along(bidx[-1]),
-      function(b) {
-        xx = x[bidx[b]:bidx[b+1]]
-        c(xx, rev(xx), NA)
-      }
-    ))
-    yy = do.call(c, sapply(
-      seq_along(bidx[-1]),
-      function(b) {
-        yy = y[bidx[b]:bidx[b+1]]
-        c(yy, rep(ymin, length(yy)), NA)
-      }
-    ))
+    xx = do.call(
+      c,
+      sapply(
+        seq_along(bidx[-1]),
+        function(b) {
+          xx = x[bidx[b]:bidx[b + 1]]
+          c(xx, rev(xx), NA)
+        }
+      )
+    )
+    yy = do.call(
+      c,
+      sapply(
+        seq_along(bidx[-1]),
+        function(b) {
+          yy = y[bidx[b]:bidx[b + 1]]
+          c(yy, rep(ymin, length(yy)), NA)
+        }
+      )
+    )
     # Catch for missing lower breaks if individual density doesn't span the full
     # range of x (and discrete color fills are supplied)
     # Aside: We only need to fix the lower missing breaks, since missing top
     # breaks will be ignored in the final polygon call anyway
     lwrmissings = breaks < x[bidx][1]
     if (any(lwrmissings[-1])) {
-      lwrmissings = breaks[lwrmissings] 
-      xxtra = c(rbind(lwrmissings[-length(lwrmissings)], lwrmissings[-1], lwrmissings[-1], lwrmissings[-length(lwrmissings)], NA))
-      yytra = c(rbind(rep(ymin, length(lwrmissings)-1), ymin, ymin, ymin, NA))
+      lwrmissings = breaks[lwrmissings]
+      xxtra = c(rbind(
+        lwrmissings[-length(lwrmissings)],
+        lwrmissings[-1],
+        lwrmissings[-1],
+        lwrmissings[-length(lwrmissings)],
+        NA
+      ))
+      yytra = c(rbind(rep(ymin, length(lwrmissings) - 1), ymin, ymin, ymin, NA))
       xx = c(xxtra, xx)
       yy = c(yytra, yy)
     }
   }
-  
+
   # Drop trailing NAs
-  xx = xx[1:(length(xx)-1)]
-  yy = yy[1:(length(yy)-1)]
-  
-  if (!is.null(alpha)) col = adjustcolor(col, alpha.f = alpha)
-  
-  # Color ramp for cases where the breaks don't match 
-  if (isFALSE(length(col)==1)) {
+  xx = xx[1:(length(xx) - 1)]
+  yy = yy[1:(length(yy) - 1)]
+
+  if (!is.null(alpha)) {
+    col = adjustcolor(col, alpha.f = alpha)
+  }
+
+  # Color ramp for cases where the breaks don't match
+  if (isFALSE(length(col) == 1)) {
     col = rev(col) ## uncomment to make extreme cols dark
     if (isTRUE(manbreaks)) {
-      if (!is.null(breaks) && length(breaks)-1 != length(col)) {
+      if (!is.null(breaks) && length(breaks) - 1 != length(col)) {
         xrange = range(xx, na.rm = TRUE)
         idx = which(breaks >= xrange[1] & breaks < xrange[2])
-        idx = c(idx, length(idx)+1)
+        idx = c(idx, length(idx) + 1)
         col = col[idx]
         col = colorRampPalette(col, alpha = TRUE)(length(x)) # support alpha?
       }
-    } else if (isFALSE(manbreaks) || length(col) > length(x) || length(x) %% length(col) != 0) {
+    } else if (
+      isFALSE(manbreaks) ||
+        length(col) > length(x) ||
+        length(x) %% length(col) != 0
+    ) {
       xrange = range(xx, na.rm = TRUE)
       idx = which(breaks >= xrange[1] & breaks < xrange[2])
-      idx = c(idx, length(idx)+1)
+      idx = c(idx, length(idx) + 1)
       col = col[idx]
       col = colorRampPalette(col, alpha = TRUE)(length(x)) # support alpha?
     }
   }
-  border = if (is.null(alpha)) col else adjustcolor(col = col, alpha.f = alpha/2)
-  
+  border = if (is.null(alpha)) {
+    col
+  } else {
+    adjustcolor(col = col, alpha.f = alpha / 2)
+  }
+
   ## draw all polygons
   polygon(xx, yy, col = col, border = border, lwd = 0.5)
 }
 
 #' @importFrom graphics rasterImage
 #' @importFrom grDevices as.raster
-segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, manbreaks = FALSE, col = "lightgray", border = "transparent", alpha = NULL) {
-  ## set up raster matrix on x-grid and 500 y-pixels 
+segmented_raster = function(
+  x,
+  y,
+  ymin = 0,
+  breaks = range(x),
+  probs = NULL,
+  manbreaks = FALSE,
+  col = "lightgray",
+  border = "transparent",
+  alpha = NULL
+) {
+  ## set up raster matrix on x-grid and 500 y-pixels
   n = length(x) - 1L
   m = 500L ## FIXME: hard-coded?
   r = matrix(1:n, ncol = n, nrow = m, byrow = TRUE)
 
   ## map quantiles to breaks
   if (!is.null(probs)) {
-    if (!(missing(breaks) || is.null(breaks))) stop("only one of 'breaks' and 'probs' must be specified")
+    if (!(missing(breaks) || is.null(breaks))) {
+      stop("only one of 'breaks' and 'probs' must be specified")
+    }
     breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
   }
 
-  if (!is.null(alpha)) col = adjustcolor(col, alpha.f = alpha)
+  if (!is.null(alpha)) {
+    col = adjustcolor(col, alpha.f = alpha)
+  }
   col = rev(col) ## uncomment to make extreme cols dark
   ## map colors to intervals and fill colors by column
   col = col[cut(x, breaks = breaks, include.lowest = TRUE)]
@@ -625,11 +789,22 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, man
   ## clip raster pixels above density line
   ymax = max(y)
   ix = cbind(as.vector(row(r)), as.vector(col(r)))
-  ix = ix[seq(from = ymax, to = ymin, length.out = m)[row(r)] > y[col(r)], , drop = FALSE]
+  ix = ix[
+    seq(from = ymax, to = ymin, length.out = m)[row(r)] > y[col(r)],
+    ,
+    drop = FALSE
+  ]
   r[ix] = NA
 
   ## plot density and add raster gradient
-  rasterImage(as.raster(r), min(x), ymin, max(x), ymax, interpolate = length(breaks) >= 20L) ## FIXME: improve quality for "few" breaks?
+  rasterImage(
+    as.raster(r),
+    min(x),
+    ymin,
+    max(x),
+    ymax,
+    interpolate = length(breaks) >= 20L
+  ) ## FIXME: improve quality for "few" breaks?
 }
 
 ## auxiliary function for determining quantiles based on density function
@@ -637,7 +812,9 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, man
 #' @importFrom stats median approx
 quantile.density = function(x, probs = seq(0, 1, 0.25), ...) {
   ## sanity check for probabilities
-  if (any(probs < 0 | probs > 1)) stop("'probs' outside [0,1]")
+  if (any(probs < 0 | probs > 1)) {
+    stop("'probs' outside [0,1]")
+  }
 
   ## probability density function, extrapolated to zero, use midpoints
   n = length(x$x)
@@ -650,9 +827,9 @@ quantile.density = function(x, probs = seq(0, 1, 0.25), ...) {
   x = c(x[1L] - delta, x, x[n] + delta)
 
   ## numerical integration of density
-  cdf = c(0, cumsum(diff(x) * (pdf[-1L] + pdf[-(n + 2L)])/2))
-  cdf = cdf/cdf[n + 2L]
+  cdf = c(0, cumsum(diff(x) * (pdf[-1L] + pdf[-(n + 2L)]) / 2))
+  cdf = cdf / cdf[n + 2L]
 
   ## approximate quantiles
-  approx(cdf, x, xout = probs, rule = 2)$y  
+  approx(cdf, x, xout = probs, rule = 2)$y
 }

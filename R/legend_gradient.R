@@ -47,10 +47,14 @@ draw_gradient_swatch = function(
   inner = !any(c(outer_side, outer_end))
   inner_right = inner_bottom = FALSE
   if (inner) {
-    if (!is.null(legend_args[["x"]]) && grepl("left$|right$", legend_args[["x"]])) {
+    if (
+      !is.null(legend_args[["x"]]) && grepl("left$|right$", legend_args[["x"]])
+    ) {
       inner_right = grepl("right$", legend_args[["x"]])
     }
-    if (!is.null(legend_args[["x"]]) && grepl("^bottoml|^top", legend_args[["x"]])) {
+    if (
+      !is.null(legend_args[["x"]]) && grepl("^bottoml|^top", legend_args[["x"]])
+    ) {
       inner_bottom = grepl("^bottom", legend_args[["x"]])
     }
   }
@@ -66,7 +70,6 @@ draw_gradient_swatch = function(
     rasterbox[2] = fklgnd$rect$top - fklgnd$rect$h - lines_to_user_y(1.5 + 0.2)
     rasterbox[3] = rasterbox[1] + lines_to_user_x(1.25)
     rasterbox[4] = rasterbox[2] + fklgnd$rect$h
-
   } else if (outer_side) {
     rb1_adj = lines_to_user_x(lmar[1] + 0.2)
     rb3_adj = lines_to_user_x(1.25)
@@ -88,7 +91,8 @@ draw_gradient_swatch = function(
     if (outer_right) {
       rasterbox[1] = corners[2] + rb1_adj
       if (user_inset) {
-        rasterbox[1] = rasterbox[1] - (corners[2] - legend_args[["inset"]][1]) / 2
+        rasterbox[1] = rasterbox[1] -
+          (corners[2] - legend_args[["inset"]][1]) / 2
       }
       rasterbox[2] = rb2_adj
       rasterbox[3] = rasterbox[1] + rb3_adj
@@ -100,7 +104,6 @@ draw_gradient_swatch = function(
       rasterbox[3] = rasterbox[1] - rb3_adj
       rasterbox[4] = rasterbox[2] + rb4_adj
     }
-
   } else if (outer_end) {
     rb1_adj = (corners[2] - corners[1] - lines_to_user_x(5 + 1)) / 2
     rb3_adj = lines_to_user_x(5 + 1)
@@ -134,7 +137,13 @@ draw_gradient_swatch = function(
 
   # Add labels, tick marks, and title
   if (isFALSE(horiz)) {
-    draw_gradient_labels_vertical(rasterbox, lgnd_labs, legend_args, inner, outer_right)
+    draw_gradient_labels_vertical(
+      rasterbox,
+      lgnd_labs,
+      legend_args,
+      inner,
+      outer_right
+    )
   } else {
     draw_gradient_labels_horizontal(rasterbox, lgnd_labs, legend_args)
   }
@@ -142,7 +151,13 @@ draw_gradient_swatch = function(
 
 
 # Draw vertical gradient legend labels, ticks, and title
-draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inner, outer_right) {
+draw_gradient_labels_vertical = function(
+  rasterbox,
+  lgnd_labs,
+  legend_args,
+  inner,
+  outer_right
+) {
   labs_idx = !is.na(lgnd_labs)
   lgnd_labs[labs_idx] = paste0(" ", format(lgnd_labs[labs_idx]))
 

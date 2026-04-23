@@ -8,13 +8,16 @@ if (getRversion() <= "4.4.0") {
 ## input
 bw_fun = function(kernel, x) {
   kernel = tolower(kernel)
-  switch(kernel,
+  switch(
+    kernel,
     nrd0 = bw.nrd0(x),
-    nrd  = bw.nrd(x),
-    ucv  = bw.ucv(x),
-    bcv  = bw.bcv(x),
-    sj   = bw.SJ(x),
-    stop("Invalid `bw` string. Choose from 'nrd0', 'nrd', 'ucv', 'bcv', or 'SJ'.")
+    nrd = bw.nrd(x),
+    ucv = bw.ucv(x),
+    bcv = bw.bcv(x),
+    sj = bw.SJ(x),
+    stop(
+      "Invalid `bw` string. Choose from 'nrd0', 'nrd', 'ucv', 'bcv', or 'SJ'."
+    )
   )
 }
 
@@ -57,8 +60,12 @@ more_than_n_unique = function(x, n, small_vec_len = 1e3L) {
 
 # Rescale numeric (used for continuous legends, etc.)
 rescale_num = function(x, from = NULL, to = NULL) {
-  if (is.null(from)) from = range(x)
-  if (is.null(to)) to = c(0, 1)
+  if (is.null(from)) {
+    from = range(x)
+  }
+  if (is.null(to)) {
+    to = c(0, 1)
+  }
   (x - from[1]) / diff(from) * diff(to) + to[1]
 }
 
@@ -112,7 +119,9 @@ restore_margin_inner = function(ooma, topmar_epsilon = 0.1) {
   ooma = par("oma")
   omar = par("mar")
 
-  if (!any(ooma != 0)) return(invisible(NULL))
+  if (!any(ooma != 0)) {
+    return(invisible(NULL))
+  }
 
   # Restore inner margin defaults (in case affected by preceding tinyplot call)
   if (any(ooma != 0)) {

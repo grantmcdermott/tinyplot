@@ -137,10 +137,9 @@ prepare_legend_multi = function(settings) {
 #'
 #' @keywords internal
 draw_multi_legend = function(
-    legend_list,
-    position = "right!"
+  legend_list,
+  position = "right!"
 ) {
-
   # Validate inputs
   if (!is.list(legend_list) || length(legend_list) != 2) {
     stop("Currently only 2 legends are supported in multi-legend mode")
@@ -175,7 +174,7 @@ draw_multi_legend = function(
   legend_dims = vector("list", length(legend_list))
   for (ll in seq_along(legend_list)) {
     legend_ll = legend_list[[ll]]
-    legend_ll$new_plot = ll == 1  # Only draw new plot for first legend
+    legend_ll$new_plot = ll == 1 # Only draw new plot for first legend
     legend_ll$draw = FALSE
     legend_dims[[ll]] = do.call(draw_legend, legend_ll)
   }
@@ -201,7 +200,9 @@ draw_multi_legend = function(
   width_order = order(lwidths)
 
   # Quick idx for original order (needed for vertical legend placement)
-  for (i in seq_along(legend_list)) legend_list[[i]]$idx = i
+  for (i in seq_along(legend_list)) {
+    legend_list[[i]]$idx = i
+  }
 
   for (o in seq_along(width_order)) {
     io = width_order[o]
@@ -210,7 +211,11 @@ draw_multi_legend = function(
     legend_o$draw = TRUE
     legend_o$legend_args$inset = c(0, 0)
     legend_o$legend_args$inset[1] = if (o == 1) -abs(diff(lwidths)) / 2 else 0
-    legend_o$legend_args$inset[2] = if (legend_o$idx == 1) linset + 0.01 else 1 - linset + 0.01
+    legend_o$legend_args$inset[2] = if (legend_o$idx == 1) {
+      linset + 0.01
+    } else {
+      1 - linset + 0.01
+    }
     legend_o$idx = NULL
     do.call(draw_legend, legend_o)
   }

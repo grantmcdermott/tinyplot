@@ -6,10 +6,10 @@
 #' @inheritParams graphics::arrows
 #' @examples
 #' tinytheme("basic")
-#' 
+#'
 #' #
 #' ## Basic coefficient plot(s)
-#' 
+#'
 #' mod = lm(mpg ~ wt * factor(am), mtcars)
 #' coefs = data.frame(names(coef(mod)), coef(mod), confint(mod))
 #' colnames(coefs) = c("term", "est", "lwr", "upr")
@@ -24,7 +24,7 @@
 #'
 #' #
 #' ## Flipped plots
-#' 
+#'
 #' # For flipped errobar / pointrange plots, it is recommended to use a dynamic
 #' # theme that applies horizontal axis tick labels
 #'
@@ -32,9 +32,9 @@
 #' tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "errorbar",
 #'          flip = TRUE)
 #' tinyplot_add(type = 'vline', lty = 2)
-#' 
+#'
 #' tinytheme("basic") # back to basic theme for the remaining examples
-#' 
+#'
 #' #
 #' ## Dodging groups
 #'
@@ -70,7 +70,7 @@
 #'          ymin = conf.low, ymax = conf.high,
 #'          data = models,
 #'          type = type_pointrange(dodge = 0.1, fixed.dodge = TRUE))
-#' 
+#'
 #' # Aside 2: layering
 #' #  For layering on top of dodged plots, rather pass the dodging arguments
 #' #  through the top-level call if you'd like the dodging behaviour to be
@@ -87,51 +87,51 @@
 #'
 #' @export
 type_errorbar = function(length = 0.05, dodge = 0, fixed.dodge = FALSE) {
-    out = list(
-        draw = draw_errorbar(length = length),
-        data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge),
-        name = "p"
-    )
-    class(out) = "tinyplot_type"
-    return(out)
+  out = list(
+    draw = draw_errorbar(length = length),
+    data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge),
+    name = "p"
+  )
+  class(out) = "tinyplot_type"
+  return(out)
 }
 
 
 draw_errorbar = function(length = 0.05) {
-    fun = function(
-        ix,
-        iy,
-        ixmin,
-        iymin,
-        ixmax,
-        iymax,
-        icol,
-        ibg,
-        ipch,
-        ilwd,
-        icex,
-        ...
-    ) {
-        arrows(
-            x0 = ixmin,
-            y0 = iymin,
-            x1 = ixmax,
-            y1 = iymax,
-            col = icol,
-            lwd = ilwd,
-            length = length,
-            angle = 90,
-            code = 3
-        )
-        draw_points()(
-            ix = ix,
-            iy = iy,
-            icol = icol,
-            ibg = ibg,
-            ipch = ipch,
-            ilwd = ilwd,
-            icex = icex
-        )
-    }
-    return(fun)
+  fun = function(
+    ix,
+    iy,
+    ixmin,
+    iymin,
+    ixmax,
+    iymax,
+    icol,
+    ibg,
+    ipch,
+    ilwd,
+    icex,
+    ...
+  ) {
+    arrows(
+      x0 = ixmin,
+      y0 = iymin,
+      x1 = ixmax,
+      y1 = iymax,
+      col = icol,
+      lwd = ilwd,
+      length = length,
+      angle = 90,
+      code = 3
+    )
+    draw_points()(
+      ix = ix,
+      iy = iy,
+      icol = icol,
+      ibg = ibg,
+      ipch = ipch,
+      ilwd = ilwd,
+      icex = icex
+    )
+  }
+  return(fun)
 }

@@ -25,7 +25,7 @@
 #' tinylabel(x, "comma")
 #' tinylabel(x, ",") # same
 #' tinylabel(x, "$") # or "dollar"
-#' 
+#'
 #' # invoke tinylabel from a parent tinyplot call...
 #' #   => x/yaxl for adjusting axes tick labels
 #' #   => legend = list(labeller = ...) for adjusting the legend labels
@@ -109,12 +109,12 @@ tinylabel = function(x, labeller = NULL, na.ignore = TRUE, na.rm = TRUE) {
 
 labeller_fun = function(label = "percent") {
   labels = c(
-    "%"      = "percent",
-    ","      = "comma",
-    "$"      = "dollar",
+    "%" = "percent",
+    "," = "comma",
+    "$" = "dollar",
     "\u20ac" = "euro",
     "\u00a3" = "sterling",
-    "l"      = "log"
+    "l" = "log"
   )
   if (label %in% names(labels)) {
     label = labels[label]
@@ -170,12 +170,12 @@ labeller_fun = function(label = "percent") {
 
   fun = switch(
     label,
-    percent  = format_percent,
-    comma    = format_comma,
-    dollar   = format_dollar,
-    euro     = format_euro,
+    percent = format_percent,
+    comma = format_comma,
+    dollar = format_dollar,
+    euro = format_euro,
     sterling = format_sterling,
-    log      = format_log
+    log = format_log
   )
 
   ## combine with absolute value if necessary

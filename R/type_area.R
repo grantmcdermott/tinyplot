@@ -1,44 +1,53 @@
 #' @rdname type_ribbon
 #' @export
 type_area = function(alpha = NULL) {
-    out = list(
-        draw = NULL,
-        data = data_area(alpha = alpha),
-        name = "area"
-    )
-    class(out) = "tinyplot_type"
-    return(out)
+  out = list(
+    draw = NULL,
+    data = data_area(alpha = alpha),
+    name = "area"
+  )
+  class(out) = "tinyplot_type"
+  return(out)
 }
 
 
 data_area = function(alpha = alpha) {
-    ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)
-    fun = function(settings, ...) {
-        env2env(settings, environment(), "datapoints")
-        datapoints$ymax = datapoints$y
-        datapoints$ymin = rep.int(0, nrow(datapoints))
-        ymax = datapoints$ymax
-        ymin = datapoints$ymin
-        type = "ribbon"
+  ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)
+  fun = function(settings, ...) {
+    env2env(settings, environment(), "datapoints")
+    datapoints$ymax = datapoints$y
+    datapoints$ymin = rep.int(0, nrow(datapoints))
+    ymax = datapoints$ymax
+    ymin = datapoints$ymin
+    type = "ribbon"
 
-        # ribbon.alpha comes from parent scope, so assign it locally
-        ribbon.alpha = ribbon.alpha
+    # ribbon.alpha comes from parent scope, so assign it locally
+    ribbon.alpha = ribbon.alpha
 
-        # legend customizations
-        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
-        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
-        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% par("lwd")
-        settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% 0
-        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
-        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
+    # legend customizations
+    settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+    settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+    settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||%
+      par("lwd")
+    settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% 0
+    settings$legend_args[["y.intersp"]] = settings$legend_args[[
+      "y.intersp"
+    ]] %||%
+      1.25
+    settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||%
+      1.25
 
-        env2env(environment(), settings, c(
-            "datapoints",
-            "ymax",
-            "ymin",
-            "type",
-            "ribbon.alpha"
-        ))
-    }
-    return(fun)
+    env2env(
+      environment(),
+      settings,
+      c(
+        "datapoints",
+        "ymax",
+        "ymin",
+        "type",
+        "ribbon.alpha"
+      )
+    )
+  }
+  return(fun)
 }

@@ -1,5 +1,5 @@
 #' @title Generic function for adding an axis to a (tiny)plot
-#'   
+#'
 #' @description Internal function used for adding an axis to a [`tinyplot`]
 #'   call.
 #' @details `tinyAxis` provides a thin(ish) wrapper around
@@ -17,7 +17,7 @@
 #' @inheritParams tinylabel
 #' @examples
 #' \dontrun{
-#' 
+#'
 #' # plot without axes
 #' tinyplot(0:10, axes = "n")
 #' # add x-axis (labels only)
@@ -44,9 +44,17 @@ tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL) {
     }
     if (!is.null(labeller)) {
       if (!is.null(args$at)) {
-        args$labels = if (!is.null(args$labels)) tinylabel(args$labels, labeller) else tinylabel(args$at, labeller)
+        args$labels = if (!is.null(args$labels)) {
+          tinylabel(args$labels, labeller)
+        } else {
+          tinylabel(args$at, labeller)
+        }
       } else {
-        args$at = if (!inherits(x, c("POSIXt", "Date"))) axTicks(args$side) else axTicksDateTime(args$side, x = x)  
+        args$at = if (!inherits(x, c("POSIXt", "Date"))) {
+          axTicks(args$side)
+        } else {
+          axTicksDateTime(args$side, x = x)
+        }
         args$labels = tinylabel(args$at, labeller)
       }
     }
@@ -61,13 +69,13 @@ axTicksDateTime = function(side, x, ...) {
     range = extendrange(x)
     rangeDateTime = .POSIXct(range, tz = tz)
   } else {
-    range = sort(par("usr")[if (side%%2)  1L:2L else 3:4L])
+    range = sort(par("usr")[if (side %% 2) 1L:2L else 3:4L])
     range[1L] = ceiling(range[1L])
     range[2L] = floor(range[2L])
     rangeDateTime = range
     class(rangeDateTime) = "Date"
   }
-  z = pretty(rangeDateTime, n = par("lab")[2 - side%%2])
+  z = pretty(rangeDateTime, n = par("lab")[2 - side %% 2])
   keep = z >= range[1L] & z <= range[2L]
   z = z[keep]
   return(z)

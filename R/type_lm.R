@@ -17,56 +17,69 @@
 #' tinyplot(Sepal.Width ~ Petal.Width, data = iris, type = type_lm(level = 0.8))
 #' @export
 type_lm = function(se = TRUE, level = 0.95) {
-    assert_flag(se)
-    out = list(
-        draw = draw_ribbon(),
-        data = data_lm(se = se, level = level),
-        name = if (isTRUE(se)) "ribbon" else "l"
-    )
-    class(out) = "tinyplot_type"
-    return(out)
+  assert_flag(se)
+  out = list(
+    draw = draw_ribbon(),
+    data = data_lm(se = se, level = level),
+    name = if (isTRUE(se)) "ribbon" else "l"
+  )
+  class(out) = "tinyplot_type"
+  return(out)
 }
 
 
 data_lm = function(se, level, ...) {
-    fun = function(settings, ...) {
-        env2env(settings, environment(), "datapoints")
-        dat = split(datapoints, list(datapoints$facet, datapoints$by))
-        dat = lapply(dat, function(x) {
-            if (nrow(x) == 0) {
-                return(x)
-            }
-            if (nrow(x) < 3) {
-                x$y = NA
-                return(x)
-            }
-            fit = lm(y ~ x, data = x)
-            nd = data.frame(x = seq(min(x$x, na.rm = TRUE), max(x$x, na.rm = TRUE), length.out = 100))
-            nd$by = x$by[1]
-            nd$facet = x$facet[1]
-            if (se == TRUE) {
-                p = predict(fit, newdata = nd, se.fit = TRUE)
-                p = ci(p$fit, p$se.fit, conf.level = level, fit$df.residual)
-                nd$y = p$estimate
-                nd$ymax = p$conf.high
-                nd$ymin = p$conf.low
-            } else {
-                nd$y = predict(fit, newdata = nd)
-            }
-            nd
-        })
-        datapoints = do.call(rbind, dat)
-        datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), ]
-        
-        # legend customizations - same as ribbon but add line through square
-        settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
-        settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
-        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% 0
-        settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% par("lty")
-        settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
-        settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
-        
-        env2env(environment(), settings, "datapoints")
-    }
-    return(fun)
+  fun = function(settings, ...) {
+    env2env(settings, environment(), "datapoints")
+    dat = split(datapoints, list(datapoints$facet, datapoints$by))
+    dat = lapply(dat, function(x) {
+      if (nrow(x) == 0) {
+        return(x)
+      }
+      if (nrow(x) < 3) {
+        x$y = NA
+        return(x)
+      }
+      fit = lm(y ~ x, data = x)
+      nd = data.frame(
+        x = seq(
+          min(x$x, na.rm = TRUE),
+          max(x$x, na.rm = TRUE),
+          length.out = 100
+        )
+      )
+      nd$by = x$by[1]
+      nd$facet = x$facet[1]
+      if (se == TRUE) {
+        p = predict(fit, newdata = nd, se.fit = TRUE)
+        p = ci(p$fit, p$se.fit, conf.level = level, fit$df.residual)
+        nd$y = p$estimate
+        nd$ymax = p$conf.high
+        nd$ymin = p$conf.low
+      } else {
+        nd$y = predict(fit, newdata = nd)
+      }
+      nd
+    })
+    datapoints = do.call(rbind, dat)
+    datapoints = datapoints[
+      order(datapoints$facet, datapoints$by, datapoints$x),
+    ]
+
+    # legend customizations - same as ribbon but add line through square
+    settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
+    settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
+    settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% 0
+    settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||%
+      par("lty")
+    settings$legend_args[["y.intersp"]] = settings$legend_args[[
+      "y.intersp"
+    ]] %||%
+      1.25
+    settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||%
+      1.25
+
+    env2env(environment(), settings, "datapoints")
+  }
+  return(fun)
 }

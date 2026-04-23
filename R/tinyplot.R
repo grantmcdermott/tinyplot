@@ -132,7 +132,7 @@
 #'       - [`type_vline()`]: vertical line(s).
 #'       - [`type_function()`]: arbitrary function.
 #'       - [`type_summary()`]: summarize `y` by unique values of `x`.
-#'       - [`type_meanse()`]: return mean and standard error of `y` by 
+#'       - [`type_mean_se()`]: return mean and standard error of `y` by 
 #'       uniue values of `x`
 #' @param legend one of the following options:
 #'    - NULL (default), in which case the legend will be determined by the

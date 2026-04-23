@@ -14,7 +14,7 @@
 #' or `draw_errorbar()` function, ex: `col="pink"`.
 #' @examples
 #' # Plot the mean and standard error of miles per gallon by cylinders
-#' tinyplot(mpg ~ cyl, data = mtcars, data = mtcars, type = "mean_se")
+#' tinyplot(mpg ~ cyl, data = mtcars, type = "mean_se")
 #'
 
 #'

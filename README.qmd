@@ -4,8 +4,9 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "70%",
+  fig.height = 5,
   fig.width = 8,
-  dpi = 100,
+  dpi = 120,
   asp = 0.625
 )
 ```
@@ -162,3 +163,10 @@ tinytheme()
 Hopefully, these have been enough to pique your interest. Head over to the
 [intro tutorial](https://grantmcdermott.com/tinyplot/vignettes/introduction.html)
 for many more examples, including model-based and custom plot types.
+
+
+```{r tinyimg}
+#| include: false
+if (requireNamespace("tinyimg")) tinyimg::tinypng("man/figures")
+```
+

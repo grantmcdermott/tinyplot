@@ -123,24 +123,7 @@ draw_facet_window = function(
       # Use that as the base instead of par("mar") which may have been
       # reset by the before.plot.new hook.
       side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
-      if (!is.null(dynmar_computed)) {
-        omar = dynmar_computed
-      } else {
-        # Fallback: recompute if dynmar_computed wasn't passed (e.g. add = TRUE
-        # or future code paths). Build each side's margin additively; the
-        # theme's mar acts as baseline padding (via pmax).
-        omar = pmax(omar, c(
-          dynmar_side(1, xlab, main = main, sub = sub, side.sub = side.sub,
-                      axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
-                      tpars = tpars),
-          dynmar_side(2, ylab,
-                      axis_on = !identical(yaxt, "none") && !identical(yaxt, "n"),
-                      tpars = tpars),
-          dynmar_side(3, NULL, main = main, sub = sub, side.sub = side.sub,
-                      tpars = tpars),
-          dynmar_side(4, NULL, tpars = tpars)
-        ))
-      }
+      omar = dynmar_computed
       # Under facets, main/sub sit ABOVE the top facet strip. Bump the
       # outer top margin by the strip height so sub doesn't collide with
       # the strip. fmar[3] already captures facet_newlines and the
@@ -225,27 +208,11 @@ draw_facet_window = function(
     # on our earlier calculations.
     par(mfrow = c(nfacet_rows, nfacet_cols))
   } else if (dynmar) {
-    # Dynamic plot margin adjustments (no facets). The theme's `mar` acts
-    # as a baseline padding (via pmax); dynmar_side() adds enough space
-    # for tick rows, axis labels, main, and sub when present. Tick-label
-    # *width/height* (whtsbp) is added further below.
+    # Dynamic plot margin adjustments (no facets). Margins were pre-computed
+    # in tinyplot.default and passed via dynmar_computed; use them directly.
+    # Tick-label *width/height* (whtsbp) is added further below.
     side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
-    if (!is.null(dynmar_computed)) {
-      omar = dynmar_computed
-    } else {
-      # Fallback: recompute if dynmar_computed wasn't passed.
-      omar = pmax(par("mar"), c(
-        dynmar_side(1, xlab, main = main, sub = sub, side.sub = side.sub,
-                    axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
-                    tpars = tpars),
-        dynmar_side(2, ylab,
-                    axis_on = !identical(yaxt, "none") && !identical(yaxt, "n"),
-                    tpars = tpars),
-        dynmar_side(3, NULL, main = main, sub = sub, side.sub = side.sub,
-                    tpars = tpars),
-        dynmar_side(4, NULL, tpars = tpars)
-      ))
-    }
+    omar = dynmar_computed
     if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis

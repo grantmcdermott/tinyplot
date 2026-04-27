@@ -34,6 +34,9 @@ execute:
   fig-height: 4.8
   fig-width: 6.4
   out-width: 60%
+knitr:
+  opts_chunk:
+    dpi: 72
 author:
   - name: Grant McDermott
     orcid: 0000-0001-7883-8573
@@ -374,3 +377,9 @@ Zeileis A (2025).
 {{< iconify fa6-brands bluesky >}} &nbsp; [`@zeileis.org`](https://bsky.app/profile/zeileis.org)
 
 {{< iconify mdi link-variant >}} &nbsp; [`https://www.zeileis.org/`](https://www.zeileis.org/)
+
+
+```{r tinyimg}
+#| include: false
+if (requireNamespace("tinyimg")) tinyimg::tinypng(knitr::opts_chunk$get("fig.path"))
+```

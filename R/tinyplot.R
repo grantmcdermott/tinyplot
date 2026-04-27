@@ -833,6 +833,17 @@ tinyplot.default = function(
   } else {
     settings$legend_args = list(x = NULL)
   }
+  # normalize legend position up front so downstream code can read
+  # legend_args[["x"]] directly (idempotent: guarded inside sanitize_legend).
+  # Use settings$legend (captured via substitute()) rather than the raw
+  # `legend` promise, since the latter may be an unevaluated call like
+  # `legend("bottom!", ...)` that would error if forced by is.null() etc.
+  # Skip when add=TRUE: no new legend is drawn in add-mode, and
+  # settings$legend is coerced to FALSE which sanitize_legend would
+  # spuriously normalize to the "right!" default.
+  if (!isTRUE(add)) {
+    settings$legend_args = sanitize_legend(settings$legend, settings$legend_args)
+  }
 
   # alias: bg = fill
   if (is.null(bg) && !is.null(fill)) settings$bg = fill
@@ -963,14 +974,7 @@ tinyplot.default = function(
     .tpars = if (!is.null(.theme_def)) .theme_def else tpar()
 
     # Detect outer-legend sides (order: bottom, left, top, right).
-    # legend_args[["x"]] isn't normalized yet (sanitize_legend runs later
-    # inside draw_legend), so evaluate the raw `legend` argument here.
-    # When legend is NULL (user didn't specify), the default is "right!".
-    .lgnd_eval = tryCatch(eval(legend), error = function(e) legend)
-    if (is.null(.lgnd_eval)) .lgnd_eval = "right!"
-    .lgnd_pos = if (is.character(.lgnd_eval)) .lgnd_eval
-                else if (is.list(.lgnd_eval)) as.character(.lgnd_eval[[1]])
-                else NULL
+    .lgnd_pos = settings$legend_args[["x"]]
     .outer_sides = c(
       grepl("bottom!$", .lgnd_pos),
       grepl("left!$",   .lgnd_pos),

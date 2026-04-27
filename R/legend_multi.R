@@ -35,8 +35,6 @@ prepare_legend_multi = function(settings) {
     )
   )
 
-  legend_args = sanitize_legend(legend, legend_args)
-
   # Legend for grouping variable (by)
   lgby = list(
     legend_args = modifyList(
@@ -162,10 +160,15 @@ draw_multi_legend = function(
     sub_positions = c("bottomleft!", "topleft!")
   }
 
-  # Assign positions of individual legends
+  # Assign positions of individual legends. Re-sanitize so the new per-legend
+  # position string ("bottomright!" etc.) populates legend_args[["x"]], which
+  # downstream code (e.g. build_legend_args) reads without further normalization.
   for (ll in seq_along(legend_list)) {
     legend_list[[ll]][["legend"]] = sub_positions[ll]
     legend_list[[ll]][["legend_args"]][["x"]] = NULL
+    legend_list[[ll]][["legend_args"]] = sanitize_legend(
+      sub_positions[ll], legend_list[[ll]][["legend_args"]]
+    )
   }
 
   #

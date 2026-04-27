@@ -487,8 +487,6 @@ build_legend_args = function(
   # Configuration
   gradient
 ) {
-  legend_args = sanitize_legend(legend, legend_args)
-
   # Set defaults
   if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
   legend_args[["pch"]] = legend_args[["pch"]] %||% pch

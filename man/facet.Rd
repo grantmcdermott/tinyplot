@@ -58,7 +58,8 @@ draw_facet_window(
   y,
   ymax,
   ymin,
-  tpars = NULL
+  tpars = NULL,
+  dynmar_computed = NULL
 )
 
 facet_layout(settings)

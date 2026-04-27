@@ -487,6 +487,12 @@ build_legend_args = function(
   # Configuration
   gradient
 ) {
+  # Ensure legend_args[["x"]] is populated. When called from the main
+  # tinyplot pipeline, this is a no-op (sanitize_legend short-circuits on
+  # the is.null guard); when called standalone via the public draw_legend
+  # entry point, this normalizes the input.
+  legend_args = sanitize_legend(legend, legend_args)
+
   # Set defaults
   if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
   legend_args[["pch"]] = legend_args[["pch"]] %||% pch

@@ -995,14 +995,14 @@ tinyplot.default = function(
     # so that "left!" and "bottom!" legends don't collide with axis content.
     .theme_mar[.outer_sides] = 0
 
-    # Establish user coordinates for strwidth (needed by whtsbp) and for
-    # title/mtext alignment later. draw_facet_window() will call
-    # plot.window() again with final asp/log etc., but that's idempotent
-    # for alignment purposes.
-    plot.new()
-    if (!is.null(xlim) && !is.null(ylim)) {
-      plot.window(xlim = xlim, ylim = ylim)
-    }
+    # whtsbp uses strwidth(units="figure") + grconvertX("nfc" → "lines"),
+    # both of which give device-default font metrics without requiring
+    # plot.new()/plot.window() first. A preparatory plot.new() here would
+    # advance par("mfg") (breaking mfrow layouts) and create a blank page
+    # in IDE plot panes (Positron). Left/bottom/top margin sizing for
+    # title alignment is handled later by draw_legend or the no-legend
+    # path's own plot.new(), after which the margins are reinstated
+    # via dynmar_computed + .whtsbp before draw_title runs.
 
     # Compute whtsbp (tick-label width/height bump)
     .whtsbp = c(0, 0, 0, 0)

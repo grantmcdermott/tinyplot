@@ -3,25 +3,28 @@ using("tinysnapshot")
 
 # Missing labels should reclaim margin space under dynmar themes.
 f = function() {
-  tinytheme("clean")
-  tinyplot(1:10, 1:10, xlab = NA, ylab = NA, main = NA)
-  tinytheme()
+  tinyplot(1:10, 1:10, xlab = NA, ylab = NA, main = NA, theme = "clean")
 }
 expect_snapshot_plot(f, label = "margins_missing_labels")
 
 # Multi-line annotation strings should increase margins as needed.
 f = function() {
-  tinytheme("clean")
-  tinyplot(1:10, 1:10, xlab = "A\nB", ylab = "C\nD", main = "E\nF")
-  tinytheme()
+  tinyplot(
+    1000:1010,
+    xlab = "x lab1\nxlab 2", ylab = "ylab 1\nylab 2",
+    main = "main 1\nmain 2", sub = "sub 1\nsub 2",
+    theme = "clean"
+  )
 }
 expect_snapshot_plot(f, label = "margins_multiline_labels")
 
 # Faceted path should also handle multi-line annotation strings.
 f = function() {
-  tinytheme("clean")
-  tinyplot(mpg ~ wt | cyl, data = mtcars, xlab = "Weight\n(1000 lbs)")
-  tinytheme()
+  tinyplot(
+    mpg ~ wt | cyl, data = mtcars,
+    xlab = "Weight\n(1000 lbs)",
+    theme = "clean"
+  )
 }
 expect_snapshot_plot(f, label = "margins_facet_multiline")
 

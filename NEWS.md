@@ -25,6 +25,8 @@ where the formatting is also better._
     line, even when long horizontal tick labels widen the left margin. (#479)
   - Similarly, center-justified axis titles are now anchored on the relevant
     axis alone, rather than the full plot region. (#573) 
+  - `cex.xlab` and `cex.ylab` now correctly control axis title size. The
+    more general `cex.lab` is still respected as a fallback. (#574)
 
 ### New features
 

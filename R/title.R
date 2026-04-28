@@ -94,14 +94,17 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar,
                      xlab_line_offset
   }
   args[["adj"]] = get_tpar(c("adj.xlab", "adj"))
+  args[["cex.lab"]] = cex_xlab
   do.call(title, args)
 
   # ylab: base R already places multi-line text correctly (outermost line at
   # mgp[1], subsequent lines closer to the plot), so no line shift needed.
   args = list(ylab = ylab)
+  cex_ylab = get_tpar(c("cex.ylab", "cex.lab"), 1)
   if (ylab_line_offset != 0) {
     args[["line"]] = get_tpar("mgp")[1] + ylab_line_offset
   }
   args[["adj"]] = get_tpar(c("adj.ylab", "adj"))
+  args[["cex.lab"]] = cex_ylab
   do.call(title, args)
 }

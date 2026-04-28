@@ -1,4 +1,5 @@
 draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar,
+                      xlab_line_offset = 0,
                       ylab_line_offset = 0) {
   # main title
   # Note that we include a special catch for the main title if legend is
@@ -82,11 +83,15 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar,
   # `line = mgp[1] - (N-1)*cex`, which pushes line 1 up into the tick-label
   # zone. Shift `line` down so line 1 aligns with where a single-line xlab
   # would be (and the extra lines extend below).
+  # Also push down by xlab_line_offset (= .whtsbp[1]) when dynmar has
+  # reserved extra space for rotated (las=2/3) x-tick labels.
   args = list(xlab = xlab)
   xlab_lines = text_line_count(xlab)
-  if (xlab_lines > 1L) {
-    cex_xlab = get_tpar(c("cex.xlab", "cex.lab"), 1)
-    args[["line"]] = get_tpar("mgp")[1] + (xlab_lines - 1) * cex_xlab
+  cex_xlab = get_tpar(c("cex.xlab", "cex.lab"), 1)
+  if (xlab_lines > 1L || xlab_line_offset != 0) {
+    args[["line"]] = get_tpar("mgp")[1] +
+                     (xlab_lines - 1) * cex_xlab +
+                     xlab_line_offset
   }
   args[["adj"]] = get_tpar(c("adj.xlab", "adj"))
   do.call(title, args)

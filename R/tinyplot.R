@@ -972,6 +972,16 @@ tinyplot.default = function(
     } else NULL
     .theme_mar = if (!is.null(.theme_def[["mar"]])) .theme_def[["mar"]] else par("mar")
     .tpars = if (!is.null(.theme_def)) .theme_def else tpar()
+    # Merge pending before.plot.new hook values into .tpars so user
+    # overrides passed via tinytheme(..., las = 2) (or tpar(...)) are
+    # visible to dynmar_side()/whtsbp before plot.new fires. Without this,
+    # user overrides for par-level values (las, cex.lab, mgp, tcl, etc.)
+    # are queued in hook closures and unreachable from par() at this point.
+    .pending_hooks = get_environment_variable(".tpar_hooks")
+    for (.h in .pending_hooks) {
+      .bp = environment(.h)[["base_par"]]
+      if (is.list(.bp)) .tpars = modifyList(.tpars, .bp)
+    }
 
     # Detect outer-legend sides (order: bottom, left, top, right).
     .lgnd_pos = settings$legend_args[["x"]]
@@ -1008,9 +1018,13 @@ tinyplot.default = function(
     # path's own plot.new(), after which the margins are reinstated
     # via dynmar_computed + .whtsbp before draw_title runs.
 
-    # Compute whtsbp (tick-label width/height bump)
+    # Compute whtsbp (tick-label width/height bump). Read `las` from .tpars
+    # (the theme definition) rather than par() — par("las") isn't set to the
+    # theme's intended value until the before.plot.new hook fires, but this
+    # block runs before that.
     .whtsbp = c(0, 0, 0, 0)
-    if (par("las") %in% 1:2) {
+    .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
+    if (.las %in% 1:2) {
       if (type == "ridge") {
         yaxlabs = levels(y)
       } else if (!is.null(ylabs)) {
@@ -1025,13 +1039,20 @@ tinyplot.default = function(
                  grconvertX(0, from = "nfc", to = "lines") - 1
       if (is.finite(whtsbp_y) && whtsbp_y > 0) .whtsbp[2] = whtsbp_y
     }
-    if (par("las") %in% 2:3) {
+    if (.las %in% 2:3) {
       xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
       whtsbp_x = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
       if (is.finite(whtsbp_x) && whtsbp_x > 0) .whtsbp[1] = whtsbp_x
     }
+
+    # Under facets, per-facet tick labels render smaller (scaled by
+    # cex_fct_adj), so whtsbp — which is computed from device font metrics
+    # — needs the same scaling to match the actual rendered margin used by
+    # draw_facet_window. Without this, draw_title's mar reserves too much
+    # space on the LHS and anchors the title too far right.
+    if (cex_fct_adj != 1) .whtsbp = .whtsbp * cex_fct_adj
 
     dynmar_computed = .theme_mar + .dyn
     par(mar = dynmar_computed + .whtsbp)
@@ -1096,6 +1117,7 @@ tinyplot.default = function(
       }
     }
     draw_title(main, sub, xlab, ylab, legend, legend_args, opar,
+               xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
                ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] else 0)
   }
 

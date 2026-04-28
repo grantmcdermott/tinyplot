@@ -47,14 +47,19 @@ draw_facet_window(
   draw,
   grid,
   has_legend,
+  main,
+  sub,
   type,
+  xlab,
   x,
   xmax,
   xmin,
+  ylab,
   y,
   ymax,
   ymin,
-  tpars = NULL
+  tpars = NULL,
+  dynmar_computed = NULL
 )
 
 facet_layout(settings)

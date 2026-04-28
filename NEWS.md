@@ -4,6 +4,35 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## Development
+
+### Aesthetic changes
+
+- **Dynamic themes**. We have significantly refactored how our _dynamic_ themes
+  work. Recall, these are themes like `"dynamic"`, `"clean"`, `"bw"`, etc. that
+  automatically adjust margin spacing and other elements to reduce whitespace.
+  Our refactoring and internal changes have some user-facing implications,
+  insofar as they can affect the appearance of your plots. Technically, these
+  are "breaking" aesthetic changes---since your plot might look slightly 
+  different from before---but we hope that you will agree that these are clear 
+  improvements. (#549 @grantmcdermott, @vincentarelbundock)
+  
+  - Plot margins now correctly respond to missing and/or multi-line `main`,
+    `sub`, and `x`/`y` axis titles. For example, a plot with a `main` (or `sub`)
+    title will expand to the top of the device region to reduce excess
+    whitespace. (#303)
+  - Left-justified `main` and `sub` titles now correctly anchor to the y-axis
+    line, even when long horizontal tick labels widen the left margin. (#479)
+  - Similarly, center-justified axis titles are now anchored on the relevant
+    axis alone, rather than the full plot region. (#573) 
+  - `cex.xlab` and `cex.ylab` now correctly control axis title size. The
+    more general `cex.lab` is still respected as a fallback. (#574)
+
+### New features
+
+- New `"dynamic"` theme that now serves as the foundation for all other dynamic
+  (tiny)themes. (#549 @grantmcdermott) 
+
 ## v0.6.1
 
 ### Aesthetic changes

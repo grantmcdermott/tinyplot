@@ -16,12 +16,13 @@
 #'   
 #'   - `"default"`: inherits the user's default base graphics settings.
 #'   - `"basic"`: light modification of `"default"`, only adding filled points, a panel background grid, and light gray background to facet titles.
-#'   - `"clean"` (*): builds on `"basic"` by moving the subtitle above the plotting area, adding horizontal axis labels, employing tighter default plot margins and title gaps to reduce whitespace, and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors). The first of our dynamic themes and the foundation for several derivative themes that follow below.
+#'   - `"dynamic"` (*): builds on `"basic"` by enabling dynamic margin adjustment with tighter default margins, horizontal axis labels, and the subtitle moved above the plotting area. Turns off the panel grid. Provides the foundation for all other dynamic themes and is a good starting point for users who wish to build custom dynamic themes.
+#'   - `"clean"` (*): builds on `"dynamic"` by re-enabling the panel background grid and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors).
 #'   - `"clean2"` (*): removes the plot frame (box) from `"clean"`.
-#'   - `"classic"` (*): connects the axes in a L-shape, but removes the other top and right-hand edges of the plot frame (box). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name. 
-#'   - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name. 
-#'   - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name. 
-#'   - `"ipsum"` (*): similar to `"minimal"`, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**. 
+#'   - `"classic"` (*): builds on `"dynamic"` with L-shaped axes (removing the top and right-hand edges of the plot frame). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
+#'   - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
+#'   - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name.
+#'   - `"ipsum"` (*): similar to `"minimal"`, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**.
 #'   - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
 #'   - `"ridge"` (*): a specialized theme for ridge plots (see [`type_ridge()`]). Builds off of `"clean"`, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
 #'   - `"ridge2"` (*): removes the plot frame (box) from `"ridge"`, but retains the x-axis line. Again, not recommended for non-ridge plots.
@@ -49,8 +50,6 @@
 #' Known current limitations include:
 #' 
 #' - Themes do not work well when `legend = "top!"`.
-#' - Dynamic margin spacing does not account for multi-line strings (e.g., axes
-#' or main titles that contain "\\n").
 #'
 #' @return The function returns nothing. It is called for its side effects.
 #' 
@@ -119,7 +118,7 @@
 #' @export
 tinytheme = function(
     theme = c(
-      "default", "basic",
+      "default", "basic", "dynamic",
       "clean", "clean2", "bw", "classic",
       "minimal", "ipsum", "dark",
       "ridge", "ridge2",
@@ -138,8 +137,8 @@ tinytheme = function(
     theme,
     c(
       "default",
-      sort(c("basic", "bw", "classic", "clean", "clean2", "dark", "ipsum",
-             "minimal", "ridge", "ridge2", "tufte", "void"))
+      sort(c("basic", "bw", "classic", "clean", "clean2", "dark", "dynamic",
+             "ipsum", "minimal", "ridge", "ridge2", "tufte", "void"))
     )
   )
 
@@ -151,6 +150,7 @@ tinytheme = function(
     "clean" = theme_clean,
     "clean2" = theme_clean2,
     "dark" = theme_dark,
+    "dynamic" = theme_dynamic,
     "ipsum" = theme_ipsum,
     "minimal" = theme_minimal,
     "ridge" = theme_ridge,
@@ -196,8 +196,8 @@ theme_default = list(
   cex = par("cex"), #1,
   cex.axis = par("cex.axis"), #1,
   cex.main = par("cex.main"), #1.2,
-  cex.xlab = par("cex.axis"), #1,
-  cex.ylab = par("cex.axis"), #1,
+  cex.xlab = NULL, # defer to par("cex.lab") unless set explicitly
+  cex.ylab = NULL, # defer to par("cex.lab") unless set explicitly
   col.axis = par("col.axis"), #1,
   col.xaxs = par("col.axis"), #1,
   col.yaxs = par("col.axis"), #1,
@@ -273,38 +273,51 @@ theme_void = modifyList(theme_default, list(
   yaxt = "none"
 ))
 
-# derivatives of "basic" 
-# - clean
+# derivatives of "basic"
+# - dynamic
 
-theme_clean = modifyList(theme_basic, list(
+theme_dynamic = modifyList(theme_basic, list(
   ## Notes:
-  ##  - 1. Reduce axis title gap by 0.5 lines and also reduce tcl to 0.3 lines.
-  ##  - 2. Sub moves to top.
-  ##  - 3. Also want to remove excess white on rhs of plot margin (when no legend).
-  ##  - Together, 1, 2, and 3 imply that...
-  ##    -- mgp[1] should be adjusted by 0.8 (= 0.5 + 0.3)
-  ##    -- mgp[2] should be adjusted by 0.3
-  ##    -- mar[1] should be adjusted by 1.8 (= 1 (no sub) + 0.5 + 0.3 (tighter axis labs))
-  ##    -- mar[2] should be adjusted by 0.8 (= 0.5 + 0.3)
-  ##    -- mar[3] should remain unchanged (main + sub will adjust automatically)
-  ##    -- mar[4] should be adjusted by 1.5 (relative to 2.1)
+  ##  - Dynamic themes start from an (almost) zero `mar` baseline. The
+  ##    `draw_facet_window()` helper builds each side's margin up from this
+  ##    pad, adding only what the plot actually needs (tick row, axis label,
+  ##    main, sub). See `dynmar_side()` in utils.R.
+  ##  - `side.sub = 3` moves the sub-caption above the plot (below main).
+  ##  - `tcl = -0.3` tightens axis tick marks relative to the base default.
   ##
-  tinytheme = "clean",
+  tinytheme = "dynamic",
   adj.main = 0,
   adj.sub = 0,
   dynmar = TRUE,
+  grid = FALSE,
   las = 1,
-  mar = c(5.1, 4.1, 4.1, 2.1) - c(1+0.5+0.3, 0.5+0.3, 0, 1.5), ## test
+  mar = c(0.1, 0.1, 0.6, 0.6),
   mgp = c(3, 1, 0) - c(0.5+0.3, 0.3, 0), # i.e., subtract 0.5 lines + the (abs) value of the tcl adjustment
-  palette.qualitative = "Tableau 10",
-  palette.sequential = "ag_Sunset",
   side.sub = 3,
   tcl = -0.3
 ))
 
-# derivatives of "clean" 
-# - clean2
+# derivatives of "dynamic"
+# - clean
 # - classic
+
+theme_clean = modifyList(theme_dynamic, list(
+  tinytheme = "clean",
+  grid = TRUE,
+  palette.qualitative = "Tableau 10",
+  palette.sequential = "ag_Sunset"
+))
+
+theme_classic = modifyList(theme_dynamic, list(
+  tinytheme = "classic",
+  bty = "l",
+  facet.bg = NULL,
+  font.main = 1,
+  palette.qualitative = "Okabe-Ito"
+))
+
+# derivatives of "clean"
+# - clean2
 # - bw
 
 theme_clean2 = modifyList(theme_clean, list(
@@ -312,15 +325,6 @@ theme_clean2 = modifyList(theme_clean, list(
   facet.border = "gray90",
   xaxt = "labels",
   yaxt = "labels"
-))
-
-theme_classic = modifyList(theme_clean, list(
-  tinytheme = "classic",
-  bty = "l",
-  facet.bg = NULL,
-  font.main = 1,
-  grid = FALSE,
-  palette.qualitative = "Okabe-Ito"
 ))
 
 theme_bw = modifyList(theme_clean, list(
@@ -372,7 +376,7 @@ theme_dark = modifyList(theme_minimal, list(
   palette.sequential = "Sunset"
 ))
 
-# derivative of clean/clean2
+# derivatives of clean/clean2
 
 theme_ridge = modifyList(theme_clean, list(
   tinytheme = "ridge",

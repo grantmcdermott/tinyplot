@@ -53,6 +53,10 @@ f = function() {
   )
 }
 
+tinytheme("dynamic")
+f()
+expect_snapshot_plot(f, label = "tinytheme_dynamic_dynamic")
+
 tinytheme("clean")
 f()
 expect_snapshot_plot(f, label = "tinytheme_dynamic_clean")

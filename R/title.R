@@ -1,4 +1,6 @@
-draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
+draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar,
+                      xlab_line_offset = 0,
+                      ylab_line_offset = 0) {
   # main title
   # Note that we include a special catch for the main title if legend is
   # "top!" (and main is specified in the first place).
@@ -20,17 +22,29 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
 
   if (isTRUE(adj_title)) {
     line_main = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1
+  } else if (isTRUE(get_tpar("dynmar", FALSE))) {
+    # Anchor main at a fixed line above the plot box so it stays in the same
+    # position regardless of whether sub is also present (the sub branch
+    # below adds a +1.2 shift on top of this baseline when needed).
+    line_main = get_tpar("mgp")[3] + 0.7 - 0.1
   } else {
     line_main = NULL
   }
 
+  # When sub sits on top (side.sub == 3), push main up by the sub block
+  # height so main is above sub rather than overlapping it. Treat NA/empty
+  # sub as absent so main stays at its normal position. First sub row gets
+  # a small (0.2-line) extra bump for visual breathing room.
+  sub_lines = text_line_count(sub)
+  if (sub_lines > 0L && isTRUE(get_tpar("side.sub", 1) == 3)) {
+    if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 0.7 - 0.1
+    cex_sub = get_tpar("cex.sub", 1.2)
+    line_main = line_main + (cex_sub + 0.2) + (sub_lines - 1) * cex_sub
+  }
+
   if (!is.null(sub)) {
     if (isTRUE(get_tpar("side.sub", 1) == 3)) {
-      if (is.null(line_main)) line_main = par("mgp")[3] + 1.7 - .1
-      line_main = line_main + 1.2
-    }
-    if (isTRUE(get_tpar("side.sub", 1) == 3)) {
-      line_sub = get_tpar("line.sub", 1.7)
+      line_sub = get_tpar("line.sub", 0.7)
     } else {
       line_sub = get_tpar("line.sub", 4)
     }
@@ -49,6 +63,10 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
   }
 
   if (!is.null(main)) {
+    # title() stacks multi-line main *above* `line_main` (line N at
+    # `line_main`, extra lines extend upward). The reserved top margin
+    # already accounts for (N-1)*cex_main extra lines, so no line-shift
+    # adjustment is needed here.
     args = list(
       main = main,
       line = line_main,
@@ -61,11 +79,32 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar) {
   }
 
 
-  # Axis titles
+  # Axis titles. For multi-line labels, base R places line 1 at
+  # `line = mgp[1] - (N-1)*cex`, which pushes line 1 up into the tick-label
+  # zone. Shift `line` down so line 1 aligns with where a single-line xlab
+  # would be (and the extra lines extend below).
+  # Also push down by xlab_line_offset (= .whtsbp[1]) when dynmar has
+  # reserved extra space for rotated (las=2/3) x-tick labels.
   args = list(xlab = xlab)
+  xlab_lines = text_line_count(xlab)
+  cex_xlab = get_tpar(c("cex.xlab", "cex.lab"), 1)
+  if (xlab_lines > 1L || xlab_line_offset != 0) {
+    args[["line"]] = get_tpar("mgp")[1] +
+                     (xlab_lines - 1) * cex_xlab +
+                     xlab_line_offset
+  }
   args[["adj"]] = get_tpar(c("adj.xlab", "adj"))
+  args[["cex.lab"]] = cex_xlab
   do.call(title, args)
+
+  # ylab: base R already places multi-line text correctly (outermost line at
+  # mgp[1], subsequent lines closer to the plot), so no line shift needed.
   args = list(ylab = ylab)
+  cex_ylab = get_tpar(c("cex.ylab", "cex.lab"), 1)
+  if (ylab_line_offset != 0) {
+    args[["line"]] = get_tpar("mgp")[1] + ylab_line_offset
+  }
   args[["adj"]] = get_tpar(c("adj.ylab", "adj"))
+  args[["cex.lab"]] = cex_ylab
   do.call(title, args)
 }

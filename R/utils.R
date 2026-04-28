@@ -3,6 +3,87 @@ if (getRversion() <= "4.4.0") {
   `%||%` = function(x, y) if (is.null(x)) y else x
 }
 
+# Count text lines. Returns 0 for absent text and 1 for expression objects.
+text_line_count = function(x) {
+  if (is.null(x)) return(0L)
+  if (identical(x, NA) || identical(x, NA_character_)) return(0L)
+  if (!is.character(x)) return(1L)
+  if (!length(x)) return(0L)
+  keep = !is.na(x) & nzchar(x)
+  if (!any(keep)) return(0L)
+  x = x[which(keep)[1L]]
+  as.integer(1L + nchar(gsub("[^\n]", "", x)))
+}
+
+# Compute additive margin "build" for a given side under dynmar.
+# Starts from zero and adds only what the plot actually needs. The tick
+# row and the axis-label row occupy overlapping vertical space (tick row
+# ends at ~|tcl| + mgp[2] + 1, axis label baseline sits at mgp[1]), so the
+# margin is the max of:
+#   - tick-row height (|tcl| + mgp[2] + 1), when the axis is drawn
+#   - axis-label extent (mgp[1] + (N - 1) * cex + 1 line for asc/desc), when present
+# Main/sub sit above/below the plot box on the top/bottom side and add to the
+# margin additively.
+# Tick-label *width* for sides 2/4 (and *height* for 1/3 under las 2:3) is
+# handled separately by the existing whtsbp logic in draw_facet_window().
+# The caller is expected to take max(theme_mar[side], dynmar_side(...)) so
+# that the theme's starting `mar` acts as a baseline padding.
+dynmar_side = function(side, label, main = NULL, sub = NULL,
+                      side.sub = 3, axis_on = TRUE, tpars = NULL) {
+  mgp = get_tpar("mgp", tpar_list = tpars)
+  tcl = get_tpar("tcl", tpar_list = tpars, default = par("tcl"))
+  tick_extent = if (side %in% 1:2 && isTRUE(axis_on)) {
+    # |tcl| = tick mark length (outward); mgp[2] = tick-label distance from
+    # axis; +1 = one line for the tick-label text itself. These mirror base
+    # R's default layout: par(tcl = -0.5, mgp = c(3,1,0)) gives 0.5+1+1=2.5.
+    max(0, -tcl) + mgp[2] + 1
+  } else 0
+  label_extent = 0
+  lines = text_line_count(label)
+  if (side %in% 1:2 && lines >= 1L) {
+    cex_lab = get_tpar(
+      if (side == 1L) c("cex.xlab", "cex.lab") else c("cex.ylab", "cex.lab"),
+      tpar_list = tpars, default = 1
+    )
+    # Last-line baseline sits at mgp[1] + (N-1)*cex (after line-shift in
+    # draw_title); add a full line to cover ascender+descender so the text
+    # doesn't clip against the device edge.
+    # TODO: the +1 constant doesn't scale with cex_lab, so large values
+    # (e.g. cex.xlab = 3) under-reserve margin and the title overlaps
+    # tick labels. Fixing this requires also pushing the draw-position
+    # (line arg in draw_title) further out. See "P.S." in #574.
+    label_extent = mgp[1] + (lines - 1) * cex_lab + 1
+  }
+  mar = max(tick_extent, label_extent)
+  if (side == 3L) {
+    mlines = text_line_count(main)
+    if (mlines >= 1L) {
+      cex_main = get_tpar("cex.main", tpar_list = tpars, default = 1.2)
+      # 0.7 = distance (in lines) from plot box to main baseline. Matches
+      #   line_main = mgp[3] + 0.7 - 0.1 in draw_title (mgp[3] default 0).
+      #   Chosen to visually match base R's default title gap at cex.main=1.2
+      #   with par(mar=c(5.1,4.1,4.1,2.1), mgp=c(3,1,0)).
+      # 0.6 = empirical ascender fraction: the top line's visible extent
+      #   reaches ~0.6 * cex_main above its baseline. Derived from
+      #   strheight("X") / par("csi") ≈ 0.6 on standard devices.
+      mar = mar + 0.7 + (mlines - 1 + 0.6) * cex_main
+    }
+  }
+  slines = text_line_count(sub)
+  if (slines >= 1L && side == side.sub && side %in% c(1L, 3L)) {
+    cex_sub = get_tpar("cex.sub", tpar_list = tpars, default = 1.2)
+    # Sub sits between the plot box and main (when side.sub = 3).
+    # 0.2 = breathing room between sub baseline and the element above it
+    #   (plot box or main). Tuned visually to avoid crowding at default cex.
+    # 0.6 = same ascender fraction as main (see above). Applied only when
+    #   main is absent, since main's ascender already covers the top.
+    has_main_here = side == 3L && text_line_count(main) >= 1L
+    asc = if (has_main_here) 0 else 0.6 * cex_sub
+    mar = mar + (cex_sub + 0.2) + (slines - 1) * cex_sub + asc
+  }
+  mar
+}
+
 
 ## Function that computes an appropriate bandwidth kernel based on a string
 ## input

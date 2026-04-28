@@ -26,9 +26,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='47.52' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='92.05px' lengthAdjust='spacingAndGlyphs'>Spineplot version</text>
-<text x='47.52' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='351.91px' lengthAdjust='spacingAndGlyphs'>Dynamic plot adjustment and whitespace reduction</text>
-<text x='271.44' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='67.36px' lengthAdjust='spacingAndGlyphs'>Petal.Length</text>
+<text x='84.48' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='92.05px' lengthAdjust='spacingAndGlyphs'>Spineplot version</text>
+<text x='84.48' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='351.91px' lengthAdjust='spacingAndGlyphs'>Dynamic plot adjustment and whitespace reduction</text>
+<text x='289.92' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='67.36px' lengthAdjust='spacingAndGlyphs'>Petal.Length</text>
 <text transform='translate(12.96,251.42) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
 </g>
 <defs>

@@ -11,7 +11,7 @@ expect_snapshot_plot(f, label = "margins_missing_labels")
 f = function() {
   tinyplot(
     1000:1010,
-    xlab = "x lab1\nxlab 2", ylab = "ylab 1\nylab 2",
+    xlab = "xlab 1\nxlab 2", ylab = "ylab 1\nylab 2",
     main = "main 1\nmain 2", sub = "sub 1\nsub 2",
     theme = "clean"
   )

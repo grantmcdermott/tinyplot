@@ -26,9 +26,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='47.52' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='123.39px' lengthAdjust='spacingAndGlyphs'>Flipped boxplot version</text>
-<text x='47.52' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='351.91px' lengthAdjust='spacingAndGlyphs'>Dynamic plot adjustment and whitespace reduction</text>
-<text x='271.44' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='34.69px' lengthAdjust='spacingAndGlyphs'>weight</text>
+<text x='89.82' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='123.39px' lengthAdjust='spacingAndGlyphs'>Flipped boxplot version</text>
+<text x='89.82' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='351.91px' lengthAdjust='spacingAndGlyphs'>Dynamic plot adjustment and whitespace reduction</text>
+<text x='292.59' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='34.69px' lengthAdjust='spacingAndGlyphs'>weight</text>
 <text transform='translate(12.96,251.42) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'>feed</text>
 <line x1='89.82' y1='409.65' x2='89.82' y2='93.20' style='stroke-width: 0.75;' />
 <line x1='89.82' y1='409.65' x2='85.50' y2='409.65' style='stroke-width: 0.75;' />

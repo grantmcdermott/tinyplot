@@ -26,9 +26,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='47.52' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='96.05px' lengthAdjust='spacingAndGlyphs'>Ridge plot version</text>
-<text x='47.52' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='351.91px' lengthAdjust='spacingAndGlyphs'>Dynamic plot adjustment and whitespace reduction</text>
-<text x='271.44' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='67.36px' lengthAdjust='spacingAndGlyphs'>Petal.Length</text>
+<text x='84.48' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='96.05px' lengthAdjust='spacingAndGlyphs'>Ridge plot version</text>
+<text x='84.48' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='351.91px' lengthAdjust='spacingAndGlyphs'>Dynamic plot adjustment and whitespace reduction</text>
+<text x='289.92' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='67.36px' lengthAdjust='spacingAndGlyphs'>Petal.Length</text>
 <text transform='translate(12.96,251.42) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <line x1='125.61' y1='456.48' x2='459.80' y2='456.48' style='stroke-width: 0.75;' />
 <line x1='125.61' y1='456.48' x2='125.61' y2='460.80' style='stroke-width: 0.75;' />

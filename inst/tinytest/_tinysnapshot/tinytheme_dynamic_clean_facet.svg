@@ -36,7 +36,7 @@
 <text x='476.89' y='252.89' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
 <text x='476.89' y='231.94' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
 <text x='458.89' y='197.71' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='22.02px' lengthAdjust='spacingAndGlyphs'>disp</text>
-<text x='47.52' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='113.78px' lengthAdjust='spacingAndGlyphs'>Works with facets too</text>
+<text x='60.03' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='113.78px' lengthAdjust='spacingAndGlyphs'>Works with facets too</text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHw0NDEuNjF8MC4wMHw1MDQuMDA='>
@@ -44,9 +44,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw0NDEuNjF8MC4wMHw1MDQuMDA=)'>
-<text x='47.52' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='351.91px' lengthAdjust='spacingAndGlyphs'>Dynamic plot adjustment and whitespace reduction</text>
-<text x='244.56' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='56.02px' lengthAdjust='spacingAndGlyphs'>I(hp * 100)</text>
-<text transform='translate(12.96,251.42) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='72.69px' lengthAdjust='spacingAndGlyphs'>I(mpg * 1000)</text>
+<text x='60.03' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='351.91px' lengthAdjust='spacingAndGlyphs'>Dynamic plot adjustment and whitespace reduction</text>
+<text x='250.82' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='56.02px' lengthAdjust='spacingAndGlyphs'>I(hp * 100)</text>
+<text transform='translate(12.96,245.17) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='72.69px' lengthAdjust='spacingAndGlyphs'>I(mpg * 1000)</text>
 </g>
 <defs>
   <clipPath id='cpNjAuMDN8MjI1LjEyfDU3LjE3fDE2MS40NA=='>

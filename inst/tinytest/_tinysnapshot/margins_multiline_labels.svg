@@ -26,12 +26,12 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<text x='61.92' y='50.69' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.34px' lengthAdjust='spacingAndGlyphs'>sub 1</text>
-<text x='61.92' y='65.09' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.34px' lengthAdjust='spacingAndGlyphs'>sub 2</text>
-<text x='61.92' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='45.59px' lengthAdjust='spacingAndGlyphs'>main 1</text>
-<text x='61.92' y='37.73' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='45.59px' lengthAdjust='spacingAndGlyphs'>main 2</text>
-<text x='278.64' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.02px' lengthAdjust='spacingAndGlyphs'>x lab1</text>
-<text x='278.64' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.02px' lengthAdjust='spacingAndGlyphs'>xlab 2</text>
+<text x='74.21' y='50.69' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.34px' lengthAdjust='spacingAndGlyphs'>sub 1</text>
+<text x='74.21' y='65.09' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.34px' lengthAdjust='spacingAndGlyphs'>sub 2</text>
+<text x='74.21' y='20.45' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='45.59px' lengthAdjust='spacingAndGlyphs'>main 1</text>
+<text x='74.21' y='37.73' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='45.59px' lengthAdjust='spacingAndGlyphs'>main 2</text>
+<text x='284.78' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.02px' lengthAdjust='spacingAndGlyphs'>xlab 1</text>
+<text x='284.78' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.02px' lengthAdjust='spacingAndGlyphs'>xlab 2</text>
 <text transform='translate(12.96,260.06) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.02px' lengthAdjust='spacingAndGlyphs'>ylab 1</text>
 <text transform='translate(27.36,260.06) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.02px' lengthAdjust='spacingAndGlyphs'>ylab 2</text>
 <line x1='128.80' y1='442.08' x2='440.77' y2='442.08' style='stroke-width: 0.75;' />

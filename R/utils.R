@@ -33,6 +33,9 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
   mgp = get_tpar("mgp", tpar_list = tpars)
   tcl = get_tpar("tcl", tpar_list = tpars, default = par("tcl"))
   tick_extent = if (side %in% 1:2 && isTRUE(axis_on)) {
+    # |tcl| = tick mark length (outward); mgp[2] = tick-label distance from
+    # axis; +1 = one line for the tick-label text itself. These mirror base
+    # R's default layout: par(tcl = -0.5, mgp = c(3,1,0)) gives 0.5+1+1=2.5.
     max(0, -tcl) + mgp[2] + 1
   } else 0
   label_extent = 0
@@ -45,6 +48,10 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
     # Last-line baseline sits at mgp[1] + (N-1)*cex (after line-shift in
     # draw_title); add a full line to cover ascender+descender so the text
     # doesn't clip against the device edge.
+    # TODO: the +1 constant doesn't scale with cex_lab, so large values
+    # (e.g. cex.xlab = 3) under-reserve margin and the title overlaps
+    # tick labels. Fixing this requires also pushing the draw-position
+    # (line arg in draw_title) further out. See "P.S." in #574.
     label_extent = mgp[1] + (lines - 1) * cex_lab + 1
   }
   mar = max(tick_extent, label_extent)
@@ -52,21 +59,24 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
     mlines = text_line_count(main)
     if (mlines >= 1L) {
       cex_main = get_tpar("cex.main", tpar_list = tpars, default = 1.2)
-      # Main last-line baseline sits 0.7 lines above the box. Additional
-      # lines stack upward at cex_main per row. The top line's visible
-      # extent reaches ~0.6 * cex_main above its baseline (empirical from
-      # strheight("X") / csi).
+      # 0.7 = distance (in lines) from plot box to main baseline. Matches
+      #   line_main = mgp[3] + 0.7 - 0.1 in draw_title (mgp[3] default 0).
+      #   Chosen to visually match base R's default title gap at cex.main=1.2
+      #   with par(mar=c(5.1,4.1,4.1,2.1), mgp=c(3,1,0)).
+      # 0.6 = empirical ascender fraction: the top line's visible extent
+      #   reaches ~0.6 * cex_main above its baseline. Derived from
+      #   strheight("X") / par("csi") ≈ 0.6 on standard devices.
       mar = mar + 0.7 + (mlines - 1 + 0.6) * cex_main
     }
   }
   slines = text_line_count(sub)
   if (slines >= 1L && side == side.sub && side %in% c(1L, 3L)) {
     cex_sub = get_tpar("cex.sub", tpar_list = tpars, default = 1.2)
-    # First sub row gets a 0.2-line extra bump; extra lines add cex_sub.
-    # The top line's visible extent reaches ~0.6 * cex_sub above baseline.
-    # If main is ALSO present on the same side, its ascender already covers
-    # the top — the sub contribution is just the stacked sub row height.
-    # Otherwise, add the sub's own ascender.
+    # Sub sits between the plot box and main (when side.sub = 3).
+    # 0.2 = breathing room between sub baseline and the element above it
+    #   (plot box or main). Tuned visually to avoid crowding at default cex.
+    # 0.6 = same ascender fraction as main (see above). Applied only when
+    #   main is absent, since main's ascender already covers the top.
     has_main_here = side == 3L && text_line_count(main) >= 1L
     asc = if (has_main_here) 0 else 0.6 * cex_sub
     mar = mar + (cex_sub + 0.2) + (slines - 1) * cex_sub + asc

@@ -321,6 +321,25 @@ parms
 
 :::
 
+As a final note about customizing themes, please note that `tinytheme` works by
+setting a persistent hook that resets parameters before each new plot. This is
+an efficient design choice, but it also means that calling `(t)par(<params>)`
+on top of an active theme won't work. This is because the active theme's hook
+will override your additional parameter tweaks during the creation of the next
+plot. All of which is to emphasize that you should pass any theme customizations
+directly to `tinytheme()`:
+
+```r
+# This won't work as expected:
+tinytheme("clean")
+tpar(mar = c(5, 5, 2, 2))  # overwritten by the theme hook
+<some plot>
+
+# Do this instead:
+tinytheme("clean", mar = c(5, 5, 2, 2))
+<some plot>
+```
+
 ## Manual customization with `tpar()`
 
 _Subtitle: And comparison with `par()`_

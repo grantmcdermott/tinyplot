@@ -50,19 +50,43 @@ whitespace.
 \details{
 Sets a list of graphical parameters using \code{tpar()}
 
-Note that themes are persistent and will be applied to all subsequent plots.
-To reset the theme to default settings (no customization), call \code{tinytheme()}
-without arguments. Altenatively, invoke the \verb{tinyplot(..., theme = <theme>)}
+\strong{Persistent vs. ephemeral themes.} Calling \code{tinytheme("<theme>")} triggers
+a persistent theme, which will be applied to all subsequent graphics (incl.
+base \code{plot}). To reset the theme to your default settings, call \code{tinytheme()}
+without arguments. Alternatively, invoke the \verb{tinyplot(..., theme = <theme>)}
 argument for an ephemeral theme that is automatically reset at the end of the
 plot call.
 
-\strong{Caveat emptor:} Themes are a somewhat experimental feature of \code{tinyplot}.
-While we feel confident that themes should work as expected for most
-"standard" cases, there may be some sharp edges. Please report any unexpected
-behaviour to our GitHub repo:
-\url{https://github.com/grantmcdermott/tinyplot/issues}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# Set a persistent theme
+tinytheme("clean")
+tinyplot(1:10)  # uses "clean"
+tinyplot(10:1)  # still uses "clean"
+tinytheme()     # reset to default
 
-Known current limitations include:
+# Use an ephemeral theme for a single plot (incl. added components)
+tinyplot(1:10, theme = "dark")  # uses "dark" ephemerally
+tinyplot_add(type = "S")        # same plot, so retains theme
+tinyplot(10:1)                  # new plot, so back to default
+}\if{html}{\out{</div>}}
+
+\strong{Custom overrides.} To customize a theme's parameters (e.g., \code{mar}, \code{las},
+etc.), pass them directly as additional args to \verb{tinytheme(<theme>, ...)}.
+Please note that passing overrides through \code{tpar()} or \code{par()} \emph{won't} work,
+because themes work by installing a persistent hook, which means that an
+active theme will override any subsequent calls for parameters that the theme
+controls.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# Do this
+tinytheme("clean", mar = c(5, 5, 2, 2))
+<some plot>
+
+# Not this (the theme hook will overwrite your changes)
+tinytheme("clean")
+tpar(mar = c(5, 5, 2, 2))
+<some plot>
+}\if{html}{\out{</div>}}
+
+\strong{Caveats.} Known \code{tinytheme} limitations include:
 \itemize{
 \item Themes do not work well when \code{legend = "top!"}.
 }

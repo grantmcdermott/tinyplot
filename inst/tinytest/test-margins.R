@@ -84,3 +84,12 @@ expect_true(
   },
   info = "bottom_margin_grows_for_multiline_xlab"
 )
+
+# Expression labels should expand margins beyond plain text (#549)
+f = function() {
+  tinyplot(1:10,
+    xlab = expression(frac(Delta*y, Delta*x)),
+    ylab = expression(Precipitation~"["~mm^{1/2}~"]"),
+    theme = "clean")
+}
+expect_snapshot_plot(f, label = "margins_math_expression")

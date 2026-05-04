@@ -53,6 +53,15 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
     # tick labels. Fixing this requires also pushing the draw-position
     # (line arg in draw_title) further out. See "P.S." in #574.
     label_extent = mgp[1] + (lines - 1) * cex_lab + 1
+    # Expressions (e.g., ylab = expression(mm^{1/2})) can be taller than a
+    # plain text line due to superscripts, subscripts, fractions, etc. Measure
+    # the actual rendered height and add the excess over a normal text line.
+    if (is.language(label)) {
+      expr_lines = strheight(label, units = "inches", cex = cex_lab) / par("csi")
+      text_lines = strheight("X", units = "inches", cex = cex_lab) / par("csi")
+      excess = expr_lines - text_lines
+      if (excess > 0) label_extent = label_extent + excess
+    }
   }
   mar = max(tick_extent, label_extent)
   if (side == 3L) {

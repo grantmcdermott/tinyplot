@@ -88,10 +88,18 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar,
   args = list(xlab = xlab)
   xlab_lines = text_line_count(xlab)
   cex_xlab = get_tpar(c("cex.xlab", "cex.lab"), 1)
-  if (xlab_lines > 1L || xlab_line_offset != 0) {
+  # Compute expression height excess (same logic as dynmar_side)
+  xlab_expr_excess = 0
+  if (is.language(xlab)) {
+    expr_lines = strheight(xlab, units = "inches", cex = cex_xlab) / par("csi")
+    text_lines = strheight("X", units = "inches", cex = cex_xlab) / par("csi")
+    xlab_expr_excess = max(0, expr_lines - text_lines)
+  }
+  if (xlab_lines > 1L || xlab_line_offset != 0 || xlab_expr_excess > 0) {
     args[["line"]] = get_tpar("mgp")[1] +
                      (xlab_lines - 1) * cex_xlab +
-                     xlab_line_offset
+                     xlab_line_offset +
+                     xlab_expr_excess
   }
   args[["adj"]] = get_tpar(c("adj.xlab", "adj"))
   args[["cex.lab"]] = cex_xlab

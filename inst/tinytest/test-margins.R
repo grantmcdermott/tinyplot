@@ -88,7 +88,7 @@ expect_true(
 # Expression labels should expand margins beyond plain text (#549)
 f = function() {
   tinyplot(1:10,
-    xlab = expression(frac(Delta*y, Delta*x)),
+    xlab = expression(frac(y, x)),
     ylab = expression(Precipitation~"["~mm^{1/2}~"]"),
     theme = "clean")
 }

@@ -10,12 +10,12 @@ where the formatting is also better._
 
 - **Dynamic themes**. We have significantly refactored how our _dynamic_ themes
   work. Recall, these are themes like `"dynamic"`, `"clean"`, `"bw"`, etc. that
-  automatically adjust margin spacing and other elements to reduce whitespace.
-  Our refactoring and internal changes have some user-facing implications,
-  insofar as they can affect the appearance of your plots. Technically, these
-  are "breaking" aesthetic changes---since your plot might look slightly 
-  different from before---but we hope that you will agree that these are clear 
-  improvements. (#549 @grantmcdermott, @vincentarelbundock)
+  automatically adjust margin spacing and related plot elements to reduce
+  whitespace and improve the overall plot aesthetic. This refactoring has some
+  user-facing implications, insofar as it can affect the appearance of your
+  plots. Technically these are "breaking" aesthetic changes, since your plot
+  might look slightly different from before. But we hope that you will agree
+  that these are clear improvements. (#549 @grantmcdermott, @vincentarelbundock)
   
   - Plot margins now correctly respond to missing and/or multi-line `main`,
     `sub`, and `x`/`y` axis titles. For example, a plot with a `main` (or `sub`)
@@ -27,6 +27,8 @@ where the formatting is also better._
     axis alone, rather than the full plot region. (#573) 
   - `cex.xlab` and `cex.ylab` now correctly control axis title size. The
     more general `cex.lab` is still respected as a fallback. (#574)
+  - Margin spacing correctly adjusts for math expressions, including fractions
+    and exponents in titles. (#575)
 
 ### New features
 

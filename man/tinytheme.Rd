@@ -5,8 +5,8 @@
 \title{Set or Reset Plot Themes for \code{tinyplot}}
 \usage{
 tinytheme(
-  theme = c("default", "basic", "clean", "clean2", "bw", "classic", "minimal", "ipsum",
-    "dark", "ridge", "ridge2", "tufte", "void"),
+  theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "classic", "minimal",
+    "ipsum", "dark", "ridge", "ridge2", "tufte", "void"),
   ...
 )
 }
@@ -20,9 +20,10 @@ dynamic plots are marked with an asterisk (*) below.
 \itemize{
 \item \code{"default"}: inherits the user's default base graphics settings.
 \item \code{"basic"}: light modification of \code{"default"}, only adding filled points, a panel background grid, and light gray background to facet titles.
-\item \code{"clean"} (*): builds on \code{"basic"} by moving the subtitle above the plotting area, adding horizontal axis labels, employing tighter default plot margins and title gaps to reduce whitespace, and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors). The first of our dynamic themes and the foundation for several derivative themes that follow below.
+\item \code{"dynamic"} (*): builds on \code{"basic"} by enabling dynamic margin adjustment with tighter default margins, horizontal axis labels, and the subtitle moved above the plotting area. Turns off the panel grid. Provides the foundation for all other dynamic themes and is a good starting point for users who wish to build custom dynamic themes.
+\item \code{"clean"} (*): builds on \code{"dynamic"} by re-enabling the panel background grid and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors).
 \item \code{"clean2"} (*): removes the plot frame (box) from \code{"clean"}.
-\item \code{"classic"} (*): connects the axes in a L-shape, but removes the other top and right-hand edges of the plot frame (box). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
+\item \code{"classic"} (*): builds on \code{"dynamic"} with L-shaped axes (removing the top and right-hand edges of the plot frame). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
 \item \code{"bw"} (*): similar to \code{"clean"}, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
 \item \code{"minimal"} (*): removes the plot frame (box) from \code{"bw"}, as well as the background for facet titles. Inspired by the \strong{ggplot2} theme of the same name.
 \item \code{"ipsum"} (*): similar to \code{"minimal"}, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
@@ -49,23 +50,45 @@ whitespace.
 \details{
 Sets a list of graphical parameters using \code{tpar()}
 
-Note that themes are persistent and will be applied to all subsequent plots.
-To reset the theme to default settings (no customization), call \code{tinytheme()}
-without arguments. Altenatively, invoke the \verb{tinyplot(..., theme = <theme>)}
+\strong{Persistent vs. ephemeral themes.} Calling \code{tinytheme("<theme>")} triggers
+a persistent theme, which will be applied to all subsequent graphics (incl.
+base \code{plot}). To reset the theme to your default settings, call \code{tinytheme()}
+without arguments. Alternatively, invoke the \verb{tinyplot(..., theme = <theme>)}
 argument for an ephemeral theme that is automatically reset at the end of the
 plot call.
 
-\strong{Caveat emptor:} Themes are a somewhat experimental feature of \code{tinyplot}.
-While we feel confident that themes should work as expected for most
-"standard" cases, there may be some sharp edges. Please report any unexpected
-behaviour to our GitHub repo:
-\url{https://github.com/grantmcdermott/tinyplot/issues}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# Set a persistent theme
+tinytheme("clean")
+tinyplot(1:10)  # uses "clean"
+tinyplot(10:1)  # still uses "clean"
+tinytheme()     # reset to default
 
-Known current limitations include:
+# Use an ephemeral theme for a single plot (incl. added components)
+tinyplot(1:10, theme = "dark")  # uses "dark" ephemerally
+tinyplot_add(type = "S")        # same plot, so retains theme
+tinyplot(10:1)                  # new plot, so back to default
+}\if{html}{\out{</div>}}
+
+\strong{Custom overrides.} To customize a theme's parameters (e.g., \code{mar}, \code{las},
+etc.), pass them directly as additional args to \verb{tinytheme(<theme>, ...)}.
+Please note that passing overrides through \code{tpar()} or \code{par()} \emph{won't} work,
+because themes work by installing a persistent hook, which means that an
+active theme will override any subsequent calls for parameters that the theme
+controls.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# Do this
+tinytheme("clean", mar = c(5, 5, 2, 2))
+<some plot>
+
+# Not this (the theme hook will overwrite your changes)
+tinytheme("clean")
+tpar(mar = c(5, 5, 2, 2))
+<some plot>
+}\if{html}{\out{</div>}}
+
+\strong{Caveats.} Known \code{tinytheme} limitations include:
 \itemize{
 \item Themes do not work well when \code{legend = "top!"}.
-\item Dynamic margin spacing does not account for multi-line strings (e.g., axes
-or main titles that contain "\\n").
 }
 }
 \examples{

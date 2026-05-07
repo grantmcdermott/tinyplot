@@ -31,10 +31,15 @@ draw_facet_window = function(
     draw,
     grid,
     has_legend,
+    main,
+    sub,
     type,
+    xlab,
     x, xmax, xmin,
+    ylab,
     y, ymax, ymin,
-    tpars = NULL
+    tpars = NULL,
+    dynmar_computed = NULL
     ) {
   
   if (is.null(tpars)) tpars = tpar()
@@ -114,6 +119,23 @@ draw_facet_window = function(
     
     ## Dynamic plot margin adjustments
     if (dynmar) {
+      # Margins were pre-computed in tinyplot.default (dynmar_computed).
+      # Use that as the base instead of par("mar") which may have been
+      # reset by the before.plot.new hook.
+      side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
+      omar = dynmar_computed
+      # Under facets, main/sub sit ABOVE the top facet strip. Bump the
+      # outer top margin by the strip height so sub doesn't collide with
+      # the strip. fmar[3] already captures facet_newlines and the
+      # facet_grid adjustment; add back the 0.5 line that was stripped
+      # when frame.plot is FALSE (that reduction is meant to tighten
+      # inter-panel gaps, not the top strip).
+      strip_bump = fmar[3]
+      if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+        strip_bump = strip_bump + 0.5
+      }
+      omar[3] = omar[3] + strip_bump
+
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
         ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
@@ -155,6 +177,9 @@ draw_facet_window = function(
           fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
         }
       }
+
+      if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
+
       # FIXME: Is this causing issues for lhs legends with facet_grid?
       # catch for missing rhs legend
       if (isTRUE(attr(facet, "facet_grid")) && !has_legend) {
@@ -183,9 +208,11 @@ draw_facet_window = function(
     # on our earlier calculations.
     par(mfrow = c(nfacet_rows, nfacet_cols))
   } else if (dynmar) {
-    # Dynamic plot margin adjustments
-    omar = par("mar")
-    omar = omar - c(0, 0, 1, 0) # reduce top whitespace since no facet (title)
+    # Dynamic plot margin adjustments (no facets). Margins were pre-computed
+    # in tinyplot.default and passed via dynmar_computed; use them directly.
+    # Tick-label *width/height* (whtsbp) is added further below.
+    side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
+    omar = dynmar_computed
     if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
@@ -218,6 +245,7 @@ draw_facet_window = function(
         omar[1] = omar[1] + whtsbp
       }
     }
+
      par(mar = omar)
   }
 

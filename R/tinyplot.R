@@ -833,6 +833,17 @@ tinyplot.default = function(
   } else {
     settings$legend_args = list(x = NULL)
   }
+  # normalize legend position up front so downstream code can read
+  # legend_args[["x"]] directly (idempotent: guarded inside sanitize_legend).
+  # Use settings$legend (captured via substitute()) rather than the raw
+  # `legend` promise, since the latter may be an unevaluated call like
+  # `legend("bottom!", ...)` that would error if forced by is.null() etc.
+  # Skip when add=TRUE: no new legend is drawn in add-mode, and
+  # settings$legend is coerced to FALSE which sanitize_legend would
+  # spuriously normalize to the "right!" default.
+  if (!isTRUE(add)) {
+    settings$legend_args = sanitize_legend(settings$legend, settings$legend_args)
+  }
 
   # alias: bg = fill
   if (is.null(bg) && !is.null(fill)) settings$bg = fill
@@ -938,6 +949,115 @@ tinyplot.default = function(
 
   env2env(settings, environment())
 
+  #
+  ## dynmar: compute margins up front -----
+  #
+  # Under dynmar themes, compute the full margin once before any drawing.
+  # theme_mar (from the theme) is the baseline padding; dynmar_side() adds
+  # space for ticks, axis labels, main, and sub. whtsbp adds tick-label
+  # width/height for horizontal y-labels or vertical x-labels.
+  # For outer legends ("bottom!", "left!", etc.), skip dynmar_side on the
+  # legend's side — the legend code owns that side's mar via oma.
+  #
+  dynmar_computed = NULL
+  .whtsbp = c(0, 0, 0, 0)
+  if (!add && isTRUE(get_tpar("dynmar"))) {
+    .side.sub = get_tpar("side.sub", default = 3)
+    # Read the theme's intended mar. Also build a tpars list from the theme
+    # definition so dynmar_side uses theme mgp/tcl/las (which aren't in
+    # par() yet since the before.plot.new hook hasn't fired).
+    .tinytheme = get_tpar("tinytheme", default = "default")
+    .theme_def = if (!is.null(.tinytheme) && .tinytheme != "default") {
+      get(paste0("theme_", .tinytheme), envir = asNamespace("tinyplot"))
+    } else NULL
+    .theme_mar = if (!is.null(.theme_def[["mar"]])) .theme_def[["mar"]] else par("mar")
+    .tpars = if (!is.null(.theme_def)) .theme_def else tpar()
+    # Merge pending before.plot.new hook values into .tpars so user
+    # overrides passed via tinytheme(..., las = 2) (or tpar(...)) are
+    # visible to dynmar_side()/whtsbp before plot.new fires. Without this,
+    # user overrides for par-level values (las, cex.lab, mgp, tcl, etc.)
+    # are queued in hook closures and unreachable from par() at this point.
+    .pending_hooks = get_environment_variable(".tpar_hooks")
+    for (.h in .pending_hooks) {
+      .bp = environment(.h)[["base_par"]]
+      if (is.list(.bp)) .tpars = modifyList(.tpars, .bp)
+    }
+
+    # Detect outer-legend sides (order: bottom, left, top, right).
+    .lgnd_pos = settings$legend_args[["x"]]
+    .outer_sides = c(
+      grepl("bottom!$", .lgnd_pos),
+      grepl("left!$",   .lgnd_pos),
+      grepl("top!$",    .lgnd_pos),
+      grepl("right!$",  .lgnd_pos)
+    )
+
+    .dyn = c(
+      dynmar_side(1, xlab, main = main, sub = sub, side.sub = .side.sub,
+                  axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
+                  tpars = .tpars),
+      dynmar_side(2, ylab,
+                  axis_on = !identical(yaxt, "none") && !identical(yaxt, "n"),
+                  tpars = .tpars),
+      dynmar_side(3, NULL, main = main, sub = sub, side.sub = .side.sub,
+                  tpars = .tpars),
+      dynmar_side(4, NULL, tpars = .tpars)
+    )
+    # Drop the theme's baseline padding on outer-legend sides so the plot
+    # region meets the legend's oma flush. Only .theme_mar is zeroed — the
+    # axis-driven bumps in .dyn (tick rows, axis labels, main/sub) are kept
+    # so that "left!" and "bottom!" legends don't collide with axis content.
+    .theme_mar[.outer_sides] = 0
+
+    # whtsbp uses strwidth(units="figure") + grconvertX("nfc" → "lines"),
+    # both of which give device-default font metrics without requiring
+    # plot.new()/plot.window() first. A preparatory plot.new() here would
+    # advance par("mfg") (breaking mfrow layouts) and create a blank page
+    # in IDE plot panes (Positron). Left/bottom/top margin sizing for
+    # title alignment is handled later by draw_legend or the no-legend
+    # path's own plot.new(), after which the margins are reinstated
+    # via dynmar_computed + .whtsbp before draw_title runs.
+
+    # Compute whtsbp (tick-label width/height bump). Read `las` from .tpars
+    # (the theme definition) rather than par() — par("las") isn't set to the
+    # theme's intended value until the before.plot.new hook fires, but this
+    # block runs before that.
+    .whtsbp = c(0, 0, 0, 0)
+    .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
+    if (.las %in% 1:2) {
+      if (type == "ridge") {
+        yaxlabs = levels(y)
+      } else if (!is.null(ylabs)) {
+        yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs
+      } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
+        yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs
+      } else {
+        yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+      }
+      if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
+      whtsbp_y = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") -
+                 grconvertX(0, from = "nfc", to = "lines") - 1
+      if (is.finite(whtsbp_y) && whtsbp_y > 0) .whtsbp[2] = whtsbp_y
+    }
+    if (.las %in% 2:3) {
+      xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
+        if (!is.null(names(xlabs))) names(xlabs) else xlabs
+      if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
+      whtsbp_x = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
+      if (is.finite(whtsbp_x) && whtsbp_x > 0) .whtsbp[1] = whtsbp_x
+    }
+
+    # Under facets, per-facet tick labels render smaller (scaled by
+    # cex_fct_adj), so whtsbp — which is computed from device font metrics
+    # — needs the same scaling to match the actual rendered margin used by
+    # draw_facet_window. Without this, draw_title's mar reserves too much
+    # space on the LHS and anchors the title too far right.
+    if (cex_fct_adj != 1) .whtsbp = .whtsbp * cex_fct_adj
+
+    dynmar_computed = .theme_mar + .dyn
+    par(mar = dynmar_computed + .whtsbp)
+  }
+
   if (legend_draw_flag) {
     if (!multi_legend) {
       ## simple case: single legend only
@@ -988,7 +1108,17 @@ tinyplot.default = function(
   #
 
   if (!add) {
-    draw_title(main, sub, xlab, ylab, legend, legend_args, opar)
+    # Reinstate dynmar margins and user coordinates after draw_legend
+    # (which may have called plot.new and reset par via hooks).
+    if (!is.null(dynmar_computed)) {
+      par(mar = dynmar_computed + .whtsbp)
+      if (!is.null(xlim) && !is.null(ylim)) {
+        plot.window(xlim = xlim, ylim = ylim)
+      }
+    }
+    draw_title(main, sub, xlab, ylab, legend, legend_args, opar,
+               xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
+               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] else 0)
   }
 
 
@@ -1062,10 +1192,15 @@ tinyplot.default = function(
       draw = draw,
       grid = grid,
       has_legend = has_legend,
+      main = main,
+      sub = sub,
       type = type,
+      xlab = xlab,
       x = x, xmax = xmax, xmin = xmin,
+      ylab = ylab,
       y = y, ymax = ymax, ymin = ymin,
-      tpars = tpars
+      tpars = tpars,
+      dynmar_computed = dynmar_computed
     ),
     list = list(
       add = add,
@@ -1086,15 +1221,19 @@ tinyplot.default = function(
       draw = draw,
       grid = grid,
       has_legend = has_legend,
+      main = main,
+      sub = sub,
       type = type,
+      xlab = xlab,
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
+      ylab = ylab,
       y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin,
-      tpars = tpar() # https://github.com/grantmcdermott/tinyplot/issues/474
+      tpars = tpar(), # https://github.com/grantmcdermott/tinyplot/issues/474
+      dynmar_computed = dynmar_computed
     ),
     getNamespace("tinyplot")
   )
   list2env(facet_window_args, environment())
-
 
   #
   ## split and draw datapoints -----

@@ -513,6 +513,22 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_grid")
 
+# Free facets with different y-axis scales (issue #570)
+f = function() {
+  dat = data.frame(
+    x = rep(0:10, times = 2),
+    y = c(0:10, 1000000:1000010),
+    f = rep(c("A", "B"), each = 11)
+  )
+  tinyplot(
+    y ~ x, data = dat,
+    facet = ~f, facet.args = list(free = TRUE),
+    theme = "clean",
+    main = "Free facets: different y scales"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_yscale")
+
 #
 # restore original par settings
 #

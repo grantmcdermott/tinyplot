@@ -65,3 +65,20 @@ f = function() {
   tinytheme()
 }
 expect_snapshot_plot(f, label = "grid_theme_xy")
+
+# grid = grid() with facets (issue #193)
+
+f = function() {
+  plt(
+    Sepal.Length ~ Petal.Length | Sepal.Length, data = iris,
+    facet = ~Species, pch = 19,
+    grid = grid(),
+    main = "grid = grid()"
+  )
+}
+expect_snapshot_plot(f, label = "grid_func_facet")
+
+# Input validation
+
+expect_error(plt(wt ~ mpg, mtcars, grid = "zz"))
+expect_error(plt(wt ~ mpg, mtcars, grid = "abc"))

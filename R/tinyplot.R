@@ -198,12 +198,14 @@
 #'   The default is to draw a frame if both axis types (set via `axes`, `xaxt`,
 #'   or `yaxt`) include axis lines.
 #' @param grid argument for plotting a background panel grid, one of:
-#'    - a logical (i.e., `TRUE` to draw the grid on both axes),
+#'    - a logical (i.e., `TRUE` to draw the grid on both axes).
 #'    - a character string controlling which axes get grid lines and at what
 #'      resolution. Uppercase letters (`"X"`, `"Y"`, `"XY"`) draw grid lines at
 #'      the standard axis tick positions (with the latter equivalent to `TRUE`),
 #'      while lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with
-#'      additional lines at the midpoints between ticks, or
+#'      additional lines at the midpoints between ticks. (Note: the finer grid
+#'      has no effect on log-scale axes, since tick positions already include
+#'      intermediate values.)
 #'    - a panel grid plotting function like `grid()`.
 #'   Note that this argument replaces the `panel.first` and `panel.last`
 #'   arguments from base `plot()` and tries to make the process more seamless

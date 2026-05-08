@@ -47,6 +47,9 @@ where the formatting is also better._
   or character inputs (e.g., `grid = TRUE`, `grid = "xy"`) remain the more
   idiomatic way to generate a background grid in `tinyplot`.
   (#193 @grantmcdermott)
+- Fixed margin spacing for free facets with different axis scales. The dynamic
+  margin adjustment now computes tick labels per-facet and sizes the margin to
+  accommodate the widest labels. (#579 @grantmcdermott)
 
 ## v0.6.1
 

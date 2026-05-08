@@ -514,34 +514,54 @@ draw_facet_window = function(
 
     # panel grid lines
     if (is.null(grid)) grid = get_tpar("grid", tpar_list = tpars)
-    if (!is.null(grid)) {
-      if (is.logical(grid)) {
-        ## If grid is TRUE create a default grid. Rather than just calling the default grid()
-        ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
-        ## and works better for axes based on date/time classes. Exception: For axes in logs,
-        ## resort to using grid() which is likely better handled there.
-        if (isTRUE(grid)) {
-          gnx = gny = NULL
-          if (!is.null(xaxb)) {
-            abline(v = xaxb, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-            gnx = NA
-          } else if (!any(c(par("xlog"), type == "boxplot"))) {
-            xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
-            abline(v = xg, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-            gnx = NA
-          }
-          if (!is.null(yaxb)) {
-            abline(h = yaxb, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-            gny = NA
-          } else if (!any(c(par("ylog"), type == "boxplot"))) {
-            yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
-            abline(h = yg, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-            gny = NA
-          }
-          grid(nx = gnx, ny = gny, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-        }
+    if (!is.null(grid) && !isFALSE(grid)) {
+      gcol = get_tpar("grid.col", tpar_list = tpars)
+      glty = get_tpar("grid.lty", tpar_list = tpars)
+      glwd = get_tpar("grid.lwd", tpar_list = tpars)
+
+      if (isTRUE(grid)) {
+        draw_x = draw_y = TRUE
+        fine_x = fine_y = FALSE
+      } else if (is.character(grid)) {
+        draw_x = grepl("x", grid, fixed = TRUE) || grepl("X", grid, fixed = TRUE)
+        draw_y = grepl("y", grid, fixed = TRUE) || grepl("Y", grid, fixed = TRUE)
+        fine_x = grepl("x", grid, fixed = TRUE)
+        fine_y = grepl("y", grid, fixed = TRUE)
       } else {
-        grid
+        eval(grid) # issue #193
+        draw_x = draw_y = FALSE
+      }
+
+      if (draw_x || draw_y) {
+
+        if (draw_x) {
+          if (!is.null(xaxb)) {
+            xg = xaxb
+          } else {
+            xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
+          }
+          if (fine_x && !par("xlog") && length(xg) >= 2L) {
+            xg = as.numeric(xg)
+            half = (xg[2L] - xg[1L]) / 2
+            xg = seq(xg[1L] - half, xg[length(xg)] + half, by = half)
+          }
+          abline(v = xg, col = gcol, lty = glty, lwd = glwd)
+        }
+
+        if (draw_y) {
+          if (!is.null(yaxb)) {
+            yg = yaxb
+          } else {
+            yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
+          }
+          if (fine_y && !par("ylog") && length(yg) >= 2L) {
+            yg = as.numeric(yg)
+            half = (yg[2L] - yg[1L]) / 2
+            yg = seq(yg[1L] - half, yg[length(yg)] + half, by = half)
+          }
+          abline(h = yg, col = gcol, lty = glty, lwd = glwd)
+        }
+
       }
     }
 

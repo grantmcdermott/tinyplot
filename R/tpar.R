@@ -65,7 +65,7 @@
 #' * `grid.col`: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to `"lightgray"`.
 #' * `grid.lty`: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to `"dotted"`.
 #' * `grid.lwd`: Non-negative numeric giving the line width of the panel grid lines. Defaults to `1`.
-#' * `grid`: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to `NULL`, which is equivalent to `FALSE`.
+#' * `grid`: Logical or character indicating whether a background panel grid should be added to plots automatically. Defaults to `NULL`, which is equivalent to `FALSE`. In addition to logical values, a character string can be used to control axis-specific grids: uppercase letters (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard axis tick positions (equivalent to `TRUE`), while lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional lines at the midpoints between ticks.
 #' * `lmar`: A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
 #' * `palette.qualitative`: Palette for qualitative colors. See the `palette` argument in `?tinyplot`.
 #' * `palette.sequential`: Palette for sequential colors. See the `palette` argument in `?tinyplot`.
@@ -276,7 +276,7 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE, name = "lmar")
   assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "ribbon.alpha")
   assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE, name = "grid.lwd")
-  assert_flag(.tpar[["grid"]], null.ok = TRUE, name = "grid")
+  assert_grid(.tpar[["grid"]], null.ok = TRUE, name = "grid")
   assert_numeric(.tpar[["file.res"]], len = 1, lower = 0, null.ok = TRUE, name = "file.res")
   assert_numeric(.tpar[["file.height"]], len = 1, lower = 0, null.ok = TRUE, name = "file.height")
   assert_numeric(.tpar[["file.width"]], len = 1, lower = 0, null.ok = TRUE, name = "file.width")

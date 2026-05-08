@@ -32,8 +32,21 @@ where the formatting is also better._
 
 ### New features
 
+- The `grid` argument (and `tpar("grid")`) now accepts character strings to
+  control axis-specific grids at different resolutions. Uppercase letters
+  (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
+  lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional
+  lines at the midpoints between ticks. Thanks to @zeileis for the suggestion.
+  (#578 @grantmcdermott)
 - New `"dynamic"` theme that now serves as the foundation for all other dynamic
   (tiny)themes. (#549 @grantmcdermott) 
+
+### Bug fixes
+
+- Fixed `grid = grid()` not drawing grid lines on all facets. That said, logical
+  or character inputs (e.g., `grid = TRUE`, `grid = "xy"`) remain the more
+  idiomatic way to generate a background grid in `tinyplot`.
+  (#193 @grantmcdermott)
 
 ## v0.6.1
 

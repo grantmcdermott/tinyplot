@@ -197,8 +197,15 @@
 #'   the plot. Can also use `frame` as an acceptable argument alias.
 #'   The default is to draw a frame if both axis types (set via `axes`, `xaxt`,
 #'   or `yaxt`) include axis lines.
-#' @param grid argument for plotting a background panel grid, one of either:
-#'    - a logical (i.e., `TRUE` to draw the grid), or
+#' @param grid argument for plotting a background panel grid, one of:
+#'    - a logical (i.e., `TRUE` to draw the grid on both axes).
+#'    - a character string controlling which axes get grid lines and at what
+#'      resolution. Uppercase letters (`"X"`, `"Y"`, `"XY"`) draw grid lines at
+#'      the standard axis tick positions (with the latter equivalent to `TRUE`),
+#'      while lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with
+#'      additional lines at the midpoints between ticks. (Note: the finer grid
+#'      has no effect on log-scale axes, since tick positions already include
+#'      intermediate values.)
 #'    - a panel grid plotting function like `grid()`.
 #'   Note that this argument replaces the `panel.first` and `panel.last`
 #'   arguments from base `plot()` and tries to make the process more seamless
@@ -653,6 +660,12 @@ tinyplot.default = function(
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
   
+  # Validate grid only for simple values; skip for unevaluated calls like grid()
+  # which are passed as language objects from tinyplot.formula via substitute(). (#193)
+  if (!is.null(grid) && !is.call(grid)) {
+    assert_grid(grid, null.ok = TRUE, name = "grid")
+  }
+
   # save for tinyplot_add()
   assert_logical(add)
   if (!add) {
@@ -1580,7 +1593,7 @@ tinyplot.formula = function(
     axes = axes,
     frame.plot = frame.plot,
     asp = asp,
-    grid = grid,
+    grid = substitute(grid), # issue #193
     legend_args = legend_args,
     pch = pch,
     col = col,

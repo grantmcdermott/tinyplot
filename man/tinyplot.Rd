@@ -331,9 +331,16 @@ the plot. Can also use \code{frame} as an acceptable argument alias.
 The default is to draw a frame if both axis types (set via \code{axes}, \code{xaxt},
 or \code{yaxt}) include axis lines.}
 
-\item{grid}{argument for plotting a background panel grid, one of either:
+\item{grid}{argument for plotting a background panel grid, one of:
 \itemize{
-\item a logical (i.e., \code{TRUE} to draw the grid), or
+\item a logical (i.e., \code{TRUE} to draw the grid on both axes).
+\item a character string controlling which axes get grid lines and at what
+resolution. Uppercase letters (\code{"X"}, \code{"Y"}, \code{"XY"}) draw grid lines at
+the standard axis tick positions (with the latter equivalent to \code{TRUE}),
+while lowercase letters (\code{"x"}, \code{"y"}, \code{"xy"}) draw a finer grid with
+additional lines at the midpoints between ticks. (Note: the finer grid
+has no effect on log-scale axes, since tick positions already include
+intermediate values.)
 \item a panel grid plotting function like \code{grid()}.
 Note that this argument replaces the \code{panel.first} and \code{panel.last}
 arguments from base \code{plot()} and tries to make the process more seamless

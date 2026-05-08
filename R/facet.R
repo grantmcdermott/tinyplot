@@ -145,8 +145,14 @@ draw_facet_window = function(
           yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
         } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
           yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
+        } else if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
+          yfree_split = split(c(y, ymin, ymax), facet)
+          yaxlabs_all = lapply(yfree_split, function(yf) {
+            axisTicks(usr = extendrange(range(yf, na.rm = TRUE), f = 0.04), log = par("ylog"))
+          })
+          widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches")), numeric(1L))
+          yaxlabs = yaxlabs_all[[which.max(widths)]]
         } else {
-          # yaxl = axTicks(2)
           yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
         }
         if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
@@ -163,9 +169,17 @@ draw_facet_window = function(
       }
       if (par("las") %in% 2:3) {
         # extra whitespace bump on the x axis
-        # xaxlabs = axTicks(1)
-        xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else 
-          if (!is.null(names(xlabs))) names(xlabs) else xlabs
+        if (is.null(xlabs) && isTRUE(facet.args[["free"]]) && null_xlim && !is.null(facet)) {
+          xfree_split = split(c(x, xmin, xmax), facet)
+          xaxlabs_all = lapply(xfree_split, function(xf) {
+            axisTicks(usr = extendrange(range(xf, na.rm = TRUE), f = 0.04), log = par("xlog"))
+          })
+          widths = vapply(xaxlabs_all, function(labs) max(strwidth(labs, "inches")), numeric(1L))
+          xaxlabs = xaxlabs_all[[which.max(widths)]]
+        } else {
+          xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
+            if (!is.null(names(xlabs))) names(xlabs) else xlabs
+        }
         if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
         whtsbp = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {

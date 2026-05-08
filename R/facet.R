@@ -543,8 +543,7 @@ draw_facet_window = function(
           if (fine_x && !par("xlog") && length(xg) >= 2L) {
             xg = as.numeric(xg)
             half = (xg[2L] - xg[1L]) / 2
-            mids = (xg[-length(xg)] + xg[-1L]) / 2
-            xg = sort(c(xg[1L] - half, xg, mids, xg[length(xg)] + half))
+            xg = seq(xg[1L] - half, xg[length(xg)] + half, by = half)
           }
           abline(v = xg, col = gcol, lty = glty, lwd = glwd)
         }
@@ -558,8 +557,7 @@ draw_facet_window = function(
           if (fine_y && !par("ylog") && length(yg) >= 2L) {
             yg = as.numeric(yg)
             half = (yg[2L] - yg[1L]) / 2
-            mids = (yg[-length(yg)] + yg[-1L]) / 2
-            yg = sort(c(yg[1L] - half, yg, mids, yg[length(yg)] + half))
+            yg = seq(yg[1L] - half, yg[length(yg)] + half, by = half)
           }
           abline(h = yg, col = gcol, lty = glty, lwd = glwd)
         }

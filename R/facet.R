@@ -540,8 +540,7 @@ draw_facet_window = function(
             xg = xaxb
             if (fine_x && length(xg) >= 2L) {
               xg2 = (xg[2L] - xg[1L]) / 2
-              xg = seq(xg[1L] - xg2, xg[length(xg)] + xg2, by = xg2)
-              xg = xg[xg >= xlim[1L] & xg <= xlim[2L]]
+              xg = seq(floor(xlim[1L] / xg2) * xg2, ceiling(xlim[2L] / xg2) * xg2, by = xg2)
             }
             abline(v = xg, col = gcol, lty = glty, lwd = glwd)
             gnx = NA
@@ -549,8 +548,7 @@ draw_facet_window = function(
             xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
             if (fine_x && length(xg) >= 2L) {
               xg2 = (xg[2L] - xg[1L]) / 2
-              xg = seq(xg[1L] - xg2, xg[length(xg)] + xg2, by = xg2)
-              xg = xg[xg >= xlim[1L] & xg <= xlim[2L]]
+              xg = seq(floor(xlim[1L] / xg2) * xg2, ceiling(xlim[2L] / xg2) * xg2, by = xg2)
             }
             abline(v = xg, col = gcol, lty = glty, lwd = glwd)
             gnx = NA
@@ -562,8 +560,7 @@ draw_facet_window = function(
             yg = yaxb
             if (fine_y && length(yg) >= 2L) {
               yg2 = (yg[2L] - yg[1L]) / 2
-              yg = seq(yg[1L] - yg2, yg[length(yg)] + yg2, by = yg2)
-              yg = yg[yg >= ylim[1L] & yg <= ylim[2L]]
+              yg = seq(floor(ylim[1L] / yg2) * yg2, ceiling(ylim[2L] / yg2) * yg2, by = yg2)
             }
             abline(h = yg, col = gcol, lty = glty, lwd = glwd)
             gny = NA
@@ -571,8 +568,7 @@ draw_facet_window = function(
             yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
             if (fine_y && length(yg) >= 2L) {
               yg2 = (yg[2L] - yg[1L]) / 2
-              yg = seq(yg[1L] - yg2, yg[length(yg)] + yg2, by = yg2)
-              yg = yg[yg >= ylim[1L] & yg <= ylim[2L]]
+              yg = seq(floor(ylim[1L] / yg2) * yg2, ceiling(ylim[2L] / yg2) * yg2, by = yg2)
             }
             abline(h = yg, col = gcol, lty = glty, lwd = glwd)
             gny = NA

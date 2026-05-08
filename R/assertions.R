@@ -93,9 +93,9 @@ assert_length = function(x, len = 1, null.ok = FALSE, name = as.character(substi
 assert_grid = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
   if (is.null(x) && isTRUE(null.ok)) return(invisible(TRUE))
   if (is.logical(x) && length(x) == 1) return(invisible(TRUE))
-  valid_strings = c("x", "y", "xy", "X", "Y", "XY")
+  valid_strings = c("x", "y", "X", "Y", "xy", "xY", "Xy", "XY")
   if (is.character(x) && length(x) == 1 && x %in% valid_strings) return(invisible(TRUE))
-  msg = sprintf("`%s` must be a logical flag or one of: %s", name, paste(valid_strings, collapse = ", "))
+  msg = sprintf("`%s` must be a logical flag or a character string combining x/X and/or y/Y (e.g., \"xy\", \"XY\", \"xY\")", name)
   stop(msg, call. = FALSE)
 }
 

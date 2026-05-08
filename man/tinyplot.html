@@ -1053,10 +1053,13 @@ a logical indicating whether a box should be drawn around the plot. Can also use
 <code id="grid">grid</code>
 </td>
 <td>
-<p>argument for plotting a background panel grid, one of either:</p>
+<p>argument for plotting a background panel grid, one of:</p>
 <ul>
 <li>
-<p>a logical (i.e., <code>TRUE</code> to draw the grid), or</p>
+<p>a logical (i.e., <code>TRUE</code> to draw the grid on both axes).</p>
+</li>
+<li>
+<p>a character string controlling which axes get grid lines and at what resolution. Uppercase letters (<code>“X”</code>, <code>“Y”</code>, <code>“XY”</code>) draw grid lines at the standard axis tick positions (with the latter equivalent to <code>TRUE</code>), while lowercase letters (<code>“x”</code>, <code>“y”</code>, <code>“xy”</code>) draw a finer grid with additional lines at the midpoints between ticks. (Note: the finer grid has no effect on log-scale axes, since tick positions already include intermediate values.)</p>
 </li>
 <li>
 <p>a panel grid plotting function like <code>grid()</code>. Note that this argument replaces the <code>panel.first</code> and <code>panel.last</code> arguments from base <code>plot()</code> and tries to make the process more seamless with better default behaviour. The default behaviour is determined by (and can be set globally through) the value of <code>tpar(“grid”)</code>.</p>

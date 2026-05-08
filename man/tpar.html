@@ -658,7 +658,7 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 <p><code>grid.lwd</code>: Non-negative numeric giving the line width of the panel grid lines. Defaults to <code>1</code>.</p>
 </li>
 <li>
-<p><code>grid</code>: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to <code>NULL</code>, which is equivalent to <code>FALSE</code>.</p>
+<p><code>grid</code>: Logical or character indicating whether a background panel grid should be added to plots automatically. Defaults to <code>NULL</code>, which is equivalent to <code>FALSE</code>. In addition to logical values, a character string can be used to control axis-specific grids: uppercase letters (<code>“X”</code>, <code>“Y”</code>, <code>“XY”</code>) draw grid lines at the standard axis tick positions (equivalent to <code>TRUE</code>), while lowercase letters (<code>“x”</code>, <code>“y”</code>, <code>“xy”</code>) draw a finer grid with additional lines at the midpoints between ticks.</p>
 </li>
 <li>
 <p><code>lmar</code>: A numeric vector of form <code>c(inner, outer)</code> that gives the margin padding, in terms of lines, around the automatic <code>tinyplot</code> legend. Defaults to <code>c(1.0, 0.1)</code>. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.</p>

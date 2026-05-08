@@ -514,34 +514,75 @@ draw_facet_window = function(
 
     # panel grid lines
     if (is.null(grid)) grid = get_tpar("grid", tpar_list = tpars)
-    if (!is.null(grid)) {
-      if (is.logical(grid)) {
-        ## If grid is TRUE create a default grid. Rather than just calling the default grid()
-        ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
-        ## and works better for axes based on date/time classes. Exception: For axes in logs,
-        ## resort to using grid() which is likely better handled there.
-        if (isTRUE(grid)) {
-          gnx = gny = NULL
+    if (!is.null(grid) && !isFALSE(grid)) {
+      gcol = get_tpar("grid.col", tpar_list = tpars)
+      glty = get_tpar("grid.lty", tpar_list = tpars)
+      glwd = get_tpar("grid.lwd", tpar_list = tpars)
+
+      if (isTRUE(grid)) {
+        draw_x = draw_y = TRUE
+        fine_x = fine_y = FALSE
+      } else if (is.character(grid)) {
+        draw_x = grepl("x", grid, fixed = TRUE) || grepl("X", grid, fixed = TRUE)
+        draw_y = grepl("y", grid, fixed = TRUE) || grepl("Y", grid, fixed = TRUE)
+        fine_x = grepl("x", grid, fixed = TRUE)
+        fine_y = grepl("y", grid, fixed = TRUE)
+      } else {
+        grid
+        draw_x = draw_y = FALSE
+      }
+
+      if (draw_x || draw_y) {
+        gnx = gny = NULL
+
+        if (draw_x) {
           if (!is.null(xaxb)) {
-            abline(v = xaxb, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
+            xg = xaxb
+            if (fine_x && length(xg) >= 2L) {
+              xg2 = (xg[2L] - xg[1L]) / 2
+              xg = seq(xg[1L] - xg2, xg[length(xg)] + xg2, by = xg2)
+              xg = xg[xg >= xlim[1L] & xg <= xlim[2L]]
+            }
+            abline(v = xg, col = gcol, lty = glty, lwd = glwd)
             gnx = NA
           } else if (!any(c(par("xlog"), type == "boxplot"))) {
             xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
-            abline(v = xg, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
+            if (fine_x && length(xg) >= 2L) {
+              xg2 = (xg[2L] - xg[1L]) / 2
+              xg = seq(xg[1L] - xg2, xg[length(xg)] + xg2, by = xg2)
+              xg = xg[xg >= xlim[1L] & xg <= xlim[2L]]
+            }
+            abline(v = xg, col = gcol, lty = glty, lwd = glwd)
             gnx = NA
           }
+        }
+
+        if (draw_y) {
           if (!is.null(yaxb)) {
-            abline(h = yaxb, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
+            yg = yaxb
+            if (fine_y && length(yg) >= 2L) {
+              yg2 = (yg[2L] - yg[1L]) / 2
+              yg = seq(yg[1L] - yg2, yg[length(yg)] + yg2, by = yg2)
+              yg = yg[yg >= ylim[1L] & yg <= ylim[2L]]
+            }
+            abline(h = yg, col = gcol, lty = glty, lwd = glwd)
             gny = NA
           } else if (!any(c(par("ylog"), type == "boxplot"))) {
             yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
-            abline(h = yg, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
+            if (fine_y && length(yg) >= 2L) {
+              yg2 = (yg[2L] - yg[1L]) / 2
+              yg = seq(yg[1L] - yg2, yg[length(yg)] + yg2, by = yg2)
+              yg = yg[yg >= ylim[1L] & yg <= ylim[2L]]
+            }
+            abline(h = yg, col = gcol, lty = glty, lwd = glwd)
             gny = NA
           }
-          grid(nx = gnx, ny = gny, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
         }
-      } else {
-        grid
+
+        # Handle log-scale axes via grid() for any axes not yet drawn
+        grid(nx = gnx %||% if (draw_x) NULL else NA,
+             ny = gny %||% if (draw_y) NULL else NA,
+             col = gcol, lty = glty, lwd = glwd)
       }
     }
 

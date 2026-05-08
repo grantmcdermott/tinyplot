@@ -20,6 +20,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Grant McDermott \email{contact@grantmcdermott.com} (\href{https://orcid.org/0000-0001-7883-8573}{ORCID})
   \item Vincent Arel-Bundock \email{vincent.arel-bundock@umontreal.ca} (\href{https://orcid.org/0000-0003-1995-6531}{ORCID})
   \item Achim Zeileis \email{Achim.Zeileis@R-project.org} (\href{https://orcid.org/0000-0003-0918-3766}{ORCID})
 }

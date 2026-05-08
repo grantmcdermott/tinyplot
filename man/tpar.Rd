@@ -76,7 +76,7 @@ you should rather use \code{par()} instead.
 \item \code{grid.col}: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to \code{"lightgray"}.
 \item \code{grid.lty}: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to \code{"dotted"}.
 \item \code{grid.lwd}: Non-negative numeric giving the line width of the panel grid lines. Defaults to \code{1}.
-\item \code{grid}: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to \code{NULL}, which is equivalent to \code{FALSE}.
+\item \code{grid}: Logical or character indicating whether a background panel grid should be added to plots automatically. Defaults to \code{NULL}, which is equivalent to \code{FALSE}. In addition to logical values, a character string can be used to control axis-specific grids: uppercase letters (\code{"X"}, \code{"Y"}, \code{"XY"}) draw grid lines at the standard axis tick positions (equivalent to \code{TRUE}), while lowercase letters (\code{"x"}, \code{"y"}, \code{"xy"}) draw a finer grid with additional lines at the midpoints between ticks.
 \item \code{lmar}: A numeric vector of form \code{c(inner, outer)} that gives the margin padding, in terms of lines, around the automatic \code{tinyplot} legend. Defaults to \code{c(1.0, 0.1)}. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
 \item \code{palette.qualitative}: Palette for qualitative colors. See the \code{palette} argument in \code{?tinyplot}.
 \item \code{palette.sequential}: Palette for sequential colors. See the \code{palette} argument in \code{?tinyplot}.

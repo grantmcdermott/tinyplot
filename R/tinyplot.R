@@ -660,6 +660,12 @@ tinyplot.default = function(
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
   
+  # Validate grid only for simple values; skip for unevaluated calls like grid()
+  # which are passed as language objects from tinyplot.formula via substitute(). (#193)
+  if (!is.null(grid) && !is.call(grid)) {
+    assert_grid(grid, null.ok = TRUE, name = "grid")
+  }
+
   # save for tinyplot_add()
   assert_logical(add)
   if (!add) {
@@ -1587,7 +1593,7 @@ tinyplot.formula = function(
     axes = axes,
     frame.plot = frame.plot,
     asp = asp,
-    grid = grid,
+    grid = substitute(grid), # issue #193
     legend_args = legend_args,
     pch = pch,
     col = col,

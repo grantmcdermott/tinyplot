@@ -528,7 +528,7 @@ draw_facet_window = function(
         fine_x = grepl("x", grid, fixed = TRUE)
         fine_y = grepl("y", grid, fixed = TRUE)
       } else {
-        grid
+        eval(grid) # issue #193
         draw_x = draw_y = FALSE
       }
 

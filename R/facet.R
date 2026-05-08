@@ -533,52 +533,35 @@ draw_facet_window = function(
       }
 
       if (draw_x || draw_y) {
-        gnx = gny = NULL
 
         if (draw_x) {
           if (!is.null(xaxb)) {
             xg = xaxb
-            if (fine_x && length(xg) >= 2L) {
-              xg2 = (xg[2L] - xg[1L]) / 2
-              xg = seq(floor(xlim[1L] / xg2) * xg2, ceiling(xlim[2L] / xg2) * xg2, by = xg2)
-            }
-            abline(v = xg, col = gcol, lty = glty, lwd = glwd)
-            gnx = NA
-          } else if (!any(c(par("xlog"), type == "boxplot"))) {
+          } else {
             xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
-            if (fine_x && length(xg) >= 2L) {
-              xg2 = (xg[2L] - xg[1L]) / 2
-              xg = seq(floor(xlim[1L] / xg2) * xg2, ceiling(xlim[2L] / xg2) * xg2, by = xg2)
-            }
-            abline(v = xg, col = gcol, lty = glty, lwd = glwd)
-            gnx = NA
           }
+          if (fine_x && !par("xlog") && length(xg) >= 2L) {
+            xg = as.numeric(xg)
+            mids = (xg[-length(xg)] + xg[-1L]) / 2
+            xg = sort(c(xg, mids))
+          }
+          abline(v = xg, col = gcol, lty = glty, lwd = glwd)
         }
 
         if (draw_y) {
           if (!is.null(yaxb)) {
             yg = yaxb
-            if (fine_y && length(yg) >= 2L) {
-              yg2 = (yg[2L] - yg[1L]) / 2
-              yg = seq(floor(ylim[1L] / yg2) * yg2, ceiling(ylim[2L] / yg2) * yg2, by = yg2)
-            }
-            abline(h = yg, col = gcol, lty = glty, lwd = glwd)
-            gny = NA
-          } else if (!any(c(par("ylog"), type == "boxplot"))) {
+          } else {
             yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
-            if (fine_y && length(yg) >= 2L) {
-              yg2 = (yg[2L] - yg[1L]) / 2
-              yg = seq(floor(ylim[1L] / yg2) * yg2, ceiling(ylim[2L] / yg2) * yg2, by = yg2)
-            }
-            abline(h = yg, col = gcol, lty = glty, lwd = glwd)
-            gny = NA
           }
+          if (fine_y && !par("ylog") && length(yg) >= 2L) {
+            yg = as.numeric(yg)
+            mids = (yg[-length(yg)] + yg[-1L]) / 2
+            yg = sort(c(yg, mids))
+          }
+          abline(h = yg, col = gcol, lty = glty, lwd = glwd)
         }
 
-        # Handle log-scale axes via grid() for any axes not yet drawn
-        grid(nx = gnx %||% if (draw_x) NULL else NA,
-             ny = gny %||% if (draw_y) NULL else NA,
-             col = gcol, lty = glty, lwd = glwd)
       }
     }
 

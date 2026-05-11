@@ -220,14 +220,20 @@ tinylegend = function(legend_env) {
   legend_env$dims = measure_fake_legend(legend_env)
 
   # Calculate and apply soma (outer margin adjustment based on legend size)
-  soma = if (legend_env$outer_side) {
-    grconvertX(legend_env$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
-  } else if (legend_env$outer_end) {
-    grconvertY(legend_env$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
+  # When soma_target is set (multi-legend), use it directly so all legends
+  # share the same outer margin and their left edges align.
+  if (!is.null(legend_env$soma_target)) {
+    soma = legend_env$soma_target
   } else {
-    0
+    soma = if (legend_env$outer_side) {
+      grconvertX(legend_env$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
+    } else if (legend_env$outer_end) {
+      grconvertY(legend_env$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
+    } else {
+      0
+    }
+    soma = soma + sum(legend_env$lmar)
   }
-  soma = soma + sum(legend_env$lmar)
 
   if (legend_env$outer_side) {
     legend_env$ooma[if (legend_env$outer_right) 4 else 2] = soma
@@ -844,7 +850,8 @@ draw_legend = function(
   lmar = NULL,
   has_sub = FALSE,
   new_plot = TRUE,
-  draw = TRUE
+  draw = TRUE,
+  soma_target = NULL
 ) {
   if (is.null(lmar)) {
     lmar = tpar("lmar")
@@ -920,6 +927,8 @@ draw_legend = function(
   if (!draw) {
     return(legend_env$dims)
   }
+
+  legend_env$soma_target = soma_target
 
   # Store base values AFTER legend_outer_margins setup (before soma/inset are applied)
   # These are needed so tinylegend() can reset to them on each recordGraphics replay

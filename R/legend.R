@@ -292,6 +292,10 @@ measure_fake_legend = function(legend_env) {
     keep.null = TRUE
   )
 
+  if (isTRUE(legend_env$ljust_tw)) {
+    fklgnd.args[["text.width"]] = NULL
+  }
+
   if (legend_env$gradient) {
     lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
     if (length(lgnd_labs_tmp) < 5L) {
@@ -894,6 +898,27 @@ draw_legend = function(
 
   if (!draw) {
     return(legend_env$dims)
+  }
+
+  # Left-justify non-horizontal, non-gradient legends
+  if (!legend_env$gradient && !isTRUE(legend_env$args[["horiz"]])) {
+    legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0
+    ttl = legend_env$args[["title"]]
+    if (!is.null(ttl) && legend_env$args[["title.adj"]] == 0) {
+      legend_env$args[["title"]] = paste0(" ", ttl)
+    }
+    if (is.null(legend_env$args[["text.width"]])) {
+      ttl = legend_env$args[["title"]]
+      if (!is.null(ttl)) {
+        lab_tw = max(strwidth(legend_env$args[["legend"]]))
+        ttl_tw = strwidth(ttl)
+        if (ttl_tw > lab_tw) {
+          xch = par("cex") * xinch(par("cin")[1])
+          legend_env$args[["text.width"]] = max(ttl_tw - xch, lab_tw)
+          legend_env$ljust_tw = TRUE
+        }
+      }
+    }
   }
 
   # Store base values AFTER legend_outer_margins setup (before soma/inset are applied)

@@ -212,7 +212,7 @@ draw_multi_legend = function(
     legend_o$new_plot = FALSE
     legend_o$draw = TRUE
     legend_o$legend_args$inset = c(0, 0)
-    legend_o$legend_args$inset[1] = if (o == 1) -abs(diff(lwidths)) / 2 else 0
+    legend_o$legend_args$inset[1] = 0
     legend_o$legend_args$inset[2] = if (legend_o$idx == 1) linset + 0.01 else 1 - linset + 0.01
     legend_o$idx = NULL
     do.call(draw_legend, legend_o)

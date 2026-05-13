@@ -29,7 +29,7 @@
 <circle cx='435.46' cy='248.40' r='2.70' style='stroke-width: 0.38; stroke: none; fill: #66C2A5;' />
 <circle cx='435.46' cy='262.80' r='2.70' style='stroke-width: 0.38; stroke: none; fill: #FC8D62;' />
 <circle cx='435.46' cy='277.20' r='2.70' style='stroke-width: 0.38; stroke: none; fill: #8DA0CB;' />
-<text x='463.84' y='234.00' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
+<text x='430.04' y='234.00' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <text x='446.26' y='252.53' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <text x='446.26' y='266.93' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
 <text x='446.26' y='281.33' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>

@@ -29,7 +29,7 @@
 <rect x='426.63' y='227.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #1F77B4; fill: #1F77B4; fill-opacity: 0.40;' />
 <rect x='426.63' y='245.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #FF7F0E; fill: #FF7F0E; fill-opacity: 0.40;' />
 <rect x='426.63' y='263.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #2CA02C; fill: #2CA02C; fill-opacity: 0.40;' />
-<text x='463.38' y='216.00' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
+<text x='429.60' y='216.00' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <text x='445.80' y='239.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <text x='445.80' y='257.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
 <text x='445.80' y='275.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>

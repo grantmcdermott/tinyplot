@@ -29,7 +29,7 @@
 <line x1='458.09' y1='237.60' x2='479.69' y2='237.60' style='stroke-width: 0.75;' />
 <line x1='458.09' y1='252.00' x2='479.69' y2='252.00' style='stroke-width: 0.75; stroke: #DF536B;' />
 <line x1='458.09' y1='266.40' x2='479.69' y2='266.40' style='stroke-width: 0.75; stroke: #61D04F;' />
-<text x='474.92' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='14.67px' lengthAdjust='spacingAndGlyphs'>cyl</text>
+<text x='452.69' y='223.20' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='14.67px' lengthAdjust='spacingAndGlyphs'>cyl</text>
 <text x='490.49' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
 <text x='490.49' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
 <text x='490.49' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>

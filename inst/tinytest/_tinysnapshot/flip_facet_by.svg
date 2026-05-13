@@ -29,7 +29,7 @@
 <circle cx='435.00' cy='237.60' r='1.78' style='stroke-width: 0.75;' />
 <circle cx='435.00' cy='252.00' r='1.78' style='stroke-width: 0.75; stroke: #DF536B;' />
 <circle cx='435.00' cy='266.40' r='1.78' style='stroke-width: 0.75; stroke: #61D04F;' />
-<text x='463.38' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
+<text x='429.60' y='223.20' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <text x='445.80' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <text x='445.80' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
 <text x='445.80' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>

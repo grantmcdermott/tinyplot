@@ -37,7 +37,7 @@
 <polygon points='468.89,262.20 472.52,268.50 465.25,268.50 ' style='stroke-width: 1.43; stroke: #2297E6;' />
 <line x1='465.07' y1='280.80' x2='472.71' y2='280.80' style='stroke-width: 1.88; stroke: #28E2E5;' />
 <line x1='468.89' y1='284.62' x2='468.89' y2='276.98' style='stroke-width: 1.88; stroke: #28E2E5;' />
-<text x='478.70' y='208.80' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='33.34px' lengthAdjust='spacingAndGlyphs'>Month</text>
+<text x='476.92' y='208.80' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='33.34px' lengthAdjust='spacingAndGlyphs'>Month</text>
 <text x='490.49' y='227.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
 <text x='490.49' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
 <text x='490.49' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>7</text>

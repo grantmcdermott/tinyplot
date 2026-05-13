@@ -26,13 +26,13 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<polygon points='464.79,240.30 470.19,240.30 470.19,234.90 464.79,234.90 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
-<polygon points='464.79,254.70 470.19,254.70 470.19,249.30 464.79,249.30 ' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
-<polygon points='464.79,269.10 470.19,269.10 470.19,263.70 464.79,263.70 ' style='stroke-width: 0.75; stroke: none; fill: #61D04F;' />
+<polygon points='452.59,240.30 457.99,240.30 457.99,234.90 452.59,234.90 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<polygon points='452.59,254.70 457.99,254.70 457.99,249.30 452.59,249.30 ' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
+<polygon points='452.59,269.10 457.99,269.10 457.99,263.70 452.59,263.70 ' style='stroke-width: 0.75; stroke: none; fill: #61D04F;' />
 <text x='473.52' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='52.67px' lengthAdjust='spacingAndGlyphs'>factor(cyl)</text>
-<text x='478.29' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
-<text x='478.29' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
-<text x='478.29' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
+<text x='466.09' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text x='466.09' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
+<text x='466.09' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHw0MzAuMDl8MC4wMHw1MDQuMDA='>

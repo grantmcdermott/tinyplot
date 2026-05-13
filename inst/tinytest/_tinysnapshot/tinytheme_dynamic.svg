@@ -26,11 +26,11 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<circle cx='466.58' cy='255.60' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
-<circle cx='466.58' cy='270.00' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
+<circle cx='453.38' cy='255.60' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='453.38' cy='270.00' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
 <text x='472.62' y='241.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='54.67px' lengthAdjust='spacingAndGlyphs'>factor(am)</text>
-<text x='477.38' y='259.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text x='477.38' y='274.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
+<text x='464.18' y='259.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='464.18' y='274.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text x='47.52' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='113.23px' lengthAdjust='spacingAndGlyphs'>tinytheme("dynamic")</text>
 </g>
 <defs>

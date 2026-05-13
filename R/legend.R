@@ -234,10 +234,9 @@ tinylegend = function(legend_env) {
   legend_env$ooma = legend_env$ooma_base
   legend_env$args[["inset"]] = legend_env$inset_base
 
-  # Recompute text.width for left-justified legends (device size may have changed)
+  # Clear stale text.width before measuring (measurement doesn't need it)
   if (isTRUE(legend_env$ljust)) {
     legend_env$args[["text.width"]] = NULL
-    compute_ljust_text_width(legend_env)
   }
 
   # Re-measure legend dimensions (device size may have changed on resize)
@@ -281,6 +280,11 @@ tinylegend = function(legend_env) {
   setHook("before.plot.new", function() par(mar = legend_env$omar), action = "append")
   plot.new()
   setHook("before.plot.new", oldhook, action = "replace")
+
+  # Recompute text.width in the final coordinate context
+  if (isTRUE(legend_env$ljust)) {
+    compute_ljust_text_width(legend_env)
+  }
 
   # Set the inset in legend args
   legend_env$args[["inset"]] = if (legend_env$user_inset) {
@@ -937,7 +941,6 @@ draw_legend = function(
         ttl_tw = strwidth(ttl)
         if (ttl_tw > lab_tw) {
           legend_env$ljust = TRUE
-          compute_ljust_text_width(legend_env)
         }
       }
     }

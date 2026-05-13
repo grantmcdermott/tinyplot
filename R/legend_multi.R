@@ -200,6 +200,17 @@ draw_multi_legend = function(
   soma_target = (grconvertX(max_w, to = "lines") - grconvertX(0, to = "lines")) +
     sum(lmar_vals)
 
+  # Small buffer when the widest legend is title-driven (prevents title clipping)
+  widest = which.max(lwidths)
+  widest_ll = legend_list[[widest]]
+  widest_ttl = widest_ll$legend_args[["title"]]
+  if (!is.null(widest_ttl) && !is.null(widest_ll$lgnd_labs)) {
+    if (strwidth(paste0(" ", widest_ttl)) > max(strwidth(widest_ll$lgnd_labs))) {
+      soma_target = soma_target +
+        grconvertX(strwidth(" "), to = "lines") - grconvertX(0, to = "lines")
+    }
+  }
+
   #
   ## Step 3: Reposition (via adjusted inset arg) and draw legends
   #

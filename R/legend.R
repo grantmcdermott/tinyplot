@@ -205,6 +205,24 @@ measure_legend_inset = function(legend_env) {
 }
 
 
+compute_ljust_text_width = function(legend_env) {
+  if (!isTRUE(legend_env$ljust)) return(invisible(NULL))
+
+  args_oh = modifyList(legend_env$args,
+    list(plot = FALSE, title = NULL, text.width = 0), keep.null = TRUE)
+  overhead = do.call("legend", args_oh)$rect$w
+
+  args_nat = modifyList(legend_env$args,
+    list(plot = FALSE, text.width = NULL), keep.null = TRUE)
+  target_w = do.call("legend", args_nat)$rect$w
+
+  tw_needed = target_w - overhead
+  if (tw_needed > 0) {
+    legend_env$args[["text.width"]] = tw_needed
+  }
+}
+
+
 # Internal workhorse function for legend rendering
 # This function is called inside recordGraphics() so that all coordinate-dependent
 # calculations are re-executed when the plot window is resized
@@ -215,6 +233,12 @@ tinylegend = function(legend_env) {
   legend_env$omar = legend_env$omar_base
   legend_env$ooma = legend_env$ooma_base
   legend_env$args[["inset"]] = legend_env$inset_base
+
+  # Recompute text.width for left-justified legends (device size may have changed)
+  if (isTRUE(legend_env$ljust)) {
+    legend_env$args[["text.width"]] = NULL
+    compute_ljust_text_width(legend_env)
+  }
 
   # Re-measure legend dimensions (device size may have changed on resize)
   legend_env$dims = measure_fake_legend(legend_env)
@@ -297,10 +321,6 @@ measure_fake_legend = function(legend_env) {
     list(plot = FALSE),
     keep.null = TRUE
   )
-
-  if (isTRUE(legend_env$ljust_tw)) {
-    fklgnd.args[["text.width"]] = NULL
-  }
 
   if (legend_env$gradient) {
     lgnd_labs_tmp = na.omit(fklgnd.args[["legend"]])
@@ -916,9 +936,8 @@ draw_legend = function(
         lab_tw = max(strwidth(legend_env$args[["legend"]]))
         ttl_tw = strwidth(ttl)
         if (ttl_tw > lab_tw) {
-          xch = par("cex") * xinch(par("cin")[1])
-          legend_env$args[["text.width"]] = max(ttl_tw - xch, lab_tw)
-          legend_env$ljust_tw = TRUE
+          legend_env$ljust = TRUE
+          compute_ljust_text_width(legend_env)
         }
       }
     }

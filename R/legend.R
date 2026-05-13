@@ -791,11 +791,13 @@ build_legend_env = function(
 #' @param draw Logical. If `FALSE`, no legend is drawn but the sizes are
 #'   returned. Note that a new (blank) plot frame will still need to be started
 #'   in order to perform the calculations.
+#' @param soma_target Numeric. Shared outer margin target (in lines) for
+#'   multi-legend alignment. If `NULL`, each legend computes its own margin.
 #'
 #' @returns No return value, called for side effect of producing a(n empty) plot
 #'   with a legend in the margin.
 #'
-#' @importFrom graphics grconvertX grconvertY rasterImage strwidth
+#' @importFrom graphics grconvertX grconvertY rasterImage strheight strwidth xinch
 #' @importFrom grDevices as.raster recordGraphics
 #' @importFrom utils modifyList
 #'

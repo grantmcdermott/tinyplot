@@ -21,7 +21,8 @@ draw_legend(
   lmar = NULL,
   has_sub = FALSE,
   new_plot = TRUE,
-  draw = TRUE
+  draw = TRUE,
+  soma_target = NULL
 )
 }
 \arguments{

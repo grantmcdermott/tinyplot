@@ -924,25 +924,37 @@ draw_legend = function(
     new_plot = new_plot
   )
 
+  # Extract and strip ljust before any legend() calls
+  ljust_mode = legend_env$args[["ljust"]] %||% tpar("ljust") %||% "left"
+  ljust_mode = match.arg(ljust_mode, c("left", "center", "l", "c"))
+  if (ljust_mode == "l") ljust_mode = "left"
+  if (ljust_mode == "c") ljust_mode = "center"
+  legend_env$args[["ljust"]] = NULL
+
   # Initial setup: adjust margins, call plot.new, and measure (but don't apply soma yet)
   legend_outer_margins(legend_env, apply = FALSE)
 
-  # Left-justify vertical, non-gradient, side-positioned legends
+  # Legend justification (vertical, non-gradient, side-positioned only)
   if (!legend_env$gradient && !isTRUE(legend_env$args[["horiz"]]) && !legend_env$outer_end) {
-    legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0
-    ttl = legend_env$args[["title"]]
-    if (!is.null(ttl) && legend_env$args[["title.adj"]] == 0) {
-      legend_env$args[["title"]] = paste0(" ", ttl)
-    }
-    if (is.null(legend_env$args[["text.width"]])) {
+
+    if (ljust_mode == "left") {
+      legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0
       ttl = legend_env$args[["title"]]
-      if (!is.null(ttl)) {
-        lab_tw = max(strwidth(legend_env$args[["legend"]]))
-        ttl_tw = strwidth(ttl)
-        if (ttl_tw > lab_tw) {
-          legend_env$ljust = TRUE
+      if (!is.null(ttl) && legend_env$args[["title.adj"]] == 0) {
+        legend_env$args[["title"]] = paste0(" ", ttl)
+      }
+      if (is.null(legend_env$args[["text.width"]])) {
+        ttl = legend_env$args[["title"]]
+        if (!is.null(ttl)) {
+          lab_tw = max(strwidth(legend_env$args[["legend"]]))
+          ttl_tw = strwidth(ttl)
+          if (ttl_tw > lab_tw) {
+            legend_env$ljust = TRUE
+          }
         }
       }
+    } else {
+      legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0.5
     }
   }
 

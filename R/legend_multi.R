@@ -200,14 +200,22 @@ draw_multi_legend = function(
   soma_target = (grconvertX(max_w, to = "lines") - grconvertX(0, to = "lines")) +
     sum(lmar_vals)
 
-  # Small buffer when the widest legend is title-driven (prevents title clipping)
-  widest = which.max(lwidths)
-  widest_ll = legend_list[[widest]]
-  widest_ttl = widest_ll$legend_args[["title"]]
-  if (!is.null(widest_ttl) && !is.null(widest_ll$lgnd_labs)) {
-    if (strwidth(paste0(" ", widest_ttl)) > max(strwidth(widest_ll$lgnd_labs))) {
-      soma_target = soma_target +
-        grconvertX(strwidth(" "), to = "lines") - grconvertX(0, to = "lines")
+  # Determine ljust mode (shared across dual legends)
+  ljust_mode = legend_list[[1]]$legend_args[["ljust"]] %||% tpar("ljust") %||% "left"
+  ljust_mode = match.arg(ljust_mode, c("left", "center", "l", "c"))
+  if (ljust_mode == "l") ljust_mode = "left"
+  if (ljust_mode == "c") ljust_mode = "center"
+
+  # Small buffer when the widest legend is title-driven (left-justify only)
+  if (ljust_mode == "left") {
+    widest = which.max(lwidths)
+    widest_ll = legend_list[[widest]]
+    widest_ttl = widest_ll$legend_args[["title"]]
+    if (!is.null(widest_ttl) && !is.null(widest_ll$lgnd_labs)) {
+      if (strwidth(paste0(" ", widest_ttl)) > max(strwidth(widest_ll$lgnd_labs))) {
+        soma_target = soma_target +
+          grconvertX(strwidth(" "), to = "lines") - grconvertX(0, to = "lines")
+      }
     }
   }
 
@@ -228,9 +236,13 @@ draw_multi_legend = function(
     legend_o = legend_list[[io]]
     legend_o$new_plot = FALSE
     legend_o$draw = TRUE
-    legend_o$soma_target = soma_target
+    legend_o$soma_target = if (ljust_mode == "center") NULL else soma_target
     legend_o$legend_args$inset = c(0, 0)
-    legend_o$legend_args$inset[1] = 0
+    legend_o$legend_args$inset[1] = if (ljust_mode == "center") {
+      if (o == 1) -abs(diff(lwidths)) / 2 else 0
+    } else {
+      0
+    }
     legend_o$legend_args$inset[2] = if (legend_o$idx == 1) linset + 0.01 else 1 - linset + 0.01
     legend_o$idx = NULL
     do.call(draw_legend, legend_o)

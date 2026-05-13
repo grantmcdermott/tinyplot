@@ -242,6 +242,7 @@ known_tpar = c(
     "grid.col",
     "grid.lty",
     "grid.lwd",
+    "ljust",
     "lmar",
     "lty.xaxs",
     "lty.yaxs",
@@ -273,6 +274,7 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
   assert_flag(.tpar[["cairo"]], name = "cairo")
   assert_flag(.tpar[["dynmar"]], null.ok = FALSE, name = "dynmar")
+  assert_choice(.tpar[["ljust"]], choice = c("left", "center", "l", "c"), null.ok = TRUE, name = "ljust")
   assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE, name = "lmar")
   assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "ribbon.alpha")
   assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE, name = "grid.lwd")
@@ -347,6 +349,9 @@ init_tpar = function(rm_hook = FALSE) {
   .tpar$grid.col = if (is.null(getOption("tinyplot_grid.col"))) "lightgray" else getOption("tinyplot_grid.col")
   .tpar$grid.lty = if (is.null(getOption("tinyplot_grid.lty"))) "dotted" else getOption("tinyplot_grid.lty")
   .tpar$grid.lwd = if (is.null(getOption("tinyplot_grid.lwd"))) 1 else as.numeric(getOption("tinyplot_grid.lwd"))
+
+  # Legend justification
+  .tpar$ljust = if (is.null(getOption("tinyplot_ljust"))) "left" else getOption("tinyplot_ljust")
 
   # Legend margin, i.e. gap between the legend and the plot elements
   .tpar$lmar = if (is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))

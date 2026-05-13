@@ -938,10 +938,20 @@ draw_legend = function(
   if (!legend_env$gradient && !isTRUE(legend_env$args[["horiz"]]) && !legend_env$outer_end) {
 
     if (ljust_mode == "left") {
-      legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0
       ttl = legend_env$args[["title"]]
-      if (!is.null(ttl) && legend_env$args[["title.adj"]] == 0) {
-        legend_env$args[["title"]] = paste0(" ", ttl)
+      # Compute title.adj to give 0.5*xch of left padding. Base R places
+      # the title at: left + title.adj * (box_w - strwidth(title)), so
+      # we solve for title.adj = 0.5*xch / slack.
+      if (is.null(legend_env$args[["title.adj"]]) && !is.null(ttl)) {
+        xch = par("cex") * xinch(par("cin")[1])
+        slack = legend_env$dims$rect$w - strwidth(ttl)
+        legend_env$args[["title.adj"]] = if (slack > 0) {
+          min(0.5 * xch / slack, 0.5)
+        } else {
+          0
+        }
+      } else {
+        legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0
       }
       if (is.null(legend_env$args[["text.width"]])) {
         ttl = legend_env$args[["title"]]

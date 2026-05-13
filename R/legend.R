@@ -923,8 +923,8 @@ draw_legend = function(
   # Initial setup: adjust margins, call plot.new, and measure (but don't apply soma yet)
   legend_outer_margins(legend_env, apply = FALSE)
 
-  # Left-justify non-horizontal, non-gradient legends
-  if (!legend_env$gradient && !isTRUE(legend_env$args[["horiz"]])) {
+  # Left-justify vertical, non-gradient, side-positioned legends
+  if (!legend_env$gradient && !isTRUE(legend_env$args[["horiz"]]) && !legend_env$outer_end) {
     legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0
     ttl = legend_env$args[["title"]]
     if (!is.null(ttl) && legend_env$args[["title.adj"]] == 0) {

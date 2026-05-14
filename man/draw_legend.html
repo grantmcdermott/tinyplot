@@ -595,7 +595,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   lmar = NULL,
   has_sub = FALSE,
   new_plot = TRUE,
-  draw = TRUE
+  draw = TRUE,
+  soma_target = NULL
 )
 </code></pre>
 </section>
@@ -736,6 +737,14 @@ Logical. Should we be calling plot.new internally?
 </td>
 <td>
 Logical. If <code>FALSE</code>, no legend is drawn but the sizes are returned. Note that a new (blank) plot frame will still need to be started in order to perform the calculations.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="soma_target">soma_target</code>
+</td>
+<td>
+Numeric. Shared outer margin target (in lines) for multi-legend alignment. If <code>NULL</code>, each legend computes its own margin.
 </td>
 </tr>
 </tbody></table>

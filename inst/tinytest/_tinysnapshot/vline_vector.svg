@@ -29,7 +29,7 @@
 <circle cx='479.69' cy='237.60' r='1.78' style='stroke-width: 0.75;' />
 <circle cx='479.69' cy='252.00' r='1.78' style='stroke-width: 0.75; stroke: #00FF00;' />
 <circle cx='479.69' cy='266.40' r='1.78' style='stroke-width: 0.75; stroke: #FFA500;' />
-<text x='485.72' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='14.67px' lengthAdjust='spacingAndGlyphs'>cyl</text>
+<text x='481.62' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='14.67px' lengthAdjust='spacingAndGlyphs'>cyl</text>
 <text x='490.49' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
 <text x='490.49' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
 <text x='490.49' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>

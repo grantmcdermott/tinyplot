@@ -29,7 +29,7 @@
 <rect x='427.09' y='238.23' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #3B99B1; fill: #D5ECF5;' />
 <rect x='427.09' y='256.23' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #EACB2B; fill: #F5E8C2;' />
 <rect x='427.09' y='274.23' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #F5191C; fill: #FFD1D2;' />
-<text x='463.84' y='226.80' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
+<text x='430.04' y='226.80' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <text x='446.26' y='250.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>
 <text x='446.26' y='268.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
 <text x='446.26' y='286.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>

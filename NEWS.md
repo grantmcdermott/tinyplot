@@ -8,14 +8,25 @@ where the formatting is also better._
 
 ### Aesthetic changes
 
+The main focus of v0.7.0 is bringing various aesthetic improvements to 
+**tinyplot**. These aesthetic improvements should carry over to all of your
+(tiny)plots automatically and do not require any changes to user-facing inputs 
+or the core API. Some of your plots may look slightly different from before. 
+But we hope that you agree the following changes result in better looking
+visualizations.
+
+- **Left-justified legends**. Legend titles and labels are now left-justified by
+  default for vertical, side-positioned legends (e.g., `"right!"`, `"left!"`).
+  This is a change from the previous (base R default) of centered legends. To
+  revert to the old behaviour globally, simply set `tpar(ljust = "c(enter)")`.
+  Or, change a single plot by passing the parameter as part of the legend list
+  arguments, e.g. `plt(..., legend = list("c"))`. (#500 @grantmcdermott)
+
 - **Dynamic themes**. We have significantly refactored our _dynamic_ themes
   logic. Recall, these are themes like `"dynamic"`, `"clean"`, `"bw"`, etc. that
   automatically adjust margin spacing and related plot elements to reduce
-  whitespace and improve the overall plot aesthetic. This internal refactoring
-  has some user-facing implications, insofar as it can affect the appearance of
-  your plots. Technically this makes it a "breaking" aesthetic changes, since
-  some of your plots might look slightly different from before. But we feel that
-  these are clear improvements. (#549 @grantmcdermott, @vincentarelbundock)
+  whitespace and improve the overall plot aesthetic.
+  (#549 @grantmcdermott, @vincentarelbundock)
   
   - Plot margins now correctly respond to missing and/or multi-line `main`,
     `sub`, and `x`/`y` axis titles. For example, a plot without a `main` (or
@@ -38,6 +49,10 @@ where the formatting is also better._
   lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional
   lines at the midpoints between ticks. Thanks to @zeileis for the suggestion.
   (#578 @grantmcdermott)
+- New `ljust` parameter for controlling legend title and label justification.
+  Accepts values of `"l(eft)"` (default) or `"c(enter")`. Can be set per-plot
+  via `legend = list(..., ljust = "c")`, or globally via `tpar(ljust = "c")`.
+  (#500 @grantmcdermott)
 - New `"dynamic"` theme that now serves as the foundation for all other dynamic
   (tiny)themes. (#549 @grantmcdermott) 
 

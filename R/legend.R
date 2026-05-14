@@ -205,6 +205,24 @@ measure_legend_inset = function(legend_env) {
 }
 
 
+compute_ljust_text_width = function(legend_env) {
+  if (!isTRUE(legend_env$ljust)) return(invisible(NULL))
+
+  args_oh = modifyList(legend_env$args,
+    list(plot = FALSE, title = NULL, text.width = 0), keep.null = TRUE)
+  overhead = do.call("legend", args_oh)$rect$w
+
+  args_nat = modifyList(legend_env$args,
+    list(plot = FALSE, text.width = NULL), keep.null = TRUE)
+  target_w = do.call("legend", args_nat)$rect$w
+
+  tw_needed = target_w - overhead
+  if (tw_needed > 0) {
+    legend_env$args[["text.width"]] = tw_needed
+  }
+}
+
+
 # Internal workhorse function for legend rendering
 # This function is called inside recordGraphics() so that all coordinate-dependent
 # calculations are re-executed when the plot window is resized
@@ -216,18 +234,29 @@ tinylegend = function(legend_env) {
   legend_env$ooma = legend_env$ooma_base
   legend_env$args[["inset"]] = legend_env$inset_base
 
+  # Clear stale text.width before measuring (measurement doesn't need it)
+  if (isTRUE(legend_env$ljust)) {
+    legend_env$args[["text.width"]] = NULL
+  }
+
   # Re-measure legend dimensions (device size may have changed on resize)
   legend_env$dims = measure_fake_legend(legend_env)
 
   # Calculate and apply soma (outer margin adjustment based on legend size)
-  soma = if (legend_env$outer_side) {
-    grconvertX(legend_env$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
-  } else if (legend_env$outer_end) {
-    grconvertY(legend_env$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
+  # When soma_target is set (multi-legend), use it directly so all legends
+  # share the same outer margin and their left edges align.
+  if (!is.null(legend_env$soma_target)) {
+    soma = legend_env$soma_target
   } else {
-    0
+    soma = if (legend_env$outer_side) {
+      grconvertX(legend_env$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
+    } else if (legend_env$outer_end) {
+      grconvertY(legend_env$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
+    } else {
+      0
+    }
+    soma = soma + sum(legend_env$lmar)
   }
-  soma = soma + sum(legend_env$lmar)
 
   if (legend_env$outer_side) {
     legend_env$ooma[if (legend_env$outer_right) 4 else 2] = soma
@@ -251,6 +280,11 @@ tinylegend = function(legend_env) {
   setHook("before.plot.new", function() par(mar = legend_env$omar), action = "append")
   plot.new()
   setHook("before.plot.new", oldhook, action = "replace")
+
+  # Recompute text.width in the final coordinate context
+  if (isTRUE(legend_env$ljust)) {
+    compute_ljust_text_width(legend_env)
+  }
 
   # Set the inset in legend args
   legend_env$args[["inset"]] = if (legend_env$user_inset) {
@@ -757,11 +791,13 @@ build_legend_env = function(
 #' @param draw Logical. If `FALSE`, no legend is drawn but the sizes are
 #'   returned. Note that a new (blank) plot frame will still need to be started
 #'   in order to perform the calculations.
+#' @param soma_target Numeric. Shared outer margin target (in lines) for
+#'   multi-legend alignment. If `NULL`, each legend computes its own margin.
 #'
 #' @returns No return value, called for side effect of producing a(n empty) plot
 #'   with a legend in the margin.
 #'
-#' @importFrom graphics grconvertX grconvertY rasterImage strwidth
+#' @importFrom graphics grconvertX grconvertY rasterImage strheight strwidth xinch
 #' @importFrom grDevices as.raster recordGraphics
 #' @importFrom utils modifyList
 #'
@@ -840,7 +876,8 @@ draw_legend = function(
   lmar = NULL,
   has_sub = FALSE,
   new_plot = TRUE,
-  draw = TRUE
+  draw = TRUE,
+  soma_target = NULL
 ) {
   if (is.null(lmar)) {
     lmar = tpar("lmar")
@@ -889,12 +926,55 @@ draw_legend = function(
     new_plot = new_plot
   )
 
+  # Extract and strip ljust before any legend() calls
+  ljust_mode = legend_env$args[["ljust"]] %||% tpar("ljust") %||% "left"
+  ljust_mode = match.arg(ljust_mode, c("left", "center", "l", "c"))
+  if (ljust_mode == "l") ljust_mode = "left"
+  if (ljust_mode == "c") ljust_mode = "center"
+  legend_env$args[["ljust"]] = NULL
+
   # Initial setup: adjust margins, call plot.new, and measure (but don't apply soma yet)
   legend_outer_margins(legend_env, apply = FALSE)
+
+  # Legend justification (vertical, non-gradient, side-positioned only)
+  if (!legend_env$gradient && !isTRUE(legend_env$args[["horiz"]]) && !legend_env$outer_end) {
+
+    if (ljust_mode == "left") {
+      ttl = legend_env$args[["title"]]
+      # Compute title.adj to give 0.5*xch of left padding. Base R places
+      # the title at: left + title.adj * (box_w - strwidth(title)), so
+      # we solve for title.adj = 0.5*xch / slack.
+      if (is.null(legend_env$args[["title.adj"]]) && !is.null(ttl)) {
+        xch = par("cex") * xinch(par("cin")[1])
+        slack = legend_env$dims$rect$w - strwidth(ttl)
+        legend_env$args[["title.adj"]] = if (slack > 0) {
+          min(0.5 * xch / slack, 0.5)
+        } else {
+          0
+        }
+      } else {
+        legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0
+      }
+      if (is.null(legend_env$args[["text.width"]])) {
+        ttl = legend_env$args[["title"]]
+        if (!is.null(ttl)) {
+          lab_tw = max(strwidth(legend_env$args[["legend"]]))
+          ttl_tw = strwidth(ttl)
+          if (ttl_tw > lab_tw) {
+            legend_env$ljust = TRUE
+          }
+        }
+      }
+    } else {
+      legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0.5
+    }
+  }
 
   if (!draw) {
     return(legend_env$dims)
   }
+
+  legend_env$soma_target = soma_target
 
   # Store base values AFTER legend_outer_margins setup (before soma/inset are applied)
   # These are needed so tinylegend() can reset to them on each recordGraphics replay

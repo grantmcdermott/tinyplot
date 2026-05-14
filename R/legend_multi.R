@@ -194,6 +194,18 @@ draw_multi_legend = function(
   # is bigger than half the plot height.
   linset = if (any(lheights > 0.5)) lheights[2] / sum(lheights) else 0.5
 
+  # Shared soma from widest legend so all legends use the same outer margin
+  max_w = max(lwidths)
+  lmar_vals = legend_list[[1]]$lmar %||% tpar("lmar")
+  soma_target = (grconvertX(max_w, to = "lines") - grconvertX(0, to = "lines")) +
+    sum(lmar_vals)
+
+  # Determine ljust mode (shared across dual legends)
+  ljust_mode = legend_list[[1]]$legend_args[["ljust"]] %||% tpar("ljust") %||% "left"
+  ljust_mode = match.arg(ljust_mode, c("left", "center", "l", "c"))
+  if (ljust_mode == "l") ljust_mode = "left"
+  if (ljust_mode == "c") ljust_mode = "center"
+
   #
   ## Step 3: Reposition (via adjusted inset arg) and draw legends
   #
@@ -211,8 +223,13 @@ draw_multi_legend = function(
     legend_o = legend_list[[io]]
     legend_o$new_plot = FALSE
     legend_o$draw = TRUE
+    legend_o$soma_target = if (ljust_mode == "center") NULL else soma_target
     legend_o$legend_args$inset = c(0, 0)
-    legend_o$legend_args$inset[1] = if (o == 1) -abs(diff(lwidths)) / 2 else 0
+    legend_o$legend_args$inset[1] = if (ljust_mode == "center") {
+      if (o == 1) -abs(diff(lwidths)) / 2 else 0
+    } else {
+      0
+    }
     legend_o$legend_args$inset[2] = if (legend_o$idx == 1) linset + 0.01 else 1 - linset + 0.01
     legend_o$idx = NULL
     do.call(draw_legend, legend_o)

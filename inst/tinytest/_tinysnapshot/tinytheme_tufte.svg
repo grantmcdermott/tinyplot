@@ -26,11 +26,11 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<circle cx='467.77' cy='244.80' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
-<circle cx='467.77' cy='259.20' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
+<circle cx='454.57' cy='244.80' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='454.57' cy='259.20' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
 <text x='473.81' y='230.40' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='54.67px' lengthAdjust='spacingAndGlyphs'>factor(am)</text>
-<text x='478.57' y='248.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text x='478.57' y='263.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
+<text x='465.37' y='248.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='465.37' y='263.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text x='59.04' y='46.08' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='91.88px' lengthAdjust='spacingAndGlyphs'>tinytheme("tufte")</text>
 </g>
 <defs>

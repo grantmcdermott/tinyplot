@@ -32,7 +32,7 @@
 <circle cx='432.26' cy='237.60' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 <circle cx='432.26' cy='252.00' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #DF536B;' />
 <circle cx='432.26' cy='266.40' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #61D04F;' />
-<text x='461.09' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.69px' lengthAdjust='spacingAndGlyphs'>model</text>
+<text x='423.62' y='223.20' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.69px' lengthAdjust='spacingAndGlyphs'>model</text>
 <text x='453.86' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='43.36px' lengthAdjust='spacingAndGlyphs'>Model A</text>
 <text x='453.86' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Model B</text>
 <text x='453.86' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.69px' lengthAdjust='spacingAndGlyphs'>Model C</text>

@@ -21,7 +21,8 @@ draw_legend(
   lmar = NULL,
   has_sub = FALSE,
   new_plot = TRUE,
-  draw = TRUE
+  draw = TRUE,
+  soma_target = NULL
 )
 }
 \arguments{
@@ -70,6 +71,9 @@ margin a bit further.}
 \item{draw}{Logical. If \code{FALSE}, no legend is drawn but the sizes are
 returned. Note that a new (blank) plot frame will still need to be started
 in order to perform the calculations.}
+
+\item{soma_target}{Numeric. Shared outer margin target (in lines) for
+multi-legend alignment. If \code{NULL}, each legend computes its own margin.}
 }
 \value{
 No return value, called for side effect of producing a(n empty) plot

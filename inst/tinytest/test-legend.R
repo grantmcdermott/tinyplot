@@ -173,6 +173,60 @@ f = function() {
 expect_snapshot_plot(f, label = "legend_lmar_top")
 
 
+# ljust parameter
+
+d = iris
+d$SpeciesVeryLongName = d$Species
+
+f = function() tinyplot(
+  Sepal.Length ~ Petal.Length | SpeciesVeryLongName, data = d,
+  legend = list("right!", bty = "o")
+)
+expect_snapshot_plot(f, label = "legend_ljust_left_long")
+
+f = function() tinyplot(
+  Sepal.Length ~ Petal.Length | Species, data = d,
+  legend = list("right!", bty = "o")
+)
+expect_snapshot_plot(f, label = "legend_ljust_left_short")
+
+f = function() tinyplot(
+  Sepal.Length ~ Petal.Length | SpeciesVeryLongName, data = d,
+  legend = list("right!", bty = "o", ljust = "center")
+)
+expect_snapshot_plot(f, label = "legend_ljust_center_long")
+
+f = function() tinyplot(
+  Sepal.Length ~ Petal.Length | Species, data = d,
+  legend = list("right!", bty = "o", ljust = "c")
+)
+expect_snapshot_plot(f, label = "legend_ljust_center_short")
+
+f = function() {
+  tpar(ljust = "center")
+  tinyplot(
+    Sepal.Length ~ Petal.Length | SpeciesVeryLongName, data = d,
+    legend = list("right!", bty = "o")
+  )
+  tpar(ljust = "left")
+}
+expect_snapshot_plot(f, label = "legend_ljust_tpar_center")
+
+f = function() tinyplot(
+  Sepal.Length ~ Petal.Length | SpeciesVeryLongName, data = d,
+  cex = d$Petal.Width, legend = list("right!", bty = "o")
+)
+expect_snapshot_plot(f, label = "legend_ljust_dual_left")
+
+f = function() tinyplot(
+  Sepal.Length ~ Petal.Length | SpeciesVeryLongName, data = d,
+  cex = d$Petal.Width, legend = list("right!", bty = "o", ljust = "c")
+)
+expect_snapshot_plot(f, label = "legend_ljust_dual_center")
+
+rm(d)
+
+
 # reset par
 par(op)
 

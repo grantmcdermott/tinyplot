@@ -26,13 +26,13 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<circle cx='477.49' cy='237.60' r='1.78' style='stroke-width: 0.75; stroke: #1F77B4; fill: #1F77B4;' />
-<circle cx='477.49' cy='252.00' r='1.78' style='stroke-width: 0.75; stroke: #FF7F0E; fill: #FF7F0E;' />
-<circle cx='477.49' cy='266.40' r='1.78' style='stroke-width: 0.75; stroke: #2CA02C; fill: #2CA02C;' />
+<circle cx='475.29' cy='237.60' r='1.78' style='stroke-width: 0.75; stroke: #1F77B4; fill: #1F77B4;' />
+<circle cx='475.29' cy='252.00' r='1.78' style='stroke-width: 0.75; stroke: #FF7F0E; fill: #FF7F0E;' />
+<circle cx='475.29' cy='266.40' r='1.78' style='stroke-width: 0.75; stroke: #2CA02C; fill: #2CA02C;' />
 <text x='483.52' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.67px' lengthAdjust='spacingAndGlyphs'>Gears</text>
-<text x='488.29' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>3</text>
-<text x='488.29' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
-<text x='488.29' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
+<text x='486.09' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>3</text>
+<text x='486.09' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text x='486.09' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
 <text x='254.56' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='246.73px' lengthAdjust='spacingAndGlyphs'>Notes: Transmission (rows) vs Cylinders (cols)</text>
 </g>
 <defs>

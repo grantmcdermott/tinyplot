@@ -26,11 +26,11 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<rect x='455.65' y='236.43' width='16.75' height='16.75' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.60;' />
-<rect x='455.65' y='254.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.60;' />
+<rect x='452.90' y='236.43' width='16.75' height='16.75' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.60;' />
+<rect x='452.90' y='254.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.60;' />
 <text x='476.52' y='225.00' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='46.69px' lengthAdjust='spacingAndGlyphs'>Survived</text>
-<text x='474.83' y='248.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='15.34px' lengthAdjust='spacingAndGlyphs'>No</text>
-<text x='474.83' y='266.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='19.58px' lengthAdjust='spacingAndGlyphs'>Yes</text>
+<text x='472.07' y='248.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='15.34px' lengthAdjust='spacingAndGlyphs'>No</text>
+<text x='472.07' y='266.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='19.58px' lengthAdjust='spacingAndGlyphs'>Yes</text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHw0MzYuMDd8MC4wMHw1MDQuMDA='>

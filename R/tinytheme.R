@@ -244,6 +244,7 @@ theme_default = list(
   grid.col = "lightgray",
   grid.lty = "dotted",
   grid.lwd = 1,
+  ljust = "left",
   lab = par("lab"), # c(5, 5, 7),
   las = par("las"), # 0,
   lwd = par("lwd"), # 1,

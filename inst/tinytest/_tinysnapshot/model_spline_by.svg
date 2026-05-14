@@ -26,17 +26,17 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<line x1='447.35' y1='223.20' x2='468.95' y2='223.20' style='stroke-width: 0.75;' />
-<line x1='447.35' y1='237.60' x2='468.95' y2='237.60' style='stroke-width: 0.75; stroke: #DF536B;' />
-<line x1='447.35' y1='252.00' x2='468.95' y2='252.00' style='stroke-width: 0.75; stroke: #61D04F;' />
-<line x1='447.35' y1='266.40' x2='468.95' y2='266.40' style='stroke-width: 0.75; stroke: #2297E6;' />
-<line x1='447.35' y1='280.80' x2='468.95' y2='280.80' style='stroke-width: 0.75; stroke: #28E2E5;' />
+<line x1='436.62' y1='223.20' x2='458.22' y2='223.20' style='stroke-width: 0.75;' />
+<line x1='436.62' y1='237.60' x2='458.22' y2='237.60' style='stroke-width: 0.75; stroke: #DF536B;' />
+<line x1='436.62' y1='252.00' x2='458.22' y2='252.00' style='stroke-width: 0.75; stroke: #61D04F;' />
+<line x1='436.62' y1='266.40' x2='458.22' y2='266.40' style='stroke-width: 0.75; stroke: #2297E6;' />
+<line x1='436.62' y1='280.80' x2='458.22' y2='280.80' style='stroke-width: 0.75; stroke: #28E2E5;' />
 <text x='464.19' y='208.80' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='71.34px' lengthAdjust='spacingAndGlyphs'>factor(Month)</text>
-<text x='479.75' y='227.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
-<text x='479.75' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
-<text x='479.75' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>7</text>
-<text x='479.75' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
-<text x='479.75' y='284.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>9</text>
+<text x='469.02' y='227.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
+<text x='469.02' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
+<text x='469.02' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>7</text>
+<text x='469.02' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
+<text x='469.02' y='284.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>9</text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHw0MTEuNDJ8MC4wMHw1MDQuMDA='>

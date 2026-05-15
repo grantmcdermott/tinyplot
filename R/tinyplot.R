@@ -995,6 +995,7 @@ tinyplot.default = function(
       .bp = environment(.h)[["base_par"]]
       if (is.list(.bp)) .tpars = modifyList(.tpars, .bp)
     }
+    if (!is.null(.tpars[["mar"]])) .theme_mar = .tpars[["mar"]]
 
     # Detect outer-legend sides (order: bottom, left, top, right).
     .lgnd_pos = settings$legend_args[["x"]]

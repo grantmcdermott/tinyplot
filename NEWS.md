@@ -65,6 +65,10 @@ visualizations.
 - Fixed margin spacing for free facets with different axis scales. The dynamic
   margin adjustment now computes tick labels per-facet and sizes the margin to
   accommodate the widest labels. (#579 @grantmcdermott)
+- Fixed several minor issues related to facet title strips and spacing: Strips
+  and spacing now scale correctly with `facet.cex`, multiline facet titles
+  inter-panel gaps remain fixed regardless of strip height, and strip text is 
+  now vertically centered within the background rect. (#586 @grantmcdermott)
 
 ## v0.6.1
 

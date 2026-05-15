@@ -106,14 +106,16 @@ draw_facet_window = function(
 
     ooma = par("oma")
 
-    # Bump top margin down for facet titles
-    fmar[3] = fmar[3] + facet_text / cex_fct_adj
+    # Bump top margin for facet strip. Use facet_text (not / cex_fct_adj)
+    # because nmar = (fmar + 0.1) / cex_fct_adj already divides — using
+    # facet_text directly keeps the inter-panel gap constant as newlines grow.
+    fmar[3] = fmar[3] + facet_text
     if (isTRUE(attr(facet, "facet_grid"))) {
-      fmar[3] = max(0, fmar[3] - facet_text / cex_fct_adj)
+      fmar[3] = max(0, fmar[3] - facet_text)
       # Indent for RHS facet_grid title strip if "right!" legend
       if (has_legend && ooma[4] > 0) ooma[4] = ooma[4] + 1
     }
-    fmar[3] = fmar[3] + facet_newlines * facet_text / cex_fct_adj
+    fmar[3] = fmar[3] + facet_newlines * facet_text
 
     omar = par("mar")
     

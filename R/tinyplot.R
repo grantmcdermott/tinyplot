@@ -1174,7 +1174,7 @@ tinyplot.default = function(
     # if (length(facet_newlines)==0) facet_newlines = 0
     # omar[3] = omar[3] + max(facet_newlines)
     facet_newlines = ifelse(length(facet_newlines) == 0, 0, max(facet_newlines))
-    omar[3] = omar[3] + facet_newlines * facet_text / cex_fct_adj
+    omar[3] = omar[3] + facet_newlines * facet_text
     # apply the changes
     par(mar = omar)
   }

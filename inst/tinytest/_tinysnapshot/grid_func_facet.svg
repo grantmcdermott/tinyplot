@@ -86,7 +86,7 @@
 <text transform='translate(47.64,111.02) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>7.5</text>
 <text transform='translate(47.64,63.24) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>8.0</text>
 <rect x='59.04' y='43.20' width='101.35' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='109.72' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
+<text x='109.72' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <polygon points='59.04,430.56 160.39,430.56 160.39,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpNTkuMDR8MTYwLjM5fDU5LjA0fDQzMC41Ng==)'>
@@ -147,7 +147,7 @@
 <text transform='translate(173.47,111.02) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>7.5</text>
 <text transform='translate(173.47,63.24) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>8.0</text>
 <rect x='184.87' y='43.20' width='101.35' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='235.55' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
+<text x='235.55' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
 <polygon points='184.87,430.56 286.22,430.56 286.22,59.04 184.87,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpMTg0Ljg3fDI4Ni4yMnw1OS4wNHw0MzAuNTY=)'>
@@ -208,7 +208,7 @@
 <text transform='translate(299.30,111.02) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>7.5</text>
 <text transform='translate(299.30,63.24) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>8.0</text>
 <rect x='310.70' y='43.20' width='101.35' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='361.38' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>
+<text x='361.38' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>
 <polygon points='310.70,430.56 412.06,430.56 412.06,59.04 310.70,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpMzEwLjcwfDQxMi4wNnw1OS4wNHw0MzAuNTY=)'>

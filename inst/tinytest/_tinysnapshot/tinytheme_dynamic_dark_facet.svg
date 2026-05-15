@@ -62,7 +62,7 @@
 <text x='53.38' y='111.66' text-anchor='end' style='font-size: 7.92px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='21.95px' lengthAdjust='spacingAndGlyphs'>25000</text>
 <text x='53.38' y='87.91' text-anchor='end' style='font-size: 7.92px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='21.95px' lengthAdjust='spacingAndGlyphs'>30000</text>
 <rect x='60.03' y='46.37' width='178.55' height='15.84' style='stroke-width: 0.38; stroke: none;' />
-<text x='149.31' y='58.41' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='149.31' y='58.42' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
 </g>
 <g clip-path='url(#cpNjAuMDN8MjM4LjU4fDYyLjIxfDE4Mi43NA==)'>
 <line x1='65.48' y1='182.74' x2='65.48' y2='62.21' style='stroke-width: 0.38; stroke: #6D6D6D;' />
@@ -86,9 +86,9 @@
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <rect x='248.66' y='46.37' width='178.55' height='15.84' style='stroke-width: 0.38; stroke: none;' />
-<text x='337.93' y='58.41' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
+<text x='337.93' y='58.42' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
 <rect x='427.21' y='62.21' width='15.84' height='120.53' style='stroke-width: 0.38; stroke: none;' />
-<text transform='translate(431.01,122.47) rotate(-270)' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text transform='translate(431.00,122.47) rotate(-270)' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
 </g>
 <g clip-path='url(#cpMjQ4LjY2fDQyNy4yMXw2Mi4yMXwxODIuNzQ=)'>
 <line x1='254.11' y1='182.74' x2='254.11' y2='62.21' style='stroke-width: 0.38; stroke: #6D6D6D;' />
@@ -139,7 +139,7 @@
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <rect x='427.21' y='192.82' width='15.84' height='120.53' style='stroke-width: 0.38; stroke: none;' />
-<text transform='translate(431.01,253.09) rotate(-270)' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
+<text transform='translate(431.00,253.09) rotate(-270)' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
 </g>
 <g clip-path='url(#cpMjQ4LjY2fDQyNy4yMXwxOTIuODJ8MzEzLjM1)'>
 <line x1='254.11' y1='313.35' x2='254.11' y2='192.82' style='stroke-width: 0.38; stroke: #6D6D6D;' />
@@ -202,7 +202,7 @@
 <text transform='translate(373.66,450.62) rotate(-90)' text-anchor='end' style='font-size: 7.92px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='21.95px' lengthAdjust='spacingAndGlyphs'>25000</text>
 <text transform='translate(402.87,450.62) rotate(-90)' text-anchor='end' style='font-size: 7.92px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='21.95px' lengthAdjust='spacingAndGlyphs'>30000</text>
 <rect x='427.21' y='323.43' width='15.84' height='120.53' style='stroke-width: 0.38; stroke: none;' />
-<text transform='translate(431.01,383.70) rotate(-270)' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
+<text transform='translate(431.00,383.70) rotate(-270)' text-anchor='middle' style='font-size: 12.00px;fill: #BBBBBB; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
 </g>
 <g clip-path='url(#cpMjQ4LjY2fDQyNy4yMXwzMjMuNDN8NDQzLjk3)'>
 <line x1='254.11' y1='443.97' x2='254.11' y2='323.43' style='stroke-width: 0.38; stroke: #6D6D6D;' />

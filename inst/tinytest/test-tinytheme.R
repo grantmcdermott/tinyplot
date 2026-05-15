@@ -178,3 +178,12 @@ f = function() {
   plt_add(type = "b")
 }
 expect_snapshot_plot(f, label = "ephemeral_default_theme_add")
+
+# User mar override respected under dynmar (#587)
+f = function() {
+  tinytheme("dynamic", mar = c(5, 5, 5, 5))
+  plt(0:10, main = "Custom mar override")
+  box("inner", lty = 2)
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "tinytheme_dynmar_mar_override")

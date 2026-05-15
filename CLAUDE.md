@@ -143,8 +143,11 @@ Non-snapshot tests (logical assertions, error checks, etc.) run fine on any plat
 This is a known quirk — don't worry about these specific persistent failures. However, if you see more than ~3 snapshot failures, something real is likely broken and needs investigation.
 
 ### Running Tests
+
+The canonical test workflow is to open the devcontainer and run `make testall`. Do not attempt to run the full test suite outside the devcontainer — snapshot tests will fail due to font/rendering differences, and even non-snapshot tests may pull in snapshot comparisons.
+
 ```bash
-# Via Makefile
+# Via Makefile (inside devcontainer)
 make testall                                          # Run all tests
 make testone testfile="inst/tinytest/test-legend.R"   # Run single test file
 

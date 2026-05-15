@@ -107,9 +107,9 @@ draw_facet_window = function(
     ooma = par("oma")
 
     # Bump top margin down for facet titles
-    fmar[3] = fmar[3] + 1
+    fmar[3] = fmar[3] + facet_text / cex_fct_adj
     if (isTRUE(attr(facet, "facet_grid"))) {
-      fmar[3] = max(0, fmar[3] - 1)
+      fmar[3] = max(0, fmar[3] - facet_text / cex_fct_adj)
       # Indent for RHS facet_grid title strip if "right!" legend
       if (has_legend && ooma[4] > 0) ooma[4] = ooma[4] + 1
     }
@@ -124,18 +124,10 @@ draw_facet_window = function(
       # reset by the before.plot.new hook.
       side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
       omar = dynmar_computed
-      # Under facets, main/sub sit ABOVE the top facet strip. Bump the
-      # outer top margin by the strip height so sub doesn't collide with
-      # the strip. fmar[3] already captures facet_newlines and the
-      # facet_grid adjustment; add back the 0.5 line that was stripped
-      # when frame.plot is FALSE (that reduction is meant to tighten
-      # inter-panel gaps, not the top strip).
-      strip_bump = fmar[3]
-      if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
-        strip_bump = strip_bump + 0.5
-      }
-      omar[3] = omar[3] + strip_bump
-
+      omar[3] = dynmar_computed[3] + (1 + facet_newlines + 0.1) * facet_text
+      # Ensure fmar[3] doesn't exceed omar[3] - 0.1, which would make
+      # noma[3] negative and get clamped to 0, creating excess top space.
+      if (fmar[3] + 0.1 > omar[3]) fmar[3] = omar[3] - 0.1
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
         ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME

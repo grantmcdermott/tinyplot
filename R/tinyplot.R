@@ -139,13 +139,19 @@
 #'    legend is drawn to the _outer_ right of the plotting area. Note that the
 #'    legend title and categories will automatically be inferred from the `by`
 #'    argument and underlying data.
-#'    - A convenience string indicating the legend position. The string should
-#'    correspond to one of the position keywords supported by the base `legend`
-#'    function, e.g. "right", "topleft", "bottom", etc. In addition, `tinyplot`
-#'    supports adding a trailing exclamation point to these keywords, e.g.
-#'    "right!", "topleft!", or "bottom!". This will place the legend _outside_
-#'    the plotting area and adjust the margins of the plot accordingly. Finally,
-#'    users can also turn off any legend printing by specifying "none".
+#'    - A convenience string indicating the legend position. Supported keywords:
+#'      - Standard position keywords from base `legend()`, e.g. `"right"`,
+#'        `"topleft"`, `"bottom"`, etc.
+#'      - Outer positions via a trailing `"!"`, e.g. `"right!"`, `"topleft!"`,
+#'        or `"bottom!"`. This places the legend _outside_ the plotting area and
+#'        adjusts the margins accordingly.
+#'      - `"direct"`: places text labels at the last point of each group's data,
+#'        coloured to match. Best suited to line-based plots with x-sorted data,
+#'        where "last" corresponds to "rightmost". The right margin is
+#'        automatically expanded to prevent clipping. Requires discrete groups
+#'        via `by`. For faceted plots, labels are only drawn on the last panel
+#'        in which each group appears.
+#'      - `"none"`: turns off legend printing.
 #'    - Logical value, where TRUE corresponds to the default case above (same
 #'    effect as specifying NULL) and FALSE turns the legend off (same effect as
 #'    specifying "none").
@@ -552,6 +558,20 @@
 #'   data = aq,
 #'   type = "l",
 #'   legend = legend("bottom!", title = "Month of the year", bty = "o")
+#' )
+#'
+#' # Use legend = "direct" to place text labels at the last point of each
+#' # group's data, coloured to match. Best suited to line-based plots with
+#' # x-sorted data, where "last" corresponds to "rightmost". The right
+#' # margin is automatically expanded to fit the labels. Pairs well with
+#' # dynamic themes for tighter margins overall.
+#'
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "l",
+#'   legend = "direct",
+#'   theme = "clean2"
 #' )
 #'
 #' # The default group colours are inherited from either the "R4" or "Viridis"
@@ -1072,7 +1092,7 @@ tinyplot.default = function(
     par(mar = dynmar_computed + .whtsbp)
   }
 
-  if (legend_draw_flag) {
+  if (legend_draw_flag && !identical(legend_args[["x"]], "direct")) {
     if (!multi_legend) {
       ## simple case: single legend only
       if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
@@ -1101,7 +1121,7 @@ tinyplot.default = function(
     }
 
     has_legend = TRUE
-    } else if (legend_args[["x"]] == "none" && !isTRUE(add)) {
+    } else if (legend_args[["x"]] %in% c("none", "direct") && !isTRUE(add)) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1
@@ -1121,6 +1141,12 @@ tinyplot.default = function(
   ## title and subtitle -----
   #
 
+  direct_labels_flag = !isTRUE(add) && identical(legend_args[["x"]], "direct") &&
+    !isTRUE(by_continuous) && !null_by
+  if (identical(legend_args[["x"]], "direct") && !direct_labels_flag && !isTRUE(add)) {
+    warning("legend=\"direct\" requires discrete groups via `by`. Falling back to no legend.")
+  }
+
   if (!add) {
     # Reinstate dynmar margins and user coordinates after draw_legend
     # (which may have called plot.new and reset par via hooks).
@@ -1129,7 +1155,32 @@ tinyplot.default = function(
       if (!is.null(xlim) && !is.null(ylim)) {
         plot.window(xlim = xlim, ylim = ylim)
       }
+    } else if (direct_labels_flag && !is.null(xlim) && !is.null(ylim)) {
+      plot.window(xlim = xlim, ylim = ylim)
     }
+
+    # Expand right margin for direct labels based on actual label overshoot
+    if (direct_labels_flag && !is.null(xlim) && !is.null(ylim)) {
+      usr_right = par("usr")[2]
+      last_x = tapply(datapoints$x, datapoints$by, function(z) tail(z, 1))
+      offset_usr = strwidth("m", units = "user") * 0.3
+      label_widths = strwidth(lgnd_labs, units = "user")
+      overshoots = (last_x + offset_usr + label_widths) - usr_right
+      max_overshoot = max(0, overshoots, na.rm = TRUE)
+      if (max_overshoot > 0) {
+        overshoot_lines = max_overshoot * par("pin")[1] / diff(par("usr")[1:2]) / par("csi")
+        if (!is.null(dynmar_computed)) {
+          dynmar_computed[4] = dynmar_computed[4] + overshoot_lines
+          par(mar = dynmar_computed + .whtsbp)
+        } else {
+          cur_mar = par("mar")
+          cur_mar[4] = cur_mar[4] + overshoot_lines
+          par(mar = cur_mar)
+        }
+        plot.window(xlim = xlim, ylim = ylim)
+      }
+    }
+
     draw_title(main, sub, xlab, ylab, legend, legend_args, opar,
                xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
                ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] else 0)
@@ -1264,6 +1315,8 @@ tinyplot.default = function(
     split_data = list(as.list(datapoints))
   }
 
+  if (direct_labels_flag) .dl_info = vector("list", ngrps)
+
   ## Outer loop over the facets
   for (i in seq_along(split_data)) {
     # Split group-level data again to grab any "by" groups
@@ -1390,9 +1443,21 @@ tinyplot.default = function(
           facet_window_args = facet_window_args
         )
       }
+      if (direct_labels_flag && !empty_plot && length(ix) > 0) {
+        .dl_info[[ii]] = list(x = tail(ix, 1), y = tail(iy, 1), col = icol)
+      }
     }
   }
-  
+
+  if (direct_labels_flag) {
+    dl_labs = lgnd_labs
+    for (k in seq_along(.dl_info)) {
+      if (!is.null(.dl_info[[k]])) {
+        text(.dl_info[[k]]$x, .dl_info[[k]]$y, labels = dl_labs[k],
+             col = .dl_info[[k]]$col, pos = 4, offset = 0.3, xpd = NA)
+      }
+    }
+  }
 
   #
   ## save end pars for possible recall later -----

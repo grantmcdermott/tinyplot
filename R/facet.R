@@ -106,14 +106,16 @@ draw_facet_window = function(
 
     ooma = par("oma")
 
-    # Bump top margin down for facet titles
-    fmar[3] = fmar[3] + 1
+    # Bump top margin for facet strip. Use facet_text (not / cex_fct_adj)
+    # because nmar = (fmar + 0.1) / cex_fct_adj already divides — using
+    # facet_text directly keeps the inter-panel gap constant as newlines grow.
+    fmar[3] = fmar[3] + facet_text
     if (isTRUE(attr(facet, "facet_grid"))) {
-      fmar[3] = max(0, fmar[3] - 1)
+      fmar[3] = max(0, fmar[3] - facet_text)
       # Indent for RHS facet_grid title strip if "right!" legend
       if (has_legend && ooma[4] > 0) ooma[4] = ooma[4] + 1
     }
-    fmar[3] = fmar[3] + facet_newlines * facet_text / cex_fct_adj
+    fmar[3] = fmar[3] + facet_newlines * facet_text
 
     omar = par("mar")
     
@@ -124,18 +126,10 @@ draw_facet_window = function(
       # reset by the before.plot.new hook.
       side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
       omar = dynmar_computed
-      # Under facets, main/sub sit ABOVE the top facet strip. Bump the
-      # outer top margin by the strip height so sub doesn't collide with
-      # the strip. fmar[3] already captures facet_newlines and the
-      # facet_grid adjustment; add back the 0.5 line that was stripped
-      # when frame.plot is FALSE (that reduction is meant to tighten
-      # inter-panel gaps, not the top strip).
-      strip_bump = fmar[3]
-      if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
-        strip_bump = strip_bump + 0.5
-      }
-      omar[3] = omar[3] + strip_bump
-
+      omar[3] = dynmar_computed[3] + (1 + facet_newlines + 0.1) * facet_text
+      # Ensure fmar[3] doesn't exceed omar[3] - 0.1, which would make
+      # noma[3] negative and get clamped to 0, creating excess top space.
+      if (fmar[3] + 0.1 > omar[3]) fmar[3] = omar[3] - 0.1
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
         ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
@@ -415,13 +409,13 @@ draw_facet_window = function(
       if (isTRUE(attr(facet, "facet_grid"))) {
         ## top facet strips
         if (ii %in% 1:nfacet_cols) {
+          line_height_lines = (facet_title_lines + .1) * facet_text / cex_fct_adj
           if (isTRUE(facet_rect)) {
-            line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
             if (ylog) {
-              line_height = grconvertY(line_height, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+              line_height = grconvertY(line_height_lines, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
               rect_height = corners[4] * line_height
             } else {
-              line_height = grconvertY(line_height, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+              line_height = grconvertY(line_height_lines, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
               rect_height = corners[4] + line_height
             }
             rect(
@@ -432,17 +426,17 @@ draw_facet_window = function(
           }
           xpos = if (xlog) 10^(mean(log10(corners[1:2]))) else mean(corners[1:2])
           if (ylog) {
-            ypos = grconvertY(0.4, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+            ypos = grconvertY(line_height_lines / 2, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
             ypos = corners[4] * ypos
           } else {
-            ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+            ypos = grconvertY(line_height_lines / 2, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
             ypos = corners[4] + ypos
           }
           text(
             x = xpos,
             y = ypos,
             labels = sub("^(.*?)~.*", "\\1", facets[[ii]]),
-            adj = c(0.5, 0),
+            adj = c(0.5, 0.5),
             cex = facet_text / cex_fct_adj,
             col = facet_col,
             font = facet_font,
@@ -451,13 +445,13 @@ draw_facet_window = function(
         }
         ## right facet strips
         if (ii %% nfacet_cols == 0 || ii == nfacets) {
+          line_height_lines = (facet_title_lines + .1) * facet_text / cex_fct_adj
           if (isTRUE(facet_rect)) {
-            line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
             if (xlog) {
-              line_height = grconvertX(line_height, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
+              line_height = grconvertX(line_height_lines, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
               rect_width = corners[2] * line_height
             } else {
-              line_height = grconvertX(line_height, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+              line_height = grconvertX(line_height_lines, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
               rect_width = corners[2] + line_height
             }
             rect(
@@ -467,10 +461,10 @@ draw_facet_window = function(
             )
           }
           if (xlog) {
-            xpos = grconvertX(0.4, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
+            xpos = grconvertX(line_height_lines / 2, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
             xpos = corners[2] * xpos
           } else {
-            xpos = grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+            xpos = grconvertX(line_height_lines / 2, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
             xpos = corners[2] + xpos
           }
           ypos = if (ylog) 10^(mean(log10(corners[3:4]))) else mean(corners[3:4])
@@ -479,7 +473,7 @@ draw_facet_window = function(
             y = ypos,
             labels = sub("^.*?~(.*)", "\\1", facets[[ii]]),
             srt = 270,
-            adj = c(0.5, 0),
+            adj = c(0.5, 0.5),
             cex = facet_text / cex_fct_adj,
             col = facet_col,
             font = facet_font,
@@ -487,13 +481,13 @@ draw_facet_window = function(
           )
         }
       } else {
+        line_height_lines = (facet_title_lines + .1) * facet_text / cex_fct_adj
         if (isTRUE(facet_rect)) {
-          line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
           if (ylog) {
-            line_height = grconvertY(line_height, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+            line_height = grconvertY(line_height_lines, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
             rect_height = corners[4] * line_height
           } else {
-            line_height = grconvertY(line_height, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+            line_height = grconvertY(line_height_lines, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
             rect_height = corners[4] + line_height
           }
           rect(
@@ -504,17 +498,17 @@ draw_facet_window = function(
         }
         xpos = if (xlog) 10^(mean(log10(corners[1:2]))) else mean(corners[1:2])
         if (ylog) {
-          ypos = grconvertY(0.4, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+          ypos = grconvertY(line_height_lines / 2, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
           ypos = corners[4] * ypos
         } else {
-          ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+          ypos = grconvertY(line_height_lines / 2, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
           ypos = corners[4] + ypos
         }
         text(
           x = xpos,
           y = ypos,
           labels = paste(facets[[ii]]),
-          adj = c(0.5, 0),
+          adj = c(0.5, 0.5),
           cex = facet_text / cex_fct_adj,
           col = facet_col,
           font = facet_font,

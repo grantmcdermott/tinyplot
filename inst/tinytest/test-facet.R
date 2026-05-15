@@ -77,6 +77,13 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_interaction_newline")
 
 f = function() {
+  tinyplot(Sepal.Width ~ Sepal.Length, data = iris,
+    facet = ~Species, facet.args = list(cex = 2, ncol = 1),
+    theme = "clean")
+}
+expect_snapshot_plot(f, label = "facet_cex_large")
+
+f = function() {
   with(
     mtcars,
     tinyplot(

@@ -117,4 +117,11 @@ Click on a plot to get the link to its code.
 #| file: "gallery_figs/density-part-shading.R"
 ```
 
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/direct-labels-aq.R){target='_blank'}"
+#| file: "gallery_figs/direct-labels-aq.R"
+```
+
 :::

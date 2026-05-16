@@ -54,7 +54,11 @@ visualizations.
   via `legend = list(..., ljust = "c")`, or globally via `tpar(ljust = "c")`.
   (#500 @grantmcdermott)
 - New `"dynamic"` theme that now serves as the foundation for all other dynamic
-  (tiny)themes. (#549 @grantmcdermott) 
+  (tiny)themes. (#549 @grantmcdermott)
+- New `legend = "direct"` option (experimental) places text labels at the last
+  point of each group's data, coloured to match. Best suited to line-based plots
+  with x-sorted data. The right margin is automatically expanded to prevent
+  clipping. Pairs well with dynamic themes. (#587 @grantmcdermott)
 
 ### Bug fixes
 

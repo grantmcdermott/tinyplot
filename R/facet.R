@@ -144,14 +144,14 @@ draw_facet_window = function(
           yaxlabs_all = lapply(yfree_split, function(yf) {
             axisTicks(usr = extendrange(range(yf, na.rm = TRUE), f = 0.04), log = par("ylog"))
           })
-          widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches")), numeric(1L))
+          widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
           yaxlabs = yaxlabs_all[[which.max(widths)]]
         } else {
           yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
         }
         if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
         # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
-        whtsbp = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
+        whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {
           omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
           fmar[2] = fmar[2] + whtsbp * cex_fct_adj
@@ -168,14 +168,14 @@ draw_facet_window = function(
           xaxlabs_all = lapply(xfree_split, function(xf) {
             axisTicks(usr = extendrange(range(xf, na.rm = TRUE), f = 0.04), log = par("xlog"))
           })
-          widths = vapply(xaxlabs_all, function(labs) max(strwidth(labs, "inches")), numeric(1L))
+          widths = vapply(xaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
           xaxlabs = xaxlabs_all[[which.max(widths)]]
         } else {
           xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
             if (!is.null(names(xlabs))) names(xlabs) else xlabs
         }
         if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-        whtsbp = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
+        whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 1
         if (whtsbp > 0) {
           omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
           fmar[1] = fmar[1] + whtsbp * cex_fct_adj
@@ -236,8 +236,8 @@ draw_facet_window = function(
         yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
       }
       if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") - 1
-      whtsbp = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
+      # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 1
+      whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
       if (whtsbp > 0) {
         omar[2] = omar[2] + whtsbp
       }
@@ -248,7 +248,7 @@ draw_facet_window = function(
       xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else 
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      whtsbp = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
+      whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 1
       if (whtsbp > 0) {
         omar[1] = omar[1] + whtsbp
       }

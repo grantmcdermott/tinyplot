@@ -313,11 +313,13 @@ draw_facet_window = function(
         lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.xaxs", "lty.axis"), 1, tpar_list = tpars)
       )
+      .ca = get_tpar(c("cex.yaxs", "cex.axis"), 0.8, tpar_list = tpars)
+      .ymgp_shift = if (par("las") %in% c(0L, 1L)) 0.5 * (.ca - 1) else 0
       args_y = list(y,
         side = yside,
         type = yaxt,
         labeller = yaxl,
-        cex = get_tpar(c("cex.yaxs", "cex.axis"), 0.8, tpar_list = tpars),
+        cex = .ca,
         lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.yaxs", "lty.axis"), 1, tpar_list = tpars)
       )
@@ -368,21 +370,27 @@ draw_facet_window = function(
         } else {
           tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
         }
+        if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
           tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
         } else {
           tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
         }
+        if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
 
         # For fixed facets we can just reuse the same plot extent and axes limits
       } else if (isTRUE(frame.plot)) {
         # if plot frame is true then print axes per normal...
         do.call(tinyAxis, args_x)
+        if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         do.call(tinyAxis, args_y)
+        if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
       } else {
         # ... else only print the "outside" axes.
         if (ii %in% oxaxis) do.call(tinyAxis, args_x)
+        if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         if (ii %in% oyaxis) do.call(tinyAxis, args_y)
+        if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
       }
     }
 

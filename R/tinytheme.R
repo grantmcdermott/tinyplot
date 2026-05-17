@@ -190,6 +190,28 @@ tinytheme = function(
     settings[[n]] = dots[[n]]
   }
 
+  # Compute mgp from spacing primitives when dynmar is active and the user
+  # didn't provide an explicit mgp override. Text is centered on mgp[N], so
+  # it extends 0.5*cex above and below. The visible gap between elements is
+  # controlled by gap.axis (tick tip to tick label edge) and gap.lab (tick
+  # label edge to title edge).
+  if (isTRUE(settings[["dynmar"]]) && !("mgp" %in% names(dots))) {
+    .ga = settings[["gap.axis"]] %||% 0.2
+    .gl = settings[["gap.lab"]] %||% 1.0
+    .ca = settings[["cex.axis"]] %||% 1
+    # FIXME: mgp is shared across sides, so we use the larger label cex to
+    # avoid clipping on either axis. Ideally we'd set side-specific mgp when
+    # cex.xlab and cex.ylab differ.
+    .cl = max(
+      settings[["cex.lab"]] %||% 1,
+      settings[["cex.xlab"]] %||% 0,
+      settings[["cex.ylab"]] %||% 0
+    )
+    .mgp2 = .ga + 0.5 * .ca
+    .mgp1 = .mgp2 + .gl + 0.5 * .cl
+    settings[["mgp"]] = c(.mgp1, .mgp2, 0)
+  }
+
   if (length(settings) > 0) {
     if (theme == "default") {
       # for default theme, we want to revert the original pars and turn off the
@@ -309,6 +331,10 @@ theme_dynamic = modifyList(theme_basic, list(
   ##    `draw_facet_window()` helper builds each side's margin up from this
   ##    pad, adding only what the plot actually needs (tick row, axis label,
   ##    main, sub). See `dynmar_side()` in utils.R.
+  ##  - `mgp` is computed in `tinytheme()` from the spacing primitives
+  ##    (gap.axis, gap.lab) and the active cex.axis/cex.lab values. If the
+  ##    user provides an explicit `mgp`, it is used as-is and the primitives
+  ##    are ignored.
   ##  - `side.sub = 3` moves the sub-caption above the plot (below main).
   ##  - `tcl = -0.3` tightens axis tick marks relative to the base default.
   ##
@@ -316,10 +342,12 @@ theme_dynamic = modifyList(theme_basic, list(
   adj.main = 0,
   adj.sub = 0,
   dynmar = TRUE,
+  gap.axis = 0.2,  # fixed gap (lines) between tick tip and tick label center
+  gap.lab = 1.0,   # gap from tick-label reference to title near cell edge (lines)
   grid = FALSE,
   las = 1,
   mar = c(0.1, 0.1, 0.6, 0.6),
-  mgp = c(3, 1, 0) - c(0.5+0.3, 0.3, 0), # i.e., subtract 0.5 lines + the (abs) value of the tcl adjustment
+  mgp = NULL,      # computed from gap.axis/gap.lab in tinytheme()
   side.sub = 3,
   tcl = -0.3
 ))

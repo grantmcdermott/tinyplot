@@ -974,7 +974,6 @@ tinyplot.default = function(
   #
   dynmar_computed = NULL
   .whtsbp = c(0, 0, 0, 0)
-  .mgp_scaled = FALSE
   if (!add && isTRUE(get_tpar("dynmar"))) {
     .side.sub = get_tpar("side.sub", default = 3)
     # Read the theme's intended mar. Also build a tpars list from the theme
@@ -998,27 +997,9 @@ tinyplot.default = function(
     }
     if (!is.null(.tpars[["mar"]])) .theme_mar = .tpars[["mar"]]
 
-    # Dynamic mgp: scale mgp[1] and mgp[2] when cex.axis or cex.lab exceed 1.
-    # At cex=1 the theme's base mgp works. At larger cex, tick labels need more
-    # space to clear the plot edge (mgp[2] >= 0.5*cex_axis) and the title needs
-    # more separation from tick labels (mgp[1] >= mgp[2] + 0.4*cex_axis + 0.5*cex_lab).
     .cex_axis = get_tpar("cex.axis", tpar_list = .tpars, default = 1)
-    .cex_lab = max(
-      get_tpar(c("cex.xlab", "cex.lab"), tpar_list = .tpars, default = 1),
-      get_tpar(c("cex.ylab", "cex.lab"), tpar_list = .tpars, default = 1)
-    )
-    .mgp = get_tpar("mgp", tpar_list = .tpars)
-    if (.cex_axis > 1 || .cex_lab > 1) {
-      .mgp2_min = 0.5 * .cex_axis
-      .mgp2 = max(.mgp[2], .mgp2_min)
-      .mgp1_min = .mgp2 + 0.4 * .cex_axis + 0.5 * .cex_lab
-      .mgp1 = max(.mgp[1], .mgp1_min)
-      if (.mgp1 != .mgp[1] || .mgp2 != .mgp[2]) {
-        .mgp = c(.mgp1, .mgp2, .mgp[3])
-        .tpars[["mgp"]] = .mgp
-        .mgp_scaled = TRUE
-      }
-    }
+    .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
+    .ymgp_shift = if (.las %in% c(0L, 1L)) 0.5 * (.cex_axis - 1) else 0
 
     # Detect outer-legend sides (order: bottom, left, top, right).
     .lgnd_pos = settings$legend_args[["x"]]
@@ -1040,6 +1021,7 @@ tinyplot.default = function(
                   tpars = .tpars),
       dynmar_side(4, NULL, tpars = .tpars)
     )
+    if (.ymgp_shift > 0) .dyn[2] = .dyn[2] - .ymgp_shift
     # Drop the theme's baseline padding on outer-legend sides so the plot
     # region meets the legend's oma flush. Only .theme_mar is zeroed — the
     # axis-driven bumps in .dyn (tick rows, axis labels, main/sub) are kept
@@ -1094,7 +1076,6 @@ tinyplot.default = function(
 
     dynmar_computed = .theme_mar + .dyn
     par(mar = dynmar_computed + .whtsbp)
-    if (.mgp_scaled) par(mgp = .mgp)
   }
 
   if (legend_draw_flag) {
@@ -1151,14 +1132,13 @@ tinyplot.default = function(
     # (which may have called plot.new and reset par via hooks).
     if (!is.null(dynmar_computed)) {
       par(mar = dynmar_computed + .whtsbp)
-      if (.mgp_scaled) par(mgp = .mgp)
       if (!is.null(xlim) && !is.null(ylim)) {
         plot.window(xlim = xlim, ylim = ylim)
       }
     }
     draw_title(main, sub, xlab, ylab, legend, legend_args, opar,
                xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
-               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] else 0)
+               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] - .ymgp_shift else 0)
   }
 
 

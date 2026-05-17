@@ -18,10 +18,13 @@ text_line_count = function(x) {
 # Compute additive margin "build" for a given side under dynmar.
 # Starts from zero and adds only what the plot actually needs. The tick
 # row and the axis-label row occupy overlapping vertical space (tick row
-# ends at ~|tcl| + mgp[2] + 1, axis label baseline sits at mgp[1]), so the
-# margin is the max of:
-#   - tick-row height (|tcl| + mgp[2] + 1), when the axis is drawn
-#   - axis-label extent (mgp[1] + (N - 1) * cex + 1 line for asc/desc), when present
+# ends at ~|tcl| + mgp[2] + descent, axis label baseline sits at mgp[1]),
+# so the margin is the max of:
+#   - tick-row height (|tcl| + mgp[2] + descent), when the axis is drawn
+#   - axis-label extent (mgp[1] + (N - 1) * cex + descent), when present
+# The descent term = 0.4*cex + 0.6: text at the mgp reference line extends
+# ~0.4*cex lines below baseline (empirically measured character cell descent),
+# plus 0.6 lines fixed buffer for descender characters and spacing.
 # Main/sub sit above/below the plot box on the top/bottom side and add to the
 # margin additively.
 # Tick-label *width* for sides 2/4 (and *height* for 1/3 under las 2:3) is
@@ -33,10 +36,8 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
   mgp = get_tpar("mgp", tpar_list = tpars)
   tcl = get_tpar("tcl", tpar_list = tpars, default = par("tcl"))
   tick_extent = if (side %in% 1:2 && isTRUE(axis_on)) {
-    # |tcl| = tick mark length (outward); mgp[2] = tick-label distance from
-    # axis; +1 = one line for the tick-label text itself. These mirror base
-    # R's default layout: par(tcl = -0.5, mgp = c(3,1,0)) gives 0.5+1+1=2.5.
-    max(0, -tcl) + mgp[2] + 1
+    cex_axis = get_tpar("cex.axis", tpar_list = tpars, default = 1)
+    max(0, -tcl) + mgp[2] + 0.4 * cex_axis + 0.6
   } else 0
   label_extent = 0
   lines = text_line_count(label)
@@ -45,14 +46,7 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
       if (side == 1L) c("cex.xlab", "cex.lab") else c("cex.ylab", "cex.lab"),
       tpar_list = tpars, default = 1
     )
-    # Last-line baseline sits at mgp[1] + (N-1)*cex (after line-shift in
-    # draw_title); add a full line to cover ascender+descender so the text
-    # doesn't clip against the device edge.
-    # TODO: the +1 constant doesn't scale with cex_lab, so large values
-    # (e.g. cex.xlab = 3) under-reserve margin and the title overlaps
-    # tick labels. Fixing this requires also pushing the draw-position
-    # (line arg in draw_title) further out. See "P.S." in #574.
-    label_extent = mgp[1] + (lines - 1) * cex_lab + 1
+    label_extent = mgp[1] + (lines - 1) * cex_lab + 0.4 * cex_lab + 0.6
     # Expressions (e.g., ylab = expression(mm^{1/2})) can be taller than a
     # plain text line due to superscripts, subscripts, fractions, etc. Measure
     # the actual rendered height and add the excess over a normal text line.

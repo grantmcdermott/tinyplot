@@ -46,7 +46,7 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
       if (side == 1L) c("cex.xlab", "cex.lab") else c("cex.ylab", "cex.lab"),
       tpar_list = tpars, default = 1
     )
-    descent = if (side == 2L) 0.5 * cex_lab + 0.6 else 0.4 * cex_lab + 0.6
+    descent = if (side == 2L) 0.1 * cex_lab + 1.0 else 0.2 * cex_lab + 0.8
     label_extent = mgp[1] + (lines - 1) * cex_lab + descent
     # Expressions (e.g., ylab = expression(mm^{1/2})) can be taller than a
     # plain text line due to superscripts, subscripts, fractions, etc. Measure

@@ -191,10 +191,10 @@ tinytheme = function(
   }
 
   # Compute mgp from spacing primitives when dynmar is active and the user
-  # didn't provide an explicit mgp override. Text is centered on mgp[N], so
-  # it extends 0.5*cex above and below. The visible gap between elements is
-  # controlled by gap.axis (tick tip to tick label edge) and gap.lab (tick
-  # label edge to title edge).
+  # didn't provide an explicit mgp override. The near edge of margin text
+  # (facing the plot region) aligns with the half-cell boundary (0.5*cex from
+  # center). Using 0.5*cex in mgp keeps the visible gap between adjacent text
+  # elements constant regardless of cex scaling.
   if (isTRUE(settings[["dynmar"]]) && !("mgp" %in% names(dots))) {
     .ga = settings[["gap.axis"]] %||% 0.2
     .gl = settings[["gap.lab"]] %||% 1.0
@@ -342,8 +342,8 @@ theme_dynamic = modifyList(theme_basic, list(
   adj.main = 0,
   adj.sub = 0,
   dynmar = TRUE,
-  gap.axis = 0.2,  # fixed gap (lines) between tick tip and tick label center
-  gap.lab = 1.0,   # gap from tick-label reference to title near cell edge (lines)
+  gap.axis = 0.2,  # gap (lines) between tick tip and tick label cell edge
+  gap.lab = 1.0,   # gap (lines) from tick label cell edge to title cell edge
   grid = FALSE,
   las = 1,
   mar = c(0.1, 0.1, 0.6, 0.6),

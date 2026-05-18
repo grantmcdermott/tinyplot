@@ -998,8 +998,10 @@ tinyplot.default = function(
     if (!is.null(.tpars[["mar"]])) .theme_mar = .tpars[["mar"]]
 
     .cex_axis = get_tpar("cex.axis", tpar_list = .tpars, default = 1)
+    .cex_lab = get_tpar(c("cex.ylab", "cex.lab"), tpar_list = .tpars, default = 1)
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
     .ymgp_shift = if (.las %in% c(0L, 1L)) 0.5 * (.cex_axis - 1) else 0
+    .ylab_cex_shift = 0.5 * (.cex_lab - 1)
 
     # Detect outer-legend sides (order: bottom, left, top, right).
     .lgnd_pos = settings$legend_args[["x"]]
@@ -1138,7 +1140,7 @@ tinyplot.default = function(
     }
     draw_title(main, sub, xlab, ylab, legend, legend_args, opar,
                xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
-               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] - .ymgp_shift else 0)
+               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] - .ymgp_shift - .ylab_cex_shift else 0)
   }
 
 

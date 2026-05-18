@@ -177,3 +177,31 @@ f = function() {
   tinytheme()
 }
 expect_snapshot_plot(f, label = "margins_large_cex_facets")
+
+# Varying cex.axis vs cex.lab independently to check gap constancy
+f = function() {
+  tinytheme("clean", cex.axis = 3, cex.lab = 1)
+  tinyplot(1000:1010, xlab = "X title (JjQqYy)", ylab = "Y title (JjQqYy)",
+           main = "cex.axis = 3, cex.lab = 1")
+  box("inner", lty = 2)
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_cex_axis3_lab1")
+
+f = function() {
+  tinytheme("clean", cex.axis = 1, cex.lab = 3)
+  tinyplot(1000:1010, xlab = "X title (JjQqYy)", ylab = "Y title (JjQqYy)",
+           main = "cex.axis = 1, cex.lab = 3")
+  box("inner", lty = 2)
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_cex_axis1_lab3")
+
+f = function() {
+  tinytheme("clean", cex.axis = 3, cex.lab = 3)
+  tinyplot(1000:1010, xlab = "X title (JjQqYy)", ylab = "Y title (JjQqYy)",
+           main = "cex.axis = 3, cex.lab = 3")
+  box("inner", lty = 2)
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_cex_axis3_lab3")

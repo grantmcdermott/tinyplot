@@ -46,7 +46,11 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
       if (side == 1L) c("cex.xlab", "cex.lab") else c("cex.ylab", "cex.lab"),
       tpar_list = tpars, default = 1
     )
-    descent = if (side == 2L) 0.1 * cex_lab + 1.0 else 0.2 * cex_lab + 0.8
+    # Side 2: rotated ylab baseline is shifted by ylab_cex_shift, so far edge
+    # = mgp[1] + 0.1*cex_lab + 0.5; descent = 0.1*cex + 0.9 gives constant
+    # 0.4-line buffer (and exactly 1.0 at cex=1, preserving existing behavior).
+    # Side 1: horizontal xlab ink extends ~0.2*cex below center; +0.8 buffer.
+    descent = if (side == 2L) 0.1 * cex_lab + 0.9 else 0.2 * cex_lab + 0.8
     label_extent = mgp[1] + (lines - 1) * cex_lab + descent
     # Expressions (e.g., ylab = expression(mm^{1/2})) can be taller than a
     # plain text line due to superscripts, subscripts, fractions, etc. Measure

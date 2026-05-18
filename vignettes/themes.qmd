@@ -21,12 +21,14 @@ knitr::opts_chunk$set(
 ```
 
 The base R aesthetic tends to divide option. Some people like the
-default minimalist look of base R plots and/or are happy to customize the (many)
+default minimalist look of base R plots and are happy to customize the (many)
 graphical parameters that are available to them. Others find base plots ugly
-and don't want to spend time endlessly tweaking different parameters. Moreover,
-the inherent "canvas" approach to drawing base R graphics, with fixed placement
-for plot elements, means that plots don't adjust dynamically and this can lead
-to awkward whitespace artifacts unless the user explicitly accounts for them.
+and don't want to spend time endlessly tweaking different parameters. Meanwhile,
+the "canvas" drawing system of base R graphics creates its own set of issues. 
+Each plot element is drawn according to a fixed placement logic, which means 
+that the overall composition can't adjust dynamically according to the elements
+that are present or not (including titles). This can lead to awkward whitespace
+artifacts unless the user explicitly accounts for them.
 
 Regardless of where you stand in this debate, the **tinyplot** view is that base
 R graphics should ideally combine flexibility and ease of use with aesthetically
@@ -56,7 +58,8 @@ tinyplot(
 
 One particular feature that may interest users is the fact that `tinytheme()`
 uses some internal ~~magic~~ logic to dynamically adjust plot margins to avoid
-whitespace. For example, when long horizontal y-axis labels are detected:
+whitespace and overlapping elements. For example, notice how the plot region 
+here bumps out to accomodate the long horizontal y-axis labels:
 
 ```{r}
 tinyplot(
@@ -105,7 +108,7 @@ default behaviour.
 ### Gallery
 
 We'll use the following running example to demonstrate the full gallery of
-built-in `tinytheme()` themes.
+built-in **tinyplot** themes.
 
 ```{r}
 p = function(theme = "default") {
@@ -223,8 +226,6 @@ catalog, either on-the-fly or downloaded to your permanent fontbook collection.
 It plays very nicely with **tinyplot**.
 
 :::
-
-#### Spacing primitives
 
 One feature of the `tinytheme()` infrastructure that is especially relevant
 to customized themes is how dynamic spacing works. Dynamic themes in

@@ -73,8 +73,32 @@
 #' <some plot>
 #' ```
 #' 
+#' **Spacing primitives.** Dynamic themes compute `mgp` (margin line positions)
+#' automatically from two spacing primitives, rather than requiring users to
+#' reason about how `mar`, `mgp`, and `tcl` combine:
+#'
+#' - `gap.axis`: the gap in margin lines between the tick tip and the near edge
+#'   of the tick label. Default `0.2`.
+#' - `gap.lab`: the gap in margin lines between the far edge of the tick label
+#'   and the near edge of the axis title. Default `1.0`.
+#'
+#' These primitives scale automatically with `cex.axis` and `cex.lab`, so the
+#' visible spacing between elements remains constant regardless of text size.
+#' To adjust spacing, pass them as overrides:
+#'
+#' ```
+#' # Tighter spacing between tick labels and axis titles
+#' tinytheme("clean", gap.lab = 0.5)
+#'
+#' # More room between ticks and tick labels
+#' tinytheme("clean", gap.axis = 0.5)
+#' ```
+#'
+#' If you supply an explicit `mgp` value, it is used as-is and the primitives
+#' are ignored.
+#'
 #' **Caveats.** Known `tinytheme` limitations include:
-#' 
+#'
 #' - Themes do not work well when `legend = "top!"`.
 #'
 #' @return The function returns nothing. It is called for its side effects.
@@ -243,9 +267,12 @@ theme_default = list(
   bty = par("bty"), #"o",
   cex = par("cex"), #1,
   cex.axis = par("cex.axis"), #1,
+  cex.lab = par("cex.lab"), #1,
   cex.main = par("cex.main"), #1.2,
+  cex.sub = par("cex.sub"), #1,
   cex.xlab = NULL, # defer to par("cex.lab") unless set explicitly
   cex.ylab = NULL, # defer to par("cex.lab") unless set explicitly
+  col = par("col"), #"black",
   col.axis = par("col.axis"), #1,
   col.xaxs = par("col.axis"), #1,
   col.yaxs = par("col.axis"), #1,
@@ -278,6 +305,7 @@ theme_default = list(
   pch = par("pch"), # 1,
   side.sub = 1,
   tck = NA,
+  tcl = par("tcl"), # -0.5
   xaxt = "standard",
   yaxt = "standard"
 )

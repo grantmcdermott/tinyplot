@@ -86,6 +86,30 @@ tpar(mar = c(5, 5, 2, 2))
 <some plot>
 }\if{html}{\out{</div>}}
 
+\strong{Spacing primitives.} Dynamic themes compute \code{mgp} (margin line positions)
+automatically from two spacing primitives, rather than requiring users to
+reason about how \code{mar}, \code{mgp}, and \code{tcl} combine:
+\itemize{
+\item \code{gap.axis}: the gap in margin lines between the tick tip and the near edge
+of the tick label. Default \code{0.2}.
+\item \code{gap.lab}: the gap in margin lines between the far edge of the tick label
+and the near edge of the axis title. Default \code{1.0}.
+}
+
+These primitives scale automatically with \code{cex.axis} and \code{cex.lab}, so the
+visible spacing between elements remains constant regardless of text size.
+To adjust spacing, pass them as overrides:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# Tighter spacing between tick labels and axis titles
+tinytheme("clean", gap.lab = 0.5)
+
+# More room between ticks and tick labels
+tinytheme("clean", gap.axis = 0.5)
+}\if{html}{\out{</div>}}
+
+If you supply an explicit \code{mgp} value, it is used as-is and the primitives
+are ignored.
+
 \strong{Caveats.} Known \code{tinytheme} limitations include:
 \itemize{
 \item Themes do not work well when \code{legend = "top!"}.

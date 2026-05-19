@@ -997,6 +997,12 @@ tinyplot.default = function(
     }
     if (!is.null(.tpars[["mar"]])) .theme_mar = .tpars[["mar"]]
 
+    .cex_axis = get_tpar("cex.axis", tpar_list = .tpars, default = 1)
+    .cex_lab = get_tpar(c("cex.ylab", "cex.lab"), tpar_list = .tpars, default = 1)
+    .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
+    .ymgp_shift = if (.las %in% c(0L, 1L)) 0.5 * (.cex_axis - 1) else 0
+    .ylab_cex_shift = 0.5 * (.cex_lab - 1)
+
     # Detect outer-legend sides (order: bottom, left, top, right).
     .lgnd_pos = settings$legend_args[["x"]]
     .outer_sides = c(
@@ -1017,6 +1023,7 @@ tinyplot.default = function(
                   tpars = .tpars),
       dynmar_side(4, NULL, tpars = .tpars)
     )
+    if (.ymgp_shift > 0) .dyn[2] = .dyn[2] - .ymgp_shift
     # Drop the theme's baseline padding on outer-legend sides so the plot
     # region meets the legend's oma flush. Only .theme_mar is zeroed — the
     # axis-driven bumps in .dyn (tick rows, axis labels, main/sub) are kept
@@ -1035,7 +1042,8 @@ tinyplot.default = function(
     # Compute whtsbp (tick-label width/height bump). Read `las` from .tpars
     # (the theme definition) rather than par() — par("las") isn't set to the
     # theme's intended value until the before.plot.new hook fires, but this
-    # block runs before that.
+    # block runs before that. Pass .cex_axis to strwidth so measurements
+    # reflect the intended text size (par("cex.axis") isn't set yet either).
     .whtsbp = c(0, 0, 0, 0)
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
     if (.las %in% 1:2) {
@@ -1049,7 +1057,7 @@ tinyplot.default = function(
         yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
       }
       if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      whtsbp_y = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") -
+      whtsbp_y = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") -
                  grconvertX(0, from = "nfc", to = "lines") - 1
       if (is.finite(whtsbp_y) && whtsbp_y > 0) .whtsbp[2] = whtsbp_y
     }
@@ -1057,7 +1065,7 @@ tinyplot.default = function(
       xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      whtsbp_x = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
+      whtsbp_x = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") - 1
       if (is.finite(whtsbp_x) && whtsbp_x > 0) .whtsbp[1] = whtsbp_x
     }
 
@@ -1132,7 +1140,7 @@ tinyplot.default = function(
     }
     draw_title(main, sub, xlab, ylab, legend, legend_args, opar,
                xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
-               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] else 0)
+               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] - .ymgp_shift - .ylab_cex_shift else 0)
   }
 
 
@@ -1412,7 +1420,7 @@ tinyplot.default = function(
         apar = par(no.readonly = TRUE)
         set_saved_par(when = "after", apar)
       },
-      list = list(), 
+      list = list(),
       env = getNamespace('tinyplot')
     )
   }

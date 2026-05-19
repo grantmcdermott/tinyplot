@@ -21,12 +21,14 @@ knitr::opts_chunk$set(
 ```
 
 The base R aesthetic tends to divide option. Some people like the
-default minimalist look of base R plots and/or are happy to customize the (many)
+default minimalist look of base R plots and are happy to customize the (many)
 graphical parameters that are available to them. Others find base plots ugly
-and don't want to spend time endlessly tweaking different parameters. Moreover,
-the inherent "canvas" approach to drawing base R graphics, with fixed placement
-for plot elements, means that plots don't adjust dynamically and this can lead
-to awkward whitespace artifacts unless the user explicitly accounts for them.
+and don't want to spend time endlessly tweaking different parameters. Meanwhile,
+the "canvas" drawing system of base R graphics creates its own set of issues. 
+Each plot element is drawn according to a fixed placement logic, which means 
+that the overall composition can't adjust dynamically according to the elements
+that are present or not (including titles). This can lead to awkward whitespace
+artifacts unless the user explicitly accounts for them.
 
 Regardless of where you stand in this debate, the **tinyplot** view is that base
 R graphics should ideally combine flexibility and ease of use with aesthetically
@@ -56,7 +58,8 @@ tinyplot(
 
 One particular feature that may interest users is the fact that `tinytheme()`
 uses some internal ~~magic~~ logic to dynamically adjust plot margins to avoid
-whitespace. For example, when long horizontal y-axis labels are detected:
+whitespace and overlapping elements. For example, notice how the plot region 
+here bumps out to accomodate the long horizontal y-axis labels:
 
 ```{r}
 tinyplot(
@@ -83,12 +86,12 @@ tinytheme()
 tinyplot(mpg ~ hp, data = mtcars, main = "Fuel efficiency vs. horsepower")
 ```
 
-### Aside: ephemeral themes
+### Persistent versus ephemeral themes
 
-We expect that users will generally want to set a persistent theme for all
-(most) of their plots. But it is also possible to set a ephemeral theme for a
-particular plot by calling the `tinyplot(..., theme = <theme>)` argument
-directly.
+Setting a persistent theme for all of your plots is often convenient. But there
+are also times where you might prefer an ephemeral theme that only applies to a
+single plot (plus any added layers). You can invoke such an ephemeral theme by
+calling the `tinyplot(..., theme = <theme>)` argument directly.
 
 ```{r}
 #| layout-ncol: 2
@@ -96,22 +99,28 @@ tinyplot(mpg ~ hp, data = mtcars, main = "Ephemeral theme", theme = "clean")
 tinyplot(mpg ~ hp, data = mtcars, main = "Back to the default")
 ```
 
-
+One of the advantages of ephemeral themes is that they won't interfere with any
+other base graphics calls (e.g, `plot`, `coplot`, etc.) In contrast, the 
+persistent hook mechanism of `tinytheme()` will also intercept these other base
+plot calls, which may lead to undesirable outcomes unless you reset to the
+default behaviour.
 
 ### Gallery
 
 We'll use the following running example to demonstrate the full gallery of
-built-in `tinytheme()` themes.
+built-in **tinyplot** themes.
 
 ```{r}
-p = function() {
+p = function(theme = "default") {
   tinyplot(
     Sepal.Width ~ Sepal.Length | Species,
     facet = "by",
     data = iris,
-    main = "Title of the plot",
-    sub = "A smaller subtitle"
+    main = paste0('theme = "', theme, '"'),
+    sub = "subtitle",
+    theme = theme
   )
+  box("outer", lty = 2)
 }
 ```
 
@@ -134,84 +143,21 @@ p = function() {
 <!-- tinytheme() -->
 <!-- ``` -->
 
-#### "default"
 
 ```{r}
-tinytheme() ## same as tinytheme("default")
-p()
+p() ## same as "default"
+p("basic")
+p("dynamic")
+p("clean")
+p("clean2")
+p("classic")
+p("bw")
+p("minimal")
+p("ipsum")
+p("dark")
+p("tufte")
+p("void")
 ```
-
-#### "basic"
-
-```{r}
-tinytheme("basic")
-p()
-```
-
-#### "clean"
-
-```{r}
-tinytheme("clean")
-p()
-```
-
-#### "clean2"
-
-```{r}
-tinytheme("clean2")
-p()
-```
-
-#### "classic"
-
-```{r}
-tinytheme("classic")
-p()
-```
-
-#### "bw"
-
-```{r}
-tinytheme("bw")
-p()
-```
-
-#### "minimal"
-
-```{r}
-tinytheme("minimal")
-p()
-```
-
-#### "ipsum"
-
-```{r}
-tinytheme("ipsum")
-p()
-```
-
-#### "dark"
-
-```{r}
-tinytheme("dark")
-p()
-```
-
-#### "tufte"
-
-```{r}
-tinytheme("tufte")
-p()
-```
-
-#### "void"
-
-```{r}
-tinytheme("void")
-p()
-```
-
-#### "ridge"
 
 ::: {.callout-note}
 The specialized `"ridge"` and `"ridge2"` themes are only intended for use with
@@ -219,30 +165,20 @@ ridge plot types.
 :::
 
 ```{r}
-p2 = function() {
+p2 = function(theme = "ridge") {
   tinyplot(
     Species ~ Sepal.Width | Species, legend = FALSE,
     data = iris,
     type = "ridge",
-    main = "Title of the plot",
-    sub = "A smaller subtitle"
+    main = paste0('theme = "', theme, '"'),
+    sub = "subtitle",
+    theme = theme
   )
+  box("outer", lty = 2)
 }
 
-tinytheme("ridge")
-p2()
-```
-
-#### "ridge2"
-
-```{r}
-tinytheme("ridge2")
-p2()
-```
-
-```{r}
-# Reset to default theme
-tinytheme()
+p2("ridge")
+p2("ridge2")
 ```
 
 Please feel free to make suggestions about themes, or contribute new themes by
@@ -291,18 +227,35 @@ It plays very nicely with **tinyplot**.
 
 :::
 
-Similarly, to create your own themes "from scratch", set the theme to
-`"default"` and pass additional graphical parameters to `tinytheme()`.
+One feature of the `tinytheme()` infrastructure that is especially relevant
+to customized themes is how dynamic spacing works. Dynamic themes in
+**tinyplot** automatically compute margin positions (`mar`, `mgp`) so that axis
+and text elements are well-spaced. Moreover, rather than requiring you to
+manually reason about how `mar`, `mgp`, and `tcl` combine to produce certain
+spacing, which---trust us---is both confusing and error prone, you can control
+the gaps between elements directly through two spacing "primitives":
+
+- `gap.axis`: the gap (in margin lines) between the tick tip and the near edge
+  of the tick label. Default `0.2`.
+- `gap.lab`: the gap (in margin lines) between the far edge of the tick label
+  and the near edge of the axis title. Default `1.0`.
+
+These scale automatically with companion features like `cex.axis` and `cex.lab`,
+maintaining constant visible spacing regardless of text size. For example:
 
 ```{r}
-tinytheme("default", font.main = 3, col = "red")
-p()
+#| layout-ncol: 2
+tinytheme("dynamic", gap.axis = 0, gap.lab = 0.5)
+tinyplot(mpg ~ hp, data = mtcars, main = "Tighter gaps")
+
+tinytheme("dynamic", gap.axis = 2, gap.lab = 2)
+tinyplot(mpg ~ hp, data = mtcars, main = "Looser gaps")
+tinytheme() # reset
 ```
 
-```{r}
-# Reset to default theme
-tinytheme()
-```
+Again, this is much more convenient that fiddling with `mgp` values. But you can
+always provide `mgp` values if you wish; in which it will take precedence and
+the primitives are ignored.
 
 ::: {.callout-tip}
 To see the full list of parameters that defines a particular theme, simply

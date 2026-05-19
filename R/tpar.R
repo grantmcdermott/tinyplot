@@ -228,6 +228,8 @@ known_tpar = c(
     "col.yaxs",
     "cairo",
     "dynmar",
+    "gap.axis",
+    "gap.lab",
     "facet.bg",
     "facet.border",
     "facet.cex",

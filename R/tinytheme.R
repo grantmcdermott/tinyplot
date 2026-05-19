@@ -73,8 +73,32 @@
 #' <some plot>
 #' ```
 #' 
+#' **Spacing primitives.** Dynamic themes compute `mgp` (margin line positions)
+#' automatically from two spacing primitives, rather than requiring users to
+#' reason about how `mar`, `mgp`, and `tcl` combine:
+#'
+#' - `gap.axis`: the gap in margin lines between the tick tip and the near edge
+#'   of the tick label. Default `0.2`.
+#' - `gap.lab`: the gap in margin lines between the far edge of the tick label
+#'   and the near edge of the axis title. Default `1.0`.
+#'
+#' These primitives scale automatically with `cex.axis` and `cex.lab`, so the
+#' visible spacing between elements remains constant regardless of text size.
+#' To adjust spacing, pass them as overrides:
+#'
+#' ```
+#' # Tighter spacing between tick labels and axis titles
+#' tinytheme("clean", gap.lab = 0.5)
+#'
+#' # More room between ticks and tick labels
+#' tinytheme("clean", gap.axis = 0.5)
+#' ```
+#'
+#' If you supply an explicit `mgp` value, it is used as-is and the primitives
+#' are ignored.
+#'
 #' **Caveats.** Known `tinytheme` limitations include:
-#' 
+#'
 #' - Themes do not work well when `legend = "top!"`.
 #'
 #' @return The function returns nothing. It is called for its side effects.
@@ -91,21 +115,26 @@
 #' p()
 #' 
 #' # Set a theme
-#' tinytheme("bw")
+#' tinytheme("dark")
 #' p()
 #' 
 #' #  A set theme is persistent and will apply to subsequent plots
 #' tinyplot(0:10)
 #'
 #' # Try a different theme
-#' tinytheme("dark")
+#' tinytheme("clean")
 #' p()
 #'          
 #' # Customize the theme by overriding default settings
-#' tinytheme("bw", fg = "green", font.main = 2, font.sub = 3, family = "Palatino")
+#' tinytheme("clean",
+#'           adj.xlab = 1, adj.ylab = 1,
+#'           cex.lab = 0.75, cex.axis = 0.9,
+#'           font.sub = 3,
+#'           gap.axis = 0, gap.lab = 0.5,
+#'           tcl = -0.1)
 #' p()
 #' 
-#' # Another custom theme example
+#' # Another custom theme example, including a different font
 #' tinytheme("bw", font.main = 2, col.axis = "darkcyan", family = "HersheyScript")
 #' p()
 #' 
@@ -190,6 +219,28 @@ tinytheme = function(
     settings[[n]] = dots[[n]]
   }
 
+  # Compute mgp from spacing primitives when dynmar is active and the user
+  # didn't provide an explicit mgp override. The near edge of margin text
+  # (facing the plot region) aligns with the half-cell boundary (0.5*cex from
+  # center). Using 0.5*cex in mgp keeps the visible gap between adjacent text
+  # elements constant regardless of cex scaling.
+  if (isTRUE(settings[["dynmar"]]) && !("mgp" %in% names(dots))) {
+    .ga = settings[["gap.axis"]] %||% 0.2
+    .gl = settings[["gap.lab"]] %||% 1.0
+    .ca = settings[["cex.axis"]] %||% 1
+    # FIXME: mgp is shared across sides, so we use the larger label cex to
+    # avoid clipping on either axis. Ideally we'd set side-specific mgp when
+    # cex.xlab and cex.ylab differ.
+    .cl = max(
+      settings[["cex.lab"]] %||% 1,
+      settings[["cex.xlab"]] %||% 0,
+      settings[["cex.ylab"]] %||% 0
+    )
+    .mgp2 = .ga + 0.5 * .ca
+    .mgp1 = .mgp2 + .gl + 0.5 * .cl
+    settings[["mgp"]] = c(.mgp1, .mgp2, 0)
+  }
+
   if (length(settings) > 0) {
     if (theme == "default") {
       # for default theme, we want to revert the original pars and turn off the
@@ -221,9 +272,12 @@ theme_default = list(
   bty = par("bty"), #"o",
   cex = par("cex"), #1,
   cex.axis = par("cex.axis"), #1,
+  cex.lab = par("cex.lab"), #1,
   cex.main = par("cex.main"), #1.2,
+  cex.sub = par("cex.sub"), #1,
   cex.xlab = NULL, # defer to par("cex.lab") unless set explicitly
   cex.ylab = NULL, # defer to par("cex.lab") unless set explicitly
+  col = par("col"), #"black",
   col.axis = par("col.axis"), #1,
   col.xaxs = par("col.axis"), #1,
   col.yaxs = par("col.axis"), #1,
@@ -256,6 +310,7 @@ theme_default = list(
   pch = par("pch"), # 1,
   side.sub = 1,
   tck = NA,
+  tcl = par("tcl"), # -0.5
   xaxt = "standard",
   yaxt = "standard"
 )
@@ -309,6 +364,10 @@ theme_dynamic = modifyList(theme_basic, list(
   ##    `draw_facet_window()` helper builds each side's margin up from this
   ##    pad, adding only what the plot actually needs (tick row, axis label,
   ##    main, sub). See `dynmar_side()` in utils.R.
+  ##  - `mgp` is computed in `tinytheme()` from the spacing primitives
+  ##    (gap.axis, gap.lab) and the active cex.axis/cex.lab values. If the
+  ##    user provides an explicit `mgp`, it is used as-is and the primitives
+  ##    are ignored.
   ##  - `side.sub = 3` moves the sub-caption above the plot (below main).
   ##  - `tcl = -0.3` tightens axis tick marks relative to the base default.
   ##
@@ -316,10 +375,12 @@ theme_dynamic = modifyList(theme_basic, list(
   adj.main = 0,
   adj.sub = 0,
   dynmar = TRUE,
+  gap.axis = 0.2,  # gap (lines) between tick tip and tick label cell edge
+  gap.lab = 1.0,   # gap (lines) from tick label cell edge to title cell edge
   grid = FALSE,
   las = 1,
   mar = c(0.1, 0.1, 0.6, 0.6),
-  mgp = c(3, 1, 0) - c(0.5+0.3, 0.3, 0), # i.e., subtract 0.5 lines + the (abs) value of the tcl adjustment
+  mgp = NULL,      # computed from gap.axis/gap.lab in tinytheme()
   side.sub = 3,
   tcl = -0.3
 ))

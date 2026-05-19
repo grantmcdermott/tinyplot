@@ -118,3 +118,90 @@ expect_true(
 #     theme = "clean")
 # }
 # expect_snapshot_plot(f, label = "margins_math_expression")
+
+# Dynamic margin and mgp scaling with large cex values (#574)
+
+# Helper: capture mar and mgp from inside the plot
+get_plot_pars = function(...) {
+  tinyplot(...)
+  list(mar = par("mar"), mgp = par("mgp"))
+}
+
+# At default cex=1, mgp is unchanged from the theme value
+expect_equal(
+  {
+    tinytheme("clean")
+    p = get_plot_pars(1:10, 1:10, xlab = "X", ylab = "Y")
+    tinytheme()
+    p$mgp
+  },
+  c(2.2, 0.7, 0),
+  info = "dynmar_mgp_unchanged_at_cex_1"
+)
+
+# cex.axis=3, cex.lab=2: mgp scales to accommodate larger text
+expect_equal(
+  {
+    tinytheme("clean", cex.axis = 3, cex.lab = 2)
+    p = get_plot_pars(1:10, 1:10, xlab = "X", ylab = "Y")
+    tinytheme()
+    p$mgp
+  },
+  c(3.7, 1.7, 0),
+  info = "dynmar_mgp_at_cex_axis_3_cex_lab_2"
+)
+
+# cex.axis=0.5, cex.lab=0.5: mgp shrinks for small text
+expect_equal(
+  {
+    tinytheme("clean", cex.axis = 0.5, cex.lab = 0.5)
+    p = get_plot_pars(1:10, 1:10, xlab = "X", ylab = "Y")
+    tinytheme()
+    p$mgp
+  },
+  c(1.7, 0.45, 0),
+  info = "dynmar_mgp_shrinks_at_small_cex"
+)
+
+# Snapshot tests for scaled-cex margins
+f = function() {
+  tinytheme("clean", cex.axis = 3, cex.lab = 2)
+  tinyplot(1000:1010, xlab = "X label", ylab = "Y label", main = "cex.axis=3, cex.lab=2")
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_large_cex")
+
+f = function() {
+  tinytheme("clean", cex.axis = 2, cex.lab = 1.5)
+  tinyplot(mpg ~ wt | cyl, facet = "by", data = mtcars, xlab = "Weight", ylab = "Miles per gallon")
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_large_cex_facets")
+
+# Varying cex.axis vs cex.lab independently to check gap constancy
+f = function() {
+  tinytheme("clean", cex.axis = 3, cex.lab = 1)
+  tinyplot(1000:1010, xlab = "X title (JjQqYy)", ylab = "Y title (JjQqYy)",
+           main = "cex.axis = 3, cex.lab = 1")
+  box("inner", lty = 2)
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_cex_axis3_lab1")
+
+f = function() {
+  tinytheme("clean", cex.axis = 1, cex.lab = 3)
+  tinyplot(1000:1010, xlab = "X title (JjQqYy)", ylab = "Y title (JjQqYy)",
+           main = "cex.axis = 1, cex.lab = 3")
+  box("inner", lty = 2)
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_cex_axis1_lab3")
+
+f = function() {
+  tinytheme("clean", cex.axis = 3, cex.lab = 3)
+  tinyplot(1000:1010, xlab = "X title (JjQqYy)", ylab = "Y title (JjQqYy)",
+           main = "cex.axis = 3, cex.lab = 3")
+  box("inner", lty = 2)
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_cex_axis3_lab3")

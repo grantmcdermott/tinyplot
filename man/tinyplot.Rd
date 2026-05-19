@@ -273,7 +273,7 @@ via \code{legend(...)}:
 \itemize{
 \item \code{nudge_x}, \code{nudge_y}: numeric vectors of per-group offsets in data
 units. Recycled to the number of groups. Supports named vectors
-for targeted adjustment, e.g. \code{nudge_y = c("August" = 5)}.
+for targeted adjustment, e.g. \code{nudge_y = c(May = -1, June = 2)}.
 \item \code{repel}: if \code{TRUE}, automatically separates overlapping labels
 vertically. If a positive number, sets the minimum gap between
 labels in data units.

@@ -47,6 +47,32 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "legend_direct_facet")
 
+# nudge_y adjusts label positions
+f = function() {
+  plt(Temp ~ Day | Month, data = aq, type = "l",
+      legend = legend("direct", nudge_y = c(0, 1, -1, 0, -1)),
+      theme = "clean2")
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_direct_nudge_y")
+
+# repel separates overlapping labels
+f = function() {
+  plt(Temp ~ Day | Month, data = subset(aq, Day <= 30), type = "l",
+      legend = legend("direct", repel = TRUE),
+      theme = "clean2")
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_direct_repel")
+
+# scalar nudge_y is recycled
+f = function() {
+  plt(Temp ~ Day | Month, data = aq, type = "l",
+      legend = legend("direct", nudge_y = 2))
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_direct_nudge_scalar")
+
 # No by variable: should warn and produce plot without labels
 expect_warning(
   plt(0:10, type = "l", legend = "direct"),

@@ -268,7 +268,15 @@ coloured to match. Best suited to line-based plots with x-sorted data,
 where "last" corresponds to "rightmost". The right margin is
 automatically expanded to prevent clipping. Requires discrete groups
 via \code{by}. For faceted plots, labels are only drawn on the last panel
-in which each group appears.
+in which each group appears. Supports additional arguments when passed
+via \code{legend(...)}:
+\itemize{
+\item \code{nudge_x}, \code{nudge_y}: numeric vectors of per-group offsets in data
+units. Recycled to the number of groups.
+\item \code{repel}: if \code{TRUE}, automatically separates overlapping labels
+vertically. If a positive number, sets the minimum gap between
+labels in data units.
+}
 \item \code{"none"}: turns off legend printing.
 }
 \item Logical value, where TRUE corresponds to the default case above (same
@@ -739,6 +747,16 @@ tinyplot(
   data = aq,
   type = "l",
   legend = "direct",
+  theme = "clean2"
+)
+
+# Use nudge_y to manually adjust label positions, or repel to auto-separate
+# overlapping labels:
+tinyplot(
+  Temp ~ Day | Month,
+  data = aq,
+  type = "l",
+  legend = legend("direct", repel = TRUE),
   theme = "clean2"
 )
 

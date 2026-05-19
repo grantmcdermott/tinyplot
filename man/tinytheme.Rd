@@ -125,21 +125,26 @@ p = function() tinyplot(
 p()
 
 # Set a theme
-tinytheme("bw")
+tinytheme("dark")
 p()
 
 #  A set theme is persistent and will apply to subsequent plots
 tinyplot(0:10)
 
 # Try a different theme
-tinytheme("dark")
+tinytheme("clean")
 p()
          
 # Customize the theme by overriding default settings
-tinytheme("bw", fg = "green", font.main = 2, font.sub = 3, family = "Palatino")
+tinytheme("clean",
+          adj.xlab = 1, adj.ylab = 1,
+          cex.lab = 0.75, cex.axis = 0.9,
+          font.sub = 3,
+          gap.axis = 0, gap.lab = 0.5,
+          tcl = -0.1)
 p()
 
-# Another custom theme example
+# Another custom theme example, including a different font
 tinytheme("bw", font.main = 2, col.axis = "darkcyan", family = "HersheyScript")
 p()
 

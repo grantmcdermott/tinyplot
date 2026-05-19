@@ -39,7 +39,8 @@ draw_facet_window = function(
     ylab,
     y, ymax, ymin,
     tpars = NULL,
-    dynmar_computed = NULL
+    dynmar_computed = NULL,
+    dl_overshoot = 0
     ) {
   
   if (is.null(tpars)) tpars = tpar()
@@ -193,6 +194,10 @@ draw_facet_window = function(
       if (isTRUE(attr(facet, "facet_grid")) && !has_legend) {
         omar[4] = omar[4] + 1
       }
+    }
+
+    if (dl_overshoot > 0) {
+      fmar[4] = fmar[4] + dl_overshoot
     }
 
     # Now we set the margins. The trick here is that we simultaneously adjust

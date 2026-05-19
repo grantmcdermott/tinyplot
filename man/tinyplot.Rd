@@ -256,13 +256,31 @@ no legend is drawn. If a grouping variable is detected, then an automatic
 legend is drawn to the \emph{outer} right of the plotting area. Note that the
 legend title and categories will automatically be inferred from the \code{by}
 argument and underlying data.
-\item A convenience string indicating the legend position. The string should
-correspond to one of the position keywords supported by the base \code{legend}
-function, e.g. "right", "topleft", "bottom", etc. In addition, \code{tinyplot}
-supports adding a trailing exclamation point to these keywords, e.g.
-"right!", "topleft!", or "bottom!". This will place the legend \emph{outside}
-the plotting area and adjust the margins of the plot accordingly. Finally,
-users can also turn off any legend printing by specifying "none".
+\item A convenience string indicating the legend position. Supported keywords:
+\itemize{
+\item Standard position keywords from base \code{legend()}, e.g. \code{"right"},
+\code{"topleft"}, \code{"bottom"}, etc.
+\item Outer positions via a trailing \code{"!"}, e.g. \code{"right!"}, \code{"topleft!"},
+or \code{"bottom!"}. This places the legend \emph{outside} the plotting area and
+adjusts the margins accordingly.
+\item \code{"direct"}: places text labels at the last point of each group's data,
+coloured to match. Best suited to line-based plots with x-sorted data,
+where "last" corresponds to "rightmost". The right margin is
+automatically expanded to prevent clipping. Requires discrete groups
+via \code{by}. For faceted plots, labels are drawn in each panel for the
+groups present there. Supports additional arguments when passed
+via \code{legend(...)}:
+\itemize{
+\item \code{nudge_x}, \code{nudge_y}: numeric vectors of per-group offsets in data
+units. Recycled to the number of groups. Supports named vectors
+for targeted adjustment, e.g.
+\code{nudge_y = c("Group A" = -10, "Group B" = 20)}.
+\item \code{repel}: if \code{TRUE}, automatically separates overlapping labels
+vertically. If a positive number, sets the minimum gap between
+labels in data units.
+}
+\item \code{"none"}: turns off legend printing.
+}
 \item Logical value, where TRUE corresponds to the default case above (same
 effect as specifying NULL) and FALSE turns the legend off (same effect as
 specifying "none").
@@ -718,6 +736,31 @@ tinyplot(
   data = aq,
   type = "l",
   legend = legend("bottom!", title = "Month of the year", bty = "o")
+)
+
+# Use legend = "direct" to place text labels at the last point of each
+# group's data, coloured to match. Best suited to line-based plots with
+# x-sorted data, where "last" corresponds to "rightmost". The right
+# margin is automatically expanded to fit the labels. Pairs well with
+# dynamic themes for tighter margins overall.
+
+tinyplot(
+  Temp ~ Day | Month,
+  data = aq,
+  type = "l",
+  legend = "direct",
+  theme = "clean2"
+)
+
+# Use `nudge_x/y`` to manually adjust label positions, or `repel` to
+# auto-separate overlapping labels:
+tinyplot(
+  Temp ~ Day | Month,
+  data = aq,
+  type = "l",
+  # legend = legend("direct", nudge_y = c(May = -1, Jun = 2)), # another option
+  legend = legend("direct", repel = TRUE),
+  theme = "clean2"
 )
 
 # The default group colours are inherited from either the "R4" or "Viridis"

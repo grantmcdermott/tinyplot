@@ -139,13 +139,27 @@
 #'    legend is drawn to the _outer_ right of the plotting area. Note that the
 #'    legend title and categories will automatically be inferred from the `by`
 #'    argument and underlying data.
-#'    - A convenience string indicating the legend position. The string should
-#'    correspond to one of the position keywords supported by the base `legend`
-#'    function, e.g. "right", "topleft", "bottom", etc. In addition, `tinyplot`
-#'    supports adding a trailing exclamation point to these keywords, e.g.
-#'    "right!", "topleft!", or "bottom!". This will place the legend _outside_
-#'    the plotting area and adjust the margins of the plot accordingly. Finally,
-#'    users can also turn off any legend printing by specifying "none".
+#'    - A convenience string indicating the legend position. Supported keywords:
+#'      - Standard position keywords from base `legend()`, e.g. `"right"`,
+#'        `"topleft"`, `"bottom"`, etc.
+#'      - Outer positions via a trailing `"!"`, e.g. `"right!"`, `"topleft!"`,
+#'        or `"bottom!"`. This places the legend _outside_ the plotting area and
+#'        adjusts the margins accordingly.
+#'      - `"direct"`: places text labels at the last point of each group's data,
+#'        coloured to match. Best suited to line-based plots with x-sorted data,
+#'        where "last" corresponds to "rightmost". The right margin is
+#'        automatically expanded to prevent clipping. Requires discrete groups
+#'        via `by`. For faceted plots, labels are drawn in each panel for the
+#'        groups present there. Supports additional arguments when passed
+#'        via `legend(...)`:
+#'        - `nudge_x`, `nudge_y`: numeric vectors of per-group offsets in data
+#'          units. Recycled to the number of groups. Supports named vectors
+#'          for targeted adjustment, e.g.
+#'          `nudge_y = c("Group A" = -10, "Group B" = 20)`.
+#'        - `repel`: if `TRUE`, automatically separates overlapping labels
+#'          vertically. If a positive number, sets the minimum gap between
+#'          labels in data units.
+#'      - `"none"`: turns off legend printing.
 #'    - Logical value, where TRUE corresponds to the default case above (same
 #'    effect as specifying NULL) and FALSE turns the legend off (same effect as
 #'    specifying "none").
@@ -552,6 +566,31 @@
 #'   data = aq,
 #'   type = "l",
 #'   legend = legend("bottom!", title = "Month of the year", bty = "o")
+#' )
+#'
+#' # Use legend = "direct" to place text labels at the last point of each
+#' # group's data, coloured to match. Best suited to line-based plots with
+#' # x-sorted data, where "last" corresponds to "rightmost". The right
+#' # margin is automatically expanded to fit the labels. Pairs well with
+#' # dynamic themes for tighter margins overall.
+#'
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "l",
+#'   legend = "direct",
+#'   theme = "clean2"
+#' )
+#'
+#' # Use `nudge_x/y`` to manually adjust label positions, or `repel` to
+#' # auto-separate overlapping labels:
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "l",
+#'   # legend = legend("direct", nudge_y = c(May = -1, Jun = 2)), # another option
+#'   legend = legend("direct", repel = TRUE),
+#'   theme = "clean2"
 #' )
 #'
 #' # The default group colours are inherited from either the "R4" or "Viridis"
@@ -1080,7 +1119,7 @@ tinyplot.default = function(
     par(mar = dynmar_computed + .whtsbp)
   }
 
-  if (legend_draw_flag) {
+  if (legend_draw_flag && !identical(legend_args[["x"]], "direct")) {
     if (!multi_legend) {
       ## simple case: single legend only
       if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
@@ -1109,7 +1148,7 @@ tinyplot.default = function(
     }
 
     has_legend = TRUE
-    } else if (legend_args[["x"]] == "none" && !isTRUE(add)) {
+    } else if (legend_args[["x"]] %in% c("none", "direct") && !isTRUE(add)) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1
@@ -1129,6 +1168,12 @@ tinyplot.default = function(
   ## title and subtitle -----
   #
 
+  direct_labels_flag = !isTRUE(add) && identical(legend_args[["x"]], "direct") &&
+    !isTRUE(by_continuous) && !null_by
+  if (identical(legend_args[["x"]], "direct") && !direct_labels_flag && !isTRUE(add)) {
+    warning("legend=\"direct\" requires discrete groups via `by`. Falling back to no legend.")
+  }
+
   if (!add) {
     # Reinstate dynmar margins and user coordinates after draw_legend
     # (which may have called plot.new and reset par via hooks).
@@ -1137,7 +1182,34 @@ tinyplot.default = function(
       if (!is.null(xlim) && !is.null(ylim)) {
         plot.window(xlim = xlim, ylim = ylim)
       }
+    } else if (direct_labels_flag && !is.null(xlim) && !is.null(ylim)) {
+      plot.window(xlim = xlim, ylim = ylim)
     }
+
+    # Expand right margin for direct labels based on actual label overshoot
+    if (direct_labels_flag && !is.null(xlim) && !is.null(ylim)) {
+      usr_right = par("usr")[2]
+      last_x = tapply(datapoints$x, datapoints$by, function(z) tail(z, 1))
+      dl_nudge_x = legend_args[["nudge_x"]] %||% rep(0, length(last_x))
+      dl_nudge_x = rep_len(dl_nudge_x, length(last_x))
+      offset_usr = strwidth("m", units = "user") * 0.3
+      label_widths = strwidth(lgnd_labs, units = "user")
+      overshoots = (last_x + dl_nudge_x + offset_usr + label_widths) - usr_right
+      max_overshoot = max(0, overshoots, na.rm = TRUE)
+      if (max_overshoot > 0) {
+        overshoot_lines = max_overshoot * par("pin")[1] / diff(par("usr")[1:2]) / par("csi")
+        if (!is.null(dynmar_computed)) {
+          dynmar_computed[4] = dynmar_computed[4] + overshoot_lines
+          par(mar = dynmar_computed + .whtsbp)
+        } else {
+          cur_mar = par("mar")
+          cur_mar[4] = cur_mar[4] + overshoot_lines
+          par(mar = cur_mar)
+        }
+        plot.window(xlim = xlim, ylim = ylim)
+      }
+    }
+
     draw_title(main, sub, xlab, ylab, legend, legend_args, opar,
                xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
                ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] - .ymgp_shift - .ylab_cex_shift else 0)
@@ -1191,6 +1263,12 @@ tinyplot.default = function(
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
   # Will be skipped if adding to an existing plot; see ?facet
 
+  dl_overshoot = 0
+  if (direct_labels_flag && nfacets > 1) {
+    dl_label_lines = max(strwidth(lgnd_labs, "inches")) / par("csi")
+    dl_overshoot = dl_label_lines * cex_fct_adj * 0.5
+  }
+
   facet_window_args = recordGraphics(
     draw_facet_window(
       add = add,
@@ -1222,7 +1300,8 @@ tinyplot.default = function(
       ylab = ylab,
       y = y, ymax = ymax, ymin = ymin,
       tpars = tpars,
-      dynmar_computed = dynmar_computed
+      dynmar_computed = dynmar_computed,
+      dl_overshoot = dl_overshoot
     ),
     list = list(
       add = add,
@@ -1251,7 +1330,8 @@ tinyplot.default = function(
       ylab = ylab,
       y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin,
       tpars = tpar(), # https://github.com/grantmcdermott/tinyplot/issues/474
-      dynmar_computed = dynmar_computed
+      dynmar_computed = dynmar_computed,
+      dl_overshoot = dl_overshoot
     ),
     getNamespace("tinyplot")
   )
@@ -1271,6 +1351,8 @@ tinyplot.default = function(
   } else {
     split_data = list(as.list(datapoints))
   }
+
+  if (direct_labels_flag) .dl_info = lapply(seq_along(split_data), function(x) vector("list", ngrps))
 
   ## Outer loop over the facets
   for (i in seq_along(split_data)) {
@@ -1398,9 +1480,73 @@ tinyplot.default = function(
           facet_window_args = facet_window_args
         )
       }
+      if (direct_labels_flag && !empty_plot && length(ix) > 0) {
+        .dl_info[[i]][[ii]] = list(x = tail(ix, 1), y = tail(iy, 1), col = icol)
+      }
     }
   }
-  
+
+  if (direct_labels_flag) {
+    dl_labs = lgnd_labs
+    repel = legend_args[["repel"]]
+    has_nudge = !is.null(legend_args[["nudge_x"]]) || !is.null(legend_args[["nudge_y"]])
+    if (has_nudge && !is.null(repel) && !isFALSE(repel)) {
+      warning("Direct labels: both `nudge` and `repel` specified. Using `nudge`.", call. = FALSE)
+      repel = FALSE
+    }
+    nudge_x = rep(0, ngrps)
+    nudge_y = rep(0, ngrps)
+    if (has_nudge) {
+      nudge_x = legend_args[["nudge_x"]] %||% rep(0, ngrps)
+      nudge_y = legend_args[["nudge_y"]] %||% rep(0, ngrps)
+      if (!is.null(names(nudge_x))) {
+        idx = match(lgnd_labs, names(nudge_x))
+        nudge_x = ifelse(is.na(idx), 0, nudge_x[idx])
+      }
+      if (!is.null(names(nudge_y))) {
+        idx = match(lgnd_labs, names(nudge_y))
+        nudge_y = ifelse(is.na(idx), 0, nudge_y[idx])
+      }
+      nudge_x = rep_len(nudge_x, ngrps)
+      nudge_y = rep_len(nudge_y, ngrps)
+    }
+
+    for (fi in seq_along(.dl_info)) {
+      if (nfacets > 1) {
+        mfgi = ceiling(fi / nfacet_cols)
+        mfgj = fi %% nfacet_cols
+        if (mfgj == 0) mfgj = nfacet_cols
+        par(mfg = c(mfgi, mfgj))
+        if (isTRUE(facet.args[["free"]])) {
+          fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
+          par(usr = fusr[[fi]])
+        }
+      }
+
+      fi_info = .dl_info[[fi]]
+      dl_x = vapply(fi_info, function(d) if (!is.null(d)) d$x else NA_real_, numeric(1))
+      dl_y = vapply(fi_info, function(d) if (!is.null(d)) d$y else NA_real_, numeric(1))
+      dl_x = dl_x + nudge_x
+      dl_y = dl_y + nudge_y
+
+      if (!is.null(repel) && !isFALSE(repel)) {
+        min_gap = if (isTRUE(repel)) 0 else as.numeric(repel)
+        dl_y = repel_text(
+          x = rep(0, length(dl_y)), y = dl_y,
+          widths = rep(0, length(dl_y)),
+          heights = strheight(dl_labs, units = "user"),
+          min_gap = min_gap, axis = "y"
+        )[["y"]]
+      }
+
+      for (k in seq_along(fi_info)) {
+        if (!is.null(fi_info[[k]])) {
+          text(dl_x[k], dl_y[k], labels = dl_labs[k],
+               col = fi_info[[k]]$col, pos = 4, offset = 0.3, xpd = NA)
+        }
+      }
+    }
+  }
 
   #
   ## save end pars for possible recall later -----

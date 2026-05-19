@@ -149,8 +149,8 @@
 #'        coloured to match. Best suited to line-based plots with x-sorted data,
 #'        where "last" corresponds to "rightmost". The right margin is
 #'        automatically expanded to prevent clipping. Requires discrete groups
-#'        via `by`. For faceted plots, labels are only drawn on the last panel
-#'        in which each group appears. Supports additional arguments when passed
+#'        via `by`. For faceted plots, labels are drawn in each panel for the
+#'        groups present there. Supports additional arguments when passed
 #'        via `legend(...)`:
 #'        - `nudge_x`, `nudge_y`: numeric vectors of per-group offsets in data
 #'          units. Recycled to the number of groups.
@@ -1260,6 +1260,12 @@ tinyplot.default = function(
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
   # Will be skipped if adding to an existing plot; see ?facet
 
+  dl_overshoot = 0
+  if (direct_labels_flag && nfacets > 1) {
+    dl_label_lines = max(strwidth(lgnd_labs, "inches")) / par("csi")
+    dl_overshoot = dl_label_lines * cex_fct_adj * 0.5
+  }
+
   facet_window_args = recordGraphics(
     draw_facet_window(
       add = add,
@@ -1291,7 +1297,8 @@ tinyplot.default = function(
       ylab = ylab,
       y = y, ymax = ymax, ymin = ymin,
       tpars = tpars,
-      dynmar_computed = dynmar_computed
+      dynmar_computed = dynmar_computed,
+      dl_overshoot = dl_overshoot
     ),
     list = list(
       add = add,
@@ -1320,7 +1327,8 @@ tinyplot.default = function(
       ylab = ylab,
       y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin,
       tpars = tpar(), # https://github.com/grantmcdermott/tinyplot/issues/474
-      dynmar_computed = dynmar_computed
+      dynmar_computed = dynmar_computed,
+      dl_overshoot = dl_overshoot
     ),
     getNamespace("tinyplot")
   )
@@ -1341,7 +1349,7 @@ tinyplot.default = function(
     split_data = list(as.list(datapoints))
   }
 
-  if (direct_labels_flag) .dl_info = vector("list", ngrps)
+  if (direct_labels_flag) .dl_info = lapply(seq_along(split_data), function(x) vector("list", ngrps))
 
   ## Outer loop over the facets
   for (i in seq_along(split_data)) {
@@ -1470,38 +1478,52 @@ tinyplot.default = function(
         )
       }
       if (direct_labels_flag && !empty_plot && length(ix) > 0) {
-        .dl_info[[ii]] = list(x = tail(ix, 1), y = tail(iy, 1), col = icol)
+        .dl_info[[i]][[ii]] = list(x = tail(ix, 1), y = tail(iy, 1), col = icol)
       }
     }
   }
 
   if (direct_labels_flag) {
     dl_labs = lgnd_labs
-    nudge_x = legend_args[["nudge_x"]] %||% rep(0, length(.dl_info))
-    nudge_y = legend_args[["nudge_y"]] %||% rep(0, length(.dl_info))
-    nudge_x = rep_len(nudge_x, length(.dl_info))
-    nudge_y = rep_len(nudge_y, length(.dl_info))
+    nudge_x = legend_args[["nudge_x"]] %||% rep(0, ngrps)
+    nudge_y = legend_args[["nudge_y"]] %||% rep(0, ngrps)
+    nudge_x = rep_len(nudge_x, ngrps)
+    nudge_y = rep_len(nudge_y, ngrps)
     repel = legend_args[["repel"]]
 
-    dl_x = vapply(.dl_info, function(d) if (!is.null(d)) d$x else NA_real_, numeric(1))
-    dl_y = vapply(.dl_info, function(d) if (!is.null(d)) d$y else NA_real_, numeric(1))
-    dl_x = dl_x + nudge_x
-    dl_y = dl_y + nudge_y
+    for (fi in seq_along(.dl_info)) {
+      if (nfacets > 1) {
+        mfgi = ceiling(fi / nfacet_cols)
+        mfgj = fi %% nfacet_cols
+        if (mfgj == 0) mfgj = nfacet_cols
+        par(mfg = c(mfgi, mfgj))
+        if (isTRUE(facet.args[["free"]])) {
+          fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
+          par(usr = fusr[[fi]])
+        }
+      }
 
-    if (!is.null(repel) && !isFALSE(repel)) {
-      min_gap = if (isTRUE(repel)) 0 else as.numeric(repel)
-      dl_y = repel_text(
-        x = rep(0, length(dl_y)), y = dl_y,
-        widths = rep(0, length(dl_y)),
-        heights = strheight(dl_labs, units = "user"),
-        min_gap = min_gap, axis = "y"
-      )[["y"]]
-    }
+      fi_info = .dl_info[[fi]]
+      dl_x = vapply(fi_info, function(d) if (!is.null(d)) d$x else NA_real_, numeric(1))
+      dl_y = vapply(fi_info, function(d) if (!is.null(d)) d$y else NA_real_, numeric(1))
+      dl_x = dl_x + nudge_x
+      dl_y = dl_y + nudge_y
 
-    for (k in seq_along(.dl_info)) {
-      if (!is.null(.dl_info[[k]])) {
-        text(dl_x[k], dl_y[k], labels = dl_labs[k],
-             col = .dl_info[[k]]$col, pos = 4, offset = 0.3, xpd = NA)
+      if (!is.null(repel) && !isFALSE(repel)) {
+        min_gap = if (isTRUE(repel)) 0 else as.numeric(repel)
+        dl_y = repel_text(
+          x = rep(0, length(dl_y)), y = dl_y,
+          widths = rep(0, length(dl_y)),
+          heights = strheight(dl_labs, units = "user"),
+          min_gap = min_gap, axis = "y"
+        )[["y"]]
+      }
+
+      for (k in seq_along(fi_info)) {
+        if (!is.null(fi_info[[k]])) {
+          text(dl_x[k], dl_y[k], labels = dl_labs[k],
+               col = fi_info[[k]]$col, pos = 4, offset = 0.3, xpd = NA)
+        }
       }
     }
   }

@@ -154,7 +154,8 @@
 #'        via `legend(...)`:
 #'        - `nudge_x`, `nudge_y`: numeric vectors of per-group offsets in data
 #'          units. Recycled to the number of groups. Supports named vectors
-#'          for targeted adjustment, e.g. `nudge_y = c(May = -1, June = 2)`.
+#'          for targeted adjustment, e.g.
+#'          `nudge_y = c("Group A" = -10, "Group B" = 20)`.
 #'        - `repel`: if `TRUE`, automatically separates overlapping labels
 #'          vertically. If a positive number, sets the minimum gap between
 #'          labels in data units.
@@ -581,12 +582,13 @@
 #'   theme = "clean2"
 #' )
 #'
-#' # Use nudge_y to manually adjust label positions, or repel to auto-separate
-#' # overlapping labels:
+#' # Use `nudge_x/y`` to manually adjust label positions, or `repel` to
+#' # auto-separate overlapping labels:
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "l",
+#'   # legend = legend("direct", nudge_y = c(May = -1, Jun = 2)), # another option
 #'   legend = legend("direct", repel = TRUE),
 #'   theme = "clean2"
 #' )
@@ -1486,19 +1488,28 @@ tinyplot.default = function(
 
   if (direct_labels_flag) {
     dl_labs = lgnd_labs
-    nudge_x = legend_args[["nudge_x"]] %||% rep(0, ngrps)
-    nudge_y = legend_args[["nudge_y"]] %||% rep(0, ngrps)
-    if (!is.null(names(nudge_x))) {
-      idx = match(lgnd_labs, names(nudge_x))
-      nudge_x = ifelse(is.na(idx), 0, nudge_x[idx])
-    }
-    if (!is.null(names(nudge_y))) {
-      idx = match(lgnd_labs, names(nudge_y))
-      nudge_y = ifelse(is.na(idx), 0, nudge_y[idx])
-    }
-    nudge_x = rep_len(nudge_x, ngrps)
-    nudge_y = rep_len(nudge_y, ngrps)
     repel = legend_args[["repel"]]
+    has_nudge = !is.null(legend_args[["nudge_x"]]) || !is.null(legend_args[["nudge_y"]])
+    if (has_nudge && !is.null(repel) && !isFALSE(repel)) {
+      warning("Direct labels: both `nudge` and `repel` specified. Using `nudge`.", call. = FALSE)
+      repel = FALSE
+    }
+    nudge_x = rep(0, ngrps)
+    nudge_y = rep(0, ngrps)
+    if (has_nudge) {
+      nudge_x = legend_args[["nudge_x"]] %||% rep(0, ngrps)
+      nudge_y = legend_args[["nudge_y"]] %||% rep(0, ngrps)
+      if (!is.null(names(nudge_x))) {
+        idx = match(lgnd_labs, names(nudge_x))
+        nudge_x = ifelse(is.na(idx), 0, nudge_x[idx])
+      }
+      if (!is.null(names(nudge_y))) {
+        idx = match(lgnd_labs, names(nudge_y))
+        nudge_y = ifelse(is.na(idx), 0, nudge_y[idx])
+      }
+      nudge_x = rep_len(nudge_x, ngrps)
+      nudge_y = rep_len(nudge_y, ngrps)
+    }
 
     for (fi in seq_along(.dl_info)) {
       if (nfacets > 1) {

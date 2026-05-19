@@ -273,7 +273,8 @@ via \code{legend(...)}:
 \itemize{
 \item \code{nudge_x}, \code{nudge_y}: numeric vectors of per-group offsets in data
 units. Recycled to the number of groups. Supports named vectors
-for targeted adjustment, e.g. \code{nudge_y = c(May = -1, June = 2)}.
+for targeted adjustment, e.g.
+\code{nudge_y = c("Group A" = -10, "Group B" = 20)}.
 \item \code{repel}: if \code{TRUE}, automatically separates overlapping labels
 vertically. If a positive number, sets the minimum gap between
 labels in data units.
@@ -751,12 +752,13 @@ tinyplot(
   theme = "clean2"
 )
 
-# Use nudge_y to manually adjust label positions, or repel to auto-separate
-# overlapping labels:
+# Use `nudge_x/y`` to manually adjust label positions, or `repel` to
+# auto-separate overlapping labels:
 tinyplot(
   Temp ~ Day | Month,
   data = aq,
   type = "l",
+  # legend = legend("direct", nudge_y = c(May = -1, Jun = 2)), # another option
   legend = legend("direct", repel = TRUE),
   theme = "clean2"
 )

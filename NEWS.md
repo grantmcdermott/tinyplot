@@ -66,7 +66,8 @@ visualizations.
 - New `legend = "direct"` option (experimental) places text labels at the last
   point of each group's data, coloured to match. Best suited to line-based plots
   with x-sorted data. The right margin is automatically expanded to prevent
-  clipping. Pairs well with dynamic themes. Supports `nudge_x`/`nudge_y` for
+  clipping. Pairs well with dynamic themes. For faceted plots, labels are drawn
+  in each panel for the groups present there. Supports `nudge_x`/`nudge_y` for
   manual per-group offsets and `repel` for automatic vertical separation of
   overlapping labels, e.g. `legend = legend("direct", repel = TRUE)`.
   (#587 @grantmcdermott)

@@ -73,6 +73,15 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "legend_direct_nudge_scalar")
 
+# named nudge_y targets specific groups
+f = function() {
+  plt(Temp ~ Day | Month, data = aq, type = "l",
+      legend = legend("direct", nudge_y = c("June" = -3, "August" = 2)),
+      theme = "clean2")
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_direct_nudge_named")
+
 # No by variable: should warn and produce plot without labels
 expect_warning(
   plt(0:10, type = "l", legend = "direct"),

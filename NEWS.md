@@ -26,7 +26,7 @@ visualizations.
   logic. Recall, these are themes like `"dynamic"`, `"clean"`, `"bw"`, etc. that
   automatically adjust margin spacing and related plot elements to reduce
   whitespace and improve the overall plot aesthetic.
-  (#549 @grantmcdermott, @vincentarelbundock)
+  (#549, #591 @grantmcdermott, @vincentarelbundock)
   
   - Plot margins now correctly respond to missing and/or multi-line `main`,
     `sub`, and `x`/`y` axis titles. For example, a plot without a `main` (or
@@ -40,25 +40,37 @@ visualizations.
     more general `cex.lab` is still respected as a fallback. (#574)
   - Margin spacing now correctly adjusts for math expressions, including
     fractions and exponents in titles. (#575)
+  - Dynamic margins and `mgp` now scale correctly with `cex.axis` and
+    `cex.lab`, maintaining constant visual gaps between axis elements
+    regardless of text size. From the user perspective, this is
+    operationalized through the new `gap.axis` and `gap.lab` theme
+    primitives, which let you control the spacing between margin elements
+    directly (tick-to-label gap and label-to-title gap, respectively),
+    replacing the guesswork of manually combining `mar`, `mgp`, and `tcl`
+    values. (#590)
 
 ### New features
 
-- The `grid` argument (and `tpar("grid")`) now accepts character strings to
-  control axis-specific grids at different resolutions. Uppercase letters
-  (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
-  lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional
-  lines at the midpoints between ticks. Thanks to @zeileis for the suggestion.
-  (#578 @grantmcdermott)
 - New `ljust` parameter for controlling legend title and label justification.
   Accepts values of `"l(eft)"` (default) or `"c(enter")`. Can be set per-plot
   via `legend = list(..., ljust = "c")`, or globally via `tpar(ljust = "c")`.
   (#500 @grantmcdermott)
 - New `"dynamic"` theme that now serves as the foundation for all other dynamic
   (tiny)themes. (#549 @grantmcdermott)
+- The `grid` argument (and `tpar("grid")`) now accepts character strings to
+  control axis-specific grids at different resolutions. Uppercase letters
+  (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
+  lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional
+  lines at the midpoints between ticks. Thanks to @zeileis for the suggestion.
+  (#578 @grantmcdermott)
 - New `legend = "direct"` option (experimental) places text labels at the last
   point of each group's data, coloured to match. Best suited to line-based plots
   with x-sorted data. The right margin is automatically expanded to prevent
   clipping. Pairs well with dynamic themes. (#587 @grantmcdermott)
+- `tinytheme()` now accepts additional `gap.axis` and `gap.lab` "primitives",
+  providing finer control for spacing between ticks-labels and labels-titles,
+  respectively, in dynamic themes. See the **Dynamic themes** entry above.
+  (#590 @grantmcdermott)
 
 ### Bug fixes
 

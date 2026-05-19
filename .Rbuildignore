@@ -27,5 +27,5 @@ Makefile
 ^.devcontainer
 Rplots.pdf
 ^CLAUDE\.md$
-^\.claude$
+^.claude/
 ^revdep$

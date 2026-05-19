@@ -670,6 +670,25 @@ tpar(mar = c(5, 5, 2, 2))
 &lt;some plot&gt;
 </pre>
 </div>
+<p><strong>Spacing primitives.</strong> Dynamic themes compute <code>mgp</code> (margin line positions) automatically from two spacing primitives, rather than requiring users to reason about how <code>mar</code>, <code>mgp</code>, and <code>tcl</code> combine:</p>
+<ul>
+<li>
+<p><code>gap.axis</code>: the gap in margin lines between the tick tip and the near edge of the tick label. Default <code>0.2</code>.</p>
+</li>
+<li>
+<p><code>gap.lab</code>: the gap in margin lines between the far edge of the tick label and the near edge of the axis title. Default <code>1.0</code>.</p>
+</li>
+</ul>
+<p>These primitives scale automatically with <code>cex.axis</code> and <code>cex.lab</code>, so the visible spacing between elements remains constant regardless of text size. To adjust spacing, pass them as overrides:</p>
+<div class="sourceCode">
+<pre># Tighter spacing between tick labels and axis titles
+tinytheme("clean", gap.lab = 0.5)
+
+# More room between ticks and tick labels
+tinytheme("clean", gap.axis = 0.5)
+</pre>
+</div>
+<p>If you supply an explicit <code>mgp</code> value, it is used as-is and the primitives are ignored.</p>
 <p><strong>Caveats.</strong> Known <code>tinytheme</code> limitations include:</p>
 <ul>
 <li>

@@ -267,8 +267,8 @@ adjusts the margins accordingly.
 coloured to match. Best suited to line-based plots with x-sorted data,
 where "last" corresponds to "rightmost". The right margin is
 automatically expanded to prevent clipping. Requires discrete groups
-via \code{by}. For faceted plots, labels are only drawn on the last panel
-in which each group appears. Supports additional arguments when passed
+via \code{by}. For faceted plots, labels are drawn in each panel for the
+groups present there. Supports additional arguments when passed
 via \code{legend(...)}:
 \itemize{
 \item \code{nudge_x}, \code{nudge_y}: numeric vectors of per-group offsets in data

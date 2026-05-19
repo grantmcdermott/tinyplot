@@ -150,7 +150,13 @@
 #'        where "last" corresponds to "rightmost". The right margin is
 #'        automatically expanded to prevent clipping. Requires discrete groups
 #'        via `by`. For faceted plots, labels are only drawn on the last panel
-#'        in which each group appears.
+#'        in which each group appears. Supports additional arguments when passed
+#'        via `legend(...)`:
+#'        - `nudge_x`, `nudge_y`: numeric vectors of per-group offsets in data
+#'          units. Recycled to the number of groups.
+#'        - `repel`: if `TRUE`, automatically separates overlapping labels
+#'          vertically. If a positive number, sets the minimum gap between
+#'          labels in data units.
 #'      - `"none"`: turns off legend printing.
 #'    - Logical value, where TRUE corresponds to the default case above (same
 #'    effect as specifying NULL) and FALSE turns the legend off (same effect as
@@ -571,6 +577,16 @@
 #'   data = aq,
 #'   type = "l",
 #'   legend = "direct",
+#'   theme = "clean2"
+#' )
+#'
+#' # Use nudge_y to manually adjust label positions, or repel to auto-separate
+#' # overlapping labels:
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "l",
+#'   legend = legend("direct", repel = TRUE),
 #'   theme = "clean2"
 #' )
 #'
@@ -1171,9 +1187,11 @@ tinyplot.default = function(
     if (direct_labels_flag && !is.null(xlim) && !is.null(ylim)) {
       usr_right = par("usr")[2]
       last_x = tapply(datapoints$x, datapoints$by, function(z) tail(z, 1))
+      dl_nudge_x = legend_args[["nudge_x"]] %||% rep(0, length(last_x))
+      dl_nudge_x = rep_len(dl_nudge_x, length(last_x))
       offset_usr = strwidth("m", units = "user") * 0.3
       label_widths = strwidth(lgnd_labs, units = "user")
-      overshoots = (last_x + offset_usr + label_widths) - usr_right
+      overshoots = (last_x + dl_nudge_x + offset_usr + label_widths) - usr_right
       max_overshoot = max(0, overshoots, na.rm = TRUE)
       if (max_overshoot > 0) {
         overshoot_lines = max_overshoot * par("pin")[1] / diff(par("usr")[1:2]) / par("csi")
@@ -1459,9 +1477,30 @@ tinyplot.default = function(
 
   if (direct_labels_flag) {
     dl_labs = lgnd_labs
+    nudge_x = legend_args[["nudge_x"]] %||% rep(0, length(.dl_info))
+    nudge_y = legend_args[["nudge_y"]] %||% rep(0, length(.dl_info))
+    nudge_x = rep_len(nudge_x, length(.dl_info))
+    nudge_y = rep_len(nudge_y, length(.dl_info))
+    repel = legend_args[["repel"]]
+
+    dl_x = vapply(.dl_info, function(d) if (!is.null(d)) d$x else NA_real_, numeric(1))
+    dl_y = vapply(.dl_info, function(d) if (!is.null(d)) d$y else NA_real_, numeric(1))
+    dl_x = dl_x + nudge_x
+    dl_y = dl_y + nudge_y
+
+    if (!is.null(repel) && !isFALSE(repel)) {
+      min_gap = if (isTRUE(repel)) 0 else as.numeric(repel)
+      dl_y = repel_text(
+        x = rep(0, length(dl_y)), y = dl_y,
+        widths = rep(0, length(dl_y)),
+        heights = strheight(dl_labs, units = "user"),
+        min_gap = min_gap, axis = "y"
+      )[["y"]]
+    }
+
     for (k in seq_along(.dl_info)) {
       if (!is.null(.dl_info[[k]])) {
-        text(.dl_info[[k]]$x, .dl_info[[k]]$y, labels = dl_labs[k],
+        text(dl_x[k], dl_y[k], labels = dl_labs[k],
              col = .dl_info[[k]]$col, pos = 4, offset = 0.3, xpd = NA)
       }
     }

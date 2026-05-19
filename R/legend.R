@@ -34,6 +34,12 @@ sanitize_legend = function(legend, legend_args) {
       if (length(new_legend) >= 1 && (is.null(names(new_legend)) || names(new_legend)[1] == "")) {
         names(new_legend)[1] = "x"
       }
+      # Evaluate language elements so e.g. c(0, 1, 2) becomes a real vector
+      for (nm in names(new_legend)) {
+        if (is.language(new_legend[[nm]])) {
+          new_legend[[nm]] = eval(new_legend[[nm]])
+        }
+      }
       new_legend
     } else {
       list(x = "right!")  # Fallback

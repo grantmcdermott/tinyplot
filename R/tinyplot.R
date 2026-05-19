@@ -153,7 +153,8 @@
 #'        groups present there. Supports additional arguments when passed
 #'        via `legend(...)`:
 #'        - `nudge_x`, `nudge_y`: numeric vectors of per-group offsets in data
-#'          units. Recycled to the number of groups.
+#'          units. Recycled to the number of groups. Supports named vectors
+#'          for targeted adjustment, e.g. `nudge_y = c("August" = 5)`.
 #'        - `repel`: if `TRUE`, automatically separates overlapping labels
 #'          vertically. If a positive number, sets the minimum gap between
 #'          labels in data units.
@@ -1487,6 +1488,14 @@ tinyplot.default = function(
     dl_labs = lgnd_labs
     nudge_x = legend_args[["nudge_x"]] %||% rep(0, ngrps)
     nudge_y = legend_args[["nudge_y"]] %||% rep(0, ngrps)
+    if (!is.null(names(nudge_x))) {
+      idx = match(lgnd_labs, names(nudge_x))
+      nudge_x = ifelse(is.na(idx), 0, nudge_x[idx])
+    }
+    if (!is.null(names(nudge_y))) {
+      idx = match(lgnd_labs, names(nudge_y))
+      nudge_y = ifelse(is.na(idx), 0, nudge_y[idx])
+    }
     nudge_x = rep_len(nudge_x, ngrps)
     nudge_y = rep_len(nudge_y, ngrps)
     repel = legend_args[["repel"]]

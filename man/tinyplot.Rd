@@ -272,7 +272,8 @@ groups present there. Supports additional arguments when passed
 via \code{legend(...)}:
 \itemize{
 \item \code{nudge_x}, \code{nudge_y}: numeric vectors of per-group offsets in data
-units. Recycled to the number of groups.
+units. Recycled to the number of groups. Supports named vectors
+for targeted adjustment, e.g. \code{nudge_y = c("August" = 5)}.
 \item \code{repel}: if \code{TRUE}, automatically separates overlapping labels
 vertically. If a positive number, sets the minimum gap between
 labels in data units.

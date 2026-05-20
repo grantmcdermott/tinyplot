@@ -2,178 +2,178 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://grantmcdermott.com/tinyplot/vignettes/themes.html</loc>
-    <lastmod>2026-05-19T23:24:16.996Z</lastmod>
+    <lastmod>2026-05-20T00:12:41.114Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/vignettes/useR2025/useR2025.html</loc>
-    <lastmod>2026-05-19T23:24:16.998Z</lastmod>
+    <lastmod>2026-05-20T00:12:41.115Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/vignettes/types.html</loc>
-    <lastmod>2026-05-19T23:24:16.996Z</lastmod>
+    <lastmod>2026-05-20T00:12:41.114Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/vignettes/introduction.html</loc>
-    <lastmod>2026-05-19T23:24:16.996Z</lastmod>
+    <lastmod>2026-05-20T00:12:41.114Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/CITATION.html</loc>
-    <lastmod>2026-05-19T23:24:08.015Z</lastmod>
+    <lastmod>2026-05-20T00:12:30.427Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_barplot.html</loc>
-    <lastmod>2026-05-19T23:24:12.879Z</lastmod>
+    <lastmod>2026-05-20T00:12:36.681Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_segments.html</loc>
-    <lastmod>2026-05-19T23:24:12.832Z</lastmod>
+    <lastmod>2026-05-20T00:12:35.916Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/draw_legend.html</loc>
-    <lastmod>2026-05-19T23:24:08.389Z</lastmod>
+    <lastmod>2026-05-20T00:12:30.787Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_rect.html</loc>
-    <lastmod>2026-05-19T23:24:09.788Z</lastmod>
+    <lastmod>2026-05-20T00:12:32.588Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/tinyplot.html</loc>
-    <lastmod>2026-05-19T23:24:09.960Z</lastmod>
+    <lastmod>2026-05-20T00:12:32.774Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_lines.html</loc>
-    <lastmod>2026-05-19T23:24:13.188Z</lastmod>
+    <lastmod>2026-05-20T00:12:36.807Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_loess.html</loc>
-    <lastmod>2026-05-19T23:24:14.462Z</lastmod>
+    <lastmod>2026-05-20T00:12:38.646Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/tinylabel.html</loc>
-    <lastmod>2026-05-19T23:24:08.398Z</lastmod>
+    <lastmod>2026-05-20T00:12:30.815Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_jitter.html</loc>
-    <lastmod>2026-05-19T23:24:12.532Z</lastmod>
+    <lastmod>2026-05-20T00:12:36.097Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_function.html</loc>
-    <lastmod>2026-05-19T23:24:10.577Z</lastmod>
+    <lastmod>2026-05-20T00:12:33.655Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_text.html</loc>
-    <lastmod>2026-05-19T23:24:15.548Z</lastmod>
+    <lastmod>2026-05-20T00:12:39.167Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_ribbon.html</loc>
-    <lastmod>2026-05-19T23:24:10.446Z</lastmod>
+    <lastmod>2026-05-20T00:12:33.377Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_histogram.html</loc>
-    <lastmod>2026-05-19T23:24:11.869Z</lastmod>
+    <lastmod>2026-05-20T00:12:35.246Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_points.html</loc>
-    <lastmod>2026-05-19T23:24:15.120Z</lastmod>
+    <lastmod>2026-05-20T00:12:39.589Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/get_saved_par.html</loc>
-    <lastmod>2026-05-19T23:24:09.717Z</lastmod>
+    <lastmod>2026-05-20T00:12:31.874Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_violin.html</loc>
-    <lastmod>2026-05-19T23:24:16.205Z</lastmod>
+    <lastmod>2026-05-20T00:12:39.991Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_summary.html</loc>
-    <lastmod>2026-05-19T23:24:14.865Z</lastmod>
+    <lastmod>2026-05-20T00:12:38.429Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/NEWS.html</loc>
-    <lastmod>2026-05-19T23:24:07.957Z</lastmod>
+    <lastmod>2026-05-20T00:12:30.369Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_polygon.html</loc>
-    <lastmod>2026-05-19T23:24:15.768Z</lastmod>
+    <lastmod>2026-05-20T00:12:40.334Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_polypath.html</loc>
-    <lastmod>2026-05-19T23:24:08.398Z</lastmod>
+    <lastmod>2026-05-20T00:12:30.802Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_rug.html</loc>
-    <lastmod>2026-05-19T23:24:12.179Z</lastmod>
+    <lastmod>2026-05-20T00:12:35.047Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_spineplot.html</loc>
-    <lastmod>2026-05-19T23:24:13.481Z</lastmod>
+    <lastmod>2026-05-20T00:12:36.691Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_qq.html</loc>
-    <lastmod>2026-05-19T23:24:09.127Z</lastmod>
+    <lastmod>2026-05-20T00:12:31.828Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_ridge.html</loc>
-    <lastmod>2026-05-19T23:24:11.327Z</lastmod>
+    <lastmod>2026-05-20T00:12:34.123Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_abline.html</loc>
-    <lastmod>2026-05-19T23:24:12.228Z</lastmod>
+    <lastmod>2026-05-20T00:12:35.740Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/tinytheme.html</loc>
-    <lastmod>2026-05-19T23:24:10.836Z</lastmod>
+    <lastmod>2026-05-20T00:12:33.779Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/tinyplot_add.html</loc>
-    <lastmod>2026-05-19T23:24:09.144Z</lastmod>
+    <lastmod>2026-05-20T00:12:31.804Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/tpar.html</loc>
-    <lastmod>2026-05-19T23:24:11.575Z</lastmod>
+    <lastmod>2026-05-20T00:12:34.817Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_glm.html</loc>
-    <lastmod>2026-05-19T23:24:11.227Z</lastmod>
+    <lastmod>2026-05-20T00:12:34.467Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_errorbar.html</loc>
-    <lastmod>2026-05-19T23:24:09.932Z</lastmod>
+    <lastmod>2026-05-20T00:12:32.838Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_lm.html</loc>
-    <lastmod>2026-05-19T23:24:13.824Z</lastmod>
+    <lastmod>2026-05-20T00:12:37.718Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_spline.html</loc>
-    <lastmod>2026-05-19T23:24:14.220Z</lastmod>
+    <lastmod>2026-05-20T00:12:37.631Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_density.html</loc>
-    <lastmod>2026-05-19T23:24:09.190Z</lastmod>
+    <lastmod>2026-05-20T00:12:31.841Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/man/type_boxplot.html</loc>
-    <lastmod>2026-05-19T23:24:08.395Z</lastmod>
+    <lastmod>2026-05-20T00:12:30.813Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/LICENSE.html</loc>
-    <lastmod>2026-05-19T23:24:07.966Z</lastmod>
+    <lastmod>2026-05-20T00:12:30.378Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/index.html</loc>
-    <lastmod>2026-05-19T23:24:07.981Z</lastmod>
+    <lastmod>2026-05-20T00:12:30.393Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/vignettes/tips.html</loc>
-    <lastmod>2026-05-19T23:24:16.996Z</lastmod>
+    <lastmod>2026-05-20T00:12:41.114Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/vignettes/gallery.html</loc>
-    <lastmod>2026-05-19T23:24:16.995Z</lastmod>
+    <lastmod>2026-05-20T00:12:41.113Z</lastmod>
   </url>
   <url>
     <loc>https://grantmcdermott.com/tinyplot/vignettes/useR2025/abstract.html</loc>
-    <lastmod>2026-05-19T23:24:16.996Z</lastmod>
+    <lastmod>2026-05-20T00:12:41.114Z</lastmod>
   </url>
 </urlset>

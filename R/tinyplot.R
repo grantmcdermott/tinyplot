@@ -588,8 +588,8 @@
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "l",
-#'   # legend = legend("direct", nudge_y = c(May = -1, Jun = 2)), # another option
-#'   legend = legend("direct", repel = TRUE),
+#'   legend = legend("direct", nudge_y = c(May = -1, Jun = 2)),
+#'   # legend = legend("direct", repel = TRUE), # another option
 #'   theme = "clean2"
 #' )
 #'

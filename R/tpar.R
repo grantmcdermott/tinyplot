@@ -218,16 +218,20 @@ get_tpar = function(opts, default = NULL, tpar_list = NULL) {
 
 
 known_tpar = c(
+    "adj.caption",
     "adj.main",
     "adj.sub",
     "adj.xlab",
     "adj.ylab",
+    "cex.caption",
     "cex.xlab",
     "cex.ylab",
+    "col.caption",
     "col.xaxs",
     "col.yaxs",
     "cairo",
     "dynmar",
+    "font.caption",
     "gap.axis",
     "gap.lab",
     "facet.bg",
@@ -244,6 +248,7 @@ known_tpar = c(
     "grid.col",
     "grid.lty",
     "grid.lwd",
+    "line.caption",
     "ljust",
     "lmar",
     "lty.xaxs",
@@ -270,6 +275,7 @@ assign_tpar = function(opts) {
 
 
 assert_tpar = function(.tpar) {
+  assert_numeric(.tpar[["adj.caption"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.caption")
   assert_numeric(.tpar[["adj.main"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.main")
   assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.sub")
   assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.xlab")

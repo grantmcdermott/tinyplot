@@ -167,6 +167,10 @@
 #'    legend arguments, e.g. "bty", "horiz", and so forth.
 #' @param main a main title for the plot, see also `title`.
 #' @param sub a subtitle for the plot.
+#' @param caption a caption for the plot, drawn at the bottom-right. Useful for
+#'   annotations like data sources. Appearance can be customized via
+#'   \code{\link[tinyplot]{tpar}} parameters `adj.caption`, `cex.caption`,
+#'   `col.caption`, `font.caption`, and `line.caption`.
 #' @param xlab a label for the x axis, defaults to a description of x.
 #' @param ylab a label for the y axis, defaults to a description of y.
 #' @param ann a logical value indicating whether the default annotation (title
@@ -649,6 +653,7 @@ tinyplot.default = function(
     legend = NULL,
     main = NULL,
     sub = NULL,
+    caption = NULL,
     xlab = NULL,
     ylab = NULL,
     ann = par("ann"),
@@ -855,11 +860,13 @@ tinyplot.default = function(
     # misc
     add           = add,
     by            = by,
+    caption       = caption,
     dodge         = NULL,
     dots          = dots,
     flip          = flip,
     group_offsets = NULL,
     offsets_axis  = NULL,
+    sub           = sub,
     type_info     = list() # pass type-specific info from type_data to type_draw
   )
 
@@ -1052,7 +1059,9 @@ tinyplot.default = function(
     )
 
     .dyn = c(
-      dynmar_side(1, xlab, main = main, sub = sub, side.sub = .side.sub,
+      dynmar_side(1, xlab, main = main, sub = sub,
+                  caption = if (.outer_sides[1]) NULL else caption,
+                  side.sub = .side.sub,
                   axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
                   tpars = .tpars),
       dynmar_side(2, ylab,
@@ -1136,7 +1145,9 @@ tinyplot.default = function(
         bg = bg,
         gradient = by_continuous,
         cex = lgnd_cex,
-        has_sub = has_sub
+        has_sub = has_sub,
+        has_caption = has_caption,
+        caption_text = caption
       )
     } else {
       ## multi-legend case...
@@ -1210,7 +1221,7 @@ tinyplot.default = function(
       }
     }
 
-    draw_title(main, sub, xlab, ylab, legend, legend_args, opar,
+    draw_title(main, sub, caption, xlab, ylab, legend, legend_args, opar,
                xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
                ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] - .ymgp_shift - .ylab_cex_shift else 0)
   }
@@ -1294,6 +1305,7 @@ tinyplot.default = function(
       has_legend = has_legend,
       main = main,
       sub = sub,
+      caption = caption,
       type = type,
       xlab = xlab,
       x = x, xmax = xmax, xmin = xmin,
@@ -1324,6 +1336,7 @@ tinyplot.default = function(
       has_legend = has_legend,
       main = main,
       sub = sub,
+      caption = caption,
       type = type,
       xlab = xlab,
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
@@ -1594,6 +1607,7 @@ tinyplot.formula = function(
     # log = "",
     main = NULL,
     sub = NULL,
+    caption = NULL,
     xlab = NULL,
     ylab = NULL,
     ann = par("ann"),
@@ -1742,6 +1756,7 @@ tinyplot.formula = function(
     # log = "",
     main = main,
     sub = sub,
+    caption = caption,
     xlab = xlab,
     ylab = ylab,
     ann = ann,

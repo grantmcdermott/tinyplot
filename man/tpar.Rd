@@ -60,9 +60,14 @@ you should rather use \code{par()} instead.
 \section{Additional Graphical Parameters}{
 
 \itemize{
+\item \code{adj.cap}: Numeric value between 0 and 1 controlling the alignment of the plot caption. Defaults to \code{0.5} (centered) for the default theme, and \code{1} (right-aligned) for all other themes.
 \item \code{adj.xlab}: Numeric value between 0 and 1 controlling the alignment of the x-axis label.
 \item \code{adj.ylab}: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
 \item \code{cairo}: Logical indicating whether \code{\link[grDevices]{cairo_pdf}} should be used when writing plots to PDF. If \code{FALSE}, then \code{\link[grDevices]{pdf}} will be used instead, with implications for embedding (non-standard) fonts. Only used if \code{tinyplot(..., file = "<filename>.pdf")} is called. Defaults to the value of \code{capabilities("cairo")}.
+\item \code{cex.cap}: Numeric expansion factor for the plot caption text. Defaults to \code{1} for the default, basic, and dynamic themes, and \code{0.8} for clean/classic and their descendants.
+\item \code{col.cap}: Character specifying the colour of the plot caption. Defaults to \code{"black"}.
+\item \code{font.cap}: Integer specifying the font face for the plot caption (\code{1} = plain, \code{2} = bold, \code{3} = italic, \code{4} = bold italic). Defaults to \code{1}.
+\item \code{line.cap}: Numeric specifying the margin line on which to draw the caption. If \code{NULL} (default), computed automatically based on the available bottom margin.
 \item \code{dynmar}: Logical indicating whether \code{tinyplot} should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal \code{tinythemes()} logic and should \emph{not} be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 \item \code{facet.bg}: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see \code{palette}). Passed to \code{rect}. Defaults to \code{NULL} (none).
 \item \code{facet.border}: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see \code{palette}). Passed to \code{rect}. Defaults to \code{NA} (none).

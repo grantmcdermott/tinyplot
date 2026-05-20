@@ -49,6 +49,7 @@ draw_facet_window(
   has_legend,
   main,
   sub,
+  cap,
   type,
   xlab,
   x,

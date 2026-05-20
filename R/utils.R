@@ -31,7 +31,7 @@ text_line_count = function(x) {
 # handled separately by the existing whtsbp logic in draw_facet_window().
 # The caller is expected to take max(theme_mar[side], dynmar_side(...)) so
 # that the theme's starting `mar` acts as a baseline padding.
-dynmar_side = function(side, label, main = NULL, sub = NULL,
+dynmar_side = function(side, label, main = NULL, sub = NULL, cap = NULL,
                       side.sub = 3, axis_on = TRUE, tpars = NULL) {
   mgp = get_tpar("mgp", tpar_list = tpars)
   tcl = get_tpar("tcl", tpar_list = tpars, default = par("tcl"))
@@ -88,6 +88,11 @@ dynmar_side = function(side, label, main = NULL, sub = NULL,
     has_main_here = side == 3L && text_line_count(main) >= 1L
     asc = if (has_main_here) 0 else 0.6 * cex_sub
     mar = mar + (cex_sub + 0.2) + (slines - 1) * cex_sub + asc
+  }
+  clines = text_line_count(cap)
+  if (clines >= 1L && side == 1L) {
+    cex_cap = get_tpar("cex.cap", tpar_list = tpars, default = 1)
+    mar = mar + (cex_cap + 0.2) + (clines - 1) * cex_cap
   }
   mar
 }

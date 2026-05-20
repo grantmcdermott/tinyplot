@@ -1,4 +1,4 @@
-draw_title = function(main, sub, caption, xlab, ylab, legend, legend_args, opar,
+draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
                       xlab_line_offset = 0,
                       ylab_line_offset = 0) {
   # main title
@@ -79,20 +79,20 @@ draw_title = function(main, sub, caption, xlab, ylab, legend, legend_args, opar,
   }
 
 
-  caption_in_legend = !is.null(legend_args[["x"]]) && grepl("bottom!$", legend_args[["x"]])
-  if (!is.null(caption) && !caption_in_legend) {
-    cex_cap = get_tpar("cex.caption", 1)
-    line_caption = get_tpar("line.caption", NULL)
-    if (is.null(line_caption)) {
-      line_caption = par("mar")[1] - 1
+  cap_in_legend = !is.null(legend_args[["x"]]) && grepl("bottom!$", legend_args[["x"]])
+  if (!is.null(cap) && !cap_in_legend) {
+    cex_cap = get_tpar("cex.cap", 1)
+    line_cap = get_tpar("line.cap", NULL)
+    if (is.null(line_cap)) {
+      line_cap = par("mar")[1] - 1
     }
     args = list(
-      text = caption,
-      line = line_caption,
+      text = cap,
+      line = line_cap,
       cex = cex_cap,
-      col = get_tpar("col.caption", "black"),
-      adj = get_tpar(c("adj.caption", "adj")),
-      font = get_tpar("font.caption", 1),
+      col = get_tpar("col.cap", "black"),
+      adj = get_tpar(c("adj.cap", "adj")),
+      font = get_tpar("font.cap", 1),
       side = 1,
       las = 1
     )

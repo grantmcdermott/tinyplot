@@ -20,8 +20,8 @@ draw_legend(
   gradient = FALSE,
   lmar = NULL,
   has_sub = FALSE,
-  has_caption = FALSE,
-  caption_text = NULL,
+  has_cap = FALSE,
+  cap_text = NULL,
   new_plot = TRUE,
   draw = TRUE,
   soma_target = NULL
@@ -68,7 +68,7 @@ for which the default values are \code{c(1.0, 0.1)}.}
 keyword position is "bottom!", in which case we need to bump the legend
 margin a bit further.}
 
-\item{has_caption}{Logical. Does the plot have a caption. Only used if
+\item{has_cap}{Logical. Does the plot have a caption. Only used if
 keyword position is "bottom!", in which case we need to bump the legend
 margin a bit further.}
 

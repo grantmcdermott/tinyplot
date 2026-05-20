@@ -169,8 +169,8 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
     } else if (legend_env$outer_end) {
       if (legend_env$outer_bottom) {
         legend_env$ooma[1] = soma
-        if (legend_env$has_caption) {
-          cex_cap = get_tpar("cex.caption", 1)
+        if (legend_env$has_cap) {
+          cex_cap = get_tpar("cex.cap", 1)
           legend_env$ooma[1] = legend_env$ooma[1] + cex_cap + 0.2
         }
       } else {
@@ -273,8 +273,8 @@ tinylegend = function(legend_env) {
   } else if (legend_env$outer_end) {
     if (legend_env$outer_bottom) {
       legend_env$ooma[1] = soma
-      if (legend_env$has_caption) {
-        cex_cap = get_tpar("cex.caption", 1)
+      if (legend_env$has_cap) {
+        cex_cap = get_tpar("cex.cap", 1)
         legend_env$ooma[1] = legend_env$ooma[1] + cex_cap + 0.2
       }
     } else {
@@ -330,17 +330,17 @@ tinylegend = function(legend_env) {
     do.call("legend", legend_env$args)
   }
 
-  if (legend_env$outer_bottom && legend_env$has_caption) {
-    cex_cap = get_tpar("cex.caption", 1)
+  if (legend_env$outer_bottom && legend_env$has_cap) {
+    cex_cap = get_tpar("cex.cap", 1)
     mtext(
-      legend_env$caption_text,
+      legend_env$cap_text,
       side = 1,
       outer = TRUE,
       line = par("oma")[1] - 1,
       cex = cex_cap,
-      col = get_tpar("col.caption", "black"),
-      adj = get_tpar(c("adj.caption", "adj")),
-      font = get_tpar("font.caption", 1),
+      col = get_tpar("col.cap", "black"),
+      adj = get_tpar(c("adj.cap", "adj")),
+      font = get_tpar("font.cap", 1),
       las = 1
     )
   }
@@ -408,7 +408,7 @@ prepare_legend = function(settings) {
       "bubble_cex",
       "by",
       "by_continuous",
-      "caption",
+      "cap",
       "cex_dep",
       "cex_fct_adj",
       "col",
@@ -472,7 +472,7 @@ prepare_legend = function(settings) {
 
   legend_draw_flag = (is.null(legend) || !is.character(legend) || legend != "none" || bubble) && !isTRUE(add)
   has_sub = text_line_count(sub) > 0L
-  has_caption = text_line_count(caption) > 0L
+  has_cap = text_line_count(cap) > 0L
 
   # Generate labels for discrete legends
   if (legend_draw_flag && isFALSE(by_continuous) && (!bubble || multi_legend)) {
@@ -495,7 +495,7 @@ prepare_legend = function(settings) {
       "legend_args",
       "legend_draw_flag",
       "has_sub",
-      "has_caption"
+      "has_cap"
     )
   )
 }
@@ -737,8 +737,8 @@ build_legend_env = function(
   gradient,
   lmar,
   has_sub = FALSE,
-  has_caption = FALSE,
-  caption_text = NULL,
+  has_cap = FALSE,
+  cap_text = NULL,
   new_plot = TRUE
 ) {
   # Create legend environment
@@ -748,8 +748,8 @@ build_legend_env = function(
   legend_env$gradient = gradient
   legend_env$type = type
   legend_env$has_sub = has_sub
-  legend_env$has_caption = has_caption
-  legend_env$caption_text = caption_text
+  legend_env$has_cap = has_cap
+  legend_env$cap_text = cap_text
   legend_env$new_plot = new_plot
   legend_env$dynmar = isTRUE(.tpar[["dynmar"]])
   legend_env$topmar_epsilon = 0.1
@@ -823,7 +823,7 @@ build_legend_env = function(
 #' @param has_sub Logical. Does the plot have a sub-caption. Only used if
 #'   keyword position is "bottom!", in which case we need to bump the legend
 #'   margin a bit further.
-#' @param has_caption Logical. Does the plot have a caption. Only used if
+#' @param has_cap Logical. Does the plot have a caption. Only used if
 #'   keyword position is "bottom!", in which case we need to bump the legend
 #'   margin a bit further.
 #' @param new_plot Logical. Should we be calling plot.new internally?
@@ -914,8 +914,8 @@ draw_legend = function(
   gradient = FALSE,
   lmar = NULL,
   has_sub = FALSE,
-  has_caption = FALSE,
-  caption_text = NULL,
+  has_cap = FALSE,
+  cap_text = NULL,
   new_plot = TRUE,
   draw = TRUE,
   soma_target = NULL
@@ -930,7 +930,7 @@ draw_legend = function(
 
   assert_logical(gradient)
   assert_logical(has_sub)
-  assert_logical(has_caption)
+  assert_logical(has_cap)
   assert_logical(new_plot)
   assert_logical(draw)
 
@@ -965,8 +965,8 @@ draw_legend = function(
     gradient = gradient,
     lmar = lmar,
     has_sub = has_sub,
-    has_caption = has_caption,
-    caption_text = caption_text,
+    has_cap = has_cap,
+    cap_text = cap_text,
     new_plot = new_plot
   )
 

@@ -20,8 +20,8 @@ build_legend_env(
   gradient,
   lmar,
   has_sub = FALSE,
-  has_caption = FALSE,
-  caption_text = NULL,
+  has_cap = FALSE,
+  cap_text = NULL,
   new_plot = TRUE
 )
 }

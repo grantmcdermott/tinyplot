@@ -33,7 +33,7 @@ draw_facet_window = function(
     has_legend,
     main,
     sub,
-    caption,
+    cap,
     type,
     xlab,
     x, xmax, xmin,

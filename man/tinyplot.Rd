@@ -25,7 +25,7 @@ tinyplot(x, ...)
   legend = NULL,
   main = NULL,
   sub = NULL,
-  caption = NULL,
+  cap = NULL,
   xlab = NULL,
   ylab = NULL,
   ann = par("ann"),
@@ -79,7 +79,7 @@ tinyplot(x, ...)
   ylim = NULL,
   main = NULL,
   sub = NULL,
-  caption = NULL,
+  cap = NULL,
   xlab = NULL,
   ylab = NULL,
   ann = par("ann"),
@@ -294,10 +294,10 @@ legend arguments, e.g. "bty", "horiz", and so forth.
 
 \item{sub}{a subtitle for the plot.}
 
-\item{caption}{a caption for the plot, drawn at the bottom-right. Useful for
+\item{cap}{a caption for the plot, drawn at the bottom. Useful for
 annotations like data sources. Appearance can be customized via
-\code{\link[tinyplot]{tpar}} parameters \code{adj.caption}, \code{cex.caption},
-\code{col.caption}, \code{font.caption}, and \code{line.caption}.}
+\code{\link[tinyplot]{tpar}} parameters \code{adj.cap}, \code{cex.cap},
+\code{col.cap}, \code{font.cap}, and \code{line.cap}.}
 
 \item{xlab}{a label for the x axis, defaults to a description of x.}
 

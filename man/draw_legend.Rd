@@ -72,6 +72,9 @@ margin a bit further.}
 keyword position is "bottom!", in which case we need to bump the legend
 margin a bit further.}
 
+\item{cap_text}{Character. The caption text to draw below the legend when
+position is "bottom!". Ignored otherwise.}
+
 \item{new_plot}{Logical. Should we be calling plot.new internally?}
 
 \item{draw}{Logical. If \code{FALSE}, no legend is drawn but the sizes are

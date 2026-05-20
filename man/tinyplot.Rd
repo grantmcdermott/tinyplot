@@ -295,9 +295,11 @@ legend arguments, e.g. "bty", "horiz", and so forth.
 \item{sub}{a subtitle for the plot.}
 
 \item{cap}{a caption for the plot, drawn at the bottom. Useful for
-annotations like data sources. Appearance can be customized via
-\code{\link[tinyplot]{tpar}} parameters \code{adj.cap}, \code{cex.cap},
-\code{col.cap}, \code{font.cap}, and \code{line.cap}.}
+annotations like data sources. Best paired with a dynamic
+\code{\link[tinyplot]{tinytheme}}. For the default theme, should be seen as
+a substitute for \code{sub}, since these two will otherwise overlap. Appearance
+can be customized via \code{\link[tinyplot]{tpar}} parameters \code{adj.cap},
+\code{cex.cap}, \code{col.cap}, \code{font.cap}, and \code{line.cap}.}
 
 \item{xlab}{a label for the x axis, defaults to a description of x.}
 
@@ -786,17 +788,16 @@ tinyplot(
 # parameters (e.g., via `(t)par`)... But a more convenient way is to just use
 # built-in themes (see `?tinytheme`).
 
-tinytheme("clean2")
 tinyplot(
   Temp ~ Day | Month,
   data = aq,
   type = "b",
   alpha = 0.5,
   main = "Daily temperatures by month",
-  sub = "Brought to you by tinyplot"
+  sub = "Brought to you by tinyplot",
+  cap = "Source: Base R airquality dataset",
+  theme = "clean2"
 )
-# reset the theme
-tinytheme()
 
 # For more examples and a detailed walkthrough, please see the introductory
 # tinyplot tutorial available online:

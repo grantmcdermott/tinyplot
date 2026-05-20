@@ -564,7 +564,8 @@ tinytheme("dark")
 tinyplot(
   Temp ~ Wind | Ozone, data = aq,
   main = "An example of a tinytheme() in action",
-  sub = "Notice that the subtitle is above the plot"
+  sub = "Notice that the subtitle is above the plot",
+  cap = "Source: A helpful caption"
 )
 ```
 ```{r}

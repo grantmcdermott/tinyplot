@@ -49,9 +49,14 @@
 #'
 #' @section Additional Graphical Parameters:
 #'
+#' * `adj.cap`: Numeric value between 0 and 1 controlling the alignment of the plot caption. Defaults to `0.5` (centered) for the default theme, and `1` (right-aligned) for all other themes.
 #' * `adj.xlab`: Numeric value between 0 and 1 controlling the alignment of the x-axis label.
 #' * `adj.ylab`: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
 #' * `cairo`: Logical indicating whether \code{\link[grDevices]{cairo_pdf}} should be used when writing plots to PDF. If `FALSE`, then \code{\link[grDevices]{pdf}} will be used instead, with implications for embedding (non-standard) fonts. Only used if `tinyplot(..., file = "<filename>.pdf")` is called. Defaults to the value of `capabilities("cairo")`.
+#' * `cex.cap`: Numeric expansion factor for the plot caption text. Defaults to `1` for the default, basic, and dynamic themes, and `0.8` for clean/classic and their descendants.
+#' * `col.cap`: Character specifying the colour of the plot caption. Defaults to `"black"`.
+#' * `font.cap`: Integer specifying the font face for the plot caption (`1` = plain, `2` = bold, `3` = italic, `4` = bold italic). Defaults to `1`.
+#' * `line.cap`: Numeric specifying the margin line on which to draw the caption. If `NULL` (default), computed automatically based on the available bottom margin.
 #' * `dynmar`: Logical indicating whether `tinyplot` should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal `tinythemes()` logic and should _not_ be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 #' * `facet.bg`: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NULL` (none).
 #' * `facet.border`: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NA` (none).
@@ -218,16 +223,20 @@ get_tpar = function(opts, default = NULL, tpar_list = NULL) {
 
 
 known_tpar = c(
+    "adj.cap",
     "adj.main",
     "adj.sub",
     "adj.xlab",
     "adj.ylab",
+    "cex.cap",
     "cex.xlab",
     "cex.ylab",
+    "col.cap",
     "col.xaxs",
     "col.yaxs",
     "cairo",
     "dynmar",
+    "font.cap",
     "gap.axis",
     "gap.lab",
     "facet.bg",
@@ -244,6 +253,7 @@ known_tpar = c(
     "grid.col",
     "grid.lty",
     "grid.lwd",
+    "line.cap",
     "ljust",
     "lmar",
     "lty.xaxs",
@@ -270,6 +280,7 @@ assign_tpar = function(opts) {
 
 
 assert_tpar = function(.tpar) {
+  assert_numeric(.tpar[["adj.cap"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.cap")
   assert_numeric(.tpar[["adj.main"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.main")
   assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.sub")
   assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.xlab")

@@ -1,4 +1,4 @@
-draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar,
+draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
                       xlab_line_offset = 0,
                       ylab_line_offset = 0) {
   # main title
@@ -78,6 +78,27 @@ draw_title = function(main, sub, xlab, ylab, legend, legend_args, opar,
     do.call(title, args)
   }
 
+
+  cap_in_legend = !is.null(legend_args[["x"]]) && grepl("bottom!$", legend_args[["x"]])
+  if (!is.null(cap) && !cap_in_legend) {
+    cex_cap = get_tpar("cex.cap", 1)
+    line_cap = get_tpar("line.cap", NULL)
+    if (is.null(line_cap)) {
+      line_cap = par("mar")[1] - 1
+    }
+    args = list(
+      text = cap,
+      line = line_cap,
+      cex = cex_cap,
+      col = get_tpar("col.cap", "black"),
+      adj = get_tpar(c("adj.cap", "adj")),
+      font = get_tpar("font.cap", 1),
+      side = 1,
+      las = 1
+    )
+    args = Filter(function(x) !is.null(x), args)
+    do.call(mtext, args)
+  }
 
   # Axis titles. For multi-line labels, base R places line 1 at
   # `line = mgp[1] - (N-1)*cex`, which pushes line 1 up into the tick-label

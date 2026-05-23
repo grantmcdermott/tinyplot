@@ -20,6 +20,8 @@ draw_legend(
   gradient = FALSE,
   lmar = NULL,
   has_sub = FALSE,
+  has_cap = FALSE,
+  cap_text = NULL,
   new_plot = TRUE,
   draw = TRUE,
   soma_target = NULL
@@ -65,6 +67,13 @@ for which the default values are \code{c(1.0, 0.1)}.}
 \item{has_sub}{Logical. Does the plot have a sub-caption. Only used if
 keyword position is "bottom!", in which case we need to bump the legend
 margin a bit further.}
+
+\item{has_cap}{Logical. Does the plot have a caption. Only used if
+keyword position is "bottom!", in which case we need to bump the legend
+margin a bit further.}
+
+\item{cap_text}{Character. The caption text to draw below the legend when
+position is "bottom!". Ignored otherwise.}
 
 \item{new_plot}{Logical. Should we be calling plot.new internally?}
 

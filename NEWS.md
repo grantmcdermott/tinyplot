@@ -75,6 +75,11 @@ visualizations.
   providing finer control for spacing between ticks-labels and labels-titles,
   respectively, in dynamic themes. See the **Dynamic themes** entry above.
   (#590 @grantmcdermott)
+- New `tinyplot(..., cap = <caption>)` argument for adding a caption to your 
+  plots. Captions are drawn at the bottom of the plot and are best paired with
+  dynamic themes (since separation from `sub` is guaranteed). Appearance is
+  customizable via `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`,
+  `font.cap`, and `line.cap`. (#592 @grantmcdermott)
 
 ### Bug fixes
 

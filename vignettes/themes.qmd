@@ -52,7 +52,8 @@ tinyplot(
   facet = "by",
   data = iris,
   main = "Title of the plot",
-  sub = "A smaller subtitle"
+  sub = "A smaller subtitle", 
+  cap = "Source: A helpful caption"
 )
 ```
 
@@ -68,7 +69,8 @@ tinyplot(
   data = iris,
   yaxl = ",",  # use comma format for the y-axis labels
   main = "Title of the plot",
-  sub = "The left-margin adjusts to accomodate the long y-axis labels"
+  sub = "A smaller subtitle", 
+  cap = "Note: The left-margin adjusts to accomodate the long y-axis labels"
 )
 ```
 
@@ -118,12 +120,19 @@ p = function(theme = "default") {
     data = iris,
     main = paste0('theme = "', theme, '"'),
     sub = "subtitle",
+    cap = "caption",
     theme = theme
   )
   box("outer", lty = 2)
 }
 ```
 
+
+:::{.callout-note}
+For non-dynamic themes, the `sub` and `cap` arguments are effectively
+subsitutes, and so will clash for these cases below. But they achieve guaranteed
+separate placement for dynamic themes.
+:::
 
 <!-- ```{r} -->
 <!-- #| echo: false -->
@@ -172,6 +181,7 @@ p2 = function(theme = "ridge") {
     type = "ridge",
     main = paste0('theme = "', theme, '"'),
     sub = "subtitle",
+    cap = "caption",
     theme = theme
   )
   box("outer", lty = 2)
@@ -246,10 +256,13 @@ maintaining constant visible spacing regardless of text size. For example:
 ```{r}
 #| layout-ncol: 2
 tinytheme("dynamic", gap.axis = 0, gap.lab = 0.5)
-tinyplot(mpg ~ hp, data = mtcars, main = "Tighter gaps")
+tinyplot(mpg ~ hp, data = mtcars, main = "Tighter axis gaps")
+box("outer", lty = 2)
 
 tinytheme("dynamic", gap.axis = 2, gap.lab = 2)
-tinyplot(mpg ~ hp, data = mtcars, main = "Looser gaps")
+tinyplot(mpg ~ hp, data = mtcars, main = "Looser axis gaps")
+box("outer", lty = 2)
+
 tinytheme() # reset
 ```
 

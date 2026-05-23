@@ -610,6 +610,9 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 <h3 class="anchored" data-anchor-id="additional-graphical-parameters">Additional Graphical Parameters</h3>
 <ul>
 <li>
+<p><code>adj.cap</code>: Numeric value between 0 and 1 controlling the alignment of the plot caption. Defaults to <code>0.5</code> (centered) for the default theme, and <code>1</code> (right-aligned) for all other themes.</p>
+</li>
+<li>
 <p><code>adj.xlab</code>: Numeric value between 0 and 1 controlling the alignment of the x-axis label.</p>
 </li>
 <li>
@@ -617,6 +620,18 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 </li>
 <li>
 <p><code>cairo</code>: Logical indicating whether <code>cairo_pdf</code> should be used when writing plots to PDF. If <code>FALSE</code>, then <code>pdf</code> will be used instead, with implications for embedding (non-standard) fonts. Only used if <code>tinyplot(…, file = “&lt;filename&gt;.pdf”)</code> is called. Defaults to the value of <code>capabilities(“cairo”)</code>.</p>
+</li>
+<li>
+<p><code>cex.cap</code>: Numeric expansion factor for the plot caption text. Defaults to <code>1</code> for the default, basic, and dynamic themes, and <code>0.8</code> for clean/classic and their descendants.</p>
+</li>
+<li>
+<p><code>col.cap</code>: Character specifying the colour of the plot caption. Defaults to <code>“black”</code>.</p>
+</li>
+<li>
+<p><code>font.cap</code>: Integer specifying the font face for the plot caption (<code>1</code> = plain, <code>2</code> = bold, <code>3</code> = italic, <code>4</code> = bold italic). Defaults to <code>1</code>.</p>
+</li>
+<li>
+<p><code>line.cap</code>: Numeric specifying the margin line on which to draw the caption. If <code>NULL</code> (default), computed automatically based on the available bottom margin.</p>
 </li>
 <li>
 <p><code>dynmar</code>: Logical indicating whether <code>tinyplot</code> should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal <code>tinythemes()</code> logic and should <em>not</em> be adjusted manually unless you really know what you are doing or don’t mind risking unintended consequences to your plot.</p>

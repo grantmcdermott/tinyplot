@@ -17,17 +17,21 @@
 #'   - `"default"`: inherits the user's default base graphics settings.
 #'   - `"basic"`: light modification of `"default"`, only adding filled points, a panel background grid, and light gray background to facet titles.
 #'   - `"dynamic"` (*): builds on `"basic"` by enabling dynamic margin adjustment with tighter default margins, horizontal axis labels, and the subtitle moved above the plotting area. Turns off the panel grid. Provides the foundation for all other dynamic themes and is a good starting point for users who wish to build custom dynamic themes.
-#'   - `"clean"` (*): builds on `"dynamic"` by re-enabling the panel background grid and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors).
-#'   - `"clean2"` (*): removes the plot frame (box) from `"clean"`.
-#'   - `"classic"` (*): builds on `"dynamic"` with L-shaped axes (removing the top and right-hand edges of the plot frame). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
-#'   - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
-#'   - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name.
-#'   - `"ipsum"` (*): similar to `"minimal"`, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**.
-#'   - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
-#'   - `"ridge"` (*): a specialized theme for ridge plots (see [`type_ridge()`]). Builds off of `"clean"`, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
-#'   - `"ridge2"` (*): removes the plot frame (box) from `"ridge"`, but retains the x-axis line. Again, not recommended for non-ridge plots.
-#'   - `"tufte"`: floating axes and minimalist plot artifacts in the style of Edward Tufte.
-#'   - `"void"`: switches off all axes, titles, legends, etc.
+#'     - `"clean"` (*): builds on `"dynamic"` by re-enabling the panel background grid and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors).
+#'       - `"clean2"` (*): removes the plot frame (box) from `"clean"`.
+#'     - `"classic"` (*): builds on `"dynamic"` with L-shaped axes (removing the top and right-hand edges of the plot frame), smaller axis text, tighter axis spacing, and the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
+#'     - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid fine grid lines, smaller axis text, tighter axis spacing, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
+#'       - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name.
+#'         - `"ipsum"` (*): builds on `"minimal"` with bold titles, no ticks, fine grid, edge-aligned axis titles, and a custom muted palette. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**.
+#'         - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
+#'         - `"socviz"` (*): builds on `"minimal"` with L-shaped axes, very light grid lines, and larger axis text. Inspired by Kieran Healy's **socviz** package theme for **ggplot2**.
+#'     - `"broadsheet"` (*): a publication/newspaper style with only horizontal grid lines, no frame, short x-axis ticks, and muted secondary text (subtitle, caption). Compact axis spacing.
+#'       - `"nber"` (*): builds on `"broadsheet"` for an NBER working paper style with a light blue-grey background, grey text, italic axis titles and captions, and a blue-grey discrete palette.
+#'     - `"web"` (*): a FiveThirtyEight-inspired style with a light grey device background, no frame or axis lines, and bold grid lines. Suited to web/online publication.
+#'     - `"tufte"` (*): floating axes and minimalist plot artifacts in the style of Edward Tufte.
+#'     - `"void"` (*): switches off all axes, titles, legends, etc.
+#'     - `"ridge"` (*): a specialized theme for ridge plots (see [`type_ridge()`]). Builds off of `"clean"`, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
+#'       - `"ridge2"` (*): removes the plot frame (box) from `"ridge"`, but retains the x-axis line. Again, not recommended for non-ridge plots.
 #' @param ... Named arguments to override specific theme settings. These
 #'   arguments are passed to `tpar()` and take precedence over the predefined
 #'   settings in the selected theme.

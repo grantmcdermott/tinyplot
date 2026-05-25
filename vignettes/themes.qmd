@@ -49,7 +49,6 @@ tinytheme("minimal")
 
 tinyplot(
   Sepal.Width ~ Sepal.Length | Species,
-  facet = "by",
   data = iris,
   main = "Title of the plot",
   sub = "A smaller subtitle", 
@@ -65,7 +64,6 @@ here bumps out to accomodate the long horizontal y-axis labels:
 ```{r}
 tinyplot(
   I(Sepal.Width*1e5) ~ Sepal.Length | Species,
-  facet = "by",
   data = iris,
   yaxl = ",",  # use comma format for the y-axis labels
   main = "Title of the plot",
@@ -164,6 +162,10 @@ p("bw")
 p("minimal")
 p("ipsum")
 p("dark")
+p("socviz")
+p("broadsheet")
+p("nber")
+p("web")
 p("tufte")
 p("void")
 ```

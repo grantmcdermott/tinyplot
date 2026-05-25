@@ -6,7 +6,8 @@
 \usage{
 tinytheme(
   theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "classic", "minimal",
-    "ipsum", "dark", "ridge", "ridge2", "tufte", "void"),
+    "ipsum", "dark", "socviz", "broadsheet", "nber", "web", "ridge", "ridge2", "tufte",
+    "void"),
   ...
 )
 }
@@ -21,17 +22,33 @@ dynamic plots are marked with an asterisk (*) below.
 \item \code{"default"}: inherits the user's default base graphics settings.
 \item \code{"basic"}: light modification of \code{"default"}, only adding filled points, a panel background grid, and light gray background to facet titles.
 \item \code{"dynamic"} (*): builds on \code{"basic"} by enabling dynamic margin adjustment with tighter default margins, horizontal axis labels, and the subtitle moved above the plotting area. Turns off the panel grid. Provides the foundation for all other dynamic themes and is a good starting point for users who wish to build custom dynamic themes.
+\itemize{
 \item \code{"clean"} (*): builds on \code{"dynamic"} by re-enabling the panel background grid and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors).
+\itemize{
 \item \code{"clean2"} (*): removes the plot frame (box) from \code{"clean"}.
-\item \code{"classic"} (*): builds on \code{"dynamic"} with L-shaped axes (removing the top and right-hand edges of the plot frame). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
-\item \code{"bw"} (*): similar to \code{"clean"}, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
+}
+\item \code{"classic"} (*): builds on \code{"dynamic"} with L-shaped axes (removing the top and right-hand edges of the plot frame), smaller axis text, tighter axis spacing, and the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
+\item \code{"bw"} (*): similar to \code{"clean"}, except uses thinner lines for the plot frame (box), solid fine grid lines, smaller axis text, tighter axis spacing, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
+\itemize{
 \item \code{"minimal"} (*): removes the plot frame (box) from \code{"bw"}, as well as the background for facet titles. Inspired by the \strong{ggplot2} theme of the same name.
-\item \code{"ipsum"} (*): similar to \code{"minimal"}, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
+\itemize{
+\item \code{"ipsum"} (*): builds on \code{"minimal"} with bold titles, no ticks, fine grid, edge-aligned axis titles, and a custom muted palette. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
 \item \code{"dark"} (*): similar to \code{"minimal"}, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
+\item \code{"socviz"} (*): builds on \code{"minimal"} with L-shaped axes, very light grid lines, and larger axis text. Inspired by Kieran Healy's \strong{socviz} package theme for \strong{ggplot2}.
+}
+}
+\item \code{"broadsheet"} (*): a publication/newspaper style with only horizontal grid lines, no frame, short x-axis ticks, and muted secondary text (subtitle, caption). Compact axis spacing.
+\itemize{
+\item \code{"nber"} (*): builds on \code{"broadsheet"} for an NBER working paper style with a light blue-grey background, grey text, italic axis titles and captions, and a blue-grey discrete palette.
+}
+\item \code{"web"} (*): a FiveThirtyEight-inspired style with a light grey device background, no frame or axis lines, and bold grid lines. Suited to web/online publication.
+\item \code{"tufte"} (*): floating axes and minimalist plot artifacts in the style of Edward Tufte.
+\item \code{"void"} (*): switches off all axes, titles, legends, etc.
 \item \code{"ridge"} (*): a specialized theme for ridge plots (see \code{\link[=type_ridge]{type_ridge()}}). Builds off of \code{"clean"}, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
+\itemize{
 \item \code{"ridge2"} (*): removes the plot frame (box) from \code{"ridge"}, but retains the x-axis line. Again, not recommended for non-ridge plots.
-\item \code{"tufte"}: floating axes and minimalist plot artifacts in the style of Edward Tufte.
-\item \code{"void"}: switches off all axes, titles, legends, etc.
+}
+}
 }}
 
 \item{...}{Named arguments to override specific theme settings. These

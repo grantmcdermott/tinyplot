@@ -94,6 +94,9 @@ visualizations.
   and spacing now scale correctly with `facet.cex`, multiline facet titles
   inter-panel gaps remain fixed regardless of strip height, and strip text is 
   now vertically centered within the background rect. (#586 @grantmcdermott)
+- Fixed Issue #593 where `palette.qualitative` in themes could not be a
+  function. Thanks to @katrinabrock for the report. (#594 @zeileis)
+
 
 ## v0.6.1
 

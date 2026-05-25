@@ -177,6 +177,7 @@ tinytheme = function(
       "default", "basic", "dynamic",
       "clean", "clean2", "bw", "classic",
       "minimal", "ipsum", "dark",
+      "socviz", "broadsheet", "nber", "web",
       "ridge", "ridge2",
       "tufte", "void"
     ),
@@ -193,14 +194,16 @@ tinytheme = function(
     theme,
     c(
       "default",
-      sort(c("basic", "bw", "classic", "clean", "clean2", "dark", "dynamic",
-             "ipsum", "minimal", "ridge", "ridge2", "tufte", "void"))
+      sort(c("basic", "broadsheet", "bw", "classic", "clean", "clean2", "dark",
+             "dynamic", "ipsum", "minimal", "nber", "ridge", "ridge2",
+             "socviz", "tufte", "void", "web"))
     )
   )
 
   settings = switch(theme,
     "default" = theme_default,
     "basic" = theme_basic,
+    "broadsheet" = theme_broadsheet,
     "bw" = theme_bw,
     "classic" = theme_classic,
     "clean" = theme_clean,
@@ -209,10 +212,13 @@ tinytheme = function(
     "dynamic" = theme_dynamic,
     "ipsum" = theme_ipsum,
     "minimal" = theme_minimal,
+    "nber" = theme_nber,
     "ridge" = theme_ridge,
     "ridge2" = theme_ridge2,
+    "socviz" = theme_socviz,
     "tufte" = theme_tufte,
     "void" = theme_void,
+    "web" = theme_web,
   )
 
   dots = list(...)
@@ -340,8 +346,14 @@ theme_tufte = modifyList(theme_default, list(
   adj.main = 0,
   adj.sub = 0,
   bty = "n",
+  dynmar = TRUE,
   font.main = 1,
+  gap.axis = 0.2,
+  gap.lab = 1.0,
   lab = c(10, 10, 7),
+  las = 1,
+  mar = c(0.1, 0.1, 0.6, 0.6),
+  mgp = NULL,
   # palette.sequential = "Grays",
   pch = 16,
   side.sub = 3,
@@ -353,12 +365,16 @@ theme_void = modifyList(theme_default, list(
   adj.cap = 1,
   adj.main = 0,
   adj.sub = 0,
+  dynmar = TRUE,
   font.main = 1,
+  gap.axis = 0.2,
+  gap.lab = 1.0,
+  mar = c(0.1, 0.1, 0.6, 0.6),
+  mgp = NULL,
   palette.qualitative = "Tableau 10",
   palette.sequential = "ag_Sunset",
   pch = 16,
   side.sub = 3,
-  # tck = -.02,
   xaxt = "none",
   yaxt = "none"
 ))
@@ -408,9 +424,12 @@ theme_clean = modifyList(theme_dynamic, list(
 theme_classic = modifyList(theme_dynamic, list(
   tinytheme = "classic",
   bty = "l",
+  cex.axis = 0.8,
   cex.cap = 0.8,
   facet.bg = NULL,
   font.main = 1,
+  gap.axis = 0.1,
+  gap.lab = 0.4,
   palette.qualitative = "Okabe-Ito"
 ))
 
@@ -427,7 +446,11 @@ theme_clean2 = modifyList(theme_clean, list(
 
 theme_bw = modifyList(theme_clean, list(
   tinytheme = "bw",
+  cex.axis = 0.8,
   font.main = 1,
+  gap.axis = 0.1,
+  gap.lab = 0.4,
+  grid = "xy",
   grid.lty = 1,
   grid.lwd = 0.5,
   lwd = 0.5,
@@ -451,10 +474,17 @@ theme_minimal = modifyList(theme_bw, list(
 
 theme_ipsum = modifyList(theme_minimal, list(
   tinytheme = "ipsum",
-  bty = "n",
-  font.sub = 3,
+  adj.xlab = 1,
   adj.ylab = 1,
-  adj.xlab = 1
+  cex.lab = 0.8,
+  font.main = 2,
+  font.sub = 1,
+  gap.axis = 0,
+  gap.lab = 0.7,
+  grid = "xy",
+  palette.qualitative = c("#D18975", "#8FD175", "#3F2D54", "#75B8D1",
+                          "#2D543D", "#C9D175", "#D1AB75", "#D175B8", "#758BD1"),
+  tcl = 0
 ))
 
 theme_dark = modifyList(theme_minimal, list(
@@ -486,4 +516,98 @@ theme_ridge2 = modifyList(theme_clean2, list(
   tinytheme = "ridge2",
   palette.qualitative = "Zissou 1",
   grid = FALSE
+))
+
+# derivatives of "minimal"
+# - socviz
+
+theme_socviz = modifyList(theme_minimal, list(
+  tinytheme = "socviz",
+  bty = "l",
+  cex.axis = 1.1,
+  cex.cap = 0.75,
+  cex.lab = 1,
+  cex.main = 1.4,
+  cex.sub = 1.05,
+  col.xaxs = "gray10",
+  col.yaxs = "gray10",
+  facet.bg = NULL,
+  facet.col = "grey10",
+  font.main = 2,
+  grid.col = "gray90",
+  grid.lty = 1,
+  grid.lwd = 0.3,
+  lwd = 1,
+  lwd.axis = 1,
+  palette.qualitative = c("#E69F00", "#56B4E9", "#009E73", "#D55E00",
+                          "#CC79A7", "#0072B2", "#F0E442", "#000000"),
+  tcl = -0.25,
+  xaxt = "standard",
+  yaxt = "standard"
+))
+
+# derivatives of "dynamic"
+# - broadsheet
+# - web
+
+theme_broadsheet = modifyList(theme_dynamic, list(
+  tinytheme = "broadsheet",
+  bty = "n",
+  cex.cap = 0.8,
+  col.cap = "gray40",
+  col.sub = "gray40",
+  font.main = 2,
+  gap.axis = 0.1,
+  gap.lab = 0.5,
+  grid = "Y",
+  grid.col = "gray85",
+  grid.lty = 1,
+  grid.lwd = 0.5,
+  palette.qualitative = "Okabe-Ito",
+  tcl = -0.2,
+  yaxt = "labels"
+))
+
+# derivatives of "broadsheet"
+# - nber
+
+theme_nber = modifyList(theme_broadsheet, list(
+  tinytheme = "nber",
+  bg = "#F2F7FB",
+  cex.cap = 1,
+  cex.main = 1.4,
+  cex.sub = 1,
+  col.axis = "#4C4D4F",
+  col.lab = "#6D6E72",
+  col.main = "#4C4D4F",
+  col.sub = "#6D6E72",
+  col.cap = "#6D6E72",
+  col.xaxs = "#6D6E72",
+  facet.bg = "white",
+  facet.col = "#6D6E72",
+  font.cap = 3,
+  font.lab = 3,
+  font.sub = 3,
+  grid.col = "#BCBFC3",
+  palette.qualitative = c(
+    "#0063A7", "#6D6E70", "#941A22", 
+    "#EDAF48", "#2E8B57", "#7B5EA7")
+))
+
+theme_web = modifyList(theme_dynamic, list(
+  tinytheme = "web",
+  bg = "#F0F0F0",
+  bty = "n",
+  cex.cap = 0.8,
+  col.cap = "gray40",
+  col.sub = "gray40",
+  font.main = 2,
+  grid = TRUE,
+  grid.col = "#D2D2D2",
+  grid.lty = 1,
+  grid.lwd = 0.5,
+  palette.qualitative = c("#008FD5", "#FF2700", "#77AB43"),
+  tcl = 0,
+  xaxt = "labels",
+  yaxt = "labels"
 ))

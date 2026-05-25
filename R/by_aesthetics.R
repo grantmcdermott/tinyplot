@@ -156,7 +156,7 @@ resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradie
   # Pick theme palette if no explicit palette provided
   if (is.null(palette_choice) && !is.null(theme_palette)) {
     palette_choice = theme_palette
-    if (length(theme_palette) == 1) {
+    if (is.character(theme_palette) && length(theme_palette) == 1) {
       # Check if theme palette needs to switch to sequential
       use_sequential = FALSE
       idx = match_palette_name(theme_palette, palette.pals())

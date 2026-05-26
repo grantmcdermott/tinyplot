@@ -31,7 +31,7 @@
 <text x='472.62' y='241.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='54.67px' lengthAdjust='spacingAndGlyphs'>factor(am)</text>
 <text x='464.18' y='259.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
 <text x='464.18' y='274.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
-<text x='36.00' y='33.41' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='109.91px' lengthAdjust='spacingAndGlyphs'>tinytheme("minimal")</text>
+<text x='36.00' y='33.41' style='font-size: 12.00px; font-style: italic; font-family: "Liberation Sans";' textLength='107.23px' lengthAdjust='spacingAndGlyphs'>tinytheme("ipsum2")</text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHw0MjguMTh8MC4wMHw1MDQuMDA='>
@@ -40,8 +40,8 @@
 </defs>
 <g clip-path='url(#cpMC4wMHw0MjguMTh8MC4wMHw1MDQuMDA=)'>
 <text x='36.00' y='20.45' style='font-size: 14.40px; font-family: "Liberation Sans";' textLength='93.88px' lengthAdjust='spacingAndGlyphs'>Title of the plot</text>
-<text x='232.09' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>hp</text>
-<text transform='translate(11.52,257.18) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'>mpg</text>
+<text x='428.18' y='499.68' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>hp</text>
+<text transform='translate(11.52,46.37) rotate(-90)' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'>mpg</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <text x='47.96' y='486.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='10.66px' lengthAdjust='spacingAndGlyphs'>50</text>

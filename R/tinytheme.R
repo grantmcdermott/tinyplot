@@ -346,45 +346,6 @@ theme_basic = modifyList(theme_default, list(
   pch = 16
 ))
 
-theme_tufte = modifyList(theme_default, list(
-  tinytheme = "tufte",
-  adj.cap = 1,
-  adj.main = 0,
-  adj.sub = 0,
-  bty = "n",
-  dynmar = TRUE,
-  font.main = 1,
-  gap.axis = 0.2,
-  gap.lab = 1.0,
-  lab = c(10, 10, 7),
-  las = 1,
-  mar = c(0.1, 0.1, 0.6, 0.6),
-  mgp = NULL,
-  # palette.sequential = "Grays",
-  pch = 16,
-  side.sub = 3,
-  tcl = 0.2
-))
-
-theme_void = modifyList(theme_default, list(
-  tinytheme = "void",
-  adj.cap = 1,
-  adj.main = 0,
-  adj.sub = 0,
-  dynmar = TRUE,
-  font.main = 1,
-  gap.axis = 0.2,
-  gap.lab = 1.0,
-  mar = c(0.1, 0.1, 0.6, 0.6),
-  mgp = NULL,
-  palette.qualitative = "Tableau 10",
-  palette.sequential = "ag_Sunset",
-  pch = 16,
-  side.sub = 3,
-  xaxt = "none",
-  yaxt = "none"
-))
-
 # derivatives of "basic"
 # - dynamic
 
@@ -625,4 +586,33 @@ theme_web = modifyList(theme_dynamic, list(
   tcl = 0,
   xaxt = "labels",
   yaxt = "labels"
+))
+
+# standalone dynamic derivatives
+# - tufte
+# - void
+
+theme_tufte = modifyList(theme_dynamic, list(
+  tinytheme = "tufte",
+  bty = "n",
+  facet.bg = NULL,
+  facet.border = NA,
+  font.main = 1,
+  gap.axis = -0.2,
+  gap.lab = 0.5,
+  grid = FALSE,
+  lab = c(10, 10, 7),
+  tcl = 0.2
+))
+
+theme_void = modifyList(theme_dynamic, list(
+  tinytheme = "void",
+  facet.bg = NULL,
+  facet.border = NA,
+  font.main = 1,
+  grid = FALSE,
+  palette.qualitative = "Tableau 10",
+  palette.sequential = "ag_Sunset",
+  xaxt = "none",
+  yaxt = "none"
 ))

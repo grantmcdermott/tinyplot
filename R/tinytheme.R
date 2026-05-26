@@ -485,6 +485,7 @@ theme_ipsum = modifyList(theme_minimal, list(
   cex.lab = 0.8,
   font.main = 2,
   font.sub = 1,
+  font.cap = 3,
   gap.axis = 0,
   gap.lab = 0.7,
   grid = "xy",

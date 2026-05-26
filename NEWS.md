@@ -49,6 +49,13 @@ visualizations.
     replacing the guesswork of manually combining `mar`, `mgp`, and `tcl`
     values. (#590)
 
+- **Theme refinements**. The `"tufte"` and `"void"` themes are now dynamic
+  (responsive margins). The `"ipsum"` theme has been overhauled (bold title, no
+  ticks, fine grid, custom palette); the original variant is preserved as
+  `"ipsum2"`. The `"bw"` and `"classic"` themes now use smaller axis text and
+  tighter spacing to better match their ggplot2 counterparts.
+  (#595 @grantmcdermott)
+
 ### New features
 
 - New `ljust` parameter for controlling legend title and label justification.
@@ -80,6 +87,9 @@ visualizations.
   dynamic themes (since separation from `sub` is guaranteed). Appearance is
   customizable via `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`,
   `font.cap`, and `line.cap`. (#592 @grantmcdermott)
+- New themes: `"socviz"`, `"broadsheet"`, `"nber"`, and `"web"`, targeting
+  academic social science, newspaper, NBER working paper, and web-style (e.g.,
+  FiveThirtyEight) aesthetics respectively. (#595 @grantmcdermott)
 
 ### Bug fixes
 

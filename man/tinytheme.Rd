@@ -6,8 +6,8 @@
 \usage{
 tinytheme(
   theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "classic", "minimal",
-    "ipsum", "dark", "socviz", "broadsheet", "nber", "web", "ridge", "ridge2", "tufte",
-    "void"),
+    "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber", "web", "ridge", "ridge2",
+    "tufte", "void"),
   ...
 )
 }
@@ -33,6 +33,7 @@ dynamic plots are marked with an asterisk (*) below.
 \item \code{"minimal"} (*): removes the plot frame (box) from \code{"bw"}, as well as the background for facet titles. Inspired by the \strong{ggplot2} theme of the same name.
 \itemize{
 \item \code{"ipsum"} (*): builds on \code{"minimal"} with bold titles, no ticks, fine grid, edge-aligned axis titles, and a custom muted palette. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
+\item \code{"ipsum2"} (*): a lighter variant of \code{"ipsum"} that retains the original italic subtitle and edge-aligned axis titles, but without the additional spacing and palette changes.
 \item \code{"dark"} (*): similar to \code{"minimal"}, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
 \item \code{"socviz"} (*): builds on \code{"minimal"} with L-shaped axes, very light grid lines, and larger axis text. Inspired by Kieran Healy's \strong{socviz} package theme for \strong{ggplot2}.
 }

@@ -23,6 +23,7 @@
 #'     - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid fine grid lines, smaller axis text, tighter axis spacing, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
 #'       - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name.
 #'         - `"ipsum"` (*): builds on `"minimal"` with bold titles, no ticks, fine grid, edge-aligned axis titles, and a custom muted palette. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**.
+#'         - `"ipsum2"` (*): a lighter variant of `"ipsum"` that retains the original italic subtitle and edge-aligned axis titles, but without the additional spacing and palette changes.
 #'         - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
 #'         - `"socviz"` (*): builds on `"minimal"` with L-shaped axes, very light grid lines, and larger axis text. Inspired by Kieran Healy's **socviz** package theme for **ggplot2**.
 #'     - `"broadsheet"` (*): a publication/newspaper style with only horizontal grid lines, no frame, short x-axis ticks, and muted secondary text (subtitle, caption). Compact axis spacing.
@@ -180,7 +181,7 @@ tinytheme = function(
     theme = c(
       "default", "basic", "dynamic",
       "clean", "clean2", "bw", "classic",
-      "minimal", "ipsum", "dark",
+      "minimal", "ipsum", "ipsum2", "dark",
       "socviz", "broadsheet", "nber", "web",
       "ridge", "ridge2",
       "tufte", "void"
@@ -199,7 +200,7 @@ tinytheme = function(
     c(
       "default",
       sort(c("basic", "broadsheet", "bw", "classic", "clean", "clean2", "dark",
-             "dynamic", "ipsum", "minimal", "nber", "ridge", "ridge2",
+             "dynamic", "ipsum", "ipsum2", "minimal", "nber", "ridge", "ridge2",
              "socviz", "tufte", "void", "web"))
     )
   )
@@ -215,6 +216,7 @@ tinytheme = function(
     "dark" = theme_dark,
     "dynamic" = theme_dynamic,
     "ipsum" = theme_ipsum,
+    "ipsum2" = theme_ipsum2,
     "minimal" = theme_minimal,
     "nber" = theme_nber,
     "ridge" = theme_ridge,
@@ -489,6 +491,14 @@ theme_ipsum = modifyList(theme_minimal, list(
   palette.qualitative = c("#D18975", "#8FD175", "#3F2D54", "#75B8D1",
                           "#2D543D", "#C9D175", "#D1AB75", "#D175B8", "#758BD1"),
   tcl = 0
+))
+
+theme_ipsum2 = modifyList(theme_minimal, list(
+  tinytheme = "ipsum2",
+  bty = "n",
+  font.sub = 3,
+  adj.ylab = 1,
+  adj.xlab = 1
 ))
 
 theme_dark = modifyList(theme_minimal, list(

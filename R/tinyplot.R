@@ -1094,6 +1094,8 @@ tinyplot.default = function(
     # block runs before that. Pass .cex_axis to strwidth so measurements
     # reflect the intended text size (par("cex.axis") isn't set yet either).
     .whtsbp = c(0, 0, 0, 0)
+    .whtsbp_y_raw = 0
+    .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
     if (.las %in% 1:2) {
       if (type == "ridge") {
@@ -1106,16 +1108,16 @@ tinyplot.default = function(
         yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
       }
       if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      whtsbp_y = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") -
-                 grconvertX(0, from = "nfc", to = "lines") - 1
-      if (is.finite(whtsbp_y) && whtsbp_y > 0) .whtsbp[2] = whtsbp_y
+      .whtsbp_y_raw = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") -
+                      grconvertX(0, from = "nfc", to = "lines") - 0.5
+      if (is.finite(.whtsbp_y_raw)) .whtsbp[2] = .whtsbp_y_raw
     }
     if (.las %in% 2:3) {
       xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      whtsbp_x = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") - 1
-      if (is.finite(whtsbp_x) && whtsbp_x > 0) .whtsbp[1] = whtsbp_x
+      .whtsbp_x_raw = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") - 0.5
+      if (is.finite(.whtsbp_x_raw)) .whtsbp[1] = .whtsbp_x_raw
     }
 
     # Under facets, per-facet tick labels render smaller (scaled by
@@ -1123,7 +1125,11 @@ tinyplot.default = function(
     # — needs the same scaling to match the actual rendered margin used by
     # draw_facet_window. Without this, draw_title's mar reserves too much
     # space on the LHS and anchors the title too far right.
-    if (cex_fct_adj != 1) .whtsbp = .whtsbp * cex_fct_adj
+    if (cex_fct_adj != 1) {
+      .whtsbp = .whtsbp * cex_fct_adj
+      .whtsbp_y_raw = .whtsbp_y_raw * cex_fct_adj
+      .whtsbp_x_raw = .whtsbp_x_raw * cex_fct_adj
+    }
 
     dynmar_computed = .theme_mar + .dyn
     par(mar = dynmar_computed + .whtsbp)
@@ -1223,8 +1229,8 @@ tinyplot.default = function(
     }
 
     draw_title(main, sub, cap, xlab, ylab, legend, legend_args, opar,
-               xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
-               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] - .ymgp_shift - .ylab_cex_shift else 0)
+               xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
+               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0)
   }
 
 

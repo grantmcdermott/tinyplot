@@ -239,7 +239,8 @@ draw_facet_window = function(
         yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
       } else {
         # yaxl = axTicks(2)
-        yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
+        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }
       if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
       # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 1
@@ -249,7 +250,8 @@ draw_facet_window = function(
     if (par("las") %in% 2:3) {
       # extra whitespace bump on the x axis
       # xaxl = axTicks(1)
-      xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
+      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
+      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
       whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 0.5

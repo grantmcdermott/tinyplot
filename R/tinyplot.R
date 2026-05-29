@@ -1105,7 +1105,8 @@ tinyplot.default = function(
       } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
         yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs
       } else {
-        yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
+        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }
       if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
       .whtsbp_y_raw = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") -
@@ -1113,7 +1114,8 @@ tinyplot.default = function(
       if (is.finite(.whtsbp_y_raw)) .whtsbp[2] = .whtsbp_y_raw
     }
     if (.las %in% 2:3) {
-      xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
+      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
+      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
       .whtsbp_x_raw = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") - 0.5

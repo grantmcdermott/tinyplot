@@ -6,5 +6,6 @@ tinyplot(
   palette = "dark",
   pch = 16,
   grid = TRUE,
-  frame = FALSE
+  frame = FALSE,
+  main = "A more exciting scatterplot"
 )

@@ -1,5 +1,4 @@
 library("tinyplot")
-tinytheme("ridge2")
 
 aq = transform(
   airquality,

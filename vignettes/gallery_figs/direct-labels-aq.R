@@ -9,5 +9,6 @@ tinyplot(
     type = "l",
     legend = "direct",
     theme = "clean2",
-    main = "Sometimes, direct legend labels are better"
+    main = "Temperatures by month",
+    sub = "Sometimes, direct legend labels are better"
 )

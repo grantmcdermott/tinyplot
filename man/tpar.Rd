@@ -78,6 +78,8 @@ you should rather use \code{par()} instead.
 \item \code{file.res}: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the \code{tinyplot(..., file = X)} argument. Defaults to \code{300}.
 \item \code{file.width}: Numeric specifying the width (in inches) of any plot that is written to disk using the \code{tinyplot(..., file = X)} argument. Defaults to \code{7}.
 \item \code{fmar}: A numeric vector of form \code{c(b,l,t,r)} for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to \code{c(1,1,1,1)}. If more than three facets are detected, the \code{fmar} parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the \code{cex} expansion logic of base graphics.
+\item \code{gap.main}: Numeric giving the gap (in margin lines) from the main title baseline to the element below it (plot box when no subtitle; subtitle top when subtitle is present). Only used when \code{dynmar = TRUE}. Defaults to \code{0.7}.
+\item \code{gap.sub}: Numeric giving the gap (in margin lines) from the subtitle baseline to the plot box. Only used when \code{dynmar = TRUE} and \code{side.sub = 3}. Defaults to \code{0.7}.
 \item \code{grid.col}: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to \code{"lightgray"}.
 \item \code{grid.lty}: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to \code{"dotted"}.
 \item \code{grid.lwd}: Non-negative numeric giving the line width of the panel grid lines. Defaults to \code{1}.

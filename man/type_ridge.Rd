@@ -58,7 +58,7 @@ the levels of the y-variable should be plotted.}
     \code{"nrd0"}, has remained the default for historical and
     compatibility reasons, rather than as a general recommendation,
     where e.g., \code{"SJ"} would rather fit, see also
-    Venables and Ripley (2002).
+    {\if{html}{\cite{}\out{<a href="#reference+density.Rd+R+3AVenables+2BRipley+3A2002" class="citation">}}Venables and Ripley (2002)\if{html}{\out{</a>}}}.
 
     The specified (or computed) value of \code{bw} is multiplied by
     \code{adjust}.

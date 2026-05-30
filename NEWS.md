@@ -101,6 +101,10 @@ visualizations.
 - New themes: `"socviz"`, `"broadsheet"`, `"nber"`, and `"web"`, targeting
   academic social science, newspaper, NBER working paper, and web-style (e.g.,
   FiveThirtyEight) aesthetics respectively. (#595 @grantmcdermott)
+- New `type_chull()` (equivalently, `type = "chull"`) for drawing convex hulls
+  around grouped points. Uses `grDevices::chull()` under the hood and delegates
+  drawing to `draw_polygon()`. Works well as a layer on top of points, e.g.
+  `plt_add(type = "chull", fill = 0.2)`. (#600 @grantmcdermott)
 
 ### Bug fixes
 

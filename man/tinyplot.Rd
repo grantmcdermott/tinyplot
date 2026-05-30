@@ -223,6 +223,7 @@ type of plot desired.
 \itemize{
 \item \code{"barplot"} / \code{\link[=type_barplot]{type_barplot()}}: Creates a bar plot.
 \item \code{"boxplot"} / \code{\link[=type_boxplot]{type_boxplot()}}: Creates a box-and-whisker plot.
+\item \code{"chull"} / \code{\link[=type_chull]{type_chull()}}: Draws convex hull(s) around grouped points.
 \item \code{"density"} / \code{\link[=type_density]{type_density()}}: Plots the density estimate of a variable.
 \item \code{"histogram"} / \code{\link[=type_histogram]{type_histogram()}}: Creates a histogram of a single variable.
 \item \code{"jitter"} / \code{\link[=type_jitter]{type_jitter()}}: Jittered points.

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -75,10 +75,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-528f776c55afa4fb03ede79057f09060.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-859f1f58819d33154c515ab64f2b70cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -571,7 +571,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">tinytheme(
   theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "classic", "minimal",
-    "ipsum", "dark", "ridge", "ridge2", "tufte", "void"),
+    "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber", "web", "ridge", "ridge2",
+    "tufte", "void"),
   ...
 )
 </code></pre>
@@ -594,39 +595,66 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
 <li>
 <p><code>“dynamic”</code> (*): builds on <code>“basic”</code> by enabling dynamic margin adjustment with tighter default margins, horizontal axis labels, and the subtitle moved above the plotting area. Turns off the panel grid. Provides the foundation for all other dynamic themes and is a good starting point for users who wish to build custom dynamic themes.</p>
-</li>
+<ul>
 <li>
 <p><code>“clean”</code> (*): builds on <code>“dynamic”</code> by re-enabling the panel background grid and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors).</p>
-</li>
+<ul>
 <li>
 <p><code>“clean2”</code> (*): removes the plot frame (box) from <code>“clean”</code>.</p>
 </li>
-<li>
-<p><code>“classic”</code> (*): builds on <code>“dynamic”</code> with L-shaped axes (removing the top and right-hand edges of the plot frame). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
+</ul>
 </li>
 <li>
-<p><code>“bw”</code> (*): similar to <code>“clean”</code>, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
+<p><code>“classic”</code> (*): builds on <code>“dynamic”</code> with L-shaped axes (removing the top and right-hand edges of the plot frame), smaller axis text, tighter axis spacing, and the "Okabe-Ito" palette as a default for discrete colors. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
 </li>
+<li>
+<p><code>“bw”</code> (*): similar to <code>“clean”</code>, except uses thinner lines for the plot frame (box), solid fine grid lines, smaller axis text, tighter axis spacing, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
+<ul>
 <li>
 <p><code>“minimal”</code> (*): removes the plot frame (box) from <code>“bw”</code>, as well as the background for facet titles. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
+<ul>
+<li>
+<p><code>“ipsum”</code> (*): builds on <code>“minimal”</code> with bold titles, no ticks, fine grid, edge-aligned axis titles, and a custom muted palette. Inspired by the <strong>hrbrthemes</strong> theme of the same name for <strong>ggplot2</strong>.</p>
 </li>
 <li>
-<p><code>“ipsum”</code> (*): similar to <code>“minimal”</code>, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the <strong>hrbrthemes</strong> theme of the same name for <strong>ggplot2</strong>.</p>
+<p><code>“ipsum2”</code> (*): a lighter variant of <code>“ipsum”</code> that retains the original italic subtitle and edge-aligned axis titles, but without the additional spacing and palette changes.</p>
 </li>
 <li>
 <p><code>“dark”</code> (*): similar to <code>“minimal”</code>, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.</p>
 </li>
 <li>
-<p><code>“ridge”</code> (*): a specialized theme for ridge plots (see <code>type_ridge()</code>). Builds off of <code>“clean”</code>, but adds ridge-specific tweaks (e.g.&nbsp;default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.</p>
+<p><code>“socviz”</code> (*): builds on <code>“minimal”</code> with L-shaped axes, very light grid lines, and larger axis text. Inspired by Kieran Healy’s <strong>socviz</strong> package theme for <strong>ggplot2</strong>.</p>
 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>“broadsheet”</code> (*): a publication/newspaper style with only horizontal grid lines, no frame, short x-axis ticks, and muted secondary text (subtitle, caption). Compact axis spacing.</p>
+<ul>
+<li>
+<p><code>“nber”</code> (*): builds on <code>“broadsheet”</code> for an NBER working paper style with a light blue-grey background, grey text, italic axis titles and captions, and a blue-grey discrete palette.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>“web”</code> (*): a FiveThirtyEight-inspired style with a light grey device background, no frame or axis lines, and bold grid lines. Suited to web/online publication.</p>
+</li>
+<li>
+<p><code>“tufte”</code> (*): floating axes and minimalist plot artifacts in the style of Edward Tufte.</p>
+</li>
+<li>
+<p><code>“void”</code> (*): switches off all axes, titles, legends, etc.</p>
+</li>
+<li>
+<p><code>“ridge”</code> (*): a specialized theme for ridge plots (see <code>type_ridge()</code>). Builds off of <code>“clean”</code>, but adds ridge-specific tweaks (e.g.&nbsp;default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.</p>
+<ul>
 <li>
 <p><code>“ridge2”</code> (*): removes the plot frame (box) from <code>“ridge”</code>, but retains the x-axis line. Again, not recommended for non-ridge plots.</p>
 </li>
-<li>
-<p><code>“tufte”</code>: floating axes and minimalist plot artifacts in the style of Edward Tufte.</p>
+</ul>
 </li>
-<li>
-<p><code>“void”</code>: switches off all axes, titles, legends, etc.</p>
+</ul>
 </li>
 </ul>
 </td>
@@ -926,6 +954,41 @@ tinytheme("clean", gap.axis = 0.5)
 <div>
 <figure class="figure">
 <p><img src="tinytheme_files/figure-html/unnamed-chunk-1-24.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinytheme_files/figure-html/unnamed-chunk-1-25.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinytheme_files/figure-html/unnamed-chunk-1-26.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinytheme_files/figure-html/unnamed-chunk-1-27.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinytheme_files/figure-html/unnamed-chunk-1-28.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinytheme_files/figure-html/unnamed-chunk-1-29.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

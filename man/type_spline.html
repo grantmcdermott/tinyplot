@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -75,10 +75,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-528f776c55afa4fb03ede79057f09060.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-859f1f58819d33154c515ab64f2b70cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -653,7 +653,7 @@ handling of tied <code>x</code> values. The string <code>“ordered”</code> or
 </section>
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>The inputs can contain missing values which are deleted, so at least one complete <code>(x, y)</code> pair is required. If <code>method = “fmm”</code>, the spline used is that of Forsythe, Malcolm and Moler (an exact cubic is fitted through the four points at each end of the data, and this is used to determine the end conditions). Natural splines are used when <code>method = “natural”</code>, and periodic splines when <code>method = “periodic”</code>.</p>
+<p>The inputs can contain missing values which are deleted, so at least one complete <code>(x, y)</code> pair is required. If <code>method = “fmm”</code>, the spline used is that of <a href="#reference+splinefun.Rd+R+3AForsythe+2BMalcolm+2BMoler+3A1977" class="citation">Forsythe, Malcolm, and Moler (1977)</a> (an exact cubic is fitted through the four points at each end of the data, and this is used to determine the end conditions). Natural splines are used when <code>method = “natural”</code>, and periodic splines when <code>method = “periodic”</code>.</p>
 <p>The method <code>“monoH.FC”</code> computes a <em>monotone</em> Hermite spline according to the method of Fritsch and Carlson. It does so by determining slopes such that the Hermite spline, determined by <span class="math inline">\((x_i,y_i,m_i)\)</span>, is monotone (increasing or decreasing) <b>iff</b> the data are.</p>
 <p>Method <code>“hyman”</code> computes a <em>monotone</em> cubic spline using Hyman filtering of an <code>method = “fmm”</code> fit for strictly monotonic inputs.</p>
 <p>These interpolation splines can also be used for extrapolation, that is prediction at points outside the range of <code>x</code>. Extrapolation makes little sense for <code>method = “fmm”</code>; for natural splines it is linear using the slope of the interpolating curve at the nearest data point.</p>

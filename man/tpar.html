@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -75,10 +75,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-528f776c55afa4fb03ede79057f09060.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-859f1f58819d33154c515ab64f2b70cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -662,6 +662,12 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 </li>
 <li>
 <p><code>fmar</code>: A numeric vector of form <code>c(b,l,t,r)</code> for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to <code>c(1,1,1,1)</code>. If more than three facets are detected, the <code>fmar</code> parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the <code>cex</code> expansion logic of base graphics.</p>
+</li>
+<li>
+<p><code>gap.main</code>: Numeric giving the gap (in margin lines) from the main title baseline to the element below it (plot box when no subtitle; subtitle top when subtitle is present). Only used when <code>dynmar = TRUE</code>. Defaults to <code>0.7</code>.</p>
+</li>
+<li>
+<p><code>gap.sub</code>: Numeric giving the gap (in margin lines) from the subtitle baseline to the plot box. Only used when <code>dynmar = TRUE</code> and <code>side.sub = 3</code>. Defaults to <code>0.7</code>.</p>
 </li>
 <li>
 <p><code>grid.col</code>: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to <code>“lightgray”</code>.</p>

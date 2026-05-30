@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Gallery – tinyplot</title>
+<title>type_chull – tinyplot</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -44,9 +79,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-859f1f58819d33154c515ab64f2b70cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
-<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -178,245 +210,88 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#convex-hull-plot-type" id="toc-convex-hull-plot-type" class="nav-link active" data-scroll-target="#convex-hull-plot-type">Convex hull plot type</a>
+  <ul class="collapse">
+  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
+  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Gallery</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
+<section id="convex-hull-plot-type" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="convex-hull-plot-type">Convex hull plot type</h2>
+<section id="description" class="level3">
+<h3 class="anchored" data-anchor-id="description">Description</h3>
+<p>Type function for drawing convex hulls around grouped points. Uses <code>chull</code> to compute the convex hull of each group and draws the result as a polygon.</p>
+</section>
+<section id="usage" class="level3">
+<h3 class="anchored" data-anchor-id="usage">Usage</h3>
+<pre><code class="language-R">type_chull(density = NULL, angle = 45)
+</code></pre>
+</section>
+<section id="arguments" class="level3">
+<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
+<table role="presentation">
+<tbody><tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="density">density</code>
+</td>
+<td>
+the density of shading lines, in lines per inch. The default value of <code>NULL</code> means that no shading lines are drawn. A zero value of <code>density</code> means no shading nor filling whereas negative values and <code>NA</code> suppress shading (and so allow color filling).
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="angle">angle</code>
+</td>
+<td>
+the slope of shading lines, given as an angle in degrees (counter-clockwise).
+</td>
+</tr>
+</tbody></table>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
-<style type="text/css">
-.gslide-desc {
-    text-align: center;
-  font-size: 1.1rem !important;
-}
-div.gslide-description, .gslide-desc {
-    background-color: #e0e0e0 !important;
-}
-</style>
-</div>
-<p>Click on a plot to get the link to its code.</p>
-<div class="quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># "chull" type convenience character string</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris, <span class="at">type =</span> <span class="st">"chull"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-1;"><img src="gallery_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><img src="type_chull_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># layer filled convex hull(s) on top of points</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris, <span class="at">theme =</span> <span class="st">"basic"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"chull"</span>, <span class="at">fill =</span> <span class="fl">0.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-2;"><img src="gallery_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><img src="type_chull_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
-</div>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-3;"><img src="gallery_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-4;"><img src="gallery_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-6-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-5;"><img src="gallery_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-6;"><img src="gallery_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-7;"><img src="gallery_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-9-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-8;"><img src="gallery_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-9;"><img src="gallery_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-11-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-10;"><img src="gallery_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-11;"><img src="gallery_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-13-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-12;"><img src="gallery_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-13;"><img src="gallery_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-15-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-14;"><img src="gallery_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="gallery_files/figure-html/unnamed-chunk-16-1.png" class="lightbox" data-gallery="r-graph" data-glightbox="description: .lightbox-desc-15;"><img src="gallery_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></a></p>
-</figure>
-</div>
-</div>
 </div>
 </div>
 </div>
 
 
-<div class="hidden" aria-hidden="true">
-<div class="glightbox-desc lightbox-desc-1">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/points-by-iris.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-2">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/points-by-facet-iris.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-3">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/hist-by-iris.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-4">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/bubble-penguins.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-5">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spineplot-titanic.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-6">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ridge-aq.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-7">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-points-rug-faithful.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-8">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/errorbar-mtcars.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-9">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/polygons.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-10">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/rect-by.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-11">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/boxplot-by-penguins.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-12">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-text-mtcars.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-13">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-ablines.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-14">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/density-part-shading.R" target="_blank">Code</a></p>
-</div>
-<div class="glightbox-desc lightbox-desc-15">
-<p><a href="https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/direct-labels-aq.R" target="_blank">Code</a></p>
-</div>
-</div>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -820,38 +695,6 @@ div.gslide-description, .gslide-desc {
   });
   </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
-(function() {
-  let previousOnload = window.onload;
-  window.onload = () => {
-    if (previousOnload) {
-      previousOnload();
-    }
-    lightboxQuarto.on('slide_before_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      const href = trigger.getAttribute('href');
-      if (href !== null) {
-        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-        if (imgEl !== null) {
-          const srcAttr = imgEl.getAttribute("src");
-          if (srcAttr && srcAttr.startsWith("data:")) {
-            slideConfig.href = srcAttr;
-          }
-        }
-      } 
-    });
-  
-    lightboxQuarto.on('slide_after_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(slideNode);
-      }
-    });
-  
-  };
-  
-})();
-          </script>
 
 
 

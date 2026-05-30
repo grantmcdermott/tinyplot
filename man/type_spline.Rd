@@ -43,7 +43,7 @@ for default argument values.
 The inputs can contain missing values which are deleted, so at least
   one complete \code{(x, y)} pair is required.
   If \code{method = "fmm"}, the spline used is that of
-  Forsythe, Malcolm and Moler
+  {\if{html}{\cite{}\out{<a href="#reference+splinefun.Rd+R+3AForsythe+2BMalcolm+2BMoler+3A1977" class="citation">}}Forsythe, Malcolm, and Moler (1977)\if{html}{\out{</a>}}}
   (an exact cubic is fitted through the four points at each
   end of the data, and this is used to determine the end conditions).
   Natural splines are used when \code{method = "natural"}, and periodic

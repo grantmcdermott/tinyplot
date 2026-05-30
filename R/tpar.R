@@ -67,6 +67,8 @@
 #' * `file.res`: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the `tinyplot(..., file = X)` argument. Defaults to `300`.
 #' * `file.width`: Numeric specifying the width (in inches) of any plot that is written to disk using the `tinyplot(..., file = X)` argument. Defaults to `7`.
 #' * `fmar`: A numeric vector of form `c(b,l,t,r)` for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to `c(1,1,1,1)`. If more than three facets are detected, the `fmar` parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the `cex` expansion logic of base graphics.
+#' * `gap.main`: Numeric giving the gap (in margin lines) from the main title baseline to the element below it (plot box when no subtitle; subtitle top when subtitle is present). Only used when `dynmar = TRUE`. Defaults to `0.7`.
+#' * `gap.sub`: Numeric giving the gap (in margin lines) from the subtitle baseline to the plot box. Only used when `dynmar = TRUE` and `side.sub = 3`. Defaults to `0.7`.
 #' * `grid.col`: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to `"lightgray"`.
 #' * `grid.lty`: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to `"dotted"`.
 #' * `grid.lwd`: Non-negative numeric giving the line width of the panel grid lines. Defaults to `1`.
@@ -239,6 +241,8 @@ known_tpar = c(
     "font.cap",
     "gap.axis",
     "gap.lab",
+    "gap.main",
+    "gap.sub",
     "facet.bg",
     "facet.border",
     "facet.cex",

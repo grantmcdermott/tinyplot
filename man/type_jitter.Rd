@@ -7,33 +7,30 @@
 type_jitter(factor = 1, amount = NULL)
 }
 \arguments{
-\item{factor}{numeric.}
+\item{factor}{numeric; used in calculation of \code{amount} when
+   the provided \code{amount} is 0 or \code{NULL}.}
 
-\item{amount}{numeric; if positive, used as \emph{amount} (see below),
-    otherwise, if \code{= 0} the default is \code{factor * z/50}.
-
-    Default (\code{NULL}): \code{factor * d/5} where \code{d} is about
-    the smallest difference between \code{x} values.}
+\item{amount}{number or \code{NULL}; when positive, specifies
+    the amount of jitter; see Details, also for other cases.}
 }
 \description{
 Type function for plotting jittered points.
 Arguments are passed to \code{\link[base]{jitter}}.
 }
 \details{
-The result, say \code{r}, is \code{r <- x + runif(n, -a, a)}
-  where \code{n <- length(x)} and \code{a} is the \code{amount}
-  argument (if specified).
+The result of \code{r <-  x + amount * runif(n, -1, 1)}
+  where \code{n <- length(x)}.
 
-  Let \code{z <- max(x) - min(x)} (assuming the usual case).
-  The amount \code{a} to be added is either provided as \emph{positive}
-  argument \code{amount} or otherwise computed from \code{z}, as
-  follows:
+  When \code{amount} is \code{NULL} (the default)
+  \code{amount <- factor * d/5} where \emph{d} is about the smallest
+  difference between adjacent unique (up to fuzz) \code{x} values.
 
-  If \code{amount == 0}, we set \code{a <- factor * z/50} (same as S).
+  If \code{amount == 0}, \code{amount <- factor * (max(x) - min(x))/50},
+  (using only finite \code{x} values), which is the same as in S and the
+  references.
+  In the above cases, the final \code{amount} is always ensured to be positive.
 
-  If \code{amount} is \code{NULL} (\emph{default}), we set
-  \code{a <- factor * d/5} where \emph{d} is the smallest
-  difference between adjacent unique (apart from fuzz) \code{x} values.
+  The short \code{jitter()} function is itself a succinct definition.
 }
 \examples{
 # "jitter" type convenience string

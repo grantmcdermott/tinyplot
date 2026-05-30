@@ -1031,7 +1031,7 @@ tinyplot.default = function(
       get(paste0("theme_", .tinytheme), envir = asNamespace("tinyplot"))
     } else NULL
     .theme_mar = if (!is.null(.theme_def[["mar"]])) .theme_def[["mar"]] else par("mar")
-    .tpars = if (!is.null(.theme_def)) .theme_def else tpar()
+    .tpars = if (!is.null(.theme_def)) modifyList(.theme_def, tpar()) else tpar()
     # Merge pending before.plot.new hook values into .tpars so user
     # overrides passed via tinytheme(..., las = 2) (or tpar(...)) are
     # visible to dynmar_side()/whtsbp before plot.new fires. Without this,

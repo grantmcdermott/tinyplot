@@ -23,28 +23,29 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
   if (isTRUE(adj_title)) {
     line_main = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1
   } else if (isTRUE(get_tpar("dynmar", FALSE))) {
-    # Anchor main at a fixed line above the plot box so it stays in the same
-    # position regardless of whether sub is also present (the sub branch
-    # below adds a +1.2 shift on top of this baseline when needed).
-    line_main = get_tpar("mgp")[3] + 0.7 - 0.1
+    gap_main = get_tpar("gap.main", 0.7)
+    line_main = get_tpar("mgp")[3] + gap_main - 0.1
   } else {
     line_main = NULL
   }
 
   # When sub sits on top (side.sub == 3), push main up by the sub block
-  # height so main is above sub rather than overlapping it. Treat NA/empty
-  # sub as absent so main stays at its normal position. First sub row gets
-  # a small (0.2-line) extra bump for visual breathing room.
+  # height so main is above sub rather than overlapping it.
   sub_lines = text_line_count(sub)
   if (sub_lines > 0L && isTRUE(get_tpar("side.sub", 1) == 3)) {
-    if (is.null(line_main)) line_main = get_tpar("mgp")[3] + 0.7 - 0.1
+    if (is.null(line_main)) {
+      gap_main = get_tpar("gap.main", 0.7)
+      line_main = get_tpar("mgp")[3] + gap_main - 0.1
+    }
     cex_sub = get_tpar("cex.sub", 1.2)
-    line_main = line_main + (cex_sub + 0.2) + (sub_lines - 1) * cex_sub
+    gap_sub = get_tpar("gap.sub", 0.7)
+    line_main = line_main + gap_sub + (sub_lines - 1 + 0.6) * cex_sub
   }
 
   if (!is.null(sub)) {
     if (isTRUE(get_tpar("side.sub", 1) == 3)) {
-      line_sub = get_tpar("line.sub", 0.7)
+      gap_sub = get_tpar("gap.sub", 0.7)
+      line_sub = get_tpar("line.sub", gap_sub - 0.1)
     } else {
       line_sub = get_tpar("line.sub", 4)
     }

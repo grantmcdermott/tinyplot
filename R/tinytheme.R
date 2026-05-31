@@ -325,6 +325,7 @@ theme_default = list(
   # palette.qualitative = "R4",
   # palette.sequential = "Viridis",
   pch = par("pch"), # 1,
+  ribbon.alpha = 0.2,
   side.sub = 1,
   tck = NA,
   tcl = par("tcl"), # -0.5
@@ -480,7 +481,8 @@ theme_dark = modifyList(theme_minimal, list(
   # facet.bg = "gray20",
   grid.col = "#6D6D6D",
   palette.qualitative = "Set 2",
-  palette.sequential = "Sunset"
+  palette.sequential = "Sunset",
+  ribbon.alpha = 0.5
 ))
 
 # derivatives of clean/clean2

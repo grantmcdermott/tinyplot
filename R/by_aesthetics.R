@@ -301,7 +301,11 @@ by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustc
     return(cols)
   }
 
-  pal_theme = get_tpar("palette.qualitative", default = NULL)
+  pal_theme = if (ordered || gradient) {
+    get_tpar("palette.sequential", default = NULL)  
+  } else {
+    get_tpar("palette.qualitative", default = NULL)
+  }
   cols = resolve_palette_colors(
     palette = palette,
     theme_palette = pal_theme,

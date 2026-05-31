@@ -327,9 +327,16 @@ by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps
     bg = "by"
   }
   if (!is.null(bg) && length(bg) == 1 && is_by_keyword(bg)) {
+    ordered = if (is.null(by_ordered)) FALSE else by_ordered
+    gradient = if (is.null(by_continuous)) FALSE else by_continuous
+    pal_theme = if (ordered || gradient) {
+      get_tpar("palette.sequential", default = NULL)  
+    } else {
+      get_tpar("palette.qualitative", default = NULL)
+    }
     bg = resolve_palette_colors(
       palette = palette,
-      theme_palette = get_tpar("palette.qualitative", default = NULL),
+      theme_palette = pal_theme,
       ngrps = ngrps,
       ordered = if (is.null(by_ordered)) FALSE else by_ordered,
       gradient = if (is.null(by_continuous)) FALSE else by_continuous,

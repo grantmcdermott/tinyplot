@@ -156,7 +156,7 @@ resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradie
   # Pick theme palette if no explicit palette provided
   if (is.null(palette_choice) && !is.null(theme_palette)) {
     palette_choice = theme_palette
-    if (length(theme_palette) == 1) {
+    if (is.character(theme_palette) && length(theme_palette) == 1) {
       # Check if theme palette needs to switch to sequential
       use_sequential = FALSE
       idx = match_palette_name(theme_palette, palette.pals())
@@ -301,7 +301,11 @@ by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustc
     return(cols)
   }
 
-  pal_theme = get_tpar("palette.qualitative", default = NULL)
+  pal_theme = if (ordered || gradient) {
+    get_tpar("palette.sequential", default = NULL)  
+  } else {
+    get_tpar("palette.qualitative", default = NULL)
+  }
   cols = resolve_palette_colors(
     palette = palette,
     theme_palette = pal_theme,
@@ -323,9 +327,16 @@ by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps
     bg = "by"
   }
   if (!is.null(bg) && length(bg) == 1 && is_by_keyword(bg)) {
+    ordered = if (is.null(by_ordered)) FALSE else by_ordered
+    gradient = if (is.null(by_continuous)) FALSE else by_continuous
+    pal_theme = if (ordered || gradient) {
+      get_tpar("palette.sequential", default = NULL)  
+    } else {
+      get_tpar("palette.qualitative", default = NULL)
+    }
     bg = resolve_palette_colors(
       palette = palette,
-      theme_palette = get_tpar("palette.qualitative", default = NULL),
+      theme_palette = pal_theme,
       ngrps = ngrps,
       ordered = if (is.null(by_ordered)) FALSE else by_ordered,
       gradient = if (is.null(by_continuous)) FALSE else by_continuous,

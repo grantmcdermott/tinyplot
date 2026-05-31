@@ -157,6 +157,29 @@ expect_snapshot_plot(f, label = "tinytheme_dynamic_clean_spineplot")
 tinytheme()
 
 
+## palette functions (#593)
+
+pal = colorRampPalette(c("darkblue", "deeppink", "cornsilk"))
+
+f = function () {
+  tinytheme("clean", palette.sequential = pal, pch = 21)
+  tinyplot(1:9, by = 1:9, cex = 3, lwd = 3, bg = "by")
+}
+expect_snapshot_plot(f, label = "tinytheme_palette_function_sequential")
+
+f = function () {
+  tinytheme("clean", palette.qualitative = pal, pch = 21)
+  tinyplot(1:9, by = factor(1:9), cex = 3, lwd = 3, bg = "by")
+}
+expect_snapshot_plot(f, label = "tinytheme_palette_function_qualitative")
+
+
+#
+## reset
+
+tinytheme()
+
+
 #
 ## ephemeral theme
 
@@ -187,3 +210,18 @@ f = function() {
   tinytheme()
 }
 expect_snapshot_plot(f, label = "tinytheme_dynmar_mar_override")
+
+## palette functions (#593)
+pal = colorRampPalette(c("darkblue", "deeppink", "cornsilk"))
+
+f = function () {
+  tinyplot(1:9, by = 1:9, cex = 3, lwd = 3, bg = "by",
+    theme = list("clean", palette.sequential = pal, pch = 21))
+}
+expect_snapshot_plot(f, label = "tinytheme_ephemeral_palette_function_sequential")
+
+f = function () {
+  tinyplot(1:9, by = factor(1:9), cex = 3, lwd = 3, bg = "by",
+    theme = list("clean", palette.qualitative = pal, pch = 21))
+}
+expect_snapshot_plot(f, label = "tinytheme_ephemeral_palette_function_qualitative")

@@ -60,9 +60,10 @@ visualizations.
 - **Theme refinements**. The `"tufte"` and `"void"` themes are now dynamic
   (responsive margins). The `"ipsum"` theme has been overhauled (bold title, no
   ticks, fine grid, custom palette); the original variant is preserved as
-  `"ipsum2"`. The `"bw"` and `"classic"` themes now use smaller axis text and
-  tighter spacing to better match their ggplot2 counterparts.
-  (#595 @grantmcdermott)
+  `"ipsum2"`. The ggplot2-inspired like `"bw"` and `"classic"` now use smaller
+  axis text and tighter spacing to better match their ggplot2 counterparts. 
+  Also, the `"dark"` theme now uses a better default `ribbon.alpha` for better
+  contrast against the black background. (#595, #603 @grantmcdermott)
 
 ### New features
 

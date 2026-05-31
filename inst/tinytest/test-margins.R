@@ -205,3 +205,32 @@ f = function() {
   tinytheme()
 }
 expect_snapshot_plot(f, label = "margins_cex_axis3_lab3")
+
+# Consistent y-title gap across label widths (#596)
+f = function() {
+  tinytheme("bw", grid = FALSE)
+  tinyplot(1, xlab = "Xx", ylab = "Yy", type = "n")
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_whtsbp_degenerate")
+
+f = function() {
+  tinytheme("bw", grid = FALSE)
+  tinyplot(1, yaxb = 1, xaxb = 1, xlab = "Xx", ylab = "Yy", type = "n")
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_whtsbp_1digit")
+
+f = function() {
+  tinytheme("bw", grid = FALSE)
+  tinyplot(10, yaxb = 10, xaxb = 1, xlab = "Xx", ylab = "Yy", type = "n")
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_whtsbp_2digit")
+
+f = function() {
+  tinytheme("bw", grid = FALSE)
+  tinyplot(100, yaxb = 100, xaxb = 1, xlab = "Xx", ylab = "Yy", type = "n")
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "margins_whtsbp_3digit")

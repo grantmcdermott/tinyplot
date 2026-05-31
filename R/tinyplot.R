@@ -113,6 +113,7 @@
 #'     - Visualizations:
 #'       - `"barplot"` / [`type_barplot()`]: Creates a bar plot.
 #'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
+#'       - `"chull"` / [`type_chull()`]: Draws convex hull(s) around grouped points.
 #'       - `"density"` / [`type_density()`]: Plots the density estimate of a variable.
 #'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.
 #'       - `"jitter"` / [`type_jitter()`]: Jittered points.
@@ -395,7 +396,7 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'
-#' @importFrom grDevices axisTicks adjustcolor cairo_pdf colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png svg xy.coords
+#' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png svg xy.coords
 #' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit setNames
@@ -861,7 +862,7 @@ tinyplot.default = function(
     # misc
     add           = add,
     by            = by,
-    cap       = cap,
+    cap           = cap,
     dodge         = NULL,
     dots          = dots,
     flip          = flip,
@@ -1031,7 +1032,7 @@ tinyplot.default = function(
       get(paste0("theme_", .tinytheme), envir = asNamespace("tinyplot"))
     } else NULL
     .theme_mar = if (!is.null(.theme_def[["mar"]])) .theme_def[["mar"]] else par("mar")
-    .tpars = if (!is.null(.theme_def)) .theme_def else tpar()
+    .tpars = if (!is.null(.theme_def)) modifyList(.theme_def, tpar()) else tpar()
     # Merge pending before.plot.new hook values into .tpars so user
     # overrides passed via tinytheme(..., las = 2) (or tpar(...)) are
     # visible to dynmar_side()/whtsbp before plot.new fires. Without this,
@@ -1094,6 +1095,8 @@ tinyplot.default = function(
     # block runs before that. Pass .cex_axis to strwidth so measurements
     # reflect the intended text size (par("cex.axis") isn't set yet either).
     .whtsbp = c(0, 0, 0, 0)
+    .whtsbp_y_raw = 0
+    .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
     if (.las %in% 1:2) {
       if (type == "ridge") {
@@ -1103,19 +1106,21 @@ tinyplot.default = function(
       } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
         yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs
       } else {
-        yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
+        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }
       if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      whtsbp_y = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") -
-                 grconvertX(0, from = "nfc", to = "lines") - 1
-      if (is.finite(whtsbp_y) && whtsbp_y > 0) .whtsbp[2] = whtsbp_y
+      .whtsbp_y_raw = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") -
+                      grconvertX(0, from = "nfc", to = "lines") - 0.5
+      if (is.finite(.whtsbp_y_raw)) .whtsbp[2] = .whtsbp_y_raw
     }
     if (.las %in% 2:3) {
-      xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
+      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
+      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      whtsbp_x = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") - 1
-      if (is.finite(whtsbp_x) && whtsbp_x > 0) .whtsbp[1] = whtsbp_x
+      .whtsbp_x_raw = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") - 0.5
+      if (is.finite(.whtsbp_x_raw)) .whtsbp[1] = .whtsbp_x_raw
     }
 
     # Under facets, per-facet tick labels render smaller (scaled by
@@ -1123,7 +1128,11 @@ tinyplot.default = function(
     # — needs the same scaling to match the actual rendered margin used by
     # draw_facet_window. Without this, draw_title's mar reserves too much
     # space on the LHS and anchors the title too far right.
-    if (cex_fct_adj != 1) .whtsbp = .whtsbp * cex_fct_adj
+    if (cex_fct_adj != 1) {
+      .whtsbp = .whtsbp * cex_fct_adj
+      .whtsbp_y_raw = .whtsbp_y_raw * cex_fct_adj
+      .whtsbp_x_raw = .whtsbp_x_raw * cex_fct_adj
+    }
 
     dynmar_computed = .theme_mar + .dyn
     par(mar = dynmar_computed + .whtsbp)
@@ -1223,8 +1232,8 @@ tinyplot.default = function(
     }
 
     draw_title(main, sub, cap, xlab, ylab, legend, legend_args, opar,
-               xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[1] else 0,
-               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp[2] - .ymgp_shift - .ylab_cex_shift else 0)
+               xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
+               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0)
   }
 
 

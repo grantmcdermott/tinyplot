@@ -67,27 +67,17 @@ dynmar_side = function(side, label, main = NULL, sub = NULL, cap = NULL,
     mlines = text_line_count(main)
     if (mlines >= 1L) {
       cex_main = get_tpar("cex.main", tpar_list = tpars, default = 1.2)
-      # 0.7 = distance (in lines) from plot box to main baseline. Matches
-      #   line_main = mgp[3] + 0.7 - 0.1 in draw_title (mgp[3] default 0).
-      #   Chosen to visually match base R's default title gap at cex.main=1.2
-      #   with par(mar=c(5.1,4.1,4.1,2.1), mgp=c(3,1,0)).
-      # 0.6 = empirical ascender fraction: the top line's visible extent
-      #   reaches ~0.6 * cex_main above its baseline. Derived from
-      #   strheight("X") / par("csi") ≈ 0.6 on standard devices.
-      mar = mar + 0.7 + (mlines - 1 + 0.6) * cex_main
+      gap_main = get_tpar("gap.main", tpar_list = tpars, default = 0.7)
+      mar = mar + gap_main + (mlines - 1 + 0.6) * cex_main
     }
   }
   slines = text_line_count(sub)
   if (slines >= 1L && side == side.sub && side %in% c(1L, 3L)) {
     cex_sub = get_tpar("cex.sub", tpar_list = tpars, default = 1.2)
-    # Sub sits between the plot box and main (when side.sub = 3).
-    # 0.2 = breathing room between sub baseline and the element above it
-    #   (plot box or main). Tuned visually to avoid crowding at default cex.
-    # 0.6 = same ascender fraction as main (see above). Applied only when
-    #   main is absent, since main's ascender already covers the top.
+    gap_sub = get_tpar("gap.sub", tpar_list = tpars, default = 0.7)
     has_main_here = side == 3L && text_line_count(main) >= 1L
     asc = if (has_main_here) 0 else 0.6 * cex_sub
-    mar = mar + (cex_sub + 0.2) + (slines - 1) * cex_sub + asc
+    mar = mar + gap_sub + (slines - 1 + 0.6) * cex_sub + asc
   }
   clines = text_line_count(cap)
   if (clines >= 1L && side == 1L) {

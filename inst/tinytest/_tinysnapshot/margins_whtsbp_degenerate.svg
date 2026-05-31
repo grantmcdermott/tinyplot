@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA='>
+    <rect x='0.00' y='0.00' width='504.00' height='504.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<text x='268.74' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='14.00px' lengthAdjust='spacingAndGlyphs'>Xx</text>
+<text transform='translate(12.96,238.32) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='14.00px' lengthAdjust='spacingAndGlyphs'>Yy</text>
+<line x1='58.91' y1='468.00' x2='478.57' y2='468.00' style='stroke-width: 0.38;' />
+<line x1='58.91' y1='468.00' x2='58.91' y2='472.32' style='stroke-width: 0.38;' />
+<line x1='163.83' y1='468.00' x2='163.83' y2='472.32' style='stroke-width: 0.38;' />
+<line x1='268.74' y1='468.00' x2='268.74' y2='472.32' style='stroke-width: 0.38;' />
+<line x1='373.66' y1='468.00' x2='373.66' y2='472.32' style='stroke-width: 0.38;' />
+<line x1='478.57' y1='468.00' x2='478.57' y2='472.32' style='stroke-width: 0.38;' />
+<text x='58.91' y='486.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>0.6</text>
+<text x='163.83' y='486.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>0.8</text>
+<text x='268.74' y='486.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>1.0</text>
+<text x='373.66' y='486.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>1.2</text>
+<text x='478.57' y='486.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>1.4</text>
+<line x1='42.13' y1='450.99' x2='42.13' y2='25.65' style='stroke-width: 0.38;' />
+<line x1='42.13' y1='450.99' x2='37.81' y2='450.99' style='stroke-width: 0.38;' />
+<line x1='42.13' y1='344.65' x2='37.81' y2='344.65' style='stroke-width: 0.38;' />
+<line x1='42.13' y1='238.32' x2='37.81' y2='238.32' style='stroke-width: 0.38;' />
+<line x1='42.13' y1='131.99' x2='37.81' y2='131.99' style='stroke-width: 0.38;' />
+<line x1='42.13' y1='25.65' x2='37.81' y2='25.65' style='stroke-width: 0.38;' />
+<text x='34.93' y='454.28' text-anchor='end' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>0.6</text>
+<text x='34.93' y='347.95' text-anchor='end' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>0.8</text>
+<text x='34.93' y='241.62' text-anchor='end' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>1.0</text>
+<text x='34.93' y='135.28' text-anchor='end' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>1.2</text>
+<text x='34.93' y='28.95' text-anchor='end' style='font-size: 9.60px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>1.4</text>
+<polygon points='42.13,468.00 495.36,468.00 495.36,8.64 42.13,8.64 ' style='stroke-width: 0.38;' />
+</g>
+</g>
+</svg>

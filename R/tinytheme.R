@@ -17,17 +17,22 @@
 #'   - `"default"`: inherits the user's default base graphics settings.
 #'   - `"basic"`: light modification of `"default"`, only adding filled points, a panel background grid, and light gray background to facet titles.
 #'   - `"dynamic"` (*): builds on `"basic"` by enabling dynamic margin adjustment with tighter default margins, horizontal axis labels, and the subtitle moved above the plotting area. Turns off the panel grid. Provides the foundation for all other dynamic themes and is a good starting point for users who wish to build custom dynamic themes.
-#'   - `"clean"` (*): builds on `"dynamic"` by re-enabling the panel background grid and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors).
-#'   - `"clean2"` (*): removes the plot frame (box) from `"clean"`.
-#'   - `"classic"` (*): builds on `"dynamic"` with L-shaped axes (removing the top and right-hand edges of the plot frame). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
-#'   - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
-#'   - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name.
-#'   - `"ipsum"` (*): similar to `"minimal"`, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**.
-#'   - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
-#'   - `"ridge"` (*): a specialized theme for ridge plots (see [`type_ridge()`]). Builds off of `"clean"`, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
-#'   - `"ridge2"` (*): removes the plot frame (box) from `"ridge"`, but retains the x-axis line. Again, not recommended for non-ridge plots.
-#'   - `"tufte"`: floating axes and minimalist plot artifacts in the style of Edward Tufte.
-#'   - `"void"`: switches off all axes, titles, legends, etc.
+#'     - `"clean"` (*): builds on `"dynamic"` by re-enabling the panel background grid and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors).
+#'       - `"clean2"` (*): removes the plot frame (box) from `"clean"`.
+#'     - `"classic"` (*): builds on `"dynamic"` with L-shaped axes (removing the top and right-hand edges of the plot frame), smaller axis text, tighter axis spacing, and the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
+#'     - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid fine grid lines, smaller axis text, tighter axis spacing, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
+#'       - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name.
+#'         - `"ipsum"` (*): builds on `"minimal"` with bold titles, no ticks, fine grid, edge-aligned axis titles, and a custom muted palette. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**.
+#'         - `"ipsum2"` (*): a lighter variant of `"ipsum"` that retains the original italic subtitle and edge-aligned axis titles, but without the additional spacing and palette changes.
+#'         - `"dark"` (*): similar to `"minimal"`, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
+#'         - `"socviz"` (*): builds on `"minimal"` with L-shaped axes, very light grid lines, and larger axis text. Inspired by Kieran Healy's **socviz** package theme for **ggplot2**.
+#'     - `"broadsheet"` (*): a publication/newspaper style with only horizontal grid lines, no frame, short x-axis ticks, and muted secondary text (subtitle, caption). Compact axis spacing.
+#'       - `"nber"` (*): builds on `"broadsheet"` for an NBER working paper style with a light blue-grey background, grey text, italic axis titles and captions, and a blue-grey discrete palette.
+#'     - `"web"` (*): a FiveThirtyEight-inspired style with a light grey device background, no frame or axis lines, and bold grid lines. Suited to web/online publication.
+#'     - `"tufte"` (*): floating axes and minimalist plot artifacts in the style of Edward Tufte.
+#'     - `"void"` (*): switches off all axes, titles, legends, etc.
+#'     - `"ridge"` (*): a specialized theme for ridge plots (see [`type_ridge()`]). Builds off of `"clean"`, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
+#'       - `"ridge2"` (*): removes the plot frame (box) from `"ridge"`, but retains the x-axis line. Again, not recommended for non-ridge plots.
 #' @param ... Named arguments to override specific theme settings. These
 #'   arguments are passed to `tpar()` and take precedence over the predefined
 #'   settings in the selected theme.
@@ -176,7 +181,8 @@ tinytheme = function(
     theme = c(
       "default", "basic", "dynamic",
       "clean", "clean2", "bw", "classic",
-      "minimal", "ipsum", "dark",
+      "minimal", "ipsum", "ipsum2", "dark",
+      "socviz", "broadsheet", "nber", "web",
       "ridge", "ridge2",
       "tufte", "void"
     ),
@@ -193,14 +199,16 @@ tinytheme = function(
     theme,
     c(
       "default",
-      sort(c("basic", "bw", "classic", "clean", "clean2", "dark", "dynamic",
-             "ipsum", "minimal", "ridge", "ridge2", "tufte", "void"))
+      sort(c("basic", "broadsheet", "bw", "classic", "clean", "clean2", "dark",
+             "dynamic", "ipsum", "ipsum2", "minimal", "nber", "ridge", "ridge2",
+             "socviz", "tufte", "void", "web"))
     )
   )
 
   settings = switch(theme,
     "default" = theme_default,
     "basic" = theme_basic,
+    "broadsheet" = theme_broadsheet,
     "bw" = theme_bw,
     "classic" = theme_classic,
     "clean" = theme_clean,
@@ -208,11 +216,15 @@ tinytheme = function(
     "dark" = theme_dark,
     "dynamic" = theme_dynamic,
     "ipsum" = theme_ipsum,
+    "ipsum2" = theme_ipsum2,
     "minimal" = theme_minimal,
+    "nber" = theme_nber,
     "ridge" = theme_ridge,
     "ridge2" = theme_ridge2,
+    "socviz" = theme_socviz,
     "tufte" = theme_tufte,
     "void" = theme_void,
+    "web" = theme_web,
   )
 
   dots = list(...)
@@ -313,6 +325,7 @@ theme_default = list(
   # palette.qualitative = "R4",
   # palette.sequential = "Viridis",
   pch = par("pch"), # 1,
+  ribbon.alpha = 0.2,
   side.sub = 1,
   tck = NA,
   tcl = par("tcl"), # -0.5
@@ -332,35 +345,6 @@ theme_basic = modifyList(theme_default, list(
   facet.border = "black",
   grid = TRUE,
   pch = 16
-))
-
-theme_tufte = modifyList(theme_default, list(
-  tinytheme = "tufte",
-  adj.cap = 1,
-  adj.main = 0,
-  adj.sub = 0,
-  bty = "n",
-  font.main = 1,
-  lab = c(10, 10, 7),
-  # palette.sequential = "Grays",
-  pch = 16,
-  side.sub = 3,
-  tcl = 0.2
-))
-
-theme_void = modifyList(theme_default, list(
-  tinytheme = "void",
-  adj.cap = 1,
-  adj.main = 0,
-  adj.sub = 0,
-  font.main = 1,
-  palette.qualitative = "Tableau 10",
-  palette.sequential = "ag_Sunset",
-  pch = 16,
-  side.sub = 3,
-  # tck = -.02,
-  xaxt = "none",
-  yaxt = "none"
 ))
 
 # derivatives of "basic"
@@ -385,6 +369,8 @@ theme_dynamic = modifyList(theme_basic, list(
   dynmar = TRUE,
   gap.axis = 0.2,  # gap (lines) between tick tip and tick label cell edge
   gap.lab = 1.0,   # gap (lines) from tick label cell edge to title cell edge
+  gap.main = 0.7,  # gap (lines) from main baseline to element below (plot or sub top)
+  gap.sub = 0.7,   # gap (lines) from sub baseline to plot box
   grid = FALSE,
   las = 1,
   mar = c(0.1, 0.1, 0.6, 0.6),
@@ -408,9 +394,12 @@ theme_clean = modifyList(theme_dynamic, list(
 theme_classic = modifyList(theme_dynamic, list(
   tinytheme = "classic",
   bty = "l",
+  cex.axis = 0.8,
   cex.cap = 0.8,
   facet.bg = NULL,
   font.main = 1,
+  gap.axis = 0.1,
+  gap.lab = 0.4,
   palette.qualitative = "Okabe-Ito"
 ))
 
@@ -427,7 +416,11 @@ theme_clean2 = modifyList(theme_clean, list(
 
 theme_bw = modifyList(theme_clean, list(
   tinytheme = "bw",
+  cex.axis = 0.8,
   font.main = 1,
+  gap.axis = 0.1,
+  gap.lab = 0.4,
+  grid = "xy",
   grid.lty = 1,
   grid.lwd = 0.5,
   lwd = 0.5,
@@ -451,6 +444,22 @@ theme_minimal = modifyList(theme_bw, list(
 
 theme_ipsum = modifyList(theme_minimal, list(
   tinytheme = "ipsum",
+  adj.xlab = 1,
+  adj.ylab = 1,
+  cex.lab = 0.8,
+  font.main = 2,
+  font.sub = 1,
+  font.cap = 3,
+  gap.axis = 0,
+  gap.lab = 0.7,
+  grid = "xy",
+  palette.qualitative = c("#D18975", "#8FD175", "#3F2D54", "#75B8D1",
+                          "#2D543D", "#C9D175", "#D1AB75", "#D175B8", "#758BD1"),
+  tcl = 0
+))
+
+theme_ipsum2 = modifyList(theme_minimal, list(
+  tinytheme = "ipsum2",
   bty = "n",
   font.sub = 3,
   adj.ylab = 1,
@@ -472,7 +481,8 @@ theme_dark = modifyList(theme_minimal, list(
   # facet.bg = "gray20",
   grid.col = "#6D6D6D",
   palette.qualitative = "Set 2",
-  palette.sequential = "Sunset"
+  palette.sequential = "Sunset",
+  ribbon.alpha = 0.5
 ))
 
 # derivatives of clean/clean2
@@ -486,4 +496,127 @@ theme_ridge2 = modifyList(theme_clean2, list(
   tinytheme = "ridge2",
   palette.qualitative = "Zissou 1",
   grid = FALSE
+))
+
+# derivatives of "minimal"
+# - socviz
+
+theme_socviz = modifyList(theme_minimal, list(
+  tinytheme = "socviz",
+  bty = "l",
+  cex.axis = 1.1,
+  cex.cap = 0.75,
+  cex.lab = 1,
+  cex.main = 1.4,
+  cex.sub = 1.05,
+  col.xaxs = "gray10",
+  col.yaxs = "gray10",
+  facet.bg = NULL,
+  facet.col = "grey10",
+  font.main = 2,
+  grid.col = "gray90",
+  grid.lty = 1,
+  grid.lwd = 0.3,
+  lwd = 1,
+  lwd.axis = 1,
+  palette.qualitative = c("#E69F00", "#56B4E9", "#009E73", "#D55E00",
+                          "#CC79A7", "#0072B2", "#F0E442", "#000000"),
+  tcl = -0.25,
+  xaxt = "standard",
+  yaxt = "standard"
+))
+
+# derivatives of "dynamic"
+# - broadsheet
+# - web
+
+theme_broadsheet = modifyList(theme_dynamic, list(
+  tinytheme = "broadsheet",
+  bty = "n",
+  cex.cap = 0.8,
+  col.cap = "gray40",
+  col.sub = "gray40",
+  font.main = 2,
+  gap.axis = 0.1,
+  gap.lab = 0.5,
+  grid = "Y",
+  grid.col = "gray85",
+  grid.lty = 1,
+  grid.lwd = 0.5,
+  palette.qualitative = "Okabe-Ito",
+  tcl = -0.2,
+  yaxt = "labels"
+))
+
+# derivatives of "broadsheet"
+# - nber
+
+theme_nber = modifyList(theme_broadsheet, list(
+  tinytheme = "nber",
+  bg = "#F2F7FB",
+  cex.cap = 1,
+  cex.main = 1.4,
+  cex.sub = 1,
+  col.axis = "#4C4D4F",
+  col.lab = "#6D6E72",
+  col.main = "#4C4D4F",
+  col.sub = "#6D6E72",
+  col.cap = "#6D6E72",
+  col.xaxs = "#6D6E72",
+  facet.bg = "white",
+  facet.col = "#6D6E72",
+  font.cap = 3,
+  font.lab = 3,
+  font.sub = 3,
+  grid.col = "#BCBFC3",
+  palette.qualitative = c(
+    "#0063A7", "#6D6E70", "#941A22", 
+    "#EDAF48", "#2E8B57", "#7B5EA7")
+))
+
+theme_web = modifyList(theme_dynamic, list(
+  tinytheme = "web",
+  bg = "#F0F0F0",
+  bty = "n",
+  cex.cap = 0.8,
+  col.cap = "gray40",
+  col.sub = "gray40",
+  font.main = 2,
+  grid = TRUE,
+  grid.col = "#D2D2D2",
+  grid.lty = 1,
+  grid.lwd = 0.5,
+  palette.qualitative = c("#008FD5", "#FF2700", "#77AB43"),
+  tcl = 0,
+  xaxt = "labels",
+  yaxt = "labels"
+))
+
+# standalone dynamic derivatives
+# - tufte
+# - void
+
+theme_tufte = modifyList(theme_dynamic, list(
+  tinytheme = "tufte",
+  bty = "n",
+  facet.bg = NULL,
+  facet.border = NA,
+  font.main = 1,
+  gap.axis = -0.2,
+  gap.lab = 0.5,
+  grid = FALSE,
+  lab = c(10, 10, 7),
+  tcl = 0.2
+))
+
+theme_void = modifyList(theme_dynamic, list(
+  tinytheme = "void",
+  facet.bg = NULL,
+  facet.border = NA,
+  font.main = 1,
+  grid = FALSE,
+  palette.qualitative = "Tableau 10",
+  palette.sequential = "ag_Sunset",
+  xaxt = "none",
+  yaxt = "none"
 ))

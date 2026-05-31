@@ -26,7 +26,7 @@ visualizations.
   logic. Recall, these are themes like `"dynamic"`, `"clean"`, `"bw"`, etc. that
   automatically adjust margin spacing and related plot elements to reduce
   whitespace and improve the overall plot aesthetic.
-  (#549, #591 @grantmcdermott, @vincentarelbundock)
+  (#549, #591, #595 @grantmcdermott, @vincentarelbundock)
   
   - Plot margins now correctly respond to missing and/or multi-line `main`,
     `sub`, and `x`/`y` axis titles. For example, a plot without a `main` (or
@@ -48,6 +48,22 @@ visualizations.
     directly (tick-to-label gap and label-to-title gap, respectively),
     replacing the guesswork of manually combining `mar`, `mgp`, and `tcl`
     values. (#590)
+  - The gap between y-axis tick labels and the y-axis title is now
+    constant regardless of label width (1-digit, 2-digit, decimals, etc.).
+    Previously the gap varied at the narrow/wide label boundary. (#596)
+  - New `gap.main` and `gap.sub` theme primitives control the spacing
+    between titles and the plot box. `gap.main` sets the gap from the main
+    title to whatever is below it (plot box or subtitle top); `gap.sub`
+    sets the gap from the subtitle to the plot box. Both default to `0.7`.
+    (#597)
+
+- **Theme refinements**. The `"tufte"` and `"void"` themes are now dynamic
+  (responsive margins). The `"ipsum"` theme has been overhauled (bold title, no
+  ticks, fine grid, custom palette); the original variant is preserved as
+  `"ipsum2"`. The ggplot2-inspired like `"bw"` and `"classic"` now use smaller
+  axis text and tighter spacing to better match their ggplot2 counterparts. 
+  Also, the `"dark"` theme now uses a better default `ribbon.alpha` for better
+  contrast against the black background. (#595, #603 @grantmcdermott)
 
 ### New features
 
@@ -75,11 +91,21 @@ visualizations.
   providing finer control for spacing between ticks-labels and labels-titles,
   respectively, in dynamic themes. See the **Dynamic themes** entry above.
   (#590 @grantmcdermott)
+- Similarly, `tinytheme()` also accepts `gap.main` and `gap.sub` primitives for 
+  controlling the spacing between titles and the plot region.
+  (#595 @grantmcdermott)
 - New `tinyplot(..., cap = <caption>)` argument for adding a caption to your 
   plots. Captions are drawn at the bottom of the plot and are best paired with
   dynamic themes (since separation from `sub` is guaranteed). Appearance is
   customizable via `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`,
   `font.cap`, and `line.cap`. (#592 @grantmcdermott)
+- New themes: `"socviz"`, `"broadsheet"`, `"nber"`, and `"web"`, targeting
+  academic social science, newspaper, NBER working paper, and web-style (e.g.,
+  FiveThirtyEight) aesthetics respectively. (#595 @grantmcdermott)
+- New `type_chull()` (equivalently, `type = "chull"`) for drawing convex hulls
+  around grouped points. Uses `grDevices::chull()` under the hood and delegates
+  drawing to `draw_polygon()`. Works well as a layer on top of points, e.g.
+  `plt_add(type = "chull", fill = 0.2)`. (#600 @grantmcdermott)
 
 ### Bug fixes
 

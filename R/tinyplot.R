@@ -1078,7 +1078,9 @@ tinyplot.default = function(
     # region meets the legend's oma flush. Only .theme_mar is zeroed — the
     # axis-driven bumps in .dyn (tick rows, axis labels, main/sub) are kept
     # so that "left!" and "bottom!" legends don't collide with axis content.
-    .theme_mar[.outer_sides] = 0
+    # Exception: "top!" lives in mar[3] (not oma), so keep the baseline padding.
+    .outer_sides_oma = .outer_sides & c(TRUE, TRUE, FALSE, TRUE)
+    .theme_mar[.outer_sides_oma] = 0
 
     # whtsbp uses strwidth(units="figure") + grconvertX("nfc" → "lines"),
     # both of which give device-default font metrics without requiring
@@ -1157,7 +1159,9 @@ tinyplot.default = function(
         cex = lgnd_cex,
         has_sub = has_sub,
         has_cap = has_cap,
-        cap_text = cap
+        cap_text = cap,
+        main_lines = text_line_count(main),
+        dynmar_title_mar = if (!is.null(dynmar_computed) && .outer_sides[3] && text_line_count(main) >= 1L) dynmar_computed[3] else NULL
       )
     } else {
       ## multi-legend case...
@@ -1199,6 +1203,9 @@ tinyplot.default = function(
     # Reinstate dynmar margins and user coordinates after draw_legend
     # (which may have called plot.new and reset par via hooks).
     if (!is.null(dynmar_computed)) {
+      if (has_legend && .outer_sides[3]) {
+        dynmar_computed[3] = par("mar")[3] - .whtsbp[3]
+      }
       par(mar = dynmar_computed + .whtsbp)
       if (!is.null(xlim) && !is.null(ylim)) {
         plot.window(xlim = xlim, ylim = ylim)

@@ -174,8 +174,13 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
           legend_env$ooma[1] = legend_env$ooma[1] + cex_cap + 0.2
         }
       } else {
-        legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+        if (!is.null(legend_env$dynmar_title_mar)) {
+          legend_env$omar[3] = legend_env$dynmar_title_mar + soma
+        } else {
+          legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+        }
         par(mar = legend_env$omar)
+        set_environment_variable(.top_legend_soma = soma)
       }
     }
     par(oma = legend_env$ooma)
@@ -278,8 +283,13 @@ tinylegend = function(legend_env) {
         legend_env$ooma[1] = legend_env$ooma[1] + cex_cap + 0.2
       }
     } else {
-      legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+      if (!is.null(legend_env$dynmar_title_mar)) {
+        legend_env$omar[3] = legend_env$dynmar_title_mar + soma
+      } else {
+        legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+      }
       par(mar = legend_env$omar)
+      set_environment_variable(.top_legend_soma = soma)
     }
   }
   par(oma = legend_env$ooma)
@@ -739,7 +749,9 @@ build_legend_env = function(
   has_sub = FALSE,
   has_cap = FALSE,
   cap_text = NULL,
-  new_plot = TRUE
+  new_plot = TRUE,
+  main_lines = 0L,
+  dynmar_title_mar = NULL
 ) {
   # Create legend environment
   legend_env = new.env(parent = emptyenv())
@@ -752,6 +764,8 @@ build_legend_env = function(
   legend_env$cap_text = cap_text
   legend_env$new_plot = new_plot
   legend_env$dynmar = isTRUE(.tpar[["dynmar"]])
+  legend_env$main_lines = main_lines
+  legend_env$dynmar_title_mar = dynmar_title_mar
   legend_env$topmar_epsilon = 0.1
 
   # Build legend arguments (modifies legend_env in-place)
@@ -920,7 +934,9 @@ draw_legend = function(
   cap_text = NULL,
   new_plot = TRUE,
   draw = TRUE,
-  soma_target = NULL
+  soma_target = NULL,
+  main_lines = 0L,
+  dynmar_title_mar = NULL
 ) {
   if (is.null(lmar)) {
     lmar = tpar("lmar")
@@ -942,6 +958,7 @@ draw_legend = function(
   if (!dynmar) {
     restore_margin_inner(par("oma"), topmar_epsilon = 0.1)
   }
+  set_environment_variable(.top_legend_soma = NULL)
 
   # Build legend environment
   legend_env = build_legend_env(
@@ -969,7 +986,9 @@ draw_legend = function(
     has_sub = has_sub,
     has_cap = has_cap,
     cap_text = cap_text,
-    new_plot = new_plot
+    new_plot = new_plot,
+    main_lines = main_lines,
+    dynmar_title_mar = dynmar_title_mar
   )
 
   # Extract and strip ljust before any legend() calls

@@ -570,9 +570,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">tinytheme(
-  theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "classic", "minimal",
-    "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber", "web", "ridge", "ridge2",
-    "tufte", "void"),
+  theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "linedraw",
+    "classic", "minimal", "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber",
+    "web", "ridge", "ridge2", "tufte", "float", "void"),
   ...
 )
 </code></pre>
@@ -611,6 +611,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>“bw”</code> (*): similar to <code>“clean”</code>, except uses thinner lines for the plot frame (box), solid fine grid lines, smaller axis text, tighter axis spacing, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
 <ul>
 <li>
+<p><code>“linedraw”</code> (*): builds on <code>“bw”</code> with black facet title strips and white strip text. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
+</li>
+<li>
 <p><code>“minimal”</code> (*): removes the plot frame (box) from <code>“bw”</code>, as well as the background for facet titles. Inspired by the <strong>ggplot2</strong> theme of the same name.</p>
 <ul>
 <li>
@@ -642,6 +645,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
 <li>
 <p><code>“tufte”</code> (*): floating axes and minimalist plot artifacts in the style of Edward Tufte.</p>
+<ul>
+<li>
+<p><code>“float”</code> (*): builds on <code>“tufte”</code> with outward ticks, fewer tick marks, and a "dark" qualitative palette.</p>
+</li>
+</ul>
 </li>
 <li>
 <p><code>“void”</code> (*): switches off all axes, titles, legends, etc.</p>
@@ -686,13 +694,16 @@ tinyplot_add(type = "S")        # same plot, so retains theme
 tinyplot(10:1)                  # new plot, so back to default
 </pre>
 </div>
-<p><strong>Custom overrides.</strong> To customize a theme’s parameters (e.g., <code>mar</code>, <code>las</code>, etc.), pass them directly as additional args to <code style="white-space: pre;">tinytheme(&lt;theme&gt;, …)</code>. Please note that passing overrides through <code>tpar()</code> or <code>par()</code> <em>won’t</em> work, because themes work by installing a persistent hook, which means that an active theme will override any subsequent calls for parameters that the theme controls.</p>
+<p><strong>Custom overrides.</strong> To customize a theme’s parameters (e.g., <code>mar</code>, <code>las</code>, etc.), either pass them directly as additional args to <code style="white-space: pre;">tinytheme(&lt;theme&gt;, …)</code> or as a list arguments to <code style="white-space: pre;">tinyplot(…, theme = list(&lt;theme&gt;, …))</code>. Please note that passing overrides through <code>tpar()</code> or <code>par()</code> <em>won’t</em> work, because themes work by installing a persistent hook, which means that an active theme will override any subsequent calls for parameters that the theme controls.</p>
 <div class="sourceCode">
 <pre># Do this
 tinytheme("clean", mar = c(5, 5, 2, 2))
 &lt;some plot&gt;
 
-# Not this (the theme hook will overwrite your changes)
+# Or this (ephemeral version)
+tinyplot(..., theme = list("clean", mar = c(5, 5, 2, 2)))
+
+# Don't do this (the theme hook will overwrite your changes)
 tinytheme("clean")
 tpar(mar = c(5, 5, 2, 2))
 &lt;some plot&gt;
@@ -836,23 +847,8 @@ tinytheme("clean", gap.axis = 0.5)
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Themes showcase</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">## We'll use a slightly more intricate plot (long y-axis labs and facets)</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">## to demonstrate dynamic margin adjustment etc.</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>thms <span class="ot">=</span> <span class="fu">eval</span>(<span class="fu">formals</span>(tinytheme)<span class="sc">$</span>theme)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (thm <span class="cf">in</span> thms) {</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinytheme</span>(thm)</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">I</span>(Sepal.Length<span class="sc">*</span><span class="fl">1e4</span>) <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> iris,</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">yaxl =</span> <span class="st">","</span>, </span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste0</span>(<span class="st">'tinytheme("'</span>, thm, <span class="st">'")'</span>),</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">sub =</span> <span class="st">"A subtitle"</span>,</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">cap =</span> <span class="st">"A caption"</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">box</span>(<span class="st">"outer"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Customize an ephemeral theme by passing arguments as a list</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">main =</span> <span class="st">"Custom"</span>, <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean"</span>, <span class="at">grid.col =</span> <span class="st">"hotpink"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -860,6 +856,23 @@ tinytheme("clean", gap.axis = 0.5)
 </figure>
 </div>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Themes showcase</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">## We'll use a slightly more intricate plot (long y-axis labs and facets)</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="do">## to demonstrate dynamic margin adjustment etc.</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>thms <span class="ot">=</span> <span class="fu">eval</span>(<span class="fu">formals</span>(tinytheme)<span class="sc">$</span>theme)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (thm <span class="cf">in</span> thms) {</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinytheme</span>(thm)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tinyplot</span>(</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">I</span>(Sepal.Length<span class="sc">*</span><span class="fl">1e4</span>) <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> iris,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">yaxl =</span> <span class="st">","</span>, </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste0</span>(<span class="st">'tinytheme("'</span>, thm, <span class="st">'")'</span>),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">sub =</span> <span class="st">"A subtitle"</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">cap =</span> <span class="st">"A caption"</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">box</span>(<span class="st">"outer"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -986,8 +999,29 @@ tinytheme("clean", gap.axis = 0.5)
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinytheme_files/figure-html/unnamed-chunk-1-30.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinytheme_files/figure-html/unnamed-chunk-1-31.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinytheme_files/figure-html/unnamed-chunk-1-32.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 

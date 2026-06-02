@@ -23,7 +23,6 @@ build_legend_env(
   has_cap = FALSE,
   cap_text = NULL,
   new_plot = TRUE,
-  main_lines = 0L,
   dynmar_title_mar = NULL
 )
 }

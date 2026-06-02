@@ -753,7 +753,6 @@ build_legend_env = function(
   has_cap = FALSE,
   cap_text = NULL,
   new_plot = TRUE,
-  main_lines = 0L,
   dynmar_title_mar = NULL
 ) {
   # Create legend environment
@@ -767,7 +766,6 @@ build_legend_env = function(
   legend_env$cap_text = cap_text
   legend_env$new_plot = new_plot
   legend_env$dynmar = isTRUE(.tpar[["dynmar"]])
-  legend_env$main_lines = main_lines
   legend_env$dynmar_title_mar = dynmar_title_mar
   legend_env$topmar_epsilon = 0.1
 
@@ -851,7 +849,6 @@ build_legend_env = function(
 #'   in order to perform the calculations.
 #' @param soma_target Numeric. Shared outer margin target (in lines) for
 #'   multi-legend alignment. If `NULL`, each legend computes its own margin.
-#' @param main_lines Integer. Number of lines in the main title (0 if none).
 #' @param dynmar_title_mar Numeric or `NULL`. The pre-computed `dynmar_computed[3]`
 #'   value for "top!" legends under dynmar themes. When set, the legend margin
 #'   formula uses this directly to ensure correct title positioning.
@@ -942,7 +939,6 @@ draw_legend = function(
   new_plot = TRUE,
   draw = TRUE,
   soma_target = NULL,
-  main_lines = 0L,
   dynmar_title_mar = NULL
 ) {
   if (is.null(lmar)) {
@@ -994,7 +990,6 @@ draw_legend = function(
     has_cap = has_cap,
     cap_text = cap_text,
     new_plot = new_plot,
-    main_lines = main_lines,
     dynmar_title_mar = dynmar_title_mar
   )
 

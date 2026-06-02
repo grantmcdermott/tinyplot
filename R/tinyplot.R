@@ -1160,7 +1160,6 @@ tinyplot.default = function(
         has_sub = has_sub,
         has_cap = has_cap,
         cap_text = cap,
-        main_lines = text_line_count(main),
         dynmar_title_mar = if (!is.null(dynmar_computed) && .outer_sides[3] && text_line_count(main) >= 1L) dynmar_computed[3] else NULL
       )
     } else {

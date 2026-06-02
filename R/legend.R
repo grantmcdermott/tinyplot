@@ -118,9 +118,10 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
         omar[1] = omar[1] + 1 * par("cex.sub")
       }
     } else {
-      # For "top!", expand existing inner margin rather than outer margin
-      ooma[3] = ooma[3] + legend_env$topmar_epsilon
-      par(oma = ooma)
+      if (is.null(legend_env$dynmar_title_mar)) {
+        ooma[3] = ooma[3] + legend_env$topmar_epsilon
+        par(oma = ooma)
+      }
     }
     par(mar = omar)
 
@@ -135,8 +136,10 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
             omar[1] = omar[1] + 1 * par("cex.sub")
           }
         } else {
-          ooma[3] = ooma[3] + legend_env$topmar_epsilon
-          par(oma = ooma)
+          if (is.null(legend_env$dynmar_title_mar)) {
+            ooma[3] = ooma[3] + legend_env$topmar_epsilon
+            par(oma = ooma)
+          }
         }
         par(mar = omar)
       }

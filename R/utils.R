@@ -196,24 +196,22 @@ restore_margin_inner = function(ooma, topmar_epsilon = 0.1) {
   ooma = par("oma")
   omar = par("mar")
 
-  if (!any(ooma != 0)) return(invisible(NULL))
+  # omd reset (from restore_margin_outer) clears oma as a side-effect, so
+  # detect dirty margins directly from mar values rather than relying on oma.
+  top_dirty = omar[3] > 4.1
+  right_dirty = omar[4] == 0
+  left_dirty = ooma[2] != 0 && omar[2] == par("mgp")[1] + 1 * par("cex.lab")
+  bottom_dirty = ooma[1] != 0 && omar[1] == par("mgp")[1] + 1 * par("cex.lab")
+
+  if (!any(ooma != 0) && !top_dirty && !right_dirty) return(invisible(NULL))
 
   # Restore inner margin defaults (in case affected by preceding tinyplot call)
-  if (any(ooma != 0)) {
-    if (ooma[1] != 0 && omar[1] == par("mgp")[1] + 1 * par("cex.lab")) {
-      omar[1] = 5.1
-    }
-    if (ooma[2] != 0 && omar[2] == par("mgp")[1] + 1 * par("cex.lab")) {
-      omar[2] = 4.1
-    }
-    if (ooma[3] == topmar_epsilon && omar[3] != 4.1) {
-      omar[3] = 4.1
-    }
-    if (ooma[4] != 0 && omar[4] == 0) {
-      omar[4] = 2.1
-    }
-    par(mar = omar)
-  }
+  if (bottom_dirty) omar[1] = 5.1
+  if (left_dirty) omar[2] = 4.1
+  if (top_dirty) omar[3] = 4.1
+  if (right_dirty) omar[4] = 2.1
+  par(mar = omar)
+
   # Restore outer margin defaults (with a catch for custom mfrow plots)
   if (all(par("mfrow") == c(1, 1))) {
     par(omd = c(0, 1, 0, 1))

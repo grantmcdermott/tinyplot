@@ -22,7 +22,8 @@ build_legend_env(
   has_sub = FALSE,
   has_cap = FALSE,
   cap_text = NULL,
-  new_plot = TRUE
+  new_plot = TRUE,
+  dynmar_title_mar = NULL
 )
 }
 \arguments{

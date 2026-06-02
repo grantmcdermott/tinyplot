@@ -118,9 +118,10 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
         omar[1] = omar[1] + 1 * par("cex.sub")
       }
     } else {
-      # For "top!", expand existing inner margin rather than outer margin
-      ooma[3] = ooma[3] + legend_env$topmar_epsilon
-      par(oma = ooma)
+      if (is.null(legend_env$dynmar_title_mar)) {
+        ooma[3] = ooma[3] + legend_env$topmar_epsilon
+        par(oma = ooma)
+      }
     }
     par(mar = omar)
 
@@ -135,8 +136,10 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
             omar[1] = omar[1] + 1 * par("cex.sub")
           }
         } else {
-          ooma[3] = ooma[3] + legend_env$topmar_epsilon
-          par(oma = ooma)
+          if (is.null(legend_env$dynmar_title_mar)) {
+            ooma[3] = ooma[3] + legend_env$topmar_epsilon
+            par(oma = ooma)
+          }
         }
         par(mar = omar)
       }
@@ -174,8 +177,13 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
           legend_env$ooma[1] = legend_env$ooma[1] + cex_cap + 0.2
         }
       } else {
-        legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+        if (!is.null(legend_env$dynmar_title_mar)) {
+          legend_env$omar[3] = legend_env$dynmar_title_mar + soma
+        } else {
+          legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+        }
         par(mar = legend_env$omar)
+        set_environment_variable(.top_legend_soma = soma)
       }
     }
     par(oma = legend_env$ooma)
@@ -278,8 +286,13 @@ tinylegend = function(legend_env) {
         legend_env$ooma[1] = legend_env$ooma[1] + cex_cap + 0.2
       }
     } else {
-      legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+      if (!is.null(legend_env$dynmar_title_mar)) {
+        legend_env$omar[3] = legend_env$dynmar_title_mar + soma
+      } else {
+        legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+      }
       par(mar = legend_env$omar)
+      set_environment_variable(.top_legend_soma = soma)
     }
   }
   par(oma = legend_env$ooma)
@@ -739,7 +752,8 @@ build_legend_env = function(
   has_sub = FALSE,
   has_cap = FALSE,
   cap_text = NULL,
-  new_plot = TRUE
+  new_plot = TRUE,
+  dynmar_title_mar = NULL
 ) {
   # Create legend environment
   legend_env = new.env(parent = emptyenv())
@@ -752,6 +766,7 @@ build_legend_env = function(
   legend_env$cap_text = cap_text
   legend_env$new_plot = new_plot
   legend_env$dynmar = isTRUE(.tpar[["dynmar"]])
+  legend_env$dynmar_title_mar = dynmar_title_mar
   legend_env$topmar_epsilon = 0.1
 
   # Build legend arguments (modifies legend_env in-place)
@@ -834,6 +849,9 @@ build_legend_env = function(
 #'   in order to perform the calculations.
 #' @param soma_target Numeric. Shared outer margin target (in lines) for
 #'   multi-legend alignment. If `NULL`, each legend computes its own margin.
+#' @param dynmar_title_mar Numeric or `NULL`. The pre-computed `dynmar_computed[3]`
+#'   value for "top!" legends under dynmar themes. When set, the legend margin
+#'   formula uses this directly to ensure correct title positioning.
 #'
 #' @returns No return value, called for side effect of producing a(n empty) plot
 #'   with a legend in the margin.
@@ -920,7 +938,8 @@ draw_legend = function(
   cap_text = NULL,
   new_plot = TRUE,
   draw = TRUE,
-  soma_target = NULL
+  soma_target = NULL,
+  dynmar_title_mar = NULL
 ) {
   if (is.null(lmar)) {
     lmar = tpar("lmar")
@@ -942,6 +961,7 @@ draw_legend = function(
   if (!dynmar) {
     restore_margin_inner(par("oma"), topmar_epsilon = 0.1)
   }
+  set_environment_variable(.top_legend_soma = NULL)
 
   # Build legend environment
   legend_env = build_legend_env(
@@ -969,7 +989,8 @@ draw_legend = function(
     has_sub = has_sub,
     has_cap = has_cap,
     cap_text = cap_text,
-    new_plot = new_plot
+    new_plot = new_plot,
+    dynmar_title_mar = dynmar_title_mar
   )
 
   # Extract and strip ljust before any legend() calls

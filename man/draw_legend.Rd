@@ -24,7 +24,8 @@ draw_legend(
   cap_text = NULL,
   new_plot = TRUE,
   draw = TRUE,
-  soma_target = NULL
+  soma_target = NULL,
+  dynmar_title_mar = NULL
 )
 }
 \arguments{
@@ -83,6 +84,10 @@ in order to perform the calculations.}
 
 \item{soma_target}{Numeric. Shared outer margin target (in lines) for
 multi-legend alignment. If \code{NULL}, each legend computes its own margin.}
+
+\item{dynmar_title_mar}{Numeric or \code{NULL}. The pre-computed \code{dynmar_computed[3]}
+value for "top!" legends under dynmar themes. When set, the legend margin
+formula uses this directly to ensure correct title positioning.}
 }
 \value{
 No return value, called for side effect of producing a(n empty) plot

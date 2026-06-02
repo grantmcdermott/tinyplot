@@ -20,7 +20,11 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
   # include a 0.1 epsilon bump, which we're using to reset the tinyplot
   # window in case of recursive "top!" calls. (See draw_legend code.)
 
-  if (isTRUE(adj_title)) {
+  if (isTRUE(adj_title) && isTRUE(get_tpar("dynmar", FALSE))) {
+    gap_main = get_tpar("gap.main", 0.7)
+    top_soma = get_environment_variable(".top_legend_soma") %||% 0
+    line_main = top_soma + gap_main - 0.1
+  } else if (isTRUE(adj_title)) {
     line_main = par("mar")[3] - opar[["mar"]][3] + 1.7 + 0.1
   } else if (isTRUE(get_tpar("dynmar", FALSE))) {
     gap_main = get_tpar("gap.main", 0.7)
@@ -46,6 +50,10 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
     if (isTRUE(get_tpar("side.sub", 1) == 3)) {
       gap_sub = get_tpar("gap.sub", 0.7)
       line_sub = get_tpar("line.sub", gap_sub - 0.1)
+      if (isTRUE(adj_title) && isTRUE(get_tpar("dynmar", FALSE))) {
+        top_soma = get_environment_variable(".top_legend_soma") %||% 0
+        line_sub = top_soma + gap_sub - 0.1
+      }
     } else {
       line_sub = get_tpar("line.sub", 4)
     }
@@ -68,6 +76,10 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
     # `line_main`, extra lines extend upward). The reserved top margin
     # already accounts for (N-1)*cex_main extra lines, so no line-shift
     # adjustment is needed here.
+    # For "top!" + dynmar, line_main exceeds par("mar")[3] so we need xpd=NA
+    # to allow drawing outside the clipping region.
+    .oxpd = par("xpd")
+    if (!is.null(line_main) && line_main > par("mar")[3] - 1) par(xpd = NA)
     args = list(
       main = main,
       line = line_main,
@@ -77,6 +89,7 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
       adj = get_tpar(c("adj.main", "adj"), 3))
     args = Filter(function(x) !is.null(x), args)
     do.call(title, args)
+    par(xpd = .oxpd)
   }
 
 

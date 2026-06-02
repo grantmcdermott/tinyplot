@@ -48,7 +48,7 @@ library(tinyplot)
 tinytheme("minimal")
 
 tinyplot(
-  Sepal.Width ~ Sepal.Length | Species,
+  Sepal.Length ~ Petal.Length | Species,
   data = iris,
   main = "Title of the plot",
   sub = "A smaller subtitle", 
@@ -63,7 +63,7 @@ here bumps out to accomodate the long horizontal y-axis labels:
 
 ```{r}
 tinyplot(
-  I(Sepal.Width*1e5) ~ Sepal.Length | Species,
+  I(Sepal.Length*1e5) ~ Petal.Length | Species,
   data = iris,
   yaxl = ",",  # use comma format for the y-axis labels
   main = "Title of the plot",
@@ -113,12 +113,13 @@ built-in **tinyplot** themes.
 ```{r}
 p = function(theme = "default") {
   tinyplot(
-    Sepal.Width ~ Sepal.Length | Species,
-    facet = "by",
-    data = iris,
+    bill_len ~ body_mass | species,
+    facet = ~sex,
+    data = penguins,
     main = paste0('theme = "', theme, '"'),
     sub = "subtitle",
     cap = "caption",
+    yaxl = ",",
     theme = theme
   )
   box("outer", lty = 2)
@@ -132,25 +133,6 @@ subsitutes, and so will clash for these cases below. But they achieve guaranteed
 separate placement for dynamic themes.
 :::
 
-<!-- ```{r} -->
-<!-- #| echo: false -->
-<!-- #| fig.keep: "all" -->
-<!-- thms = eval(formals(tinytheme)$theme) -->
-
-<!-- for (thm in thms) { -->
-<!--   tinytheme(thm) -->
-<!--   tinyplot( -->
-<!--     Sepal.Length ~ Petal.Length | Species, facet = "by", data = iris, -->
-<!--     main = paste0('tinytheme("', thm, '")'), -->
-<!--     sub = "Subtitle of the plot" -->
-<!--   ) -->
-<!-- } -->
-
-<!-- # Reset -->
-<!-- tinytheme() -->
-<!-- ``` -->
-
-
 ```{r}
 p() ## same as "default"
 p("basic")
@@ -159,6 +141,7 @@ p("clean")
 p("clean2")
 p("classic")
 p("bw")
+p("linedraw")
 p("minimal")
 p("ipsum")
 p("ipsum2")
@@ -168,6 +151,7 @@ p("broadsheet")
 p("nber")
 p("web")
 p("tufte")
+p("float")
 p("void")
 ```
 
@@ -179,8 +163,8 @@ ridge plot types.
 ```{r}
 p2 = function(theme = "ridge") {
   tinyplot(
-    Species ~ Sepal.Width | Species, legend = FALSE,
-    data = iris,
+    species ~ body_mass | species,
+    data = penguins,
     type = "ridge",
     main = paste0('theme = "', theme, '"'),
     sub = "subtitle",
@@ -208,7 +192,7 @@ in persistent fashion.
 tinytheme(
   "ipsum",
   pch = 2, col.axis = "darkcyan", cex = 1.2, cex.main = 2, cex.lab = 1.5,
-  family ="HersheyScript"
+  family = "HersheyScript"
 )
 tinyplot(mpg ~ hp, data = mtcars, main = "Fuel efficiency vs. horsepower")
 tinyplot(hp ~ mpg, data = mtcars, main = "Horsepower vs. fuel efficiency")
@@ -219,12 +203,36 @@ tinyplot(hp ~ mpg, data = mtcars, main = "Horsepower vs. fuel efficiency")
 tinytheme()
 ```
 
+Similarly, you can pass a list object to the `themes` argument to customize
+an ephemeral theme for a single plot. Here's a more fancy adaption that builds off the "dynamic" theme.
+
+```{r}
+tinyplot(
+  lat ~ long | depth, data = quakes,
+  main = "Earthquakes off Fiji",
+  xlab = "Longitutde",
+  ylab = "Latitude",
+  cap = "Data courtesy of the Harvard PRIM-H project",
+  palette = "mako",
+  # custom ephemeral theme
+  theme = list(
+    "dynamic",
+    bty = "n",
+    bg = "#E0D9D2",
+    cex = 1.2, cex.main = 1.5, cex.lab = 1.2,
+    col = "#3D3532",
+    family = "HersheyScript",
+    grid = TRUE, grid.col = "gray95", grid.lwd = 1.5
+  )
+)
+```
+
 ::: {.callout-tip}
 ## Font families
 
 Fonts are a suprisingly effective way to add impact and personality to your
 plots. While it is perhaps underappreciated, base R actually ships with built-in
-support for quite a few font families. In the code chunk above we used a member
+support for quite a few font families. In the code chunks above we used a member
 of the Hershey font family that comes bundled with the base R distribution (see
 [`?Hershey`](https://search.r-project.org/R/refmans/grDevices/html/Hershey.html)).
 But this built-in support also extends to other popular LaTex and PDF fonts like

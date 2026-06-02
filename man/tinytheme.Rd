@@ -5,9 +5,9 @@
 \title{Set or Reset Plot Themes for \code{tinyplot}}
 \usage{
 tinytheme(
-  theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "classic", "minimal",
-    "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber", "web", "ridge", "ridge2",
-    "tufte", "void"),
+  theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "linedraw",
+    "classic", "minimal", "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber",
+    "web", "ridge", "ridge2", "tufte", "float", "void"),
   ...
 )
 }
@@ -30,6 +30,7 @@ dynamic plots are marked with an asterisk (*) below.
 \item \code{"classic"} (*): builds on \code{"dynamic"} with L-shaped axes (removing the top and right-hand edges of the plot frame), smaller axis text, tighter axis spacing, and the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
 \item \code{"bw"} (*): similar to \code{"clean"}, except uses thinner lines for the plot frame (box), solid fine grid lines, smaller axis text, tighter axis spacing, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
 \itemize{
+\item \code{"linedraw"} (*): builds on \code{"bw"} with black facet title strips and white strip text. Inspired by the \strong{ggplot2} theme of the same name.
 \item \code{"minimal"} (*): removes the plot frame (box) from \code{"bw"}, as well as the background for facet titles. Inspired by the \strong{ggplot2} theme of the same name.
 \itemize{
 \item \code{"ipsum"} (*): builds on \code{"minimal"} with bold titles, no ticks, fine grid, edge-aligned axis titles, and a custom muted palette. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
@@ -44,6 +45,9 @@ dynamic plots are marked with an asterisk (*) below.
 }
 \item \code{"web"} (*): a FiveThirtyEight-inspired style with a light grey device background, no frame or axis lines, and bold grid lines. Suited to web/online publication.
 \item \code{"tufte"} (*): floating axes and minimalist plot artifacts in the style of Edward Tufte.
+\itemize{
+\item \code{"float"} (*): builds on \code{"tufte"} with outward ticks, fewer tick marks, and a "dark" qualitative palette.
+}
 \item \code{"void"} (*): switches off all axes, titles, legends, etc.
 \item \code{"ridge"} (*): a specialized theme for ridge plots (see \code{\link[=type_ridge]{type_ridge()}}). Builds off of \code{"clean"}, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
 \itemize{
@@ -88,7 +92,9 @@ tinyplot(10:1)                  # new plot, so back to default
 }\if{html}{\out{</div>}}
 
 \strong{Custom overrides.} To customize a theme's parameters (e.g., \code{mar}, \code{las},
-etc.), pass them directly as additional args to \verb{tinytheme(<theme>, ...)}.
+etc.), either pass them directly as additional args to
+\verb{tinytheme(<theme>, ...)} or as a list arguments to
+\verb{tinyplot(..., theme = list(<theme>, ...))}.
 Please note that passing overrides through \code{tpar()} or \code{par()} \emph{won't} work,
 because themes work by installing a persistent hook, which means that an
 active theme will override any subsequent calls for parameters that the theme
@@ -98,7 +104,10 @@ controls.
 tinytheme("clean", mar = c(5, 5, 2, 2))
 <some plot>
 
-# Not this (the theme hook will overwrite your changes)
+# Or this (ephemeral version)
+tinyplot(..., theme = list("clean", mar = c(5, 5, 2, 2)))
+
+# Don't do this (the theme hook will overwrite your changes)
 tinytheme("clean")
 tpar(mar = c(5, 5, 2, 2))
 <some plot>
@@ -172,6 +181,9 @@ p()
 # For an ephemeral theme, use `tinyplot(..., theme = <theme>)` directly
 tinyplot(0:10, theme = "clean", main = "This theme is ephemeral")
 tinyplot(10:0, main = "See, no more theme")
+
+# Customize an ephemeral theme by passing arguments as a list
+tinyplot(0:10, main = "Custom", theme = list("clean", grid.col = "hotpink"))
 
 # Themes showcase
 ## We'll use a slightly more intricate plot (long y-axis labs and facets)

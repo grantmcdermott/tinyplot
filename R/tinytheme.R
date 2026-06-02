@@ -21,6 +21,7 @@
 #'       - `"clean2"` (*): removes the plot frame (box) from `"clean"`.
 #'     - `"classic"` (*): builds on `"dynamic"` with L-shaped axes (removing the top and right-hand edges of the plot frame), smaller axis text, tighter axis spacing, and the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
 #'     - `"bw"` (*): similar to `"clean"`, except uses thinner lines for the plot frame (box), solid fine grid lines, smaller axis text, tighter axis spacing, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the **ggplot2** theme of the same name.
+#'       - `"linedraw"` (*): builds on `"bw"` with black facet title strips and white strip text. Inspired by the **ggplot2** theme of the same name.
 #'       - `"minimal"` (*): removes the plot frame (box) from `"bw"`, as well as the background for facet titles. Inspired by the **ggplot2** theme of the same name.
 #'         - `"ipsum"` (*): builds on `"minimal"` with bold titles, no ticks, fine grid, edge-aligned axis titles, and a custom muted palette. Inspired by the **hrbrthemes** theme of the same name for **ggplot2**.
 #'         - `"ipsum2"` (*): a lighter variant of `"ipsum"` that retains the original italic subtitle and edge-aligned axis titles, but without the additional spacing and palette changes.
@@ -30,6 +31,7 @@
 #'       - `"nber"` (*): builds on `"broadsheet"` for an NBER working paper style with a light blue-grey background, grey text, italic axis titles and captions, and a blue-grey discrete palette.
 #'     - `"web"` (*): a FiveThirtyEight-inspired style with a light grey device background, no frame or axis lines, and bold grid lines. Suited to web/online publication.
 #'     - `"tufte"` (*): floating axes and minimalist plot artifacts in the style of Edward Tufte.
+#'       - `"float"` (*): builds on `"tufte"` with outward ticks, fewer tick marks, and a "dark" qualitative palette.
 #'     - `"void"` (*): switches off all axes, titles, legends, etc.
 #'     - `"ridge"` (*): a specialized theme for ridge plots (see [`type_ridge()`]). Builds off of `"clean"`, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
 #'       - `"ridge2"` (*): removes the plot frame (box) from `"ridge"`, but retains the x-axis line. Again, not recommended for non-ridge plots.
@@ -61,7 +63,9 @@
 #' ```
 #' 
 #' **Custom overrides.** To customize a theme's parameters (e.g., `mar`, `las`,
-#' etc.), pass them directly as additional args to `tinytheme(<theme>, ...)`.
+#' etc.), either pass them directly as additional args to
+#' `tinytheme(<theme>, ...)` or as a list arguments to
+#' `tinyplot(..., theme = list(<theme>, ...))`.
 #' Please note that passing overrides through `tpar()` or `par()` _won't_ work,
 #' because themes work by installing a persistent hook, which means that an
 #' active theme will override any subsequent calls for parameters that the theme
@@ -72,7 +76,10 @@
 #' tinytheme("clean", mar = c(5, 5, 2, 2))
 #' <some plot>
 #' 
-#' # Not this (the theme hook will overwrite your changes)
+#' # Or this (ephemeral version)
+#' tinyplot(..., theme = list("clean", mar = c(5, 5, 2, 2)))
+#' 
+#' # Don't do this (the theme hook will overwrite your changes)
 #' tinytheme("clean")
 #' tpar(mar = c(5, 5, 2, 2))
 #' <some plot>
@@ -151,6 +158,9 @@
 #' tinyplot(0:10, theme = "clean", main = "This theme is ephemeral")
 #' tinyplot(10:0, main = "See, no more theme")
 #' 
+#' # Customize an ephemeral theme by passing arguments as a list
+#' tinyplot(0:10, main = "Custom", theme = list("clean", grid.col = "hotpink"))
+#' 
 #' # Themes showcase
 #' ## We'll use a slightly more intricate plot (long y-axis labs and facets)
 #' ## to demonstrate dynamic margin adjustment etc.
@@ -176,11 +186,11 @@
 tinytheme = function(
     theme = c(
       "default", "basic", "dynamic",
-      "clean", "clean2", "bw", "classic",
+      "clean", "clean2", "bw", "linedraw", "classic",
       "minimal", "ipsum", "ipsum2", "dark",
       "socviz", "broadsheet", "nber", "web",
       "ridge", "ridge2",
-      "tufte", "void"
+      "tufte", "float", "void"
     ),
     ...
     ) {
@@ -196,8 +206,8 @@ tinytheme = function(
     c(
       "default",
       sort(c("basic", "broadsheet", "bw", "classic", "clean", "clean2", "dark",
-             "dynamic", "ipsum", "ipsum2", "minimal", "nber", "ridge", "ridge2",
-             "socviz", "tufte", "void", "web"))
+             "dynamic", "float", "ipsum", "ipsum2", "linedraw", "minimal",
+             "nber", "ridge", "ridge2", "socviz", "tufte", "void", "web"))
     )
   )
 
@@ -206,6 +216,7 @@ tinytheme = function(
     "basic" = theme_basic,
     "broadsheet" = theme_broadsheet,
     "bw" = theme_bw,
+    "linedraw" = theme_linedraw,
     "classic" = theme_classic,
     "clean" = theme_clean,
     "clean2" = theme_clean2,
@@ -219,6 +230,7 @@ tinytheme = function(
     "ridge2" = theme_ridge2,
     "socviz" = theme_socviz,
     "tufte" = theme_tufte,
+    "float" = theme_float,
     "void" = theme_void,
     "web" = theme_web,
   )
@@ -424,6 +436,14 @@ theme_bw = modifyList(theme_clean, list(
   palette.qualitative = "Okabe-Ito"
 ))
 
+theme_linedraw = modifyList(theme_bw, list(
+  tinytheme = "linedraw",
+  facet.bg = "black",
+  facet.col = "white",
+  grid.col = "black",
+  grid.lwd = 0.1
+))
+
 # derivatives of "bw"
 # - minimal
 # - ipsum
@@ -603,6 +623,15 @@ theme_tufte = modifyList(theme_dynamic, list(
   grid = FALSE,
   lab = c(10, 10, 7),
   tcl = 0.2
+))
+
+theme_float = modifyList(theme_tufte, list(
+  tinytheme = "float",
+  gap.axis = 0,
+  gap.lab = 0.7,
+  lab = c(5, 5, 7),
+  palette.qualitative = "dark",
+  tcl = -0.2
 ))
 
 theme_void = modifyList(theme_dynamic, list(

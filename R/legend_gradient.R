@@ -175,7 +175,9 @@ draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inne
     x = lbl_x_anchor,
     y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
     labels = lgnd_ticks,
+    cex = 1,
     col = "white",
+    family = "sans",
     xpd = NA,
     adj = c(1, 0.5)
   )

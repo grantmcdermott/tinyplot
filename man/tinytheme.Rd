@@ -127,11 +127,6 @@ tinytheme("clean", gap.axis = 0.5)
 
 If you supply an explicit \code{mgp} value, it is used as-is and the primitives
 are ignored.
-
-\strong{Caveats.} Known \code{tinytheme} limitations include:
-\itemize{
-\item Themes do not work well when \code{legend = "top!"}.
-}
 }
 \examples{
 # Reusable plot function

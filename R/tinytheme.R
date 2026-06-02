@@ -102,10 +102,6 @@
 #' If you supply an explicit `mgp` value, it is used as-is and the primitives
 #' are ignored.
 #'
-#' **Caveats.** Known `tinytheme` limitations include:
-#'
-#' - Themes do not work well when `legend = "top!"`.
-#'
 #' @return The function returns nothing. It is called for its side effects.
 #' 
 #' @seealso [`tpar`] which does the heavy lifting under the hood.

@@ -851,6 +851,10 @@ build_legend_env = function(
 #'   in order to perform the calculations.
 #' @param soma_target Numeric. Shared outer margin target (in lines) for
 #'   multi-legend alignment. If `NULL`, each legend computes its own margin.
+#' @param main_lines Integer. Number of lines in the main title (0 if none).
+#' @param dynmar_title_mar Numeric or `NULL`. The pre-computed `dynmar_computed[3]`
+#'   value for "top!" legends under dynmar themes. When set, the legend margin
+#'   formula uses this directly to ensure correct title positioning.
 #'
 #' @returns No return value, called for side effect of producing a(n empty) plot
 #'   with a legend in the margin.

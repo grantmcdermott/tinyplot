@@ -70,45 +70,50 @@ visualizations.
 
 ### New features
 
-- New `ljust` parameter for controlling legend title and label justification.
-  Accepts values of `"l(eft)"` (default) or `"c(enter")`. Can be set per-plot
-  via `legend = list(..., ljust = "c")`, or globally via `tpar(ljust = "c")`.
-  (#500 @grantmcdermott)
-- New `"dynamic"` theme that now serves as the foundation for all other dynamic
-  (tiny)themes. (#549 @grantmcdermott)
+- New `type_chull()` (equivalently, `type = "chull"`) for drawing convex hulls
+  around grouped points. Uses `grDevices::chull()` under the hood and delegates
+  drawing to `draw_polygon()`. Works well as a layer on top of points, e.g.
+  `plt_add(type = "chull", fill = 0.2)`. (#600 @grantmcdermott)
+- New legend features and arguments: 
+  - `ljust` parameter enables control of legend title and label justification.
+    Accepts values of `"l(eft)"` (default) or `"c(enter")`. Can be set per-plot
+    via `legend = list(..., ljust = "c")`, or globally via `tpar(ljust = "c")`.
+    (#500 @grantmcdermott)
+  - `legend = "direct"` option for placing text labels at the last point of each
+    group's data, coloured to match. Best suited to line-based plots with
+    x-sorted data. The right margin is automatically expanded to prevent
+    clipping. Pairs well with dynamic themes. For faceted plots, labels are
+    drawn in each panel for the groups present there. Supports
+    `nudge_x`/`nudge_y` for manual per-group offsets and `repel` for automatic
+    vertical separation of overlapping labels, e.g.
+    `legend = legend("direct", repel = TRUE)`. (#587 @grantmcdermott)
 - The `grid` argument (and `tpar("grid")`) now accepts character strings to
   control axis-specific grids at different resolutions. Uppercase letters
   (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
   lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional
   lines at the midpoints between ticks. Thanks to @zeileis for the suggestion.
   (#578 @grantmcdermott)
-- New `legend = "direct"` option (experimental) places text labels at the last
-  point of each group's data, coloured to match. Best suited to line-based plots
-  with x-sorted data. The right margin is automatically expanded to prevent
-  clipping. Pairs well with dynamic themes. For faceted plots, labels are drawn
-  in each panel for the groups present there. Supports `nudge_x`/`nudge_y` for
-  manual per-group offsets and `repel` for automatic vertical separation of
-  overlapping labels, e.g. `legend = legend("direct", repel = TRUE)`.
-  (#587 @grantmcdermott)
-- `tinytheme()` now accepts additional `gap.axis` and `gap.lab` "primitives",
-  providing finer control for spacing between ticks-labels and labels-titles,
-  respectively, in dynamic themes. See the **Dynamic themes** entry above.
-  (#590 @grantmcdermott)
-- Similarly, `tinytheme()` also accepts `gap.main` and `gap.sub` primitives for 
-  controlling the spacing between titles and the plot region.
-  (#595 @grantmcdermott)
 - New `tinyplot(..., cap = <caption>)` argument for adding a caption to your 
   plots. Captions are drawn at the bottom of the plot and are best paired with
   dynamic themes (since separation from `sub` is guaranteed). Appearance is
   customizable via `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`,
   `font.cap`, and `line.cap`. (#592 @grantmcdermott)
-- New themes: `"socviz"`, `"broadsheet"`, `"nber"`, and `"web"`, targeting
-  academic social science, newspaper, NBER working paper, and web-style (e.g.,
-  FiveThirtyEight) aesthetics respectively. (#595 @grantmcdermott)
-- New `type_chull()` (equivalently, `type = "chull"`) for drawing convex hulls
-  around grouped points. Uses `grDevices::chull()` under the hood and delegates
-  drawing to `draw_polygon()`. Works well as a layer on top of points, e.g.
-  `plt_add(type = "chull", fill = 0.2)`. (#600 @grantmcdermott)
+- New `tinytheme()` features:
+  - `tinytheme()` now accepts additional `gap.axis` and `gap.lab` "primitives",
+    providing finer control for spacing between ticks-labels and labels-titles,
+    respectively, in dynamic themes. See the **Dynamic themes** entry above.
+    (#590 @grantmcdermott)
+  - Similarly, `tinytheme()` also accepts `gap.main` and `gap.sub` primitives
+    for controlling the spacing between titles and the plot region.
+    (#595 @grantmcdermott)
+  - New (tiny)themes (#549, #595, #606 @grantmcdermott)
+    - `"dynamic"` (new foundation for all other dynamic themes)
+    - `"socviz"` (based on Kieran Healy's [book](https://socviz.co/))
+    - `"broadsheet"` (data journalism style _a la_ _The Economist_ or _NY Times_)
+    - `"nber"` (NBER working paper style)
+    - `"web"` (web publication, e.g., FiveThirtyEight).
+    - `"float"` (floating axes)
+    - `"linedraw"` (based on the `ggplot2` theme)
 
 ### Bug fixes
 

@@ -242,3 +242,53 @@ f = function() {
   plt(foo) 
 }
 expect_snapshot_plot(f, label = "legend_custom_s3")
+
+
+# top! + dynmar: title above legend, legend above plot
+
+f = function() {
+  tinyplot(
+    Sepal.Length ~ Petal.Length | Species, data = iris,
+    main = "Hello", legend = list("top!", bty = "o"), theme = "dynamic"
+  )
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_top_dynmar_title")
+
+f = function() {
+  tinyplot(
+    Sepal.Length ~ Petal.Length | Species, data = iris,
+    legend = list("top!", bty = "o"), theme = "dynamic"
+  )
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_top_dynmar_notitle")
+
+f = function() {
+  tinyplot(
+    Sepal.Length ~ Petal.Length | Species, data = iris,
+    main = "Hello", sub = "Subtitle", legend = list("top!", bty = "o"),
+    theme = "dynamic"
+  )
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_top_dynmar_title_sub")
+
+# top! + dynmar: margin reset between successive plots
+f = function() {
+  tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris,
+           legend = list("right!", bty = "o"), theme = "dynamic")
+  tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris,
+           main = "Hello", legend = list("top!", bty = "o"), theme = "dynamic")
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_top_dynmar_after_right")
+
+f = function() {
+  tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris,
+           main = "Hello", legend = list("top!", bty = "o"), theme = "dynamic")
+  tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris,
+           legend = list("right!", bty = "o"), theme = "dynamic")
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_right_dynmar_after_top")

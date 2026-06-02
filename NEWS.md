@@ -56,6 +56,9 @@ visualizations.
     title to whatever is below it (plot box or subtitle top); `gap.sub`
     sets the gap from the subtitle to the plot box. Both default to `0.7`.
     (#597)
+  - Dynamic themes now play nicely with `legend = "top!"`. The title,
+    subtitle, and legend stack correctly above the plot region with proper
+    spacing. (#605)
 
 - **Theme refinements**. The `"tufte"` and `"void"` themes are now dynamic
   (responsive margins). The `"ipsum"` theme has been overhauled (bold title, no
@@ -122,6 +125,12 @@ visualizations.
   now vertically centered within the background rect. (#586 @grantmcdermott)
 - Fixed Issue #593 where `palette.qualitative` in themes could not be a
   function. Thanks to @katrinabrock for the report. (#594 @zeileis)
+- Fixed `legend = "top!"` under dynamic themes where the main title was
+  invisible and the legend overlapped the plot region. Title and subtitle
+  (when `side.sub = 3`) now stack correctly above the legend with exact
+  positioning that matches other legend positions. Also fixed margin state
+  corruption when switching between outer legend positions across successive
+  plots. (#604, #605 @grantmcdermott)
 
 
 ## v0.6.1

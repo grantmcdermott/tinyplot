@@ -63,7 +63,9 @@
 #' ```
 #' 
 #' **Custom overrides.** To customize a theme's parameters (e.g., `mar`, `las`,
-#' etc.), pass them directly as additional args to `tinytheme(<theme>, ...)`.
+#' etc.), either pass them directly as additional args to
+#' `tinytheme(<theme>, ...)` or as a list arguments to
+#' `tinyplot(..., theme = list(<theme>, ...))`.
 #' Please note that passing overrides through `tpar()` or `par()` _won't_ work,
 #' because themes work by installing a persistent hook, which means that an
 #' active theme will override any subsequent calls for parameters that the theme
@@ -74,7 +76,10 @@
 #' tinytheme("clean", mar = c(5, 5, 2, 2))
 #' <some plot>
 #' 
-#' # Not this (the theme hook will overwrite your changes)
+#' # Or this (ephemeral version)
+#' tinyplot(..., theme = list("clean", mar = c(5, 5, 2, 2)))
+#' 
+#' # Don't do this (the theme hook will overwrite your changes)
 #' tinytheme("clean")
 #' tpar(mar = c(5, 5, 2, 2))
 #' <some plot>
@@ -152,6 +157,9 @@
 #' # For an ephemeral theme, use `tinyplot(..., theme = <theme>)` directly
 #' tinyplot(0:10, theme = "clean", main = "This theme is ephemeral")
 #' tinyplot(10:0, main = "See, no more theme")
+#' 
+#' # Customize an ephemeral theme by passing arguments as a list
+#' tinyplot(0:10, main = "Custom", theme = list("bw", family = "HersheyScript"))
 #' 
 #' # Themes showcase
 #' ## We'll use a slightly more intricate plot (long y-axis labs and facets)

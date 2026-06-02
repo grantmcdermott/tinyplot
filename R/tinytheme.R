@@ -159,7 +159,7 @@
 #' tinyplot(10:0, main = "See, no more theme")
 #' 
 #' # Customize an ephemeral theme by passing arguments as a list
-#' tinyplot(0:10, main = "Custom", theme = list("bw", family = "HersheyScript"))
+#' tinyplot(0:10, main = "Custom", theme = list("clean", grid.col = "hotpink"))
 #' 
 #' # Themes showcase
 #' ## We'll use a slightly more intricate plot (long y-axis labs and facets)

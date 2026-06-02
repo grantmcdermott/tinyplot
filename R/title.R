@@ -50,6 +50,10 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
     if (isTRUE(get_tpar("side.sub", 1) == 3)) {
       gap_sub = get_tpar("gap.sub", 0.7)
       line_sub = get_tpar("line.sub", gap_sub - 0.1)
+      if (isTRUE(adj_title) && isTRUE(get_tpar("dynmar", FALSE))) {
+        top_soma = get_environment_variable(".top_legend_soma") %||% 0
+        line_sub = top_soma + gap_sub - 0.1
+      }
     } else {
       line_sub = get_tpar("line.sub", 4)
     }

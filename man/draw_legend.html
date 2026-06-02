@@ -598,7 +598,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   cap_text = NULL,
   new_plot = TRUE,
   draw = TRUE,
-  soma_target = NULL
+  soma_target = NULL,
+  dynmar_title_mar = NULL
 )
 </code></pre>
 </section>
@@ -763,6 +764,14 @@ Logical. If <code>FALSE</code>, no legend is drawn but the sizes are returned. N
 </td>
 <td>
 Numeric. Shared outer margin target (in lines) for multi-legend alignment. If <code>NULL</code>, each legend computes its own margin.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="dynmar_title_mar">dynmar_title_mar</code>
+</td>
+<td>
+Numeric or <code>NULL</code>. The pre-computed <code>dynmar_computed[3]</code> value for "top!" legends under dynmar themes. When set, the legend margin formula uses this directly to ensure correct title positioning.
 </td>
 </tr>
 </tbody></table>

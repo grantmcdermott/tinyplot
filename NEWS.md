@@ -11,82 +11,114 @@ where the formatting is also better._
 The main focus of v0.7.0 is bringing various aesthetic improvements to 
 **tinyplot**. These aesthetic improvements should carry over to all of your
 (tiny)plots automatically and do not require any changes to user-facing inputs 
-or the core API. Some of your plots may look slightly different from before. 
-But we hope that you agree the following changes result in better looking
-visualizations.
+or the core API. From that perspective they are not a breaking change, even
+though some of your plots may look slightly different from before. Still, we
+hope that you agree the following changes result in better looking
+visualizations:
 
-- **Left-justified legends**. Legend titles and labels are now left-justified by
-  default for vertical, side-positioned legends (e.g., `"right!"`, `"left!"`).
-  This is a change from the previous (base R default) of centered legends. To
-  revert to the old behaviour globally, simply set `tpar(ljust = "c(enter)")`.
-  Or, change a single plot by passing the parameter as part of the legend list
-  arguments, e.g. `plt(..., legend = list("c"))`. (#500 @grantmcdermott)
+#### Legend aesthetics
 
-- **Dynamic themes**. We have significantly refactored our _dynamic_ themes
-  logic. Recall, these are themes like `"dynamic"`, `"clean"`, `"bw"`, etc. that
-  automatically adjust margin spacing and related plot elements to reduce
-  whitespace and improve the overall plot aesthetic.
-  (#549, #591, #595 @grantmcdermott, @vincentarelbundock)
-  
-  - Plot margins now correctly respond to missing and/or multi-line `main`,
-    `sub`, and `x`/`y` axis titles. For example, a plot without a `main` (or
-    `sub`) title will expand to the top of the device region to reduce excess
-    whitespace. (#303)
-  - Left-justified `main` and `sub` titles now correctly anchor to the y-axis
-    line, even when long horizontal tick labels widen the left margin. (#479)
-  - Similarly, center-justified axis titles are now anchored on the relevant
-    axis alone, rather than the full plot region. (#573) 
-  - `cex.xlab` and `cex.ylab` now correctly control axis title size. The
-    more general `cex.lab` is still respected as a fallback. (#574)
-  - Margin spacing now correctly adjusts for math expressions, including
-    fractions and exponents in titles. (#575)
-  - Dynamic margins and `mgp` now scale correctly with `cex.axis` and
-    `cex.lab`, maintaining constant visual gaps between axis elements
-    regardless of text size. From the user perspective, this is
-    operationalized through the new `gap.axis` and `gap.lab` theme
-    primitives, which let you control the spacing between margin elements
-    directly (tick-to-label gap and label-to-title gap, respectively),
-    replacing the guesswork of manually combining `mar`, `mgp`, and `tcl`
-    values. (#590)
-  - The gap between y-axis tick labels and the y-axis title is now
-    constant regardless of label width (1-digit, 2-digit, decimals, etc.).
-    Previously the gap varied at the narrow/wide label boundary. (#596)
-  - New `gap.main` and `gap.sub` theme primitives control the spacing
-    between titles and the plot box. `gap.main` sets the gap from the main
-    title to whatever is below it (plot box or subtitle top); `gap.sub`
-    sets the gap from the subtitle to the plot box. Both default to `0.7`.
-    (#597)
-  - Dynamic themes now play nicely with `legend = "top!"`. The title,
-    subtitle, and legend stack correctly above the plot region with proper
-    spacing. (#605)
+- Legend titles and labels are now left-justified by default for the (vertical)
+  side-positioned legends like `"right!"` and `"left!"`. This is a minor visual
+  change from the previous default of centered legends, which we inherited from
+  base R. However, users can still override this behaviour with the new `ljust`
+  parameter, which accepts values of `"l(eft)"` (new default) or `"c(enter")`
+  (old default). (#500 @grantmcdermott)
+  - Example: Override globally by setting `tpar(ljust = "c")`, or revert for a
+    single plot by passing the parameter as part of the legend list arguments,
+    i.e. `plt(..., legend = list(ljust = "c"))`.
+- Direct legend labels are now supported via the new `legend = "direct"`
+  keyword. This places the legend labels at the last observation of each data
+  group and is thus best suited to line or ribbon plots, where the data is
+  sorted along the x-axis. (#587 @grantmcdermott)
+  - Note: The plot (facet) RHS margin is automatically expanded to prevent text
+    clipping of these direct legend labels. However, the labels themselves may
+    still overlap. Users can prevent this by passing helper arguments to the
+    legend contructor: either `repel` (for automatic vertical separation) or 
+    `nudge_x`/`nudge_y` (for manual per-group offsets). For example,
+    `plt(..., legend = list("direct", repel = TRUE))`. 
 
-- **Theme refinements**. The `"tufte"` and `"void"` themes are now dynamic
-  (responsive margins). The `"ipsum"` theme has been overhauled (bold title, no
-  ticks, fine grid, custom palette); the original variant is preserved as
-  `"ipsum2"`. The ggplot2-inspired like `"bw"` and `"classic"` now use smaller
-  axis text and tighter spacing to better match their ggplot2 counterparts. 
-  Also, the `"dark"` theme now uses a better default `ribbon.alpha` for better
-  contrast against the black background. (#595, #603 @grantmcdermott)
+#### Theme aesthetics
 
-### New features
+We have significantly refactored our _dynamic_ themes logic. Recall, these are
+themes like `"dynamic"`, `"clean"`, `"bw"`, etc. that automatically adjust
+margin spacing and related plot elements to reduce whitespace and improve the
+overall plot aesthetic. The `?tinytheme` help file and online
+[Themes](https://grantmcdermott.com/tinyplot/vignettes/themes.html) vignette
+cover the new features in detail. But see below for the highlights.
+(#549, #591, #595, #606 @grantmcdermott, @vincentarelbundock)
 
-- New `type_chull()` (equivalently, `type = "chull"`) for drawing convex hulls
+New theme features:
+
+- `tinytheme()` now accepts additional `gap.axis` and `gap.lab` "primitives",
+  providing finer control for spacing between ticks-to-labels and
+  labels-to-titles, respectively, in dynamic themes. (#590 @grantmcdermott)
+- Similarly, `tinytheme()` also accepts `gap.main` and `gap.sub` primitives
+  for controlling the spacing between titles and the plot region.
+  (#595 @grantmcdermott)
+- Existing theme refinements and improvments. (#595, #603 @grantmcdermott).
+  - `"tufte"` and `"void"` are now dynamic (responsive margins).
+  - All of the `ggplot2`-inspired themes (`"bw"`, `"classic"`, etc.) now use
+    smaller axis text and tighter spacing to better match their upstream
+    `ggplot2` counterparts.
+  - `"ipsum"` has been similarly overhauled to match the upsteam theme (bold
+    title, no ticks, fine grid, custom palette). Our original `tinyplot` variant
+    is preserved as `"ipsum2"` for those who still want to use it.
+  - `"dark"` now uses a better default `ribbon.alpha` for better contrast
+    against the black background.
+- Added several new themes. (#595, #606 @grantmcdermott)
+  - `"dynamic"` (new foundation for all other dynamic themes)
+  - `"broadsheet"` (data journalism style _a la_ _The Economist_ or _NY Times_)
+  - `"float"` (floating axes; a variant of `"tufte"`)
+  - `"linedraw"` (based on the `ggplot2` theme)
+  - `"nber"` (NBER working paper style)
+  - `"socviz"` (based on Kieran Healy's [book](https://socviz.co/))
+  - `"web"` (web publication, e.g. FiveThirtyEight)
+
+Theme fixes:
+
+- Plot margins now correctly respond to missing and/or multi-line `main`,
+  `sub`, and `x`/`y` axis titles. For example, a plot without a `main` (or
+  `sub`) title will expand to the top of the device region to reduce excess
+  whitespace. (#303)
+- Left-justified `main` and `sub` titles now correctly anchor to the y-axis
+  line, even when long horizontal tick labels widen the left margin. (#479)
+- Similarly, center-justified axis titles are now anchored on the relevant
+  axis alone, rather than the full plot region. (#573) 
+- `cex.xlab` and `cex.ylab` now correctly control axis title size. The
+  more general `cex.lab` is still respected as a fallback. (#574)
+- Margin spacing now correctly adjusts for math expressions, including
+  fractions and exponents in titles. (#575)
+- Dynamic margins and `mgp` now scale correctly with `cex.axis` and
+  `cex.lab`, maintaining constant visual gaps between axis elements
+  regardless of text size. From the user perspective, this is
+  operationalized through the new `gap.axis` and `gap.lab` theme
+  primitives, which let you control the spacing between margin elements
+  directly (tick-to-label gap and label-to-title gap, respectively),
+  replacing the guesswork of manually combining `mar`, `mgp`, and `tcl`
+  values. (#590)
+- The gap between y-axis tick labels and the y-axis title is now
+  constant regardless of label width (1-digit, 2-digit, decimals, etc.).
+  Previously the gap varied at the narrow/wide label boundary. (#596)
+- New `gap.main` and `gap.sub` theme primitives control the spacing
+  between titles and the plot box. `gap.main` sets the gap from the main
+  title to whatever is below it (plot box or subtitle top); `gap.sub`
+  sets the gap from the subtitle to the plot box. Both default to `0.7`.
+  (#597)
+- Dynamic themes now play nicely with `legend = "top!"`. The title,
+  subtitle, and legend stack correctly above the plot region with proper
+  spacing. (#605)
+
+
+### New plot types
+
+- `type_chull()` (equivalently, `type = "chull"`) for drawing convex hulls
   around grouped points. Uses `grDevices::chull()` under the hood and delegates
   drawing to `draw_polygon()`. Works well as a layer on top of points, e.g.
   `plt_add(type = "chull", fill = 0.2)`. (#600 @grantmcdermott)
-- New legend features and arguments: 
-  - `ljust` parameter enables control of legend title and label justification.
-    Accepts values of `"l(eft)"` (default) or `"c(enter")`. Can be set per-plot
-    via `legend = list(..., ljust = "c")`, or globally via `tpar(ljust = "c")`.
-    (#500 @grantmcdermott)
-  - `legend = "direct"` option for placing text labels at the last point of each
-    group's data, coloured to match. Best suited to line-based plots with
-    x-sorted data. The right margin is automatically expanded to prevent
-    clipping. Pairs well with dynamic themes. For faceted plots, labels are
-    drawn in each panel for the groups present there. Supports
-    `nudge_x`/`nudge_y` for manual per-group offsets and `repel` for automatic
-    vertical separation of overlapping labels, e.g.
-    `legend = legend("direct", repel = TRUE)`. (#587 @grantmcdermott)
+
+### Other new features
+
 - The `grid` argument (and `tpar("grid")`) now accepts character strings to
   control axis-specific grids at different resolutions. Uppercase letters
   (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
@@ -98,22 +130,6 @@ visualizations.
   dynamic themes (since separation from `sub` is guaranteed). Appearance is
   customizable via `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`,
   `font.cap`, and `line.cap`. (#592 @grantmcdermott)
-- New `tinytheme()` features:
-  - `tinytheme()` now accepts additional `gap.axis` and `gap.lab` "primitives",
-    providing finer control for spacing between ticks-labels and labels-titles,
-    respectively, in dynamic themes. See the **Dynamic themes** entry above.
-    (#590 @grantmcdermott)
-  - Similarly, `tinytheme()` also accepts `gap.main` and `gap.sub` primitives
-    for controlling the spacing between titles and the plot region.
-    (#595 @grantmcdermott)
-  - New (tiny)themes (#549, #595, #606 @grantmcdermott)
-    - `"dynamic"` (new foundation for all other dynamic themes)
-    - `"socviz"` (based on Kieran Healy's [book](https://socviz.co/))
-    - `"broadsheet"` (data journalism style _a la_ _The Economist_ or _NY Times_)
-    - `"nber"` (NBER working paper style)
-    - `"web"` (web publication, e.g., FiveThirtyEight).
-    - `"float"` (floating axes)
-    - `"linedraw"` (based on the `ggplot2` theme)
 
 ### Bug fixes
 
@@ -130,13 +146,6 @@ visualizations.
   now vertically centered within the background rect. (#586 @grantmcdermott)
 - Fixed Issue #593 where `palette.qualitative` in themes could not be a
   function. Thanks to @katrinabrock for the report. (#594 @zeileis)
-- Fixed `legend = "top!"` under dynamic themes where the main title was
-  invisible and the legend overlapped the plot region. Title and subtitle
-  (when `side.sub = 3`) now stack correctly above the legend with exact
-  positioning that matches other legend positions. Also fixed margin state
-  corruption when switching between outer legend positions across successive
-  plots. (#604, #605 @grantmcdermott)
-
 
 ## v0.6.1
 

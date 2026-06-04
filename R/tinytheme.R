@@ -38,6 +38,10 @@
 #' @param ... Named arguments to override specific theme settings. These
 #'   arguments are passed to `tpar()` and take precedence over the predefined
 #'   settings in the selected theme.
+#' @param register Optional character string. If provided, the theme (with any
+#'   `...` overrides) is registered under this name via [`tinytheme_register()`]
+#'   and simultaneously activated. This is a shortcut for calling
+#'   [`tinytheme_register()`] and `tinytheme()` separately.
 #'
 #' @details
 #' Sets a list of graphical parameters using `tpar()`
@@ -112,7 +116,7 @@
 #' @return The function returns nothing. It is called for its side effects.
 #' 
 #' @seealso [`tpar`] which does the heavy lifting under the hood;
-#'   [tinytheme_register()] for adding custom named themes.
+#'   [`tinytheme_register()`] for adding custom named themes.
 #'
 #' @examples
 #' # Reusable plot function
@@ -193,7 +197,8 @@ tinytheme = function(
       "ridge", "ridge2",
       "tufte", "float", "void"
     ),
-    ...
+    ...,
+    register = NULL
     ) {
   
   if (length(theme) > 1) theme = theme[1]
@@ -257,10 +262,15 @@ tinytheme = function(
     settings[["mgp"]] = c(.mgp1, .mgp2, 0)
   }
 
+  if (!is.null(register)) {
+    tinytheme_register(register, theme = theme, ...)
+    settings[["tinytheme"]] = register
+  }
+
   if (length(settings) > 0) {
     if (theme == "default") {
       # for default theme, we want to revert the original pars and turn off the
-      # before.new.plot hook (otherwise manual par(x = y) changes won't work) 
+      # before.new.plot hook (otherwise manual par(x = y) changes won't work)
       tpar(settings, hook = FALSE)
       old_hooks = get_environment_variable(".tpar_hooks")
       remove_hooks(old_hooks)

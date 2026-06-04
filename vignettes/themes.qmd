@@ -183,16 +183,25 @@ Please feel free to make suggestions about themes, or contribute new themes by
 
 ### Custom themes
 
-Tweaking existing themes is easy. For example, the `tinytheme()` function also
-accepts any graphical parameter supported by `tpar()`/`par()` and applies them
-in persistent fashion.
+Creating custom **tinyplot** themes is easy. Below we demonstrate how to tweak
+existing themes in an _ad hoc_ manner, as well as how to register themes for
+consistent re-use. 
+
+#### _Ad hoc_ customization
+
+The `tinytheme()` function accepts all of the graphical parameters supported by
+`(t)par()`. This means that you customize a persistent theme simply by passing
+down the relevant parameter arguments. For example:
 
 ```{r}
 #| layout-ncol: 2
 tinytheme(
-  "ipsum",
-  pch = 2, col.axis = "darkcyan", cex = 1.2, cex.main = 2, cex.lab = 1.5,
-  family = "HersheyScript"
+  "dynamic",
+  cex = 1.2, cex.main = 1.5,
+  col.axis = "darkred", col.main = "firebrick",
+  family = "HersheySans",
+  grid = TRUE, grid.col = "thistle",
+  pch = 2
 )
 tinyplot(mpg ~ hp, data = mtcars, main = "Fuel efficiency vs. horsepower")
 tinyplot(hp ~ mpg, data = mtcars, main = "Horsepower vs. fuel efficiency")
@@ -227,6 +236,66 @@ tinyplot(
 )
 ```
 
+#### Registering custom themes
+
+If you find yourself reusing the same custom theme settings across multiple
+plots or sessions, you may prefer to register them as a named theme with
+`tinytheme_register()`. Once a theme is registered, it works just like a
+built-in one. So you can set it persistently with `tinytheme(<theme>)`, or pass
+it ephemerally with `tinyplot(..., theme = <theme>)`.
+
+Here's a rather fancy example of a "pirate"-inspired theme:
+
+```{r}
+# Register a custom "pirate" theme that builds on top of "clean"
+tinytheme_register(
+  "pirate",
+  theme = "clean",
+  family = "HersheyScript",
+  bg = "#f5e6c8", fg = "#3b2209",
+  cex.lab = 1.5, cex.main = 1.5, cex.sub = 1.2,
+  col = "#3b2209", col.axis = "#5c3a1e", col.cap = "#7a5230", 
+  col.lab = "#3b2209", col.main = "#1a0f04", col.sub = "#7a5230",
+  grid = TRUE, grid.col = "#c9a96e", grid.lty = "dotted",
+  facet.bg = "#e8d4a8", facet.border = "#5c3a1e",
+  pch = 4,
+  palette.qualitative = c(
+    "#8b0000", "#1a5276", "#196f3d", "#7d6608",
+    "#6c3483", "#a04000", "#1b4f72", "#145a32"
+  )
+)
+
+# Use it ephemerally
+tinyplot(
+  Sepal.Length ~ Petal.Length | Species, iris,
+  main = "Avast, me hearties!",
+  sub  = "x marks the petal",
+  cap  = "Ye Olde Iris Data", 
+  theme = "pirate"
+)
+```
+
+Use `tinytheme_list()` to see all available themes (both built-in and
+registered), and `tinytheme_unregister()` to remove one.
+
+```{r}
+tinytheme_unregister("pirate")
+```
+
+Registered themes are session-scoped: they persist across plots but disappear
+when R restarts. To make a custom theme permanently available, register it in
+your `.Rprofile`:
+
+```r
+# In ~/.Rprofile
+if (requireNamespace("tinyplot", quietly = TRUE)) {
+  tinyplot::tinytheme_register("my_theme", theme = "clean", grid.col = "pink")
+}
+```
+
+Similarly, package authors can ship their own custom (tiny)themes as part of
+their codebase, which any subsequent `tinyplot()` calls can plug into.  
+
 ::: {.callout-tip}
 ## Font families
 
@@ -247,6 +316,8 @@ catalog, either on-the-fly or downloaded to your permanent fontbook collection.
 It plays very nicely with **tinyplot**.
 
 :::
+
+#### Customization tips
 
 One feature of the `tinytheme()` infrastructure that is especially relevant
 to customized themes is how dynamic spacing works. Dynamic themes in
@@ -281,7 +352,6 @@ Again, this is much more convenient that fiddling with `mgp` values. But you can
 always provide `mgp` values if you wish; in which it will take precedence and
 the primitives are ignored.
 
-::: {.callout-tip}
 To see the full list of parameters that defines a particular theme, simply
 assign them to an object. This can be helpful if you want to explore creating
 your own custom theme, or tweak an existing theme.
@@ -295,8 +365,6 @@ parms = tinyplot:::theme_clean # doesn't assign the theme
 # show the list of parameters used in the "clean" theme
 parms
 ```
-
-:::
 
 As a final note about customizing themes, please note that `tinytheme` works by
 setting a persistent hook that resets parameters before each new plot. This is

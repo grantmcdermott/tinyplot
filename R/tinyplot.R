@@ -1386,14 +1386,14 @@ tinyplot.formula = function(
       if (xtype %in% c("none", "empty")) {
         facet = yfacet
         if (xtype == "empty") {
-          attr(facet, "facet_grid") = TRUE
-          attr(facet, "facet_nrow") = length(unique(yfacet))
+          if (is.null(facet.args)) facet.args = list()
+          if (is.null(facet.args[["nrow"]])) facet.args[["nrow"]] = length(unique(yfacet))
         }
       } else if (ytype %in% c("none", "empty")) {
         facet = xfacet
         if (ytype == "empty") {
-          attr(facet, "facet_grid") = TRUE
-          attr(facet, "facet_nrow") = 1L
+          if (is.null(facet.args)) facet.args = list()
+          if (is.null(facet.args[["nrow"]])) facet.args[["nrow"]] = 1L
         }
       } else {
         facet = interaction(xfacet, yfacet, sep = "~")

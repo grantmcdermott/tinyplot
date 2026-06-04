@@ -208,5 +208,6 @@ tinytheme()
 
 }
 \seealso{
-\code{\link{tpar}} which does the heavy lifting under the hood.
+\code{\link{tpar}} which does the heavy lifting under the hood;
+\code{\link[=tinytheme_register]{tinytheme_register()}} for adding custom named themes.
 }

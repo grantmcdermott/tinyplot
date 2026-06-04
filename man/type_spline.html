@@ -107,35 +107,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -653,10 +624,7 @@ handling of tied <code>x</code> values. The string <code>“ordered”</code> or
 </section>
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>The inputs can contain missing values which are deleted, so at least one complete <code>(x, y)</code> pair is required. If <code>method = “fmm”</code>, the spline used is that of <a href="#reference+splinefun.Rd+R+3AForsythe+2BMalcolm+2BMoler+3A1977" class="citation">Forsythe, Malcolm, and Moler (1977)</a> (an exact cubic is fitted through the four points at each end of the data, and this is used to determine the end conditions). Natural splines are used when <code>method = “natural”</code>, and periodic splines when <code>method = “periodic”</code>.</p>
-<p>The method <code>“monoH.FC”</code> computes a <em>monotone</em> Hermite spline according to the method of Fritsch and Carlson. It does so by determining slopes such that the Hermite spline, determined by <span class="math inline">\((x_i,y_i,m_i)\)</span>, is monotone (increasing or decreasing) <b>iff</b> the data are.</p>
-<p>Method <code>“hyman”</code> computes a <em>monotone</em> cubic spline using Hyman filtering of an <code>method = “fmm”</code> fit for strictly monotonic inputs.</p>
-<p>These interpolation splines can also be used for extrapolation, that is prediction at points outside the range of <code>x</code>. Extrapolation makes little sense for <code>method = “fmm”</code>; for natural splines it is linear using the slope of the interpolating curve at the nearest data point.</p>
+<p>See <code>spline</code> for further details on the available interpolation methods.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>

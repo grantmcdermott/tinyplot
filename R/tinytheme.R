@@ -111,7 +111,8 @@
 #'
 #' @return The function returns nothing. It is called for its side effects.
 #' 
-#' @seealso [`tpar`] which does the heavy lifting under the hood.
+#' @seealso [`tpar`] which does the heavy lifting under the hood;
+#'   [tinytheme_register()] for adding custom named themes.
 #'
 #' @examples
 #' # Reusable plot function
@@ -195,21 +196,14 @@ tinytheme = function(
     ...
     ) {
   
-  theme = match.arg(theme)
+  if (length(theme) > 1) theme = theme[1]
+
+  registered = names(get_environment_variable(".registered_themes"))
+  assert_choice(theme, c(builtin_themes, registered))
 
   # in notebooks, we don't want to close the device because no image.
   # init_tpar() tries to be smart, but may fail.
   init_tpar(rm_hook = TRUE)
-
-  assert_choice(
-    theme,
-    c(
-      "default",
-      sort(c("basic", "broadsheet", "bw", "classic", "clean", "clean2", "dark",
-             "dynamic", "float", "ipsum", "ipsum2", "linedraw", "minimal",
-             "nber", "ridge", "ridge2", "socviz", "tufte", "void", "web"))
-    )
-  )
 
   settings = switch(theme,
     "default" = theme_default,
@@ -233,6 +227,7 @@ tinytheme = function(
     "float" = theme_float,
     "void" = theme_void,
     "web" = theme_web,
+    get_environment_variable(".registered_themes")[[theme]]
   )
 
   dots = list(...)
@@ -281,6 +276,15 @@ tinytheme = function(
 
 #
 ## Themes (these are read and set at initial load time)
+
+builtin_themes = c(
+  "default", "basic", "dynamic",
+  "clean", "clean2", "bw", "linedraw", "classic",
+  "minimal", "ipsum", "ipsum2", "dark",
+  "socviz", "broadsheet", "nber", "web",
+  "ridge", "ridge2",
+  "tufte", "float", "void"
+)
 
 # theme_default = list()
 
@@ -645,3 +649,176 @@ theme_void = modifyList(theme_dynamic, list(
   xaxt = "none",
   yaxt = "none"
 ))
+
+
+#
+## Theme registry helpers
+#
+
+# Internal: unified theme lookup (registered first, then built-in)
+get_theme_def = function(name) {
+  if (is.null(name) || name == "default") return(theme_default)
+  registry = get_environment_variable(".registered_themes")
+  if (!is.null(registry[[name]])) return(registry[[name]])
+  obj_name = paste0("theme_", name)
+  if (exists(obj_name, envir = asNamespace("tinyplot"), inherits = FALSE)) {
+    return(get(obj_name, envir = asNamespace("tinyplot")))
+  }
+  NULL
+}
+
+
+#' Register a Custom Named Theme
+#'
+#' @md
+#' @description
+#' Register a custom theme so it can be used by name with `tinytheme(<theme>)`
+#' or `tinyplot(..., theme = <theme>)`. Custom themes inherit from a base theme
+#' and apply user-specified overrides.
+#'
+#' Registered themes are session-scoped: they persist across plots but not
+#' across R sessions. To make a custom theme available automatically, register
+#' it in your `.Rprofile`.
+#'
+#' @param name Character string. The name for your custom theme. Cannot clash
+#'   with or overwrite a built-in theme name (`"default"`, `"clean"`, etc.)
+#' @param theme Character string or list. The base theme to inherit from.
+#'   If a string, it must reference a built-in or previously-registered theme.
+#'   If a list, it is used directly as the base definition. Default is
+#'   `"default"`.
+#' @param ... Named arguments to override specific theme settings. These are
+#'   the same parameters accepted by `tpar()`.
+#'
+#' @return Returns the theme definition list (invisibly).
+#'
+#' @seealso [tinytheme()], [tinytheme_list()], [tinytheme_unregister()]
+#'
+#' @examples
+#' # Register a simple custom theme, based on "float" but now with a grid
+#' tinytheme_register("float2", theme = "float", grid = TRUE)
+#'
+#' # Use it persistently
+#' tinytheme("float2")
+#' tinyplot(1:5)
+#' tinytheme()
+#'
+#' # Or ephemerally
+#' tinyplot(1:5, theme = "float2")
+#'
+#' # Optional: unregister the theme
+#' tinytheme_unregister("float2")
+#'
+#' # A more elaborate, pirate-themed example
+#' tinytheme_register(
+#'   "pirate",
+#'   theme = "clean",
+#'   family = "HersheyScript",
+#'   bg = "#f5e6c8", fg = "#3b2209",
+#'   cex.lab = 1.5, cex.main = 1.5, cex.sub = 1.2, cex.cap = 1.2,
+#'   col = "#3b2209", col.axis = "#5c3a1e", col.cap = "#7a5230", 
+#'   col.lab = "#3b2209", col.main = "#1a0f04", col.sub = "#7a5230",
+#'   grid = TRUE, grid.col = "#c9a96e", grid.lty = "dotted",
+#'   facet.bg = "#e8d4a8", facet.border = "#5c3a1e",
+#'   pch = 4,
+#'   palette.qualitative = c(
+#'     "#8b0000", "#1a5276", "#196f3d", "#7d6608",
+#'     "#6c3483", "#a04000", "#1b4f72", "#145a32"
+#'   )
+#' )
+#' tinyplot(
+#'   Sepal.Length ~ Petal.Length | Species, iris,
+#'   main = "Avast, me hearties!",
+#'   sub  = "x marks the petal",
+#'   cap  = "Ye Olde Iris Data", 
+#'   theme = "pirate"
+#' )
+#' tinytheme_unregister("pirate")
+#'
+#' @export
+tinytheme_register = function(name, theme = "default", ...) {
+  if (!is.character(name) || length(name) != 1 || nchar(name) == 0) {
+    stop("`name` must be a single non-empty character string.", call. = FALSE)
+  }
+  builtins = builtin_themes
+  if (name %in% builtins) {
+    stop(
+      sprintf("'%s' is a built-in theme and cannot be overridden.", name),
+      call. = FALSE
+    )
+  }
+
+  if (is.character(theme) && length(theme) == 1) {
+    base_theme = get_theme_def(theme)
+    if (is.null(base_theme)) {
+      stop(sprintf("Base theme '%s' not found.", theme), call. = FALSE)
+    }
+  } else if (is.list(theme)) {
+    base_theme = theme
+  } else {
+    stop("`theme` must be a theme name (string) or a list.", call. = FALSE)
+  }
+
+  dots = list(...)
+  new_theme = if (length(dots) > 0) modifyList(base_theme, dots) else base_theme
+  new_theme[["tinytheme"]] = name
+
+  registry = get_environment_variable(".registered_themes") %||% list()
+  registry[[name]] = new_theme
+  set_environment_variable(.registered_themes = registry)
+  invisible(new_theme)
+}
+
+
+#' List Available Themes
+#'
+#' @md
+#' @description
+#' Returns the names of all available themes, both built-in and user-registered.
+#'
+#' @return A named list with two character vectors: `builtin` and `registered`.
+#'
+#' @seealso [tinytheme()], [tinytheme_register()]
+#'
+#' @examples
+#' tinytheme_list()
+#'
+#' @export
+tinytheme_list = function() {
+  builtins = builtin_themes
+  registered = names(get_environment_variable(".registered_themes"))
+  list(builtin = builtins, registered = registered)
+}
+
+
+#' Unregister a Custom Theme
+#'
+#' @md
+#' @description
+#' Remove a previously registered custom theme. Does not reset an active theme;
+#' it only removes the theme from the registry so it can no longer be selected
+#' by name.
+#'
+#' @param name Character string. The name of the registered theme to remove.
+#'
+#' @return Returns `NULL` (invisibly).
+#'
+#' @seealso [tinytheme_register()], [tinytheme_list()]
+#'
+#' @examples
+#' tinytheme_register("my_theme", .base = "clean", grid = FALSE)
+#' tinytheme_unregister("my_theme")
+#'
+#' @export
+tinytheme_unregister = function(name) {
+  registry = get_environment_variable(".registered_themes")
+  if (!name %in% names(registry)) {
+    warning(
+      sprintf("Theme '%s' is not registered. Nothing to remove.", name),
+      call. = FALSE
+    )
+    return(invisible(NULL))
+  }
+  registry[[name]] = NULL
+  set_environment_variable(.registered_themes = registry)
+  invisible(NULL)
+}

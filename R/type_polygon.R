@@ -42,7 +42,7 @@ draw_polygon = function(density = density, angle = 45) {
             x = ix,
             y = iy,
             border = icol,
-            col = ibg,
+            col = if (!is.null(density)) icol else ibg,
             lty = ilty,
             lwd = ilwd,
             density = density,

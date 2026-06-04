@@ -74,6 +74,12 @@ New theme features:
   - `"nber"` (NBER working paper style)
   - `"socviz"` (based on Kieran Healy's [book](https://socviz.co/))
   - `"web"` (web publication, e.g. FiveThirtyEight)
+- New `tinytheme_register()` function for registering custom user themes.
+  Registered themes inherit from any built-in (or previously registered) theme,
+  apply user-specified overrides, and can then be used by name with
+  `tinytheme(<theme>)` or `tinyplot(..., theme = <theme>)`. Companion functions
+  `tinytheme_list()` and `tinytheme_unregister()` further support this
+  functionality. (#608 @grantmcdermott)
 
 Theme fixes:
 

@@ -714,7 +714,7 @@ get_theme_def = function(name) {
 #'   theme = "clean",
 #'   family = "HersheyScript",
 #'   bg = "#f5e6c8", fg = "#3b2209",
-#'   cex.lab = 1.5, cex.main = 1.5, cex.sub = 1.2, cex.cap = 1.2,
+#'   cex.lab = 1.5, cex.main = 1.5, cex.sub = 1.2,
 #'   col = "#3b2209", col.axis = "#5c3a1e", col.cap = "#7a5230", 
 #'   col.lab = "#3b2209", col.main = "#1a0f04", col.sub = "#7a5230",
 #'   grid = TRUE, grid.col = "#c9a96e", grid.lty = "dotted",

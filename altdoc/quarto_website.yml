@@ -100,6 +100,8 @@ website:
                 file: man/type_boxplot.qmd
               - text: type_chull
                 file: man/type_chull.qmd
+              - text: type_ellipse
+                file: man/type_ellipse.qmd
               - text: type_density
                 file: man/type_density.qmd
               - text: type_histogram

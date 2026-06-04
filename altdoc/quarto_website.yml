@@ -98,6 +98,8 @@ website:
                 file: man/type_barplot.qmd
               - text: type_boxplot
                 file: man/type_boxplot.qmd
+              - text: type_chull
+                file: man/type_chull.qmd
               - text: type_density
                 file: man/type_density.qmd
               - text: type_histogram

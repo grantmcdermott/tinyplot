@@ -214,6 +214,9 @@ Steps:
 4. Run `make document` to update NAMESPACE
 5. Add tests in `inst/tinytest/test-type_<name>.R`
 6. Add snapshot SVGs by running tests on Linux (devcontainer)
+7. Add the new page to the website navigation in `altdoc/quarto_website.yml`
+
+**Important:** Step 7 applies to any new exported function or page, not just plot types. Whenever you add or rename an exported function that gets its own `.Rd` page, add it to `altdoc/quarto_website.yml` under the appropriate section.
 
 ### Modifying Legend Behaviour
 Type-specific legend customizations should go in the type's `data` function by modifying `settings$legend_args`:

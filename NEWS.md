@@ -122,6 +122,9 @@ Theme fixes:
   around grouped points. Uses `grDevices::chull()` under the hood and delegates
   drawing to `draw_polygon()`. Works well as a layer on top of points, e.g.
   `plt_add(type = "chull", fill = 0.2)`. (#600 @grantmcdermott)
+- `type_ellipse()` (equivalently, `type = "ellipse"`) for drawing confidence
+  ellipses around grouped points. Like `type_chull`, works well as a filled
+  layer, e.g. `plt_add(type = "ellipse", fill = 0.2)`. (#610 @grantmcdermott)
 
 ### Other new features
 
@@ -152,6 +155,9 @@ Theme fixes:
   now vertically centered within the background rect. (#586 @grantmcdermott)
 - Fixed Issue #593 where `palette.qualitative` in themes could not be a
   function. Thanks to @katrinabrock for the report. (#594 @zeileis)
+  - Polygon density hatching lines now correctly use the group colour instead of
+  black. Affects `type_polygon`, `type_chull`, and `type_ellipse` when
+  `density` is set. (#610 @grantmcdermott)
 
 ## v0.6.1
 

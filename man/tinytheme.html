@@ -249,6 +249,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">tinytheme</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/tinytheme_register.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tinytheme_register</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -356,6 +362,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/type_boxplot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_boxplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_chull.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_chull</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -573,7 +585,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "linedraw",
     "classic", "minimal", "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber",
     "web", "ridge", "ridge2", "tufte", "float", "void"),
-  ...
+  ...,
+  register = NULL
 )
 </code></pre>
 </section>
@@ -675,6 +688,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 Named arguments to override specific theme settings. These arguments are passed to <code>tpar()</code> and take precedence over the predefined settings in the selected theme.
 </td>
 </tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="register">register</code>
+</td>
+<td>
+Optional character string. If provided, the theme (with any <code>…</code> overrides) is registered under this name via <code>tinytheme_register()</code> and simultaneously activated. This is a shortcut for calling <code>tinytheme_register()</code> and <code>tinytheme()</code> separately.
+</td>
+</tr>
 </tbody></table>
 </section>
 <section id="details" class="level3">
@@ -735,7 +756,7 @@ tinytheme("clean", gap.axis = 0.5)
 </section>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p><code>tpar</code> which does the heavy lifting under the hood.</p>
+<p><code>tpar</code> which does the heavy lifting under the hood; <code>tinytheme_register()</code> for registering custom named themes.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>

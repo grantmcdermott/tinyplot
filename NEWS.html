@@ -333,6 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>"socviz"</code> (based on Kieran Healy’s <a href="https://socviz.co/">book</a>)</li>
 <li><code>"web"</code> (web publication, e.g.&nbsp;FiveThirtyEight)</li>
 </ul></li>
+<li>New <code>tinytheme_register()</code> function for registering custom user themes. Registered themes inherit from any built-in (or previously registered) theme, apply user-specified overrides, and can then be used by name with <code>tinytheme(&lt;theme&gt;)</code> or <code>tinyplot(..., theme = &lt;theme&gt;)</code>. Companion functions <code>tinytheme_list()</code> and <code>tinytheme_unregister()</code> further support this functionality. (<a href="https://github.com/grantmcdermott/tinyplot/issues/608">#608</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 <p>Theme fixes:</p>
 <ul>

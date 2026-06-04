@@ -64,6 +64,8 @@ website:
               file: man/tinyplot_add.qmd
             - text: tinytheme
               file: man/tinytheme.qmd
+            - text: tinytheme_register
+              file: man/tinytheme_register.qmd
         - section: "Plot types"
           contents:
           - section: Shapes
@@ -96,6 +98,8 @@ website:
                 file: man/type_barplot.qmd
               - text: type_boxplot
                 file: man/type_boxplot.qmd
+              - text: type_chull
+                file: man/type_chull.qmd
               - text: type_density
                 file: man/type_density.qmd
               - text: type_histogram

@@ -8,7 +8,8 @@ tinytheme(
   theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "linedraw",
     "classic", "minimal", "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber",
     "web", "ridge", "ridge2", "tufte", "float", "void"),
-  ...
+  ...,
+  register = NULL
 )
 }
 \arguments{
@@ -59,6 +60,11 @@ dynamic plots are marked with an asterisk (*) below.
 \item{...}{Named arguments to override specific theme settings. These
 arguments are passed to \code{tpar()} and take precedence over the predefined
 settings in the selected theme.}
+
+\item{register}{Optional character string. If provided, the theme (with any
+\code{...} overrides) is registered under this name via \code{\link[=tinytheme_register]{tinytheme_register()}}
+and simultaneously activated. This is a shortcut for calling
+\code{\link[=tinytheme_register]{tinytheme_register()}} and \code{tinytheme()} separately.}
 }
 \value{
 The function returns nothing. It is called for its side effects.
@@ -209,5 +215,5 @@ tinytheme()
 }
 \seealso{
 \code{\link{tpar}} which does the heavy lifting under the hood;
-\code{\link[=tinytheme_register]{tinytheme_register()}} for adding custom named themes.
+\code{\link[=tinytheme_register]{tinytheme_register()}} for registering custom named themes.
 }

@@ -64,6 +64,8 @@ website:
               file: man/tinyplot_add.qmd
             - text: tinytheme
               file: man/tinytheme.qmd
+            - text: tinytheme_register
+              file: man/tinytheme_register.qmd
         - section: "Plot types"
           contents:
           - section: Shapes

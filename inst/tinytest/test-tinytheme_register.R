@@ -20,5 +20,18 @@ expect_error(
   info = "unregistered name errors"
 )
 
+# register shortcut via tinytheme(..., register = )
+tinytheme("float", bg = "#f5e6c8", register = "float3")
+expect_equal(
+  tpar("tinytheme"), "float3",
+  info = "register shortcut activates under registered name"
+)
+expect_true(
+  "float3" %in% tinytheme_list()[["registered"]],
+  info = "register shortcut adds to registry"
+)
+tinytheme()
+
 # clean up
 tinytheme_unregister("float2")
+tinytheme_unregister("float3")

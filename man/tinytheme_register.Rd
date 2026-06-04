@@ -2,76 +2,59 @@
 % Please edit documentation in R/tinytheme.R
 \name{tinytheme_register}
 \alias{tinytheme_register}
-\title{Register a Custom Named Theme}
+\alias{tinytheme_list}
+\alias{tinytheme_unregister}
+\title{Register, List, and Unregister Custom Themes}
 \usage{
 tinytheme_register(name, theme = "default", ...)
+
+tinytheme_list()
+
+tinytheme_unregister(name)
 }
 \arguments{
 \item{name}{Character string. The name for your custom theme. Cannot clash
 with or overwrite a built-in theme name (\code{"default"}, \code{"clean"}, etc.)}
 
-\item{theme}{Character string or list. The base theme to inherit from.
-If a string, it must reference a built-in or previously-registered theme.
-If a list, it is used directly as the base definition. Default is
-\code{"default"}.}
+\item{theme}{Character string or list. The base theme to inherit from. If a
+string, it must reference a built-in or previously-registered theme. If a
+list, it is used directly as the base definition. Default is \code{"default"}.}
 
 \item{...}{Named arguments to override specific theme settings. These are
 the same parameters accepted by \code{tpar()}.}
 }
 \value{
-Returns the theme definition list (invisibly).
+\code{tinytheme_register()} returns the theme definition list (invisibly).
+\code{tinytheme_list()} returns a named list with character vectors \code{builtin}
+and \code{registered}. \code{tinytheme_unregister()} returns \code{NULL} (invisibly).
 }
 \description{
-Register a custom theme so it can be used by name with \verb{tinytheme(<theme>)}
-or \verb{tinyplot(..., theme = <theme>)}. Custom themes inherit from a base theme
-and apply user-specified overrides.
+\code{tinytheme_register()} registers a custom theme so it can be used by name
+with \code{tinytheme()} or \code{tinyplot(..., theme = )}. Custom themes inherit from
+a base theme and apply user-specified overrides. Registered themes are
+session-scoped: they persist across plots but not across R sessions. To make
+a custom theme permanently available, register it in your \code{.Rprofile}.
 
-Registered themes are session-scoped: they persist across plots but not
-across R sessions. To make a custom theme available automatically, register
-it in your \code{.Rprofile}.
+\code{tinytheme_list()} returns the names of all available themes (built-in and
+registered).
+
+\code{tinytheme_unregister()} removes a previously registered theme from the
+registry. Does not reset an active theme.
 }
 \examples{
-# Register a simple custom theme, based on "float" but now with a grid
+# Register a custom theme based on "float" but with a grid
 tinytheme_register("float2", theme = "float", grid = TRUE)
 
-# Use it persistently
-tinytheme("float2")
-tinyplot(1:5)
-tinytheme()
-
-# Or ephemerally
+# Use it
 tinyplot(1:5, theme = "float2")
 
-# Optional: unregister the theme
-tinytheme_unregister("float2")
+# List all themes
+tinytheme_list()
 
-# A more elaborate, pirate-themed example
-tinytheme_register(
-  "pirate",
-  theme = "clean",
-  family = "HersheyScript",
-  bg = "#f5e6c8", fg = "#3b2209",
-  cex.lab = 1.5, cex.main = 1.5, cex.sub = 1.2,
-  col = "#3b2209", col.axis = "#5c3a1e", col.cap = "#7a5230", 
-  col.lab = "#3b2209", col.main = "#1a0f04", col.sub = "#7a5230",
-  grid = TRUE, grid.col = "#c9a96e", grid.lty = "dotted",
-  facet.bg = "#e8d4a8", facet.border = "#5c3a1e",
-  pch = 4,
-  palette.qualitative = c(
-    "#8b0000", "#1a5276", "#196f3d", "#7d6608",
-    "#6c3483", "#a04000", "#1b4f72", "#145a32"
-  )
-)
-tinyplot(
-  Sepal.Length ~ Petal.Length | Species, iris,
-  main = "Avast, me hearties!",
-  sub  = "x marks the petal",
-  cap  = "Ye Olde Iris Data", 
-  theme = "pirate"
-)
-tinytheme_unregister("pirate")
+# Unregister
+tinytheme_unregister("float2")
 
 }
 \seealso{
-\code{\link[=tinytheme]{tinytheme()}}, \code{\link[=tinytheme_list]{tinytheme_list()}}, \code{\link[=tinytheme_unregister]{tinytheme_unregister()}}
+\code{\link[=tinytheme]{tinytheme()}}
 }

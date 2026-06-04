@@ -183,9 +183,9 @@ Please feel free to make suggestions about themes, or contribute new themes by
 
 ### Custom themes
 
-Creating custom **tinyplot** themes is easy. Below we demonstrate how to tweak
-existing themes in an _ad hoc_ manner, as well as how to register themes for
-consistent re-use. 
+Creating custom **tinyplot** themes is easy. In this section, we demonstrate how
+to tweak aexisting themes in an _ad hoc_ manner, as well as how to register your
+own custom themes for convenient re-use. 
 
 #### _Ad hoc_ customization
 
@@ -213,7 +213,8 @@ tinytheme()
 ```
 
 Similarly, you can pass a list object to the `themes` argument to customize
-an ephemeral theme for a single plot. Here's a more fancy adaption that builds off the "dynamic" theme.
+an ephemeral theme for a single plot. Here's a more fancy adaptation that builds
+off the "dynamic" theme.
 
 ```{r}
 tinyplot(
@@ -239,12 +240,12 @@ tinyplot(
 #### Registering custom themes
 
 If you find yourself reusing the same custom theme settings across multiple
-plots or sessions, you may prefer to register them as a named theme with
+plots or sessions, you may prefer to _register_ them as a named theme with
 `tinytheme_register()`. Once a theme is registered, it works just like a
-built-in one. So you can set it persistently with `tinytheme(<theme>)`, or pass
-it ephemerally with `tinyplot(..., theme = <theme>)`.
+built-in one. So you can set it persistently with `tinytheme(<yourtheme>)`, or
+pass it ephemerally with `tinyplot(..., theme = <yourtheme>)`.
 
-Here's a rather fancy example of a "pirate"-inspired theme:
+Here's a (possibly ill-advised) example of a "pirate"-inspired theme:
 
 ```{r}
 # Register a custom "pirate" theme that builds on top of "clean"
@@ -268,23 +269,31 @@ tinytheme_register(
 # Use it ephemerally
 tinyplot(
   Sepal.Length ~ Petal.Length | Species, iris,
-  main = "Avast, me hearties!",
-  sub  = "x marks the petal",
-  cap  = "Ye Olde Iris Data", 
-  theme = "pirate"
+  main = 'Avast, me hearties!',
+  sub  = 'Here be a "pirate" theme',
+  cap  = '"x" marks the spot',
+  theme = 'pirate'
 )
 ```
 
-Use `tinytheme_list()` to see all available themes (both built-in and
+As a convenience, `tinytheme()` also accepts a `register` argument that
+registers _and_ activates the theme in a single call:
+
+```r
+# Equivalent to tinytheme_register("float2", ...) + tinytheme("float2")
+tinytheme("float", grid = TRUE, register = "float2")
+```
+
+You can use `tinytheme_list()` to see all available themes (both built-in and
 registered), and `tinytheme_unregister()` to remove one.
 
 ```{r}
 tinytheme_unregister("pirate")
 ```
 
-Registered themes are session-scoped: they persist across plots but disappear
-when R restarts. To make a custom theme permanently available, register it in
-your `.Rprofile`:
+Note that registered themes are session-scoped: they persist across plots but
+disappear when R restarts. To make a custom theme permanently available,
+register it in your `.Rprofile`:
 
 ```r
 # In ~/.Rprofile

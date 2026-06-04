@@ -3,6 +3,8 @@
 #' @md
 #' @description Type function for density plots.
 #' @inheritParams stats::density
+#' @param bw the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
+#'   see \code{\link[stats]{density}} for details and options.
 #' @param kernel a character string giving the smoothing kernel to be used. This
 #'   must partially match one of `"gaussian"`, `"rectangular"`, `"triangular"`,
 #'   `"epanechnikov"`, `"biweight"`, `"cosine"` or `"optcosine"`, with default

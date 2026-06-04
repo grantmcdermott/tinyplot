@@ -49,20 +49,8 @@ at the specified \code{probs}. The quantiles are computed based on the density
 \item{ylevels}{a character or numeric vector specifying in which order
 the levels of the y-variable should be plotted.}
 
-\item{bw}{the smoothing bandwidth to be used.  The kernels are scaled
-    such that this is the standard deviation of the smoothing kernel.
-    (Note this differs from the reference books cited below.)
-
-    \code{bw} can also be a character string giving a rule to choose the
-    bandwidth.  See \code{\link[stats]{bw.nrd}}. \cr The default,
-    \code{"nrd0"}, has remained the default for historical and
-    compatibility reasons, rather than as a general recommendation,
-    where e.g., \code{"SJ"} would rather fit, see also
-    {\if{html}{\cite{}\out{<a href="#reference+density.Rd+R+3AVenables+2BRipley+3A2002" class="citation">}}Venables and Ripley (2002)\if{html}{\out{</a>}}}.
-
-    The specified (or computed) value of \code{bw} is multiplied by
-    \code{adjust}.
-  }
+\item{bw}{the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
+see \code{\link[stats]{density}} for details and options.}
 
 \item{joint.bw}{character string indicating whether (and how) the smoothing
 bandwidth should be computed from the joint data distribution. The default

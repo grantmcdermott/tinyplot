@@ -115,7 +115,6 @@ Theme fixes:
   subtitle, and legend stack correctly above the plot region with proper
   spacing. (#605)
 
-
 ### New plot types
 
 - `type_chull()` (equivalently, `type = "chull"`) for drawing convex hulls
@@ -139,6 +138,11 @@ Theme fixes:
   dynamic themes (since separation from `sub` is guaranteed). Appearance is
   customizable via `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`,
   `font.cap`, and `line.cap`. (#592 @grantmcdermott)
+- Facet formulas now support `1` as a convenience syntax for single row or
+  column arrangements. For example, `plt(..., facet = z ~ 1)` is equivalent to
+  `plt(..., facet = ~z, facet.args = list(ncol = 1))`. Analogously,
+  `plt(..., facet = 1 ~ z)` can be used as a shortcut for
+  `plt(..., facet = ~ z, facet.args = list(nrow = 1))`. (#562 @zeileis)
 
 ### Bug fixes
 

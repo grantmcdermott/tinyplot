@@ -5,7 +5,8 @@
 #' for default argument values.
 #'
 #' @inheritParams stats::spline
-#' @inherit stats::spline details
+#' @details See \code{\link[stats]{spline}} for further details on the available
+#'   interpolation methods.
 #' @importFrom stats spline
 #' @examples
 #' # "spline" type convenience string

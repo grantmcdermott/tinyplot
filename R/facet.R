@@ -31,10 +31,17 @@ draw_facet_window = function(
     draw,
     grid,
     has_legend,
+    main,
+    sub,
+    cap,
     type,
+    xlab,
     x, xmax, xmin,
+    ylab,
     y, ymax, ymin,
-    tpars = NULL
+    tpars = NULL,
+    dynmar_computed = NULL,
+    dl_overshoot = 0
     ) {
   
   if (is.null(tpars)) tpars = tpar()
@@ -101,19 +108,30 @@ draw_facet_window = function(
 
     ooma = par("oma")
 
-    # Bump top margin down for facet titles
-    fmar[3] = fmar[3] + 1
+    # Bump top margin for facet strip. Use facet_text (not / cex_fct_adj)
+    # because nmar = (fmar + 0.1) / cex_fct_adj already divides — using
+    # facet_text directly keeps the inter-panel gap constant as newlines grow.
+    fmar[3] = fmar[3] + facet_text
     if (isTRUE(attr(facet, "facet_grid"))) {
-      fmar[3] = max(0, fmar[3] - 1)
+      fmar[3] = max(0, fmar[3] - facet_text)
       # Indent for RHS facet_grid title strip if "right!" legend
       if (has_legend && ooma[4] > 0) ooma[4] = ooma[4] + 1
     }
-    fmar[3] = fmar[3] + facet_newlines * facet_text / cex_fct_adj
+    fmar[3] = fmar[3] + facet_newlines * facet_text
 
     omar = par("mar")
     
     ## Dynamic plot margin adjustments
     if (dynmar) {
+      # Margins were pre-computed in tinyplot.default (dynmar_computed).
+      # Use that as the base instead of par("mar") which may have been
+      # reset by the before.plot.new hook.
+      side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
+      omar = dynmar_computed
+      omar[3] = dynmar_computed[3] + (1 + facet_newlines + 0.1) * facet_text
+      # Ensure fmar[3] doesn't exceed omar[3] - 0.1, which would make
+      # noma[3] negative and get clamped to 0, creating excess top space.
+      if (fmar[3] + 0.1 > omar[3]) fmar[3] = omar[3] - 0.1
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
         ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
@@ -123,13 +141,19 @@ draw_facet_window = function(
           yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
         } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
           yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
+        } else if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
+          yfree_split = split(c(y, ymin, ymax), facet)
+          yaxlabs_all = lapply(yfree_split, function(yf) {
+            axisTicks(usr = extendrange(range(yf, na.rm = TRUE), f = 0.04), log = par("ylog"))
+          })
+          widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
+          yaxlabs = yaxlabs_all[[which.max(widths)]]
         } else {
-          # yaxl = axTicks(2)
           yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
         }
         if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
         # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
-        whtsbp = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
+        whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
         if (whtsbp > 0) {
           omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
           fmar[2] = fmar[2] + whtsbp * cex_fct_adj
@@ -141,11 +165,19 @@ draw_facet_window = function(
       }
       if (par("las") %in% 2:3) {
         # extra whitespace bump on the x axis
-        # xaxlabs = axTicks(1)
-        xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else 
-          if (!is.null(names(xlabs))) names(xlabs) else xlabs
+        if (is.null(xlabs) && isTRUE(facet.args[["free"]]) && null_xlim && !is.null(facet)) {
+          xfree_split = split(c(x, xmin, xmax), facet)
+          xaxlabs_all = lapply(xfree_split, function(xf) {
+            axisTicks(usr = extendrange(range(xf, na.rm = TRUE), f = 0.04), log = par("xlog"))
+          })
+          widths = vapply(xaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
+          xaxlabs = xaxlabs_all[[which.max(widths)]]
+        } else {
+          xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
+            if (!is.null(names(xlabs))) names(xlabs) else xlabs
+        }
         if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-        whtsbp = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
+        whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 0.5
         if (whtsbp > 0) {
           omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
           fmar[1] = fmar[1] + whtsbp * cex_fct_adj
@@ -155,11 +187,18 @@ draw_facet_window = function(
           fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
         }
       }
+
+      if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
+
       # FIXME: Is this causing issues for lhs legends with facet_grid?
       # catch for missing rhs legend
       if (isTRUE(attr(facet, "facet_grid")) && !has_legend) {
         omar[4] = omar[4] + 1
       }
+    }
+
+    if (dl_overshoot > 0) {
+      fmar[4] = fmar[4] + dl_overshoot
     }
 
     # Now we set the margins. The trick here is that we simultaneously adjust
@@ -183,9 +222,11 @@ draw_facet_window = function(
     # on our earlier calculations.
     par(mfrow = c(nfacet_rows, nfacet_cols))
   } else if (dynmar) {
-    # Dynamic plot margin adjustments
-    omar = par("mar")
-    omar = omar - c(0, 0, 1, 0) # reduce top whitespace since no facet (title)
+    # Dynamic plot margin adjustments (no facets). Margins were pre-computed
+    # in tinyplot.default and passed via dynmar_computed; use them directly.
+    # Tick-label *width/height* (whtsbp) is added further below.
+    side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
+    omar = dynmar_computed
     if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
@@ -198,26 +239,25 @@ draw_facet_window = function(
         yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
       } else {
         # yaxl = axTicks(2)
-        yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
+        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }
       if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") - 1
-      whtsbp = grconvertX(max(strwidth(yaxlabs, "figure")), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 1
-      if (whtsbp > 0) {
-        omar[2] = omar[2] + whtsbp
-      }
+      # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 1
+      whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
+      omar[2] = omar[2] + whtsbp
     }
     if (par("las") %in% 2:3) {
       # extra whitespace bump on the x axis
       # xaxl = axTicks(1)
-      xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else 
+      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
+      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      whtsbp = grconvertX(max(strwidth(xaxlabs, "figure")), from = "nfc", to = "lines") - 1
-      if (whtsbp > 0) {
-        omar[1] = omar[1] + whtsbp
-      }
+      whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 0.5
+      omar[1] = omar[1] + whtsbp
     }
+
      par(mar = omar)
   }
 
@@ -277,11 +317,13 @@ draw_facet_window = function(
         lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.xaxs", "lty.axis"), 1, tpar_list = tpars)
       )
+      .ca = get_tpar(c("cex.yaxs", "cex.axis"), 0.8, tpar_list = tpars)
+      .ymgp_shift = if (par("las") %in% c(0L, 1L)) 0.5 * (.ca - 1) else 0
       args_y = list(y,
         side = yside,
         type = yaxt,
         labeller = yaxl,
-        cex = get_tpar(c("cex.yaxs", "cex.axis"), 0.8, tpar_list = tpars),
+        cex = .ca,
         lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.yaxs", "lty.axis"), 1, tpar_list = tpars)
       )
@@ -332,21 +374,27 @@ draw_facet_window = function(
         } else {
           tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
         }
+        if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
           tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
         } else {
           tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
         }
+        if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
 
         # For fixed facets we can just reuse the same plot extent and axes limits
       } else if (isTRUE(frame.plot)) {
         # if plot frame is true then print axes per normal...
         do.call(tinyAxis, args_x)
+        if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         do.call(tinyAxis, args_y)
+        if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
       } else {
         # ... else only print the "outside" axes.
         if (ii %in% oxaxis) do.call(tinyAxis, args_x)
+        if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         if (ii %in% oyaxis) do.call(tinyAxis, args_y)
+        if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
       }
     }
 
@@ -373,13 +421,13 @@ draw_facet_window = function(
       if (isTRUE(attr(facet, "facet_grid"))) {
         ## top facet strips
         if (ii %in% 1:nfacet_cols) {
+          line_height_lines = (facet_title_lines + .1) * facet_text / cex_fct_adj
           if (isTRUE(facet_rect)) {
-            line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
             if (ylog) {
-              line_height = grconvertY(line_height, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+              line_height = grconvertY(line_height_lines, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
               rect_height = corners[4] * line_height
             } else {
-              line_height = grconvertY(line_height, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+              line_height = grconvertY(line_height_lines, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
               rect_height = corners[4] + line_height
             }
             rect(
@@ -390,17 +438,17 @@ draw_facet_window = function(
           }
           xpos = if (xlog) 10^(mean(log10(corners[1:2]))) else mean(corners[1:2])
           if (ylog) {
-            ypos = grconvertY(0.4, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+            ypos = grconvertY(line_height_lines / 2, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
             ypos = corners[4] * ypos
           } else {
-            ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+            ypos = grconvertY(line_height_lines / 2, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
             ypos = corners[4] + ypos
           }
           text(
             x = xpos,
             y = ypos,
             labels = sub("^(.*?)~.*", "\\1", facets[[ii]]),
-            adj = c(0.5, 0),
+            adj = c(0.5, 0.5),
             cex = facet_text / cex_fct_adj,
             col = facet_col,
             font = facet_font,
@@ -409,13 +457,13 @@ draw_facet_window = function(
         }
         ## right facet strips
         if (ii %% nfacet_cols == 0 || ii == nfacets) {
+          line_height_lines = (facet_title_lines + .1) * facet_text / cex_fct_adj
           if (isTRUE(facet_rect)) {
-            line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
             if (xlog) {
-              line_height = grconvertX(line_height, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
+              line_height = grconvertX(line_height_lines, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
               rect_width = corners[2] * line_height
             } else {
-              line_height = grconvertX(line_height, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+              line_height = grconvertX(line_height_lines, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
               rect_width = corners[2] + line_height
             }
             rect(
@@ -425,10 +473,10 @@ draw_facet_window = function(
             )
           }
           if (xlog) {
-            xpos = grconvertX(0.4, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
+            xpos = grconvertX(line_height_lines / 2, from = "lines", to = "user") / grconvertX(0, from = "lines", to = "user")
             xpos = corners[2] * xpos
           } else {
-            xpos = grconvertX(0.4, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
+            xpos = grconvertX(line_height_lines / 2, from = "lines", to = "user") - grconvertX(0, from = "lines", to = "user")
             xpos = corners[2] + xpos
           }
           ypos = if (ylog) 10^(mean(log10(corners[3:4]))) else mean(corners[3:4])
@@ -437,7 +485,7 @@ draw_facet_window = function(
             y = ypos,
             labels = sub("^.*?~(.*)", "\\1", facets[[ii]]),
             srt = 270,
-            adj = c(0.5, 0),
+            adj = c(0.5, 0.5),
             cex = facet_text / cex_fct_adj,
             col = facet_col,
             font = facet_font,
@@ -445,13 +493,13 @@ draw_facet_window = function(
           )
         }
       } else {
+        line_height_lines = (facet_title_lines + .1) * facet_text / cex_fct_adj
         if (isTRUE(facet_rect)) {
-          line_height = (facet_title_lines + .1) * facet_text / cex_fct_adj
           if (ylog) {
-            line_height = grconvertY(line_height, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+            line_height = grconvertY(line_height_lines, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
             rect_height = corners[4] * line_height
           } else {
-            line_height = grconvertY(line_height, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+            line_height = grconvertY(line_height_lines, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
             rect_height = corners[4] + line_height
           }
           rect(
@@ -462,17 +510,17 @@ draw_facet_window = function(
         }
         xpos = if (xlog) 10^(mean(log10(corners[1:2]))) else mean(corners[1:2])
         if (ylog) {
-          ypos = grconvertY(0.4, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
+          ypos = grconvertY(line_height_lines / 2, from = "lines", to = "user") / grconvertY(0, from = "lines", to = "user")
           ypos = corners[4] * ypos
         } else {
-          ypos = grconvertY(0.4, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
+          ypos = grconvertY(line_height_lines / 2, from = "lines", to = "user") - grconvertY(0, from = "lines", to = "user")
           ypos = corners[4] + ypos
         }
         text(
           x = xpos,
           y = ypos,
           labels = paste(facets[[ii]]),
-          adj = c(0.5, 0),
+          adj = c(0.5, 0.5),
           cex = facet_text / cex_fct_adj,
           col = facet_col,
           font = facet_font,
@@ -486,34 +534,54 @@ draw_facet_window = function(
 
     # panel grid lines
     if (is.null(grid)) grid = get_tpar("grid", tpar_list = tpars)
-    if (!is.null(grid)) {
-      if (is.logical(grid)) {
-        ## If grid is TRUE create a default grid. Rather than just calling the default grid()
-        ## abline(... = pretty(extendrange(...)), ...) is used. Reason: pretty() is generic
-        ## and works better for axes based on date/time classes. Exception: For axes in logs,
-        ## resort to using grid() which is likely better handled there.
-        if (isTRUE(grid)) {
-          gnx = gny = NULL
-          if (!is.null(xaxb)) {
-            abline(v = xaxb, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-            gnx = NA
-          } else if (!any(c(par("xlog"), type == "boxplot"))) {
-            xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
-            abline(v = xg, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-            gnx = NA
-          }
-          if (!is.null(yaxb)) {
-            abline(h = yaxb, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-            gny = NA
-          } else if (!any(c(par("ylog"), type == "boxplot"))) {
-            yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
-            abline(h = yg, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-            gny = NA
-          }
-          grid(nx = gnx, ny = gny, col = get_tpar("grid.col", tpar_list = tpars), lty = get_tpar("grid.lty", tpar_list = tpars), lwd = get_tpar("grid.lwd", tpar_list = tpars))
-        }
+    if (!is.null(grid) && !isFALSE(grid)) {
+      gcol = get_tpar("grid.col", tpar_list = tpars)
+      glty = get_tpar("grid.lty", tpar_list = tpars)
+      glwd = get_tpar("grid.lwd", tpar_list = tpars)
+
+      if (isTRUE(grid)) {
+        draw_x = draw_y = TRUE
+        fine_x = fine_y = FALSE
+      } else if (is.character(grid)) {
+        draw_x = grepl("x", grid, fixed = TRUE) || grepl("X", grid, fixed = TRUE)
+        draw_y = grepl("y", grid, fixed = TRUE) || grepl("Y", grid, fixed = TRUE)
+        fine_x = grepl("x", grid, fixed = TRUE)
+        fine_y = grepl("y", grid, fixed = TRUE)
       } else {
-        grid
+        eval(grid) # issue #193
+        draw_x = draw_y = FALSE
+      }
+
+      if (draw_x || draw_y) {
+
+        if (draw_x) {
+          if (!is.null(xaxb)) {
+            xg = xaxb
+          } else {
+            xg = if (!inherits(x, c("POSIXt", "Date"))) axTicks(side = 1) else axTicksDateTime(side = 1, x = x)
+          }
+          if (fine_x && !par("xlog") && length(xg) >= 2L) {
+            xg = as.numeric(xg)
+            half = (xg[2L] - xg[1L]) / 2
+            xg = seq(xg[1L] - half, xg[length(xg)] + half, by = half)
+          }
+          abline(v = xg, col = gcol, lty = glty, lwd = glwd)
+        }
+
+        if (draw_y) {
+          if (!is.null(yaxb)) {
+            yg = yaxb
+          } else {
+            yg = if (!inherits(y, c("POSIXt", "Date"))) axTicks(side = 2) else axTicksDateTime(side = 2, x = x)
+          }
+          if (fine_y && !par("ylog") && length(yg) >= 2L) {
+            yg = as.numeric(yg)
+            half = (yg[2L] - yg[1L]) / 2
+            yg = seq(yg[1L] - half, yg[length(yg)] + half, by = half)
+          }
+          abline(h = yg, col = gcol, lty = glty, lwd = glwd)
+        }
+
       }
     }
 

@@ -234,6 +234,20 @@ tinyplot(
 )
 ```
 
+Another option is `legend = "direct"`, which places text labels at the end of
+each group's data instead of a separate legend box. This works best for
+line-based plots with x-sorted data, and pairs well with dynamic themes for
+tighter margins (more on themes [below](#themes)).
+
+```{r legend_direct}
+tinyplot(
+  Temp ~ Day | Month, data = aq,
+  type = "l",
+  legend = "direct",
+  theme = "clean2"
+)
+```
+
 Beyond the convenience of these positional keywords, the `legend` argument also
 permits additional customization in the form of a list of arguments, which will
 be passed on to the standard `legend()` function internally. So you can change
@@ -550,7 +564,8 @@ tinytheme("dark")
 tinyplot(
   Temp ~ Wind | Ozone, data = aq,
   main = "An example of a tinytheme() in action",
-  sub = "Notice that the subtitle is above the plot"
+  sub = "Notice that the subtitle is above the plot",
+  cap = "Source: A helpful caption"
 )
 ```
 ```{r}

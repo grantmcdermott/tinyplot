@@ -29,7 +29,7 @@
 <line x1='413.40' y1='237.60' x2='435.00' y2='237.60' style='stroke-width: 0.75;' />
 <line x1='413.40' y1='252.00' x2='435.00' y2='252.00' style='stroke-width: 0.75; stroke: #DF536B;' />
 <line x1='413.40' y1='266.40' x2='435.00' y2='266.40' style='stroke-width: 0.75; stroke: #61D04F;' />
-<text x='452.58' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
+<text x='408.00' y='223.20' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <text x='445.80' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <text x='445.80' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
 <text x='445.80' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>

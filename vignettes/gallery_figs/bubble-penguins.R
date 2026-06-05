@@ -9,6 +9,8 @@ with(
     col = 'white', fill = 0.5, pch = 21,
     legend = list(labeller = ","),
     type = "p",
+    main = "Palmer penguins",
+    cap = "Source: Gorman et al. (2014)",
     theme = "clean2"
   )
 )

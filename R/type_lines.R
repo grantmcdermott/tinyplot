@@ -12,6 +12,26 @@
 #' # Use `type_lines()` to pass extra arguments for customization
 #' tinyplot(circumference ~ age | Tree, data = Orange, type = type_lines(type = "s"))
 #' 
+#' # Direct legend labels are a good option for grouped lined plots (assuming
+#' # there aren't too many groups and the data are sorted along the x-axis)
+#' tinyplot(
+#'   circumference ~ age | Tree, data = Orange, type = "l",
+#'   legend = "direct"
+#' )
+#' 
+#' # Fancier version(s) that use a theme and repel overlapping labels
+#' Orange2 = transform(Orange, Tree = paste("Tree", Tree))
+#' tinyplot(
+#'   circumference ~ age | Tree, data = Orange2, type = "l",
+#'   legend = list("direct", repel = TRUE), # auto repel
+#'   theme = "socviz"
+#' )
+#' tinyplot(
+#'   circumference ~ age | Tree, data = Orange2, type = "l",
+#'   legend = list("direct", nudge_y = c("Tree 1" = 3, "Tree 3" = -5)), # manual
+#'   theme = "socviz"
+#' )
+#' 
 #' @export
 type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE) {
   out = list(

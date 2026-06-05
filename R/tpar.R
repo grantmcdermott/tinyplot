@@ -49,9 +49,14 @@
 #'
 #' @section Additional Graphical Parameters:
 #'
+#' * `adj.cap`: Numeric value between 0 and 1 controlling the alignment of the plot caption. Defaults to `0.5` (centered) for the default theme, and `1` (right-aligned) for all other themes.
 #' * `adj.xlab`: Numeric value between 0 and 1 controlling the alignment of the x-axis label.
 #' * `adj.ylab`: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
 #' * `cairo`: Logical indicating whether \code{\link[grDevices]{cairo_pdf}} should be used when writing plots to PDF. If `FALSE`, then \code{\link[grDevices]{pdf}} will be used instead, with implications for embedding (non-standard) fonts. Only used if `tinyplot(..., file = "<filename>.pdf")` is called. Defaults to the value of `capabilities("cairo")`.
+#' * `cex.cap`: Numeric expansion factor for the plot caption text. Defaults to `1` for the default, basic, and dynamic themes, and `0.8` for clean/classic and their descendants.
+#' * `col.cap`: Character specifying the colour of the plot caption. Defaults to `"black"`.
+#' * `font.cap`: Integer specifying the font face for the plot caption (`1` = plain, `2` = bold, `3` = italic, `4` = bold italic). Defaults to `1`.
+#' * `line.cap`: Numeric specifying the margin line on which to draw the caption. If `NULL` (default), computed automatically based on the available bottom margin.
 #' * `dynmar`: Logical indicating whether `tinyplot` should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal `tinythemes()` logic and should _not_ be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 #' * `facet.bg`: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NULL` (none).
 #' * `facet.border`: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NA` (none).
@@ -62,10 +67,12 @@
 #' * `file.res`: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the `tinyplot(..., file = X)` argument. Defaults to `300`.
 #' * `file.width`: Numeric specifying the width (in inches) of any plot that is written to disk using the `tinyplot(..., file = X)` argument. Defaults to `7`.
 #' * `fmar`: A numeric vector of form `c(b,l,t,r)` for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to `c(1,1,1,1)`. If more than three facets are detected, the `fmar` parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the `cex` expansion logic of base graphics.
+#' * `gap.main`: Numeric giving the gap (in margin lines) from the main title baseline to the element below it (plot box when no subtitle; subtitle top when subtitle is present). Only used when `dynmar = TRUE`. Defaults to `0.7`.
+#' * `gap.sub`: Numeric giving the gap (in margin lines) from the subtitle baseline to the plot box. Only used when `dynmar = TRUE` and `side.sub = 3`. Defaults to `0.7`.
 #' * `grid.col`: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to `"lightgray"`.
 #' * `grid.lty`: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to `"dotted"`.
 #' * `grid.lwd`: Non-negative numeric giving the line width of the panel grid lines. Defaults to `1`.
-#' * `grid`: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to `NULL`, which is equivalent to `FALSE`.
+#' * `grid`: Logical or character indicating whether a background panel grid should be added to plots automatically. Defaults to `NULL`, which is equivalent to `FALSE`. In addition to logical values, a character string can be used to control axis-specific grids: uppercase letters (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard axis tick positions (equivalent to `TRUE`), while lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional lines at the midpoints between ticks.
 #' * `lmar`: A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
 #' * `palette.qualitative`: Palette for qualitative colors. See the `palette` argument in `?tinyplot`.
 #' * `palette.sequential`: Palette for sequential colors. See the `palette` argument in `?tinyplot`.
@@ -218,16 +225,24 @@ get_tpar = function(opts, default = NULL, tpar_list = NULL) {
 
 
 known_tpar = c(
+    "adj.cap",
     "adj.main",
     "adj.sub",
     "adj.xlab",
     "adj.ylab",
+    "cex.cap",
     "cex.xlab",
     "cex.ylab",
+    "col.cap",
     "col.xaxs",
     "col.yaxs",
     "cairo",
     "dynmar",
+    "font.cap",
+    "gap.axis",
+    "gap.lab",
+    "gap.main",
+    "gap.sub",
     "facet.bg",
     "facet.border",
     "facet.cex",
@@ -242,6 +257,8 @@ known_tpar = c(
     "grid.col",
     "grid.lty",
     "grid.lwd",
+    "line.cap",
+    "ljust",
     "lmar",
     "lty.xaxs",
     "lty.yaxs",
@@ -267,16 +284,18 @@ assign_tpar = function(opts) {
 
 
 assert_tpar = function(.tpar) {
+  assert_numeric(.tpar[["adj.cap"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.cap")
   assert_numeric(.tpar[["adj.main"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.main")
   assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.sub")
   assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.xlab")
   assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
   assert_flag(.tpar[["cairo"]], name = "cairo")
   assert_flag(.tpar[["dynmar"]], null.ok = FALSE, name = "dynmar")
+  assert_choice(.tpar[["ljust"]], choice = c("left", "center", "l", "c"), null.ok = TRUE, name = "ljust")
   assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE, name = "lmar")
   assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "ribbon.alpha")
   assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE, name = "grid.lwd")
-  assert_flag(.tpar[["grid"]], null.ok = TRUE, name = "grid")
+  assert_grid(.tpar[["grid"]], null.ok = TRUE, name = "grid")
   assert_numeric(.tpar[["file.res"]], len = 1, lower = 0, null.ok = TRUE, name = "file.res")
   assert_numeric(.tpar[["file.height"]], len = 1, lower = 0, null.ok = TRUE, name = "file.height")
   assert_numeric(.tpar[["file.width"]], len = 1, lower = 0, null.ok = TRUE, name = "file.width")
@@ -347,6 +366,9 @@ init_tpar = function(rm_hook = FALSE) {
   .tpar$grid.col = if (is.null(getOption("tinyplot_grid.col"))) "lightgray" else getOption("tinyplot_grid.col")
   .tpar$grid.lty = if (is.null(getOption("tinyplot_grid.lty"))) "dotted" else getOption("tinyplot_grid.lty")
   .tpar$grid.lwd = if (is.null(getOption("tinyplot_grid.lwd"))) 1 else as.numeric(getOption("tinyplot_grid.lwd"))
+
+  # Legend justification
+  .tpar$ljust = if (is.null(getOption("tinyplot_ljust"))) "left" else getOption("tinyplot_ljust")
 
   # Legend margin, i.e. gap between the legend and the plot elements
   .tpar$lmar = if (is.null(getOption("tinyplot_lmar"))) c(1.0, 0.1) else as.numeric(getOption("tinyplot_lmar"))

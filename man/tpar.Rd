@@ -60,9 +60,14 @@ you should rather use \code{par()} instead.
 \section{Additional Graphical Parameters}{
 
 \itemize{
+\item \code{adj.cap}: Numeric value between 0 and 1 controlling the alignment of the plot caption. Defaults to \code{0.5} (centered) for the default theme, and \code{1} (right-aligned) for all other themes.
 \item \code{adj.xlab}: Numeric value between 0 and 1 controlling the alignment of the x-axis label.
 \item \code{adj.ylab}: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
 \item \code{cairo}: Logical indicating whether \code{\link[grDevices]{cairo_pdf}} should be used when writing plots to PDF. If \code{FALSE}, then \code{\link[grDevices]{pdf}} will be used instead, with implications for embedding (non-standard) fonts. Only used if \code{tinyplot(..., file = "<filename>.pdf")} is called. Defaults to the value of \code{capabilities("cairo")}.
+\item \code{cex.cap}: Numeric expansion factor for the plot caption text. Defaults to \code{1} for the default, basic, and dynamic themes, and \code{0.8} for clean/classic and their descendants.
+\item \code{col.cap}: Character specifying the colour of the plot caption. Defaults to \code{"black"}.
+\item \code{font.cap}: Integer specifying the font face for the plot caption (\code{1} = plain, \code{2} = bold, \code{3} = italic, \code{4} = bold italic). Defaults to \code{1}.
+\item \code{line.cap}: Numeric specifying the margin line on which to draw the caption. If \code{NULL} (default), computed automatically based on the available bottom margin.
 \item \code{dynmar}: Logical indicating whether \code{tinyplot} should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal \code{tinythemes()} logic and should \emph{not} be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 \item \code{facet.bg}: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see \code{palette}). Passed to \code{rect}. Defaults to \code{NULL} (none).
 \item \code{facet.border}: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see \code{palette}). Passed to \code{rect}. Defaults to \code{NA} (none).
@@ -73,10 +78,12 @@ you should rather use \code{par()} instead.
 \item \code{file.res}: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the \code{tinyplot(..., file = X)} argument. Defaults to \code{300}.
 \item \code{file.width}: Numeric specifying the width (in inches) of any plot that is written to disk using the \code{tinyplot(..., file = X)} argument. Defaults to \code{7}.
 \item \code{fmar}: A numeric vector of form \code{c(b,l,t,r)} for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to \code{c(1,1,1,1)}. If more than three facets are detected, the \code{fmar} parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the \code{cex} expansion logic of base graphics.
+\item \code{gap.main}: Numeric giving the gap (in margin lines) from the main title baseline to the element below it (plot box when no subtitle; subtitle top when subtitle is present). Only used when \code{dynmar = TRUE}. Defaults to \code{0.7}.
+\item \code{gap.sub}: Numeric giving the gap (in margin lines) from the subtitle baseline to the plot box. Only used when \code{dynmar = TRUE} and \code{side.sub = 3}. Defaults to \code{0.7}.
 \item \code{grid.col}: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to \code{"lightgray"}.
 \item \code{grid.lty}: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to \code{"dotted"}.
 \item \code{grid.lwd}: Non-negative numeric giving the line width of the panel grid lines. Defaults to \code{1}.
-\item \code{grid}: Logical indicating whether a background panel grid should be added to plots automatically. Defaults to \code{NULL}, which is equivalent to \code{FALSE}.
+\item \code{grid}: Logical or character indicating whether a background panel grid should be added to plots automatically. Defaults to \code{NULL}, which is equivalent to \code{FALSE}. In addition to logical values, a character string can be used to control axis-specific grids: uppercase letters (\code{"X"}, \code{"Y"}, \code{"XY"}) draw grid lines at the standard axis tick positions (equivalent to \code{TRUE}), while lowercase letters (\code{"x"}, \code{"y"}, \code{"xy"}) draw a finer grid with additional lines at the midpoints between ticks.
 \item \code{lmar}: A numeric vector of form \code{c(inner, outer)} that gives the margin padding, in terms of lines, around the automatic \code{tinyplot} legend. Defaults to \code{c(1.0, 0.1)}. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
 \item \code{palette.qualitative}: Palette for qualitative colors. See the \code{palette} argument in \code{?tinyplot}.
 \item \code{palette.sequential}: Palette for sequential colors. See the \code{palette} argument in \code{?tinyplot}.

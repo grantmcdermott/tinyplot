@@ -35,5 +35,6 @@ set_environment_variable(
   .saved_par_after = NULL,
   .saved_par_first = NULL,
   .last_call = NULL,
-  .tpar_hooks = NULL
+  .tpar_hooks = NULL,
+  .registered_themes = NULL
 )

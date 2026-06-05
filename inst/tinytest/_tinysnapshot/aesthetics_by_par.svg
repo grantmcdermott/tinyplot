@@ -36,7 +36,7 @@
 <polygon points='466.19,252.00 468.89,249.30 471.59,252.00 468.89,254.70 ' style='stroke-width: 1.97; stroke: none; fill: #61D04F;' />
 <circle cx='468.89' cy='266.40' r='2.70' style='stroke-width: 2.86; stroke: #2297E6; fill: #2297E6;' />
 <circle cx='468.89' cy='280.80' r='1.80' style='stroke-width: 3.75; stroke: #28E2E5; fill: #28E2E5;' />
-<text x='478.70' y='208.80' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='33.34px' lengthAdjust='spacingAndGlyphs'>Month</text>
+<text x='476.92' y='208.80' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='33.34px' lengthAdjust='spacingAndGlyphs'>Month</text>
 <text x='490.49' y='227.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
 <text x='490.49' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
 <text x='490.49' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>7</text>

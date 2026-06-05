@@ -4,7 +4,167 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## Development version
+## Development
+
+### Aesthetic changes
+
+The main focus of v0.7.0 is bringing various aesthetic improvements to 
+**tinyplot**. These aesthetic improvements should carry over to all of your
+(tiny)plots automatically and do not require any changes to user-facing inputs 
+or the core API. From that perspective they are not a breaking change, even
+though some of your plots may look slightly different from before. Still, we
+hope that you agree the following changes result in better looking
+visualizations:
+
+#### Legend aesthetics
+
+- Legend titles and labels are now left-justified by default for the (vertical)
+  side-positioned legends like `"right!"` and `"left!"`. This is a minor visual
+  change from the previous default of centered legends, which we inherited from
+  base R. However, users can still override this behaviour with the new `ljust`
+  parameter, which accepts values of `"l(eft)"` (new default) or `"c(enter")`
+  (old default). (#500 @grantmcdermott)
+  - Example: Override globally by setting `tpar(ljust = "c")`, or revert for a
+    single plot by passing the parameter as part of the legend list arguments,
+    i.e. `plt(..., legend = list(ljust = "c"))`.
+- Direct legend labels are now supported via the new `legend = "direct"`
+  keyword. This places the legend labels at the last observation of each data
+  group and is thus best suited to line or ribbon plots, where the data is
+  sorted along the x-axis. (#587 @grantmcdermott)
+  - Note: The plot (facet) RHS margin is automatically expanded to prevent text
+    clipping of these direct legend labels. However, the labels themselves may
+    still overlap. Users can prevent this by passing helper arguments to the
+    legend contructor: either `repel` (for automatic vertical separation) or 
+    `nudge_x`/`nudge_y` (for manual per-group offsets). For example,
+    `plt(..., legend = list("direct", repel = TRUE))`. 
+
+#### Theme aesthetics
+
+We have significantly refactored our _dynamic_ themes logic. Recall, these are
+themes like `"dynamic"`, `"clean"`, `"bw"`, etc. that automatically adjust
+margin spacing and related plot elements to reduce whitespace and improve the
+overall plot aesthetic. The `?tinytheme` help file and online
+[Themes](https://grantmcdermott.com/tinyplot/vignettes/themes.html) vignette
+cover the new features in detail. But see below for the highlights.
+(#549, #591, #595, #606 @grantmcdermott, @vincentarelbundock)
+
+New theme features:
+
+- `tinytheme()` now accepts additional `gap.axis` and `gap.lab` "primitives",
+  providing finer control for spacing between ticks-to-labels and
+  labels-to-titles, respectively, in dynamic themes. (#590 @grantmcdermott)
+- Similarly, `tinytheme()` also accepts `gap.main` and `gap.sub` primitives
+  for controlling the spacing between titles and the plot region.
+  (#595 @grantmcdermott)
+- Existing theme refinements and improvments. (#595, #603 @grantmcdermott).
+  - `"tufte"` and `"void"` are now dynamic (responsive margins).
+  - All of the `ggplot2`-inspired themes (`"bw"`, `"classic"`, etc.) now use
+    smaller axis text and tighter spacing to better match their upstream
+    `ggplot2` counterparts.
+  - `"ipsum"` has been similarly overhauled to match the upsteam theme (bold
+    title, no ticks, fine grid, custom palette). Our original `tinyplot` variant
+    is preserved as `"ipsum2"` for those who still want to use it.
+  - `"dark"` now uses a better default `ribbon.alpha` for better contrast
+    against the black background.
+- Added several new themes. (#595, #606 @grantmcdermott)
+  - `"dynamic"` (new foundation for all other dynamic themes)
+  - `"broadsheet"` (data journalism style _a la_ _The Economist_ or _NY Times_)
+  - `"float"` (floating axes; a variant of `"tufte"`)
+  - `"linedraw"` (based on the `ggplot2` theme)
+  - `"nber"` (NBER working paper style)
+  - `"socviz"` (based on Kieran Healy's [book](https://socviz.co/))
+  - `"web"` (web publication, e.g. FiveThirtyEight)
+- New `tinytheme_register()` function for registering custom user themes.
+  Registered themes inherit from any built-in (or previously registered) theme,
+  apply user-specified overrides, and can then be used by name with
+  `tinytheme(<theme>)` or `tinyplot(..., theme = <theme>)`. Companion functions
+  `tinytheme_list()` and `tinytheme_unregister()` further support this
+  functionality. (#608 @grantmcdermott)
+
+Theme fixes:
+
+- Plot margins now correctly respond to missing and/or multi-line `main`,
+  `sub`, and `x`/`y` axis titles. For example, a plot without a `main` (or
+  `sub`) title will expand to the top of the device region to reduce excess
+  whitespace. (#303)
+- Left-justified `main` and `sub` titles now correctly anchor to the y-axis
+  line, even when long horizontal tick labels widen the left margin. (#479)
+- Similarly, center-justified axis titles are now anchored on the relevant
+  axis alone, rather than the full plot region. (#573) 
+- `cex.xlab` and `cex.ylab` now correctly control axis title size. The
+  more general `cex.lab` is still respected as a fallback. (#574)
+- Margin spacing now correctly adjusts for math expressions, including
+  fractions and exponents in titles. (#575)
+- Dynamic margins and `mgp` now scale correctly with `cex.axis` and
+  `cex.lab`, maintaining constant visual gaps between axis elements
+  regardless of text size. From the user perspective, this is
+  operationalized through the new `gap.axis` and `gap.lab` theme
+  primitives, which let you control the spacing between margin elements
+  directly (tick-to-label gap and label-to-title gap, respectively),
+  replacing the guesswork of manually combining `mar`, `mgp`, and `tcl`
+  values. (#590)
+- The gap between y-axis tick labels and the y-axis title is now
+  constant regardless of label width (1-digit, 2-digit, decimals, etc.).
+  Previously the gap varied at the narrow/wide label boundary. (#596)
+- New `gap.main` and `gap.sub` theme primitives control the spacing
+  between titles and the plot box. `gap.main` sets the gap from the main
+  title to whatever is below it (plot box or subtitle top); `gap.sub`
+  sets the gap from the subtitle to the plot box. Both default to `0.7`.
+  (#597)
+- Dynamic themes now play nicely with `legend = "top!"`. The title,
+  subtitle, and legend stack correctly above the plot region with proper
+  spacing. (#605)
+
+
+### New plot types
+
+- `type_chull()` (equivalently, `type = "chull"`) for drawing convex hulls
+  around grouped points. Uses `grDevices::chull()` under the hood and delegates
+  drawing to `draw_polygon()`. Works well as a layer on top of points, e.g.
+  `plt_add(type = "chull", fill = 0.2)`. (#600 @grantmcdermott)
+- `type_ellipse()` (equivalently, `type = "ellipse"`) for drawing confidence
+  ellipses around grouped points. Like `type_chull`, works well as a filled
+  layer, e.g. `plt_add(type = "ellipse", fill = 0.2)`. (#610 @grantmcdermott)
+
+### Other new features
+
+- The `grid` argument (and `tpar("grid")`) now accepts character strings to
+  control axis-specific grids at different resolutions. Uppercase letters
+  (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
+  lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional
+  lines at the midpoints between ticks. Thanks to @zeileis for the suggestion.
+  (#578 @grantmcdermott)
+- New `tinyplot(..., cap = <caption>)` argument for adding a caption to your 
+  plots. Captions are drawn at the bottom of the plot and are best paired with
+  dynamic themes (since separation from `sub` is guaranteed). Appearance is
+  customizable via `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`,
+  `font.cap`, and `line.cap`. (#592 @grantmcdermott)
+
+### Bug fixes
+
+- Fixed `grid = grid()` not drawing grid lines on all facets. That said, logical
+  or character inputs (e.g., `grid = TRUE`, `grid = "xy"`) remain the more
+  idiomatic way to generate a background grid in `tinyplot`.
+  (#193 @grantmcdermott)
+- Fixed margin spacing for free facets with different axis scales. The dynamic
+  margin adjustment now computes tick labels per-facet and sizes the margin to
+  accommodate the widest labels. (#579 @grantmcdermott)
+- Fixed several minor issues related to facet title strips and spacing: Strips
+  and spacing now scale correctly with `facet.cex`, multiline facet titles
+  inter-panel gaps remain fixed regardless of strip height, and strip text is 
+  now vertically centered within the background rect. (#586 @grantmcdermott)
+- Fixed Issue #593 where `palette.qualitative` in themes could not be a
+  function. Thanks to @katrinabrock for the report. (#594 @zeileis)
+  - Polygon density hatching lines now correctly use the group colour instead of
+  black. Affects `type_polygon`, `type_chull`, and `type_ellipse` when
+  `density` is set. (#610 @grantmcdermott)
+
+## v0.6.1
+
+### Aesthetic changes
+
+- The legend plot characters for the `"pointrange"` and `"errorbar"` types now
+  include a line, to better resemble the actual plot elements (#533 @grantmcdermott)
 
 ### New features
 
@@ -16,26 +176,25 @@ where the formatting is also better._
   for types that don't require x/y, such as `segments` and `rect`. Thanks to
   @katrinabrock for the suggestion. (#534 @zeileis, @grantmcdermott)
 
-### Aesthetic changes
-
-- The legend plot characters for the `"pointrange"` and `"errorbar"` types now
-  include a line, to better resemble the actual plot elements (#533 @grantmcdermott)
-
 ### Bug fixes
 
+- Fixed Issue #545 where xaxs/yaxs were not restored when set by an internal
+  function. (#545 @zeileis)
+- Fixed Issue #553 where `facet.args = list(free = TRUE)` lead to an error
+  when used used without facets. Thanks to @katrinabrock for the report.
+  (#554 @zeileis)
+- Fixed `type_ridge()` fill errors for themes that set a qualitative palette,
+  e.g. `"clean2"`. (#564 @grantmcdermott)
+- Fixed plot clipping when using ephemeral `theme = "default"` with a legend
+  and `tinyplot_add()`. Thanks to @katrinabrock for the report in #557.
+  (#565 @grantmcdermott)
 - Several improvements/fixes to jittered plots and layering:
   - Jittered plots now support Date/POSIXt axes. Thanks to @wachtermh for the
      bug report and @vincentarelbundock for the code contribution. (#327)
   - `tinyplot_add(type = "jitter")` no longer errors when layered on top of
     boxplot, violin, or similar categorical plot types. (#560 @grantmcdermott)
   - Jitter layers added via `tinyplot_add()` now align correctly with grouped
-    (offset) boxplot, violin, and ridge base layers. (#493 @grantmcdermott)
-
-### Internals
-
-- We now encourage type-specific legend customizations within the individual
-  `type_<type>` constructors. (#531 @grantmcdermott)
-- Change maintainer email address.
+    (offset) boxplot, violin, and ridge base layers. (#561 @grantmcdermott)
 
 ### Documentation
 
@@ -43,13 +202,18 @@ where the formatting is also better._
   [custom types](https://grantmcdermott.com/tinyplot/vignettes/types.html#custom-types)
   in the `Types` vignette. (#531 @grantmcdermott)
 
-### Bugs
+### Internals
 
-- Fixed Issue #545 where xaxs/yaxs were not restored when set by an internal function.
-  (#545 @zeileis)
-
-- Fixed Issue #553 where `facet.args = list(free = TRUE)` lead to an error when used
-  used without facets. Thanks to @katrinabrock for the report. (#554 @zeileis)
+- We now encourage type-specific legend customizations within the individual
+  `type_<type>` constructors. (#531 @grantmcdermott)
+- Change maintainer email address.
+- Add `.CLAUDE.md` context file for AI-assisted development. (#563 @grantmcdermott)
+- Quality of life website improvements. (#566 @grantmcdermott)
+  - Fix Makefile website target (remove circular dep, fix comment)
+  - Enable parallel + freeze for faster local builds
+  - Replace iconify extension with native Bootstrap icon for Bluesky
+- Add GitHub Actions workflow for reverse dependency checks. Triggered by
+  pushing a `revdep*` branch. (#567 @grantmcdermott)
 
 ## v0.6.0
 

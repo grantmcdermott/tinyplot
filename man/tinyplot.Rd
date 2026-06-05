@@ -25,6 +25,7 @@ tinyplot(x, ...)
   legend = NULL,
   main = NULL,
   sub = NULL,
+  cap = NULL,
   xlab = NULL,
   ylab = NULL,
   ann = par("ann"),
@@ -78,6 +79,7 @@ tinyplot(x, ...)
   ylim = NULL,
   main = NULL,
   sub = NULL,
+  cap = NULL,
   xlab = NULL,
   ylab = NULL,
   ann = par("ann"),
@@ -221,6 +223,7 @@ type of plot desired.
 \itemize{
 \item \code{"barplot"} / \code{\link[=type_barplot]{type_barplot()}}: Creates a bar plot.
 \item \code{"boxplot"} / \code{\link[=type_boxplot]{type_boxplot()}}: Creates a box-and-whisker plot.
+\item \code{"chull"} / \code{\link[=type_chull]{type_chull()}}: Draws convex hull(s) around grouped points.
 \item \code{"density"} / \code{\link[=type_density]{type_density()}}: Plots the density estimate of a variable.
 \item \code{"histogram"} / \code{\link[=type_histogram]{type_histogram()}}: Creates a histogram of a single variable.
 \item \code{"jitter"} / \code{\link[=type_jitter]{type_jitter()}}: Jittered points.
@@ -256,13 +259,31 @@ no legend is drawn. If a grouping variable is detected, then an automatic
 legend is drawn to the \emph{outer} right of the plotting area. Note that the
 legend title and categories will automatically be inferred from the \code{by}
 argument and underlying data.
-\item A convenience string indicating the legend position. The string should
-correspond to one of the position keywords supported by the base \code{legend}
-function, e.g. "right", "topleft", "bottom", etc. In addition, \code{tinyplot}
-supports adding a trailing exclamation point to these keywords, e.g.
-"right!", "topleft!", or "bottom!". This will place the legend \emph{outside}
-the plotting area and adjust the margins of the plot accordingly. Finally,
-users can also turn off any legend printing by specifying "none".
+\item A convenience string indicating the legend position. Supported keywords:
+\itemize{
+\item Standard position keywords from base \code{legend()}, e.g. \code{"right"},
+\code{"topleft"}, \code{"bottom"}, etc.
+\item Outer positions via a trailing \code{"!"}, e.g. \code{"right!"}, \code{"topleft!"},
+or \code{"bottom!"}. This places the legend \emph{outside} the plotting area and
+adjusts the margins accordingly.
+\item \code{"direct"}: places text labels at the last point of each group's data,
+coloured to match. Best suited to line-based plots with x-sorted data,
+where "last" corresponds to "rightmost". The right margin is
+automatically expanded to prevent clipping. Requires discrete groups
+via \code{by}. For faceted plots, labels are drawn in each panel for the
+groups present there. Supports additional arguments when passed
+via \code{legend(...)}:
+\itemize{
+\item \code{nudge_x}, \code{nudge_y}: numeric vectors of per-group offsets in data
+units. Recycled to the number of groups. Supports named vectors
+for targeted adjustment, e.g.
+\code{nudge_y = c("Group A" = -10, "Group B" = 20)}.
+\item \code{repel}: if \code{TRUE}, automatically separates overlapping labels
+vertically. If a positive number, sets the minimum gap between
+labels in data units.
+}
+\item \code{"none"}: turns off legend printing.
+}
 \item Logical value, where TRUE corresponds to the default case above (same
 effect as specifying NULL) and FALSE turns the legend off (same effect as
 specifying "none").
@@ -273,6 +294,13 @@ legend arguments, e.g. "bty", "horiz", and so forth.
 \item{main}{a main title for the plot, see also \code{title}.}
 
 \item{sub}{a subtitle for the plot.}
+
+\item{cap}{a caption for the plot, drawn at the bottom. Useful for
+annotations like data sources. Best paired with a dynamic
+\code{\link[tinyplot]{tinytheme}}. For the default theme, should be seen as
+a substitute for \code{sub}, since these two will otherwise overlap. Appearance
+can be customized via \code{\link[tinyplot]{tpar}} parameters \code{adj.cap},
+\code{cex.cap}, \code{col.cap}, \code{font.cap}, and \code{line.cap}.}
 
 \item{xlab}{a label for the x axis, defaults to a description of x.}
 
@@ -331,9 +359,16 @@ the plot. Can also use \code{frame} as an acceptable argument alias.
 The default is to draw a frame if both axis types (set via \code{axes}, \code{xaxt},
 or \code{yaxt}) include axis lines.}
 
-\item{grid}{argument for plotting a background panel grid, one of either:
+\item{grid}{argument for plotting a background panel grid, one of:
 \itemize{
-\item a logical (i.e., \code{TRUE} to draw the grid), or
+\item a logical (i.e., \code{TRUE} to draw the grid on both axes).
+\item a character string controlling which axes get grid lines and at what
+resolution. Uppercase letters (\code{"X"}, \code{"Y"}, \code{"XY"}) draw grid lines at
+the standard axis tick positions (with the latter equivalent to \code{TRUE}),
+while lowercase letters (\code{"x"}, \code{"y"}, \code{"xy"}) draw a finer grid with
+additional lines at the midpoints between ticks. (Note: the finer grid
+has no effect on log-scale axes, since tick positions already include
+intermediate values.)
 \item a panel grid plotting function like \code{grid()}.
 Note that this argument replaces the \code{panel.first} and \code{panel.last}
 arguments from base \code{plot()} and tries to make the process more seamless
@@ -713,6 +748,31 @@ tinyplot(
   legend = legend("bottom!", title = "Month of the year", bty = "o")
 )
 
+# Use legend = "direct" to place text labels at the last point of each
+# group's data, coloured to match. Best suited to line-based plots with
+# x-sorted data, where "last" corresponds to "rightmost". The right
+# margin is automatically expanded to fit the labels. Pairs well with
+# dynamic themes for tighter margins overall.
+
+tinyplot(
+  Temp ~ Day | Month,
+  data = aq,
+  type = "l",
+  legend = "direct",
+  theme = "clean2"
+)
+
+# Use `nudge_x/y`` to manually adjust label positions, or `repel` to
+# auto-separate overlapping labels:
+tinyplot(
+  Temp ~ Day | Month,
+  data = aq,
+  type = "l",
+  legend = legend("direct", nudge_y = c(May = -1, Jun = 2)),
+  # legend = legend("direct", repel = TRUE), # another option
+  theme = "clean2"
+)
+
 # The default group colours are inherited from either the "R4" or "Viridis"
 # palettes, depending on the number of groups. However, all palettes listed
 # by `palette.pals()` and `hcl.pals()` are supported as convenience strings,
@@ -729,17 +789,16 @@ tinyplot(
 # parameters (e.g., via `(t)par`)... But a more convenient way is to just use
 # built-in themes (see `?tinytheme`).
 
-tinytheme("clean2")
 tinyplot(
   Temp ~ Day | Month,
   data = aq,
   type = "b",
   alpha = 0.5,
   main = "Daily temperatures by month",
-  sub = "Brought to you by tinyplot"
+  sub = "Brought to you by tinyplot",
+  cap = "Source: Base R airquality dataset",
+  theme = "clean2"
 )
-# reset the theme
-tinytheme()
 
 # For more examples and a detailed walkthrough, please see the introductory
 # tinyplot tutorial available online:

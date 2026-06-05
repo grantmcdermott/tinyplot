@@ -1,7 +1,0 @@
-title: Iconify
-author: Mickaël Canouil
-version: 2.3.1
-quarto-required: ">=1.5.57"
-contributes:
-  shortcodes:
-    - iconify.lua

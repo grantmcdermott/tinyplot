@@ -42,7 +42,7 @@ website:
         href: $ALTDOC_PACKAGE_URL_GITHUB
         aria-label: $ALTDOC_PACKAGE_NAME GitHub
         target: _blank
-      - text: "{{< iconify fa6-brands:bluesky >}}"
+      - icon: bluesky
         href: https://bsky.app/profile/gmcd.bsky.social
         aria-label: "@gmcd.bsky.social"
         target: _blank
@@ -64,6 +64,8 @@ website:
               file: man/tinyplot_add.qmd
             - text: tinytheme
               file: man/tinytheme.qmd
+            - text: tinytheme_register
+              file: man/tinytheme_register.qmd
         - section: "Plot types"
           contents:
           - section: Shapes
@@ -96,6 +98,10 @@ website:
                 file: man/type_barplot.qmd
               - text: type_boxplot
                 file: man/type_boxplot.qmd
+              - text: type_chull
+                file: man/type_chull.qmd
+              - text: type_ellipse
+                file: man/type_ellipse.qmd
               - text: type_density
                 file: man/type_density.qmd
               - text: type_histogram

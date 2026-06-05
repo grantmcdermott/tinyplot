@@ -113,6 +113,7 @@
 #'     - Visualizations:
 #'       - `"barplot"` / [`type_barplot()`]: Creates a bar plot.
 #'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
+#'       - `"chull"` / [`type_chull()`]: Draws convex hull(s) around grouped points.
 #'       - `"density"` / [`type_density()`]: Plots the density estimate of a variable.
 #'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.
 #'       - `"jitter"` / [`type_jitter()`]: Jittered points.
@@ -139,13 +140,27 @@
 #'    legend is drawn to the _outer_ right of the plotting area. Note that the
 #'    legend title and categories will automatically be inferred from the `by`
 #'    argument and underlying data.
-#'    - A convenience string indicating the legend position. The string should
-#'    correspond to one of the position keywords supported by the base `legend`
-#'    function, e.g. "right", "topleft", "bottom", etc. In addition, `tinyplot`
-#'    supports adding a trailing exclamation point to these keywords, e.g.
-#'    "right!", "topleft!", or "bottom!". This will place the legend _outside_
-#'    the plotting area and adjust the margins of the plot accordingly. Finally,
-#'    users can also turn off any legend printing by specifying "none".
+#'    - A convenience string indicating the legend position. Supported keywords:
+#'      - Standard position keywords from base `legend()`, e.g. `"right"`,
+#'        `"topleft"`, `"bottom"`, etc.
+#'      - Outer positions via a trailing `"!"`, e.g. `"right!"`, `"topleft!"`,
+#'        or `"bottom!"`. This places the legend _outside_ the plotting area and
+#'        adjusts the margins accordingly.
+#'      - `"direct"`: places text labels at the last point of each group's data,
+#'        coloured to match. Best suited to line-based plots with x-sorted data,
+#'        where "last" corresponds to "rightmost". The right margin is
+#'        automatically expanded to prevent clipping. Requires discrete groups
+#'        via `by`. For faceted plots, labels are drawn in each panel for the
+#'        groups present there. Supports additional arguments when passed
+#'        via `legend(...)`:
+#'        - `nudge_x`, `nudge_y`: numeric vectors of per-group offsets in data
+#'          units. Recycled to the number of groups. Supports named vectors
+#'          for targeted adjustment, e.g.
+#'          `nudge_y = c("Group A" = -10, "Group B" = 20)`.
+#'        - `repel`: if `TRUE`, automatically separates overlapping labels
+#'          vertically. If a positive number, sets the minimum gap between
+#'          labels in data units.
+#'      - `"none"`: turns off legend printing.
 #'    - Logical value, where TRUE corresponds to the default case above (same
 #'    effect as specifying NULL) and FALSE turns the legend off (same effect as
 #'    specifying "none").
@@ -153,6 +168,12 @@
 #'    legend arguments, e.g. "bty", "horiz", and so forth.
 #' @param main a main title for the plot, see also `title`.
 #' @param sub a subtitle for the plot.
+#' @param cap a caption for the plot, drawn at the bottom. Useful for
+#'   annotations like data sources. Best paired with a dynamic
+#'   \code{\link[tinyplot]{tinytheme}}. For the default theme, should be seen as
+#'   a substitute for `sub`, since these two will otherwise overlap. Appearance
+#'   can be customized via \code{\link[tinyplot]{tpar}} parameters `adj.cap`,
+#'   `cex.cap`, `col.cap`, `font.cap`, and `line.cap`.
 #' @param xlab a label for the x axis, defaults to a description of x.
 #' @param ylab a label for the y axis, defaults to a description of y.
 #' @param ann a logical value indicating whether the default annotation (title
@@ -197,8 +218,15 @@
 #'   the plot. Can also use `frame` as an acceptable argument alias.
 #'   The default is to draw a frame if both axis types (set via `axes`, `xaxt`,
 #'   or `yaxt`) include axis lines.
-#' @param grid argument for plotting a background panel grid, one of either:
-#'    - a logical (i.e., `TRUE` to draw the grid), or
+#' @param grid argument for plotting a background panel grid, one of:
+#'    - a logical (i.e., `TRUE` to draw the grid on both axes).
+#'    - a character string controlling which axes get grid lines and at what
+#'      resolution. Uppercase letters (`"X"`, `"Y"`, `"XY"`) draw grid lines at
+#'      the standard axis tick positions (with the latter equivalent to `TRUE`),
+#'      while lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with
+#'      additional lines at the midpoints between ticks. (Note: the finer grid
+#'      has no effect on log-scale axes, since tick positions already include
+#'      intermediate values.)
 #'    - a panel grid plotting function like `grid()`.
 #'   Note that this argument replaces the `panel.first` and `panel.last`
 #'   arguments from base `plot()` and tries to make the process more seamless
@@ -368,7 +396,7 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'
-#' @importFrom grDevices axisTicks adjustcolor cairo_pdf colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png svg xy.coords
+#' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png svg xy.coords
 #' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit setNames
@@ -547,6 +575,31 @@
 #'   legend = legend("bottom!", title = "Month of the year", bty = "o")
 #' )
 #'
+#' # Use legend = "direct" to place text labels at the last point of each
+#' # group's data, coloured to match. Best suited to line-based plots with
+#' # x-sorted data, where "last" corresponds to "rightmost". The right
+#' # margin is automatically expanded to fit the labels. Pairs well with
+#' # dynamic themes for tighter margins overall.
+#'
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "l",
+#'   legend = "direct",
+#'   theme = "clean2"
+#' )
+#'
+#' # Use `nudge_x/y`` to manually adjust label positions, or `repel` to
+#' # auto-separate overlapping labels:
+#' tinyplot(
+#'   Temp ~ Day | Month,
+#'   data = aq,
+#'   type = "l",
+#'   legend = legend("direct", nudge_y = c(May = -1, Jun = 2)),
+#'   # legend = legend("direct", repel = TRUE), # another option
+#'   theme = "clean2"
+#' )
+#'
 #' # The default group colours are inherited from either the "R4" or "Viridis"
 #' # palettes, depending on the number of groups. However, all palettes listed
 #' # by `palette.pals()` and `hcl.pals()` are supported as convenience strings,
@@ -563,17 +616,16 @@
 #' # parameters (e.g., via `(t)par`)... But a more convenient way is to just use
 #' # built-in themes (see `?tinytheme`).
 #'
-#' tinytheme("clean2")
 #' tinyplot(
 #'   Temp ~ Day | Month,
 #'   data = aq,
 #'   type = "b",
 #'   alpha = 0.5,
 #'   main = "Daily temperatures by month",
-#'   sub = "Brought to you by tinyplot"
+#'   sub = "Brought to you by tinyplot",
+#'   cap = "Source: Base R airquality dataset",
+#'   theme = "clean2"
 #' )
-#' # reset the theme
-#' tinytheme()
 #'
 #' # For more examples and a detailed walkthrough, please see the introductory
 #' # tinyplot tutorial available online:
@@ -603,6 +655,7 @@ tinyplot.default = function(
     legend = NULL,
     main = NULL,
     sub = NULL,
+    cap = NULL,
     xlab = NULL,
     ylab = NULL,
     ann = par("ann"),
@@ -653,6 +706,12 @@ tinyplot.default = function(
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
   
+  # Validate grid only for simple values; skip for unevaluated calls like grid()
+  # which are passed as language objects from tinyplot.formula via substitute(). (#193)
+  if (!is.null(grid) && !is.call(grid)) {
+    assert_grid(grid, null.ok = TRUE, name = "grid")
+  }
+
   # save for tinyplot_add()
   assert_logical(add)
   if (!add) {
@@ -692,12 +751,18 @@ tinyplot.default = function(
     } else {
       warning('Argument `theme` must be a character of length 1 (e.g. "clean"), or a list. Ignoring.')
     }
-    dtheme = theme_default
-    otheme = opar[names(dtheme)]
-
-    on.exit(do.call(tinytheme, otheme), add = TRUE)
+    if (is.character(theme) && theme == "default") {
+      # Reset mar to pre-theme value so legend margin adjustment isn't
+      # clobbered. Only needed for "default" theme which uses hook = FALSE
+      # and thus sets par(mar) immediately. (#557)
+      par(mar = opar$mar)
+      on.exit(init_tpar(rm_hook = TRUE), add = TRUE)
+    } else {
+      dtheme = theme_default
+      otheme = opar[names(dtheme)]
+      on.exit(do.call(tinytheme, otheme), add = TRUE)
+    }
   }
-
 
   #
   ## settings container -----
@@ -797,11 +862,13 @@ tinyplot.default = function(
     # misc
     add           = add,
     by            = by,
+    cap           = cap,
     dodge         = NULL,
     dots          = dots,
     flip          = flip,
     group_offsets = NULL,
     offsets_axis  = NULL,
+    sub           = sub,
     type_info     = list() # pass type-specific info from type_data to type_draw
   )
 
@@ -826,6 +893,17 @@ tinyplot.default = function(
     settings$dots$legend_args = NULL # avoid passing both directly and via ...
   } else {
     settings$legend_args = list(x = NULL)
+  }
+  # normalize legend position up front so downstream code can read
+  # legend_args[["x"]] directly (idempotent: guarded inside sanitize_legend).
+  # Use settings$legend (captured via substitute()) rather than the raw
+  # `legend` promise, since the latter may be an unevaluated call like
+  # `legend("bottom!", ...)` that would error if forced by is.null() etc.
+  # Skip when add=TRUE: no new legend is drawn in add-mode, and
+  # settings$legend is coerced to FALSE which sanitize_legend would
+  # spuriously normalize to the "right!" default.
+  if (!isTRUE(add)) {
+    settings$legend_args = sanitize_legend(settings$legend, settings$legend_args)
   }
 
   # alias: bg = fill
@@ -932,7 +1010,136 @@ tinyplot.default = function(
 
   env2env(settings, environment())
 
-  if (legend_draw_flag) {
+  #
+  ## dynmar: compute margins up front -----
+  #
+  # Under dynmar themes, compute the full margin once before any drawing.
+  # theme_mar (from the theme) is the baseline padding; dynmar_side() adds
+  # space for ticks, axis labels, main, and sub. whtsbp adds tick-label
+  # width/height for horizontal y-labels or vertical x-labels.
+  # For outer legends ("bottom!", "left!", etc.), skip dynmar_side on the
+  # legend's side — the legend code owns that side's mar via oma.
+  #
+  dynmar_computed = NULL
+  .whtsbp = c(0, 0, 0, 0)
+  if (!add && isTRUE(get_tpar("dynmar"))) {
+    .side.sub = get_tpar("side.sub", default = 3)
+    # Read the theme's intended mar. Also build a tpars list from the theme
+    # definition so dynmar_side uses theme mgp/tcl/las (which aren't in
+    # par() yet since the before.plot.new hook hasn't fired).
+    .tinytheme = get_tpar("tinytheme", default = "default")
+    .theme_def = get_theme_def(.tinytheme)
+    if (identical(.theme_def, theme_default)) .theme_def = NULL
+    .theme_mar = if (!is.null(.theme_def[["mar"]])) .theme_def[["mar"]] else par("mar")
+    .tpars = if (!is.null(.theme_def)) modifyList(.theme_def, tpar()) else tpar()
+    # Merge pending before.plot.new hook values into .tpars so user
+    # overrides passed via tinytheme(..., las = 2) (or tpar(...)) are
+    # visible to dynmar_side()/whtsbp before plot.new fires. Without this,
+    # user overrides for par-level values (las, cex.lab, mgp, tcl, etc.)
+    # are queued in hook closures and unreachable from par() at this point.
+    .pending_hooks = get_environment_variable(".tpar_hooks")
+    for (.h in .pending_hooks) {
+      .bp = environment(.h)[["base_par"]]
+      if (is.list(.bp)) .tpars = modifyList(.tpars, .bp)
+    }
+    if (!is.null(.tpars[["mar"]])) .theme_mar = .tpars[["mar"]]
+
+    .cex_axis = get_tpar("cex.axis", tpar_list = .tpars, default = 1)
+    .cex_lab = get_tpar(c("cex.ylab", "cex.lab"), tpar_list = .tpars, default = 1)
+    .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
+    .ymgp_shift = if (.las %in% c(0L, 1L)) 0.5 * (.cex_axis - 1) else 0
+    .ylab_cex_shift = 0.5 * (.cex_lab - 1)
+
+    # Detect outer-legend sides (order: bottom, left, top, right).
+    .lgnd_pos = settings$legend_args[["x"]]
+    .outer_sides = c(
+      grepl("bottom!$", .lgnd_pos),
+      grepl("left!$",   .lgnd_pos),
+      grepl("top!$",    .lgnd_pos),
+      grepl("right!$",  .lgnd_pos)
+    )
+
+    .dyn = c(
+      dynmar_side(1, xlab, main = main, sub = sub,
+                  cap = if (.outer_sides[1]) NULL else cap,
+                  side.sub = .side.sub,
+                  axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
+                  tpars = .tpars),
+      dynmar_side(2, ylab,
+                  axis_on = !identical(yaxt, "none") && !identical(yaxt, "n"),
+                  tpars = .tpars),
+      dynmar_side(3, NULL, main = main, sub = sub, side.sub = .side.sub,
+                  tpars = .tpars),
+      dynmar_side(4, NULL, tpars = .tpars)
+    )
+    if (.ymgp_shift > 0) .dyn[2] = .dyn[2] - .ymgp_shift
+    # Drop the theme's baseline padding on outer-legend sides so the plot
+    # region meets the legend's oma flush. Only .theme_mar is zeroed — the
+    # axis-driven bumps in .dyn (tick rows, axis labels, main/sub) are kept
+    # so that "left!" and "bottom!" legends don't collide with axis content.
+    # Exception: "top!" lives in mar[3] (not oma), so keep the baseline padding.
+    .outer_sides_oma = .outer_sides & c(TRUE, TRUE, FALSE, TRUE)
+    .theme_mar[.outer_sides_oma] = 0
+
+    # whtsbp uses strwidth(units="figure") + grconvertX("nfc" → "lines"),
+    # both of which give device-default font metrics without requiring
+    # plot.new()/plot.window() first. A preparatory plot.new() here would
+    # advance par("mfg") (breaking mfrow layouts) and create a blank page
+    # in IDE plot panes (Positron). Left/bottom/top margin sizing for
+    # title alignment is handled later by draw_legend or the no-legend
+    # path's own plot.new(), after which the margins are reinstated
+    # via dynmar_computed + .whtsbp before draw_title runs.
+
+    # Compute whtsbp (tick-label width/height bump). Read `las` from .tpars
+    # (the theme definition) rather than par() — par("las") isn't set to the
+    # theme's intended value until the before.plot.new hook fires, but this
+    # block runs before that. Pass .cex_axis to strwidth so measurements
+    # reflect the intended text size (par("cex.axis") isn't set yet either).
+    .whtsbp = c(0, 0, 0, 0)
+    .whtsbp_y_raw = 0
+    .whtsbp_x_raw = 0
+    .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
+    if (.las %in% 1:2) {
+      if (type == "ridge") {
+        yaxlabs = levels(y)
+      } else if (!is.null(ylabs)) {
+        yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs
+      } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
+        yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs
+      } else {
+        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
+        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
+      }
+      if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
+      .whtsbp_y_raw = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") -
+                      grconvertX(0, from = "nfc", to = "lines") - 0.5
+      if (is.finite(.whtsbp_y_raw)) .whtsbp[2] = .whtsbp_y_raw
+    }
+    if (.las %in% 2:3) {
+      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
+      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
+        if (!is.null(names(xlabs))) names(xlabs) else xlabs
+      if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
+      .whtsbp_x_raw = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") - 0.5
+      if (is.finite(.whtsbp_x_raw)) .whtsbp[1] = .whtsbp_x_raw
+    }
+
+    # Under facets, per-facet tick labels render smaller (scaled by
+    # cex_fct_adj), so whtsbp — which is computed from device font metrics
+    # — needs the same scaling to match the actual rendered margin used by
+    # draw_facet_window. Without this, draw_title's mar reserves too much
+    # space on the LHS and anchors the title too far right.
+    if (cex_fct_adj != 1) {
+      .whtsbp = .whtsbp * cex_fct_adj
+      .whtsbp_y_raw = .whtsbp_y_raw * cex_fct_adj
+      .whtsbp_x_raw = .whtsbp_x_raw * cex_fct_adj
+    }
+
+    dynmar_computed = .theme_mar + .dyn
+    par(mar = dynmar_computed + .whtsbp)
+  }
+
+  if (legend_draw_flag && !identical(legend_args[["x"]], "direct")) {
     if (!multi_legend) {
       ## simple case: single legend only
       if (is.null(lgnd_cex)) lgnd_cex = cex * cex_fct_adj
@@ -949,7 +1156,10 @@ tinyplot.default = function(
         bg = bg,
         gradient = by_continuous,
         cex = lgnd_cex,
-        has_sub = has_sub
+        has_sub = has_sub,
+        has_cap = has_cap,
+        cap_text = cap,
+        dynmar_title_mar = if (!is.null(dynmar_computed) && .outer_sides[3] && text_line_count(main) >= 1L) dynmar_computed[3] else NULL
       )
     } else {
       ## multi-legend case...
@@ -961,7 +1171,7 @@ tinyplot.default = function(
     }
 
     has_legend = TRUE
-    } else if (legend_args[["x"]] == "none" && !isTRUE(add)) {
+    } else if (legend_args[["x"]] %in% c("none", "direct") && !isTRUE(add)) {
     omar = par("mar")
     ooma = par("oma")
     topmar_epsilon = 0.1
@@ -981,8 +1191,54 @@ tinyplot.default = function(
   ## title and subtitle -----
   #
 
+  direct_labels_flag = !isTRUE(add) && identical(legend_args[["x"]], "direct") &&
+    !isTRUE(by_continuous) && !null_by
+  if (identical(legend_args[["x"]], "direct") && !direct_labels_flag && !isTRUE(add)) {
+    warning("legend=\"direct\" requires discrete groups via `by`. Falling back to no legend.")
+  }
+
   if (!add) {
-    draw_title(main, sub, xlab, ylab, legend, legend_args, opar)
+    # Reinstate dynmar margins and user coordinates after draw_legend
+    # (which may have called plot.new and reset par via hooks).
+    if (!is.null(dynmar_computed)) {
+      if (has_legend && .outer_sides[3]) {
+        dynmar_computed[3] = par("mar")[3] - .whtsbp[3]
+      }
+      par(mar = dynmar_computed + .whtsbp)
+      if (!is.null(xlim) && !is.null(ylim)) {
+        plot.window(xlim = xlim, ylim = ylim)
+      }
+    } else if (direct_labels_flag && !is.null(xlim) && !is.null(ylim)) {
+      plot.window(xlim = xlim, ylim = ylim)
+    }
+
+    # Expand right margin for direct labels based on actual label overshoot
+    if (direct_labels_flag && !is.null(xlim) && !is.null(ylim)) {
+      usr_right = par("usr")[2]
+      last_x = tapply(datapoints$x, datapoints$by, function(z) tail(z, 1))
+      dl_nudge_x = legend_args[["nudge_x"]] %||% rep(0, length(last_x))
+      dl_nudge_x = rep_len(dl_nudge_x, length(last_x))
+      offset_usr = strwidth("m", units = "user") * 0.3
+      label_widths = strwidth(lgnd_labs, units = "user")
+      overshoots = (last_x + dl_nudge_x + offset_usr + label_widths) - usr_right
+      max_overshoot = max(0, overshoots, na.rm = TRUE)
+      if (max_overshoot > 0) {
+        overshoot_lines = max_overshoot * par("pin")[1] / diff(par("usr")[1:2]) / par("csi")
+        if (!is.null(dynmar_computed)) {
+          dynmar_computed[4] = dynmar_computed[4] + overshoot_lines
+          par(mar = dynmar_computed + .whtsbp)
+        } else {
+          cur_mar = par("mar")
+          cur_mar[4] = cur_mar[4] + overshoot_lines
+          par(mar = cur_mar)
+        }
+        plot.window(xlim = xlim, ylim = ylim)
+      }
+    }
+
+    draw_title(main, sub, cap, xlab, ylab, legend, legend_args, opar,
+               xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
+               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0)
   }
 
 
@@ -1025,13 +1281,19 @@ tinyplot.default = function(
     # if (length(facet_newlines)==0) facet_newlines = 0
     # omar[3] = omar[3] + max(facet_newlines)
     facet_newlines = ifelse(length(facet_newlines) == 0, 0, max(facet_newlines))
-    omar[3] = omar[3] + facet_newlines * facet_text / cex_fct_adj
+    omar[3] = omar[3] + facet_newlines * facet_text
     # apply the changes
     par(mar = omar)
   }
 
   # Now draw the individual facet windows (incl. axes, grid lines, and facet titles)
   # Will be skipped if adding to an existing plot; see ?facet
+
+  dl_overshoot = 0
+  if (direct_labels_flag && nfacets > 1) {
+    dl_label_lines = max(strwidth(lgnd_labs, "inches")) / par("csi")
+    dl_overshoot = dl_label_lines * cex_fct_adj * 0.5
+  }
 
   facet_window_args = recordGraphics(
     draw_facet_window(
@@ -1056,10 +1318,17 @@ tinyplot.default = function(
       draw = draw,
       grid = grid,
       has_legend = has_legend,
+      main = main,
+      sub = sub,
+      cap = cap,
       type = type,
+      xlab = xlab,
       x = x, xmax = xmax, xmin = xmin,
+      ylab = ylab,
       y = y, ymax = ymax, ymin = ymin,
-      tpars = tpars
+      tpars = tpars,
+      dynmar_computed = dynmar_computed,
+      dl_overshoot = dl_overshoot
     ),
     list = list(
       add = add,
@@ -1080,15 +1349,21 @@ tinyplot.default = function(
       draw = draw,
       grid = grid,
       has_legend = has_legend,
+      main = main,
+      sub = sub,
+      cap = cap,
       type = type,
+      xlab = xlab,
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
+      ylab = ylab,
       y = datapoints$y, ymax = datapoints$ymax, ymin = datapoints$ymin,
-      tpars = tpar() # https://github.com/grantmcdermott/tinyplot/issues/474
+      tpars = tpar(), # https://github.com/grantmcdermott/tinyplot/issues/474
+      dynmar_computed = dynmar_computed,
+      dl_overshoot = dl_overshoot
     ),
     getNamespace("tinyplot")
   )
   list2env(facet_window_args, environment())
-
 
   #
   ## split and draw datapoints -----
@@ -1104,6 +1379,8 @@ tinyplot.default = function(
   } else {
     split_data = list(as.list(datapoints))
   }
+
+  if (direct_labels_flag) .dl_info = lapply(seq_along(split_data), function(x) vector("list", ngrps))
 
   ## Outer loop over the facets
   for (i in seq_along(split_data)) {
@@ -1231,9 +1508,73 @@ tinyplot.default = function(
           facet_window_args = facet_window_args
         )
       }
+      if (direct_labels_flag && !empty_plot && length(ix) > 0) {
+        .dl_info[[i]][[ii]] = list(x = tail(ix, 1), y = tail(iy, 1), col = icol)
+      }
     }
   }
-  
+
+  if (direct_labels_flag) {
+    dl_labs = lgnd_labs
+    repel = legend_args[["repel"]]
+    has_nudge = !is.null(legend_args[["nudge_x"]]) || !is.null(legend_args[["nudge_y"]])
+    if (has_nudge && !is.null(repel) && !isFALSE(repel)) {
+      warning("Direct labels: both `nudge` and `repel` specified. Using `nudge`.", call. = FALSE)
+      repel = FALSE
+    }
+    nudge_x = rep(0, ngrps)
+    nudge_y = rep(0, ngrps)
+    if (has_nudge) {
+      nudge_x = legend_args[["nudge_x"]] %||% rep(0, ngrps)
+      nudge_y = legend_args[["nudge_y"]] %||% rep(0, ngrps)
+      if (!is.null(names(nudge_x))) {
+        idx = match(lgnd_labs, names(nudge_x))
+        nudge_x = ifelse(is.na(idx), 0, nudge_x[idx])
+      }
+      if (!is.null(names(nudge_y))) {
+        idx = match(lgnd_labs, names(nudge_y))
+        nudge_y = ifelse(is.na(idx), 0, nudge_y[idx])
+      }
+      nudge_x = rep_len(nudge_x, ngrps)
+      nudge_y = rep_len(nudge_y, ngrps)
+    }
+
+    for (fi in seq_along(.dl_info)) {
+      if (nfacets > 1) {
+        mfgi = ceiling(fi / nfacet_cols)
+        mfgj = fi %% nfacet_cols
+        if (mfgj == 0) mfgj = nfacet_cols
+        par(mfg = c(mfgi, mfgj))
+        if (isTRUE(facet.args[["free"]])) {
+          fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
+          par(usr = fusr[[fi]])
+        }
+      }
+
+      fi_info = .dl_info[[fi]]
+      dl_x = vapply(fi_info, function(d) if (!is.null(d)) d$x else NA_real_, numeric(1))
+      dl_y = vapply(fi_info, function(d) if (!is.null(d)) d$y else NA_real_, numeric(1))
+      dl_x = dl_x + nudge_x
+      dl_y = dl_y + nudge_y
+
+      if (!is.null(repel) && !isFALSE(repel)) {
+        min_gap = if (isTRUE(repel)) 0 else as.numeric(repel)
+        dl_y = repel_text(
+          x = rep(0, length(dl_y)), y = dl_y,
+          widths = rep(0, length(dl_y)),
+          heights = strheight(dl_labs, units = "user"),
+          min_gap = min_gap, axis = "y"
+        )[["y"]]
+      }
+
+      for (k in seq_along(fi_info)) {
+        if (!is.null(fi_info[[k]])) {
+          text(dl_x[k], dl_y[k], labels = dl_labs[k],
+               col = fi_info[[k]]$col, pos = 4, offset = 0.3, xpd = NA)
+        }
+      }
+    }
+  }
 
   #
   ## save end pars for possible recall later -----
@@ -1253,7 +1594,7 @@ tinyplot.default = function(
         apar = par(no.readonly = TRUE)
         set_saved_par(when = "after", apar)
       },
-      list = list(), 
+      list = list(),
       env = getNamespace('tinyplot')
     )
   }
@@ -1281,6 +1622,7 @@ tinyplot.formula = function(
     # log = "",
     main = NULL,
     sub = NULL,
+    cap = NULL,
     xlab = NULL,
     ylab = NULL,
     ann = par("ann"),
@@ -1457,13 +1799,14 @@ tinyplot.formula = function(
     # log = "",
     main = main,
     sub = sub,
+    cap = cap,
     xlab = xlab,
     ylab = ylab,
     ann = ann,
     axes = axes,
     frame.plot = frame.plot,
     asp = asp,
-    grid = grid,
+    grid = substitute(grid), # issue #193
     legend_args = legend_args,
     pch = pch,
     col = col,

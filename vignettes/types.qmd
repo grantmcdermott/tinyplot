@@ -78,7 +78,9 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 |----------------------------|---------------------|------------------------------------------------|------|
 | `"barplot"` / `"bar"`      | `type_barplot()`    | Creates a bar plot.                            | [link](/man/type_barplot.qmd) |
 | `"boxplot"` / `"box"`      | `type_boxplot()`    | Creates a box-and-whisker plot.                | [link](/man/type_boxplot.qmd) |
+| `"chull"`                  | `type_chull()`      | Draws convex hull(s) around grouped points.    | [link](/man/type_chull.qmd) |
 | `"density"`                | `type_density()`    | Plots the density estimate of a variable.      | [link](/man/type_density.qmd) |
+| `"ellipse"`                | `type_ellipse()`    | Draws confidence ellipse(s) around grouped points. | [link](/man/type_ellipse.qmd) |
 | `"histogram"` / `"hist"`   | `type_histogram()`  | Creates a histogram of a single variable.      | [link](/man/type_histogram.qmd) |
 | `"jitter"` / `"j"`         | `type_jitter()`     | Jittered points.                               | [link](/man/type_jitter.qmd) |
 | `"qq"`                     | `type_qq()`         | Creates a quantile-quantile plot.              | [link](/man/type_qq.qmd) |

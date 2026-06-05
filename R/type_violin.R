@@ -12,6 +12,7 @@
 #' @inherit stats::density details
 #' @details See [`type_density`] for more details and considerations related to
 #'   bandwidth selection and kernel types.
+#'
 #'   
 #' @examples
 #' # "violin" type convenience string

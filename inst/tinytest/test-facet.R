@@ -477,6 +477,26 @@ expect_snapshot_plot(f, label = "facet_density_grid")
 
 f = function() {
   tinyplot(
+    ~Ozone, aq,
+    type = "density",
+    facet = 1 ~ hot:windy,
+    main = "Ozone pollution is worse on hot, calm days"
+  )
+}
+expect_snapshot_plot(f, label = "facet_density_formula_1row")
+
+f = function() {
+  tinyplot(
+    ~Ozone, aq,
+    type = "density",
+    facet = hot:windy ~ 1,
+    main = "Ozone pollution is worse on hot, calm days"
+  )
+}
+expect_snapshot_plot(f, label = "facet_density_formula_1col")
+
+f = function() {
+  tinyplot(
     ~wt,
     data = mtcars,
     type = "hist",

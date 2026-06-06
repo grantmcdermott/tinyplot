@@ -588,6 +588,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width = 5/6,
   beside = FALSE,
   center = FALSE,
+  offset = NULL,
   FUN = NULL,
   xlevels = NULL,
   xaxlabels = NULL,
@@ -620,6 +621,14 @@ logical. In case of a <code>by</code> grouping variable, should bars be juxtapos
 </td>
 <td>
 logical or numeric. In case of stacked barplots (<code>beside = FALSE</code>) should the bars be centered (or all start at zero, default)? If set to <code>TRUE</code> the center is at the mid-point of the middle category (in case of uneven number of categories) or between the two middle categories (in case of an even number). Additionally it is possible to set <code>center = 2</code> or <code>center = 2.5</code> to indicate that centering should be after the second category or the mid-way in the third category, respectively.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="offset">offset</code>
+</td>
+<td>
+numeric. Optional vertical offset(s) for bar baselines. When provided, bars start at the offset value(s) rather than zero. Accepts either a single scalar (applied to all bars) or a numeric vector with one value per x-level (matched after any <code>xlevels</code> reordering). Cannot be combined with <code>center</code>.
 </td>
 </tr>
 <tr>
@@ -759,7 +768,23 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Manual waterfall plot example using offset</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">item =</span> <span class="fu">c</span>(<span class="st">"Sales"</span>, <span class="st">"Services"</span>, <span class="st">"Costs"</span>, <span class="st">"Returns"</span>, <span class="st">"TOTAL"</span>),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">40</span>, <span class="sc">-</span><span class="dv">80</span>, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">50</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>item <span class="ot">=</span> <span class="fu">factor</span>(d<span class="sc">$</span>item, <span class="at">levels =</span> d<span class="sc">$</span>item)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>offset <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(d<span class="sc">$</span>value[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]), <span class="dv">0</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(value <span class="sc">~</span> item <span class="sc">|</span> <span class="fu">I</span>(value <span class="sc">&lt;</span> <span class="dv">0</span>), <span class="at">data =</span> d,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">offset =</span> d<span class="sc">$</span>offset), <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fl">4.5</span>), <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 
 

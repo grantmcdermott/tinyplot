@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA='>
+    <rect x='0.00' y='0.00' width='504.00' height='504.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.00px' lengthAdjust='spacingAndGlyphs'>x</text>
+<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.00px' lengthAdjust='spacingAndGlyphs'>y</text>
+<text x='116.14' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='8.00px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text x='216.31' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='8.00px' lengthAdjust='spacingAndGlyphs'>B</text>
+<text x='316.49' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='8.67px' lengthAdjust='spacingAndGlyphs'>C</text>
+<text x='416.66' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='8.67px' lengthAdjust='spacingAndGlyphs'>D</text>
+<line x1='59.04' y1='430.56' x2='59.04' y2='66.32' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='430.56' x2='51.84' y2='430.56' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='339.50' x2='51.84' y2='339.50' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='248.44' x2='51.84' y2='248.44' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='157.38' x2='51.84' y2='157.38' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='66.32' x2='51.84' y2='66.32' style='stroke-width: 0.75;' />
+<text transform='translate(41.76,430.56) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text transform='translate(41.76,339.50) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
+<text transform='translate(41.76,248.44) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text transform='translate(41.76,157.38) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>15</text>
+<text transform='translate(41.76,66.32) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>20</text>
+</g>
+<defs>
+  <clipPath id='cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng=='>
+    <rect x='59.04' y='59.04' width='414.72' height='371.52' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
+<rect x='74.40' y='248.44' width='83.48' height='182.12' style='stroke-width: 0.75; fill: #BEBEBE;' />
+<rect x='174.57' y='157.38' width='83.48' height='91.06' style='stroke-width: 0.75; fill: #BEBEBE;' />
+<rect x='274.75' y='157.38' width='83.48' height='54.64' style='stroke-width: 0.75; fill: #BEBEBE;' />
+<rect x='374.92' y='66.32' width='83.48' height='145.69' style='stroke-width: 0.75; fill: #BEBEBE;' />
+</g>
+</g>
+</svg>

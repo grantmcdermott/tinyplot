@@ -136,9 +136,10 @@ labeller_fun = function(label = "percent") {
   format_percent = function(x) {
     max_decimals = 5L
     pct = as.numeric(x) * 100
+    upct = unique(pct)
     d = Find(
       function(d) {
-        length(unique(sprintf(paste0('%.', d, 'f%%'), pct))) == length(pct)
+        length(unique(sprintf(paste0('%.', d, 'f%%'), upct))) == length(upct)
       },
       0:max_decimals
     ) %||%

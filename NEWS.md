@@ -143,6 +143,9 @@ Theme fixes:
   `plt(..., facet = ~z, facet.args = list(ncol = 1))`. Analogously,
   `plt(..., facet = 1 ~ z)` can be used as a shortcut for
   `plt(..., facet = ~ z, facet.args = list(nrow = 1))`. (#562 @zeileis)
+- `type_barplot()` gains an `offset` argument for shifting bar baselines away
+  from zero. Accepts a scalar or per-x-level numeric vector. Useful for
+  waterfall plots and floating bars. (#611 @grantmcdermott)
 
 ### Bug fixes
 

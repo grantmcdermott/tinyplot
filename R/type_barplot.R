@@ -24,6 +24,11 @@
 #'   (if numeric) for the plot.
 #' @param xaxlabels a character vector with the axis labels for the `x` variable,
 #'   defaulting to the levels of `x`.
+#' @param offset numeric. Optional vertical offset(s) for bar baselines. When
+#'   provided, bars start at the offset value(s) rather than zero. Accepts
+#'   either a single scalar (applied to all bars) or a numeric vector with one
+#'   value per x-level (matched after any `xlevels` reordering).
+#'   Cannot be combined with `center`.
 #' @param drop.zeros logical. Should bars with zero height be dropped? If set
 #'   to `FALSE` (default) a zero height bar is still drawn for which the border
 #'   lines will still be visible.
@@ -64,11 +69,20 @@
 #'   center = TRUE, flip = TRUE, facet.args = list(ncol = 1), yaxl = "percent")
 #'
 #' tinytheme()
-#' 
+#'
+#' # Manual waterfall plot example using offset
+#' d = data.frame(item = c("Sales", "Services", "Costs", "Returns", "TOTAL"),
+#'                value = c(100, 40, -80, -10, 50))
+#' d$item = factor(d$item, levels = d$item)
+#' d$offset = c(0, cumsum(d$value[1:3]), 0)
+#' tinyplot(value ~ item | I(value < 0), data = d,
+#'   type = type_barplot(offset = d$offset), legend = FALSE)
+#' tinyplot_add(type = type_vline(4.5), lty = 2)
+#'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
   out = list(
-    data = data_barplot(width = width, beside = beside, center = center, FUN = FUN, xlevels = xlevels, xaxlabels = xaxlabels, drop.zeros = drop.zeros),
+    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xaxlabels = xaxlabels, drop.zeros = drop.zeros),
     draw = draw_rect(),
     name = "barplot"
   )
@@ -77,7 +91,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
 }
 
 #' @importFrom stats aggregate
-data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
+data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
     fun = function(settings, ...) {
         env2env(
           settings,
@@ -111,13 +125,30 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
         
-        if (isFALSE(null_by) && isFALSE(facet_by) && !beside && any(datapoints$y < 0)) {
+        if (!is.null(offset)) {
+          if (!is.numeric(offset)) stop("'offset' must be numeric")
+          if (!isFALSE(center)) {
+            warning("'offset' cannot be combined with 'center'; ignoring 'center'")
+            center = FALSE
+          }
+          nx_levels = nlevels(datapoints$x)
+          if (length(offset) == 1L) {
+            offset = rep(offset, nx_levels)
+          } else if (length(offset) != nx_levels) {
+            stop(sprintf(
+              "'offset' must be length 1 or %d (number of x levels), got %d",
+              nx_levels, length(offset)
+            ))
+          }
+        }
+        if (is.null(offset) && isFALSE(null_by) && isFALSE(facet_by) && !beside && any(datapoints$y < 0)) {
           warning("'beside' must be TRUE if there are negative 'y' values")
           beside = TRUE
         }
         if (beside & !isFALSE(center)) {
           warning("'center' is currently only supported for 'beside = FALSE'")
         }
+        null_ylim = is.null(ylim)
         offset_sum = function(z, center = TRUE, na.rm = TRUE) {
           n = length(z)
           if (isFALSE(center) || n < 1L) return(0)
@@ -153,7 +184,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
           nx = nlevels(df$x)
           nb = nlevels(df$by)
           
-          if (beside) {        
+          if (beside) {
             xl = as.numeric(df$x) - width/2 + (as.numeric(df$by) - 1) * width/nb * as.numeric(!facet_by)
             xr = if (facet_by) xl + width else xl + width/nb
             yb = 0
@@ -185,7 +216,17 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, FUN = NULL,
         datapoints$nx = NULL
         xlabs = 1L:nx
         names(xlabs) = levels(datapoints$x)
-        
+
+        # Apply offset: shift bar baselines after rectangle computation
+        if (!is.null(offset)) {
+          off = offset[as.numeric(datapoints$x)]
+          datapoints$ymin = datapoints$ymin + off
+          datapoints$ymax = datapoints$ymax + off
+          if (null_ylim) {
+            ylim = range(c(0, datapoints$ymin, datapoints$ymax), na.rm = TRUE) * 1.02
+          }
+        }
+
         if (!isFALSE(center)) {
           if (is.null(yaxl)) {
             yaxl = abs

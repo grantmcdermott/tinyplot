@@ -87,3 +87,56 @@ f = function() {
   tinyplot(~ Species, data = iris)
 }
 expect_snapshot_plot(f, label = "barplot_formula_univariate")
+
+
+#
+## offset argument
+
+# Scalar offset shifts all bars
+f = function() {
+  tinyplot(extra ~ ID, data = sleep[sleep$group == 1, ],
+    type = type_barplot(offset = 10))
+}
+expect_snapshot_plot(f, label = "barplot_offset_scalar")
+
+# Vector offset (waterfall pattern)
+f = function() {
+  d = data.frame(x = factor(LETTERS[1:4]), y = c(10, 5, -3, 8))
+  d$off = c(0, cumsum(d$y[-4]))
+  tinyplot(y ~ x, data = d, type = type_barplot(offset = d$off))
+}
+expect_snapshot_plot(f, label = "barplot_offset_waterfall")
+
+# Offset + beside with grouping
+f = function() {
+  tinyplot(extra ~ ID | group, data = sleep,
+    type = type_barplot(beside = TRUE, offset = rep(1, 10)))
+}
+expect_snapshot_plot(f, label = "barplot_offset_beside_group")
+
+# Offset + stacked
+f = function() {
+  tinyplot(Freq ~ Sex | Survived, data = as.data.frame(Titanic)[1:8, ],
+    type = type_barplot(offset = c(10, 20)))
+}
+expect_snapshot_plot(f, label = "barplot_offset_stacked")
+
+# Offset + flip
+f = function() {
+  d = data.frame(x = factor(LETTERS[1:3]), y = c(5, 3, 7))
+  tinyplot(y ~ x, data = d, type = type_barplot(offset = c(2, 4, 1)), flip = TRUE)
+}
+expect_snapshot_plot(f, label = "barplot_offset_flip")
+
+# Offset + center warns and ignores center
+expect_warning(
+  tinyplot(~ cyl | vs, data = mtcars,
+    type = type_barplot(offset = c(5, 10, 15), center = TRUE)),
+  "cannot be combined"
+)
+
+# Wrong offset length errors
+expect_error(
+  tinyplot(~ cyl, data = mtcars, type = type_barplot(offset = c(1, 2))),
+  "must be length"
+)

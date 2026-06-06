@@ -96,7 +96,7 @@ tinytheme()
 
 # Manual waterfall plot example using offset
 d = data.frame(item = c("Sales", "Services", "Costs", "Returns", "TOTAL"),
-               value = c(100, 40, -80, -10, 60))
+               value = c(100, 40, -80, -10, 50))
 d$item = factor(d$item, levels = d$item)
 d$offset = c(0, cumsum(d$value[1:3]), 0)
 tinyplot(value ~ item | I(value < 0), data = d,

@@ -70,7 +70,7 @@
 #'
 #' tinytheme()
 #'
-#' # Manualy waterfall plot example using offset
+#' # Manual waterfall plot example using offset
 #' d = data.frame(item = c("Sales", "Services", "Costs", "Returns", "TOTAL"),
 #'                value = c(100, 40, -80, -10, 60))
 #' d$item = factor(d$item, levels = d$item)

@@ -80,6 +80,35 @@ New theme features:
   `tinytheme(<theme>)` or `tinyplot(..., theme = <theme>)`. Companion functions
   `tinytheme_list()` and `tinytheme_unregister()` further support this
   functionality. (#608 @grantmcdermott)
+- We adopt a new logic for selecting the default colour for single-group
+  (i.e. plots without a `by` grouping) versus multi-group displays. The upshot
+  is that, for many themes, single-group displays will simply default to
+  "black", whereas multi-group displays will drop "black" and only present
+  colour palettes. This behaviour is operationalized through the new
+  `col.default` parameter, settable via `tpar()` or within a theme: when unset
+  (`NULL`) the first colour of the theme's palette is used; otherwise
+  `col.default` overrides it. Single-group displays are also now resolved
+  consistently across _all_ plot types, whereas types like `"boxplot"`,
+  `"barplot"`, `"violin"`, and `"histogram"` previously hard-coded a black
+  colour regardless of theme. (#598 @grantmcdermott @zeileis)
+  - As a result, the ggplot2-inspired themes now drop the leading black from
+    their _grouped_ palettes while continuing to use black for single-group
+    displays (via `col.default = "black"`). The `"bw"`, `"classic"`,
+    `"linedraw"`, and `"minimal"` themes now use the ggplot2 default palette
+    (less its leading black), so grouped plots start at the familiar salmon
+    hue. The `"ipsum2"` and `"broadsheet"` themes similarly use the Okabe-Ito
+    palette less its leading black, so grouped plots start at orange. The
+    `"float"` and `"void"` themes also default to black for single-group
+    displays. Themes whose palette already leads with a non-black colour (e.g.
+    `"clean"`, `"dark"`, `"nber"`, `"web"`) now use that colour for single-group
+    displays too (e.g. a single-group boxplot under `"clean"` gains a blue
+    border, matching its points and lines).
+  - Relatedly, when a theme palette is active, the _fill_ of single-group
+    `"boxplot"`, `"violin"`, and `"barplot"` displays now tracks the resolved
+    border colour rather than a fixed neutral grey, so that single-group plots
+    match their own multi-group counterparts. Boxplots use a translucent fill
+    (`ribbon.alpha`), while violins and bars use a solid fill. The plain
+    (theme-less) default is unchanged and retains its neutral grey fill.
 
 Theme fixes:
 

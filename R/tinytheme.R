@@ -517,7 +517,7 @@ theme_ipsum2 = modifyList(theme_minimal, list(
 theme_dark = modifyList(theme_minimal, list(
   tinytheme = "dark",
   bg = "#1A1A1A",
-  col.default = "#BBBBBB",
+  col.default = NULL,  # no fixed default: single-group uses palette[1] (Set 2)
   fg = "#BBBBBB",
   # col = "white",
   col.xaxs = "#BBBBBB",
@@ -664,6 +664,7 @@ theme_tufte = modifyList(theme_dynamic, list(
 
 theme_float = modifyList(theme_tufte, list(
   tinytheme = "float",
+  col.default = "black",
   gap.axis = 0,
   gap.lab = 0.7,
   lab = c(5, 5, 7),
@@ -673,6 +674,7 @@ theme_float = modifyList(theme_tufte, list(
 
 theme_void = modifyList(theme_dynamic, list(
   tinytheme = "void",
+  col.default = "black",
   facet.bg = NULL,
   facet.border = NA,
   font.main = 1,

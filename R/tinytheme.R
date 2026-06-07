@@ -306,6 +306,13 @@ okabe_ito_noblack = c(
   "#0072B2", "#D55E00", "#CC79A7", "#999999"
 )
 
+# ggplot2 default qualitative palette with the leading black dropped, paired
+# with `col.default = "black"` (see #598). Used by the ggplot2-inspired themes.
+ggplot2_noblack = c(
+  "#F8766D", "#00BA38", "#619CFF", "#00BFC4",
+  "#F564E3", "#B79F00", "#9E9E9E"
+)
+
 theme_default = list(
   tinytheme = "default",
   adj = par("adj"), # 0.5,
@@ -431,7 +438,7 @@ theme_classic = modifyList(theme_dynamic, list(
   font.main = 1,
   gap.axis = 0.1,
   gap.lab = 0.4,
-  palette.qualitative = okabe_ito_noblack
+  palette.qualitative = ggplot2_noblack
 ))
 
 # derivatives of "clean"
@@ -457,7 +464,7 @@ theme_bw = modifyList(theme_clean, list(
   grid.lwd = 0.5,
   lwd = 0.5,
   lwd.axis = 0.5,
-  palette.qualitative = okabe_ito_noblack
+  palette.qualitative = ggplot2_noblack
 ))
 
 theme_linedraw = modifyList(theme_bw, list(
@@ -503,7 +510,8 @@ theme_ipsum2 = modifyList(theme_minimal, list(
   bty = "n",
   font.sub = 3,
   adj.ylab = 1,
-  adj.xlab = 1
+  adj.xlab = 1,
+  palette.qualitative = okabe_ito_noblack  # keep Okabe-Ito, not the ggplot2 palette
 ))
 
 theme_dark = modifyList(theme_minimal, list(

@@ -296,6 +296,12 @@ by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustc
 
   if (is_by_keyword(col)) col = NULL
 
+  # Single-group default colour (theme-settable via tpar). When NULL, defer to
+  # the usual palette resolution below (first qualitative colour, or palette()[1]).
+  if (is.null(col) && ngrps == 1L && !ordered && !gradient) {
+    col = get_tpar("col.default", default = NULL)
+  }
+
   cols = resolve_manual_colors(col, ngrps, gradient, ordered, alpha, adjustcolor)
   if (!is.null(cols)) {
     return(cols)
@@ -352,6 +358,13 @@ by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps
     } else if (!is.null(col)) {
       bg = adjustcolor(col, ribbon.alpha)
     }
+  } else if (ngrps == 1L && is.null(bg) && !is.null(col) && type %in% c("boxplot", "violin", "barplot")) {
+    # Single-group fill tracks the resolved border colour, so that themed
+    # box/violin/bar plots match their own multi-group counterparts. Boxplots
+    # use a translucent fill (ribbon.alpha); violins and bars use a solid fill.
+    # (The data functions leave `bg = NULL` here only when a theme palette is
+    # active; the no-theme default keeps a neutral grey fill.)
+    bg = if (type == "boxplot") adjustcolor(col, ribbon.alpha) else col
   }
 
   bg

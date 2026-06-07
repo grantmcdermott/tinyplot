@@ -298,6 +298,14 @@ builtin_themes = c(
 
 # theme_default = list()
 
+# Okabe-Ito qualitative palette with the leading black dropped. Themes that use
+# this for multi-group plots pair it with `col.default = "black"` so single-group
+# displays still use black (see #598).
+okabe_ito_noblack = c(
+  "#E69F00", "#56B4E9", "#009E73", "#F0E442",
+  "#0072B2", "#D55E00", "#CC79A7", "#999999"
+)
+
 theme_default = list(
   tinytheme = "default",
   adj = par("adj"), # 0.5,
@@ -418,11 +426,12 @@ theme_classic = modifyList(theme_dynamic, list(
   bty = "l",
   cex.axis = 0.8,
   cex.cap = 0.8,
+  col.default = "black",
   facet.bg = NULL,
   font.main = 1,
   gap.axis = 0.1,
   gap.lab = 0.4,
-  palette.qualitative = "Okabe-Ito"
+  palette.qualitative = okabe_ito_noblack
 ))
 
 # derivatives of "clean"
@@ -439,6 +448,7 @@ theme_clean2 = modifyList(theme_clean, list(
 theme_bw = modifyList(theme_clean, list(
   tinytheme = "bw",
   cex.axis = 0.8,
+  col.default = "black",
   font.main = 1,
   gap.axis = 0.1,
   gap.lab = 0.4,
@@ -447,7 +457,7 @@ theme_bw = modifyList(theme_clean, list(
   grid.lwd = 0.5,
   lwd = 0.5,
   lwd.axis = 0.5,
-  palette.qualitative = "Okabe-Ito"
+  palette.qualitative = okabe_ito_noblack
 ))
 
 theme_linedraw = modifyList(theme_bw, list(
@@ -499,6 +509,7 @@ theme_ipsum2 = modifyList(theme_minimal, list(
 theme_dark = modifyList(theme_minimal, list(
   tinytheme = "dark",
   bg = "#1A1A1A",
+  col.default = "#BBBBBB",
   fg = "#BBBBBB",
   # col = "white",
   col.xaxs = "#BBBBBB",
@@ -519,11 +530,13 @@ theme_dark = modifyList(theme_minimal, list(
 
 theme_ridge = modifyList(theme_clean, list(
   tinytheme = "ridge",
+  col.default = "black",  # keep black ridgelines; Zissou is for gradient fills
   palette.qualitative = "Zissou 1",
   grid = FALSE
 ))
 theme_ridge2 = modifyList(theme_clean2, list(
   tinytheme = "ridge2",
+  col.default = "black",  # keep black ridgelines; Zissou is for gradient fills
   palette.qualitative = "Zissou 1",
   grid = FALSE
 ))
@@ -565,6 +578,7 @@ theme_broadsheet = modifyList(theme_dynamic, list(
   bty = "n",
   cex.cap = 0.8,
   col.cap = "gray40",
+  col.default = "black",
   col.sub = "gray40",
   font.main = 2,
   gap.axis = 0.1,
@@ -573,7 +587,7 @@ theme_broadsheet = modifyList(theme_dynamic, list(
   grid.col = "gray85",
   grid.lty = 1,
   grid.lwd = 0.5,
-  palette.qualitative = "Okabe-Ito",
+  palette.qualitative = okabe_ito_noblack,
   tcl = -0.2,
   yaxt = "labels"
 ))
@@ -584,6 +598,7 @@ theme_broadsheet = modifyList(theme_dynamic, list(
 theme_nber = modifyList(theme_broadsheet, list(
   tinytheme = "nber",
   bg = "#F2F7FB",
+  col.default = NULL,  # override broadsheet's black: nber palette leads with blue
   cex.cap = 1,
   cex.main = 1.4,
   cex.sub = 1,

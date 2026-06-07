@@ -106,7 +106,6 @@ data_histogram = function(breaks = "Sturges",
         hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 
         if (is.null(by) && is.null(palette)) {
-            if (is.null(col)) col = par("fg")
             if (is.null(bg)) bg = "lightgray"
         } else {
             if (is.null(bg)) bg = ribbon.alpha

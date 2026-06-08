@@ -46,7 +46,7 @@ margin spacing and related plot elements to reduce whitespace and improve the
 overall plot aesthetic. The `?tinytheme` help file and online
 [Themes](https://grantmcdermott.com/tinyplot/vignettes/themes.html) vignette
 cover the new features in detail. But see below for the highlights.
-(#549, #591, #595, #606 @grantmcdermott, @vincentarelbundock)
+(#549, #591, #595, #606, #614 @grantmcdermott, @vincentarelbundock, @zeileis)
 
 New theme features:
 
@@ -90,7 +90,7 @@ New theme features:
   `col.default` overrides it. Single-group displays are also now resolved
   consistently across _all_ plot types, whereas types like `"boxplot"`,
   `"barplot"`, `"violin"`, and `"histogram"` previously hard-coded a black
-  colour regardless of theme. (#598 @grantmcdermott @zeileis)
+  colour regardless of theme. (#614 @grantmcdermott @zeileis)
   - As a result, the ggplot2-inspired themes now drop the leading black from
     their _grouped_ palettes while continuing to use black for single-group
     displays (via `col.default = "black"`). The `"bw"`, `"classic"`,

@@ -16,6 +16,19 @@ for (thm in thms) {
 }
 rm(thm)
 
+# Single-group (no `by`) displays: safeguard the per-theme default colour
+# logic, i.e. col.default and the leading-black palette drop. (#598)
+for (thm in thms) {
+  tinytheme(thm)
+  f = function() tinyplot(
+    mpg ~ hp, data = mtcars,
+    main = "Title of the plot",
+    sub = paste0('tinytheme("', thm, '")')
+  )
+  expect_snapshot_plot(f, label = paste0("tinytheme_single_", thm))
+}
+rm(thm)
+
 # legend placement
 
 f = function() {

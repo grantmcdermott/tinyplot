@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA='>
+    <rect x='0.00' y='0.00' width='504.00' height='504.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<text x='53.66' y='36.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='90.56px' lengthAdjust='spacingAndGlyphs'>tinytheme("void")</text>
+<text x='53.66' y='20.45' style='font-size: 14.40px; font-family: "Liberation Sans";' textLength='93.88px' lengthAdjust='spacingAndGlyphs'>Title of the plot</text>
+<text x='274.51' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>hp</text>
+<text transform='translate(12.96,252.14) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'>mpg</text>
+</g>
+<defs>
+  <clipPath id='cpNTMuNjZ8NDk1LjM2fDQ3LjgxfDQ1Ni40OA=='>
+    <rect x='53.66' y='47.81' width='441.70' height='408.67' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNTMuNjZ8NDk1LjM2fDQ3LjgxfDQ1Ni40OA==)'>
+<circle cx='153.84' cy='270.66' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='153.84' cy='270.66' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='129.27' cy='241.68' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='153.84' cy='264.22' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='247.78' cy='307.70' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='146.62' cy='317.36' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='348.94' cy='378.55' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='84.47' cy='215.91' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='132.16' cy='241.68' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='172.63' cy='299.65' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='172.63' cy='322.19' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='255.00' cy='344.73' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='255.00' cy='330.24' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='255.00' cy='364.05' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='291.13' cy='441.34' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='305.58' cy='441.34' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='327.26' cy='372.10' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='90.25' cy='87.10' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='70.02' cy='119.30' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='88.81' cy='62.94' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='135.05' cy='262.61' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='211.65' cy='359.22' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='211.65' cy='364.05' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='348.94' cy='394.65' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='247.78' cy='299.65' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='90.25' cy='169.22' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='126.38' cy='190.15' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='158.18' cy='119.30' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='376.40' cy='354.39' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='247.78' cy='291.59' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='479.00' cy='367.27' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='152.40' cy='264.22' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+</g>
+</g>
+</svg>

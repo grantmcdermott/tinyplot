@@ -144,8 +144,15 @@ Theme fixes:
   `plt(..., facet = 1 ~ z)` can be used as a shortcut for
   `plt(..., facet = ~ z, facet.args = list(nrow = 1))`. (#562 @zeileis)
 - `type_barplot()` gains an `offset` argument for shifting bar baselines away
-  from zero. Accepts a scalar or per-x-level numeric vector. Useful for
-  waterfall plots and floating bars. (#611 @grantmcdermott)
+  from zero. (#611, #615 @grantmcdermott @zeileis)
+  - If the offset is an unnamed scalar or numeric vector, it shifts the bars
+    positionally by the given values. Useful for creating waterfall plots and
+    floating bars.
+  - If the offset is a character or named numeric vector, it instead "sets
+    aside" the named level(s) of the `by` group, pulling them out of the stack
+    and drawing them as standalone bars. This is useful for Likert plots, where
+    you want to show a neutral categories (e.g., "Unsure") apart from the 
+    diverging stack. Thanks to @strengejacke for the suggestion.
 
 ### Bug fixes
 

@@ -140,3 +140,38 @@ expect_error(
   tinyplot(~ cyl, data = mtcars, type = type_barplot(offset = c(1, 2))),
   "must be length"
 )
+
+
+#
+## by-level offset ("set aside" / diverging-Likert)
+
+hec = as.data.frame(proportions(HairEyeColor, 2:3))
+
+# Character offset auto-places a set-aside category (the #420 use case)
+f = function() {
+  tinyplot(Freq ~ Eye | Hair, facet = Sex ~ 1, data = hec, type = "barplot",
+    center = TRUE, flip = TRUE, yaxl = "percent", offset = "Red")
+}
+expect_snapshot_plot(f, label = "barplot_offset_aside")
+
+# Named numeric offset places a set-aside category at an explicit baseline
+f = function() {
+  tinyplot(Freq ~ Eye | Hair, facet = Sex ~ 1, data = hec, type = "barplot",
+    center = TRUE, flip = TRUE, yaxl = "percent", offset = c(Red = 1.1))
+}
+expect_snapshot_plot(f, label = "barplot_offset_aside_explicit")
+
+# Invalid by-level offsets error
+expect_error( # unknown level
+  tinyplot(~ cyl | vs, data = mtcars, type = type_barplot(offset = "nope")),
+  "must name levels"
+)
+expect_error( # no `by` grouping
+  tinyplot(~ cyl, data = mtcars, type = type_barplot(offset = "4")),
+  "requires a 'by' grouping"
+)
+expect_error( # requires stacked bars
+  tinyplot(~ cyl | vs, data = mtcars,
+    type = type_barplot(offset = "0", beside = TRUE)),
+  "requires stacked bars"
+)

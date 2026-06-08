@@ -30,11 +30,21 @@ of an even number). Additionally it is possible to set \code{center = 2} or
 \code{center = 2.5} to indicate that centering should be after the second category
 or the mid-way in the third category, respectively.}
 
-\item{offset}{numeric. Optional vertical offset(s) for bar baselines. When
-provided, bars start at the offset value(s) rather than zero. Accepts
-either a single scalar (applied to all bars) or a numeric vector with one
-value per x-level (matched after any \code{xlevels} reordering).
-Cannot be combined with \code{center}.}
+\item{offset}{optional specification for shifting bar baselines, accepting
+one of two distinct forms. See the Examples for illustrations of both.
+\itemize{
+\item \emph{Positions} via an unnamed numeric scalar or vector. Bars start at the
+offset value(s) rather than zero, matched per x-level after any \code{xlevels}
+reordering (a scalar is applied to all bars). Useful for waterfall charts.
+The positional form cannot be combined with \code{center}.
+\item \emph{Category} via a character vector such as \code{offset = "Unsure"}, or a
+named numeric vector such as \code{offset = c(Unsure = 1.1)}. The named
+level(s) of the \code{by} grouping are "set aside", i.e. pulled out of the
+(optionally centered) stack and drawn as standalone bars. This is useful
+for diverging/Likert plots where a neutral category (e.g. "Unsure") is
+shown apart from the diverging stack. The category form requires a \code{by}
+grouping and \code{beside = FALSE}, but can be combined with \code{center}.
+}}
 
 \item{FUN}{a function to compute the summary statistic for \code{y} within each
 group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: mean).}
@@ -94,7 +104,9 @@ tinyplot(Freq ~ Eye | Hair, facet = ~ Sex, data = hec, type = "barplot",
 
 tinytheme()
 
-# Manual waterfall plot example using offset
+# Use cases for the `offset` argument
+
+# 1. Waterfall plot
 d = data.frame(item = c("Sales", "Services", "Costs", "Returns", "TOTAL"),
                value = c(100, 40, -80, -10, 50))
 d$item = factor(d$item, levels = d$item)
@@ -102,5 +114,30 @@ d$offset = c(0, cumsum(d$value[1:3]), 0)
 tinyplot(value ~ item | I(value < 0), data = d,
   type = type_barplot(offset = d$offset), legend = FALSE)
 tinyplot_add(type = type_vline(4.5), lty = 2)
+
+# 2. Diverging/Likert layout: a character (or named numeric) offset "sets
+# aside" the named category, pulling it out of the centered stack and drawing
+# it as a standalone bar. Here a neutral "Unsure" response is shown apart from
+# the diverging agree/disagree scale.
+lik = expand.grid(
+  question = c("Pay", "Workload", "Manager", "Culture"),
+  response = c("Strong disagree", "Disagree", "Agree", "Strong agree", "Unsure")
+)
+lik$response = factor(lik$response, levels = unique(lik$response))
+lik$share = c( # proportions summing to 1 within each question
+  .10, .25, .05, .15,   .20, .30, .15, .20,   .35, .20, .40, .30,
+  .25, .15, .35, .20,   .10, .10, .05, .15
+)
+# diverging palette: reds (disagree) -> blues (agree), grey for "Unsure"
+pal = c("#b2182b", "#ef8a62", "#67a9cf", "#2166ac", "grey")
+tinyplot(
+  share ~ question | response, data = lik,
+  type = "barplot", center = TRUE, offset = "Unsure",
+  flip = TRUE, xlab = NA, ylab = NA, yaxl = "percent",
+  legend = list("top!", title = NULL),
+  theme = list("clean2", palette.qualitative = pal),
+  main = "Hypothetical Likert example with category offset"
+)
+tinyplot_add(type = "vline")
 
 }

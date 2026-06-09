@@ -628,7 +628,15 @@ logical or numeric. In case of stacked barplots (<code>beside = FALSE</code>) sh
 <code id="offset">offset</code>
 </td>
 <td>
-numeric. Optional vertical offset(s) for bar baselines. When provided, bars start at the offset value(s) rather than zero. Accepts either a single scalar (applied to all bars) or a numeric vector with one value per x-level (matched after any <code>xlevels</code> reordering). Cannot be combined with <code>center</code>.
+<p>optional specification for shifting bar baselines, accepting one of two distinct forms. See the Examples for illustrations of both.</p>
+<ul>
+<li>
+<p><em>Positions</em> via an unnamed numeric scalar or vector. Bars start at the offset value(s) rather than zero, matched per x-level after any <code>xlevels</code> reordering (a scalar is applied to all bars). Useful for waterfall charts. The positional form cannot be combined with <code>center</code>.</p>
+</li>
+<li>
+<p><em>Category</em> via a character vector such as <code>offset = “Unsure”</code>, or a named numeric vector such as <code>offset = c(Unsure = 1.1)</code>. The named level(s) of the <code>by</code> grouping are "set aside", i.e.&nbsp;pulled out of the (optionally centered) stack and drawn as standalone bars. This is useful for diverging/Likert plots where a neutral category (e.g.&nbsp;"Unsure") is shown apart from the diverging stack. The category form requires a <code>by</code> grouping and <code>beside = FALSE</code>, but can be combined with <code>center</code>.</p>
+</li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -770,18 +778,51 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Manual waterfall plot example using offset</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">item =</span> <span class="fu">c</span>(<span class="st">"Sales"</span>, <span class="st">"Services"</span>, <span class="st">"Costs"</span>, <span class="st">"Returns"</span>, <span class="st">"TOTAL"</span>),</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">40</span>, <span class="sc">-</span><span class="dv">80</span>, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">50</span>))</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>item <span class="ot">=</span> <span class="fu">factor</span>(d<span class="sc">$</span>item, <span class="at">levels =</span> d<span class="sc">$</span>item)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>offset <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(d<span class="sc">$</span>value[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]), <span class="dv">0</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(value <span class="sc">~</span> item <span class="sc">|</span> <span class="fu">I</span>(value <span class="sc">&lt;</span> <span class="dv">0</span>), <span class="at">data =</span> d,</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">offset =</span> d<span class="sc">$</span>offset), <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fl">4.5</span>), <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use cases for the `offset` argument</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Waterfall plot</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">item =</span> <span class="fu">c</span>(<span class="st">"Sales"</span>, <span class="st">"Services"</span>, <span class="st">"Costs"</span>, <span class="st">"Returns"</span>, <span class="st">"TOTAL"</span>),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">40</span>, <span class="sc">-</span><span class="dv">80</span>, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">50</span>))</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>item <span class="ot">=</span> <span class="fu">factor</span>(d<span class="sc">$</span>item, <span class="at">levels =</span> d<span class="sc">$</span>item)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>offset <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(d<span class="sc">$</span>value[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]), <span class="dv">0</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(value <span class="sc">~</span> item <span class="sc">|</span> <span class="fu">I</span>(value <span class="sc">&lt;</span> <span class="dv">0</span>), <span class="at">data =</span> d,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">offset =</span> d<span class="sc">$</span>offset), <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fl">4.5</span>), <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_barplot_files/figure-html/unnamed-chunk-1-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Diverging/Likert layout: a character (or named numeric) offset "sets</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># aside" the named category, pulling it out of the centered stack and drawing</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># it as a standalone bar. Here a neutral "Unsure" response is shown apart from</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the diverging agree/disagree scale.</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>lik <span class="ot">=</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">question =</span> <span class="fu">c</span>(<span class="st">"Pay"</span>, <span class="st">"Workload"</span>, <span class="st">"Manager"</span>, <span class="st">"Culture"</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">response =</span> <span class="fu">c</span>(<span class="st">"Strong disagree"</span>, <span class="st">"Disagree"</span>, <span class="st">"Agree"</span>, <span class="st">"Strong agree"</span>, <span class="st">"Unsure"</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>response <span class="ot">=</span> <span class="fu">factor</span>(lik<span class="sc">$</span>response, <span class="at">levels =</span> <span class="fu">unique</span>(lik<span class="sc">$</span>response))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>share <span class="ot">=</span> <span class="fu">c</span>( <span class="co"># proportions summing to 1 within each question</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">15</span>,   .<span class="dv">20</span>, .<span class="dv">30</span>, .<span class="dv">15</span>, .<span class="dv">20</span>,   .<span class="dv">35</span>, .<span class="dv">20</span>, .<span class="dv">40</span>, .<span class="dv">30</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">25</span>, .<span class="dv">15</span>, .<span class="dv">35</span>, .<span class="dv">20</span>,   .<span class="dv">10</span>, .<span class="dv">10</span>, .<span class="dv">05</span>, .<span class="dv">15</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># diverging palette: reds (disagree) -&gt; blues (agree), grey for "Unsure"</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"#b2182b"</span>, <span class="st">"#ef8a62"</span>, <span class="st">"#67a9cf"</span>, <span class="st">"#2166ac"</span>, <span class="st">"grey"</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  share <span class="sc">~</span> question <span class="sc">|</span> response, <span class="at">data =</span> lik,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">offset =</span> <span class="st">"Unsure"</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"top!"</span>, <span class="at">title =</span> <span class="cn">NULL</span>),</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> pal),</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Hypothetical Likert example with category offset"</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-12.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

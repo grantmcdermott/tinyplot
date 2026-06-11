@@ -153,6 +153,10 @@ Theme fixes:
     and drawing them as standalone bars. This is useful for Likert plots, where
     you want to show a neutral categories (e.g., "Unsure") apart from the 
     diverging stack. Thanks to @strengejacke for the suggestion.
+- `type_text()` (and `type = "text"`) gains a `labeller` argument that is passed
+  to `tinylabel()` for formatting the text labels. This is useful for ensuring
+  that text annotations match a formatted axis, e.g. `labeller = "%"` to display
+  the labels as percentages. (#620 @grantmcdermott)
 
 ### Bug fixes
 

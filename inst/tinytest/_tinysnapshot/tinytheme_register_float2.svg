@@ -69,11 +69,11 @@
 <line x1='39.79' y1='255.74' x2='495.36' y2='255.74' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='39.79' y1='159.48' x2='495.36' y2='159.48' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='39.79' y1='63.21' x2='495.36' y2='63.21' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
-<circle cx='56.66' cy='448.28' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #1B9E77;' />
-<circle cx='162.12' cy='352.01' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #1B9E77;' />
-<circle cx='267.58' cy='255.74' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #1B9E77;' />
-<circle cx='373.03' cy='159.48' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #1B9E77;' />
-<circle cx='478.49' cy='63.21' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #1B9E77;' />
+<circle cx='56.66' cy='448.28' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='162.12' cy='352.01' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='267.58' cy='255.74' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='373.03' cy='159.48' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='478.49' cy='63.21' r='2.70' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 </g>
 </g>
 </svg>

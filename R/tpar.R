@@ -55,6 +55,7 @@
 #' * `cairo`: Logical indicating whether \code{\link[grDevices]{cairo_pdf}} should be used when writing plots to PDF. If `FALSE`, then \code{\link[grDevices]{pdf}} will be used instead, with implications for embedding (non-standard) fonts. Only used if `tinyplot(..., file = "<filename>.pdf")` is called. Defaults to the value of `capabilities("cairo")`.
 #' * `cex.cap`: Numeric expansion factor for the plot caption text. Defaults to `1` for the default, basic, and dynamic themes, and `0.8` for clean/classic and their descendants.
 #' * `col.cap`: Character specifying the colour of the plot caption. Defaults to `"black"`.
+#' * `col.default`: Character specifying the default colour for single-group displays (i.e. plots without a `by` grouping). Defaults to `NULL`, in which case the first colour of the active qualitative palette is used (or base `palette()[1]`, typically black, if no theme is set). Themes may set this to override the single-group colour independently of the multi-group palette; for example, a theme can drop the leading colour from `palette.qualitative` for grouped plots while still using it (e.g. black) for single-group plots.
 #' * `font.cap`: Integer specifying the font face for the plot caption (`1` = plain, `2` = bold, `3` = italic, `4` = bold italic). Defaults to `1`.
 #' * `line.cap`: Numeric specifying the margin line on which to draw the caption. If `NULL` (default), computed automatically based on the available bottom margin.
 #' * `dynmar`: Logical indicating whether `tinyplot` should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal `tinythemes()` logic and should _not_ be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
@@ -234,6 +235,7 @@ known_tpar = c(
     "cex.xlab",
     "cex.ylab",
     "col.cap",
+    "col.default",
     "col.xaxs",
     "col.yaxs",
     "cairo",
@@ -305,6 +307,14 @@ assert_tpar = function(.tpar) {
   assert_string(.tpar[["grid.bg"]], null.ok = TRUE, name = "grid.bg")
   assert_numeric(.tpar[["fmar"]], len = 4, null.ok = TRUE, name = "fmar")
 
+  col.default = .tpar[["col.default"]]
+  if (!is.null(col.default)) {
+    if (!is.character(col.default)) {
+      stop("col.default needs to be NULL or a (length-1) character colour", call. = FALSE)
+    }
+    assert_true(length(col.default) == 1, name = "length(col.default)==1")
+  }
+
   facet.col = .tpar[["facet.col"]]
   if (!is.null(facet.col)) {
     if (!is.null(facet.col) && !is.numeric(facet.col) && !is.character(facet.col)) {
@@ -366,6 +376,10 @@ init_tpar = function(rm_hook = FALSE) {
   .tpar$grid.col = if (is.null(getOption("tinyplot_grid.col"))) "lightgray" else getOption("tinyplot_grid.col")
   .tpar$grid.lty = if (is.null(getOption("tinyplot_grid.lty"))) "dotted" else getOption("tinyplot_grid.lty")
   .tpar$grid.lwd = if (is.null(getOption("tinyplot_grid.lwd"))) 1 else as.numeric(getOption("tinyplot_grid.lwd"))
+
+  # Default colour for single-group displays (NULL defers to the first
+  # qualitative palette colour, or base palette()[1] if no theme is active)
+  .tpar$col.default = if (is.null(getOption("tinyplot_col.default"))) NULL else getOption("tinyplot_col.default")
 
   # Legend justification
   .tpar$ljust = if (is.null(getOption("tinyplot_ljust"))) "left" else getOption("tinyplot_ljust")

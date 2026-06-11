@@ -64,7 +64,12 @@
 #' of the ridge densities. Note that a singular value is expected; if multiple
 #' colors are provided then only the first will be used. This argument is mostly
 #' useful for the aesthetic effect of drawing a common outline color in
-#' combination with gradient fills. See Examples.
+#' combination with gradient fills. See Examples. If left unset here, the
+#' outline color can also be supplied via the top-level `tinyplot(..., col =)`
+#' call (the `type_ridge(col =)` argument takes precedence if both are given).
+#' When neither is supplied, the outline defaults to the active theme's
+#' `col.default` (see [tpar]), falling back to the first color of the theme's
+#' qualitative palette, or black if no theme is set.
 #' @param alpha Numeric in the range `[0,1]` for adjusting the alpha
 #' transparency of the density fills. In most cases, will default to a value of
 #' 1, i.e. fully opaque. But for some `by` grouped plots (excepting the special
@@ -257,6 +262,12 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by"))
 
+    # `col` may arrive either via the top-level `tinyplot(..., col =)` call
+    # (stored in settings) or via the `type_ridge(col =)` constructor arg. The
+    # constructor arg takes precedence; otherwise fall back to the settings
+    # value so that a user-supplied `col` is respected. (#598)
+    if (is.null(col)) col = settings[["col"]]
+
     #  catch for special cases
     anyby = !null_by
     x_by = anyby && identical(datapoints$x, datapoints$by)
@@ -396,7 +407,24 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       breaks[length(breaks)] = pmax(breaks[length(breaks)], xlim[2L])
     }
     
-    if (is.null(col) && (!anyby || x_by)) col = "black"
+    # Single-group (or x_by) ridges: default the outline colour consistently
+    # with the other plot types. An explicit `col.default` wins; otherwise fall
+    # back to the first colour of the active qualitative palette (e.g. blue under
+    # "clean"), or base palette()[1] (black) when no theme palette is set. (#598)
+    if (is.null(col) && (!anyby || x_by)) {
+      col = get_tpar("col.default", default = NULL)
+      if (is.null(col)) {
+        pal_q = .tpar[["palette.qualitative"]]
+        col = if (!is.null(pal_q)) {
+          resolve_palette_spec(
+            pal_q, ngrps = 1L, gradient = FALSE, ordered = FALSE,
+            alpha = 1, adjustcolor = adjustcolor
+          )
+        } else {
+          palette()[1L]
+        }
+      }
+    }
 
     # For ridge themes without groups, a numeric bg (e.g. bg = 0.2) should
     # produce transparent gray, not a transparent palette colour. (#547)
@@ -458,10 +486,15 @@ draw_ridge = function() {
     if (is.null(ibg)) {
       pal_q = .tpar[["palette.qualitative"]]
       # For non-ridge themes with a palette, derive fill from the first palette
-      # colour. We need palette.colors() here because the palette is still just
-      # a string name at this point (not yet resolved to colours). (#547)
+      # colour. The theme palette may be a name (e.g. "Tableau 10") or a vector
+      # of colours (e.g. the ipsum/socviz themes), so resolve it to an actual
+      # colour rather than assuming a name. (#547, #598)
       default_bg = if (!ridge_theme && !is.null(pal_q)) {
-        seq_palette(palette.colors(1, palette = pal_q), n = 2)[2]
+        pal_q1 = resolve_palette_spec(
+          pal_q, ngrps = 1L, gradient = FALSE, ordered = FALSE,
+          alpha = 1, adjustcolor = adjustcolor
+        )
+        seq_palette(pal_q1, n = 2)[2]
       } else {
         "gray"
       }

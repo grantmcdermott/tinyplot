@@ -101,16 +101,16 @@ data_histogram = function(breaks = "Sturges",
     hright = right
 
     fun = function(settings, .breaks = hbreaks, .freebreaks = hfree.breaks, .freq = hfreq, .right = hright, .drop.zeros = hdrop.zeros, ...) {
-        env2env(settings, environment(), c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha"))
+        env2env(settings, environment(), c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha", "by", "null_by"))
 
         hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 
-        if (is.null(by) && is.null(palette)) {
-            if (is.null(col)) col = par("fg")
-            if (is.null(bg)) bg = "lightgray"
-        } else {
-            if (is.null(bg)) bg = ribbon.alpha
-        }
+        # Histogram fills are drawn at `ribbon.alpha` transparency. For
+        # single-group displays we leave `bg = NULL` so the fill tracks the
+        # resolved border colour (see by_bg), which honours `col.default` (e.g.
+        # black under themes like "classic"). Multi-group displays fill from the
+        # palette via the `ribbon.alpha` keyword.
+        if (is.null(bg) && !null_by) bg = ribbon.alpha
 
         if (!.freebreaks) xbreaks = hist(datapoints$x, breaks = hbreaks, right = .right, plot = FALSE)$breaks
         datapoints = split(datapoints, list(datapoints$by, datapoints$facet))

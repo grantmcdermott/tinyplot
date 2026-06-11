@@ -296,6 +296,12 @@ by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustc
 
   if (is_by_keyword(col)) col = NULL
 
+  # Single-group default colour (theme-settable via tpar). When NULL, defer to
+  # the usual palette resolution below (first qualitative colour, or palette()[1]).
+  if (is.null(col) && ngrps == 1L && !ordered && !gradient) {
+    col = get_tpar("col.default", default = NULL)
+  }
+
   cols = resolve_manual_colors(col, ngrps, gradient, ordered, alpha, adjustcolor)
   if (!is.null(cols)) {
     return(cols)
@@ -351,6 +357,24 @@ by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps
       bg = adjustcolor(bg, ribbon.alpha)
     } else if (!is.null(col)) {
       bg = adjustcolor(col, ribbon.alpha)
+    }
+  } else if (ngrps == 1L && is.null(bg) && type %in% c("boxplot", "violin", "barplot", "histogram")) {
+    # Single-group fill tracks the theme's *default* colour (col.default ->
+    # palette[1] -> black) so that themed box/violin/bar/histogram plots match
+    # their own multi-group counterparts. We resolve this default independently
+    # of `col` so that a user-supplied outline colour (e.g. `col = "white"`)
+    # doesn't bleed into the fill. Boxplots and histograms use a translucent
+    # fill (ribbon.alpha); violins and bars use a solid fill. (The data functions
+    # leave `bg = NULL` here only when a theme palette is active; the no-theme
+    # default keeps a neutral grey fill.)
+    fill_base = by_col(
+      col = NULL, palette = palette, alpha = 1, by_ordered = by_ordered,
+      by_continuous = by_continuous, ngrps = 1L, adjustcolor = adjustcolor
+    )
+    bg = if (type %in% c("boxplot", "histogram")) {
+      adjustcolor(fill_base, ribbon.alpha)
+    } else {
+      fill_base
     }
   }
 

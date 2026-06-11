@@ -133,36 +133,51 @@ labeller_fun = function(label = "percent") {
 
   ## actual formatting functions
 
-  format_percent = function(x) {
-    max_decimals = 5L
-    pct = as.numeric(x) * 100
-    upct = unique(pct)
-    d = Find(
+  # Find the smallest number of decimal places (from 0:max_decimals) that keeps
+  # the unique values distinct, so a single consistent format can be applied to
+  # the whole vector. Falls back to max_decimals.
+  consistent_decimals = function(x, max_decimals = 5L) {
+    ux = unique(as.numeric(x))
+    Find(
       function(d) {
-        length(unique(sprintf(paste0('%.', d, 'f%%'), upct))) == length(upct)
+        length(unique(sprintf(paste0("%.", d, "f"), ux))) == length(ux)
       },
       0:max_decimals
     ) %||%
       max_decimals
-    pct = sprintf(paste0('%.', d, 'f%%'), pct)
-    return(pct)
+  }
+
+  format_percent = function(x) {
+    pct = as.numeric(x) * 100
+    d = consistent_decimals(pct)
+    sprintf(paste0("%.", d, "f%%"), pct)
+  }
+
+  # Currency convention: keep clean integers integer-valued, but show at least
+  # two decimal places whenever any fractional component is present (e.g.
+  # "$0.50" rather than "$0.5"). Negative values place the sign in front of the
+  # currency symbol (e.g. "-$1.50" rather than "$-1.50"). The comma formatter is
+  # not currency, so it just uses the smallest consistent number of decimals.
+  format_currency = function(x, symbol) {
+    xn = as.numeric(x)
+    d = consistent_decimals(xn)
+    has_decimal = any(xn[!is.na(xn)] %% 1 != 0)
+    if (has_decimal) d = max(d, 2L)
+    fmt = formatC(abs(xn), format = "f", digits = d, big.mark = ",")
+    sign = ifelse(!is.na(xn) & xn < 0, "-", "")
+    paste0(sign, symbol, fmt)
   }
 
   format_comma = function(x) {
-    prettyNum(x, big.mark = ",", scientific = FALSE)
+    d = consistent_decimals(x)
+    formatC(as.numeric(x), format = "f", digits = d, big.mark = ",")
   }
 
-  format_dollar = function(x) {
-    paste0("$", prettyNum(x, big.mark = ",", scientific = FALSE))
-  }
+  format_dollar = function(x) format_currency(x, "$")
 
-  format_euro = function(x) {
-    paste0("\u20ac", prettyNum(x, big.mark = ",", scientific = FALSE))
-  }
+  format_euro = function(x) format_currency(x, "\u20ac")
 
-  format_sterling = function(x) {
-    paste0("\u00a3", prettyNum(x, big.mark = ",", scientific = FALSE))
-  }
+  format_sterling = function(x) format_currency(x, "\u00a3")
 
   format_log = function(x) {
     x = as.numeric(x)

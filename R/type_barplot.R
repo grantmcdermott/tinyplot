@@ -57,28 +57,38 @@
 #' # wouldn't work for `width`, since it would conflict with the top-level
 #' # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
 #' # through the `type_barplot()` functional equivalent.
-#' tinyplot(~ cyl | vs, data = mtcars, fill = 0.2,
-#'   type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65))
-#'
-#' tinytheme("clean2")
+#' tinyplot(
+#'   ~ cyl | vs, data = mtcars, fill = 0.2,
+#'   type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65)
+#' )
 #' 
 #' # Example for numeric y aggregated by x (default: FUN = mean) + facets
-#' tinyplot(extra ~ ID | group, facet = "by", data = sleep,
-#'   type = "barplot", fill = 0.6)
+#' tinyplot(
+#'   extra ~ ID | group, facet = "by", data = sleep,
+#'   type = "barplot", fill = 0.6,
+#'   theme = "clean2"
+#' )
 #' 
 #' # Fancy frequency table:
-#' tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),
-#'   type = "barplot", facet.args = list(nrow = 1), flip = TRUE, fill = 0.6)
+#' tinyplot(
+#'   Freq ~ Sex | Survived, data = as.data.frame(Titanic),
+#'   facet = ~ Class, facet.args = list(nrow = 1),
+#'   type = "barplot", flip = TRUE, fill = 0.6,
+#'   theme = "clean2"
+#' )
 #'
 #' # Centered barplot for conditional proportions of hair color (black/brown vs.
 #' # red/blond) given eye color and sex
-#' tinytheme("clean2", palette.qualitative = c("black", "sienna", "indianred", "goldenrod"))
 #' hec = as.data.frame(proportions(HairEyeColor, 2:3))
-#' tinyplot(Freq ~ Eye | Hair, facet = ~ Sex, data = hec, type = "barplot",
-#'   center = TRUE, flip = TRUE, facet.args = list(ncol = 1), yaxl = "percent")
+#' hcols = c("black", "sienna", "indianred", "goldenrod")
+#' tinyplot(
+#'   Freq ~ Eye | Hair, data = hec,
+#'   facet = ~ Sex, facet.args = list(ncol = 1),
+#'   type = "barplot", center = TRUE,
+#'   flip = TRUE, yaxl = "percent",
+#'   theme = list("clean2", palette.qualitative = hcols)
+#' )
 #'
-#' tinytheme()
-#' 
 #' # Use cases for the `offset` argument
 #'
 #' # 1. Waterfall plot
@@ -86,8 +96,10 @@
 #'                value = c(100, 40, -80, -10, 50))
 #' d$item = factor(d$item, levels = d$item)
 #' d$offset = c(0, cumsum(d$value[1:3]), 0)
-#' tinyplot(value ~ item | I(value < 0), data = d,
-#'   type = type_barplot(offset = d$offset), legend = FALSE)
+#' tinyplot(
+#'   value ~ item | I(value < 0), data = d,
+#'   type = type_barplot(offset = d$offset), legend = FALSE
+#' )
 #' tinyplot_add(type = type_vline(4.5), lty = 2)
 #'
 #' # 2. Diverging/Likert layout: a character (or named numeric) offset "sets

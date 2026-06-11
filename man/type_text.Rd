@@ -6,6 +6,7 @@
 \usage{
 type_text(
   labels = NULL,
+  labeller = NULL,
   adj = NULL,
   pos = NULL,
   offset = 0.5,
@@ -21,6 +22,12 @@ type_text(
 \item{labels}{Character vector of length \code{1} or the same length as the
 number of \code{x},\code{y} coordinates. If left as \code{NULL}, then the labels will
 automatically inherit the corresponding \code{y} values. See Examples.}
+
+\item{labeller}{A formatting function (or convenience string) passed to
+\code{\link{tinylabel}} for formatting the \code{labels}. Useful for ensuring that the
+text labels match the formatting of an axis, e.g. \code{labeller = "\%"} to
+display the labels as percentages. Default is \code{NULL}, i.e. no formatting.
+See Examples.}
 
 \item{adj}{one or two values in \eqn{[0, 1]} which specify the x
     (and optionally y) adjustment (\sQuote{justification}) of the
@@ -98,5 +105,10 @@ tinyplot(mpg ~ hp | factor(cyl),
     xpd = NA
   )
 )
+
+# use `labeller` to format the labels, e.g. to match a formatted axis
+d = data.frame(x = c("A", "B"), y = c(0.5, 0.8))
+tinyplot(y ~ x, data = d, type = "bar", ylim = c(0, 1), yaxl = "\%")
+tinyplot_add(type = type_text(labeller = "\%", adj = c(0.5, -0.5)))
 
 }

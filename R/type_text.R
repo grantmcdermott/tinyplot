@@ -6,6 +6,11 @@
 #' @param labels Character vector of length `1` or the same length as the
 #'   number of `x`,`y` coordinates. If left as `NULL`, then the labels will
 #'   automatically inherit the corresponding `y` values. See Examples.
+#' @param labeller A formatting function (or convenience string) passed to
+#'   [`tinylabel`] for formatting the `labels`. Useful for ensuring that the
+#'   text labels match the formatting of an axis, e.g. `labeller = "%"` to
+#'   display the labels as percentages. Default is `NULL`, i.e. no formatting.
+#'   See Examples.
 #' @param family The name of a font family. Default of `NULL` means that the
 #' family will be the same as the main plot text, following
 #' \code{\link[graphics]{par}}. Note that if a `family` argument is provided,
@@ -53,9 +58,15 @@
 #'   )
 #' )
 #'
+#' # use `labeller` to format the labels, e.g. to match a formatted axis
+#' d = data.frame(x = c("A", "B"), y = c(0.5, 0.8))
+#' tinyplot(y ~ x, data = d, type = "bar", ylim = c(0, 1), yaxl = "%")
+#' tinyplot_add(type = type_text(labeller = "%", adj = c(0.5, -0.5)))
+#'
 #' @export
 type_text = function(
   labels = NULL,
+  labeller = NULL,
   adj = NULL,
   pos = NULL,
   offset = 0.5,
@@ -77,26 +88,29 @@ type_text = function(
       xpd = xpd,
       srt = srt
     ),
-    data = data_text(labels = labels, clim = clim),
+    data = data_text(labels = labels, labeller = labeller, clim = clim),
     name = "text"
   )
   class(out) = "tinyplot_type"
   return(out)
 }
 
-data_text = function(labels = NULL, clim = c(0.5, 2.5)) {
+data_text = function(labels = NULL, labeller = NULL, clim = c(0.5, 2.5)) {
   fun = function(settings, ...) {
     env2env(settings, environment(), "datapoints")
-    
+
     # Store clim for bubble() function
     settings$clim = clim
-    
+
     if (is.null(labels)) {
       labels = datapoints$y
     }
     if (length(labels) != 1 && length(labels) != nrow(datapoints)) {
       msg = sprintf("`labels` must be of length 1 or %s.", nrow(datapoints))
       stop(msg, call. = FALSE)
+    }
+    if (!is.null(labeller)) {
+      labels = tinylabel(labels, labeller)
     }
     datapoints$labels = labels
     if (is.factor(datapoints$x)) {

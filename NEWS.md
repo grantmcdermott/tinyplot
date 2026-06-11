@@ -172,6 +172,15 @@ Theme fixes:
   - Polygon density hatching lines now correctly use the group colour instead of
   black. Affects `type_polygon`, `type_chull`, and `type_ellipse` when
   `density` is set. (#610 @grantmcdermott)
+- Fixed inconsistent decimal places in the `tinylabel()` currency and comma
+  formatters (e.g., `"$"`, `"€"`, `"£"`, `","`). These now use a consistent
+  number of decimal places across the whole vector, matching the existing
+  behaviour of the percent formatter. The currency formatters additionally show
+  at least two decimal places whenever a fractional component is present (e.g.
+  `"$0.50"` rather than `"$0.5"`), while still keeping clean integers
+  integer-valued (e.g. `"$1,000"`), and place the negative sign in front of the
+  currency symbol (e.g. `"-$1.50"` rather than `"$-1.50"`).
+  (#618 @grantmcdermott)
 
 ## v0.6.1
 

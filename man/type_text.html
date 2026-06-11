@@ -615,6 +615,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">type_text(
   labels = NULL,
+  labeller = NULL,
   adj = NULL,
   pos = NULL,
   offset = 0.5,
@@ -636,6 +637,14 @@ window.Quarto = {
 </td>
 <td>
 Character vector of length <code>1</code> or the same length as the number of <code>x</code>,<code>y</code> coordinates. If left as <code>NULL</code>, then the labels will automatically inherit the corresponding <code>y</code> values. See Examples.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="labeller">labeller</code>
+</td>
+<td>
+A formatting function (or convenience string) passed to <code>tinylabel</code> for formatting the <code>labels</code>. Useful for ensuring that the text labels match the formatting of an axis, e.g.&nbsp;<code>labeller = “%”</code> to display the labels as percentages. Default is <code>NULL</code>, i.e.&nbsp;no formatting. See Examples.
 </td>
 </tr>
 <tr>
@@ -777,6 +786,17 @@ Numeric giving the lower and upper limits of the character expansion (<code>cex<
 <div>
 <figure class="figure">
 <p><img src="type_text_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use `labeller` to format the labels, e.g. to match a formatted axis</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.8</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> d, <span class="at">type =</span> <span class="st">"bar"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">yaxl =</span> <span class="st">"%"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_text</span>(<span class="at">labeller =</span> <span class="st">"%"</span>, <span class="at">adj =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_text_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

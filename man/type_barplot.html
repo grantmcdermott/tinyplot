@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-859f1f58819d33154c515ab64f2b70cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-aeb4db13bab9fa66edc66d7ce7aa743f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -732,8 +732,10 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># wouldn't work for `width`, since it would conflict with the top-level</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `tinyplot(..., width = &lt;width&gt;)` argument. It's safer to pass these args</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># through the `type_barplot()` functional equivalent.</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">fill =</span> <span class="fl">0.2</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">drop.zeros =</span> <span class="cn">TRUE</span>, <span class="at">width =</span> <span class="fl">0.65</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">fill =</span> <span class="fl">0.2</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">drop.zeros =</span> <span class="cn">TRUE</span>, <span class="at">width =</span> <span class="fl">0.65</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -741,11 +743,12 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Example for numeric y aggregated by x (default: FUN = mean) + facets</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(extra <span class="sc">~</span> ID <span class="sc">|</span> group, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> sleep,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">fill =</span> <span class="fl">0.6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example for numeric y aggregated by x (default: FUN = mean) + facets</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID <span class="sc">|</span> group, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> sleep,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">fill =</span> <span class="fl">0.6</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="st">"clean2"</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -754,8 +757,12 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fancy frequency table:</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Freq <span class="sc">~</span> Sex <span class="sc">|</span> Survived, <span class="at">facet =</span> <span class="sc">~</span> Class, <span class="at">data =</span> <span class="fu">as.data.frame</span>(Titanic),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>), <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="fl">0.6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  Freq <span class="sc">~</span> Sex <span class="sc">|</span> Survived, <span class="at">data =</span> <span class="fu">as.data.frame</span>(Titanic),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span> Class, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="fl">0.6</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="st">"clean2"</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -765,10 +772,15 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Centered barplot for conditional proportions of hair color (black/brown vs.</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># red/blond) given eye color and sex</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"sienna"</span>, <span class="st">"indianred"</span>, <span class="st">"goldenrod"</span>))</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>hec <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">proportions</span>(HairEyeColor, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Freq <span class="sc">~</span> Eye <span class="sc">|</span> Hair, <span class="at">facet =</span> <span class="sc">~</span> Sex, <span class="at">data =</span> hec, <span class="at">type =</span> <span class="st">"barplot"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">1</span>), <span class="at">yaxl =</span> <span class="st">"percent"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>hec <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">proportions</span>(HairEyeColor, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>hcols <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"sienna"</span>, <span class="st">"indianred"</span>, <span class="st">"goldenrod"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  Freq <span class="sc">~</span> Eye <span class="sc">|</span> Hair, <span class="at">data =</span> hec,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span> Sex, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">1</span>),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> hcols)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -776,17 +788,17 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use cases for the `offset` argument</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use cases for the `offset` argument</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Waterfall plot</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">item =</span> <span class="fu">c</span>(<span class="st">"Sales"</span>, <span class="st">"Services"</span>, <span class="st">"Costs"</span>, <span class="st">"Returns"</span>, <span class="st">"TOTAL"</span>),</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">40</span>, <span class="sc">-</span><span class="dv">80</span>, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">50</span>))</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>item <span class="ot">=</span> <span class="fu">factor</span>(d<span class="sc">$</span>item, <span class="at">levels =</span> d<span class="sc">$</span>item)</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>offset <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(d<span class="sc">$</span>value[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]), <span class="dv">0</span>)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(value <span class="sc">~</span> item <span class="sc">|</span> <span class="fu">I</span>(value <span class="sc">&lt;</span> <span class="dv">0</span>), <span class="at">data =</span> d,</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">offset =</span> d<span class="sc">$</span>offset), <span class="at">legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Waterfall plot</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">item =</span> <span class="fu">c</span>(<span class="st">"Sales"</span>, <span class="st">"Services"</span>, <span class="st">"Costs"</span>, <span class="st">"Returns"</span>, <span class="st">"TOTAL"</span>),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">40</span>, <span class="sc">-</span><span class="dv">80</span>, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">50</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>item <span class="ot">=</span> <span class="fu">factor</span>(d<span class="sc">$</span>item, <span class="at">levels =</span> d<span class="sc">$</span>item)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>offset <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(d<span class="sc">$</span>value[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]), <span class="dv">0</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  value <span class="sc">~</span> item <span class="sc">|</span> <span class="fu">I</span>(value <span class="sc">&lt;</span> <span class="dv">0</span>), <span class="at">data =</span> d,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">offset =</span> d<span class="sc">$</span>offset), <span class="at">legend =</span> <span class="cn">FALSE</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fl">4.5</span>), <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
@@ -805,20 +817,23 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>response <span class="ot">=</span> <span class="fu">factor</span>(lik<span class="sc">$</span>response, <span class="at">levels =</span> <span class="fu">unique</span>(lik<span class="sc">$</span>response))</span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>share <span class="ot">=</span> <span class="fu">c</span>( <span class="co"># proportions summing to 1 within each question</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">15</span>,   .<span class="dv">20</span>, .<span class="dv">30</span>, .<span class="dv">15</span>, .<span class="dv">20</span>,   .<span class="dv">35</span>, .<span class="dv">20</span>, .<span class="dv">40</span>, .<span class="dv">30</span>,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">25</span>, .<span class="dv">15</span>, .<span class="dv">35</span>, .<span class="dv">20</span>,   .<span class="dv">10</span>, .<span class="dv">10</span>, .<span class="dv">05</span>, .<span class="dv">15</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># diverging palette: reds (disagree) -&gt; blues (agree), grey for "Unsure"</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"#b2182b"</span>, <span class="st">"#ef8a62"</span>, <span class="st">"#67a9cf"</span>, <span class="st">"#2166ac"</span>, <span class="st">"grey"</span>)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  share <span class="sc">~</span> question <span class="sc">|</span> response, <span class="at">data =</span> lik,</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">offset =</span> <span class="st">"Unsure"</span>,</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"top!"</span>, <span class="at">title =</span> <span class="cn">NULL</span>),</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> pal),</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Hypothetical Likert example with category offset"</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">15</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">20</span>, .<span class="dv">30</span>, .<span class="dv">15</span>, .<span class="dv">20</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">35</span>, .<span class="dv">20</span>, .<span class="dv">40</span>, .<span class="dv">30</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">25</span>, .<span class="dv">15</span>, .<span class="dv">35</span>, .<span class="dv">20</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">10</span>, .<span class="dv">05</span>, .<span class="dv">15</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># diverging palette: reds (disagree) -&gt; blues (agree), grey for "Unsure"</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"#b2182b"</span>, <span class="st">"#ef8a62"</span>, <span class="st">"#67a9cf"</span>, <span class="st">"#2166ac"</span>, <span class="st">"grey"</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  share <span class="sc">~</span> question <span class="sc">|</span> response, <span class="at">data =</span> lik,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">offset =</span> <span class="st">"Unsure"</span>,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"top!"</span>, <span class="at">title =</span> <span class="cn">NULL</span>),</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> pal),</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Hypothetical Likert example with category offset"</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

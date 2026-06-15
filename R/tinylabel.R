@@ -195,5 +195,19 @@ labeller_fun = function(label = "percent") {
   )
 
   ## combine with absolute value if necessary
-  if (abs_) function(x) fun(abs(x)) else fun
+  numeric_fun = if (abs_) function(x) fun(abs(x)) else fun
+
+  # The built-in formatters coerce their input via as.numeric(). Guard against
+  # non-numeric input (e.g. categorical axis labels reaching a numeric labeller
+  # via flip = TRUE) by leaving such values unchanged, which avoids "NAs
+  # introduced by coercion" warnings (#622). The is.na(xn) & !is.na(x) test only
+  # flags values that became NA through coercion, so genuine NA input still
+  # reaches the formatter.
+  function(x) {
+    xn = suppressWarnings(as.numeric(x))
+    if (any(is.na(xn) & !is.na(x))) {
+      return(x)
+    }
+    numeric_fun(x)
+  }
 }

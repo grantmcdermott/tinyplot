@@ -85,30 +85,34 @@ New theme features:
   is that, for many themes, single-group displays will simply default to
   "black", whereas multi-group displays will drop "black" and only present
   colour palettes. This behaviour is operationalized through the new
-  `col.default` parameter, settable via `tpar()` or within a theme: when unset
-  (`NULL`) the first colour of the theme's palette is used; otherwise
-  `col.default` overrides it. Single-group displays are also now resolved
-  consistently across _all_ plot types, whereas types like `"boxplot"`,
-  `"barplot"`, `"violin"`, and `"histogram"` previously hard-coded a black
-  colour regardless of theme. (#614 @grantmcdermott @zeileis)
-  - As a result, the ggplot2-inspired themes now drop the leading black from
-    their _grouped_ palettes while continuing to use black for single-group
-    displays (via `col.default = "black"`). The `"bw"`, `"classic"`,
-    `"linedraw"`, and `"minimal"` themes now use the ggplot2 default palette
-    (less its leading black), so grouped plots start at the familiar salmon
-    hue. The `"ipsum2"` and `"broadsheet"` themes similarly use the Okabe-Ito
-    palette less its leading black, so grouped plots start at orange. The
-    `"float"` and `"void"` themes also default to black for single-group
-    displays. Themes whose palette already leads with a non-black colour (e.g.
-    `"clean"`, `"dark"`, `"nber"`, `"web"`) now use that colour for single-group
-    displays too (e.g. a single-group boxplot under `"clean"` gains a blue
-    border, matching its points and lines).
-  - Relatedly, when a theme palette is active, the _fill_ of single-group
-    `"boxplot"`, `"violin"`, and `"barplot"` displays now tracks the resolved
-    border colour rather than a fixed neutral grey, so that single-group plots
-    match their own multi-group counterparts. Boxplots use a translucent fill
-    (`ribbon.alpha`), while violins and bars use a solid fill. The plain
-    (theme-less) default is unchanged and retains its neutral grey fill.
+  `col.default` parameter, settable via `tpar()` or within a theme.
+  (#614 @grantmcdermott @zeileis)
+  - Themes whose palette already leads with a non-black colour (e.g.
+    `"clean(2)"`, `"dark"`, `"nber"`, `"web"`) consistently use that colour for
+    single-group displays too.
+  - The ggplot2-inspired themes (`"bw"`, `"classic"`, `"linedraw"`, and
+    `"minimal"`) continue to use black for single-group display. But they now
+    drop the leading black from their _grouped_ palettes. (Note that these
+    themes also use the default `"ggplot2"` palette now, so grouped plots start
+    at the familiar salmon hue.)
+  - Similarly, the `"ipsum2"` and `"broadsheet"` themes use the
+    Okabe-Ito palette less its leading black, so grouped plots start at orange.
+    The `"float"` and `"void"` themes also default to black for single-group
+    displays.
+- Relatedly, the _fill_ of single-group `"boxplot"`, `"violin"`, `"barplot"`,
+  and `"histogram"` displays is now unified across these four types, so that a
+  single-group plot looks the same regardless of which one you reach for.
+  (#614 @grantmcdermott @zeileis)
+  - When the resolved default colour is _chromatic_ (e.g. the blue of `"clean"`
+    or the teal of `"dark"`), the fill is a lighter-but-opaque tint of it;
+    following the same sequential HCL ramp that `"ridge"` type plots have been
+    using for a while.
+  - When the default is _achromatic_ (black, as in the plain default and the
+    `"bw"`/`"classic"`/`"ipsum"` themes), all four types share a neutral
+    `"lightgray"` fill, matching base R's `hist()` and `boxplot()` defaults.
+    Note that this does imply a change for `"barplot"` types, which previously
+    used a slightly darker `"grey"` (to match base R's `barplot()`), but we
+    decided internal consistency was the more important feature to prioritize.
 
 Theme fixes:
 

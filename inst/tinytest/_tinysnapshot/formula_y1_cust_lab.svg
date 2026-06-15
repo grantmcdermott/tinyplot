@@ -62,14 +62,14 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-<rect x='74.40' y='361.32' width='48.00' height='55.48' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
-<rect x='122.40' y='117.19' width='48.00' height='299.61' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
-<rect x='170.40' y='117.19' width='48.00' height='299.61' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
-<rect x='218.40' y='83.90' width='48.00' height='332.90' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
-<rect x='266.40' y='72.80' width='48.00' height='344.00' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
-<rect x='314.40' y='217.06' width='48.00' height='199.74' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
-<rect x='362.40' y='350.22' width='48.00' height='66.58' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
-<rect x='410.40' y='350.22' width='48.00' height='66.58' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
+<rect x='74.40' y='361.32' width='48.00' height='55.48' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='122.40' y='117.19' width='48.00' height='299.61' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='170.40' y='117.19' width='48.00' height='299.61' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='218.40' y='83.90' width='48.00' height='332.90' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='266.40' y='72.80' width='48.00' height='344.00' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='314.40' y='217.06' width='48.00' height='199.74' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='362.40' y='350.22' width='48.00' height='66.58' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='410.40' y='350.22' width='48.00' height='66.58' style='stroke-width: 0.75; fill: #D3D3D3;' />
 </g>
 </g>
 </svg>

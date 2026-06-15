@@ -187,7 +187,7 @@ Theme fixes:
   `"$0.50"` rather than `"$0.5"`), while still keeping clean integers
   integer-valued (e.g. `"$1,000"`), and place the negative sign in front of the
   currency symbol (e.g. `"-$1.50"` rather than `"$-1.50"`).
-  (#618 @grantmcdermott)
+  (#618, #623 @grantmcdermott)
 
 ## v0.6.1
 

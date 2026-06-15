@@ -48,3 +48,8 @@ expect_equal(
   tinylabel(c(-1000, 2000), "$"),
   c("-$1,000", "$2,000")
 )
+# Non-numeric input (e.g. categorical axis labels reaching a numeric labeller
+# via flip = TRUE) should be returned unchanged, without "NAs introduced by
+# coercion" warnings (#622).
+spp = c("Adelie", "Gentoo", "Chinstrap")
+expect_equal(tinylabel(spp, ","), spp)

@@ -38,3 +38,12 @@ f = function() {
   tinyplot_add(type = type_text(labeller = "%", adj = c(0.5, -0.5)))
 }
 expect_snapshot_plot(f, label = "text_labeller_percent")
+
+
+# repel arg nudges overlapping labels apart (#318)
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars,
+    type = type_text(labels =  row.names(mtcars), repel = TRUE),
+    main = "repel = TRUE")
+}
+expect_snapshot_plot(f, label = "text_repel")

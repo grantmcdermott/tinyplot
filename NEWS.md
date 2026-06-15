@@ -153,10 +153,13 @@ Theme fixes:
     and drawing them as standalone bars. This is useful for Likert plots, where
     you want to show a neutral categories (e.g., "Unsure") apart from the 
     diverging stack. Thanks to @strengejacke for the suggestion.
-- `type_text()` (and `type = "text"`) gains a `labeller` argument that is passed
-  to `tinylabel()` for formatting the text labels. This is useful for ensuring
-  that text annotations match a formatted axis, e.g. `labeller = "%"` to display
-  the labels as percentages. (#620 @grantmcdermott)
+- `type_text()` gains two new arguments:
+  - a `labeller` argument that is passed to `tinylabel()` for formatting the
+    text labels. (#620 @grantmcdermott)
+  - a `repel` argument that automatically nudges overlapping text labels apart.
+    One limitation is that the repulsion logic operates with groups. So there
+    may still be some overlapping text for for grouped data.
+    (#621 @grantmcdermott)
 
 ### Bug fixes
 
@@ -184,7 +187,7 @@ Theme fixes:
   `"$0.50"` rather than `"$0.5"`), while still keeping clean integers
   integer-valued (e.g. `"$1,000"`), and place the negative sign in front of the
   currency symbol (e.g. `"-$1.50"` rather than `"$-1.50"`).
-  (#618 @grantmcdermott)
+  (#618, #623 @grantmcdermott)
 
 ## v0.6.1
 

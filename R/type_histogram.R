@@ -101,16 +101,21 @@ data_histogram = function(breaks = "Sturges",
     hright = right
 
     fun = function(settings, .breaks = hbreaks, .freebreaks = hfree.breaks, .freq = hfreq, .right = hright, .drop.zeros = hdrop.zeros, ...) {
-        env2env(settings, environment(), c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha", "by", "null_by"))
+        env2env(settings, environment(), c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha", "by", "null_by", "null_palette"))
 
         hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 
-        # Histogram fills are drawn at `ribbon.alpha` transparency. For
-        # single-group displays we leave `bg = NULL` so the fill tracks the
-        # resolved border colour (see by_bg), which honours `col.default` (e.g.
-        # black under themes like "classic"). Multi-group displays fill from the
-        # palette via the `ribbon.alpha` keyword.
-        if (is.null(bg) && !null_by) bg = ribbon.alpha
+        # Multi-group displays fill from the palette at `ribbon.alpha`
+        # transparency via the `ribbon.alpha` keyword. For single-group displays
+        # with a theme palette active we leave `bg = NULL` so the fill tracks the
+        # resolved border colour (see by_bg), which honours `col.default`. With
+        # no theme palette, single-group uses the neutral "lightgray" shared by
+        # all single-group area fills (matches base R hist()).
+        if (is.null(bg) && !null_by) {
+          bg = ribbon.alpha
+        } else if (is.null(bg) && null_by && null_palette && is.null(get_tpar("palette.qualitative", default = NULL))) {
+          bg = "lightgray"
+        }
 
         if (!.freebreaks) xbreaks = hist(datapoints$x, breaks = hbreaks, right = .right, plot = FALSE)$breaks
         datapoints = split(datapoints, list(datapoints$by, datapoints$facet))

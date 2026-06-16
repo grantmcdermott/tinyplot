@@ -646,6 +646,9 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 <p><code>col.cap</code>: Character specifying the colour of the plot caption. Defaults to <code>“black”</code>.</p>
 </li>
 <li>
+<p><code>col.default</code>: Default colour for single-group displays (i.e.&nbsp;plots without a <code>by</code> grouping). Can be <code>NULL</code>, a length-1 character colour, or a length-1 numeric index into <code>palette.qualitative</code>. Defaults to <code>NULL</code>, in which case the first colour of the active qualitative palette is used (or base <code>palette()[1]</code>, typically black, if no theme is set). A character value sets the single-group colour independently of the multi-group palette. A numeric value <code>i</code> selects the <code>i</code>th colour of <code>palette.qualitative</code> as the single-group default; a <em>negative</em> index additionally drops that colour from the palette used for grouped plots. For example, <code>col.default = -1</code> paired with <code>palette.qualitative = “Okabe-Ito”</code> uses black (the leading palette colour) for single-group plots and an Okabe-Ito-minus-black palette for grouped plots, avoiding the need to maintain a separate "no-black" palette.</p>
+</li>
+<li>
 <p><code>font.cap</code>: Integer specifying the font face for the plot caption (<code>1</code> = plain, <code>2</code> = bold, <code>3</code> = italic, <code>4</code> = bold italic). Defaults to <code>1</code>.</p>
 </li>
 <li>

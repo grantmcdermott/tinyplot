@@ -429,7 +429,7 @@ by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps
     # neutral "lightgray" used by the no-theme path and base R's hist()/boxplot()
     # -- so we use that literal directly, keeping all black-default single-group
     # fills consistent regardless of whether a theme palette happens to be set.
-    achromatic = drop(to_hcl(fill_base))[2L] < 1
+    achromatic = is_achromatic(fill_base)
     bg = if (achromatic) "lightgray" else seq_palette(fill_base, n = 3)[3]
   }
 

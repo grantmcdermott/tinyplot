@@ -234,6 +234,14 @@ to_hcl = function(x) {
     return(x)
 }
 
+# Is a colour (effectively) neutral grey, i.e. has near-zero chroma? Used to
+# decide when a single-group fill should fall back to a plain grey rather than a
+# coloured tint (see by_bg() and draw_spineplot()). Black, white, and greys are
+# all achromatic; any palette hue is not.
+is_achromatic = function(x, tol = 1) {
+  drop(to_hcl(x))[2L] < tol
+}
+
 # Build an n-step sequential ramp from colour `x` toward near-white, in HCL
 # space (reduces chroma, increases lightness). Used for single-group fills
 # (boxplot/violin/barplot/histogram), ridge fills, legend swatches, and

@@ -79,7 +79,7 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 #' @importFrom grDevices nclass.Sturges
 data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL) {
     fun = function(settings, ...) {
-        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "null_palette", "col", "bg", "axes", "xaxt", "yaxt"))
+        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "xaxt", "yaxt"))
       
         ## process weights
         if (!is.null(weights)) {
@@ -237,9 +237,6 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         # catch for x_by / y/by
         if (isTRUE(x_by)) datapoints$by = factor(rep(xaxlabels, each = ny)) # each x label extends over ny rows
         if (isTRUE(y_by)) datapoints$by = factor(rep_len(yaxlabels, nrow(datapoints)))
-          
-        ## grayscale flag
-        grayscale = null_by && null_palette && is.null(.tpar[["palette.qualitative"]])
 
         x = c(datapoints$xmin, datapoints$xmax)
         y = c(datapoints$ymin, datapoints$ymax)
@@ -275,7 +272,6 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
           axes = axes_orig,
           xaxt = xaxt_orig,
           yaxt = yaxt_orig,
-          grayscale = grayscale,
           null_by = null_by,
           x_by = x_by,
           y_by = y_by
@@ -314,7 +310,6 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
       nx = type_info[["nx"]]
       ny = type_info[["ny"]]
       x.categorical = type_info[["x.categorical"]]
-      grayscale = type_info[["grayscale"]]
       null_by = type_info[["null_by"]]
       x_by = type_info[["x_by"]]
       y_by = type_info[["y_by"]]
@@ -324,14 +319,14 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
         if (is.null(ibg)) ibg = icol
         if (isFALSE(y_by)) {
           # For single-group displays, use a neutral grey ramp (gray.colors)
-          # whenever the resolved seed colour is achromatic -- not only when no
-          # palette is set. This keeps black-default themes consistent with each
-          # other regardless of whether they happen to declare a palette (e.g.
-          # "ipsum" matches "dynamic"), mirroring the single-group fill logic in
-          # by_bg(). For grouped displays we never switch to grayscale: each
-          # group (including one whose palette colour is black) follows the same
-          # seq_palette ramp so the fills stay in sync with the legend swatches.
-          gs = grayscale || (isTRUE(null_by) && drop(to_hcl(ibg))[2L] < 1)
+          # whenever the resolved seed colour is achromatic (e.g. the black
+          # default of the plain default or the "bw"/"ipsum" themes), so these
+          # are consistent regardless of whether a palette is declared -- the
+          # same principle as the single-group fill logic in by_bg(). For grouped
+          # displays we never switch to grayscale: each group (including one
+          # whose palette colour is black) follows the same seq_palette ramp so
+          # the fills stay in sync with the legend swatches.
+          gs = isTRUE(null_by) && is_achromatic(ibg)
           ibg = seq_palette(ibg, ny, grayscale = gs)
         }
         ibg = rep_len(ibg, ny)

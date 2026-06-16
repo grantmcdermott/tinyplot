@@ -217,3 +217,46 @@ restore_margin_inner = function(ooma, topmar_epsilon = 0.1) {
     par(omd = c(0, 1, 0, 1))
   }
 }
+
+
+# Convert colour(s) to HCL-like (Luv) coordinates, preserving alpha. Helper for
+# seq_palette(). (Originally lived in type_spineplot.R.)
+#' @importFrom grDevices col2rgb convertColor hcl
+to_hcl = function(x) {
+    x = t(col2rgb(x, alpha = TRUE)/255)
+    alpha = x[, 4]
+    x = x[, 1:3]
+    x = convertColor(x, from = "sRGB", to = "Luv")
+    x = cbind(H = atan2(x[, 3L], x[, 2L]) * 180/pi, C = sqrt(x[, 2L]^2 + x[, 3L]^2), L = x[, 1L])
+    x[is.na(x[, 1L]), 1L] = 0
+    x[x[, 1L] < 0, 1L] = x[x[, 1L] < 0, 1L] + 360
+    attr(x, "alpha") = alpha
+    return(x)
+}
+
+# Is a colour (effectively) neutral grey, i.e. has near-zero chroma? Used to
+# decide when a single-group fill should fall back to a plain grey rather than a
+# coloured tint (see by_bg() and draw_spineplot()). Black, white, and greys are
+# all achromatic; any palette hue is not.
+is_achromatic = function(x, tol = 1) {
+  drop(to_hcl(x))[2L] < tol
+}
+
+# Build an n-step sequential ramp from colour `x` toward near-white, in HCL
+# space (reduces chroma, increases lightness). Used for single-group fills
+# (boxplot/violin/barplot/histogram), ridge fills, legend swatches, and
+# spineplot shading. `seq_palette(col, 3)[3]` is thus a lighter-but-*opaque*
+# tint of `col`. When `grayscale = TRUE`, returns a neutral grey ramp via
+# gray.colors() instead (used by spineplot when no colour grouping is active).
+#' @importFrom grDevices gray.colors
+seq_palette = function(x, n, power = 1.5, grayscale = FALSE) {
+    if (isTRUE(grayscale)) return(gray.colors(n))
+    x = drop(to_hcl(x[1L]))
+    alpha = attr(x, "alpha")
+    hcl(
+      h = x[1L],
+      c = seq.int(from = x[2L]^(1/power), to = 0, length.out = n + 1)[1L:n]^power,
+      l = 100 - seq.int(from = (100 - x[3L])^(1/power), to = pmin(8, (100 - x[3L])/2)^(1/power), length.out = n)^power,
+      alpha = alpha
+    )[1L:n]
+}

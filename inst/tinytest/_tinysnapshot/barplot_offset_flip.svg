@@ -49,9 +49,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-<rect x='160.69' y='315.62' width='254.12' height='101.18' style='stroke-width: 0.75; fill: #BEBEBE;' />
-<rect x='262.33' y='194.21' width='152.47' height='101.18' style='stroke-width: 0.75; fill: #BEBEBE;' />
-<rect x='109.86' y='72.80' width='355.76' height='101.18' style='stroke-width: 0.75; fill: #BEBEBE;' />
+<rect x='160.69' y='315.62' width='254.12' height='101.18' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='262.33' y='194.21' width='152.47' height='101.18' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='109.86' y='72.80' width='355.76' height='101.18' style='stroke-width: 0.75; fill: #D3D3D3;' />
 </g>
 </g>
 </svg>

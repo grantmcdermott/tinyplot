@@ -99,7 +99,12 @@ section below.}
 of the ridge densities. Note that a singular value is expected; if multiple
 colors are provided then only the first will be used. This argument is mostly
 useful for the aesthetic effect of drawing a common outline color in
-combination with gradient fills. See Examples.}
+combination with gradient fills. See Examples. If left unset here, the
+outline color can also be supplied via the top-level \code{tinyplot(..., col =)}
+call (the \code{type_ridge(col =)} argument takes precedence if both are given).
+When neither is supplied, the outline defaults to the active theme's
+\code{col.default} (see \link{tpar}), falling back to the first color of the theme's
+qualitative palette, or black if no theme is set.}
 
 \item{alpha}{Numeric in the range \verb{[0,1]} for adjusting the alpha
 transparency of the density fills. In most cases, will default to a value of

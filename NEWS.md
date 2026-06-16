@@ -46,7 +46,7 @@ margin spacing and related plot elements to reduce whitespace and improve the
 overall plot aesthetic. The `?tinytheme` help file and online
 [Themes](https://grantmcdermott.com/tinyplot/vignettes/themes.html) vignette
 cover the new features in detail. But see below for the highlights.
-(#549, #591, #595, #606 @grantmcdermott, @vincentarelbundock)
+(#549, #591, #595, #606, #614 @grantmcdermott, @vincentarelbundock, @zeileis)
 
 New theme features:
 
@@ -80,6 +80,39 @@ New theme features:
   `tinytheme(<theme>)` or `tinyplot(..., theme = <theme>)`. Companion functions
   `tinytheme_list()` and `tinytheme_unregister()` further support this
   functionality. (#608 @grantmcdermott)
+- We adopt a new logic for selecting the default colour for single-group
+  (i.e. plots without a `by` grouping) versus multi-group displays. The upshot
+  is that, for many themes, single-group displays will simply default to
+  "black", whereas multi-group displays will drop "black" and only present
+  colour palettes. This behaviour is operationalized through the new
+  `col.default` parameter, settable via `tpar()` or within a theme.
+  (#614 @grantmcdermott @zeileis)
+  - Themes whose palette already leads with a non-black colour (e.g.
+    `"clean(2)"`, `"dark"`, `"nber"`, `"web"`) consistently use that colour for
+    single-group displays too.
+  - The ggplot2-inspired themes (`"bw"`, `"classic"`, `"linedraw"`, and
+    `"minimal"`) continue to use black for single-group display. But they now
+    drop the leading black from their _grouped_ palettes. (Note that these
+    themes also use the default `"ggplot2"` palette now, so grouped plots start
+    at the familiar salmon hue.)
+  - Similarly, the `"ipsum2"` and `"broadsheet"` themes use the
+    Okabe-Ito palette less its leading black, so grouped plots start at orange.
+    The `"float"` and `"void"` themes also default to black for single-group
+    displays.
+- Relatedly, the _fill_ of single-group `"boxplot"`, `"violin"`, `"barplot"`,
+  and `"histogram"` displays is now unified across these four types, so that a
+  single-group plot looks the same regardless of which one you reach for.
+  (#614 @grantmcdermott @zeileis)
+  - When the resolved default colour is _chromatic_ (e.g. the blue of `"clean"`
+    or the teal of `"dark"`), the fill is a lighter-but-opaque tint of it;
+    following the same sequential HCL ramp that `"ridge"` type plots have been
+    using for a while.
+  - When the default is _achromatic_ (black, as in the plain default and the
+    `"bw"`/`"classic"`/`"ipsum"` themes), all four types share a neutral
+    `"lightgray"` fill, matching base R's `hist()` and `boxplot()` defaults.
+    Note that this does imply a change for `"barplot"` types, which previously
+    used a slightly darker `"grey"` (to match base R's `barplot()`), but we
+    decided internal consistency was the more important feature to prioritize.
 
 Theme fixes:
 
@@ -144,8 +177,22 @@ Theme fixes:
   `plt(..., facet = 1 ~ z)` can be used as a shortcut for
   `plt(..., facet = ~ z, facet.args = list(nrow = 1))`. (#562 @zeileis)
 - `type_barplot()` gains an `offset` argument for shifting bar baselines away
-  from zero. Accepts a scalar or per-x-level numeric vector. Useful for
-  waterfall plots and floating bars. (#611 @grantmcdermott)
+  from zero. (#611, #615 @grantmcdermott @zeileis)
+  - If the offset is an unnamed scalar or numeric vector, it shifts the bars
+    positionally by the given values. Useful for creating waterfall plots and
+    floating bars.
+  - If the offset is a character or named numeric vector, it instead "sets
+    aside" the named level(s) of the `by` group, pulling them out of the stack
+    and drawing them as standalone bars. This is useful for Likert plots, where
+    you want to show a neutral categories (e.g., "Unsure") apart from the 
+    diverging stack. Thanks to @strengejacke for the suggestion.
+- `type_text()` gains two new arguments:
+  - a `labeller` argument that is passed to `tinylabel()` for formatting the
+    text labels. (#620 @grantmcdermott)
+  - a `repel` argument that automatically nudges overlapping text labels apart.
+    One limitation is that the repulsion logic operates with groups. So there
+    may still be some overlapping text for for grouped data.
+    (#621 @grantmcdermott)
 
 ### Bug fixes
 
@@ -165,6 +212,15 @@ Theme fixes:
   - Polygon density hatching lines now correctly use the group colour instead of
   black. Affects `type_polygon`, `type_chull`, and `type_ellipse` when
   `density` is set. (#610 @grantmcdermott)
+- Fixed inconsistent decimal places in the `tinylabel()` currency and comma
+  formatters (e.g., `"$"`, `"€"`, `"£"`, `","`). These now use a consistent
+  number of decimal places across the whole vector, matching the existing
+  behaviour of the percent formatter. The currency formatters additionally show
+  at least two decimal places whenever a fractional component is present (e.g.
+  `"$0.50"` rather than `"$0.5"`), while still keeping clean integers
+  integer-valued (e.g. `"$1,000"`), and place the negative sign in front of the
+  currency symbol (e.g. `"-$1.50"` rather than `"$-1.50"`).
+  (#618, #623 @grantmcdermott)
 
 ## v0.6.1
 

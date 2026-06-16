@@ -177,8 +177,22 @@ Theme fixes:
   `plt(..., facet = 1 ~ z)` can be used as a shortcut for
   `plt(..., facet = ~ z, facet.args = list(nrow = 1))`. (#562 @zeileis)
 - `type_barplot()` gains an `offset` argument for shifting bar baselines away
-  from zero. Accepts a scalar or per-x-level numeric vector. Useful for
-  waterfall plots and floating bars. (#611 @grantmcdermott)
+  from zero. (#611, #615 @grantmcdermott @zeileis)
+  - If the offset is an unnamed scalar or numeric vector, it shifts the bars
+    positionally by the given values. Useful for creating waterfall plots and
+    floating bars.
+  - If the offset is a character or named numeric vector, it instead "sets
+    aside" the named level(s) of the `by` group, pulling them out of the stack
+    and drawing them as standalone bars. This is useful for Likert plots, where
+    you want to show a neutral categories (e.g., "Unsure") apart from the 
+    diverging stack. Thanks to @strengejacke for the suggestion.
+- `type_text()` gains two new arguments:
+  - a `labeller` argument that is passed to `tinylabel()` for formatting the
+    text labels. (#620 @grantmcdermott)
+  - a `repel` argument that automatically nudges overlapping text labels apart.
+    One limitation is that the repulsion logic operates with groups. So there
+    may still be some overlapping text for for grouped data.
+    (#621 @grantmcdermott)
 
 ### Bug fixes
 
@@ -198,6 +212,15 @@ Theme fixes:
   - Polygon density hatching lines now correctly use the group colour instead of
   black. Affects `type_polygon`, `type_chull`, and `type_ellipse` when
   `density` is set. (#610 @grantmcdermott)
+- Fixed inconsistent decimal places in the `tinylabel()` currency and comma
+  formatters (e.g., `"$"`, `"€"`, `"£"`, `","`). These now use a consistent
+  number of decimal places across the whole vector, matching the existing
+  behaviour of the percent formatter. The currency formatters additionally show
+  at least two decimal places whenever a fractional component is present (e.g.
+  `"$0.50"` rather than `"$0.5"`), while still keeping clean integers
+  integer-valued (e.g. `"$1,000"`), and place the negative sign in front of the
+  currency symbol (e.g. `"-$1.50"` rather than `"$-1.50"`).
+  (#618, #623 @grantmcdermott)
 
 ## v0.6.1
 

@@ -29,3 +29,21 @@ f = function() {
   tinyplot(x, y, labels = z, type = "text")
 }
 expect_snapshot_plot(f, label = "text_single_character")
+
+
+# labeller arg formats text labels, e.g. to match a formatted axis (#617)
+f = function() {
+  d = data.frame(x = c("A", "B"), y = c(0.5, 0.8))
+  tinyplot(y ~ x, data = d, type = "bar", ylim = c(0, 1), yaxl = "%")
+  tinyplot_add(type = type_text(labeller = "%", adj = c(0.5, -0.5)))
+}
+expect_snapshot_plot(f, label = "text_labeller_percent")
+
+
+# repel arg nudges overlapping labels apart (#318)
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars,
+    type = type_text(labels =  row.names(mtcars), repel = TRUE),
+    main = "repel = TRUE")
+}
+expect_snapshot_plot(f, label = "text_repel")

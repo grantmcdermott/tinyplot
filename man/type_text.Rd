@@ -6,6 +6,7 @@
 \usage{
 type_text(
   labels = NULL,
+  labeller = NULL,
   adj = NULL,
   pos = NULL,
   offset = 0.5,
@@ -14,6 +15,7 @@ type_text(
   vfont = NULL,
   xpd = NULL,
   srt = 0,
+  repel = FALSE,
   clim = c(0.5, 2.5)
 )
 }
@@ -21,6 +23,12 @@ type_text(
 \item{labels}{Character vector of length \code{1} or the same length as the
 number of \code{x},\code{y} coordinates. If left as \code{NULL}, then the labels will
 automatically inherit the corresponding \code{y} values. See Examples.}
+
+\item{labeller}{A formatting function (or convenience string) passed to
+\code{\link{tinylabel}} for formatting the \code{labels}. Useful for ensuring that the
+text labels match the formatting of an axis, e.g. \code{labeller = "\%"} to
+display the labels as percentages. Default is \code{NULL}, i.e. no formatting.
+See Examples.}
 
 \item{adj}{one or two values in \eqn{[0, 1]} which specify the x
     (and optionally y) adjustment (\sQuote{justification}) of the
@@ -58,6 +66,17 @@ regular, \code{2} = bold, \code{3} = italic, \code{4} = bold italic, and \code{5
 
 \item{srt}{Numeric giving the desired string rotation in degrees.}
 
+\item{repel}{Logical or numeric controlling automatic repulsion of
+overlapping text labels. The default \code{FALSE} draws the labels at their
+exact (\code{x},\code{y}) coordinates. \code{TRUE} nudges overlapping labels apart using a
+force-directed algorithm (labels are pushed off each other and then sprung
+back toward their original positions). A numeric value does the same but
+additionally enforces that much minimum padding (in user coordinates)
+between labels. Works best with the default centered text placement (i.e.
+without \code{pos}). \strong{Caveat:} The repulsion logic currently operates
+within each group rather than across groups. So the text of different
+groups may still overlap. See Examples.}
+
 \item{clim}{Numeric giving the lower and upper limits of the character
 expansion (\code{cex}) normalization for bubble charts.}
 }
@@ -72,9 +91,18 @@ tinyplot(1:12, type = "text")
 # pass explicit `labels` arg if you want specific text
 tinyplot(1:12, type = "text", labels = month.abb)
 
+# you can also use a labeller function (passed to `tinylabel`) to
+# customize
+tinyplot(1:12, type = "text", labels = month.abb, labeller = toupper)
+
 # for advanced customization, it's safer to pass args through `type_text()`
-tinyplot(1:12, type = type_text(
-  labels = month.abb, family = "HersheyScript", srt = -20))
+tinyplot(
+  1:12,
+  type = type_text(
+  labels = month.abb,
+  family = "HersheyScript",
+  srt = -20)
+)
 
 # same principles apply to grouped and/or facet data
 tinyplot(mpg ~ hp | factor(cyl),
@@ -97,6 +125,19 @@ tinyplot(mpg ~ hp | factor(cyl),
     adj = 0,
     xpd = NA
   )
+)
+
+# use `repel = TRUE` to automically nudge overlapping labels apart
+tinyplot(
+  mpg ~ wt, data = mtcars,
+  type = type_text(labels = row.names(mtcars), repel = TRUE)
+)
+
+# limitation: `repel` logic currently works per group, so grouped text data
+# may still overlap
+tinyplot(
+  mpg ~ wt | factor(cyl), data = mtcars,
+  type = type_text(labels = row.names(mtcars), repel = TRUE)
 )
 
 }

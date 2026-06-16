@@ -50,8 +50,8 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-<rect x='74.40' y='244.80' width='174.55' height='185.76' style='stroke-width: 0.75; fill: #BEBEBE;' />
-<rect x='283.85' y='133.34' width='174.55' height='297.22' style='stroke-width: 0.75; fill: #BEBEBE;' />
+<rect x='74.40' y='244.80' width='174.55' height='185.76' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='283.85' y='133.34' width='174.55' height='297.22' style='stroke-width: 0.75; fill: #D3D3D3;' />
 <text x='161.67' y='240.67' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='24.02px' lengthAdjust='spacingAndGlyphs'>50%</text>
 <text x='371.13' y='129.21' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='24.02px' lengthAdjust='spacingAndGlyphs'>80%</text>
 </g>

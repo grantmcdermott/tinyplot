@@ -126,8 +126,9 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         }
 
         if (length(unique(datapoints[["by"]])) == 1 && null_palette) {
-            if (is.null(col)) col = par("fg")
-            if (is.null(bg)) bg = "lightgray"
+            # With a theme palette active, leave bg = NULL so the fill tracks
+            # the resolved border colour (see by_bg). Otherwise use neutral grey.
+            if (is.null(bg) && is.null(get_tpar("palette.qualitative", default = NULL))) bg = "lightgray"
         } else if (is.null(bg)) {
             bg = "by"
         }

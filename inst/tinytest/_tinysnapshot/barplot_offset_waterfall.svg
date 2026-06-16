@@ -50,10 +50,10 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-<rect x='74.40' y='248.44' width='83.48' height='182.12' style='stroke-width: 0.75; fill: #BEBEBE;' />
-<rect x='174.57' y='157.38' width='83.48' height='91.06' style='stroke-width: 0.75; fill: #BEBEBE;' />
-<rect x='274.75' y='157.38' width='83.48' height='54.64' style='stroke-width: 0.75; fill: #BEBEBE;' />
-<rect x='374.92' y='66.32' width='83.48' height='145.69' style='stroke-width: 0.75; fill: #BEBEBE;' />
+<rect x='74.40' y='248.44' width='83.48' height='182.12' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='174.57' y='157.38' width='83.48' height='91.06' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='274.75' y='157.38' width='83.48' height='54.64' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='374.92' y='66.32' width='83.48' height='145.69' style='stroke-width: 0.75; fill: #D3D3D3;' />
 </g>
 </g>
 </svg>

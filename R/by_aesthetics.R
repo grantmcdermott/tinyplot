@@ -122,6 +122,44 @@ match_palette_name = function(name, candidates) {
   charmatch(normalize(name), normalize(candidates))
 }
 
+## Resolve a palette spec to its full concrete colour vector (or NULL if it
+## can't be resolved to a discrete set, e.g. a continuous hcl palette). Used to
+## support relative `col.default` indices.
+resolve_palette_to_colors = function(palette) {
+  if (is.null(palette)) return(NULL)
+  if (is.character(palette) && length(palette) > 1) return(unname(palette))
+  if (is.character(palette) && length(palette) == 1) {
+    discrete_pals = palette.pals()
+    idx = match_palette_name(palette, discrete_pals)
+    if (!is.na(idx) && idx >= 1L) {
+      return(unname(palette.colors(palette = discrete_pals[idx])))
+    }
+  }
+  NULL
+}
+
+## Resolve a (possibly relative) `col.default` against the qualitative palette.
+## `col_default` may be NULL, a character colour, or a numeric index into the
+## palette. A negative index additionally *drops* that colour from the palette
+## returned for grouped displays. So `col.default = -1` with an "Okabe-Ito"
+## palette uses black (the leading colour) for single-group plots and an
+## Okabe-Ito-minus-black palette for grouped plots, avoiding the need to keep a
+## separate "no-black" palette copy around (#598, #614). Returns a list with the
+## resolved single-group `col_default` and the (possibly trimmed) `palette`.
+resolve_col_default = function(col_default, palette_spec) {
+  if (!is.numeric(col_default)) {
+    return(list(col_default = col_default, palette = palette_spec))
+  }
+  full = resolve_palette_to_colors(palette_spec)
+  if (is.null(full)) {
+    return(list(col_default = NULL, palette = palette_spec))
+  }
+  i = as.integer(col_default)
+  out_col = full[abs(i)]
+  if (i < 0L) palette_spec = full[-abs(i)]
+  list(col_default = out_col, palette = palette_spec)
+}
+
 ## Handle direct color input via `col` arg. Returns colors or NULL if not applicable.
 resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcolor) {
   if (is.null(col) || !is.atomic(col) || !is.vector(col)) {
@@ -296,16 +334,32 @@ by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustc
 
   if (is_by_keyword(col)) col = NULL
 
+  pal_theme = if (ordered || gradient) {
+    get_tpar("palette.sequential", default = NULL)
+  } else {
+    get_tpar("palette.qualitative", default = NULL)
+  }
+
+  # Resolve a (possibly relative) col.default against the qualitative palette.
+  # A relative (negative) index also drops the chosen colour from the grouped
+  # palette, so e.g. `col.default = -1` uses the palette's leading colour for
+  # single-group displays and the palette-minus-that-colour for grouped ones
+  # (see resolve_col_default). col.default only applies to qualitative displays.
+  if (!ordered && !gradient) {
+    cd = resolve_col_default(get_tpar("col.default", default = NULL), pal_theme)
+    pal_theme = cd[["palette"]]
+    # Single-group default colour (theme-settable via tpar). When NULL, defer to
+    # the usual palette resolution below (first qualitative colour, or palette()[1]).
+    if (is.null(col) && ngrps == 1L) {
+      col = cd[["col_default"]]
+    }
+  }
+
   cols = resolve_manual_colors(col, ngrps, gradient, ordered, alpha, adjustcolor)
   if (!is.null(cols)) {
     return(cols)
   }
 
-  pal_theme = if (ordered || gradient) {
-    get_tpar("palette.sequential", default = NULL)  
-  } else {
-    get_tpar("palette.qualitative", default = NULL)
-  }
   cols = resolve_palette_colors(
     palette = palette,
     theme_palette = pal_theme,
@@ -330,9 +384,14 @@ by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps
     ordered = if (is.null(by_ordered)) FALSE else by_ordered
     gradient = if (is.null(by_continuous)) FALSE else by_continuous
     pal_theme = if (ordered || gradient) {
-      get_tpar("palette.sequential", default = NULL)  
+      get_tpar("palette.sequential", default = NULL)
     } else {
       get_tpar("palette.qualitative", default = NULL)
+    }
+    # Mirror by_col(): a relative col.default trims the grouped palette, so
+    # grouped fills stay in step with grouped line colours.
+    if (!ordered && !gradient) {
+      pal_theme = resolve_col_default(get_tpar("col.default", default = NULL), pal_theme)[["palette"]]
     }
     bg = resolve_palette_colors(
       palette = palette,
@@ -352,6 +411,26 @@ by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps
     } else if (!is.null(col)) {
       bg = adjustcolor(col, ribbon.alpha)
     }
+  } else if (ngrps == 1L && is.null(bg) && type %in% c("boxplot", "violin", "barplot", "histogram")) {
+    # Single-group fill tracks the theme's *default* colour (col.default ->
+    # palette[1] -> black) so that themed box/violin/bar/histogram plots match
+    # their own multi-group counterparts. We resolve this default independently
+    # of `col` so that a user-supplied outline colour (e.g. `col = "white"`)
+    # doesn't bleed into the fill.
+    fill_base = by_col(
+      col = NULL, palette = palette, alpha = 1, by_ordered = by_ordered,
+      by_continuous = by_continuous, ngrps = 1L, adjustcolor = adjustcolor
+    )
+    # For a *chromatic* default the fill is a lighter-but-opaque tint of that
+    # colour (via seq_palette, the same HCL ramp used for ridge fills and legend
+    # swatches), so it reads cleanly over grid lines unlike alpha blending. For
+    # an *achromatic* default (typically black, e.g. the "bw"/"classic"/"ipsum"
+    # themes and the plain default) seq_palette's light endpoint can't reach the
+    # neutral "lightgray" used by the no-theme path and base R's hist()/boxplot()
+    # -- so we use that literal directly, keeping all black-default single-group
+    # fills consistent regardless of whether a theme palette happens to be set.
+    achromatic = is_achromatic(fill_base)
+    bg = if (achromatic) "lightgray" else seq_palette(fill_base, n = 3)[3]
   }
 
   bg

@@ -55,9 +55,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-<rect x='74.40' y='144.38' width='112.94' height='286.18' style='stroke-width: 0.75; fill: #BEBEBE;' />
-<rect x='209.93' y='248.44' width='112.94' height='182.12' style='stroke-width: 0.75; fill: #BEBEBE;' />
-<rect x='345.46' y='66.32' width='112.94' height='364.24' style='stroke-width: 0.75; fill: #BEBEBE;' />
+<rect x='74.40' y='144.38' width='112.94' height='286.18' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='209.93' y='248.44' width='112.94' height='182.12' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='345.46' y='66.32' width='112.94' height='364.24' style='stroke-width: 0.75; fill: #D3D3D3;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <text x='130.87' y='137.18' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='12.45px' lengthAdjust='spacingAndGlyphs'>11</text>

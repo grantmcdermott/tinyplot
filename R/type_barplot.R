@@ -280,8 +280,11 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         ## default color palette
         ngrps = length(unique(datapoints$by))
         if (ngrps == 1L && null_palette) {
-          if (is.null(col)) col = par("fg")
-          if (is.null(bg)) bg = "grey"
+          # With a theme palette active, leave bg = NULL so the fill tracks
+          # the resolved border colour (see by_bg). Otherwise use the neutral
+          # "lightgray" shared by all single-group area fills (matches base R
+          # hist()/boxplot()).
+          if (is.null(bg) && is.null(get_tpar("palette.qualitative", default = NULL))) bg = "lightgray"
         } else {
           if (is.null(bg)) bg = "by"
         }

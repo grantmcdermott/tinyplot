@@ -58,6 +58,13 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/bubble-quakes.R){target='_blank'}"
+#| file: "gallery_figs/bubble-quakes.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-points-rug-faithful.R){target='_blank'}"
 #| file: "gallery_figs/add-points-rug-faithful.R"
 ```
@@ -72,13 +79,6 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ridge-aq.R){target='_blank'}"
-#| file: "gallery_figs/ridge-aq.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/hist-by-penguins.R){target='_blank'}"
 #| file: "gallery_figs/hist-by-penguins.R"
 ```
@@ -86,43 +86,8 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spineplot-titanic.R){target='_blank'}"
-#| file: "gallery_figs/spineplot-titanic.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/bubble-quakes.R){target='_blank'}"
-#| file: "gallery_figs/bubble-quakes.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/coefplot-mtcars.R){target='_blank'}"
-#| file: "gallery_figs/coefplot-mtcars.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/rect-by.R){target='_blank'}"
-#| file: "gallery_figs/rect-by.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/pirate-iris.R){target='_blank'}"
-#| file: "gallery_figs/pirate-iris.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-text-mtcars.R){target='_blank'}"
-#| file: "gallery_figs/add-text-mtcars.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ridge-aq.R){target='_blank'}"
+#| file: "gallery_figs/ridge-aq.R"
 ```
 
 ```{r}
@@ -135,6 +100,20 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spineplot-titanic.R){target='_blank'}"
+#| file: "gallery_figs/spineplot-titanic.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/coefplot-mtcars.R){target='_blank'}"
+#| file: "gallery_figs/coefplot-mtcars.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-ablines.R){target='_blank'}"
 #| file: "gallery_figs/add-ablines.R"
 ```
@@ -142,8 +121,22 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/density-part-shading.R){target='_blank'}"
-#| file: "gallery_figs/density-part-shading.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-text-mtcars.R){target='_blank'}"
+#| file: "gallery_figs/add-text-mtcars.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/pirate-iris.R){target='_blank'}"
+#| file: "gallery_figs/pirate-iris.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/rect-by.R){target='_blank'}"
+#| file: "gallery_figs/rect-by.R"
 ```
 
 ```{r}
@@ -151,6 +144,13 @@ Click on a plot to get the link to its code.
 #|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/polygons.R){target='_blank'}"
 #| file: "gallery_figs/polygons.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/density-part-shading.R){target='_blank'}"
+#| file: "gallery_figs/density-part-shading.R"
 ```
 
 ```{r}

@@ -26,3 +26,4 @@ plt(
   main = "Likert example with \"Unsure\" category offset"
 )
 plt_add(type = "vline")
+# plt_add(type = "vline", v = 1, lty = 2) ## optional

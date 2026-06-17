@@ -238,3 +238,14 @@ f = function () {
     theme = list("clean", palette.qualitative = pal, pch = 21))
 }
 expect_snapshot_plot(f, label = "tinytheme_ephemeral_palette_function_qualitative")
+
+
+# User palette override should not be trimmed by a theme's negative
+# col.default (e.g. bw's -1), which would silently recycle colours. (#627)
+f = function() {
+  plt(
+    Sepal.Length ~ Petal.Length | Species, iris,
+    theme = list("bw", palette.qualitative = c("red", "blue", "green"))
+  )
+}
+expect_silent(f())

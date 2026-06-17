@@ -29,7 +29,7 @@ f2 = function() {
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
   plot(1:10)
 }
-expect_snapshot_plot(f2, label = "restore_par_FALSE")
+expect_snapshot_plot(f2, label = "restore_par_TRUE")
 
 # restore original par settings and then rerun with restore.par=TRUE
 par(op)

@@ -128,6 +128,13 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/likert.R){target='_blank'}"
+#| file: "gallery_figs/likert.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-ablines.R){target='_blank'}"
 #| file: "gallery_figs/add-ablines.R"
 ```

@@ -37,8 +37,8 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/chull-penguins.R){target='_blank'}"
-#| file: "gallery_figs/chull-penguins.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ellipse-penguins.R){target='_blank'}"
+#| file: "gallery_figs/ellipse-penguins.R"
 ```
 
 ```{r}

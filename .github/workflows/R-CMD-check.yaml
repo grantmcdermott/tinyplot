@@ -1,5 +1,6 @@
-# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+# Workflow derived from https://eddelbuettel.github.io/r-ci/
+# Uses r-ci + r2u for fast (binary) package installation. R-devel coverage is
+# provided via the rocker/drd container (itself built FROM rocker/r2u).
 on:
   push:
     branches: [main, master]
@@ -9,41 +10,31 @@ on:
 name: ci
 
 jobs:
-  R-CMD-check:
-    runs-on: ${{ matrix.config.os }}
+  ci:
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.name }}
 
     strategy:
       fail-fast: false
       matrix:
-        config:
-          # - {os: macos-latest,   r: 'release'}
-          # - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
-          # - {os: ubuntu-latest,   r: 'oldrel-1'}
+        include:
+          - { name: r-release, os: ubuntu-latest }
+          - { name: r-devel,   os: ubuntu-latest, container: rocker/drd }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: r-lib/actions/setup-pandoc@v2
+      - name: Setup
+        uses: eddelbuettel/github-actions/r-ci@master
 
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
+      - name: Dependencies
+        run: ./run.sh install_all
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck
-          needs: check
-
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
+      - name: Test
+        run: ./run.sh run_tests

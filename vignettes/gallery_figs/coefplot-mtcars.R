@@ -12,7 +12,7 @@ tinyplot(
     type = "errorbar",
     xlab = NA, ylab = "Estimate",
     flip = TRUE,
-    draw = abline(v = 0, lty = 2, col = "grey50"),
+    draw = abline(v = 0, lty = 2, col = "hotpink"),
     main = "Coefficient plot",
     sub = "Determinants of fuel efficiency",
     cap = expression(Model: mpg == beta[0] + beta[1] %.% wt + beta[2] %.% am + beta[3] %.% wt %.% am),

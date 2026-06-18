@@ -1,7 +1,8 @@
 # Workflow derived from https://eddelbuettel.github.io/r-ci/
 # Uses r-ci + r2u for fast (binary) package installation. Both jobs run in
-# containers that already bundle r2u (rocker/r2u for release, rocker/drd for
-# devel, the latter built FROM rocker/r2u), so neither pays the bare-runner
+# containers that already bundle r2u (rocker/r2u4ci for release -- the
+# CI-flavoured image recommended by r-ci, with curl etc. preinstalled -- and
+# rocker/drd for devel, built FROM rocker/r2u), so neither pays the bare-runner
 # r2u mirror-setup cost (which can stall if the upstream r2u mirror is down).
 on:
   push:
@@ -22,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { name: r-release, os: ubuntu-latest, container: rocker/r2u }
+          - { name: r-release, os: ubuntu-latest, container: rocker/r2u4ci }
           - { name: r-devel,   os: ubuntu-latest, container: rocker/drd }
 
     env:

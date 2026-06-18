@@ -21,7 +21,7 @@ plt(
 )
 plt_add(
   type = "text", labels = mtcars2$model, repel = TRUE, xpd = NA, pos = 4,
-  alpha = 0.4
+  alpha = 0.3
 )
 plt_add(
   data = subset(mtcars2, make=="Merc")

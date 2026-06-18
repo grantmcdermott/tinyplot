@@ -14,6 +14,9 @@ name: altdoc
 jobs:
   altdoc:
     runs-on: ubuntu-latest
+    # Fail fast (and retryably) if the bare-runner r2u bootstrap stalls on a
+    # flaky upstream mirror, rather than burning a full-length run.
+    timeout-minutes: 20
     # Only restrict concurrency for non-PR jobs
     concurrency:
       group: altdoc-${{ github.event_name != 'pull_request' || github.run_id }}

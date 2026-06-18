@@ -65,8 +65,8 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-points-rug-faithful.R){target='_blank'}"
-#| file: "gallery_figs/add-points-rug-faithful.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spaghetti-aq.R){target='_blank'}"
+#| file: "gallery_figs/spaghetti-aq.R"
 ```
 
 ```{r}
@@ -116,6 +116,13 @@ Click on a plot to get the link to its code.
 #|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/simpsons-paradox.R){target='_blank'}"
 #| file: "gallery_figs/simpsons-paradox.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-points-rug-faithful.R){target='_blank'}"
+#| file: "gallery_figs/add-points-rug-faithful.R"
 ```
 
 ```{r}

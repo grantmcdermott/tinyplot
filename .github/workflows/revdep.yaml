@@ -23,7 +23,7 @@ jobs:
           curl -s --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/rate_limit
         shell: bash
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - id: set-matrix
         run: |
@@ -71,7 +71,7 @@ jobs:
           curl -s --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/rate_limit
         shell: bash
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # r2u: installs CRAN packages as apt binaries and auto-resolves their
       # system (OS) dependencies, so no manual system_requirements() step is

@@ -26,23 +26,23 @@ This is a convenience function for plotting data frames with
 or without a formula. The case with the formula mainly facilitates
 using \code{tinyplot()} in combination with pipes. The case without
 formula provides a quick way of plotting the variables in data frames,
-either only one variable or a pair of variables. In the future, the
-latter might be extended to a pairs display for data frames with
-more than two variables but this is not implemented, yet. See the
-examples for illustrations.
+either only one variable or a pair of variables, or all possible pairs
+of variables.
 }
 \examples{
 tinytheme("clean2")
 
-## using tinyplot() with data frames and pipes
-cars |> tinyplot()
-iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
+## using tinyplot() with data frames
+tinyplot(cars)
+tinyplot(iris, Sepal.Length ~ Petal.Width | Species)
 
-## tinyplot(df) only works for data frames with 1 or 2 variables
-## in the future we might add a pairs-style display as follows
-## but this would require better handling of axes and their labels
-par(mfrow = c(5, 5))
-for (i in names(iris)) for(j in names(iris)) tinyplot(iris[, unique(c(j, i)), drop = FALSE])
+## note that this also enables usage with pipes (in R >= 4.1.0) such as
+## cars |> tinyplot()
+## iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
+
+## pairs-style display for more than 2 variables
+## (handling of axes and their labels will be improved in future versions)
+tinyplot(iris)
 
 tinytheme() ## reset
 

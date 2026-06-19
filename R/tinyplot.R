@@ -1059,14 +1059,22 @@ tinyplot.default = function(
       grepl("right!$",  .lgnd_pos)
     )
 
+    # Types that suppress the standard axes (xaxt/yaxt = "n") only because they
+    # draw their own in the same place (e.g. spineplot category + numeric labels
+    # via spine_axis()). Their tick-row margin must still be reserved, else the
+    # self-drawn labels clip when xlab/ylab = NA makes label_extent = 0 (#635).
+    .self_axis = identical(type, "spineplot")
+
     .dyn = c(
       dynmar_side(1, xlab, main = main, sub = sub,
                   cap = if (.outer_sides[1]) NULL else cap,
                   side.sub = .side.sub,
-                  axis_on = !identical(xaxt, "none") && !identical(xaxt, "n"),
+                  axis_on = .self_axis ||
+                    (!identical(xaxt, "none") && !identical(xaxt, "n")),
                   tpars = .tpars),
       dynmar_side(2, ylab,
-                  axis_on = !identical(yaxt, "none") && !identical(yaxt, "n"),
+                  axis_on = .self_axis ||
+                    (!identical(yaxt, "none") && !identical(yaxt, "n")),
                   tpars = .tpars),
       dynmar_side(3, NULL, main = main, sub = sub, side.sub = .side.sub,
                   tpars = .tpars),

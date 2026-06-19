@@ -54,25 +54,53 @@ tinyplot.data.frame = function (x, formula = NULL, ...) {
 
   if (is.null(formula) & n > 2L) {
 
-    ## 3d: pairs-esque  
+    ## 3d: pairs-esque
     op = par(mfrow = c(n, n))
+    on.exit(par(op))
+
+    ## We'll (manually) scale cex elements similar to faceted plots.
+    ## Safest way is to capture the existing theme and then inject temporary
+    ## overrides via an ephemeral theme. The theme is built as a language object
+    ## because `cl` is a matched call, so `cl[["theme"]]` is unevaluated (e.g.
+    ## the call `list("dark")`, not a list).
+    cex_fct_adj = 0.66 # use same scaling as with faceted plots.
+    active_theme = get_tpar("tinytheme", default = "default")
+    theme_arg = cl[["theme"]]
+    if (is.null(theme_arg)) {
+      theme_ij = bquote(list(.(active_theme), cex = .(cex_fct_adj)))
+    } else if (is.call(theme_arg) && identical(theme_arg[[1L]], as.name("list"))) {
+      theme_arg[["cex"]] = cex_fct_adj
+      theme_ij = theme_arg
+    } else {
+      theme_ij = bquote(list(.(theme_arg), cex = .(cex_fct_adj)))
+    }
+
+    ## Ephemeral themes revert to the *default* theme on exit, so after the loop
+    ## we must re-assert any persistent theme that was active beforehand.
+    if (!identical(active_theme, "default")) {
+      on.exit(tinytheme(active_theme), add = TRUE)
+    }
+
     for (j in 1L:n) {
       for (i in 1L:n) {
         cl_ij = cl
+        cl_ij[["theme"]] = theme_ij
         if (i == j) {
           cl_ij$formula = reformulate("1", nm[i])
-          cl_ij$xlab = ""
-          cl_ij$ylab = ""
+          # cl_ij$xlab = ""
+          # cl_ij$ylab = ""
           cl_ij$main = nm[i]
         } else {
           cl_ij$formula = reformulate(nm[i], nm[j])
-          if (i > 1L) cl_ij$ylab = ""
-          if (j < n)  cl_ij$xlab = ""
+          # if (i > 1L) cl_ij$ylab = ""
+          # if (j < n)  cl_ij$xlab = ""
         }
+        cl_ij$ylab = NA
+        cl_ij$xlab = NA
         eval.parent(cl_ij)
+        box("figure", lwd = 0.5)
       }
     }
-    par(op)
 
   } else {
 

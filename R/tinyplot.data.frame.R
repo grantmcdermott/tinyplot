@@ -87,18 +87,20 @@ tinyplot.data.frame = function (x, formula = NULL, ...) {
         cl_ij[["theme"]] = theme_ij
         if (i == j) {
           cl_ij$formula = reformulate("1", nm[i])
-          # cl_ij$xlab = ""
-          # cl_ij$ylab = ""
+          # cl_ij$xlab = NA
+          # cl_ij$ylab = NA
           cl_ij$main = nm[i]
         } else {
           cl_ij$formula = reformulate(nm[i], nm[j])
-          # if (i > 1L) cl_ij$ylab = ""
-          # if (j < n)  cl_ij$xlab = ""
+          # if (i > 1L) cl_ij$ylab = NA
+          # if (j < n)  cl_ij$xlab = NA
         }
+        # GM: drop all axes labs (like pairs)
         cl_ij$ylab = NA
         cl_ij$xlab = NA
         eval.parent(cl_ij)
-        box("figure", lwd = 0.5)
+        # GM: add box around each plot
+        box("figure", lwd = 0.3)
       }
     }
 

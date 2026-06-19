@@ -115,7 +115,7 @@ tinyplot(mpg ~ wt, data = mtcars, facet = ~am)
 # Reset back to original values
 tpar(op)
 
-# Important: tpar() only evalutes parameters that have been passed explicitly
+# Important: tpar() only evaluates parameters that have been passed explicitly
 #   by the user. So it it should not be used to query and set (restore)
 #   parameters that weren't explicitly requested, i.e. tpar() != par().
 

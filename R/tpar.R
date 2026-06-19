@@ -13,7 +13,7 @@
 #'   parameters typically supported by \code{\link[graphics]{par}}, as well as
 #'   the `tinyplot`-specific ones described in the 'Graphical Parameters'
 #'   section below.
-#' @param hook Logical. If `TRUE`, base graphical parameters persist across 
+#' @param hook Logical. If `TRUE`, base graphical parameters persist across
 #'   plots via a hook applied before each new plot (see `?setHook`).
 #'
 #' @md
@@ -81,13 +81,13 @@
 #'
 #' @importFrom graphics par
 #' @importFrom utils modifyList
-#' 
+#'
 #' @seealso [`graphics::par`] which `tpar` builds on top of. [`get_saved_par`]
 #' is a convenience function for retrieving graphical parameters at different
 #' stages of a `tinyplot` call (and used for internal accounting purposes).
 #' [`tinytheme`] allows users to easily set a group of graphics parameters
 #' in a single function call, according to a variety of predefined themes.
-#' 
+#'
 #' @examples
 #' # Return a list of existing base and tinyplot graphic params
 #' tpar("las", "pch", "facet.bg", "facet.cex", "grid")
@@ -111,7 +111,7 @@
 #' # Reset back to original values
 #' tpar(op)
 #'
-#' # Important: tpar() only evalutes parameters that have been passed explicitly
+#' # Important: tpar() only evaluates parameters that have been passed explicitly
 #' #   by the user. So it it should not be used to query and set (restore)
 #' #   parameters that weren't explicitly requested, i.e. tpar() != par().
 #'
@@ -352,10 +352,10 @@ init_tpar = function(rm_hook = FALSE) {
   }
 
   .tpar$cairo = if (is.null(getOption("tinyplot_cairo"))) capabilities("cairo") else as.logical(getOption("tinyplot_cairo"))
-  
-  
+
+
   .tpar$dynmar = if (is.null(getOption("tinyplot_dynmar"))) FALSE else as.logical(getOption("tinyplot_dynmar"))
-  
+
   # Figure output options if written to file
   .tpar$file.width = if (is.null(getOption("tinyplot_file.width"))) 7 else as.numeric(getOption("tinyplot_file.width"))
   .tpar$file.height = if (is.null(getOption("tinyplot_file.height"))) 7 else as.numeric(getOption("tinyplot_file.height"))

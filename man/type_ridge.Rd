@@ -174,7 +174,7 @@ tinytheme("ridge2") # removes the plot frame (but keeps x-axis line)
 tinyplot(Month ~ Temp, data = aq, type = "ridge")
 
 # the "ridge(2)" themes are especially helpful for long y labels, due to
-# dyanmic plot adjustment
+# dynamic plot adjustment
 tinyplot(Month2 ~ Temp, data = aq, type = "ridge")
 
 # pass customization arguments through type_ridge()... for example, use
@@ -182,7 +182,7 @@ tinyplot(Month2 ~ Temp, data = aq, type = "ridge")
 # further below)
 
 tinyplot(Month ~ Temp, data = aq, type = type_ridge(scale = 1))
-  
+
 ## by grouping is also supported. two special cases of interest:
 
 # 1) by == y (color by y groups)
@@ -243,7 +243,7 @@ tinyplot(Month ~ Temp | Late, data = aq,
   type = type_ridge(scale = 1))
 tinyplot(Month ~ Temp | Late, data = aq,
   type = type_ridge(scale = 1, joint.max = "by"))
-  
+
 # restore the default theme
 tinytheme()
 

@@ -40,7 +40,7 @@
 #'
 #' # pass explicit `labels` arg if you want specific text
 #' tinyplot(1:12, type = "text", labels = month.abb)
-#' 
+#'
 #' # you can also use a labeller function (passed to `tinylabel`) to
 #' # customize
 #' tinyplot(1:12, type = "text", labels = month.abb, labeller = toupper)
@@ -77,12 +77,12 @@
 #'   )
 #' )
 #'
-#' # use `repel = TRUE` to automically nudge overlapping labels apart
+#' # use `repel = TRUE` to automatically nudge overlapping labels apart
 #' tinyplot(
 #'   mpg ~ wt, data = mtcars,
 #'   type = type_text(labels = row.names(mtcars), repel = TRUE)
 #' )
-#' 
+#'
 #' # limitation: `repel` logic currently works per group, so grouped text data
 #' # may still overlap
 #' tinyplot(

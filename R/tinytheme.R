@@ -240,6 +240,14 @@ tinytheme = function(
     settings[[n]] = dots[[n]]
   }
 
+  # `col.default` < 0 gotcha for user-supplied palettes.(#627)
+  if ("palette.qualitative" %in% names(dots) &&
+      !("col.default" %in% names(dots)) &&
+      is.numeric(settings[["col.default"]]) &&
+      settings[["col.default"]] < 0L) {
+    settings[["col.default"]] = abs(settings[["col.default"]])
+  }
+
   # Compute mgp from spacing primitives when dynmar is active and the user
   # didn't provide an explicit mgp override. The near edge of margin text
   # (facing the plot region) aligns with the half-cell boundary (0.5*cex from

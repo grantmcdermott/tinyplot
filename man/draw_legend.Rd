@@ -11,6 +11,7 @@ draw_legend(
   lgnd_labs = NULL,
   labeller = NULL,
   type = NULL,
+  type_axes_hints = NULL,
   pch = NULL,
   lty = NULL,
   lwd = NULL,
@@ -42,6 +43,10 @@ draw_legend(
 Passed down to \code{\link{tinylabel}}.}
 
 \item{type}{Plotting type(s), passed down from \link{tinyplot}.}
+
+\item{type_axes_hints}{Optional named list of axes/legend behaviour flags that
+a plot type declares for itself (e.g. \code{rhs_axis} for a secondary right-hand
+axis). Passed down from \link{tinyplot}; defaults to \code{NULL}.}
 
 \item{pch}{Plotting character(s), passed down from \link{tinyplot}.}
 

@@ -105,3 +105,13 @@ f = function() {
     theme = "dynamic", type = "spineplot", xlab = NA)
 }
 expect_snapshot_plot(f, label = "spineplot_xlab_na_issue635")
+
+#
+## outer legend exercises the secondary (RHS) axis margin bump (type_axes_hints
+## rhs_axis); guards the spineplot legend-margin path during the #635 refactor
+
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris,
+    type = "spineplot", legend = "right!")
+}
+expect_snapshot_plot(f, label = "spineplot_legend_outer_right")

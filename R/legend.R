@@ -82,8 +82,9 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
 
   # Step 1: Prepare margins before measuring
   if (legend_env$outer_side) {
-    # Extra bump for spineplot if outer_right legend (to accommodate secondary y-axis)
-    if (identical(legend_env$type, "spineplot")) {
+    # Extra bump for types with a secondary (RHS) axis when an outer legend is
+    # present, to accommodate that axis (e.g. spineplot).
+    if (isTRUE(legend_env$type_axes_hints[["rhs_axis"]])) {
       lmar[1] = lmar[1] + 1.1
     }
 
@@ -600,7 +601,7 @@ build_legend_args = function(
   }
 
   # Special pt.bg handling for types that need color-based fills
-  if (identical(type, "spineplot")) {
+  if (isTRUE(legend_env[["type_axes_hints"]][["legend_fill_from_col"]])) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% legend_args[["col"]]
   } else if (identical(type, "ridge") && isFALSE(gradient)) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
@@ -739,6 +740,7 @@ build_legend_env = function(
 
   # Visual aesthetics
   type,
+  type_axes_hints = NULL,
   pch,
   lty,
   lwd,
@@ -761,6 +763,7 @@ build_legend_env = function(
   # Initialize metadata
   legend_env$gradient = gradient
   legend_env$type = type
+  legend_env$type_axes_hints = type_axes_hints
   legend_env$has_sub = has_sub
   legend_env$has_cap = has_cap
   legend_env$cap_text = cap_text
@@ -821,6 +824,9 @@ build_legend_env = function(
 #' @param labeller Character or function for formatting the labels (`lgnd_labs`).
 #'   Passed down to [`tinylabel`].
 #' @param type Plotting type(s), passed down from [tinyplot].
+#' @param type_axes_hints Optional named list of axes/legend behaviour flags that
+#'   a plot type declares for itself (e.g. `rhs_axis` for a secondary right-hand
+#'   axis). Passed down from [tinyplot]; defaults to `NULL`.
 #' @param pch Plotting character(s), passed down from [tinyplot].
 #' @param lty Plotting linetype(s), passed down from [tinyplot].
 #' @param lwd Plotting line width(s), passed down from [tinyplot].
@@ -925,6 +931,7 @@ draw_legend = function(
   lgnd_labs = NULL,
   labeller = NULL,
   type = NULL,
+  type_axes_hints = NULL,
   pch = NULL,
   lty = NULL,
   lwd = NULL,
@@ -976,6 +983,7 @@ draw_legend = function(
 
     # Visual aesthetics
     type = type,
+    type_axes_hints = type_axes_hints,
     pch = pch,
     lty = lty,
     lwd = lwd,

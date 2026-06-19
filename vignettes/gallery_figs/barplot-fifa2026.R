@@ -22,7 +22,7 @@ tinyplot(
   xaxt = "n",
   main = "Spain most likely to (not) win the 2026 FIFA World Cup",
   cap = "Source: https://www.zeileis.org/news/fifa2026/",
-  theme = list("clean2", grid.lty = 1, las = 2, dynmar = FALSE, mar = c(7, 4, 5, 0), cex.main = 1.5)
+  theme = list("clean2", grid.lty = 1, las = 2, dynmar = FALSE, mar = c(7, 4, 5, 0), cex.main = 1.3)
 )
 text(
   1:48,
@@ -31,5 +31,5 @@ text(
   srt = 45,
   adj = c(1.15, 1.15),
   xpd = TRUE,
-  cex = 0.8
+  cex = 0.5
 )

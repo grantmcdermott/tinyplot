@@ -127,7 +127,7 @@ tinyplot(mpg ~ hp | factor(cyl),
   )
 )
 
-# use `repel = TRUE` to automically nudge overlapping labels apart
+# use `repel = TRUE` to automatically nudge overlapping labels apart
 tinyplot(
   mpg ~ wt, data = mtcars,
   type = type_text(labels = row.names(mtcars), repel = TRUE)

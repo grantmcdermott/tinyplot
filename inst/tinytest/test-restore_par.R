@@ -24,7 +24,7 @@ f2 = function() {
     mpg ~ wt | cyl, mtcars,
     pch = 19,
     grid = grid(),
-    legend = legend("right!", title = "How many cylnders do you have?")
+    legend = legend("right!", title = "How many cylinders do you have?")
   )
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))
   plot(1:10)
@@ -39,7 +39,7 @@ f3 = function() {
     mpg ~ wt | cyl, mtcars,
     pch = 19,
     grid = grid(),
-    legend = legend("right!", title = "How many cylnders do you have?"),
+    legend = legend("right!", title = "How many cylinders do you have?"),
     restore.par = TRUE
   )
   lines(lowess(mtcars[["wt"]], mtcars[["mpg"]]))

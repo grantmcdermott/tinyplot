@@ -79,6 +79,20 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/line-ipcc.R){target='_blank'}"
+#| file: "gallery_figs/line-ipcc.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/line-eustockmarkets.R){target='_blank'}"
+#| file: "gallery_figs/line-eustockmarkets.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/hist-by-penguins.R){target='_blank'}"
 #| file: "gallery_figs/hist-by-penguins.R"
 ```

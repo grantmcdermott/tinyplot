@@ -175,3 +175,10 @@ expect_error( # requires stacked bars
     type = type_barplot(offset = "0", beside = TRUE)),
   "requires stacked bars"
 )
+
+# xlab = NA should suppress the axis title, not error (#635)
+
+f = function() {
+  tinyplot(~ Species, data = iris, type = "barplot", xlab = NA)
+}
+expect_snapshot_plot(f, label = "barplot_xlab_na_issue635")

@@ -89,3 +89,19 @@ f = function() {
   plt(factor(cyl) ~ factor(am), data = mtcars)
 }
 expect_snapshot_plot(f, label = "spineplot_auto_factors")
+
+#
+## xlab/ylab = NA should suppress the axis title without clipping the
+## self-drawn category/tick labels under dynamic themes (#635)
+
+f = function() {
+  tinyplot(Species ~ Sepal.Length, data = iris,
+    theme = "dynamic", type = "spineplot", ylab = NA)
+}
+expect_snapshot_plot(f, label = "spineplot_ylab_na_issue635")
+
+f = function() {
+  tinyplot(Species ~ Sepal.Length, data = iris,
+    theme = "dynamic", type = "spineplot", xlab = NA)
+}
+expect_snapshot_plot(f, label = "spineplot_xlab_na_issue635")

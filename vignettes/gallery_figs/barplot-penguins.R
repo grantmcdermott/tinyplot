@@ -11,5 +11,5 @@ tinyplot(
   flip = TRUE,
   col = "transparent",
   grid = "X",
-  bg = rbind(pal, colorspace::lighten(pal, 0.6))
+  bg = sapply(pal, tinyplot:::seq_palette, 2) ## rbind(pal, colorspace::lighten(pal, 0.6))
 )

@@ -4,7 +4,7 @@
 \alias{tinyplot.data.frame}
 \title{tinyplot Method for Plotting Data Frames}
 \usage{
-\method{tinyplot}{data.frame}(x, formula = NULL, by = NULL, labs = FALSE, frames = TRUE, ...)
+\method{tinyplot}{data.frame}(x, formula = NULL, by = NULL, labs = FALSE, frames = FALSE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{"data.frame"}.}
@@ -12,27 +12,28 @@
 \item{formula}{a \code{\link[stats]{formula}} that is passed on to
 \code{\link{tinyplot.formula}}. If \code{formula} is \code{NULL} a formula of
 type \code{y ~ 1} or \code{y ~ x} is set up for 1- and 2-variable data frames,
-respectively. For data frames with 3 or more variables, a pairs-style
-grid of all variable combinations is drawn instead.}
+respectively. For data frames with 3+ variables, a
+\code{\link[graphics]{pairs}}-style grid of all variable combinations is
+drawn instead.}
 
-\item{by}{optional string giving the name of a column in \code{x} to use as a
-grouping variable in the pairs-style case. The variable is spliced into
-each sub-plot's formula as \code{y ~ x | by} so groups are distinguished (e.g.
-by colour). A legend is suppressed in this case to avoid repeating it
-across every sub-plot. Ignored for 1- and 2-variable data frames.}
+\item{by}{(3+ case only) optional string giving the name of a column in \code{x}
+to use as a grouping variable. The variable is spliced into each sub-plot's
+formula as \code{y ~ x | by} so groups are distinguished (e.g. by colour). The
+legend is suppressed automatically.}
 
-\item{labs}{logical indicating whether the axes labels (titles) for each
-sub-plot in the pairs-style case should be shown. Default is \code{FALSE}.}
+\item{labs}{(3+ case only) logical indicating whether the axes labels
+(titles) for each sub-plot in the pairs-style case should be shown. Default
+is \code{FALSE}.}
 
-\item{frames}{logical indicating whether each sub-plot in the pairs-style
-case should be framed by a box. Default is \code{TRUE}. Note the trailing "s"
-plural case to disambiguate from \code{frame.plot}.}
+\item{frames}{(3+ case only) logical indicating whether each sub-plot should
+be framed by a box. Default is \code{FALSE}. Note the trailing "s" plural case
+to disambiguate from \code{frame.plot}.}
 
 \item{...}{further arguments passed to \code{tinyplot}.}
 }
 \description{
-Convenience interface for visualizing data.frame objects
-with tinyplot.
+Convenience interface for visualizing
+\code{\link[base]{data.frames}} objects with tinyplot.
 }
 \details{
 This is a convenience function for plotting data frames with
@@ -51,15 +52,16 @@ tinyplot(cars)
 tinyplot(iris, Sepal.Length ~ Petal.Width | Species)
 
 ## note that this also enables usage with pipes (in R >= 4.1.0) such as
-## cars |> tinyplot()
-## iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
+# cars |> tinyplot()
+# iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
 
 ## pairs-style display for data frames with 3 or more variables
 tinyplot(iris)
 
-## use `by` to group the pairs-style display (legend is suppressed)
-tinyplot(iris, by = "Species")
+## pass `by` arg to group the pairs display (legend is suppressed)
+## here, we also add optional frames around the individual sub-plots
+tinyplot(iris, by = "Species", frames = TRUE)
 
-tinytheme() ## reset
+tinytheme() ## reset theme
 
 }

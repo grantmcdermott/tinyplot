@@ -1,7 +1,7 @@
 #' tinyplot Method for Plotting Data Frames
 #'
-#' @description Convenience interface for visualizing data.frame objects
-#'   with tinyplot.
+#' @description Convenience interface for visualizing
+#'   \code{\link[base]{data.frames}} with tinyplot.
 #'
 #' @details This is a convenience function for plotting data frames with
 #'   or without a formula. The case with the formula mainly facilitates
@@ -15,18 +15,19 @@
 #' @param formula a \code{\link[stats]{formula}} that is passed on to
 #'   \code{\link{tinyplot.formula}}. If `formula` is `NULL` a formula of
 #'   type `y ~ 1` or `y ~ x` is set up for 1- and 2-variable data frames,
-#'   respectively. For data frames with 3 or more variables, a pairs-style
-#'   grid of all variable combinations is drawn instead.
-#' @param by optional string giving the name of a column in `x` to use as a
-#'   grouping variable in the pairs-style case. The variable is spliced into
-#'   each sub-plot's formula as `y ~ x | by` so groups are distinguished (e.g.
-#'   by colour). A legend is suppressed in this case to avoid repeating it
-#'   across every sub-plot. Ignored for 1- and 2-variable data frames.
-#' @param labs logical indicating whether the axes labels (titles) for each
-#'   sub-plot in the pairs-style case should be shown. Default is `FALSE`.
-#' @param frames logical indicating whether each sub-plot in the pairs-style
-#'   case should be framed by a box. Default is `TRUE`. Note the trailing "s"
-#'   plural case to disambiguate from `frame.plot`.
+#'   respectively. For data frames with 3+ variables, a
+#'   \code{\link[graphics]{pairs}}-style grid of all variable combinations is
+#'   drawn instead.
+#' @param by (3+ case only) optional string giving the name of a column in `x`
+#'   to use as a grouping variable. The variable is spliced into each sub-plot's
+#'   formula as `y ~ x | by` so groups are distinguished (e.g. by colour). The
+#'   legend is suppressed automatically.
+#' @param labs (3+ case only) logical indicating whether the axes labels
+#'   (titles) for each sub-plot in the pairs-style case should be shown. Default
+#'   is `FALSE`.
+#' @param frames (3+ case only) logical indicating whether each sub-plot should
+#'   be framed by a box. Default is `FALSE`. Note the trailing "s" plural case
+#'   to disambiguate from `frame.plot`.
 #' @param ... further arguments passed to `tinyplot`.
 #'
 #' @examples
@@ -37,20 +38,21 @@
 #' tinyplot(iris, Sepal.Length ~ Petal.Width | Species)
 #'
 #' ## note that this also enables usage with pipes (in R >= 4.1.0) such as
-#' ## cars |> tinyplot()
-#' ## iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
+#' # cars |> tinyplot()
+#' # iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
 #'
 #' ## pairs-style display for data frames with 3 or more variables
 #' tinyplot(iris)
 #'
-#' ## use `by` to group the pairs-style display (legend is suppressed)
-#' tinyplot(iris, by = "Species")
+#' ## pass `by` arg to group the pairs display (legend is suppressed)
+#' ## here, we also add optional frames around the individual sub-plots
+#' tinyplot(iris, by = "Species", frames = TRUE)
 #'
-#' tinytheme() ## reset
+#' tinytheme() ## reset theme
 #'
 #' @importFrom stats reformulate
 #' @export
-tinyplot.data.frame = function (x, formula = NULL, by = NULL, labs = FALSE, frames = TRUE, ...) {
+tinyplot.data.frame = function (x, formula = NULL, by = NULL, labs = FALSE, frames = FALSE, ...) {
   ## original call
   cl = match.call()
 

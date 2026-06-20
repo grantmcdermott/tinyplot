@@ -18,10 +18,12 @@
 #'   respectively. For data frames with 3+ variables, a
 #'   \code{\link[graphics]{pairs}}-style grid of all variable combinations is
 #'   drawn instead.
-#' @param by (3+ case only) optional string giving the name of a column in `x`
-#'   to use as a grouping variable. The variable is spliced into each sub-plot's
-#'   formula as `y ~ x | by` so groups are distinguished (e.g. by colour). The
-#'   legend is suppressed automatically.
+#' @param by (3+ case only) optional grouping variable. Either 1) a character
+#'   string giving a column name in `x`, or 2) a vector of equal length to the
+#'   main data.frame (_caveat emptor_: this is not checked). The variable is
+#'   spliced into each sub-plot's formula as `y ~ x | by` so groups are
+#'   distinguished (e.g. by colour). Note that the legend is deliberately
+#'   suppressed.
 #' @param labs (3+ case only) logical indicating whether the axes labels
 #'   (titles) for each sub-plot in the pairs-style case should be shown. Default
 #'   is `FALSE`.
@@ -47,6 +49,9 @@
 #' ## pass `by` arg to group the pairs display (legend is suppressed)
 #' ## here, we also add optional frames around the individual sub-plots
 #' tinyplot(iris, by = "Species", frames = TRUE)
+#' 
+#' ## another option (but assumes objects of equal length)
+#' tinyplot(iris[, 1:4], by = iris$Species, frames = TRUE)
 #'
 #' tinytheme() ## reset theme
 #'
@@ -79,14 +84,22 @@ tinyplot.data.frame = function (x, formula = NULL, by = NULL, labs = FALSE, fram
 
     assert_logical(labs)
     assert_logical(frames)
-    assert_string(by, null.ok = TRUE)
-    if (!is.null(by)) assert_choice(by, nm)
-
-    ## `by` (a column name) is spliced into each cell formula as a grouping
-    ## term, `y ~ x | by`. Forcing legend = FALSE avoids drawing a legend in
-    ## every one of the n^2 cells. Drop both from the cell call so they aren't
-    ## passed through verbatim.
     if (!is.null(by)) {
+      if (inherits(by, "character")) {
+        ## a column name already in `x`
+        assert_choice(by, nm)
+      } else {
+        ## a standalone vector: splice it into `x` under a unique name so the
+        ## formula method can reference it. make.unique() guards against an
+        ## existing "__by__" column. The name is added after `n` is computed,
+        ## so it is used for grouping only and not drawn as its own row/column.
+        by_nm = make.unique(c(nm, "__by__"))[n + 1L]
+        x[[by_nm]] = by
+        by = by_nm
+        cl[["data"]] = x
+      }
+      ## `by` is spliced directly into each cell formula below, so drop it from
+      ## the call. Suppress the legend to avoid repeating it across every cell.
       if ("by" %in% names(cl)) cl[["by"]] = NULL
       cl[["legend"]] = FALSE
     }

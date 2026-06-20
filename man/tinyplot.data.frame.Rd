@@ -16,10 +16,12 @@ respectively. For data frames with 3+ variables, a
 \code{\link[graphics]{pairs}}-style grid of all variable combinations is
 drawn instead.}
 
-\item{by}{(3+ case only) optional string giving the name of a column in \code{x}
-to use as a grouping variable. The variable is spliced into each sub-plot's
-formula as \code{y ~ x | by} so groups are distinguished (e.g. by colour). The
-legend is suppressed automatically.}
+\item{by}{(3+ case only) optional grouping variable. Either 1) a character
+string giving a column name in \code{x}, or 2) a vector of equal length to the
+main data.frame (\emph{caveat emptor}: this is not checked). The variable is
+spliced into each sub-plot's formula as \code{y ~ x | by} so groups are
+distinguished (e.g. by colour). Note that the legend is deliberately
+suppressed.}
 
 \item{labs}{(3+ case only) logical indicating whether the axes labels
 (titles) for each sub-plot in the pairs-style case should be shown. Default
@@ -33,7 +35,7 @@ to disambiguate from \code{frame.plot}.}
 }
 \description{
 Convenience interface for visualizing
-\code{\link[base]{data.frames}} objects with tinyplot.
+\code{\link[base]{data.frames}} with tinyplot.
 }
 \details{
 This is a convenience function for plotting data frames with
@@ -61,6 +63,9 @@ tinyplot(iris)
 ## pass `by` arg to group the pairs display (legend is suppressed)
 ## here, we also add optional frames around the individual sub-plots
 tinyplot(iris, by = "Species", frames = TRUE)
+
+## another option (but assumes objects of equal length)
+tinyplot(iris[, 1:4], by = iris$Species, frames = TRUE)
 
 tinytheme() ## reset theme
 

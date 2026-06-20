@@ -70,11 +70,10 @@ tinyplot.data.frame = function (x, formula = NULL, labs = FALSE, frames = TRUE, 
     assert_logical(labs)
     assert_logical(frames)
 
-    ## We'll (manually) scale cex elements similar to faceted plots.
-    ## Safest way is to capture the existing theme and then inject temporary
-    ## overrides via an ephemeral theme. The theme is built as a language object
-    ## because `cl` is a matched call, so `cl[["theme"]]` is unevaluated (e.g.
-    ## the call `list("dark")`, not a list).
+    ## To scale cex like faceted plots, we capture the existing theme and apply
+    ## temporary cex overrides (restoring on exit). The theme is built as a
+    ## language object because `cl` is a matched call, so `cl[["theme"]]` is
+    ## unevaluated (e.g. the call `list("dark")`, not a list).
     cex_fct_adj = 0.66 # use same scaling as with faceted plots.
     active_theme = get_tpar("tinytheme", default = "default")
     theme_arg = cl[["theme"]]
@@ -86,17 +85,18 @@ tinyplot.data.frame = function (x, formula = NULL, labs = FALSE, frames = TRUE, 
     } else {
       theme_ij = bquote(list(.(theme_arg), cex = .(cex_fct_adj)))
     }
+    ## drop any `theme` from the cell call so it isn't re-applied per cell (see
+    ## above). NULL-assignment on a call errors if the element is absent, so
+    ## guard with a membership check.
+    if ("theme" %in% names(cl)) cl[["theme"]] = NULL
 
-    ## Ephemeral themes revert to the *default* theme on exit, so after the loop
-    ## we must re-assert any persistent theme that was active beforehand.
-    if (!identical(active_theme, "default")) {
-      on.exit(tinytheme(active_theme), add = TRUE)
-    }
+    ## apply temp theme overrides and restore orig theme on exit
+    do.call(tinytheme, eval(theme_ij))
+    on.exit(if (identical(active_theme, "default")) tinytheme() else tinytheme(active_theme), add = TRUE)
 
     for (j in 1L:n) {
       for (i in 1L:n) {
         cl_ij = cl
-        cl_ij[["theme"]] = theme_ij
         if (i == j) {
           cl_ij$formula = reformulate("1", bt(nm[i]))
           cl_ij$main = nm[i]

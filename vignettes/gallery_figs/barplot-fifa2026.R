@@ -15,21 +15,20 @@ tinyplot(
   x = 1:48,
   y = fifa2026$win,
   type = "barplot",
-  yaxl = "%",
-  grid = "xY",
-  xlab = "",
-  ylab = "",
+  xlab = NA,
+  ylab = NA,
   xaxt = "n",
+  yaxl = "%",
   main = "Spain most likely to (not) win the 2026 FIFA World Cup",
   cap = "Source: https://www.zeileis.org/news/fifa2026/",
-  theme = list("clean2", grid.lty = 1, las = 2, dynmar = FALSE, mar = c(7, 4, 5, 0), cex.main = 1.3)
+  theme = list("broadsheet", mar = c(4, 0.1, 0.6, 0.6), col.default = "#2A9D8F")
 )
 text(
   1:48,
-  0,
+  -0.001,
   labels = fifa2026$team,
+  adj = c(1, 1.15),
+  cex = 0.5,
   srt = 45,
-  adj = c(1.15, 1.15),
-  xpd = TRUE,
-  cex = 0.5
+  xpd = TRUE
 )

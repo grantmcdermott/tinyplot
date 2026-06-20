@@ -1,4 +1,7 @@
+## note: replace with tinyplot.ts method once #558 is merged
+
 data("EuStockMarkets", package = "datasets")
+
 eu = data.frame(
   time = rep(time(EuStockMarkets), ncol(EuStockMarkets)),
   market = rep(colnames(EuStockMarkets), each = nrow(EuStockMarkets)),
@@ -9,10 +12,10 @@ library("tinyplot")
 tinyplot(
   value ~ time | market,
   data = eu,
-  facet = "by",
+  facet = "by", legend = FALSE,
   type = "l",
   theme = "clean2",
-  legend = FALSE,
-  xlab = "",
-  ylab = ""
+  main = "EU Stock Markets Performance",
+  xlab = NA, ylab = NA,
+  yaxl = ","
 )

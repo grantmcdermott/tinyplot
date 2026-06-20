@@ -57,6 +57,10 @@ tinyplot.data.frame = function (x, formula = NULL, labs = FALSE, frames = TRUE, 
   nm = names(x)
   n = length(nm)
 
+  ## backtick-protect names so reformulate() parses non-syntactic names (e.g.
+  ## "GDP (2020)") as single symbols rather than as code, matching pairs().
+  bt = function(x) paste0("`", x, "`")
+
   if (is.null(formula) && n > 2L) {
 
     ## 3d: pairs-esque
@@ -94,10 +98,10 @@ tinyplot.data.frame = function (x, formula = NULL, labs = FALSE, frames = TRUE, 
         cl_ij = cl
         cl_ij[["theme"]] = theme_ij
         if (i == j) {
-          cl_ij$formula = reformulate("1", nm[i])
+          cl_ij$formula = reformulate("1", bt(nm[i]))
           cl_ij$main = nm[i]
         } else {
-          cl_ij$formula = reformulate(nm[i], nm[j])
+          cl_ij$formula = reformulate(bt(nm[i]), bt(nm[j]))
         }
         if (!labs) {
           cl_ij$ylab = NA
@@ -114,7 +118,7 @@ tinyplot.data.frame = function (x, formula = NULL, labs = FALSE, frames = TRUE, 
     ## 1d: y ~ 1
     ## 2d: y ~ x
     if (is.null(formula)) {
-      cl$formula = if (length(nm) < 2L) reformulate("1", nm) else reformulate(nm[1L], nm[2L])
+      cl$formula = if (length(nm) < 2L) reformulate("1", bt(nm)) else reformulate(bt(nm[1L]), bt(nm[2L]))
     }
 
     ## evaluate updated call

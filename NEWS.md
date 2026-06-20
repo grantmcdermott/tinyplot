@@ -160,6 +160,19 @@ Theme fixes:
 
 ### Other new features
 
+- A dedicated `tinyplot.data.frame()` method now supports direct plotting of
+  data frames, with or without a formula. Combining with a formula is mostly
+  useful insofar as it facilitates piping, e.g.
+  
+  ```r
+  iris |> plt(Sepal.Length ~ Petal.Width | Species)
+  ```
+  
+  If no formula is provided, then the behaviour depends on the number of
+  variables (columns) in the data frame. For example, a dataset with 3 or more
+  variables will yield a `pairs()`-style grid of all variable combinations. 
+  Thanks to @mthulin for the suggestion and original implementation idea.
+  (#613 @zeileis @grantmcdermott)
 - The `grid` argument (and `tpar("grid")`) now accepts character strings to
   control axis-specific grids at different resolutions. Uppercase letters
   (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
@@ -172,10 +185,9 @@ Theme fixes:
   customizable via `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`,
   `font.cap`, and `line.cap`. (#592 @grantmcdermott)
 - Facet formulas now support `1` as a convenience syntax for single row or
-  column arrangements. For example, `plt(..., facet = z ~ 1)` is equivalent to
-  `plt(..., facet = ~z, facet.args = list(ncol = 1))`. Analogously,
-  `plt(..., facet = 1 ~ z)` can be used as a shortcut for
-  `plt(..., facet = ~ z, facet.args = list(nrow = 1))`. (#562 @zeileis)
+  column arrangements. (#562 @zeileis)
+  - `plt(..., facet = z ~ 1)` <-> `plt(..., facet = ~z, facet.args = list(ncol = 1))`
+  - `plt(..., facet = 1 ~ z)` <-> `plt(..., facet = ~z, facet.args = list(nrow = 1))`.
 - `type_barplot()` gains an `offset` argument for shifting bar baselines away
   from zero. (#611, #615 @grantmcdermott @zeileis)
   - If the offset is an unnamed scalar or numeric vector, it shifts the bars

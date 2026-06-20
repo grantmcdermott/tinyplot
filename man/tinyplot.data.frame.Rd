@@ -4,16 +4,24 @@
 \alias{tinyplot.data.frame}
 \title{tinyplot Method for Plotting Data Frames}
 \usage{
-\method{tinyplot}{data.frame}(x, formula = NULL, ...)
+\method{tinyplot}{data.frame}(x, formula = NULL, labs = FALSE, frames = TRUE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{"data.frame"}.}
 
 \item{formula}{a \code{\link[stats]{formula}} that is passed on to
 \code{\link{tinyplot.formula}}. If \code{formula} is \code{NULL} a formula of
-type \code{y ~ 1} or \code{y ~ x} is set up for 1- and 2-dimensional data frames,
-respectively. For data frames with more than 2 variables the \code{facet = NULL}
-case is not supported, yet, and currently leads to an error.}
+type \code{y ~ 1} or \code{y ~ x} is set up for 1- and 2-variable data frames,
+respectively. For data frames with 3 or more variables, a
+\code{\link[graphics]{pairs}}-style grid of all variable combinations is
+drawn instead.}
+
+\item{labs}{logical indicating whether the axes labels (titles) for each
+sub-plot in the >=3 case should be shown. Default is \code{FALSE}.}
+
+\item{frames}{logical indicating whether each sub-plot in the >=3 case should
+be framed by a box. Default is \code{TRUE}. Note the trailing "s" plural case to
+disambiguate from \code{frame.plot}.}
 
 \item{...}{further arguments passed to \code{tinyplot}.}
 }
@@ -40,8 +48,7 @@ tinyplot(iris, Sepal.Length ~ Petal.Width | Species)
 ## cars |> tinyplot()
 ## iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
 
-## pairs-style display for more than 2 variables
-## (handling of axes and their labels will be improved in future versions)
+## pairs-style display data frames for more than 2 variables
 tinyplot(iris)
 
 tinytheme() ## reset

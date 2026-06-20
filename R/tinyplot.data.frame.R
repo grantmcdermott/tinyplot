@@ -13,9 +13,15 @@
 #' @param x an object of class `"data.frame"`.
 #' @param formula a \code{\link[stats]{formula}} that is passed on to
 #'   \code{\link{tinyplot.formula}}. If `formula` is `NULL` a formula of
-#'   type `y ~ 1` or `y ~ x` is set up for 1- and 2-dimensional data frames,
-#'   respectively. For data frames with more than 2 variables the `facet = NULL`
-#'   case is not supported, yet, and currently leads to an error.
+#'   type `y ~ 1` or `y ~ x` is set up for 1- and 2-variable data frames,
+#'   respectively. For data frames with 3 or more variables, a
+#'   \code{\link[graphics]{pairs}}-style grid of all variable combinations is
+#'   drawn instead.
+#' @param labs logical indicating whether the axes labels (titles) for each
+#'   sub-plot in the >=3 case should be shown. Default is `FALSE`.
+#' @param frames logical indicating whether each sub-plot in the >=3 case should
+#'   be framed by a box. Default is `TRUE`. Note the trailing "s" plural case to
+#'   disambiguate from `frame.plot`.
 #' @param ... further arguments passed to `tinyplot`. 
 #'
 #' @examples
@@ -29,15 +35,14 @@
 #' ## cars |> tinyplot()
 #' ## iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
 #'
-#' ## pairs-style display for more than 2 variables
-#' ## (handling of axes and their labels will be improved in future versions)
+#' ## pairs-style display data frames for more than 2 variables
 #' tinyplot(iris)
 #'
 #' tinytheme() ## reset
 #'
 #' @importFrom stats reformulate
 #' @export
-tinyplot.data.frame = function (x, formula = NULL, ...) {
+tinyplot.data.frame = function (x, formula = NULL, labs = FALSE, frames = TRUE, ...) {
   ## original call
   cl = match.call()
 
@@ -52,11 +57,14 @@ tinyplot.data.frame = function (x, formula = NULL, ...) {
   nm = names(x)
   n = length(nm)
 
-  if (is.null(formula) & n > 2L) {
+  if (is.null(formula) && n > 2L) {
 
     ## 3d: pairs-esque
     op = par(mfrow = c(n, n))
     on.exit(par(op))
+
+    assert_logical(labs)
+    assert_logical(frames)
 
     ## We'll (manually) scale cex elements similar to faceted plots.
     ## Safest way is to capture the existing theme and then inject temporary
@@ -87,20 +95,16 @@ tinyplot.data.frame = function (x, formula = NULL, ...) {
         cl_ij[["theme"]] = theme_ij
         if (i == j) {
           cl_ij$formula = reformulate("1", nm[i])
-          # cl_ij$xlab = NA
-          # cl_ij$ylab = NA
           cl_ij$main = nm[i]
         } else {
           cl_ij$formula = reformulate(nm[i], nm[j])
-          # if (i > 1L) cl_ij$ylab = NA
-          # if (j < n)  cl_ij$xlab = NA
         }
-        # GM: drop all axes labs (like pairs)
-        cl_ij$ylab = NA
-        cl_ij$xlab = NA
+        if (!labs) {
+          cl_ij$ylab = NA
+          cl_ij$xlab = NA
+        }
         eval.parent(cl_ij)
-        # GM: add box around each plot
-        box("figure", lwd = 0.3)
+        if (frames) box("figure", lwd = 0.3)
       }
     }
 

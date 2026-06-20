@@ -17,8 +17,9 @@
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   `"rect"` or `"segments"` (where all four min-max coordinates are required),
 #'   or `"pointrange"`, `"errorbar"`, or `"ribbon"` (where only `ymin` and
-#'   `ymax` required alongside `x`). In the formula method the arguments
-#'   can be specified as `ymin = var` if `var` is a variable in `data`.
+#'   `ymax` required alongside `x`). Can be passed as unquoted (NSE) variable
+#'   names when called from the `tinyplot.formula` method, e.g. `ymin = varname`
+#'   where `varname` is a variable in `data`.
 #' @param by grouping variable(s). The default behaviour is for groups to be
 #'   represented in the form of distinct colours, which will also trigger an
 #'   automatic legend. (See `legend` below for customization options.) However,
@@ -318,6 +319,21 @@
 #'     (e.g., another column in the same dataset) will yield a "bubble"plot with
 #'     its own dedicated legend. This can provide a useful way to visualize an
 #'     extra dimension of the data; see Examples.
+#' @param weights an optional numeric vector of observation weights, of the same
+#'   length as the number of `x`,`y` coordinates. Can be passed as an unquoted
+#'   (NSE) variable name when called from the `tinyplot.formula` method, e.g.
+#'   `weights = varname` where `varname` is a variable in `data`. Weights are
+#'   only consumed by the plot types that support them; specifically, the model
+#'   fit and distribution types like [`type_lm()`] and [`type_spineplot()`].
+#'   Because weights trigger a statistical transformation, a warning is emitted
+#'   if this argument is supplied to a non-supported type (even though the
+#'   actual weights will be ignored, regardless).
+#' @param labels an optional vector of text labels for use with [`type_text()`],
+#'   of length 1 or the same length as the number of `x`,`y` coordinates. Can be
+#'   passed as an unquoted (NSE) variable name when called from the
+#'   `tinyplot.formula` method, e.g. `labels = varname` where `varname` is a
+#'   variable in `data`. Ignored by other plot types. Overrides the `labels`
+#'   argument of [`type_text()`] if both are supplied.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param add logical. If TRUE, then elements are added to the current plot rather
@@ -647,6 +663,8 @@ tinyplot.default = function(
     xmax = NULL,
     ymin = NULL,
     ymax = NULL,
+    weights = NULL,
+    labels = NULL,
     by = NULL,
     facet = NULL,
     facet.args = NULL,
@@ -814,6 +832,9 @@ tinyplot.default = function(
     ymin          = ymin,
     ylab          = ylab,
     ylabs         = NULL,
+    weights       = weights,
+    labels        = labels,
+    weights_used  = FALSE, # set TRUE by type_data() functions that consume weights
 
     # axes
     axes          = axes,
@@ -949,6 +970,19 @@ tinyplot.default = function(
 
   if (!is.null(settings$type_data)) {
     settings$type_data(settings, ...)
+  }
+
+  # Warn if weights were supplied but the plot type ignored them. This is a
+  # deliberate exception to how other unconsumed top-level args (e.g.
+  # xmin/xmax/ymin/ymax) are silently dropped: a missing ribbon is visually
+  # obvious, but ignored weights produce a normal-looking yet statistically
+  # wrong plot. Consuming types opt in by setting `weights_used`, so new
+  # weight-aware types are covered automatically (#332).
+  if (!is.null(settings$weights) && !isTRUE(settings$weights_used)) {
+    warning(
+      "`weights` were supplied but are ignored by this plot type.",
+      call. = FALSE
+    )
   }
 
   # ensure axis aligment of any added layers
@@ -1625,6 +1659,8 @@ tinyplot.formula = function(
     xmax = NULL,
     ymin = NULL,
     ymax = NULL,
+    weights = NULL,
+    labels = NULL,
     xlim = NULL,
     ylim = NULL,
     # log = "",
@@ -1675,7 +1711,7 @@ tinyplot.formula = function(
 
   ## set up model frame
   m = match.call(expand.dots = FALSE)
-  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels", "xmin", "xmax", "ymin", "ymax"), names(m), 0L))]
+  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels", "xmin", "xmax", "ymin", "ymax", "weights", "labels"), names(m), 0L))]
   m$formula = tf$full
   ## need stats:: for non-standard evaluation
   m[[1L]] = quote(stats::model.frame)
@@ -1802,6 +1838,8 @@ tinyplot.formula = function(
     xmax = mf[["(xmax)"]],
     ymin = mf[["(ymin)"]],
     ymax = mf[["(ymax)"]],
+    weights = mf[["(weights)"]],
+    labels = mf[["(labels)"]],
     xlim = xlim,
     ylim = ylim,
     # log = "",

@@ -4,7 +4,7 @@
 \alias{tinyplot.data.frame}
 \title{tinyplot Method for Plotting Data Frames}
 \usage{
-\method{tinyplot}{data.frame}(x, formula = NULL, labs = FALSE, frames = TRUE, ...)
+\method{tinyplot}{data.frame}(x, formula = NULL, by = NULL, labs = FALSE, frames = TRUE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{"data.frame"}.}
@@ -12,16 +12,21 @@
 \item{formula}{a \code{\link[stats]{formula}} that is passed on to
 \code{\link{tinyplot.formula}}. If \code{formula} is \code{NULL} a formula of
 type \code{y ~ 1} or \code{y ~ x} is set up for 1- and 2-variable data frames,
-respectively. For data frames with 3 or more variables, a
-\code{\link[graphics]{pairs}}-style grid of all variable combinations is
-drawn instead.}
+respectively. For data frames with 3 or more variables, a pairs-style
+grid of all variable combinations is drawn instead.}
+
+\item{by}{optional string giving the name of a column in \code{x} to use as a
+grouping variable in the pairs-style case. The variable is spliced into
+each sub-plot's formula as \code{y ~ x | by} so groups are distinguished (e.g.
+by colour). A legend is suppressed in this case to avoid repeating it
+across every sub-plot. Ignored for 1- and 2-variable data frames.}
 
 \item{labs}{logical indicating whether the axes labels (titles) for each
-sub-plot in the >=3 case should be shown. Default is \code{FALSE}.}
+sub-plot in the pairs-style case should be shown. Default is \code{FALSE}.}
 
-\item{frames}{logical indicating whether each sub-plot in the >=3 case should
-be framed by a box. Default is \code{TRUE}. Note the trailing "s" plural case to
-disambiguate from \code{frame.plot}.}
+\item{frames}{logical indicating whether each sub-plot in the pairs-style
+case should be framed by a box. Default is \code{TRUE}. Note the trailing "s"
+plural case to disambiguate from \code{frame.plot}.}
 
 \item{...}{further arguments passed to \code{tinyplot}.}
 }
@@ -33,9 +38,10 @@ with tinyplot.
 This is a convenience function for plotting data frames with
 or without a formula. The case with the formula mainly facilitates
 using \code{tinyplot()} in combination with pipes. The case without
-formula provides a quick way of plotting the variables in data frames,
-either only one variable or a pair of variables, or all possible pairs
-of variables.
+formula provides a quick way of plotting the variables in a data frame:
+a single variable, a pair of variables, or a
+\code{\link[graphics]{pairs}}-style grid of all variable combinations for
+3 or more variables.
 }
 \examples{
 tinytheme("clean2")
@@ -48,8 +54,11 @@ tinyplot(iris, Sepal.Length ~ Petal.Width | Species)
 ## cars |> tinyplot()
 ## iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
 
-## pairs-style display data frames for more than 2 variables
+## pairs-style display for data frames with 3 or more variables
 tinyplot(iris)
+
+## use `by` to group the pairs-style display (legend is suppressed)
+tinyplot(iris, by = "Species")
 
 tinytheme() ## reset
 

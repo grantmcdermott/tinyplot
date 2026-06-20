@@ -2,23 +2,23 @@ source("helpers.R")
 using("tinysnapshot")
 
 # 2-variable data frame -> y ~ x
-f = function() tinyplot(cars)
+f = function() tinyplot(cars, theme = "clean2")
 expect_snapshot_plot(f, label = "df_2var")
 
 # 3+ variables -> pairs-style grid
-f = function() tinyplot(iris)
+f = function() tinyplot(iris, theme = "clean2")
 expect_snapshot_plot(f, label = "df_pairs")
 
 # pairs grid with a `by` grouping variable (column name)
-f = function() tinyplot(iris, by = "Species")
+f = function() tinyplot(iris, by = "Species", theme = "clean2")
 expect_snapshot_plot(f, label = "df_pairs_by")
 
 # `by` as a standalone vector (grouping var excluded from the grid)
-f = function() tinyplot(iris[, 1:4], by = iris$Species)
+f = function() tinyplot(iris[, 1:4], by = iris$Species, theme = "clean2")
 expect_snapshot_plot(f, label = "df_pairs_by_vector")
 
 # axis labels and per-panel frames toggled on
-f = function() tinyplot(iris, by = "Species", labs = TRUE, frames = TRUE)
+f = function() tinyplot(iris, by = "Species", labs = TRUE, frames = TRUE, theme = "clean2")
 expect_snapshot_plot(f, label = "df_pairs_labs_frames")
 
 

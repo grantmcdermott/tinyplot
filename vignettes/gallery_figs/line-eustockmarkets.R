@@ -15,7 +15,7 @@ tinyplot(
   facet = "by", legend = FALSE,
   type = "l",
   theme = "clean2",
-  main = "EU Stock Markets Performance",
+  main = "EU stock markets performance",
   xlab = NA, ylab = NA,
   yaxl = ","
 )

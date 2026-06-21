@@ -599,7 +599,7 @@ plt_add(...)
 <code id="...">…</code>
 </td>
 <td>
-All named arguments override arguments from the previous calls. Arguments not supplied to tinyplot_add remain unchanged from the previous call.
+All named arguments override arguments from the previous calls. Arguments not supplied to tinyplot_add remain unchanged from the previous call. Arguments are captured unevaluated and spliced into the updated call, so those that rely on non-standard evaluation against <code>data</code>—e.g. <code>subset = cyl == 4</code> or <code>weights = wt</code>—behave the same as in a direct <code>tinyplot</code> call.
 </td>
 </tr>
 </tbody></table>
@@ -643,7 +643,18 @@ All named arguments override arguments from the previous calls. Arguments not su
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#          facet = ~Species,</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#          data = iris,</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#          type = "lm",</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#          add = TRUE)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#          add = TRUE)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Arguments relying on non-standard evaluation (e.g. `subset`) work too:</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">subset =</span> cyl <span class="sc">==</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinyplot_add_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 
 

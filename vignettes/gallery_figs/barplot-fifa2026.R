@@ -1,19 +1,16 @@
-fifa2026 = data.frame(
-  team = c("Spain", "England", "France", "Germany", "Portugal", "Argentina", "Netherlands", "Brazil",
-    "Belgium", "Norway", "Switzerland", "Croatia", "Colombia", "Japan", "Morocco", "United States",
-    "Uruguay", "Senegal", "Sweden", "Ecuador", "Austria", "Turkey", "Canada", "Mexico", "South Korea",
-    "Ivory Coast", "Algeria", "Australia", "Czech Republic", "Scotland", "Paraguay", "Egypt",
-    "Bosnia and Herzegovina", "DR Congo", "Ghana", "Tunisia", "Iran", "Cape Verde", "Uzbekistan",
-    "Panama", "Haiti", "New Zealand", "Saudi Arabia", "Curaçao", "South Africa", "Iraq", "Qatar", "Jordan"),
-  win = c(14462, 12426, 12365, 11246, 8909, 8240, 5576, 4720, 2992, 2602, 2083, 1373, 1303, 1274, 990, 954,
-    945, 945, 886, 752, 657, 651, 616, 601, 481, 281, 250, 222, 212, 206, 143, 121, 113, 71, 70, 59, 36,
-    31, 29, 26, 24, 18, 12, 11, 7, 6, 2, 1)/1e5
-)
+fifa2026 = c(Spain = 14462, England = 12426, France = 12365, Germany = 11246, Portugal = 8909, Argentina = 8240,
+  Netherlands = 5576, Brazil = 4720, Belgium = 2992, Norway = 2602, Switzerland = 2083, Croatia = 1373,
+  Colombia = 1303, Japan = 1274, Morocco = 990, `United States` = 954, Uruguay = 945, Senegal = 945,
+  Sweden = 886, Ecuador = 752, Austria = 657, Turkey = 651, Canada = 616, Mexico = 601, `South Korea` = 481, 
+  `Ivory Coast` = 281, Algeria = 250, Australia = 222, `Czech Republic` = 212, Scotland = 206, Paraguay = 143,
+  Egypt = 121, `Bosnia and Herzegovina` = 113, `DR Congo` = 71, Ghana = 70, Tunisia = 59, Iran = 36,
+  `Cape Verde` = 31, Uzbekistan = 29, Panama = 26, Haiti = 24, `New Zealand` = 18, 
+  `Saudi Arabia` = 12, Curaçao = 11, `South Africa` = 7, Iraq = 6, Qatar = 2, Jordan = 1) / 1e5
 
 library("tinyplot")
 tinyplot(
   x = 1:48,
-  y = fifa2026$win,
+  y = fifa2026,
   type = "barplot",
   xlab = NA,
   ylab = NA,
@@ -26,7 +23,7 @@ tinyplot(
 text(
   1:48,
   -0.001,
-  labels = fifa2026$team,
+  labels = names(fifa2026),
   adj = c(1, 1.15),
   cex = 0.5,
   srt = 45,

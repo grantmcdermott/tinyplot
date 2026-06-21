@@ -168,7 +168,8 @@ Theme fixes:
   are passed to an unsupported type), while `labels` feeds `type = "text"`. The
   model-fit types also accept `weights` directly at the constructor level, e.g.
   `type_lm(weights = w)`, with the top-level argument taking precedence if both
-  are supplied. Thanks to @eleuven for the suggestion. (#332 @grantmcdermott )
+  are supplied. Thanks to @eleuven for the original suggestion, as well as
+  various discussion participants. (#639 @grantmcdermott )
 - A dedicated `tinyplot.data.frame()` method now supports direct plotting of
   data frames, with or without a formula. Combining with a formula is mostly
   useful insofar as it facilitates piping, e.g.

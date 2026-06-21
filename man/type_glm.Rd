@@ -4,7 +4,13 @@
 \alias{type_glm}
 \title{Generalized linear model plot type}
 \usage{
-type_glm(family = "gaussian", se = TRUE, level = 0.95, type = "response")
+type_glm(
+  family = "gaussian",
+  se = TRUE,
+  level = 0.95,
+  type = "response",
+  weights = NULL
+)
 }
 \arguments{
 \item{family}{a description of the error distribution and link
@@ -20,6 +26,12 @@ type_glm(family = "gaussian", se = TRUE, level = 0.95, type = "response")
 
 \item{type}{character, partial matching allowed.  Type of weights to
     extract from the fitted model object.  Can be abbreviated.}
+
+\item{weights}{an optional numeric vector of observation weights for the model
+fit, of the same length as the number of data points. Weights can also be
+supplied via the top-level \code{weights} argument of \code{\link{tinyplot}} (which is
+evaluated with non-standard evaluation in the formula method, and takes
+precedence if both are given).}
 }
 \description{
 Type function for plotting a generalized model fit.

@@ -15,12 +15,20 @@
 #'
 #' # Use `type_lm()` to pass extra arguments for customization
 #' tinyplot(Sepal.Width ~ Petal.Width, data = iris, type = type_lm(level = 0.8))
+#'
+#' # Weighted fit example, either as a top-level argument (which supports
+#' # non-standard evaluation in the formula method)...
+#' s77 = as.data.frame(state.x77)
+#' tinyplot(`Life Exp` ~ Income, data = s77, type = "lm", weights = Population)
+#' # ...or directly via the type constructor (requires an evaluated vector)
+#' tinyplot(`Life Exp` ~ Income, data = s77, type = type_lm(
+#'   weights = states$Population))
 #' @export
-type_lm = function(se = TRUE, level = 0.95) {
+type_lm = function(se = TRUE, level = 0.95, weights = NULL) {
     assert_flag(se)
     out = list(
         draw = draw_ribbon(),
-        data = data_lm(se = se, level = level),
+        data = data_lm(se = se, level = level, weights = weights),
         name = if (isTRUE(se)) "ribbon" else "l"
     )
     class(out) = "tinyplot_type"
@@ -28,9 +36,16 @@ type_lm = function(se = TRUE, level = 0.95) {
 }
 
 
-data_lm = function(se, level, ...) {
+data_lm = function(se, level, weights = NULL, ...) {
     fun = function(settings, ...) {
         env2env(settings, environment(), "datapoints")
+        # top-level `weights` (carried on datapoints via NSE) take precedence
+        # over the constructor-level `weights` argument
+        if (is.null(datapoints[["weights"]]) && !is.null(weights)) {
+            datapoints[["weights"]] = weights
+        }
+        has_weights = !is.null(datapoints[["weights"]])
+        if (has_weights) settings$weights_used = TRUE
         dat = split(datapoints, list(datapoints$facet, datapoints$by))
         dat = lapply(dat, function(x) {
             if (nrow(x) == 0) {
@@ -40,7 +55,10 @@ data_lm = function(se, level, ...) {
                 x$y = NA
                 return(x)
             }
-            fit = lm(y ~ x, data = x)
+            # .w is NULL when no weights column is present, which lm() treats
+            # the same as omitting the argument
+            .w = x[["weights"]]
+            fit = lm(y ~ x, data = x, weights = .w)
             nd = data.frame(x = seq(min(x$x, na.rm = TRUE), max(x$x, na.rm = TRUE), length.out = 100))
             nd$by = x$by[1]
             nd$facet = x$facet[1]

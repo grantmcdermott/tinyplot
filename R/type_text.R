@@ -131,7 +131,12 @@ data_text = function(labels = NULL, labeller = NULL, clim = c(0.5, 2.5)) {
     # Store clim for bubble() function
     settings$clim = clim
 
-    if (is.null(labels)) {
+    # Precedence: a top-level `labels` column (carried on datapoints via NSE)
+    # wins over the type_text(labels=) constructor arg, which in turn falls
+    # back to the y values.
+    if (!is.null(datapoints[["labels"]])) {
+      labels = datapoints[["labels"]]
+    } else if (is.null(labels)) {
       labels = datapoints$y
     }
     if (length(labels) != 1 && length(labels) != nrow(datapoints)) {

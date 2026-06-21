@@ -103,6 +103,9 @@ data_histogram = function(breaks = "Sturges",
     fun = function(settings, .breaks = hbreaks, .freebreaks = hfree.breaks, .freq = hfreq, .right = hright, .drop.zeros = hdrop.zeros, ...) {
         env2env(settings, environment(), c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha", "by", "null_by", "null_palette"))
 
+        has_weights = !is.null(datapoints[["weights"]])
+        if (has_weights) settings$weights_used = TRUE
+
         hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 
         # Multi-group displays fill from the palette at `ribbon.alpha`
@@ -124,6 +127,16 @@ data_histogram = function(breaks = "Sturges",
         datapoints = lapply(datapoints, function(k) {
             if (.freebreaks) xbreaks = breaks
             h = hist(k$x, breaks = xbreaks, right = .right, plot = FALSE)
+            # weighted histogram: hist() has no weights arg, so recompute the bin
+            # counts as weighted sums and rescale densities to integrate to 1.
+            if (has_weights) {
+                bin = findInterval(k$x, h$breaks, rightmost.closed = TRUE, left.open = .right)
+                bin[bin < 1L] = 1L
+                wsum = vapply(seq_along(h$mids), function(b) sum(k$weights[bin == b]), numeric(1))
+                bw = diff(h$breaks)
+                h$counts = wsum
+                h$density = wsum / sum(k$weights) / bw
+            }
             # zero count cases
             if (.drop.zeros) {
                 nzidx = which(h$counts > 0)

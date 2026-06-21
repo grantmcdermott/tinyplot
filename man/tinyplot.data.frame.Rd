@@ -2,9 +2,12 @@
 % Please edit documentation in R/tinyplot.data.frame.R
 \name{tinyplot.data.frame}
 \alias{tinyplot.data.frame}
+\alias{tinypairs}
 \title{tinyplot Method for Plotting Data Frames}
 \usage{
 \method{tinyplot}{data.frame}(x, formula = NULL, by = NULL, labs = FALSE, frames = FALSE, ...)
+
+tinypairs(x, by = NULL, labs = FALSE, frames = FALSE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{"data.frame"}.}
@@ -12,22 +15,22 @@
 \item{formula}{a \code{\link[stats]{formula}} that is passed on to
 \code{\link{tinyplot.formula}}. If \code{formula} is \code{NULL} a formula of
 type \code{y ~ 1} or \code{y ~ x} is set up for 1- and 2-variable data frames,
-respectively. For data frames with 3+ variables, a
+respectively. For data frames with 3 or more variables, a
 \code{\link[graphics]{pairs}}-style grid of all variable combinations is
 drawn instead.}
 
-\item{by}{(3+ case only) optional grouping variable. Either 1) a character
+\item{by}{(pairs-case only) optional grouping variable. Either 1) a character
 string giving a column name in \code{x}, or 2) a vector of equal length to the
 main data.frame (\emph{caveat emptor}: this is not checked). The variable is
 spliced into each sub-plot's formula as \code{y ~ x | by} so groups are
 distinguished (e.g. by colour). Note that the legend is deliberately
 suppressed.}
 
-\item{labs}{(3+ case only) logical indicating whether the axes labels
+\item{labs}{(pairs-case only) logical indicating whether the axes labels
 (titles) for each sub-plot in the pairs-style case should be shown. Default
 is \code{FALSE}.}
 
-\item{frames}{(3+ case only) logical indicating whether each sub-plot should
+\item{frames}{(pairs-case only) logical indicating whether each sub-plot should
 be framed by a box. Default is \code{FALSE}. Note the trailing "s" plural case
 to disambiguate from \code{frame.plot}.}
 
@@ -35,7 +38,7 @@ to disambiguate from \code{frame.plot}.}
 }
 \description{
 Convenience interface for visualizing
-\code{\link[base]{data.frames}} with tinyplot.
+\code{\link[base]{data.frame}}s with tinyplot.
 }
 \details{
 This is a convenience function for plotting data frames with
@@ -44,7 +47,8 @@ using \code{tinyplot()} in combination with pipes. The case without
 formula provides a quick way of plotting the variables in a data frame:
 a single variable, a pair of variables, or a
 \code{\link[graphics]{pairs}}-style grid of all variable combinations for
-3 or more variables.
+3 or more variables. The latter can be called directly (also for less than
+3 variables) via \code{tinypairs()}.
 }
 \examples{
 tinytheme("clean2")
@@ -66,6 +70,9 @@ tinyplot(iris, by = "Species", frames = TRUE)
 
 ## another option (but assumes objects of equal length)
 tinyplot(iris[, 1:4], by = iris$Species, frames = TRUE)
+
+## tinypairs can also create 2x2 pairs display
+tinypairs(iris[, c(3, 1)], by = iris$Species)
 
 tinytheme() ## reset theme
 

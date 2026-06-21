@@ -31,7 +31,7 @@ tinyplot(
   temperature ~ year | scenario,
   data = ipcc,
   type = "l",
-  theme = "clean2",
+  theme = "socviz",
   col = c("#000000", "#00a9d1", "#29416e", "#e58c35", "#dd4048", "#942324"),
   lwd = 3,
   grid = "xY",
@@ -39,7 +39,12 @@ tinyplot(
   main = "Global surface temperature change relative to 1850-1900",
   sub = "Intergovernmental Panel on Climate Change (IPCC), Sixth Assessment Report",
   xlab = "",
-  ylab = "Temperature change [°C]"
+  ylab = "Temperature change [°C]",
+  draw = {
+    abline(v = 2014.5, lty = 2, col = "gray60")
+    text(2014, 0, "Historical", pos = 2, col = "gray60")
+    text(2015, 0, "Projection", pos = 4, col = "gray60")
+  }
 )
 
 

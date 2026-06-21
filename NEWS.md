@@ -160,16 +160,6 @@ Theme fixes:
 
 ### Other new features
 
-- New top-level `weights` and `labels` arguments. Both support non-standard
-  evaluation in the formula method (so bare column names can be passed, e.g.
-  `plt(y ~ x, data = d, type = "lm", weights = w)`). The `weights` arg is 
-  consumed by `type_lm()`, `type_glm()`, `type_loess()`, `type_density()`,
-  `type_histogram()`, and `type_spineplot()` (a warning is emitted if `weights`
-  are passed to an unsupported type), while `labels` feeds `type = "text"`. The
-  model-fit types also accept `weights` directly at the constructor level, e.g.
-  `type_lm(weights = w)`, with the top-level argument taking precedence if both
-  are supplied. Thanks to @eleuven for the original suggestion, as well as
-  various discussion participants. (#639 @grantmcdermott )
 - A dedicated `tinyplot.data.frame()` method now supports direct plotting of
   data frames, with or without a formula. Combining with a formula is mostly
   useful insofar as it facilitates piping, e.g.
@@ -183,17 +173,49 @@ Theme fixes:
   variables will yield a `pairs()`-style grid of all variable combinations. 
   Thanks to @mthulin for the suggestion and original implementation idea.
   (#613 @zeileis @grantmcdermott)
+- New top-level `tinyplot()`/`plt()` arguments:
+  - `cap = <string>` for adding a caption to your plots. Captions are drawn at
+    the bottom of the plot and are best paired with dynamic themes (since
+    separation from `sub` is guaranteed). Appearance is customizable via
+    `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`, `font.cap`, and
+    `line.cap`. (#592 @grantmcdermott)
+  - `weights = <varname>` for adding weights to statisical transformations.
+    Supported types are models (`type_lm()`, `type_glm()`, `type_loess()`) and
+    distributions (`type_density()`, `type_histogram()`, `type_spineplot()`). A
+    warning is emitted if `weights` is passed to an unsupported type and the
+    argument is also ignored. The top-level `weights` argument supports
+    non-standard evaluation (NSE) in the formula method, so that bare column
+    names can be passed for convenience. Users can also pass a weights argument
+    directly at the type-specific function level, but this must be a vector
+    of correct length (no NSE). For example:
+    
+    ```r
+    plt(y ~ x, data = dat, type = "lm", weights = w)        # top-level, NSE
+    plt(y ~ x, data = dat, type = type_lm(weights = dat$w)) # type-level, vector
+    ```
+    
+    In addition to NSE convenience, the top-level variant is preferred since it
+    is correctly matched to the model frame construction with the formula method
+    (e.g., so missing values are handled automatically). Thanks to @eleuven for
+    the original suggestion, as well as various discussion participants for
+    helping to frame the scope. (#639 @grantmcdermott)
+  - `labels = <varname>` for passing labels to `type = "text"`. Like the new
+    `weights` argument (above), the main benefit is the convenience of NSE, as
+    well as the automatic handling of missing values and subsets as part of the
+    model frame construction. For example, compare:
+    
+    ```r
+    plt(y ~ x, data = dat, type = "text", labels = labs, subset = x < 10)
+    plt(y ~ x, data = subset(dat, x < 10), type = type_text(labels = subset(dat, x < 10)$labs))
+    ```
+    The `labels` arg is silently ignored for non-text types.
+    (#639 @grantmcdermott)
 - The `grid` argument (and `tpar("grid")`) now accepts character strings to
   control axis-specific grids at different resolutions. Uppercase letters
   (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
   lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional
   lines at the midpoints between ticks. Thanks to @zeileis for the suggestion.
   (#578 @grantmcdermott)
-- New `tinyplot(..., cap = <caption>)` argument for adding a caption to your 
-  plots. Captions are drawn at the bottom of the plot and are best paired with
-  dynamic themes (since separation from `sub` is guaranteed). Appearance is
-  customizable via `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`,
-  `font.cap`, and `line.cap`. (#592 @grantmcdermott)
 - Facet formulas now support `1` as a convenience syntax for single row or
   column arrangements. (#562 @zeileis)
   - `plt(..., facet = z ~ 1)` <-> `plt(..., facet = ~z, facet.args = list(ncol = 1))`

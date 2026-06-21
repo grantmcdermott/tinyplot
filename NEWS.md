@@ -236,6 +236,10 @@ Theme fixes:
 - Fixed `xlab = NA` / `ylab = NA` gotchas: a barplot with `xlab = NA` no longer
   errors, and spineplots no longer clip their category and tick labels when
   `xlab`/`ylab` are set to `NA` under a dynamic theme. (#635 @grantmcdermott)
+- `tinyplot_add()` (`plt_add()`) now captures its arguments unevaluated, so
+  arguments that rely on non-standard evaluation against `data` (e.g.,
+  `plt_add(..., subset = <>)`) resolve correctly instead of erroring with 
+  "object not found". (#638 @grantmcdermott)
 
 ## v0.6.1
 

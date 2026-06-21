@@ -118,3 +118,10 @@ f = function() {
   tinyplot_add(type = "jitter", cex = 0.5, alpha = 0.3)
 }
 expect_snapshot_plot(f, label = "tinyplot_add_jitter_on_grouped_violin")
+
+# subset NSE in tinyplot_add (#630)
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars)
+  tinyplot_add(subset = cyl == 4, col = "red", pch = 16)
+}
+expect_snapshot_plot(f, label = "tinyplot_add_subset")

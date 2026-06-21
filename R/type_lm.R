@@ -22,7 +22,7 @@
 #' tinyplot(`Life Exp` ~ Income, data = s77, type = "lm", weights = Population)
 #' # ...or directly via the type constructor (requires an evaluated vector)
 #' tinyplot(`Life Exp` ~ Income, data = s77, type = type_lm(
-#'   weights = states$Population))
+#'   weights = s77$Population))
 #' @export
 type_lm = function(se = TRUE, level = 0.95, weights = NULL) {
     assert_flag(se)

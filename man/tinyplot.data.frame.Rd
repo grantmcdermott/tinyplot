@@ -35,7 +35,7 @@ to disambiguate from \code{frame.plot}.}
 }
 \description{
 Convenience interface for visualizing
-\code{\link[base]{data.frames}} with tinyplot.
+\code{\link[base]{data.frame}} objects with tinyplot.
 }
 \details{
 This is a convenience function for plotting data frames with

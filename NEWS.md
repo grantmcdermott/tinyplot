@@ -160,6 +160,15 @@ Theme fixes:
 
 ### Other new features
 
+- New top-level `weights` and `labels` arguments. Both support non-standard
+  evaluation in the formula method (so bare column names can be passed, e.g.
+  `plt(y ~ x, data = d, type = "lm", weights = w)`). The `weights` arg is 
+  consumed by `type_lm()`, `type_glm()`, `type_loess()`, `type_density()`,
+  `type_histogram()`, and `type_spineplot()` (a warning is emitted if `weights`
+  are passed to an unsupported type), while `labels` feeds `type = "text"`. The
+  model-fit types also accept `weights` directly at the constructor level, e.g.
+  `type_lm(weights = w)`, with the top-level argument taking precedence if both
+  are supplied. Thanks to @eleuven for the suggestion. (#332 @grantmcdermott )
 - A dedicated `tinyplot.data.frame()` method now supports direct plotting of
   data frames, with or without a formula. Combining with a formula is mostly
   useful insofar as it facilitates piping, e.g.

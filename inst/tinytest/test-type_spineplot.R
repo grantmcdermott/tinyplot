@@ -26,6 +26,13 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "spineplot_weights")
 
+# equivalent via the top-level `weights` argument, which supports NSE in the
+# formula method (#332). Should reproduce "spineplot_weights" above.
+f = function() {
+  tinyplot(Survived ~ Sex, data = ttnc, type = "spineplot", weights = Freq)
+}
+expect_snapshot_plot(f, label = "spineplot_weights")
+
 
 #
 ## grouped boxplots

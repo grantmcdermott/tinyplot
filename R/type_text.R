@@ -5,7 +5,10 @@
 #'
 #' @param labels Character vector of length `1` or the same length as the
 #'   number of `x`,`y` coordinates. If left as `NULL`, then the labels will
-#'   automatically inherit the corresponding `y` values. See Examples.
+#'   automatically inherit the corresponding `y` values. Can also be supplied as
+#'   a top-level [`tinyplot`] argument, which additionally supports non-standard
+#'   evaluation against `data` and takes precedence if both are given. See
+#'   Examples.
 #' @param labeller A formatting function (or convenience string) passed to
 #'   [`tinylabel`] for formatting the `labels`. Useful for ensuring that the
 #'   text labels match the formatting of an axis, e.g. `labeller = "%"` to
@@ -53,12 +56,22 @@
 #'   family = "HersheyScript",
 #'   srt = -20)
 #' )
+#' 
+#' # some formumla + data.frame examples...
+#' 
+#' mt = transform(mtcars, cyl = factor(cyl), model = rownames(mtcars))
+#' 
+#' # as a top-level argument, `labels` supports non-standard evaluation, so a
+#' # bare column name is resolved against `data` (just like the plot variables)
 #'
-#' # same principles apply to grouped and/or facet data
-#' tinyplot(mpg ~ hp | factor(cyl),
-#'   data = mtcars,
+#' # tinyplot(mpg ~ wt | cyl, data = mt, type = type_text(labels = mt$model))
+#' tinyplot(mpg ~ wt | cyl, data = mt, type = "text", labels = model) # same
+#'
+#' # same customization principles apply as before
+#' tinyplot(mpg ~ hp | cyl,
+#'   data = mt,
+#'   labels = model,
 #'   type = type_text(
-#'     labels = row.names(mtcars),
 #'     family = "HersheySans",
 #'     font = 2,
 #'     adj = 0
@@ -66,10 +79,10 @@
 #' )
 #'
 #' # tip: use `xpd = NA` to avoid clipping text at the plot region
-#' tinyplot(mpg ~ hp | factor(cyl),
-#'   data = mtcars,
-#'   type = type_text(
-#'     labels = row.names(mtcars),
+#' tinyplot(mpg ~ hp | cyl,
+#'   data = mt,
+#'   labels = model,
+#'    type = type_text(
 #'     family = "HersheySans",
 #'     font = 2,
 #'     adj = 0,
@@ -79,15 +92,15 @@
 #'
 #' # use `repel = TRUE` to automatically nudge overlapping labels apart
 #' tinyplot(
-#'   mpg ~ wt, data = mtcars,
-#'   type = type_text(labels = row.names(mtcars), repel = TRUE)
+#'   mpg ~ wt, data = mt, labels = model,
+#'   type = type_text(repel = TRUE)
 #' )
 #'
 #' # limitation: `repel` logic currently works per group, so grouped text data
 #' # may still overlap
 #' tinyplot(
-#'   mpg ~ wt | factor(cyl), data = mtcars,
-#'   type = type_text(labels = row.names(mtcars), repel = TRUE)
+#'   mpg ~ wt | cyl, data = mt, labels = model,
+#'   type = type_text(repel = TRUE)
 #' )
 #'
 #' @export

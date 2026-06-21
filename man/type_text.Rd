@@ -22,7 +22,10 @@ type_text(
 \arguments{
 \item{labels}{Character vector of length \code{1} or the same length as the
 number of \code{x},\code{y} coordinates. If left as \code{NULL}, then the labels will
-automatically inherit the corresponding \code{y} values. See Examples.}
+automatically inherit the corresponding \code{y} values. Can also be supplied as
+a top-level \code{\link{tinyplot}} argument, which additionally supports non-standard
+evaluation against \code{data} and takes precedence if both are given. See
+Examples.}
 
 \item{labeller}{A formatting function (or convenience string) passed to
 \code{\link{tinylabel}} for formatting the \code{labels}. Useful for ensuring that the
@@ -104,11 +107,21 @@ tinyplot(
   srt = -20)
 )
 
-# same principles apply to grouped and/or facet data
-tinyplot(mpg ~ hp | factor(cyl),
-  data = mtcars,
+# some formumla + data.frame examples...
+
+mt = transform(mtcars, cyl = factor(cyl), model = rownames(mtcars))
+
+# as a top-level argument, `labels` supports non-standard evaluation, so a
+# bare column name is resolved against `data` (just like the plot variables)
+
+# tinyplot(mpg ~ wt | cyl, data = mt, type = type_text(labels = mt$model))
+tinyplot(mpg ~ wt | cyl, data = mt, type = "text", labels = model) # same
+
+# same customization principles apply as before
+tinyplot(mpg ~ hp | cyl,
+  data = mt,
+  labels = model,
   type = type_text(
-    labels = row.names(mtcars),
     family = "HersheySans",
     font = 2,
     adj = 0
@@ -116,10 +129,10 @@ tinyplot(mpg ~ hp | factor(cyl),
 )
 
 # tip: use `xpd = NA` to avoid clipping text at the plot region
-tinyplot(mpg ~ hp | factor(cyl),
-  data = mtcars,
-  type = type_text(
-    labels = row.names(mtcars),
+tinyplot(mpg ~ hp | cyl,
+  data = mt,
+  labels = model,
+   type = type_text(
     family = "HersheySans",
     font = 2,
     adj = 0,
@@ -129,15 +142,15 @@ tinyplot(mpg ~ hp | factor(cyl),
 
 # use `repel = TRUE` to automatically nudge overlapping labels apart
 tinyplot(
-  mpg ~ wt, data = mtcars,
-  type = type_text(labels = row.names(mtcars), repel = TRUE)
+  mpg ~ wt, data = mt, labels = model,
+  type = type_text(repel = TRUE)
 )
 
 # limitation: `repel` logic currently works per group, so grouped text data
 # may still overlap
 tinyplot(
-  mpg ~ wt | factor(cyl), data = mtcars,
-  type = type_text(labels = row.names(mtcars), repel = TRUE)
+  mpg ~ wt | cyl, data = mt, labels = model,
+  type = type_text(repel = TRUE)
 )
 
 }

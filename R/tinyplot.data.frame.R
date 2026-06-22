@@ -33,17 +33,24 @@
 #' @param ... further arguments passed to `tinyplot`.
 #'
 #' @examples
-#' tinytheme("clean2")
-#' 
 #' ## using tinyplot() with data frames
 #' tinyplot(cars)
 #' tinyplot(iris, Sepal.Length ~ Petal.Width | Species)
+#' tinyplot(
+#'   as.data.frame(UCBAdmissions),
+#'   Admit ~ Gender, facet = 1 ~ Dept, weights = Freq
+#' )
 #'
 #' ## note that this also enables usage with pipes (in R >= 4.1.0) such as
 #' # cars |> tinyplot()
 #' # iris |> tinyplot(Sepal.Length ~ Petal.Width | Species)
-#'
+#' # UCBAdmissions |> 
+#' #   as.data.frame() |>
+#' #   tinyplot(Admit ~ Gender, facet = 1 ~ Dept, weights = Freq)
+#' 
 #' ## pairs-style display for data frames with 3 or more variables
+#' ## (works best with a theme)
+#' tinytheme("clean2")
 #' tinyplot(iris)
 #'
 #' ## pass `by` arg to group the pairs display (legend is suppressed)

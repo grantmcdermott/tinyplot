@@ -56,22 +56,18 @@ website:
       style: floating
       collapse-level: 1
       contents:
-        - section: "Plot"
+        - section: "Main"
           contents:
             - text: tinyplot
               file: man/tinyplot.qmd
             - text: tinyplot_add
               file: man/tinyplot_add.qmd
-            - section: "Methods"
-              contents:
-                - text: tinyplot.data.frame
-                  file: man/tinyplot.data.frame.qmd
-        - section: "Themes"
-          contents:
-            - text: tinytheme
-              file: man/tinytheme.qmd
-            - text: tinytheme_register
-              file: man/tinytheme_register.qmd
+            - text: tinypairs
+              file: man/tinyplot.data.frame.qmd
+            # - section: "Methods"
+            #   contents:
+            #     - text: tinyplot.data.frame
+            #       file: man/tinyplot.data.frame.qmd
         - section: "Types"
           contents:
           - section: Shapes
@@ -146,6 +142,12 @@ website:
                 file: man/type_summary.qmd
               - text: type_vline
                 file: man/type_abline.qmd
+        - section: "Themes"
+          contents:
+            - text: tinytheme
+              file: man/tinytheme.qmd
+            - text: tinytheme_register
+              file: man/tinytheme_register.qmd
         - section: "Utilities"
           contents:
             - text: draw_legend
@@ -160,6 +162,10 @@ website:
               file: man/tpar.qmd
             - text: get_saved_par
               file: man/get_saved_par.qmd
+        - section: "Methods"
+          contents:
+            - text: tinyplot.data.frame
+              file: man/tinyplot.data.frame.qmd
 
 format:
   html:

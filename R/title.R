@@ -1,4 +1,4 @@
-draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
+draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar, ann,
                       xlab_line_offset = 0,
                       ylab_line_offset = 0) {
   # main title
@@ -88,7 +88,7 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
       font.main = get_tpar("font.main", 2),
       adj = get_tpar(c("adj.main", "adj"), 3))
     args = Filter(function(x) !is.null(x), args)
-    do.call(title, args)
+    if (ann) do.call(title, args)
     par(xpd = .oxpd)
   }
 
@@ -111,7 +111,7 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
       las = 1
     )
     args = Filter(function(x) !is.null(x), args)
-    do.call(mtext, args)
+    if (ann) do.call(mtext, args)
   }
 
   # Axis titles. For multi-line labels, base R places line 1 at
@@ -138,7 +138,7 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
   }
   args[["adj"]] = get_tpar(c("adj.xlab", "adj"))
   args[["cex.lab"]] = cex_xlab
-  do.call(title, args)
+  if (ann) do.call(title, args)
 
   # ylab: base R already places multi-line text correctly (outermost line at
   # mgp[1], subsequent lines closer to the plot), so no line shift needed.
@@ -149,5 +149,5 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar,
   }
   args[["adj"]] = get_tpar(c("adj.ylab", "adj"))
   args[["cex.lab"]] = cex_ylab
-  do.call(title, args)
+  if (ann) do.call(title, args)
 }

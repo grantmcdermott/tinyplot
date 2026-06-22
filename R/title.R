@@ -68,7 +68,7 @@ draw_title = function(main, sub, cap, xlab, ylab, legend, legend_args, opar, ann
       las = 1
     )
     args = Filter(function(x) !is.null(x), args)
-    do.call(mtext, args)
+    if (ann) do.call(mtext, args)
   }
 
   if (!is.null(main)) {

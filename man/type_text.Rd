@@ -98,6 +98,9 @@ tinyplot(1:12, type = "text", labels = month.abb)
 # customize
 tinyplot(1:12, type = "text", labels = month.abb, labeller = toupper)
 
+# tip: use `xpd = NA` to avoid clipping text at the plot region
+tinyplot(1:12, type = "text", labels = month.name, xpd = NA)
+
 # for advanced customization, it's safer to pass args through `type_text()`
 tinyplot(
   1:12,
@@ -107,50 +110,53 @@ tinyplot(
   srt = -20)
 )
 
-# some formumla + data.frame examples...
+# some formula + data.frame examples...
 
-mt = transform(mtcars, cyl = factor(cyl), model = rownames(mtcars))
+mt = transform(mtcars[1:20,], cyl = factor(cyl), model = rownames(mtcars[1:20,]))
 
 # as a top-level argument, `labels` supports non-standard evaluation, so a
 # bare column name is resolved against `data` (just like the plot variables)
 
-# tinyplot(mpg ~ wt | cyl, data = mt, type = type_text(labels = mt$model))
-tinyplot(mpg ~ wt | cyl, data = mt, type = "text", labels = model) # same
+# tinyplot(mpg ~ wt, data = mt, type = type_text(labels = mt$model))
+tinyplot(mpg ~ wt, data = mt, type = "text", labels = model) # same
 
-# same customization principles apply as before
-tinyplot(mpg ~ hp | cyl,
-  data = mt,
-  labels = model,
-  type = type_text(
-    family = "HersheySans",
-    font = 2,
-    adj = 0
-  )
-)
-
-# tip: use `xpd = NA` to avoid clipping text at the plot region
-tinyplot(mpg ~ hp | cyl,
-  data = mt,
-  labels = model,
-   type = type_text(
-    family = "HersheySans",
-    font = 2,
-    adj = 0,
-    xpd = NA
-  )
-)
-
-# use `repel = TRUE` to automatically nudge overlapping labels apart
+# tip: use `repel = TRUE` to automatically nudge overlapping labels apart
 tinyplot(
-  mpg ~ wt, data = mt, labels = model,
-  type = type_text(repel = TRUE)
+  mpg ~ wt, data = mt,
+  type = "text", labels = model,
+  repel = TRUE, xpd = NA
 )
 
 # limitation: `repel` logic currently works per group, so grouped text data
 # may still overlap
 tinyplot(
-  mpg ~ wt | cyl, data = mt, labels = model,
-  type = type_text(repel = TRUE)
+  mpg ~ wt | cyl, data = mt,
+  type = "text", labels = model,
+  repel = TRUE, xpd = NA
+)
+
+# an advantage of the top-level `labels` approach is that data subsetting and 
+# sanitizing ops pass through automatically
+tinyplot(hp ~ wt, data = mt)
+tinyplot_add(subset = carb==2, col = "red", pch = 16)
+tinyplot_add(subset = carb==2, col = "red", type = "text", labels = model, pos = 4)
+
+# fancier plot that combines a theme and some other customizations
+tinyplot(
+  mpg ~ hp | cyl,
+  data = mt,
+  legend = list(title = "Cylinders"),
+  theme = "web"
+)
+tinyplot_add(
+  labels = model,
+  type = type_text(
+    family = "HersheySans",
+    font = 2,
+    pos = 4,
+    repel = TRUE,
+    xpd = NA
+  )
 )
 
 }

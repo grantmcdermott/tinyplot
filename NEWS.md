@@ -276,6 +276,10 @@ Theme fixes:
 - `plt(..., ann = FALSE)` correctly turns off title annotations now, fixing a
   regression that we missed from at least v0.6.0. Thanks to @bastistician for
   the report. (#641 @zeileis)
+- Fixed `bquote()` (and other unevaluated language) annotations such as `main`,
+  `sub`, `cap`, `xlab`, and `ylab` being evaluated instead of coerced to
+  plotmath expressions, e.g. `plt(0, 0, main = bquote(foo == .(pi)))`. Thanks 
+  (again) to @bastistician for the report. (#642 @grantmcdermott)
 
 ## v0.6.1
 

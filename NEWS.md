@@ -272,6 +272,9 @@ Theme fixes:
   arguments that rely on non-standard evaluation against `data` (e.g.,
   `plt_add(..., subset = <>)`) resolve correctly instead of erroring with 
   "object not found". (#638 @grantmcdermott)
+- `plt(..., ann = FALSE)` correctly turns off title annotations now, fixing a
+  regression that we missed from at least v0.6.0. Thanks to @bastistician for
+  the report. (#641 @zeileis)
 
 ## v0.6.1
 

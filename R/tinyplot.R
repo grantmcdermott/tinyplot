@@ -1245,9 +1245,9 @@ tinyplot.default = function(
     }
 
     ann = as.logical(ann)
-    draw_title(main, sub, cap, xlab, ylab, legend, legend_args, opar, ann,
-               xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
-               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0)
+    if (ann) draw_title(main, sub, cap, xlab, ylab, legend, legend_args, opar,
+                        xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
+                        ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0)
   }
 
 

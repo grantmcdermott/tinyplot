@@ -4,6 +4,11 @@
 #' Arguments are passed to \code{\link[stats]{glm}}.
 #'
 #' @param se logical. If TRUE, confidence intervals are drawn.
+#' @param weights an optional numeric vector of observation weights for the model
+#'   fit, of the same length as the number of data points. Weights can also be
+#'   supplied via the top-level `weights` argument of [`tinyplot`] (which is
+#'   evaluated with non-standard evaluation in the formula method, and takes
+#'   precedence if both are given).
 #' @inheritParams stats::glm
 #' @inheritParams stats::predict.glm
 #' @inheritParams stats::confint
@@ -15,11 +20,11 @@
 #' # Use `type_glm()` to pass extra arguments for customization
 #' tinyplot(am ~ mpg, data = mtcars, type = type_glm(family = "binomial"))
 #' @export
-type_glm = function(family = "gaussian", se = TRUE, level = 0.95, type = "response") {
+type_glm = function(family = "gaussian", se = TRUE, level = 0.95, type = "response", weights = NULL) {
     assert_flag(se)
     out = list(
         draw = draw_ribbon(),
-        data = data_glm(family = family, se = se, level = level, type = type),
+        data = data_glm(family = family, se = se, level = level, type = type, weights = weights),
         name = if (isTRUE(se)) "ribbon" else "l"
     )
     class(out) = "tinyplot_type"
@@ -27,9 +32,16 @@ type_glm = function(family = "gaussian", se = TRUE, level = 0.95, type = "respon
 }
 
 
-data_glm = function(family, se, level, type, ...) {
+data_glm = function(family, se, level, type, weights = NULL, ...) {
     fun = function(settings, ...) {
         env2env(settings, environment(), "datapoints")
+        # top-level `weights` (carried on datapoints via NSE) take precedence
+        # over the constructor-level `weights` argument
+        if (is.null(datapoints[["weights"]]) && !is.null(weights)) {
+            datapoints[["weights"]] = weights
+        }
+        has_weights = !is.null(datapoints[["weights"]])
+        if (has_weights) settings$weights_used = TRUE
         dat = split(datapoints, list(datapoints$facet, datapoints$by))
         dat = lapply(dat, function(x) {
             if (nrow(x) == 0) {
@@ -39,7 +51,10 @@ data_glm = function(family, se, level, type, ...) {
                 x$y = NA
                 return(x)
             }
-            fit = glm(y ~ x, data = x, family = family)
+            # .w is NULL when no weights column is present, which glm() treats
+            # the same as omitting the argument
+            .w = x[["weights"]]
+            fit = glm(y ~ x, data = x, family = family, weights = .w)
             nd = data.frame(x = seq(min(x$x, na.rm = TRUE), max(x$x, na.rm = TRUE), length.out = 100))
             nd$by = x$by[1]
             nd$facet = x$facet[1]

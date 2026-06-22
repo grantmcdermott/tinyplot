@@ -129,3 +129,52 @@ f = function() {
   tinyplot(1:10, pch = 19, cex = 2, main = "dots not cut off")
 }
 expect_snapshot_plot(f, label = "issue_545_xaxs_yaxs_restoration")
+
+
+# univariate formula: ~ x (numeric) gives scatterplot against index
+f = function() {
+  tinyplot(~ Sepal.Length, data = iris)
+}
+expect_snapshot_plot(f, label = "formula_univariate_num")
+
+# univariate formula: y ~ 1 with by grouping
+f = function() {
+  tinyplot(Sepal.Length ~ 1 | Species, data = iris)
+}
+expect_snapshot_plot(f, label = "formula_y1")
+
+# univariate formula: user-supplied labels override defaults
+f = function() {
+  tinyplot(Sepal.Length ~ 1, data = iris, xlab = "My X", ylab = "My Y")
+}
+expect_snapshot_plot(f, label = "formula_y1_cust_lab")
+
+# ann = FALSE turns off titles (#626)
+f = function() {
+  plt(0, 0, ann = FALSE)
+}
+expect_snapshot_plot(f, label = "ann=FALSE")
+
+
+# bquote() and other unevaluated/language annotations must be coerced
+# to plotmath expressions, not evaluated. (#624)
+
+f = function() {
+  plt(0, 0, type = "n", main = bquote(pi == .(pi)))
+}
+expect_snapshot_plot(f, label = "titles-bquote-pi")
+
+# kitchen sink: every annotation slot a (different) language object at once
+f = function() {
+  plt(
+    0, 0,
+    type = "n",
+    main = bquote(pi == .(round(pi, 2))),
+    sub  = bquote(n == .(42L)),
+    xlab = bquote(x[i]^2),
+    ylab = bquote(sqrt(y)),
+    cap  = bquote(italic("source: foo")),
+    theme = "dynamic"
+  )
+}
+expect_snapshot_plot(f, label = "titles-bquote-kitchen")

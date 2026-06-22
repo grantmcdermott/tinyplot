@@ -20,8 +20,12 @@ draw_legend(
   gradient = FALSE,
   lmar = NULL,
   has_sub = FALSE,
+  has_cap = FALSE,
+  cap_text = NULL,
   new_plot = TRUE,
-  draw = TRUE
+  draw = TRUE,
+  soma_target = NULL,
+  dynmar_title_mar = NULL
 )
 }
 \arguments{
@@ -65,11 +69,25 @@ for which the default values are \code{c(1.0, 0.1)}.}
 keyword position is "bottom!", in which case we need to bump the legend
 margin a bit further.}
 
+\item{has_cap}{Logical. Does the plot have a caption. Only used if
+keyword position is "bottom!", in which case we need to bump the legend
+margin a bit further.}
+
+\item{cap_text}{Character. The caption text to draw below the legend when
+position is "bottom!". Ignored otherwise.}
+
 \item{new_plot}{Logical. Should we be calling plot.new internally?}
 
 \item{draw}{Logical. If \code{FALSE}, no legend is drawn but the sizes are
 returned. Note that a new (blank) plot frame will still need to be started
 in order to perform the calculations.}
+
+\item{soma_target}{Numeric. Shared outer margin target (in lines) for
+multi-legend alignment. If \code{NULL}, each legend computes its own margin.}
+
+\item{dynmar_title_mar}{Numeric or \code{NULL}. The pre-computed \code{dynmar_computed[3]}
+value for "top!" legends under dynmar themes. When set, the legend margin
+formula uses this directly to ensure correct title positioning.}
 }
 \value{
 No return value, called for side effect of producing a(n empty) plot

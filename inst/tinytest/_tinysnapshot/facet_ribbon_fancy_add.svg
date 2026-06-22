@@ -26,11 +26,11 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<circle cx='458.36' cy='244.80' r='1.78' style='stroke-width: 0.75; stroke: #1B9E77;' />
-<circle cx='458.36' cy='259.20' r='1.78' style='stroke-width: 0.75; stroke: #D95F02;' />
+<circle cx='437.04' cy='244.80' r='1.78' style='stroke-width: 0.75; stroke: #1B9E77;' />
+<circle cx='437.04' cy='259.20' r='1.78' style='stroke-width: 0.75; stroke: #D95F02;' />
 <text x='464.40' y='230.40' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='70.92px' lengthAdjust='spacingAndGlyphs'>Transmission</text>
-<text x='469.16' y='248.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text x='469.16' y='263.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
+<text x='447.84' y='248.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='447.84' y='263.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text x='235.44' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='250.73px' lengthAdjust='spacingAndGlyphs'>Notes: Broken out by cylinder and transmission</text>
 </g>
 <defs>
@@ -72,7 +72,7 @@
 <text transform='translate(47.64,203.08) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.78px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(47.64,129.89) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.78px' lengthAdjust='spacingAndGlyphs'>30</text>
 <rect x='59.04' y='43.20' width='101.28' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='109.68' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text x='109.68' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
 <polygon points='59.04,430.56 160.32,430.56 160.32,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpNTkuMDR8MTYwLjMyfDU5LjA0fDQzMC41Ng==)'>
@@ -115,7 +115,7 @@
 <text transform='translate(173.39,203.08) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.78px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(173.39,129.89) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.78px' lengthAdjust='spacingAndGlyphs'>30</text>
 <rect x='184.80' y='43.20' width='101.28' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='235.44' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
+<text x='235.44' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
 <polygon points='184.80,430.56 286.08,430.56 286.08,59.04 184.80,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpMTg0LjgwfDI4Ni4wOHw1OS4wNHw0MzAuNTY=)'>
@@ -158,7 +158,7 @@
 <text transform='translate(299.15,203.08) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.78px' lengthAdjust='spacingAndGlyphs'>25</text>
 <text transform='translate(299.15,129.89) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='8.78px' lengthAdjust='spacingAndGlyphs'>30</text>
 <rect x='310.56' y='43.20' width='101.28' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='361.20' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
+<text x='361.20' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
 <polygon points='310.56,430.56 411.84,430.56 411.84,59.04 310.56,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpMzEwLjU2fDQxMS44NHw1OS4wNHw0MzAuNTY=)'>

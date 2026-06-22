@@ -6,7 +6,8 @@ sanitize_datapoints = function(settings) {
     c(
       "x", "xmin", "xmax", "xaxt",
       "y", "ymin", "ymax", "ygroup",
-      "facet", "null_by", "by", "type"
+      "facet", "null_by", "by", "type",
+      "weights", "labels"
     )
   )
 
@@ -40,7 +41,8 @@ sanitize_datapoints = function(settings) {
 
   datapoints = list(
     x = x, xmin = xmin, xmax = xmax,
-    y = y, ymin = ymin, ymax = ymax, ygroup = ygroup
+    y = y, ymin = ymin, ymax = ymax, ygroup = ygroup,
+    weights = weights, labels = labels
   )
   datapoints = Filter(function(z) length(z) > 0, datapoints)
   datapoints = data.frame(datapoints)

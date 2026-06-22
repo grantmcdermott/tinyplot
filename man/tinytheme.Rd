@@ -5,9 +5,11 @@
 \title{Set or Reset Plot Themes for \code{tinyplot}}
 \usage{
 tinytheme(
-  theme = c("default", "basic", "clean", "clean2", "bw", "classic", "minimal", "ipsum",
-    "dark", "ridge", "ridge2", "tufte", "void"),
-  ...
+  theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "linedraw",
+    "classic", "minimal", "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber",
+    "web", "ridge", "ridge2", "tufte", "float", "void"),
+  ...,
+  register = NULL
 )
 }
 \arguments{
@@ -20,22 +22,49 @@ dynamic plots are marked with an asterisk (*) below.
 \itemize{
 \item \code{"default"}: inherits the user's default base graphics settings.
 \item \code{"basic"}: light modification of \code{"default"}, only adding filled points, a panel background grid, and light gray background to facet titles.
-\item \code{"clean"} (*): builds on \code{"basic"} by moving the subtitle above the plotting area, adding horizontal axis labels, employing tighter default plot margins and title gaps to reduce whitespace, and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors). The first of our dynamic themes and the foundation for several derivative themes that follow below.
+\item \code{"dynamic"} (*): builds on \code{"basic"} by enabling dynamic margin adjustment with tighter default margins, horizontal axis labels, and the subtitle moved above the plotting area. Turns off the panel grid. Provides the foundation for all other dynamic themes and is a good starting point for users who wish to build custom dynamic themes.
+\itemize{
+\item \code{"clean"} (*): builds on \code{"dynamic"} by re-enabling the panel background grid and setting different default palettes ("Tableau 10" for discrete colors and "agSunset" for gradient colors).
+\itemize{
 \item \code{"clean2"} (*): removes the plot frame (box) from \code{"clean"}.
-\item \code{"classic"} (*): connects the axes in a L-shape, but removes the other top and right-hand edges of the plot frame (box). Also sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
-\item \code{"bw"} (*): similar to \code{"clean"}, except uses thinner lines for the plot frame (box), solid grid lines, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
+}
+\item \code{"classic"} (*): builds on \code{"dynamic"} with L-shaped axes (removing the top and right-hand edges of the plot frame), smaller axis text, tighter axis spacing, and the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
+\item \code{"bw"} (*): similar to \code{"clean"}, except uses thinner lines for the plot frame (box), solid fine grid lines, smaller axis text, tighter axis spacing, and sets the "Okabe-Ito" palette as a default for discrete colors. Inspired by the \strong{ggplot2} theme of the same name.
+\itemize{
+\item \code{"linedraw"} (*): builds on \code{"bw"} with black facet title strips and white strip text. Inspired by the \strong{ggplot2} theme of the same name.
 \item \code{"minimal"} (*): removes the plot frame (box) from \code{"bw"}, as well as the background for facet titles. Inspired by the \strong{ggplot2} theme of the same name.
-\item \code{"ipsum"} (*): similar to \code{"minimal"}, except subtitle is italicised and axes titles are aligned to the far edges. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
+\itemize{
+\item \code{"ipsum"} (*): builds on \code{"minimal"} with bold titles, no ticks, fine grid, edge-aligned axis titles, and a custom muted palette. Inspired by the \strong{hrbrthemes} theme of the same name for \strong{ggplot2}.
+\item \code{"ipsum2"} (*): a lighter variant of \code{"ipsum"} that retains the original italic subtitle and edge-aligned axis titles, but without the additional spacing and palette changes.
 \item \code{"dark"} (*): similar to \code{"minimal"}, but set against a dark background with foreground and a palette colours lightened for appropriate contrast.
+\item \code{"socviz"} (*): builds on \code{"minimal"} with L-shaped axes, very light grid lines, and larger axis text. Inspired by Kieran Healy's \strong{socviz} package theme for \strong{ggplot2}.
+}
+}
+\item \code{"broadsheet"} (*): a publication/newspaper style with only horizontal grid lines, no frame, short x-axis ticks, and muted secondary text (subtitle, caption). Compact axis spacing.
+\itemize{
+\item \code{"nber"} (*): builds on \code{"broadsheet"} for an NBER working paper style with a light blue-grey background, grey text, italic axis titles and captions, and a blue-grey discrete palette.
+}
+\item \code{"web"} (*): a FiveThirtyEight-inspired style with a light grey device background, no frame or axis lines, and bold grid lines. Suited to web/online publication.
+\item \code{"tufte"} (*): floating axes and minimalist plot artifacts in the style of Edward Tufte.
+\itemize{
+\item \code{"float"} (*): builds on \code{"tufte"} with outward ticks, fewer tick marks, and a "dark" qualitative palette.
+}
+\item \code{"void"} (*): switches off all axes, titles, legends, etc.
 \item \code{"ridge"} (*): a specialized theme for ridge plots (see \code{\link[=type_ridge]{type_ridge()}}). Builds off of \code{"clean"}, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
+\itemize{
 \item \code{"ridge2"} (*): removes the plot frame (box) from \code{"ridge"}, but retains the x-axis line. Again, not recommended for non-ridge plots.
-\item \code{"tufte"}: floating axes and minimalist plot artifacts in the style of Edward Tufte.
-\item \code{"void"}: switches off all axes, titles, legends, etc.
+}
+}
 }}
 
 \item{...}{Named arguments to override specific theme settings. These
 arguments are passed to \code{tpar()} and take precedence over the predefined
 settings in the selected theme.}
+
+\item{register}{Optional character string. If provided, the theme (with any
+\code{...} overrides) is registered under this name via \code{\link[=tinytheme_register]{tinytheme_register()}}
+and simultaneously activated. This is a shortcut for calling
+\code{\link[=tinytheme_register]{tinytheme_register()}} and \code{tinytheme()} separately.}
 }
 \value{
 The function returns nothing. It is called for its side effects.
@@ -49,24 +78,70 @@ whitespace.
 \details{
 Sets a list of graphical parameters using \code{tpar()}
 
-Note that themes are persistent and will be applied to all subsequent plots.
-To reset the theme to default settings (no customization), call \code{tinytheme()}
-without arguments. Altenatively, invoke the \verb{tinyplot(..., theme = <theme>)}
+\strong{Persistent vs. ephemeral themes.} Calling \code{tinytheme("<theme>")} triggers
+a persistent theme, which will be applied to all subsequent graphics (incl.
+base \code{plot}). To reset the theme to your default settings, call \code{tinytheme()}
+without arguments. Alternatively, invoke the \verb{tinyplot(..., theme = <theme>)}
 argument for an ephemeral theme that is automatically reset at the end of the
 plot call.
 
-\strong{Caveat emptor:} Themes are a somewhat experimental feature of \code{tinyplot}.
-While we feel confident that themes should work as expected for most
-"standard" cases, there may be some sharp edges. Please report any unexpected
-behaviour to our GitHub repo:
-\url{https://github.com/grantmcdermott/tinyplot/issues}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# Set a persistent theme
+tinytheme("clean")
+tinyplot(1:10)  # uses "clean"
+tinyplot(10:1)  # still uses "clean"
+tinytheme()     # reset to default
 
-Known current limitations include:
+# Use an ephemeral theme for a single plot (incl. added components)
+tinyplot(1:10, theme = "dark")  # uses "dark" ephemerally
+tinyplot_add(type = "S")        # same plot, so retains theme
+tinyplot(10:1)                  # new plot, so back to default
+}\if{html}{\out{</div>}}
+
+\strong{Custom overrides.} To customize a theme's parameters (e.g., \code{mar}, \code{las},
+etc.), either pass them directly as additional args to
+\verb{tinytheme(<theme>, ...)} or as a list arguments to
+\verb{tinyplot(..., theme = list(<theme>, ...))}.
+Please note that passing overrides through \code{tpar()} or \code{par()} \emph{won't} work,
+because themes work by installing a persistent hook, which means that an
+active theme will override any subsequent calls for parameters that the theme
+controls.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# Do this
+tinytheme("clean", mar = c(5, 5, 2, 2))
+<some plot>
+
+# Or this (ephemeral version)
+tinyplot(..., theme = list("clean", mar = c(5, 5, 2, 2)))
+
+# Don't do this (the theme hook will overwrite your changes)
+tinytheme("clean")
+tpar(mar = c(5, 5, 2, 2))
+<some plot>
+}\if{html}{\out{</div>}}
+
+\strong{Spacing primitives.} Dynamic themes compute \code{mgp} (margin line positions)
+automatically from two spacing primitives, rather than requiring users to
+reason about how \code{mar}, \code{mgp}, and \code{tcl} combine:
 \itemize{
-\item Themes do not work well when \code{legend = "top!"}.
-\item Dynamic margin spacing does not account for multi-line strings (e.g., axes
-or main titles that contain "\\n").
+\item \code{gap.axis}: the gap in margin lines between the tick tip and the near edge
+of the tick label. Default \code{0.2}.
+\item \code{gap.lab}: the gap in margin lines between the far edge of the tick label
+and the near edge of the axis title. Default \code{1.0}.
 }
+
+These primitives scale automatically with \code{cex.axis} and \code{cex.lab}, so the
+visible spacing between elements remains constant regardless of text size.
+To adjust spacing, pass them as overrides:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# Tighter spacing between tick labels and axis titles
+tinytheme("clean", gap.lab = 0.5)
+
+# More room between ticks and tick labels
+tinytheme("clean", gap.axis = 0.5)
+}\if{html}{\out{</div>}}
+
+If you supply an explicit \code{mgp} value, it is used as-is and the primitives
+are ignored.
 }
 \examples{
 # Reusable plot function
@@ -78,21 +153,26 @@ p = function() tinyplot(
 p()
 
 # Set a theme
-tinytheme("bw")
+tinytheme("dark")
 p()
 
 #  A set theme is persistent and will apply to subsequent plots
 tinyplot(0:10)
 
 # Try a different theme
-tinytheme("dark")
+tinytheme("clean")
 p()
          
 # Customize the theme by overriding default settings
-tinytheme("bw", fg = "green", font.main = 2, font.sub = 3, family = "Palatino")
+tinytheme("clean",
+          adj.xlab = 1, adj.ylab = 1,
+          cex.lab = 0.75, cex.axis = 0.9,
+          font.sub = 3,
+          gap.axis = 0, gap.lab = 0.5,
+          tcl = -0.1)
 p()
 
-# Another custom theme example
+# Another custom theme example, including a different font
 tinytheme("bw", font.main = 2, col.axis = "darkcyan", family = "HersheyScript")
 p()
 
@@ -108,6 +188,9 @@ p()
 tinyplot(0:10, theme = "clean", main = "This theme is ephemeral")
 tinyplot(10:0, main = "See, no more theme")
 
+# Customize an ephemeral theme by passing arguments as a list
+tinyplot(0:10, main = "Custom", theme = list("clean", grid.col = "hotpink"))
+
 # Themes showcase
 ## We'll use a slightly more intricate plot (long y-axis labs and facets)
 ## to demonstrate dynamic margin adjustment etc.
@@ -120,7 +203,8 @@ for (thm in thms) {
     I(Sepal.Length*1e4) ~ Petal.Length | Species, facet = "by", data = iris,
     yaxl = ",", 
     main = paste0('tinytheme("', thm, '")'),
-    sub = "A subtitle"
+    sub = "A subtitle",
+    cap = "A caption"
   )
   box("outer", lty = 2)
 }
@@ -130,5 +214,6 @@ tinytheme()
 
 }
 \seealso{
-\code{\link{tpar}} which does the heavy lifting under the hood.
+\code{\link{tpar}} which does the heavy lifting under the hood;
+\code{\link[=tinytheme_register]{tinytheme_register()}} for registering custom named themes.
 }

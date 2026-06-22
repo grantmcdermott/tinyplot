@@ -28,7 +28,7 @@
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <line x1='458.09' y1='244.80' x2='479.69' y2='244.80' style='stroke-width: 0.75;' />
 <line x1='458.09' y1='259.20' x2='479.69' y2='259.20' style='stroke-width: 0.75; stroke: #DF536B;' />
-<text x='474.92' y='230.40' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>am</text>
+<text x='452.69' y='230.40' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.67px' lengthAdjust='spacingAndGlyphs'>am</text>
 <text x='490.49' y='248.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
 <text x='490.49' y='263.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>1</text>
 </g>
@@ -78,7 +78,7 @@
 <text transform='translate(47.64,131.80) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='15.38px' lengthAdjust='spacingAndGlyphs'>0.25</text>
 <text transform='translate(47.64,74.80) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='15.38px' lengthAdjust='spacingAndGlyphs'>0.30</text>
 <rect x='59.04' y='43.20' width='108.30' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='113.19' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text x='113.19' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
 <polygon points='59.04,430.56 167.34,430.56 167.34,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -118,7 +118,7 @@
 <text transform='translate(180.41,131.80) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='15.38px' lengthAdjust='spacingAndGlyphs'>0.25</text>
 <text transform='translate(180.41,74.80) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='15.38px' lengthAdjust='spacingAndGlyphs'>0.30</text>
 <rect x='191.82' y='43.20' width='108.30' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='245.96' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
+<text x='245.96' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
 <polygon points='191.82,430.56 300.11,430.56 300.11,59.04 191.82,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -158,7 +158,7 @@
 <text transform='translate(313.19,131.80) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='15.38px' lengthAdjust='spacingAndGlyphs'>0.25</text>
 <text transform='translate(313.19,74.80) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='15.38px' lengthAdjust='spacingAndGlyphs'>0.30</text>
 <rect x='324.59' y='43.20' width='108.30' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='378.74' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
+<text x='378.74' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
 <polygon points='324.59,430.56 432.89,430.56 432.89,59.04 324.59,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpNTkuMDR8MTY3LjM0fDU5LjA0fDQzMC41Ng==)'>

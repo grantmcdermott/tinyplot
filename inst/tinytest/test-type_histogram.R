@@ -85,3 +85,18 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "hist_facet_free_breaks_free")
+
+
+# univariate formula: y ~ 1 infers histogram
+f = function() {
+  tinyplot(Sepal.Length ~ 1, data = iris)
+}
+expect_snapshot_plot(f, label = "hist_formula_y1")
+
+
+# weighted histogram (#332): base hist() has no weights arg, so bin counts are
+# recomputed as weighted sums via the top-level `weights` argument
+f = function() {
+  tinyplot(~Sepal.Length, data = iris, type = "histogram", weights = Petal.Width)
+}
+expect_snapshot_plot(f, label = "hist_weights")

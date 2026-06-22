@@ -29,7 +29,7 @@
 <circle cx='435.00' cy='237.60' r='1.78' style='stroke-width: 0.75;' />
 <circle cx='435.00' cy='252.00' r='1.78' style='stroke-width: 0.75; stroke: #DF536B;' />
 <circle cx='435.00' cy='266.40' r='1.78' style='stroke-width: 0.75; stroke: #61D04F;' />
-<text x='463.38' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
+<text x='429.60' y='223.20' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Species</text>
 <text x='445.80' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <text x='445.80' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
 <text x='445.80' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>
@@ -76,7 +76,7 @@
 <text transform='translate(47.64,201.80) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>3.5</text>
 <text transform='translate(47.64,130.13) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>4.0</text>
 <rect x='59.04' y='43.20' width='100.60' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='109.34' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
+<text x='109.34' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>setosa</text>
 <polygon points='59.04,430.56 159.64,430.56 159.64,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -112,7 +112,7 @@
 <text transform='translate(172.72,201.80) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>3.5</text>
 <text transform='translate(172.72,130.13) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>4.0</text>
 <rect x='184.12' y='43.20' width='100.60' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='234.42' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
+<text x='234.42' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='51.36px' lengthAdjust='spacingAndGlyphs'>versicolor</text>
 <polygon points='184.12,430.56 284.72,430.56 284.72,59.04 184.12,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -148,7 +148,7 @@
 <text transform='translate(297.80,201.80) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>3.5</text>
 <text transform='translate(297.80,130.13) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='10.98px' lengthAdjust='spacingAndGlyphs'>4.0</text>
 <rect x='309.20' y='43.20' width='100.60' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='359.50' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>
+<text x='359.50' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.03px' lengthAdjust='spacingAndGlyphs'>virginica</text>
 <polygon points='309.20,430.56 409.80,430.56 409.80,59.04 309.20,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpNTkuMDR8MTU5LjY0fDU5LjA0fDQzMC41Ng==)'>

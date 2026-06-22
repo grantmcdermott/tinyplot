@@ -30,7 +30,7 @@
 <rect x='449.97' y='236.43' width='16.75' height='16.75' style='stroke-width: 0.00; stroke: #DF536B; fill: #DF536B;' />
 <rect x='449.97' y='254.43' width='16.75' height='16.75' style='stroke-width: 0.00; stroke: #61D04F; fill: #61D04F;' />
 <rect x='449.97' y='272.43' width='16.75' height='16.75' style='stroke-width: 0.00; stroke: #2297E6; fill: #2297E6;' />
-<text x='475.05' y='207.00' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='30.02px' lengthAdjust='spacingAndGlyphs'>Class</text>
+<text x='452.94' y='207.00' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='30.02px' lengthAdjust='spacingAndGlyphs'>Class</text>
 <text x='469.14' y='230.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.00px' lengthAdjust='spacingAndGlyphs'>1st</text>
 <text x='469.14' y='248.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>2nd</text>
 <text x='469.14' y='266.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='17.34px' lengthAdjust='spacingAndGlyphs'>3rd</text>
@@ -54,7 +54,7 @@
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <rect x='59.04' y='43.20' width='156.09' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='137.09' y='54.26' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.00px' lengthAdjust='spacingAndGlyphs'>1st</text>
+<text x='137.09' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='16.00px' lengthAdjust='spacingAndGlyphs'>1st</text>
 </g>
 <defs>
   <clipPath id='cpMjYxLjIxfDQxNy4zMHw1OS4wNHwyMTQuNTY='>
@@ -65,7 +65,7 @@
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <rect x='261.21' y='43.20' width='156.09' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='339.26' y='54.26' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>2nd</text>
+<text x='339.26' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>2nd</text>
 </g>
 <defs>
   <clipPath id='cpNTkuMDR8MjE1LjEzfDI3NS4wNHw0MzAuNTY='>
@@ -76,7 +76,7 @@
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <rect x='59.04' y='259.20' width='156.09' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='137.09' y='270.26' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='17.34px' lengthAdjust='spacingAndGlyphs'>3rd</text>
+<text x='137.09' y='271.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='17.34px' lengthAdjust='spacingAndGlyphs'>3rd</text>
 </g>
 <defs>
   <clipPath id='cpMjYxLjIxfDQxNy4zMHwyNzUuMDR8NDMwLjU2'>
@@ -87,7 +87,7 @@
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <rect x='261.21' y='259.20' width='156.09' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='339.26' y='270.26' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='28.02px' lengthAdjust='spacingAndGlyphs'>Crew</text>
+<text x='339.26' y='271.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='28.02px' lengthAdjust='spacingAndGlyphs'>Crew</text>
 </g>
 <g clip-path='url(#cpNTkuMDR8MjE1LjEzfDU5LjA0fDIxNC41Ng==)'>
 <rect x='59.04' y='160.99' width='84.76' height='53.57' style='stroke-width: 0.75; fill: #000000;' />

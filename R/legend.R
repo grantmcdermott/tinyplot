@@ -34,6 +34,12 @@ sanitize_legend = function(legend, legend_args) {
       if (length(new_legend) >= 1 && (is.null(names(new_legend)) || names(new_legend)[1] == "")) {
         names(new_legend)[1] = "x"
       }
+      # Evaluate language elements so e.g. c(0, 1, 2) becomes a real vector
+      for (nm in names(new_legend)) {
+        if (is.language(new_legend[[nm]])) {
+          new_legend[[nm]] = eval(new_legend[[nm]])
+        }
+      }
       new_legend
     } else {
       list(x = "right!")  # Fallback
@@ -112,9 +118,10 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
         omar[1] = omar[1] + 1 * par("cex.sub")
       }
     } else {
-      # For "top!", expand existing inner margin rather than outer margin
-      ooma[3] = ooma[3] + legend_env$topmar_epsilon
-      par(oma = ooma)
+      if (is.null(legend_env$dynmar_title_mar)) {
+        ooma[3] = ooma[3] + legend_env$topmar_epsilon
+        par(oma = ooma)
+      }
     }
     par(mar = omar)
 
@@ -124,13 +131,15 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
       if (legend_env$dynmar) {
         omar = par("mar")
         if (legend_env$outer_bottom) {
-          omar[1] = theme_clean$mgp[1] + 1 * par("cex.lab")
+          omar[1] = par("mgp")[1] + 1 * par("cex.lab")
           if (legend_env$has_sub && (is.null(.tpar[["side.sub"]]) || .tpar[["side.sub"]] == 1)) {
             omar[1] = omar[1] + 1 * par("cex.sub")
           }
         } else {
-          ooma[3] = ooma[3] + legend_env$topmar_epsilon
-          par(oma = ooma)
+          if (is.null(legend_env$dynmar_title_mar)) {
+            ooma[3] = ooma[3] + legend_env$topmar_epsilon
+            par(oma = ooma)
+          }
         }
         par(mar = omar)
       }
@@ -163,9 +172,18 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
     } else if (legend_env$outer_end) {
       if (legend_env$outer_bottom) {
         legend_env$ooma[1] = soma
+        if (legend_env$has_cap) {
+          cex_cap = get_tpar("cex.cap", 1)
+          legend_env$ooma[1] = legend_env$ooma[1] + cex_cap + 0.2
+        }
       } else {
-        legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+        if (!is.null(legend_env$dynmar_title_mar)) {
+          legend_env$omar[3] = legend_env$dynmar_title_mar + soma
+        } else {
+          legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+        }
         par(mar = legend_env$omar)
+        set_environment_variable(.top_legend_soma = soma)
       }
     }
     par(oma = legend_env$ooma)
@@ -205,6 +223,24 @@ measure_legend_inset = function(legend_env) {
 }
 
 
+compute_ljust_text_width = function(legend_env) {
+  if (!isTRUE(legend_env$ljust)) return(invisible(NULL))
+
+  args_oh = modifyList(legend_env$args,
+    list(plot = FALSE, title = NULL, text.width = 0), keep.null = TRUE)
+  overhead = do.call("legend", args_oh)$rect$w
+
+  args_nat = modifyList(legend_env$args,
+    list(plot = FALSE, text.width = NULL), keep.null = TRUE)
+  target_w = do.call("legend", args_nat)$rect$w
+
+  tw_needed = target_w - overhead
+  if (tw_needed > 0) {
+    legend_env$args[["text.width"]] = tw_needed
+  }
+}
+
+
 # Internal workhorse function for legend rendering
 # This function is called inside recordGraphics() so that all coordinate-dependent
 # calculations are re-executed when the plot window is resized
@@ -216,27 +252,47 @@ tinylegend = function(legend_env) {
   legend_env$ooma = legend_env$ooma_base
   legend_env$args[["inset"]] = legend_env$inset_base
 
+  # Clear stale text.width before measuring (measurement doesn't need it)
+  if (isTRUE(legend_env$ljust)) {
+    legend_env$args[["text.width"]] = NULL
+  }
+
   # Re-measure legend dimensions (device size may have changed on resize)
   legend_env$dims = measure_fake_legend(legend_env)
 
   # Calculate and apply soma (outer margin adjustment based on legend size)
-  soma = if (legend_env$outer_side) {
-    grconvertX(legend_env$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
-  } else if (legend_env$outer_end) {
-    grconvertY(legend_env$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
+  # When soma_target is set (multi-legend), use it directly so all legends
+  # share the same outer margin and their left edges align.
+  if (!is.null(legend_env$soma_target)) {
+    soma = legend_env$soma_target
   } else {
-    0
+    soma = if (legend_env$outer_side) {
+      grconvertX(legend_env$dims$rect$w, to = "lines") - grconvertX(0, to = "lines")
+    } else if (legend_env$outer_end) {
+      grconvertY(legend_env$dims$rect$h, to = "lines") - grconvertY(0, to = "lines")
+    } else {
+      0
+    }
+    soma = soma + sum(legend_env$lmar)
   }
-  soma = soma + sum(legend_env$lmar)
 
   if (legend_env$outer_side) {
     legend_env$ooma[if (legend_env$outer_right) 4 else 2] = soma
   } else if (legend_env$outer_end) {
     if (legend_env$outer_bottom) {
       legend_env$ooma[1] = soma
+      if (legend_env$has_cap) {
+        cex_cap = get_tpar("cex.cap", 1)
+        legend_env$ooma[1] = legend_env$ooma[1] + cex_cap + 0.2
+      }
     } else {
-      legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+      if (!is.null(legend_env$dynmar_title_mar)) {
+        legend_env$omar[3] = legend_env$dynmar_title_mar + soma
+      } else {
+        legend_env$omar[3] = legend_env$omar[3] + soma - legend_env$topmar_epsilon
+      }
       par(mar = legend_env$omar)
+      set_environment_variable(.top_legend_soma = soma)
     }
   }
   par(oma = legend_env$ooma)
@@ -251,6 +307,11 @@ tinylegend = function(legend_env) {
   setHook("before.plot.new", function() par(mar = legend_env$omar), action = "append")
   plot.new()
   setHook("before.plot.new", oldhook, action = "replace")
+
+  # Recompute text.width in the final coordinate context
+  if (isTRUE(legend_env$ljust)) {
+    compute_ljust_text_width(legend_env)
+  }
 
   # Set the inset in legend args
   legend_env$args[["inset"]] = if (legend_env$user_inset) {
@@ -280,6 +341,21 @@ tinylegend = function(legend_env) {
     )
   } else {
     do.call("legend", legend_env$args)
+  }
+
+  if (legend_env$outer_bottom && legend_env$has_cap) {
+    cex_cap = get_tpar("cex.cap", 1)
+    mtext(
+      legend_env$cap_text,
+      side = 1,
+      outer = TRUE,
+      line = par("oma")[1] - 1,
+      cex = cex_cap,
+      col = get_tpar("col.cap", "black"),
+      adj = get_tpar(c("adj.cap", "adj")),
+      font = get_tpar("font.cap", 1),
+      las = 1
+    )
   }
 }
 
@@ -345,6 +421,7 @@ prepare_legend = function(settings) {
       "bubble_cex",
       "by",
       "by_continuous",
+      "cap",
       "cex_dep",
       "cex_fct_adj",
       "col",
@@ -407,7 +484,8 @@ prepare_legend = function(settings) {
   }
 
   legend_draw_flag = (is.null(legend) || !is.character(legend) || legend != "none" || bubble) && !isTRUE(add)
-  has_sub = !is.null(sub)
+  has_sub = text_line_count(sub) > 0L
+  has_cap = text_line_count(cap) > 0L
 
   # Generate labels for discrete legends
   if (legend_draw_flag && isFALSE(by_continuous) && (!bubble || multi_legend)) {
@@ -429,7 +507,8 @@ prepare_legend = function(settings) {
       "legend",
       "legend_args",
       "legend_draw_flag",
-      "has_sub"
+      "has_sub",
+      "has_cap"
     )
   )
 }
@@ -487,6 +566,10 @@ build_legend_args = function(
   # Configuration
   gradient
 ) {
+  # Ensure legend_args[["x"]] is populated. When called from the main
+  # tinyplot pipeline, this is a no-op (sanitize_legend short-circuits on
+  # the is.null guard); when called standalone via the public draw_legend
+  # entry point, this normalizes the input.
   legend_args = sanitize_legend(legend, legend_args)
 
   # Set defaults
@@ -667,7 +750,10 @@ build_legend_env = function(
   gradient,
   lmar,
   has_sub = FALSE,
-  new_plot = TRUE
+  has_cap = FALSE,
+  cap_text = NULL,
+  new_plot = TRUE,
+  dynmar_title_mar = NULL
 ) {
   # Create legend environment
   legend_env = new.env(parent = emptyenv())
@@ -676,8 +762,11 @@ build_legend_env = function(
   legend_env$gradient = gradient
   legend_env$type = type
   legend_env$has_sub = has_sub
+  legend_env$has_cap = has_cap
+  legend_env$cap_text = cap_text
   legend_env$new_plot = new_plot
   legend_env$dynmar = isTRUE(.tpar[["dynmar"]])
+  legend_env$dynmar_title_mar = dynmar_title_mar
   legend_env$topmar_epsilon = 0.1
 
   # Build legend arguments (modifies legend_env in-place)
@@ -749,15 +838,25 @@ build_legend_env = function(
 #' @param has_sub Logical. Does the plot have a sub-caption. Only used if
 #'   keyword position is "bottom!", in which case we need to bump the legend
 #'   margin a bit further.
+#' @param has_cap Logical. Does the plot have a caption. Only used if
+#'   keyword position is "bottom!", in which case we need to bump the legend
+#'   margin a bit further.
+#' @param cap_text Character. The caption text to draw below the legend when
+#'   position is "bottom!". Ignored otherwise.
 #' @param new_plot Logical. Should we be calling plot.new internally?
 #' @param draw Logical. If `FALSE`, no legend is drawn but the sizes are
 #'   returned. Note that a new (blank) plot frame will still need to be started
 #'   in order to perform the calculations.
+#' @param soma_target Numeric. Shared outer margin target (in lines) for
+#'   multi-legend alignment. If `NULL`, each legend computes its own margin.
+#' @param dynmar_title_mar Numeric or `NULL`. The pre-computed `dynmar_computed[3]`
+#'   value for "top!" legends under dynmar themes. When set, the legend margin
+#'   formula uses this directly to ensure correct title positioning.
 #'
 #' @returns No return value, called for side effect of producing a(n empty) plot
 #'   with a legend in the margin.
 #'
-#' @importFrom graphics grconvertX grconvertY rasterImage strwidth
+#' @importFrom graphics grconvertX grconvertY rasterImage strheight strwidth xinch
 #' @importFrom grDevices as.raster recordGraphics
 #' @importFrom utils modifyList
 #'
@@ -835,8 +934,12 @@ draw_legend = function(
   gradient = FALSE,
   lmar = NULL,
   has_sub = FALSE,
+  has_cap = FALSE,
+  cap_text = NULL,
   new_plot = TRUE,
-  draw = TRUE
+  draw = TRUE,
+  soma_target = NULL,
+  dynmar_title_mar = NULL
 ) {
   if (is.null(lmar)) {
     lmar = tpar("lmar")
@@ -848,6 +951,7 @@ draw_legend = function(
 
   assert_logical(gradient)
   assert_logical(has_sub)
+  assert_logical(has_cap)
   assert_logical(new_plot)
   assert_logical(draw)
 
@@ -857,6 +961,7 @@ draw_legend = function(
   if (!dynmar) {
     restore_margin_inner(par("oma"), topmar_epsilon = 0.1)
   }
+  set_environment_variable(.top_legend_soma = NULL)
 
   # Build legend environment
   legend_env = build_legend_env(
@@ -882,15 +987,61 @@ draw_legend = function(
     gradient = gradient,
     lmar = lmar,
     has_sub = has_sub,
-    new_plot = new_plot
+    has_cap = has_cap,
+    cap_text = cap_text,
+    new_plot = new_plot,
+    dynmar_title_mar = dynmar_title_mar
   )
+
+  # Extract and strip ljust before any legend() calls
+  ljust_mode = legend_env$args[["ljust"]] %||% tpar("ljust") %||% "left"
+  ljust_mode = match.arg(ljust_mode, c("left", "center", "l", "c"))
+  if (ljust_mode == "l") ljust_mode = "left"
+  if (ljust_mode == "c") ljust_mode = "center"
+  legend_env$args[["ljust"]] = NULL
 
   # Initial setup: adjust margins, call plot.new, and measure (but don't apply soma yet)
   legend_outer_margins(legend_env, apply = FALSE)
 
+  # Legend justification (vertical, non-gradient, side-positioned only)
+  if (!legend_env$gradient && !isTRUE(legend_env$args[["horiz"]]) && !legend_env$outer_end) {
+
+    if (ljust_mode == "left") {
+      ttl = legend_env$args[["title"]]
+      # Compute title.adj to give 0.5*xch of left padding. Base R places
+      # the title at: left + title.adj * (box_w - strwidth(title)), so
+      # we solve for title.adj = 0.5*xch / slack.
+      if (is.null(legend_env$args[["title.adj"]]) && !is.null(ttl)) {
+        xch = par("cex") * xinch(par("cin")[1])
+        slack = legend_env$dims$rect$w - strwidth(ttl)
+        legend_env$args[["title.adj"]] = if (slack > 0) {
+          min(0.5 * xch / slack, 0.5)
+        } else {
+          0
+        }
+      } else {
+        legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0
+      }
+      if (is.null(legend_env$args[["text.width"]])) {
+        ttl = legend_env$args[["title"]]
+        if (!is.null(ttl)) {
+          lab_tw = max(strwidth(legend_env$args[["legend"]]))
+          ttl_tw = strwidth(ttl)
+          if (ttl_tw > lab_tw) {
+            legend_env$ljust = TRUE
+          }
+        }
+      }
+    } else {
+      legend_env$args[["title.adj"]] = legend_env$args[["title.adj"]] %||% 0.5
+    }
+  }
+
   if (!draw) {
     return(legend_env$dims)
   }
+
+  legend_env$soma_target = soma_target
 
   # Store base values AFTER legend_outer_margins setup (before soma/inset are applied)
   # These are needed so tinylegend() can reset to them on each recordGraphics replay

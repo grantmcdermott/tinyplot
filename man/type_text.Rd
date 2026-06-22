@@ -6,6 +6,7 @@
 \usage{
 type_text(
   labels = NULL,
+  labeller = NULL,
   adj = NULL,
   pos = NULL,
   offset = 0.5,
@@ -14,13 +15,23 @@ type_text(
   vfont = NULL,
   xpd = NULL,
   srt = 0,
+  repel = FALSE,
   clim = c(0.5, 2.5)
 )
 }
 \arguments{
 \item{labels}{Character vector of length \code{1} or the same length as the
 number of \code{x},\code{y} coordinates. If left as \code{NULL}, then the labels will
-automatically inherit the corresponding \code{y} values. See Examples.}
+automatically inherit the corresponding \code{y} values. Can also be supplied as
+a top-level \code{\link{tinyplot}} argument, which additionally supports non-standard
+evaluation against \code{data} and takes precedence if both are given. See
+Examples.}
+
+\item{labeller}{A formatting function (or convenience string) passed to
+\code{\link{tinylabel}} for formatting the \code{labels}. Useful for ensuring that the
+text labels match the formatting of an axis, e.g. \code{labeller = "\%"} to
+display the labels as percentages. Default is \code{NULL}, i.e. no formatting.
+See Examples.}
 
 \item{adj}{one or two values in \eqn{[0, 1]} which specify the x
     (and optionally y) adjustment (\sQuote{justification}) of the
@@ -58,6 +69,17 @@ regular, \code{2} = bold, \code{3} = italic, \code{4} = bold italic, and \code{5
 
 \item{srt}{Numeric giving the desired string rotation in degrees.}
 
+\item{repel}{Logical or numeric controlling automatic repulsion of
+overlapping text labels. The default \code{FALSE} draws the labels at their
+exact (\code{x},\code{y}) coordinates. \code{TRUE} nudges overlapping labels apart using a
+force-directed algorithm (labels are pushed off each other and then sprung
+back toward their original positions). A numeric value does the same but
+additionally enforces that much minimum padding (in user coordinates)
+between labels. Works best with the default centered text placement (i.e.
+without \code{pos}). \strong{Caveat:} The repulsion logic currently operates
+within each group rather than across groups. So the text of different
+groups may still overlap. See Examples.}
+
 \item{clim}{Numeric giving the lower and upper limits of the character
 expansion (\code{cex}) normalization for bubble charts.}
 }
@@ -72,29 +94,67 @@ tinyplot(1:12, type = "text")
 # pass explicit `labels` arg if you want specific text
 tinyplot(1:12, type = "text", labels = month.abb)
 
-# for advanced customization, it's safer to pass args through `type_text()`
-tinyplot(1:12, type = type_text(
-  labels = month.abb, family = "HersheyScript", srt = -20))
-
-# same principles apply to grouped and/or facet data
-tinyplot(mpg ~ hp | factor(cyl),
-  data = mtcars,
-  type = type_text(
-    labels = row.names(mtcars),
-    family = "HersheySans",
-    font = 2,
-    adj = 0
-  )
-)
+# you can also use a labeller function (passed to `tinylabel`) to
+# customize
+tinyplot(1:12, type = "text", labels = month.abb, labeller = toupper)
 
 # tip: use `xpd = NA` to avoid clipping text at the plot region
-tinyplot(mpg ~ hp | factor(cyl),
-  data = mtcars,
+tinyplot(1:12, type = "text", labels = month.name, xpd = NA)
+
+# for advanced customization, it's safer to pass args through `type_text()`
+tinyplot(
+  1:12,
   type = type_text(
-    labels = row.names(mtcars),
+  labels = month.abb,
+  family = "HersheyScript",
+  srt = -20)
+)
+
+# some formula + data.frame examples...
+
+mt = transform(mtcars[1:20,], cyl = factor(cyl), model = rownames(mtcars[1:20,]))
+
+# as a top-level argument, `labels` supports non-standard evaluation, so a
+# bare column name is resolved against `data` (just like the plot variables)
+
+# tinyplot(mpg ~ wt, data = mt, type = type_text(labels = mt$model))
+tinyplot(mpg ~ wt, data = mt, type = "text", labels = model) # same
+
+# tip: use `repel = TRUE` to automatically nudge overlapping labels apart
+tinyplot(
+  mpg ~ wt, data = mt,
+  type = "text", labels = model,
+  repel = TRUE, xpd = NA
+)
+
+# limitation: `repel` logic currently works per group, so grouped text data
+# may still overlap
+tinyplot(
+  mpg ~ wt | cyl, data = mt,
+  type = "text", labels = model,
+  repel = TRUE, xpd = NA
+)
+
+# an advantage of the top-level `labels` approach is that data subsetting and 
+# sanitizing ops pass through automatically
+tinyplot(hp ~ wt, data = mt)
+tinyplot_add(subset = carb==2, col = "red", pch = 16)
+tinyplot_add(subset = carb==2, col = "red", type = "text", labels = model, pos = 4)
+
+# fancier plot that combines a theme and some other customizations
+tinyplot(
+  mpg ~ hp | cyl,
+  data = mt,
+  legend = list(title = "Cylinders"),
+  theme = "web"
+)
+tinyplot_add(
+  labels = model,
+  type = type_text(
     family = "HersheySans",
     font = 2,
-    adj = 0,
+    pos = 4,
+    repel = TRUE,
     xpd = NA
   )
 )

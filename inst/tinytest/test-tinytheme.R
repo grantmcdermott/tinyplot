@@ -16,6 +16,19 @@ for (thm in thms) {
 }
 rm(thm)
 
+# Single-group (no `by`) displays: safeguard the per-theme default colour
+# logic, i.e. col.default and the leading-black palette drop. (#598)
+for (thm in thms) {
+  tinytheme(thm)
+  f = function() tinyplot(
+    mpg ~ hp, data = mtcars,
+    main = "Title of the plot",
+    sub = paste0('tinytheme("', thm, '")')
+  )
+  expect_snapshot_plot(f, label = paste0("tinytheme_single_", thm))
+}
+rm(thm)
+
 # legend placement
 
 f = function() {
@@ -52,6 +65,10 @@ f = function() {
     sub = "For themes with las = 1, etc."
   )
 }
+
+tinytheme("dynamic")
+f()
+expect_snapshot_plot(f, label = "tinytheme_dynamic_dynamic")
 
 tinytheme("clean")
 f()
@@ -153,6 +170,29 @@ expect_snapshot_plot(f, label = "tinytheme_dynamic_clean_spineplot")
 tinytheme()
 
 
+## palette functions (#593)
+
+pal = colorRampPalette(c("darkblue", "deeppink", "cornsilk"))
+
+f = function () {
+  tinytheme("clean", palette.sequential = pal, pch = 21)
+  tinyplot(1:9, by = 1:9, cex = 3, lwd = 3, bg = "by")
+}
+expect_snapshot_plot(f, label = "tinytheme_palette_function_sequential")
+
+f = function () {
+  tinytheme("clean", palette.qualitative = pal, pch = 21)
+  tinyplot(1:9, by = factor(1:9), cex = 3, lwd = 3, bg = "by")
+}
+expect_snapshot_plot(f, label = "tinytheme_palette_function_qualitative")
+
+
+#
+## reset
+
+tinytheme()
+
+
 #
 ## ephemeral theme
 
@@ -167,3 +207,45 @@ f = function() {
   par(opar)
 }
 expect_snapshot_plot(f, label = "tinytheme_ephemeral")
+
+# Ephemeral "default" theme with by + plt_add should not clip (#557)
+f = function() {
+  plt(1:3, c(1, 1, 1), by = c("a", "a", "a"), theme = "default", type = "n")
+  plt_add(type = "b")
+}
+expect_snapshot_plot(f, label = "ephemeral_default_theme_add")
+
+# User mar override respected under dynmar (#587)
+f = function() {
+  tinytheme("dynamic", mar = c(5, 5, 5, 5))
+  plt(0:10, main = "Custom mar override")
+  box("inner", lty = 2)
+  tinytheme()
+}
+expect_snapshot_plot(f, label = "tinytheme_dynmar_mar_override")
+
+## palette functions (#593)
+pal = colorRampPalette(c("darkblue", "deeppink", "cornsilk"))
+
+f = function () {
+  tinyplot(1:9, by = 1:9, cex = 3, lwd = 3, bg = "by",
+    theme = list("clean", palette.sequential = pal, pch = 21))
+}
+expect_snapshot_plot(f, label = "tinytheme_ephemeral_palette_function_sequential")
+
+f = function () {
+  tinyplot(1:9, by = factor(1:9), cex = 3, lwd = 3, bg = "by",
+    theme = list("clean", palette.qualitative = pal, pch = 21))
+}
+expect_snapshot_plot(f, label = "tinytheme_ephemeral_palette_function_qualitative")
+
+
+# User palette override should not be trimmed by a theme's negative
+# col.default (e.g. bw's -1), which would silently recycle colours. (#627)
+f = function() {
+  plt(
+    Sepal.Length ~ Petal.Length | Species, iris,
+    theme = list("bw", palette.qualitative = c("red", "blue", "green"))
+  )
+}
+expect_silent(f())

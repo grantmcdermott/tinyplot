@@ -44,6 +44,9 @@ README_files/
 inst/tinytest/_tinysnapshot_OLD/
 inst/tinytest/_tinysnapshot_review/
 
+# Claude Code
+.claude/
+
 # MacOS cruft
 .DS_Store
 
@@ -60,3 +63,4 @@ _quarto
 /.quarto/
 
 Rplots.pdf
+revdep/

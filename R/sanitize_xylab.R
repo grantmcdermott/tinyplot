@@ -37,7 +37,7 @@ sanitize_xylab = function(settings) {
   if (!is.null(ylab)) {
     out_ylab = ylab
   } else if (is_frequency && is.null(y) && !is.null(x)) {
-    out_ylab = "Frequency"
+    out_ylab = if (type == "barplot") "Count" else "Frequency"
   } else if (is_density && is.null(y) && !is.null(x)) {
     out_ylab = "Density"
   } else if (is_ribbon) {

@@ -26,13 +26,13 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<line x1='456.69' y1='237.60' x2='478.29' y2='237.60' style='stroke-width: 7.50;' />
-<line x1='456.69' y1='252.00' x2='478.29' y2='252.00' style='stroke-width: 3.75; stroke: #DF536B;' />
-<line x1='456.69' y1='266.40' x2='478.29' y2='266.40' style='stroke-width: 0.75; stroke: #61D04F;' />
+<line x1='455.29' y1='237.60' x2='476.89' y2='237.60' style='stroke-width: 7.50;' />
+<line x1='455.29' y1='252.00' x2='476.89' y2='252.00' style='stroke-width: 3.75; stroke: #DF536B;' />
+<line x1='455.29' y1='266.40' x2='476.89' y2='266.40' style='stroke-width: 0.75; stroke: #61D04F;' />
 <text x='473.52' y='223.20' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='52.67px' lengthAdjust='spacingAndGlyphs'>factor(cyl)</text>
-<text x='489.09' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
-<text x='489.09' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
-<text x='489.09' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
+<text x='487.69' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text x='487.69' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
+<text x='487.69' y='270.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
 </g>
 <defs>
   <clipPath id='cpMC4wMHw0MzAuMDl8MC4wMHw1MDQuMDA='>

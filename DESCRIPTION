@@ -1,8 +1,8 @@
 Package: tinyplot
 Type: Package
 Title: Lightweight Extension of the Base R Graphics System
-Version: 0.6.99
-Date: 2025-11-26
+Version: 0.6.1.99
+Date: 2026-03-28
 Authors@R: 
   c(
     person(
@@ -52,9 +52,9 @@ Suggests:
   tinytest,
   tinysnapshot (>= 0.0.3),
   knitr
-Config/Needs/website: altdoc (>= 0.6.0), future.apply
+Config/Needs/website: altdoc (>= 0.7.2), future.apply
 Encoding: UTF-8
-RoxygenNote: 7.3.3
 URL: https://grantmcdermott.com/tinyplot/
 BugReports: https://github.com/grantmcdermott/tinyplot/issues
 Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.0.0

@@ -4,12 +4,18 @@
 \alias{type_lm}
 \title{Linear model plot type}
 \usage{
-type_lm(se = TRUE, level = 0.95)
+type_lm(se = TRUE, level = 0.95, weights = NULL)
 }
 \arguments{
 \item{se}{logical. If TRUE, confidence intervals are drawn.}
 
 \item{level}{the confidence level required.}
+
+\item{weights}{an optional numeric vector of observation weights for the model
+fit, of the same length as the number of data points. Weights can also be
+supplied via the top-level \code{weights} argument of \code{\link{tinyplot}} (which is
+evaluated with non-standard evaluation in the formula method, and takes
+precedence if both are given).}
 }
 \description{
 Type function for plotting a linear model fit.
@@ -25,4 +31,12 @@ tinyplot_add(type = "p")
 
 # Use `type_lm()` to pass extra arguments for customization
 tinyplot(Sepal.Width ~ Petal.Width, data = iris, type = type_lm(level = 0.8))
+
+# Weighted fit example, either as a top-level argument (which supports
+# non-standard evaluation in the formula method)...
+s77 = as.data.frame(state.x77)
+tinyplot(`Life Exp` ~ Income, data = s77, type = "lm", weights = Population)
+# ...or directly via the type constructor (requires an evaluated vector)
+tinyplot(`Life Exp` ~ Income, data = s77, type = type_lm(
+  weights = s77$Population))
 }

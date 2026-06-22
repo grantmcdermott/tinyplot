@@ -49,20 +49,8 @@ at the specified \code{probs}. The quantiles are computed based on the density
 \item{ylevels}{a character or numeric vector specifying in which order
 the levels of the y-variable should be plotted.}
 
-\item{bw}{the smoothing bandwidth to be used.  The kernels are scaled
-    such that this is the standard deviation of the smoothing kernel.
-    (Note this differs from the reference books cited below.)
-
-    \code{bw} can also be a character string giving a rule to choose the
-    bandwidth.  See \code{\link[stats]{bw.nrd}}. \cr The default,
-    \code{"nrd0"}, has remained the default for historical and
-    compatibility reasons, rather than as a general recommendation,
-    where e.g., \code{"SJ"} would rather fit, see also
-    Venables and Ripley (2002).
-
-    The specified (or computed) value of \code{bw} is multiplied by
-    \code{adjust}.
-  }
+\item{bw}{the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
+see \code{\link[stats]{density}} for details and options.}
 
 \item{joint.bw}{character string indicating whether (and how) the smoothing
 bandwidth should be computed from the joint data distribution. The default
@@ -111,7 +99,12 @@ section below.}
 of the ridge densities. Note that a singular value is expected; if multiple
 colors are provided then only the first will be used. This argument is mostly
 useful for the aesthetic effect of drawing a common outline color in
-combination with gradient fills. See Examples.}
+combination with gradient fills. See Examples. If left unset here, the
+outline color can also be supplied via the top-level \code{tinyplot(..., col =)}
+call (the \code{type_ridge(col =)} argument takes precedence if both are given).
+When neither is supplied, the outline defaults to the active theme's
+\code{col.default} (see \link{tpar}), falling back to the first color of the theme's
+qualitative palette, or black if no theme is set.}
 
 \item{alpha}{Numeric in the range \verb{[0,1]} for adjusting the alpha
 transparency of the density fills. In most cases, will default to a value of
@@ -181,7 +174,7 @@ tinytheme("ridge2") # removes the plot frame (but keeps x-axis line)
 tinyplot(Month ~ Temp, data = aq, type = "ridge")
 
 # the "ridge(2)" themes are especially helpful for long y labels, due to
-# dyanmic plot adjustment
+# dynamic plot adjustment
 tinyplot(Month2 ~ Temp, data = aq, type = "ridge")
 
 # pass customization arguments through type_ridge()... for example, use
@@ -189,7 +182,7 @@ tinyplot(Month2 ~ Temp, data = aq, type = "ridge")
 # further below)
 
 tinyplot(Month ~ Temp, data = aq, type = type_ridge(scale = 1))
-  
+
 ## by grouping is also supported. two special cases of interest:
 
 # 1) by == y (color by y groups)
@@ -250,7 +243,7 @@ tinyplot(Month ~ Temp | Late, data = aq,
   type = type_ridge(scale = 1))
 tinyplot(Month ~ Temp | Late, data = aq,
   type = type_ridge(scale = 1, joint.max = "by"))
-  
+
 # restore the default theme
 tinytheme()
 

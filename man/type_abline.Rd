@@ -60,7 +60,7 @@ group in the first facet, and second three (\code{24:26}) coloured by by group
 in the second facet.
 }
 
-Alongside these general rules, we also try to accomodate special cases when
+Alongside these general rules, we also try to accommodate special cases when
 other aesthetic parameters like \code{lwd} or \code{lty} are invoked by the user. See
 Examples.
 }

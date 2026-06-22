@@ -118,8 +118,7 @@ expect_snapshot_plot(f, label = "ridge_gradient_probs")
 f = function() {
   tinyplot(
     am ~ mpg, facet = ~vs, data = mtcars,
-    type = type_ridge(gradient = "agsunset"),
-    col = "white"
+    type = type_ridge(gradient = "agsunset")
   )
 }
 expect_snapshot_plot(f, label = "ridge_gradient_facet")
@@ -129,22 +128,35 @@ tinytheme("ridge2")
 expect_snapshot_plot(f, label = "ridge_gradient_facet_theme_ridge2")
 tinytheme()
 
+# Dedicated test for a white boundary color between gradient ridges, which is a
+# common aesthetic for separating overlapping densities. (#598)
 f = function() {
   tinyplot(
     am ~ mpg, facet = ~vs, data = mtcars,
-    type = type_ridge(gradient = "agsunset", raster = TRUE, alpha = 0.5),
-    col = "white"
+    type = type_ridge(gradient = TRUE),
+    col = "white",
+    theme = "ridge"
+  )
+}
+expect_snapshot_plot(f, label = "ridge_gradient_white_facet_theme_ridge")
+
+
+f = function() {
+  tinyplot(
+    am ~ mpg, facet = ~vs, data = mtcars,
+    type = type_ridge(gradient = "agsunset", raster = TRUE, alpha = 0.5)
   )
 }
 expect_snapshot_plot(f, label = "ridge_gradient_facet_raster_alpha")
 
-
-
+# Issue #547: ridge with themed palette should not error
 f = function() {
-  tinyplot(
-    am ~ mpg, facet = ~vs, data = mtcars,
-    type = type_ridge(gradient = "agsunset", raster = TRUE, alpha = 0.5),
-    col = "white"
-  )
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", theme = "clean2")
 }
-expect_snapshot_plot(f, label = "ridge_gradient_facet_raster_alpha")
+expect_snapshot_plot(f, label = "ridge_theme_palette")
+
+# Issue #547: numeric bg with ridge theme should produce transparent gray
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", theme = "ridge2", bg = 0.2)
+}
+expect_snapshot_plot(f, label = "ridge_theme_bg_numeric")

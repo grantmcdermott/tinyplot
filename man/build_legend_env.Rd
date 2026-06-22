@@ -20,7 +20,10 @@ build_legend_env(
   gradient,
   lmar,
   has_sub = FALSE,
-  new_plot = TRUE
+  has_cap = FALSE,
+  cap_text = NULL,
+  new_plot = TRUE,
+  dynmar_title_mar = NULL
 )
 }
 \arguments{

@@ -22,71 +22,23 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/points-by-iris.R){target='_blank'}"
-#| file: "gallery_figs/points-by-iris.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/points-iris-boring.R){target='_blank'}"
+#| file: "gallery_figs/points-iris-boring.R"
+```
+
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/points-iris-better.R){target='_blank'}"
+#| file: "gallery_figs/points-iris-better.R"
 ```
 
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/points-by-facet-iris.R){target='_blank'}"
-#| file: "gallery_figs/points-by-facet-iris.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/hist-by-iris.R){target='_blank'}"
-#| file: "gallery_figs/hist-by-iris.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/bubble-penguins.R){target='_blank'}"
-#| file: "gallery_figs/bubble-penguins.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spineplot-titanic.R){target='_blank'}"
-#| file: "gallery_figs/spineplot-titanic.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ridge-aq.R){target='_blank'}"
-#| file: "gallery_figs/ridge-aq.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-points-rug-faithful.R){target='_blank'}"
-#| file: "gallery_figs/add-points-rug-faithful.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/errorbar-mtcars.R){target='_blank'}"
-#| file: "gallery_figs/errorbar-mtcars.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/polygons.R){target='_blank'}"
-#| file: "gallery_figs/polygons.R"
-```
-
-```{r}
-#| lightbox:
-#|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/rect-by.R){target='_blank'}"
-#| file: "gallery_figs/rect-by.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ellipse-penguins.R){target='_blank'}"
+#| file: "gallery_figs/ellipse-penguins.R"
 ```
 
 ```{r}
@@ -99,8 +51,99 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
-#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-text-mtcars.R){target='_blank'}"
-#| file: "gallery_figs/add-text-mtcars.R"
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/bubble-penguins.R){target='_blank'}"
+#| file: "gallery_figs/bubble-penguins.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/bubble-quakes.R){target='_blank'}"
+#| file: "gallery_figs/bubble-quakes.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spaghetti-aq.R){target='_blank'}"
+#| file: "gallery_figs/spaghetti-aq.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/direct-labels-aq.R){target='_blank'}"
+#| file: "gallery_figs/direct-labels-aq.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/line-ipcc.R){target='_blank'}"
+#| file: "gallery_figs/line-ipcc.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/line-eustockmarkets.R){target='_blank'}"
+#| file: "gallery_figs/line-eustockmarkets.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/hist-by-penguins.R){target='_blank'}"
+#| file: "gallery_figs/hist-by-penguins.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ridge-aq.R){target='_blank'}"
+#| file: "gallery_figs/ridge-aq.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/barplot-fifa2026.R){target='_blank'}"
+#| file: "gallery_figs/barplot-fifa2026.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/barplot-meat.R){target='_blank'}"
+#| file: "gallery_figs/barplot-meat.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/likert.R){target='_blank'}"
+#| file: "gallery_figs/likert.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/spineplot-titanic.R){target='_blank'}"
+#| file: "gallery_figs/spineplot-titanic.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/coefplot-mtcars.R){target='_blank'}"
+#| file: "gallery_figs/coefplot-mtcars.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/simpsons-paradox.R){target='_blank'}"
+#| file: "gallery_figs/simpsons-paradox.R"
 ```
 
 ```{r}
@@ -113,8 +156,50 @@ Click on a plot to get the link to its code.
 ```{r}
 #| lightbox:
 #|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-points-rug-faithful.R){target='_blank'}"
+#| file: "gallery_figs/add-points-rug-faithful.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/add-text-mtcars.R){target='_blank'}"
+#| file: "gallery_figs/add-text-mtcars.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/pirate-iris.R){target='_blank'}"
+#| file: "gallery_figs/pirate-iris.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/rect-by.R){target='_blank'}"
+#| file: "gallery_figs/rect-by.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/polygons.R){target='_blank'}"
+#| file: "gallery_figs/polygons.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/density-part-shading.R){target='_blank'}"
 #| file: "gallery_figs/density-part-shading.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/polygon-valentine.R){target='_blank'}"
+#| file: "gallery_figs/polygon-valentine.R"
 ```
 
 :::

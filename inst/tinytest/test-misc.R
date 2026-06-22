@@ -148,3 +148,9 @@ f = function() {
   tinyplot(Sepal.Length ~ 1, data = iris, xlab = "My X", ylab = "My Y")
 }
 expect_snapshot_plot(f, label = "formula_y1_cust_lab")
+
+# ann = FALSE turns off titles (#626)
+f = function() {
+  plt(0, 0, ann = FALSE)
+}
+expect_snapshot_plot(f, label = "ann=FALSE")

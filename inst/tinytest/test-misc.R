@@ -154,3 +154,27 @@ f = function() {
   plt(0, 0, ann = FALSE)
 }
 expect_snapshot_plot(f, label = "ann=FALSE")
+
+
+# bquote() and other unevaluated/language annotations must be coerced
+# to plotmath expressions, not evaluated. (#624)
+
+f = function() {
+  plt(0, 0, type = "n", main = bquote(pi == .(pi)))
+}
+expect_snapshot_plot(f, label = "titles-bquote-pi")
+
+# kitchen sink: every annotation slot a (different) language object at once
+f = function() {
+  plt(
+    0, 0,
+    type = "n",
+    main = bquote(pi == .(round(pi, 2))),
+    sub  = bquote(n == .(42L)),
+    xlab = bquote(x[i]^2),
+    ylab = bquote(sqrt(y)),
+    cap  = bquote(italic("source: foo")),
+    theme = "dynamic"
+  )
+}
+expect_snapshot_plot(f, label = "titles-bquote-kitchen")

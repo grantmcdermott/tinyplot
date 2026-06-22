@@ -11,6 +11,10 @@
 #'   \code{\link[graphics]{pairs}}-style grid of all variable combinations for
 #'   3 or more variables. The latter can be called directly (also for less than
 #'   3 variables) via `tinypairs()`.
+#' 
+#'   Note that, unlike a base \code{\link[graphics]{pairs}} plot, these
+#'   `tinyplot` variants (deliberately) produce a histogram for the univariate
+#'   cases along the grid diagonal.
 #'
 #' @param x an object of class `"data.frame"`.
 #' @param formula a \code{\link[stats]{formula}} that is passed on to
@@ -48,6 +52,7 @@
 #' # UCBAdmissions |> 
 #' #   as.data.frame() |>
 #' #   tinyplot(Admit ~ Gender, facet = 1 ~ Dept, weights = Freq)
+#' # etc.
 #' 
 #' ## pairs-style display for data frames with 3 or more variables
 #' ## (works best with a theme)
@@ -157,7 +162,7 @@ tinypairs = function (x, by = NULL, labs = FALSE, frames = FALSE, ...) {
   ## temporary cex overrides (restoring on exit). The theme is built as a
   ## language object because `cl` is a matched call, so `cl[["theme"]]` is
   ## unevaluated (e.g. the call `list("dark")`, not a list).
-  cex_fct_adj = 0.66 # use same scaling as with faceted plots.
+  cex_fct_adj = ifelse(n > 2, 0.66, 0.83) # use same scaling as with faceted plots.
   active_theme = get_tpar("tinytheme", default = "default")
   theme_arg = cl[["theme"]]
   if (is.null(theme_arg)) {

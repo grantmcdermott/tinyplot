@@ -49,6 +49,10 @@ a single variable, a pair of variables, or a
 \code{\link[graphics]{pairs}}-style grid of all variable combinations for
 3 or more variables. The latter can be called directly (also for less than
 3 variables) via \code{tinypairs()}.
+
+Note that, unlike a base \code{\link[graphics]{pairs}} plot, these
+\code{tinyplot} variants (deliberately) produce a histogram for the univariate
+cases along the grid diagonal.
 }
 \examples{
 ## using tinyplot() with data frames
@@ -65,6 +69,7 @@ tinyplot(
 # UCBAdmissions |> 
 #   as.data.frame() |>
 #   tinyplot(Admit ~ Gender, facet = 1 ~ Dept, weights = Freq)
+# etc.
 
 ## pairs-style display for data frames with 3 or more variables
 ## (works best with a theme)

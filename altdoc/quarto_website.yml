@@ -56,17 +56,23 @@ website:
       style: floating
       collapse-level: 1
       contents:
-        - section: "Main functions"
+        - section: "Plot"
           contents:
             - text: tinyplot
               file: man/tinyplot.qmd
             - text: tinyplot_add
               file: man/tinyplot_add.qmd
+            - section: "Methods"
+              contents:
+                - text: tinyplot.data.frame
+                  file: man/tinyplot.data.frame.qmd
+        - section: "Themes"
+          contents:
             - text: tinytheme
               file: man/tinytheme.qmd
             - text: tinytheme_register
               file: man/tinytheme_register.qmd
-        - section: "Plot types"
+        - section: "Types"
           contents:
           - section: Shapes
             contents:
@@ -140,13 +146,7 @@ website:
                 file: man/type_summary.qmd
               - text: type_vline
                 file: man/type_abline.qmd
-        - section: "Options"
-          contents:
-            - text: tpar
-              file: man/tpar.qmd
-            - text: get_saved_par
-              file: man/get_saved_par.qmd
-        - section: "Internals"
+        - section: "Utilities"
           contents:
             - text: draw_legend
               file: man/draw_legend.qmd
@@ -154,6 +154,12 @@ website:
             #   file: man/tinyAxis.qmd
             - text: tinylabel
               file: man/tinylabel.qmd
+        - section: "Options"
+          contents:
+            - text: tpar
+              file: man/tpar.qmd
+            - text: get_saved_par
+              file: man/get_saved_par.qmd
 
 format:
   html:

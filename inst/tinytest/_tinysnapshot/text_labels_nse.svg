@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA='>
+    <rect x='0.00' y='0.00' width='504.00' height='504.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<text x='266.40' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='180.75px' lengthAdjust='spacingAndGlyphs'>labels NSE + repel = TRUE</text>
+<text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='12.00px' lengthAdjust='spacingAndGlyphs'>wt</text>
+<text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'>mpg</text>
+<line x1='122.22' y1='430.56' x2='416.77' y2='430.56' style='stroke-width: 0.75;' />
+<line x1='122.22' y1='430.56' x2='122.22' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='220.40' y1='430.56' x2='220.40' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='318.59' y1='430.56' x2='318.59' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='416.77' y1='430.56' x2='416.77' y2='437.76' style='stroke-width: 0.75;' />
+<text x='122.22' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>2</text>
+<text x='220.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>3</text>
+<text x='318.59' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text x='416.77' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
+<line x1='59.04' y1='422.66' x2='59.04' y2='129.89' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='422.66' x2='51.84' y2='422.66' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='349.46' x2='51.84' y2='349.46' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='276.27' x2='51.84' y2='276.27' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='203.08' x2='51.84' y2='203.08' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='129.89' x2='51.84' y2='129.89' style='stroke-width: 0.75;' />
+<text transform='translate(41.76,422.66) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text transform='translate(41.76,349.46) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>15</text>
+<text transform='translate(41.76,276.27) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>20</text>
+<text transform='translate(41.76,203.08) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>25</text>
+<text transform='translate(41.76,129.89) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>30</text>
+<polygon points='59.04,430.56 473.76,430.56 473.76,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
+</g>
+<defs>
+  <clipPath id='cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng=='>
+    <rect x='59.04' y='59.04' width='414.72' height='371.52' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
+<text x='171.86' y='266.39' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='36.02px' lengthAdjust='spacingAndGlyphs'>Mazda</text>
+<text x='209.56' y='267.13' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='36.02px' lengthAdjust='spacingAndGlyphs'>Mazda</text>
+<text x='153.63' y='239.36' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='38.02px' lengthAdjust='spacingAndGlyphs'>Datsun</text>
+<text x='245.57' y='259.85' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='36.02px' lengthAdjust='spacingAndGlyphs'>Hornet</text>
+<text x='263.60' y='298.90' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='36.02px' lengthAdjust='spacingAndGlyphs'>Hornet</text>
+<text x='265.57' y='307.38' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.80px' lengthAdjust='spacingAndGlyphs'>Valiant</text>
+<text x='276.37' y='363.78' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>Duster</text>
+<text x='239.06' y='215.94' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.67px' lengthAdjust='spacingAndGlyphs'>Merc</text>
+<text x='235.13' y='239.36' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.67px' lengthAdjust='spacingAndGlyphs'>Merc</text>
+<text x='263.60' y='290.65' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.67px' lengthAdjust='spacingAndGlyphs'>Merc</text>
+<text x='263.60' y='315.42' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.67px' lengthAdjust='spacingAndGlyphs'>Merc</text>
+<text x='325.46' y='333.04' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.67px' lengthAdjust='spacingAndGlyphs'>Merc</text>
+<text x='292.08' y='319.87' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.67px' lengthAdjust='spacingAndGlyphs'>Merc</text>
+<text x='312.88' y='350.61' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.67px' lengthAdjust='spacingAndGlyphs'>Merc</text>
+<text x='429.67' y='421.09' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>Cadillac</text>
+<text x='470.04' y='421.09' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='38.03px' lengthAdjust='spacingAndGlyphs'>Lincoln</text>
+<text x='450.64' y='356.96' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.69px' lengthAdjust='spacingAndGlyphs'>Chrysler</text>
+<text x='141.85' y='99.05' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'>Fiat</text>
+<text x='95.58' y='128.33' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.36px' lengthAdjust='spacingAndGlyphs'>Honda</text>
+<text x='106.02' y='75.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>Toyota</text>
+<text x='167.87' y='256.73' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>Toyota</text>
+<text x='278.31' y='344.78' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.36px' lengthAdjust='spacingAndGlyphs'>Dodge</text>
+<text x='240.19' y='350.67' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='26.67px' lengthAdjust='spacingAndGlyphs'>AMC</text>
+<text x='302.88' y='378.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='42.69px' lengthAdjust='spacingAndGlyphs'>Camaro</text>
+<text x='303.37' y='292.27' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='40.02px' lengthAdjust='spacingAndGlyphs'>Pontiac</text>
+<text x='115.83' y='173.70' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'>Fiat</text>
+<text x='135.96' y='192.73' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Porsche</text>
+<text x='63.23' y='128.11' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.34px' lengthAdjust='spacingAndGlyphs'>Lotus</text>
+<text x='237.09' y='342.04' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='24.67px' lengthAdjust='spacingAndGlyphs'>Ford</text>
+<text x='197.82' y='284.96' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='35.34px' lengthAdjust='spacingAndGlyphs'>Ferrari</text>
+<text x='276.54' y='354.22' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='46.02px' lengthAdjust='spacingAndGlyphs'>Maserati</text>
+<text x='204.54' y='258.87' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='29.36px' lengthAdjust='spacingAndGlyphs'>Volvo</text>
+</g>
+</g>
+</svg>

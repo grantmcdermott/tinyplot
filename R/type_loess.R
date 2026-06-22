@@ -3,6 +3,7 @@
 #' @description Type function for plotting a LOESS (LOcal regrESSion) fit.
 #' Arguments are passed to \code{\link[stats]{loess}}.
 #'
+#' @inheritParams type_glm
 #' @inheritParams stats::loess
 #' @param se logical. If `TRUE` (the default), confidence intervals are drawn.
 #' @param level the confidence level required if `se = TRUE`. Default is 0.95.
@@ -20,10 +21,11 @@ type_loess = function(
     family = "gaussian",
     control = loess.control(),
     se = TRUE,
-    level = 0.95) {
+    level = 0.95,
+    weights = NULL) {
     out = list(
         draw = draw_ribbon(),
-        data = data_loess(span = span, degree = degree, family = family, control = control, se = se, level = level),
+        data = data_loess(span = span, degree = degree, family = family, control = control, se = se, level = level, weights = weights),
         name = if (isTRUE(se)) "ribbon" else "l"
     )
     class(out) = "tinyplot_type"
@@ -31,13 +33,23 @@ type_loess = function(
 }
 
 
-data_loess = function(span, degree, family, control, se, level, ...) {
+data_loess = function(span, degree, family, control, se, level, weights = NULL, ...) {
     fun = function(settings, ...) {
         env2env(settings, environment(), "datapoints")
+        # top-level `weights` (carried on datapoints via NSE) take precedence
+        # over the constructor-level `weights` argument
+        if (is.null(datapoints[["weights"]]) && !is.null(weights)) {
+            datapoints[["weights"]] = weights
+        }
+        has_weights = !is.null(datapoints[["weights"]])
+        if (has_weights) settings$weights_used = TRUE
         datapoints = split(datapoints, list(datapoints$facet, datapoints$by))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
         datapoints = lapply(datapoints, function(dat) {
-            fit = loess(y ~ x, data = dat, span = span, degree = degree, family = family, control = control)
+            # .w is NULL when no weights column is present, which loess() treats
+            # the same as omitting the argument
+            .w = dat[["weights"]]
+            fit = loess(y ~ x, data = dat, span = span, degree = degree, family = family, control = control, weights = .w)
             if (se == TRUE) {
                 p = predict(fit, newdata = dat, se = TRUE)
                 p = ci(p$fit, p$se.fit, conf.level = level, p$df)

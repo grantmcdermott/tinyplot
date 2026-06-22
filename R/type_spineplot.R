@@ -29,39 +29,47 @@
 #'   palette = "Pastel 1", legend = FALSE
 #' )
 #' 
-#' # Grouped and faceted spineplots
-#' 
+#' # Grouped and faceted spineplots. The Titanic dataset is pre-tabulated, so we
+#' # pass its frequency counts via the top-level `weights` argument (which
+#' # supports non-standard evaluation in the formula method).
+#'
 #' ttnc = as.data.frame(Titanic)
-#' 
+#'
 #' tinyplot(
 #'   Survived ~ Sex, facet = ~ Class, data = ttnc,
-#'   type = type_spineplot(weights = ttnc$Freq)
+#'   # type_spineplot(weights = ttnc$Freq), ## same thing but not NSE
+#'   type = "spineplot",
+#'   weights = Freq
 #' )
-#' 
+#'
 #' # For grouped "by" spineplots, it's better visually to facet as well
 #' tinyplot(
 #'   Survived ~ Sex | Class, facet = "by", data = ttnc,
-#'   type = type_spineplot(weights = ttnc$Freq)
+#'   type = "spineplot",
+#'   weights = Freq
 #' )
-#' 
+#'
 #' # Fancier version. Note the smart inheritance of spacing etc.
 #' tinyplot(
 #'   Survived ~ Sex | Class, facet = "by", data = ttnc,
-#'   type = type_spineplot(weights = ttnc$Freq),
+#'   type = "spineplot",
+#'   weights = Freq,
 #'   palette = "Dark 2", facet.args = list(nrow = 1), axes = "t"
 #' )
 #'
-#' # Reorder x and y variable categories either by their character levels or numeric indexes
+#' # Reorder x and y variable categories either by their character levels or
+#' # numeric indexes. (Here we combine a top-level `weights` with constructor-
+#' # level arguments passed through `type_spineplot()`.)
 #' tinyplot(
-#'   Survived ~ Sex, facet = ~ Class, data = ttnc,
-#'   type = type_spineplot(weights = ttnc$Freq, xlevels = c("Female", "Male"), ylevels = 2:1)
+#'   Survived ~ Sex, facet = ~ Class, data = ttnc, weights = Freq,
+#'   type = type_spineplot(xlevels = c("Female", "Male"), ylevels = 2:1)
 #' )
 #'
 #' # Note: It's possible to use "by" on its own (without faceting), but the
 #' # overlaid result isn't great. We will likely overhaul this behaviour in a
 #' # future version of tinyplot...
 #' tinyplot(Survived ~ Sex | Class, data = ttnc,
-#'   type = type_spineplot(weights = ttnc$Freq), alpha = 0.3
+#'   type = "spineplot", weights = Freq, alpha = 0.3
 #' )
 #' 
 #' @export
@@ -81,14 +89,15 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "xaxt", "yaxt"))
       
-        ## process weights
-        if (!is.null(weights)) {
-            ny = length(datapoints$y)
-            if (length(weights) != ny && length(weights) != 1L) {
-                stop(sprintf("'weights' must have either length 1 or %s", ny))
-            }
+        ## process weights: a top-level `weights` column (carried on datapoints
+        ## via NSE) takes precedence over the constructor-level `weights` arg.
+        ## Either way, unify into the `datapoints$weights` column and the local
+        ## `weights` vector that the break/range logic below relies on.
+        if (is.null(datapoints[["weights"]]) && !is.null(weights)) {
+            datapoints$weights = weights
         }
-        datapoints$weights = weights
+        weights = datapoints[["weights"]]
+        if (!is.null(weights)) settings$weights_used = TRUE
         
         ## process x variable
         if (is.factor(datapoints$x)) {

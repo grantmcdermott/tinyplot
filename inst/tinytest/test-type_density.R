@@ -85,3 +85,13 @@ f2 = function() with(mtcars, tinyplot(mpg, by = am, type = "density", legend = l
 expect_snapshot_plot(f1, label = "density_legend_bottom")
 expect_snapshot_plot(f2, label = "density_legend_bottom")
 
+
+# weighted density (#332): the top-level `weights` argument is passed through
+# to density(weights=), shifting the curve relative to the unweighted estimate
+f = function() {
+  tinyplot(~Sepal.Length, data = iris, type = "density", weights = Petal.Width)
+  tinyplot_add(weights = NULL, col = "grey")
+  legend("topleft", legend = c("weighted", "regular"), lty = 1, col = c("black", "grey"))
+}
+expect_snapshot_plot(f, label = "density_weights")
+

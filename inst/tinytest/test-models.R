@@ -65,3 +65,32 @@ f = function() {
   plt(Temp ~ Day | Month, data = airquality, facet = "by", type = type_spline())
 }
 expect_snapshot_plot(f, label = "model_spline_facet")
+
+
+# weights (#332) -----------------------------------------------------------
+
+s77 = as.data.frame(state.x77)
+
+# weighted vs unweighted lm should produce visibly different fits. `weights`
+# can be passed as a top-level argument (with NSE in the formula method) or
+# directly to the type constructor.
+f = function() {
+  plt(`Life Exp` ~ Income, data = s77)
+  plt_add(type = "lm")
+  plt_add(type = "lm", weights = Population, col = "red")
+}
+expect_snapshot_plot(f, label = "model_lm_weights")
+
+# logical checks for behaviours not covered by the snapshot above
+# top-level NSE weights also work for glm and loess (lm is snapshotted above)
+expect_silent(plt(`Life Exp` ~ Income, data = s77, type = "glm", weights = Population))
+expect_silent(plt(Temp ~ Day, data = airquality, type = "loess", weights = Wind))
+# constructor-level weights (evaluated vector) also work
+expect_silent(plt(`Life Exp` ~ Income, data = s77, type = type_lm(weights = s77$Population)))
+expect_silent(plt(am ~ mpg, data = mtcars, type = type_glm(weights = mtcars$wt)))
+expect_silent(plt(dist ~ speed, data = cars, type = type_loess(weights = cars$speed)))
+# weights supplied to an unsupported type warn (but are otherwise ignored)
+expect_warning(
+  plt(Temp ~ Wind, data = airquality, type = "p", weights = Day),
+  pattern = "ignored by this plot type"
+)

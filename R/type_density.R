@@ -116,6 +116,8 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     fun = function(settings, ...) {
         env2env(settings, environment(), c("by", "bg", "facet", "ylab", "col", "ribbon.alpha", "datapoints"))
         ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)
+        has_weights = !is.null(datapoints[["weights"]])
+        if (has_weights) settings$weights_used = TRUE
         
         if (is.null(ylab)) ylab = "Density"
         
@@ -136,7 +138,8 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         }
         
         datapoints = lapply(datapoints, function(dat) {
-            d = density(dat$x, bw = dens_bw, kernel = kernel, n = n)
+            wts = if (has_weights) dat[["weights"]] / sum(dat[["weights"]]) else NULL
+            d = density(dat$x, bw = dens_bw, kernel = kernel, n = n, weights = wts)
             out = data.frame(
                 by = dat$by[1], # already split
                 facet = dat$facet[1], # already split

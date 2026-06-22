@@ -17,6 +17,8 @@ tinyplot(x, ...)
   xmax = NULL,
   ymin = NULL,
   ymax = NULL,
+  weights = NULL,
+  labels = NULL,
   by = NULL,
   facet = NULL,
   facet.args = NULL,
@@ -75,6 +77,8 @@ tinyplot(x, ...)
   xmax = NULL,
   ymin = NULL,
   ymax = NULL,
+  weights = NULL,
+  labels = NULL,
   xlim = NULL,
   ylim = NULL,
   main = NULL,
@@ -121,8 +125,26 @@ All remaining arguments from \code{...} can be further graphical parameters, see
 or interval plot types. Only used when the \code{type} argument is one of
 \code{"rect"} or \code{"segments"} (where all four min-max coordinates are required),
 or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{ymin} and
-\code{ymax} required alongside \code{x}). In the formula method the arguments
-can be specified as \code{ymin = var} if \code{var} is a variable in \code{data}.}
+\code{ymax} required alongside \code{x}). Can be passed as unquoted (NSE) variable
+names when called from the \code{tinyplot.formula} method, e.g. \code{ymin = varname}
+where \code{varname} is a variable in \code{data}.}
+
+\item{weights}{an optional numeric vector of observation weights, of the same
+length as the number of \code{x},\code{y} coordinates. Can be passed as an unquoted
+(NSE) variable name when called from the \code{tinyplot.formula} method, e.g.
+\code{weights = varname} where \code{varname} is a variable in \code{data}. Weights are
+only consumed by the plot types that support them; specifically, the model
+fit and distribution types like \code{\link[=type_lm]{type_lm()}} and \code{\link[=type_spineplot]{type_spineplot()}}.
+Because weights trigger a statistical transformation, a warning is emitted
+if this argument is supplied to a non-supported type (even though the
+actual weights will be ignored, regardless).}
+
+\item{labels}{an optional vector of text labels for use with \code{\link[=type_text]{type_text()}},
+of length 1 or the same length as the number of \code{x},\code{y} coordinates. Can be
+passed as an unquoted (NSE) variable name when called from the
+\code{tinyplot.formula} method, e.g. \code{labels = varname} where \code{varname} is a
+variable in \code{data}. Ignored by other plot types. Overrides the \code{labels}
+argument of \code{\link[=type_text]{type_text()}} if both are supplied.}
 
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an

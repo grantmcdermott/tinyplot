@@ -72,39 +72,47 @@ tinyplot(
   palette = "Pastel 1", legend = FALSE
 )
 
-# Grouped and faceted spineplots
+# Grouped and faceted spineplots. The Titanic dataset is pre-tabulated, so we
+# pass its frequency counts via the top-level `weights` argument (which
+# supports non-standard evaluation in the formula method).
 
 ttnc = as.data.frame(Titanic)
 
 tinyplot(
   Survived ~ Sex, facet = ~ Class, data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq)
+  # type_spineplot(weights = ttnc$Freq), ## same thing but not NSE
+  type = "spineplot",
+  weights = Freq
 )
 
 # For grouped "by" spineplots, it's better visually to facet as well
 tinyplot(
   Survived ~ Sex | Class, facet = "by", data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq)
+  type = "spineplot",
+  weights = Freq
 )
 
 # Fancier version. Note the smart inheritance of spacing etc.
 tinyplot(
   Survived ~ Sex | Class, facet = "by", data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq),
+  type = "spineplot",
+  weights = Freq,
   palette = "Dark 2", facet.args = list(nrow = 1), axes = "t"
 )
 
-# Reorder x and y variable categories either by their character levels or numeric indexes
+# Reorder x and y variable categories either by their character levels or
+# numeric indexes. (Here we combine a top-level `weights` with constructor-
+# level arguments passed through `type_spineplot()`.)
 tinyplot(
-  Survived ~ Sex, facet = ~ Class, data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq, xlevels = c("Female", "Male"), ylevels = 2:1)
+  Survived ~ Sex, facet = ~ Class, data = ttnc, weights = Freq,
+  type = type_spineplot(xlevels = c("Female", "Male"), ylevels = 2:1)
 )
 
 # Note: It's possible to use "by" on its own (without faceting), but the
 # overlaid result isn't great. We will likely overhaul this behaviour in a
 # future version of tinyplot...
 tinyplot(Survived ~ Sex | Class, data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq), alpha = 0.3
+  type = "spineplot", weights = Freq, alpha = 0.3
 )
 
 }

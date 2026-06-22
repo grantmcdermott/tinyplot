@@ -160,9 +160,10 @@ Theme fixes:
 
 ### Other new features
 
-- A dedicated `tinyplot.data.frame()` method now supports direct plotting of
-  data frames, with or without a formula. Combining with a formula is mostly
-  useful insofar as it facilitates piping, e.g.
+- A new top-level `tinypairs()` function, together with a dedicated
+  `tinyplot.data.frame()` method now supports direct plotting of data frames,
+  with or without a formula. Combining with a formula is mostly useful insofar
+  as it facilitates piping, e.g.
   
   ```r
   iris |> plt(Sepal.Length ~ Petal.Width | Species)
@@ -172,7 +173,7 @@ Theme fixes:
   variables (columns) in the data frame. For example, a dataset with 3 or more
   variables will yield a `pairs()`-style grid of all variable combinations. 
   Thanks to @mthulin for the suggestion and original implementation idea.
-  (#613 @zeileis @grantmcdermott)
+  (#613, #640 @zeileis @grantmcdermott)
 - New top-level `tinyplot()`/`plt()` arguments:
   - `cap = <string>` for adding a caption to your plots. Captions are drawn at
     the bottom of the plot and are best paired with dynamic themes (since

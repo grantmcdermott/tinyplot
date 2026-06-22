@@ -31,7 +31,7 @@
 <line x1='420.74' y1='252.00' x2='442.34' y2='252.00' style='stroke-width: 0.75; stroke: #61D04F;' />
 <line x1='420.74' y1='266.40' x2='442.34' y2='266.40' style='stroke-width: 0.75; stroke: #2297E6;' />
 <line x1='420.74' y1='280.80' x2='442.34' y2='280.80' style='stroke-width: 0.75; stroke: #28E2E5;' />
-<text x='456.25' y='208.80' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='34.02px' lengthAdjust='spacingAndGlyphs'>Series</text>
+<text x='415.34' y='208.80' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='34.02px' lengthAdjust='spacingAndGlyphs'>Series</text>
 <text x='453.14' y='227.33' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 1</text>
 <text x='453.14' y='241.73' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 2</text>
 <text x='453.14' y='256.13' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 3</text>
@@ -79,7 +79,7 @@
 <text transform='translate(47.64,110.76) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='4.39px' lengthAdjust='spacingAndGlyphs'>2</text>
 <text transform='translate(47.64,74.54) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='4.39px' lengthAdjust='spacingAndGlyphs'>4</text>
 <rect x='59.04' y='43.20' width='95.85' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='106.96' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 1</text>
+<text x='106.96' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 1</text>
 <polygon points='59.04,225.36 154.89,225.36 154.89,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -117,7 +117,7 @@
 <text transform='translate(167.96,103.02) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='7.03px' lengthAdjust='spacingAndGlyphs'>-2</text>
 <text transform='translate(167.96,75.83) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='4.39px' lengthAdjust='spacingAndGlyphs'>0</text>
 <rect x='179.37' y='43.20' width='95.85' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='227.29' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 2</text>
+<text x='227.29' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 2</text>
 <polygon points='179.37,225.36 275.22,225.36 275.22,59.04 179.37,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -155,7 +155,7 @@
 <text transform='translate(288.29,105.30) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='4.39px' lengthAdjust='spacingAndGlyphs'>6</text>
 <text transform='translate(288.29,76.62) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='4.39px' lengthAdjust='spacingAndGlyphs'>8</text>
 <rect x='299.70' y='43.20' width='95.85' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='347.62' y='55.24' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 3</text>
+<text x='347.62' y='55.25' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 3</text>
 <polygon points='299.70,225.36 395.54,225.36 395.54,59.04 299.70,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -191,7 +191,7 @@
 <text transform='translate(47.64,325.06) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='4.39px' lengthAdjust='spacingAndGlyphs'>2</text>
 <text transform='translate(47.64,291.08) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='4.39px' lengthAdjust='spacingAndGlyphs'>4</text>
 <rect x='59.04' y='248.40' width='95.85' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='106.96' y='260.44' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 4</text>
+<text x='106.96' y='260.45' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 4</text>
 <polygon points='59.04,430.56 154.89,430.56 154.89,264.24 59.04,264.24 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -231,7 +231,7 @@
 <text transform='translate(167.96,299.27) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='4.39px' lengthAdjust='spacingAndGlyphs'>4</text>
 <text transform='translate(167.96,276.98) rotate(-90)' text-anchor='middle' style='font-size: 7.92px; font-family: "Liberation Sans";' textLength='4.39px' lengthAdjust='spacingAndGlyphs'>6</text>
 <rect x='179.37' y='248.40' width='95.85' height='15.84' style='stroke-width: 0.75; stroke: none;' />
-<text x='227.29' y='260.44' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 5</text>
+<text x='227.29' y='260.45' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Series 5</text>
 <polygon points='179.37,430.56 275.22,430.56 275.22,264.24 179.37,264.24 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpNTkuMDR8MTU0Ljg5fDU5LjA0fDIyNS4zNg==)'>

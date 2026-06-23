@@ -41,8 +41,8 @@ tinytheme("clean2")
 ## univariate series
 tinyplot(Nile)
 
-# exception: explcitly passing a distribution type on a univariate time
-# series triggers the corresponding transformation
+# exception: expicitly passing a distribution type on a univariate series
+# still triggers the corresponding transformation
 tinyplot(Nile, type = "histogram")
 
 ## multivariate 
@@ -54,6 +54,7 @@ tinyplot(EuStockMarkets, facet = NULL)      ## single, separate colors
 ## further variations
 tinyplot(EuStockMarkets, facet = "by", facet.args = NULL)
 tinyplot(EuStockMarkets, facet.args = list(free = TRUE, ncol = 1))
+tinyplot(EuStockMarkets, facet = NULL, legend = list("direct", repel = TRUE))
 
 tinytheme() ## reset
 

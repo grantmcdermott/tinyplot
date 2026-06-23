@@ -254,6 +254,9 @@ Theme fixes:
       apart. One limitation is that the repulsion logic operates with groups. So
       there may still be some overlapping text for for grouped data.
       (#621 @grantmcdermott)
+  - Model-fit and various distribution types gain a `weights` argument; although
+    this is best provided from the top-level `tinyplot()`/`plt()` call. See
+    above.
 
 ### Bug fixes
 

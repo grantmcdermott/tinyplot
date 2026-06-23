@@ -1,7 +1,7 @@
 #' tinyplot Method for Plotting ts Objects (Time Series)
 #'
-#' @description Convenience interface for visualizing ts objects
-#'   (time sereis with tinyplot.
+#' @description Convenience interface for visualizing \code{\link[stats]{ts}}
+#'   (time series) objects with tinyplot.
 #'
 #' @details Internally the time series object is converted to a long
 #'   data frame with columns `Time` (time index), `Value` (observations),

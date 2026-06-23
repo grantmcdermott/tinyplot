@@ -185,7 +185,7 @@ Theme fixes:
   Produces a line plot by default, although users can override by passing an
   explicit `type` argument. Similarly, multivariate series are faceted by
   default, but users can also override to obtain, say, a single frame with
-  direct labels. (#558 @zeileis)
+  direct labels. (#558 @zeileis @grantmcdermott)
 
 #### Other new features
 

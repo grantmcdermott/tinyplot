@@ -26,12 +26,24 @@ and \code{Series} (factor with column labels). Depending on the settings
 of \code{facet} this data frame is visualized either with the formula
 \code{Value ~ Time} or \code{Value ~ Time | Series}. See the \code{facet} argument
 description for more details and the examples for some illustrations.
+
+An exception is made if the user explicitly supplies a distribution \code{type}
+argument (i.e, one of \code{"histogram"}, \code{"density"}, \code{"boxplot"}, \code{"violin"},
+\code{"qq"}, \code{"ridge"}, or \code{"rug"}). These summarize the series values and
+ignore the time index, so they are visualized with the one-sided
+formula \code{~ Value} (or \code{~ Value | Series} for multivariate series). This
+preserves base-R-compatible behaviour such as
+\code{tinyplot(Nile, type = "histogram")}.
 }
 \examples{
 tinytheme("clean2")
 
 ## univariate series
 tinyplot(Nile)
+
+# exception: explcitly passing a distribution type on a univariate time
+# series triggers the corresponding transformation
+tinyplot(Nile, type = "histogram")
 
 ## multivariate 
 tinyplot(EuStockMarkets)                    ## multiple, same color, free scales

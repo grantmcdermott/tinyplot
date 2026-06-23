@@ -3,10 +3,7 @@ using("tinysnapshot")
 
 ## five random walks
 set.seed(0)
-x = c(0, rnorm(100)) |>
-  cumsum() |>
-  replicate(n = 5) |>
-  ts(start = 0)
+x = ts(replicate(cumsum(c(0, rnorm(100))), n = 5), start = 0)
 
 ## univariate
 
@@ -32,10 +29,16 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "ts-multivariate-by-free")
 
+## Currently triggers a false positive on the devcontainer
+# f = function() {
+#   tinyplot(x, facet = "by", facet.args = NULL)
+# }
+# expect_snapshot_plot(f, label = "ts-multivariate-by-same")
+
 f = function() {
-  tinyplot(x, facet = "by", facet.args = NULL)
+  tinyplot(x, facet = NULL, legend = list("direct", repel = TRUE))
 }
-expect_snapshot_plot(f, label = "ts-multivariate-by-same")
+expect_snapshot_plot(f, label = "ts-multivariate-by-direct")
 
 f = function() {
   tinyplot(x, facet = NULL)

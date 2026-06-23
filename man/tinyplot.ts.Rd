@@ -67,8 +67,11 @@ tinyplot(EuStockMarkets, facet = NULL, legend = list("direct", repel = TRUE))
 tinyplot(EuStockMarkets, facet = "by", facet.args = NULL)
 tinyplot(EuStockMarkets, facet.args = list(free = TRUE, ncol = 1))
 
-## pass other tinyplot args through `...` for additional customization
-tinyplot(EuStockMarkets, main = "European stock indices", xlab = NA, yaxl = ",")
+## pass additional tinyplot args through `...` for further customization
+tinyplot(EuStockMarkets,
+         facet.args = NULL,
+         type = "area", xlab = NA, yaxl = ",",
+         main = "European stock indices")
 
 tinytheme() ## reset
 

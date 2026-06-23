@@ -1,5 +1,32 @@
 # calculate limits of each plot
 
+# Resolve a user-supplied x/ylim that may be a scalar or contains a single NA.
+# `lim`  : raw user value (already known to be non-NULL)
+# `drng` : data range, 2-element numeric, i.e. range(..., finite = TRUE)
+# Returns a 2-element numeric vector (raw; window padding applied downstream).
+resolve_lim = function(lim, drng, arg = "xlim") {
+  if (!is.numeric(lim)) {
+    stop(sprintf("`%s` must be numeric (a scalar or length-2 vector).", arg), call. = FALSE)
+  }
+  n = length(lim)
+  if (n == 1L) {
+    if (is.na(lim)) stop(sprintf("`%s` cannot be a single `NA`.", arg), call. = FALSE)
+    # scalar: ensure the value is covered alongside the data
+    return(range(c(drng, lim)))
+  }
+  if (n == 2L) {
+    nas = is.na(lim)
+    if (all(nas)) {
+      stop(sprintf("`%s` cannot be `c(NA, NA)`; supply at least one finite limit.", arg), call. = FALSE)
+    }
+    if (!any(nas)) return(lim) # full override: unchanged (reversed axis OK)
+    # exactly one NA: fill that side from the data range, pin the other verbatim
+    if (nas[1L]) lim[1L] = drng[1L] else lim[2L] = drng[2L]
+    return(lim)
+  }
+  stop(sprintf("`%s` must be length 1 or 2, not length %d.", arg, n), call. = FALSE)
+}
+
 lim_args = function(settings) {
   env2env(
     settings,
@@ -26,11 +53,21 @@ lim_args = function(settings) {
     xlim = range(as.numeric(c(
       datapoints[["x"]], datapoints[["xmin"]],
       datapoints[["xmax"]])), finite = TRUE)
+  } else if (length(xlim) != 2L || anyNA(xlim)) {
+    xdrng = range(as.numeric(c(
+      datapoints[["x"]], datapoints[["xmin"]],
+      datapoints[["xmax"]])), finite = TRUE)
+    xlim = resolve_lim(xlim, xdrng, "xlim")
   }
   if (is.null(ylim)) {
     ylim = range(as.numeric(c(
       datapoints[["y"]], datapoints[["ymin"]],
       datapoints[["ymax"]])), finite = TRUE)
+  } else if (length(ylim) != 2L || anyNA(ylim)) {
+    ydrng = range(as.numeric(c(
+      datapoints[["y"]], datapoints[["ymin"]],
+      datapoints[["ymax"]])), finite = TRUE)
+    ylim = resolve_lim(ylim, ydrng, "ylim")
   }
 
   if (identical(type, "boxplot")) {

@@ -181,8 +181,14 @@
 #'   and x and y axis labels) should appear on the plot.
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
 #'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
-#'   the range of the `finite` values to be plotted should be used.
-#' @param ylim the y limits of the plot.
+#'   the range of the `finite` values to be plotted should be used. Alongside
+#'   the standard length-2 vector (e.g., `xlim = c(0, 1)`, `tinyplot` supports
+#'   two further convenience forms. First, passing a single scalar (e.g.
+#'   `xlim = 0`) ensures that the provided value is covered by the axis range,
+#'   irespective of the data extent. Second, a length-2 vector with one `NA`
+#'   (e.g. `xlim = c(0, NA)`) pins the non-`NA` limit and lets the data
+#'   determine the other limit.
+#' @param ylim the y limits of the plot. Accepts input forms as `xlim`.
 #' @param axes logical or character. Should axes be drawn (`TRUE` or `FALSE`)?
 #'   Or alternatively what type of axes should be drawn: `"standard"` (with
 #'   axis, ticks, and labels; equivalent to `TRUE`), `"none"` (no axes;

@@ -24,6 +24,9 @@ multivariate series.}
 
 \item{type, facet.args, xlab, ylab, ...}{further arguments passed to \code{tinyplot}.}
 }
+\value{
+No return value, called for the side effect of producing a plot.
+}
 \description{
 Convenience interface for visualizing ts objects
 (time sereis with tinyplot.

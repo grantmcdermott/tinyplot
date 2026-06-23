@@ -25,6 +25,8 @@
 #'   multivariate series.
 #' @param type,facet.args,xlab,ylab,... further arguments passed to `tinyplot`.
 #'
+#' @returns No return value, called for the side effect of producing a plot.
+#'
 #' @examples
 #' ## univariate series
 #' tinyplot(Nile)

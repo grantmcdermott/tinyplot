@@ -36,6 +36,9 @@ to disambiguate from \code{frame.plot}.}
 
 \item{...}{further arguments passed to \code{tinyplot}.}
 }
+\value{
+No return value, called for the side effect of producing a plot.
+}
 \description{
 Convenience interface for visualizing
 \code{\link[base]{data.frame}} objects with tinyplot.

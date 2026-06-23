@@ -4,16 +4,25 @@
 \alias{tinyplot.ts}
 \title{tinyplot Method for Plotting ts Objects (Time Series)}
 \usage{
-\method{tinyplot}{ts}(x, facet, type = "l", facet.args = list(free = TRUE), ylab = "", ...)
+\method{tinyplot}{ts}(
+  x,
+  facet,
+  type = "l",
+  facet.args = list(free = TRUE),
+  xlab = NULL,
+  ylab = NA,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{"ts"}.}
 
 \item{facet}{specification of \code{facet} for \code{tinyplot.formula}. The
 default in the \code{tinyplot} method is to use \code{facet = NULL} for univariate
-series and \code{facet = ~ Series} (equivalent to \code{facet = "by"}) for multivariate series.}
+series and \code{facet = ~ Series} (equivalent to \code{facet = "by"}) for
+multivariate series.}
 
-\item{type, facet.args, ylab, ...}{further arguments passed to \code{tinyplot}.}
+\item{type, facet.args, xlab, ylab, ...}{further arguments passed to \code{tinyplot}.}
 }
 \description{
 Convenience interface for visualizing ts objects
@@ -25,7 +34,7 @@ data frame with columns \code{Time} (time index), \code{Value} (observations),
 and \code{Series} (factor with column labels). Depending on the settings
 of \code{facet} this data frame is visualized either with the formula
 \code{Value ~ Time} or \code{Value ~ Time | Series}. See the \code{facet} argument
-description for more details and the examples for some illustrations.
+description for more details and the Examples below for some illustrations.
 
 An exception is made if the user explicitly supplies a distribution \code{type}
 argument (i.e, one of \code{"histogram"}, \code{"density"}, \code{"boxplot"}, \code{"violin"},
@@ -36,8 +45,6 @@ preserves base-R-compatible behaviour such as
 \code{tinyplot(Nile, type = "histogram")}.
 }
 \examples{
-tinytheme("clean2")
-
 ## univariate series
 tinyplot(Nile)
 
@@ -45,16 +52,20 @@ tinyplot(Nile)
 # still triggers the corresponding transformation
 tinyplot(Nile, type = "histogram")
 
-## multivariate 
-tinyplot(EuStockMarkets)                    ## multiple, same color, free scales
-tinyplot(EuStockMarkets, facet.args = NULL) ## multiple, same color, same scale
-tinyplot(EuStockMarkets, facet = "by")      ## multiple, separate colors, free scales
-tinyplot(EuStockMarkets, facet = NULL)      ## single, separate colors
+## multivariate series (generally, these also look better with a theme)
+tinytheme("clean2")
+tinyplot(EuStockMarkets)                    ## faceted, free scales, same color
+tinyplot(EuStockMarkets, facet.args = NULL) ## faceted, same scale, same color
+tinyplot(EuStockMarkets, facet = "by")      ## faceted, free scales, diff colors
+tinyplot(EuStockMarkets, facet = NULL)      ## single frame, diff colors
 
 ## further variations
+tinyplot(EuStockMarkets, facet = NULL, legend = list("direct", repel = TRUE))
 tinyplot(EuStockMarkets, facet = "by", facet.args = NULL)
 tinyplot(EuStockMarkets, facet.args = list(free = TRUE, ncol = 1))
-tinyplot(EuStockMarkets, facet = NULL, legend = list("direct", repel = TRUE))
+
+## pass other tinyplot args through `...` for additional customization
+tinyplot(EuStockMarkets, main = "European stock indices", xlab = NA, yaxl = ",")
 
 tinytheme() ## reset
 

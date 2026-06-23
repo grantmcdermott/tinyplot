@@ -8,7 +8,7 @@
 #'   and `Series` (factor with column labels). Depending on the settings
 #'  of `facet` this data frame is visualized either with the formula
 #'  `Value ~ Time` or `Value ~ Time | Series`. See the `facet` argument
-#'  description for more details and the examples for some illustrations.
+#'  description for more details and the Examples below for some illustrations.
 #'
 #'  An exception is made if the user explicitly supplies a distribution `type`
 #'  argument (i.e, one of `"histogram"`, `"density"`, `"boxplot"`, `"violin"`,
@@ -21,12 +21,11 @@
 #' @param x an object of class `"ts"`.
 #' @param facet specification of `facet` for `tinyplot.formula`. The
 #'   default in the `tinyplot` method is to use `facet = NULL` for univariate
-#'   series and `facet = ~ Series` (equivalent to `facet = "by"`) for multivariate series.
-#' @param type,facet.args,ylab,... further arguments passed to `tinyplot`.
+#'   series and `facet = ~ Series` (equivalent to `facet = "by"`) for
+#'   multivariate series.
+#' @param type,facet.args,xlab,ylab,... further arguments passed to `tinyplot`.
 #'
 #' @examples
-#' tinytheme("clean2")
-#' 
 #' ## univariate series
 #' tinyplot(Nile)
 #' 
@@ -34,22 +33,26 @@
 #' # still triggers the corresponding transformation
 #' tinyplot(Nile, type = "histogram")
 #' 
-#' ## multivariate 
-#' tinyplot(EuStockMarkets)                    ## multiple, same color, free scales
-#' tinyplot(EuStockMarkets, facet.args = NULL) ## multiple, same color, same scale
-#' tinyplot(EuStockMarkets, facet = "by")      ## multiple, separate colors, free scales
-#' tinyplot(EuStockMarkets, facet = NULL)      ## single, separate colors
+#' ## multivariate series (generally, these also look better with a theme)
+#' tinytheme("clean2")
+#' tinyplot(EuStockMarkets)                    ## faceted, free scales, same color
+#' tinyplot(EuStockMarkets, facet.args = NULL) ## faceted, same scale, same color
+#' tinyplot(EuStockMarkets, facet = "by")      ## faceted, free scales, diff colors
+#' tinyplot(EuStockMarkets, facet = NULL)      ## single frame, diff colors
 #'
 #' ## further variations
+#' tinyplot(EuStockMarkets, facet = NULL, legend = list("direct", repel = TRUE))
 #' tinyplot(EuStockMarkets, facet = "by", facet.args = NULL)
 #' tinyplot(EuStockMarkets, facet.args = list(free = TRUE, ncol = 1))
-#' tinyplot(EuStockMarkets, facet = NULL, legend = list("direct", repel = TRUE))
+#' 
+#' ## pass other tinyplot args through `...` for additional customization
+#' tinyplot(EuStockMarkets, main = "European stock indices", xlab = NA, yaxl = ",")
 #'
 #' tinytheme() ## reset
 #'
 #' @importFrom stats time
 #' @export
-tinyplot.ts = function(x, facet, type = "l", facet.args = list(free = TRUE), ylab = "", ...) {
+tinyplot.ts = function(x, facet, type = "l", facet.args = list(free = TRUE), xlab = NULL, ylab = NA, ...) {
   ## basic object properties
   n = NROW(x)
   k = NCOL(x)
@@ -94,10 +97,9 @@ tinyplot.ts = function(x, facet, type = "l", facet.args = list(free = TRUE), yla
   if (is.null(facet)) facet.args = NULL
 
   ## dispatch formula and axis labels
-  xlab = NULL
   if (is_dist) {
     fml = if (single) ~ Value else ~ Value | Series
-    if (single) xlab = lab
+    if (single && is.null(xlab)) xlab = lab
     ## use tinyplot's own ylab default (e.g. "Frequency") unless caller set one
     if (missing(ylab)) ylab = NULL
   } else if (single || (!is.null(facet) && auto)) {

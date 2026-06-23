@@ -25,6 +25,7 @@ draw_facet_window = function(
     axes, flip, frame.plot, oxaxis, oyaxis,
     xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl,
     ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl,
+    rev_x = FALSE, rev_y = FALSE,
     asp, log,
     # other args (in approx. alphabetical + group ordering)
     dots,
@@ -355,8 +356,11 @@ draw_facet_window = function(
         yfree = if (!is.null(facet)) split(c(y, ymin, ymax), facet)[[ii]] else c(y, ymin, ymax)
         if (null_xlim) xlim = range(xfree, na.rm = TRUE)
         if (null_ylim) ylim = range(yfree, na.rm = TRUE)
+        # extendrange() returns an ascending pair, so reverse afterwards
         xext = extendrange(xlim, f = 0.04)
         yext = extendrange(ylim, f = 0.04)
+        if (isTRUE(rev_x)) xext = rev(xext)
+        if (isTRUE(rev_y)) yext = rev(yext)
         # We'll save this in a special .fusr env var (list) that we'll re-use
         # when it comes to plotting the actual elements later
         if (ii == 1) {

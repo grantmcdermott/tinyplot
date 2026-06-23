@@ -332,10 +332,22 @@ can be customized via \code{\link[tinyplot]{tpar}} parameters \code{adj.cap},
 and x and y axis labels) should appear on the plot.}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
-and leads to a ‘reversed axis’. The default value, NULL, indicates that
-the range of the \code{finite} values to be plotted should be used.}
+and leads to a reversed axis (although see the \code{"rev(erse)"} keyword option
+below). The default value, \code{NULL}, indicates that the range of the \code{finite}
+values to be plotted should be used. Alongside the standard length-2 vector
+(e.g., \code{xlim = c(0, 1)}), \code{tinyplot} supports three further convenience
+forms:
+\itemize{
+\item a single scalar (e.g. \code{xlim = 0}) ensures that the provided value is
+covered by the axis range, irrespective of the data extent.
+\item a length-2 vector with one \code{NA} (e.g. \code{xlim = c(0, NA)}) pins the
+non-\code{NA} limit and lets the data determine the other limit.
+\item the convenience string \code{"rev"} (or the longer \code{"reverse"}) reverses the
+automatically-computed axis range. This is equivalent to passing a
+descending vector, but without having to know the data extent in advance.
+}}
 
-\item{ylim}{the y limits of the plot.}
+\item{ylim}{the y limits of the plot. Accepts the same input forms as \code{xlim}.}
 
 \item{axes}{logical or character. Should axes be drawn (\code{TRUE} or \code{FALSE})?
 Or alternatively what type of axes should be drawn: \code{"standard"} (with

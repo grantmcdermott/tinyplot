@@ -148,7 +148,9 @@ Theme fixes:
   subtitle, and legend stack correctly above the plot region with proper
   spacing. (#605)
 
-### New plot types
+### New features
+
+#### New plot types
 
 - `type_chull()` (equivalently, `type = "chull"`) for drawing convex hulls
   around grouped points. Uses `grDevices::chull()` under the hood and delegates
@@ -158,10 +160,10 @@ Theme fixes:
   ellipses around grouped points. Like `type_chull`, works well as a filled
   layer, e.g. `plt_add(type = "ellipse", fill = 0.2)`. (#610 @grantmcdermott)
 
-### Other new features
+#### New `tinyplot.*` methods
 
-- A new top-level `tinypairs()` function, together with a dedicated
-  `tinyplot.data.frame()` method now supports direct plotting of data frames,
+- A top-level `tinypairs()` function, together with a dedicated
+  `tinyplot.data.frame()` method, now supports direct plotting of data frames,
   with or without a formula. Combining with a formula is mostly useful insofar
   as it facilitates piping, e.g.
   
@@ -174,7 +176,20 @@ Theme fixes:
   variables will yield a `pairs()`-style grid of all variable combinations. 
   Thanks to @mthulin for the suggestion and original implementation idea.
   (#613, #640 @zeileis @grantmcdermott)
-- New top-level `tinyplot()`/`plt()` arguments:
+- New dedicated `tinyplot.ts()` method for `ts` time series, e.g.
+  
+  ```r
+  plt(EuStockMarkets)
+  ```
+  
+  Produces a line plot by default, although users can override by passing an
+  explicit `type` argument. Similarly, multivariate series are faceted by
+  default, but users can also override to obtain, say, a single frame with
+  direct labels. (#558 @zeileis @grantmcdermott)
+
+#### Other new features
+
+- New and updated top-level `tinyplot()`/`plt()` arguments:
   - `cap = <string>` for adding a caption to your plots. Captions are drawn at
     the bottom of the plot and are best paired with dynamic themes (since
     separation from `sub` is guaranteed). Appearance is customizable via
@@ -211,33 +226,37 @@ Theme fixes:
     ```
     The `labels` arg is silently ignored for non-text types.
     (#639 @grantmcdermott)
-- The `grid` argument (and `tpar("grid")`) now accepts character strings to
-  control axis-specific grids at different resolutions. Uppercase letters
-  (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
-  lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional
-  lines at the midpoints between ticks. Thanks to @zeileis for the suggestion.
-  (#578 @grantmcdermott)
-- Facet formulas now support `1` as a convenience syntax for single row or
-  column arrangements. (#562 @zeileis)
-  - `plt(..., facet = z ~ 1)` <-> `plt(..., facet = ~z, facet.args = list(ncol = 1))`
-  - `plt(..., facet = 1 ~ z)` <-> `plt(..., facet = ~z, facet.args = list(nrow = 1))`.
-- `type_barplot()` gains an `offset` argument for shifting bar baselines away
-  from zero. (#611, #615 @grantmcdermott @zeileis)
-  - If the offset is an unnamed scalar or numeric vector, it shifts the bars
-    positionally by the given values. Useful for creating waterfall plots and
-    floating bars.
-  - If the offset is a character or named numeric vector, it instead "sets
-    aside" the named level(s) of the `by` group, pulling them out of the stack
-    and drawing them as standalone bars. This is useful for Likert plots, where
-    you want to show a neutral categories (e.g., "Unsure") apart from the 
-    diverging stack. Thanks to @strengejacke for the suggestion.
-- `type_text()` gains two new arguments:
-  - a `labeller` argument that is passed to `tinylabel()` for formatting the
-    text labels. (#620 @grantmcdermott)
-  - a `repel` argument that automatically nudges overlapping text labels apart.
-    One limitation is that the repulsion logic operates with groups. So there
-    may still be some overlapping text for for grouped data.
-    (#621 @grantmcdermott)
+  - The `grid` argument (and `tpar("grid")`) now accepts character strings to
+    control axis-specific grids at different resolutions. Uppercase letters
+    (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard tick positions, while
+    lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional
+    lines at the midpoints between ticks. Thanks to @zeileis for the suggestion.
+    (#578 @grantmcdermott)
+  - Facet formulas now support `1` as a convenience syntax for single row or
+    column arrangements. (#562 @zeileis)
+    - `plt(..., facet = z ~ 1)` <-> `plt(..., facet = ~z, facet.args = list(ncol = 1))`
+    - `plt(..., facet = 1 ~ z)` <-> `plt(..., facet = ~z, facet.args = list(nrow = 1))`.
+- Type-specific updates:
+  - `type_barplot()` gains an `offset` argument for shifting bar baselines away
+    from zero. (#611, #615 @grantmcdermott @zeileis)
+    - If the offset is an unnamed scalar or numeric vector, it shifts the bars
+      positionally by the given values. Useful for creating waterfall plots and
+      floating bars.
+    - If the offset is a character or named numeric vector, it instead "sets
+      aside" the named level(s) of the `by` group, pulling them out of the stack
+      and drawing them as standalone bars. This is useful for Likert plots,
+      where you want to show a neutral categories (e.g., "Unsure") apart from 
+      the diverging stack. Thanks to @strengejacke for the suggestion.
+  - `type_text()` gains two new arguments:
+    - a `labeller` argument that is passed to `tinylabel()` for formatting the
+      text labels. (#620 @grantmcdermott)
+    - a `repel` argument that automatically nudges overlapping text labels
+      apart. One limitation is that the repulsion logic operates with groups. So
+      there may still be some overlapping text for for grouped data.
+      (#621 @grantmcdermott)
+  - Model-fit and various distribution types gain a `weights` argument; although
+    this is best provided from the top-level `tinyplot()`/`plt()` call. See
+    above.
 
 ### Bug fixes
 

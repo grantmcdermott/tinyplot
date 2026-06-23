@@ -62,12 +62,6 @@ website:
               file: man/tinyplot.qmd
             - text: tinyplot_add
               file: man/tinyplot_add.qmd
-            - text: tinypairs
-              file: man/tinyplot.data.frame.qmd
-            # - section: "Methods"
-            #   contents:
-            #     - text: tinyplot.data.frame
-            #       file: man/tinyplot.data.frame.qmd
         - section: "Types"
           contents:
           - section: Shapes
@@ -166,6 +160,8 @@ website:
           contents:
             - text: tinyplot.data.frame
               file: man/tinyplot.data.frame.qmd
+            - text: tinyplot.ts
+              file: man/tinyplot.ts.qmd
 
 format:
   html:

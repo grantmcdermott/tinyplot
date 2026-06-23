@@ -49,7 +49,7 @@ jobs:
         with:
           name: tinysnapshot-review-${{ matrix.name }}
           path: |
-            *.Rcheck/tests/tinytest/_tinysnapshot_review/
+            *.Rcheck/**/_tinysnapshot_review/**
             *.Rcheck/00check.log
           if-no-files-found: ignore
           retention-days: 7

@@ -359,6 +359,11 @@ draw_facet_window = function(
         # extendrange() returns an ascending pair, so reverse afterwards
         xext = extendrange(xlim, f = 0.04)
         yext = extendrange(ylim, f = 0.04)
+        # base axTicks() misbehaves on a reversed usr (it collapses to a single
+        # tick), so precompute ticks from the ascending extent and pass them as
+        # an explicit `at` below; placement against the reversed usr is fine.
+        xat = if (isTRUE(rev_x)) axisTicks(usr = xext, log = par("xlog")) else NULL
+        yat = if (isTRUE(rev_y)) axisTicks(usr = yext, log = par("ylog")) else NULL
         if (isTRUE(rev_x)) xext = rev(xext)
         if (isTRUE(rev_y)) yext = rev(yext)
         # We'll save this in a special .fusr env var (list) that we'll re-use
@@ -375,12 +380,16 @@ draw_facet_window = function(
         # if plot frame is true then print axes per normal...
         if (type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)) {
           tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, labeller = xaxl)
+        } else if (!is.null(xat)) {
+          tinyAxis(xfree, side = xside, at = xat, type = xaxt, labeller = xaxl)
         } else {
           tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
           tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
+        } else if (!is.null(yat)) {
+          tinyAxis(yfree, side = yside, at = yat, type = yaxt, labeller = yaxl)
         } else {
           tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
         }

@@ -399,6 +399,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>plt(..., facet = z ~ 1)</code> &lt;-&gt; <code>plt(..., facet = ~z, facet.args = list(ncol = 1))</code></li>
 <li><code>plt(..., facet = 1 ~ z)</code> &lt;-&gt; <code>plt(..., facet = ~z, facet.args = list(nrow = 1))</code>.</li>
 </ul></li>
+<li><p><code>x/ylim</code> gain several “smart” override forms. (<a href="https://github.com/grantmcdermott/tinyplot/issues/616">#616</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p>
+<ul>
+<li>A single scalar (e.g.&nbsp;<code>ylim = 0</code>) ensures that value is covered by the axis range, e.g.&nbsp;for forcing zero onto a coefficient plot.</li>
+<li>A length-2 vector with one <code>NA</code> (e.g.&nbsp;<code>ylim = c(0, NA)</code>) pins the non-<code>NA</code> limit and lets the data determine the other.</li>
+<li>The string <code>"rev</code> (or <code>"reverse"</code>) reverses the auto-computed axis range, without needing to know the data extent in advance.</li>
+</ul></li>
 </ul></li>
 <li>Type-specific updates:
 <ul>

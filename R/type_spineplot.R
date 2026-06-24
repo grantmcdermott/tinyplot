@@ -292,11 +292,24 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% 0
         settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
         settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
-        
+
+        # Declare this type's axes/legend behaviour so the main pipeline can read
+        # semantic flags instead of hardcoding `type == "spineplot"` checks.
+        # A spineplot suppresses the standard axes (xaxt/yaxt = "n") because it
+        # draws its own (category + numeric labels, plus a secondary RHS axis)
+        # via spine_axis(), and uses proportional [0, 1] limits.
+        type_axes_hints = list(
+          self_axes            = TRUE, # draws own tick-row axes despite xaxt/yaxt = "n"
+          rhs_axis             = TRUE, # secondary right-hand axis (reserve margin)
+          proportional_lim     = TRUE, # [0, 1] limits; don't expand to axis breaks
+          legend_fill_from_col = TRUE, # legend swatch pt.bg defaults from col
+          draw_empty_facet     = TRUE  # can draw with zero per-group rows
+        )
+
         env2env(environment(), settings, c(
           "x", "y", "ymin", "ymax", "xmin", "xmax", "col", "bg", "datapoints",
           "by", "facet", "axes", "frame.plot", "xaxt", "yaxt", "xaxs", "yaxs",
-          "ylabs", "type_info", "facet.args"
+          "ylabs", "type_info", "facet.args", "type_axes_hints"
         ))
         
     }

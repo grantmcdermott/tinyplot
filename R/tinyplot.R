@@ -890,7 +890,8 @@ tinyplot.default = function(
     group_offsets = NULL,
     offsets_axis  = NULL,
     sub           = sub,
-    type_info     = list() # pass type-specific info from type_data to type_draw
+    type_info     = list(), # pass type-specific info from type_data to type_draw
+    type_axes_hints = NULL  # axes/legend behaviour a type declares for itself
   )
 
   settings = new.env()
@@ -1097,7 +1098,7 @@ tinyplot.default = function(
     # draw their own in the same place (e.g. spineplot category + numeric labels
     # via spine_axis()). Their tick-row margin must still be reserved, else the
     # self-drawn labels clip when xlab/ylab = NA makes label_extent = 0 (#635).
-    .self_axis = identical(type, "spineplot")
+    .self_axis = isTRUE(type_axes_hints[["self_axes"]])
 
     .dyn = c(
       dynmar_side(1, xlab, main = main, sub = sub,
@@ -1191,6 +1192,7 @@ tinyplot.default = function(
         by_dep = by_dep,
         lgnd_labs = lgnd_labs,
         type = type,
+        type_axes_hints = type_axes_hints,
         pch = pch,
         lty = lty,
         lwd = lwd,
@@ -1367,6 +1369,7 @@ tinyplot.default = function(
       sub = sub,
       cap = cap,
       type = type,
+      type_axes_hints = type_axes_hints,
       xlab = xlab,
       x = x, xmax = xmax, xmin = xmin,
       ylab = ylab,
@@ -1398,6 +1401,7 @@ tinyplot.default = function(
       sub = sub,
       cap = cap,
       type = type,
+      type_axes_hints = type_axes_hints,
       xlab = xlab,
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
       ylab = ylab,
@@ -1500,7 +1504,9 @@ tinyplot.default = function(
 
       # empty plot flag
       empty_plot = FALSE
-      if (isTRUE(empty) || isTRUE(type == "n") || ((length(ix) == 0) && !(type %in% c("histogram", "hist", "rect", "segments", "spineplot")))) {
+      draws_empty = type %in% c("histogram", "hist", "rect", "segments") ||
+        isTRUE(type_axes_hints[["draw_empty_facet"]])
+      if (isTRUE(empty) || isTRUE(type == "n") || ((length(ix) == 0) && !draws_empty)) {
         empty_plot = TRUE
       }
 

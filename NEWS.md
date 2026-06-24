@@ -236,7 +236,7 @@ Theme fixes:
     column arrangements. (#562 @zeileis)
     - `plt(..., facet = z ~ 1)` <-> `plt(..., facet = ~z, facet.args = list(ncol = 1))`
     - `plt(..., facet = 1 ~ z)` <-> `plt(..., facet = ~z, facet.args = list(nrow = 1))`.
-  - `x/ylim` gain several "smart" override forms. (#616 @grantmcdermott)
+  - `x/ylim` gain several "smart" override forms. (#644 @grantmcdermott)
     - A single scalar (e.g. `ylim = 0`) ensures that value is covered by the
       axis range, e.g. for forcing zero onto a coefficient plot.
     - A length-2 vector with one `NA` (e.g. `ylim = c(0, NA)`) pins the non-`NA`

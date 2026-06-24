@@ -613,5 +613,8 @@ who want to create convenient, sophisticated plots with minimal overhead.
 
 Believe it or not, there's still plenty of **tinyplot** functionality that we
 didn't cover here. If you’d like to keep exploring, we recommend continuing with
-the [Plot types](types.qmd) and [Themes](themes.qmd) vignettes. Happy
-tinyplotting!
+the [Plot types](types.qmd) and [Themes](themes.qmd) vignettes. Or, simply take
+a look at our [Gallery](gallery.qmd) page if you're looking for inspiration and
+code examples.
+
+Happy tinyplotting!

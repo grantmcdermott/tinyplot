@@ -1080,18 +1080,7 @@ a logical value indicating whether the default annotation (title and x and y axi
 <code id="xlim">xlim</code>
 </td>
 <td>
-<p>the x limits (x1, x2) of the plot. Note that x1 &gt; x2 is allowed and leads to a reversed axis (although see the <code>“rev(erse)”</code> keyword option below). The default value, <code>NULL</code>, indicates that the range of the <code>finite</code> values to be plotted should be used. Alongside the standard length-2 vector (e.g., <code>xlim = c(0, 1)</code>), <code>tinyplot</code> supports three further convenience forms:</p>
-<ul>
-<li>
-<p>a single scalar (e.g.&nbsp;<code>xlim = 0</code>) ensures that the provided value is covered by the axis range, irrespective of the data extent.</p>
-</li>
-<li>
-<p>a length-2 vector with one <code>NA</code> (e.g.&nbsp;<code>xlim = c(0, NA)</code>) pins the non-<code>NA</code> limit and lets the data determine the other limit.</p>
-</li>
-<li>
-<p>the convenience string <code>“rev”</code> (or the longer <code>“reverse”</code>) reverses the automatically-computed axis range. This is equivalent to passing a descending vector, but without having to know the data extent in advance.</p>
-</li>
-</ul>
+the x limits (x1, x2) of the plot. Note that x1 &gt; x2 is allowed and leads to a ‘reversed axis’. The default value, NULL, indicates that the range of the <code>finite</code> values to be plotted should be used.
 </td>
 </tr>
 <tr>
@@ -1099,7 +1088,7 @@ a logical value indicating whether the default annotation (title and x and y axi
 <code id="ylim">ylim</code>
 </td>
 <td>
-the y limits of the plot. Accepts the same input forms as <code>xlim</code>.
+the y limits of the plot.
 </td>
 </tr>
 <tr>

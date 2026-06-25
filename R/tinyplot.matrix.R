@@ -30,11 +30,15 @@
 #' @seealso \code{\link{tinyplot}}, \code{\link[graphics]{matplot}}
 #'
 #' @examples
-#' ## using tinyplot() with matrices
+#' # basic use
 #' iris_mat = as.matrix(iris[1:50, 1:4])
 #' tinyplot(iris_mat)
 #' tinyplot(iris_mat, legend = "direct", theme = "socviz")
 #' tinyplot(iris_mat, legend = FALSE, facet = "by", theme = "socviz")
+#' 
+#' # equivalent example to one in `?matplot`
+#' sines = outer(1:20, 1:4, function(x, y) sin(x / 20 * pi * y))
+#' tinplot(sines, type = "o", pch = "by", lty = "by", col = rainbow(ncol(sines)))
 #'
 #' @export
 tinyplot.matrix = function(x, legend = NULL, facet = NULL, xlab = NULL, ylab = NULL, ...) {

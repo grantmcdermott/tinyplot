@@ -182,3 +182,35 @@ f = function() {
   tinyplot(~ Species, data = iris, type = "barplot", xlab = NA)
 }
 expect_snapshot_plot(f, label = "barplot_xlab_na_issue635")
+
+# sort_y: order bars by aggregated y value (#645)
+
+# ascending (sort() default: smallest bar first)
+f = function() {
+  tinyplot(extra ~ ID, data = sleep, type = type_barplot(sort_y = TRUE))
+}
+expect_snapshot_plot(f, label = "barplot_sort_y_increasing")
+
+# decreasing (largest bar first)
+f = function() {
+  tinyplot(extra ~ ID, data = sleep, type = type_barplot(sort_y = "decreasing"))
+}
+expect_snapshot_plot(f, label = "barplot_sort_y_decreasing")
+
+# grouped/stacked: sort on the per-x column total
+f = function() {
+  tinyplot(
+    Freq ~ Class | Sex, data = as.data.frame(Titanic),
+    type = type_barplot(sort_y = TRUE), fill = 0.6
+  )
+}
+expect_snapshot_plot(f, label = "barplot_sort_y_grouped")
+
+# xlevels takes precedence over sort_y (with a warning)
+expect_warning(
+  tinyplot(
+    ~ cyl, data = mtcars,
+    type = type_barplot(sort_y = TRUE, xlevels = c("8", "6", "4"))
+  ),
+  "takes precedence"
+)

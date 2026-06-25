@@ -24,6 +24,14 @@
 #'   (if numeric) for the plot.
 #' @param xaxlabels a character vector with the axis labels for the `x` variable,
 #'   defaulting to the levels of `x`.
+#' @param sort_y controls whether the bars are ordered by their (aggregated) `y`
+#'   value rather than by the levels of `x`. Semantics mimic base [sort()], which
+#'   defaults to increasing order. Accepts `FALSE`/`0`/`NULL` (no sorting,
+#'   default), `TRUE`/`1`/`"increasing"` (ascending, i.e. smallest bar first), or
+#'   `-1`/`"decreasing"` (descending, i.e. largest bar first). For grouped and/or
+#'   faceted plots the sort is global and based on the per-`x` total. If `xlevels`
+#'   is also supplied, it takes precedence and `sort_y` is ignored (with a
+#'   warning).
 #' @param offset optional specification for shifting bar baselines, accepting
 #'   one of two distinct forms. See the Examples for illustrations of both.
 #' 
@@ -52,11 +60,15 @@
 #' # Reorder x variable categories either by their character levels or numeric indexes
 #' tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = c("8", "6", "4"))
 #' tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
+#'
+#' # Or, sort the bars by their (aggregated) y value, e.g. 
+#' tinyplot(~ cyl, data = mtcars, type = "barplot", sort_y = TRUE)
+#' tinyplot(~ cyl, data = mtcars, type = "barplot", sort_y = -1)
 #' 
-#' # Note: Above we used automatic argument passing for `beside`. But this
+#' # Note: Above we used automatic argument passing for `beside` & co. But this
 #' # wouldn't work for `width`, since it would conflict with the top-level
-#' # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
-#' # through the `type_barplot()` functional equivalent.
+#' # `tinyplot(..., width = <width>)` argument. Hence, it's safer to pass these
+#' # args through the `type_barplot()` functional equivalent.
 #' tinyplot(
 #'   ~ cyl | vs, data = mtcars, fill = 0.2,
 #'   type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65)
@@ -131,9 +143,9 @@
 #' tinyplot_add(type = "vline")
 #'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, sort_y = FALSE, drop.zeros = FALSE) {
   out = list(
-    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xaxlabels = xaxlabels, drop.zeros = drop.zeros),
+    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xaxlabels = xaxlabels, sort_y = sort_y, drop.zeros = drop.zeros),
     draw = draw_rect(),
     name = "barplot"
   )
@@ -141,8 +153,26 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
   return(out)
 }
 
+## Normalize the `sort_y` argument to NULL (no sort), "increasing", or
+## "decreasing". Mimics base sort(), which defaults to increasing order.
+barplot_sort_dir = function(sort_y) {
+  if (is.null(sort_y) || isFALSE(sort_y)) return(NULL)
+  if (isTRUE(sort_y)) return("increasing") # sort() default = ascending
+  if (is.numeric(sort_y)) {
+    if (sort_y == 0) return(NULL)
+    return(if (sort_y > 0) "increasing" else "decreasing")
+  }
+  if (is.character(sort_y)) {
+    opt = c("increasing", "decreasing")
+    m = pmatch(sort_y, opt)
+    if (is.na(m)) stop("'sort_y' must be one of TRUE/FALSE, 'increasing'/'decreasing', or 1/0/-1")
+    return(opt[m])
+  }
+  stop("'sort_y' must be logical, numeric (-1/0/1), or a character direction")
+}
+
 #' @importFrom stats aggregate
-data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
+data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, sort_y = FALSE, drop.zeros = FALSE) {
     fun = function(settings, ...) {
         env2env(
           settings,
@@ -175,7 +205,20 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         datapoints$y[is.na(datapoints$y)] = 0 #FIXME: always?#
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
-        
+
+        ## `sort_y`: reorder x levels by aggregated y (global, across by/facet).
+        ## An explicit `xlevels` ordering takes precedence.
+        sort_dir = barplot_sort_dir(sort_y)
+        if (!is.null(sort_dir)) {
+          if (!is.null(xlevels)) {
+            warning("'xlevels' takes precedence over 'sort_y'; ignoring 'sort_y'")
+          } else {
+            x_tot = tapply(datapoints$y, datapoints$x, sum, na.rm = TRUE)
+            new_levels = names(sort(x_tot, decreasing = identical(sort_dir, "decreasing")))
+            datapoints$x = factor(datapoints$x, levels = new_levels)
+          }
+        }
+
         ## `offset` accepts two distinct forms:
         ##  - unnamed numeric -> positional, keyed by x-level (waterfall)
         ##  - character or *named* numeric -> keyed by `by`-level: those groups

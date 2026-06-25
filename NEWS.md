@@ -247,6 +247,10 @@ Theme fixes:
       and drawing them as standalone bars. This is useful for Likert plots,
       where you want to show a neutral categories (e.g., "Unsure") apart from 
       the diverging stack. Thanks to @strengejacke for the suggestion.
+  - `type_barplot()` gains a `sort_y` argument for ordering the bars by their
+    aggregated `y` value rather than by the levels of `x`. Semantics mimic base
+    `sort()` (default increasing): `TRUE`/`1`/`"increasing"` sorts smallest-first
+    and `-1`/`"decreasing"` sorts largest-first. (#645 @grantmcdermott)
   - `type_text()` gains two new arguments:
     - a `labeller` argument that is passed to `tinylabel()` for formatting the
       text labels. (#620 @grantmcdermott)

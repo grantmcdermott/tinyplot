@@ -12,6 +12,7 @@ type_barplot(
   FUN = NULL,
   xlevels = NULL,
   xaxlabels = NULL,
+  sort_y = FALSE,
   drop.zeros = FALSE
 )
 }
@@ -56,6 +57,15 @@ levels of the \code{x} variable (if character) or the corresponding indexes
 \item{xaxlabels}{a character vector with the axis labels for the \code{x} variable,
 defaulting to the levels of \code{x}.}
 
+\item{sort_y}{controls whether the bars are ordered by their (aggregated) \code{y}
+value rather than by the levels of \code{x}. Semantics mimic base \code{\link[=sort]{sort()}}, which
+defaults to increasing order. Accepts \code{FALSE}/\code{0}/\code{NULL} (no sorting,
+default), \code{TRUE}/\code{1}/\code{"increasing"} (ascending, i.e. smallest bar first), or
+\code{-1}/\code{"decreasing"} (descending, i.e. largest bar first). For grouped and/or
+faceted plots the sort is global and based on the per-\code{x} total. If \code{xlevels}
+is also supplied, it takes precedence and \code{sort_y} is ignored (with a
+warning).}
+
 \item{drop.zeros}{logical. Should bars with zero height be dropped? If set
 to \code{FALSE} (default) a zero height bar is still drawn for which the border
 lines will still be visible.}
@@ -78,10 +88,14 @@ tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE, fill = 0.2)
 tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = c("8", "6", "4"))
 tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
 
-# Note: Above we used automatic argument passing for `beside`. But this
+# Or, sort the bars by their (aggregated) y value, e.g. 
+tinyplot(~ cyl, data = mtcars, type = "barplot", sort_y = TRUE)
+tinyplot(~ cyl, data = mtcars, type = "barplot", sort_y = -1)
+
+# Note: Above we used automatic argument passing for `beside` & co. But this
 # wouldn't work for `width`, since it would conflict with the top-level
-# `tinyplot(..., width = <width>)` argument. It's safer to pass these args
-# through the `type_barplot()` functional equivalent.
+# `tinyplot(..., width = <width>)` argument. Hence, it's safer to pass these
+# args through the `type_barplot()` functional equivalent.
 tinyplot(
   ~ cyl | vs, data = mtcars, fill = 0.2,
   type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65)

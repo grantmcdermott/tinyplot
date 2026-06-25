@@ -332,7 +332,7 @@ and `"density"`. In general, **tinyplot** supports all the primitive plot types
 and elements available in base R, along with a number of additional types that
 can be tedious to code manually. You can find the full list of in the dedicated
 [Plot Types](types.qmd) vignette. For the moment, we’ll content ourselves with
-a one or two illustrative examples.
+one or two illustrative examples.
 
 Earlier, we saw a grouped density plot. But these can be hard to reason about
 if there is a high degree of overlap. A good alternative in such cases are
@@ -372,27 +372,26 @@ tinyplot(
 The default behaviour of these model types can be adjusted by passing
 appropriate arguments to the equivalent _functional_ version of the type in
 question. These functional types all follow a `type_<typename>` syntax, so that
-`"lm"` is paired with `type_lm()`, etc. Below we illustrate with an adapted
-generalised linear model, where we fit a logistic regression passing explicitly
-passing the binomial
-[family](https://search.r-project.org/R/refmans/stats/html/family.html)
-argument.
+`"lm"` is paired with `type_lm()`, `"ridge"` with `type_ridge()`, etc. Below we
+illustrate with an adapted generalised linear model, where we explicitly pass
+a [family](https://search.r-project.org/R/refmans/stats/html/family.html)
+argument to fit a logistic regression.
 
 ```{r ribbon_pred_glm}
 tinyplot(
   I(hot == "hot") ~ Wind, aq,
+  # type = "glm", ## default is gaussian
   type = type_glm(family = binomial),
   main = "Logit model: Temps above 75 °F",
   ylab = "Probability", yaxl = "%"
 )
 ```
 
-We will see examples of more plot types below, including other model prediction
-types. Again, please also take a look at the dedicated 
-[Plot Types](types.qmd) vignette for explicit details about all of the different
-plot types that **tinyplot** supports, as well as how to create your own custom
-types. You can also request support for additional plot types, or see what's on
-our roadmap, by heading over to this
+Again, these are just a few examples of the _many_ different plot types that
+**tinyplot** supports. Please also take a look at the dedicated 
+[Plot Types](types.qmd) vignette for  the full list, as well a guide for
+creating your own custom types. You can also request support for additional plot
+types, or see what's on our roadmap, by heading over to this
 [pinned issue](https://github.com/grantmcdermott/tinyplot/issues/97)
 on our GitHub repo.
 

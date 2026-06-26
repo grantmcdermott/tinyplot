@@ -1095,9 +1095,11 @@ tinyplot.default = function(
 
     # Types that suppress the standard axes (xaxt/yaxt = "n") only because they
     # draw their own in the same place (e.g. spineplot category + numeric labels
-    # via spine_axis()). Their tick-row margin must still be reserved, else the
-    # self-drawn labels clip when xlab/ylab = NA makes label_extent = 0 (#635).
-    .self_axis = identical(type, "spineplot")
+    # via spine_axis(); ridge y-axis category labels via tinyAxis()). Their
+    # tick-row margin must still be reserved, else the self-drawn labels clip --
+    # or, under las 0/1 where mar is further shifted, error -- when xlab/ylab = NA
+    # makes label_extent = 0 (#635, #650).
+    .self_axis = type %in% c("spineplot", "ridge")
 
     .dyn = c(
       dynmar_side(1, xlab, main = main, sub = sub,

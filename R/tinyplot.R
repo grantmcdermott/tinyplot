@@ -166,7 +166,9 @@
 #'    effect as specifying NULL) and FALSE turns the legend off (same effect as
 #'    specifying "none").
 #'    - A list or, equivalently, a dedicated `legend()` function with supported
-#'    legend arguments, e.g. "bty", "horiz", and so forth.
+#'    legend arguments, e.g. "bty", "horiz", and so forth. To suppress the
+#'    legend title, set `title = NULL` or `title = FALSE`, e.g.
+#'    `legend = list(title = FALSE)`.
 #' @param main a main title for the plot, see also `title`.
 #' @param sub a subtitle for the plot.
 #' @param cap a caption for the plot, drawn at the bottom. Useful for

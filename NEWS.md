@@ -293,9 +293,8 @@ Theme fixes:
   integer-valued (e.g. `"$1,000"`), and place the negative sign in front of the
   currency symbol (e.g. `"-$1.50"` rather than `"$-1.50"`).
   (#618, #623 @grantmcdermott)
-- Fixed `xlab = NA` / `ylab = NA` gotchas: a barplot with `xlab = NA` no longer
-  errors, and spineplots no longer clip their category and tick labels when
-  `xlab`/`ylab` are set to `NA` under a dynamic theme. (#635 @grantmcdermott)
+- Fixed `xlab = NA` / `ylab = NA` gotchas for `"barplot"`, `"spineplot"`, and
+  `"ridge"` types. (#635, #650 @grantmcdermott)
 - `tinyplot_add()` (`plt_add()`) now captures its arguments unevaluated, so
   arguments that rely on non-standard evaluation against `data` (e.g.,
   `plt_add(..., subset = <>)`) resolve correctly instead of erroring with 

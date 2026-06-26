@@ -329,7 +329,9 @@ draw_facet_window = function(
       )
       if (!is.null(xaxb)) args_x$at = xaxb
       if (!is.null(yaxb)) args_y$at = yaxb
-      type_range_x = type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)
+      # `xlabs` is only non-NULL when a type has placed categorical data on the
+      # x-axis, so its presence is the signal to draw labelled ticks.
+      type_range_x = !is.null(xlabs)
       type_range_y = !is.null(ylabs) && (type == "p" || (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "violin")))
       if (type_range_x) {
         args_x = modifyList(args_x, list(at = xlabs, labels = names(xlabs)))
@@ -369,7 +371,7 @@ draw_facet_window = function(
         # Explicitly set (override) the current facet extent
         par(usr = fusr[[ii]])
         # if plot frame is true then print axes per normal...
-        if (type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)) {
+        if (!is.null(xlabs)) {
           tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, labeller = xaxl)
         } else {
           tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)

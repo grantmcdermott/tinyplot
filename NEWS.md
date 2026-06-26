@@ -162,10 +162,9 @@ Theme fixes:
 
 #### New `tinyplot.*` methods
 
-- A top-level `tinypairs()` function, together with a dedicated
-  `tinyplot.data.frame()` method, now supports direct plotting of data frames,
-  with or without a formula. Combining with a formula is mostly useful insofar
-  as it facilitates piping, e.g.
+- `tinyplot.data.frame()`: Supports direct plotting of data frames, alongside
+  the new top-level function `tinypairs()`. Can be called with or without a
+  formula. One benefit of the former is that it facilitates piping, e.g.
   
   ```r
   iris |> plt(Sepal.Length ~ Petal.Width | Species)
@@ -176,7 +175,16 @@ Theme fixes:
   variables will yield a `pairs()`-style grid of all variable combinations. 
   Thanks to @mthulin for the suggestion and original implementation idea.
   (#613, #640 @zeileis @grantmcdermott)
-- New dedicated `tinyplot.ts()` method for `ts` time series, e.g.
+- `tinyplot.matrix()`: for `matrix` objects, e.g.
+  
+  ```r
+  plt(VADeaths, type = "b")
+  ```
+
+  The output largely mimics the base `matplot`/`matlines` equivalents, but with
+  additional **tinyplot** functionality related to automatic legends, options
+  for faceting, etc. (#649 @grantmcdermott)
+- `tinyplot.ts()`: for `ts` time series, e.g.
   
   ```r
   plt(EuStockMarkets)
@@ -299,6 +307,10 @@ Theme fixes:
   `sub`, `cap`, `xlab`, and `ylab` being evaluated instead of coerced to
   plotmath expressions, e.g. `plt(0, 0, main = bquote(foo == .(pi)))`. Thanks 
   (again) to @bastistician for the report. (#642 @grantmcdermott)
+- Line plots (`type = "l"`, and relatives like `"b"`/`"o"`) with a factor or
+  character `x` variable now draw the category labels on the x-axis, matching
+  the behaviour of point plots. Previously these tick labels were only shown
+  when dodging was active. (#648 @grantmcdermott)
 
 ## v0.6.1
 

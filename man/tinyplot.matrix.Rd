@@ -4,10 +4,20 @@
 \alias{tinyplot.matrix}
 \title{tinyplot Method for Plotting Matrices}
 \usage{
-\method{tinyplot}{matrix}(x, legend = NULL, facet = NULL, xlab = NULL, ylab = NULL, ...)
+\method{tinyplot}{matrix}(
+  x,
+  type = NULL,
+  legend = NULL,
+  facet = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{"matrix"}.}
+
+\item{type}{plot type passed on to \code{tinyplot}. Defaults to \code{"p"} (points).}
 
 \item{legend}{specification passed on to \code{tinyplot}. The default is to draw a
 legend (titled by the matrix name) when the matrix has named columns, and
@@ -17,8 +27,10 @@ to suppress it otherwise.}
 accepted (non-\code{NULL}) value is the \code{"by"} convenience string, which facets
 the plot by matrix column.}
 
-\item{xlab, ylab}{axis labels passed on to \code{tinyplot}. These default to
-\code{"Index"} (the row number) and the deparsed matrix name, respectively.}
+\item{xlab, ylab}{axis labels passed on to \code{tinyplot}. \code{ylab} defaults to the
+deparsed matrix name. \code{xlab} defaults to \code{"Index"} when the matrix has no
+row names; when it does, the row names already label the ticks so the
+x-axis title is suppressed.}
 
 \item{...}{further arguments passed to \code{tinyplot}.}
 }
@@ -43,14 +55,14 @@ grouping or legend.
 }
 \examples{
 # basic use
-iris_mat = as.matrix(iris[1:50, 1:4])
-tinyplot(iris_mat)
-tinyplot(iris_mat, legend = "direct", theme = "socviz")
-tinyplot(iris_mat, legend = FALSE, facet = "by", theme = "socviz")
+tinyplot(VADeaths)
+tinyplot(VADeaths, type = "b")
+tinyplot(VADeaths, type = "b", legend = "direct", theme = "socviz")
+tinyplot(VADeaths, type = "b", legend = FALSE, facet = "by", theme = "socviz")
 
-# equivalent example to one in `?matplot`
+# equivalent plot to an example in `?matplot`
 sines = outer(1:20, 1:4, function(x, y) sin(x / 20 * pi * y))
-tinplot(sines, type = "o", pch = "by", lty = "by", col = rainbow(ncol(sines)))
+tinyplot(sines, type = "o", pch = "by", lty = "by", col = rainbow(ncol(sines)))
 
 }
 \seealso{

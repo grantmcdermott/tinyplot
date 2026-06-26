@@ -15,14 +15,17 @@
 #'   grouping or legend.
 #'
 #' @param x an object of class `"matrix"`.
+#' @param type plot type passed on to `tinyplot`. Defaults to `"p"` (points).
 #' @param legend specification passed on to `tinyplot`. The default is to draw a
 #'   legend (titled by the matrix name) when the matrix has named columns, and
 #'   to suppress it otherwise.
 #' @param facet specification of `facet` passed on to `tinyplot`. The only
 #'   accepted (non-`NULL`) value is the `"by"` convenience string, which facets
 #'   the plot by matrix column.
-#' @param xlab,ylab axis labels passed on to `tinyplot`. These default to
-#'   `"Index"` (the row number) and the deparsed matrix name, respectively.
+#' @param xlab,ylab axis labels passed on to `tinyplot`. `ylab` defaults to the
+#'   deparsed matrix name. `xlab` defaults to `"Index"` when the matrix has no
+#'   row names; when it does, the row names already label the ticks so the
+#'   x-axis title is suppressed.
 #' @param ... further arguments passed to `tinyplot`.
 #'
 #' @returns No return value, called for the side effect of producing a plot.
@@ -31,18 +34,22 @@
 #'
 #' @examples
 #' # basic use
-#' iris_mat = as.matrix(iris[1:50, 1:4])
-#' tinyplot(iris_mat)
-#' tinyplot(iris_mat, legend = "direct", theme = "socviz")
-#' tinyplot(iris_mat, legend = FALSE, facet = "by", theme = "socviz")
+#' tinyplot(VADeaths)
+#' tinyplot(VADeaths, type = "b")
+#' tinyplot(VADeaths, type = "b", legend = "direct", theme = "socviz")
+#' tinyplot(VADeaths, type = "b", legend = FALSE, facet = "by", theme = "socviz")
 #' 
-#' # equivalent example to one in `?matplot`
+#' # equivalent plot to an example in `?matplot`
 #' sines = outer(1:20, 1:4, function(x, y) sin(x / 20 * pi * y))
-#' tinplot(sines, type = "o", pch = "by", lty = "by", col = rainbow(ncol(sines)))
+#' tinyplot(sines, type = "o", pch = "by", lty = "by", col = rainbow(ncol(sines)))
 #'
 #' @export
-tinyplot.matrix = function(x, legend = NULL, facet = NULL, xlab = NULL, ylab = NULL, ...) {
+tinyplot.matrix = function(x, type = NULL, legend = NULL, facet = NULL, xlab = NULL, ylab = NULL, ...) {
   assert_choice(facet, "by", null.ok = TRUE)
+  ## Default to points. We set this explicitly (rather than relying on
+  ## tinyplot's auto-inference) because the x-axis row labels are passed as a
+  ## factor, which would otherwise be inferred as a boxplot.
+  if (is.null(type)) type = "p"
   dep_x = deparse1(substitute(x))
   dims = dim(x)
   if (dims[2] == 1L) {
@@ -58,13 +65,25 @@ tinyplot.matrix = function(x, legend = NULL, facet = NULL, xlab = NULL, ylab = N
       legend = FALSE
     }
   }
+  ## If the matrix has row names, use them for the x-axis tick labels via an
+  ## ordered factor (preserving row order). Otherwise fall back to a plain
+  ## numeric index.
+  rnms = rownames(x)
   dim(x) = dims[1] * dims[2]
   y = x
-  x = rep(seq_len(dims[1]), times = dims[2])
-  if (is.null(xlab)) xlab = "Index"
+  if (is.null(rnms)) {
+    x = rep(seq_len(dims[1]), times = dims[2])
+    ## no row names: x is a plain numeric index, so label it as such
+    if (is.null(xlab)) xlab = "Index"
+  } else {
+    x = factor(rep(rnms, times = dims[2]), levels = rnms, ordered = TRUE)
+    ## row names already label the ticks, so an "Index" title is redundant
+    if (is.null(xlab)) xlab = NA
+  }
   if (is.null(ylab)) ylab = dep_x
   tinyplot.default(
     x = x, y = y,
+    type = type,
     by = bby,
     facet = facet,
     legend = legend,

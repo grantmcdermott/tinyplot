@@ -20,11 +20,10 @@
 \item{type}{plot type passed on to \code{tinyplot}. Defaults to \code{"p"} (points).}
 
 \item{legend}{specification passed on to \code{tinyplot}. The default is to draw a
-legend (titled by the matrix name) when the matrix has named columns, and
-to suppress it otherwise.}
+legend when the matrix has named columns, and to suppress it otherwise.}
 
 \item{facet}{specification of \code{facet} passed on to \code{tinyplot}. The only
-accepted (non-\code{NULL}) value is the \code{"by"} convenience string, which facets
+accepted non-\code{NULL} value is the \code{"by"} convenience string, which facets
 the plot by matrix column.}
 
 \item{xlab, ylab}{axis labels passed on to \code{tinyplot}. \code{ylab} defaults to the
@@ -44,14 +43,13 @@ Convenience interface for visualizing
 \details{
 Internally the matrix is converted to long form and visualized as a
 scatter (or other \code{type}) of each column's values against their row index.
-Each column is mapped to a separate group (the \code{by} aesthetic), so a matrix
-with multiple columns produces a grouped plot, optionally faceted by column
-via \code{facet = "by"}. This mirrors the base R \code{\link[graphics]{matplot}}
-convention of plotting the columns of a matrix against the row numbers.
-
-If the matrix has column names, these are used as the group (and legend)
-labels. Single-column matrices are drawn as a simple index plot with no
-grouping or legend.
+Each column is mapped to a separate \code{by} category, so a matrix with
+multiple columns produces a grouped plot. Optionally, it can also be
+faceted via \code{facet = "by"}. This mirrors the base R
+\code{\link[graphics]{matplot}} convention of plotting the columns of a
+matrix against the row numbers. If the matrix has column names, these are
+used as the group (and legend) labels. Single-column matrices are drawn as
+a simple index plot with no grouping or legend.
 }
 \examples{
 # basic use
@@ -66,5 +64,5 @@ tinyplot(sines, type = "o", pch = "by", lty = "by", col = rainbow(ncol(sines)))
 
 }
 \seealso{
-\code{\link{tinyplot}}, \code{\link[graphics]{matplot}}
+\code{\link[graphics]{matplot}}
 }

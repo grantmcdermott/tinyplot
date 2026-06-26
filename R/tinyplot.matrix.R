@@ -5,22 +5,20 @@
 #'
 #' @details Internally the matrix is converted to long form and visualized as a
 #'   scatter (or other `type`) of each column's values against their row index.
-#'   Each column is mapped to a separate group (the `by` aesthetic), so a matrix
-#'   with multiple columns produces a grouped plot, optionally faceted by column
-#'   via `facet = "by"`. This mirrors the base R \code{\link[graphics]{matplot}}
-#'   convention of plotting the columns of a matrix against the row numbers.
-#'
-#'   If the matrix has column names, these are used as the group (and legend)
-#'   labels. Single-column matrices are drawn as a simple index plot with no
-#'   grouping or legend.
+#'   Each column is mapped to a separate `by` category, so a matrix with
+#'   multiple columns produces a grouped plot. Optionally, it can also be
+#'   faceted via `facet = "by"`. This mirrors the base R
+#'   \code{\link[graphics]{matplot}} convention of plotting the columns of a
+#'   matrix against the row numbers. If the matrix has column names, these are
+#'   used as the group (and legend) labels. Single-column matrices are drawn as
+#'   a simple index plot with no grouping or legend.
 #'
 #' @param x an object of class `"matrix"`.
 #' @param type plot type passed on to `tinyplot`. Defaults to `"p"` (points).
 #' @param legend specification passed on to `tinyplot`. The default is to draw a
-#'   legend (titled by the matrix name) when the matrix has named columns, and
-#'   to suppress it otherwise.
+#'   legend when the matrix has named columns, and to suppress it otherwise.
 #' @param facet specification of `facet` passed on to `tinyplot`. The only
-#'   accepted (non-`NULL`) value is the `"by"` convenience string, which facets
+#'   accepted non-`NULL` value is the `"by"` convenience string, which facets
 #'   the plot by matrix column.
 #' @param xlab,ylab axis labels passed on to `tinyplot`. `ylab` defaults to the
 #'   deparsed matrix name. `xlab` defaults to `"Index"` when the matrix has no
@@ -30,7 +28,7 @@
 #'
 #' @returns No return value, called for the side effect of producing a plot.
 #'
-#' @seealso \code{\link{tinyplot}}, \code{\link[graphics]{matplot}}
+#' @seealso \code{\link[graphics]{matplot}}
 #'
 #' @examples
 #' # basic use

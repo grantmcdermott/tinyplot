@@ -663,6 +663,7 @@ theme_tufte = modifyList(theme_dynamic, list(
 theme_float = modifyList(theme_tufte, list(
   tinytheme = "float",
   col.default = "black",
+  facet.bg = "gray95",
   gap.axis = 0,
   gap.lab = 0.7,
   lab = c(5, 5, 7),

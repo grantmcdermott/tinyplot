@@ -310,7 +310,9 @@ labels in data units.
 effect as specifying NULL) and FALSE turns the legend off (same effect as
 specifying "none").
 \item A list or, equivalently, a dedicated \code{legend()} function with supported
-legend arguments, e.g. "bty", "horiz", and so forth.
+legend arguments, e.g. "bty", "horiz", and so forth. To suppress the
+legend title, set \code{title = NULL} or \code{title = FALSE}, e.g.
+\code{legend = list(title = FALSE)}.
 }}
 
 \item{main}{a main title for the plot, see also \code{title}.}

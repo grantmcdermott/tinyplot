@@ -265,6 +265,8 @@ Theme fixes:
   - Model-fit and various distribution types gain a `weights` argument; although
     this is best provided from the top-level `tinyplot()`/`plt()` call. See
     above.
+- `legend = list(title = FALSE)` now suppresses the legend title, matching the
+  existing `title = NULL` behaviour. (#653 @grantmcdermott)
 
 ### Bug fixes
 

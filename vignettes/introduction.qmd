@@ -292,8 +292,8 @@ tinyplot(
   ~ Temp | Month,
   data = aq,
   type = "density",
-  fill = "by",                                   # add fill by groups
-  legend = list("top!", title = NULL, bty = "o") # change legend features
+  fill = "by",                                    # add fill by groups
+  legend = list("top!", title = FALSE, bty = "o") # change legend features
 )
 ```
 

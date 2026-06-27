@@ -160,6 +160,8 @@ website:
           contents:
             - text: tinyplot.data.frame
               file: man/tinyplot.data.frame.qmd
+            - text: tinyplot.matrix
+              file: man/tinyplot.matrix.qmd
             - text: tinyplot.ts
               file: man/tinyplot.ts.qmd
 

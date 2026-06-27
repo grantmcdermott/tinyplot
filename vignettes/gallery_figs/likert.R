@@ -21,7 +21,7 @@ plt(
   share ~ question | response, data = lik,
   type = "barplot", center = TRUE, offset = "Unsure",
   flip = TRUE, xlab = NA, ylab = NA, yaxl = "percent",
-  legend = list("top!", title = NULL),
+  legend = list("top!", title = FALSE),
   theme = list("clean2", palette.qualitative = pal),
   main = "Likert example with \"Unsure\" category offset"
 )

@@ -124,6 +124,13 @@ f = function() tinyplot(
 )
 expect_snapshot_plot(f, label = "legend_title_null")
 
+# title = FALSE should suppress the title, just like title = NULL (#652)
+f = function() tinyplot(
+  Temp ~ Day | Month, data = aq,
+  legend = list(title = FALSE)
+)
+expect_snapshot_plot(f, label = "legend_title_null")
+
 f = function() tinyplot(
   Temp ~ Day | Month, data = aq,
   legend = legend(legend = month.abb[5:9])

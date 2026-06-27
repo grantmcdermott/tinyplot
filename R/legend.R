@@ -574,6 +574,8 @@ build_legend_args = function(
 
   # Set defaults
   if (!exists("title", where = legend_args)) legend_args[["title"]] = by_dep
+  # Treat title = FALSE the same as NULL, i.e. suppress the title (#652).
+  if (isFALSE(legend_args[["title"]])) legend_args[["title"]] = NULL
   legend_args[["pch"]] = legend_args[["pch"]] %||% pch
   legend_args[["lty"]] = legend_args[["lty"]] %||% lty
   legend_args[["col"]] = legend_args[["col"]] %||% col

@@ -8,7 +8,7 @@ by_aesthetics = function(settings) {
     environment(),
     c(
       "datapoints", "by", "type", "null_by", "pch", "bg", "lty", "lwd",
-      "bubble", "cex", "alpha", "col", "fill", "ribbon.alpha"
+      "bubble", "cex", "alpha", "col", "fill", "ribbon.alpha", "lighten"
     )
   )
 
@@ -59,6 +59,7 @@ by_aesthetics = function(settings) {
     type = type,
     by = by,
     ribbon.alpha = ribbon.alpha,
+    lighten = lighten,
     adjustcolor = adjustcolor
   )
 
@@ -81,6 +82,17 @@ apply_alpha = function(cols, alpha, adjustcolor) {
     return(cols)
   }
   adjustcolor(cols, alpha.f = alpha)
+}
+
+# Apply the lighter-but-opaque tint (PR #614) to each colour in a vector.
+lighten_fill = function(cols) {
+  if (is.null(cols)) return(cols)
+  vapply(
+    cols,
+    function(cc) if (is_achromatic(cc)) "lightgray" else seq_palette(cc, n = 3)[3],
+    character(1),
+    USE.NAMES = FALSE
+  )
 }
 
 is_by_keyword = function(x) {
@@ -374,15 +386,31 @@ by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustc
 }
 
 
-by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps, type, by, ribbon.alpha, adjustcolor) {
+by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps, type, by, ribbon.alpha, lighten, adjustcolor) {
+  lighten = if (is.null(lighten)) TRUE else isTRUE(lighten)
   if (is.null(bg) && !is.null(fill)) bg = fill
+
+  # A numeric bg/fill in [0,1] is an alpha *request*, not a colour: remember it
+  # as the transparency to layer on top of the resolved (and possibly lightened)
+  # base fill, and defer to the "by" palette for the base colour itself. Applying
+  # alpha last -- after lightening -- means a fill request blends a light tint
+  # toward the background rather than darkening a saturated base (issue #646).
   if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
     alpha = bg
     bg = "by"
   }
-  if (!is.null(bg) && length(bg) == 1 && is_by_keyword(bg)) {
-    ordered = if (is.null(by_ordered)) FALSE else by_ordered
-    gradient = if (is.null(by_continuous)) FALSE else by_continuous
+
+  ordered = if (is.null(by_ordered)) FALSE else by_ordered
+  gradient = if (is.null(by_continuous)) FALSE else by_continuous
+
+  # Whether the base fill comes from palette resolution (the "by" keyword, incl.
+  # a numeric fill request) or the single-group default, vs. an explicit colour
+  # such as `fill = "bisque"`. Only the former are eligible for lightening; an
+  # explicit colour is always honoured verbatim.
+  bg_from_palette = !is.null(bg) && length(bg) == 1 && is_by_keyword(bg)
+  palette_fill = bg_from_palette
+
+  if (bg_from_palette) {
     pal_theme = if (ordered || gradient) {
       get_tpar("palette.sequential", default = NULL)
     } else {
@@ -393,44 +421,64 @@ by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps
     if (!ordered && !gradient) {
       pal_theme = resolve_col_default(get_tpar("col.default", default = NULL), pal_theme)[["palette"]]
     }
+    # Resolve opaque (alpha = 1); any user alpha is layered on below.
     bg = resolve_palette_colors(
       palette = palette,
       theme_palette = pal_theme,
       ngrps = ngrps,
-      ordered = if (is.null(by_ordered)) FALSE else by_ordered,
-      gradient = if (is.null(by_continuous)) FALSE else by_continuous,
-      alpha = if (is.null(alpha)) 1 else alpha,
+      ordered = ordered,
+      gradient = gradient,
+      alpha = 1,
       adjustcolor = adjustcolor
     )
-  } else if (length(bg) != ngrps) {
-    bg = rep(bg, ngrps)
-  }
-  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
-    if (!is.null(bg)) {
-      bg = adjustcolor(bg, ribbon.alpha)
-    } else if (!is.null(col)) {
-      bg = adjustcolor(col, ribbon.alpha)
-    }
   } else if (ngrps == 1L && is.null(bg) && type %in% c("boxplot", "violin", "barplot", "histogram")) {
     # Single-group fill tracks the theme's *default* colour (col.default ->
     # palette[1] -> black) so that themed box/violin/bar/histogram plots match
     # their own multi-group counterparts. We resolve this default independently
     # of `col` so that a user-supplied outline colour (e.g. `col = "white"`)
     # doesn't bleed into the fill.
-    fill_base = by_col(
+    bg = by_col(
       col = NULL, palette = palette, alpha = 1, by_ordered = by_ordered,
       by_continuous = by_continuous, ngrps = 1L, adjustcolor = adjustcolor
     )
-    # For a *chromatic* default the fill is a lighter-but-opaque tint of that
-    # colour (via seq_palette, the same HCL ramp used for ridge fills and legend
+    palette_fill = TRUE
+  } else if (length(bg) != ngrps) {
+    bg = rep(bg, ngrps)
+  }
+
+  # The solid categorical area types take the lighter-but-opaque tint, but only
+  # for qualitative groupings: lightening a sequential/continuous ramp would
+  # crush the contrast between adjacent levels.
+  area_light_types = c("barplot", "boxplot", "violin")
+  light_ok = lighten && type %in% area_light_types && !ordered && !gradient
+
+  if (palette_fill) {
+    # For a *chromatic* base the fill is a lighter-but-opaque tint of that colour
+    # (via seq_palette, the same HCL ramp used for ridge fills and legend
     # swatches), so it reads cleanly over grid lines unlike alpha blending. For
-    # an *achromatic* default (typically black, e.g. the "bw"/"classic"/"ipsum"
+    # an *achromatic* base (typically black, e.g. the "bw"/"classic"/"ipsum"
     # themes and the plain default) seq_palette's light endpoint can't reach the
     # neutral "lightgray" used by the no-theme path and base R's hist()/boxplot()
-    # -- so we use that literal directly, keeping all black-default single-group
-    # fills consistent regardless of whether a theme palette happens to be set.
-    achromatic = is_achromatic(fill_base)
-    bg = if (achromatic) "lightgray" else seq_palette(fill_base, n = 3)[3]
+    # -- so we fall back to that literal. Histograms only lighten in the
+    # single-group case; grouped histograms keep their semi-transparent fill so
+    # that overlapping distributions remain legible (issue #646).
+    if (light_ok) {
+      bg = lighten_fill(bg)
+    } else if (type == "histogram" && ngrps == 1L) {
+      bg = lighten_fill(bg)
+    }
+    # Layer any user-supplied transparency on top of the (lightened) base fill.
+    if (!is.null(alpha)) bg = apply_alpha(bg, alpha, adjustcolor)
+  }
+
+  # Legacy semi-transparent fill: ribbon-type plots, and the opt-out path for
+  # grouped boxplots (`lighten = FALSE`), which keeps the historical look.
+  if (type == "ribbon" || (type == "boxplot" && !is.null(by) && !light_ok)) {
+    if (!is.null(bg)) {
+      bg = adjustcolor(bg, ribbon.alpha)
+    } else if (!is.null(col)) {
+      bg = adjustcolor(col, ribbon.alpha)
+    }
   }
 
   bg

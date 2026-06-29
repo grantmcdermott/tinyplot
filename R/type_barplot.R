@@ -41,6 +41,10 @@
 #' @param drop.zeros logical. Should bars with zero height be dropped? If set
 #'   to `FALSE` (default) a zero height bar is still drawn for which the border
 #'   lines will still be visible.
+#' @param lighten logical. Should the fills use a lighter, opaque tint of the
+#'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group
+#'   displays consistent and lets the fill read cleanly over grid lines. Set to
+#'   `FALSE` to use the fully-saturated palette colour(s) instead.
 #'
 #' @examples
 #' # Basic examples of frequency tables (without y variable)
@@ -131,9 +135,9 @@
 #' tinyplot_add(type = "vline")
 #'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
   out = list(
-    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xaxlabels = xaxlabels, drop.zeros = drop.zeros),
+    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xaxlabels = xaxlabels, drop.zeros = drop.zeros, lighten = lighten),
     draw = draw_rect(),
     name = "barplot"
   )
@@ -142,7 +146,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
 }
 
 #' @importFrom stats aggregate
-data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE) {
+data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
     fun = function(settings, ...) {
         env2env(
           settings,
@@ -276,6 +280,9 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
           }
           range(c(stack_range, off_range), na.rm = TRUE) * 1.02
         }
+
+        ## fill lightening (see by_bg)
+        settings[["lighten"]] = lighten
 
         ## default color palette
         ngrps = length(unique(datapoints$by))

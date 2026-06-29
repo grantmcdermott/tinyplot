@@ -7,6 +7,10 @@
 #' numeric.
 #'
 #' @inheritParams graphics::boxplot
+#' @param lighten logical. Should the fills use a lighter, opaque tint of the
+#'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group
+#'   displays consistent and lets the fill read cleanly over grid lines. Set to
+#'   `FALSE` to use the fully-saturated palette colour(s) instead.
 #' @examples
 #' # "boxplot" type convenience string
 #' tinyplot(count ~ spray, data = InsectSprays, type = "boxplot")
@@ -32,7 +36,8 @@ type_boxplot = function(
     outline = TRUE,
     boxwex = 0.8,
     staplewex = 0.5,
-    outwex = 0.5) {
+    outwex = 0.5,
+    lighten = TRUE) {
   out = list(
     draw = draw_boxplot(
       range = range,
@@ -43,7 +48,7 @@ type_boxplot = function(
       boxwex = boxwex,
       staplewex = staplewex,
       outwex = outwex),
-    data = data_boxplot(boxwex = boxwex),
+    data = data_boxplot(boxwex = boxwex, lighten = lighten),
     name = "boxplot"
   )
   class(out) = "tinyplot_type"
@@ -89,9 +94,10 @@ draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewe
 
 
 
-data_boxplot = function(boxwex = 0.8) {
+data_boxplot = function(boxwex = 0.8, lighten = TRUE) {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "by", "facet", "null_facet", "null_palette", "x", "col", "bg", "null_by"))
+        settings[["lighten"]] = lighten
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
 

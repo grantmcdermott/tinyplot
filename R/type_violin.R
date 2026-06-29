@@ -9,6 +9,10 @@
 #'   range of the data. Default is `FALSE`.
 #' @param width numeric (ideally in the range `[0, 1]`, although this isn't
 #'   enforced) giving the normalized width of the individual violins.
+#' @param lighten logical. Should the fills use a lighter, opaque tint of the
+#'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group
+#'   displays consistent and lets the fill read cleanly over grid lines. Set to
+#'   `FALSE` to use the fully-saturated palette colour(s) instead.
 #' @inherit stats::density details
 #' @details See [`type_density`] for more details and considerations related to
 #'   bandwidth selection and kernel types.
@@ -58,7 +62,8 @@ type_violin = function(
         n = 512,
         # more args from density here?
         trim = FALSE,
-        width = 0.9
+        width = 0.9,
+        lighten = TRUE
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
     if (is.logical(joint.bw)) {
@@ -67,7 +72,8 @@ type_violin = function(
     joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
     out = list(
         data = data_violin(bw = bw, adjust = adjust, kernel = kernel, n = n,
-                            joint.bw = joint.bw, trim = trim, width = width),
+                            joint.bw = joint.bw, trim = trim, width = width,
+                            lighten = lighten),
         # draw = NULL,
         # name = "polygon"
         draw = draw_polygon(density = NULL),
@@ -78,9 +84,11 @@ type_violin = function(
 }
 
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
-                        joint.bw = "none", trim = FALSE, width = 0.9) {
+                        joint.bw = "none", trim = FALSE, width = 0.9,
+                        lighten = TRUE) {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "by", "null_palette", "facet", "ylab", "col", "bg", "log", "null_by", "null_facet"))
+        settings[["lighten"]] = lighten
 
         
         # Handle ordering based on by and facet variables

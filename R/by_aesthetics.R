@@ -1,5 +1,5 @@
 #
-## orchestration function -----
+## main orchestration function -----
 #
 
 by_aesthetics = function(settings) {
@@ -69,265 +69,6 @@ by_aesthetics = function(settings) {
     settings,
     c("by_continuous", "by_ordered", "ngrps", "pch", "lty", "lwd", "cex", "col", "bg")
   )
-}
-
-
-#
-## helper functions -----
-#
-
-
-apply_alpha = function(cols, alpha, adjustcolor) {
-  if (is.null(cols) || is.null(alpha) || identical(alpha, 0)) {
-    return(cols)
-  }
-  adjustcolor(cols, alpha.f = alpha)
-}
-
-# Apply the lighter-but-opaque tint (PR #614) to each colour in a vector.
-lighten_fill = function(cols) {
-  if (is.null(cols)) return(cols)
-  vapply(
-    cols,
-    function(cc) if (is_achromatic(cc)) "lightgray" else seq_palette(cc, n = 3)[3],
-    character(1),
-    USE.NAMES = FALSE
-  )
-}
-
-is_by_keyword = function(x) {
-  is.character(x) && length(x) == 1 && !is.na(x) && identical(x, "by")
-}
-
-warn_recycle_colors = function(ncols, ngrps) {
-  warning(
-    "\nFewer colours (", ncols, ") provided than there are groups (",
-    ngrps, "). Recycling to make up the shortfall."
-  )
-}
-
-expand_colors_to_ngrps = function(values, ngrps, gradient) {
-  if (length(values) == 1) {
-    return(rep(values, ngrps))
-  }
-  if (length(values) >= ngrps) {
-    return(values[seq_len(ngrps)])
-  }
-  if (gradient) {
-    return(colorRampPalette(colors = values, alpha = TRUE)(ngrps))
-  }
-  warn_recycle_colors(length(values), ngrps)
-  rep_len(values, ngrps)
-}
-
-assert_len_1_or_ngrps = function(x, ngrps, name, allow_character = FALSE) {
-  types = if (allow_character) "numeric or character" else "numeric"
-  valid_type = is.numeric(x) || (allow_character && is.character(x))
-  valid = is.atomic(x) && is.vector(x) && valid_type && (length(x) == 1 || length(x) == ngrps)
-  if (!valid) {
-    stop(sprintf("`%s` must be `NULL`, or a %s vector of length 1 or %s.", name, types, ngrps), call. = FALSE)
-  }
-}
-
-match_palette_name = function(name, candidates) {
-  normalize = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
-  charmatch(normalize(name), normalize(candidates))
-}
-
-## Resolve a palette spec to its full concrete colour vector (or NULL if it
-## can't be resolved to a discrete set, e.g. a continuous hcl palette). Used to
-## support relative `col.default` indices.
-resolve_palette_to_colors = function(palette) {
-  if (is.null(palette)) return(NULL)
-  if (is.character(palette) && length(palette) > 1) return(unname(palette))
-  if (is.character(palette) && length(palette) == 1) {
-    discrete_pals = palette.pals()
-    idx = match_palette_name(palette, discrete_pals)
-    if (!is.na(idx) && idx >= 1L) {
-      return(unname(palette.colors(palette = discrete_pals[idx])))
-    }
-  }
-  NULL
-}
-
-## Resolve a (possibly relative) `col.default` against the qualitative palette.
-## `col_default` may be NULL, a character colour, or a numeric index into the
-## palette. A negative index additionally *drops* that colour from the palette
-## returned for grouped displays. So `col.default = -1` with an "Okabe-Ito"
-## palette uses black (the leading colour) for single-group plots and an
-## Okabe-Ito-minus-black palette for grouped plots, avoiding the need to keep a
-## separate "no-black" palette copy around (#598, #614). Returns a list with the
-## resolved single-group `col_default` and the (possibly trimmed) `palette`.
-resolve_col_default = function(col_default, palette_spec) {
-  if (!is.numeric(col_default)) {
-    return(list(col_default = col_default, palette = palette_spec))
-  }
-  full = resolve_palette_to_colors(palette_spec)
-  if (is.null(full)) {
-    return(list(col_default = NULL, palette = palette_spec))
-  }
-  i = as.integer(col_default)
-  out_col = full[abs(i)]
-  if (i < 0L) palette_spec = full[-abs(i)]
-  list(col_default = out_col, palette = palette_spec)
-}
-
-## Handle direct color input via `col` arg. Returns colors or NULL if not applicable.
-resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcolor) {
-  if (is.null(col) || !is.atomic(col) || !is.vector(col)) {
-    return(NULL)
-  }
-
-  cols = col
-  if (length(cols) == 1) {
-    cols = rep(cols, ngrps)
-  } else if (length(cols) < ngrps) {
-    cols = expand_colors_to_ngrps(cols, ngrps, gradient)
-  }
-
-  # Map numeric indices to palette colors (unless ordered)
-  if (!ordered && is.numeric(cols)) {
-    base_pal = palette()
-    cols = if (ngrps <= length(base_pal)) {
-      base_pal[cols]
-    } else {
-      hcl.colors(max(cols))[cols]
-    }
-  }
-
-  if (gradient) cols = rev(cols)
-  apply_alpha(cols, alpha, adjustcolor)
-}
-
-## High-level palette resolution: theme fallback, defaults, then delegate to resolve_palette_spec.
-resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradient, alpha, adjustcolor) {
-  palette_choice = palette
-
-  # Pick theme palette if no explicit palette provided
-  if (is.null(palette_choice) && !is.null(theme_palette)) {
-    palette_choice = theme_palette
-    if (is.character(theme_palette) && length(theme_palette) == 1) {
-      # Check if theme palette needs to switch to sequential
-      use_sequential = FALSE
-      idx = match_palette_name(theme_palette, palette.pals())
-      if (!is.na(idx) && idx >= 1L) {
-        max_colors = length(palette.colors(palette = palette.pals()[idx]))
-        use_sequential = ngrps >= max_colors || ordered
-      } else {
-        idx = match_palette_name(theme_palette, hcl.pals())
-        use_sequential = !is.na(idx) && idx >= 1L && gradient
-      }
-      if (use_sequential) {
-        palette_choice = get_tpar("palette.sequential", default = NULL)
-      }
-    }
-  }
-
-  if (is.null(palette_choice)) {
-    # Default palette selection (alpha applied at end)
-    base_pal = palette()
-    if (ngrps <= length(base_pal) && !ordered && !gradient) {
-      cols = base_pal[seq_len(ngrps)]
-    } else if (ngrps <= 8 && !ordered) {
-      cols = palette.colors(n = ngrps, palette = "R4")
-    } else if (!gradient && !ordered) {
-      cols = hcl.colors(n = ngrps, palette = "Viridis")
-    } else {
-      # Restricted viridis for gradient/ordered (excludes extreme ends)
-      cols = colorRampPalette(
-        hcl.colors(n = 100, palette = "Viridis")[11:90],
-        alpha = TRUE
-      )(ngrps)
-    }
-    cols = apply_alpha(cols, alpha, adjustcolor)
-  } else {
-    cols = resolve_palette_spec(
-      palette = palette_choice,
-      ngrps = ngrps,
-      gradient = gradient,
-      ordered = ordered,
-      alpha = alpha,
-      adjustcolor = adjustcolor
-    )
-  }
-
-  if (gradient || ordered) cols = rev(cols)
-  cols
-}
-
-## Parse palette arg (vector, string, call, or function) into colors.
-resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjustcolor) {
-  cols = NULL
-  if (is.character(palette) && length(palette) > 1) {
-    # Direct color vector
-    cols = palette
-  } else if (is.character(palette)) {
-    # Named palette string - try palette.pals() then hcl.pals()
-    discrete_pals = palette.pals()
-    idx = match_palette_name(palette, discrete_pals)
-
-    if (!is.na(idx)) {
-      if (idx < 1L) stop("'palette' is ambiguous")
-      matched_name = discrete_pals[idx]
-      max_colors = length(palette.colors(palette = matched_name))
-
-      if (gradient) {
-        cols = colorRampPalette(palette.colors(palette = matched_name))(ngrps)
-      } else if (ngrps >= max_colors) {
-        warn_recycle_colors(max_colors, ngrps)
-        cols = palette.colors(n = ngrps, palette = matched_name, recycle = TRUE)
-      } else {
-        cols = palette.colors(n = ngrps, palette = matched_name)
-      }
-    } else {
-      hcl_pals = hcl.pals()
-      idx = match_palette_name(palette, hcl_pals)
-      if (!is.na(idx)) {
-        if (idx < 1L) stop("'palette' is ambiguous")
-        cols = hcl.colors(n = ngrps, palette = palette)
-      } else {
-        stop(
-          "\nPalette string not recognized. Must be a value produced by either ",
-          "`palette.pals()` or `hcl.pals()`.\n",
-          call. = FALSE
-        )
-      }
-    }
-  } else if (inherits(palette, c("call", "name"))) {
-    # Expression or symbol
-    if (inherits(palette, "name")) {
-      eval_palette = tryCatch(eval(palette), error = function(e) NULL)
-      if (is.character(eval_palette)) {
-        cols = eval_palette
-      }
-    }
-    if (is.null(cols)) {
-      args = as.list(palette)
-      fun_name = paste(args[[1]])
-      args[[1]] = NULL
-      if (fun_name %in% c("c", "list")) {
-        cols = unlist(args, recursive = TRUE, use.names = FALSE)
-      } else {
-        args[["n"]] = ngrps
-        if (any(names(args) == "")) args[which(names(args) == "")] = NULL
-        cols = tryCatch(
-          do.call(fun_name, args),
-          error = function(e) do.call(eval(palette), args)
-        )
-      }
-    }
-  } else if (inherits(palette, "function")) {
-    cols = palette(ngrps)
-  } else {
-    stop(
-      "\nInvalid palette argument. Must be a recognized keyword, or a ",
-      "palette-generating function with named arguments.\n"
-    )
-  }
-
-  # Uniform post-processing
-  cols = expand_colors_to_ngrps(cols, ngrps, gradient)
-  apply_alpha(cols, alpha, adjustcolor)
 }
 
 
@@ -613,3 +354,262 @@ by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
 
   return(cex)
 }
+
+
+#
+## helper functions -----
+#
+
+apply_alpha = function(cols, alpha, adjustcolor) {
+  if (is.null(cols) || is.null(alpha) || identical(alpha, 0)) {
+    return(cols)
+  }
+  adjustcolor(cols, alpha.f = alpha)
+}
+
+# Apply the lighter-but-opaque tint (PR #614) to each colour in a vector.
+lighten_fill = function(cols) {
+  if (is.null(cols)) return(cols)
+  vapply(
+    cols,
+    function(cc) if (is_achromatic(cc)) "lightgray" else seq_palette(cc, n = 3)[3],
+    character(1),
+    USE.NAMES = FALSE
+  )
+}
+
+is_by_keyword = function(x) {
+  is.character(x) && length(x) == 1 && !is.na(x) && identical(x, "by")
+}
+
+warn_recycle_colors = function(ncols, ngrps) {
+  warning(
+    "\nFewer colours (", ncols, ") provided than there are groups (",
+    ngrps, "). Recycling to make up the shortfall."
+  )
+}
+
+expand_colors_to_ngrps = function(values, ngrps, gradient) {
+  if (length(values) == 1) {
+    return(rep(values, ngrps))
+  }
+  if (length(values) >= ngrps) {
+    return(values[seq_len(ngrps)])
+  }
+  if (gradient) {
+    return(colorRampPalette(colors = values, alpha = TRUE)(ngrps))
+  }
+  warn_recycle_colors(length(values), ngrps)
+  rep_len(values, ngrps)
+}
+
+assert_len_1_or_ngrps = function(x, ngrps, name, allow_character = FALSE) {
+  types = if (allow_character) "numeric or character" else "numeric"
+  valid_type = is.numeric(x) || (allow_character && is.character(x))
+  valid = is.atomic(x) && is.vector(x) && valid_type && (length(x) == 1 || length(x) == ngrps)
+  if (!valid) {
+    stop(sprintf("`%s` must be `NULL`, or a %s vector of length 1 or %s.", name, types, ngrps), call. = FALSE)
+  }
+}
+
+match_palette_name = function(name, candidates) {
+  normalize = function(x) tolower(gsub("[-, _, \\,, (, ), \\ , \\.]", "", x))
+  charmatch(normalize(name), normalize(candidates))
+}
+
+## Resolve a palette spec to its full concrete colour vector (or NULL if it
+## can't be resolved to a discrete set, e.g. a continuous hcl palette). Used to
+## support relative `col.default` indices.
+resolve_palette_to_colors = function(palette) {
+  if (is.null(palette)) return(NULL)
+  if (is.character(palette) && length(palette) > 1) return(unname(palette))
+  if (is.character(palette) && length(palette) == 1) {
+    discrete_pals = palette.pals()
+    idx = match_palette_name(palette, discrete_pals)
+    if (!is.na(idx) && idx >= 1L) {
+      return(unname(palette.colors(palette = discrete_pals[idx])))
+    }
+  }
+  NULL
+}
+
+## Resolve a (possibly relative) `col.default` against the qualitative palette.
+## `col_default` may be NULL, a character colour, or a numeric index into the
+## palette. A negative index additionally *drops* that colour from the palette
+## returned for grouped displays. So `col.default = -1` with an "Okabe-Ito"
+## palette uses black (the leading colour) for single-group plots and an
+## Okabe-Ito-minus-black palette for grouped plots, avoiding the need to keep a
+## separate "no-black" palette copy around (#598, #614). Returns a list with the
+## resolved single-group `col_default` and the (possibly trimmed) `palette`.
+resolve_col_default = function(col_default, palette_spec) {
+  if (!is.numeric(col_default)) {
+    return(list(col_default = col_default, palette = palette_spec))
+  }
+  full = resolve_palette_to_colors(palette_spec)
+  if (is.null(full)) {
+    return(list(col_default = NULL, palette = palette_spec))
+  }
+  i = as.integer(col_default)
+  out_col = full[abs(i)]
+  if (i < 0L) palette_spec = full[-abs(i)]
+  list(col_default = out_col, palette = palette_spec)
+}
+
+## Handle direct color input via `col` arg. Returns colors or NULL if not applicable.
+resolve_manual_colors = function(col, ngrps, gradient, ordered, alpha, adjustcolor) {
+  if (is.null(col) || !is.atomic(col) || !is.vector(col)) {
+    return(NULL)
+  }
+
+  cols = col
+  if (length(cols) == 1) {
+    cols = rep(cols, ngrps)
+  } else if (length(cols) < ngrps) {
+    cols = expand_colors_to_ngrps(cols, ngrps, gradient)
+  }
+
+  # Map numeric indices to palette colors (unless ordered)
+  if (!ordered && is.numeric(cols)) {
+    base_pal = palette()
+    cols = if (ngrps <= length(base_pal)) {
+      base_pal[cols]
+    } else {
+      hcl.colors(max(cols))[cols]
+    }
+  }
+
+  if (gradient) cols = rev(cols)
+  apply_alpha(cols, alpha, adjustcolor)
+}
+
+## High-level palette resolution: theme fallback, defaults, then delegate to resolve_palette_spec.
+resolve_palette_colors = function(palette, theme_palette, ngrps, ordered, gradient, alpha, adjustcolor) {
+  palette_choice = palette
+
+  # Pick theme palette if no explicit palette provided
+  if (is.null(palette_choice) && !is.null(theme_palette)) {
+    palette_choice = theme_palette
+    if (is.character(theme_palette) && length(theme_palette) == 1) {
+      # Check if theme palette needs to switch to sequential
+      use_sequential = FALSE
+      idx = match_palette_name(theme_palette, palette.pals())
+      if (!is.na(idx) && idx >= 1L) {
+        max_colors = length(palette.colors(palette = palette.pals()[idx]))
+        use_sequential = ngrps >= max_colors || ordered
+      } else {
+        idx = match_palette_name(theme_palette, hcl.pals())
+        use_sequential = !is.na(idx) && idx >= 1L && gradient
+      }
+      if (use_sequential) {
+        palette_choice = get_tpar("palette.sequential", default = NULL)
+      }
+    }
+  }
+
+  if (is.null(palette_choice)) {
+    # Default palette selection (alpha applied at end)
+    base_pal = palette()
+    if (ngrps <= length(base_pal) && !ordered && !gradient) {
+      cols = base_pal[seq_len(ngrps)]
+    } else if (ngrps <= 8 && !ordered) {
+      cols = palette.colors(n = ngrps, palette = "R4")
+    } else if (!gradient && !ordered) {
+      cols = hcl.colors(n = ngrps, palette = "Viridis")
+    } else {
+      # Restricted viridis for gradient/ordered (excludes extreme ends)
+      cols = colorRampPalette(
+        hcl.colors(n = 100, palette = "Viridis")[11:90],
+        alpha = TRUE
+      )(ngrps)
+    }
+    cols = apply_alpha(cols, alpha, adjustcolor)
+  } else {
+    cols = resolve_palette_spec(
+      palette = palette_choice,
+      ngrps = ngrps,
+      gradient = gradient,
+      ordered = ordered,
+      alpha = alpha,
+      adjustcolor = adjustcolor
+    )
+  }
+
+  if (gradient || ordered) cols = rev(cols)
+  cols
+}
+
+## Parse palette arg (vector, string, call, or function) into colors.
+resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjustcolor) {
+  cols = NULL
+  if (is.character(palette) && length(palette) > 1) {
+    # Direct color vector
+    cols = palette
+  } else if (is.character(palette)) {
+    # Named palette string - try palette.pals() then hcl.pals()
+    discrete_pals = palette.pals()
+    idx = match_palette_name(palette, discrete_pals)
+
+    if (!is.na(idx)) {
+      if (idx < 1L) stop("'palette' is ambiguous")
+      matched_name = discrete_pals[idx]
+      max_colors = length(palette.colors(palette = matched_name))
+
+      if (gradient) {
+        cols = colorRampPalette(palette.colors(palette = matched_name))(ngrps)
+      } else if (ngrps >= max_colors) {
+        warn_recycle_colors(max_colors, ngrps)
+        cols = palette.colors(n = ngrps, palette = matched_name, recycle = TRUE)
+      } else {
+        cols = palette.colors(n = ngrps, palette = matched_name)
+      }
+    } else {
+      hcl_pals = hcl.pals()
+      idx = match_palette_name(palette, hcl_pals)
+      if (!is.na(idx)) {
+        if (idx < 1L) stop("'palette' is ambiguous")
+        cols = hcl.colors(n = ngrps, palette = palette)
+      } else {
+        stop(
+          "\nPalette string not recognized. Must be a value produced by either ",
+          "`palette.pals()` or `hcl.pals()`.\n",
+          call. = FALSE
+        )
+      }
+    }
+  } else if (inherits(palette, c("call", "name"))) {
+    # Expression or symbol
+    if (inherits(palette, "name")) {
+      eval_palette = tryCatch(eval(palette), error = function(e) NULL)
+      if (is.character(eval_palette)) {
+        cols = eval_palette
+      }
+    }
+    if (is.null(cols)) {
+      args = as.list(palette)
+      fun_name = paste(args[[1]])
+      args[[1]] = NULL
+      if (fun_name %in% c("c", "list")) {
+        cols = unlist(args, recursive = TRUE, use.names = FALSE)
+      } else {
+        args[["n"]] = ngrps
+        if (any(names(args) == "")) args[which(names(args) == "")] = NULL
+        cols = tryCatch(
+          do.call(fun_name, args),
+          error = function(e) do.call(eval(palette), args)
+        )
+      }
+    }
+  } else if (inherits(palette, "function")) {
+    cols = palette(ngrps)
+  } else {
+    stop(
+      "\nInvalid palette argument. Must be a recognized keyword, or a ",
+      "palette-generating function with named arguments.\n"
+    )
+  }
+
+  # Uniform post-processing
+  cols = expand_colors_to_ngrps(cols, ngrps, gradient)
+  apply_alpha(cols, alpha, adjustcolor)
+}
+

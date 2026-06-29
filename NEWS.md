@@ -241,7 +241,7 @@ Theme fixes:
       axis range, e.g. for forcing zero onto a coefficient plot.
     - A length-2 vector with one `NA` (e.g. `ylim = c(0, NA)`) pins the non-`NA`
       limit and lets the data determine the other.
-    - The string `"rev` (or `"reverse"`) reverses the auto-computed axis range,
+    - The string `"rev"` (or `"reverse"`) reverses the auto-computed axis range,
       without needing to know the data extent in advance.
 - Type-specific updates:
   - `type_barplot()` gains an `offset` argument for shifting bar baselines away

@@ -50,6 +50,7 @@
     "iby",
     "ifacet",
     "labels",
+    "lighten",
     "lty",
     "lwd",
     "nfacet_cols",

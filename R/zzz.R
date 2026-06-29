@@ -75,6 +75,8 @@
     "oxaxis",
     "oyaxis",
     "pch",
+    "rev_x",
+    "rev_y",
     "ribbon.alpha",
     "split_data",
     "tpars",

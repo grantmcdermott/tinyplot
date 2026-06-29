@@ -182,9 +182,19 @@
 #' @param ann a logical value indicating whether the default annotation (title
 #'   and x and y axis labels) should appear on the plot.
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
-#'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
-#'   the range of the `finite` values to be plotted should be used.
-#' @param ylim the y limits of the plot.
+#'   and leads to a reversed axis (although see the `"rev(erse)"` keyword option
+#'   below). The default value, `NULL`, indicates that the range of the `finite`
+#'   values to be plotted should be used. Alongside the standard length-2 vector
+#'   (e.g., `xlim = c(0, 1)`), `tinyplot` supports three further convenience
+#'   forms:
+#'   - a single scalar (e.g. `xlim = 0`) ensures that the provided value is
+#'     covered by the axis range, irrespective of the data extent.
+#'   - a length-2 vector with one `NA` (e.g. `xlim = c(0, NA)`) pins the
+#'     non-`NA` limit and lets the data determine the other limit.
+#'   - the convenience string `"rev"` (or the longer `"reverse"`) reverses the
+#'     automatically-computed axis range. This is equivalent to passing a
+#'     descending vector, but without having to know the data extent in advance.
+#' @param ylim the y limits of the plot. Accepts the same input forms as `xlim`.
 #' @param axes logical or character. Should axes be drawn (`TRUE` or `FALSE`)?
 #'   Or alternatively what type of axes should be drawn: `"standard"` (with
 #'   axis, ticks, and labels; equivalent to `TRUE`), `"none"` (no axes;
@@ -790,6 +800,13 @@ tinyplot.default = function(
 
   dots = list(...)
 
+  # resolve any axis-reversal keyword (e.g. xlim = "reverse") into a flag, and
+  # reset the limit to NULL so the normal auto-range path runs (see lim.R)
+  .revx = sanitize_lim_rev(xlim, "xlim")
+  xlim = .revx[["lim"]]; rev_x = .revx[["rev"]]
+  .revy = sanitize_lim_rev(ylim, "ylim")
+  ylim = .revy[["lim"]]; rev_y = .revy[["rev"]]
+
   settings_list = list(
     # save call to check user input later
     call          = match.call(),
@@ -851,6 +868,8 @@ tinyplot.default = function(
     frame.plot    = frame.plot,
     xlim          = xlim,
     ylim          = ylim,
+    rev_x         = rev_x,
+    rev_y         = rev_y,
 
     # flags to check user input (useful later on)
     null_by       = is.null(by),
@@ -1361,6 +1380,7 @@ tinyplot.default = function(
       oxaxis = oxaxis, oyaxis = oyaxis,
       xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
       ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      rev_x = rev_x, rev_y = rev_y,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1393,6 +1413,7 @@ tinyplot.default = function(
       oxaxis = oxaxis, oyaxis = oyaxis,
       xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
       ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      rev_x = rev_x, rev_y = rev_y,
       asp = asp, log = log,
       dots = dots,
       draw = draw,

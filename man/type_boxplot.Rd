@@ -12,7 +12,8 @@ type_boxplot(
   outline = TRUE,
   boxwex = 0.8,
   staplewex = 0.5,
-  outwex = 0.5
+  outwex = 0.5,
+  lighten = TRUE
 )
 }
 \arguments{
@@ -47,6 +48,11 @@ type_boxplot(
 
 \item{outwex}{outlier line width expansion, proportional to box
     width.}
+
+\item{lighten}{logical. Should the fills use a lighter, opaque tint of the
+series colour(s)? Default is \code{TRUE}, which keeps single- and multi-group
+displays consistent and lets the fill read cleanly over grid lines. Set to
+\code{FALSE} to use the fully-saturated palette colour(s) instead.}
 }
 \description{
 Type function for producing box-and-whisker plots.

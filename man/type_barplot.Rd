@@ -12,7 +12,8 @@ type_barplot(
   FUN = NULL,
   xlevels = NULL,
   xaxlabels = NULL,
-  drop.zeros = FALSE
+  drop.zeros = FALSE,
+  lighten = TRUE
 )
 }
 \arguments{
@@ -59,6 +60,11 @@ defaulting to the levels of \code{x}.}
 \item{drop.zeros}{logical. Should bars with zero height be dropped? If set
 to \code{FALSE} (default) a zero height bar is still drawn for which the border
 lines will still be visible.}
+
+\item{lighten}{logical. Should the fills use a lighter, opaque tint of the
+series colour(s)? Default is \code{TRUE}, which keeps single- and multi-group
+displays consistent and lets the fill read cleanly over grid lines. Set to
+\code{FALSE} to use the fully-saturated palette colour(s) instead.}
 }
 \description{
 Type function for producing barplots. For formulas of type

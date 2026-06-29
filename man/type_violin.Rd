@@ -12,7 +12,8 @@ type_violin(
     "cosine", "optcosine"),
   n = 512,
   trim = FALSE,
-  width = 0.9
+  width = 0.9,
+  lighten = TRUE
 )
 }
 \arguments{
@@ -51,6 +52,11 @@ range of the data. Default is \code{FALSE}.}
 
 \item{width}{numeric (ideally in the range \verb{[0, 1]}, although this isn't
 enforced) giving the normalized width of the individual violins.}
+
+\item{lighten}{logical. Should the fills use a lighter, opaque tint of the
+series colour(s)? Default is \code{TRUE}, which keeps single- and multi-group
+displays consistent and lets the fill read cleanly over grid lines. Set to
+\code{FALSE} to use the fully-saturated palette colour(s) instead.}
 }
 \description{
 Type function for violin plots, which are an alternative to box

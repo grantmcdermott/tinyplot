@@ -26,8 +26,8 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<rect x='452.90' y='236.43' width='16.75' height='16.75' style='stroke-width: 0.75; fill: #000000;' />
-<rect x='452.90' y='254.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
+<rect x='452.90' y='236.43' width='16.75' height='16.75' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='452.90' y='254.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #DF536B; fill: #FFE0E4;' />
 <text x='476.52' y='225.00' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='46.69px' lengthAdjust='spacingAndGlyphs'>Survived</text>
 <text x='472.07' y='248.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='15.34px' lengthAdjust='spacingAndGlyphs'>No</text>
 <text x='472.07' y='266.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='19.58px' lengthAdjust='spacingAndGlyphs'>Yes</text>
@@ -62,10 +62,10 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDM2LjA3fDU5LjA0fDQzMC41Ng==)'>
-<rect x='73.00' y='148.93' width='158.68' height='131.43' style='stroke-width: 0.75; fill: #000000;' />
-<rect x='263.42' y='66.32' width='158.68' height='63.84' style='stroke-width: 0.75; fill: #000000;' />
-<rect x='73.00' y='148.93' width='158.68' height='0.00' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
-<rect x='263.42' y='66.32' width='158.68' height='0.00' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B;' />
+<rect x='73.00' y='148.93' width='158.68' height='131.43' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='263.42' y='66.32' width='158.68' height='63.84' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='73.00' y='148.93' width='158.68' height='0.00' style='stroke-width: 0.75; stroke: #DF536B; fill: #FFE0E4;' />
+<rect x='263.42' y='66.32' width='158.68' height='0.00' style='stroke-width: 0.75; stroke: #DF536B; fill: #FFE0E4;' />
 </g>
 </g>
 </svg>

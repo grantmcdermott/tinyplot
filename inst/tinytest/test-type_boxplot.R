@@ -107,3 +107,13 @@ f = function() {
   suppressWarnings(plt(mpg ~ factor(am), data = mtcars))
 }
 expect_snapshot_plot(f, label = "boxplot_auto_factor")
+
+#
+## lighter opaque grouped fills (#646); `lighten = FALSE` keeps the legacy
+## semi-transparent fill
+
+f = function() {
+  plt(len ~ dose | supp, data = ToothGrowth,
+    type = type_boxplot(lighten = FALSE), theme = "clean2")
+}
+expect_snapshot_plot(f, label = "boxplot_groups_lighten_false")

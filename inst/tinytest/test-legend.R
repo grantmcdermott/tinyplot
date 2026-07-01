@@ -299,3 +299,15 @@ f = function() {
   box("outer", lty = 2)
 }
 expect_snapshot_plot(f, label = "legend_right_dynmar_after_top")
+
+# The "continuous legend not supported" warning still fires for a continuous
+# `by` on an unsupported type ...
+expect_warning(
+  plt(mpg ~ wt | cyl, mtcars, type = "l"),
+  "Continuous"
+)
+# ... but not when the legend is suppressed (#656): the internal reversion to
+# discrete grouping still happens, so only the (moot) warning is skipped.
+expect_silent(
+  plt(mpg ~ wt | cyl, mtcars, type = "l", legend = FALSE)
+)

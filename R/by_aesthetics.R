@@ -16,7 +16,12 @@ by_aesthetics = function(settings) {
   by_ordered = FALSE
   by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot", "chull")) {
-    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    # Only warn if a legend would actually be drawn: the reversion to a discrete
+    # legend still needs to happen for correct grouping, but it's not worth
+    # flagging when the user has suppressed the legend anyway (#656).
+    if (!isFALSE(settings$legend)) {
+      warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    }
     by_continuous = FALSE
   } else if (!null_by) {
     by_ordered = is.ordered(by)

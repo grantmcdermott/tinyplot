@@ -13,7 +13,8 @@ type_spineplot(
   col = NULL,
   xaxlabels = NULL,
   yaxlabels = NULL,
-  weights = NULL
+  weights = NULL,
+  lighten = TRUE
 )
 }
 \arguments{
@@ -44,6 +45,11 @@ levels of the \code{x} and \code{y} variables (if character) or the correspondin
     observation in the data. If \code{NULL} all weights are implicitly
     assumed to be 1. If \code{x} is already a 2-way table, the weights
     are ignored.}
+
+\item{lighten}{logical. Should the fills use a lighter, opaque tint of the
+series colour(s)? Default is \code{TRUE}, which keeps single- and multi-group
+displays consistent and lets the fill read cleanly over grid lines. Set to
+\code{FALSE} to use the fully-saturated palette colour(s) instead.}
 }
 \description{
 Type function(s) for producing spineplots and spinograms, which

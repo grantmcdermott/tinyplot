@@ -8,6 +8,7 @@
 #'   levels of the `x` and `y` variables (if character) or the corresponding indexes
 #'   (if numeric) for the plot.
 #' @inheritParams graphics::spineplot
+#' @inheritParams type_barplot
 #' @examples
 #' # "spineplot" type convenience string
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot")
@@ -73,11 +74,11 @@
 #' )
 #' 
 #' @export
-type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, ylevels = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL) {
+type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, ylevels = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = TRUE) {
   col = col
   out = list(
-    data = data_spineplot(off = off, breaks = breaks, xlevels = xlevels, ylevels = ylevels, xaxlabels = xaxlabels, yaxlabels = yaxlabels, weights = weights),
-    draw = draw_spineplot(tol.ylab = tol.ylab, off = off, col = col, xaxlabels = xaxlabels, yaxlabels = yaxlabels),
+    data = data_spineplot(off = off, breaks = breaks, xlevels = xlevels, ylevels = ylevels, xaxlabels = xaxlabels, yaxlabels = yaxlabels, weights = weights, lighten = lighten),
+    draw = draw_spineplot(tol.ylab = tol.ylab, off = off, col = col, xaxlabels = xaxlabels, yaxlabels = yaxlabels, lighten = lighten),
     name = "spineplot"
   )
   class(out) = "tinyplot_type"
@@ -85,9 +86,10 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 }
 
 #' @importFrom grDevices nclass.Sturges
-data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL) {
+data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = TRUE) {
     fun = function(settings, ...) {
-        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "xaxt", "yaxt"))
+        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "xaxt", "yaxt", "lwd"))
+        settings[["lighten"]] = lighten
       
         ## process weights: a top-level `weights` column (carried on datapoints
         ## via NSE) takes precedence over the constructor-level `weights` arg.
@@ -289,7 +291,15 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         # legend customizations
         settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
         settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
-        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% 0
+        # Spineplot tiles carry black separating borders, so the swatches get a
+        # matching (black) border too (the colour override happens in
+        # build_legend_args when the swatch border is drawn). The swatch border
+        # width tracks the tile border width `lwd` -- the `pch = 22` swatch reads
+        # its border width from `pt.lwd` -- so e.g. `lwd = 0` drops both. (Base
+        # `legend()` can't dash a filled-square border, so `lty` only affects the
+        # tiles, not the swatch -- as with the other area types.)
+        spine_pt_lwd = if (is.null(lwd)) 1 else lwd
+        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% spine_pt_lwd
         settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
         settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
         
@@ -303,7 +313,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
     return(fun)
 }
 
-draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL) {
+draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, lighten = TRUE) {
     fun = function(ixmin, iymin, ixmax, iymax, ilty, ilwd, icol, ibg, 
                    flip,
                    facet_window_args,
@@ -325,7 +335,6 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
       
       ## graphical parameters
       if (is.null(col)) {
-        if (is.null(ibg)) ibg = icol
         if (isFALSE(y_by)) {
           # For single-group displays, use a neutral grey ramp (gray.colors)
           # whenever the resolved seed colour is achromatic (e.g. the black
@@ -335,18 +344,23 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
           # displays we never switch to grayscale: each group (including one
           # whose palette colour is black) follows the same seq_palette ramp so
           # the fills stay in sync with the legend swatches.
+          if (is.null(ibg)) ibg = icol
           gs = isTRUE(null_by) && is_achromatic(ibg)
           ibg = seq_palette(ibg, ny, grayscale = gs)
+        } else {
+          # When the y variable is itself the grouping (`y_by`), each band is a
+          # group's palette colour. The fill is resolved once in prepare_legend()
+          # and arrives via `ibg` -- lightened to match the other area types
+          # (barplot/boxplot/violin) unless `lighten` is off (issue #646). Only
+          # fall back to lightening the group colour `icol` here if no fill was
+          # supplied (e.g. a standalone draw outside the legend pipeline).
+          if (is.null(ibg)) ibg = if (isTRUE(lighten)) lighten_fill(icol) else icol
         }
         ibg = rep_len(ibg, ny)
       } else {
         ibg = col
       }
-      
-      if (type_info[["xaxt"]] %in% c("l", "t", "n") &&
-          type_info[["yaxt"]] %in% c("l", "t", "n") &&
-          !all(c(type_info[["xaxt"]], type_info[["yaxt"]]) == "n")) ilwd = 0
-      
+
       rect(
           xleft = ixmin, ybottom = iymin, xright = ixmax, ytop = iymax,
           lty = ilty,

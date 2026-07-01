@@ -112,3 +112,16 @@ f = function() {
     theme = "dynamic", type = "spineplot", xlab = NA)
 }
 expect_snapshot_plot(f, label = "spineplot_xlab_na_issue635")
+
+#
+## lighter opaque grouped (`y_by`) fills (#646); `lighten = FALSE` keeps the
+## fully-saturated palette colour(s)
+
+f = function() {
+  tinyplot(
+    Species ~ Sepal.Width | Species, data = iris,
+    type = type_spineplot(breaks = 4, lighten = FALSE),
+    palette = "Pastel 1"
+  )
+}
+expect_snapshot_plot(f, label = "spineplot_yby_lighten_false")

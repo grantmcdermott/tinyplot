@@ -319,6 +319,9 @@ Theme fixes:
   character `x` variable now draw the category labels on the x-axis, matching
   the behaviour of point plots. Previously these tick labels were only shown
   when dodging was active. (#648 @grantmcdermott)
+- The "Continuous legends not supported for this plot type" warning no longer
+  fires when the legend is suppressed, e.g. `legend = FALSE`.
+  (#656 @grantmcdermott)
 
 ## v0.6.1
 

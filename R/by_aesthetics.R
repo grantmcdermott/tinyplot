@@ -212,9 +212,10 @@ by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps
     if (!is.null(alpha)) bg = apply_alpha(bg, alpha, adjustcolor)
   }
 
-  # Legacy semi-transparent fill: ribbon-type plots, and the opt-out path for
-  # grouped boxplots (`lighten = FALSE`), which keeps the historical look.
-  if (type == "ribbon" || (type == "boxplot" && !is.null(by) && !light_ok)) {
+  # Semi-transparent fill for ribbon-type plots (the default look for ribbons).
+  # Other area types only become transparent if the user explicitly asks (e.g.
+  # `fill = 0.3`), which is handled via the `alpha` layering above.
+  if (type == "ribbon") {
     if (!is.null(bg)) {
       bg = adjustcolor(bg, ribbon.alpha)
     } else if (!is.null(col)) {

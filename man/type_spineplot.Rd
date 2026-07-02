@@ -14,7 +14,7 @@ type_spineplot(
   xaxlabels = NULL,
   yaxlabels = NULL,
   weights = NULL,
-  lighten = TRUE
+  lighten = FALSE
 )
 }
 \arguments{
@@ -46,10 +46,16 @@ levels of the \code{x} and \code{y} variables (if character) or the correspondin
     assumed to be 1. If \code{x} is already a 2-way table, the weights
     are ignored.}
 
-\item{lighten}{logical. Should the fills use a lighter, opaque tint of the
-series colour(s)? Default is \code{TRUE}, which keeps single- and multi-group
-displays consistent and lets the fill read cleanly over grid lines. Set to
-\code{FALSE} to use the fully-saturated palette colour(s) instead.}
+\item{lighten}{logical. For grouped spineplots where the \code{y} variable is
+itself the grouping variable (i.e. \code{y == by}), should the fills use a
+lighter, opaque tint of the series colour(s)? Default is \code{FALSE}, i.e. the
+fills use the fully-saturated palette colour(s). (Unlike the other area
+types such as \code{\link{type_barplot}}, where lightening is the default, spineplot
+tiles abut one another with no gap, so the darker saturated fills read
+better against their matching border colours.) Set to \code{TRUE} to opt in to
+the lighter tint. Note that \code{lighten} has no effect on other spineplot
+displays (single-group or \code{x == by}), which always use a sequential shading
+ramp of the base colour.}
 }
 \description{
 Type function(s) for producing spineplots and spinograms, which

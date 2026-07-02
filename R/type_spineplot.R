@@ -8,7 +8,16 @@
 #'   levels of the `x` and `y` variables (if character) or the corresponding indexes
 #'   (if numeric) for the plot.
 #' @inheritParams graphics::spineplot
-#' @inheritParams type_barplot
+#' @param lighten logical. For grouped spineplots where the `y` variable is
+#'   itself the grouping variable (i.e. `y == by`), should the fills use a
+#'   lighter, opaque tint of the series colour(s)? Default is `FALSE`, i.e. the
+#'   fills use the fully-saturated palette colour(s). (Unlike the other area
+#'   types such as [`type_barplot`], where lightening is the default, spineplot
+#'   tiles abut one another with no gap, so the darker saturated fills read
+#'   better against their matching border colours.) Set to `TRUE` to opt in to
+#'   the lighter tint. Note that `lighten` has no effect on other spineplot
+#'   displays (single-group or `x == by`), which always use a sequential shading
+#'   ramp of the base colour.
 #' @examples
 #' # "spineplot" type convenience string
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot")
@@ -74,7 +83,7 @@
 #' )
 #' 
 #' @export
-type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, ylevels = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = TRUE) {
+type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, ylevels = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
   col = col
   out = list(
     data = data_spineplot(off = off, breaks = breaks, xlevels = xlevels, ylevels = ylevels, xaxlabels = xaxlabels, yaxlabels = yaxlabels, weights = weights, lighten = lighten),
@@ -86,7 +95,7 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 }
 
 #' @importFrom grDevices nclass.Sturges
-data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = TRUE) {
+data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "xaxt", "yaxt", "lwd"))
         settings[["lighten"]] = lighten
@@ -289,6 +298,10 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         )
         
         # legend customizations
+        # lty = 0 so the filled-square swatch has no line component; otherwise
+        # legend() reserves `seg.len` horizontal space for a line segment beside
+        # the square, leaving an odd gap before the label (matches type_barplot).
+        settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% 0
         settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
         settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
         # Spineplot tiles carry black separating borders, so the swatches get a
@@ -313,7 +326,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
     return(fun)
 }
 
-draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, lighten = TRUE) {
+draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, lighten = FALSE) {
     fun = function(ixmin, iymin, ixmax, iymax, ilty, ilwd, icol, ibg, 
                    flip,
                    facet_window_args,

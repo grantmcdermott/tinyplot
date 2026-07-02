@@ -80,7 +80,7 @@ tinyplot(
 )
 
 # For flipped violin plots, it's usually better to use a dynamic theme to
-# accomodate (horizontal) y-axis labels
+# accommodate (horizontal) y-axis labels
 tinyplot(
   weight ~ feed, data = chickwts, type = "violin", flip = TRUE,
   theme = "dynamic" # or "clean(2)", "classic", "minimal", etc.

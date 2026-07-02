@@ -49,7 +49,7 @@
 #'
 #' ttnc = as.data.frame(Titanic)
 #' 
-#' # Note:The Titanic (ttnc) dataset is pre-tabulated, so we pass its frequency
+#' # Note: The Titanic (ttnc) dataset is pre-tabulated, so we pass its frequency
 #' # counts via the top-level `weights` argument (accepted via non-standard
 #' # evaluation in the formula method).
 #' tinyplot(

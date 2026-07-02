@@ -70,7 +70,7 @@ tinyplot(weight ~ feed, data = chickwts, type = "boxplot")
 tinyplot(weight ~ feed, data = chickwts)
 
 # For flipped boxplots, it's usually better to use a dynamic theme to
-# accomodate (horizontal) y-axis labels
+# accommodate (horizontal) y-axis labels
 tinyplot(weight ~ feed, data = chickwts, flip = TRUE, theme = "dynamic")
 
 # Grouped boxplot example using a different dataset

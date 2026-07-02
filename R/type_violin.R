@@ -20,36 +20,37 @@
 #'   
 #' @examples
 #' # "violin" type convenience string
-#' tinyplot(count ~ spray, data = InsectSprays, type = "violin")
+#' tinyplot(weight ~ feed, data = chickwts, type = "violin")
 #' 
-#' # aside: to match the defaults of `ggplot2::geom_violin()`, use `trim = TRUE`
-#' # and `joint.bw = FALSE`
-#' tinyplot(count ~ spray, data = InsectSprays, type = "violin",
-#'     trim = TRUE, joint.bw = FALSE)
+#' # to match the defaults of `ggplot2::geom_violin()`, use `trim = TRUE` and
+#' # `joint.bw = FALSE`
+#' tinyplot(
+#'   weight ~ feed, data = chickwts,
+#'   # type = type_violin(trim = TRUE, joint.bw = FALSE) # same but see final ex.
+#'   type = "violin", trim = TRUE, joint.bw = FALSE
+#' )
 #' 
-#' # use flip = TRUE to reorient the axes
-#' tinyplot(count ~ spray, data = InsectSprays, type = "violin", flip = TRUE)
-#' 
-#' # for flipped plots with long group labels, it's better to use a theme for
-#' # dynamic plot resizing
-#' tinytheme("clean")
-#' tinyplot(weight ~ feed, data = chickwts, type = "violin", flip = TRUE)
+#' # For flipped violin plots, it's usually better to use a dynamic theme to
+#' # accomodate (horizontal) y-axis labels
+#' tinyplot(
+#'   weight ~ feed, data = chickwts, type = "violin", flip = TRUE,
+#'   theme = "dynamic" # or "clean(2)", "classic", "minimal", etc.
+#' )
 #' 
 #' # you can group by the x var to add colour (here with the original orientation)
 #' tinyplot(weight ~ feed | feed, data = chickwts, type = "violin", legend = FALSE)
 #' 
 #' # dodged grouped violin plot example (different dataset)
-#' tinyplot(len ~ dose | supp, data = ToothGrowth, type = "violin", fill = 0.2)
+#' tinyplot(len ~ dose | supp, data = ToothGrowth, type = "violin")
 #' 
 #' # note: above we relied on `...` argument passing alongside the "violin"
 #' # type convenience string. But this won't work for `width`, since it will
 #' # clash with the top-level `tinyplot(..., width = <width>)` arg. To ensure
-#' # correct arg passing, it's safer to use the formal `type_violin()` option.
-#' tinyplot(len ~ dose | supp, data = ToothGrowth, fill = 0.2,
-#'     type = type_violin(width = 0.8))
-#' 
-#' # reset theme
-#' tinytheme()
+#' # correct arg passing, it's safer to use the functional `type_violin()` type.
+#' tinyplot(
+#'   len ~ dose | supp, data = ToothGrowth,
+#'   type = type_violin(width = 0.75)
+#' )
 #' 
 #' @importFrom stats density weighted.mean
 #' @importFrom stats bw.SJ bw.bcv bw.nrd bw.nrd0 bw.ucv 

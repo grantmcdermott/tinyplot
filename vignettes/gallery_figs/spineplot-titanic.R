@@ -3,7 +3,7 @@ ttnc = as.data.frame(Titanic)
 tinyplot(
     Survived ~ Sex | Class,
     facet = "by", facet.args = list(nrow = 1),
-    legend = FALSE,
+    legend = FALSE, lwd = 0,
     data = ttnc,
     type = "spineplot", weights = Freq,
     theme = "void", axes = "t",

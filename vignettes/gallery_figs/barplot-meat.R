@@ -12,7 +12,7 @@ tinyplot(
   consumption ~ decade | type,
   facet = country ~ 1,
   data = meat,
-  type = "barplot",
+  type = "barplot", lighten = FALSE,
   grid = "X",
   flip = TRUE,
   legend = list("bottom!", title = NULL),

@@ -63,18 +63,31 @@ numeric.
 }
 \examples{
 # "boxplot" type convenience string
-tinyplot(count ~ spray, data = InsectSprays, type = "boxplot")
+tinyplot(weight ~ feed, data = chickwts, type = "boxplot")
 
 # Note: Specifying the type here is redundant. Like base plot, tinyplot
 # automatically produces a boxplot if x is a factor and y is numeric
-tinyplot(count ~ spray, data = InsectSprays)
+tinyplot(weight ~ feed, data = chickwts)
 
-# Grouped boxplot example
-tinyplot(len ~ dose | supp, data = ToothGrowth, type = "boxplot")
+# For flipped boxplots, it's usually better to use a dynamic theme to
+# accomodate (horizontal) y-axis labels
+tinyplot(weight ~ feed, data = chickwts, flip = TRUE, theme = "dynamic")
+
+# Grouped boxplot example using a different dataset
+# (C.f., the final example in `?boxplot`)
+tinyplot(
+  len ~ dose | supp, data = ToothGrowth, type = "boxplot",
+  main = "Guinea Pigs' Tooth Growth",
+  legend = list(title = "Supplement"),
+  xlab = "Vitamin C dose mg", ylab = "tooth length"
+)
 
 # Use `type_boxplot()` to pass extra arguments for customization
 tinyplot(
-  len ~ dose | supp, data = ToothGrowth, lty = 1,
-  type = type_boxplot(boxwex = 0.3, staplewex = 0, outline = FALSE)
+  len ~ dose | supp, data = ToothGrowth,
+  type = type_boxplot(boxwex = 0.3, staplewex = 0, outline = FALSE), lty = 1,
+  legend = list(title = "Supplement"),
+  main = "Guinea Pigs' Tooth Growth",
+  xlab = "Vitamin C dose mg", ylab = "tooth length"
 )
 }

@@ -78,7 +78,6 @@ using some function (default: mean).
 tinyplot(~ cyl, data = mtcars, type = "barplot")
 tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
 tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
-tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE, fill = 0.2)
 
 # Reorder x variable categories either by their character levels or numeric indexes
 tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = c("8", "6", "4"))
@@ -89,14 +88,14 @@ tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
 # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
 # through the `type_barplot()` functional equivalent.
 tinyplot(
-  ~ cyl | vs, data = mtcars, fill = 0.2,
+  ~ cyl | vs, data = mtcars,
   type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65)
 )
 
 # Example for numeric y aggregated by x (default: FUN = mean) + facets
 tinyplot(
   extra ~ ID | group, facet = "by", data = sleep,
-  type = "barplot", fill = 0.6,
+  type = "barplot",
   theme = "clean2"
 )
 
@@ -104,18 +103,19 @@ tinyplot(
 tinyplot(
   Freq ~ Sex | Survived, data = as.data.frame(Titanic),
   facet = ~ Class, facet.args = list(nrow = 1),
-  type = "barplot", flip = TRUE, fill = 0.6,
+  type = "barplot", flip = TRUE,
   theme = "clean2"
 )
 
-# Centered barplot for conditional proportions of hair color (black/brown vs.
-# red/blond) given eye color and sex
+# Centered barplot for conditional proportions of dark (black/brown) vs.
+# light (red/blond) hair color, conditional on eye color and sex.
+# Aside: use `lighten = FALSE` to avoid lightening the bar fill colors.
 hec = as.data.frame(proportions(HairEyeColor, 2:3))
 hcols = c("black", "sienna", "indianred", "goldenrod")
 tinyplot(
   Freq ~ Eye | Hair, data = hec,
   facet = ~ Sex, facet.args = list(ncol = 1),
-  type = "barplot", center = TRUE,
+  type = type_barplot(center = TRUE, lighten = FALSE),
   flip = TRUE, yaxl = "percent",
   theme = list("clean2", palette.qualitative = hcols)
 )
@@ -129,7 +129,9 @@ d$item = factor(d$item, levels = d$item)
 d$offset = c(0, cumsum(d$value[1:3]), 0)
 tinyplot(
   value ~ item | I(value < 0), data = d,
-  type = type_barplot(offset = d$offset), legend = FALSE
+  type = type_barplot(offset = d$offset, lighten = FALSE),
+  col = NA, # (optional: turn off border)
+  legend = FALSE
 )
 tinyplot_add(type = type_vline(4.5), lty = 2)
 
@@ -153,9 +155,9 @@ lik$share = c( # proportions summing to 1 within each question
 pal = c("#b2182b", "#ef8a62", "#67a9cf", "#2166ac", "grey")
 tinyplot(
   share ~ question | response, data = lik,
-  type = "barplot", center = TRUE, offset = "Unsure",
+  type = type_barplot(center = TRUE, offset = "Unsure", lighten = FALSE),
   flip = TRUE, xlab = NA, ylab = NA, yaxl = "percent",
-  legend = list("top!", title = NULL),
+  legend = list("top!", title = FALSE),
   theme = list("clean2", palette.qualitative = pal),
   main = "Hypothetical Likert example with category offset"
 )

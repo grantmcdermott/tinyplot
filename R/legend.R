@@ -615,13 +615,8 @@ build_legend_args = function(
     # The swatch fill comes via `bg` (resolved in prepare_legend for the grouped
     # `y_by` case; NULL otherwise, falling back to the group colour).
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg %||% legend_args[["col"]]
-    # Grouped spineplot tiles always carry black separating borders, so the
-    # bordered swatch (pt.lwd turned on for `y_by` in data_spineplot) matches
-    # with a black border too. A group-coloured border would vanish against a
-    # pale fill (e.g. a pastel palette).
-    if (!is.null(legend_args[["pt.lwd"]]) && any(legend_args[["pt.lwd"]] > 0)) {
-      legend_args[["col"]] = par("fg")
-    }
+    # Conversely, the border colour is always black
+    legend_args[["col"]] = par("fg")
   } else if (identical(type, "ridge") && isFALSE(gradient)) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
   } else {

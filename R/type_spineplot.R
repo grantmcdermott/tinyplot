@@ -106,7 +106,7 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 #' @importFrom grDevices nclass.Sturges
 data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
     fun = function(settings, ...) {
-        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "xaxt", "yaxt", "lwd"))
+        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "frame.plot", "xaxt", "yaxt", "lwd", "lty"))
         settings[["lighten"]] = lighten
       
         ## process weights: a top-level `weights` column (carried on datapoints
@@ -280,6 +280,11 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         axes_orig = axes
         xaxt_orig = xaxt
         yaxt_orig = yaxt
+        # `frame.plot` defaults to TRUE for numeric-x spinograms (the outer box
+        # is drawn by draw_spineplot below, after the tiles); NULL/unset counts
+        # as TRUE. Preserve the user's choice before overwriting it, so the box
+        # honours the top-level `frame.plot` rather than the tile-border `lwd`.
+        frameplot_orig = !isFALSE(frame.plot)
 
         axes = FALSE
         frame.plot = FALSE
@@ -299,6 +304,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
           yaxlabels = yaxlabels,
           breaks = breaks,
           axes = axes_orig,
+          frame.plot = frameplot_orig,
           xaxt = xaxt_orig,
           yaxt = yaxt_orig,
           null_by = null_by,
@@ -307,21 +313,10 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         )
         
         # legend customizations
-        # lty = 0 so the filled-square swatch has no line component; otherwise
-        # legend() reserves `seg.len` horizontal space for a line segment beside
-        # the square, leaving an odd gap before the label (matches type_barplot).
+        # Mirror type_barplot()
         settings$legend_args[["lty"]] = settings$legend_args[["lty"]] %||% 0
         settings$legend_args[["pch"]] = settings$legend_args[["pch"]] %||% 22
         settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
-        # Spineplot tiles carry black separating borders, so the swatches get a
-        # matching (black) border too (the colour override happens in
-        # build_legend_args when the swatch border is drawn). The swatch border
-        # width tracks the tile border width `lwd` -- the `pch = 22` swatch reads
-        # its border width from `pt.lwd` -- so e.g. `lwd = 0` drops both. (Base
-        # `legend()` can't dash a filled-square border, so `lty` only affects the
-        # tiles, not the swatch -- as with the other area types.)
-        spine_pt_lwd = if (is.null(lwd)) 1 else lwd
-        settings$legend_args[["pt.lwd"]] = settings$legend_args[["pt.lwd"]] %||% spine_pt_lwd
         settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
         settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
         
@@ -410,7 +405,10 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
           if (is_facet_position(if(flip) "bottom" else "right", ifacet, facet_window_args)) spine_axis(if (flip) 1 else 4,
               type = type_info[["yaxt"]], categorical = FALSE)
       }
-      if(!x.categorical && (is.null(ilwd) || ilwd > 0)) box()
+      # Outer box for numeric-x spinograms. This is a structural frame, so it
+      # follows the top-level `frame.plot` (via type_info) rather than the
+      # tile-border `lwd` -- otherwise `lwd = 0` would wrongly drop the box too.
+      if (!x.categorical && isTRUE(type_info[["frame.plot"]])) box()
       
     }
     return(fun)

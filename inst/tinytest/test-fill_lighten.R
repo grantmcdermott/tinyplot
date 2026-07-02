@@ -138,8 +138,9 @@ expect_false(isTRUE(all.equal(spine_light, spine_seed)))
 # tile border width `lwd` (defaulting to 1), and build_legend_args() forces that
 # border *black* whenever it is drawn (pt.lwd > 0), matching the tiles -- a
 # group-coloured border would vanish against a pale fill. The fill arrives via
-# `bg` (lightened in prepare_legend for the grouped `y_by` case, saturated
-# otherwise); only the fill colour differs.
+# `bg` (lightened in prepare_legend only when `lighten = TRUE`, which is opt-in
+# for spineplots; saturated otherwise). Both fills are exercised below by
+# passing `bg` explicitly.
 build_swatch = function(bg, pt.lwd = 1) {
   le = new.env(parent = emptyenv())
   tinyplot:::build_legend_args(

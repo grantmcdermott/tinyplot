@@ -4,11 +4,15 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
-## Development
+## v0.7.0
+
+**tinyplot** v0.7.0 is a big release with many new features, including major
+updates to our theming logic and aesthetic stylings. Related updates are grouped
+below for easier navigation.
 
 ### Aesthetic changes
 
-The main focus of v0.7.0 is bringing various aesthetic improvements to 
+A major focus of v0.7.0 is bringing various aesthetic improvements to 
 **tinyplot**. These aesthetic improvements should carry over to all of your
 (tiny)plots automatically and do not require any changes to user-facing inputs 
 or the core API. From that perspective they are not a breaking change, even

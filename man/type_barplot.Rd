@@ -133,7 +133,7 @@ tinyplot(
   col = NA, # (optional: turn off border)
   legend = FALSE
 )
-tinyplot_add(type = type_vline(4.5), lty = 2)
+tinyplot_add(type = type_vline(4.5), lty = 2, col = "grey50")
 
 # 2. Diverging/Likert layout: a character (or named numeric) offset "sets
 # aside" the named category, pulling it out of the centered stack and drawing

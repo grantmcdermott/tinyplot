@@ -1,6 +1,9 @@
 ## Overview
 
-**tinyplot** v0.6.1 is a patch release containing bug fixes.
+**tinyplot** v0.7.0 is a feature release. It brings major updates to our theming
+logic and aesthetic stylings, several new plot types and `tinyplot.*` methods,
+and various other enhancements and bug fixes. See NEWS.md for the full list of
+changes.
 
 ## Test environments
 macOS (local)
@@ -9,10 +12,7 @@ Win Builder
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-Note: New maintainer email address (contact@grantmcdermott.com). This is the same
-person, just a different email.
+0 errors | 0 warnings | 0 notes
 
 P.S. We continue to run a comprehensive test suite comprising hundreds of test
 snapshots (i.e., SVG images) as part of our CI development workflow. See:

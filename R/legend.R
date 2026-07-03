@@ -496,6 +496,15 @@ prepare_legend = function(settings) {
     }
   }
 
+  # Grouped (`y_by`) spineplots draw their fills inside draw_spineplot() rather
+  # than via the shared `bg` channel, so `settings$bg` is NULL and the legend has
+  # nothing to mirror. Resolve the swatch fill here (where `col` is the resolved
+  # group palette) into `bg`, so the rest of the legend machinery treats it like
+  # any other area type. The fill tracks `lighten`, matching the plotted tiles.
+  if (identical(settings$type, "spineplot") && isTRUE(settings$type_info[["y_by"]])) {
+    settings$bg = if (isTRUE(settings$lighten)) lighten_fill(col) else col
+  }
+
   env2env(
     environment(),
     settings,
@@ -603,7 +612,11 @@ build_legend_args = function(
 
   # Special pt.bg handling for types that need color-based fills
   if (identical(type, "spineplot")) {
-    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% legend_args[["col"]]
+    # The swatch fill comes via `bg` (resolved in prepare_legend for the grouped
+    # `y_by` case; NULL otherwise, falling back to the group colour).
+    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg %||% legend_args[["col"]]
+    # Conversely, the border colour is always black
+    legend_args[["col"]] = par("fg")
   } else if (identical(type, "ridge") && isFALSE(gradient)) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
   } else {

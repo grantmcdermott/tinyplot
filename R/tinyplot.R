@@ -908,6 +908,7 @@ tinyplot.default = function(
     dodge         = NULL,
     dots          = dots,
     flip          = flip,
+    lighten       = TRUE, # area types may override via their type_data() fn
     group_offsets = NULL,
     offsets_axis  = NULL,
     sub           = sub,

@@ -19,7 +19,7 @@ pal = c("#b2182b", "#ef8a62", "#67a9cf", "#2166ac", "grey")
 
 plt(
   share ~ question | response, data = lik,
-  type = "barplot", center = TRUE, offset = "Unsure",
+  type = type_barplot(lighten = FALSE, center = TRUE, offset = "Unsure"),
   flip = TRUE, xlab = NA, ylab = NA, yaxl = "percent",
   legend = list("top!", title = FALSE),
   theme = list("clean2", palette.qualitative = pal),

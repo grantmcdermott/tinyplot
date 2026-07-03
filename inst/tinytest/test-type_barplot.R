@@ -13,31 +13,30 @@ expect_snapshot_plot(f, label = "barplot_group")
 
 
 f = function() {
-  tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE, fill = 0.2)
+  tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
 }
 expect_snapshot_plot(f, label = "barplot_group_beside")
 
 f = function() {
-  tinyplot(~ cyl | vs, data = mtcars, type = "barplot", fill = 0.2,
-           facet = "by")
+  tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by")
 }
 expect_snapshot_plot(f, label = "barplot_facet")
 
 f = function() {
-  tinyplot(~ cyl | vs, data = mtcars, type = "barplot", fill = 0.2,
+  tinyplot(~ cyl | vs, data = mtcars, type = "barplot",
            facet = "by", facet.args = list(free = TRUE))
 }
 expect_snapshot_plot(f, label = "barplot_facet_free")
 
 f = function() {
   tinyplot(extra ~ ID | group, facet = "by", data = sleep,
-    type = "barplot", beside = TRUE, fill = 0.6)
+    type = "barplot", beside = TRUE)
 }
 expect_snapshot_plot(f, label = "barplot_aggregation")
 
 f = function() {
   tinyplot(Freq ~ Sex | Survived, facet = ~ Class, data = as.data.frame(Titanic),
-           type = "barplot", flip = TRUE, fill = 0.6, beside = TRUE)
+           type = "barplot", flip = TRUE, beside = TRUE)
 }
 expect_snapshot_plot(f, label = "barplot_flip_fancy")
 
@@ -150,14 +149,16 @@ hec = as.data.frame(proportions(HairEyeColor, 2:3))
 # Character offset auto-places a set-aside category (the #420 use case)
 f = function() {
   tinyplot(Freq ~ Eye | Hair, facet = Sex ~ 1, data = hec, type = "barplot",
-    center = TRUE, flip = TRUE, yaxl = "percent", offset = "Red")
+    center = TRUE, flip = TRUE, lighten = FALSE, offset = "Red",
+    yaxl = "percent")
 }
 expect_snapshot_plot(f, label = "barplot_offset_aside")
 
 # Named numeric offset places a set-aside category at an explicit baseline
 f = function() {
   tinyplot(Freq ~ Eye | Hair, facet = Sex ~ 1, data = hec, type = "barplot",
-    center = TRUE, flip = TRUE, yaxl = "percent", offset = c(Red = 1.1))
+    center = TRUE, flip = TRUE, lighten = FALSE, offset = c(Red = 1.1),
+    yaxl = "percent")
 }
 expect_snapshot_plot(f, label = "barplot_offset_aside_explicit")
 
@@ -182,3 +183,12 @@ f = function() {
   tinyplot(~ Species, data = iris, type = "barplot", xlab = NA)
 }
 expect_snapshot_plot(f, label = "barplot_xlab_na_issue635")
+
+# Lighter opaque grouped fills (#646). The grouped bar fill should default to a
+# lighter, opaque tint of the palette colour, and `lighten = FALSE` should fall
+# back to the fully-saturated palette colour.
+f = function() {
+  tinyplot(~ cyl | vs, data = mtcars,
+    type = type_barplot(lighten = FALSE), theme = "clean2")
+}
+expect_snapshot_plot(f, label = "barplot_group_lighten_false")

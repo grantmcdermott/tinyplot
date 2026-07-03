@@ -113,6 +113,22 @@ New theme features:
     Note that this does imply a change for `"barplot"` types, which previously
     used a slightly darker `"grey"` (to match base R's `barplot()`), but we
     decided internal consistency was the more important feature to prioritize.
+- Building on the above, _multi-group_ `"boxplot"`, `"violin"`, and `"barplot"`
+  displays now also use the lighter-but-opaque fill, so that grouped plots match
+  their single-group counterparts (previously grouped barplots used dark
+  saturated fills and grouped boxplots/violins used semi-transparent fills). Each
+  type gains a `lighten` argument (default `TRUE`); set
+  `type_barplot(lighten = FALSE)` (etc.) to recover the fully-saturated palette
+  colours. `"histogram"` is deliberately excluded, since semi-transparency
+  remains preferable for overlapping grouped distributions. `"spineplot"` also
+  gains a `lighten` argument (only relevant for the `y == by` case), but defaults
+  to `FALSE` (saturated fills): its tiles abut one another with no gap, so the
+  darker fills read better against their matching border colours.
+  (#646 @grantmcdermott @zeileis)
+  - Relatedly, transparency requested via `fill` or `alpha` is now layered _on
+    top of_ the (lightened) fill rather than the saturated base colour. This
+    fixes a counterintuitive case where adding an alpha fill (e.g. `fill = 0.7`)
+    could _darken_ the interior of an area-based plot.
 
 Theme fixes:
 

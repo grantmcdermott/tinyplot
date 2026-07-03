@@ -9,6 +9,10 @@
 #'   range of the data. Default is `FALSE`.
 #' @param width numeric (ideally in the range `[0, 1]`, although this isn't
 #'   enforced) giving the normalized width of the individual violins.
+#' @param lighten logical. Should the fills use a lighter, opaque tint of the
+#'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group
+#'   displays consistent and lets the fill read cleanly over grid lines. Set to
+#'   `FALSE` to use the fully-saturated palette colour(s) instead.
 #' @inherit stats::density details
 #' @details See [`type_density`] for more details and considerations related to
 #'   bandwidth selection and kernel types.
@@ -16,36 +20,37 @@
 #'   
 #' @examples
 #' # "violin" type convenience string
-#' tinyplot(count ~ spray, data = InsectSprays, type = "violin")
+#' tinyplot(weight ~ feed, data = chickwts, type = "violin")
 #' 
-#' # aside: to match the defaults of `ggplot2::geom_violin()`, use `trim = TRUE`
-#' # and `joint.bw = FALSE`
-#' tinyplot(count ~ spray, data = InsectSprays, type = "violin",
-#'     trim = TRUE, joint.bw = FALSE)
+#' # to match the defaults of `ggplot2::geom_violin()`, use `trim = TRUE` and
+#' # `joint.bw = FALSE`
+#' tinyplot(
+#'   weight ~ feed, data = chickwts,
+#'   # type = type_violin(trim = TRUE, joint.bw = FALSE) # same but see final ex.
+#'   type = "violin", trim = TRUE, joint.bw = FALSE
+#' )
 #' 
-#' # use flip = TRUE to reorient the axes
-#' tinyplot(count ~ spray, data = InsectSprays, type = "violin", flip = TRUE)
-#' 
-#' # for flipped plots with long group labels, it's better to use a theme for
-#' # dynamic plot resizing
-#' tinytheme("clean")
-#' tinyplot(weight ~ feed, data = chickwts, type = "violin", flip = TRUE)
+#' # For flipped violin plots, it's usually better to use a dynamic theme to
+#' # accommodate (horizontal) y-axis labels
+#' tinyplot(
+#'   weight ~ feed, data = chickwts, type = "violin", flip = TRUE,
+#'   theme = "dynamic" # or "clean(2)", "classic", "minimal", etc.
+#' )
 #' 
 #' # you can group by the x var to add colour (here with the original orientation)
 #' tinyplot(weight ~ feed | feed, data = chickwts, type = "violin", legend = FALSE)
 #' 
 #' # dodged grouped violin plot example (different dataset)
-#' tinyplot(len ~ dose | supp, data = ToothGrowth, type = "violin", fill = 0.2)
+#' tinyplot(len ~ dose | supp, data = ToothGrowth, type = "violin")
 #' 
 #' # note: above we relied on `...` argument passing alongside the "violin"
 #' # type convenience string. But this won't work for `width`, since it will
 #' # clash with the top-level `tinyplot(..., width = <width>)` arg. To ensure
-#' # correct arg passing, it's safer to use the formal `type_violin()` option.
-#' tinyplot(len ~ dose | supp, data = ToothGrowth, fill = 0.2,
-#'     type = type_violin(width = 0.8))
-#' 
-#' # reset theme
-#' tinytheme()
+#' # correct arg passing, it's safer to use the functional `type_violin()` type.
+#' tinyplot(
+#'   len ~ dose | supp, data = ToothGrowth,
+#'   type = type_violin(width = 0.75)
+#' )
 #' 
 #' @importFrom stats density weighted.mean
 #' @importFrom stats bw.SJ bw.bcv bw.nrd bw.nrd0 bw.ucv 
@@ -58,7 +63,8 @@ type_violin = function(
         n = 512,
         # more args from density here?
         trim = FALSE,
-        width = 0.9
+        width = 0.9,
+        lighten = TRUE
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
     if (is.logical(joint.bw)) {
@@ -67,7 +73,8 @@ type_violin = function(
     joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
     out = list(
         data = data_violin(bw = bw, adjust = adjust, kernel = kernel, n = n,
-                            joint.bw = joint.bw, trim = trim, width = width),
+                            joint.bw = joint.bw, trim = trim, width = width,
+                            lighten = lighten),
         # draw = NULL,
         # name = "polygon"
         draw = draw_polygon(density = NULL),
@@ -78,9 +85,11 @@ type_violin = function(
 }
 
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
-                        joint.bw = "none", trim = FALSE, width = 0.9) {
+                        joint.bw = "none", trim = FALSE, width = 0.9,
+                        lighten = TRUE) {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "by", "null_palette", "facet", "ylab", "col", "bg", "log", "null_by", "null_facet"))
+        settings[["lighten"]] = lighten
 
         
         # Handle ordering based on by and facet variables

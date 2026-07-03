@@ -79,7 +79,7 @@ f = function() {
   tinyplot(
     Survived ~ Sex | Class, facet = "by", data = ttnc,
     type = type_spineplot(weights = ttnc$Freq),
-    palette = "Dark 2",  axes = "t", legend = FALSE
+    palette = "Dark 2",  axes = "t", legend = FALSE, lwd = 0
   )
 }
 expect_snapshot_plot(f, label = "spineplot_facet_by_fancy")
@@ -112,3 +112,18 @@ f = function() {
     theme = "dynamic", type = "spineplot", xlab = NA)
 }
 expect_snapshot_plot(f, label = "spineplot_xlab_na_issue635")
+
+#
+## spineplots default to saturated fills (lighten = FALSE); `lighten = TRUE`
+## opts in to the lighter-but-opaque tint used by the other area types (#646).
+## (The default saturated look is already covered by the `spineplot_yby` case
+## above.)
+
+f = function() {
+  tinyplot(
+    Species ~ Sepal.Width | Species, data = iris,
+    type = type_spineplot(breaks = 4, lighten = TRUE),
+    palette = "Pastel 1"
+  )
+}
+expect_snapshot_plot(f, label = "spineplot_yby_lighten_true")

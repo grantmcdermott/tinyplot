@@ -22,7 +22,7 @@ visualizations:
   side-positioned legends like `"right!"` and `"left!"`. This is a minor visual
   change from the previous default of centered legends, which we inherited from
   base R. However, users can still override this behaviour with the new `ljust`
-  parameter, which accepts values of `"l(eft)"` (new default) or `"c(enter")`
+  parameter, which accepts values of `"l(eft)"` (new default) or `"c(enter)"`
   (old default). (#500 @grantmcdermott)
   - Example: Override globally by setting `tpar(ljust = "c")`, or revert for a
     single plot by passing the parameter as part of the legend list arguments,
@@ -34,9 +34,9 @@ visualizations:
   - Note: The plot (facet) RHS margin is automatically expanded to prevent text
     clipping of these direct legend labels. However, the labels themselves may
     still overlap. Users can prevent this by passing helper arguments to the
-    legend contructor: either `repel` (for automatic vertical separation) or 
+    legend constructor: either `repel` (for automatic vertical separation) or
     `nudge_x`/`nudge_y` (for manual per-group offsets). For example,
-    `plt(..., legend = list("direct", repel = TRUE))`. 
+    `plt(..., legend = list("direct", repel = TRUE))`.
 
 #### Theme aesthetics
 
@@ -56,19 +56,19 @@ New theme features:
 - Similarly, `tinytheme()` also accepts `gap.main` and `gap.sub` primitives
   for controlling the spacing between titles and the plot region.
   (#595 @grantmcdermott)
-- Existing theme refinements and improvments. (#595, #603 @grantmcdermott).
+- Existing theme refinements and improvements. (#595, #603 @grantmcdermott).
   - `"tufte"` and `"void"` are now dynamic (responsive margins).
   - All of the `ggplot2`-inspired themes (`"bw"`, `"classic"`, etc.) now use
     smaller axis text and tighter spacing to better match their upstream
     `ggplot2` counterparts.
-  - `"ipsum"` has been similarly overhauled to match the upsteam theme (bold
+  - `"ipsum"` has been similarly overhauled to match the upstream theme (bold
     title, no ticks, fine grid, custom palette). Our original `tinyplot` variant
     is preserved as `"ipsum2"` for those who still want to use it.
   - `"dark"` now uses a better default `ribbon.alpha` for better contrast
     against the black background.
 - Added several new themes. (#595, #606 @grantmcdermott)
   - `"dynamic"` (new foundation for all other dynamic themes)
-  - `"broadsheet"` (data journalism style _a la_ _The Economist_ or _NY Times_)
+  - `"broadsheet"` (data journalism style _à la_ _The Economist_ or _NY Times_)
   - `"float"` (floating axes; a variant of `"tufte"`)
   - `"linedraw"` (based on the `ggplot2` theme)
   - `"nber"` (NBER working paper style)
@@ -139,7 +139,7 @@ Theme fixes:
 - Left-justified `main` and `sub` titles now correctly anchor to the y-axis
   line, even when long horizontal tick labels widen the left margin. (#479)
 - Similarly, center-justified axis titles are now anchored on the relevant
-  axis alone, rather than the full plot region. (#573) 
+  axis alone, rather than the full plot region. (#573)
 - `cex.xlab` and `cex.ylab` now correctly control axis title size. The
   more general `cex.lab` is still respected as a fallback. (#574)
 - Margin spacing now correctly adjusts for math expressions, including
@@ -219,7 +219,7 @@ Theme fixes:
     separation from `sub` is guaranteed). Appearance is customizable via
     `tpar()` parameters: `adj.cap`, `cex.cap`, `col.cap`, `font.cap`, and
     `line.cap`. (#592 @grantmcdermott)
-  - `weights = <varname>` for adding weights to statisical transformations.
+  - `weights = <varname>` for adding weights to statistical transformations.
     Supported types are models (`type_lm()`, `type_glm()`, `type_loess()`) and
     distributions (`type_density()`, `type_histogram()`, `type_spineplot()`). A
     warning is emitted if `weights` is passed to an unsupported type and the
@@ -276,14 +276,14 @@ Theme fixes:
     - If the offset is a character or named numeric vector, it instead "sets
       aside" the named level(s) of the `by` group, pulling them out of the stack
       and drawing them as standalone bars. This is useful for Likert plots,
-      where you want to show a neutral categories (e.g., "Unsure") apart from 
+      where you want to show a neutral category (e.g., "Unsure") apart from
       the diverging stack. Thanks to @strengejacke for the suggestion.
   - `type_text()` gains two new arguments:
     - a `labeller` argument that is passed to `tinylabel()` for formatting the
       text labels. (#620 @grantmcdermott)
     - a `repel` argument that automatically nudges overlapping text labels
-      apart. One limitation is that the repulsion logic operates with groups. So
-      there may still be some overlapping text for for grouped data.
+      apart. One limitation is that the repulsion logic operates within groups.
+      So there may still be some overlapping text for grouped data.
       (#621 @grantmcdermott)
   - Model-fit and various distribution types gain a `weights` argument; although
     this is best provided from the top-level `tinyplot()`/`plt()` call. See
@@ -301,12 +301,13 @@ Theme fixes:
   margin adjustment now computes tick labels per-facet and sizes the margin to
   accommodate the widest labels. (#579 @grantmcdermott)
 - Fixed several minor issues related to facet title strips and spacing: Strips
-  and spacing now scale correctly with `facet.cex`, multiline facet titles
-  inter-panel gaps remain fixed regardless of strip height, and strip text is 
-  now vertically centered within the background rect. (#586 @grantmcdermott)
+  and spacing now scale correctly with `facet.cex`; inter-panel gaps for
+  multiline facet titles remain fixed regardless of strip height; and strip
+  text is now vertically centered within the background rect.
+  (#586 @grantmcdermott)
 - Fixed Issue #593 where `palette.qualitative` in themes could not be a
   function. Thanks to @katrinabrock for the report. (#594 @zeileis)
-  - Polygon density hatching lines now correctly use the group colour instead of
+- Polygon density hatching lines now correctly use the group colour instead of
   black. Affects `type_polygon`, `type_chull`, and `type_ellipse` when
   `density` is set. (#610 @grantmcdermott)
 - Fixed inconsistent decimal places in the `tinylabel()` currency and comma
@@ -354,14 +355,14 @@ Theme fixes:
   (factor) produces a barplot, `~ x` (factor) produces a barplot, and `~ x`
   (numeric) produces a scatterplot against the index. The `~ 0` form is useful
   for types that don't require x/y, such as `segments` and `rect`. Thanks to
-  @katrinabrock for the suggestion. (#534 @zeileis, @grantmcdermott)
+  @katrinabrock for the suggestion. (#534 @zeileis @grantmcdermott)
 
 ### Bug fixes
 
 - Fixed Issue #545 where xaxs/yaxs were not restored when set by an internal
   function. (#545 @zeileis)
 - Fixed Issue #553 where `facet.args = list(free = TRUE)` lead to an error
-  when used used without facets. Thanks to @katrinabrock for the report.
+  when used without facets. Thanks to @katrinabrock for the report.
   (#554 @zeileis)
 - Fixed `type_ridge()` fill errors for themes that set a qualitative palette,
   e.g. `"clean2"`. (#564 @grantmcdermott)
@@ -588,8 +589,8 @@ Theme fixes:
   cairo graphics are supported on the user's machine. This should help to ensure
   better fidelity of (non-standard) fonts in PDFs. (#311 @grantmcdermott)
 - The `palette` argument now accepts a vector or list of manual colours, e.g.
-  `tinyplot(..., palette = c("cyan4", "hotpink, "purple4"))`, or
-  `tinytheme("clean", palette = c("cyan4", "hotpink, "purple4"))` (#325 @grantmcdermott)
+  `tinyplot(..., palette = c("cyan4", "hotpink", "purple4"))`, or
+  `tinytheme("clean", palette = c("cyan4", "hotpink", "purple4"))` (#325 @grantmcdermott)
 - Two new sets of top-level arguments allow for greater axis customization:
   - `xaxb`/`yaxb` control the manual break points of the axis tick marks. (#400 @grantmcdermott)
   - `xaxl`/`yaxl` apply a formatting function to change the appearance of the
@@ -840,7 +841,7 @@ enable fine-grained control over this behaviour. (#228 @eleuven and
 - Major internal refactor of the type drawing and data processing. (#222
 @vincentarelbundock)
 - Documentation improvements, e.g. explicit guidance on how to specify multiple
-grouping variables (thanks to @strengjacke for reporting #213).
+grouping variables (thanks to @strengejacke for reporting #213).
   - The new functional type processing system also means that each type now
     has its own help page (e.g. `?type_hist`, `type_ridge`, etc.)
 
@@ -981,7 +982,7 @@ This function replaces some older (non-exported) internal functions that
 also prove help to end users who are looking for additional ways to restore
 `par` settings after the fact. See `?get_saved_par` for some examples. (#152
 @grantmcdermott)
-- `tinyplot`/`plt` gaina a new `alpha = <numeric[0,1]>` convenience argument for
+- `tinyplot`/`plt` gains a new `alpha = <numeric[0,1]>` convenience argument for
 adding transparency to plot elements and colours. Example use:
 `plt(rnorm(1e3), pch = 19, alpha = 0.3)`. (#129 @grantmcdermott)
 - Similar to the preceding news item, transparency can be added to (grouped)
@@ -1098,7 +1099,7 @@ added in future releases. (#33, #94 @grantmcdermott)
 Bug fixes:
 
 - Y-label correctly prints if a function was used for the atomic plot method,
-e.g. `plot2(rnorm(100)`. (#52 etiennebacher)
+e.g. `plot2(rnorm(100))`. (#52 etiennebacher)
 - Ribbon plot types are now automatically ordered by the x variable. (#54
 @grantmcdermott)
 - Interval plots like ribbons, errorbars, and pointranges are now correctly
@@ -1176,7 +1177,7 @@ Bug fixes:
 Internals:
 
 - Better formula parsing for `plot2.formula` (#8 by @zeileis).
-- Unit testing scaffolding based on **tinysnaphot** (#11 by @vincent).
+- Unit testing scaffolding based on **tinysnapshot** (#11 by @vincent).
 
 Project:
 

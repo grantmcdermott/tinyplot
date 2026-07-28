@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>type_loess – tinyplot</title>
+<title>type_hexbin – tinyplot</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -242,7 +242,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Types</li><li class="breadcrumb-item"><a href="../man/type_glm.html">Models</a></li><li class="breadcrumb-item"><a href="../man/type_loess.html">type_loess</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Types</li><li class="breadcrumb-item"><a href="../man/type_barplot.html">Visualizations</a></li><li class="breadcrumb-item"><a href="../man/type_hexbin.html">type_hexbin</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -365,13 +365,13 @@ window.Quarto = {
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Visualizations</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_barplot.html" class="sidebar-item-text sidebar-link">
@@ -404,7 +404,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_hexbin.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/type_hexbin.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">type_hexbin</span></a>
   </div>
 </li>
@@ -454,13 +454,13 @@ window.Quarto = {
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
  <span class="menu-text">Models</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_glm.html" class="sidebar-item-text sidebar-link">
@@ -469,7 +469,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_loess</span></a>
   </div>
 </li>
@@ -638,38 +638,39 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#local-polynomial-regression-plot-type" id="toc-local-polynomial-regression-plot-type" class="nav-link active" data-scroll-target="#local-polynomial-regression-plot-type">Local polynomial regression plot type</a>
+  <li><a href="#hexagonal-binning-plot-type" id="toc-hexagonal-binning-plot-type" class="nav-link active" data-scroll-target="#hexagonal-binning-plot-type">Hexagonal binning plot type</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Types</li><li class="breadcrumb-item"><a href="../man/type_glm.html">Models</a></li><li class="breadcrumb-item"><a href="../man/type_loess.html">type_loess</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Types</li><li class="breadcrumb-item"><a href="../man/type_barplot.html">Visualizations</a></li><li class="breadcrumb-item"><a href="../man/type_hexbin.html">type_hexbin</a></li></ol></nav></header>
 
 
 
 
-<section id="local-polynomial-regression-plot-type" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="local-polynomial-regression-plot-type">Local polynomial regression plot type</h2>
+<section id="hexagonal-binning-plot-type" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="hexagonal-binning-plot-type">Hexagonal binning plot type</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Type function for plotting a LOESS (LOcal regrESSion) fit. Arguments are passed to <code>loess</code>.</p>
+<p>Type function for hexagonal bin plots (a 2D analogue of a histogram). Point density is aggregated into a regular hexagonal lattice and each occupied cell is drawn as a hexagon whose fill colour encodes the number of points it contains. This is a lightweight (vectorized), pure R implementation of the canonical hexagonal binning algorithm of Carr et al. (1987).</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_loess(
-  span = 0.75,
-  degree = 2,
-  family = "gaussian",
-  control = loess.control(),
-  se = TRUE,
-  level = 0.95,
-  weights = NULL
+<pre><code class="language-R">type_hexbin(
+  xbins = 30,
+  shape = 1,
+  mincnt = 1,
+  maxcnt = Inf,
+  border = NA,
+  fun = NULL
 )
 </code></pre>
 </section>
@@ -678,82 +679,143 @@ window.Quarto = {
 <table role="presentation">
 <tbody><tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="span">span</code>
+<code id="xbins">xbins</code>
 </td>
 <td>
-the parameter <span class="math inline">\(\alpha\)</span> which controls the degree of smoothing.
+Integer. The number of bins partitioning the range of the x-axis. Default is <code>30</code>.
 </td>
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="degree">degree</code>
+<code id="shape">shape</code>
 </td>
 <td>
-the degree of the polynomials to be used, normally 1 or 2. (Degree 0 is also allowed, but see the ‘Note’.)
+Numeric. The aspect ratio (height/width) of the plotting region used to compute the hexagon geometry. Default is <code>1</code>.
 </td>
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="family">family</code>
+<code id="mincnt">mincnt</code>, <code id="maxcnt">maxcnt</code>
 </td>
 <td>
-a description of the error distribution and link function to be used in the model. For <code>glm</code> this can be a character string naming a family function, a family function or the result of a call to a family function. For <code>glm.fit</code> only the third option is supported. (See <code>family</code> for details of family functions.)
+Integer. Cells with counts outside the <code style="white-space: pre;">[mincnt, maxcnt]</code> range are omitted. Defaults keep all occupied cells.
 </td>
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="control">control</code>
+<code id="border">border</code>
 </td>
 <td>
-control parameters: see <code>loess.control</code>.
+Colour for the hexagon borders, passed to <code>polygon</code>. The default <code>NA</code> omits the border entirely. Set a colour (e.g.&nbsp;<code>“black”</code>) for outlined hexagons. Passing the sentinel string <code>“fill”</code> matches the border to each cell’s fill colour, which produces perfectly seamless tiling.
 </td>
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="se">se</code>
+<code id="fun">fun</code>
 </td>
 <td>
-logical. If <code>TRUE</code> (the default), confidence intervals are drawn.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="level">level</code>
-</td>
-<td>
-the confidence level required if <code>se = TRUE</code>. Default is 0.95.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="weights">weights</code>
-</td>
-<td>
-an optional numeric vector of observation weights for the model fit, of the same length as the number of data points. Weights can also be supplied via the top-level <code>weights</code> argument of <code>tinyplot</code> (which is evaluated with non-standard evaluation in the formula method, and takes precedence if both are given).
+Function used to summarise a <em>numeric</em> <code>by</code> variable within each cell (see Details). Defaults to <code>NULL</code>, which is equivalent to <code>mean</code>. Has no effect when <code>by</code> is absent (count mode) or discrete (modal mode).
 </td>
 </tr>
 </tbody></table>
+</section>
+<section id="details" class="level3">
+<h3 class="anchored" data-anchor-id="details">Details</h3>
+<p>Hexagonal binning partitions the plotting region into a regular lattice of hexagons. Following the original Carr et al.&nbsp;(1987) algorithm, rows are spaced <span class="math inline">\(\sqrt{3}/2\)</span> apart in scaled space, with odd rows offset by half a cell in the x-direction, while each point is assigned to its nearest lattice node.</p>
+<p>What the fill colour encodes depends on whether a <code>by</code> variable is supplied (e.g.&nbsp;<code>y ~ x | z</code>):</p>
+<ul>
+<li>
+<p><strong>No <code>by</code> (default).</strong> The fill encodes the <em>cell count</em>, mapped to a continuous colour gradient with an automatic colourbar legend.</p>
+</li>
+<li>
+<p><strong>Discrete <code>by</code>.</strong> The fill encodes the <em>modal</em> (most frequent) level of the <code>by</code> variable within each cell, drawn with a discrete qualitative palette and legend. Useful for mapping the dominant category across a dense scatter.</p>
+</li>
+<li>
+<p><strong>Numeric <code>by</code>.</strong> The fill encodes a per-cell summary of the <code>by</code> variable—by default the mean, or any other function passed via <code>fun</code> (e.g.&nbsp;<code>fun = sum</code>). Like the original no-<code>by</code> case, the legend is drawn as a continuous gradient. This is the hexagonal analogue of a binned heatmap.</p>
+</li>
+</ul>
+<p>In all three modes, the <code>mincnt</code>/<code>maxcnt</code> filters still apply to the raw cell <em>count</em>, so sparsely populated cells can be excluded regardless of what the colour encodes.</p>
+<p>Because the hexagon size is derived from the data ranges, hexagons will only appear perfectly regular when the plot region’s aspect ratio matches <code>shape</code>. Adjust <code>shape</code> (or the device dimensions) if you need visually regular hexagons.</p>
+<p>The <a href="https://CRAN.R-project.org/package=tinyplot"><span class="pkg">tinyplot</span></a> implementation presented here is a compact (vectorised) translation of the original Carr et al.&nbsp;algorithm into base R. Users requiring the fuller feature set of a dedicated hexbinning package should consult <a href="https://CRAN.R-project.org/package=hexbin"><span class="pkg">hexbin</span></a> as a canonical reference, which is built on top of compiled Fortran code. Note that we have validated our cell counts against this package to confirm they match exactly.</p>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<p>Carr, D. B., Littlefield, R. J., Nicholson, W. L., and Littlefield, J. S. (1987). <cite>Scatterplot Matrix Techniques for Large N</cite>. Journal of the American Statistical Association, 82(398), 424-436. Available: https://doi.org/10.2307/2289444</p>
+<p>Carr, D., Lewin-Koh, N., Maechler, M., and Sarkar, D. (2024). <cite>hexbin: Hexagonal Binning Routines</cite>. R package version 1.28.5. Available: https://doi.org/10.32614/CRAN.package.hexbin. The <a href="https://CRAN.R-project.org/package=hexbin"><span class="pkg">hexbin</span></a> package provides the canonical implementation of this algorithm, and was a valuable reference for validating our cell counts.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># "loess" type convenience string</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars, <span class="at">type =</span> <span class="st">"loess"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">20000</span>), <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">20000</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># "hexbin" type convenience string</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat, <span class="at">type =</span> <span class="st">"hexbin"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="type_loess_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_hexbin_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use `type_loess()` to pass extra arguments for customization</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars, <span class="at">type =</span> <span class="fu">type_loess</span>(<span class="at">span =</span> <span class="fl">0.5</span>, <span class="at">degree =</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use type_hexbin() to pass extra arguments</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat, <span class="at">type =</span> <span class="fu">type_hexbin</span>(<span class="at">xbins =</span> <span class="dv">40</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="type_loess_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="type_hexbin_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tinyplot's default palette logic maps darker colours (the end of the</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># spectrum) to higher densities. For hexbin plots it can sometimes be more</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># visually pleasing to reverse this, which users can do manually by passing a</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># reversed palette.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="at">data =</span> dat, <span class="at">type =</span> <span class="st">"hexbin"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">hcl.colors</span>(<span class="dv">100</span>, <span class="at">palette =</span> <span class="st">"viridis"</span>, <span class="at">rev =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_hexbin_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Passing a `by` grouping variable will colour cells according to a summary</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># of this variable (in each hex cell) instead of density count. The default</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># summary function depends on whether `by` is discrete or continuous:</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Discrete grouping variable: each cell is coloured by its mode.</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>g <span class="ot">=</span> <span class="fu">cut</span>(dat<span class="sc">$</span>x, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="cn">Inf</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"lo"</span>, <span class="st">"mid"</span>, <span class="st">"hi"</span>))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> g, <span class="at">data =</span> dat, <span class="at">type =</span> <span class="st">"hexbin"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_hexbin_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Continuous grouping variable: each cell is coloured by its mean. </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    Example: Create a long version of the `volcano` dataset, and plot its</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#    elevations onto a gridded terrain map.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>volc <span class="ot">=</span> <span class="fu">local</span>({</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">=</span> <span class="fu">setNames</span>(<span class="fu">stack</span>(<span class="fu">as.data.frame</span>(volcano)), <span class="fu">c</span>(<span class="st">"elevation"</span>, <span class="st">"y"</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  v<span class="sc">$</span>y <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"^V"</span>, <span class="st">""</span>, v<span class="sc">$</span>y))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  v<span class="sc">$</span>x <span class="ot">=</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(volcano))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  v</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="sc">|</span> elevation, <span class="at">data =</span> volc,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"hexbin"</span>, <span class="at">xbins =</span> <span class="dv">50</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">terrain.colors</span>(<span class="dv">100</span>, <span class="at">rev =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_hexbin_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

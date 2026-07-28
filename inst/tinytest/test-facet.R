@@ -572,6 +572,19 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_single_value")
 
+# Free facets combined with flip: the fixed continuous-axis limit must follow
+# the flip and be honoured, rather than the wrong axis being freed (issue #670)
+f = function() {
+  tinyplot(
+    mpg ~ carb, data = mtcars, type = "p",
+    facet = ~am, facet.args = list(free = TRUE),
+    ylim = c(0, 50),
+    flip = TRUE,
+    main = "Free facets: flipped"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_flip")
+
 #
 # restore original par settings
 #

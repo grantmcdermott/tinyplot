@@ -312,7 +312,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
-<li>Fixed bug where single-valued discrete axes would trigger invalid <code>par(usr)</code> values when combined with free facets. (<a href="https://github.com/grantmcdermott/tinyplot/issues/668">#668</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Fixed several bugs specific to plots with free facets (i.e., <code>facet.args = list(free = TRUE)</code>):
+<ul>
+<li>Single-valued discrete axes no longer trigger invalid <code>par(usr)</code> values. (<a href="https://github.com/grantmcdermott/tinyplot/issues/668">#668</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>User-provided <code>x/ylim</code> overrides now work correctly with flipped plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/670">#670</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul></li>
 </ul>
 </section>
 </section>

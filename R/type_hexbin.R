@@ -101,10 +101,10 @@
 #' #    Example: Create a long version of the `volcano` dataset, and plot its
 #' #    elevations onto a gridded terrain map.
 #' volc = local({
-#'   d = setNames(stack(as.data.frame(volcano)), c("elevation", "y"))
-#'   d$y = as.numeric(gsub("^V", "", d$y))
-#'   d$x = seq_len(nrow(volcano))
-#'   d
+#'   v = setNames(stack(as.data.frame(volcano)), c("elevation", "y"))
+#'   v$y = as.numeric(gsub("^V", "", v$y))
+#'   v$x = seq_len(nrow(volcano))
+#'   v
 #' })
 #' tinyplot(
 #'   y ~ x | elevation, data = volc,

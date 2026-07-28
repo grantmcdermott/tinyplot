@@ -3,29 +3,30 @@
 #' @description Type function for hexagonal bin plots (a 2D analogue of a
 #'   histogram). Point density is aggregated into a regular hexagonal lattice
 #'   and each occupied cell is drawn as a hexagon whose fill colour encodes the
-#'   number of points it contains. This is a lightweight, dependency-free
-#'   implementation of the standard hexagonal binning algorithm of Carr et al.
+#'   number of points it contains. This is a lightweight (vectorized), pure R
+#'   implementation of the canonical hexagonal binning algorithm of Carr et al.
 #'   (1987).
 #'
 #' @details Hexagonal binning partitions the plotting region into a regular
-#'   lattice of hexagons: rows are spaced \eqn{\sqrt{3}/2} apart in scaled
-#'   space, with odd rows offset by half a cell in the x-direction, and each
-#'   point is assigned to its nearest lattice node. The geometry follows the
-#'   original algorithm of Carr et al. (1987).
+#'   lattice of hexagons. Following the original Carr et al. (1987) algorithm, 
+#'   rows are spaced \eqn{\sqrt{3}/2} apart in scaled space, with odd rows
+#'   offset by half a cell in the x-direction, while each point is assigned to
+#'   its nearest lattice node.
 #'
 #'   What the fill colour encodes depends on whether a `by` variable is supplied
 #'   (e.g. `y ~ x | z`):
 #'
 #'   * **No `by` (default).** The fill encodes the *cell count*, mapped to a
 #'     continuous colour gradient with an automatic colourbar legend.
-#'   * **Numeric `by`.** The fill encodes a per-cell summary of the `by`
-#'     variable---by default the mean, or any other function passed via `fun`
-#'     (e.g. `fun = median`). Also drawn as a continuous gradient. This is the
-#'     hexagonal analogue of a binned heatmap.
 #'   * **Discrete `by`.** The fill encodes the *modal* (most frequent) level of
 #'     the `by` variable within each cell, drawn with a discrete qualitative
 #'     palette and legend. Useful for mapping the dominant category across a
 #'     dense scatter.
+#'   * **Numeric `by`.** The fill encodes a per-cell summary of the `by`
+#'     variable---by default the mean, or any other function passed via `fun`
+#'     (e.g. `fun = sum`). Like the original no-`by` case, the legend is drawn
+#'     as a continuous gradient. This is the hexagonal analogue of a binned
+#'     heatmap.
 #'
 #'   In all three modes, the `mincnt`/`maxcnt` filters still apply to the raw
 #'   cell *count*, so sparsely populated cells can be excluded regardless of

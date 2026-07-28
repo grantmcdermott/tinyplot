@@ -15,7 +15,8 @@ where the formatting is also better._
 
 ### Bug fixes
 
-- Fix bug for single-valued discrete axes with free facets (#668 @grantmcdermott)
+- Fixed bug where single-valued discrete axes would trigger invalid `par(usr)`
+  values when combined with free facets. (#668 @grantmcdermott)
 
 ## v0.7.0
 

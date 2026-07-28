@@ -619,6 +619,10 @@ build_legend_args = function(
     legend_args[["col"]] = par("fg")
   } else if (identical(type, "ridge") && isFALSE(gradient)) {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
+  } else if (identical(type, "hexbin")) {
+    # Discrete hexbin fills its tiles with the group colour (`col`), not `bg`,
+    # so mirror that into the swatch fill.
+    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg %||% legend_args[["col"]]
   } else {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg
   }

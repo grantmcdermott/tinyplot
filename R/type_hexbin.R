@@ -11,9 +11,25 @@
 #'   lattice of hexagons: rows are spaced \eqn{\sqrt{3}/2} apart in scaled
 #'   space, with odd rows offset by half a cell in the x-direction, and each
 #'   point is assigned to its nearest lattice node. The geometry follows the
-#'   original algorithm of Carr et al. (1987). Cell counts are mapped to a
-#'   continuous colour gradient via tinyplot's usual continuous-`by` machinery,
-#'   so a gradient (colourbar) legend is produced automatically.
+#'   original algorithm of Carr et al. (1987).
+#'
+#'   What the fill colour encodes depends on whether a `by` variable is supplied
+#'   (e.g. `y ~ x | z`):
+#'
+#'   * **No `by` (default).** The fill encodes the *cell count*, mapped to a
+#'     continuous colour gradient with an automatic colourbar legend.
+#'   * **Numeric `by`.** The fill encodes a per-cell summary of the `by`
+#'     variable---by default the mean, or any other function passed via `fun`
+#'     (e.g. `fun = median`). Also drawn as a continuous gradient. This is the
+#'     hexagonal analogue of a binned heatmap.
+#'   * **Discrete `by`.** The fill encodes the *modal* (most frequent) level of
+#'     the `by` variable within each cell, drawn with a discrete qualitative
+#'     palette and legend. Useful for mapping the dominant category across a
+#'     dense scatter.
+#'
+#'   In all three modes, the `mincnt`/`maxcnt` filters still apply to the raw
+#'   cell *count*, so sparsely populated cells can be excluded regardless of
+#'   what the colour encodes.
 #'
 #'   Because the hexagon size is derived from the data ranges, hexagons will
 #'   only appear perfectly regular when the plot region's aspect ratio matches
@@ -38,6 +54,9 @@
 #'   Set a colour (e.g. `"black"`) for outlined hexagons. Passing the sentinel
 #'   string `"fill"` matches the border to each cell's fill colour, which
 #'   produces perfectly seamless tiling.
+#' @param fun Function used to summarise a *numeric* `by` variable within each
+#'   cell (see Details). Defaults to `NULL`, which is equivalent to `mean`. Has
+#'   no effect when `by` is absent (count mode) or discrete (modal mode).
 #'
 #' @references
 #' Carr, D. B., Littlefield, R. J., Nicholson, W. L., and Littlefield, J. S.
@@ -61,12 +80,45 @@
 #' # Use type_hexbin() to pass extra arguments
 #' tinyplot(y ~ x, data = dat, type = type_hexbin(xbins = 40))
 #'
+#' # tinyplot's default palette logic maps darker colours (the end of the
+#' # spectrum) to higher densities. For hexbin plots it can sometimes be more
+#' # visually pleasing to reverse this, which users can do manually by passing a
+#' # reversed palette.
+#' tinyplot(
+#'   y ~ x, data = dat, type = "hexbin",
+#'   palette = hcl.colors(100, palette = "viridis", rev = TRUE)
+#' )
+#'
+#' # Passing a `by` grouping variable will colour cells according to a summary
+#' # of this variable (in each hex cell) instead of density count. The default
+#' # summary function depends on whether `by` is discrete or continuous:
+#' 
+#' # 1) Discrete grouping variable: each cell is coloured by its mode.
+#' dat$g = cut(dat$x, breaks = c(-Inf, -1, 1, Inf), labels = c("lo", "mid", "hi"))
+#' tinyplot(y ~ x | g, data = dat, type = "hexbin")
+#' 
+#' # 2) Continuous grouping variable: each cell is coloured by its mean. 
+#' #    Example: Create a long version of the `volcano` dataset, and plot its
+#' #    elevations onto a gridded terrain map.
+#' volc = local({
+#'   d = setNames(stack(as.data.frame(volcano)), c("elevation", "y"))
+#'   d$y = as.numeric(gsub("^V", "", d$y))
+#'   d$x = seq_len(nrow(volcano))
+#'   d
+#' })
+#' tinyplot(
+#'   y ~ x | elevation, data = volc,
+#'   type = "hexbin", xbins = 50,
+#'   palette = terrain.colors(100, rev = TRUE)
+#' )
+#'
 #' @export
 type_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf,
-                       border = NA) {
+                       border = NA, fun = NULL) {
   out = list(
     draw = draw_hexbin(border = border),
-    data = data_hexbin(xbins = xbins, shape = shape, mincnt = mincnt, maxcnt = maxcnt),
+    data = data_hexbin(xbins = xbins, shape = shape, mincnt = mincnt,
+                       maxcnt = maxcnt, fun = fun),
     name = "hexbin"
   )
   class(out) = "tinyplot_type"
@@ -77,12 +129,17 @@ type_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf,
 # Pure base R hexagonal binning, implementing the standard lattice of Carr et
 # al. (1987). Cell counts have been validated against hexbin::hexbin() and match
 # exactly. Returns a data.frame with one row per occupied cell: cell centre
-# (x, y) and count.
-hexbin_base = function(x, y, xbins, shape, xbnds, ybnds) {
+# (x, y) and count. If a `z` vector is supplied, an additional `stat` column
+# holds a per-cell summary of `z`: `fun(z)` when `z` is numeric (default
+# `mean`), or the modal (most frequent) level when `z` is discrete.
+hexbin_base = function(x, y, xbins, shape, xbnds, ybnds, z = NULL, fun = NULL) {
   ok = is.finite(x) & is.finite(y)
   x = x[ok]; y = y[ok]
+  if (!is.null(z)) z = z[ok]
   if (length(x) == 0L) {
-    return(data.frame(x = numeric(0), y = numeric(0), count = integer(0)))
+    out = data.frame(x = numeric(0), y = numeric(0), count = integer(0))
+    if (!is.null(z)) out[["stat"]] = z[0L]
+    return(out)
   }
 
   sx = xbins / diff(xbnds)
@@ -116,42 +173,64 @@ hexbin_base = function(x, y, xbins, shape, xbnds, ybnds) {
   jmin = min(j)
   span = max(j) - jmin + 1L
   key = i * span + (j - jmin)
-  ukey = unique(key)
+  cell = match(key, ukey <- unique(key))
   first = match(ukey, key)
   ii = i[first]
   jj = j[first]
-  count = tabulate(match(key, ukey))
+  count = tabulate(cell)
   off = ifelse(ii %% 2 == 0, 0, 0.5)
 
-  data.frame(
+  out = data.frame(
     x = (jj + off) / sx + xbnds[1L],
     y = (ii * ry) / sy + ybnds[1L],
     count = as.integer(count)
   )
+
+  # Optional per-cell summary of `z`.
+  if (!is.null(z)) {
+    if (is.numeric(z)) {
+      # Aggregate `z` within each cell via `fun` (default mean).
+      fun = if (is.null(fun)) mean else match.fun(fun)
+      agg = tapply(z, cell, fun)
+      out[["stat"]] = as.numeric(agg[as.character(seq_len(nrow(out)))])
+    } else {
+      # Discrete `z`: assign each cell its modal (most frequent) level. Ties are
+      # broken by factor-level order (which.max returns the first maximum).
+      z = as.factor(z)
+      modal = tapply(as.integer(z), cell, function(idx) {
+        tab = tabulate(idx, nbins = nlevels(z))
+        which.max(tab)
+      })
+      lvl = modal[as.character(seq_len(nrow(out)))]
+      out[["stat"]] = factor(levels(z)[lvl], levels = levels(z))
+    }
+  }
+
+  out
 }
 
 
-data_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf) {
+data_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf,
+                       fun = NULL) {
   hxbins = xbins
   hshape = shape
   hmincnt = mincnt
   hmaxcnt = maxcnt
+  hfun = fun
 
   fun = function(settings, ...) {
     env2env(settings, environment(), c(
       "datapoints", "by", "null_by", "facet", "legend_args", "type_info"
     ))
 
-    # Colour is owned by the cell count, so a user-supplied (discrete) `by`
-    # grouping would be silently clobbered. Warn and drop it. (Faceting, which
-    # lives on a separate channel, is still fully supported.)
-    if (!null_by) {
-      warning(
-        "`type_hexbin` maps colour to the cell count, so the supplied `by` ",
-        "grouping is ignored. Use `facet` to split hexbin plots by group.",
-        call. = FALSE
-      )
-    }
+    # Three fill modes, dispatched on the (optional) `by` variable:
+    #   * no `by`         -> colour encodes the cell count (continuous gradient)
+    #   * numeric `by`    -> colour encodes `fun(by)` per cell (default mean)
+    #   * discrete `by`   -> colour encodes the modal `by` level (discrete)
+    # In every mode `mincnt`/`maxcnt` still filter on the raw cell *count*.
+    z = if (null_by) NULL else datapoints[["by"]]
+    z_mode = !is.null(z)
+    z_discrete = z_mode && !is.numeric(z)
 
     # Common bounds across all facets so cells align. Guard against degenerate
     # (zero-width) ranges -- e.g. a single point, or all-identical x/y -- which
@@ -173,6 +252,10 @@ data_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf) {
     dx = inner / sx
     dy = outer / (2 * sy)
 
+    # For a discrete `by`, factor it up front (with global levels) so cells
+    # across facets share a consistent set of levels when combined below.
+    if (z_discrete) datapoints[["by"]] = as.factor(datapoints[["by"]])
+
     # Bin within each facet, keeping shared bounds.
     has_facet = !is.null(datapoints[["facet"]])
     fac = if (has_facet) datapoints[["facet"]] else rep("", nrow(datapoints))
@@ -184,7 +267,8 @@ data_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf) {
     part_names = names(parts)
     binned = lapply(seq_along(parts), function(idx) {
       k = parts[[idx]]
-      hb = hexbin_base(k[["x"]], k[["y"]], hxbins, hshape, xbnds, ybnds)
+      hb = hexbin_base(k[["x"]], k[["y"]], hxbins, hshape, xbnds, ybnds,
+                       z = if (z_mode) k[["by"]] else NULL, fun = hfun)
       if (nrow(hb) == 0L) return(NULL)
       # Recover the facet label from the split key, not from `k` (which carries
       # no `facet` column in the no-facet case).
@@ -206,15 +290,20 @@ data_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf) {
       )
     }
 
-    # Map count -> continuous `by` so tinyplot draws a gradient legend. Storing
-    # the count as a plain numeric vector triggers by_continuous = TRUE.
+    # Choose what the fill encodes, per mode:
+    #   * count     -> numeric `by` (triggers by_continuous = TRUE -> gradient)
+    #   * numeric z -> the per-cell `fun(z)` summary (also continuous gradient)
+    #   * discrete z-> the per-cell modal level (a factor -> discrete legend)
+    by = if (z_mode) binned[["stat"]] else binned[["count"]]
+    # Drop discrete levels that are nobody's mode, so the legend only lists
+    # categories that actually colour a cell.
+    if (z_discrete) by = droplevels(by)
     datapoints = data.frame(
       x = binned[["x"]],
       y = binned[["y"]],
-      by = binned[["count"]],
+      by = by,
       facet = binned[["facet"]]
     )
-    by = binned[["count"]]
     null_by = FALSE
 
     # Extend plot limits to cover the full hexagons (centres +/- half extent),
@@ -230,8 +319,19 @@ data_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf) {
       hexY = c(dy, -dy, -2 * dy, -dy, dy, 2 * dy)
     )
 
-    # Legend title (axis labels are already handled by sanitize_xylab()).
-    legend_args[["title"]] = legend_args[["title"]] %||% "Count"
+    # Legend title. In count mode default to "Count"; in `by`-summary mode leave
+    # it unset so the usual default (the deparsed `by` variable name) is used.
+    if (!z_mode) legend_args[["title"]] = legend_args[["title"]] %||% "Count"
+
+    # Discrete mode draws a categorical legend, so use filled-square keys (pch
+    # 22) like the other area/fill types (rect, polygon, boxplot, ...). The
+    # continuous modes render a colourbar, where these have no effect.
+    if (z_discrete) {
+      legend_args[["pch"]] = legend_args[["pch"]] %||% 22
+      legend_args[["pt.cex"]] = legend_args[["pt.cex"]] %||% 3.5
+      # Space the large square keys so they don't overlap (cf. type_ridge).
+      legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25
+    }
 
     env2env(environment(), settings, c(
       "datapoints", "by", "null_by", "legend_args", "type_info"

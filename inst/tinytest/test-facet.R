@@ -556,6 +556,22 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_yscale")
 
+# Free facets where a facet has a single distinct (discrete) axis value, which
+# collapses the free-scale range to zero width (issue #668)
+f = function() {
+  dat = data.frame(
+    x = c("a", "b", "b"),
+    y = c(1, 2, 3),
+    g = c("A", "B", "B")
+  )
+  tinyplot(
+    y ~ x, data = dat,
+    facet = ~g, facet.args = list(free = TRUE),
+    main = "Free facets: single-value facet"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_single_value")
+
 #
 # restore original par settings
 #

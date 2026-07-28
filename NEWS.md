@@ -4,6 +4,15 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## Development version
+
+### New features
+
+#### New plot types
+
+- `type_hexbin()` (equivalently, `type = "hexbin"`) for hexagonal bin plots, a
+  2D analogue of a histogram. (#667 @grantmcdermott)
+
 ## v0.7.0
 
 **tinyplot** v0.7.0 is a big release with many new features, including major

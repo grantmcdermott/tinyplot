@@ -15,8 +15,12 @@ where the formatting is also better._
 
 ### Bug fixes
 
-- Fixed bug where single-valued discrete axes would trigger invalid `par(usr)`
-  values when combined with free facets. (#668 @grantmcdermott)
+- Fixed several bugs specific to plots with free facets (i.e.,
+  `facet.args = list(free = TRUE)`):
+  - Single-valued discrete axes no longer trigger invalid `par(usr)` values.
+    (#668 @grantmcdermott)
+  - User-provided `x/ylim` overrides now work correctly with flipped plots.
+    (#670 @grantmcdermott)
 
 ## v0.7.0
 

@@ -13,6 +13,11 @@ where the formatting is also better._
 - `type_hexbin()` (equivalently, `type = "hexbin"`) for hexagonal bin plots, a
   2D analogue of a histogram. (#667 @grantmcdermott)
 
+### Bug fixes
+
+- Fixed bug where single-valued discrete axes would trigger invalid `par(usr)`
+  values when combined with free facets. (#668 @grantmcdermott)
+
 ## v0.7.0
 
 **tinyplot** v0.7.0 is a big release with many new features, including major

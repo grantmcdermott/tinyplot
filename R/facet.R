@@ -368,6 +368,11 @@ draw_facet_window = function(
         # extendrange() returns an ascending pair, so reverse afterwards
         xext = extendrange(sort(xlim), f = 0.04)
         yext = extendrange(sort(ylim), f = 0.04)
+        # A facet with a single distinct x (or y) value yields a zero-width
+        # extent, which par(usr=) rejects. Mirror base plot.window() and pad
+        # a degenerate range symmetrically so the facet still draws. (#668)
+        if (diff(xext) == 0) xext = xext + c(-1, 1) * (if (xext[1L] == 0) 1 else 0.04 * abs(xext[1L]))
+        if (diff(yext) == 0) yext = yext + c(-1, 1) * (if (yext[1L] == 0) 1 else 0.04 * abs(yext[1L]))
         # base axTicks() misbehaves on a reversed usr (it collapses to a single
         # tick), so precompute ticks from the ascending extent and pass them as
         # an explicit `at` below; placement against the reversed usr is fine.

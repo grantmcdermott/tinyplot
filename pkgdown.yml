@@ -2,7 +2,7 @@ altdoc: 0.7.3
 pandoc: 3.1.3
 pkgdown: 2.1.3
 pkgdown_sha: ~
-last_built: 2026-07-28T21:41:46+0000
+last_built: 2026-07-28T22:57:50+0000
 urls:
   reference: https://grantmcdermott.com/tinyplot/man
   article: https://grantmcdermott.com/tinyplot/vignettes

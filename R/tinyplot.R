@@ -1185,8 +1185,10 @@ tinyplot.default = function(
     .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
     if (.las %in% 1:2) {
-      yaxlabs = y_axis_labels(type, y, ylabs, xlabs, flip)
-      if (is.null(yaxlabs)) {
+      .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
+      if (!is.null(.ylabset)) {
+        yaxlabs = .ylabset[[1L]]
+      } else {
         ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
         yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }

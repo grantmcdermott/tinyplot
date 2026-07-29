@@ -189,8 +189,10 @@ draw_facet_window = function(
       if (fmar[3] + 0.1 > omar[3]) fmar[3] = omar[3] - 0.1
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
-        yaxlabs = y_axis_labels(type, y, ylabs, xlabs, flip)
-        if (is.null(yaxlabs)) {
+        .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
+        if (!is.null(.ylabset)) {
+          yaxlabs = .ylabset[[1L]]
+        } else {
           if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
             # Free scales: measure every facet's ticks and keep the widest set.
             yfree_split = split(c(y, ymin, ymax), facet)
@@ -290,8 +292,10 @@ draw_facet_window = function(
     if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
-      yaxlabs = y_axis_labels(type, y, ylabs, xlabs, flip)
-      if (is.null(yaxlabs)) {
+      .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
+      if (!is.null(.ylabset)) {
+        yaxlabs = .ylabset[[1L]]
+      } else {
         ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
         yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }
@@ -819,11 +823,17 @@ get_facet_fml = function(formula, data = NULL) {
 
 ## Categorical y-axis tick labels, for margin measurement.
 ##
-## Returns the label set that will be drawn on the y axis when a type puts
-## categories there, or NULL when the axis is numeric and the caller should fall
-## back to its own axisTicks() computation. Used by the whtsbp label-width blocks
-## in tinyplot.default() and draw_facet_window(), which each measure strwidth()
-## on the result but otherwise differ in how they apply it.
+## Used by the whtsbp label-width blocks in tinyplot.default() and
+## draw_facet_window(), which each measure strwidth() on the result but otherwise
+## differ in how they apply it.
+##
+## Returns a one-element list wrapping the label set when a type puts categories
+## on the y axis, or NULL when it does not and the caller should fall back to its
+## own axisTicks() computation. The wrapper matters: `levels(y)` is itself NULL
+## for a ridge plot over a *numeric* y, and that empty result must stay
+## distinguishable from "this isn't a categorical axis" -- otherwise the caller
+## would substitute numeric ticks and bump the margin that the label-less axis
+## does not need.
 ##
 ## `ylabs` covers the general case of a type that has placed named categories on
 ## the y axis. The ridge and flipped-boxplot cases are special: ridge takes its
@@ -831,13 +841,13 @@ get_facet_fml = function(formula, data = NULL) {
 ## categories swapped onto `xlabs` by flip_datapoints().
 y_axis_labels = function(type, y, ylabs, xlabs, flip) {
   if (identical(type, "ridge")) {
-    return(levels(y))
+    return(list(levels(y)))
   }
   if (!is.null(ylabs)) {
-    return(if (!is.null(names(ylabs))) names(ylabs) else ylabs)
+    return(list(if (!is.null(names(ylabs))) names(ylabs) else ylabs))
   }
   if (identical(type, "boxplot") && isTRUE(flip) && !is.null(xlabs)) {
-    return(if (!is.null(names(xlabs))) names(xlabs) else xlabs)
+    return(list(if (!is.null(names(xlabs))) names(xlabs) else xlabs))
   }
   NULL
 }

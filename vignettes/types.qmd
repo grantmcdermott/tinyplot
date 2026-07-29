@@ -166,15 +166,24 @@ tinyplot(Temp ~ Wind | Month, data = aq, facet = "by", type = "lm")
 
 ## Custom types
 
-It is easy to add custom types to **tinyplot**. Users who need highly customized
-plots, or developers who want to add support to their package or functions, only
-need to define their own `type_<type>()` function. Let's start with a simple
-example to see how this works in practice.
+We want **tinyplot** to be as extensible as possible. Users should be able to
+create their own custom **tinyplot** types and, where appropriate, make them
+available to others.^[Examples of downstream R packages shipping bespoke
+**tinyplot** types include **descstat** (see
+[here](https://cran.r-project.org/web/packages/descstat/refman/descstat.html#tinyplot)
+and
+[here](https://cran.r-project.org/web/packages/descstat/vignettes/descstat.html))
+and **trackframe** (see
+[here](https://github.com/livingingroups/trackframe/blob/21c9be7924d871ef7a5a09c6d25285ec4865b2d9/R/plot_type_arrows.R)).]
+To create a custom type, you need only define a new `type_<type>()` function
+that adheres to a few basic principles.
+
+Let's walk through a minimal example to see how this works in practice.
 
 ### A minimal example
 
-Here is a minimal example of a custom `type_log()` that logs both `x` and `y`
-before plotting points.
+Consider a custom `type_log()` that logs both `x` and `y` before plotting
+points.
 
 ```{r}
 type_log = function(base = exp(1)) {
@@ -242,9 +251,9 @@ key functions:
    of class `"tinyplot_type"` and contain three elements:
     - `data`: A data transformation function (see below)
     - `draw`: A drawing function (see below)
-    - `name`: The name of the underlying plot type (this can be anything, but
-      think of it as a convenient way to inherit default/fallback behaviour from
-      an existing plot type)
+    - `name`: The name of the underlying plot type. This can be anything, but
+      re-using the name of a built-in type (e.g., `"p"`) is a convenient way to
+      inherit its default/fallback behaviour (e.g. legend defaults).
 
 2. **`data_<type>()`**: A function factory that returns a data transformation
    function:
@@ -273,13 +282,13 @@ is called repeatedly for each group or facet.
 
 Rather than code up all of the internals for a custom type from scratch, users
 are strongly encouraged to re-use the scaffolding for existing types. One of the
-easiest ways to do this---which we use repeatedly in the main **tinyplot**
+easiest ways to do this---which we use _repeatedly_ in the main **tinyplot**
 codebase---is by "delegating" to an existing type at the end of the
 `data_<type>` function. Again, this is perhaps easier seen than explained, so
 consider an alternate version of our previous `type_log()` function.
 
 ```{r}
-type_log_redux = function(base = exp(1)) {
+type_log2 = function(base = exp(1)) {
 
   # data tranformation function
   data_log = function() {
@@ -315,27 +324,80 @@ The key differences from our original `type_log` function are:
 - `settings$type = "p"` (re-assign the type at the end of `data_log()`)
 - `draw = NULL` (drop the dedicated `draw_log()` function entirely; will fall back to `draw_points()` internally now)
 
-This "redux" version is obviously shorter than our original version, since we
+This new version is obviously shorter than our original version, since we
 can skip the custom `draw_log()` section. But re-using existing **tinyplot**
 scaffolding brings added benefits beyond code concision. In particular, it
 guarantees that all of the functionality from an existing `type` will be made
-available to your custom type. For example, in our first `type_log()` function
-we didn't account for the fact that users might want to adjust groups by other
-aesthetics (e.g, `pch`), whereas we get this for free in `type_log_redux()`.
+available to your custom type. (Which, trust us, is safer.) For example, it
+guarantees that grouping behaviour by other aesthetics (e.g, `pch`) passes
+through "for free".
 
 ```{r}
-#| layout-ncol: 2
 tinyplot(mpg ~ wt | factor(am), data = mtcars,
   pch = "by",
-  type = type_log(), main = "type_log")
-
-tinyplot(mpg ~ wt | factor(am), data = mtcars,
-  pch = "by",
-  type = type_log_redux(), main = "type_log_redux")
+  type = type_log2(), main = "Better to re-use an existing drawing type")
 ```
 
 Moral of the story: be lazy and re-use existing **tinyplot** scaffolding
-wherever possible; especially drawing functions.
+wherever possible, especially for drawing functions.
+
+### Advanced customization: declaring special type behaviour {#type-hints}
+
+In most cases, simply declaring the `data_<type>()` transformation and passing
+to an appropriate drawing function should be enough for your custom type.
+Additional features like faceting, theming, and layering should flow seamlessly
+through the rest of the **tinyplot** machinery.
+
+However, some plot types require advanced customization features that go beyond
+the basics. For example, `type_spineplot()` ships its own special (dual) axes
+logic that the surrounding scaffolding---margins, axes limits---needs to account
+for. For these special cases, we provide several escape hatches that your type
+can plug into to override default behaviour. The one you're most likely to need
+is `settings$type_hints`; a named list that you can set inside your
+`data_<type>()` function. If a specific hint is declared, then **tinyplot** 
+knows to use it for custom behaviour rather than reverting to the default logic.
+
+Again, an example may help to illustrate. Say we are defining a custom type
+whose axes should span a fixed \[0, 1\] range (i.e., we don't want its axis
+limits determined by the empirical data range). We can pass the
+`has_proportional_lim` flag to ensure this: 
+
+```r
+data_mytype = function() {
+  fun = function(settings, ...) {
+    settings$type_hints = list(has_proportional_lim = TRUE)
+    # ... other data transformations
+  }
+  return(fun)
+}
+```
+
+Currently, `type_hints` accepts several known hints; all of which are booleans.
+Any hint left undefined is treated internally as `NULL` and is ignored. So you
+need only define the list of hints that you actually want:
+
+| Hint | Declared by | Effect when `TRUE` |
+|------|-------------|--------------------|
+| `draws_own_axes` | `type_ridge()`, `type_spineplot()` | Your `draw_*()` function draws its own axes (having set `xaxt`/`yaxt` to `"n"`). Reserves the tick-row margin that would otherwise be dropped, so self-drawn labels aren't clipped. |
+| `has_rhs_axis` | `type_spineplot()` | Reserve right-hand margin for a secondary axis. |
+| `has_proportional_lim` | `type_spineplot()` | Treat the limits as proportional (e.g. \[0, 1\]); don't expand them to axis breaks. |
+| `framed` | `type_spineplot()` | Report the user's `frame.plot` choice when your type overrides the setting internally (e.g. because it draws its own box). Used to decide whether interior facets draw their own axes. |
+| `legend_fills_from_col` | `type_hexbin()`, `type_spineplot()` | Fill the legend key with the group colour (`col`) rather than `bg`. |
+| `legend_fills_from_seq_palette` | `type_ridge()` | Fill the legend key with a lighter step of the group colour's sequential ramp. |
+| `legend_border_fg` | `type_spineplot()` | Draw the legend key border in the foreground colour rather than the group colour. |
+
+To see `type_hints` in action, consult the
+[source code](https://github.com/grantmcdermott/tinyplot/tree/main/R) of the
+types listed above.
+
+Beyond `type_hints`, another customization escape hatch is provided by the
+sister `type_info` setting. Without going into too much detail, the key
+difference between these two is that `type_hints` specifies _behaviour_ you want
+the plot machinery to respect, while `type_info` is used for passing bespoke
+_rendering payload_ from `data_<type>()` through to `draw_<type>()` (e.g.,
+coordinates, precomputed breaks, and so on). An example is the custom hex
+polygon offsets of `type_hexbin()` (see
+[here](https://github.com/grantmcdermott/tinyplot/blob/a1f1e2c80e1dd67508327ad2e05f229b6d537e17/R/type_hexbin.R#L317)).
 
 ### More examples
 

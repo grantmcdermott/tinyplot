@@ -462,11 +462,21 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
     settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
 
+    # Declare this type's axes behaviour so the main pipeline can read semantic
+    # flags instead of hardcoding `type == "ridge"` checks. A ridge plot draws
+    # its own y-axis category labels via tinyAxis() (yaxt = "n"), so its tick-row
+    # margin must still be reserved -- else the labels clip, or error under las
+    # 0/1, when ylab = NA makes label_extent = 0 (#650).
+    type_axes_hints = list(
+      self_axes = TRUE # draws own y-axis category labels despite yaxt = "n"
+    )
+
     env2env(environment(), settings, c(
       "datapoints",
       "yaxt",
       "ylim",
       "type_info",
+      "type_axes_hints",
       "group_offsets",
       "offsets_axis"
     ))

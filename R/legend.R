@@ -614,21 +614,26 @@ build_legend_args = function(
     legend_args[["pch"]] = legend_args[["pch"]] %||% par("pch")
   }
 
-  # Special pt.bg handling for types that need color-based fills
-  if (isTRUE(legend_env[["type_hints"]][["legend_fills_from_col"]])) {
-    # The swatch fill comes via `bg` (resolved in prepare_legend for the grouped
-    # `y_by` case; NULL otherwise, falling back to the group colour).
+  # Special pt.bg handling for types that need color-based fills. Types declare
+  # how their swatch fill is derived via hints, rather than being matched by name
+  # here; see type_spineplot(), type_ridge(), type_hexbin().
+  .hints = legend_env[["type_hints"]]
+  if (isTRUE(.hints[["legend_fills_from_col"]])) {
+    # Types that fill their swatch with the group colour itself. The fill comes
+    # via `bg` (resolved in prepare_legend for the grouped `y_by` case; NULL
+    # otherwise, falling back to the group colour).
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg %||% legend_args[["col"]]
-    # Conversely, the border colour is always black
-    legend_args[["col"]] = par("fg")
-  } else if (identical(type, "ridge") && isFALSE(gradient)) {
+  } else if (isTRUE(.hints[["legend_fills_from_seq_palette"]]) && isFALSE(gradient)) {
+    # Types whose fill is a lighter step of the group colour's sequential ramp,
+    # matching how they shade the plotted area.
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
-  } else if (identical(type, "hexbin")) {
-    # Discrete hexbin fills its tiles with the group colour (`col`), not `bg`,
-    # so mirror that into the swatch fill.
-    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg %||% legend_args[["col"]]
   } else {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg
+  }
+  # Independently of the fill: some types outline the swatch in the foreground
+  # colour rather than the group colour (e.g. spineplot's abutting tiles).
+  if (isTRUE(.hints[["legend_border_fg"]])) {
+    legend_args[["col"]] = par("fg")
   }
 
   # Set legend labels

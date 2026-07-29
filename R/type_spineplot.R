@@ -330,6 +330,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
           has_rhs_axis          = TRUE, # secondary right-hand axis (reserve margin)
           has_proportional_lim  = TRUE, # [0, 1] limits; don't expand to axis breaks
           legend_fills_from_col = TRUE, # legend swatch pt.bg defaults from col
+          legend_border_fg      = TRUE, # ... and its border is always par("fg")
           # We force `frame.plot = FALSE` above so the pipeline doesn't draw a box
           # (draw_spineplot() draws its own). Surface the user's actual choice so
           # margin logic can still tell a framed plot from a frameless one.

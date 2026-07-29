@@ -466,7 +466,11 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     # margin must still be reserved -- else the labels clip, or error under las
     # 0/1, when ylab = NA makes label_extent = 0 (#650).
     type_hints = list(
-      draws_own_axes = TRUE # draws own y-axis category labels despite yaxt = "n"
+      draws_own_axes = TRUE, # draws own y-axis category labels despite yaxt = "n"
+      # Ridge densities are shaded with a lighter step of the group colour's
+      # sequential ramp, so the legend swatch mirrors that rather than using
+      # `col` directly.
+      legend_fills_from_seq_palette = TRUE
     )
 
     env2env(environment(), settings, c(

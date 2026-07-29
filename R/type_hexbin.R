@@ -334,8 +334,14 @@ data_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf,
       legend_args[["y.intersp"]] = legend_args[["y.intersp"]] %||% 1.25
     }
 
+    # Discrete hexbin fills its tiles with the group colour (`col`) rather than
+    # `bg`, so the legend swatch mirrors that.
+    type_hints = list(
+      legend_fills_from_col = TRUE
+    )
+
     env2env(environment(), settings, c(
-      "datapoints", "by", "null_by", "legend_args", "type_info"
+      "datapoints", "by", "null_by", "legend_args", "type_info", "type_hints"
     ))
   }
   return(fun)

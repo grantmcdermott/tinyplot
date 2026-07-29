@@ -325,18 +325,17 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         # A spineplot suppresses the standard axes (xaxt/yaxt = "n") because it
         # draws its own (category + numeric labels, plus a secondary RHS axis)
         # via spine_axis(), and uses proportional [0, 1] limits.
-        type_axes_hints = list(
-          self_axes            = TRUE, # draws own tick-row axes despite xaxt/yaxt = "n"
-          rhs_axis             = TRUE, # secondary right-hand axis (reserve margin)
-          proportional_lim     = TRUE, # [0, 1] limits; don't expand to axis breaks
-          legend_fill_from_col = TRUE, # legend swatch pt.bg defaults from col
-          draw_empty_facet     = TRUE  # can draw with zero per-group rows
+        type_hints = list(
+          draws_own_axes        = TRUE, # draws own tick-row axes despite xaxt/yaxt = "n"
+          has_rhs_axis          = TRUE, # secondary right-hand axis (reserve margin)
+          has_proportional_lim  = TRUE, # [0, 1] limits; don't expand to axis breaks
+          legend_fills_from_col = TRUE  # legend swatch pt.bg defaults from col
         )
 
         env2env(environment(), settings, c(
           "x", "y", "ymin", "ymax", "xmin", "xmax", "col", "bg", "datapoints",
           "by", "facet", "axes", "frame.plot", "xaxt", "yaxt", "xaxs", "yaxs",
-          "ylabs", "type_info", "facet.args", "type_axes_hints"
+          "ylabs", "type_info", "facet.args", "type_hints"
         ))
         
     }

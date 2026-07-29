@@ -7,7 +7,7 @@ lim_args = function(settings) {
     c(
       "xaxb", "xlabs", "xlim", "null_xlim", "rev_x",
       "yaxb", "ylabs", "ylim", "null_ylim", "rev_y",
-      "datapoints", "type", "type_axes_hints"
+      "datapoints", "type", "type_hints"
     )
   )
 
@@ -47,7 +47,7 @@ lim_args = function(settings) {
     xlim = xlim + c(-0.5, 0.5)
   }
 
-  prop_lim = isTRUE(type_axes_hints[["proportional_lim"]])
+  prop_lim = isTRUE(type_hints[["has_proportional_lim"]])
   if (null_xlim && !is.null(xaxb) && !prop_lim) xlim = range(c(xlim, xaxb))
   if (null_ylim && !is.null(yaxb) && !prop_lim) ylim = range(c(ylim, yaxb))
 

@@ -11,7 +11,7 @@ build_legend_env(
   lgnd_labs,
   labeller = NULL,
   type,
-  type_axes_hints = NULL,
+  type_hints = NULL,
   pch,
   lty,
   lwd,

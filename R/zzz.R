@@ -82,6 +82,7 @@
     "split_data",
     "tpars",
     "type",
+    "type_hints",
     "type_info",
     "was_area_type",
     "weights",

@@ -912,8 +912,14 @@ tinyplot.default = function(
     group_offsets = NULL,
     offsets_axis  = NULL,
     sub           = sub,
-    type_info     = list(), # pass type-specific info from type_data to type_draw
-    type_axes_hints = NULL  # axes/legend behaviour a type declares for itself
+    # Two distinct type-declared slots; keep them that way:
+    #  - type_info:  rendering payload passed from type_data() to type_draw(),
+    #                consumed per group inside draw_<type>() only.
+    #  - type_hints: semantic behaviour properties that a type declares (in its
+    #                type_data() fn) for the *generic* pipeline to read. Never
+    #                read inside a draw_<type>().
+    type_info     = list(),
+    type_hints    = NULL
   )
 
   settings = new.env()
@@ -1122,18 +1128,18 @@ tinyplot.default = function(
     # tick-row margin must still be reserved, else the self-drawn labels clip --
     # or, under las 0/1 where mar is further shifted, error -- when xlab/ylab = NA
     # makes label_extent = 0 (#635, #650). Types declare this via the
-    # `self_axes` hint (see type_spineplot(), type_ridge()).
-    .self_axis = isTRUE(type_axes_hints[["self_axes"]])
+    # `draws_own_axes` hint (see type_spineplot(), type_ridge()).
+    .draws_own_axes = isTRUE(type_hints[["draws_own_axes"]])
 
     .dyn = c(
       dynmar_side(1, xlab, main = main, sub = sub,
                   cap = if (.outer_sides[1]) NULL else cap,
                   side.sub = .side.sub,
-                  axis_on = .self_axis ||
+                  axis_on = .draws_own_axes ||
                     (!identical(xaxt, "none") && !identical(xaxt, "n")),
                   tpars = .tpars),
       dynmar_side(2, ylab,
-                  axis_on = .self_axis ||
+                  axis_on = .draws_own_axes ||
                     (!identical(yaxt, "none") && !identical(yaxt, "n")),
                   tpars = .tpars),
       dynmar_side(3, NULL, main = main, sub = sub, side.sub = .side.sub,
@@ -1217,7 +1223,7 @@ tinyplot.default = function(
         by_dep = by_dep,
         lgnd_labs = lgnd_labs,
         type = type,
-        type_axes_hints = type_axes_hints,
+        type_hints = type_hints,
         pch = pch,
         lty = lty,
         lwd = lwd,
@@ -1395,7 +1401,7 @@ tinyplot.default = function(
       sub = sub,
       cap = cap,
       type = type,
-      type_axes_hints = type_axes_hints,
+      type_hints = type_hints,
       xlab = xlab,
       x = x, xmax = xmax, xmin = xmin,
       ylab = ylab,
@@ -1428,7 +1434,7 @@ tinyplot.default = function(
       sub = sub,
       cap = cap,
       type = type,
-      type_axes_hints = type_axes_hints,
+      type_hints = type_hints,
       xlab = xlab,
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
       ylab = ylab,
@@ -1529,11 +1535,15 @@ tinyplot.default = function(
         ibg = idata[[ii]]$bg
       }
 
-      # empty plot flag
+      # empty plot flag. A group with no `x` is not necessarily empty: some types
+      # (rect, segments, histogram, spineplot) place their horizontal geometry in
+      # xmin/xmax instead, so there is still something to draw. Ask the data
+      # rather than the type name. Note both xmin *and* xmax are required: types
+      # that need `x` alongside a y-extent (errorbar, pointrange, ribbon) must
+      # still count as empty when `x` is missing.
       empty_plot = FALSE
-      draws_empty = type %in% c("histogram", "hist", "rect", "segments") ||
-        isTRUE(type_axes_hints[["draw_empty_facet"]])
-      if (isTRUE(empty) || isTRUE(type == "n") || ((length(ix) == 0) && !draws_empty)) {
+      has_data = length(ix) > 0 || (length(ixmin) > 0 && length(ixmax) > 0)
+      if (isTRUE(empty) || isTRUE(type == "n") || !has_data) {
         empty_plot = TRUE
       }
 

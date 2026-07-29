@@ -53,7 +53,7 @@ draw_facet_window(
   sub,
   cap,
   type,
-  type_axes_hints = NULL,
+  type_hints = NULL,
   xlab,
   x,
   xmax,

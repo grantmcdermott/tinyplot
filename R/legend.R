@@ -84,7 +84,7 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
   if (legend_env$outer_side) {
     # Extra bump for types with a secondary (RHS) axis when an outer legend is
     # present, to accommodate that axis (e.g. spineplot).
-    if (isTRUE(legend_env$type_axes_hints[["rhs_axis"]])) {
+    if (isTRUE(legend_env$type_hints[["has_rhs_axis"]])) {
       lmar[1] = lmar[1] + 1.1
     }
 
@@ -497,12 +497,15 @@ prepare_legend = function(settings) {
     }
   }
 
-  # Grouped (`y_by`) spineplots draw their fills inside draw_spineplot() rather
-  # than via the shared `bg` channel, so `settings$bg` is NULL and the legend has
-  # nothing to mirror. Resolve the swatch fill here (where `col` is the resolved
-  # group palette) into `bg`, so the rest of the legend machinery treats it like
-  # any other area type. The fill tracks `lighten`, matching the plotted tiles.
-  if (identical(settings$type, "spineplot") && isTRUE(settings$type_info[["y_by"]])) {
+  # Types that fill their legend swatch from `col` and draw a grouped (`y_by`)
+  # variant do that fill inside their own draw_*() rather than via the shared
+  # `bg` channel, so `settings$bg` is NULL and the legend has nothing to mirror.
+  # Resolve the swatch fill here -- this has to happen after by_aesthetics(),
+  # which is where `col` becomes the resolved group palette -- so that the rest
+  # of the legend machinery treats it like any other area type. The fill tracks
+  # `lighten`, matching the plotted tiles.
+  if (isTRUE(settings$type_hints[["legend_fills_from_col"]]) &&
+      isTRUE(settings$type_info[["y_by"]])) {
     settings$bg = if (isTRUE(settings$lighten)) lighten_fill(col) else col
   }
 
@@ -612,7 +615,7 @@ build_legend_args = function(
   }
 
   # Special pt.bg handling for types that need color-based fills
-  if (isTRUE(legend_env[["type_axes_hints"]][["legend_fill_from_col"]])) {
+  if (isTRUE(legend_env[["type_hints"]][["legend_fills_from_col"]])) {
     # The swatch fill comes via `bg` (resolved in prepare_legend for the grouped
     # `y_by` case; NULL otherwise, falling back to the group colour).
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg %||% legend_args[["col"]]
@@ -759,7 +762,7 @@ build_legend_env = function(
 
   # Visual aesthetics
   type,
-  type_axes_hints = NULL,
+  type_hints = NULL,
   pch,
   lty,
   lwd,
@@ -782,7 +785,7 @@ build_legend_env = function(
   # Initialize metadata
   legend_env$gradient = gradient
   legend_env$type = type
-  legend_env$type_axes_hints = type_axes_hints
+  legend_env$type_hints = type_hints
   legend_env$has_sub = has_sub
   legend_env$has_cap = has_cap
   legend_env$cap_text = cap_text
@@ -843,9 +846,10 @@ build_legend_env = function(
 #' @param labeller Character or function for formatting the labels (`lgnd_labs`).
 #'   Passed down to [`tinylabel`].
 #' @param type Plotting type(s), passed down from [tinyplot].
-#' @param type_axes_hints Optional named list of axes/legend behaviour flags that
-#'   a plot type declares for itself (e.g. `rhs_axis` for a secondary right-hand
-#'   axis). Passed down from [tinyplot]; defaults to `NULL`.
+#' @param type_hints Optional named list of semantic behaviour properties that a
+#'   plot type declares for itself (e.g. `has_rhs_axis` for a secondary
+#'   right-hand axis, or `legend_fills_from_col` for a legend swatch fill taken
+#'   from `col`). Passed down from [tinyplot]; defaults to `NULL`.
 #' @param pch Plotting character(s), passed down from [tinyplot].
 #' @param lty Plotting linetype(s), passed down from [tinyplot].
 #' @param lwd Plotting line width(s), passed down from [tinyplot].
@@ -950,7 +954,7 @@ draw_legend = function(
   lgnd_labs = NULL,
   labeller = NULL,
   type = NULL,
-  type_axes_hints = NULL,
+  type_hints = NULL,
   pch = NULL,
   lty = NULL,
   lwd = NULL,
@@ -1002,7 +1006,7 @@ draw_legend = function(
 
     # Visual aesthetics
     type = type,
-    type_axes_hints = type_axes_hints,
+    type_hints = type_hints,
     pch = pch,
     lty = lty,
     lwd = lwd,

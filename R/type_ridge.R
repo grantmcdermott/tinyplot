@@ -467,8 +467,8 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     # its own y-axis category labels via tinyAxis() (yaxt = "n"), so its tick-row
     # margin must still be reserved -- else the labels clip, or error under las
     # 0/1, when ylab = NA makes label_extent = 0 (#650).
-    type_axes_hints = list(
-      self_axes = TRUE # draws own y-axis category labels despite yaxt = "n"
+    type_hints = list(
+      draws_own_axes = TRUE # draws own y-axis category labels despite yaxt = "n"
     )
 
     env2env(environment(), settings, c(
@@ -476,7 +476,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       "yaxt",
       "ylim",
       "type_info",
-      "type_axes_hints",
+      "type_hints",
       "group_offsets",
       "offsets_axis"
     ))

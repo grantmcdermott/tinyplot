@@ -36,7 +36,7 @@ draw_facet_window = function(
     sub,
     cap,
     type,
-    type_axes_hints = NULL,
+    type_hints = NULL,
     xlab,
     x, xmax, xmin,
     ylab,
@@ -191,7 +191,7 @@ draw_facet_window = function(
       }
 
       # reserve RHS margin for types with a secondary axis (e.g. spineplot)
-      if (isTRUE(type_axes_hints[["rhs_axis"]])) omar[4] = 2.1
+      if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
 
       # FIXME: Is this causing issues for lhs legends with facet_grid?
       # catch for missing rhs legend
@@ -231,7 +231,7 @@ draw_facet_window = function(
     side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
     omar = dynmar_computed
     # reserve RHS margin for types with a secondary axis (e.g. spineplot)
-    if (isTRUE(type_axes_hints[["rhs_axis"]])) omar[4] = 2.1
+    if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
       ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME

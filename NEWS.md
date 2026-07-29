@@ -21,6 +21,10 @@ where the formatting is also better._
     (#668 @grantmcdermott)
   - User-provided `x/ylim` overrides now work correctly with flipped plots.
     (#670 @grantmcdermott)
+- Grouped and faceted plots no longer redraw axes once per empty group. This was
+  most visible for `"spineplot"` types (e.g. `facet = "by"`), where the
+  self-drawn axis labels were overplotted several times and rendered too heavy.
+  (#637 @grantmcdermott)
 
 ## v0.7.0
 

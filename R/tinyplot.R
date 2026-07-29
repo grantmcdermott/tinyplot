@@ -1185,13 +1185,8 @@ tinyplot.default = function(
     .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
     if (.las %in% 1:2) {
-      if (type == "ridge") {
-        yaxlabs = levels(y)
-      } else if (!is.null(ylabs)) {
-        yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs
-      } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
-        yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs
-      } else {
+      yaxlabs = y_axis_labels(type, y, ylabs, xlabs, flip)
+      if (is.null(yaxlabs)) {
         ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
         yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }

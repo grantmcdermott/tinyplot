@@ -189,22 +189,19 @@ draw_facet_window = function(
       if (fmar[3] + 0.1 > omar[3]) fmar[3] = omar[3] - 0.1
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
-        ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
-        if (type == "ridge") {
-          yaxlabs = levels(y)
-        } else if (!is.null(ylabs)) {
-          yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
-        } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
-          yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
-        } else if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
-          yfree_split = split(c(y, ymin, ymax), facet)
-          yaxlabs_all = lapply(yfree_split, function(yf) {
-            axisTicks(usr = extendrange(range(yf, na.rm = TRUE), f = 0.04), log = par("ylog"))
-          })
-          widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
-          yaxlabs = yaxlabs_all[[which.max(widths)]]
-        } else {
-          yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+        yaxlabs = y_axis_labels(type, y, ylabs, xlabs, flip)
+        if (is.null(yaxlabs)) {
+          if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
+            # Free scales: measure every facet's ticks and keep the widest set.
+            yfree_split = split(c(y, ymin, ymax), facet)
+            yaxlabs_all = lapply(yfree_split, function(yf) {
+              axisTicks(usr = extendrange(range(yf, na.rm = TRUE), f = 0.04), log = par("ylog"))
+            })
+            widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
+            yaxlabs = yaxlabs_all[[which.max(widths)]]
+          } else {
+            yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+          }
         }
         if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
         # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
@@ -293,15 +290,8 @@ draw_facet_window = function(
     if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
-      ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
-      if (type == "ridge") {
-        yaxlabs = levels(y)
-      } else if (!is.null(ylabs)) {
-        yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
-      } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
-        yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
-      } else {
-        # yaxl = axTicks(2)
+      yaxlabs = y_axis_labels(type, y, ylabs, xlabs, flip)
+      if (is.null(yaxlabs)) {
         ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
         yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }
@@ -824,6 +814,32 @@ get_facet_fml = function(formula, data = NULL) {
   }
 
   return(ret)
+}
+
+
+## Categorical y-axis tick labels, for margin measurement.
+##
+## Returns the label set that will be drawn on the y axis when a type puts
+## categories there, or NULL when the axis is numeric and the caller should fall
+## back to its own axisTicks() computation. Used by the whtsbp label-width blocks
+## in tinyplot.default() and draw_facet_window(), which each measure strwidth()
+## on the result but otherwise differ in how they apply it.
+##
+## `ylabs` covers the general case of a type that has placed named categories on
+## the y axis. The ridge and flipped-boxplot cases are special: ridge takes its
+## categories from the y factor's levels, while a flipped boxplot has had its
+## categories swapped onto `xlabs` by flip_datapoints().
+y_axis_labels = function(type, y, ylabs, xlabs, flip) {
+  if (identical(type, "ridge")) {
+    return(levels(y))
+  }
+  if (!is.null(ylabs)) {
+    return(if (!is.null(names(ylabs))) names(ylabs) else ylabs)
+  }
+  if (identical(type, "boxplot") && isTRUE(flip) && !is.null(xlabs)) {
+    return(if (!is.null(names(xlabs))) names(xlabs) else xlabs)
+  }
+  NULL
 }
 
 

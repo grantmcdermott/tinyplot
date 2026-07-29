@@ -131,11 +131,10 @@ draw_facet_window = function(
     # pipeline skips the box (e.g. data_spineplot()), while surfacing the user's
     # real choice via the `framed` hint. Use the hint where given, so the margin
     # logic below matches what the type will actually draw.
-    .framed = if (!is.null(type_hints[["framed"]])) {
-      isTRUE(type_hints[["framed"]])
-    } else {
-      isTRUE(frame.plot)
-    }
+    .framed = facet_axes_framed(
+      if (!is.null(type_hints[["framed"]])) type_hints[["framed"]] else frame.plot,
+      xaxt, yaxt
+    )
 
     # Will any *interior* (non-edge) facet draw its own axis on this side? If so
     # that facet needs the tick-label width in its own margin, rather than the
@@ -818,6 +817,24 @@ get_facet_fml = function(formula, data = NULL) {
   }
 
   return(ret)
+}
+
+
+## Are a facet's interior tick labels visually anchored?
+##
+## draw_facet_axis() keys the "outer facets only" rule off framing, on the basis
+## that an unframed interior axis floats free and collides with the neighbouring
+## panel. `frame.plot` is only a proxy for that, though: sanitize_axes() derives
+## it as `all(c(xaxt, yaxt) %in% c("s", "a"))`, so `axes = "ticks"` reports
+## FALSE despite drawing tick marks that anchor the labels perfectly well. Only
+## the "l" (labels) and "n" (none) styles are genuinely bare.
+##
+## A cleaner long-term fix would drop `frame.plot` from this decision entirely in
+## favour of an explicit "would inner axes float?" flag, but that changes
+## behaviour more broadly; see SCRATCH/facet-margin-slack.md.
+facet_axes_framed = function(frame.plot, xaxt, yaxt) {
+  if (any(c(xaxt, yaxt) == "t")) return(TRUE)
+  isTRUE(frame.plot)
 }
 
 

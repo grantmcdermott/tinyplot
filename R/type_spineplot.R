@@ -414,7 +414,9 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
           keep_axis = function(side) {
             draw_facet_axis(
               side, ifacet, facet_window_args,
-              framed = isTRUE(type_info[["frame.plot"]]),
+              framed = facet_axes_framed(
+                type_info[["frame.plot"]], type_info[["xaxt"]], type_info[["yaxt"]]
+              ),
               free = isTRUE(facet_window_args[["facet.args"]][["free"]]),
               axes = facet_window_args[["facet.args"]][["axes"]]
             )

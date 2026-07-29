@@ -553,7 +553,10 @@ draw_ridge = function() {
     keep_axis = function(side) {
       draw_facet_axis(
         side, ifacet, facet_window_args,
-        framed = isTRUE(facet_window_args[["frame.plot"]]),
+        framed = facet_axes_framed(
+          facet_window_args[["frame.plot"]],
+          facet_window_args[["xaxt"]], type_info[["yaxt"]]
+        ),
         free = isTRUE(facet_window_args[["facet.args"]][["free"]]),
         axes = facet_window_args[["facet.args"]][["axes"]]
       )

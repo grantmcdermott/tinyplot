@@ -488,7 +488,8 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 #
 ## Underlying draw_ridge function
 draw_ridge = function() {
-  fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info, ...) {
+  fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info,
+                 ifacet = 1L, facet_window_args = NULL, ...) {
     ridge_theme = isTRUE(type_info[["ridge_theme"]])
     d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
     dsplit = split(d, d$y)
@@ -543,15 +544,31 @@ draw_ridge = function() {
       with(dsplit[[i]], polygon(x, ymax, col = if (type_info[["gradient"]]) "transparent" else ibg, border = NA))
       with(dsplit[[i]], lines(x, ymax, col = icol))
     }
+    # Ridge draws its own y-axis category labels, so it must apply the same
+    # per-facet rule the generic pipeline uses (see draw_facet_axis()): framed
+    # panels each get an axis, frameless ones only on the outer edge. Otherwise
+    # the inner labels spill into the neighbouring panel.
+    keep_axis = function(side) {
+      draw_facet_axis(
+        side, ifacet, facet_window_args,
+        framed = isTRUE(facet_window_args[["frame.plot"]]),
+        free = isTRUE(facet_window_args[["facet.args"]][["free"]]),
+        axes = facet_window_args[["facet.args"]][["axes"]]
+      )
+    }
     # tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]], padj = padj)
     if (ridge_theme) {
-      tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
-               padj = 0,
-               mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
-               tcl = 0)
-      if (identical(.tpar[["tinytheme"]], "ridge2")) axis(1, labels = FALSE)
+      if (keep_axis(2)) {
+        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
+                 padj = 0,
+                 mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
+                 tcl = 0)
+      }
+      if (identical(.tpar[["tinytheme"]], "ridge2") && keep_axis(1)) axis(1, labels = FALSE)
     } else {
-      tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
+      if (keep_axis(2)) {
+        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
+      }
     }
   }
   return(fun)

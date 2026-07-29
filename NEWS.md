@@ -13,6 +13,15 @@ where the formatting is also better._
 - `type_hexbin()` (equivalently, `type = "hexbin"`) for hexagonal bin plots, a
   2D analogue of a histogram. (#667 @grantmcdermott)
 
+#### Other new features
+
+- New `axes` argument for `facet.args`, giving explicit control over which facets
+  draw their own axes: `"all"`, `"outer"` (drop redundant interior axes), or
+  `"none"`. Previously this was only achievable as a side effect of
+  `frame.plot = FALSE`, so `facet.args = list(axes = "outer")` now allows
+  redundant axes to be dropped while *keeping* the facet frames. (#661
+  @grantmcdermott)
+
 ### Bug fixes
 
 - Fixed several bugs specific to plots with free facets (i.e.,
@@ -25,6 +34,13 @@ where the formatting is also better._
   most visible for `"spineplot"` types (e.g. `facet = "by"`), where the
   self-drawn axis labels were overplotted several times and rendered too heavy.
   (#637 @grantmcdermott)
+- Faceted plots no longer draw redundant interior axes when the plot is
+  frameless (e.g. `tinytheme("clean2")`). Affected `"spineplot"` and `"ridge"`
+  types, which draw their own axes and so bypassed the existing outer-axis
+  logic, causing their category labels to spill into the neighbouring facet.
+  Also fixes flipped plots (e.g. `type = "boxplot", flip = TRUE`), where the
+  axis-position test keyed off the pre-flip axis and so both duplicated the
+  category axis *and* omitted the interior x-axes. (#660, #661 @grantmcdermott)
 
 ## v0.7.0
 

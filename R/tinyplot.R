@@ -61,6 +61,17 @@
 #'   the data within that facet. Default is `FALSE`. Separate free scaling of
 #'   the x- or y-axis (i.e., whilst holding the other axis fixed) is not
 #'   currently supported.
+#'   - `axes` a character string for controlling which facets draw their own
+#'   axes. One of `"all"` (every facet gets its own axes), `"outer"` (only the
+#'   facets along the bottom and left edges of the grid, so that redundant
+#'   interior axes are dropped), or `"none"` (no facet axes at all). If left
+#'   unspecified (the default), the behaviour is inherited from `frame.plot`:
+#'   framed plots draw axes in every facet, since each frame visually contains
+#'   its own axes, while frameless plots (e.g. `tinytheme("clean2")`) draw only
+#'   the outer ones. Use `axes = "outer"` to drop the interior axes while
+#'   *keeping* the facet frames. Note that `axes` is ignored for free-scaled
+#'   facets (`free = TRUE`), which necessarily require their own axes; the
+#'   sole exception being `axes = "none"`, which is always respected.
 #'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
 #'   between facets in terms of lines. Defaults to the value of `tpar("fmar")`,
 #'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each

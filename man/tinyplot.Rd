@@ -201,7 +201,7 @@ framed plots draw axes in every facet, since each frame visually contains
 its own axes, while frameless plots (e.g. \code{tinytheme("clean2")}) draw only
 the outer ones. Use \code{axes = "outer"} to drop the interior axes while
 \emph{keeping} the facet frames. Note that \code{axes} is ignored for free-scaled
-facets (\code{free = TRUE}), which necessarily require their own axes --- the
+facets (\code{free = TRUE}), which necessarily require their own axes; the
 sole exception being \code{axes = "none"}, which is always respected.
 \item \code{fmar} a vector of form \code{c(b,l,t,r)} for controlling the base margin
 between facets in terms of lines. Defaults to the value of \code{tpar("fmar")},

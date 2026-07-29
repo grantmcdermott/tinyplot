@@ -26,9 +26,9 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
-<rect x='471.31' y='227.43' width='16.75' height='16.75' style='stroke-width: 0.75; fill: #000000; fill-opacity: 0.20;' />
-<rect x='471.31' y='245.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #DF536B; fill: #DF536B; fill-opacity: 0.20;' />
-<rect x='471.31' y='263.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #61D04F; fill: #61D04F; fill-opacity: 0.20;' />
+<rect x='471.31' y='227.43' width='16.75' height='16.75' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='471.31' y='245.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #DF536B; fill: #FFE0E4;' />
+<rect x='471.31' y='263.43' width='16.75' height='16.75' style='stroke-width: 0.75; stroke: #61D04F; fill: #DAEED8;' />
 <text x='485.72' y='216.00' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='24.02px' lengthAdjust='spacingAndGlyphs'>gear</text>
 <text x='490.49' y='239.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>3</text>
 <text x='490.49' y='257.93' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
@@ -134,7 +134,7 @@
 <polygon points='338.99,430.56 454.49,430.56 454.49,59.04 338.99,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpNTkuMDR8MTc0LjU0fDU5LjA0fDQzMC41Ng==)'>
-<polygon points='66.88,356.78 95.40,356.78 95.40,299.69 66.88,299.69 ' style='stroke-width: 0.75; stroke: none; fill: #000000; fill-opacity: 0.20;' />
+<polygon points='66.88,356.78 95.40,356.78 95.40,299.69 66.88,299.69 ' style='stroke-width: 0.75; stroke: none; fill: #D3D3D3;' />
 <line x1='66.88' y1='342.14' x2='95.40' y2='342.14' style='stroke-width: 2.25; stroke-linecap: butt;' />
 <line x1='81.14' y1='416.80' x2='81.14' y2='356.78' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
 <line x1='81.14' y1='254.31' x2='81.14' y2='299.69' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
@@ -143,7 +143,7 @@
 <polygon points='66.88,356.78 95.40,356.78 95.40,299.69 66.88,299.69 ' style='stroke-width: 0.75;' />
 </g>
 <g clip-path='url(#cpMTk5LjAyfDMxNC41MXw1OS4wNHw0MzAuNTY=)'>
-<polygon points='242.51,261.63 271.02,261.63 271.02,146.72 242.51,146.72 ' style='stroke-width: 0.75; stroke: none; fill: #DF536B; fill-opacity: 0.20;' />
+<polygon points='242.51,261.63 271.02,261.63 271.02,146.72 242.51,146.72 ' style='stroke-width: 0.75; stroke: none; fill: #FFE0E4;' />
 <line x1='242.51' y1='235.29' x2='271.02' y2='235.29' style='stroke-width: 2.25; stroke: #DF536B; stroke-linecap: butt;' />
 <line x1='256.76' y1='308.48' x2='256.76' y2='261.63' style='stroke-width: 0.75; stroke: #DF536B; stroke-dasharray: 4.00,4.00;' />
 <line x1='256.76' y1='72.80' x2='256.76' y2='146.72' style='stroke-width: 0.75; stroke: #DF536B; stroke-dasharray: 4.00,4.00;' />
@@ -152,7 +152,7 @@
 <polygon points='242.51,261.63 271.02,261.63 271.02,146.72 242.51,146.72 ' style='stroke-width: 0.75; stroke: #DF536B;' />
 </g>
 <g clip-path='url(#cpMzM4Ljk5fDQ1NC40OXw1OS4wNHw0MzAuNTY=)'>
-<polygon points='418.13,337.75 446.65,337.75 446.65,188.44 418.13,188.44 ' style='stroke-width: 0.75; stroke: none; fill: #61D04F; fill-opacity: 0.20;' />
+<polygon points='418.13,337.75 446.65,337.75 446.65,188.44 418.13,188.44 ' style='stroke-width: 0.75; stroke: none; fill: #DAEED8;' />
 <line x1='418.13' y1='280.66' x2='446.65' y2='280.66' style='stroke-width: 2.25; stroke: #61D04F; stroke-linecap: butt;' />
 <line x1='432.39' y1='349.46' x2='432.39' y2='337.75' style='stroke-width: 0.75; stroke: #61D04F; stroke-dasharray: 4.00,4.00;' />
 <line x1='432.39' y1='124.03' x2='432.39' y2='188.44' style='stroke-width: 0.75; stroke: #61D04F; stroke-dasharray: 4.00,4.00;' />

@@ -13,7 +13,8 @@ type_spineplot(
   col = NULL,
   xaxlabels = NULL,
   yaxlabels = NULL,
-  weights = NULL
+  weights = NULL,
+  lighten = FALSE
 )
 }
 \arguments{
@@ -44,6 +45,17 @@ levels of the \code{x} and \code{y} variables (if character) or the correspondin
     observation in the data. If \code{NULL} all weights are implicitly
     assumed to be 1. If \code{x} is already a 2-way table, the weights
     are ignored.}
+
+\item{lighten}{logical. For grouped spineplots where the \code{y} variable is
+itself the grouping variable (i.e. \code{y == by}), should the fills use a
+lighter, opaque tint of the series colour(s)? Default is \code{FALSE}, i.e. the
+fills use the fully-saturated palette colour(s). (Unlike the other area
+types such as \code{\link{type_barplot}}, where lightening is the default, spineplot
+tiles abut one another with no gap, so the darker saturated fills read
+better against their matching border colours.) Set to \code{TRUE} to opt in to
+the lighter tint. Note that \code{lighten} has no effect on other spineplot
+displays (single-group or \code{x == by}), which always use a sequential shading
+ramp of the base colour.}
 }
 \description{
 Type function(s) for producing spineplots and spinograms, which
@@ -60,51 +72,68 @@ tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot")
 tinyplot(Species ~ Sepal.Width, data = iris)
 
 # Use `type_spineplot()` to pass extra arguments for customization
-tinyplot(Species ~ Sepal.Width, data = iris, type = type_spineplot(breaks = 4))
+tinyplot(
+  Species ~ Sepal.Width, data = iris,
+  type = type_spineplot(breaks = 4)
+)
 
-p = palette.colors(3, "Pastel 1")
-tinyplot(Species ~ Sepal.Width, data = iris, type = type_spineplot(breaks = 4, col = p))
-rm(p)
+# Passing custom colors to the y-axis categories
+tinyplot(
+  Species ~ Sepal.Width, data = iris,
+  type = type_spineplot(breaks = 4, col = palette.colors(3, "Pastel 1"))
+)
 
 # More idiomatic tinyplot way of drawing the previous plot: use y == by
 tinyplot(
-  Species ~ Sepal.Width | Species, data = iris, type = type_spineplot(breaks = 4),
+  Species ~ Sepal.Width | Species, data = iris,
+  type = type_spineplot(breaks = 4),
   palette = "Pastel 1", legend = FALSE
 )
 
-# Grouped and faceted spineplots
+## Grouped and faceted spineplots
 
 ttnc = as.data.frame(Titanic)
 
+# Note: The Titanic (ttnc) dataset is pre-tabulated, so we pass its frequency
+# counts via the top-level `weights` argument (accepted via non-standard
+# evaluation in the formula method).
 tinyplot(
   Survived ~ Sex, facet = ~ Class, data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq)
+  # type_spineplot(weights = ttnc$Freq), ## same thing but not NSE
+  type = "spineplot", weights = Freq
 )
 
-# For grouped "by" spineplots, it's better visually to facet as well
+# Reorder x and y variable categories either by their character levels or
+# numeric indexes. (Here we combine a top-level `weights` with constructor-
+# level arguments passed through `type_spineplot()`.)
 tinyplot(
-  Survived ~ Sex | Class, facet = "by", data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq)
+  Survived ~ Sex, facet = ~ Class, data = ttnc,
+  type = type_spineplot(xlevels = c("Female", "Male"), ylevels = 2:1),
+  weights = Freq
+)
+
+# For (colour) grouped "by" spineplots, it's visually better to facet too
+tinyplot(
+  Survived ~ Sex | Class, data = ttnc,
+  facet = "by",
+  type = "spineplot", weights = Freq
 )
 
 # Fancier version. Note the smart inheritance of spacing etc.
 tinyplot(
-  Survived ~ Sex | Class, facet = "by", data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq),
-  palette = "Dark 2", facet.args = list(nrow = 1), axes = "t"
+  Survived ~ Sex | Class, data = ttnc,
+  facet = "by", facet.args = list(nrow = 1),
+  type = "spineplot", weights = Freq,
+  theme = "void", axes = "t", lty = 0, legend = FALSE,
+  main = "Who survived the Titanic disaster?",
+  sub = "Frequencies by boarding class and sex"
 )
 
-# Reorder x and y variable categories either by their character levels or numeric indexes
-tinyplot(
-  Survived ~ Sex, facet = ~ Class, data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq, xlevels = c("Female", "Male"), ylevels = 2:1)
-)
-
-# Note: It's possible to use "by" on its own (without faceting), but the
+# Aside: It's possible to use "by" on its own (without faceting), but the
 # overlaid result isn't great. We will likely overhaul this behaviour in a
 # future version of tinyplot...
 tinyplot(Survived ~ Sex | Class, data = ttnc,
-  type = type_spineplot(weights = ttnc$Freq), alpha = 0.3
+  type = "spineplot", weights = Freq, alpha = 0.3
 )
 
 }

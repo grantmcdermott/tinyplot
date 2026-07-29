@@ -1,5 +1,5 @@
 #
-## orchestration function -----
+## main orchestration function -----
 #
 
 by_aesthetics = function(settings) {
@@ -8,7 +8,7 @@ by_aesthetics = function(settings) {
     environment(),
     c(
       "datapoints", "by", "type", "null_by", "pch", "bg", "lty", "lwd",
-      "bubble", "cex", "alpha", "col", "fill", "ribbon.alpha"
+      "bubble", "cex", "alpha", "col", "fill", "ribbon.alpha", "lighten"
     )
   )
 
@@ -16,7 +16,12 @@ by_aesthetics = function(settings) {
   by_ordered = FALSE
   by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
   if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot", "chull")) {
-    warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    # Only warn if a legend would actually be drawn: the reversion to a discrete
+    # legend still needs to happen for correct grouping, but it's not worth
+    # flagging when the user has suppressed the legend anyway (#656).
+    if (!isFALSE(settings$legend)) {
+      warning("\nContinuous legends not supported for this plot type. Reverting to discrete legend.")
+    }
     by_continuous = FALSE
   } else if (!null_by) {
     by_ordered = is.ordered(by)
@@ -59,6 +64,7 @@ by_aesthetics = function(settings) {
     type = type,
     by = by,
     ribbon.alpha = ribbon.alpha,
+    lighten = lighten,
     adjustcolor = adjustcolor
   )
 
@@ -72,15 +78,310 @@ by_aesthetics = function(settings) {
 
 
 #
-## helper functions -----
+## subsidiary functions -----
 #
 
+by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustcolor) {
+  ordered = if (is.null(by_ordered)) FALSE else by_ordered
+  gradient = if (is.null(by_continuous)) FALSE else by_continuous
+  assert_logical(ordered)
+  assert_logical(gradient)
+
+  if (is.null(alpha)) alpha = 1
+  if (gradient) ngrps = 100L
+
+  if (is_by_keyword(col)) col = NULL
+
+  pal_theme = if (ordered || gradient) {
+    get_tpar("palette.sequential", default = NULL)
+  } else {
+    get_tpar("palette.qualitative", default = NULL)
+  }
+
+  # Resolve a (possibly relative) col.default against the qualitative palette.
+  # A relative (negative) index also drops the chosen colour from the grouped
+  # palette, so e.g. `col.default = -1` uses the palette's leading colour for
+  # single-group displays and the palette-minus-that-colour for grouped ones
+  # (see resolve_col_default). col.default only applies to qualitative displays.
+  if (!ordered && !gradient) {
+    cd = resolve_col_default(get_tpar("col.default", default = NULL), pal_theme)
+    pal_theme = cd[["palette"]]
+    # Single-group default colour (theme-settable via tpar). When NULL, defer to
+    # the usual palette resolution below (first qualitative colour, or palette()[1]).
+    if (is.null(col) && ngrps == 1L) {
+      col = cd[["col_default"]]
+    }
+  }
+
+  cols = resolve_manual_colors(col, ngrps, gradient, ordered, alpha, adjustcolor)
+  if (!is.null(cols)) {
+    return(cols)
+  }
+
+  cols = resolve_palette_colors(
+    palette = palette,
+    theme_palette = pal_theme,
+    ngrps = ngrps,
+    ordered = ordered,
+    gradient = gradient,
+    alpha = alpha,
+    adjustcolor = adjustcolor
+  )
+
+  cols
+}
+
+
+by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps, type, by, ribbon.alpha, lighten, adjustcolor) {
+  lighten = if (is.null(lighten)) TRUE else isTRUE(lighten)
+  if (is.null(bg) && !is.null(fill)) bg = fill
+
+  # A numeric bg/fill in [0,1] is an alpha *request*, not a colour: remember it
+  # as the transparency to layer on top of the resolved (and possibly lightened)
+  # base fill, and defer to the "by" palette for the base colour itself. Applying
+  # alpha last -- after lightening -- means a fill request blends a light tint
+  # toward the background rather than darkening a saturated base (issue #646).
+  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
+    alpha = bg
+    bg = "by"
+  }
+
+  ordered = if (is.null(by_ordered)) FALSE else by_ordered
+  gradient = if (is.null(by_continuous)) FALSE else by_continuous
+
+  # Whether the base fill comes from palette resolution (the "by" keyword, incl.
+  # a numeric fill request) or the single-group default, vs. an explicit colour
+  # such as `fill = "bisque"`. Only the former are eligible for lightening; an
+  # explicit colour is always honoured verbatim.
+  bg_from_palette = !is.null(bg) && length(bg) == 1 && is_by_keyword(bg)
+  palette_fill = bg_from_palette
+
+  if (bg_from_palette) {
+    pal_theme = if (ordered || gradient) {
+      get_tpar("palette.sequential", default = NULL)
+    } else {
+      get_tpar("palette.qualitative", default = NULL)
+    }
+    # Mirror by_col(): a relative col.default trims the grouped palette, so
+    # grouped fills stay in step with grouped line colours.
+    if (!ordered && !gradient) {
+      pal_theme = resolve_col_default(get_tpar("col.default", default = NULL), pal_theme)[["palette"]]
+    }
+    # Resolve opaque (alpha = 1); any user alpha is layered on below.
+    bg = resolve_palette_colors(
+      palette = palette,
+      theme_palette = pal_theme,
+      ngrps = ngrps,
+      ordered = ordered,
+      gradient = gradient,
+      alpha = 1,
+      adjustcolor = adjustcolor
+    )
+  } else if (ngrps == 1L && is.null(bg) && type %in% c("boxplot", "violin", "barplot", "histogram")) {
+    # Single-group fill tracks the theme's *default* colour (col.default ->
+    # palette[1] -> black) so that themed box/violin/bar/histogram plots match
+    # their own multi-group counterparts. We resolve this default independently
+    # of `col` so that a user-supplied outline colour (e.g. `col = "white"`)
+    # doesn't bleed into the fill.
+    bg = by_col(
+      col = NULL, palette = palette, alpha = 1, by_ordered = by_ordered,
+      by_continuous = by_continuous, ngrps = 1L, adjustcolor = adjustcolor
+    )
+    palette_fill = TRUE
+  } else if (length(bg) != ngrps) {
+    bg = rep(bg, ngrps)
+  }
+
+  # The solid categorical area types take the lighter-but-opaque tint, but only
+  # for qualitative groupings: lightening a sequential/continuous ramp would
+  # crush the contrast between adjacent levels.
+  area_light_types = c("barplot", "boxplot", "violin")
+  light_ok = lighten && type %in% area_light_types && !ordered && !gradient
+
+  if (palette_fill) {
+    # For a *chromatic* base the fill is a lighter-but-opaque tint of that colour
+    # (via seq_palette, the same HCL ramp used for ridge fills and legend
+    # swatches), so it reads cleanly over grid lines unlike alpha blending. For
+    # an *achromatic* base (typically black, e.g. the "bw"/"classic"/"ipsum"
+    # themes and the plain default) seq_palette's light endpoint can't reach the
+    # neutral "lightgray" used by the no-theme path and base R's hist()/boxplot()
+    # -- so we fall back to that literal. Histograms only lighten in the
+    # single-group case; grouped histograms keep their semi-transparent fill so
+    # that overlapping distributions remain legible (issue #646).
+    if (light_ok) {
+      bg = lighten_fill(bg)
+    } else if (type == "histogram" && ngrps == 1L) {
+      bg = lighten_fill(bg)
+    }
+    # Layer any user-supplied transparency on top of the (lightened) base fill.
+    if (!is.null(alpha)) bg = apply_alpha(bg, alpha, adjustcolor)
+  }
+
+  # Semi-transparent fill for ribbon-type plots (the default look for ribbons).
+  # Other area types only become transparent if the user explicitly asks (e.g.
+  # `fill = 0.3`), which is handled via the `alpha` layering above.
+  if (type == "ribbon") {
+    if (!is.null(bg)) {
+      bg = adjustcolor(bg, ribbon.alpha)
+    } else if (!is.null(col)) {
+      bg = adjustcolor(col, ribbon.alpha)
+    }
+  }
+
+  bg
+}
+
+
+by_pch = function(ngrps, type, pch = NULL) {
+  no_pch = FALSE
+  if (identical(type, "text")) {
+    pch = rep(15, ngrps)
+  } else if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot", "qq")) {
+    no_pch = TRUE
+    pch = NULL
+
+    # special "by" convenience keyword
+  } else if (is_by_keyword(pch)) {
+    no_pch = TRUE # skip checks below
+    pch = 1:ngrps + par("pch") - 1
+    # correctly recycle if over max pch type
+    if (max(pch) > 25L) {
+      pch_below = pch[pch <= 25L]
+      pch_above = pch[pch > 25L]
+      pch_above = rep_len(0:25, length(pch_above))
+      pch = c(pch_below, pch_above)
+    }
+
+    # return NULL if not a valid point type
+  } else if (is.null(pch)) {
+    pch = par("pch")
+  }
+
+  if (!no_pch) {
+    assert_len_1_or_ngrps(pch, ngrps, "pch", allow_character = TRUE)
+    if (length(pch) == 1) pch = rep(pch, ngrps)
+  }
+
+  return(pch)
+}
+
+
+by_lty = function(ngrps, type, lty = NULL) {
+  # We only care about line types, otherwise return NULL
+  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon", "barplot", "boxplot", "rect", "spineplot", "segments", "qq", "abline", "hline", "vline")) {
+    lty = NULL
+
+    # special "by" convenience keyword
+  } else if (is_by_keyword(lty)) {
+    lty_dict = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
+    par_lty = par("lty")
+
+    if (!par_lty %in% lty_dict) {
+      warning(
+        "\nBespoke lty specifications (i.e., using string combinations) are not ",
+        "currently supported alongside the lty='by' keyword argument. ",
+        "Defaulting to 1 and looping from there.\n"
+      )
+      par_lty = 1
+    } else {
+      par_lty = which(par_lty == lty_dict)
+    }
+    lty = 1:ngrps + par_lty - 1
+    # correctly recycle if over max lty type
+    if (max(lty) > 6L) {
+      lty_below = lty[lty <= 6L]
+      lty_above = lty[lty > 6L]
+      lty_above = rep_len(1:6, length(lty_above))
+      lty = c(lty_below, lty_above)
+    }
+
+    # NULL -> solid (or default) line
+  } else if (is.null(lty)) {
+    if (!identical(type, "boxplot")) {
+      lty = rep(par("lty"), ngrps)
+    }
+
+    # atomic vector: sanity check length
+  } else if (is.atomic(lty) && is.vector(lty)) {
+    assert_len_1_or_ngrps(lty, ngrps, "lty")
+    if (length(lty) == 1) lty = rep(lty, ngrps)
+  }
+
+  lty
+}
+
+
+by_lwd = function(ngrps, type, lwd = NULL) {
+  lwd_base = par("lwd")
+  lwd_floor = lwd_base / min(5, max((ngrps - 1), 1))
+  lwd_ceiling = lwd_base * min(5, ngrps)
+
+  no_lwd = FALSE
+  # special "by" convenience keyword
+  if (is_by_keyword(lwd)) {
+    no_lwd = TRUE # skip checks below
+    lwd = seq(lwd_floor, lwd_ceiling, length.out = ngrps)
+  } else if (is.null(lwd)) {
+    no_lwd = TRUE
+    lwd = NULL
+  }
+
+  if (!no_lwd) {
+    assert_len_1_or_ngrps(lwd, ngrps, "lwd")
+    if (length(lwd) == 1) lwd = rep(lwd, ngrps)
+  }
+
+  return(lwd)
+}
+
+
+by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
+  no_cex = FALSE
+  # special "by" convenience keyword
+  if (is_by_keyword(cex)) {
+    no_cex = TRUE # skip checks below
+    cex = rescale_num(c(1:ngrps), to = c(1, 2.5))
+  } else if (is.null(cex)) {
+    no_cex = TRUE
+    # cex = NULL
+    # can't leave cex as NULL otherwise JIT cex_fct_adj adjustment in
+    # draw_legend() won't work later
+    cex = 1
+    cex = rep(cex, ngrps)
+  }
+
+  # placehodler
+  if (bubble) no_cex = TRUE
+
+  if (!no_cex) {
+    assert_len_1_or_ngrps(cex, ngrps, "cex")
+    if (length(cex) == 1) cex = rep(cex, ngrps)
+  }
+
+  return(cex)
+}
+
+
+#
+## helper functions -----
+#
 
 apply_alpha = function(cols, alpha, adjustcolor) {
   if (is.null(cols) || is.null(alpha) || identical(alpha, 0)) {
     return(cols)
   }
   adjustcolor(cols, alpha.f = alpha)
+}
+
+# Apply the lighter-but-opaque tint (PR #614) to each colour in a vector.
+lighten_fill = function(cols) {
+  if (is.null(cols)) return(cols)
+  vapply(
+    cols,
+    function(cc) if (is_achromatic(cc)) "lightgray" else seq_palette(cc, n = 3)[3],
+    character(1),
+    USE.NAMES = FALSE
+  )
 }
 
 is_by_keyword = function(x) {
@@ -318,250 +619,3 @@ resolve_palette_spec = function(palette, ngrps, gradient, ordered, alpha, adjust
   apply_alpha(cols, alpha, adjustcolor)
 }
 
-
-#
-## subsidiary functions -----
-#
-
-by_col = function(col, palette, alpha, by_ordered, by_continuous, ngrps, adjustcolor) {
-  ordered = if (is.null(by_ordered)) FALSE else by_ordered
-  gradient = if (is.null(by_continuous)) FALSE else by_continuous
-  assert_logical(ordered)
-  assert_logical(gradient)
-
-  if (is.null(alpha)) alpha = 1
-  if (gradient) ngrps = 100L
-
-  if (is_by_keyword(col)) col = NULL
-
-  pal_theme = if (ordered || gradient) {
-    get_tpar("palette.sequential", default = NULL)
-  } else {
-    get_tpar("palette.qualitative", default = NULL)
-  }
-
-  # Resolve a (possibly relative) col.default against the qualitative palette.
-  # A relative (negative) index also drops the chosen colour from the grouped
-  # palette, so e.g. `col.default = -1` uses the palette's leading colour for
-  # single-group displays and the palette-minus-that-colour for grouped ones
-  # (see resolve_col_default). col.default only applies to qualitative displays.
-  if (!ordered && !gradient) {
-    cd = resolve_col_default(get_tpar("col.default", default = NULL), pal_theme)
-    pal_theme = cd[["palette"]]
-    # Single-group default colour (theme-settable via tpar). When NULL, defer to
-    # the usual palette resolution below (first qualitative colour, or palette()[1]).
-    if (is.null(col) && ngrps == 1L) {
-      col = cd[["col_default"]]
-    }
-  }
-
-  cols = resolve_manual_colors(col, ngrps, gradient, ordered, alpha, adjustcolor)
-  if (!is.null(cols)) {
-    return(cols)
-  }
-
-  cols = resolve_palette_colors(
-    palette = palette,
-    theme_palette = pal_theme,
-    ngrps = ngrps,
-    ordered = ordered,
-    gradient = gradient,
-    alpha = alpha,
-    adjustcolor = adjustcolor
-  )
-
-  cols
-}
-
-
-by_bg = function(bg, fill, col, palette, alpha, by_ordered, by_continuous, ngrps, type, by, ribbon.alpha, adjustcolor) {
-  if (is.null(bg) && !is.null(fill)) bg = fill
-  if (!is.null(bg) && length(bg) == 1 && is.numeric(bg) && bg >= 0 && bg <= 1) {
-    alpha = bg
-    bg = "by"
-  }
-  if (!is.null(bg) && length(bg) == 1 && is_by_keyword(bg)) {
-    ordered = if (is.null(by_ordered)) FALSE else by_ordered
-    gradient = if (is.null(by_continuous)) FALSE else by_continuous
-    pal_theme = if (ordered || gradient) {
-      get_tpar("palette.sequential", default = NULL)
-    } else {
-      get_tpar("palette.qualitative", default = NULL)
-    }
-    # Mirror by_col(): a relative col.default trims the grouped palette, so
-    # grouped fills stay in step with grouped line colours.
-    if (!ordered && !gradient) {
-      pal_theme = resolve_col_default(get_tpar("col.default", default = NULL), pal_theme)[["palette"]]
-    }
-    bg = resolve_palette_colors(
-      palette = palette,
-      theme_palette = pal_theme,
-      ngrps = ngrps,
-      ordered = if (is.null(by_ordered)) FALSE else by_ordered,
-      gradient = if (is.null(by_continuous)) FALSE else by_continuous,
-      alpha = if (is.null(alpha)) 1 else alpha,
-      adjustcolor = adjustcolor
-    )
-  } else if (length(bg) != ngrps) {
-    bg = rep(bg, ngrps)
-  }
-  if (type == "ribbon" || (type == "boxplot" && !is.null(by))) {
-    if (!is.null(bg)) {
-      bg = adjustcolor(bg, ribbon.alpha)
-    } else if (!is.null(col)) {
-      bg = adjustcolor(col, ribbon.alpha)
-    }
-  } else if (ngrps == 1L && is.null(bg) && type %in% c("boxplot", "violin", "barplot", "histogram")) {
-    # Single-group fill tracks the theme's *default* colour (col.default ->
-    # palette[1] -> black) so that themed box/violin/bar/histogram plots match
-    # their own multi-group counterparts. We resolve this default independently
-    # of `col` so that a user-supplied outline colour (e.g. `col = "white"`)
-    # doesn't bleed into the fill.
-    fill_base = by_col(
-      col = NULL, palette = palette, alpha = 1, by_ordered = by_ordered,
-      by_continuous = by_continuous, ngrps = 1L, adjustcolor = adjustcolor
-    )
-    # For a *chromatic* default the fill is a lighter-but-opaque tint of that
-    # colour (via seq_palette, the same HCL ramp used for ridge fills and legend
-    # swatches), so it reads cleanly over grid lines unlike alpha blending. For
-    # an *achromatic* default (typically black, e.g. the "bw"/"classic"/"ipsum"
-    # themes and the plain default) seq_palette's light endpoint can't reach the
-    # neutral "lightgray" used by the no-theme path and base R's hist()/boxplot()
-    # -- so we use that literal directly, keeping all black-default single-group
-    # fills consistent regardless of whether a theme palette happens to be set.
-    achromatic = is_achromatic(fill_base)
-    bg = if (achromatic) "lightgray" else seq_palette(fill_base, n = 3)[3]
-  }
-
-  bg
-}
-
-
-by_pch = function(ngrps, type, pch = NULL) {
-  no_pch = FALSE
-  if (identical(type, "text")) {
-    pch = rep(15, ngrps)
-  } else if (!type %in% c("p", "b", "o", "pointrange", "errorbar", "boxplot", "qq")) {
-    no_pch = TRUE
-    pch = NULL
-
-    # special "by" convenience keyword
-  } else if (is_by_keyword(pch)) {
-    no_pch = TRUE # skip checks below
-    pch = 1:ngrps + par("pch") - 1
-    # correctly recycle if over max pch type
-    if (max(pch) > 25L) {
-      pch_below = pch[pch <= 25L]
-      pch_above = pch[pch > 25L]
-      pch_above = rep_len(0:25, length(pch_above))
-      pch = c(pch_below, pch_above)
-    }
-
-    # return NULL if not a valid point type
-  } else if (is.null(pch)) {
-    pch = par("pch")
-  }
-
-  if (!no_pch) {
-    assert_len_1_or_ngrps(pch, ngrps, "pch", allow_character = TRUE)
-    if (length(pch) == 1) pch = rep(pch, ngrps)
-  }
-
-  return(pch)
-}
-
-
-by_lty = function(ngrps, type, lty = NULL) {
-  # We only care about line types, otherwise return NULL
-  if (!type %in% c("l", "b", "o", "c", "h", "s", "S", "ribbon", "barplot", "boxplot", "rect", "segments", "qq", "abline", "hline", "vline")) {
-    lty = NULL
-
-    # special "by" convenience keyword
-  } else if (is_by_keyword(lty)) {
-    lty_dict = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
-    par_lty = par("lty")
-
-    if (!par_lty %in% lty_dict) {
-      warning(
-        "\nBespoke lty specifications (i.e., using string combinations) are not ",
-        "currently supported alongside the lty='by' keyword argument. ",
-        "Defaulting to 1 and looping from there.\n"
-      )
-      par_lty = 1
-    } else {
-      par_lty = which(par_lty == lty_dict)
-    }
-    lty = 1:ngrps + par_lty - 1
-    # correctly recycle if over max lty type
-    if (max(lty) > 6L) {
-      lty_below = lty[lty <= 6L]
-      lty_above = lty[lty > 6L]
-      lty_above = rep_len(1:6, length(lty_above))
-      lty = c(lty_below, lty_above)
-    }
-
-    # NULL -> solid (or default) line
-  } else if (is.null(lty)) {
-    if (!identical(type, "boxplot")) {
-      lty = rep(par("lty"), ngrps)
-    }
-
-    # atomic vector: sanity check length
-  } else if (is.atomic(lty) && is.vector(lty)) {
-    assert_len_1_or_ngrps(lty, ngrps, "lty")
-    if (length(lty) == 1) lty = rep(lty, ngrps)
-  }
-
-  lty
-}
-
-
-by_lwd = function(ngrps, type, lwd = NULL) {
-  lwd_base = par("lwd")
-  lwd_floor = lwd_base / min(5, max((ngrps - 1), 1))
-  lwd_ceiling = lwd_base * min(5, ngrps)
-
-  no_lwd = FALSE
-  # special "by" convenience keyword
-  if (is_by_keyword(lwd)) {
-    no_lwd = TRUE # skip checks below
-    lwd = seq(lwd_floor, lwd_ceiling, length.out = ngrps)
-  } else if (is.null(lwd)) {
-    no_lwd = TRUE
-    lwd = NULL
-  }
-
-  if (!no_lwd) {
-    assert_len_1_or_ngrps(lwd, ngrps, "lwd")
-    if (length(lwd) == 1) lwd = rep(lwd, ngrps)
-  }
-
-  return(lwd)
-}
-
-
-by_cex = function(ngrps, type, bubble = FALSE, cex = NULL) {
-  no_cex = FALSE
-  # special "by" convenience keyword
-  if (is_by_keyword(cex)) {
-    no_cex = TRUE # skip checks below
-    cex = rescale_num(c(1:ngrps), to = c(1, 2.5))
-  } else if (is.null(cex)) {
-    no_cex = TRUE
-    # cex = NULL
-    # can't leave cex as NULL otherwise JIT cex_fct_adj adjustment in
-    # draw_legend() won't work later
-    cex = 1
-    cex = rep(cex, ngrps)
-  }
-
-  # placehodler
-  if (bubble) no_cex = TRUE
-
-  if (!no_cex) {
-    assert_len_1_or_ngrps(cex, ngrps, "cex")
-    if (length(cex) == 1) cex = rep(cex, ngrps)
-  }
-
-  return(cex)
-}

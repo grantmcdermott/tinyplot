@@ -1,6 +1,9 @@
 ## Overview
 
-**tinyplot** v0.6.1 is a patch release containing bug fixes.
+**tinyplot** v0.7.0 is a feature release. It brings major updates to our theming
+logic and aesthetic stylings, several new plot types and `tinyplot.*` methods,
+and various other enhancements and bug fixes. See NEWS.md for the full list of
+changes.
 
 ## Test environments
 macOS (local)
@@ -9,10 +12,16 @@ Win Builder
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-Note: New maintainer email address (contact@grantmcdermott.com). This is the same
-person, just a different email.
+## Reverse dependency checks
+
+We ran reverse-dependency checks on all 12 CRAN revdeps. All packages that
+could be checked showed no status change from the current CRAN version of
+tinyplot. One package, 'RTMB', failed to install in our CI environment under
+both the old and new versions of tinyplot (identical ERROR, unrelated to this
+submission -- RTMB requires a TMB/C++ toolchain build that did not complete in
+our runner).
 
 P.S. We continue to run a comprehensive test suite comprising hundreds of test
 snapshots (i.e., SVG images) as part of our CI development workflow. See:

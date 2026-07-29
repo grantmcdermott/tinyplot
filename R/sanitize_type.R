@@ -20,6 +20,7 @@ sanitize_type = function(settings) {
     "errorbar",
     "function",
     "glm",
+    "hexbin",
     "hist", "histogram",
     "hline",
     "j", "jitter",
@@ -83,13 +84,12 @@ sanitize_type = function(settings) {
       "errorbar"   = type_errorbar,
       "function"   = type_function,
       "glm"        = type_glm,
+      "hexbin"     = type_hexbin,
       "hist"       = type_histogram,
       "histogram"  = type_histogram,
       "hline"      = type_hline,
       "j"          = type_jitter,
       "jitter"     = type_jitter,
-      "l"          = type_lines,
-      "lines"      = type_lines,
       "lm"         = type_lm,
       "loess"      = type_loess,
       "p"          = type_points,
@@ -110,15 +110,22 @@ sanitize_type = function(settings) {
       "text"       = type_text,
       "violin"     = type_violin,
       "vline"      = type_vline,
-      type # default case
+      type # default case (incl. line-family chars, handled below)
     )
   }
-# browser()
+
   if (is.function(type)) {
     args = intersect(names(formals(type)), names(dots))
     args = if (length(args) >= 1L) dots[args] else list()
     type = do.call(type, args)
     type$dots = dots[setdiff(names(dots), names(args))]
+  } else if (is.character(type) && type %in% c("l", "lines", "o", "b", "c", "h", "s", "S")) {
+    # Line-family convenience characters route through type_lines(), preserving
+    # the requested plot character (so e.g. "b" stays points + lines, rather than
+    # defaulting to "l").
+    args = dots[intersect(names(formals(type_lines)), names(dots))]
+    args[["type"]] = if (type == "lines") "l" else type
+    type = do.call(type_lines, args)
   }
 
   if (inherits(type, "tinyplot_type")) {

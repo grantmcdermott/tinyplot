@@ -25,6 +25,7 @@ draw_facet_window = function(
     axes, flip, frame.plot, oxaxis, oyaxis,
     xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl,
     ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl,
+    rev_x = FALSE, rev_y = FALSE,
     asp, log,
     # other args (in approx. alphabetical + group ordering)
     dots,
@@ -332,7 +333,9 @@ draw_facet_window = function(
       )
       if (!is.null(xaxb)) args_x$at = xaxb
       if (!is.null(yaxb)) args_y$at = yaxb
-      type_range_x = type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)
+      # `xlabs` is only non-NULL when a type has placed categorical data on the
+      # x-axis, so its presence is the signal to draw labelled ticks.
+      type_range_x = !is.null(xlabs)
       type_range_y = !is.null(ylabs) && (type == "p" || (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "violin")))
       if (type_range_x) {
         args_x = modifyList(args_x, list(at = xlabs, labels = names(xlabs)))
@@ -358,8 +361,28 @@ draw_facet_window = function(
         yfree = if (!is.null(facet)) split(c(y, ymin, ymax), facet)[[ii]] else c(y, ymin, ymax)
         if (null_xlim) xlim = range(xfree, na.rm = TRUE)
         if (null_ylim) ylim = range(yfree, na.rm = TRUE)
-        xext = extendrange(xlim, f = 0.04)
-        yext = extendrange(ylim, f = 0.04)
+        # An axis is reversed either via the `rev_x`/`rev_y` flag (e.g. the
+        # "reverse" keyword) or when the user supplies descending fixed limits
+        # (e.g. xlim = c(10, 0)). The latter must be detected before extendrange()
+        # below, which always returns an ascending pair and would otherwise drop
+        # the descending order. (#644)
+        rev_xext = isTRUE(rev_x) || (!null_xlim && length(xlim) == 2L && xlim[2L] < xlim[1L])
+        rev_yext = isTRUE(rev_y) || (!null_ylim && length(ylim) == 2L && ylim[2L] < ylim[1L])
+        # extendrange() returns an ascending pair, so reverse afterwards
+        xext = extendrange(sort(xlim), f = 0.04)
+        yext = extendrange(sort(ylim), f = 0.04)
+        # A facet with a single distinct x (or y) value yields a zero-width
+        # extent, which par(usr=) rejects. Mirror base plot.window() and pad
+        # a degenerate range symmetrically so the facet still draws. (#668)
+        if (diff(xext) == 0) xext = xext + c(-1, 1) * (if (xext[1L] == 0) 1 else 0.04 * abs(xext[1L]))
+        if (diff(yext) == 0) yext = yext + c(-1, 1) * (if (yext[1L] == 0) 1 else 0.04 * abs(yext[1L]))
+        # base axTicks() misbehaves on a reversed usr (it collapses to a single
+        # tick), so precompute ticks from the ascending extent and pass them as
+        # an explicit `at` below; placement against the reversed usr is fine.
+        xat = if (rev_xext) axisTicks(usr = xext, log = par("xlog")) else NULL
+        yat = if (rev_yext) axisTicks(usr = yext, log = par("ylog")) else NULL
+        if (rev_xext) xext = rev(xext)
+        if (rev_yext) yext = rev(yext)
         # We'll save this in a special .fusr env var (list) that we'll re-use
         # when it comes to plotting the actual elements later
         if (ii == 1) {
@@ -372,14 +395,18 @@ draw_facet_window = function(
         # Explicitly set (override) the current facet extent
         par(usr = fusr[[ii]])
         # if plot frame is true then print axes per normal...
-        if (type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(xlabs)) {
+        if (!is.null(xlabs)) {
           tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, labeller = xaxl)
+        } else if (!is.null(xat)) {
+          tinyAxis(xfree, side = xside, at = xat, type = xaxt, labeller = xaxl)
         } else {
           tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
           tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
+        } else if (!is.null(yat)) {
+          tinyAxis(yfree, side = yside, at = yat, type = yaxt, labeller = yaxl)
         } else {
           tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
         }

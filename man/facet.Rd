@@ -41,6 +41,8 @@ draw_facet_window(
   yaxs,
   yaxb,
   yaxl,
+  rev_x = FALSE,
+  rev_y = FALSE,
   asp,
   log,
   dots,

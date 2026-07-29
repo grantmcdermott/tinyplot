@@ -17,8 +17,9 @@
 #'   or interval plot types. Only used when the `type` argument is one of
 #'   `"rect"` or `"segments"` (where all four min-max coordinates are required),
 #'   or `"pointrange"`, `"errorbar"`, or `"ribbon"` (where only `ymin` and
-#'   `ymax` required alongside `x`). In the formula method the arguments
-#'   can be specified as `ymin = var` if `var` is a variable in `data`.
+#'   `ymax` required alongside `x`). Can be passed as unquoted (NSE) variable
+#'   names when called from the `tinyplot.formula` method, e.g. `ymin = varname`
+#'   where `varname` is a variable in `data`.
 #' @param by grouping variable(s). The default behaviour is for groups to be
 #'   represented in the form of distinct colours, which will also trigger an
 #'   automatic legend. (See `legend` below for customization options.) However,
@@ -165,7 +166,9 @@
 #'    effect as specifying NULL) and FALSE turns the legend off (same effect as
 #'    specifying "none").
 #'    - A list or, equivalently, a dedicated `legend()` function with supported
-#'    legend arguments, e.g. "bty", "horiz", and so forth.
+#'    legend arguments, e.g. "bty", "horiz", and so forth. To suppress the
+#'    legend title, set `title = NULL` or `title = FALSE`, e.g.
+#'    `legend = list(title = FALSE)`.
 #' @param main a main title for the plot, see also `title`.
 #' @param sub a subtitle for the plot.
 #' @param cap a caption for the plot, drawn at the bottom. Useful for
@@ -179,9 +182,19 @@
 #' @param ann a logical value indicating whether the default annotation (title
 #'   and x and y axis labels) should appear on the plot.
 #' @param xlim the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
-#'   and leads to a ‘reversed axis’. The default value, NULL, indicates that
-#'   the range of the `finite` values to be plotted should be used.
-#' @param ylim the y limits of the plot.
+#'   and leads to a reversed axis (although see the `"rev(erse)"` keyword option
+#'   below). The default value, `NULL`, indicates that the range of the `finite`
+#'   values to be plotted should be used. Alongside the standard length-2 vector
+#'   (e.g., `xlim = c(0, 1)`), `tinyplot` supports three further convenience
+#'   forms:
+#'   - a single scalar (e.g. `xlim = 0`) ensures that the provided value is
+#'     covered by the axis range, irrespective of the data extent.
+#'   - a length-2 vector with one `NA` (e.g. `xlim = c(0, NA)`) pins the
+#'     non-`NA` limit and lets the data determine the other limit.
+#'   - the convenience string `"rev"` (or the longer `"reverse"`) reverses the
+#'     automatically-computed axis range. This is equivalent to passing a
+#'     descending vector, but without having to know the data extent in advance.
+#' @param ylim the y limits of the plot. Accepts the same input forms as `xlim`.
 #' @param axes logical or character. Should axes be drawn (`TRUE` or `FALSE`)?
 #'   Or alternatively what type of axes should be drawn: `"standard"` (with
 #'   axis, ticks, and labels; equivalent to `TRUE`), `"none"` (no axes;
@@ -318,6 +331,21 @@
 #'     (e.g., another column in the same dataset) will yield a "bubble"plot with
 #'     its own dedicated legend. This can provide a useful way to visualize an
 #'     extra dimension of the data; see Examples.
+#' @param weights an optional numeric vector of observation weights, of the same
+#'   length as the number of `x`,`y` coordinates. Can be passed as an unquoted
+#'   (NSE) variable name when called from the `tinyplot.formula` method, e.g.
+#'   `weights = varname` where `varname` is a variable in `data`. Weights are
+#'   only consumed by the plot types that support them; specifically, the model
+#'   fit and distribution types like [`type_lm()`] and [`type_spineplot()`].
+#'   Because weights trigger a statistical transformation, a warning is emitted
+#'   if this argument is supplied to a non-supported type (even though the
+#'   actual weights will be ignored, regardless).
+#' @param labels an optional vector of text labels for use with [`type_text()`],
+#'   of length 1 or the same length as the number of `x`,`y` coordinates. Can be
+#'   passed as an unquoted (NSE) variable name when called from the
+#'   `tinyplot.formula` method, e.g. `labels = varname` where `varname` is a
+#'   variable in `data`. Ignored by other plot types. Overrides the `labels`
+#'   argument of [`type_text()`] if both are supplied.
 #' @param subset,na.action,drop.unused.levels arguments passed to `model.frame`
 #'   when extracting the data from `formula` and `data`.
 #' @param add logical. If TRUE, then elements are added to the current plot rather
@@ -647,6 +675,8 @@ tinyplot.default = function(
     xmax = NULL,
     ymin = NULL,
     ymax = NULL,
+    weights = NULL,
+    labels = NULL,
     by = NULL,
     facet = NULL,
     facet.args = NULL,
@@ -770,6 +800,13 @@ tinyplot.default = function(
 
   dots = list(...)
 
+  # resolve any axis-reversal keyword (e.g. xlim = "reverse") into a flag, and
+  # reset the limit to NULL so the normal auto-range path runs (see lim.R)
+  .revx = sanitize_lim_rev(xlim, "xlim")
+  xlim = .revx[["lim"]]; rev_x = .revx[["rev"]]
+  .revy = sanitize_lim_rev(ylim, "ylim")
+  ylim = .revy[["lim"]]; rev_y = .revy[["rev"]]
+
   settings_list = list(
     # save call to check user input later
     call          = match.call(),
@@ -814,6 +851,9 @@ tinyplot.default = function(
     ymin          = ymin,
     ylab          = ylab,
     ylabs         = NULL,
+    weights       = weights,
+    labels        = labels,
+    weights_used  = FALSE, # set TRUE by type_data() functions that consume weights
 
     # axes
     axes          = axes,
@@ -828,6 +868,8 @@ tinyplot.default = function(
     frame.plot    = frame.plot,
     xlim          = xlim,
     ylim          = ylim,
+    rev_x         = rev_x,
+    rev_y         = rev_y,
 
     # flags to check user input (useful later on)
     null_by       = is.null(by),
@@ -866,6 +908,7 @@ tinyplot.default = function(
     dodge         = NULL,
     dots          = dots,
     flip          = flip,
+    lighten       = TRUE, # area types may override via their type_data() fn
     group_offsets = NULL,
     offsets_axis  = NULL,
     sub           = sub,
@@ -950,6 +993,19 @@ tinyplot.default = function(
 
   if (!is.null(settings$type_data)) {
     settings$type_data(settings, ...)
+  }
+
+  # Warn if weights were supplied but the plot type ignored them. This is a
+  # deliberate exception to how other unconsumed top-level args (e.g.
+  # xmin/xmax/ymin/ymax) are silently dropped: a missing ribbon is visually
+  # obvious, but ignored weights produce a normal-looking yet statistically
+  # wrong plot. Consuming types opt in by setting `weights_used`, so new
+  # weight-aware types are covered automatically (#332).
+  if (!is.null(settings$weights) && !isTRUE(settings$weights_used)) {
+    warning(
+      "`weights` were supplied but are ignored by this plot type.",
+      call. = FALSE
+    )
   }
 
   # ensure axis aligment of any added layers
@@ -1062,8 +1118,11 @@ tinyplot.default = function(
 
     # Types that suppress the standard axes (xaxt/yaxt = "n") only because they
     # draw their own in the same place (e.g. spineplot category + numeric labels
-    # via spine_axis()). Their tick-row margin must still be reserved, else the
-    # self-drawn labels clip when xlab/ylab = NA makes label_extent = 0 (#635).
+    # via spine_axis(); ridge y-axis category labels via tinyAxis()). Their
+    # tick-row margin must still be reserved, else the self-drawn labels clip --
+    # or, under las 0/1 where mar is further shifted, error -- when xlab/ylab = NA
+    # makes label_extent = 0 (#635, #650). Types declare this via the
+    # `self_axes` hint (see type_spineplot(), type_ridge()).
     .self_axis = isTRUE(type_axes_hints[["self_axes"]])
 
     .dyn = c(
@@ -1246,9 +1305,12 @@ tinyplot.default = function(
       }
     }
 
-    draw_title(main, sub, cap, xlab, ylab, legend, legend_args, opar,
-               xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
-               ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0)
+    ann = as.logical(ann)
+    if (ann) draw_title(
+      main, sub, cap, xlab, ylab, legend, legend_args, opar,
+      xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
+      ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0
+    )
   }
 
 
@@ -1322,6 +1384,7 @@ tinyplot.default = function(
       oxaxis = oxaxis, oyaxis = oyaxis,
       xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
       ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      rev_x = rev_x, rev_y = rev_y,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1355,6 +1418,7 @@ tinyplot.default = function(
       oxaxis = oxaxis, oyaxis = oyaxis,
       xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
       ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      rev_x = rev_x, rev_y = rev_y,
       asp = asp, log = log,
       dots = dots,
       draw = draw,
@@ -1631,6 +1695,8 @@ tinyplot.formula = function(
     xmax = NULL,
     ymin = NULL,
     ymax = NULL,
+    weights = NULL,
+    labels = NULL,
     xlim = NULL,
     ylim = NULL,
     # log = "",
@@ -1681,7 +1747,7 @@ tinyplot.formula = function(
 
   ## set up model frame
   m = match.call(expand.dots = FALSE)
-  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels", "xmin", "xmax", "ymin", "ymax"), names(m), 0L))]
+  m = m[c(1L, match(c("formula", "data", "subset", "na.action", "drop.unused.levels", "xmin", "xmax", "ymin", "ymax", "weights", "labels"), names(m), 0L))]
   m$formula = tf$full
   ## need stats:: for non-standard evaluation
   m[[1L]] = quote(stats::model.frame)
@@ -1808,6 +1874,8 @@ tinyplot.formula = function(
     xmax = mf[["(xmax)"]],
     ymin = mf[["(ymin)"]],
     ymax = mf[["(ymax)"]],
+    weights = mf[["(weights)"]],
+    labels = mf[["(labels)"]],
     xlim = xlim,
     ylim = ylim,
     # log = "",

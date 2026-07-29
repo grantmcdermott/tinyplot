@@ -29,6 +29,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      NOT_CRAN: true
 
     steps:
       - uses: actions/checkout@v6
@@ -41,3 +42,14 @@ jobs:
 
       - name: Test
         run: ./run.sh run_tests
+
+      - name: Upload snapshot review (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tinysnapshot-review-${{ matrix.name }}
+          path: |
+            *.Rcheck/**/_tinysnapshot_review/**
+            *.Rcheck/00check.log
+          if-no-files-found: ignore
+          retention-days: 7

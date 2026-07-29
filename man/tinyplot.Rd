@@ -17,6 +17,8 @@ tinyplot(x, ...)
   xmax = NULL,
   ymin = NULL,
   ymax = NULL,
+  weights = NULL,
+  labels = NULL,
   by = NULL,
   facet = NULL,
   facet.args = NULL,
@@ -75,6 +77,8 @@ tinyplot(x, ...)
   xmax = NULL,
   ymin = NULL,
   ymax = NULL,
+  weights = NULL,
+  labels = NULL,
   xlim = NULL,
   ylim = NULL,
   main = NULL,
@@ -121,8 +125,26 @@ All remaining arguments from \code{...} can be further graphical parameters, see
 or interval plot types. Only used when the \code{type} argument is one of
 \code{"rect"} or \code{"segments"} (where all four min-max coordinates are required),
 or \code{"pointrange"}, \code{"errorbar"}, or \code{"ribbon"} (where only \code{ymin} and
-\code{ymax} required alongside \code{x}). In the formula method the arguments
-can be specified as \code{ymin = var} if \code{var} is a variable in \code{data}.}
+\code{ymax} required alongside \code{x}). Can be passed as unquoted (NSE) variable
+names when called from the \code{tinyplot.formula} method, e.g. \code{ymin = varname}
+where \code{varname} is a variable in \code{data}.}
+
+\item{weights}{an optional numeric vector of observation weights, of the same
+length as the number of \code{x},\code{y} coordinates. Can be passed as an unquoted
+(NSE) variable name when called from the \code{tinyplot.formula} method, e.g.
+\code{weights = varname} where \code{varname} is a variable in \code{data}. Weights are
+only consumed by the plot types that support them; specifically, the model
+fit and distribution types like \code{\link[=type_lm]{type_lm()}} and \code{\link[=type_spineplot]{type_spineplot()}}.
+Because weights trigger a statistical transformation, a warning is emitted
+if this argument is supplied to a non-supported type (even though the
+actual weights will be ignored, regardless).}
+
+\item{labels}{an optional vector of text labels for use with \code{\link[=type_text]{type_text()}},
+of length 1 or the same length as the number of \code{x},\code{y} coordinates. Can be
+passed as an unquoted (NSE) variable name when called from the
+\code{tinyplot.formula} method, e.g. \code{labels = varname} where \code{varname} is a
+variable in \code{data}. Ignored by other plot types. Overrides the \code{labels}
+argument of \code{\link[=type_text]{type_text()}} if both are supplied.}
 
 \item{by}{grouping variable(s). The default behaviour is for groups to be
 represented in the form of distinct colours, which will also trigger an
@@ -288,7 +310,9 @@ labels in data units.
 effect as specifying NULL) and FALSE turns the legend off (same effect as
 specifying "none").
 \item A list or, equivalently, a dedicated \code{legend()} function with supported
-legend arguments, e.g. "bty", "horiz", and so forth.
+legend arguments, e.g. "bty", "horiz", and so forth. To suppress the
+legend title, set \code{title = NULL} or \code{title = FALSE}, e.g.
+\code{legend = list(title = FALSE)}.
 }}
 
 \item{main}{a main title for the plot, see also \code{title}.}
@@ -310,10 +334,22 @@ can be customized via \code{\link[tinyplot]{tpar}} parameters \code{adj.cap},
 and x and y axis labels) should appear on the plot.}
 
 \item{xlim}{the x limits (x1, x2) of the plot. Note that x1 > x2 is allowed
-and leads to a ‘reversed axis’. The default value, NULL, indicates that
-the range of the \code{finite} values to be plotted should be used.}
+and leads to a reversed axis (although see the \code{"rev(erse)"} keyword option
+below). The default value, \code{NULL}, indicates that the range of the \code{finite}
+values to be plotted should be used. Alongside the standard length-2 vector
+(e.g., \code{xlim = c(0, 1)}), \code{tinyplot} supports three further convenience
+forms:
+\itemize{
+\item a single scalar (e.g. \code{xlim = 0}) ensures that the provided value is
+covered by the axis range, irrespective of the data extent.
+\item a length-2 vector with one \code{NA} (e.g. \code{xlim = c(0, NA)}) pins the
+non-\code{NA} limit and lets the data determine the other limit.
+\item the convenience string \code{"rev"} (or the longer \code{"reverse"}) reverses the
+automatically-computed axis range. This is equivalent to passing a
+descending vector, but without having to know the data extent in advance.
+}}
 
-\item{ylim}{the y limits of the plot.}
+\item{ylim}{the y limits of the plot. Accepts the same input forms as \code{xlim}.}
 
 \item{axes}{logical or character. Should axes be drawn (\code{TRUE} or \code{FALSE})?
 Or alternatively what type of axes should be drawn: \code{"standard"} (with

@@ -45,7 +45,6 @@ type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE) {
 
 
 data_lines = function(dodge = 0, fixed.dodge = FALSE) {
-  if (is.null(dodge) || dodge == 0) return(NULL)
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "xlabs"))
 
@@ -53,7 +52,8 @@ data_lines = function(dodge = 0, fixed.dodge = FALSE) {
       datapoints$x = as.factor(datapoints$x)
     }
     if (is.factor(datapoints$x)) {
-      xlvls = unique(datapoints$x)
+      # honour pre-ordered factors; otherwise fall back to first-appearance order
+      xlvls = if (is.ordered(datapoints$x)) levels(datapoints$x) else unique(datapoints$x)
       datapoints$x = factor(datapoints$x, levels = xlvls)
       xlabs = seq_along(xlvls)
       names(xlabs) = xlvls

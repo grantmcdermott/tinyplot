@@ -10,7 +10,8 @@ type_loess(
   family = "gaussian",
   control = loess.control(),
   se = TRUE,
-  level = 0.95
+  level = 0.95,
+  weights = NULL
 )
 }
 \arguments{
@@ -20,15 +21,24 @@ type_loess(
 \item{degree}{the degree of the polynomials to be used, normally 1 or
     2. (Degree 0 is also allowed, but see the \sQuote{Note}.)}
 
-\item{family}{if \code{"gaussian"} fitting is by least-squares, and if
-    \code{"symmetric"} a re-descending M estimator is used with Tukey's
-    biweight function.  Can be abbreviated.}
+\item{family}{a description of the error distribution and link
+    function to be used in the model.  For \code{glm} this can be a
+    character string naming a family function, a family function or the
+    result of a call to a family function.  For \code{glm.fit} only the
+    third option is supported.  (See \code{\link[stats]{family}} for details of
+    family functions.)}
 
 \item{control}{control parameters: see \code{\link[stats]{loess.control}}.}
 
 \item{se}{logical. If \code{TRUE} (the default), confidence intervals are drawn.}
 
 \item{level}{the confidence level required if \code{se = TRUE}. Default is 0.95.}
+
+\item{weights}{an optional numeric vector of observation weights for the model
+fit, of the same length as the number of data points. Weights can also be
+supplied via the top-level \code{weights} argument of \code{\link{tinyplot}} (which is
+evaluated with non-standard evaluation in the formula method, and takes
+precedence if both are given).}
 }
 \description{
 Type function for plotting a LOESS (LOcal regrESSion) fit.

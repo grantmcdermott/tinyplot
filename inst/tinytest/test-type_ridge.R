@@ -160,3 +160,13 @@ f = function() {
   tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", theme = "ridge2", bg = 0.2)
 }
 expect_snapshot_plot(f, label = "ridge_theme_bg_numeric")
+
+# Issue #650: ylab = NA should suppress the y-axis title without erroring.
+# Ridge draws its own y-axis labels, so the tick-row margin must still be
+# reserved under dynamic themes (else mar collapses and par() errors).
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris,
+    type = "ridge", theme = "ridge", ylab = NA)
+}
+expect_snapshot_plot(f, label = "ridge_ylab_na_issue650")
+

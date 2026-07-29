@@ -12,7 +12,10 @@ plt_add(...)
 \arguments{
 \item{...}{All named arguments override arguments from the previous calls.
 Arguments not supplied to \link{tinyplot_add} remain unchanged from the previous
-call.}
+call. Arguments are captured unevaluated and spliced into the updated call,
+so those that rely on non-standard evaluation against \code{data}---e.g.
+\code{subset = cyl == 4} or \code{weights = wt}---behave the same as in a direct
+\code{\link{tinyplot}} call.}
 }
 \value{
 No return value, called for side effect of producing a plot.
@@ -52,5 +55,9 @@ tinyplot_add(type = "lm") ## or : plt_add(type = "lm")
 #          data = iris,
 #          type = "lm",
 #          add = TRUE)
+
+## Arguments relying on non-standard evaluation (e.g. `subset`) work too:
+tinyplot(mpg ~ wt, data = mtcars)
+tinyplot_add(subset = cyl == 4, col = "red", pch = 16)
 
 }

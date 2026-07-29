@@ -19,7 +19,10 @@
 #'
 #' @param ... All named arguments override arguments from the previous calls.
 #' Arguments not supplied to [tinyplot_add] remain unchanged from the previous
-#' call.
+#' call. Arguments are captured unevaluated and spliced into the updated call,
+#' so those that rely on non-standard evaluation against `data`---e.g.
+#' `subset = cyl == 4` or `weights = wt`---behave the same as in a direct
+#' [`tinyplot`] call.
 #'
 #' @examples
 #' tinyplot(Sepal.Width ~ Sepal.Length | Species,
@@ -37,6 +40,10 @@
 #' #          type = "lm",
 #' #          add = TRUE)
 #'
+#' ## Arguments relying on non-standard evaluation (e.g. `subset`) work too:
+#' tinyplot(mpg ~ wt, data = mtcars)
+#' tinyplot_add(subset = cyl == 4, col = "red", pch = 16)
+#'
 #' @returns No return value, called for side effect of producing a plot.
 #'
 #' @export
@@ -47,16 +54,25 @@ tinyplot_add = function(...) {
     stop("No previous tinyplot call found.")
   }
 
-  args = list(...)
-  for (n in names(args)) {
-    if (n != "") {
-      cal[[n]] = args[[n]]
+  # Capture the dots as *unevaluated* expressions rather than evaluated values.
+  # This way, arguments that rely on non-standard evaluation against `data`
+  # (e.g. `subset = cyl == 4`, `weights = wt`, or a bare-name formula) are
+  # spliced into the rebuilt call and only resolved when it is finally
+  # evaluated through the formula method's `model.frame`. Using `list(...)`
+  # here would instead force evaluation in this frame, where data-scoped
+  # variables are not visible. (#630)
+  args = match.call(expand.dots = FALSE)[["..."]]
+  nms = names(args)
+  for (i in seq_along(args)) {
+    n = if (is.null(nms)) "" else nms[[i]]
+    if (!is.null(n) && n != "") {
+      cal[[n]] = args[[i]]
     }
   }
 
   # allow first argument in tinyplot_add() to be unnamed
-  if (isTRUE(names(args)[1] == "")) {
-    cal[[2]] = args[[1]]
+  if (length(args) >= 1L && (is.null(nms) || nms[[1L]] == "")) {
+    cal[[2]] = args[[1L]]
   }
 
   cal[["add"]] = TRUE

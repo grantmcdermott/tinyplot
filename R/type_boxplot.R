@@ -7,21 +7,38 @@
 #' numeric.
 #'
 #' @inheritParams graphics::boxplot
+#' @param lighten logical. Should the fills use a lighter, opaque tint of the
+#'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group
+#'   displays consistent and lets the fill read cleanly over grid lines. Set to
+#'   `FALSE` to use the fully-saturated palette colour(s) instead.
 #' @examples
 #' # "boxplot" type convenience string
-#' tinyplot(count ~ spray, data = InsectSprays, type = "boxplot")
+#' tinyplot(weight ~ feed, data = chickwts, type = "boxplot")
 #' 
 #' # Note: Specifying the type here is redundant. Like base plot, tinyplot
 #' # automatically produces a boxplot if x is a factor and y is numeric
-#' tinyplot(count ~ spray, data = InsectSprays)
+#' tinyplot(weight ~ feed, data = chickwts)
 #' 
-#' # Grouped boxplot example
-#' tinyplot(len ~ dose | supp, data = ToothGrowth, type = "boxplot")
+#' # For flipped boxplots, it's usually better to use a dynamic theme to
+#' # accommodate (horizontal) y-axis labels
+#' tinyplot(weight ~ feed, data = chickwts, flip = TRUE, theme = "dynamic")
+#' 
+#' # Grouped boxplot example using a different dataset
+#' # (C.f., the final example in `?boxplot`)
+#' tinyplot(
+#'   len ~ dose | supp, data = ToothGrowth, type = "boxplot",
+#'   main = "Guinea Pigs' Tooth Growth",
+#'   legend = list(title = "Supplement"),
+#'   xlab = "Vitamin C dose mg", ylab = "tooth length"
+#' )
 #' 
 #' # Use `type_boxplot()` to pass extra arguments for customization
 #' tinyplot(
-#'   len ~ dose | supp, data = ToothGrowth, lty = 1,
-#'   type = type_boxplot(boxwex = 0.3, staplewex = 0, outline = FALSE)
+#'   len ~ dose | supp, data = ToothGrowth,
+#'   type = type_boxplot(boxwex = 0.3, staplewex = 0, outline = FALSE), lty = 1,
+#'   legend = list(title = "Supplement"),
+#'   main = "Guinea Pigs' Tooth Growth",
+#'   xlab = "Vitamin C dose mg", ylab = "tooth length"
 #' )
 #' @export
 type_boxplot = function(
@@ -32,7 +49,8 @@ type_boxplot = function(
     outline = TRUE,
     boxwex = 0.8,
     staplewex = 0.5,
-    outwex = 0.5) {
+    outwex = 0.5,
+    lighten = TRUE) {
   out = list(
     draw = draw_boxplot(
       range = range,
@@ -43,7 +61,7 @@ type_boxplot = function(
       boxwex = boxwex,
       staplewex = staplewex,
       outwex = outwex),
-    data = data_boxplot(boxwex = boxwex),
+    data = data_boxplot(boxwex = boxwex, lighten = lighten),
     name = "boxplot"
   )
   class(out) = "tinyplot_type"
@@ -89,9 +107,10 @@ draw_boxplot = function(range, width, varwidth, notch, outline, boxwex, staplewe
 
 
 
-data_boxplot = function(boxwex = 0.8) {
+data_boxplot = function(boxwex = 0.8, lighten = TRUE) {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "by", "facet", "null_facet", "null_palette", "x", "col", "bg", "null_by"))
+        settings[["lighten"]] = lighten
         # Convert x to factor if it's not already
         datapoints$x = as.factor(datapoints$x)
 

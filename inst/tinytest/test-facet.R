@@ -556,6 +556,35 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_yscale")
 
+# Free facets where a facet has a single distinct (discrete) axis value, which
+# collapses the free-scale range to zero width (issue #668)
+f = function() {
+  dat = data.frame(
+    x = c("a", "b", "b"),
+    y = c(1, 2, 3),
+    g = c("A", "B", "B")
+  )
+  tinyplot(
+    y ~ x, data = dat,
+    facet = ~g, facet.args = list(free = TRUE),
+    main = "Free facets: single-value facet"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_single_value")
+
+# Free facets combined with flip: the fixed continuous-axis limit must follow
+# the flip and be honoured, rather than the wrong axis being freed (issue #670)
+f = function() {
+  tinyplot(
+    mpg ~ carb, data = mtcars, type = "p",
+    facet = ~am, facet.args = list(free = TRUE),
+    ylim = c(0, 50),
+    flip = TRUE,
+    main = "Free facets: flipped"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_flip")
+
 #
 # restore original par settings
 #

@@ -35,7 +35,6 @@ expect_snapshot_plot(f, label = "violin_groups")
 f = function() {
   plt(len ~ dose | factor(supp, labels = c("Ascorbic acid", "Orange juice")),
     data = ToothGrowth,
-    fill = 0.2, 
     main = "Guinea Pigs' Tooth Growth",
     xlab = "Vitamin C dose mg", ylab = "tooth length",
     type = type_violin(trim = TRUE, joint.bw = FALSE),
@@ -67,7 +66,7 @@ expect_snapshot_plot(f, label = "violin_by_x_equivalent")
 ## facets
 
 f = function() {
-  plt(weight ~ Time | Diet, ChickWeight, type = "violin", facet = "by", fill = 0.2)
+  plt(weight ~ Time | Diet, ChickWeight, type = "violin", facet = "by")
 }
 expect_snapshot_plot(f, label = "violin_facet_by")
 
@@ -80,3 +79,13 @@ expect_snapshot_plot(f, label = "violin_facet_x_by_same")
 #   plt(mpg ~ gear | factor(cyl), data = mtcars, type = "violin", facet = ~am)
 # }
 # expect_snapshot_plot(f, label = "violin_groups_facets_with_missings")
+
+#
+## lighter opaque grouped fills (#646); `lighten = FALSE` uses the saturated
+## palette colour(s)
+
+f = function() {
+  plt(len ~ dose | supp, data = ToothGrowth,
+    type = type_violin(lighten = FALSE), theme = "clean2")
+}
+expect_snapshot_plot(f, label = "violin_groups_lighten_false")

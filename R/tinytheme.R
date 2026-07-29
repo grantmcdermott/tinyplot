@@ -635,7 +635,9 @@ theme_web = modifyList(theme_dynamic, list(
   grid.col = "#D2D2D2",
   grid.lty = 1,
   grid.lwd = 0.5,
-  palette.qualitative = c("#008FD5", "#FF2700", "#77AB43"),
+  palette.qualitative = c(
+    "#008FD5", "#FF2700", "#77AB43", "#5D2E8C",
+    "#FF8C00", "#00B2A9", "#A67C52", "#C71585"),
   tcl = 0,
   xaxt = "labels",
   yaxt = "labels"
@@ -661,6 +663,7 @@ theme_tufte = modifyList(theme_dynamic, list(
 theme_float = modifyList(theme_tufte, list(
   tinytheme = "float",
   col.default = "black",
+  facet.bg = "gray95",
   gap.axis = 0,
   gap.lab = 0.7,
   lab = c(5, 5, 7),

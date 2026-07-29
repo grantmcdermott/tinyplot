@@ -20,16 +20,13 @@ plt(
   theme = list("web", palette.qualitative = c("#0FCFC0", "#F79CD4"))
 )
 plt_add(
-  type = "text", labels = mtcars2$model, repel = TRUE, xpd = NA, pos = 4,
-  alpha = 0.3
+  type = "text", labels = model, repel = TRUE, xpd = NA, pos = 4, alpha = 0.3
 )
+# Add emphasized Merc points + labels
+plt_add(subset = make == "Merc") # ensure Merc points not covered by text labels
 plt_add(
-  data = subset(mtcars2, make=="Merc")
-)
-plt_add(
-  data = subset(mtcars2, make=="Merc"),
-  type = "text", labels = subset(mtcars2, make == "Merc")$model,
-  repel = TRUE, xpd = NA, pos = 4, font = 2
+  subset = make == "Merc",
+  type = "text", labels = model, repel = TRUE, xpd = NA, pos = 4, font = 2
 )
 
 # optional annotations

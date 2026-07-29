@@ -47,3 +47,27 @@ f = function() {
     main = "repel = TRUE")
 }
 expect_snapshot_plot(f, label = "text_repel")
+
+
+# top-level `labels` with NSE in the formula method (#332). airquality has NAs
+# that the formula drops, so the bare `labels` column must align with the rows
+# retained after na.action.
+mtcars2 = within(
+  mtcars, {
+    make = sub(" .*", "", row.names(mtcars))
+    model = sub("^\\S+\\s+", "", row.names(mtcars))
+  }
+)
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars2, labels = make,
+    type = type_text(repel = TRUE),
+    main = "labels NSE + repel = TRUE")
+  
+}
+expect_snapshot_plot(f, label = "text_labels_nse")
+
+# logical checks for behaviours a snapshot can't express
+# length mismatch is caught (model.frame in the formula path)
+expect_error(tinyplot(mpg ~ wt, data = mtcars, type = "text", labels = c("a", "b")))
+# top-level `labels` overrides the constructor-level arg
+expect_silent(tinyplot(1:3, type = type_text(labels = "x"), labels = c("a", "b", "c")))

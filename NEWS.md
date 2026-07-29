@@ -41,6 +41,12 @@ where the formatting is also better._
   Also fixes flipped plots (e.g. `type = "boxplot", flip = TRUE`), where the
   axis-position test keyed off the pre-flip axis and so both duplicated the
   category axis *and* omitted the interior x-axes. (#660, #661 @grantmcdermott)
+- Faceted `"spineplot"` plots no longer overlap their category labels with the
+  neighbouring facet under framed themes (e.g. `tinytheme("clean")`). The
+  tick-label width was only ever reserved once, in the outer margin, which is
+  correct when just the edge facet draws an axis but not when every facet does.
+  Interior facets now reserve that width in their own margin. (#660
+  @grantmcdermott)
 
 ## v0.7.0
 

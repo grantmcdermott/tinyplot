@@ -127,6 +127,42 @@ draw_facet_window = function(
 
     ooma = par("oma")
 
+    # Types that draw their own axes may force `frame.plot = FALSE` so the
+    # pipeline skips the box (e.g. data_spineplot()), while surfacing the user's
+    # real choice via the `framed` hint. Use the hint where given, so the margin
+    # logic below matches what the type will actually draw.
+    .framed = if (!is.null(type_hints[["framed"]])) {
+      isTRUE(type_hints[["framed"]])
+    } else {
+      isTRUE(frame.plot)
+    }
+
+    # Will any *interior* (non-edge) facet draw its own axis on this side? If so
+    # that facet needs the tick-label width in its own margin, rather than the
+    # single outer allocation that the nmar/noma split below would otherwise
+    # make. Mirrors draw_facet_axis(), so the margin and the axis agree.
+    .interior_axis = function(side) {
+      if (nfacets <= 1) return(FALSE)
+      fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
+      keep = vapply(
+        ifacet,
+        function(ii) draw_facet_axis(
+          side, ii, fwa,
+          framed = .framed,
+          free = isTRUE(facet.args[["free"]]),
+          axes = facet.args[["axes"]]
+        ),
+        logical(1L)
+      )
+      # more panels draw this axis than sit on its outer edge => interior draws
+      edge = vapply(
+        ifacet,
+        function(ii) draw_facet_axis(side, ii, fwa, framed = FALSE, free = FALSE, axes = "outer"),
+        logical(1L)
+      )
+      sum(keep) > sum(edge)
+    }
+
     # Bump top margin for facet strip. Use facet_text (not / cex_fct_adj)
     # because nmar = (fmar + 0.1) / cex_fct_adj already divides — using
     # facet_text directly keeps the inter-panel gap constant as newlines grow.
@@ -177,8 +213,13 @@ draw_facet_window = function(
           omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
           fmar[2] = fmar[2] + whtsbp * cex_fct_adj
         }
-        # Extra reduction if no plot frame to reduce whitespace
-        if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+        # The label width above is reserved once, and the nmar/noma split below
+        # hands it to the *outer* margin -- correct when only the leftmost facet
+        # draws a y axis. But when interior facets draw their own (e.g. framed
+        # panels), each needs that width in its own margin instead, else the
+        # labels overflow into the neighbouring panel. Keep the fmar bump in that
+        # case; otherwise release it back to the outer margin as before.
+        if (!.framed && !isTRUE(facet.args[["free"]]) && !.interior_axis(2)) {
           fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
         }
       }
@@ -201,8 +242,9 @@ draw_facet_window = function(
           omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
           fmar[1] = fmar[1] + whtsbp * cex_fct_adj
         }
-        # Extra reduction if no plot frame to reduce whitespace
-        if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+        # As per the y axis above: keep the label width in fmar when interior
+        # facets draw their own x axis, else release it to the outer margin.
+        if (!.framed && !isTRUE(facet.args[["free"]]) && !.interior_axis(1)) {
           fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
         }
       }

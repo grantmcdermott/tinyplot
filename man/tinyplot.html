@@ -825,6 +825,9 @@ grouping variable(s). The default behaviour is for groups to be represented in t
 <p><code>free</code> a logical value indicating whether the axis limits (scales) for each individual facet should adjust independently to match the range of the data within that facet. Default is <code>FALSE</code>. Separate free scaling of the x- or y-axis (i.e., whilst holding the other axis fixed) is not currently supported.</p>
 </li>
 <li>
+<p><code>axes</code> a character string for controlling which facets draw their own axes. One of <code>“all”</code> (every facet gets its own axes), <code>“outer”</code> (only the facets along the bottom and left edges of the grid, so that redundant interior axes are dropped), or <code>“none”</code> (no facet axes at all). If left unspecified (the default), the behaviour is inherited from <code>frame.plot</code>: framed plots draw axes in every facet, since each frame visually contains its own axes, while frameless plots (e.g.&nbsp;<code>tinytheme(“clean2”)</code>) draw only the outer ones. Use <code>axes = “outer”</code> to drop the interior axes while <em>keeping</em> the facet frames. Note that <code>axes</code> is ignored for free-scaled facets (<code>free = TRUE</code>), which necessarily require their own axes; the sole exception being <code>axes = “none”</code>, which is always respected.</p>
+</li>
+<li>
 <p><code>fmar</code> a vector of form <code>c(b,l,t,r)</code> for controlling the base margin between facets in terms of lines. Defaults to the value of <code>tpar(“fmar”)</code>, which should be <code>c(1,1,1,1)</code>, i.e.&nbsp;a single line of padding around each individual facet, assuming it hasn’t been overridden by the user as part their global <code>tpar</code> settings. Note some automatic adjustments are made for certain layouts, and depending on whether the plot is framed or not, to reduce excess whitespace. See <code>tpar</code> for more details.</p>
 </li>
 <li>

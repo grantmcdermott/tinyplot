@@ -308,6 +308,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>type_hexbin()</code> (equivalently, <code>type = "hexbin"</code>) for hexagonal bin plots, a 2D analogue of a histogram. (<a href="https://github.com/grantmcdermott/tinyplot/issues/667">#667</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
+<section id="other-new-features" class="level4">
+<h4 class="anchored" data-anchor-id="other-new-features">Other new features</h4>
+<ul>
+<li>Custom plot types have more control over the surrounding plot machinery, via a new <code>type_hints</code> mechanism. A type can declare properties about itself—that it draws its own axes, needs a secondary right-hand axis, uses proportional limits, fills its legend key from <code>col</code>, and so on—and <strong>tinyplot</strong> adjusts margins, axis limits and legend keys accordingly. Previously this behaviour was hard-coded against the names of built-in types, so it was unavailable to custom types. See <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html#type-hints">Advanced customization</a> in the <code>Types</code> vignette for the list of supported hints. (<a href="https://github.com/grantmcdermott/tinyplot/issues/543">#543</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>New <code>axes</code> argument for <code>facet.args</code>, giving explicit control over which facets draw their own axes: <code>"all"</code>, <code>"outer"</code> (drop redundant interior axes), or <code>"none"</code>. Previously this was only achievable as a side effect of <code>frame.plot = FALSE</code>, so <code>facet.args = list(axes = "outer")</code> now allows redundant axes to be dropped while <em>keeping</em> the facet frames. (<a href="https://github.com/grantmcdermott/tinyplot/issues/661">#661</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+</section>
 </section>
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
@@ -316,6 +323,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Single-valued discrete axes no longer trigger invalid <code>par(usr)</code> values. (<a href="https://github.com/grantmcdermott/tinyplot/issues/668">#668</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>User-provided <code>x/ylim</code> overrides now work correctly with flipped plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/670">#670</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul></li>
+<li>Grouped and faceted plots no longer redraw axes once per empty group. This was most visible for <code>"spineplot"</code> types (e.g.&nbsp;<code>facet = "by"</code>), where the self-drawn axis labels were overplotted several times and rendered too heavy. (<a href="https://github.com/grantmcdermott/tinyplot/issues/637">#637</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Fixed several bugs in how faceted plots draw their axes. These were most visible for <code>"spineplot"</code> and <code>"ridge"</code> types, which draw their own axes and so bypassed the shared outer-axis logic, but some affected other types too. (<a href="https://github.com/grantmcdermott/tinyplot/issues/660">#660</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/661">#661</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)
+<ul>
+<li>Redundant interior axes are no longer drawn when the plot is frameless (e.g. <code>tinytheme("clean2")</code>), where the category labels previously spilled into the neighbouring facet.</li>
+<li>Category labels no longer overlap the neighbouring facet under framed themes (e.g.&nbsp;<code>tinytheme("clean")</code>). The tick-label width was only reserved once, in the outer margin, which is correct only when a single facet draws that axis.</li>
+<li>Flipped plots (e.g.&nbsp;<code>type = "boxplot", flip = TRUE</code>) no longer duplicate the category axis while omitting the interior x-axes, which had left facets labelled against a neighbour’s scale.</li>
+<li><code>axes = "t"</code> (and other tick-style axes) no longer drop the interior facet labels.</li>
 </ul></li>
 </ul>
 </section>
@@ -417,8 +432,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Produces a line plot by default, although users can override by passing an explicit <code>type</code> argument. Similarly, multivariate series are faceted by default, but users can also override to obtain, say, a single frame with direct labels. (<a href="https://github.com/grantmcdermott/tinyplot/issues/558">#558</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
 </ul>
 </section>
-<section id="other-new-features" class="level4">
-<h4 class="anchored" data-anchor-id="other-new-features">Other new features</h4>
+<section id="other-new-features-1" class="level4">
+<h4 class="anchored" data-anchor-id="other-new-features-1">Other new features</h4>
 <ul>
 <li>New and updated top-level <code>tinyplot()</code>/<code>plt()</code> arguments:
 <ul>
@@ -664,8 +679,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>"violin"</code> / <code>type_violin()</code> for violin plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/354">#354</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="other-new-features-1" class="level4">
-<h4 class="anchored" data-anchor-id="other-new-features-1">Other new features</h4>
+<section id="other-new-features-2" class="level4">
+<h4 class="anchored" data-anchor-id="other-new-features-2">Other new features</h4>
 <ul>
 <li><p><code>tinyplot(..., file = "*.pdf")</code> will now default to using <code>cairo_pdf()</code> if cairo graphics are supported on the user’s machine. This should help to ensure better fidelity of (non-standard) fonts in PDFs. (<a href="https://github.com/grantmcdermott/tinyplot/issues/311">#311</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
 <li><p>The <code>palette</code> argument now accepts a vector or list of manual colours, e.g. <code>tinyplot(..., palette = c("cyan4", "hotpink", "purple4"))</code>, or <code>tinytheme("clean", palette = c("cyan4", "hotpink", "purple4"))</code> (<a href="https://github.com/grantmcdermott/tinyplot/issues/325">#325</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
@@ -784,8 +799,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>More details are provided in the dedicated <a href="https://grantmcdermott.com/tinyplot/vignettes/themes.html">Themes vignette</a> on the website.</li>
 </ul>
 </section>
-<section id="other-new-features-2" class="level4">
-<h4 class="anchored" data-anchor-id="other-new-features-2">Other new features</h4>
+<section id="other-new-features-3" class="level4">
+<h4 class="anchored" data-anchor-id="other-new-features-3">Other new features</h4>
 <ul>
 <li><p>New <code>tinyplot()</code> arguments:</p>
 <ul>

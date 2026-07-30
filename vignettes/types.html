@@ -227,6 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#how-it-works" id="toc-how-it-works" class="nav-link" data-scroll-target="#how-it-works">How it works</a></li>
   <li><a href="#pro-tip-re-use-existing-plot-types" id="toc-pro-tip-re-use-existing-plot-types" class="nav-link" data-scroll-target="#pro-tip-re-use-existing-plot-types">Pro tip: Re-use existing plot types</a></li>
   <li><a href="#more-examples" id="toc-more-examples" class="nav-link" data-scroll-target="#more-examples">More examples</a></li>
+  <li><a href="#type-hints" id="toc-type-hints" class="nav-link" data-scroll-target="#type-hints">Advanced customization: declaring special type behaviour</a></li>
   </ul></li>
   <li><a href="#appendix-available-settings" id="toc-appendix-available-settings" class="nav-link" data-scroll-target="#appendix-available-settings">Appendix: Available settings</a></li>
   </ul>
@@ -632,14 +633,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="custom-types" class="level2">
 <h2 class="anchored" data-anchor-id="custom-types">Custom types</h2>
-<p>It is easy to add custom types to <strong>tinyplot</strong>. Users who need highly customized plots, or developers who want to add support to their package or functions, only need to define their own <code>type_&lt;type&gt;()</code> function. Let’s start with a simple example to see how this works in practice.</p>
+<p>We want <strong>tinyplot</strong> to be as extensible as possible. Users should be able to create their own custom <strong>tinyplot</strong> types and, where appropriate, make them available to others.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> To create a custom type, you need only define a new <code>type_&lt;type&gt;()</code> function that adheres to a few basic principles.</p>
+<p>Let’s walk through a minimal example to see how this works in practice.</p>
 <section id="a-minimal-example" class="level3">
 <h3 class="anchored" data-anchor-id="a-minimal-example">A minimal example</h3>
-<p>Here is a minimal example of a custom <code>type_log()</code> that logs both <code>x</code> and <code>y</code> before plotting points.</p>
+<p>Consider a custom <code>type_log()</code> that logs both <code>x</code> and <code>y</code> before plotting points.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>type_log <span class="ot">=</span> <span class="cf">function</span>(<span class="at">base =</span> <span class="fu">exp</span>(<span class="dv">1</span>)) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data tranformation function</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data transformation function</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  data_log <span class="ot">=</span> <span class="cf">function</span>() {</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      <span class="co"># extract raw datapoints from settings environment</span></span>
@@ -703,7 +705,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>data</code>: A data transformation function (see below)</li>
 <li><code>draw</code>: A drawing function (see below)</li>
-<li><code>name</code>: The name of the underlying plot type (this can be anything, but think of it as a convenient way to inherit default/fallback behaviour from an existing plot type)</li>
+<li><code>name</code>: The name of the underlying plot type. This can be anything, but re-using the name of a built-in type (e.g., <code>"p"</code>) is a convenient way to inherit its default/fallback behaviour (e.g.&nbsp;legend defaults).</li>
 </ul></li>
 <li><strong><code>data_&lt;type&gt;()</code></strong>: A function factory that returns a data transformation function:
 <ul>
@@ -724,11 +726,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="pro-tip-re-use-existing-plot-types" class="level3">
 <h3 class="anchored" data-anchor-id="pro-tip-re-use-existing-plot-types">Pro tip: Re-use existing plot types</h3>
-<p>Rather than code up all of the internals for a custom type from scratch, users are strongly encouraged to re-use the scaffolding for existing types. One of the easiest ways to do this—which we use repeatedly in the main <strong>tinyplot</strong> codebase—is by “delegating” to an existing type at the end of the <code>data_&lt;type&gt;</code> function. Again, this is perhaps easier seen than explained, so consider an alternate version of our previous <code>type_log()</code> function.</p>
+<p>Rather than code up all of the internals for a custom type from scratch, users are strongly encouraged to re-use the scaffolding for existing types. One of the easiest ways to do this—which we use <em>repeatedly</em> in the main <strong>tinyplot</strong> codebase—is by “delegating” to an existing type at the end of the <code>data_&lt;type&gt;</code> function. Again, this is perhaps easier seen than explained, so consider an alternate version of our previous <code>type_log()</code> function.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>type_log_redux <span class="ot">=</span> <span class="cf">function</span>(<span class="at">base =</span> <span class="fu">exp</span>(<span class="dv">1</span>)) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>type_log2 <span class="ot">=</span> <span class="cf">function</span>(<span class="at">base =</span> <span class="fu">exp</span>(<span class="dv">1</span>)) {</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data tranformation function</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data transformation function</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  data_log <span class="ot">=</span> <span class="cf">function</span>() {</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      datapoints <span class="ot">=</span> settings<span class="sc">$</span>datapoints</span>
@@ -761,54 +763,118 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>settings$type = "p"</code> (re-assign the type at the end of <code>data_log()</code>)</li>
 <li><code>draw = NULL</code> (drop the dedicated <code>draw_log()</code> function entirely; will fall back to <code>draw_points()</code> internally now)</li>
 </ul>
-<p>This “redux” version is obviously shorter than our original version, since we can skip the custom <code>draw_log()</code> section. But re-using existing <strong>tinyplot</strong> scaffolding brings added benefits beyond code concision. In particular, it guarantees that all of the functionality from an existing <code>type</code> will be made available to your custom type. For example, in our first <code>type_log()</code> function we didn’t account for the fact that users might want to adjust groups by other aesthetics (e.g, <code>pch</code>), whereas we get this for free in <code>type_log_redux()</code>.</p>
+<p>This new version is obviously shorter than our original version, since we can skip the custom <code>draw_log()</code> section. But re-using existing <strong>tinyplot</strong> scaffolding brings added benefits beyond code concision. In particular, it guarantees that all of the functionality from an existing <code>type</code> will be made available to your custom type. (Which, trust us, is safer.) For example, it guarantees that grouping behaviour by other aesthetics (e.g, <code>pch</code>) passes through “for free”.</p>
+<div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars,</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="st">"by"</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_log</span>(), <span class="at">main =</span> <span class="st">"type_log"</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt <span class="sc">|</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="st">"by"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_log_redux</span>(), <span class="at">main =</span> <span class="st">"type_log_redux"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="types_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="types_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_log2</span>(), <span class="at">main =</span> <span class="st">"Better to re-use an existing drawing type"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="types_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
-<p>Moral of the story: be lazy and re-use existing <strong>tinyplot</strong> scaffolding wherever possible; especially drawing functions.</p>
+<p>Moral of the story: be lazy and re-use existing <strong>tinyplot</strong> scaffolding wherever possible, especially for drawing functions.</p>
 </section>
 <section id="more-examples" class="level3">
 <h3 class="anchored" data-anchor-id="more-examples">More examples</h3>
 <p>The <strong>tinyplot</strong> <a href="https://github.com/grantmcdermott/tinyplot/tree/main/R">source code</a> contains many examples of type constructor functions that should provide a helpful starting point for custom plot types. Each built-in <strong>tinyplot</strong> type is itself implemented as a custom type, so you can see real-world examples of varying complexity. For example, take a look at the <a href="https://github.com/grantmcdermott/tinyplot/blob/main/R/type_points.R"><code>type_points.R</code></a> or <a href="https://github.com/grantmcdermott/tinyplot/blob/main/R/type_area.R"><code>type_area.R</code></a> code. (The latter provides an example where we delegate to the <code>type_ribbon</code> drawing code.)</p>
 <p>Beyond that, the <strong>tinyplot</strong> team are always happy to help guide users on how to create their own types. Just let us know by <a href="https://github.com/grantmcdermott/tinyplot/issues">raising an issue</a> on our GitHub repo.</p>
 </section>
+<section id="type-hints" class="level3">
+<h3 class="anchored" data-anchor-id="type-hints">Advanced customization: declaring special type behaviour</h3>
+<p>In most cases, simply declaring the <code>data_&lt;type&gt;()</code> transformation and passing to an appropriate drawing function should be enough for your custom type. Additional features like faceting, theming, and layering should flow seamlessly through the rest of the <strong>tinyplot</strong> machinery.</p>
+<p>However, some plot types require advanced customization features that go beyond the basics. For example, <code>type_spineplot()</code> ships its own special (dual) axes logic that the surrounding scaffolding—margins, axes limits—needs to account for. For these special cases, we provide several escape hatches that your type can plug into to override default behaviour. The one you’re most likely to need is <code>settings$type_hints</code>; a named list that you can set inside your <code>data_&lt;type&gt;()</code> function. If a specific hint is declared, then <strong>tinyplot</strong> knows to use it for custom behaviour rather than reverting to the default logic.</p>
+<p>Again, an example may help to illustrate. Say we are defining a custom type whose axes should span a fixed [0, 1] range (i.e., we don’t want its axis limits determined by the empirical data range). We can pass the special <code>has_proportional_lim</code> flag to ensure this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data_mytype <span class="ot">=</span> <span class="cf">function</span>() {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    settings<span class="sc">$</span>type_hints <span class="ot">=</span> <span class="fu">list</span>(<span class="at">has_proportional_lim =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ... other data transformations</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(fun)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Currently, <code>type_hints</code> accepts several known hints; all of which are booleans. Any hint left undefined is treated internally as <code>NULL</code> and is ignored. So you need only define the list of hints that you actually want:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Hint</th>
+<th>Declared by</th>
+<th>Effect when <code>TRUE</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>draws_own_axes</code></td>
+<td><code>type_ridge()</code>, <code>type_spineplot()</code></td>
+<td>Your <code>draw_*()</code> function draws its own axes (having set <code>xaxt</code>/<code>yaxt</code> to <code>"n"</code>). Reserves the tick-row margin that would otherwise be dropped, so self-drawn labels aren’t clipped.</td>
+</tr>
+<tr class="even">
+<td><code>has_rhs_axis</code></td>
+<td><code>type_spineplot()</code></td>
+<td>Reserve right-hand margin for a secondary axis.</td>
+</tr>
+<tr class="odd">
+<td><code>has_proportional_lim</code></td>
+<td><code>type_spineplot()</code></td>
+<td>Treat the limits as proportional (e.g.&nbsp;[0, 1]); don’t expand them to axis breaks.</td>
+</tr>
+<tr class="even">
+<td><code>framed</code></td>
+<td><code>type_spineplot()</code></td>
+<td>Report the user’s <code>frame.plot</code> choice when your type overrides the setting internally (e.g.&nbsp;because it draws its own box). Used to decide whether interior facets draw their own axes.</td>
+</tr>
+<tr class="odd">
+<td><code>legend_fills_from_col</code></td>
+<td><code>type_hexbin()</code>, <code>type_spineplot()</code></td>
+<td>Fill the legend key with the group colour (<code>col</code>) rather than <code>bg</code>.</td>
+</tr>
+<tr class="even">
+<td><code>legend_fills_from_seq_palette</code></td>
+<td><code>type_ridge()</code></td>
+<td>Fill the legend key with a lighter step of the group colour’s sequential ramp.</td>
+</tr>
+<tr class="odd">
+<td><code>legend_border_fg</code></td>
+<td><code>type_spineplot()</code></td>
+<td>Draw the legend key border in the foreground colour rather than the group colour.</td>
+</tr>
+</tbody>
+</table>
+<p>To see <code>type_hints</code> in action, consult the <a href="https://github.com/grantmcdermott/tinyplot/tree/main/R">source code</a> of the types listed above.</p>
+<p>Beyond <code>type_hints</code>, another customization escape hatch is provided by the sister <code>type_info</code> setting. Without going into too much detail, the key difference between these two is that <code>type_hints</code> specifies <em>behaviour</em> you want the plot machinery to respect, while <code>type_info</code> is used for passing bespoke <em>rendering payload</em> from <code>data_&lt;type&gt;()</code> through to <code>draw_&lt;type&gt;()</code> (e.g., coordinates, precomputed breaks, and so on). An example is the custom hex polygon offsets of <code>type_hexbin()</code> (see <a href="https://github.com/grantmcdermott/tinyplot/blob/a1f1e2c80e1dd67508327ad2e05f229b6d537e17/R/type_hexbin.R#L317">here</a>).</p>
+<p>We reiterate that <code>type_hints</code> and <code>type_info</code> are very much in the advanced corner of the <strong>tinyplot</strong> codebase. Most users can safely ignore these internal features when creating their own custom types. But feel free to reach out if you need help.</p>
+</section>
 </section>
 <section id="appendix-available-settings" class="level2">
 <h2 class="anchored" data-anchor-id="appendix-available-settings">Appendix: Available settings</h2>
 <p>To see what objects and parameters are available in the <code>settings</code> environment, we can create a simple <code>type_error()</code> function that stops with the names of all available settings:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>type_error <span class="ot">=</span> <span class="cf">function</span>() {</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  data_error <span class="ot">=</span> <span class="cf">function</span>() {</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="fu">paste</span>(<span class="fu">sort</span>(<span class="fu">names</span>(settings)), <span class="at">collapse =</span> <span class="st">", "</span>))</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fun)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">data_error</span>()</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class</span>(out) <span class="ot">=</span> <span class="st">"tinyplot_type"</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="fu">type_error</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>type_error <span class="ot">=</span> <span class="cf">function</span>() {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  data_error <span class="ot">=</span> <span class="cf">function</span>() {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    fun <span class="ot">=</span> <span class="cf">function</span>(settings, ...) {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="fu">paste</span>(<span class="fu">sort</span>(<span class="fu">names</span>(settings)), <span class="at">collapse =</span> <span class="st">", "</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fun)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">data_error</span>()</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class</span>(out) <span class="ot">=</span> <span class="st">"tinyplot_type"</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="fu">type_error</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `settings$type_data()`:
-! add, alpha, axes, bg, bubble, bubble_alpha, bubble_bg_alpha, bubble_pch, by, by_dep, call, cap, cex, cex_dep, col, datapoints, dodge, dots, draw, facet, facet_attr, facet_by, facet_dep, facet.args, file, fill, flip, frame.plot, group_offsets, height, labels, legend, legend_args, lighten, log, lty, lwd, null_by, null_facet, null_palette, null_xlim, null_ylim, offsets_axis, palette, pch, rev_x, rev_y, ribbon.alpha, sub, type, type_data, type_draw, type_info, type_name, weights, weights_used, width, x, x_by, x_dep, xaxb, xaxl, xaxs, xaxt, xlab, xlabs, xlim, xmax, xmax_dep, xmin, xmin_dep, y, y_dep, yaxb, yaxl, yaxs, yaxt, ygroup, ylab, ylabs, ylim, ymax, ymax_dep, ymin, ymin_dep</code></pre>
+! add, alpha, axes, bg, bubble, bubble_alpha, bubble_bg_alpha, bubble_pch, by, by_dep, call, cap, cex, cex_dep, col, datapoints, dodge, dots, draw, facet, facet_attr, facet_by, facet_dep, facet.args, file, fill, flip, frame.plot, group_offsets, height, labels, legend, legend_args, lighten, log, lty, lwd, null_by, null_facet, null_palette, null_xlim, null_ylim, offsets_axis, palette, pch, rev_x, rev_y, ribbon.alpha, sub, type, type_data, type_draw, type_hints, type_info, type_name, weights, weights_used, width, x, x_by, x_dep, xaxb, xaxl, xaxs, xaxt, xlab, xlabs, xlim, xmax, xmax_dep, xmin, xmin_dep, y, y_dep, yaxb, yaxl, yaxs, yaxt, ygroup, ylab, ylabs, ylim, ymax, ymax_dep, ymin, ymin_dep</code></pre>
 </div>
 </div>
 <p>As we can see, the <code>settings</code> environment contains many parameters that custom types can use as inputs or modify as needed.</p>
@@ -821,6 +887,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <ol>
 <li id="fn1"><p>Note: If we simply specified the <code>"glm"</code> convenience string on its own, we’d get a linear fit since the default family is <code>gaussian</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Examples of downstream R packages shipping bespoke <strong>tinyplot</strong> types include <strong>descstat</strong> (see <a href="https://cran.r-project.org/web/packages/descstat/refman/descstat.html#tinyplot">here</a> and <a href="https://cran.r-project.org/web/packages/descstat/vignettes/descstat.html">here</a>) and <strong>trackframe</strong> (see <a href="https://github.com/livingingroups/trackframe/blob/21c9be7924d871ef7a5a09c6d25285ec4865b2d9/R/plot_type_arrows.R">here</a>).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

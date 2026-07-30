@@ -666,7 +666,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   new_plot = TRUE,
   draw = TRUE,
   soma_target = NULL,
-  dynmar_title_mar = NULL
+  dynmar_title_mar = NULL,
+  type_hints = NULL
 )
 </code></pre>
 </section>
@@ -839,6 +840,14 @@ Numeric. Shared outer margin target (in lines) for multi-legend alignment. If <c
 </td>
 <td>
 Numeric or <code>NULL</code>. The pre-computed <code>dynmar_computed[3]</code> value for "top!" legends under dynmar themes. When set, the legend margin formula uses this directly to ensure correct title positioning.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="type_hints">type_hints</code>
+</td>
+<td>
+Optional named list of semantic behaviour properties that a plot type declares for itself (e.g.&nbsp;<code>has_rhs_axis</code> for a secondary right-hand axis, or <code>legend_fills_from_col</code> for a legend swatch fill taken from <code>col</code>). Passed down from tinyplot; defaults to <code>NULL</code>. Deliberately last, so that adding it did not shift the position of any pre-existing argument for positional callers.
 </td>
 </tr>
 </tbody></table>

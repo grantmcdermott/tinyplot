@@ -319,11 +319,28 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         settings$legend_args[["pt.cex"]] = settings$legend_args[["pt.cex"]] %||% 3.5
         settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
         settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
-        
+
+        # Declare this type's axes/legend behaviour so the main pipeline can read
+        # semantic flags instead of hardcoding `type == "spineplot"` checks.
+        # A spineplot suppresses the standard axes (xaxt/yaxt = "n") because it
+        # draws its own (category + numeric labels, plus a secondary RHS axis)
+        # via spine_axis(), and uses proportional [0, 1] limits.
+        type_hints = list(
+          draws_own_axes        = TRUE, # draws own tick-row axes despite xaxt/yaxt = "n"
+          has_rhs_axis          = TRUE, # secondary right-hand axis (reserve margin)
+          has_proportional_lim  = TRUE, # [0, 1] limits; don't expand to axis breaks
+          legend_fills_from_col = TRUE, # legend swatch pt.bg defaults from col
+          legend_border_fg      = TRUE, # ... and its border is always par("fg")
+          # We force `frame.plot = FALSE` above so the pipeline doesn't draw a box
+          # (draw_spineplot() draws its own). Surface the user's actual choice so
+          # margin logic can still tell a framed plot from a frameless one.
+          framed                = frameplot_orig
+        )
+
         env2env(environment(), settings, c(
           "x", "y", "ymin", "ymax", "xmin", "xmax", "col", "bg", "datapoints",
           "by", "facet", "axes", "frame.plot", "xaxt", "yaxt", "xaxs", "yaxs",
-          "ylabs", "type_info", "facet.args"
+          "ylabs", "type_info", "facet.args", "type_hints"
         ))
         
     }
@@ -390,20 +407,53 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
       ## - standard categorical axes (xaxt/yaxt == "s") _without_ ticks
       ## - never draw additional axis lines, box always for spinogram
       if(type_info[["axes"]]) {
-          if (x.categorical) {
-              spine_axis(if (flip) 2 else 1, at = (xat[1L:nx] + xat[2L:(nx+1L)] - off)/2, labels = xaxlabels,
-                  type = type_info[["xaxt"]], categorical = TRUE)
-          } else {
-              spine_axis(if (flip) 2 else 1, at = xat, labels = xaxlabels,
-                  type = type_info[["xaxt"]], categorical = FALSE)
+          # Spineplot draws its own axes, so it must apply the same per-facet rule
+          # the generic pipeline uses (see draw_facet_axis()): framed panels each
+          # get an axis, frameless ones only on the outer edge. `frame.plot` comes
+          # via type_info because data_spineplot() forces the settings copy FALSE.
+          keep_axis = function(side) {
+            draw_facet_axis(
+              side, ifacet, facet_window_args,
+              framed = facet_axes_framed(
+                type_info[["frame.plot"]], type_info[["xaxt"]], type_info[["yaxt"]]
+              ),
+              free = isTRUE(facet_window_args[["facet.args"]][["free"]]),
+              axes = facet_window_args[["facet.args"]][["axes"]]
+            )
+          }
+          xside = if (flip) 2 else 1
+          yside = if (flip) 3 else 2
+          rside = if (flip) 1 else 4
+          if (keep_axis(xside)) {
+            if (x.categorical) {
+                spine_axis(xside, at = (xat[1L:nx] + xat[2L:(nx+1L)] - off)/2, labels = xaxlabels,
+                    type = type_info[["xaxt"]], categorical = TRUE)
+            } else {
+                spine_axis(xside, at = xat, labels = xaxlabels,
+                    type = type_info[["xaxt"]], categorical = FALSE)
+            }
           }
           yat = yat[, if(flip) ncol(yat) else 1L]
           equidist = any(diff(yat) < tol.ylab)
           yat = if(equidist) seq.int(1/(2*ny), 1-1/(2*ny), by = 1/ny) else (yat[-1L] + yat[-length(yat)])/2
-          spine_axis(if (flip) 3 else 2, at = yat, labels = yaxlabels,
-              type = type_info[["yaxt"]], categorical = TRUE)
-          if (is_facet_position(if(flip) "bottom" else "right", ifacet, facet_window_args)) spine_axis(if (flip) 1 else 4,
-              type = type_info[["yaxt"]], categorical = FALSE)
+          if (keep_axis(yside)) {
+            spine_axis(yside, at = yat, labels = yaxlabels,
+                type = type_info[["yaxt"]], categorical = TRUE)
+          }
+          # The secondary numeric axis only ever belongs on the far edge, so it
+          # keeps its position test regardless of framing -- hence the forced
+          # "outer" below, rather than the user's `axes` value. An explicit
+          # "none" must still suppress it though, like any other axis, so route
+          # that through the shared predicate too. (`draw_facet_axis()` maps
+          # side 4 -> "right" and side 1 -> "bottom", matching `rside`.)
+          .raxes = facet_window_args[["facet.args"]][["axes"]]
+          if (draw_facet_axis(
+                rside, ifacet, facet_window_args,
+                framed = FALSE, free = FALSE,
+                axes = if (identical(.raxes, "none")) "none" else "outer"
+              )) {
+            spine_axis(rside, type = type_info[["yaxt"]], categorical = FALSE)
+          }
       }
       # Outer box for numeric-x spinograms. This is a structural frame, so it
       # follows the top-level `frame.plot` (via type_info) rather than the

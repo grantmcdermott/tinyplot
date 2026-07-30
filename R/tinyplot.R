@@ -61,6 +61,17 @@
 #'   the data within that facet. Default is `FALSE`. Separate free scaling of
 #'   the x- or y-axis (i.e., whilst holding the other axis fixed) is not
 #'   currently supported.
+#'   - `axes` a character string for controlling which facets draw their own
+#'   axes. One of `"all"` (every facet gets its own axes), `"outer"` (only the
+#'   facets along the bottom and left edges of the grid, so that redundant
+#'   interior axes are dropped), or `"none"` (no facet axes at all). If left
+#'   unspecified (the default), the behaviour is inherited from `frame.plot`:
+#'   framed plots draw axes in every facet, since each frame visually contains
+#'   its own axes, while frameless plots (e.g. `tinytheme("clean2")`) draw only
+#'   the outer ones. Use `axes = "outer"` to drop the interior axes while
+#'   *keeping* the facet frames. Note that `axes` is ignored for free-scaled
+#'   facets (`free = TRUE`), which necessarily require their own axes; the
+#'   sole exception being `axes = "none"`, which is always respected.
 #'   - `fmar` a vector of form `c(b,l,t,r)` for controlling the base margin
 #'   between facets in terms of lines. Defaults to the value of `tpar("fmar")`,
 #'   which should be `c(1,1,1,1)`, i.e. a single line of padding around each
@@ -742,6 +753,18 @@ tinyplot.default = function(
     assert_grid(grid, null.ok = TRUE, name = "grid")
   }
 
+  # Validate up front, rather than inside draw_facet_window(): the latter is
+  # replayed by recordGraphics() on every device resize, so a warning there
+  # would re-fire on each redraw.
+  if (is.list(facet.args)) {
+    assert_choice(
+      facet.args[["axes"]],
+      c("all", "outer", "none"),
+      null.ok = TRUE,
+      name = "facet.args$axes"
+    )
+  }
+
   # save for tinyplot_add()
   assert_logical(add)
   if (!add) {
@@ -912,7 +935,14 @@ tinyplot.default = function(
     group_offsets = NULL,
     offsets_axis  = NULL,
     sub           = sub,
-    type_info     = list() # pass type-specific info from type_data to type_draw
+    # Two distinct type-declared slots; keep them that way:
+    #  - type_info:  rendering payload passed from type_data() to type_draw(),
+    #                consumed per group inside draw_<type>() only.
+    #  - type_hints: semantic behaviour properties that a type declares (in its
+    #                type_data() fn) for the *generic* pipeline to read. Never
+    #                read inside a draw_<type>().
+    type_info     = list(),
+    type_hints    = NULL
   )
 
   settings = new.env()
@@ -993,6 +1023,10 @@ tinyplot.default = function(
   if (!is.null(settings$type_data)) {
     settings$type_data(settings, ...)
   }
+
+  # Validate any hints the type just declared. Has to happen here rather than in
+  # sanitize_type(), which runs before type_data() and so sees no hints yet.
+  assert_type_hints(settings$type_hints)
 
   # Warn if weights were supplied but the plot type ignored them. This is a
   # deliberate exception to how other unconsumed top-level args (e.g.
@@ -1120,18 +1154,19 @@ tinyplot.default = function(
     # via spine_axis(); ridge y-axis category labels via tinyAxis()). Their
     # tick-row margin must still be reserved, else the self-drawn labels clip --
     # or, under las 0/1 where mar is further shifted, error -- when xlab/ylab = NA
-    # makes label_extent = 0 (#635, #650).
-    .self_axis = type %in% c("spineplot", "ridge")
+    # makes label_extent = 0 (#635, #650). Types declare this via the
+    # `draws_own_axes` hint (see type_spineplot(), type_ridge()).
+    .draws_own_axes = isTRUE(type_hints[["draws_own_axes"]])
 
     .dyn = c(
       dynmar_side(1, xlab, main = main, sub = sub,
                   cap = if (.outer_sides[1]) NULL else cap,
                   side.sub = .side.sub,
-                  axis_on = .self_axis ||
+                  axis_on = .draws_own_axes ||
                     (!identical(xaxt, "none") && !identical(xaxt, "n")),
                   tpars = .tpars),
       dynmar_side(2, ylab,
-                  axis_on = .self_axis ||
+                  axis_on = .draws_own_axes ||
                     (!identical(yaxt, "none") && !identical(yaxt, "n")),
                   tpars = .tpars),
       dynmar_side(3, NULL, main = main, sub = sub, side.sub = .side.sub,
@@ -1166,12 +1201,9 @@ tinyplot.default = function(
     .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
     if (.las %in% 1:2) {
-      if (type == "ridge") {
-        yaxlabs = levels(y)
-      } else if (!is.null(ylabs)) {
-        yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs
-      } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
-        yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs
+      .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
+      if (!is.null(.ylabset)) {
+        yaxlabs = .ylabset[[1L]]
       } else {
         ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
         yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
@@ -1215,6 +1247,7 @@ tinyplot.default = function(
         by_dep = by_dep,
         lgnd_labs = lgnd_labs,
         type = type,
+        type_hints = type_hints,
         pch = pch,
         lty = lty,
         lwd = lwd,
@@ -1392,6 +1425,7 @@ tinyplot.default = function(
       sub = sub,
       cap = cap,
       type = type,
+      type_hints = type_hints,
       xlab = xlab,
       x = x, xmax = xmax, xmin = xmin,
       ylab = ylab,
@@ -1424,6 +1458,7 @@ tinyplot.default = function(
       sub = sub,
       cap = cap,
       type = type,
+      type_hints = type_hints,
       xlab = xlab,
       x = datapoints$x, xmax = datapoints$xmax, xmin = datapoints$xmin,
       ylab = ylab,
@@ -1524,9 +1559,15 @@ tinyplot.default = function(
         ibg = idata[[ii]]$bg
       }
 
-      # empty plot flag
+      # empty plot flag. A group with no `x` is not necessarily empty: some types
+      # (rect, segments, histogram, spineplot) place their horizontal geometry in
+      # xmin/xmax instead, so there is still something to draw. Ask the data
+      # rather than the type name. Note both xmin *and* xmax are required: types
+      # that need `x` alongside a y-extent (errorbar, pointrange, ribbon) must
+      # still count as empty when `x` is missing.
       empty_plot = FALSE
-      if (isTRUE(empty) || isTRUE(type == "n") || ((length(ix) == 0) && !(type %in% c("histogram", "hist", "rect", "segments", "spineplot")))) {
+      has_data = length(ix) > 0 || (length(ixmin) > 0 && length(ixmax) > 0)
+      if (isTRUE(empty) || isTRUE(type == "n") || !has_data) {
         empty_plot = TRUE
       }
 

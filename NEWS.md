@@ -13,6 +13,24 @@ where the formatting is also better._
 - `type_hexbin()` (equivalently, `type = "hexbin"`) for hexagonal bin plots, a
   2D analogue of a histogram. (#667 @grantmcdermott)
 
+#### Other new features
+
+- Custom plot types have more control over the surrounding plot machinery, via a
+  new `type_hints` mechanism. A type can declare properties about itself---that
+  it draws its own axes, needs a secondary right-hand axis, uses proportional
+  limits, fills its legend key from `col`, and so on---and **tinyplot** adjusts
+  margins, axis limits and legend keys accordingly. Previously this behaviour was
+  hard-coded against the names of built-in types, so it was unavailable to custom
+  types. See
+  [Advanced customization](https://grantmcdermott.com/tinyplot/vignettes/types.html#type-hints)
+  in the `Types` vignette for the list of supported hints. (#543 @grantmcdermott)
+- New `axes` argument for `facet.args`, giving explicit control over which facets
+  draw their own axes: `"all"`, `"outer"` (drop redundant interior axes), or
+  `"none"`. Previously this was only achievable as a side effect of
+  `frame.plot = FALSE`, so `facet.args = list(axes = "outer")` now allows
+  redundant axes to be dropped while *keeping* the facet frames. (#661
+  @grantmcdermott)
+
 ### Bug fixes
 
 - Fixed several bugs specific to plots with free facets (i.e.,
@@ -21,6 +39,25 @@ where the formatting is also better._
     (#668 @grantmcdermott)
   - User-provided `x/ylim` overrides now work correctly with flipped plots.
     (#670 @grantmcdermott)
+- Grouped and faceted plots no longer redraw axes once per empty group. This was
+  most visible for `"spineplot"` types (e.g. `facet = "by"`), where the
+  self-drawn axis labels were overplotted several times and rendered too heavy.
+  (#637 @grantmcdermott)
+- Fixed several bugs in how faceted plots draw their axes. These were most
+  visible for `"spineplot"` and `"ridge"` types, which draw their own axes and so
+  bypassed the shared outer-axis logic, but some affected other types too.
+  (#660, #661 @grantmcdermott)
+  - Redundant interior axes are no longer drawn when the plot is frameless (e.g.
+    `tinytheme("clean2")`), where the category labels previously spilled into the
+    neighbouring facet.
+  - Category labels no longer overlap the neighbouring facet under framed themes
+    (e.g. `tinytheme("clean")`). The tick-label width was only reserved once, in
+    the outer margin, which is correct only when a single facet draws that axis.
+  - Flipped plots (e.g. `type = "boxplot", flip = TRUE`) no longer duplicate the
+    category axis while omitting the interior x-axes, which had left facets
+    labelled against a neighbour's scale.
+  - `axes = "t"` (and other tick-style axes) no longer drop the interior facet
+    labels.
 
 ## v0.7.0
 

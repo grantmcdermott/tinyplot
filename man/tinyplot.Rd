@@ -192,6 +192,17 @@ each individual facet should adjust independently to match the range of
 the data within that facet. Default is \code{FALSE}. Separate free scaling of
 the x- or y-axis (i.e., whilst holding the other axis fixed) is not
 currently supported.
+\item \code{axes} a character string for controlling which facets draw their own
+axes. One of \code{"all"} (every facet gets its own axes), \code{"outer"} (only the
+facets along the bottom and left edges of the grid, so that redundant
+interior axes are dropped), or \code{"none"} (no facet axes at all). If left
+unspecified (the default), the behaviour is inherited from \code{frame.plot}:
+framed plots draw axes in every facet, since each frame visually contains
+its own axes, while frameless plots (e.g. \code{tinytheme("clean2")}) draw only
+the outer ones. Use \code{axes = "outer"} to drop the interior axes while
+\emph{keeping} the facet frames. Note that \code{axes} is ignored for free-scaled
+facets (\code{free = TRUE}), which necessarily require their own axes; the
+sole exception being \code{axes = "none"}, which is always respected.
 \item \code{fmar} a vector of form \code{c(b,l,t,r)} for controlling the base margin
 between facets in terms of lines. Defaults to the value of \code{tpar("fmar")},
 which should be \code{c(1,1,1,1)}, i.e. a single line of padding around each

@@ -82,8 +82,9 @@ legend_outer_margins = function(legend_env, apply = TRUE) {
 
   # Step 1: Prepare margins before measuring
   if (legend_env$outer_side) {
-    # Extra bump for spineplot if outer_right legend (to accommodate secondary y-axis)
-    if (identical(legend_env$type, "spineplot")) {
+    # Extra bump for types with a secondary (RHS) axis when an outer legend is
+    # present, to accommodate that axis (e.g. spineplot).
+    if (isTRUE(legend_env$type_hints[["has_rhs_axis"]])) {
       lmar[1] = lmar[1] + 1.1
     }
 
@@ -496,12 +497,15 @@ prepare_legend = function(settings) {
     }
   }
 
-  # Grouped (`y_by`) spineplots draw their fills inside draw_spineplot() rather
-  # than via the shared `bg` channel, so `settings$bg` is NULL and the legend has
-  # nothing to mirror. Resolve the swatch fill here (where `col` is the resolved
-  # group palette) into `bg`, so the rest of the legend machinery treats it like
-  # any other area type. The fill tracks `lighten`, matching the plotted tiles.
-  if (identical(settings$type, "spineplot") && isTRUE(settings$type_info[["y_by"]])) {
+  # Types that fill their legend swatch from `col` and draw a grouped (`y_by`)
+  # variant do that fill inside their own draw_*() rather than via the shared
+  # `bg` channel, so `settings$bg` is NULL and the legend has nothing to mirror.
+  # Resolve the swatch fill here -- this has to happen after by_aesthetics(),
+  # which is where `col` becomes the resolved group palette -- so that the rest
+  # of the legend machinery treats it like any other area type. The fill tracks
+  # `lighten`, matching the plotted tiles.
+  if (isTRUE(settings$type_hints[["legend_fills_from_col"]]) &&
+      isTRUE(settings$type_info[["y_by"]])) {
     settings$bg = if (isTRUE(settings$lighten)) lighten_fill(col) else col
   }
 
@@ -610,21 +614,26 @@ build_legend_args = function(
     legend_args[["pch"]] = legend_args[["pch"]] %||% par("pch")
   }
 
-  # Special pt.bg handling for types that need color-based fills
-  if (identical(type, "spineplot")) {
-    # The swatch fill comes via `bg` (resolved in prepare_legend for the grouped
-    # `y_by` case; NULL otherwise, falling back to the group colour).
+  # Special pt.bg handling for types that need color-based fills. Types declare
+  # how their swatch fill is derived via hints, rather than being matched by name
+  # here; see type_spineplot(), type_ridge(), type_hexbin().
+  .hints = legend_env[["type_hints"]]
+  if (isTRUE(.hints[["legend_fills_from_col"]])) {
+    # Types that fill their swatch with the group colour itself. The fill comes
+    # via `bg` (resolved in prepare_legend for the grouped `y_by` case; NULL
+    # otherwise, falling back to the group colour).
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg %||% legend_args[["col"]]
-    # Conversely, the border colour is always black
-    legend_args[["col"]] = par("fg")
-  } else if (identical(type, "ridge") && isFALSE(gradient)) {
+  } else if (isTRUE(.hints[["legend_fills_from_seq_palette"]]) && isFALSE(gradient)) {
+    # Types whose fill is a lighter step of the group colour's sequential ramp,
+    # matching how they shade the plotted area.
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% sapply(legend_args[["col"]], function(ccol) seq_palette(ccol, n = 2)[2])
-  } else if (identical(type, "hexbin")) {
-    # Discrete hexbin fills its tiles with the group colour (`col`), not `bg`,
-    # so mirror that into the swatch fill.
-    legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg %||% legend_args[["col"]]
   } else {
     legend_args[["pt.bg"]] = legend_args[["pt.bg"]] %||% bg
+  }
+  # Independently of the fill: some types outline the swatch in the foreground
+  # colour rather than the group colour (e.g. spineplot's abutting tiles).
+  if (isTRUE(.hints[["legend_border_fg"]])) {
+    legend_args[["col"]] = par("fg")
   }
 
   # Set legend labels
@@ -758,6 +767,7 @@ build_legend_env = function(
 
   # Visual aesthetics
   type,
+  type_hints = NULL,
   pch,
   lty,
   lwd,
@@ -780,6 +790,7 @@ build_legend_env = function(
   # Initialize metadata
   legend_env$gradient = gradient
   legend_env$type = type
+  legend_env$type_hints = type_hints
   legend_env$has_sub = has_sub
   legend_env$has_cap = has_cap
   legend_env$cap_text = cap_text
@@ -871,6 +882,12 @@ build_legend_env = function(
 #' @param dynmar_title_mar Numeric or `NULL`. The pre-computed `dynmar_computed[3]`
 #'   value for "top!" legends under dynmar themes. When set, the legend margin
 #'   formula uses this directly to ensure correct title positioning.
+#' @param type_hints Optional named list of semantic behaviour properties that a
+#'   plot type declares for itself (e.g. `has_rhs_axis` for a secondary
+#'   right-hand axis, or `legend_fills_from_col` for a legend swatch fill taken
+#'   from `col`). Passed down from [tinyplot]; defaults to `NULL`. Deliberately
+#'   last, so that adding it did not shift the position of any pre-existing
+#'   argument for positional callers.
 #'
 #' @returns No return value, called for side effect of producing a(n empty) plot
 #'   with a legend in the margin.
@@ -958,7 +975,10 @@ draw_legend = function(
   new_plot = TRUE,
   draw = TRUE,
   soma_target = NULL,
-  dynmar_title_mar = NULL
+  dynmar_title_mar = NULL,
+  # New args go last, to keep positional callers of this exported function
+  # working; always passed by name internally.
+  type_hints = NULL
 ) {
   if (is.null(lmar)) {
     lmar = tpar("lmar")
@@ -995,6 +1015,7 @@ draw_legend = function(
 
     # Visual aesthetics
     type = type,
+    type_hints = type_hints,
     pch = pch,
     lty = lty,
     lwd = lwd,

@@ -175,15 +175,13 @@
 #'   gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)],
 #'   probs = 0:500/500))
 #'
-#' # faceting also works, although we recommend switching (back) to the "ridge"
-#' # theme for faceted ridge plots
+#' ## faceting works too. for example:
 #'
-#' tinytheme("ridge")
 #' tinyplot(Month ~ Ozone, facet = ~ Late, data = aq,
 #'   type = type_ridge(gradient = TRUE))
 #'
-#' ## use the joint.max argument to vary the maximum density used for
-#' ## determining relative scaling...
+#' # use the joint.max argument to vary the maximum density used for
+#' # determining relative scaling...
 #'
 #' # jointly across all densities (default) vs. per facet
 #' tinyplot(Month ~ Temp, facet = ~ Late, data = aq,
@@ -197,7 +195,7 @@
 #' tinyplot(Month ~ Temp | Late, data = aq,
 #'   type = type_ridge(scale = 1, joint.max = "by"))
 #'
-#' # restore the default theme
+#' ## restore the default theme
 #' tinytheme()
 #'
 #' @export
@@ -462,11 +460,25 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
     settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
 
+    # Declare this type's axes behaviour so the main pipeline can read semantic
+    # flags instead of hardcoding `type == "ridge"` checks. A ridge plot draws
+    # its own y-axis category labels via tinyAxis() (yaxt = "n"), so its tick-row
+    # margin must still be reserved -- else the labels clip, or error under las
+    # 0/1, when ylab = NA makes label_extent = 0 (#650).
+    type_hints = list(
+      draws_own_axes = TRUE, # draws own y-axis category labels despite yaxt = "n"
+      # Ridge densities are shaded with a lighter step of the group colour's
+      # sequential ramp, so the legend swatch mirrors that rather than using
+      # `col` directly.
+      legend_fills_from_seq_palette = TRUE
+    )
+
     env2env(environment(), settings, c(
       "datapoints",
       "yaxt",
       "ylim",
       "type_info",
+      "type_hints",
       "group_offsets",
       "offsets_axis"
     ))
@@ -478,7 +490,8 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 #
 ## Underlying draw_ridge function
 draw_ridge = function() {
-  fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info, ...) {
+  fun = function(ix, iy, iz, ibg, icol, iymin, iymax, type_info,
+                 ifacet = 1L, facet_window_args = NULL, ...) {
     ridge_theme = isTRUE(type_info[["ridge_theme"]])
     d = data.frame(x = ix, y = iy, ymin = iymin, ymax = iymax)
     dsplit = split(d, d$y)
@@ -533,15 +546,34 @@ draw_ridge = function() {
       with(dsplit[[i]], polygon(x, ymax, col = if (type_info[["gradient"]]) "transparent" else ibg, border = NA))
       with(dsplit[[i]], lines(x, ymax, col = icol))
     }
+    # Ridge draws its own y-axis category labels, so it must apply the same
+    # per-facet rule the generic pipeline uses (see draw_facet_axis()): framed
+    # panels each get an axis, frameless ones only on the outer edge. Otherwise
+    # the inner labels spill into the neighbouring panel.
+    keep_axis = function(side) {
+      draw_facet_axis(
+        side, ifacet, facet_window_args,
+        framed = facet_axes_framed(
+          facet_window_args[["frame.plot"]],
+          facet_window_args[["xaxt"]], type_info[["yaxt"]]
+        ),
+        free = isTRUE(facet_window_args[["facet.args"]][["free"]]),
+        axes = facet_window_args[["facet.args"]][["axes"]]
+      )
+    }
     # tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]], padj = padj)
     if (ridge_theme) {
-      tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
-               padj = 0,
-               mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
-               tcl = 0)
-      if (identical(.tpar[["tinytheme"]], "ridge2")) axis(1, labels = FALSE)
+      if (keep_axis(2)) {
+        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
+                 padj = 0,
+                 mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
+                 tcl = 0)
+      }
+      if (identical(.tpar[["tinytheme"]], "ridge2") && keep_axis(1)) axis(1, labels = FALSE)
     } else {
-      tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
+      if (keep_axis(2)) {
+        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
+      }
     }
   }
   return(fun)

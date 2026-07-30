@@ -222,15 +222,13 @@ tinyplot(Month ~ Temp, data = aq, type = type_ridge(
   gradient = hcl.colors(250, "Dark Mint")[c(250:1, 1:250)],
   probs = 0:500/500))
 
-# faceting also works, although we recommend switching (back) to the "ridge"
-# theme for faceted ridge plots
+## faceting works too. for example:
 
-tinytheme("ridge")
 tinyplot(Month ~ Ozone, facet = ~ Late, data = aq,
   type = type_ridge(gradient = TRUE))
 
-## use the joint.max argument to vary the maximum density used for
-## determining relative scaling...
+# use the joint.max argument to vary the maximum density used for
+# determining relative scaling...
 
 # jointly across all densities (default) vs. per facet
 tinyplot(Month ~ Temp, facet = ~ Late, data = aq,
@@ -244,7 +242,7 @@ tinyplot(Month ~ Temp | Late, data = aq,
 tinyplot(Month ~ Temp | Late, data = aq,
   type = type_ridge(scale = 1, joint.max = "by"))
 
-# restore the default theme
+## restore the default theme
 tinytheme()
 
 }

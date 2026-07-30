@@ -7,7 +7,7 @@ lim_args = function(settings) {
     c(
       "xaxb", "xlabs", "xlim", "null_xlim", "rev_x",
       "yaxb", "ylabs", "ylim", "null_ylim", "rev_y",
-      "datapoints", "type"
+      "datapoints", "type", "type_hints"
     )
   )
 
@@ -47,8 +47,9 @@ lim_args = function(settings) {
     xlim = xlim + c(-0.5, 0.5)
   }
 
-  if (null_xlim && !is.null(xaxb) && type != "spineplot") xlim = range(c(xlim, xaxb))
-  if (null_ylim && !is.null(yaxb) && type != "spineplot") ylim = range(c(ylim, yaxb))
+  prop_lim = isTRUE(type_hints[["has_proportional_lim"]])
+  if (null_xlim && !is.null(xaxb) && !prop_lim) xlim = range(c(xlim, xaxb))
+  if (null_ylim && !is.null(yaxb) && !prop_lim) ylim = range(c(ylim, yaxb))
 
   # reverse axis direction last, once the range is otherwise finalized
   if (isTRUE(rev_x)) xlim = rev(xlim)

@@ -36,6 +36,7 @@ draw_facet_window = function(
     sub,
     cap,
     type,
+    type_hints = NULL,
     xlab,
     x, xmax, xmin,
     ylab,
@@ -52,6 +53,7 @@ draw_facet_window = function(
     return(as.list(environment()))
   }
   
+
   # if breaks are provided use these (but only if x/ylabs are null)
   if (!is.null(xaxb) && !is.null(xlabs)) xlabs = xaxb
   if (!is.null(yaxb) && !is.null(ylabs)) ylabs = yaxb
@@ -109,6 +111,46 @@ draw_facet_window = function(
 
     ooma = par("oma")
 
+    # Types that draw their own axes may force `frame.plot = FALSE` so the
+    # pipeline skips the box (e.g. data_spineplot()), while surfacing the user's
+    # real choice via the `framed` hint. Use the hint where given, so the margin
+    # logic below matches what the type will actually draw.
+    .framed = facet_axes_framed(
+      if (!is.null(type_hints[["framed"]])) type_hints[["framed"]] else frame.plot,
+      xaxt, yaxt
+    )
+
+    # Will any *interior* (non-edge) facet draw its own axis on this side? If so
+    # that facet needs the tick-label width in its own margin, rather than the
+    # single outer allocation that the nmar/noma split below would otherwise
+    # make.
+    #
+    # Only reached for genuinely bare axis styles ("l", "n") with fixed scales:
+    # both callers below guard on `!.framed` first, and `.framed` is TRUE for
+    # every framed theme *and* for `axes = "t"`. Note this does not mirror the
+    # generic draw site, which is not tick-aware; see facet_axes_framed().
+    .interior_axis = function(side) {
+      if (nfacets <= 1) return(FALSE)
+      fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
+      keep = vapply(
+        ifacet,
+        function(ii) draw_facet_axis(
+          side, ii, fwa,
+          framed = .framed,
+          free = isTRUE(facet.args[["free"]]),
+          axes = facet.args[["axes"]]
+        ),
+        logical(1L)
+      )
+      # more panels draw this axis than sit on its outer edge => interior draws
+      edge = vapply(
+        ifacet,
+        function(ii) draw_facet_axis(side, ii, fwa, framed = FALSE, free = FALSE, axes = "outer"),
+        logical(1L)
+      )
+      sum(keep) > sum(edge)
+    }
+
     # Bump top margin for facet strip. Use facet_text (not / cex_fct_adj)
     # because nmar = (fmar + 0.1) / cex_fct_adj already divides — using
     # facet_text directly keeps the inter-panel gap constant as newlines grow.
@@ -135,22 +177,21 @@ draw_facet_window = function(
       if (fmar[3] + 0.1 > omar[3]) fmar[3] = omar[3] - 0.1
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
-        ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
-        if (type == "ridge") {
-          yaxlabs = levels(y)
-        } else if (!is.null(ylabs)) {
-          yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
-        } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
-          yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
-        } else if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
-          yfree_split = split(c(y, ymin, ymax), facet)
-          yaxlabs_all = lapply(yfree_split, function(yf) {
-            axisTicks(usr = extendrange(range(yf, na.rm = TRUE), f = 0.04), log = par("ylog"))
-          })
-          widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
-          yaxlabs = yaxlabs_all[[which.max(widths)]]
+        .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
+        if (!is.null(.ylabset)) {
+          yaxlabs = .ylabset[[1L]]
         } else {
-          yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+          if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
+            # Free scales: measure every facet's ticks and keep the widest set.
+            yfree_split = split(c(y, ymin, ymax), facet)
+            yaxlabs_all = lapply(yfree_split, function(yf) {
+              axisTicks(usr = extendrange(range(yf, na.rm = TRUE), f = 0.04), log = par("ylog"))
+            })
+            widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
+            yaxlabs = yaxlabs_all[[which.max(widths)]]
+          } else {
+            yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+          }
         }
         if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
         # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
@@ -159,8 +200,13 @@ draw_facet_window = function(
           omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
           fmar[2] = fmar[2] + whtsbp * cex_fct_adj
         }
-        # Extra reduction if no plot frame to reduce whitespace
-        if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+        # The label width above is reserved once, and the nmar/noma split below
+        # hands it to the *outer* margin -- correct when only the leftmost facet
+        # draws a y axis. But when interior facets draw their own (e.g. framed
+        # panels), each needs that width in its own margin instead, else the
+        # labels overflow into the neighbouring panel. Keep the fmar bump in that
+        # case; otherwise release it back to the outer margin as before.
+        if (!.framed && !isTRUE(facet.args[["free"]]) && !.interior_axis(2)) {
           fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
         }
       }
@@ -183,13 +229,15 @@ draw_facet_window = function(
           omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
           fmar[1] = fmar[1] + whtsbp * cex_fct_adj
         }
-        # Extra reduction if no plot frame to reduce whitespace
-        if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+        # As per the y axis above: keep the label width in fmar when interior
+        # facets draw their own x axis, else release it to the outer margin.
+        if (!.framed && !isTRUE(facet.args[["free"]]) && !.interior_axis(1)) {
           fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
         }
       }
 
-      if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
+      # reserve RHS margin for types with a secondary axis (e.g. spineplot)
+      if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
 
       # FIXME: Is this causing issues for lhs legends with facet_grid?
       # catch for missing rhs legend
@@ -228,18 +276,14 @@ draw_facet_window = function(
     # Tick-label *width/height* (whtsbp) is added further below.
     side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
     omar = dynmar_computed
-    if (type == "spineplot") omar[4] = 2.1 # FIXME catch for spineplot RHS axis labs
+    # reserve RHS margin for types with a secondary axis (e.g. spineplot)
+    if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
-      ## overrides for ridge and some types that use integer spacing with (named) axis labels ## FXIME
-      if (type == "ridge") {
-        yaxlabs = levels(y)
-      } else if (!is.null(ylabs)) {
-        yaxlabs = if (!is.null(names(ylabs))) names(ylabs) else ylabs 
-      } else if (type == "boxplot" && isTRUE(flip) && !is.null(xlabs)) {
-        yaxlabs = if (!is.null(names(xlabs))) names(xlabs) else xlabs 
+      .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
+      if (!is.null(.ylabset)) {
+        yaxlabs = .ylabset[[1L]]
       } else {
-        # yaxl = axTicks(2)
         ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
         yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }
@@ -391,36 +435,48 @@ draw_facet_window = function(
         assign(".fusr", fusr, envir = get(".tinyplot_env", envir = parent.env(environment())))
         # Explicitly set (override) the current facet extent
         par(usr = fusr[[ii]])
+        # Free facets each need their own axes, since every panel has its own
+        # scale. The one exception is an explicit `axes = "none"` request.
+        .free_axes = !identical(facet.args[["axes"]], "none")
         # if plot frame is true then print axes per normal...
-        if (!is.null(xlabs)) {
-          tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, labeller = xaxl)
-        } else if (!is.null(xat)) {
-          tinyAxis(xfree, side = xside, at = xat, type = xaxt, labeller = xaxl)
-        } else {
-          tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
+        if (.free_axes) {
+          if (!is.null(xlabs)) {
+            tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, labeller = xaxl)
+          } else if (!is.null(xat)) {
+            tinyAxis(xfree, side = xside, at = xat, type = xaxt, labeller = xaxl)
+          } else {
+            tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
+          }
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
-        if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
-          tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
-        } else if (!is.null(yat)) {
-          tinyAxis(yfree, side = yside, at = yat, type = yaxt, labeller = yaxl)
-        } else {
-          tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
+        if (.free_axes) {
+          if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
+            tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
+          } else if (!is.null(yat)) {
+            tinyAxis(yfree, side = yside, at = yat, type = yaxt, labeller = yaxl)
+          } else {
+            tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
+          }
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
 
         # For fixed facets we can just reuse the same plot extent and axes limits
-      } else if (isTRUE(frame.plot)) {
-        # if plot frame is true then print axes per normal...
-        do.call(tinyAxis, args_x)
-        if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
-        do.call(tinyAxis, args_y)
-        if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
       } else {
-        # ... else only print the "outside" axes.
-        if (ii %in% oxaxis) do.call(tinyAxis, args_x)
+        # Framed panels each print their own axes; frameless ones only print the
+        # "outside" ones, else inner axes collide with the neighbouring panel.
+        # Note xside/yside may be swapped (flipped boxplots), so gate on the
+        # actual side rather than assuming 1/2.
+        .fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
+        keep_axis = function(side) {
+          draw_facet_axis(
+            side, ii, .fwa,
+            framed = isTRUE(frame.plot),
+            axes = facet.args[["axes"]]
+          )
+        }
+        if (keep_axis(xside)) do.call(tinyAxis, args_x)
         if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
-        if (ii %in% oyaxis) do.call(tinyAxis, args_y)
+        if (keep_axis(yside)) do.call(tinyAxis, args_y)
         if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
       }
     }
@@ -753,6 +809,74 @@ get_facet_fml = function(formula, data = NULL) {
 }
 
 
+## Are a facet's interior tick labels visually anchored?
+##
+## draw_facet_axis() keys the "outer facets only" rule off framing, on the basis
+## that an unframed interior axis floats free and collides with the neighbouring
+## panel. `frame.plot` is only a proxy for that, though: sanitize_axes() derives
+## it as `all(c(xaxt, yaxt) %in% c("s", "a"))`, so `axes = "ticks"` reports
+## FALSE despite drawing tick marks that anchor the labels perfectly well. Only
+## the "l" (labels) and "n" (none) styles are genuinely bare.
+##
+## A cleaner long-term fix would drop `frame.plot` from this decision entirely in
+## favour of an explicit "would inner axes float?" flag, but that changes
+## behaviour more broadly; see SCRATCH/facet-margin-slack.md.
+##
+## Note that this is deliberately *not* consulted by the generic fixed-facet draw
+## site (the `keep_axis()` block in draw_facet_window()), which keys off
+## `frame.plot` directly and so stays outer-only under `axes = "t"`. Only the
+## margin logic and the self-drawing types (draw_spineplot(), draw_ridge()) route
+## through here. That divergence is intentional, and follows from what the axis
+## means in each case:
+##
+##   - Generic facets share one scale, so a single edge axis is correct. Drawing
+##     one per panel is both redundant and collision-prone: with no frame the
+##     interior tick rows land in the neighbouring panel's data region.
+##   - The self-drawing types put *per-panel* categories on their axes, so every
+##     panel needs its own to be readable at all.
+##
+## Consequence: under `axes = "t"` the margin block keeps a per-facet label width
+## that the generic draw site never uses. The nmar/noma split absorbs it, so
+## there is no visible effect -- but don't assume the two consumers agree here,
+## because they don't.
+facet_axes_framed = function(frame.plot, xaxt, yaxt) {
+  if (any(c(xaxt, yaxt) == "t")) return(TRUE)
+  isTRUE(frame.plot)
+}
+
+
+## Categorical y-axis tick labels, for margin measurement.
+##
+## Used by the whtsbp label-width blocks in tinyplot.default() and
+## draw_facet_window(), which each measure strwidth() on the result but otherwise
+## differ in how they apply it.
+##
+## Returns a one-element list wrapping the label set when a type puts categories
+## on the y axis, or NULL when it does not and the caller should fall back to its
+## own axisTicks() computation. The wrapper matters: `levels(y)` is itself NULL
+## for a ridge plot over a *numeric* y, and that empty result must stay
+## distinguishable from "this isn't a categorical axis" -- otherwise the caller
+## would substitute numeric ticks and bump the margin that the label-less axis
+## does not need.
+##
+## `ylabs` covers the general case of a type that has placed named categories on
+## the y axis. The ridge and flipped-boxplot cases are special: ridge takes its
+## categories from the y factor's levels, while a flipped boxplot has had its
+## categories swapped onto `xlabs` by flip_datapoints().
+y_axis_labels = function(type, y, ylabs, xlabs, flip) {
+  if (identical(type, "ridge")) {
+    return(list(levels(y)))
+  }
+  if (!is.null(ylabs)) {
+    return(list(if (!is.null(names(ylabs))) names(ylabs) else ylabs))
+  }
+  if (identical(type, "boxplot") && isTRUE(flip) && !is.null(xlabs)) {
+    return(list(if (!is.null(names(xlabs))) names(xlabs) else xlabs))
+  }
+  NULL
+}
+
+
 ## internal convenience function to determine whether the current facet panel
 ## has the position "left", "right", "top", or "bottom" in the facet grid
 is_facet_position = function(position, ifacet, facet_window_args) {
@@ -766,4 +890,47 @@ is_facet_position = function(position, ifacet, facet_window_args) {
     "bottom" = ifacet %in% tail(id, nc),
     NA
   )
+}
+
+
+## Should facet panel `ifacet` draw its own axis on `side`?
+##
+## Framed panels each get their own axis, since the frame visually contains it.
+## Frameless panels only draw on the outer edge, else the inner axes float into
+## the neighbouring panel and collide with its labels. Free facets always draw,
+## because each panel has its own scale and an outer axis would misreport it.
+##
+## `axes` is the (optional) user override from `facet.args$axes`, and takes
+## precedence over the implicit `framed` rule: "all" keeps a per-panel axis,
+## "outer" restricts to the edge, "none" suppresses entirely.
+##
+## This is the single decision point for every axis-drawing site, including the
+## self-drawing types (see draw_spineplot(), draw_ridge()).
+draw_facet_axis = function(
+    side,
+    ifacet,
+    facet_window_args,
+    framed = TRUE,
+    free = FALSE,
+    axes = NULL
+    ) {
+  # an explicit "none" wins over everything, including free scales
+  if (identical(axes, "none")) return(FALSE)
+  if (identical(axes, "all")) return(TRUE)
+  # without layout info there is nothing to suppress (e.g. unfaceted plots)
+  if (is.null(facet_window_args)) return(TRUE)
+  outer_only = identical(axes, "outer")
+  if (!outer_only) {
+    if (isTRUE(free) || isTRUE(framed)) return(TRUE)
+  }
+  # sides 1/3 sit on the x axis (bottom/top), sides 2/4 on the y (left/right)
+  position = switch(as.character(side),
+    "1" = "bottom",
+    "2" = "left",
+    "3" = "top",
+    "4" = "right",
+    NULL
+  )
+  if (is.null(position)) return(TRUE)
+  isTRUE(is_facet_position(position, ifacet, facet_window_args))
 }

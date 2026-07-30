@@ -89,9 +89,16 @@ draw_facet_window = function(
   #  - .outer_axes_eff: keyed off the `framed` hint where a type sets one (e.g.
   #                     data_spineplot() forces frame.plot = FALSE internally but
   #                     still draws per-panel axes); used for the tick-label width.
+  # A per-call `facet.args$axes` wins over the global `tpar("facet.axes")`, which
+  # in turn wins over the implicit frame-based rule (i.e. NULL, the default).
+  # Resolve it back into `facet.args` so that every downstream consumer -- incl.
+  # the self-drawing types, which read it off `facet_window_args` -- sees the
+  # same value without each having to redo the lookup.
+  facet.args[["axes"]] = facet.args[["axes"]] %||% get_tpar("facet.axes", tpar_list = tpars)
+  .axes = facet.args[["axes"]]
   .eff_frame = if (!is.null(type_hints[["framed"]])) type_hints[["framed"]] else frame.plot
-  .outer_axes = outer_axes_only(frame.plot, facet.args[["free"]], facet.args[["axes"]])
-  .outer_axes_eff = outer_axes_only(.eff_frame, facet.args[["free"]], facet.args[["axes"]])
+  .outer_axes = outer_axes_only(frame.plot, facet.args[["free"]], .axes)
+  .outer_axes_eff = outer_axes_only(.eff_frame, facet.args[["free"]], .axes)
 
   if (nfacets > 1) {
     # Set facet margins (i.e., gaps between facets)
@@ -413,7 +420,7 @@ draw_facet_window = function(
         par(usr = fusr[[ii]])
         # Free facets each need their own axes, since every panel has its own
         # scale. The one exception is an explicit `axes = "none"` request.
-        .free_axes = !identical(facet.args[["axes"]], "none")
+        .free_axes = !identical(.axes, "none")
         # if plot frame is true then print axes per normal...
         if (.free_axes) {
           if (!is.null(xlabs)) {
@@ -447,7 +454,7 @@ draw_facet_window = function(
           draw_facet_axis(
             side, ii, .fwa,
             framed = isTRUE(frame.plot),
-            axes = facet.args[["axes"]]
+            axes = .axes
           )
         }
         if (keep_axis(xside)) do.call(tinyAxis, args_x)

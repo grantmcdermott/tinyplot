@@ -585,6 +585,18 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_flip")
 
+# `axes = "outer"` must also close up the whitespace that the dropped interior
+# axes would have occupied, i.e. match the spacing of a frameless plot rather
+# than leaving a gap behind (#637)
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~am:vs, facet.args = list(axes = "outer"),
+    theme = "float"
+  )
+}
+expect_snapshot_plot(f, label = "facet_axes_outer")
+
 #
 # restore original par settings
 #

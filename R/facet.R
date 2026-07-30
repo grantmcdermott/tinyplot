@@ -123,7 +123,12 @@ draw_facet_window = function(
     # Will any *interior* (non-edge) facet draw its own axis on this side? If so
     # that facet needs the tick-label width in its own margin, rather than the
     # single outer allocation that the nmar/noma split below would otherwise
-    # make. Mirrors draw_facet_axis(), so the margin and the axis agree.
+    # make.
+    #
+    # Only reached for genuinely bare axis styles ("l", "n") with fixed scales:
+    # both callers below guard on `!.framed` first, and `.framed` is TRUE for
+    # every framed theme *and* for `axes = "t"`. Note this does not mirror the
+    # generic draw site, which is not tick-aware; see facet_axes_framed().
     .interior_axis = function(side) {
       if (nfacets <= 1) return(FALSE)
       fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
@@ -816,6 +821,24 @@ get_facet_fml = function(formula, data = NULL) {
 ## A cleaner long-term fix would drop `frame.plot` from this decision entirely in
 ## favour of an explicit "would inner axes float?" flag, but that changes
 ## behaviour more broadly; see SCRATCH/facet-margin-slack.md.
+##
+## Note that this is deliberately *not* consulted by the generic fixed-facet draw
+## site (the `keep_axis()` block in draw_facet_window()), which keys off
+## `frame.plot` directly and so stays outer-only under `axes = "t"`. Only the
+## margin logic and the self-drawing types (draw_spineplot(), draw_ridge()) route
+## through here. That divergence is intentional, and follows from what the axis
+## means in each case:
+##
+##   - Generic facets share one scale, so a single edge axis is correct. Drawing
+##     one per panel is both redundant and collision-prone: with no frame the
+##     interior tick rows land in the neighbouring panel's data region.
+##   - The self-drawing types put *per-panel* categories on their axes, so every
+##     panel needs its own to be readable at all.
+##
+## Consequence: under `axes = "t"` the margin block keeps a per-facet label width
+## that the generic draw site never uses. The nmar/noma split absorbs it, so
+## there is no visible effect -- but don't assume the two consumers agree here,
+## because they don't.
 facet_axes_framed = function(frame.plot, xaxt, yaxt) {
   if (any(c(xaxt, yaxt) == "t")) return(TRUE)
   isTRUE(frame.plot)

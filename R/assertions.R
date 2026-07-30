@@ -268,3 +268,64 @@ assert_class = function(x, classname) {
   }
 }
 
+
+## The complete set of behaviour hints that a type may declare for itself, via
+## `settings$type_hints` in its `data_<type>()` function. Single source of truth:
+## the Types vignette documents these, and assert_type_hints() validates against
+## it. Keep all three in sync when adding a hint.
+known_type_hints = c(
+  "draws_own_axes",                # draws its own axes despite xaxt/yaxt = "n"
+  "framed",                        # the user's real `frame.plot`, where forced
+  "has_proportional_lim",          # limits are proportional; don't expand them
+  "has_rhs_axis",                  # secondary right-hand axis (reserve margin)
+  "legend_border_fg",              # legend swatch border is always par("fg")
+  "legend_fills_from_col",         # legend swatch fill comes from `col`
+  "legend_fills_from_seq_palette"  # ... or from the colour's sequential ramp
+)
+
+## Validate a type's declared hints.
+##
+## Warns rather than errors: an unrecognised hint is inert (every consumer reads
+## hints through isTRUE()), so the plot is still drawn. That inertness is exactly
+## why the check is worth having, though -- a misspelled hint behaves identically
+## to an absent one, which would otherwise leave a custom-type author with no
+## signal at all. Warning also keeps a custom type written against a newer
+## tinyplot from hard-failing on an older one.
+assert_type_hints = function(x, name = "type_hints") {
+  if (is.null(x)) return(invisible(TRUE))
+  if (!is.list(x) || (length(x) > 0L && is.null(names(x)))) {
+    warning(
+      sprintf("`%s` must be a named list. Ignoring.", name),
+      call. = FALSE
+    )
+    return(invisible(FALSE))
+  }
+  unknown = setdiff(names(x), known_type_hints)
+  if (length(unknown) > 0L) {
+    warning(
+      sprintf(
+        "Unknown %s: %s.\nKnown hints are: %s.\nUnknown hints are ignored.",
+        if (length(unknown) > 1L) "hints" else "hint",
+        paste(sprintf('"%s"', unknown), collapse = ", "),
+        paste(sprintf('"%s"', known_type_hints), collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+  # Values must be length-1 logicals: the consumers all test with isTRUE(), so
+  # anything else silently reads as FALSE.
+  bad = names(x)[!vapply(x, check_flag, logical(1L))]
+  bad = setdiff(bad, unknown) # don't double-report an unknown hint
+  if (length(bad) > 0L) {
+    warning(
+      sprintf(
+        "%s must be a logical flag: %s. Ignoring.",
+        if (length(bad) > 1L) "These hints" else "This hint",
+        paste(sprintf('"%s"', bad), collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+  invisible(length(unknown) == 0L && length(bad) == 0L)
+}
+

@@ -1024,6 +1024,10 @@ tinyplot.default = function(
     settings$type_data(settings, ...)
   }
 
+  # Validate any hints the type just declared. Has to happen here rather than in
+  # sanitize_type(), which runs before type_data() and so sees no hints yet.
+  assert_type_hints(settings$type_hints)
+
   # Warn if weights were supplied but the plot type ignored them. This is a
   # deliberate exception to how other unconsumed top-level args (e.g.
   # xmin/xmax/ymin/ymax) are silently dropped: a missing ribbon is visually

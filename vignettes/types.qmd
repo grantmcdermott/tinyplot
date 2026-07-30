@@ -188,7 +188,7 @@ points.
 ```{r}
 type_log = function(base = exp(1)) {
 
-  # data tranformation function
+  # data transformation function
   data_log = function() {
     fun = function(settings, ...) {
       # extract raw datapoints from settings environment
@@ -290,7 +290,7 @@ consider an alternate version of our previous `type_log()` function.
 ```{r}
 type_log2 = function(base = exp(1)) {
 
-  # data tranformation function
+  # data transformation function
   data_log = function() {
     fun = function(settings, ...) {
       datapoints = settings$datapoints

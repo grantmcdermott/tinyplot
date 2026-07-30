@@ -753,6 +753,18 @@ tinyplot.default = function(
     assert_grid(grid, null.ok = TRUE, name = "grid")
   }
 
+  # Validate up front, rather than inside draw_facet_window(): the latter is
+  # replayed by recordGraphics() on every device resize, so a warning there
+  # would re-fire on each redraw.
+  if (is.list(facet.args)) {
+    assert_choice(
+      facet.args[["axes"]],
+      c("all", "outer", "none"),
+      null.ok = TRUE,
+      name = "facet.args$axes"
+    )
+  }
+
   # save for tinyplot_add()
   assert_logical(add)
   if (!add) {

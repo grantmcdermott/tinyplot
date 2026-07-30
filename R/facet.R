@@ -53,22 +53,6 @@ draw_facet_window = function(
     return(as.list(environment()))
   }
   
-  # validate the `axes` facet argument up front, so a typo doesn't silently fall
-  # back to the default behaviour further down
-  if (!is.null(facet.args[["axes"]])) {
-    .axes_ok = c("all", "outer", "none")
-    if (length(facet.args[["axes"]]) != 1L || !facet.args[["axes"]] %in% .axes_ok) {
-      warning(
-        "`axes` has to be one of ",
-        paste(sprintf('"%s"', .axes_ok), collapse = ", "),
-        ", e.g. `facet.args = list(axes = \"outer\")`.",
-        "\n",
-        "Ignoring.",
-        "\n"
-      )
-      facet.args[["axes"]] = NULL
-    }
-  }
 
   # if breaks are provided use these (but only if x/ylabs are null)
   if (!is.null(xaxb) && !is.null(xlabs)) xlabs = xaxb

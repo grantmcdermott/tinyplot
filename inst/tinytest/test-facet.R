@@ -597,6 +597,18 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_axes_outer")
 
+# Same, but for a directional `bty` (the L-shaped frame of "classic"). Here the
+# interior frame edges have to be dropped too, else they float in the gutter
+# without an axis to anchor them.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~am:vs, facet.args = list(axes = "outer"),
+    theme = "classic"
+  )
+}
+expect_snapshot_plot(f, label = "facet_axes_outer_classic")
+
 #
 # restore original par settings
 #

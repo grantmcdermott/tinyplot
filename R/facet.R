@@ -104,52 +104,22 @@ draw_facet_window = function(
       ## ... exception for 2x2 cases
       if (!(nfacet_rows == 2 && nfacet_cols == 2)) fmar = fmar * .75
     }
-    # Extra reduction if no plot frame to reduce whitespace
-    if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+    # Effective frame for the tick-label-width question further below. A type
+    # that draws its own axes may force `frame.plot = FALSE` internally (e.g.
+    # data_spineplot()) while surfacing the user's real choice via the `framed`
+    # hint. Those types still draw a per-panel axis, so the reserved label width
+    # must be kept; use the hint where given so the release logic sees that.
+    .eff_frame = if (!is.null(type_hints[["framed"]])) type_hints[["framed"]] else frame.plot
+
+    # Extra reduction to close up the whitespace that an interior facet axis
+    # would otherwise occupy; see outer_axes_only(). This gap is the
+    # box-to-box spacing, so it keys off the *structural* `frame.plot` (a type
+    # that suppresses its own box wants the tighter gap), not `.eff_frame`.
+    if (outer_axes_only(frame.plot, facet.args[["free"]], facet.args[["axes"]])) {
       fmar = fmar - 0.5
     }
 
     ooma = par("oma")
-
-    # Types that draw their own axes may force `frame.plot = FALSE` so the
-    # pipeline skips the box (e.g. data_spineplot()), while surfacing the user's
-    # real choice via the `framed` hint. Use the hint where given, so the margin
-    # logic below matches what the type will actually draw.
-    .framed = facet_axes_framed(
-      if (!is.null(type_hints[["framed"]])) type_hints[["framed"]] else frame.plot,
-      xaxt, yaxt
-    )
-
-    # Will any *interior* (non-edge) facet draw its own axis on this side? If so
-    # that facet needs the tick-label width in its own margin, rather than the
-    # single outer allocation that the nmar/noma split below would otherwise
-    # make.
-    #
-    # Only reached for genuinely bare axis styles ("l", "n") with fixed scales:
-    # both callers below guard on `!.framed` first, and `.framed` is TRUE for
-    # every framed theme *and* for `axes = "t"`. Note this does not mirror the
-    # generic draw site, which is not tick-aware; see facet_axes_framed().
-    .interior_axis = function(side) {
-      if (nfacets <= 1) return(FALSE)
-      fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
-      keep = vapply(
-        ifacet,
-        function(ii) draw_facet_axis(
-          side, ii, fwa,
-          framed = .framed,
-          free = isTRUE(facet.args[["free"]]),
-          axes = facet.args[["axes"]]
-        ),
-        logical(1L)
-      )
-      # more panels draw this axis than sit on its outer edge => interior draws
-      edge = vapply(
-        ifacet,
-        function(ii) draw_facet_axis(side, ii, fwa, framed = FALSE, free = FALSE, axes = "outer"),
-        logical(1L)
-      )
-      sum(keep) > sum(edge)
-    }
 
     # Bump top margin for facet strip. Use facet_text (not / cex_fct_adj)
     # because nmar = (fmar + 0.1) / cex_fct_adj already divides — using
@@ -204,9 +174,10 @@ draw_facet_window = function(
         # hands it to the *outer* margin -- correct when only the leftmost facet
         # draws a y axis. But when interior facets draw their own (e.g. framed
         # panels), each needs that width in its own margin instead, else the
-        # labels overflow into the neighbouring panel. Keep the fmar bump in that
-        # case; otherwise release it back to the outer margin as before.
-        if (!.framed && !isTRUE(facet.args[["free"]]) && !.interior_axis(2)) {
+        # labels overflow into the neighbouring panel. So only release it back to
+        # the outer margin when interior axes aren't drawn at all; same rule
+        # (and same reason) as the inter-facet gap above.
+        if (outer_axes_only(.eff_frame, facet.args[["free"]], facet.args[["axes"]])) {
           fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
         }
       }
@@ -231,7 +202,7 @@ draw_facet_window = function(
         }
         # As per the y axis above: keep the label width in fmar when interior
         # facets draw their own x axis, else release it to the outer margin.
-        if (!.framed && !isTRUE(facet.args[["free"]]) && !.interior_axis(1)) {
+        if (outer_axes_only(.eff_frame, facet.args[["free"]], facet.args[["axes"]])) {
           fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
         }
       }
@@ -890,6 +861,23 @@ is_facet_position = function(position, ifacet, facet_window_args) {
     "bottom" = ifacet %in% tail(id, nc),
     NA
   )
+}
+
+
+## Are only the outer (edge) facet axes drawn, i.e. no interior axes?
+##
+## Drives the inter-facet gap (fmar), which must shrink exactly when no interior
+## axis is drawn to fill it. This has to mirror what the pipeline *actually*
+## draws, which is not a single rule: free scales draw per-panel via `.free_axes`
+## (ignoring "outer"), while fixed scales follow draw_facet_axis(). Hence the
+## `none` and `free` short-circuits below come before the "outer"/frame checks.
+## (For "none", strictly *no* axes are drawn, but the gap-tightening is the same.)
+outer_axes_only = function(frame.plot, free, axes) {
+  if (identical(axes, "none")) return(TRUE)   # no axes at all (free or fixed)
+  if (isTRUE(free)) return(FALSE)             # free scales draw per-panel
+  if (identical(axes, "all")) return(FALSE)   # per-panel axes forced on
+  if (identical(axes, "outer")) return(TRUE)  # interior axes off, edges kept
+  isFALSE(frame.plot)                         # frameless => interior dropped
 }
 
 

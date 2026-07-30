@@ -11,7 +11,6 @@ draw_legend(
   lgnd_labs = NULL,
   labeller = NULL,
   type = NULL,
-  type_hints = NULL,
   pch = NULL,
   lty = NULL,
   lwd = NULL,
@@ -26,7 +25,8 @@ draw_legend(
   new_plot = TRUE,
   draw = TRUE,
   soma_target = NULL,
-  dynmar_title_mar = NULL
+  dynmar_title_mar = NULL,
+  type_hints = NULL
 )
 }
 \arguments{
@@ -43,11 +43,6 @@ draw_legend(
 Passed down to \code{\link{tinylabel}}.}
 
 \item{type}{Plotting type(s), passed down from \link{tinyplot}.}
-
-\item{type_hints}{Optional named list of semantic behaviour properties that a
-plot type declares for itself (e.g. \code{has_rhs_axis} for a secondary
-right-hand axis, or \code{legend_fills_from_col} for a legend swatch fill taken
-from \code{col}). Passed down from \link{tinyplot}; defaults to \code{NULL}.}
 
 \item{pch}{Plotting character(s), passed down from \link{tinyplot}.}
 
@@ -94,6 +89,13 @@ multi-legend alignment. If \code{NULL}, each legend computes its own margin.}
 \item{dynmar_title_mar}{Numeric or \code{NULL}. The pre-computed \code{dynmar_computed[3]}
 value for "top!" legends under dynmar themes. When set, the legend margin
 formula uses this directly to ensure correct title positioning.}
+
+\item{type_hints}{Optional named list of semantic behaviour properties that a
+plot type declares for itself (e.g. \code{has_rhs_axis} for a secondary
+right-hand axis, or \code{legend_fills_from_col} for a legend swatch fill taken
+from \code{col}). Passed down from \link{tinyplot}; defaults to \code{NULL}. Deliberately
+last, so that adding it did not shift the position of any pre-existing
+argument for positional callers.}
 }
 \value{
 No return value, called for side effect of producing a(n empty) plot

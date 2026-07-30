@@ -851,10 +851,6 @@ build_legend_env = function(
 #' @param labeller Character or function for formatting the labels (`lgnd_labs`).
 #'   Passed down to [`tinylabel`].
 #' @param type Plotting type(s), passed down from [tinyplot].
-#' @param type_hints Optional named list of semantic behaviour properties that a
-#'   plot type declares for itself (e.g. `has_rhs_axis` for a secondary
-#'   right-hand axis, or `legend_fills_from_col` for a legend swatch fill taken
-#'   from `col`). Passed down from [tinyplot]; defaults to `NULL`.
 #' @param pch Plotting character(s), passed down from [tinyplot].
 #' @param lty Plotting linetype(s), passed down from [tinyplot].
 #' @param lwd Plotting line width(s), passed down from [tinyplot].
@@ -886,6 +882,12 @@ build_legend_env = function(
 #' @param dynmar_title_mar Numeric or `NULL`. The pre-computed `dynmar_computed[3]`
 #'   value for "top!" legends under dynmar themes. When set, the legend margin
 #'   formula uses this directly to ensure correct title positioning.
+#' @param type_hints Optional named list of semantic behaviour properties that a
+#'   plot type declares for itself (e.g. `has_rhs_axis` for a secondary
+#'   right-hand axis, or `legend_fills_from_col` for a legend swatch fill taken
+#'   from `col`). Passed down from [tinyplot]; defaults to `NULL`. Deliberately
+#'   last, so that adding it did not shift the position of any pre-existing
+#'   argument for positional callers.
 #'
 #' @returns No return value, called for side effect of producing a(n empty) plot
 #'   with a legend in the margin.
@@ -959,7 +961,6 @@ draw_legend = function(
   lgnd_labs = NULL,
   labeller = NULL,
   type = NULL,
-  type_hints = NULL,
   pch = NULL,
   lty = NULL,
   lwd = NULL,
@@ -974,7 +975,10 @@ draw_legend = function(
   new_plot = TRUE,
   draw = TRUE,
   soma_target = NULL,
-  dynmar_title_mar = NULL
+  dynmar_title_mar = NULL,
+  # New args go last, to keep positional callers of this exported function
+  # working; always passed by name internally.
+  type_hints = NULL
 ) {
   if (is.null(lmar)) {
     lmar = tpar("lmar")

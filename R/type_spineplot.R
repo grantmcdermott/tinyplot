@@ -441,8 +441,17 @@ draw_spineplot = function(tol.ylab = 0.05, off = NULL, col = NULL, xaxlabels = N
                 type = type_info[["yaxt"]], categorical = TRUE)
           }
           # The secondary numeric axis only ever belongs on the far edge, so it
-          # keeps its unconditional position test regardless of framing.
-          if (is_facet_position(if(flip) "bottom" else "right", ifacet, facet_window_args)) {
+          # keeps its position test regardless of framing -- hence the forced
+          # "outer" below, rather than the user's `axes` value. An explicit
+          # "none" must still suppress it though, like any other axis, so route
+          # that through the shared predicate too. (`draw_facet_axis()` maps
+          # side 4 -> "right" and side 1 -> "bottom", matching `rside`.)
+          .raxes = facet_window_args[["facet.args"]][["axes"]]
+          if (draw_facet_axis(
+                rside, ifacet, facet_window_args,
+                framed = FALSE, free = FALSE,
+                axes = if (identical(.raxes, "none")) "none" else "outer"
+              )) {
             spine_axis(rside, type = type_info[["yaxt"]], categorical = FALSE)
           }
       }

@@ -216,9 +216,17 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                 "   ", bw_lab, " = ", bw_txt
             )
             if ("cat" %in% echo.bw) cat(echo_txt, "\n", sep = "")
-            # Never overwrite a label the user has set themselves.
+            # Never overwrite a label the user has set themselves. sub and cap
+            # are NULL unless user-set, but xlab has already been filled with
+            # an auto-derived default upstream, so for that destination we
+            # check the tp_auto marker that travels on the derived value.
             for (dest in intersect(c("sub", "xlab", "cap"), echo.bw)) {
-                if (is.null(settings[[dest]])) settings[[dest]] = echo_txt
+                user_set = if (dest == "xlab") {
+                    !is.null(settings[["xlab"]]) && !isTRUE(attr(settings[["xlab"]], "tp_auto"))
+                } else {
+                    !is.null(settings[[dest]])
+                }
+                if (!user_set) settings[[dest]] = echo_txt
             }
         }
 

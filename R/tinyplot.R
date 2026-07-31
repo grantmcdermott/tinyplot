@@ -1880,7 +1880,9 @@ tinyplot.formula = function(
     if (is.null(xlab)) xlab = ynam
   } else if (dens_type) {
     # if (is.null(ylab)) ylab = "Density" ## rather assign ylab as part of internal type_density() logic
-    if (is.null(xlab)) xlab = xnam
+    # tp_auto marks the label as derived rather than user-set, so that
+    # type_density(echo.bw = "xlab") knows it may overwrite it.
+    if (is.null(xlab)) xlab = structure(xnam, tp_auto = TRUE)
   } else if (hist_type) {
     # if (is.null(ylab)) ylab = "Frequency" ## rather assign ylab as part of internal type_histogram() logic
     if (is.null(xlab)) xlab = xnam

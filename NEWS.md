@@ -28,8 +28,16 @@ where the formatting is also better._
   draw their own axes: `"all"`, `"outer"` (drop redundant interior axes), or
   `"none"`. Previously this was only achievable as a side effect of
   `frame.plot = FALSE`, so `facet.args = list(axes = "outer")` now allows
-  redundant axes to be dropped while *keeping* the facet frames. (#661
+  redundant axes to be dropped while *keeping* the facet frames. (#661, #673
   @grantmcdermott)
+  - The same behaviour can be set globally via the new `facet.axes` parameter
+    (note the reverse order), e.g. `tpar(facet.axes = "outer")`, which also
+    makes it available to themes. A per-call `facet.args = list(axes = ...)`
+    takes precedence over the global setting, which in turn takes precedence
+    over the old frame-based inference.
+  - Accordingly, themes with L-shaped axes (`"classic"`, `"socviz"`, `"tufte"`,
+    and `"float"`) now default to `facet.axes = "outer"` so that they drop the
+    redundant interior axes of faceted plots.
 
 ### Bug fixes
 
@@ -39,6 +47,11 @@ where the formatting is also better._
     (#668 @grantmcdermott)
   - User-provided `x/ylim` overrides now work correctly with flipped plots.
     (#670 @grantmcdermott)
+  - Axes now inherit the same themed `cex`, `lwd` and `lty` as their fixed-scale
+    counterparts. Previously the free-facet code path built its axis calls by
+    hand and so silently ignored `cex.axis`, `lwd.axis` and `lty.axis` (plus
+    their per-side variants), which was most visible under themes that set them,
+    e.g. `tinytheme("bw")`. (#673 @grantmcdermott)
 - Grouped and faceted plots no longer redraw axes once per empty group. This was
   most visible for `"spineplot"` types (e.g. `facet = "by"`), where the
   self-drawn axis labels were overplotted several times and rendered too heavy.

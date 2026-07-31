@@ -585,6 +585,65 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_flip")
 
+# `axes = "outer"` must also close up the whitespace that the dropped interior
+# axes would have occupied, i.e. match the spacing of a frameless plot rather
+# than leaving a gap behind (#637, #673). Testing with "float", which should
+# defaults to `facet.axes = "outer"` as part of its tpar settings.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~am:vs,
+    theme = "float"
+  )
+}
+expect_snapshot_plot(f, label = "facet_axes_outer")
+
+# Same, but for a directional `bty` (the L-shaped frame of "classic"), and
+# relying on the theme's own `facet.axes = "outer"` default rather than passing
+# it per call. The interior frame edges have to be dropped alongside the axes,
+# else they float in the gutter without an axis to anchor them.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~am:vs,
+    theme = "classic"
+  )
+}
+expect_snapshot_plot(f, label = "facet_axes_outer_classic")
+
+# The global parameter should work through an ephemeral theme too, i.e. suppress
+# the interior axes of an otherwise framed theme.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~am:vs,
+    theme = list("dynamic", facet.axes = "outer")
+  )
+}
+expect_snapshot_plot(f, label = "facet_axes_outer_tpar")
+
+## Opposite for themes that normally suppress; override with all axes
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~am:vs, facet.args = list(axes = "all"),
+    theme = "classic"
+  )
+}
+expect_snapshot_plot(f, label = "facet_axes_all_classic_override")
+
+# Free scales are the exception: every panel has its own scale, so each keeps
+# its own axes and `axes = "outer"` is (deliberately) a no-op. Guards against
+# the outer-axis rule stripping axes that a free panel needs to be readable.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~am:vs, facet.args = list(free = TRUE),
+    theme = "classic"
+  )
+}
+expect_snapshot_plot(f, label = "facet_axes_outer_free")
+
 #
 # restore original par settings
 #

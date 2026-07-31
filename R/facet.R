@@ -81,6 +81,25 @@ draw_facet_window = function(
     }
   }
 
+  # Are only the outer (edge) facet axes drawn? Computed once, up here, because
+  # both the margin logic below and the per-panel frame drawing further down need
+  # it (and the latter also runs for unfaceted plots). Two variants:
+  #  - .outer_axes:     keyed off the structural `frame.plot`; used for the
+  #                     box-to-box facet gap.
+  #  - .outer_axes_eff: keyed off the `framed` hint where a type sets one (e.g.
+  #                     data_spineplot() forces frame.plot = FALSE internally but
+  #                     still draws per-panel axes); used for the tick-label width.
+  # A per-call `facet.args$axes` wins over the global `tpar("facet.axes")`, which
+  # in turn wins over the implicit frame-based rule (i.e. NULL, the default).
+  # Resolve it back into `facet.args` so that every downstream consumer -- incl.
+  # the self-drawing types, which read it off `facet_window_args` -- sees the
+  # same value without each having to redo the lookup.
+  facet.args[["axes"]] = facet.args[["axes"]] %||% get_tpar("facet.axes", tpar_list = tpars)
+  .axes = facet.args[["axes"]]
+  .eff_frame = if (!is.null(type_hints[["framed"]])) type_hints[["framed"]] else frame.plot
+  .outer_axes = outer_axes_only(frame.plot, facet.args[["free"]], .axes)
+  .outer_axes_eff = outer_axes_only(.eff_frame, facet.args[["free"]], .axes)
+
   if (nfacets > 1) {
     # Set facet margins (i.e., gaps between facets)
     if (is.null(facet.args[["fmar"]])) {
@@ -104,52 +123,15 @@ draw_facet_window = function(
       ## ... exception for 2x2 cases
       if (!(nfacet_rows == 2 && nfacet_cols == 2)) fmar = fmar * .75
     }
-    # Extra reduction if no plot frame to reduce whitespace
-    if (isFALSE(frame.plot) && !isTRUE(facet.args[["free"]])) {
+    # Extra reduction to close up the whitespace that an interior facet axis
+    # would otherwise occupy; see outer_axes_only(). This gap is the
+    # box-to-box spacing, so it keys off the *structural* `frame.plot` (a type
+    # that suppresses its own box wants the tighter gap), not `.eff_frame`.
+    if (.outer_axes) {
       fmar = fmar - 0.5
     }
 
     ooma = par("oma")
-
-    # Types that draw their own axes may force `frame.plot = FALSE` so the
-    # pipeline skips the box (e.g. data_spineplot()), while surfacing the user's
-    # real choice via the `framed` hint. Use the hint where given, so the margin
-    # logic below matches what the type will actually draw.
-    .framed = facet_axes_framed(
-      if (!is.null(type_hints[["framed"]])) type_hints[["framed"]] else frame.plot,
-      xaxt, yaxt
-    )
-
-    # Will any *interior* (non-edge) facet draw its own axis on this side? If so
-    # that facet needs the tick-label width in its own margin, rather than the
-    # single outer allocation that the nmar/noma split below would otherwise
-    # make.
-    #
-    # Only reached for genuinely bare axis styles ("l", "n") with fixed scales:
-    # both callers below guard on `!.framed` first, and `.framed` is TRUE for
-    # every framed theme *and* for `axes = "t"`. Note this does not mirror the
-    # generic draw site, which is not tick-aware; see facet_axes_framed().
-    .interior_axis = function(side) {
-      if (nfacets <= 1) return(FALSE)
-      fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
-      keep = vapply(
-        ifacet,
-        function(ii) draw_facet_axis(
-          side, ii, fwa,
-          framed = .framed,
-          free = isTRUE(facet.args[["free"]]),
-          axes = facet.args[["axes"]]
-        ),
-        logical(1L)
-      )
-      # more panels draw this axis than sit on its outer edge => interior draws
-      edge = vapply(
-        ifacet,
-        function(ii) draw_facet_axis(side, ii, fwa, framed = FALSE, free = FALSE, axes = "outer"),
-        logical(1L)
-      )
-      sum(keep) > sum(edge)
-    }
 
     # Bump top margin for facet strip. Use facet_text (not / cex_fct_adj)
     # because nmar = (fmar + 0.1) / cex_fct_adj already divides — using
@@ -204,9 +186,10 @@ draw_facet_window = function(
         # hands it to the *outer* margin -- correct when only the leftmost facet
         # draws a y axis. But when interior facets draw their own (e.g. framed
         # panels), each needs that width in its own margin instead, else the
-        # labels overflow into the neighbouring panel. Keep the fmar bump in that
-        # case; otherwise release it back to the outer margin as before.
-        if (!.framed && !isTRUE(facet.args[["free"]]) && !.interior_axis(2)) {
+        # labels overflow into the neighbouring panel. So only release it back to
+        # the outer margin when interior axes aren't drawn at all; same rule
+        # (and same reason) as the inter-facet gap above.
+        if (.outer_axes_eff) {
           fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
         }
       }
@@ -231,7 +214,7 @@ draw_facet_window = function(
         }
         # As per the y axis above: keep the label width in fmar when interior
         # facets draw their own x axis, else release it to the outer margin.
-        if (!.framed && !isTRUE(facet.args[["free"]]) && !.interior_axis(1)) {
+        if (.outer_axes_eff) {
           fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
         }
       }
@@ -437,26 +420,38 @@ draw_facet_window = function(
         par(usr = fusr[[ii]])
         # Free facets each need their own axes, since every panel has its own
         # scale. The one exception is an explicit `axes = "none"` request.
-        .free_axes = !identical(facet.args[["axes"]], "none")
-        # if plot frame is true then print axes per normal...
+        .free_axes = !identical(.axes, "none")
+        # Reuse the args_x/args_y lists built above rather than calling tinyAxis()
+        # with a bare handful of arguments, so that free facets pick up the same
+        # themed `cex`/`lwd`/`lty` (cex.axis, lwd.axis, lty.axis and their
+        # per-side variants) as fixed ones. Only the per-facet bits are
+        # overridden: the panel's own data, plus `at`/`labels` where this facet
+        # needs explicit ticks.
         if (.free_axes) {
+          .axf = args_x
+          .axf[[1L]] = xfree
           if (!is.null(xlabs)) {
-            tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, labeller = xaxl)
+            .axf = modifyList(.axf, list(at = xlabs, labels = names(xlabs)))
           } else if (!is.null(xat)) {
-            tinyAxis(xfree, side = xside, at = xat, type = xaxt, labeller = xaxl)
+            .axf = modifyList(.axf, list(at = xat))
           } else {
-            tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
+            # a fixed-scale `at` (from xaxb) doesn't apply to this facet's range
+            .axf[["at"]] = NULL
           }
+          do.call(tinyAxis, .axf)
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         if (.free_axes) {
+          .ayf = args_y
+          .ayf[[1L]] = yfree
           if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
-            tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
+            .ayf = modifyList(.ayf, list(at = ylabs, labels = names(ylabs)))
           } else if (!is.null(yat)) {
-            tinyAxis(yfree, side = yside, at = yat, type = yaxt, labeller = yaxl)
+            .ayf = modifyList(.ayf, list(at = yat))
           } else {
-            tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
+            .ayf[["at"]] = NULL
           }
+          do.call(tinyAxis, .ayf)
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
 
@@ -471,7 +466,7 @@ draw_facet_window = function(
           draw_facet_axis(
             side, ii, .fwa,
             framed = isTRUE(frame.plot),
-            axes = facet.args[["axes"]]
+            axes = .axes
           )
         }
         if (keep_axis(xside)) do.call(tinyAxis, args_x)
@@ -612,8 +607,27 @@ draw_facet_window = function(
       }
     }
 
-    # plot frame
-    if (frame.plot) box()
+    # plot frame. For a directional `bty` (e.g. the L of tinytheme("classic")),
+    # drop any edge that faces a neighbouring panel rather than the grid's outer
+    # boundary, else it floats in the gutter; see draw_facet_box().
+    #
+    # Only when the interior axes are dropped too, though. A per-panel box also
+    # extends that panel's axis rules to the full panel width, so removing it
+    # while the axes remain would leave short, inset rules behind. Tie the two
+    # together: same condition, so the frame and the axes agree.
+    #
+    # Fast path: a stray interior edge needs more than one facet, a *directional*
+    # bty, and suppressed interior axes. A single panel has no interior edge at
+    # all; nor does a full box ("o") or no box ("n"); nor does a plot that still
+    # draws its interior axes. All of those defer straight to box(), which is
+    # cheaper, exact, and (unlike per-side segments) draws one joined polyline.
+    if (frame.plot) {
+      if (nfacets > 1 && .outer_axes && !(par("bty") %in% c("o", "O", "n", "N"))) {
+        draw_facet_box(par("bty"), ii, list(ifacet = ifacet, nfacet_cols = nfacet_cols))
+      } else {
+        box()
+      }
+    }
 
     # panel grid lines
     if (is.null(grid)) grid = get_tpar("grid", tpar_list = tpars)
@@ -890,6 +904,94 @@ is_facet_position = function(position, ifacet, facet_window_args) {
     "bottom" = ifacet %in% tail(id, nc),
     NA
   )
+}
+
+
+## Draw a facet panel's plot frame, dropping any edge that faces a neighbour.
+##
+## For a directional `bty` (i.e. anything but the full box "o"), a per-panel
+## frame leaves stray lines floating in the gutter between facets -- e.g.
+## tinytheme("classic") draws an L in every panel, so interior panels show a bare
+## vertical/horizontal rule. Only the edges that sit on the facet grid's *outer*
+## boundary are wanted, matching how ggplot2 renders `theme_classic()` facets.
+##
+## This can't be delegated back to box(): `bty` has no code for a single edge
+## ("o" = all four, "l" = left+bottom, "7" = top+right, "u" = 3 sides, "c"/"]" =
+## bracket, "n" = none), yet a 2x2 grid needs left-only and bottom-only panels.
+## So decompose `bty` into its constituent sides and draw the survivors with
+## segments() along par("usr").
+##
+## `bty = "o"` keeps calling box() directly: a full box on every panel is the
+## conventional faceted look, and it has no interior-facing edge problem.
+draw_facet_box = function(bty, ifacet, facet_window_args) {
+  sides = switch(
+    bty,
+    # GBox() case-folds these, so accept both cases for the letter codes.
+    "o" = , "O" = c("bottom", "left", "top", "right"),
+    "l" = , "L" = c("bottom", "left"),
+    "7" = c("top", "right"),
+    "u" = , "U" = c("bottom", "left", "right"),
+    # "c" opens to the right, so it draws top/left/bottom (same as "["); "]"
+    # opens to the left, so bottom/right/top. Verified against base box().
+    "c" = , "C" = , "[" = c("bottom", "left", "top"),
+    "]" = c("bottom", "top", "right"),
+    "n" = , "N" = character(0L),
+    # unknown/unsupported code: fall back to base R's own handling
+    NULL
+  )
+  if (is.null(sides)) {
+    box(bty = bty)
+    return(invisible(NULL))
+  }
+  if (!length(sides)) return(invisible(NULL))
+  # A full box has no interior-facing edge to drop, so keep base R's version
+  # (identical output, and it draws the frame as a single polygon).
+  if (bty %in% c("o", "O")) {
+    box()
+    return(invisible(NULL))
+  }
+  # Drop the edges that abut another panel rather than the grid's outer boundary
+  if (!is.null(facet_window_args)) {
+    sides = sides[vapply(
+      sides,
+      function(s) isTRUE(is_facet_position(s, ifacet, facet_window_args)),
+      logical(1L)
+    )]
+  }
+  if (!length(sides)) return(invisible(NULL))
+  u = par("usr")
+  if (par("xlog")) u[1:2] = 10^u[1:2]
+  if (par("ylog")) u[3:4] = 10^u[3:4]
+  # `xpd = 2` mirrors what C_box() does before calling GBox() ("force clipping to
+  # device region"). The frame lies exactly *on* the plot region boundary, so
+  # under the default xpd = FALSE it gets clipped to that same boundary, losing
+  # half its stroke width and rendering visibly thin.
+  for (s in sides) {
+    switch(s,
+      "bottom" = segments(u[1], u[3], u[2], u[3], xpd = 2),
+      "top"    = segments(u[1], u[4], u[2], u[4], xpd = 2),
+      "left"   = segments(u[1], u[3], u[1], u[4], xpd = 2),
+      "right"  = segments(u[2], u[3], u[2], u[4], xpd = 2)
+    )
+  }
+  invisible(NULL)
+}
+
+
+## Are only the outer (edge) facet axes drawn, i.e. no interior axes?
+##
+## Drives the inter-facet gap (fmar), which must shrink exactly when no interior
+## axis is drawn to fill it. This has to mirror what the pipeline *actually*
+## draws, which is not a single rule: free scales draw per-panel via `.free_axes`
+## (ignoring "outer"), while fixed scales follow draw_facet_axis(). Hence the
+## `none` and `free` short-circuits below come before the "outer"/frame checks.
+## (For "none", strictly *no* axes are drawn, but the gap-tightening is the same.)
+outer_axes_only = function(frame.plot, free, axes) {
+  if (identical(axes, "none")) return(TRUE)   # no axes at all (free or fixed)
+  if (isTRUE(free)) return(FALSE)             # free scales draw per-panel
+  if (identical(axes, "all")) return(FALSE)   # per-panel axes forced on
+  if (identical(axes, "outer")) return(TRUE)  # interior axes off, edges kept
+  isFALSE(frame.plot)                         # frameless => interior dropped
 }
 
 

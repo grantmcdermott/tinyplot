@@ -421,25 +421,37 @@ draw_facet_window = function(
         # Free facets each need their own axes, since every panel has its own
         # scale. The one exception is an explicit `axes = "none"` request.
         .free_axes = !identical(.axes, "none")
-        # if plot frame is true then print axes per normal...
+        # Reuse the args_x/args_y lists built above rather than calling tinyAxis()
+        # with a bare handful of arguments, so that free facets pick up the same
+        # themed `cex`/`lwd`/`lty` (cex.axis, lwd.axis, lty.axis and their
+        # per-side variants) as fixed ones. Only the per-facet bits are
+        # overridden: the panel's own data, plus `at`/`labels` where this facet
+        # needs explicit ticks.
         if (.free_axes) {
+          .axf = args_x
+          .axf[[1L]] = xfree
           if (!is.null(xlabs)) {
-            tinyAxis(xfree, side = xside, at = xlabs, labels = names(xlabs), type = xaxt, labeller = xaxl)
+            .axf = modifyList(.axf, list(at = xlabs, labels = names(xlabs)))
           } else if (!is.null(xat)) {
-            tinyAxis(xfree, side = xside, at = xat, type = xaxt, labeller = xaxl)
+            .axf = modifyList(.axf, list(at = xat))
           } else {
-            tinyAxis(xfree, side = xside, type = xaxt, labeller = xaxl)
+            # a fixed-scale `at` (from xaxb) doesn't apply to this facet's range
+            .axf[["at"]] = NULL
           }
+          do.call(tinyAxis, .axf)
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
         if (.free_axes) {
+          .ayf = args_y
+          .ayf[[1L]] = yfree
           if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
-            tinyAxis(yfree, side = yside, at = ylabs, labels = names(ylabs), type = yaxt, labeller = yaxl)
+            .ayf = modifyList(.ayf, list(at = ylabs, labels = names(ylabs)))
           } else if (!is.null(yat)) {
-            tinyAxis(yfree, side = yside, at = yat, type = yaxt, labeller = yaxl)
+            .ayf = modifyList(.ayf, list(at = yat))
           } else {
-            tinyAxis(yfree, side = yside, type = yaxt, labeller = yaxl)
+            .ayf[["at"]] = NULL
           }
+          do.call(tinyAxis, .ayf)
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") + c(0, .ymgp_shift, 0))
 
@@ -604,12 +616,13 @@ draw_facet_window = function(
     # while the axes remain would leave short, inset rules behind. Tie the two
     # together: same condition, so the frame and the axes agree.
     #
-    # Fast path: only a *directional* bty on a panel whose interior axes are
-    # suppressed can have a stray interior edge. A full box ("o") or no box ("n")
-    # never does, and nor does any plot that still draws its interior axes -- so
-    # those defer straight to box(), which is both cheaper and exact.
+    # Fast path: a stray interior edge needs more than one facet, a *directional*
+    # bty, and suppressed interior axes. A single panel has no interior edge at
+    # all; nor does a full box ("o") or no box ("n"); nor does a plot that still
+    # draws its interior axes. All of those defer straight to box(), which is
+    # cheaper, exact, and (unlike per-side segments) draws one joined polyline.
     if (frame.plot) {
-      if (.outer_axes && !(par("bty") %in% c("o", "O", "n", "N"))) {
+      if (nfacets > 1 && .outer_axes && !(par("bty") %in% c("o", "O", "n", "N"))) {
         draw_facet_box(par("bty"), ii, list(ifacet = ifacet, nfacet_cols = nfacet_cols))
       } else {
         box()

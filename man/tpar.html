@@ -707,6 +707,9 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 <p><code>dynmar</code>: Logical indicating whether <code>tinyplot</code> should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal <code>tinythemes()</code> logic and should <em>not</em> be adjusted manually unless you really know what you are doing or don’t mind risking unintended consequences to your plot.</p>
 </li>
 <li>
+<p><code>facet.axes</code>: Character string controlling which facets draw their own axes: <code>“all”</code> (each facet), <code>“outer”</code> (only facets on the outer edge of the facet grid, dropping redundant interior axes), or <code>“none”</code>. Defaults to <code>NULL</code>, whereby the choice is inferred from whether the plot is framed (see the <code>axes</code> argument of <code>facet.args</code>). Equivalent to setting <code>tinyplot(…, facet.args = list(axes = X))</code>, but globally, which also makes it available to themes.</p>
+</li>
+<li>
 <p><code>facet.bg</code>: Character or integer specifying the facet background colour. If an integer, will correspond to the user’s default colour palette (see <code>palette</code>). Passed to <code>rect</code>. Defaults to <code>NULL</code> (none).</p>
 </li>
 <li>

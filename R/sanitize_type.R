@@ -1,13 +1,10 @@
 sanitize_type = function(settings) {
   env2env(settings, environment(), c("type", "dots", "x", "y"))
 
-  # Univariate `y ~ 1` displays put their single variable on the x-axis. This
-  # swap must happen regardless of whether `type` was supplied explicitly
-  # (e.g. type = "histogram", or an added type_vline() layer). Otherwise `x`
-  # stays NULL and the draw loop treats the plot as empty, silently dropping
-  # the layer (#647). We keep a `univariate` flag because the swapped-in state
-  # is indistinguishable from a one-sided `~ x` formula, yet the two imply
-  # different default types (histogram vs. points).
+  # Univariate `y ~ 1` puts its single variable on the x-axis. Swap before the
+  # early returns below, else explicit types keep a NULL `x` and the draw loop
+  # discards them as empty (#647). Flag it first: post-swap, `y ~ 1` is
+  # indistinguishable from `~ x`, which defaults to points rather than histogram.
   univariate = is.null(x) && !is.null(y)
   if (univariate) {
     settings$x = x = y

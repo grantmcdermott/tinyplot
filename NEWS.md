@@ -77,6 +77,12 @@ where the formatting is also better._
     labelled against a neighbour's scale.
   - `axes = "t"` (and other tick-style axes) no longer drop the interior facet
     labels.
+- Univariate `y ~ 1` formulas no longer silently drop explicitly-typed layers,
+  e.g. `tinyplot(body_mass ~ 1, data = penguins)` followed by
+  `tinyplot_add(type = type_vline(4500))`. The x-axis swap these formulas
+  require was only applied when the type had to be inferred, so an explicit type
+  was mistaken for an empty plot and never drawn. (#647 @grantmcdermott
+  @zeileis)
 
 ## v0.7.0
 

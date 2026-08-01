@@ -672,6 +672,7 @@ window.Quarto = {
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   n = 512,
+  echo.bw = FALSE,
   alpha = NULL
 )
 </code></pre>
@@ -722,6 +723,14 @@ the bandwidth used is actually <code>adjust*bw</code>. This makes it easy to spe
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="echo.bw">echo.bw</code>
+</td>
+<td>
+where to report the smoothing bandwidth (and the number of observations behind it), since neither is visible from the curve itself. The default <code>FALSE</code> reports nothing. <code>TRUE</code> is shorthand for <code>“sub”</code>, and any combination of <code>“sub”</code> (subtitle), <code>“cap”</code> (caption), and <code>“cat”</code> (printed to the console, with <code>“print”</code> accepted as a synonym) may be given. A destination the user has already labelled is left alone. Bandwidths shared across subgroups are reported once and named as joint; individual bandwidths are reported per group, truncated after three so the label stays legible.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="alpha">alpha</code>
 </td>
 <td>
@@ -753,7 +762,7 @@ numeric value between 0 and 1 specifying the opacity of ribbon shading If no <co
 </section>
 <section id="titles" class="level3">
 <h3 class="anchored" data-anchor-id="titles">Titles</h3>
-<p>This tinyplot method for density plots differs from the base <code>plot.density</code> function in its treatment of titles. The x-axis title displays only the variable name, omitting details about the number of observations and smoothing bandwidth. Additionally, the main title is left blank by default for a cleaner appearance.</p>
+<p>This tinyplot method for density plots differs from the base <code>plot.density</code> function in its treatment of titles. The x-axis title displays only the variable name, omitting details about the number of observations and smoothing bandwidth. Additionally, the main title is left blank by default for a cleaner appearance. Use <code>echo.bw</code> to put those details back in the subtitle, a caption, or the console.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -813,6 +822,28 @@ numeric value between 0 and 1 specifying the opacity of ribbon shading If no <co
 <div>
 <figure class="figure">
 <p><img src="type_density_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># neither the bandwidth nor the number of observations is visible from the</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># curve, so `echo.bw` can report them: in the subtitle, a caption, or the</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># console</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">type_density</span>(<span class="at">echo.bw =</span> <span class="st">"sub"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_density_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># individual bandwidths are listed per group</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>Sepal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">type_density</span>(<span class="at">joint.bw =</span> <span class="st">"none"</span>, <span class="at">echo.bw =</span> <span class="st">"sub"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_density_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

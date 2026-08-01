@@ -317,6 +317,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The same behaviour can be set globally via the new <code>facet.axes</code> parameter (note the reverse order), e.g.&nbsp;<code>tpar(facet.axes = "outer")</code>, which also makes it available to themes. A per-call <code>facet.args = list(axes = ...)</code> takes precedence over the global setting, which in turn takes precedence over the old frame-based inference.</li>
 <li>Accordingly, themes with L-shaped axes (<code>"classic"</code>, <code>"socviz"</code>, <code>"tufte"</code>, and <code>"float"</code>) now default to <code>facet.axes = "outer"</code> so that they drop the redundant interior axes of faceted plots.</li>
 </ul></li>
+<li><code>type_density()</code> gains an <code>echo.bw</code> argument for reporting the smoothing bandwidth and the number of observations behind it, neither of which is visible from the curve itself. Destinations are <code>"sub"</code>, <code>"cap"</code>, and <code>"cat"</code> (console), in any combination; a destination the user has already labelled is left alone. Shared bandwidths are reported once and named as joint, individual bandwidths per group. (<a href="https://github.com/grantmcdermott/tinyplot/issues/287">#287</a> <a href="https://github.com/haomeng797-ship-it"><span class="citation" data-cites="haomeng797-ship-it">@haomeng797-ship-it</span></a>)</li>
 </ul>
 </section>
 </section>

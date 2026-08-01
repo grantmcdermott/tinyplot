@@ -21,6 +21,16 @@
 #'   `"mean"` and `FALSE` maps to `"none"`. See the "Bandwidth selection"
 #'   section below for a discussion of practical considerations.
 #' @inherit stats::density details
+#' @param echo.bw where to report the smoothing bandwidth (and the number of
+#'   observations behind it), since neither is visible from the curve itself.
+#'   The default `FALSE` reports nothing. `TRUE` is shorthand for `"sub"`, and
+#'   any combination of `"sub"` (subtitle), `"cap"` (caption), and `"cat"`
+#'   (printed to the console, with `"print"` accepted as a synonym) may be
+#'   given. A destination the user has already labelled is
+#'   left alone. Bandwidths shared across subgroups are reported once and named
+#'   as joint; individual bandwidths are reported per group, truncated after
+#'   three so the label stays legible.
+#'
 #' @section Bandwidth selection: While the choice of smoothing bandwidth will
 #'   always stand to affect a density visualization, it gains an added
 #'   importance when multiple densities are drawn simultaneously (e.g., for
@@ -56,7 +66,8 @@
 #'   \code{\link[stats]{plot.density}} function in its treatment of titles. The
 #'   x-axis title displays only the variable name, omitting details about the
 #'   number of observations and smoothing bandwidth. Additionally, the main
-#'   title is left blank by default for a cleaner appearance.
+#'   title is left blank by default for a cleaner appearance. Use `echo.bw` to
+#'   put those details back in the subtitle, a caption, or the console.
 #' @examples
 #' # "density" type convenience string
 #' tinyplot(~Sepal.Length, data = iris, type = "density")
@@ -83,7 +94,17 @@
 #' tinyplot_add(joint.bw = "full", lty = 2)        # full data
 #' tinyplot_add(joint.bw = "none", lty = 3)        # none (individual)
 #' legend("topright", c("Mean", "Full", "None"), lty = 1:3, bty = "n", title = "Joint BW")
-#' 
+#'
+#' # neither the bandwidth nor the number of observations is visible from the
+#' # curve, so `echo.bw` can report them: in the subtitle, a caption, or the
+#' # console
+#' tinyplot(~Sepal.Length | Species, data = iris,
+#'     type = type_density(echo.bw = "sub"))
+#'
+#' # individual bandwidths are listed per group
+#' tinyplot(~Sepal.Length | Species, data = iris,
+#'     type = type_density(joint.bw = "none", echo.bw = "sub"))
+#'
 #' @importFrom stats density weighted.mean
 #' @importFrom stats bw.SJ bw.bcv bw.nrd bw.nrd0 bw.ucv 
 #' @export
@@ -94,6 +115,7 @@ type_density = function(
         kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"),
         n = 512,
         # more args from density here?
+        echo.bw = FALSE,
         alpha = NULL
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
@@ -101,9 +123,11 @@ type_density = function(
         joint.bw = ifelse(joint.bw, "mean", "none")
     }
     joint.bw = match.arg(joint.bw, c("mean", "full", "none"))
+    echo.bw = match_echo_bw(echo.bw)
     out = list(
         data = data_density(bw = bw, adjust = adjust, kernel = kernel, n = n,
-                            joint.bw = joint.bw, alpha = alpha),
+                            joint.bw = joint.bw, echo.bw = echo.bw,
+                            alpha = alpha),
         draw = NULL,
         name = "density"
     )
@@ -111,8 +135,44 @@ type_density = function(
     return(out)
 }
 
+## Normalize the echo.bw argument to a character vector of destinations.
+## FALSE/NULL disables it; TRUE is shorthand for the subtitle. "print" is
+## accepted as a synonym for "cat".
+match_echo_bw = function(echo.bw) {
+    if (is.null(echo.bw) || isFALSE(echo.bw)) return(character(0))
+    if (isTRUE(echo.bw)) return("sub")
+    if (!is.character(echo.bw)) {
+        stop("`echo.bw` must be TRUE, FALSE, or a character vector.",
+             call. = FALSE)
+    }
+    echo.bw[echo.bw == "print"] = "cat"
+    valid = c("sub", "cap", "cat")
+    bad = setdiff(echo.bw, valid)
+    if (length(bad)) {
+        stop(
+            "`echo.bw` must be one or more of ",
+            paste(sprintf('"%s"', valid), collapse = ", "),
+            ' (or "print" for "cat"); got ',
+            paste(sprintf('"%s"', bad), collapse = ", "), ".",
+            call. = FALSE
+        )
+    }
+    unique(echo.bw)
+}
+
+## Collapse a vector for display, following the convention used elsewhere in
+## tinyplot: a lone value prints bare, several print as a bracketed list, and
+## more than three are truncated so the label stays readable.
+format_echo_vec = function(x, numeric = TRUE) {
+    x = if (numeric) sprintf("%.4g", x) else as.character(x)
+    if (length(x) == 1L) return(x)
+    if (length(x) > 3L) x = c(x[1:3], "...")
+    paste0("[", paste(x, collapse = ", "), "]")
+}
+
 data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
-                        joint.bw = "none", alpha = NULL) {
+                        joint.bw = "none", echo.bw = character(0),
+                        alpha = NULL) {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("by", "bg", "facet", "ylab", "col", "ribbon.alpha", "datapoints"))
         ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)
@@ -137,17 +197,38 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             }
         }
         
-        datapoints = lapply(datapoints, function(dat) {
+        dens = lapply(datapoints, function(dat) {
             wts = if (has_weights) dat[["weights"]] / sum(dat[["weights"]]) else NULL
-            d = density(dat$x, bw = dens_bw, kernel = kernel, n = n, weights = wts)
-            out = data.frame(
+            density(dat$x, bw = dens_bw, kernel = kernel, n = n, weights = wts)
+        })
+
+        if (length(echo.bw)) {
+            bws = vapply(dens, `[[`, numeric(1), "bw")
+            ns = vapply(dens, `[[`, numeric(1), "n")
+            # A shared bandwidth is reported once and named as joint; individual
+            # bandwidths are reported per group, in the order the groups plot.
+            shared = length(bws) > 1L && isTRUE(all.equal(min(bws), max(bws)))
+            bw_txt = format_echo_vec(if (shared) bws[1] else bws)
+            bw_lab = if (shared) "Joint Bandwidth" else "Bandwidth"
+            echo_txt = paste0(
+                "N = ", format_echo_vec(ns, numeric = FALSE),
+                "   ", bw_lab, " = ", bw_txt
+            )
+            if ("cat" %in% echo.bw) cat(echo_txt, "\n", sep = "")
+            # Never overwrite a label the user has set themselves.
+            for (dest in intersect(c("sub", "cap"), echo.bw)) {
+                if (is.null(settings[[dest]])) settings[[dest]] = echo_txt
+            }
+        }
+
+        datapoints = Map(function(dat, d) {
+            data.frame(
                 by = dat$by[1], # already split
                 facet = dat$facet[1], # already split
                 y = d$y,
                 x = d$x
             )
-            return(out)
-        })
+        }, datapoints, dens)
         datapoints = do.call(rbind, datapoints)
         datapoints$ymax = datapoints$y
         datapoints$ymin = rep.int(0, nrow(datapoints))

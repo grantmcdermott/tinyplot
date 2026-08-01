@@ -31,6 +31,12 @@ Authors@R:
       family = "Bacher",
       role = "ctb",
       email = "etienne.bacher@protonmail.com"
+    ),
+    person(
+      given = "Miura",
+      family = "Meng",
+      role = "ctb",
+      comment = c(ORCID = "0009-0004-1522-1997")
     )
   )
 Description: Lightweight extension of the base R graphics system, with support

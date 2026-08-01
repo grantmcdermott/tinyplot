@@ -95,3 +95,22 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "density_weights")
 
+
+# echo.bw ----------------------------------------------------------------
+
+f = function() {
+  tinyplot(
+    ~Sepal.Length | Species, data = iris,
+    type = type_density(joint.bw = "full", echo.bw = TRUE)
+  )
+}
+expect_snapshot_plot(f, label = "density_echo_bw")
+
+f = function() {
+  tinyplot(
+    ~Sepal.Length | Species, data = iris,
+    type = type_density(joint.bw = "full", echo.bw = "cap"),
+    theme = "clean"
+  )
+}
+expect_snapshot_plot(f, label = "density_echo_bw_cap_clean")

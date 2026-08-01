@@ -11,6 +11,7 @@ type_density(
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   n = 512,
+  echo.bw = FALSE,
   alpha = NULL
 )
 }
@@ -44,6 +45,16 @@ the version used by S.}
     final result is interpolated by \code{\link[stats]{approx}}.  So it almost
     always makes sense to specify \code{n} as a power of two.
   }
+
+\item{echo.bw}{where to report the smoothing bandwidth (and the number of
+observations behind it), since neither is visible from the curve itself.
+The default \code{FALSE} reports nothing. \code{TRUE} is shorthand for \code{"sub"}, and
+any combination of \code{"sub"} (subtitle), \code{"cap"} (caption), and \code{"cat"}
+(printed to the console, with \code{"print"} accepted as a synonym) may be
+given. A destination the user has already labelled is
+left alone. Bandwidths shared across subgroups are reported once and named
+as joint; individual bandwidths are reported per group, truncated after
+three so the label stays legible.}
 
 \item{alpha}{numeric value between 0 and 1 specifying the opacity of ribbon shading
 If no \code{alpha} value is provided, then will default to \code{tpar("ribbon.alpha")}
@@ -113,7 +124,8 @@ necessitating different amounts of smoothing.
 \code{\link[stats]{plot.density}} function in its treatment of titles. The
 x-axis title displays only the variable name, omitting details about the
 number of observations and smoothing bandwidth. Additionally, the main
-title is left blank by default for a cleaner appearance.
+title is left blank by default for a cleaner appearance. Use \code{echo.bw} to
+put those details back in the subtitle, a caption, or the console.
 }
 
 \examples{
@@ -142,5 +154,15 @@ tinyplot(~Sepal.Length | Species, data = iris,
 tinyplot_add(joint.bw = "full", lty = 2)        # full data
 tinyplot_add(joint.bw = "none", lty = 3)        # none (individual)
 legend("topright", c("Mean", "Full", "None"), lty = 1:3, bty = "n", title = "Joint BW")
+
+# neither the bandwidth nor the number of observations is visible from the
+# curve, so `echo.bw` can report them: in the subtitle, a caption, or the
+# console
+tinyplot(~Sepal.Length | Species, data = iris,
+    type = type_density(echo.bw = "sub"))
+
+# individual bandwidths are listed per group
+tinyplot(~Sepal.Length | Species, data = iris,
+    type = type_density(joint.bw = "none", echo.bw = "sub"))
 
 }

@@ -1,6 +1,19 @@
 sanitize_type = function(settings) {
   env2env(settings, environment(), c("type", "dots", "x", "y"))
 
+  # Univariate `y ~ 1` displays put their single variable on the x-axis. This
+  # swap must happen regardless of whether `type` was supplied explicitly
+  # (e.g. type = "histogram", or an added type_vline() layer). Otherwise `x`
+  # stays NULL and the draw loop treats the plot as empty, silently dropping
+  # the layer (#647). We keep a `univariate` flag because the swapped-in state
+  # is indistinguishable from a one-sided `~ x` formula, yet the two imply
+  # different default types (histogram vs. points).
+  univariate = is.null(x) && !is.null(y)
+  if (univariate) {
+    settings$x = x = y
+    settings$y = y = NULL
+  }
+
   if (inherits(type, "tinyplot_type")) {
     settings$type = type$name
     settings$type_draw = type$draw
@@ -46,15 +59,11 @@ sanitize_type = function(settings) {
   assert_choice(type, known_types, null.ok = TRUE)
 
   if (is.null(type)) {
-    if (is.null(x) && !(is.factor(y) || is.character(y))) {
+    if (univariate && !(is.factor(x) || is.character(x))) {
       # enforce histogram type for y ~ 1
-      settings$x = y
-      settings$y = NULL
       type = type_hist
-    } else if (is.null(x) && (is.factor(y) || is.character(y))) {
+    } else if (univariate && (is.factor(x) || is.character(x))) {
       # enforce barplot type for factor(y) ~ 1
-      settings$x = y
-      settings$y = NULL
       type = type_barplot
     } else if ((is.factor(x) || is.character(x)) && is.null(y)) {
       # enforce barplot type for ~ factor(y)

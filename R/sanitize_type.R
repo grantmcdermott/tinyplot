@@ -1,6 +1,16 @@
 sanitize_type = function(settings) {
   env2env(settings, environment(), c("type", "dots", "x", "y"))
 
+  # Univariate `y ~ 1` puts its single variable on the x-axis. Swap before the
+  # early returns below, else explicit types keep a NULL `x` and the draw loop
+  # discards them as empty (#647). Flag it first: post-swap, `y ~ 1` is
+  # indistinguishable from `~ x`, which defaults to points rather than histogram.
+  univariate = is.null(x) && !is.null(y)
+  if (univariate) {
+    settings$x = x = y
+    settings$y = y = NULL
+  }
+
   if (inherits(type, "tinyplot_type")) {
     settings$type = type$name
     settings$type_draw = type$draw
@@ -46,15 +56,11 @@ sanitize_type = function(settings) {
   assert_choice(type, known_types, null.ok = TRUE)
 
   if (is.null(type)) {
-    if (is.null(x) && !(is.factor(y) || is.character(y))) {
+    if (univariate && !(is.factor(x) || is.character(x))) {
       # enforce histogram type for y ~ 1
-      settings$x = y
-      settings$y = NULL
       type = type_hist
-    } else if (is.null(x) && (is.factor(y) || is.character(y))) {
+    } else if (univariate && (is.factor(x) || is.character(x))) {
       # enforce barplot type for factor(y) ~ 1
-      settings$x = y
-      settings$y = NULL
       type = type_barplot
     } else if ((is.factor(x) || is.character(x)) && is.null(y)) {
       # enforce barplot type for ~ factor(y)

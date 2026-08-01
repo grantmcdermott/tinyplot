@@ -40,8 +40,8 @@ where the formatting is also better._
     redundant interior axes of faceted plots.
 - `type_density()` gains an `echo.bw` argument for reporting the smoothing
   bandwidth and the number of observations behind it, neither of which is
-  visible from the curve itself. Destinations are `"sub"`, `"xlab"`, `"cap"`,
-  and `"cat"` (console), in any combination; a destination the user has already
+  visible from the curve itself. Destinations are `"sub"`, `"cap"`, and
+  `"cat"` (console), in any combination; a destination the user has already
   labelled is left alone. Shared bandwidths are reported once and named as
   joint, individual bandwidths per group. (#287 @haomeng797-ship-it)
 

@@ -56,11 +56,6 @@ sanitize_xylab = function(settings) {
     out_ylab = NULL
   }
 
-  # Mark a label we derived ourselves (as opposed to one the user supplied),
-  # so type_data() functions (e.g. echo.bw in type_density) can tell the two
-  # apart. The marker travels on the value itself, surviving reassignment.
-  if (is.null(xlab) && !is.null(out_xlab)) attr(out_xlab, "tp_auto") = TRUE
-
   settings$xlab = out_xlab
   settings$ylab = out_ylab
 }

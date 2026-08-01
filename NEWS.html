@@ -338,6 +338,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Flipped plots (e.g.&nbsp;<code>type = "boxplot", flip = TRUE</code>) no longer duplicate the category axis while omitting the interior x-axes, which had left facets labelled against a neighbour’s scale.</li>
 <li><code>axes = "t"</code> (and other tick-style axes) no longer drop the interior facet labels.</li>
 </ul></li>
+<li>Univariate <code>y ~ 1</code> formulas no longer silently drop explicitly-typed layers, e.g.&nbsp;<code>tinyplot(body_mass ~ 1, data = penguins)</code> followed by <code>tinyplot_add(type = type_vline(4500))</code>. The x-axis swap these formulas require was only applied when the type had to be inferred, so an explicit type was mistaken for an empty plot and never drawn. (<a href="https://github.com/grantmcdermott/tinyplot/issues/647">#647</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 </ul>
 </section>
 </section>

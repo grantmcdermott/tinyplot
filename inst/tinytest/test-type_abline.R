@@ -47,6 +47,15 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "hline_recyle_by")
 
+# Univariate `y ~ 1` formulas must not swallow the added line layer. The x/y
+# swap only ran for an inferred type, so an explicit one (here the vline) kept
+# a NULL `x` and got discarded as an empty plot. (#647)
+f = function() {
+  tinyplot(Sepal.Length ~ 1, data = iris)
+  tinyplot_add(type = type_vline(6), lwd = 2, col = 2)
+}
+expect_snapshot_plot(f, label = "vline_univariate_y1")
+
 ## TODO: uncomment this when ready to test. Probably after the tinyplot_add
 ## refactor to save in an environment instead of global option
 # f = function() {

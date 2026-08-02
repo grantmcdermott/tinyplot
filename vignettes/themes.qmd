@@ -156,12 +156,13 @@ p("void")
 ```
 
 ::: {.callout-note}
-The specialized `"ridge"` and `"ridge2"` themes are only intended for use with
-ridge plot types.
+The specialized `"ridge(2)"` and `"heatmap"` themes are only intended for use
+with their respective types.
 :::
 
 ```{r}
-p2 = function(theme = "ridge") {
+p2 = function(theme = c("ridge", "ridge2")) {
+  theme = match.arg(theme)
   tinyplot(
     species ~ body_mass | species,
     data = penguins,
@@ -173,9 +174,26 @@ p2 = function(theme = "ridge") {
   )
   box("outer", lty = 2)
 }
-
 p2("ridge")
 p2("ridge2")
+```
+
+```{r}
+# For tiles/heatmap, better to use a different dataset
+p3 = function(theme = "heatmap") {
+  catt = as.data.frame(as.table(cor(attitude)))
+  tinyplot(
+    Var1 ~ Var2 | Freq,
+    data = catt,
+    type = "tile", # or, "heatmap" (alias)
+    main = paste0('theme = "', theme, '"'),
+    sub = "subtitle",
+    cap = "caption",
+    theme = theme
+  )
+  box("outer", lty = 2)
+}
+p3("heatmap")
 ```
 
 Please feel free to make suggestions about themes, or contribute new themes by

@@ -10,8 +10,14 @@ where the formatting is also better._
 
 #### New plot types
 
-- `type_hexbin()` (equivalently, `type = "hexbin"`) for hexagonal bin plots, a
-  2D analogue of a histogram. (#667 @grantmcdermott)
+- `type_hexbin()` / `"hexbin"` for hexagonal bin plots, a 2D analogue of a
+  histogram. (#667 @grantmcdermott)
+- `type_tile()` / `"tile"` for tile plots and heatmaps, i.e. a grid of
+  rectangles whose fill encodes a third variable. `type_heatmap()` / `"heatmap"`
+  is an alias. (#677 @grantmcdermott)
+  - Ships with a companion `"heatmap"` theme, which removes the axis padding so
+    that tiles meet the panel edge, tick labels are always rotated against their
+    axis the tick labels, and defaults to the "tealgrn" sequential palette.
 
 #### Other new features
 

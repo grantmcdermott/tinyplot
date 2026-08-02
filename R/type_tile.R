@@ -40,35 +40,37 @@
 #' # It is recommended to use the dedicated "heatmap" theme for this type
 #' tinytheme("heatmap")
 #'
-#' # Correlation matrix of the base `attitude` dataset. The `x` and `y`
-#' # variables are factors, so tile bounds and axis labels are derived
-#' # automatically.
-#' catt = as.data.frame(cor(attitude))
-#' catt = cbind(
-#'   stack(catt),
-#'   ind2 = factor(row.names(catt), levels = row.names(catt))
-#' )
+#' # Correlation matrix of the base `attitude` dataset in "long" form.
+#' catt = as.data.frame(as.table(cor(attitude)), responseName = "Correlation")
 #'
-#' tinyplot(ind2 ~ ind | values, data = catt, type = "tile")
+#' tinyplot(Var1 ~ Var2 | Correlation, data = catt, type = "tile")
 #'
 #' # slightly fancier version, where we suppress the legend but layer on the values
 #' # as text
 #' tinyplot(
-#'   ind2 ~ ind | values, data = catt,
+#'   Var1 ~ Var2 | Correlation, data = catt,
 #'   type = "tile",
 #'   legend = FALSE,
 #'   xlab = NA, ylab = NA,
 #'   main = "Correlation matrix of base attitude dataset"
 #' )
-#' tinyplot_add(type = "text", labels = round(catt$values, 2), col = "white")
+#' tinyplot_add(type = "text", labels = round(catt$Correlation, 2), col = "white")
 #'
 #' # aside: "heatmap" is an alias for "tile"
-#' tinyplot(ind2 ~ ind | values, data = catt, type = "heatmap")
+#' tinyplot(Var1 ~ Var2 | Correlation, data = catt, type = "heatmap")
 #'
 #' # Pass scaled tile widths and heights through type_tile() for a gridded look
 #' tinyplot(
-#'   ind2 ~ ind | values, data = catt,
+#'   Var1 ~ Var2 | Correlation, data = catt,
 #'   type = type_tile(width = 0.9, height = 0.9)
+#' )
+#' 
+#' # It doesn't really work for this example, but you can easily switch to a
+#' # diverging palettes if it makes sense for your data
+#' tinyplot(
+#'   Var1 ~ Var2 | Correlation, data = catt,
+#'   type = type_tile(width = 0.9, height = 0.9),
+#'   palette = "tropic"
 #' )
 #'
 #' # Numeric axes work too, e.g. a (long-format) matrix of volcano heights

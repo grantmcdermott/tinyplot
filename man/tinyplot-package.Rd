@@ -28,6 +28,7 @@ Authors:
 Other contributors:
 \itemize{
   \item Etienne Bacher \email{etienne.bacher@protonmail.com} [contributor]
+  \item Miura Meng (\href{https://orcid.org/0009-0004-1522-1997}{ORCID}) [contributor]
 }
 
 }

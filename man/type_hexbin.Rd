@@ -110,12 +110,11 @@ tinyplot(y ~ x | g, data = dat, type = "hexbin")
 # 2) Continuous grouping variable: each cell is coloured by its mean. 
 #    Example: Create a long version of the `volcano` dataset, and plot its
 #    elevations onto a gridded terrain map.
-volc = local({
-  v = setNames(stack(as.data.frame(volcano)), c("elevation", "y"))
-  v$y = as.numeric(gsub("^V", "", v$y))
-  v$x = seq_len(nrow(volcano))
-  v
-})
+volc = data.frame(
+  x         = as.vector(row(volcano)),
+  y         = as.vector(col(volcano)),
+  elevation = as.vector(volcano)
+)
 tinyplot(
   y ~ x | elevation, data = volc,
   type = "hexbin", xbins = 50,

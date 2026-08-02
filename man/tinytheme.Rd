@@ -7,7 +7,7 @@
 tinytheme(
   theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "linedraw",
     "classic", "minimal", "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber",
-    "web", "ridge", "ridge2", "tufte", "float", "void"),
+    "web", "heatmap", "ridge", "ridge2", "tufte", "float", "void"),
   ...,
   register = NULL
 )
@@ -50,6 +50,7 @@ dynamic plots are marked with an asterisk (*) below.
 \item \code{"float"} (*): builds on \code{"tufte"} with outward ticks, fewer tick marks, and a "dark" qualitative palette.
 }
 \item \code{"void"} (*): switches off all axes, titles, legends, etc.
+\item \code{"heatmap"} (*): a specialized theme for tile plots and heatmaps (see \code{\link[=type_tile]{type_tile()}}). Builds off of \code{"clean2"}, but removes the axis padding so that the tiles meet the panel edge, drops the (redundant) grid lines, rotates the tick labels and removes their tick marks, and defaults to the "tealgrn" sequential palette. Not recommended for non-tile plots.
 \item \code{"ridge"} (*): a specialized theme for ridge plots (see \code{\link[=type_ridge]{type_ridge()}}). Builds off of \code{"clean"}, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
 \itemize{
 \item \code{"ridge2"} (*): removes the plot frame (box) from \code{"ridge"}, but retains the x-axis line. Again, not recommended for non-ridge plots.

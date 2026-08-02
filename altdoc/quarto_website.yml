@@ -100,6 +100,8 @@ website:
                 file: man/type_ellipse.qmd
               - text: type_density
                 file: man/type_density.qmd
+              - text: type_heatmap
+                file: man/type_tile.qmd
               - text: type_hexbin
                 file: man/type_hexbin.qmd
               - text: type_histogram
@@ -114,6 +116,8 @@ website:
                 file: man/type_rug.qmd
               - text: type_spineplot
                 file: man/type_spineplot.qmd
+              - text: type_tile
+                file: man/type_tile.qmd
               - text: type_violin
                 file: man/type_violin.qmd
           - section: "Models"

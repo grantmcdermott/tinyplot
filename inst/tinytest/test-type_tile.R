@@ -30,14 +30,13 @@ f = function() {
     Var1 ~ Var2 | Correlation, data = catt,
     type = type_tile(width = 0.9, height = 0.9),
     theme = "heatmap",
-    legend = FALSE, xlab = NA, ylab = NA,
-    main = "Correlation matrix of base attitude dataset"
+    col = "white",
+    legend = FALSE,
+    main = "Correlation matrix of base attitude dataset",
+    xlab = NA, ylab = NA,
+    ylim = "rev"
   )
-  tinyplot_add(
-    type = "text",
-    labels = round(catt$Correlation, 2),
-    col = "white"
-  )
+  tinyplot_add(type = "text", labels = round(catt$Correlation, 2))
 }
 expect_snapshot_plot(f, label = "tile_fancy")
 

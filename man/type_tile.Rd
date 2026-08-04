@@ -57,19 +57,22 @@ catt = as.data.frame(as.table(cor(attitude)), responseName = "Correlation")
 
 tinyplot(Var1 ~ Var2 | Correlation, data = catt, type = "tile")
 
-# slightly fancier version, where we suppress the legend but layer on the values
-# as text
+# aside: "heatmap" is an alias for "tile"
+tinyplot(Var1 ~ Var2 | Correlation, data = catt, type = "heatmap")
+
+# fancier version where we reverse the y-axis (to mimic the usual correlation
+# matrix layout), add white borders around each tile, and suppress the legend
+# but layer on the values as text
 tinyplot(
   Var1 ~ Var2 | Correlation, data = catt,
   type = "tile",
+  col = "white",
   legend = FALSE,
+  main = "Correlation matrix of base attitude dataset",
   xlab = NA, ylab = NA,
-  main = "Correlation matrix of base attitude dataset"
+  ylim = "rev"
 )
-tinyplot_add(type = "text", labels = round(catt$Correlation, 2), col = "white")
-
-# aside: "heatmap" is an alias for "tile"
-tinyplot(Var1 ~ Var2 | Correlation, data = catt, type = "heatmap")
+tinyplot_add(type = "text", labels = round(catt$Correlation, 2))
 
 # Pass scaled tile widths and heights through type_tile() for a gridded look
 tinyplot(
@@ -85,7 +88,7 @@ tinyplot(
   palette = "tropic"
 )
 
-# Numeric axes work too, e.g. a (long-format) matrix of volcano heights
+# Numeric axes work too, e.g. a (reshaped long) data.frame of volcano heights
 volc = data.frame(
   x         = as.vector(row(volcano)),
   y         = as.vector(col(volcano)),

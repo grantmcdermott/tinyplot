@@ -77,12 +77,37 @@ data_lines = function(dodge = 0, fixed.dodge = FALSE) {
 
 
 draw_lines = function(type = "l") {
-    fun = function(ix, iy, icol, ipch, ibg, ilty, ilwd, icex = 1, ...) {
+    fun = function(ix, iy, icol, ipch, ibg, ilty, ilwd, icex = 1, flip = FALSE, ...) {
+        ltype = type
+        if (isTRUE(flip)) {
+            # flip_datapoints() has already swapped the coordinates, but the
+            # base engine still draws these types in fixed orientations:
+            # type = "h" always drops vertically, and the step types commit
+            # to which coordinate moves first. So draw "h" as explicit
+            # horizontal segments to the baseline, and mirror the step order.
+            if (ltype == "h") {
+                x0 = if (par("xlog")) 10^par("usr")[1] else 0
+                segments(
+                    x0 = x0,
+                    y0 = iy,
+                    x1 = ix,
+                    y1 = iy,
+                    col = icol,
+                    lty = ilty,
+                    lwd = ilwd
+                )
+                return(invisible(NULL))
+            } else if (ltype == "s") {
+                ltype = "S"
+            } else if (ltype == "S") {
+                ltype = "s"
+            }
+        }
         lines(
             x = ix,
             y = iy,
             col = icol,
-            type = type,
+            type = ltype,
             pch = ipch,
             bg = ibg,
             lty = ilty,

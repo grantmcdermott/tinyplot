@@ -47,6 +47,10 @@ where the formatting is also better._
 
 ### Bug fixes
 
+- `flip = TRUE` now flips the drawn geometry of the single-letter line types,
+  not just the axes: `type = "h"` draws horizontal segments to the baseline,
+  and the step types `"s"` and `"S"` swap which coordinate moves first.
+  (#675 @haomeng797-ship-it)
 - Fixed several bugs specific to plots with free facets (i.e.,
   `facet.args = list(free = TRUE)`):
   - Single-valued discrete axes no longer trigger invalid `par(usr)` values.

@@ -113,3 +113,52 @@ f = function() {
   tinyplot(x_dt, y, grid = TRUE, flip = TRUE)
 }
 expect_snapshot_plot(f, label = "flip_date")
+
+
+# flipped single-letter line types keep their geometry (#675)
+# These checks read the SVG output directly, so they run on every OS.
+
+svg_of = function(...) {
+  tf = tempfile(fileext = ".svg")
+  svglite::svglite(tf)
+  tinyplot(...)
+  dev.off()
+  readLines(tf)
+}
+
+num_attr = function(el, attr) {
+  as.numeric(sub(sprintf(".*%s='([^']*)'.*", attr), "\\1", el))
+}
+
+first_step = function(svg) {
+  pl = grep("<polyline ", svg, value = TRUE)[1]
+  pts = strsplit(sub(".*points='([^']*)'.*", "\\1", pl), " ")[[1]]
+  xy = do.call(rbind, lapply(strsplit(pts, ","), as.numeric))
+  xy[2, ] - xy[1, ]
+}
+
+x = 1:5
+y = c(10, 20, 30, 40, 50)
+
+# type = "h" with flip draws one horizontal segment per point
+svg = svg_of(x, y, type = "h", flip = TRUE, axes = FALSE)
+seg = grep("<line ", svg, value = TRUE)
+expect_equal(length(seg), length(x))
+expect_true(all(abs(num_attr(seg, "y1") - num_attr(seg, "y2")) < 1e-6))
+expect_true(all(abs(num_attr(seg, "x2") - num_attr(seg, "x1")) > 1))
+
+# unflipped "h" still draws vertical drops
+svg = svg_of(x, y, type = "h", axes = FALSE)
+seg = grep("<line ", svg, value = TRUE)
+expect_equal(length(seg), length(x))
+expect_true(all(abs(num_attr(seg, "x1") - num_attr(seg, "x2")) < 1e-6))
+
+# flipping swaps which coordinate moves first in the step types
+d = first_step(svg_of(x, y, type = "s", flip = TRUE, axes = FALSE))
+expect_true(abs(d[1]) < 1e-6 && abs(d[2]) > 1)
+
+d = first_step(svg_of(x, y, type = "S", flip = TRUE, axes = FALSE))
+expect_true(abs(d[1]) > 1 && abs(d[2]) < 1e-6)
+
+d = first_step(svg_of(x, y, type = "s", axes = FALSE))
+expect_true(abs(d[1]) > 1 && abs(d[2]) < 1e-6)

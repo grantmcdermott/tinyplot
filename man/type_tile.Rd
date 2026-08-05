@@ -172,6 +172,11 @@ tinyplot(
   xlab = NA, ylab = NA
 )
 
+#
+## aside: use tinyplot.matrix directly to avoid reshaping ----
+
+tinyplot(as.matrix(mtcars), type = type_heatmap(scale = "x"), col = "white")
+
 ## restore the default theme
 tinytheme()
 

@@ -15,8 +15,9 @@ where the formatting is also better._
 - `type_tile()` / `"tile"` for tile plots, i.e. a grid of rectangles whose fill
   encodes a third variable. (#677 @grantmcdermott)
 - `type_heatmap()` / `"heatmap"` builds on `type_tile()`, adding a `scale`
-  argument that rescales the fill values *within* each category of one axis.
-  This is anaologous to base R's `heatmap()` function. (#677 @grantmcdermott)
+  argument that scales the fill values *within* each category of one axis. This
+  is analogous to base R's `heatmap()` function, and like the latter it z-scores
+  along the chosen margin by default. (#677 @grantmcdermott)
 
 #### Other new features
 

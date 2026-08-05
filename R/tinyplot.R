@@ -115,23 +115,27 @@
 #'     - Shapes:
 #'       - `"area"` / [`type_area()`]: Plots the area under the curve from `y` = 0 to `y` = f(`x`).
 #'       - `"errorbar"` / [`type_errorbar()`]: Adds error bars to points; requires `ymin` and `ymax`.
+#'       - `"jitter"` / [`type_jitter()`]: Jittered points.
 #'       - `"pointrange"` / [`type_pointrange()`]: Combines points with error bars.
 #'       - `"polygon"` / [`type_polygon()`]: Draws polygons.
 #'       - `"polypath"` / [`type_polypath()`]: Draws a path whose vertices are given in `x` and `y`.
 #'       - `"rect"` / [`type_rect()`]: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
 #'       - `"ribbon"` / [`type_ribbon()`]: Creates a filled area between `ymin` and `ymax`.
+#'       - `"rug"` / [`type_rug()`]: Adds a rug to an existing plot.
 #'       - `"segments"` / [`type_segments()`]: Draws line segments between pairs of points.
 #'       - `"text"` / [`type_text()`]: Add text annotations.
+#'       - `"tile"` / [`type_tile()`]: Draws a grid of tiles, with the fill given by `by`.
 #'     - Visualizations:
 #'       - `"barplot"` / [`type_barplot()`]: Creates a bar plot.
 #'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
 #'       - `"chull"` / [`type_chull()`]: Draws convex hull(s) around grouped points.
 #'       - `"density"` / [`type_density()`]: Plots the density estimate of a variable.
+#'       - `"ellipse"` / [`type_ellipse()`]: Draws confidence ellipse(s) around grouped points.
+#'       - `"heatmap"` / [`type_heatmap()`]: Draws a grid of tiles, optionally rescaling the fill along one axis.
+#'       - `"hexbin"` / [`type_hexbin()`]: Creates a hexagonal bin plot, a 2D analogue of a histogram.
 #'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.
-#'       - `"jitter"` / [`type_jitter()`]: Jittered points.
 #'       - `"qq"` / [`type_qq()`]: Creates a quantile-quantile plot.
 #'       - `"ridge"` / [`type_ridge()`]: Creates a ridgeline (aka joy) plot.
-#'       - `"rug"` / [`type_rug()`]: Adds a rug to an existing plot.
 #'       - `"spineplot"` / [`type_spineplot()`]: Creates a spineplot or spinogram.
 #'       - `"violin"` / [`type_violin()`]: Creates a violin plot.
 #'     - Models:

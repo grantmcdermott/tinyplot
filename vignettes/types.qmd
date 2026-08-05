@@ -62,6 +62,7 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 |-----------------------|---------------------|----------------------------------------------------------------|------|
 | `"area"`              | `type_area()`       | Plots the area under the curve from `y` = 0 to `y` = f(`x`).   | [link](/man/type_ribbon.qmd) |
 | `"errorbar"`          | `type_errorbar()`   | Adds error bars to points; requires `ymin` and `ymax`.         | [link](/man/type_errorbar.qmd) |
+| `"jitter"` / `"j"`    | `type_jitter()`     | Jittered points.                                               | [link](/man/type_jitter.qmd) |
 | `"l"` / `"b"` / etc.  | `type_lines()`      | Draws lines and line-alike (same as base `"l"`, `"b"`, etc.)   | [link](/man/type_lines.qmd) |
 | `"pointrange"`        | `type_pointrange()` | Combines points with error bars.                               | [link](/man/type_errorbar.qmd) |
 | `"p"`                 | `type_points()`     | Draws points (same as base `"p"`).                             | [link](/man/type_points.qmd) |
@@ -69,8 +70,10 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 | `"polypath"`          | `type_polypath()`   | Draws a path whose vertices are given in `x` and `y`.          | [link](/man/type_polypath.qmd) |
 | `"rect"`              | `type_rect()`       | Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`. | [link](/man/type_rect.qmd) |
 | `"ribbon"`            | `type_ribbon()`     | Creates a filled area between `ymin` and `ymax`.               | [link](/man/type_ribbon.qmd) |
+| `"rug"`               | `type_rug()`        | Adds a rug to an existing plot.                                | [link](/man/type_rug.qmd) |
 | `"segments"`          | `type_segments()`   | Draws line segments between pairs of points.                   | [link](/man/type_segments.qmd) |
 | `"text"`              | `type_text()`       | Adds text annotations to a plot.                               | [link](/man/type_text.qmd) |
+| `"tile"`              | `type_tile()`       | Draws a grid of tiles; fill given by `by`.                     | [link](/man/type_tile.qmd) |
 
 #### Visualizations
 
@@ -81,11 +84,11 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 | `"chull"`                  | `type_chull()`      | Draws convex hull(s) around grouped points.    | [link](/man/type_chull.qmd) |
 | `"density"`                | `type_density()`    | Plots the density estimate of a variable.      | [link](/man/type_density.qmd) |
 | `"ellipse"`                | `type_ellipse()`    | Draws confidence ellipse(s) around grouped points. | [link](/man/type_ellipse.qmd) |
+| `"heatmap"`                | `type_heatmap()`    | Tiles, optionally rescaled along one axis.     | [link](/man/type_tile.qmd) |
+| `"hexbin"`                 | `type_hexbin()`     | Creates a hexagonal bin plot (2D histogram).   | [link](/man/type_hexbin.qmd) |
 | `"histogram"` / `"hist"`   | `type_histogram()`  | Creates a histogram of a single variable.      | [link](/man/type_histogram.qmd) |
-| `"jitter"` / `"j"`         | `type_jitter()`     | Jittered points.                               | [link](/man/type_jitter.qmd) |
 | `"qq"`                     | `type_qq()`         | Creates a quantile-quantile plot.              | [link](/man/type_qq.qmd) |
 | `"ridge"`                  | `type_ridge()`      | Creates a ridgeline (aka joy) plot.            | [link](/man/type_ridge.qmd) |
-| `"rug"`                    | `type_rug()`        | Adds a rug to an existing plot.                | [link](/man/type_rug.qmd) |
 | `"spineplot"` / `"spine"`  | `type_spineplot()`  | Creates a spine plot or spinogram.             | [link](/man/type_spineplot.qmd) |
 | `"violin"`                 | `type_violin()`     | Creates a violin plot.                         | [link](/man/type_violin.qmd) |
   

@@ -20,7 +20,8 @@
 \item{type}{plot type passed on to \code{tinyplot}. Defaults to \code{"p"} (points).}
 
 \item{legend}{specification passed on to \code{tinyplot}. The default is to draw a
-legend when the matrix has named columns, and to suppress it otherwise.}
+legend when the matrix has named columns, and to suppress it otherwise. For
+\code{"tile"} and \code{"heatmap"} types it is suppressed by default.}
 
 \item{facet}{specification of \code{facet} passed on to \code{tinyplot}. The only
 accepted non-\code{NULL} value is the \code{"by"} convenience string, which facets
@@ -29,7 +30,8 @@ the plot by matrix column.}
 \item{xlab, ylab}{axis labels passed on to \code{tinyplot}. \code{ylab} defaults to the
 deparsed matrix name. \code{xlab} defaults to \code{"Index"} when the matrix has no
 row names; when it does, the row names already label the ticks so the
-x-axis title is suppressed.}
+x-axis title is suppressed. For \code{"tile"} and \code{"heatmap"} types both
+titles default to \code{NA}, since the dimnames label both axes.}
 
 \item{...}{further arguments passed to \code{tinyplot}.}
 }
@@ -50,6 +52,17 @@ faceted via \code{facet = "by"}. This mirrors the base R
 matrix against the row numbers. If the matrix has column names, these are
 used as the group (and legend) labels. Single-column matrices are drawn as
 a simple index plot with no grouping or legend.
+
+The \code{"tile"} and \code{"heatmap"} types are an exception, since the matplot
+convention makes little sense for them. Instead the matrix is laid out as a
+grid---columns along the x-axis, rows along the y-axis---with the matrix
+\emph{values} supplied as the fill. Row order is reversed so that the first row
+sits at the top, matching how one reads a matrix (cf.
+\code{\link[stats]{heatmap}} and \code{\link[graphics]{image}}). Both axis
+titles are suppressed, since the dimnames already label the ticks, and so
+is the legend, since the fill merely re-encodes the matrix's own values.
+Pass an explicit \code{legend} (or \code{xlab}/\code{ylab}) to override either. See
+Examples.
 }
 \examples{
 # basic use
@@ -61,6 +74,9 @@ tinyplot(VADeaths, type = "b", legend = FALSE, facet = "by", theme = "socviz")
 # equivalent plot to an example in `?matplot`
 sines = outer(1:20, 1:4, function(x, y) sin(x / 20 * pi * y))
 tinyplot(sines, type = "o", pch = "by", lty = "by", col = rainbow(ncol(sines)))
+
+# `"tile"` + `"heatmap"` types lay the matrix out as a grid instead
+tinyplot(VADeaths, type = "heatmap", theme = "heatmap", col = "white")
 
 }
 \seealso{

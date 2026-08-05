@@ -244,13 +244,16 @@ type of plot desired.
 \itemize{
 \item \code{"area"} / \code{\link[=type_area]{type_area()}}: Plots the area under the curve from \code{y} = 0 to \code{y} = f(\code{x}).
 \item \code{"errorbar"} / \code{\link[=type_errorbar]{type_errorbar()}}: Adds error bars to points; requires \code{ymin} and \code{ymax}.
+\item \code{"jitter"} / \code{\link[=type_jitter]{type_jitter()}}: Jittered points.
 \item \code{"pointrange"} / \code{\link[=type_pointrange]{type_pointrange()}}: Combines points with error bars.
 \item \code{"polygon"} / \code{\link[=type_polygon]{type_polygon()}}: Draws polygons.
 \item \code{"polypath"} / \code{\link[=type_polypath]{type_polypath()}}: Draws a path whose vertices are given in \code{x} and \code{y}.
 \item \code{"rect"} / \code{\link[=type_rect]{type_rect()}}: Draws rectangles; requires \code{xmin}, \code{xmax}, \code{ymin}, and \code{ymax}.
 \item \code{"ribbon"} / \code{\link[=type_ribbon]{type_ribbon()}}: Creates a filled area between \code{ymin} and \code{ymax}.
+\item \code{"rug"} / \code{\link[=type_rug]{type_rug()}}: Adds a rug to an existing plot.
 \item \code{"segments"} / \code{\link[=type_segments]{type_segments()}}: Draws line segments between pairs of points.
 \item \code{"text"} / \code{\link[=type_text]{type_text()}}: Add text annotations.
+\item \code{"tile"} / \code{\link[=type_tile]{type_tile()}}: Draws a grid of tiles, with the fill given by \code{by}.
 }
 \item Visualizations:
 \itemize{
@@ -258,11 +261,12 @@ type of plot desired.
 \item \code{"boxplot"} / \code{\link[=type_boxplot]{type_boxplot()}}: Creates a box-and-whisker plot.
 \item \code{"chull"} / \code{\link[=type_chull]{type_chull()}}: Draws convex hull(s) around grouped points.
 \item \code{"density"} / \code{\link[=type_density]{type_density()}}: Plots the density estimate of a variable.
+\item \code{"ellipse"} / \code{\link[=type_ellipse]{type_ellipse()}}: Draws confidence ellipse(s) around grouped points.
+\item \code{"heatmap"} / \code{\link[=type_heatmap]{type_heatmap()}}: Draws a grid of tiles, optionally rescaling the fill along one axis.
+\item \code{"hexbin"} / \code{\link[=type_hexbin]{type_hexbin()}}: Creates a hexagonal bin plot, a 2D analogue of a histogram.
 \item \code{"histogram"} / \code{\link[=type_histogram]{type_histogram()}}: Creates a histogram of a single variable.
-\item \code{"jitter"} / \code{\link[=type_jitter]{type_jitter()}}: Jittered points.
 \item \code{"qq"} / \code{\link[=type_qq]{type_qq()}}: Creates a quantile-quantile plot.
 \item \code{"ridge"} / \code{\link[=type_ridge]{type_ridge()}}: Creates a ridgeline (aka joy) plot.
-\item \code{"rug"} / \code{\link[=type_rug]{type_rug()}}: Adds a rug to an existing plot.
 \item \code{"spineplot"} / \code{\link[=type_spineplot]{type_spineplot()}}: Creates a spineplot or spinogram.
 \item \code{"violin"} / \code{\link[=type_violin]{type_violin()}}: Creates a violin plot.
 }

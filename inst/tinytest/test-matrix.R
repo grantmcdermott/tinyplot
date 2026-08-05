@@ -15,3 +15,23 @@ expect_snapshot_plot(f, label = "matrix_type_b")
 # faceting by column
 f = function() tinyplot(VADeaths, type = "o", facet = "by")
 expect_snapshot_plot(f, label = "matrix_facet")
+
+
+#
+## tile / heatmap types get a grid layout instead of the matplot convention
+#
+
+f = function() tinyplot(VADeaths, type = "heatmap", theme = "heatmap")
+expect_snapshot_plot(f, label = "matrix_heatmap")
+
+# "tile" takes the same layout, just without the rescaling option
+f = function() tinyplot(VADeaths, type = "tile", theme = "heatmap")
+expect_snapshot_plot(f, label = "matrix_heatmap")
+
+# rescaling within each column, for matrices whose columns are on different
+# scales. This is the motivating case: unscaled, `disp`/`hp` swamp everything.
+f = function() {
+  tinyplot(as.matrix(mtcars), type = type_heatmap(scale = "x"),
+           theme = "heatmap")
+}
+expect_snapshot_plot(f, label = "matrix_heatmap_scale")

@@ -357,10 +357,13 @@ draw_facet_window = function(
       )
       if (!is.null(xaxb)) args_x$at = xaxb
       if (!is.null(yaxb)) args_y$at = yaxb
-      # `xlabs` is only non-NULL when a type has placed categorical data on the
-      # x-axis, so its presence is the signal to draw labelled ticks.
+      # `xlabs`/`ylabs` are only non-NULL when a type has placed categorical data
+      # on that axis, so their presence is the signal to draw labelled ticks.
+      # The y-side previously listed the eligible types by name, but every type
+      # that populates `ylabs` does so precisely because it has categories to
+      # label, making the extra condition redundant (#665).
       type_range_x = !is.null(xlabs)
-      type_range_y = !is.null(ylabs) && (type == "p" || (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "violin")))
+      type_range_y = !is.null(ylabs)
       if (type_range_x) {
         args_x = modifyList(args_x, list(at = xlabs, labels = names(xlabs)))
       }

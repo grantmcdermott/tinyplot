@@ -10,8 +10,14 @@ where the formatting is also better._
 
 #### New plot types
 
-- `type_hexbin()` (equivalently, `type = "hexbin"`) for hexagonal bin plots, a
-  2D analogue of a histogram. (#667 @grantmcdermott)
+- `type_hexbin()` / `"hexbin"` for hexagonal bin plots, a 2D analogue of a
+  histogram. (#667 @grantmcdermott)
+- `type_tile()` / `"tile"` for tile plots, i.e. a grid of rectangles whose fill
+  encodes a third variable. (#677 @grantmcdermott)
+- `type_heatmap()` / `"heatmap"` builds on `type_tile()`, adding a `scale`
+  argument that scales the fill values *within* each category of one axis. This
+  is analogous to base R's `heatmap()` function, and like the latter it z-scores
+  along the chosen margin by default. (#677 @grantmcdermott)
 
 #### Other new features
 
@@ -44,6 +50,12 @@ where the formatting is also better._
   `"cat"` (console), in any combination; a destination the user has already
   labelled is left alone. Shared bandwidths are reported once and named as
   joint, individual bandwidths per group. (#287 @haomeng797-ship-it)
+- Themes:
+  - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
+    and `type_heatmap()` types (see above). The theme removes all axis padding,
+    so that tiles meet the panel edge, and also rotates the tick labels against
+    their respective axes. Colour fills default to the "tealgrn" sequential
+    palette. (#677 @grantmcdermott)
 
 ### Bug fixes
 

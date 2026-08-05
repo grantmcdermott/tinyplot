@@ -11,7 +11,7 @@ type_heatmap(
   width = 1,
   height = 1,
   scale = c("none", "x", "y"),
-  method = c("rescale", "zscore")
+  method = c("zscore", "rescale")
 )
 }
 \arguments{
@@ -20,9 +20,9 @@ type_heatmap(
 numeric) axes. Values below \code{1} inset the tiles, leaving gaps between them.
 Recycled across tiles, so a vector may be used for variable sizes.}
 
-\item{scale}{Character. Should the \code{by} (fill) values be rescaled \emph{within}
+\item{scale}{Character. Should the \code{by} (fill) values be scaled \emph{within}
 each category of one axis? One of \code{"none"} (default, i.e. the raw values
-are used), \code{"x"}, or \code{"y"}. Rescaling is what makes a raw matrix legible
+are used), \code{"x"}, or \code{"y"}. Scaling is what makes a raw matrix legible
 when its variables span very different magnitudes: left alone, the
 largest-magnitude column monopolises the entire colour ramp. See Examples.
 
@@ -38,9 +38,16 @@ internal structure. Since rescaled values are no longer in the units of the
 \code{by} variable, the legend title is annotated accordingly.}
 
 \item{method}{Character. How should the values be rescaled, if \code{scale} is not
-\code{"none"}? Either \code{"rescale"} (default) to map each group onto the unit
-interval [0, 1], or \code{"zscore"} to centre each group and divide by its
-standard deviation. Ignored when \code{scale = "none"}.
+\code{"none"}? Either \code{"zscore"} (default) to centre each group and divide by its
+standard deviation, or \code{"rescale"} to map each group onto the unit interval
+[0, 1]. Ignored when \code{scale = "none"}.
+
+\code{"zscore"} matches base R's \code{\link[stats]{heatmap}} and keeps values
+comparable across groups, since \code{-1} means "one standard deviation below
+this group's mean" everywhere. \code{"rescale"} instead pins every group's
+minimum and maximum to the ends of the colour ramp, which uses the palette
+more fully but makes the endpoints an artefact of the transform rather than
+a feature of the data.
 
 Groups with no spread---a constant column, or a single tile---would divide
 by zero, so they are set to the midpoint of the target range (\code{0.5} and \code{0}
@@ -85,10 +92,16 @@ theme that removes the padding and grid, rotates the tick labels, and
 switches to a sequential palette. See \code{\link[=tinytheme]{tinytheme()}} and the Examples.
 
 \code{type_heatmap()}'s \code{scale} argument is the analogue of the \code{scale} argument
-in base R's \code{\link[stats]{heatmap}}. For exact parity with the
-latter, which z-scores along the chosen margin, pair it with
-\code{method = "zscore"}; our default instead rescales each group onto the unit
-([0, 1]) interval.
+in base R's \code{\link[stats]{heatmap}}, and like the latter it z-scores
+along the chosen margin by default. Pass \code{method = "rescale"} to map each
+group onto the unit [0, 1] interval instead.
+
+Either way, note that scaling along a margin necessarily discards the
+\emph{relative} spread of each group: a narrow-range column will occupy as much
+of the colour ramp as a wide-range one, since both are divided by their own
+measure of spread. That is the price of making a matrix of incomparable
+units legible; use \code{scale = "none"} (or \code{type_tile()}) when preserving
+cross-group magnitudes matters more.
 }
 \examples{
 # It is recommended to use the dedicated "heatmap" theme for tile plots
@@ -158,17 +171,20 @@ tinyplot(
   xlab = NA, ylab = NA
 )
 
-# and now rescaled within each x variable (i.e., column)
+# and now scaled within each x variable (i.e., column). The default is to
+# z-score, matching base R's `heatmap(scale = "column")`.
 tinyplot(
   Var1 ~ Var2 | Freq, data = mt,
   type = type_heatmap(scale = "x"),
   xlab = NA, ylab = NA
 )
 
-# use `method = "zscore"` for parity with base R's `heatmap(scale = "column")`
+# `method = "rescale"` maps each column onto [0, 1] instead. This uses the
+# colour ramp more fully, at the cost of pinning every column's min and max to
+# the same two colours.
 tinyplot(
   Var1 ~ Var2 | Freq, data = mt,
-  type = type_heatmap(scale = "x", method = "zscore"),
+  type = type_heatmap(scale = "x", method = "rescale"),
   xlab = NA, ylab = NA
 )
 

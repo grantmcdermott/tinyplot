@@ -37,10 +37,16 @@
 #'   switches to a sequential palette. See [`tinytheme()`] and the Examples.
 #'
 #'   `type_heatmap()`'s `scale` argument is the analogue of the `scale` argument
-#'   in base R's \code{\link[stats]{heatmap}}. For exact parity with the
-#'   latter, which z-scores along the chosen margin, pair it with
-#'   `method = "zscore"`; our default instead rescales each group onto the unit
-#'   (\[0, 1\]) interval.
+#'   in base R's \code{\link[stats]{heatmap}}, and like the latter it z-scores
+#'   along the chosen margin by default. Pass `method = "rescale"` to map each
+#'   group onto the unit \[0, 1\] interval instead.
+#'
+#'   Either way, note that scaling along a margin necessarily discards the
+#'   *relative* spread of each group: a narrow-range column will occupy as much
+#'   of the colour ramp as a wide-range one, since both are divided by their own
+#'   measure of spread. That is the price of making a matrix of incomparable
+#'   units legible; use `scale = "none"` (or `type_tile()`) when preserving
+#'   cross-group magnitudes matters more.
 #'
 #' @param width,height Numeric tile dimensions in data units. Both default to
 #'   `1`, which produces contiguous tiles on categorical (or unit-spaced
@@ -114,17 +120,20 @@
 #'   xlab = NA, ylab = NA
 #' )
 #'
-#' # and now rescaled within each x variable (i.e., column)
+#' # and now scaled within each x variable (i.e., column). The default is to
+#' # z-score, matching base R's `heatmap(scale = "column")`.
 #' tinyplot(
 #'   Var1 ~ Var2 | Freq, data = mt,
 #'   type = type_heatmap(scale = "x"),
 #'   xlab = NA, ylab = NA
 #' )
 #'
-#' # use `method = "zscore"` for parity with base R's `heatmap(scale = "column")`
+#' # `method = "rescale"` maps each column onto [0, 1] instead. This uses the
+#' # colour ramp more fully, at the cost of pinning every column's min and max to
+#' # the same two colours.
 #' tinyplot(
 #'   Var1 ~ Var2 | Freq, data = mt,
-#'   type = type_heatmap(scale = "x", method = "zscore"),
+#'   type = type_heatmap(scale = "x", method = "rescale"),
 #'   xlab = NA, ylab = NA
 #' )
 #'
@@ -155,9 +164,9 @@ type_tile = function(width = 1, height = 1) {
 
 
 #' @rdname type_tile
-#' @param scale Character. Should the `by` (fill) values be rescaled *within*
+#' @param scale Character. Should the `by` (fill) values be scaled *within*
 #'   each category of one axis? One of `"none"` (default, i.e. the raw values
-#'   are used), `"x"`, or `"y"`. Rescaling is what makes a raw matrix legible
+#'   are used), `"x"`, or `"y"`. Scaling is what makes a raw matrix legible
 #'   when its variables span very different magnitudes: left alone, the
 #'   largest-magnitude column monopolises the entire colour ramp. See Examples.
 #'
@@ -172,9 +181,16 @@ type_tile = function(width = 1, height = 1) {
 #'   internal structure. Since rescaled values are no longer in the units of the
 #'   `by` variable, the legend title is annotated accordingly.
 #' @param method Character. How should the values be rescaled, if `scale` is not
-#'   `"none"`? Either `"rescale"` (default) to map each group onto the unit
-#'   interval \[0, 1\], or `"zscore"` to centre each group and divide by its
-#'   standard deviation. Ignored when `scale = "none"`.
+#'   `"none"`? Either `"zscore"` (default) to centre each group and divide by its
+#'   standard deviation, or `"rescale"` to map each group onto the unit interval
+#'   \[0, 1\]. Ignored when `scale = "none"`.
+#'
+#'   `"zscore"` matches base R's \code{\link[stats]{heatmap}} and keeps values
+#'   comparable across groups, since `-1` means "one standard deviation below
+#'   this group's mean" everywhere. `"rescale"` instead pins every group's
+#'   minimum and maximum to the ends of the colour ramp, which uses the palette
+#'   more fully but makes the endpoints an artefact of the transform rather than
+#'   a feature of the data.
 #'
 #'   Groups with no spread---a constant column, or a single tile---would divide
 #'   by zero, so they are set to the midpoint of the target range (`0.5` and `0`
@@ -186,13 +202,13 @@ type_heatmap = function(
     width = 1,
     height = 1,
     scale = c("none", "x", "y"),
-    method = c("rescale", "zscore")) {
+    method = c("zscore", "rescale")) {
   assert_numeric(width)
   assert_numeric(height)
   if (length(scale) > 1L) scale = scale[1L]
   assert_choice(scale, c("none", "x", "y"))
   if (length(method) > 1L) method = method[1L]
-  assert_choice(method, c("rescale", "zscore"))
+  assert_choice(method, c("zscore", "rescale"))
   out = list(
     draw = draw_rect(),
     data = data_tile(
@@ -217,7 +233,7 @@ type_heatmap = function(
 ## the offending group. Map such groups to the midpoint of the target range
 ## instead, and report them back so the caller can warn -- a silently flattened
 ## group otherwise reads as a genuine mid-scale value.
-scale_by_group = function(by, g, method = "rescale") {
+scale_by_group = function(by, g, method = "zscore") {
   gi = if (is.factor(g)) g else factor(g)
   mid = if (identical(method, "zscore")) 0 else 0.5
   flat = character(0)
@@ -249,7 +265,7 @@ scale_by_group = function(by, g, method = "rescale") {
 
 
 data_tile = function(
-    width = 1, height = 1, scale = "none", method = "rescale") {
+    width = 1, height = 1, scale = "none", method = "zscore") {
   fun = function(settings, ...) {
     env2env(
       settings,

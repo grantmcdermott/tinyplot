@@ -88,15 +88,16 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "heatmap_scale_x")
 
+# `method = "rescale"` is the alternative to the z-score default
 f = function() {
   tinyplot(
     Var1 ~ Var2 | Freq, data = mt,
-    type = type_heatmap(scale = "x", method = "zscore"),
+    type = type_heatmap(scale = "x", method = "rescale"),
     theme = "heatmap",
     xlab = NA, ylab = NA
   )
 }
-expect_snapshot_plot(f, label = "heatmap_scale_x_zscore")
+expect_snapshot_plot(f, label = "heatmap_scale_x_rescale")
 
 # `scale = "none"` is the default, so a bare type_heatmap() must reproduce the
 # plain type_tile() fixture exactly (asserted against the *same* label)
@@ -107,4 +108,3 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "tile_basic")
-

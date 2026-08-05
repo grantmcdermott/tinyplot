@@ -3,23 +3,59 @@
 \name{type_tile}
 \alias{type_tile}
 \alias{type_heatmap}
-\title{Tile (heatmap) plot type}
+\title{Tile and heatmap plot types}
 \usage{
 type_tile(width = 1, height = 1)
 
-type_heatmap(width = 1, height = 1)
+type_heatmap(
+  width = 1,
+  height = 1,
+  scale = c("none", "x", "y"),
+  method = c("rescale", "zscore")
+)
 }
 \arguments{
 \item{width, height}{Numeric tile dimensions in data units. Both default to
 \code{1}, which produces contiguous tiles on categorical (or unit-spaced
 numeric) axes. Values below \code{1} inset the tiles, leaving gaps between them.
 Recycled across tiles, so a vector may be used for variable sizes.}
+
+\item{scale}{Character. Should the \code{by} (fill) values be rescaled \emph{within}
+each category of one axis? One of \code{"none"} (default, i.e. the raw values
+are used), \code{"x"}, or \code{"y"}. Rescaling is what makes a raw matrix legible
+when its variables span very different magnitudes: left alone, the
+largest-magnitude column monopolises the entire colour ramp. See Examples.
+
+Note that \code{"x"} and \code{"y"} refer to the axes \emph{as written in the formula},
+i.e. before any \code{flip = TRUE} is applied. We deliberately avoid base R's
+\code{"row"}/\code{"column"} wording, since a tile's position depends on which
+variable the user placed where in the formula, so there is no fixed matrix
+orientation to refer to.
+
+Rescaling is computed independently per facet; pooling across facets would
+pin a panel on a different scale to one end of the ramp and lose its
+internal structure. Since rescaled values are no longer in the units of the
+\code{by} variable, the legend title is annotated accordingly.}
+
+\item{method}{Character. How should the values be rescaled, if \code{scale} is not
+\code{"none"}? Either \code{"rescale"} (default) to map each group onto the unit
+interval [0, 1], or \code{"zscore"} to centre each group and divide by its
+standard deviation. Ignored when \code{scale = "none"}.
+
+Groups with no spread---a constant column, or a single tile---would divide
+by zero, so they are set to the midpoint of the target range (\code{0.5} and \code{0}
+respectively) and a warning is emitted.}
 }
 \description{
-Type function for tile plots, i.e. a grid of rectangles whose
-fill colour encodes a third variable. This is the standard building block
-of heatmaps, correlation matrices, and calendar plots. \code{type_heatmap} is an
-alias for \code{type_tile}.
+Type functions for tile plots, i.e. a grid of rectangles whose
+fill colour encodes a third variable. \code{type_tile()} is the default building
+block for these gridded shapes, drawing the values exactly as supplied. It
+underpins heatmaps, correlation matrices, calendar plots, confusion
+matrices, and similar displays.
+
+\code{type_heatmap()} is a specialised case that first rescales the fill values
+within each category of one axis. Reach for it when those values are not
+already on a common scale.
 }
 \details{
 Tile plots are specified as \code{z ~ x} with the fill variable passed as
@@ -47,18 +83,24 @@ padding and grid lines of most themes are redundant (and the grid is hidden
 behind the tiles in any case). We therefore ship a dedicated \code{"heatmap"}
 theme that removes the padding and grid, rotates the tick labels, and
 switches to a sequential palette. See \code{\link[=tinytheme]{tinytheme()}} and the Examples.
+
+\code{type_heatmap()}'s \code{scale} argument is the analogue of the \code{scale} argument
+in base R's \code{\link[stats]{heatmap}}. For exact parity with the
+latter, which z-scores along the chosen margin, pair it with
+\code{method = "zscore"}; our default instead rescales each group onto the unit
+([0, 1]) interval.
 }
 \examples{
-# It is recommended to use the dedicated "heatmap" theme for this type
+# It is recommended to use the dedicated "heatmap" theme for tile plots
 tinytheme("heatmap")
+
+#
+## type_tile ----
 
 # Correlation matrix of the base `attitude` dataset in "long" form.
 catt = as.data.frame(as.table(cor(attitude)), responseName = "Correlation")
 
 tinyplot(Var1 ~ Var2 | Correlation, data = catt, type = "tile")
-
-# aside: "heatmap" is an alias for "tile"
-tinyplot(Var1 ~ Var2 | Correlation, data = catt, type = "heatmap")
 
 # fancier version where we reverse the y-axis (to mimic the usual correlation
 # matrix layout), add white borders around each tile, and suppress the legend
@@ -100,6 +142,34 @@ tinyplot(
   theme = "void", # void theme looks better with this numeric example
   xlab = NA, ylab = NA,
   main = "Maunga Whau volcano"
+)
+
+#
+## type_heatmap ----
+
+# Raw data matrices are usually dominated by their largest-magnitude column.
+# `type_heatmap()` can rescale within each column to make the rest legible.
+mt = as.data.frame(as.table(as.matrix(mtcars)))
+
+# first, the unscaled version: only `disp` and `hp` are visible
+tinyplot(
+  Var1 ~ Var2 | Freq, data = mt,
+  type = "heatmap",
+  xlab = NA, ylab = NA
+)
+
+# and now rescaled within each x variable (i.e., column)
+tinyplot(
+  Var1 ~ Var2 | Freq, data = mt,
+  type = type_heatmap(scale = "x"),
+  xlab = NA, ylab = NA
+)
+
+# use `method = "zscore"` for parity with base R's `heatmap(scale = "column")`
+tinyplot(
+  Var1 ~ Var2 | Freq, data = mt,
+  type = type_heatmap(scale = "x", method = "zscore"),
+  xlab = NA, ylab = NA
 )
 
 ## restore the default theme

@@ -116,7 +116,7 @@ sanitize_type = function(settings) {
       "summary"    = type_summary,
       "text"       = type_text,
       "tile"       = type_tile,
-      "heatmap"    = type_tile,
+      "heatmap"    = type_heatmap,
       "violin"     = type_violin,
       "vline"      = type_vline,
       type # default case (incl. line-family chars, handled below)

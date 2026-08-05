@@ -73,7 +73,7 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 | `"rug"`               | `type_rug()`        | Adds a rug to an existing plot.                                | [link](/man/type_rug.qmd) |
 | `"segments"`          | `type_segments()`   | Draws line segments between pairs of points.                   | [link](/man/type_segments.qmd) |
 | `"text"`              | `type_text()`       | Adds text annotations to a plot.                               | [link](/man/type_text.qmd) |
-| `"tile"` / `"heatmap"`| `type_tile()`       | Draws a grid of tiles (heatmap); fill given by `by`.           | [link](/man/type_tile.qmd) |
+| `"tile"`              | `type_tile()`       | Draws a grid of tiles; fill given by `by`.                     | [link](/man/type_tile.qmd) |
 
 #### Visualizations
 
@@ -84,6 +84,7 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 | `"chull"`                  | `type_chull()`      | Draws convex hull(s) around grouped points.    | [link](/man/type_chull.qmd) |
 | `"density"`                | `type_density()`    | Plots the density estimate of a variable.      | [link](/man/type_density.qmd) |
 | `"ellipse"`                | `type_ellipse()`    | Draws confidence ellipse(s) around grouped points. | [link](/man/type_ellipse.qmd) |
+| `"heatmap"`                | `type_heatmap()`    | Tiles, optionally rescaled along one axis.     | [link](/man/type_tile.qmd) |
 | `"hexbin"`                 | `type_hexbin()`     | Creates a hexagonal bin plot (2D histogram).   | [link](/man/type_hexbin.qmd) |
 | `"histogram"` / `"hist"`   | `type_histogram()`  | Creates a histogram of a single variable.      | [link](/man/type_histogram.qmd) |
 | `"qq"`                     | `type_qq()`         | Creates a quantile-quantile plot.              | [link](/man/type_qq.qmd) |

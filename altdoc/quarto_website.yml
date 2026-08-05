@@ -106,6 +106,8 @@ website:
                 file: man/type_density.qmd
               - text: type_ellipse
                 file: man/type_ellipse.qmd
+              - text: type_heatmap
+                file: man/type_tile.qmd
               - text: type_hexbin
                 file: man/type_hexbin.qmd
               - text: type_histogram

@@ -68,3 +68,43 @@ f = function() {
   tinyplot(b ~ a | v, facet = ~g, data = d, type = "tile", theme = "heatmap")
 }
 expect_snapshot_plot(f, label = "tile_facet")
+
+
+#
+## type_heatmap(): scale/method, cf. base R `heatmap(scale=)`
+#
+
+# A raw data matrix is the motivating case: unscaled, `disp`/`hp` monopolise the
+# colour ramp and the other nine columns are indistinguishable.
+mt = as.data.frame(as.table(as.matrix(mtcars)))
+
+f = function() {
+  tinyplot(
+    Var1 ~ Var2 | Freq, data = mt,
+    type = type_heatmap(scale = "x"),
+    theme = "heatmap",
+    xlab = NA, ylab = NA
+  )
+}
+expect_snapshot_plot(f, label = "heatmap_scale_x")
+
+f = function() {
+  tinyplot(
+    Var1 ~ Var2 | Freq, data = mt,
+    type = type_heatmap(scale = "x", method = "zscore"),
+    theme = "heatmap",
+    xlab = NA, ylab = NA
+  )
+}
+expect_snapshot_plot(f, label = "heatmap_scale_x_zscore")
+
+# `scale = "none"` is the default, so a bare type_heatmap() must reproduce the
+# plain type_tile() fixture exactly (asserted against the *same* label)
+f = function() {
+  tinyplot(
+    Var1 ~ Var2 | Correlation, data = catt, type = type_heatmap(scale = "none"),
+    theme = "heatmap"
+  )
+}
+expect_snapshot_plot(f, label = "tile_basic")
+

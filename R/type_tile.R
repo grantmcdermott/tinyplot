@@ -1,9 +1,14 @@
-#' Tile (heatmap) plot type
+#' Tile and heatmap plot types
 #'
-#' @description Type function for tile plots, i.e. a grid of rectangles whose
-#'   fill colour encodes a third variable. This is the standard building block
-#'   of heatmaps, correlation matrices, and calendar plots. `type_heatmap` is an
-#'   alias for `type_tile`.
+#' @description Type functions for tile plots, i.e. a grid of rectangles whose
+#'   fill colour encodes a third variable. `type_tile()` is the default building
+#'   block for these gridded shapes, drawing the values exactly as supplied. It
+#'   underpins heatmaps, correlation matrices, calendar plots, confusion
+#'   matrices, and similar displays.
+#'
+#'   `type_heatmap()` is a specialised case that first rescales the fill values
+#'   within each category of one axis. Reach for it when those values are not
+#'   already on a common scale.
 #'
 #' @details Tile plots are specified as `z ~ x` with the fill variable passed as
 #'   the `by` grouping, i.e. `tinyplot(y ~ x | z, type = "tile")`. The `x` and
@@ -31,22 +36,27 @@
 #'   theme that removes the padding and grid, rotates the tick labels, and
 #'   switches to a sequential palette. See [`tinytheme()`] and the Examples.
 #'
+#'   `type_heatmap()`'s `scale` argument is the analogue of the `scale` argument
+#'   in base R's \code{\link[stats]{heatmap}}. For exact parity with the
+#'   latter, which z-scores along the chosen margin, pair it with
+#'   `method = "zscore"`; our default instead rescales each group onto the unit
+#'   (\[0, 1\]) interval.
+#'
 #' @param width,height Numeric tile dimensions in data units. Both default to
 #'   `1`, which produces contiguous tiles on categorical (or unit-spaced
 #'   numeric) axes. Values below `1` inset the tiles, leaving gaps between them.
 #'   Recycled across tiles, so a vector may be used for variable sizes.
-#'
 #' @examples
-#' # It is recommended to use the dedicated "heatmap" theme for this type
+#' # It is recommended to use the dedicated "heatmap" theme for tile plots
 #' tinytheme("heatmap")
 #'
+#' #
+#' ## type_tile ----
+#' 
 #' # Correlation matrix of the base `attitude` dataset in "long" form.
 #' catt = as.data.frame(as.table(cor(attitude)), responseName = "Correlation")
 #'
 #' tinyplot(Var1 ~ Var2 | Correlation, data = catt, type = "tile")
-#' 
-#' # aside: "heatmap" is an alias for "tile"
-#' tinyplot(Var1 ~ Var2 | Correlation, data = catt, type = "heatmap")
 #'
 #' # fancier version where we reverse the y-axis (to mimic the usual correlation
 #' # matrix layout), add white borders around each tile, and suppress the legend
@@ -90,6 +100,34 @@
 #'   main = "Maunga Whau volcano"
 #' )
 #'
+#' #
+#' ## type_heatmap ----
+#' 
+#' # Raw data matrices are usually dominated by their largest-magnitude column.
+#' # `type_heatmap()` can rescale within each column to make the rest legible.
+#' mt = as.data.frame(as.table(as.matrix(mtcars)))
+#'
+#' # first, the unscaled version: only `disp` and `hp` are visible
+#' tinyplot(
+#'   Var1 ~ Var2 | Freq, data = mt,
+#'   type = "heatmap",
+#'   xlab = NA, ylab = NA
+#' )
+#'
+#' # and now rescaled within each x variable (i.e., column)
+#' tinyplot(
+#'   Var1 ~ Var2 | Freq, data = mt,
+#'   type = type_heatmap(scale = "x"),
+#'   xlab = NA, ylab = NA
+#' )
+#'
+#' # use `method = "zscore"` for parity with base R's `heatmap(scale = "column")`
+#' tinyplot(
+#'   Var1 ~ Var2 | Freq, data = mt,
+#'   type = type_heatmap(scale = "x", method = "zscore"),
+#'   xlab = NA, ylab = NA
+#' )
+#'
 #' ## restore the default theme
 #' tinytheme()
 #'
@@ -110,17 +148,111 @@ type_tile = function(width = 1, height = 1) {
   return(out)
 }
 
+
 #' @rdname type_tile
+#' @param scale Character. Should the `by` (fill) values be rescaled *within*
+#'   each category of one axis? One of `"none"` (default, i.e. the raw values
+#'   are used), `"x"`, or `"y"`. Rescaling is what makes a raw matrix legible
+#'   when its variables span very different magnitudes: left alone, the
+#'   largest-magnitude column monopolises the entire colour ramp. See Examples.
+#'
+#'   Note that `"x"` and `"y"` refer to the axes *as written in the formula*,
+#'   i.e. before any `flip = TRUE` is applied. We deliberately avoid base R's
+#'   `"row"`/`"column"` wording, since a tile's position depends on which
+#'   variable the user placed where in the formula, so there is no fixed matrix
+#'   orientation to refer to.
+#'
+#'   Rescaling is computed independently per facet; pooling across facets would
+#'   pin a panel on a different scale to one end of the ramp and lose its
+#'   internal structure. Since rescaled values are no longer in the units of the
+#'   `by` variable, the legend title is annotated accordingly.
+#' @param method Character. How should the values be rescaled, if `scale` is not
+#'   `"none"`? Either `"rescale"` (default) to map each group onto the unit
+#'   interval \[0, 1\], or `"zscore"` to centre each group and divide by its
+#'   standard deviation. Ignored when `scale = "none"`.
+#'
+#'   Groups with no spread---a constant column, or a single tile---would divide
+#'   by zero, so they are set to the midpoint of the target range (`0.5` and `0`
+#'   respectively) and a warning is emitted.
+#'
+#' @importFrom stats sd
 #' @export
-type_heatmap = type_tile
+type_heatmap = function(
+    width = 1,
+    height = 1,
+    scale = c("none", "x", "y"),
+    method = c("rescale", "zscore")) {
+  assert_numeric(width)
+  assert_numeric(height)
+  if (length(scale) > 1L) scale = scale[1L]
+  assert_choice(scale, c("none", "x", "y"))
+  if (length(method) > 1L) method = method[1L]
+  assert_choice(method, c("rescale", "zscore"))
+  out = list(
+    draw = draw_rect(),
+    data = data_tile(
+      width = width, height = height, scale = scale, method = method
+    ),
+    # Deliberately reports "tile": the two types are interchangeable as far as
+    # the rest of the pipeline is concerned, and nothing downstream needs to
+    # tell them apart. Keeps the option of diverging later.
+    name = "tile"
+  )
+  class(out) = "tinyplot_type"
+  return(out)
+}
 
 
-data_tile = function(width = 1, height = 1) {
+## Rescale `by` within each level of `g`, either to the unit interval
+## (method = "rescale") or as a z-score (method = "zscore"). Both divide by a
+## measure of spread, so a group with no spread (all values identical, or a
+## single observation) would produce NaN. That is much worse than it sounds:
+## `range()` of a vector containing one NaN is NaN, so the draw loop's colour
+## indices all become NA and tiles blank out across the *whole* plot, not just
+## the offending group. Map such groups to the midpoint of the target range
+## instead, and report them back so the caller can warn -- a silently flattened
+## group otherwise reads as a genuine mid-scale value.
+scale_by_group = function(by, g, method = "rescale") {
+  gi = if (is.factor(g)) g else factor(g)
+  mid = if (identical(method, "zscore")) 0 else 0.5
+  flat = character(0)
+  out = unsplit(
+    lapply(split(seq_along(by), gi), function(ix) {
+      v = by[ix]
+      if (identical(method, "zscore")) {
+        s = sd(v, na.rm = TRUE)
+        if (!is.finite(s) || s == 0) {
+          flat[[length(flat) + 1L]] <<- as.character(gi[ix][1L])
+          return(rep.int(mid, length(v)))
+        }
+        return((v - mean(v, na.rm = TRUE)) / s)
+      }
+      # rescale_num()'s default `from` is range(x), which propagates an NA to
+      # every element, so compute the range with na.rm explicitly.
+      rng = range(v, na.rm = TRUE)
+      if (!all(is.finite(rng)) || diff(rng) == 0) {
+        flat[[length(flat) + 1L]] <<- as.character(gi[ix][1L])
+        return(rep.int(mid, length(v)))
+      }
+      rescale_num(v, from = rng, to = c(0, 1))
+    }),
+    gi
+  )
+  attr(out, "flat") = flat
+  out
+}
+
+
+data_tile = function(
+    width = 1, height = 1, scale = "none", method = "rescale") {
   fun = function(settings, ...) {
     env2env(
       settings,
       environment(),
-      c("datapoints", "xlabs", "ylabs", "xaxt", "yaxt", "bg", "fill", "null_by")
+      c(
+        "datapoints", "xlabs", "ylabs", "xaxt", "yaxt", "bg", "fill",
+        "null_by", "by", "by_dep", "legend_args"
+      )
     )
 
     # Tiles are a filled mark: the `by` variable encodes the *fill*, not the
@@ -132,6 +264,72 @@ data_tile = function(width = 1, height = 1) {
     # the tiles unfilled (cf. type_rect()) rather than flooding every one with
     # the same flat colour, which would read as a solid black grid.
     if (is.null(bg) && is.null(fill) && !isTRUE(null_by)) bg = "by"
+
+    # Optional z-scoring of the fill values within each x (or y) category, cf.
+    # `heatmap(scale=)`. Must happen *before* the factor -> integer conversion
+    # below, which needs the axis variables still as factors to group on. Note
+    # this keys off the axis as written in the formula: flip_datapoints() runs
+    # later in the pipeline, so `flip` does not invert the meaning.
+    if (!identical(scale, "none")) {
+      if (isTRUE(null_by) || !is.numeric(datapoints[["by"]])) {
+        # Nothing numeric to standardize. Also catches `facet = "by"`, which
+        # coerces `by` to a factor upstream in sanitize_facet(). Warn rather
+        # than error: the plot is still perfectly drawable, just unscaled.
+        warning(
+          "`type_tile(scale=)` requires a numeric `by` (fill) variable. ",
+          "Ignoring `scale`.",
+          call. = FALSE
+        )
+      } else {
+        # Group on the axis position *and* the facet, so each panel is scaled
+        # independently. Pooling across panels defeats the purpose: a panel on
+        # a different order of magnitude would pin its whole range to one end
+        # of the ramp and lose all within-panel structure. `datapoints$facet`
+        # is always present (a constant "" when unfaceted).
+        grp = interaction(
+          datapoints[[scale]], datapoints[["facet"]], drop = TRUE
+        )
+        z = scale_by_group(datapoints[["by"]], grp, method = method)
+        flat = attr(z, "flat")
+        if (length(flat) > 0L) {
+          warning(
+            sprintf(
+              paste(
+                "No variation within %d %s of `%s`;",
+                "set to the scale midpoint: %s"
+              ),
+              length(flat), if (length(flat) > 1L) "groups" else "group",
+              scale, paste(flat, collapse = ", ")
+            ),
+            call. = FALSE
+          )
+        }
+        if (anyNA(z)) {
+          warning(
+            "Missing values in `by`; those tiles are left unfilled.",
+            call. = FALSE
+          )
+        }
+        attributes(z) = NULL
+        # Both slots are needed: the tile fills read `datapoints$by`, but the
+        # gradient legend's tick labels come from the bare `by`, so updating
+        # only one would leave the colourbar numbers disagreeing with the
+        # colours (cf. type_hexbin()).
+        datapoints[["by"]] = z
+        by = z
+        # A scaled fill is no longer in the units of the `by` variable, so a
+        # legend still titled e.g. "Freq" would be actively misleading. Note the
+        # formula method has already pre-filled the title with the variable
+        # name, so annotate whatever is there rather than only filling a blank.
+        # The grepl() guard keeps this idempotent under tinyplot_add() replay.
+        sfx = if (identical(method, "zscore")) "(z-score)" else "(rescaled)"
+        ttl = legend_args[["title"]] %||% by_dep
+        if (is.character(ttl) && length(ttl) == 1L && nzchar(ttl) &&
+            !grepl(sfx, ttl, fixed = TRUE)) {
+          legend_args[["title"]] = paste0(ttl, "\n", sfx)
+        }
+      }
+    }
 
     # A categorical axis carries its own tick labels, so convert to consecutive
     # integer positions and hand the levels off to the axis machinery. Numeric
@@ -180,7 +378,10 @@ data_tile = function(width = 1, height = 1) {
     env2env(
       environment(),
       settings,
-      c("datapoints", "xlabs", "ylabs", "xaxt", "yaxt", "bg")
+      c(
+        "datapoints", "xlabs", "ylabs", "xaxt", "yaxt", "bg", "by",
+        "legend_args"
+      )
     )
   }
   return(fun)

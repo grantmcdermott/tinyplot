@@ -124,13 +124,14 @@
 #'       - `"rug"` / [`type_rug()`]: Adds a rug to an existing plot.
 #'       - `"segments"` / [`type_segments()`]: Draws line segments between pairs of points.
 #'       - `"text"` / [`type_text()`]: Add text annotations.
-#'       - `"tile"` / `"heatmap"` / [`type_tile()`]: Draws a grid of tiles (heatmap), with the fill given by `by`.
+#'       - `"tile"` / [`type_tile()`]: Draws a grid of tiles, with the fill given by `by`.
 #'     - Visualizations:
 #'       - `"barplot"` / [`type_barplot()`]: Creates a bar plot.
 #'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
 #'       - `"chull"` / [`type_chull()`]: Draws convex hull(s) around grouped points.
 #'       - `"density"` / [`type_density()`]: Plots the density estimate of a variable.
 #'       - `"ellipse"` / [`type_ellipse()`]: Draws confidence ellipse(s) around grouped points.
+#'       - `"heatmap"` / [`type_heatmap()`]: Draws a grid of tiles, optionally rescaling the fill along one axis.
 #'       - `"hexbin"` / [`type_hexbin()`]: Creates a hexagonal bin plot, a 2D analogue of a histogram.
 #'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.
 #'       - `"qq"` / [`type_qq()`]: Creates a quantile-quantile plot.

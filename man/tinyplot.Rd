@@ -253,7 +253,7 @@ type of plot desired.
 \item \code{"rug"} / \code{\link[=type_rug]{type_rug()}}: Adds a rug to an existing plot.
 \item \code{"segments"} / \code{\link[=type_segments]{type_segments()}}: Draws line segments between pairs of points.
 \item \code{"text"} / \code{\link[=type_text]{type_text()}}: Add text annotations.
-\item \code{"tile"} / \code{"heatmap"} / \code{\link[=type_tile]{type_tile()}}: Draws a grid of tiles (heatmap), with the fill given by \code{by}.
+\item \code{"tile"} / \code{\link[=type_tile]{type_tile()}}: Draws a grid of tiles, with the fill given by \code{by}.
 }
 \item Visualizations:
 \itemize{
@@ -262,6 +262,7 @@ type of plot desired.
 \item \code{"chull"} / \code{\link[=type_chull]{type_chull()}}: Draws convex hull(s) around grouped points.
 \item \code{"density"} / \code{\link[=type_density]{type_density()}}: Plots the density estimate of a variable.
 \item \code{"ellipse"} / \code{\link[=type_ellipse]{type_ellipse()}}: Draws confidence ellipse(s) around grouped points.
+\item \code{"heatmap"} / \code{\link[=type_heatmap]{type_heatmap()}}: Draws a grid of tiles, optionally rescaling the fill along one axis.
 \item \code{"hexbin"} / \code{\link[=type_hexbin]{type_hexbin()}}: Creates a hexagonal bin plot, a 2D analogue of a histogram.
 \item \code{"histogram"} / \code{\link[=type_histogram]{type_histogram()}}: Creates a histogram of a single variable.
 \item \code{"qq"} / \code{\link[=type_qq]{type_qq()}}: Creates a quantile-quantile plot.

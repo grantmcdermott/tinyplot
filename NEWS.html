@@ -324,6 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
+<li><code>flip = TRUE</code> now flips the drawn geometry of the single-letter line types, not just the axes: <code>type = "h"</code> draws horizontal segments to the baseline, and the step types <code>"s"</code> and <code>"S"</code> swap which coordinate moves first. (<a href="https://github.com/grantmcdermott/tinyplot/issues/675">#675</a> <a href="https://github.com/haomeng797-ship-it"><span class="citation" data-cites="haomeng797-ship-it">@haomeng797-ship-it</span></a>)</li>
 <li>Fixed several bugs specific to plots with free facets (i.e., <code>facet.args = list(free = TRUE)</code>):
 <ul>
 <li>Single-valued discrete axes no longer trigger invalid <code>par(usr)</code> values. (<a href="https://github.com/grantmcdermott/tinyplot/issues/668">#668</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>

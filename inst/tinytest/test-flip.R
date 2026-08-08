@@ -113,3 +113,30 @@ f = function() {
   tinyplot(x_dt, y, grid = TRUE, flip = TRUE)
 }
 expect_snapshot_plot(f, label = "flip_date")
+
+
+# flipped single-letter line types (#675)
+
+f = function() {
+  tinyplot(1:10, (1:10)^2, type = "h", flip = TRUE, main = "Flipped type = \"h\"")
+}
+expect_snapshot_plot(f, label = "flip_type_h")
+
+f = function() {
+  tinyplot(1:10, (1:10)^2, type = "s", flip = TRUE, main = "Flipped type = \"s\"")
+}
+expect_snapshot_plot(f, label = "flip_type_step")
+
+f = function() {
+  tinyplot(1:10, (1:10)^2, type = "S", flip = TRUE, main = "Flipped type = \"S\"")
+}
+expect_snapshot_plot(f, label = "flip_type_step_rev")
+
+f = function() {
+  tinyplot(
+    circumference ~ age | Tree, data = Orange,
+    type = "h", flip = TRUE, grid = TRUE,
+    main = "Flipped grouped type = \"h\""
+  )
+}
+expect_snapshot_plot(f, label = "flip_type_h_grouped")

@@ -41,6 +41,12 @@
 #'   along the chosen margin by default. Pass `method = "rescale"` to map each
 #'   group onto the unit \[0, 1\] interval instead.
 #'
+#'   `type_heatmap()` also reverses the y-axis by default, so that the first
+#'   row sits at the top, matching how one reads a matrix (and again cf. base
+#'   R's `heatmap()` and \code{\link[graphics]{image}}). Pass an explicit `ylim`
+#'   to override. `type_tile()` makes no such adjustment, since it draws the
+#'   values exactly as supplied.
+#'
 #'   Either way, note that scaling along a margin necessarily discards the
 #'   *relative* spread of each group: a narrow-range column will occupy as much
 #'   of the colour ramp as a wide-range one, since both are divided by their own
@@ -211,7 +217,7 @@ type_heatmap = function(
   assert_choice(method, c("zscore", "rescale"))
   out = list(
     draw = draw_rect(),
-    data = data_tile(
+    data = data_heatmap(
       width = width, height = height, scale = scale, method = method
     ),
     # Deliberately reports "tile": the two types are interchangeable as far as
@@ -261,6 +267,31 @@ scale_by_group = function(by, g, method = "zscore") {
   )
   attr(out, "flat") = flat
   out
+}
+
+
+## type_heatmap() is data_tile() plus one extra convention: the first row sits
+## at the *top*, matching how one reads a matrix (cf. `heatmap()`, `image()`).
+## Kept separate from data_tile() so that type_tile() keeps drawing values
+## exactly as supplied.
+data_heatmap = function(
+    width = 1, height = 1, scale = "none", method = "zscore") {
+  tile_fun = data_tile(
+    width = width, height = height, scale = scale, method = method
+  )
+  fun = function(settings, ...) {
+    tile_fun(settings, ...)
+    # Only default the reversal when the user has left `ylim` alone: an explicit
+    # `ylim` is a direct instruction about axis direction and must win. We set
+    # the already-parsed `rev_y` flag rather than `ylim = "reverse"`, because
+    # sanitize_lim_rev() resolves that keyword much earlier in the pipeline, so
+    # a character `ylim` set here would reach lim_args() unparsed. The flag is
+    # also idempotent (so it cannot double-reverse if something upstream has
+    # asked for the same thing) and flip_datapoints() knows to swap it under
+    # `flip = TRUE`.
+    if (isTRUE(settings$null_ylim)) settings$rev_y = TRUE
+  }
+  return(fun)
 }
 
 

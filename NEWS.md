@@ -17,7 +17,9 @@ where the formatting is also better._
 - `type_heatmap()` / `"heatmap"` builds on `type_tile()`, adding a `scale`
   argument that scales the fill values *within* each category of one axis. This
   is analogous to base R's `heatmap()` function, and like the latter it z-scores
-  along the chosen margin by default. (#677 @grantmcdermott)
+  along the chosen margin by default. It also reverses the y-axis by default, so
+  that the first row sits at the top (again matching `heatmap()`); pass an
+  explicit `ylim` to override. (#677 @grantmcdermott)
 
 #### Other new features
 

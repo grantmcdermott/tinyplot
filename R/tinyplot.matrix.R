@@ -16,9 +16,10 @@
 #'   The `"tile"` and `"heatmap"` types are an exception, since the matplot
 #'   convention makes little sense for them. Instead the matrix is laid out as a
 #'   grid---columns along the x-axis, rows along the y-axis---with the matrix
-#'   *values* supplied as the fill. Row order is reversed so that the first row
+#'   *values* supplied as the fill. The y-axis is reversed so that the first row
 #'   sits at the top, matching how one reads a matrix (cf.
-#'   \code{\link[stats]{heatmap}} and \code{\link[graphics]{image}}). Both axis
+#'   \code{\link[stats]{heatmap}} and \code{\link[graphics]{image}}); pass an
+#'   explicit `ylim` to override. Both axis
 #'   titles are suppressed, since the dimnames already label the ticks, and so
 #'   is the legend, since the fill merely re-encodes the matrix's own values.
 #'   Pass an explicit `legend` (or `xlab`/`ylab`) to override either. See
@@ -82,13 +83,14 @@ tinyplot.matrix = function(x, type = NULL, legend = NULL, facet = NULL, xlab = N
     } else {
       factor(rep(cnms, each = dims[1]), levels = cnms)
     }
-    ## Reverse the row levels so that row 1 sits at the *top* of the plot,
-    ## matching how one reads a matrix (cf. `heatmap()`, `image()`).
+    ## Note the row levels are *not* reversed here. Row 1 belongs at the *top*
+    ## of a matrix display (cf. `heatmap()`, `image()`), but we get that by
+    ## defaulting the y-axis to reversed below, which keeps it overridable via
+    ## `ylim`. Reversing the levels *and* the axis would cancel out.
     yy = if (is.null(rnms)) {
-      factor(rep(seq_len(dims[1]), times = dims[2]),
-             levels = rev(seq_len(dims[1])))
+      factor(rep(seq_len(dims[1]), times = dims[2]))
     } else {
-      factor(rep(rnms, times = dims[2]), levels = rev(rnms))
+      factor(rep(rnms, times = dims[2]), levels = rnms)
     }
     ## Both axes are labelled by the matrix dimnames, so axis titles would be
     ## redundant. Ditto the legend: the fill encodes the matrix's own values, so
@@ -97,15 +99,26 @@ tinyplot.matrix = function(x, type = NULL, legend = NULL, facet = NULL, xlab = N
     if (is.null(xlab)) xlab = NA
     if (is.null(ylab)) ylab = NA
     if (is.null(legend)) legend = FALSE
-    return(tinyplot.default(
-      x = xx, y = yy,
-      type = type,
-      by = as.vector(x),
-      facet = facet,
-      legend = legend,
-      xlab = xlab,
-      ylab = ylab,
-      ...
+    ## Applies to "tile" as well as "heatmap": the matrix *layout* is what
+    ## implies the orientation here, not the choice of type. (type_heatmap()
+    ## additionally defaults to this on its own, for the formula method; the two
+    ## are idempotent and so compose safely.)
+    dots = list(...)
+    if (!"ylim" %in% names(dots)) dots[["ylim"]] = "reverse"
+    return(do.call(
+      tinyplot.default,
+      c(
+        list(
+          x = xx, y = yy,
+          type = type,
+          by = as.vector(x),
+          facet = facet,
+          legend = legend,
+          xlab = xlab,
+          ylab = ylab
+        ),
+        dots
+      )
     ))
   }
   if (dims[2] == 1L) {

@@ -56,9 +56,10 @@ a simple index plot with no grouping or legend.
 The \code{"tile"} and \code{"heatmap"} types are an exception, since the matplot
 convention makes little sense for them. Instead the matrix is laid out as a
 grid---columns along the x-axis, rows along the y-axis---with the matrix
-\emph{values} supplied as the fill. Row order is reversed so that the first row
+\emph{values} supplied as the fill. The y-axis is reversed so that the first row
 sits at the top, matching how one reads a matrix (cf.
-\code{\link[stats]{heatmap}} and \code{\link[graphics]{image}}). Both axis
+\code{\link[stats]{heatmap}} and \code{\link[graphics]{image}}); pass an
+explicit \code{ylim} to override. Both axis
 titles are suppressed, since the dimnames already label the ticks, and so
 is the legend, since the fill merely re-encodes the matrix's own values.
 Pass an explicit \code{legend} (or \code{xlab}/\code{ylab}) to override either. See

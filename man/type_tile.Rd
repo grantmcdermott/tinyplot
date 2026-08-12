@@ -96,6 +96,12 @@ in base R's \code{\link[stats]{heatmap}}, and like the latter it z-scores
 along the chosen margin by default. Pass \code{method = "rescale"} to map each
 group onto the unit [0, 1] interval instead.
 
+\code{type_heatmap()} also reverses the y-axis by default, so that the first
+row sits at the top, matching how one reads a matrix (and again cf. base
+R's \code{heatmap()} and \code{\link[graphics]{image}}). Pass an explicit \code{ylim}
+to override. \code{type_tile()} makes no such adjustment, since it draws the
+values exactly as supplied.
+
 Either way, note that scaling along a margin necessarily discards the
 \emph{relative} spread of each group: a narrow-range column will occupy as much
 of the colour ramp as a wide-range one, since both are divided by their own

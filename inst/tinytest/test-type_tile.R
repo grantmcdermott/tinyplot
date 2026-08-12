@@ -5,8 +5,9 @@ using("tinysnapshot")
 # "long" form used by the type_tile() examples
 catt = as.data.frame(as.table(cor(attitude)), responseName = "Correlation")
 
-# "tile" and "heatmap" are aliases, as are type_tile() and type_heatmap(),
-# so all four spellings must produce an identical plot.
+# "tile" and type_tile() are aliases and must produce an identical plot. Note
+# that "heatmap" / type_heatmap() are *not* interchangeable with these, since
+# they additionally reverse the y-axis (see the type_heatmap() section below).
 f = function() {
   tinyplot(
     Var1 ~ Var2 | Correlation, data = catt, type = "tile",
@@ -15,10 +16,10 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "tile_basic")
 
-# "heatmap" alias (should be identical to the above)
+# type_tile() constructor (should be identical to the above)
 f = function() {
   tinyplot(
-    Var1 ~ Var2 | Correlation, data = catt, type = "heatmap",
+    Var1 ~ Var2 | Correlation, data = catt, type = type_tile(),
     theme = "heatmap"
   )
 }
@@ -99,12 +100,13 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "heatmap_scale_x_rescale")
 
-# `scale = "none"` is the default, so a bare type_heatmap() must reproduce the
-# plain type_tile() fixture exactly (asserted against the *same* label)
+# `scale = "none"` is the default, so a bare type_heatmap() applies no rescaling.
+# It does still reverse the y-axis, so pinning `ylim` back to normal is what
+# recovers the plain type_tile() fixture exactly (asserted against that label).
 f = function() {
   tinyplot(
     Var1 ~ Var2 | Correlation, data = catt, type = type_heatmap(scale = "none"),
-    theme = "heatmap"
+    theme = "heatmap", ylim = c(0.5, 7.5)
   )
 }
 expect_snapshot_plot(f, label = "tile_basic")

@@ -152,6 +152,11 @@ draw_facet_window = function(
       # Use that as the base instead of par("mar") which may have been
       # reset by the before.plot.new hook.
       side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
+      # Tick labels are measured at their own side's cex, falling back to the
+      # shared par("cex.axis"). Measuring both sides at the shared value clips
+      # the wider axis and reserves dead space on the narrower one.
+      .cex_xaxs = get_tpar("cex.xaxs", tpar_list = tpars, default = par("cex.axis"))
+      .cex_yaxs = get_tpar("cex.yaxs", tpar_list = tpars, default = par("cex.axis"))
       omar = dynmar_computed
       omar[3] = dynmar_computed[3] + (1 + facet_newlines + 0.1) * facet_text
       # Ensure fmar[3] doesn't exceed omar[3] - 0.1, which would make
@@ -169,7 +174,7 @@ draw_facet_window = function(
             yaxlabs_all = lapply(yfree_split, function(yf) {
               axisTicks(usr = extendrange(range(yf, na.rm = TRUE), f = 0.04), log = par("ylog"))
             })
-            widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
+            widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = .cex_yaxs)), numeric(1L))
             yaxlabs = yaxlabs_all[[which.max(widths)]]
           } else {
             yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
@@ -177,7 +182,7 @@ draw_facet_window = function(
         }
         if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
         # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
-        whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
+        whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
         if (whtsbp > 0) {
           omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
           fmar[2] = fmar[2] + whtsbp * cex_fct_adj
@@ -200,14 +205,14 @@ draw_facet_window = function(
           xaxlabs_all = lapply(xfree_split, function(xf) {
             axisTicks(usr = extendrange(range(xf, na.rm = TRUE), f = 0.04), log = par("xlog"))
           })
-          widths = vapply(xaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = par("cex.axis"))), numeric(1L))
+          widths = vapply(xaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = .cex_xaxs)), numeric(1L))
           xaxlabs = xaxlabs_all[[which.max(widths)]]
         } else {
           xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
             if (!is.null(names(xlabs))) names(xlabs) else xlabs
         }
         if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-        whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 0.5
+        whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
         if (whtsbp > 0) {
           omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
           fmar[1] = fmar[1] + whtsbp * cex_fct_adj
@@ -258,6 +263,9 @@ draw_facet_window = function(
     # in tinyplot.default and passed via dynmar_computed; use them directly.
     # Tick-label *width/height* (whtsbp) is added further below.
     side.sub = get_tpar("side.sub", tpar_list = tpars, default = 3)
+    # Per-side tick-label cex; see the faceted branch above.
+    .cex_xaxs = get_tpar("cex.xaxs", tpar_list = tpars, default = par("cex.axis"))
+    .cex_yaxs = get_tpar("cex.yaxs", tpar_list = tpars, default = par("cex.axis"))
     omar = dynmar_computed
     # reserve RHS margin for types with a secondary axis (e.g. spineplot)
     if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
@@ -271,8 +279,8 @@ draw_facet_window = function(
         yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }
       if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 1
-      whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
+      # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") - 1
+      whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
       omar[2] = omar[2] + whtsbp
     }
     if (par("las") %in% 2:3) {
@@ -282,7 +290,7 @@ draw_facet_window = function(
       xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = par("cex.axis"))), from = "nfc", to = "lines") - 0.5
+      whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
       omar[1] = omar[1] + whtsbp
     }
 
@@ -337,11 +345,15 @@ draw_facet_window = function(
 
     # axes, frame.plot and grid
     if (isTRUE(axes) || isTRUE(facet.args[["free"]])) {
+      # Note `cex.axis` rather than `cex`: base `axis()` sizes its tick labels
+      # from the former and silently ignores the latter, so passing `cex` here
+      # would leave `cex.xaxs`/`cex.yaxs` (and any theme that sets them) with no
+      # effect on label size.
       args_x = list(x,
         side = xside,
         type = xaxt,
         labeller = xaxl,
-        cex = get_tpar(c("cex.xaxs", "cex.axis"), 0.8, tpar_list = tpars),
+        cex.axis = get_tpar(c("cex.xaxs", "cex.axis"), 0.8, tpar_list = tpars),
         lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.xaxs", "lty.axis"), 1, tpar_list = tpars)
       )
@@ -351,16 +363,19 @@ draw_facet_window = function(
         side = yside,
         type = yaxt,
         labeller = yaxl,
-        cex = .ca,
+        cex.axis = .ca,
         lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.yaxs", "lty.axis"), 1, tpar_list = tpars)
       )
       if (!is.null(xaxb)) args_x$at = xaxb
       if (!is.null(yaxb)) args_y$at = yaxb
-      # `xlabs` is only non-NULL when a type has placed categorical data on the
-      # x-axis, so its presence is the signal to draw labelled ticks.
+      # `xlabs`/`ylabs` are only non-NULL when a type has placed categorical data
+      # on that axis, so their presence is the signal to draw labelled ticks.
+      # The y-side previously listed the eligible types by name, but every type
+      # that populates `ylabs` does so precisely because it has categories to
+      # label, making the extra condition redundant (#665).
       type_range_x = !is.null(xlabs)
-      type_range_y = !is.null(ylabs) && (type == "p" || (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "violin")))
+      type_range_y = !is.null(ylabs)
       if (type_range_x) {
         args_x = modifyList(args_x, list(at = xlabs, labels = names(xlabs)))
       }

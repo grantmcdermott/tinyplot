@@ -115,23 +115,27 @@
 #'     - Shapes:
 #'       - `"area"` / [`type_area()`]: Plots the area under the curve from `y` = 0 to `y` = f(`x`).
 #'       - `"errorbar"` / [`type_errorbar()`]: Adds error bars to points; requires `ymin` and `ymax`.
+#'       - `"jitter"` / [`type_jitter()`]: Jittered points.
 #'       - `"pointrange"` / [`type_pointrange()`]: Combines points with error bars.
 #'       - `"polygon"` / [`type_polygon()`]: Draws polygons.
 #'       - `"polypath"` / [`type_polypath()`]: Draws a path whose vertices are given in `x` and `y`.
 #'       - `"rect"` / [`type_rect()`]: Draws rectangles; requires `xmin`, `xmax`, `ymin`, and `ymax`.
 #'       - `"ribbon"` / [`type_ribbon()`]: Creates a filled area between `ymin` and `ymax`.
+#'       - `"rug"` / [`type_rug()`]: Adds a rug to an existing plot.
 #'       - `"segments"` / [`type_segments()`]: Draws line segments between pairs of points.
 #'       - `"text"` / [`type_text()`]: Add text annotations.
+#'       - `"tile"` / [`type_tile()`]: Draws a grid of tiles, with the fill given by `by`.
 #'     - Visualizations:
 #'       - `"barplot"` / [`type_barplot()`]: Creates a bar plot.
 #'       - `"boxplot"` / [`type_boxplot()`]: Creates a box-and-whisker plot.
 #'       - `"chull"` / [`type_chull()`]: Draws convex hull(s) around grouped points.
 #'       - `"density"` / [`type_density()`]: Plots the density estimate of a variable.
+#'       - `"ellipse"` / [`type_ellipse()`]: Draws confidence ellipse(s) around grouped points.
+#'       - `"heatmap"` / [`type_heatmap()`]: Draws a grid of tiles, optionally rescaling the fill along one axis.
+#'       - `"hexbin"` / [`type_hexbin()`]: Creates a hexagonal bin plot, a 2D analogue of a histogram.
 #'       - `"histogram"` / [`type_histogram()`]: Creates a histogram of a single variable.
-#'       - `"jitter"` / [`type_jitter()`]: Jittered points.
 #'       - `"qq"` / [`type_qq()`]: Creates a quantile-quantile plot.
 #'       - `"ridge"` / [`type_ridge()`]: Creates a ridgeline (aka joy) plot.
-#'       - `"rug"` / [`type_rug()`]: Adds a rug to an existing plot.
 #'       - `"spineplot"` / [`type_spineplot()`]: Creates a spineplot or spinogram.
 #'       - `"violin"` / [`type_violin()`]: Creates a violin plot.
 #'     - Models:
@@ -1134,10 +1138,14 @@ tinyplot.default = function(
     }
     if (!is.null(.tpars[["mar"]])) .theme_mar = .tpars[["mar"]]
 
-    .cex_axis = get_tpar("cex.axis", tpar_list = .tpars, default = 1)
+    # Tick-label cex is per-side (cex.xaxs/cex.yaxs), each falling back to the
+    # shared cex.axis. Measuring both axes with cex.axis alone clips the x
+    # labels and leaves dead whitespace on the y when the two differ.
+    .cex_xaxs = get_tpar(c("cex.xaxs", "cex.axis"), tpar_list = .tpars, default = 1)
+    .cex_yaxs = get_tpar(c("cex.yaxs", "cex.axis"), tpar_list = .tpars, default = 1)
     .cex_lab = get_tpar(c("cex.ylab", "cex.lab"), tpar_list = .tpars, default = 1)
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
-    .ymgp_shift = if (.las %in% c(0L, 1L)) 0.5 * (.cex_axis - 1) else 0
+    .ymgp_shift = if (.las %in% c(0L, 1L)) 0.5 * (.cex_yaxs - 1) else 0
     .ylab_cex_shift = 0.5 * (.cex_lab - 1)
 
     # Detect outer-legend sides (order: bottom, left, top, right).
@@ -1194,7 +1202,7 @@ tinyplot.default = function(
     # Compute whtsbp (tick-label width/height bump). Read `las` from .tpars
     # (the theme definition) rather than par() — par("las") isn't set to the
     # theme's intended value until the before.plot.new hook fires, but this
-    # block runs before that. Pass .cex_axis to strwidth so measurements
+    # block runs before that. Pass the per-side cex to strwidth so measurements
     # reflect the intended text size (par("cex.axis") isn't set yet either).
     .whtsbp = c(0, 0, 0, 0)
     .whtsbp_y_raw = 0
@@ -1209,7 +1217,7 @@ tinyplot.default = function(
         yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
       }
       if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      .whtsbp_y_raw = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") -
+      .whtsbp_y_raw = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") -
                       grconvertX(0, from = "nfc", to = "lines") - 0.5
       if (is.finite(.whtsbp_y_raw)) .whtsbp[2] = .whtsbp_y_raw
     }
@@ -1218,7 +1226,7 @@ tinyplot.default = function(
       xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
         if (!is.null(names(xlabs))) names(xlabs) else xlabs
       if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      .whtsbp_x_raw = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_axis)), from = "nfc", to = "lines") - 0.5
+      .whtsbp_x_raw = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
       if (is.finite(.whtsbp_x_raw)) .whtsbp[1] = .whtsbp_x_raw
     }
 

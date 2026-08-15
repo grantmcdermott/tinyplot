@@ -33,6 +33,7 @@
 #'     - `"tufte"` (*): floating axes and minimalist plot artifacts in the style of Edward Tufte.
 #'       - `"float"` (*): builds on `"tufte"` with outward ticks, fewer tick marks, and a "dark" qualitative palette.
 #'     - `"void"` (*): switches off all axes, titles, legends, etc.
+#'     - `"heatmap"` (*): a specialized theme for tile plots and heatmaps (see [`type_tile()`]). Builds off of `"clean2"`, but removes the axis padding so that the tiles meet the panel edge, drops the (redundant) grid lines, rotates the tick labels and removes their tick marks, and defaults to the "tealgrn" sequential palette. Not recommended for non-tile plots.
 #'     - `"ridge"` (*): a specialized theme for ridge plots (see [`type_ridge()`]). Builds off of `"clean"`, but adds ridge-specific tweaks (e.g. default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.
 #'       - `"ridge2"` (*): removes the plot frame (box) from `"ridge"`, but retains the x-axis line. Again, not recommended for non-ridge plots.
 #' @param ... Named arguments to override specific theme settings. These
@@ -194,7 +195,7 @@ tinytheme = function(
       "clean", "clean2", "bw", "linedraw", "classic",
       "minimal", "ipsum", "ipsum2", "dark",
       "socviz", "broadsheet", "nber", "web",
-      "ridge", "ridge2",
+      "heatmap", "ridge", "ridge2",
       "tufte", "float", "void"
     ),
     ...,
@@ -225,6 +226,7 @@ tinytheme = function(
     "ipsum2" = theme_ipsum2,
     "minimal" = theme_minimal,
     "nber" = theme_nber,
+    "heatmap" = theme_heatmap,
     "ridge" = theme_ridge,
     "ridge2" = theme_ridge2,
     "socviz" = theme_socviz,
@@ -256,10 +258,14 @@ tinytheme = function(
   if (isTRUE(settings[["dynmar"]]) && !("mgp" %in% names(dots))) {
     .ga = settings[["gap.axis"]] %||% 0.2
     .gl = settings[["gap.lab"]] %||% 1.0
-    .ca = settings[["cex.axis"]] %||% 1
-    # FIXME: mgp is shared across sides, so we use the larger label cex to
+    # FIXME: mgp is shared across sides, so we use the larger tick/label cex to
     # avoid clipping on either axis. Ideally we'd set side-specific mgp when
-    # cex.xlab and cex.ylab differ.
+    # cex.xaxs and cex.yaxs (or cex.xlab and cex.ylab) differ.
+    .ca = max(
+      settings[["cex.axis"]] %||% 1,
+      settings[["cex.xaxs"]] %||% 0,
+      settings[["cex.yaxs"]] %||% 0
+    )
     .cl = max(
       settings[["cex.lab"]] %||% 1,
       settings[["cex.xlab"]] %||% 0,
@@ -300,7 +306,7 @@ builtin_themes = c(
   "clean", "clean2", "bw", "linedraw", "classic",
   "minimal", "ipsum", "ipsum2", "dark",
   "socviz", "broadsheet", "nber", "web",
-  "ridge", "ridge2",
+  "heatmap", "ridge", "ridge2",
   "tufte", "float", "void"
 )
 
@@ -320,6 +326,8 @@ theme_default = list(
   cex.main = par("cex.main"), #1.2,
   cex.cap = 1,
   cex.sub = par("cex.sub"), #1,
+  cex.xaxs = NULL, # defer to cex.axis unless set explicitly
+  cex.yaxs = NULL, # defer to cex.axis unless set explicitly
   cex.xlab = NULL, # defer to par("cex.lab") unless set explicitly
   cex.ylab = NULL, # defer to par("cex.lab") unless set explicitly
   col = par("col"), #"black",
@@ -359,6 +367,12 @@ theme_default = list(
   side.sub = 1,
   tck = NA,
   tcl = par("tcl"), # -0.5
+  # `theme_default` doubles as the reset baseline for tinytheme(), so every
+  # parameter that *any* theme sets has to appear here -- otherwise nothing
+  # restores it and the setting leaks into subsequent (incl. base) plots. The
+  # axis styles below are only touched by the "heatmap" theme so far.
+  xaxs = par("xaxs"), # "r"
+  yaxs = par("yaxs"), # "r"
   xaxt = "standard",
   yaxt = "standard"
 )
@@ -533,6 +547,21 @@ theme_dark = modifyList(theme_minimal, list(
 ))
 
 # derivatives of clean/clean2
+
+# Companion theme for type_tile() / type_heatmap(). Tiles are opaque and drawn
+# edge-to-edge, so the usual axis padding leaves them floating inside the panel
+# and the grid is hidden behind them regardless. Long categorical labels are the
+# norm for correlation matrices, hence the rotated, tick-less axes.
+theme_heatmap = modifyList(theme_clean2, list(
+  tinytheme = "heatmap",
+  gap.axis = 0,
+  grid = FALSE,
+  las = 2,
+  palette.sequential = "tealgrn",
+  tcl = 0,
+  xaxs = "i",
+  yaxs = "i"
+))
 
 theme_ridge = modifyList(theme_clean, list(
   tinytheme = "ridge",

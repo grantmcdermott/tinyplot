@@ -36,7 +36,11 @@ dynmar_side = function(side, label, main = NULL, sub = NULL, cap = NULL,
   mgp = get_tpar("mgp", tpar_list = tpars)
   tcl = get_tpar("tcl", tpar_list = tpars, default = par("tcl"))
   tick_extent = if (side %in% 1:2 && isTRUE(axis_on)) {
-    cex_axis = get_tpar("cex.axis", tpar_list = tpars, default = 1)
+    # Per-side cex, falling back to the shared cex.axis (as for cex_lab below).
+    cex_axis = get_tpar(
+      if (side == 1L) c("cex.xaxs", "cex.axis") else c("cex.yaxs", "cex.axis"),
+      tpar_list = tpars, default = 1
+    )
     max(0, -tcl) + mgp[2] + 0.4 * cex_axis + 0.6
   } else 0
   label_extent = 0

@@ -130,28 +130,30 @@ When multiple groups share the same x-position (boxplot, violin, etc.), offsets 
 
 ## Testing & CI
 
-Tests use `tinytest` + `tinysnapshot`. Snapshot tests produce SVG output with Liberation fonts and must be run on Linux (`options("tinysnapshot_os" = "Linux")`). For non-Linux users, we provide a dedicated `.devcontainer` for running tests via VS Code or GitHub Codespaces:
-1. Open repo in VS Code
-2. Command Palette → "Dev Containers: Reopen in Container"
-3. Dependencies install automatically
+Tests use `tinytest` + `tinysnapshot`. Snapshot tests produce SVG output with Liberation fonts and are meant to run on **Linux** (`helpers.R` sets `tinysnapshot_os = "Linux"`); they only run when the environment variable `NOT_CRAN` is set to the lowercase string `"true"`. Non-snapshot tests (logical assertions, error checks) run anywhere.
 
-Non-snapshot tests (logical assertions, error checks, etc.) run fine on any platform. Even with the devcontainer, a small number of snapshot tests (~2-3) may produce false positive failures on macOS hosts due to imperceptible rendering differences. These show up in `inst/tinytest/_tinysnapshot_review/` but the visual differences are too small to detect by eye. Known false positives:
-
-- `xaxl_yaxl`
-- `palette_manual_continuous`
-
-This is a known quirk — don't worry about these specific persistent failures. However, if you see more than ~3 snapshot failures, something real is likely broken and needs investigation.
+On Linux you can generally just run the suite directly and expect it to match CI. Snapshots are byte-compared against amd64 reference images, so the usual things that trip people up are (a) not being on Linux/amd64, and (b) a stale render toolchain — e.g. distro/PPM package binaries built against an older R after a minor bump, which make `svglite`/`systemfonts`/`textshaping`/`rsvg`/`magick` error or drift. A handful of pure text/glyph-metric diffs (titles, themed labels, plotmath) almost always means one of those, not a code regression; a larger or structural set of failures is the real thing. CI is the final arbiter.
 
 ### Running Tests
 
-The canonical test workflow is to open the devcontainer and run `make testall`. Do not attempt to run the full test suite outside the devcontainer — snapshot tests will fail due to font/rendering differences, and even non-snapshot tests may pull in snapshot comparisons.
+Pick the path that fits your setup:
+
+**Native Linux (amd64) — fastest.** `make testall` runs directly against your R install and should match CI. Snapshots only run with `NOT_CRAN=true` set (lowercase). If the render stack errors ("Graphics API version mismatch") or snapshots drift, it's the stale-toolchain gotcha above — reinstall `svglite`, `magick`, `rsvg`, `systemfonts`, `textshaping` from source.
+
+**VS Code devcontainer (any OS).** Open the repo in VS Code → Command Palette → "Dev Containers: Reopen in Container" (deps install automatically), then `make testall`. Also works via GitHub Codespaces.
+
+**Terminal container runner (any OS with Docker/Podman/Finch/nerdctl).** No editor required:
+- `make testall-docker` — full suite in a Linux container at your native architecture.
+- `make testall-ci` — same, forced to amd64 (`--platform linux/amd64`). **On Apple Silicon this is the CI-faithful run**: arm64-native rendering differs subtly from the amd64 reference SVGs, so a native-arch run shows a couple of spurious text-snapshot diffs. It's emulated (slower), so iterate with `testall-docker` and confirm with `testall-ci` before pushing.
 
 ```bash
-# Via Makefile (inside devcontainer)
-make testall                                          # Run all tests
-make testone testfile="inst/tinytest/test-legend.R"   # Run single test file
+make testall            # native Linux host
+make testall-docker     # container, native arch
+make testall-ci         # container, amd64 (CI-faithful; needed on Apple Silicon)
+make testone testfile="inst/tinytest/test-legend.R"       # single file, native
+.devcontainer/run-tests.sh inst/tinytest/test-legend.R    # single file, container
 
-# Via R
+# Via R (Linux, NOT_CRAN=true)
 tinytest::run_test_dir("inst/tinytest")
 tinytest::run_test_file("inst/tinytest/test-legend.R")
 ```

@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bd99d2caa9216ff79fd4771f5621bedd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-b5094435fd9d984d9b5c580374574846.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -280,6 +280,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_jitter</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_lines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_lines</span></a>
   </div>
@@ -322,14 +328,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_text</span></a>
+  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_segments.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_segments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_tile</span></a>
   </div>
 </li>
       </ul>
@@ -363,14 +381,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_density</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_ellipse.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ellipse</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_density</span></a>
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_heatmap</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -387,12 +411,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_jitter</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../man/type_qq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_qq</span></a>
   </div>
@@ -401,12 +419,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/type_ridge.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ridge</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -440,14 +452,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_loess</span></a>
+  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_lm</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_lm</span></a>
+  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_loess</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -692,7 +704,13 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 <p><code>cex.cap</code>: Numeric expansion factor for the plot caption text. Defaults to <code>1</code> for the default, basic, and dynamic themes, and <code>0.8</code> for clean/classic and their descendants.</p>
 </li>
 <li>
+<p><code>cex.xaxs</code>, <code>cex.yaxs</code>: Numeric expansion factors for the x- and y-axis tick labels, respectively. Both default to <code>NULL</code>, whereby the shared <code>cex.axis</code> value is used instead (which in turn falls back to <code>par(“cex.axis”)</code>). Set one of them to size a single axis’ tick labels independently of the other, e.g.&nbsp;<code>cex.yaxs</code> to shrink a long list of category names on the y-axis without also shrinking the x-axis. Compare <code>cex.xlab</code> and <code>cex.ylab</code>, which do the same for the axis <em>titles</em>.</p>
+</li>
+<li>
 <p><code>col.cap</code>: Character specifying the colour of the plot caption. Defaults to <code>“black”</code>.</p>
+</li>
+<li>
+<p><code>col.xaxs</code>, <code>col.yaxs</code>: Characters (or integers) specifying the colour of the x- and y-axis tick labels, respectively. Both default to <code>NULL</code>, whereby the shared <code>col.axis</code> value is used instead.</p>
 </li>
 <li>
 <p><code>col.default</code>: Default colour for single-group displays (i.e.&nbsp;plots without a <code>by</code> grouping). Can be <code>NULL</code>, a length-1 character colour, or a length-1 numeric index into <code>palette.qualitative</code>. Defaults to <code>NULL</code>, in which case the first colour of the active qualitative palette is used (or base <code>palette()[1]</code>, typically black, if no theme is set). A character value sets the single-group colour independently of the multi-group palette. A numeric value <code>i</code> selects the <code>i</code>th colour of <code>palette.qualitative</code> as the single-group default; a <em>negative</em> index additionally drops that colour from the palette used for grouped plots. For example, <code>col.default = -1</code> paired with <code>palette.qualitative = “Okabe-Ito”</code> uses black (the leading palette colour) for single-group plots and an Okabe-Ito-minus-black palette for grouped plots, avoiding the need to maintain a separate "no-black" palette.</p>
@@ -756,6 +774,12 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 </li>
 <li>
 <p><code>lmar</code>: A numeric vector of form <code>c(inner, outer)</code> that gives the margin padding, in terms of lines, around the automatic <code>tinyplot</code> legend. Defaults to <code>c(1.0, 0.1)</code>. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.</p>
+</li>
+<li>
+<p><code>lty.xaxs</code>, <code>lty.yaxs</code>: Line types for the x- and y-axis lines, respectively. Both default to <code>NULL</code>, whereby the shared <code>lty.axis</code> value is used instead.</p>
+</li>
+<li>
+<p><code>lwd.xaxs</code>, <code>lwd.yaxs</code>: Line widths for the x- and y-axis lines, respectively. Both default to <code>NULL</code>, whereby the shared <code>lwd.axis</code> value is used instead.</p>
 </li>
 <li>
 <p><code>palette.qualitative</code>: Palette for qualitative colors. See the <code>palette</code> argument in <code>?tinyplot</code>.</p>

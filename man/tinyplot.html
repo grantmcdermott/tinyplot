@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bd99d2caa9216ff79fd4771f5621bedd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-b5094435fd9d984d9b5c580374574846.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -280,6 +280,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_jitter</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_lines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_lines</span></a>
   </div>
@@ -322,14 +328,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_text</span></a>
+  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_segments.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_segments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_tile</span></a>
   </div>
 </li>
       </ul>
@@ -363,14 +381,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_density</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_ellipse.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ellipse</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_density</span></a>
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_heatmap</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -387,12 +411,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_jitter</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../man/type_qq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_qq</span></a>
   </div>
@@ -401,12 +419,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/type_ridge.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ridge</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -440,14 +452,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_loess</span></a>
+  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_lm</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_lm</span></a>
+  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_loess</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -899,6 +911,9 @@ a data.frame (or list) from which the variables in formula should be taken. A ma
 <p><code>“errorbar”</code> / <code>type_errorbar()</code>: Adds error bars to points; requires <code>ymin</code> and <code>ymax</code>.</p>
 </li>
 <li>
+<p><code>“jitter”</code> / <code>type_jitter()</code>: Jittered points.</p>
+</li>
+<li>
 <p><code>“pointrange”</code> / <code>type_pointrange()</code>: Combines points with error bars.</p>
 </li>
 <li>
@@ -914,10 +929,16 @@ a data.frame (or list) from which the variables in formula should be taken. A ma
 <p><code>“ribbon”</code> / <code>type_ribbon()</code>: Creates a filled area between <code>ymin</code> and <code>ymax</code>.</p>
 </li>
 <li>
+<p><code>“rug”</code> / <code>type_rug()</code>: Adds a rug to an existing plot.</p>
+</li>
+<li>
 <p><code>“segments”</code> / <code>type_segments()</code>: Draws line segments between pairs of points.</p>
 </li>
 <li>
 <p><code>“text”</code> / <code>type_text()</code>: Add text annotations.</p>
+</li>
+<li>
+<p><code>“tile”</code> / <code>type_tile()</code>: Draws a grid of tiles, with the fill given by <code>by</code>.</p>
 </li>
 </ul>
 </li>
@@ -937,19 +958,22 @@ a data.frame (or list) from which the variables in formula should be taken. A ma
 <p><code>“density”</code> / <code>type_density()</code>: Plots the density estimate of a variable.</p>
 </li>
 <li>
-<p><code>“histogram”</code> / <code>type_histogram()</code>: Creates a histogram of a single variable.</p>
+<p><code>“ellipse”</code> / <code>type_ellipse()</code>: Draws confidence ellipse(s) around grouped points.</p>
 </li>
 <li>
-<p><code>“jitter”</code> / <code>type_jitter()</code>: Jittered points.</p>
+<p><code>“heatmap”</code> / <code>type_heatmap()</code>: Draws a grid of tiles, optionally rescaling the fill along one axis.</p>
+</li>
+<li>
+<p><code>“hexbin”</code> / <code>type_hexbin()</code>: Creates a hexagonal bin plot, a 2D analogue of a histogram.</p>
+</li>
+<li>
+<p><code>“histogram”</code> / <code>type_histogram()</code>: Creates a histogram of a single variable.</p>
 </li>
 <li>
 <p><code>“qq”</code> / <code>type_qq()</code>: Creates a quantile-quantile plot.</p>
 </li>
 <li>
 <p><code>“ridge”</code> / <code>type_ridge()</code>: Creates a ridgeline (aka joy) plot.</p>
-</li>
-<li>
-<p><code>“rug”</code> / <code>type_rug()</code>: Adds a rug to an existing plot.</p>
 </li>
 <li>
 <p><code>“spineplot”</code> / <code>type_spineplot()</code>: Creates a spineplot or spinogram.</p>

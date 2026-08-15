@@ -70,6 +70,8 @@ website:
                 file: man/type_ribbon.qmd
               - text: type_errorbar
                 file: man/type_errorbar.qmd
+              - text: type_jitter
+                file: man/type_jitter.qmd
               - text: type_lines
                 file: man/type_lines.qmd
               - text: type_pointrange
@@ -84,10 +86,14 @@ website:
                 file: man/type_rect.qmd
               - text: type_ribbon
                 file: man/type_ribbon.qmd
-              - text: type_text
-                file: man/type_text.qmd
+              - text: type_rug
+                file: man/type_rug.qmd
               - text: type_segments
                 file: man/type_segments.qmd
+              - text: type_text
+                file: man/type_text.qmd
+              - text: type_tile
+                file: man/type_tile.qmd
           - section: "Visualizations"
             contents:
               - text: type_barplot
@@ -96,22 +102,20 @@ website:
                 file: man/type_boxplot.qmd
               - text: type_chull
                 file: man/type_chull.qmd
-              - text: type_ellipse
-                file: man/type_ellipse.qmd
               - text: type_density
                 file: man/type_density.qmd
+              - text: type_ellipse
+                file: man/type_ellipse.qmd
+              - text: type_heatmap
+                file: man/type_tile.qmd
               - text: type_hexbin
                 file: man/type_hexbin.qmd
               - text: type_histogram
                 file: man/type_histogram.qmd
-              - text: type_jitter
-                file: man/type_jitter.qmd
               - text: type_qq
                 file: man/type_qq.qmd
               - text: type_ridge
                 file: man/type_ridge.qmd
-              - text: type_rug
-                file: man/type_rug.qmd
               - text: type_spineplot
                 file: man/type_spineplot.qmd
               - text: type_violin
@@ -120,10 +124,10 @@ website:
             contents:
               - text: type_glm
                 file: man/type_glm.qmd
-              - text: type_loess
-                file: man/type_loess.qmd
               - text: type_lm
                 file: man/type_lm.qmd
+              - text: type_loess
+                file: man/type_loess.qmd
               - text: type_spline
                 file: man/type_spline.qmd
           - section: "Functions"

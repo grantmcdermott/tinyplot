@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bd99d2caa9216ff79fd4771f5621bedd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-b5094435fd9d984d9b5c580374574846.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -280,6 +280,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_jitter</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_lines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_lines</span></a>
   </div>
@@ -322,14 +328,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_text</span></a>
+  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_segments.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_segments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_tile</span></a>
   </div>
 </li>
       </ul>
@@ -363,14 +381,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_density</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_ellipse.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ellipse</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_density</span></a>
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_heatmap</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -387,12 +411,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_jitter</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../man/type_qq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_qq</span></a>
   </div>
@@ -401,12 +419,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/type_ridge.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ridge</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -440,14 +452,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_loess</span></a>
+  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_lm</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_lm</span></a>
+  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_loess</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -639,7 +651,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code class="language-R">tinytheme(
   theme = c("default", "basic", "dynamic", "clean", "clean2", "bw", "linedraw",
     "classic", "minimal", "ipsum", "ipsum2", "dark", "socviz", "broadsheet", "nber",
-    "web", "ridge", "ridge2", "tufte", "float", "void"),
+    "web", "heatmap", "ridge", "ridge2", "tufte", "float", "void"),
   ...,
   register = NULL
 )
@@ -721,6 +733,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
 <li>
 <p><code>“void”</code> (*): switches off all axes, titles, legends, etc.</p>
+</li>
+<li>
+<p><code>“heatmap”</code> (*): a specialized theme for tile plots and heatmaps (see <code>type_tile()</code>). Builds off of <code>“clean2”</code>, but removes the axis padding so that the tiles meet the panel edge, drops the (redundant) grid lines, rotates the tick labels and removes their tick marks, and defaults to the "tealgrn" sequential palette. Not recommended for non-tile plots.</p>
 </li>
 <li>
 <p><code>“ridge”</code> (*): a specialized theme for ridge plots (see <code>type_ridge()</code>). Builds off of <code>“clean”</code>, but adds ridge-specific tweaks (e.g.&nbsp;default "Zissou 1" palette for discrete colors, solid horizontal grid lines, and minor adjustments to y-axis labels). Not recommended for non-ridge plots.</p>
@@ -1093,6 +1108,13 @@ tinytheme("clean", gap.axis = 0.5)
 <div>
 <figure class="figure">
 <p><img src="tinytheme_files/figure-html/unnamed-chunk-1-32.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinytheme_files/figure-html/unnamed-chunk-1-33.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

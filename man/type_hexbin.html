@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bd99d2caa9216ff79fd4771f5621bedd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-b5094435fd9d984d9b5c580374574846.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -309,6 +309,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_jitter</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_lines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_lines</span></a>
   </div>
@@ -351,14 +357,26 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_text</span></a>
+  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_segments.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_segments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_tile</span></a>
   </div>
 </li>
       </ul>
@@ -392,14 +410,20 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_density</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_ellipse.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ellipse</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_density</span></a>
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_heatmap</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -416,12 +440,6 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_jitter</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../man/type_qq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_qq</span></a>
   </div>
@@ -430,12 +448,6 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../man/type_ridge.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ridge</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -469,14 +481,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_loess</span></a>
+  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_lm</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_lm</span></a>
+  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_loess</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -801,17 +813,16 @@ Function used to summarise a <em>numeric</em> <code>by</code> variable within ea
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Continuous grouping variable: each cell is coloured by its mean. </span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    Example: Create a long version of the `volcano` dataset, and plot its</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#    elevations onto a gridded terrain map.</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>volc <span class="ot">=</span> <span class="fu">local</span>({</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">=</span> <span class="fu">setNames</span>(<span class="fu">stack</span>(<span class="fu">as.data.frame</span>(volcano)), <span class="fu">c</span>(<span class="st">"elevation"</span>, <span class="st">"y"</span>))</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  v<span class="sc">$</span>y <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"^V"</span>, <span class="st">""</span>, v<span class="sc">$</span>y))</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  v<span class="sc">$</span>x <span class="ot">=</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(volcano))</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  v</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="sc">|</span> elevation, <span class="at">data =</span> volc,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"hexbin"</span>, <span class="at">xbins =</span> <span class="dv">50</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">terrain.colors</span>(<span class="dv">100</span>, <span class="at">rev =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>volc <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x         =</span> <span class="fu">as.vector</span>(<span class="fu">row</span>(volcano)),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y         =</span> <span class="fu">as.vector</span>(<span class="fu">col</span>(volcano)),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation =</span> <span class="fu">as.vector</span>(volcano)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="sc">|</span> elevation, <span class="at">data =</span> volc,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"hexbin"</span>, <span class="at">xbins =</span> <span class="dv">50</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">terrain.colors</span>(<span class="dv">100</span>, <span class="at">rev =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

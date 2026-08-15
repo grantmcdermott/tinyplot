@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bd99d2caa9216ff79fd4771f5621bedd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-b5094435fd9d984d9b5c580374574846.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -280,6 +280,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_jitter</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_lines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_lines</span></a>
   </div>
@@ -322,14 +328,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_text</span></a>
+  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_segments.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_segments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_tile</span></a>
   </div>
 </li>
       </ul>
@@ -363,14 +381,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_density</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_ellipse.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ellipse</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_density.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_density</span></a>
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_heatmap</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -387,12 +411,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_jitter</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../man/type_qq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_qq</span></a>
   </div>
@@ -401,12 +419,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/type_ridge.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_ridge</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../man/type_rug.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_rug</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -440,14 +452,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_loess</span></a>
+  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_lm</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">type_lm</span></a>
+  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_loess</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -672,7 +684,7 @@ plot type passed on to <code>tinyplot</code>. Defaults to <code>“p”</code> (
 <code id="legend">legend</code>
 </td>
 <td>
-specification passed on to <code>tinyplot</code>. The default is to draw a legend when the matrix has named columns, and to suppress it otherwise.
+specification passed on to <code>tinyplot</code>. The default is to draw a legend when the matrix has named columns, and to suppress it otherwise. For <code>“tile”</code> and <code>“heatmap”</code> types it is suppressed by default.
 </td>
 </tr>
 <tr>
@@ -688,7 +700,7 @@ specification of <code>facet</code> passed on to <code>tinyplot</code>. The only
 <code id="xlab">xlab</code>, <code id="ylab">ylab</code>
 </td>
 <td>
-axis labels passed on to <code>tinyplot</code>. <code>ylab</code> defaults to the deparsed matrix name. <code>xlab</code> defaults to <code>“Index”</code> when the matrix has no row names; when it does, the row names already label the ticks so the x-axis title is suppressed.
+axis labels passed on to <code>tinyplot</code>. <code>ylab</code> defaults to the deparsed matrix name. <code>xlab</code> defaults to <code>“Index”</code> when the matrix has no row names; when it does, the row names already label the ticks so the x-axis title is suppressed. For <code>“tile”</code> and <code>“heatmap”</code> types both titles default to <code>NA</code>, since the dimnames label both axes.
 </td>
 </tr>
 <tr>
@@ -704,6 +716,7 @@ further arguments passed to <code>tinyplot</code>.
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
 <p>Internally the matrix is converted to long form and visualized as a scatter (or other <code>type</code>) of each column’s values against their row index. Each column is mapped to a separate <code>by</code> category, so a matrix with multiple columns produces a grouped plot. Optionally, it can also be faceted via <code>facet = “by”</code>. This mirrors the base R <code>matplot</code> convention of plotting the columns of a matrix against the row numbers. If the matrix has column names, these are used as the group (and legend) labels. Single-column matrices are drawn as a simple index plot with no grouping or legend.</p>
+<p>The <code>“tile”</code> and <code>“heatmap”</code> types are an exception, since the matplot convention makes little sense for them. Instead the matrix is laid out as a grid—columns along the x-axis, rows along the y-axis—with the matrix <em>values</em> supplied as the fill. The y-axis is reversed so that the first row sits at the top, matching how one reads a matrix (cf. <code>heatmap</code> and <code>image</code>); pass an explicit <code>ylim</code> to override. Both axis titles are suppressed, since the dimnames already label the ticks, and so is the legend, since the fill merely re-encodes the matrix’s own values. Pass an explicit <code>legend</code> (or <code>xlab</code>/<code>ylab</code>) to override either. See Examples.</p>
 </section>
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
@@ -758,6 +771,15 @@ further arguments passed to <code>tinyplot</code>.
 <div>
 <figure class="figure">
 <p><img src="tinyplot.matrix_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `"tile"` + `"heatmap"` types lay the matrix out as a grid instead</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(VADeaths, <span class="at">type =</span> <span class="st">"heatmap"</span>, <span class="at">theme =</span> <span class="st">"heatmap"</span>, <span class="at">col =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinyplot.matrix_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

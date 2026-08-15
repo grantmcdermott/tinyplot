@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bd99d2caa9216ff79fd4771f5621bedd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-b5094435fd9d984d9b5c580374574846.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -331,46 +331,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><a href="../man/type_errorbar.html">link</a></td>
 </tr>
 <tr class="odd">
+<td><code>"jitter"</code> / <code>"j"</code></td>
+<td><code>type_jitter()</code></td>
+<td>Jittered points.</td>
+<td><a href="../man/type_jitter.html">link</a></td>
+</tr>
+<tr class="even">
 <td><code>"l"</code> / <code>"b"</code> / etc.</td>
 <td><code>type_lines()</code></td>
 <td>Draws lines and line-alike (same as base <code>"l"</code>, <code>"b"</code>, etc.)</td>
 <td><a href="../man/type_lines.html">link</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>"pointrange"</code></td>
 <td><code>type_pointrange()</code></td>
 <td>Combines points with error bars.</td>
 <td><a href="../man/type_errorbar.html">link</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>"p"</code></td>
 <td><code>type_points()</code></td>
 <td>Draws points (same as base <code>"p"</code>).</td>
 <td><a href="../man/type_points.html">link</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>"polygon"</code></td>
 <td><code>type_polygon()</code></td>
 <td>Draws polygons.</td>
 <td><a href="../man/type_polygon.html">link</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>"polypath"</code></td>
 <td><code>type_polypath()</code></td>
 <td>Draws a path whose vertices are given in <code>x</code> and <code>y</code>.</td>
 <td><a href="../man/type_polypath.html">link</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>"rect"</code></td>
 <td><code>type_rect()</code></td>
 <td>Draws rectangles; requires <code>xmin</code>, <code>xmax</code>, <code>ymin</code>, and <code>ymax</code>.</td>
 <td><a href="../man/type_rect.html">link</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>"ribbon"</code></td>
 <td><code>type_ribbon()</code></td>
 <td>Creates a filled area between <code>ymin</code> and <code>ymax</code>.</td>
 <td><a href="../man/type_ribbon.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"rug"</code></td>
+<td><code>type_rug()</code></td>
+<td>Adds a rug to an existing plot.</td>
+<td><a href="../man/type_rug.html">link</a></td>
 </tr>
 <tr class="even">
 <td><code>"segments"</code></td>
@@ -383,6 +395,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>type_text()</code></td>
 <td>Adds text annotations to a plot.</td>
 <td><a href="../man/type_text.html">link</a></td>
+</tr>
+<tr class="even">
+<td><code>"tile"</code></td>
+<td><code>type_tile()</code></td>
+<td>Draws a grid of tiles; fill given by <code>by</code>.</td>
+<td><a href="../man/type_tile.html">link</a></td>
 </tr>
 </tbody>
 </table>
@@ -436,34 +454,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><a href="../man/type_ellipse.html">link</a></td>
 </tr>
 <tr class="even">
+<td><code>"heatmap"</code></td>
+<td><code>type_heatmap()</code></td>
+<td>Tiles, optionally rescaled along one axis.</td>
+<td><a href="../man/type_tile.html">link</a></td>
+</tr>
+<tr class="odd">
+<td><code>"hexbin"</code></td>
+<td><code>type_hexbin()</code></td>
+<td>Creates a hexagonal bin plot (2D histogram).</td>
+<td><a href="../man/type_hexbin.html">link</a></td>
+</tr>
+<tr class="even">
 <td><code>"histogram"</code> / <code>"hist"</code></td>
 <td><code>type_histogram()</code></td>
 <td>Creates a histogram of a single variable.</td>
 <td><a href="../man/type_histogram.html">link</a></td>
 </tr>
 <tr class="odd">
-<td><code>"jitter"</code> / <code>"j"</code></td>
-<td><code>type_jitter()</code></td>
-<td>Jittered points.</td>
-<td><a href="../man/type_jitter.html">link</a></td>
-</tr>
-<tr class="even">
 <td><code>"qq"</code></td>
 <td><code>type_qq()</code></td>
 <td>Creates a quantile-quantile plot.</td>
 <td><a href="../man/type_qq.html">link</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>"ridge"</code></td>
 <td><code>type_ridge()</code></td>
 <td>Creates a ridgeline (aka joy) plot.</td>
 <td><a href="../man/type_ridge.html">link</a></td>
-</tr>
-<tr class="even">
-<td><code>"rug"</code></td>
-<td><code>type_rug()</code></td>
-<td>Adds a rug to an existing plot.</td>
-<td><a href="../man/type_rug.html">link</a></td>
 </tr>
 <tr class="odd">
 <td><code>"spineplot"</code> / <code>"spine"</code></td>

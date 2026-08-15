@@ -1,7 +1,7 @@
 {
   "name": "tinyplot devcontainer",
-  "image": "rocker/r2u:24.04",
-  
+  "build": { "dockerfile": "Dockerfile" },
+
   "containerEnv": {
     "NOT_CRAN": "true"
   },

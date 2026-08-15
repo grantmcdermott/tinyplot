@@ -258,10 +258,14 @@ tinytheme = function(
   if (isTRUE(settings[["dynmar"]]) && !("mgp" %in% names(dots))) {
     .ga = settings[["gap.axis"]] %||% 0.2
     .gl = settings[["gap.lab"]] %||% 1.0
-    .ca = settings[["cex.axis"]] %||% 1
-    # FIXME: mgp is shared across sides, so we use the larger label cex to
+    # FIXME: mgp is shared across sides, so we use the larger tick/label cex to
     # avoid clipping on either axis. Ideally we'd set side-specific mgp when
-    # cex.xlab and cex.ylab differ.
+    # cex.xaxs and cex.yaxs (or cex.xlab and cex.ylab) differ.
+    .ca = max(
+      settings[["cex.axis"]] %||% 1,
+      settings[["cex.xaxs"]] %||% 0,
+      settings[["cex.yaxs"]] %||% 0
+    )
     .cl = max(
       settings[["cex.lab"]] %||% 1,
       settings[["cex.xlab"]] %||% 0,
@@ -322,6 +326,8 @@ theme_default = list(
   cex.main = par("cex.main"), #1.2,
   cex.cap = 1,
   cex.sub = par("cex.sub"), #1,
+  cex.xaxs = NULL, # defer to cex.axis unless set explicitly
+  cex.yaxs = NULL, # defer to cex.axis unless set explicitly
   cex.xlab = NULL, # defer to par("cex.lab") unless set explicitly
   cex.ylab = NULL, # defer to par("cex.lab") unless set explicitly
   col = par("col"), #"black",

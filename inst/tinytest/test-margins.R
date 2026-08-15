@@ -234,3 +234,14 @@ f = function() {
   tinytheme()
 }
 expect_snapshot_plot(f, label = "margins_whtsbp_3digit")
+
+# Per-axis tick-label cex must reach the margin calculations, not just the axis
+# call. Reading only the shared cex.axis clipped the labels on whichever axis was
+# scaled up and left dead whitespace on the one scaled down (#677).
+f = function() {
+  tinyplot(
+    as.matrix(mtcars), type = type_heatmap(scale = "x"), col = "white",
+    theme = list("heatmap", cex.yaxs = 0.5, cex.xaxs = 2)
+  )
+}
+expect_snapshot_plot(f, label = "margins_per_axis_cex_heatmap")

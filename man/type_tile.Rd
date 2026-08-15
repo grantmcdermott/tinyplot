@@ -195,9 +195,14 @@ tinyplot(
 )
 
 #
-## aside: use tinyplot.matrix directly to avoid reshaping ----
+## tips ----
 
+# tip 1: use tinyplot.matrix() directly to avoid reshaping
 tinyplot(as.matrix(mtcars), type = type_heatmap(scale = "x"), col = "white")
+
+# tip 2: use per-axis tick label scaling (cex) for dense heatmaps
+tinyplot(as.matrix(mtcars), type = type_heatmap(scale = "x"), col = "white",
+         theme = list("heatmap", cex.yaxs = 0.75, cex.xaxs = 1.5))
 
 ## restore the default theme
 tinytheme()

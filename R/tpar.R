@@ -54,7 +54,9 @@
 #' * `adj.ylab`: Numeric value between 0 and 1 controlling the alignment of the y-axis label.
 #' * `cairo`: Logical indicating whether \code{\link[grDevices]{cairo_pdf}} should be used when writing plots to PDF. If `FALSE`, then \code{\link[grDevices]{pdf}} will be used instead, with implications for embedding (non-standard) fonts. Only used if `tinyplot(..., file = "<filename>.pdf")` is called. Defaults to the value of `capabilities("cairo")`.
 #' * `cex.cap`: Numeric expansion factor for the plot caption text. Defaults to `1` for the default, basic, and dynamic themes, and `0.8` for clean/classic and their descendants.
+#' * `cex.xaxs`, `cex.yaxs`: Numeric expansion factors for the x- and y-axis tick labels, respectively. Both default to `NULL`, whereby the shared `cex.axis` value is used instead (which in turn falls back to `par("cex.axis")`). Set one of them to size a single axis' tick labels independently of the other, e.g. `cex.yaxs` to shrink a long list of category names on the y-axis without also shrinking the x-axis. Compare `cex.xlab` and `cex.ylab`, which do the same for the axis _titles_.
 #' * `col.cap`: Character specifying the colour of the plot caption. Defaults to `"black"`.
+#' * `col.xaxs`, `col.yaxs`: Characters (or integers) specifying the colour of the x- and y-axis tick labels, respectively. Both default to `NULL`, whereby the shared `col.axis` value is used instead.
 #' * `col.default`: Default colour for single-group displays (i.e. plots without a `by` grouping). Can be `NULL`, a length-1 character colour, or a length-1 numeric index into `palette.qualitative`. Defaults to `NULL`, in which case the first colour of the active qualitative palette is used (or base `palette()[1]`, typically black, if no theme is set). A character value sets the single-group colour independently of the multi-group palette. A numeric value `i` selects the `i`th colour of `palette.qualitative` as the single-group default; a *negative* index additionally drops that colour from the palette used for grouped plots. For example, `col.default = -1` paired with `palette.qualitative = "Okabe-Ito"` uses black (the leading palette colour) for single-group plots and an Okabe-Ito-minus-black palette for grouped plots, avoiding the need to maintain a separate "no-black" palette.
 #' * `font.cap`: Integer specifying the font face for the plot caption (`1` = plain, `2` = bold, `3` = italic, `4` = bold italic). Defaults to `1`.
 #' * `line.cap`: Numeric specifying the margin line on which to draw the caption. If `NULL` (default), computed automatically based on the available bottom margin.
@@ -76,6 +78,8 @@
 #' * `grid.lwd`: Non-negative numeric giving the line width of the panel grid lines. Defaults to `1`.
 #' * `grid`: Logical or character indicating whether a background panel grid should be added to plots automatically. Defaults to `NULL`, which is equivalent to `FALSE`. In addition to logical values, a character string can be used to control axis-specific grids: uppercase letters (`"X"`, `"Y"`, `"XY"`) draw grid lines at the standard axis tick positions (equivalent to `TRUE`), while lowercase letters (`"x"`, `"y"`, `"xy"`) draw a finer grid with additional lines at the midpoints between ticks.
 #' * `lmar`: A numeric vector of form `c(inner, outer)` that gives the margin padding, in terms of lines, around the automatic `tinyplot` legend. Defaults to `c(1.0, 0.1)`. The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.
+#' * `lty.xaxs`, `lty.yaxs`: Line types for the x- and y-axis lines, respectively. Both default to `NULL`, whereby the shared `lty.axis` value is used instead.
+#' * `lwd.xaxs`, `lwd.yaxs`: Line widths for the x- and y-axis lines, respectively. Both default to `NULL`, whereby the shared `lwd.axis` value is used instead.
 #' * `palette.qualitative`: Palette for qualitative colors. See the `palette` argument in `?tinyplot`.
 #' * `palette.sequential`: Palette for sequential colors. See the `palette` argument in `?tinyplot`.
 #' * `ribbon.alpha`: Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is `0.2`.
@@ -233,6 +237,8 @@ known_tpar = c(
     "adj.xlab",
     "adj.ylab",
     "cex.cap",
+    "cex.xaxs",
+    "cex.yaxs",
     "cex.xlab",
     "cex.ylab",
     "col.cap",
@@ -293,6 +299,8 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["adj.sub"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.sub")
   assert_numeric(.tpar[["adj.xlab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.xlab")
   assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
+  assert_numeric(.tpar[["cex.xaxs"]], len = 1, lower = 0, null.ok = TRUE, name = "cex.xaxs")
+  assert_numeric(.tpar[["cex.yaxs"]], len = 1, lower = 0, null.ok = TRUE, name = "cex.yaxs")
   assert_flag(.tpar[["cairo"]], name = "cairo")
   assert_flag(.tpar[["dynmar"]], null.ok = FALSE, name = "dynmar")
   assert_choice(.tpar[["ljust"]], choice = c("left", "center", "l", "c"), null.ok = TRUE, name = "ljust")

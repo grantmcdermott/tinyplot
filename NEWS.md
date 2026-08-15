@@ -52,6 +52,11 @@ where the formatting is also better._
   `"cat"` (console), in any combination; a destination the user has already
   labelled is left alone. Shared bandwidths are reported once and named as
   joint, individual bandwidths per group. (#287 @haomeng797-ship-it)
+- New `cex.xaxs` and `cex.yaxs` graphical parameters allow the x- and y-axis
+  tick labels to be sized independently, e.g. `tpar(cex.yaxs = 0.6)` to shrink a 
+  long list of category names on the y-axis without also shrinking the x-axis.
+  Both default to `NULL`, in which case the shared `cex.axis` value is used, so
+  existing plots are unaffected. (#677 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -72,6 +77,16 @@ where the formatting is also better._
     hand and so silently ignored `cex.axis`, `lwd.axis` and `lty.axis` (plus
     their per-side variants), which was most visible under themes that set them,
     e.g. `tinytheme("bw")`. (#673 @grantmcdermott)
+- Axis tick labels now honour the themed `cex.axis` value. The internal axis call
+  passed it as `cex`, which base `axis()` ignores in favour of `cex.axis` when
+  sizing tick labels, so the setting had no effect on label size. This also means
+  the per-side `cex.xaxs`/`cex.yaxs` parameters (see above) take effect.
+  (#677 @grantmcdermott)
+- Dynamic margins now measure each axis at its own tick-label size. The margin
+  and whitespace calculations read only the shared `cex.axis`, so a plot that
+  set `cex.xaxs`/`cex.yaxs` to different values clipped the labels on the larger
+  axis and reserved dead whitespace on the smaller one, e.g.
+  `tinytheme("heatmap", cex.xaxs = 2, cex.yaxs = 0.5)`. (#677 @grantmcdermott)
 - Grouped and faceted plots no longer redraw axes once per empty group. This was
   most visible for `"spineplot"` types (e.g. `facet = "by"`), where the
   self-drawn axis labels were overplotted several times and rendered too heavy.

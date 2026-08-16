@@ -150,10 +150,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Themes</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../vignettes/gallery.html">
- <span class="dropdown-text">Gallery</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="../vignettes/tips.html">
  <span class="dropdown-text">Tips &amp; tricks</span></a>
   </li>  
@@ -163,6 +159,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
     </ul>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/gallery.html"> 
+<span class="menu-text">Gallery</span></a>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-about" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">About</span>
@@ -303,8 +303,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Let’s end this tip with a more sophisticated example using real-life US GDP data from <a href="https://fred.stlouisfed.org/series/GDPC1">FRED</a>. As a bonus, we’ll pair our simple <code>recbar()</code> function with another <code>get_rec_dates()</code> function that calculates recession dates according to the standard definition of two consecutive quarters of negative growth.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get 1980+ US GDP data from FRED</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">=</span> <span class="st">"https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPC1&amp;cosd=1980-01-01"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>gdp <span class="ot">=</span> <span class="fu">read.csv</span>(url) <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fred_url <span class="ot">=</span> <span class="st">"https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPC1&amp;cosd=1980-01-01"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>gdp <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="fu">url</span>(fred_url, <span class="at">headers =</span> <span class="fu">c</span>(<span class="st">"User-Agent"</span> <span class="ot">=</span> <span class="st">"curl"</span>))) <span class="sc">|&gt;</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"gdp"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date))</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>

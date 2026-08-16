@@ -7,8 +7,9 @@ aq = transform(
   Late = ifelse(Day > 15, "Late", "Early")
 )
   
-tinyplot(Month ~ Temp | Temp,
+tinyplot(
+  Month ~ Temp,
   data = aq,
-  type = type_ridge(col = "white"),
+  type = type_ridge(col = "white", gradient = TRUE),
   theme = "ridge2"
 )

@@ -7,11 +7,12 @@ execute:
 
 ```{css}
 .gslide-desc {
-	text-align: center;
+  text-align: center;
   font-size: 1.1rem !important;
 }
-div.gslide-description, .gslide-desc {
-	background-color: #e0e0e0 !important;
+div.gslide-description,
+.gslide-desc {
+  background-color: #e0e0e0 !important;
 }
 ```
 
@@ -102,6 +103,20 @@ Click on a plot to get the link to its code.
 #|   group: r-graph
 #|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/ridge-aq.R){target='_blank'}"
 #| file: "gallery_figs/ridge-aq.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/heatmap-mtcars.R){target='_blank'}"
+#| file: "gallery_figs/heatmap-mtcars.R"
+```
+
+```{r}
+#| lightbox:
+#|   group: r-graph
+#|   description: "[Code](https://github.com/grantmcdermott/tinyplot/blob/main/vignettes/gallery_figs/hexbin.R){target='_blank'}"
+#| file: "gallery_figs/hexbin.R"
 ```
 
 ```{r}

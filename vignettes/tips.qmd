@@ -68,8 +68,8 @@ consecutive quarters of negative growth.
 
 ```{r}
 # get 1980+ US GDP data from FRED
-url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPC1&cosd=1980-01-01"
-gdp = read.csv(url) |>
+fred_url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPC1&cosd=1980-01-01"
+gdp = read.csv(url(fred_url, headers = c("User-Agent" = "curl"))) |>
   setNames(c("date", "gdp")) |>
   transform(date = as.Date(date))
 

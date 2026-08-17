@@ -151,7 +151,7 @@
 #'
 #' # tip 2: use per-axis tick label scaling (cex) for dense heatmaps
 #' tinyplot(as.matrix(mtcars), type = type_heatmap(scale = "x"), col = "white",
-#'          theme = list("heatmap", cex.yaxs = 0.75, cex.xaxs = 1.5))
+#'          theme = list("heatmap", cex.yaxs = 0.75, cex.xaxs = 1.25))
 #' 
 #' ## restore the default theme
 #' tinytheme()

@@ -14,7 +14,7 @@
     "text": "Convenience function for retrieving the graphical parameters (i.e., the full list of tag = value pairs held in par) from either immediately before or immediately after the most recent tinyplot call.\n\n\n\nget_saved_par(when = c(\"before\", \"after\", \"first\"))\n\n\n\n\n\n\n\nwhen\n\n\ncharacter. From when should the saved parameters be retrieved? Either \"before\" (the default) or \"after\" the preceding tinyplot call.\n\n\n\n\n\n\nA potential side-effect of tinyplot is that it can change a user’s par settings. For example, it may adjust the inner and outer plot margins to make space for an automatic legend; see draw_legend. While it is possible to immediately restore the original par settings upon exit via the tinyplot(…, restore.par = TRUE) argument, this is not the default behaviour. The reason being that we need to preserve the adjusted parameter settings in case users want to add further graphical annotations to their plot (e.g., abline, text, etc.) Nevertheless, it may still prove desirable to recall and reset these original graphical parameters after the fact (e.g., once all these extra annotations have been added). That is the purpose of this get_saved_par function.\nOf course, users may prefer to manually capture and reset graphical parameters, as per the standard method described in the par documentation. For example:\n\nop = par(no.readonly = TRUE)  # save current par settings \n# &lt;do lots of (tiny)plotting&gt;\npar(op)                       # reset original pars\n\n\nThis standard manual approach may be safer than get_saved_par because it offers more precise control. Specifically, the value of get_saved_par itself will be reset after ever new tinyplot call; i.e. it may inherit an already-changed set of parameters. Users should bear these trade-offs in mind when deciding which approach to use. As a general rule, get_saved_par offers the convenience of resetting the original par settings even if a user forgot to save them beforehand. But one should avoid invoking it after a series of consecutive tinyplot calls.\nFinally, note that users can always call dev.off to reset all par settings to their defaults.\n\n\n\nA list of par settings.\n\n\n\n\nlibrary(\"tinyplot\")\n\n#\n# Contrived example where we draw a grouped scatterplot with a legend and\n# manually add corresponding best fit lines for each group...\n#\n\n# First draw the grouped scatterplot\ntinyplot(Sepal.Length ~ Petal.Length | Species, iris)\n\n# Preserving adjusted par settings is good for adding elements to our plot\nfor (s in levels(iris$Species)) {\n  abline(\n    lm(Sepal.Length ~ Petal.Length, iris, subset = Species==s),\n    col = which(levels(iris$Species)==s)\n  )\n}\n\n\n\n\n\n\n\n# Get saved par from before the preceding tinyplot call (but don't use yet)\nsp = get_saved_par(\"before\")\n\n# Note the changed margins will affect regular plots too, which is probably\n# not desirable\nplot(1:10)\n\n\n\n\n\n\n\n# Reset the original parameters (could use `par(sp)` here)\ntpar(sp)\n# Redraw our simple plot with our corrected right margin\nplot(1:10)\n\n#\n# Quick example going the other way, \"correcting\" for par.restore = TRUE...\n#\n\ntinyplot(Sepal.Length ~ Petal.Length | Species, iris, restore.par = TRUE)\n# Our added best lines will be wrong b/c of misaligned par\nfor (s in levels(iris$Species)) {\n  abline(\n    lm(Sepal.Length ~ Petal.Length, iris, subset = Species==s),\n    col = which(levels(iris$Species)==s), lty = 2\n  )\n}\n# grab the par settings from the _end_ of the preceding tinyplot call to fix\ntpar(get_saved_par(\"after\"))\n# now the best lines are correct\nfor (s in levels(iris$Species)) {\n  abline(\n    lm(Sepal.Length ~ Petal.Length, iris, subset = Species==s),\n    col = which(levels(iris$Species)==s)\n  )\n}\n\n\n\n\n\n\n\n# reset again to original saved par settings before exit\ntpar(sp)",
     "crumbs": [
       "Reference",
-      "Options",
+      "Utilities",
       "get_saved_par"
     ]
   },
@@ -26,7 +26,7 @@
     "text": "Convenience function for retrieving the graphical parameters (i.e., the full list of tag = value pairs held in par) from either immediately before or immediately after the most recent tinyplot call.\n\n\n\nget_saved_par(when = c(\"before\", \"after\", \"first\"))\n\n\n\n\n\n\n\nwhen\n\n\ncharacter. From when should the saved parameters be retrieved? Either \"before\" (the default) or \"after\" the preceding tinyplot call.\n\n\n\n\n\n\nA potential side-effect of tinyplot is that it can change a user’s par settings. For example, it may adjust the inner and outer plot margins to make space for an automatic legend; see draw_legend. While it is possible to immediately restore the original par settings upon exit via the tinyplot(…, restore.par = TRUE) argument, this is not the default behaviour. The reason being that we need to preserve the adjusted parameter settings in case users want to add further graphical annotations to their plot (e.g., abline, text, etc.) Nevertheless, it may still prove desirable to recall and reset these original graphical parameters after the fact (e.g., once all these extra annotations have been added). That is the purpose of this get_saved_par function.\nOf course, users may prefer to manually capture and reset graphical parameters, as per the standard method described in the par documentation. For example:\n\nop = par(no.readonly = TRUE)  # save current par settings \n# &lt;do lots of (tiny)plotting&gt;\npar(op)                       # reset original pars\n\n\nThis standard manual approach may be safer than get_saved_par because it offers more precise control. Specifically, the value of get_saved_par itself will be reset after ever new tinyplot call; i.e. it may inherit an already-changed set of parameters. Users should bear these trade-offs in mind when deciding which approach to use. As a general rule, get_saved_par offers the convenience of resetting the original par settings even if a user forgot to save them beforehand. But one should avoid invoking it after a series of consecutive tinyplot calls.\nFinally, note that users can always call dev.off to reset all par settings to their defaults.\n\n\n\nA list of par settings.\n\n\n\n\nlibrary(\"tinyplot\")\n\n#\n# Contrived example where we draw a grouped scatterplot with a legend and\n# manually add corresponding best fit lines for each group...\n#\n\n# First draw the grouped scatterplot\ntinyplot(Sepal.Length ~ Petal.Length | Species, iris)\n\n# Preserving adjusted par settings is good for adding elements to our plot\nfor (s in levels(iris$Species)) {\n  abline(\n    lm(Sepal.Length ~ Petal.Length, iris, subset = Species==s),\n    col = which(levels(iris$Species)==s)\n  )\n}\n\n\n\n\n\n\n\n# Get saved par from before the preceding tinyplot call (but don't use yet)\nsp = get_saved_par(\"before\")\n\n# Note the changed margins will affect regular plots too, which is probably\n# not desirable\nplot(1:10)\n\n\n\n\n\n\n\n# Reset the original parameters (could use `par(sp)` here)\ntpar(sp)\n# Redraw our simple plot with our corrected right margin\nplot(1:10)\n\n#\n# Quick example going the other way, \"correcting\" for par.restore = TRUE...\n#\n\ntinyplot(Sepal.Length ~ Petal.Length | Species, iris, restore.par = TRUE)\n# Our added best lines will be wrong b/c of misaligned par\nfor (s in levels(iris$Species)) {\n  abline(\n    lm(Sepal.Length ~ Petal.Length, iris, subset = Species==s),\n    col = which(levels(iris$Species)==s), lty = 2\n  )\n}\n# grab the par settings from the _end_ of the preceding tinyplot call to fix\ntpar(get_saved_par(\"after\"))\n# now the best lines are correct\nfor (s in levels(iris$Species)) {\n  abline(\n    lm(Sepal.Length ~ Petal.Length, iris, subset = Species==s),\n    col = which(levels(iris$Species)==s)\n  )\n}\n\n\n\n\n\n\n\n# reset again to original saved par settings before exit\ntpar(sp)",
     "crumbs": [
       "Reference",
-      "Options",
+      "Utilities",
       "get_saved_par"
     ]
   },
@@ -39,7 +39,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_errorbar"
     ]
   },
@@ -52,7 +51,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_errorbar"
     ]
   },
@@ -65,7 +63,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Models",
       "type_spline"
     ]
   },
@@ -78,7 +75,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Models",
       "type_spline"
     ]
   },
@@ -91,7 +87,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Functions",
       "type_abline"
     ]
   },
@@ -104,7 +99,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Functions",
       "type_abline"
     ]
   },
@@ -141,7 +135,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_segments"
     ]
   },
@@ -154,7 +147,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_segments"
     ]
   },
@@ -215,7 +207,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_spineplot"
     ]
   },
@@ -228,7 +219,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_spineplot"
     ]
   },
@@ -265,7 +255,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Functions",
       "type_function"
     ]
   },
@@ -278,7 +267,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Functions",
       "type_function"
     ]
   },
@@ -291,7 +279,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_density"
     ]
   },
@@ -304,7 +291,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_density"
     ]
   },
@@ -316,7 +302,7 @@
     "text": "Extends par, serving as a (near) drop-in replacement for setting or querying graphical parameters. The key differences is that, beyond supporting the standard group of R graphical parameters in par, tpar also supports additional graphical parameters that are provided by tinyplot. Similar to par, parameters are set by passing appropriate key = value argument pairs, and multiple parameters can be set or queried at the same time.\n\n\n\ntpar(..., hook = FALSE)\n\n\n\n\n\n\n\n…\n\n\narguments of the form key = value. This includes all of the parameters typically supported by par, as well as the tinyplot-specific ones described in the ‘Graphical Parameters’ section below.\n\n\n\n\nhook\n\n\nLogical. If TRUE, base graphical parameters persist across plots via a hook applied before each new plot (see ?setHook).\n\n\n\n\n\n\nThe tinyplot-specific parameters are saved in an internal environment called .tpar for performance and safety reasons. However, they can also be set at package load time via options, which may prove convenient for users that want to enable different default behaviour at startup (e.g., through an .Rprofile file). These options all take a tinyplot_* prefix, e.g. options(tinyplot_grid = TRUE, tinyplot_facet.bg = “grey90”).\nFor their part, any \"base\" graphical parameters are caught dynamically and passed on to par as appropriate. Technically, only parameters that satisfy par(…, no.readonly = TRUE) are evaluated.\nHowever, note the important distinction: tpar only evaluates parameters from par if they are passed explicitly by the user. This means that tpar should not be used to capture the (invisible) state of a user’s entire set of graphics parameters, i.e. tpar() != par(). If you want to capture the all existing graphics settings, then you should rather use par() instead.\n\n\n\nWhen parameters are set, their previous values are returned in an invisible named list. Such a list can be passed as an argument to tpar to restore the parameter values.\nWhen just one parameter is queried, the value of that parameter is returned as (atomic) vector. When two or more parameters are queried, their values are returned in a list, with the list names giving the parameters.\nNote the inconsistency: setting one parameter returns a list, but querying one parameter returns a vector.\n\n\n\n\n\nadj.cap: Numeric value between 0 and 1 controlling the alignment of the plot caption. Defaults to 0.5 (centered) for the default theme, and 1 (right-aligned) for all other themes.\n\n\nadj.xlab: Numeric value between 0 and 1 controlling the alignment of the x-axis label.\n\n\nadj.ylab: Numeric value between 0 and 1 controlling the alignment of the y-axis label.\n\n\ncairo: Logical indicating whether cairo_pdf should be used when writing plots to PDF. If FALSE, then pdf will be used instead, with implications for embedding (non-standard) fonts. Only used if tinyplot(…, file = “&lt;filename&gt;.pdf”) is called. Defaults to the value of capabilities(“cairo”).\n\n\ncex.cap: Numeric expansion factor for the plot caption text. Defaults to 1 for the default, basic, and dynamic themes, and 0.8 for clean/classic and their descendants.\n\n\ncex.xaxs, cex.yaxs: Numeric expansion factors for the x- and y-axis tick labels, respectively. Both default to NULL, whereby the shared cex.axis value is used instead (which in turn falls back to par(“cex.axis”)). Set one of them to size a single axis’ tick labels independently of the other, e.g. cex.yaxs to shrink a long list of category names on the y-axis without also shrinking the x-axis. Compare cex.xlab and cex.ylab, which do the same for the axis titles.\n\n\ncol.cap: Character specifying the colour of the plot caption. Defaults to “black”.\n\n\ncol.xaxs, col.yaxs: Characters (or integers) specifying the colour of the x- and y-axis tick labels, respectively. Both default to NULL, whereby the shared col.axis value is used instead.\n\n\ncol.default: Default colour for single-group displays (i.e. plots without a by grouping). Can be NULL, a length-1 character colour, or a length-1 numeric index into palette.qualitative. Defaults to NULL, in which case the first colour of the active qualitative palette is used (or base palette()[1], typically black, if no theme is set). A character value sets the single-group colour independently of the multi-group palette. A numeric value i selects the ith colour of palette.qualitative as the single-group default; a negative index additionally drops that colour from the palette used for grouped plots. For example, col.default = -1 paired with palette.qualitative = “Okabe-Ito” uses black (the leading palette colour) for single-group plots and an Okabe-Ito-minus-black palette for grouped plots, avoiding the need to maintain a separate \"no-black\" palette.\n\n\nfont.cap: Integer specifying the font face for the plot caption (1 = plain, 2 = bold, 3 = italic, 4 = bold italic). Defaults to 1.\n\n\nline.cap: Numeric specifying the margin line on which to draw the caption. If NULL (default), computed automatically based on the available bottom margin.\n\n\ndynmar: Logical indicating whether tinyplot should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal tinythemes() logic and should not be adjusted manually unless you really know what you are doing or don’t mind risking unintended consequences to your plot.\n\n\nfacet.axes: Character string controlling which facets draw their own axes: “all” (each facet), “outer” (only facets on the outer edge of the facet grid, dropping redundant interior axes), or “none”. Defaults to NULL, whereby the choice is inferred from whether the plot is framed (see the axes argument of facet.args). Equivalent to setting tinyplot(…, facet.args = list(axes = X)), but globally, which also makes it available to themes.\n\n\nfacet.bg: Character or integer specifying the facet background colour. If an integer, will correspond to the user’s default colour palette (see palette). Passed to rect. Defaults to NULL (none).\n\n\nfacet.border: Character or integer specifying the facet border colour. If an integer, will correspond to the user’s default colour palette (see palette). Passed to rect. Defaults to NA (none).\n\n\nfacet.cex: Expansion factor for facet titles. Defaults to 1.\n\n\nfacet.col: Character or integer specifying the facet text colour. If an integer, will correspond to the user’s default global colour palette (see palette). Defaults to NULL, which is equivalent to \"black\".\n\n\nfacet.font: An integer corresponding to the desired font face for facet titles. For most font families and graphics devices, one of four possible values: 1 (regular), 2 (bold), 3 (italic), or 4 (bold italic). Defaults to NULL, which is equivalent to 1 (i.e., regular).\n\n\nfile.height: Numeric specifying the height (in inches) of any plot that is written to disk using the tinyplot(…, file = X) argument. Defaults to 7.\n\n\nfile.res: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the tinyplot(…, file = X) argument. Defaults to 300.\n\n\nfile.width: Numeric specifying the width (in inches) of any plot that is written to disk using the tinyplot(…, file = X) argument. Defaults to 7.\n\n\nfmar: A numeric vector of form c(b,l,t,r) for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to c(1,1,1,1). If more than three facets are detected, the fmar parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the cex expansion logic of base graphics.\n\n\ngap.main: Numeric giving the gap (in margin lines) from the main title baseline to the element below it (plot box when no subtitle; subtitle top when subtitle is present). Only used when dynmar = TRUE. Defaults to 0.7.\n\n\ngap.sub: Numeric giving the gap (in margin lines) from the subtitle baseline to the plot box. Only used when dynmar = TRUE and side.sub = 3. Defaults to 0.7.\n\n\ngrid.col: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to “lightgray”.\n\n\ngrid.lty: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to “dotted”.\n\n\ngrid.lwd: Non-negative numeric giving the line width of the panel grid lines. Defaults to 1.\n\n\ngrid: Logical or character indicating whether a background panel grid should be added to plots automatically. Defaults to NULL, which is equivalent to FALSE. In addition to logical values, a character string can be used to control axis-specific grids: uppercase letters (“X”, “Y”, “XY”) draw grid lines at the standard axis tick positions (equivalent to TRUE), while lowercase letters (“x”, “y”, “xy”) draw a finer grid with additional lines at the midpoints between ticks.\n\n\nlmar: A numeric vector of form c(inner, outer) that gives the margin padding, in terms of lines, around the automatic tinyplot legend. Defaults to c(1.0, 0.1). The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.\n\n\nlty.xaxs, lty.yaxs: Line types for the x- and y-axis lines, respectively. Both default to NULL, whereby the shared lty.axis value is used instead.\n\n\nlwd.xaxs, lwd.yaxs: Line widths for the x- and y-axis lines, respectively. Both default to NULL, whereby the shared lwd.axis value is used instead.\n\n\npalette.qualitative: Palette for qualitative colors. See the palette argument in ?tinyplot.\n\n\npalette.sequential: Palette for sequential colors. See the palette argument in ?tinyplot.\n\n\nribbon.alpha: Numeric factor in the range [0,1] for modifying the opacity alpha of \"ribbon\" and \"area\" type plots. Default value is 0.2.\n\n\n\n\n\ngraphics::par which tpar builds on top of. get_saved_par is a convenience function for retrieving graphical parameters at different stages of a tinyplot call (and used for internal accounting purposes). tinytheme allows users to easily set a group of graphics parameters in a single function call, according to a variety of predefined themes.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# Return a list of existing base and tinyplot graphic params\ntpar(\"las\", \"pch\", \"facet.bg\", \"facet.cex\", \"grid\")\n\n$las\n[1] 0\n\n$pch\n[1] 1\n\n$facet.bg\nNULL\n\n$facet.cex\n[1] 1\n\n$grid\n[1] FALSE\n\n# Simple facet plot with these default values\ntinyplot(mpg ~ wt, data = mtcars, facet = ~am)\n\n\n\n\n\n\n\n# Set params to something new. Similar to graphics::par(), note that we save\n# the existing values at the same time by assigning to an object.\nop = tpar(\n  las       = 1,\n  pch       = 2,\n  facet.bg  = \"grey90\",\n  facet.cex = 2,\n  grid      = TRUE\n)\n\n# Re-plot with these new params\ntinyplot(mpg ~ wt, data = mtcars, facet = ~am)\n\n\n\n\n\n\n\n# Reset back to original values\ntpar(op)\n\n# Important: tpar() only evaluates parameters that have been passed explicitly\n#   by the user. So it it should not be used to query and set (restore)\n#   parameters that weren't explicitly requested, i.e. tpar() != par().\n\n# Note: The tinyplot-specific parameters can also be be set via `options`\n#   with a `tinyplot_*` prefix, which can be convenient for enabling\n#   different default behaviour at startup time (e.g., via an .Rprofile\n#   file). Example:\n# options(tinyplot_grid = TRUE, tinyplot_facet.bg = \"grey90\")",
     "crumbs": [
       "Reference",
-      "Options",
+      "Utilities",
       "tpar"
     ]
   },
@@ -328,7 +314,7 @@
     "text": "Extends par, serving as a (near) drop-in replacement for setting or querying graphical parameters. The key differences is that, beyond supporting the standard group of R graphical parameters in par, tpar also supports additional graphical parameters that are provided by tinyplot. Similar to par, parameters are set by passing appropriate key = value argument pairs, and multiple parameters can be set or queried at the same time.\n\n\n\ntpar(..., hook = FALSE)\n\n\n\n\n\n\n\n…\n\n\narguments of the form key = value. This includes all of the parameters typically supported by par, as well as the tinyplot-specific ones described in the ‘Graphical Parameters’ section below.\n\n\n\n\nhook\n\n\nLogical. If TRUE, base graphical parameters persist across plots via a hook applied before each new plot (see ?setHook).\n\n\n\n\n\n\nThe tinyplot-specific parameters are saved in an internal environment called .tpar for performance and safety reasons. However, they can also be set at package load time via options, which may prove convenient for users that want to enable different default behaviour at startup (e.g., through an .Rprofile file). These options all take a tinyplot_* prefix, e.g. options(tinyplot_grid = TRUE, tinyplot_facet.bg = “grey90”).\nFor their part, any \"base\" graphical parameters are caught dynamically and passed on to par as appropriate. Technically, only parameters that satisfy par(…, no.readonly = TRUE) are evaluated.\nHowever, note the important distinction: tpar only evaluates parameters from par if they are passed explicitly by the user. This means that tpar should not be used to capture the (invisible) state of a user’s entire set of graphics parameters, i.e. tpar() != par(). If you want to capture the all existing graphics settings, then you should rather use par() instead.\n\n\n\nWhen parameters are set, their previous values are returned in an invisible named list. Such a list can be passed as an argument to tpar to restore the parameter values.\nWhen just one parameter is queried, the value of that parameter is returned as (atomic) vector. When two or more parameters are queried, their values are returned in a list, with the list names giving the parameters.\nNote the inconsistency: setting one parameter returns a list, but querying one parameter returns a vector.\n\n\n\n\n\nadj.cap: Numeric value between 0 and 1 controlling the alignment of the plot caption. Defaults to 0.5 (centered) for the default theme, and 1 (right-aligned) for all other themes.\n\n\nadj.xlab: Numeric value between 0 and 1 controlling the alignment of the x-axis label.\n\n\nadj.ylab: Numeric value between 0 and 1 controlling the alignment of the y-axis label.\n\n\ncairo: Logical indicating whether cairo_pdf should be used when writing plots to PDF. If FALSE, then pdf will be used instead, with implications for embedding (non-standard) fonts. Only used if tinyplot(…, file = “&lt;filename&gt;.pdf”) is called. Defaults to the value of capabilities(“cairo”).\n\n\ncex.cap: Numeric expansion factor for the plot caption text. Defaults to 1 for the default, basic, and dynamic themes, and 0.8 for clean/classic and their descendants.\n\n\ncex.xaxs, cex.yaxs: Numeric expansion factors for the x- and y-axis tick labels, respectively. Both default to NULL, whereby the shared cex.axis value is used instead (which in turn falls back to par(“cex.axis”)). Set one of them to size a single axis’ tick labels independently of the other, e.g. cex.yaxs to shrink a long list of category names on the y-axis without also shrinking the x-axis. Compare cex.xlab and cex.ylab, which do the same for the axis titles.\n\n\ncol.cap: Character specifying the colour of the plot caption. Defaults to “black”.\n\n\ncol.xaxs, col.yaxs: Characters (or integers) specifying the colour of the x- and y-axis tick labels, respectively. Both default to NULL, whereby the shared col.axis value is used instead.\n\n\ncol.default: Default colour for single-group displays (i.e. plots without a by grouping). Can be NULL, a length-1 character colour, or a length-1 numeric index into palette.qualitative. Defaults to NULL, in which case the first colour of the active qualitative palette is used (or base palette()[1], typically black, if no theme is set). A character value sets the single-group colour independently of the multi-group palette. A numeric value i selects the ith colour of palette.qualitative as the single-group default; a negative index additionally drops that colour from the palette used for grouped plots. For example, col.default = -1 paired with palette.qualitative = “Okabe-Ito” uses black (the leading palette colour) for single-group plots and an Okabe-Ito-minus-black palette for grouped plots, avoiding the need to maintain a separate \"no-black\" palette.\n\n\nfont.cap: Integer specifying the font face for the plot caption (1 = plain, 2 = bold, 3 = italic, 4 = bold italic). Defaults to 1.\n\n\nline.cap: Numeric specifying the margin line on which to draw the caption. If NULL (default), computed automatically based on the available bottom margin.\n\n\ndynmar: Logical indicating whether tinyplot should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal tinythemes() logic and should not be adjusted manually unless you really know what you are doing or don’t mind risking unintended consequences to your plot.\n\n\nfacet.axes: Character string controlling which facets draw their own axes: “all” (each facet), “outer” (only facets on the outer edge of the facet grid, dropping redundant interior axes), or “none”. Defaults to NULL, whereby the choice is inferred from whether the plot is framed (see the axes argument of facet.args). Equivalent to setting tinyplot(…, facet.args = list(axes = X)), but globally, which also makes it available to themes.\n\n\nfacet.bg: Character or integer specifying the facet background colour. If an integer, will correspond to the user’s default colour palette (see palette). Passed to rect. Defaults to NULL (none).\n\n\nfacet.border: Character or integer specifying the facet border colour. If an integer, will correspond to the user’s default colour palette (see palette). Passed to rect. Defaults to NA (none).\n\n\nfacet.cex: Expansion factor for facet titles. Defaults to 1.\n\n\nfacet.col: Character or integer specifying the facet text colour. If an integer, will correspond to the user’s default global colour palette (see palette). Defaults to NULL, which is equivalent to \"black\".\n\n\nfacet.font: An integer corresponding to the desired font face for facet titles. For most font families and graphics devices, one of four possible values: 1 (regular), 2 (bold), 3 (italic), or 4 (bold italic). Defaults to NULL, which is equivalent to 1 (i.e., regular).\n\n\nfile.height: Numeric specifying the height (in inches) of any plot that is written to disk using the tinyplot(…, file = X) argument. Defaults to 7.\n\n\nfile.res: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the tinyplot(…, file = X) argument. Defaults to 300.\n\n\nfile.width: Numeric specifying the width (in inches) of any plot that is written to disk using the tinyplot(…, file = X) argument. Defaults to 7.\n\n\nfmar: A numeric vector of form c(b,l,t,r) for controlling the (base) margin padding, in terms of lines, between the individual facets in a faceted plot. Defaults to c(1,1,1,1). If more than three facets are detected, the fmar parameter is scaled by 0.75 to reduce excess whitespace. For 2x2 plots, the padding better matches the cex expansion logic of base graphics.\n\n\ngap.main: Numeric giving the gap (in margin lines) from the main title baseline to the element below it (plot box when no subtitle; subtitle top when subtitle is present). Only used when dynmar = TRUE. Defaults to 0.7.\n\n\ngap.sub: Numeric giving the gap (in margin lines) from the subtitle baseline to the plot box. Only used when dynmar = TRUE and side.sub = 3. Defaults to 0.7.\n\n\ngrid.col: Character or (integer) numeric that specifies the color of the panel grid lines. Defaults to “lightgray”.\n\n\ngrid.lty: Character or (integer) numeric that specifies the line type of the panel grid lines. Defaults to “dotted”.\n\n\ngrid.lwd: Non-negative numeric giving the line width of the panel grid lines. Defaults to 1.\n\n\ngrid: Logical or character indicating whether a background panel grid should be added to plots automatically. Defaults to NULL, which is equivalent to FALSE. In addition to logical values, a character string can be used to control axis-specific grids: uppercase letters (“X”, “Y”, “XY”) draw grid lines at the standard axis tick positions (equivalent to TRUE), while lowercase letters (“x”, “y”, “xy”) draw a finer grid with additional lines at the midpoints between ticks.\n\n\nlmar: A numeric vector of form c(inner, outer) that gives the margin padding, in terms of lines, around the automatic tinyplot legend. Defaults to c(1.0, 0.1). The inner margin is the gap between the legend and the plot region, and the outer margin is the gap between the legend and the edge of the graphics device.\n\n\nlty.xaxs, lty.yaxs: Line types for the x- and y-axis lines, respectively. Both default to NULL, whereby the shared lty.axis value is used instead.\n\n\nlwd.xaxs, lwd.yaxs: Line widths for the x- and y-axis lines, respectively. Both default to NULL, whereby the shared lwd.axis value is used instead.\n\n\npalette.qualitative: Palette for qualitative colors. See the palette argument in ?tinyplot.\n\n\npalette.sequential: Palette for sequential colors. See the palette argument in ?tinyplot.\n\n\nribbon.alpha: Numeric factor in the range [0,1] for modifying the opacity alpha of \"ribbon\" and \"area\" type plots. Default value is 0.2.\n\n\n\n\n\ngraphics::par which tpar builds on top of. get_saved_par is a convenience function for retrieving graphical parameters at different stages of a tinyplot call (and used for internal accounting purposes). tinytheme allows users to easily set a group of graphics parameters in a single function call, according to a variety of predefined themes.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# Return a list of existing base and tinyplot graphic params\ntpar(\"las\", \"pch\", \"facet.bg\", \"facet.cex\", \"grid\")\n\n$las\n[1] 0\n\n$pch\n[1] 1\n\n$facet.bg\nNULL\n\n$facet.cex\n[1] 1\n\n$grid\n[1] FALSE\n\n# Simple facet plot with these default values\ntinyplot(mpg ~ wt, data = mtcars, facet = ~am)\n\n\n\n\n\n\n\n# Set params to something new. Similar to graphics::par(), note that we save\n# the existing values at the same time by assigning to an object.\nop = tpar(\n  las       = 1,\n  pch       = 2,\n  facet.bg  = \"grey90\",\n  facet.cex = 2,\n  grid      = TRUE\n)\n\n# Re-plot with these new params\ntinyplot(mpg ~ wt, data = mtcars, facet = ~am)\n\n\n\n\n\n\n\n# Reset back to original values\ntpar(op)\n\n# Important: tpar() only evaluates parameters that have been passed explicitly\n#   by the user. So it it should not be used to query and set (restore)\n#   parameters that weren't explicitly requested, i.e. tpar() != par().\n\n# Note: The tinyplot-specific parameters can also be be set via `options`\n#   with a `tinyplot_*` prefix, which can be convenient for enabling\n#   different default behaviour at startup time (e.g., via an .Rprofile\n#   file). Example:\n# options(tinyplot_grid = TRUE, tinyplot_facet.bg = \"grey90\")",
     "crumbs": [
       "Reference",
-      "Options",
+      "Utilities",
       "tpar"
     ]
   },
@@ -341,7 +327,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_polygon"
     ]
   },
@@ -354,7 +339,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_polygon"
     ]
   },
@@ -367,7 +351,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_rug"
     ]
   },
@@ -380,7 +363,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_rug"
     ]
   },
@@ -393,7 +375,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_rect"
     ]
   },
@@ -406,7 +387,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_rect"
     ]
   },
@@ -419,7 +399,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_histogram"
     ]
   },
@@ -432,7 +411,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_histogram"
     ]
   },
@@ -445,7 +423,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_polypath"
     ]
   },
@@ -458,7 +435,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_polypath"
     ]
   },
@@ -467,12 +443,11 @@
     "href": "man/type_tile.html",
     "title": "tinyplot",
     "section": "",
-    "text": "Type functions for tile plots, i.e. a grid of rectangles whose fill colour encodes a third variable. type_tile() is the default building block for these gridded shapes, drawing the values exactly as supplied. It underpins heatmaps, correlation matrices, calendar plots, confusion matrices, and similar displays.\ntype_heatmap() is a specialised case that first rescales the fill values within each category of one axis. Reach for it when those values are not already on a common scale.\n\n\n\ntype_tile(width = 1, height = 1)\n\ntype_heatmap(\n  width = 1,\n  height = 1,\n  scale = c(\"none\", \"x\", \"y\"),\n  method = c(\"zscore\", \"rescale\")\n)\n\n\n\n\n\n\n\nwidth, height\n\n\nNumeric tile dimensions in data units. Both default to 1, which produces contiguous tiles on categorical (or unit-spaced numeric) axes. Values below 1 inset the tiles, leaving gaps between them. Recycled across tiles, so a vector may be used for variable sizes.\n\n\n\n\nscale\n\n\nCharacter. Should the by (fill) values be scaled within each category of one axis? One of “none” (default, i.e. the raw values are used), “x”, or “y”. Scaling is what makes a raw matrix legible when its variables span very different magnitudes: left alone, the largest-magnitude column monopolises the entire colour ramp. See Examples.\nNote that “x” and “y” refer to the axes as written in the formula, i.e. before any flip = TRUE is applied. We deliberately avoid base R’s “row”/“column” wording, since a tile’s position depends on which variable the user placed where in the formula, so there is no fixed matrix orientation to refer to.\nRescaling is computed independently per facet; pooling across facets would pin a panel on a different scale to one end of the ramp and lose its internal structure. Since rescaled values are no longer in the units of the by variable, the legend title is annotated accordingly.\n\n\n\n\nmethod\n\n\nCharacter. How should the values be rescaled, if scale is not “none”? Either “zscore” (default) to centre each group and divide by its standard deviation, or “rescale” to map each group onto the unit interval [0, 1]. Ignored when scale = “none”.\n“zscore” matches base R’s heatmap and keeps values comparable across groups, since -1 means \"one standard deviation below this group’s mean\" everywhere. “rescale” instead pins every group’s minimum and maximum to the ends of the colour ramp, which uses the palette more fully but makes the endpoints an artefact of the transform rather than a feature of the data.\nGroups with no spread—a constant column, or a single tile—would divide by zero, so they are set to the midpoint of the target range (0.5 and 0 respectively) and a warning is emitted.\n\n\n\n\n\n\nTile plots are specified as z ~ x with the fill variable passed as the by grouping, i.e. tinyplot(y ~ x | z, type = “tile”). The x and y variables may be factors, characters, or numerics; the by variable supplies the fill and will typically be numeric, yielding a continuous colour gradient and colourbar legend. Omitting by leaves the tiles unfilled, since there is nothing for the fill to encode; pass an explicit fill (or bg) if you want a uniform colour in that case.\nUnlike the closely-related type_rect, which requires explicit xmin/xmax/ymin/ymax bounds, type_tile() derives the tile bounds for you: each tile is centred on its x/y position and extends width/2 and height/2 in each direction. Categorical axes are converted to consecutive integer positions and the axis tick labels are taken from the factor levels automatically.\nExplicit bounds still take precedence. Passing any of xmin, xmax, ymin, or ymax leaves that dimension untouched, which is useful for irregular or unequal-width tiles (e.g. binned continuous data). Bounds may be given for one axis while the other is derived.\nNote that tiles are opaque and drawn edge-to-edge, so the default axis padding and grid lines of most themes are redundant (and the grid is hidden behind the tiles in any case). We therefore ship a dedicated “heatmap” theme that removes the padding and grid, rotates the tick labels, and switches to a sequential palette. See tinytheme() and the Examples.\ntype_heatmap()’s scale argument is the analogue of the scale argument in base R’s heatmap, and like the latter it z-scores along the chosen margin by default. Pass method = “rescale” to map each group onto the unit [0, 1] interval instead.\ntype_heatmap() also reverses the y-axis by default, so that the first row sits at the top, matching how one reads a matrix (and again cf. base R’s heatmap() and image). Pass an explicit ylim to override. type_tile() makes no such adjustment, since it draws the values exactly as supplied.\nEither way, note that scaling along a margin necessarily discards the relative spread of each group: a narrow-range column will occupy as much of the colour ramp as a wide-range one, since both are divided by their own measure of spread. That is the price of making a matrix of incomparable units legible; use scale = “none” (or type_tile()) when preserving cross-group magnitudes matters more.\n\n\n\ntype_rect for the lower-level rectangle type that type_tile() builds on, and tinytheme() for the companion “heatmap” theme.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# It is recommended to use the dedicated \"heatmap\" theme for tile plots\ntinytheme(\"heatmap\")\n\n#\n## type_tile ----\n\n# Correlation matrix of the base `attitude` dataset in \"long\" form.\ncatt = as.data.frame(as.table(cor(attitude)), responseName = \"Correlation\")\n\ntinyplot(Var1 ~ Var2 | Correlation, data = catt, type = \"tile\")\n\n\n\n\n\n\n\n# fancier version where we reverse the y-axis (to mimic the usual correlation\n# matrix layout), add white borders around each tile, and suppress the legend\n# but layer on the values as text\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = \"tile\",\n  col = \"white\",\n  legend = FALSE,\n  main = \"Correlation matrix of base attitude dataset\",\n  xlab = NA, ylab = NA,\n  ylim = \"rev\"\n)\ntinyplot_add(type = \"text\", labels = round(catt$Correlation, 2))\n\n\n\n\n\n\n\n# Pass scaled tile widths and heights through type_tile() for a gridded look\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = type_tile(width = 0.9, height = 0.9)\n)\n\n\n\n\n\n\n\n# It doesn't really work for this example, but you can easily switch to a\n# diverging palettes if it makes sense for your data\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = type_tile(width = 0.9, height = 0.9),\n  palette = \"tropic\"\n)\n\n\n\n\n\n\n\n# Numeric axes work too, e.g. a (reshaped long) data.frame of volcano heights\nvolc = data.frame(\n  x         = as.vector(row(volcano)),\n  y         = as.vector(col(volcano)),\n  elevation = as.vector(volcano)\n)\ntinyplot(\n  y ~ x | elevation, data = volc,\n  type = \"tile\",\n  theme = \"void\", # void theme looks better with this numeric example\n  xlab = NA, ylab = NA,\n  main = \"Maunga Whau volcano\"\n)\n\n\n\n\n\n\n\n#\n## type_heatmap ----\n\n# Raw data matrices are usually dominated by their largest-magnitude column.\n# `type_heatmap()` can rescale within each column to make the rest legible.\nmt = as.data.frame(as.table(as.matrix(mtcars)))\n\n# first, the unscaled version: only `disp` and `hp` are visible\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = \"heatmap\",\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n# and now scaled within each x variable (i.e., column). The default is to\n# z-score, matching base R's `heatmap(scale = \"column\")`.\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = type_heatmap(scale = \"x\"),\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n# `method = \"rescale\"` maps each column onto [0, 1] instead. This uses the\n# colour ramp more fully, at the cost of pinning every column's min and max to\n# the same two colours.\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = type_heatmap(scale = \"x\", method = \"rescale\"),\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n#\n## tips ----\n\n# tip 1: use tinyplot.matrix() directly to avoid reshaping\ntinyplot(as.matrix(mtcars), type = type_heatmap(scale = \"x\"), col = \"white\")\n\n\n\n\n\n\n\n# tip 2: use per-axis tick label scaling (cex) for dense heatmaps\ntinyplot(as.matrix(mtcars), type = type_heatmap(scale = \"x\"), col = \"white\",\n         theme = list(\"heatmap\", cex.yaxs = 0.75, cex.xaxs = 1.5))\n\n\n\n\n\n\n\n## restore the default theme\ntinytheme()",
+    "text": "Type functions for tile plots, i.e. a grid of rectangles whose fill colour encodes a third variable. type_tile() is the default building block for these gridded shapes, drawing the values exactly as supplied. It underpins heatmaps, correlation matrices, calendar plots, confusion matrices, and similar displays.\ntype_heatmap() is a specialised case that first rescales the fill values within each category of one axis. Reach for it when those values are not already on a common scale.\n\n\n\ntype_tile(width = 1, height = 1)\n\ntype_heatmap(\n  width = 1,\n  height = 1,\n  scale = c(\"none\", \"x\", \"y\"),\n  method = c(\"zscore\", \"rescale\")\n)\n\n\n\n\n\n\n\nwidth, height\n\n\nNumeric tile dimensions in data units. Both default to 1, which produces contiguous tiles on categorical (or unit-spaced numeric) axes. Values below 1 inset the tiles, leaving gaps between them. Recycled across tiles, so a vector may be used for variable sizes.\n\n\n\n\nscale\n\n\nCharacter. Should the by (fill) values be scaled within each category of one axis? One of “none” (default, i.e. the raw values are used), “x”, or “y”. Scaling is what makes a raw matrix legible when its variables span very different magnitudes: left alone, the largest-magnitude column monopolises the entire colour ramp. See Examples.\nNote that “x” and “y” refer to the axes as written in the formula, i.e. before any flip = TRUE is applied. We deliberately avoid base R’s “row”/“column” wording, since a tile’s position depends on which variable the user placed where in the formula, so there is no fixed matrix orientation to refer to.\nRescaling is computed independently per facet; pooling across facets would pin a panel on a different scale to one end of the ramp and lose its internal structure. Since rescaled values are no longer in the units of the by variable, the legend title is annotated accordingly.\n\n\n\n\nmethod\n\n\nCharacter. How should the values be rescaled, if scale is not “none”? Either “zscore” (default) to centre each group and divide by its standard deviation, or “rescale” to map each group onto the unit interval [0, 1]. Ignored when scale = “none”.\n“zscore” matches base R’s heatmap and keeps values comparable across groups, since -1 means \"one standard deviation below this group’s mean\" everywhere. “rescale” instead pins every group’s minimum and maximum to the ends of the colour ramp, which uses the palette more fully but makes the endpoints an artefact of the transform rather than a feature of the data.\nGroups with no spread—a constant column, or a single tile—would divide by zero, so they are set to the midpoint of the target range (0.5 and 0 respectively) and a warning is emitted.\n\n\n\n\n\n\nTile plots are specified as z ~ x with the fill variable passed as the by grouping, i.e. tinyplot(y ~ x | z, type = “tile”). The x and y variables may be factors, characters, or numerics; the by variable supplies the fill and will typically be numeric, yielding a continuous colour gradient and colourbar legend. Omitting by leaves the tiles unfilled, since there is nothing for the fill to encode; pass an explicit fill (or bg) if you want a uniform colour in that case.\nUnlike the closely-related type_rect, which requires explicit xmin/xmax/ymin/ymax bounds, type_tile() derives the tile bounds for you: each tile is centred on its x/y position and extends width/2 and height/2 in each direction. Categorical axes are converted to consecutive integer positions and the axis tick labels are taken from the factor levels automatically.\nExplicit bounds still take precedence. Passing any of xmin, xmax, ymin, or ymax leaves that dimension untouched, which is useful for irregular or unequal-width tiles (e.g. binned continuous data). Bounds may be given for one axis while the other is derived.\nNote that tiles are opaque and drawn edge-to-edge, so the default axis padding and grid lines of most themes are redundant (and the grid is hidden behind the tiles in any case). We therefore ship a dedicated “heatmap” theme that removes the padding and grid, rotates the tick labels, and switches to a sequential palette. See tinytheme() and the Examples.\ntype_heatmap()’s scale argument is the analogue of the scale argument in base R’s heatmap, and like the latter it z-scores along the chosen margin by default. Pass method = “rescale” to map each group onto the unit [0, 1] interval instead.\ntype_heatmap() also reverses the y-axis by default, so that the first row sits at the top, matching how one reads a matrix (and again cf. base R’s heatmap() and image). Pass an explicit ylim to override. type_tile() makes no such adjustment, since it draws the values exactly as supplied.\nEither way, note that scaling along a margin necessarily discards the relative spread of each group: a narrow-range column will occupy as much of the colour ramp as a wide-range one, since both are divided by their own measure of spread. That is the price of making a matrix of incomparable units legible; use scale = “none” (or type_tile()) when preserving cross-group magnitudes matters more.\n\n\n\ntype_rect for the lower-level rectangle type that type_tile() builds on, and tinytheme() for the companion “heatmap” theme.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# It is recommended to use the dedicated \"heatmap\" theme for tile plots\ntinytheme(\"heatmap\")\n\n#\n## type_tile ----\n\n# Correlation matrix of the base `attitude` dataset in \"long\" form.\ncatt = as.data.frame(as.table(cor(attitude)), responseName = \"Correlation\")\n\ntinyplot(Var1 ~ Var2 | Correlation, data = catt, type = \"tile\")\n\n\n\n\n\n\n\n# fancier version where we reverse the y-axis (to mimic the usual correlation\n# matrix layout), add white borders around each tile, and suppress the legend\n# but layer on the values as text\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = \"tile\",\n  col = \"white\",\n  legend = FALSE,\n  main = \"Correlation matrix of base attitude dataset\",\n  xlab = NA, ylab = NA,\n  ylim = \"rev\"\n)\ntinyplot_add(type = \"text\", labels = round(catt$Correlation, 2))\n\n\n\n\n\n\n\n# Pass scaled tile widths and heights through type_tile() for a gridded look\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = type_tile(width = 0.9, height = 0.9)\n)\n\n\n\n\n\n\n\n# It doesn't really work for this example, but you can easily switch to a\n# diverging palettes if it makes sense for your data\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = type_tile(width = 0.9, height = 0.9),\n  palette = \"tropic\"\n)\n\n\n\n\n\n\n\n# Numeric axes work too, e.g. a (reshaped long) data.frame of volcano heights\nvolc = data.frame(\n  x         = as.vector(row(volcano)),\n  y         = as.vector(col(volcano)),\n  elevation = as.vector(volcano)\n)\ntinyplot(\n  y ~ x | elevation, data = volc,\n  type = \"tile\",\n  theme = \"void\", # void theme looks better with this numeric example\n  xlab = NA, ylab = NA,\n  main = \"Maunga Whau volcano\"\n)\n\n\n\n\n\n\n\n#\n## type_heatmap ----\n\n# Raw data matrices are usually dominated by their largest-magnitude column.\n# `type_heatmap()` can rescale within each column to make the rest legible.\nmt = as.data.frame(as.table(as.matrix(mtcars)))\n\n# first, the unscaled version: only `disp` and `hp` are visible\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = \"heatmap\",\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n# and now scaled within each x variable (i.e., column). The default is to\n# z-score, matching base R's `heatmap(scale = \"column\")`.\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = type_heatmap(scale = \"x\"),\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n# `method = \"rescale\"` maps each column onto [0, 1] instead. This uses the\n# colour ramp more fully, at the cost of pinning every column's min and max to\n# the same two colours.\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = type_heatmap(scale = \"x\", method = \"rescale\"),\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n#\n## tips ----\n\n# tip 1: use tinyplot.matrix() directly to avoid reshaping\ntinyplot(as.matrix(mtcars), type = type_heatmap(scale = \"x\"), col = \"white\")\n\n\n\n\n\n\n\n# tip 2: use per-axis tick label scaling (cex) for dense heatmaps\ntinyplot(as.matrix(mtcars), type = type_heatmap(scale = \"x\"), col = \"white\",\n         theme = list(\"heatmap\", cex.yaxs = 0.75, cex.xaxs = 1.25))\n\n\n\n\n\n\n\n## restore the default theme\ntinytheme()",
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
-      "type_tile"
+      "type_heatmap"
     ]
   },
   {
@@ -480,12 +455,11 @@
     "href": "man/type_tile.html#tile-and-heatmap-plot-types",
     "title": "tinyplot",
     "section": "",
-    "text": "Type functions for tile plots, i.e. a grid of rectangles whose fill colour encodes a third variable. type_tile() is the default building block for these gridded shapes, drawing the values exactly as supplied. It underpins heatmaps, correlation matrices, calendar plots, confusion matrices, and similar displays.\ntype_heatmap() is a specialised case that first rescales the fill values within each category of one axis. Reach for it when those values are not already on a common scale.\n\n\n\ntype_tile(width = 1, height = 1)\n\ntype_heatmap(\n  width = 1,\n  height = 1,\n  scale = c(\"none\", \"x\", \"y\"),\n  method = c(\"zscore\", \"rescale\")\n)\n\n\n\n\n\n\n\nwidth, height\n\n\nNumeric tile dimensions in data units. Both default to 1, which produces contiguous tiles on categorical (or unit-spaced numeric) axes. Values below 1 inset the tiles, leaving gaps between them. Recycled across tiles, so a vector may be used for variable sizes.\n\n\n\n\nscale\n\n\nCharacter. Should the by (fill) values be scaled within each category of one axis? One of “none” (default, i.e. the raw values are used), “x”, or “y”. Scaling is what makes a raw matrix legible when its variables span very different magnitudes: left alone, the largest-magnitude column monopolises the entire colour ramp. See Examples.\nNote that “x” and “y” refer to the axes as written in the formula, i.e. before any flip = TRUE is applied. We deliberately avoid base R’s “row”/“column” wording, since a tile’s position depends on which variable the user placed where in the formula, so there is no fixed matrix orientation to refer to.\nRescaling is computed independently per facet; pooling across facets would pin a panel on a different scale to one end of the ramp and lose its internal structure. Since rescaled values are no longer in the units of the by variable, the legend title is annotated accordingly.\n\n\n\n\nmethod\n\n\nCharacter. How should the values be rescaled, if scale is not “none”? Either “zscore” (default) to centre each group and divide by its standard deviation, or “rescale” to map each group onto the unit interval [0, 1]. Ignored when scale = “none”.\n“zscore” matches base R’s heatmap and keeps values comparable across groups, since -1 means \"one standard deviation below this group’s mean\" everywhere. “rescale” instead pins every group’s minimum and maximum to the ends of the colour ramp, which uses the palette more fully but makes the endpoints an artefact of the transform rather than a feature of the data.\nGroups with no spread—a constant column, or a single tile—would divide by zero, so they are set to the midpoint of the target range (0.5 and 0 respectively) and a warning is emitted.\n\n\n\n\n\n\nTile plots are specified as z ~ x with the fill variable passed as the by grouping, i.e. tinyplot(y ~ x | z, type = “tile”). The x and y variables may be factors, characters, or numerics; the by variable supplies the fill and will typically be numeric, yielding a continuous colour gradient and colourbar legend. Omitting by leaves the tiles unfilled, since there is nothing for the fill to encode; pass an explicit fill (or bg) if you want a uniform colour in that case.\nUnlike the closely-related type_rect, which requires explicit xmin/xmax/ymin/ymax bounds, type_tile() derives the tile bounds for you: each tile is centred on its x/y position and extends width/2 and height/2 in each direction. Categorical axes are converted to consecutive integer positions and the axis tick labels are taken from the factor levels automatically.\nExplicit bounds still take precedence. Passing any of xmin, xmax, ymin, or ymax leaves that dimension untouched, which is useful for irregular or unequal-width tiles (e.g. binned continuous data). Bounds may be given for one axis while the other is derived.\nNote that tiles are opaque and drawn edge-to-edge, so the default axis padding and grid lines of most themes are redundant (and the grid is hidden behind the tiles in any case). We therefore ship a dedicated “heatmap” theme that removes the padding and grid, rotates the tick labels, and switches to a sequential palette. See tinytheme() and the Examples.\ntype_heatmap()’s scale argument is the analogue of the scale argument in base R’s heatmap, and like the latter it z-scores along the chosen margin by default. Pass method = “rescale” to map each group onto the unit [0, 1] interval instead.\ntype_heatmap() also reverses the y-axis by default, so that the first row sits at the top, matching how one reads a matrix (and again cf. base R’s heatmap() and image). Pass an explicit ylim to override. type_tile() makes no such adjustment, since it draws the values exactly as supplied.\nEither way, note that scaling along a margin necessarily discards the relative spread of each group: a narrow-range column will occupy as much of the colour ramp as a wide-range one, since both are divided by their own measure of spread. That is the price of making a matrix of incomparable units legible; use scale = “none” (or type_tile()) when preserving cross-group magnitudes matters more.\n\n\n\ntype_rect for the lower-level rectangle type that type_tile() builds on, and tinytheme() for the companion “heatmap” theme.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# It is recommended to use the dedicated \"heatmap\" theme for tile plots\ntinytheme(\"heatmap\")\n\n#\n## type_tile ----\n\n# Correlation matrix of the base `attitude` dataset in \"long\" form.\ncatt = as.data.frame(as.table(cor(attitude)), responseName = \"Correlation\")\n\ntinyplot(Var1 ~ Var2 | Correlation, data = catt, type = \"tile\")\n\n\n\n\n\n\n\n# fancier version where we reverse the y-axis (to mimic the usual correlation\n# matrix layout), add white borders around each tile, and suppress the legend\n# but layer on the values as text\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = \"tile\",\n  col = \"white\",\n  legend = FALSE,\n  main = \"Correlation matrix of base attitude dataset\",\n  xlab = NA, ylab = NA,\n  ylim = \"rev\"\n)\ntinyplot_add(type = \"text\", labels = round(catt$Correlation, 2))\n\n\n\n\n\n\n\n# Pass scaled tile widths and heights through type_tile() for a gridded look\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = type_tile(width = 0.9, height = 0.9)\n)\n\n\n\n\n\n\n\n# It doesn't really work for this example, but you can easily switch to a\n# diverging palettes if it makes sense for your data\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = type_tile(width = 0.9, height = 0.9),\n  palette = \"tropic\"\n)\n\n\n\n\n\n\n\n# Numeric axes work too, e.g. a (reshaped long) data.frame of volcano heights\nvolc = data.frame(\n  x         = as.vector(row(volcano)),\n  y         = as.vector(col(volcano)),\n  elevation = as.vector(volcano)\n)\ntinyplot(\n  y ~ x | elevation, data = volc,\n  type = \"tile\",\n  theme = \"void\", # void theme looks better with this numeric example\n  xlab = NA, ylab = NA,\n  main = \"Maunga Whau volcano\"\n)\n\n\n\n\n\n\n\n#\n## type_heatmap ----\n\n# Raw data matrices are usually dominated by their largest-magnitude column.\n# `type_heatmap()` can rescale within each column to make the rest legible.\nmt = as.data.frame(as.table(as.matrix(mtcars)))\n\n# first, the unscaled version: only `disp` and `hp` are visible\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = \"heatmap\",\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n# and now scaled within each x variable (i.e., column). The default is to\n# z-score, matching base R's `heatmap(scale = \"column\")`.\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = type_heatmap(scale = \"x\"),\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n# `method = \"rescale\"` maps each column onto [0, 1] instead. This uses the\n# colour ramp more fully, at the cost of pinning every column's min and max to\n# the same two colours.\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = type_heatmap(scale = \"x\", method = \"rescale\"),\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n#\n## tips ----\n\n# tip 1: use tinyplot.matrix() directly to avoid reshaping\ntinyplot(as.matrix(mtcars), type = type_heatmap(scale = \"x\"), col = \"white\")\n\n\n\n\n\n\n\n# tip 2: use per-axis tick label scaling (cex) for dense heatmaps\ntinyplot(as.matrix(mtcars), type = type_heatmap(scale = \"x\"), col = \"white\",\n         theme = list(\"heatmap\", cex.yaxs = 0.75, cex.xaxs = 1.5))\n\n\n\n\n\n\n\n## restore the default theme\ntinytheme()",
+    "text": "Type functions for tile plots, i.e. a grid of rectangles whose fill colour encodes a third variable. type_tile() is the default building block for these gridded shapes, drawing the values exactly as supplied. It underpins heatmaps, correlation matrices, calendar plots, confusion matrices, and similar displays.\ntype_heatmap() is a specialised case that first rescales the fill values within each category of one axis. Reach for it when those values are not already on a common scale.\n\n\n\ntype_tile(width = 1, height = 1)\n\ntype_heatmap(\n  width = 1,\n  height = 1,\n  scale = c(\"none\", \"x\", \"y\"),\n  method = c(\"zscore\", \"rescale\")\n)\n\n\n\n\n\n\n\nwidth, height\n\n\nNumeric tile dimensions in data units. Both default to 1, which produces contiguous tiles on categorical (or unit-spaced numeric) axes. Values below 1 inset the tiles, leaving gaps between them. Recycled across tiles, so a vector may be used for variable sizes.\n\n\n\n\nscale\n\n\nCharacter. Should the by (fill) values be scaled within each category of one axis? One of “none” (default, i.e. the raw values are used), “x”, or “y”. Scaling is what makes a raw matrix legible when its variables span very different magnitudes: left alone, the largest-magnitude column monopolises the entire colour ramp. See Examples.\nNote that “x” and “y” refer to the axes as written in the formula, i.e. before any flip = TRUE is applied. We deliberately avoid base R’s “row”/“column” wording, since a tile’s position depends on which variable the user placed where in the formula, so there is no fixed matrix orientation to refer to.\nRescaling is computed independently per facet; pooling across facets would pin a panel on a different scale to one end of the ramp and lose its internal structure. Since rescaled values are no longer in the units of the by variable, the legend title is annotated accordingly.\n\n\n\n\nmethod\n\n\nCharacter. How should the values be rescaled, if scale is not “none”? Either “zscore” (default) to centre each group and divide by its standard deviation, or “rescale” to map each group onto the unit interval [0, 1]. Ignored when scale = “none”.\n“zscore” matches base R’s heatmap and keeps values comparable across groups, since -1 means \"one standard deviation below this group’s mean\" everywhere. “rescale” instead pins every group’s minimum and maximum to the ends of the colour ramp, which uses the palette more fully but makes the endpoints an artefact of the transform rather than a feature of the data.\nGroups with no spread—a constant column, or a single tile—would divide by zero, so they are set to the midpoint of the target range (0.5 and 0 respectively) and a warning is emitted.\n\n\n\n\n\n\nTile plots are specified as z ~ x with the fill variable passed as the by grouping, i.e. tinyplot(y ~ x | z, type = “tile”). The x and y variables may be factors, characters, or numerics; the by variable supplies the fill and will typically be numeric, yielding a continuous colour gradient and colourbar legend. Omitting by leaves the tiles unfilled, since there is nothing for the fill to encode; pass an explicit fill (or bg) if you want a uniform colour in that case.\nUnlike the closely-related type_rect, which requires explicit xmin/xmax/ymin/ymax bounds, type_tile() derives the tile bounds for you: each tile is centred on its x/y position and extends width/2 and height/2 in each direction. Categorical axes are converted to consecutive integer positions and the axis tick labels are taken from the factor levels automatically.\nExplicit bounds still take precedence. Passing any of xmin, xmax, ymin, or ymax leaves that dimension untouched, which is useful for irregular or unequal-width tiles (e.g. binned continuous data). Bounds may be given for one axis while the other is derived.\nNote that tiles are opaque and drawn edge-to-edge, so the default axis padding and grid lines of most themes are redundant (and the grid is hidden behind the tiles in any case). We therefore ship a dedicated “heatmap” theme that removes the padding and grid, rotates the tick labels, and switches to a sequential palette. See tinytheme() and the Examples.\ntype_heatmap()’s scale argument is the analogue of the scale argument in base R’s heatmap, and like the latter it z-scores along the chosen margin by default. Pass method = “rescale” to map each group onto the unit [0, 1] interval instead.\ntype_heatmap() also reverses the y-axis by default, so that the first row sits at the top, matching how one reads a matrix (and again cf. base R’s heatmap() and image). Pass an explicit ylim to override. type_tile() makes no such adjustment, since it draws the values exactly as supplied.\nEither way, note that scaling along a margin necessarily discards the relative spread of each group: a narrow-range column will occupy as much of the colour ramp as a wide-range one, since both are divided by their own measure of spread. That is the price of making a matrix of incomparable units legible; use scale = “none” (or type_tile()) when preserving cross-group magnitudes matters more.\n\n\n\ntype_rect for the lower-level rectangle type that type_tile() builds on, and tinytheme() for the companion “heatmap” theme.\n\n\n\n\nlibrary(\"tinyplot\")\n\n# It is recommended to use the dedicated \"heatmap\" theme for tile plots\ntinytheme(\"heatmap\")\n\n#\n## type_tile ----\n\n# Correlation matrix of the base `attitude` dataset in \"long\" form.\ncatt = as.data.frame(as.table(cor(attitude)), responseName = \"Correlation\")\n\ntinyplot(Var1 ~ Var2 | Correlation, data = catt, type = \"tile\")\n\n\n\n\n\n\n\n# fancier version where we reverse the y-axis (to mimic the usual correlation\n# matrix layout), add white borders around each tile, and suppress the legend\n# but layer on the values as text\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = \"tile\",\n  col = \"white\",\n  legend = FALSE,\n  main = \"Correlation matrix of base attitude dataset\",\n  xlab = NA, ylab = NA,\n  ylim = \"rev\"\n)\ntinyplot_add(type = \"text\", labels = round(catt$Correlation, 2))\n\n\n\n\n\n\n\n# Pass scaled tile widths and heights through type_tile() for a gridded look\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = type_tile(width = 0.9, height = 0.9)\n)\n\n\n\n\n\n\n\n# It doesn't really work for this example, but you can easily switch to a\n# diverging palettes if it makes sense for your data\ntinyplot(\n  Var1 ~ Var2 | Correlation, data = catt,\n  type = type_tile(width = 0.9, height = 0.9),\n  palette = \"tropic\"\n)\n\n\n\n\n\n\n\n# Numeric axes work too, e.g. a (reshaped long) data.frame of volcano heights\nvolc = data.frame(\n  x         = as.vector(row(volcano)),\n  y         = as.vector(col(volcano)),\n  elevation = as.vector(volcano)\n)\ntinyplot(\n  y ~ x | elevation, data = volc,\n  type = \"tile\",\n  theme = \"void\", # void theme looks better with this numeric example\n  xlab = NA, ylab = NA,\n  main = \"Maunga Whau volcano\"\n)\n\n\n\n\n\n\n\n#\n## type_heatmap ----\n\n# Raw data matrices are usually dominated by their largest-magnitude column.\n# `type_heatmap()` can rescale within each column to make the rest legible.\nmt = as.data.frame(as.table(as.matrix(mtcars)))\n\n# first, the unscaled version: only `disp` and `hp` are visible\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = \"heatmap\",\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n# and now scaled within each x variable (i.e., column). The default is to\n# z-score, matching base R's `heatmap(scale = \"column\")`.\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = type_heatmap(scale = \"x\"),\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n# `method = \"rescale\"` maps each column onto [0, 1] instead. This uses the\n# colour ramp more fully, at the cost of pinning every column's min and max to\n# the same two colours.\ntinyplot(\n  Var1 ~ Var2 | Freq, data = mt,\n  type = type_heatmap(scale = \"x\", method = \"rescale\"),\n  xlab = NA, ylab = NA\n)\n\n\n\n\n\n\n\n#\n## tips ----\n\n# tip 1: use tinyplot.matrix() directly to avoid reshaping\ntinyplot(as.matrix(mtcars), type = type_heatmap(scale = \"x\"), col = \"white\")\n\n\n\n\n\n\n\n# tip 2: use per-axis tick label scaling (cex) for dense heatmaps\ntinyplot(as.matrix(mtcars), type = type_heatmap(scale = \"x\"), col = \"white\",\n         theme = list(\"heatmap\", cex.yaxs = 0.75, cex.xaxs = 1.25))\n\n\n\n\n\n\n\n## restore the default theme\ntinytheme()",
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
-      "type_tile"
+      "type_heatmap"
     ]
   },
   {
@@ -497,7 +471,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_barplot"
     ]
   },
@@ -510,7 +483,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_barplot"
     ]
   },
@@ -1244,7 +1216,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Models",
       "type_loess"
     ]
   },
@@ -1257,7 +1228,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Models",
       "type_loess"
     ]
   },
@@ -1270,7 +1240,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_ridge"
     ]
   },
@@ -1283,7 +1252,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_ridge"
     ]
   },
@@ -1296,7 +1264,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_ellipse"
     ]
   },
@@ -1309,7 +1276,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_ellipse"
     ]
   },
@@ -1322,7 +1288,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_lines"
     ]
   },
@@ -1335,7 +1300,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_lines"
     ]
   },
@@ -1348,7 +1312,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_boxplot"
     ]
   },
@@ -1361,7 +1324,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_boxplot"
     ]
   },
@@ -1374,7 +1336,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Models",
       "type_lm"
     ]
   },
@@ -1387,7 +1348,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Models",
       "type_lm"
     ]
   },
@@ -1400,7 +1360,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_qq"
     ]
   },
@@ -1413,7 +1372,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_qq"
     ]
   },
@@ -1450,7 +1408,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Functions",
       "type_summary"
     ]
   },
@@ -1463,7 +1420,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Functions",
       "type_summary"
     ]
   },
@@ -1500,7 +1456,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_chull"
     ]
   },
@@ -1513,7 +1468,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_chull"
     ]
   },
@@ -1526,7 +1480,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_area"
     ]
   },
@@ -1539,7 +1492,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_area"
     ]
   },
@@ -1552,7 +1504,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_hexbin"
     ]
   },
@@ -1565,7 +1516,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_hexbin"
     ]
   },
@@ -1626,7 +1576,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_violin"
     ]
   },
@@ -1639,7 +1588,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Visualizations",
       "type_violin"
     ]
   },
@@ -1652,7 +1600,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_text"
     ]
   },
@@ -1665,7 +1612,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_text"
     ]
   },
@@ -1678,7 +1624,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_jitter"
     ]
   },
@@ -1691,7 +1636,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_jitter"
     ]
   },
@@ -1704,7 +1648,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Models",
       "type_glm"
     ]
   },
@@ -1717,7 +1660,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Models",
       "type_glm"
     ]
   },
@@ -1730,7 +1672,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_points"
     ]
   },
@@ -1743,7 +1684,6 @@
     "crumbs": [
       "Reference",
       "Types",
-      "Shapes",
       "type_points"
     ]
   },

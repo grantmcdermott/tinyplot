@@ -70,6 +70,12 @@ where the formatting is also better._
   not just the axes: `type = "h"` draws horizontal segments to the baseline,
   and the step types `"s"` and `"S"` swap which coordinate moves first.
   (#675 @haomeng797-ship-it)
+- Added layers now align on the category that each row belongs to. The
+  realignment logic used each row's *position* rather than its category, which
+  only coincided with the right answer when the added layer's rows happened to
+  arrive in ascending order. Rows that arrived in any other order were
+  permuted, and repeated categories collapsed onto a single position.
+  (#679 @grantmcdermott)
 - Fixed several bugs specific to plots with free facets (i.e.,
   `facet.args = list(free = TRUE)`):
   - A categorical y-axis no longer errors out with `'labels' is supplied and

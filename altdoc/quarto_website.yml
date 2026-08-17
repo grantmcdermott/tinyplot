@@ -25,8 +25,6 @@ website:
             file: vignettes/tips.qmd
           - text: useR! 2025
             file: vignettes/useR2025/useR2025.qmd
-      - text: Gallery
-        file: vignettes/gallery.qmd
       - text: About
         menu:
           - text: News
@@ -37,6 +35,8 @@ website:
             file: $ALTDOC_LICENSE
       - text: Reference
         file: man/tinyplot.qmd
+      - text: Gallery
+        file: vignettes/gallery.qmd
     right:
       - icon: github
         href: $ALTDOC_PACKAGE_URL_GITHUB

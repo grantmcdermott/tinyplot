@@ -459,7 +459,12 @@ draw_facet_window = function(
         if (.free_axes) {
           .ayf = args_y
           .ayf[[1L]] = yfree
-          if (isTRUE(flip) && type %in% c("barplot", "pointrange", "errorbar", "ribbon", "boxplot", "p", "violin") && !is.null(ylabs)) {
+          # Same signal as the fixed-scale branch above: named `ylabs` means the
+          # type put categories on the y-axis. Listing eligible types by name
+          # instead not only dropped the labels for unlisted types, it left the
+          # `labels` inherited from `args_y` without a matching `at`, which
+          # axis() rejects outright. (#679)
+          if (!is.null(ylabs)) {
             .ayf = modifyList(.ayf, list(at = ylabs, labels = names(ylabs)))
           } else if (!is.null(yat)) {
             .ayf = modifyList(.ayf, list(at = yat))

@@ -72,6 +72,13 @@ where the formatting is also better._
   (#675 @haomeng797-ship-it)
 - Fixed several bugs specific to plots with free facets (i.e.,
   `facet.args = list(free = TRUE)`):
+  - A categorical y-axis no longer errors out with `'labels' is supplied and
+    not 'at'`. The free-facet code path listed the eligible types by name, so
+    any other type lost its tick positions while keeping the corresponding
+    labels. This affected both flipped plots (e.g. `type = "b"` with
+    `flip = TRUE`) and unflipped ones that place categories on the y-axis
+    anyway (e.g. `type = "p"` with a factor `y` variable).
+    (#679 @grantmcdermott)
   - Single-valued discrete axes no longer trigger invalid `par(usr)` values.
     (#668 @grantmcdermott)
   - User-provided `x/ylim` overrides now work correctly with flipped plots.

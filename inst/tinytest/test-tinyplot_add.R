@@ -125,3 +125,20 @@ f = function() {
   tinyplot_add(subset = cyl == 4, col = "red", pch = 16)
 }
 expect_snapshot_plot(f, label = "tinyplot_add_subset")
+
+# Layer alignment follows the category each row belongs to, not the row's
+# position, which is what the two layers disagreed on: the added rows were
+# permuted rather than matched up by category. Both layers use the same type
+# here, and the disagreement comes from the levels each data frame declares,
+# so the test does not depend on how any given type orders its categories.
+# The red points should sit directly above the black ones. (#679)
+f = function() {
+  d1 = data.frame(g = factor(c("a", "b", "c")), y = c(1, 2, 3))
+  d2 = data.frame(
+    g = factor(c("a", "b", "c"), levels = c("c", "b", "a")),
+    y = c(1.5, 2.5, 3.5)
+  )
+  tinyplot(y ~ g, data = d1, type = "p", ylim = c(0.5, 4))
+  tinyplot_add(y ~ g, data = d2, type = "p", col = "red", pch = 16)
+}
+expect_snapshot_plot(f, label = "tinyplot_add_layer_category_alignment")

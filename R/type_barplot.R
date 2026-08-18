@@ -21,9 +21,10 @@
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
 #' @param xlevels a character or numeric vector specifying the ordering of the
 #'   levels of the `x` variable (if character) or the corresponding indexes
-#'   (if numeric) for the plot. The special keyword `"data"` orders the levels
-#'   by their first appearance in the data. Note that this argument only
-#'   affects categorical (i.e., factor or character) `x` variables.
+#'   (if numeric) for the plot. The special keyword `"asis"` takes the
+#'   categories in the order that they appear in the data. Note that this
+#'   argument only affects categorical (i.e., factor or character) `x`
+#'   variables.
 #' @param xaxlabels a character vector with the axis labels for the `x` variable,
 #'   defaulting to the levels of `x`.
 #' @param offset optional specification for shifting bar baselines, accepting

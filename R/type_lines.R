@@ -12,7 +12,7 @@
 #' character) data according to the factor levels. Character variables are
 #' coerced with [factor()] and so end up in alphabetical order. To order the
 #' categories by their appearance in the data instead, use
-#' `xlevels = "data"`, or set the levels explicitly, e.g.
+#' `xlevels = "asis"`, or set the levels explicitly, e.g.
 #' `factor(x, levels = unique(x))`.
 #'
 #' Note that the lines themselves are always drawn in the order that the rows

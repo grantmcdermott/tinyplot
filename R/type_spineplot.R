@@ -6,9 +6,9 @@
 #'   to `type_spineplot()` if `y` is a factor variable.
 #' @param xlevels,ylevels a character or numeric vector specifying the ordering of the
 #'   levels of the `x` and `y` variables (if character) or the corresponding indexes
-#'   (if numeric) for the plot. The special keyword `"data"` orders the levels
-#'   by their first appearance in the data. Note that these arguments only
-#'   affect categorical (i.e., factor or character) variables.
+#'   (if numeric) for the plot. The special keyword `"asis"` takes the
+#'   categories in the order that they appear in the data. Note that these
+#'   arguments only affect categorical (i.e., factor or character) variables.
 #' @inheritParams graphics::spineplot
 #' @param lighten logical. For grouped spineplots where the `y` variable is
 #'   itself the grouping variable (i.e. `y == by`), should the fills use a

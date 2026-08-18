@@ -72,7 +72,7 @@ fun = function() {
 }
 expect_snapshot_plot(fun, label = "pointrange_with_layers_flipped")
 
-# xlevels = NULL overrides the "data" default, ordering the terms by their
+# xlevels = NULL overrides the "asis" default, ordering the terms by their
 # factor levels (alphabetical here) instead of their row order (#679)
 fun = function() {
     with(

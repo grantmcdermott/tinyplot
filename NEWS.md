@@ -28,12 +28,13 @@ where the formatting is also better._
   `x` variable on the fly, extending the convention already established by
   `type_barplot()`, `type_spineplot()`, and `type_ridge()` (`ylevels`). Accepted
   values are a character vector of level names, a numeric vector of level
-  indexes (e.g., `3:1`), or the new keyword `"data"`, which orders the levels by
-  their first appearance in the data; the keyword is also accepted by the three
-  existing types. The argument is forwarded automatically from the top-level
-  call, e.g. `tinyplot(runtime ~ name, data = LOTR, type = "b", xlevels =
-  "data")`. It only affects categorical variables and is ignored for numeric
-  ones. `type_errorbar()` and `type_pointrange()` default to `xlevels = "data"`
+  indexes (e.g., `3:1`), or the new keyword `"asis"`, which takes the categories
+  in the order that they appear in the data (cf. the `as.is` argument of
+  `read.table()`); the keyword is also accepted by the three existing types. The
+  argument is forwarded automatically from the top-level call, e.g.
+  `tinyplot(runtime ~ name, data = LOTR, type = "b", xlevels = "asis")`. It only
+  affects categorical variables and is ignored for numeric ones.
+  `type_errorbar()` and `type_pointrange()` default to `xlevels = "asis"`
   (unchanged behaviour, now overridable): these types are typically used for
   coefficient plots, where the row order of the data is intentional. (#679
   @grantmcdermott)
@@ -91,7 +92,7 @@ where the formatting is also better._
   ignored by the line types, and layering points on lines (or vice versa) could
   place the two layers against different orderings. Note that this ordering is
   a property of the data, not of the plot type: to order categories by their
-  appearance in the data, use the new `xlevels = "data"` argument (see above)
+  appearance in the data, use the new `xlevels = "asis"` argument (see above)
   or set the levels accordingly, e.g. `factor(x, levels = unique(x))`.
   Category labels are also kept on a
   categorical y-axis now, both for `flip = TRUE` and for a factor `y` variable;

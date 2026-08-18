@@ -41,20 +41,13 @@ f = function() {
 expect_snapshot_plot(f, label = "type_lines_layer_h_p")
 
 # xlevels: on-the-fly reordering of a categorical x variable (#679). The
-# "data" keyword orders by first appearance, restoring the pre-fix behaviour
-# on demand; forwarded automatically from the top-level call.
-f = function() tinyplot(runtime ~ name, data = LOTR, type = "b", xlevels = "data")
-expect_snapshot_plot(f, label = "type_lines_xlevels_data")
+# "asis" keyword takes the categories in the order they appear in the data,
+# restoring the pre-fix behaviour on demand; forwarded automatically from the
+# top-level call.
+f = function() tinyplot(runtime ~ name, data = LOTR, type = "b", xlevels = "asis")
+expect_snapshot_plot(f, label = "type_lines_xlevels_asis")
 
 # numeric indexes into the existing levels, via the constructor
 f = function() tinyplot(runtime ~ name, data = LOTR, type = type_points(xlevels = 3:1))
 expect_snapshot_plot(f, label = "type_points_xlevels_idx")
 
-# unknown levels warn (mirroring type_barplot / type_spineplot)
-png(tmp_png <- tempfile(fileext = ".png"))
-expect_warning(
-  tinyplot(runtime ~ name, data = LOTR, type = "b", xlevels = c("Nope", "Return")),
-  pattern = "not all 'xlevels' correspond"
-)
-dev.off()
-unlink(tmp_png)

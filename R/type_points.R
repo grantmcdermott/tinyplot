@@ -6,10 +6,12 @@
 #' @param xlevels a character or numeric vector specifying the order in which
 #'   the levels of the `x` variable should be plotted (as level names if
 #'   character, or level indexes if numeric, e.g. `3:1`). The special keyword
-#'   `"data"` orders the levels by their first appearance in the data. Note
-#'   that this argument only affects categorical (i.e., factor or character)
-#'   `x` variables; it is ignored for numeric `x`. The default `NULL` keeps
-#'   the existing factor levels (alphabetical for character variables).
+#'   `"asis"` takes the categories in the order that they appear in the data,
+#'   i.e. skipping the alphabetical sort that is otherwise applied when
+#'   coercing a character variable to a factor. Note that this argument only
+#'   affects categorical (i.e., factor or character) `x` variables; it is
+#'   ignored for numeric `x`. The default `NULL` keeps the existing factor
+#'   levels (alphabetical for character variables).
 #' @inheritParams dodge_positions
 #'
 #' @examples

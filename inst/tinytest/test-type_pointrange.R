@@ -71,3 +71,19 @@ fun = function() {
   tinyplot_add(type = "vline", lty = 2)
 }
 expect_snapshot_plot(fun, label = "pointrange_with_layers_flipped")
+
+# xlevels = NULL overrides the "data" default, ordering the terms by their
+# factor levels (alphabetical here) instead of their row order (#679)
+fun = function() {
+    with(
+        coefs,
+        tinyplot(
+          x = x,
+          y = y,
+          ymin = ymin,
+          ymax = ymax,
+          type = type_pointrange(xlevels = NULL)
+        )
+      )
+}
+expect_snapshot_plot(fun, label = "pointrange_xlevels_null")

@@ -3,6 +3,13 @@
 #' @description Type function for plotting points, i.e. a scatter plot.
 #' @param clim Numeric giving the lower and upper limits of the character
 #'   expansion (`cex`) normalization for bubble charts.
+#' @param xlevels a character or numeric vector specifying the order in which
+#'   the levels of the `x` variable should be plotted (as level names if
+#'   character, or level indexes if numeric, e.g. `3:1`). The special keyword
+#'   `"data"` orders the levels by their first appearance in the data. Note
+#'   that this argument only affects categorical (i.e., factor or character)
+#'   `x` variables; it is ignored for numeric `x`. The default `NULL` keeps
+#'   the existing factor levels (alphabetical for character variables).
 #' @inheritParams dodge_positions
 #'
 #' @examples
@@ -32,9 +39,9 @@
 #'   pch = 21, fill = 0.3)
 #'
 #' @export
-type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
+type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
   out = list(
-    data = data_points(clim = clim, dodge = dodge, fixed.dodge = fixed.dodge),
+    data = data_points(clim = clim, dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels),
     draw = draw_points(),
     name = "p"
   )
@@ -42,7 +49,7 @@ type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
   return(out)
 }
 
-data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
+data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
   fun = function(settings, ...) {
     env2env(settings, environment(), "datapoints")
 
@@ -50,6 +57,7 @@ data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE) {
     settings$clim = clim
 
     # catch for factors (we should still be able to "force" plot these with points)
+    datapoints$x = sanitize_xlevels(datapoints$x, xlevels)
     if (is.factor(datapoints$x)) {
       xlvls = levels(datapoints$x)
       xlabs = seq_along(xlvls)

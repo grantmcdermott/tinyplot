@@ -31,7 +31,9 @@ type_spineplot(
 
 \item{xlevels, ylevels}{a character or numeric vector specifying the ordering of the
 levels of the \code{x} and \code{y} variables (if character) or the corresponding indexes
-(if numeric) for the plot.}
+(if numeric) for the plot. The special keyword \code{"data"} orders the levels
+by their first appearance in the data. Note that these arguments only
+affect categorical (i.e., factor or character) variables.}
 
 \item{col}{a vector of fill colors of the same length as \code{levels(y)}.
     The default is to call \code{\link{gray.colors}}.}

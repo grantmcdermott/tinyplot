@@ -4,7 +4,7 @@
 \alias{type_points}
 \title{Points plot type}
 \usage{
-type_points(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE)
+type_points(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL)
 }
 \arguments{
 \item{clim}{Numeric giving the lower and upper limits of the character
@@ -31,6 +31,14 @@ calculated independently for each \code{x} value, based only on the groups
 present at that position. If \code{TRUE}, dodge positions are based on all
 groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
 groups are missing for a particular \code{x} value).}
+
+\item{xlevels}{a character or numeric vector specifying the order in which
+the levels of the \code{x} variable should be plotted (as level names if
+character, or level indexes if numeric, e.g. \code{3:1}). The special keyword
+\code{"data"} orders the levels by their first appearance in the data. Note
+that this argument only affects categorical (i.e., factor or character)
+\code{x} variables; it is ignored for numeric \code{x}. The default \code{NULL} keeps
+the existing factor levels (alphabetical for character variables).}
 }
 \description{
 Type function for plotting points, i.e. a scatter plot.

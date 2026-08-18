@@ -4,6 +4,16 @@
 #'
 #' @inheritParams dodge_positions
 #' @inheritParams graphics::arrows
+#' @param xlevels a character or numeric vector specifying the order in which
+#'   the levels of the `x` variable should be plotted (as level names if
+#'   character, or level indexes if numeric, e.g. `3:1`). Note that this
+#'   argument only affects categorical (i.e., factor or character) `x`
+#'   variables; it is ignored for numeric `x`. Unlike most other plot types,
+#'   here it defaults to the special keyword `"data"`, which orders the levels
+#'   by their first appearance in the data: these types are typically used for
+#'   coefficient plots, where the row order of the data (e.g., the terms of a
+#'   model) is usually intentional. Set `xlevels = NULL` to follow the factor
+#'   levels instead, matching the other plot types.
 #' @examples
 #' tinytheme("basic")
 #' 
@@ -86,10 +96,10 @@
 #' tinytheme() # reset theme
 #'
 #' @export
-type_errorbar = function(length = 0.05, dodge = 0, fixed.dodge = FALSE) {
+type_errorbar = function(length = 0.05, dodge = 0, fixed.dodge = FALSE, xlevels = "data") {
     out = list(
         draw = draw_errorbar(length = length),
-        data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge),
+        data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels),
         name = "p"
     )
     class(out) = "tinyplot_type"

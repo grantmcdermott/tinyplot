@@ -28,7 +28,8 @@
 #' (rather than the raw original variable). Only one of `breaks` or
 #' `probs` must be specified.
 #' @param ylevels a character or numeric vector specifying in which order
-#' the levels of the y-variable should be plotted.
+#' the levels of the y-variable should be plotted. The special keyword
+#' `"data"` orders the levels by their first appearance in the data.
 #' @inheritParams stats::density
 #' @param bw the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
 #'   see \code{\link[stats]{density}} for details and options.
@@ -286,7 +287,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     ## reorder levels of y-variable if requested
     if (!is.null(ylevels)) {
       if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
-      datapoints$y = factor(datapoints$y, levels = if(is.numeric(ylevels)) levels(datapoints$y)[ylevels] else ylevels)
+      datapoints$y = sanitize_xlevels(datapoints$y, ylevels, arg = "ylevels")
       if (y_by) datapoints$by = datapoints$y
     }
 

@@ -23,6 +23,20 @@ where the formatting is also better._
 
 #### Other new features
 
+- `type_points()`, `type_lines()`, `type_errorbar()`, and `type_pointrange()`
+  gain an `xlevels` argument for reordering a categorical (factor or character)
+  `x` variable on the fly, extending the convention already established by
+  `type_barplot()`, `type_spineplot()`, and `type_ridge()` (`ylevels`). Accepted
+  values are a character vector of level names, a numeric vector of level
+  indexes (e.g., `3:1`), or the new keyword `"data"`, which orders the levels by
+  their first appearance in the data; the keyword is also accepted by the three
+  existing types. The argument is forwarded automatically from the top-level
+  call, e.g. `tinyplot(runtime ~ name, data = LOTR, type = "b", xlevels =
+  "data")`. It only affects categorical variables and is ignored for numeric
+  ones. `type_errorbar()` and `type_pointrange()` default to `xlevels = "data"`
+  (unchanged behaviour, now overridable): these types are typically used for
+  coefficient plots, where the row order of the data is intentional. (#679
+  @grantmcdermott)
 - Custom plot types have more control over the surrounding plot machinery, via a
   new `type_hints` mechanism. A type can declare properties about itself---that
   it draws its own axes, needs a secondary right-hand axis, uses proportional
@@ -70,6 +84,19 @@ where the formatting is also better._
   not just the axes: `type = "h"` draws horizontal segments to the baseline,
   and the step types `"s"` and `"S"` swap which coordinate moves first.
   (#675 @haomeng797-ship-it)
+- The line types (`type = "l"`, `"b"`, `"h"`, ... and their `type_lines()`
+  equivalent) now place categorical data exactly like `type_points()` does.
+  Categories are ordered by their factor levels rather than by order of
+  appearance in the data; an explicit `factor(x, levels = ...)` was previously
+  ignored by the line types, and layering points on lines (or vice versa) could
+  place the two layers against different orderings. Note that this ordering is
+  a property of the data, not of the plot type: to order categories by their
+  appearance in the data, use the new `xlevels = "data"` argument (see above)
+  or set the levels accordingly, e.g. `factor(x, levels = unique(x))`.
+  Category labels are also kept on a
+  categorical y-axis now, both for `flip = TRUE` and for a factor `y` variable;
+  previously the y-axis fell back to numeric tick labels for every line type
+  except `"p"`. (#679 @grantmcdermott)
 - Added layers now align on the category that each row belongs to. The
   realignment logic used each row's *position* rather than its category, which
   only coincided with the right answer when the added layer's rows happened to

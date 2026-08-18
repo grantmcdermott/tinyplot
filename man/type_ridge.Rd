@@ -47,7 +47,8 @@ at the specified \code{probs}. The quantiles are computed based on the density
 \code{probs} must be specified.}
 
 \item{ylevels}{a character or numeric vector specifying in which order
-the levels of the y-variable should be plotted.}
+the levels of the y-variable should be plotted. The special keyword
+\code{"data"} orders the levels by their first appearance in the data.}
 
 \item{bw}{the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
 see \code{\link[stats]{density}} for details and options.}

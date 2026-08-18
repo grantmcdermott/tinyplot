@@ -1,9 +1,9 @@
 #' @rdname type_errorbar
 #' @export
-type_pointrange = function(dodge = 0, fixed.dodge = FALSE) {
+type_pointrange = function(dodge = 0, fixed.dodge = FALSE, xlevels = "data") {
   out = list(
     draw = draw_pointrange(),
-    data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge),
+    data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels),
     name = "p"
   )
   class(out) = "tinyplot_type"
@@ -47,17 +47,19 @@ draw_pointrange = function() {
 }
 
 
-data_pointrange = function(dodge, fixed.dodge) {
+data_pointrange = function(dodge, fixed.dodge, xlevels = "data") {
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "xlabs", "cex", "lty", "lwd"))
 
     if (is.character(datapoints$x)) {
       datapoints$x = as.factor(datapoints$x)
     }
+    ## default xlevels = "data" preserves the row order of the data (i.e., no
+    ## new sorting by factor), since these types are typically used for
+    ## coefficient plots where that order is intentional
+    datapoints$x = sanitize_xlevels(datapoints$x, xlevels)
     if (is.factor(datapoints$x)) {
-      ## original data (i.e., no new sorting by factor)
-      xlvls = unique(datapoints$x)
-      datapoints$x = factor(datapoints$x, levels = xlvls)
+      xlvls = levels(datapoints$x)
       xlabs = seq_along(xlvls)
       names(xlabs) = xlvls
       datapoints$x = as.integer(datapoints$x)

@@ -10,13 +10,13 @@ where the formatting is also better._
 
 - `type_lines()` and its shortcut equivalents like `"l"` and `"b"` now order
   categorical `x` data by (coerced) factor levels, rather than simple order of
-  appearance. This resolves a longstanding tension between lines types and
+  appearance. This resolves a longstanding tension between line types and
   other types like `type_points()`, which have always ordered the `x` axis by
   implied factor levels. It also improves layering consistency via `plt_add()`
   and co. so that plots are identical, regardless of whether lines are layered
-  on top of points, or vice versa. Note that the old behaviour is still
-  available as an explicit user override via the new `xlevels = "asis"`
-  argument; see "Other new features" below. (#683 @grantmcdermott)
+  on top of points, or vice versa. Note that you can still select into the
+  old behaviour by passing the (new) `xlevels = "asis"` argument as an
+  explicit override; see "Other new features" below. (#683 @grantmcdermott)
 
 ### New features
 

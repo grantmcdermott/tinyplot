@@ -749,6 +749,30 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_labeller_list")
 
+# All of the facet title arguments at once: a named `prefix` (so the order it
+# is written in doesn't matter), a `labeller`, and a `sep` to stack the two
+# variables. Note that the labeller sees each variable's own values rather than
+# the strings that the composite title has to be split on -- `as.logical(0)` is
+# FALSE, whereas `as.logical("0")` is NA -- which is what keeps multi-variable
+# and grid facets agreeing with single-variable ones.
+f = function() {
+  # NB: this file coerces `mtcars$am` to a factor up top, and a factor's values
+  # *are* its level strings, so use the numeric original here -- otherwise the
+  # labeller has no type to preserve and NAs are the correct answer.
+  d = transform(mtcars, am = as.numeric(as.character(am)))
+  tinyplot(
+    mpg ~ wt, data = d,
+    facet = ~am:vs,
+    facet.args = list(
+      prefix = list("vs" = "V-shape", "am" = "Automatic"),
+      labeller = as.logical,
+      sep = "\n"
+    ),
+    theme = "clean"
+  )
+}
+expect_snapshot_plot(f, label = "facet_titles_combined")
+
 # Global fallback via tpar (also makes it available to themes)
 f = function() {
   tpar(facet.prefix = TRUE)

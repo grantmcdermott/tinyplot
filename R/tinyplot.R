@@ -1885,9 +1885,9 @@ tinyplot.formula = function(
     xtype = if (is.null(xfacet)) "none" else if (ncol(xfacet) == 0L) "empty" else "data"
     ytype = if (is.null(yfacet)) "none" else if (ncol(yfacet) == 0L) "empty" else "data"
     
-    ## variable names, for optional "varname = value" facet titles
-    xfacet_nms = if (xtype == "data") names(xfacet) else NULL
-    yfacet_nms = if (ytype == "data") names(yfacet) else NULL
+    ## each facet variable's levels, keyed by its name; see facet_titles()
+    xfacet_vars = if (xtype == "data") lapply(xfacet, facet_var_levels) else NULL
+    yfacet_vars = if (ytype == "data") lapply(yfacet, facet_var_levels) else NULL
 
     ## turn data frame (if specified) into a single factor
     if (xtype == "data") xfacet = if (ncol(xfacet) == 1L) xfacet[[1L]] else interaction(xfacet, sep = ":")
@@ -1899,14 +1899,14 @@ tinyplot.formula = function(
     } else {
       if (xtype %in% c("none", "empty")) {
         facet = yfacet
-        facet_nms = list(x = yfacet_nms)
+        fvars = list(x = yfacet_vars)
         if (xtype == "empty") {
           if (is.null(facet.args)) facet.args = list()
           if (is.null(facet.args[["nrow"]])) facet.args[["nrow"]] = length(unique(yfacet))
         }
       } else if (ytype %in% c("none", "empty")) {
         facet = xfacet
-        facet_nms = list(x = xfacet_nms)
+        fvars = list(x = xfacet_vars)
         if (ytype == "empty") {
           if (is.null(facet.args)) facet.args = list()
           if (is.null(facet.args[["nrow"]])) facet.args[["nrow"]] = 1L
@@ -1915,14 +1915,14 @@ tinyplot.formula = function(
         facet = interaction(xfacet, yfacet, sep = "~")
         attr(facet, "facet_grid") = TRUE
         attr(facet, "facet_nrow") = length(unique(yfacet))
-        facet_nms = list(x = xfacet_nms, y = yfacet_nms)
+        fvars = list(x = xfacet_vars, y = yfacet_vars)
       }
-      attr(facet, "facet_names") = facet_nms
+      attr(facet, "facet_vars") = fvars
     }
   } else if (!is.null(facet) && !inherits(facet, "formula") &&
-             is.null(attr(facet, "facet_names")) && !identical(facet, "by")) {
+             is.null(attr(facet, "facet_vars")) && !identical(facet, "by")) {
     ## facet passed as data (rather than a formula), e.g. facet = dat$fvar
-    attr(facet, "facet_names") = list(x = facet_dep)
+    attr(facet, "facet_vars") = list(x = facet_var_list(facet, facet_dep))
   }
 
   ## nice axis and legend labels

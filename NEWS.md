@@ -33,6 +33,39 @@ where the formatting is also better._
   that the first row sits at the top (again matching `heatmap()`); pass an
   explicit `ylim` to override. (#677 @grantmcdermott)
 
+#### Facet improvements
+
+The top-level `facet.args` list argument gains several new (sub-)arguments that
+enable finer control and customization of faceted plots:
+
+- `axes`: gives explicit control over which facets draw their own axes: `"all"`,
+  `"outer"` (drop redundant interior axes), or `"none"`. Previously this was
+  only achievable as a side effect of `frame.plot = FALSE`, so `axes = "outer"`
+  now allows redundant axes to be dropped while _keeping_ the facet frames. Left
+  unspecified, the behaviour is still inferred from whether the plot is framed.
+  (#661, #673 @grantmcdermott)
+  - Themes with L-shaped axes (`"classic"`, `"socviz"`, `"tufte"`, and
+    `"float"`) now default to `facet.axes = "outer"`, so that they drop the
+    redundant interior axes of faceted plots.
+- `labeller`: for formatting facet titles via `tinylabel()`. Accepts the usual
+  mix of convenience keywords (symbols) known to `tinylabel()`, or formatting
+  functions. A (named) vector or list can be used to separately format
+  multi-variable facets, e.g. `labeller = c(country = toupper, size = ",")`.
+  (#295 @grantmcdermott)
+- `prefix`: for adding an informative prefix to facet titles. In its simplest
+  form, `prefix = TRUE` prepends the facet variable name, e.g. `"vs = 0"` and
+  `"vs = 1"` (rather than just `"0"` and `"1"`). Like `labeller` above,
+  multi-variable facets can be prefixed separately via a (named) vector or list,
+  e.g. `prefix = c(am = "Automatic", vs = "V-shaped")`. (#295 @grantmcdermott)
+- `sep`: controls how the individual variables of a multi-variable facet title
+  are separated, e.g. use `sep = "\n"` to stack on separate lines rather than
+  concatenating via the default `":"`. (#295 @grantmcdermott)
+
+Note that each of these `facet.args` arguments is paired with an equivalent
+`tpar(facet.<arg>)` parameter. For example, call `tpar(facet.axes = "outer")` 
+to set this behaviour globally. This also means that they can be set as part of
+a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
+
 #### Other new features
 
 - `type_points()`, `type_lines()`, `type_errorbar()`, and `type_pointrange()`
@@ -54,20 +87,6 @@ where the formatting is also better._
   custom types. See
   [Advanced customization](https://grantmcdermott.com/tinyplot/vignettes/types.html#type-hints)
   in the `Types` vignette for the list of supported hints. (#543 @grantmcdermott)
-- New `axes` argument for `facet.args`, giving explicit control over which
-  facets draw their own axes: `"all"`, `"outer"` (drop redundant interior
-  axes), or `"none"`. Previously this was only achievable as a side effect of
-  `frame.plot = FALSE`, so `facet.args = list(axes = "outer")` now allows
-  redundant axes to be dropped while _keeping_ the facet frames.
-  (#661, #673 @grantmcdermott)
-  - The same behaviour can be set globally via the new `facet.axes` parameter
-    (note the reverse order), e.g. `tpar(facet.axes = "outer")`, which also
-    makes it available to themes. A per-call `facet.args = list(axes = ...)`
-    takes precedence over the global setting, which in turn takes precedence
-    over the old frame-based inference.
-  - Accordingly, themes with L-shaped axes (`"classic"`, `"socviz"`, `"tufte"`,
-    and `"float"`) now default to `facet.axes = "outer"` so that they drop the
-    redundant interior axes of faceted plots.
 - `type_density()` gains an `echo.bw` argument for reporting the smoothing
   bandwidth and the number of observations behind it, neither of which is
   visible from the curve itself. Destinations are `"sub"`, `"cap"`, and

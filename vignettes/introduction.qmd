@@ -35,8 +35,8 @@ library(tinyplot)
 aq = transform(
   airquality,
   Month = factor(month.abb[Month], levels = month.abb[5:9]),
-  hot   = ifelse(Temp>=75, "hot", "cold"),
-  windy = ifelse(Wind>=15, "windy", "calm")
+  hot   = Temp>=75,
+  windy = Wind>=15
 )
 ```
 
@@ -371,7 +371,7 @@ argument to fit a logistic regression.
 
 ```{r ribbon_pred_glm}
 tinyplot(
-  I(hot == "hot") ~ Wind, aq,
+  hot ~ Wind, aq,
   # type = "glm", ## default is gaussian
   type = type_glm(family = binomial),
   main = "Logit model: Temps above 75 °F",
@@ -417,11 +417,15 @@ tinyplot(
 )
 ```
 
-To customize facets, simply pass a list of named arguments through the companion
-`facet.args` argument. Customization options include: override the default
-"square" facet window arrangement; allow free-scaled axes so that the limits of
-each individual facet are drawn independently; adjust the padding (margin)
-between individual facets; change the facet title text and background; etc.
+The companion `facet.args` argument accepts a list of (sub-)arguments for
+customizing your facets. Options include: `nrow`/`ncol` to override the default
+"square" facet window arrangement; `free` to allow free-scaled axes so that the
+limits of each individual facet are drawn independently; `fmar` to adjust the
+padding (margin) between individual facets; `labeller` to format the facet
+titles (see `?tinylabel`); `prefix` to prepend the facet variable name to the
+titles; as well as the regular text-based parameters like `cex`, `font`, `col`,
+`bg`, and `border` to change the facet title text and background.
+
 Here is a simple example where we (1) arrange the facets in a single row and (2)
 change the facet strip text and background fill.
 
@@ -444,9 +448,15 @@ facets in a fixed grid layout. Here is a simple, if contrived, example.
 ```{r facet_grid}
 tinyplot(
   Temp ~ Day, data = aq,
-  facet = windy ~ hot
+  facet = windy ~ hot,
+  facet.args = list(prefix = TRUE) # optional
 )
 ```
+
+Note that we used the `prefix = TRUE` argument to prepend the facet variable
+names to the strip titles. This is entirely optional, but makes for a more
+informative display since our two faceting variables are logical and would
+othewise just display `TRUE`/`FALSE` without any context.
 
 ## Layers
 
@@ -510,7 +520,7 @@ simplified version of our facet grid example from earlier.
 ```{r draw_simple}
 tinyplot(
  Temp ~ Day, data = aq,
- facet = windy ~ hot,
+ facet = windy ~ hot, facet.args = list(prefix = TRUE),
  # draw a horizontal (threshold) line in each facet using the abline function
  draw = abline(h = 75, lty = 2)
 )

@@ -211,6 +211,37 @@ their global \code{\link[tinyplot]{tpar}} settings. Note some automatic
 adjustments are made for certain layouts, and depending on whether the plot
 is framed or not, to reduce excess whitespace. See
 \code{\link[tinyplot]{tpar}} for more details.
+\item \code{labeller} a formatting function or convenience string passed to
+\code{\link[tinyplot]{tinylabel}} for adjusting facet titles. This is
+applied to the underlying facet values, i.e. before any \code{prefix} (below) is
+added, and component-wise if the facets are defined over several variables.
+For the latter case, a (named) list or character vector can be used to
+format each variable differently, e.g.
+\code{labeller = list(firm = toupper, yield = "\%")}, with any variable left
+unnamed not formatted. While not recommended, unnamed values are matched
+positionally, according to the variable order in the \code{facet} formula
+specification. Defaults to the value of \code{tpar("facet.labeller")}, which is
+\code{NULL} (no formatting).
+\item \code{prefix} a logical or character value for prefixing the facet titles with
+a descriptive name. Pass \code{TRUE} to prefix with the (deparsed) facet
+variable name(s), e.g. \code{"am = 0"} instead of just \code{"0"}. Alternatively,
+pass a custom prefix name as a character value, e.g. \code{prefix = "Automatic"}
+yields \code{"Automatic = 0"}. Like the \code{labeller} argument (above), a (named)
+character vector or list can be used to prefix multiple facet variables,
+e.g. \code{prefix = c(am = "Automatic", vs = "V-shaped")}, with any omitted
+variable taking its own (deparsed) name. While not recommended, unnamed
+values are matched positionally, according to the variable order in the
+\code{facet} formula specification. Similarly, a single string is recycled
+across all facet variables. (Regardless of how they are specified, note
+that prefixed multi-variable facet titles are separated by commas, rather
+than the usual colon.) Defaults to the value of \code{tpar("facet.prefix")},
+which is \code{NULL} (equivalent to \code{FALSE}, i.e. no prefix).
+\item \code{sep} a character string separating the individual variables of a
+multi-variable facet title (ignored otherwise). For example, pass
+\code{sep = "\\n"} to stack each variable on a separate line. Defaults to the
+value of \code{tpar("facet.sep")}, which is \code{NULL} and implies conditional
+behaviour depending on whether the combined variables are prefixed (then:
+\code{", "}) or the not (then: \code{":"}) for readability.
 \item \code{cex}, \code{font}, \code{col}, \code{bg}, \code{border} for adjusting the facet title text
 and background. Default values for these arguments are inherited from
 \code{\link[tinyplot]{tpar}} (where they take a "facet." prefix, e.g.
@@ -759,7 +790,8 @@ tinyplot(
 
 tinyplot(
   Temp ~ Day | Summer,
-  facet = ~Month, facet.args = list(nrow = 1),
+  facet = ~Month,
+  facet.args = list(nrow = 1),
   data = aq,
   type = "area",
   palette = "dark2",
@@ -770,19 +802,25 @@ tinyplot(
 # Use a two-sided formula to arrange the facet windows in a fixed grid.
 # LHS -> facet rows; RHS -> facet columns
 
-aq$hot = ifelse(aq$Temp >= 75, "hot", "cold")
-aq$windy = ifelse(aq$Wind >= 15, "windy", "calm")
+aq$hot = aq$Temp >= 75
+aq$windy = aq$Wind >= 15
 tinyplot(
   Temp ~ Day,
   facet = windy ~ hot,
+  facet.args = list(prefix = TRUE), # optional
   data = aq
 )
+
+# (Note: The optional `prefix = TRUE` argument prepends the facet variable
+#  names to the strip titles, making for a more informative display here.)
+
 
 # To add common elements to each facet, use the `draw` argument
 
 tinyplot(
   Temp ~ Day,
   facet = windy ~ hot,
+  facet.args = list(prefix = TRUE),
   data = aq,
   draw = abline(h = 75, lty = 2, col = "hotpink")
 )

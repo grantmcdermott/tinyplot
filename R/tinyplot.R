@@ -80,6 +80,37 @@
 #'   adjustments are made for certain layouts, and depending on whether the plot
 #'   is framed or not, to reduce excess whitespace. See
 #'   \code{\link[tinyplot]{tpar}} for more details.
+#'   - `labeller` a formatting function or convenience string passed to
+#'   \code{\link[tinyplot]{tinylabel}} for adjusting facet titles. This is
+#'   applied to the underlying facet values, i.e. before any `prefix` (below) is
+#'   added, and component-wise if the facets are defined over several variables.
+#'   For the latter case, a (named) list or character vector can be used to
+#'   format each variable differently, e.g.
+#'   `labeller = list(firm = toupper, yield = "%")`, with any variable left
+#'   unnamed not formatted. While not recommended, unnamed values are matched
+#'   positionally, according to the variable order in the `facet` formula
+#'   specification. Defaults to the value of `tpar("facet.labeller")`, which is
+#'   `NULL` (no formatting).
+#'   - `prefix` a logical or character value for prefixing the facet titles with
+#'   a descriptive name. Pass `TRUE` to prefix with the (deparsed) facet
+#'   variable name(s), e.g. `"am = 0"` instead of just `"0"`. Alternatively,
+#'   pass a custom prefix name as a character value, e.g. `prefix = "Automatic"`
+#'   yields `"Automatic = 0"`. Like the `labeller` argument (above), a (named)
+#'   character vector or list can be used to prefix multiple facet variables,
+#'   e.g. `prefix = c(am = "Automatic", vs = "V-shaped")`, with any omitted
+#'   variable taking its own (deparsed) name. While not recommended, unnamed
+#'   values are matched positionally, according to the variable order in the
+#'   `facet` formula specification. Similarly, a single string is recycled
+#'   across all facet variables. (Regardless of how they are specified, note
+#'   that prefixed multi-variable facet titles are separated by commas, rather
+#'   than the usual colon.) Defaults to the value of `tpar("facet.prefix")`,
+#'   which is `NULL` (equivalent to `FALSE`, i.e. no prefix).
+#'   - `sep` a character string separating the individual variables of a
+#'   multi-variable facet title (ignored otherwise). For example, pass
+#'   `sep = "\n"` to stack each variable on a separate line. Defaults to the
+#'   value of `tpar("facet.sep")`, which is `NULL` and implies conditional
+#'   behaviour depending on whether the combined variables are prefixed (then:
+#'   `", "`) or the not (then: `":"`) for readability.
 #'   - `cex`, `font`, `col`, `bg`, `border` for adjusting the facet title text
 #'   and background. Default values for these arguments are inherited from
 #'   \code{\link[tinyplot]{tpar}} (where they take a "facet." prefix, e.g.
@@ -578,7 +609,8 @@
 #'
 #' tinyplot(
 #'   Temp ~ Day | Summer,
-#'   facet = ~Month, facet.args = list(nrow = 1),
+#'   facet = ~Month,
+#'   facet.args = list(nrow = 1),
 #'   data = aq,
 #'   type = "area",
 #'   palette = "dark2",
@@ -589,19 +621,25 @@
 #' # Use a two-sided formula to arrange the facet windows in a fixed grid.
 #' # LHS -> facet rows; RHS -> facet columns
 #'
-#' aq$hot = ifelse(aq$Temp >= 75, "hot", "cold")
-#' aq$windy = ifelse(aq$Wind >= 15, "windy", "calm")
+#' aq$hot = aq$Temp >= 75
+#' aq$windy = aq$Wind >= 15
 #' tinyplot(
 #'   Temp ~ Day,
 #'   facet = windy ~ hot,
+#'   facet.args = list(prefix = TRUE), # optional
 #'   data = aq
 #' )
+#' 
+#' # (Note: The optional `prefix = TRUE` argument prepends the facet variable
+#' #  names to the strip titles, making for a more informative display here.)
+#'
 #'
 #' # To add common elements to each facet, use the `draw` argument
 #'
 #' tinyplot(
 #'   Temp ~ Day,
 #'   facet = windy ~ hot,
+#'   facet.args = list(prefix = TRUE),
 #'   data = aq,
 #'   draw = abline(h = 75, lty = 2, col = "hotpink")
 #' )
@@ -767,6 +805,9 @@ tinyplot.default = function(
       null.ok = TRUE,
       name = "facet.args$axes"
     )
+    assert_labeller(facet.args[["labeller"]], name = "facet.args$labeller", list.ok = TRUE)
+    assert_facet_prefix(facet.args[["prefix"]], name = "facet.args$prefix")
+    assert_string(facet.args[["sep"]], null.ok = TRUE, name = "facet.args$sep")
   }
 
   # save for tinyplot_add()
@@ -1778,6 +1819,11 @@ tinyplot.formula = function(
   ## placeholder for legend title
   legend_args = list(x = NULL)
 
+  ## deparsed facet input, for optional "varname = value" facet titles (only
+  ## used if `facet` is passed as data rather than as a formula, since the
+  ## latter carries its variable names through the model frame below)
+  facet_dep = if (is.null(substitute(facet))) NULL else deparse1(substitute(facet))
+
   ## turn facet into a formula if it does not evaluate successfully
   if (inherits(try(facet, silent = TRUE), "try-error")) {
     facet = as.formula(paste("~", deparse(substitute(facet))))
@@ -1839,6 +1885,10 @@ tinyplot.formula = function(
     xtype = if (is.null(xfacet)) "none" else if (ncol(xfacet) == 0L) "empty" else "data"
     ytype = if (is.null(yfacet)) "none" else if (ncol(yfacet) == 0L) "empty" else "data"
     
+    ## variable names, for optional "varname = value" facet titles
+    xfacet_nms = if (xtype == "data") names(xfacet) else NULL
+    yfacet_nms = if (ytype == "data") names(yfacet) else NULL
+
     ## turn data frame (if specified) into a single factor
     if (xtype == "data") xfacet = if (ncol(xfacet) == 1L) xfacet[[1L]] else interaction(xfacet, sep = ":")
     if (ytype == "data") yfacet = if (ncol(yfacet) == 1L) yfacet[[1L]] else interaction(yfacet, sep = ":")
@@ -1849,12 +1899,14 @@ tinyplot.formula = function(
     } else {
       if (xtype %in% c("none", "empty")) {
         facet = yfacet
+        facet_nms = list(x = yfacet_nms)
         if (xtype == "empty") {
           if (is.null(facet.args)) facet.args = list()
           if (is.null(facet.args[["nrow"]])) facet.args[["nrow"]] = length(unique(yfacet))
         }
       } else if (ytype %in% c("none", "empty")) {
         facet = xfacet
+        facet_nms = list(x = xfacet_nms)
         if (ytype == "empty") {
           if (is.null(facet.args)) facet.args = list()
           if (is.null(facet.args[["nrow"]])) facet.args[["nrow"]] = 1L
@@ -1863,8 +1915,14 @@ tinyplot.formula = function(
         facet = interaction(xfacet, yfacet, sep = "~")
         attr(facet, "facet_grid") = TRUE
         attr(facet, "facet_nrow") = length(unique(yfacet))
+        facet_nms = list(x = xfacet_nms, y = yfacet_nms)
       }
+      attr(facet, "facet_names") = facet_nms
     }
+  } else if (!is.null(facet) && !inherits(facet, "formula") &&
+             is.null(attr(facet, "facet_names")) && !identical(facet, "by")) {
+    ## facet passed as data (rather than a formula), e.g. facet = dat$fvar
+    attr(facet, "facet_names") = list(x = facet_dep)
   }
 
   ## nice axis and legend labels

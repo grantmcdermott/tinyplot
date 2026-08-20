@@ -36,10 +36,13 @@ align_layer = function(settings) {
       if (setequal(names(xlabs_layer), names(xlabs_orig))) {
         # If mappings already agree and no dodge, no realignment needed
         if (identical(xlabs_layer, xlabs_orig) && is.null(settings$dodge)) return(invisible())
-        orig_order = xlabs_orig[names(xlabs_layer)[settings$datapoints[["x"]]]]
         x_layer = settings$datapoints[["x"]]
         if (is.null(settings$dodge)) {
-          x_new = x_layer[orig_order] 
+          # Per-row lookup, not a permutation: the position each row's category
+          # occupies in the original layer. Indexing `x_layer` by it instead
+          # only coincided with the right answer when the layer's rows happened
+          # to arrive in ascending order. (#679)
+          x_new = unname(xlabs_orig[names(xlabs_layer)[x_layer]])
         } else {
           names(x_layer) = names(xlabs_layer)[round(x_layer)]
           x_new = x_layer + (xlabs_orig[names(round(x_layer))] - round(x_layer))

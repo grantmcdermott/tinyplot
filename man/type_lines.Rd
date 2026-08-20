@@ -4,7 +4,7 @@
 \alias{type_lines}
 \title{Lines plot type}
 \usage{
-type_lines(type = "l", dodge = 0, fixed.dodge = FALSE)
+type_lines(type = "l", dodge = 0, fixed.dodge = FALSE, xlevels = NULL)
 }
 \arguments{
 \item{type}{1-character string giving the type of plot desired.  The
@@ -39,10 +39,36 @@ calculated independently for each \code{x} value, based only on the groups
 present at that position. If \code{TRUE}, dodge positions are based on all
 groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
 groups are missing for a particular \code{x} value).}
+
+\item{xlevels}{a character or numeric vector specifying the order in which
+the levels of the \code{x} variable should be plotted (as level names if
+character, or level indexes if numeric, e.g. \code{3:1}). The special keyword
+\code{"asis"} takes the categories in the order that they appear in the data,
+i.e. skipping the alphabetical sort that is otherwise applied when
+coercing a character variable to a factor. Note that this argument only
+affects categorical (i.e., factor or character) \code{x} variables; it is
+ignored for numeric \code{x}. The default \code{NULL} keeps the existing factor
+levels (alphabetical for character variables).}
 }
 \description{
 Type function for plotting lines.
 }
+\section{Categorical axes}{
+
+
+Like the other plot types, \code{type_lines()} places categorical (factor or
+character) data according to the factor levels. Character variables are
+coerced with \code{\link[=factor]{factor()}} and so end up in alphabetical order. To order the
+categories by their appearance in the data instead, use
+\code{xlevels = "asis"}, or set the levels explicitly, e.g.
+\code{factor(x, levels = unique(x))}.
+
+Note that the lines themselves are always drawn in the order that the rows
+arrive in, exactly as base \code{\link[=lines]{lines()}} does. Categories whose level order
+differs from their row order will therefore produce a zig-zag, just as an
+unsorted numeric x-variable would.
+}
+
 \examples{
 # "l" type convenience character string
 tinyplot(circumference ~ age | Tree, data = Orange, type = "l")

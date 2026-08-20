@@ -6,7 +6,9 @@
 #'   to `type_spineplot()` if `y` is a factor variable.
 #' @param xlevels,ylevels a character or numeric vector specifying the ordering of the
 #'   levels of the `x` and `y` variables (if character) or the corresponding indexes
-#'   (if numeric) for the plot.
+#'   (if numeric) for the plot. The special keyword `"asis"` takes the
+#'   categories in the order that they appear in the data. Note that these
+#'   arguments only affect categorical (i.e., factor or character) variables.
 #' @inheritParams graphics::spineplot
 #' @param lighten logical. For grouped spineplots where the `y` variable is
 #'   itself the grouping variable (i.e. `y == by`), should the fills use a
@@ -157,15 +159,11 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         
         x.categorical = is.factor(datapoints$x)
         if (!is.null(xlevels) && x.categorical) {
-          xlevels = if(is.numeric(xlevels)) levels(datapoints$x)[xlevels] else xlevels
-          if (anyNA(xlevels) || !all(xlevels %in% levels(datapoints$x))) warning("not all 'xlevels' correspond to levels of 'x'")
-          datapoints$x = factor(datapoints$x, levels = xlevels)
+          datapoints$x = sanitize_xlevels(datapoints$x, xlevels)
           if (x_by) datapoints$by = datapoints$x
         }
         if (!is.null(ylevels)) {
-          ylevels = if(is.numeric(ylevels)) levels(datapoints$y)[ylevels] else ylevels
-          if (anyNA(ylevels) || !all(ylevels %in% levels(datapoints$y))) warning("not all 'ylevels' correspond to levels of 'y'")
-          datapoints$y = factor(datapoints$y, levels = ylevels)
+          datapoints$y = sanitize_xlevels(datapoints$y, ylevels, arg = "ylevels")
           if (y_by) datapoints$by = datapoints$y
         }
         

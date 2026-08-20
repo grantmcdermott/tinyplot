@@ -34,6 +34,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # r-ci's run.sh (hotfix a07614a, 2026-08-19) seds /etc/apt/apt-mirrors.txt
+      # unconditionally to drop the flaky azure mirror. That file only exists on
+      # GitHub-hosted runner images, not in containers, so the sed exits 2 and
+      # kills the step under `bash -e`. (r2u4ci escapes it via the /etc/r2u_ci
+      # stamp, which makes Bootstrap() skip BootstrapLinux entirely; drd has no
+      # such stamp.) An empty file is inert here -- containers never used the
+      # azure mirror. Drop once upstream guards the sed with `test -f`.
+      - name: Work around r-ci apt-mirrors.txt assumption
+        run: touch /etc/apt/apt-mirrors.txt
+
       - name: Setup
         uses: eddelbuettel/github-actions/r-ci@master
 

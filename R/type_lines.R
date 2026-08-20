@@ -4,11 +4,26 @@
 #' 
 #' @inheritParams graphics::plot.default
 #' @inheritParams dodge_positions
-#' 
+#' @inheritParams type_points
+#'
+#' @section Categorical axes:
+#'
+#' Like the other plot types, `type_lines()` places categorical (factor or
+#' character) data according to the factor levels. Character variables are
+#' coerced with [factor()] and so end up in alphabetical order. To order the
+#' categories by their appearance in the data instead, use
+#' `xlevels = "asis"`, or set the levels explicitly, e.g.
+#' `factor(x, levels = unique(x))`.
+#'
+#' Note that the lines themselves are always drawn in the order that the rows
+#' arrive in, exactly as base [lines()] does. Categories whose level order
+#' differs from their row order will therefore produce a zig-zag, just as an
+#' unsorted numeric x-variable would.
+#'
 #' @examples
 #' # "l" type convenience character string
 #' tinyplot(circumference ~ age | Tree, data = Orange, type = "l")
-#' 
+#'
 #' # Use `type_lines()` to pass extra arguments for customization
 #' tinyplot(circumference ~ age | Tree, data = Orange, type = type_lines(type = "s"))
 #' 
@@ -33,10 +48,10 @@
 #' )
 #' 
 #' @export
-type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE) {
+type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
   out = list(
     draw = draw_lines(type = type),
-    data = data_lines(dodge = dodge, fixed.dodge = fixed.dodge),
+    data = data_lines(dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels),
     name = type
   )
   class(out) = "tinyplot_type"
@@ -44,20 +59,31 @@ type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE) {
 }
 
 
-data_lines = function(dodge = 0, fixed.dodge = FALSE) {
+data_lines = function(dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
   fun = function(settings, ...) {
-    env2env(settings, environment(), c("datapoints", "xlabs"))
+    env2env(settings, environment(), "datapoints")
 
-    if (is.character(datapoints$x)) {
-      datapoints$x = as.factor(datapoints$x)
-    }
-    if (is.factor(datapoints$x)) {
-      # honour pre-ordered factors; otherwise fall back to first-appearance order
-      xlvls = if (is.ordered(datapoints$x)) levels(datapoints$x) else unique(datapoints$x)
-      datapoints$x = factor(datapoints$x, levels = xlvls)
+    # Categorical axes follow the factor levels, exactly as in data_points().
+    # (Character vectors have already been coerced by sanitize_datapoints().)
+    # Ordering by the levels rather than by first appearance means an explicit
+    # `factor(x, levels = ...)` is honoured, and that layering a line type onto
+    # a point type (or vice versa) lands on the same categories. #679
+    datapoints[["x"]] = sanitize_xlevels(datapoints[["x"]], xlevels)
+    if (is.factor(datapoints[["x"]])) {
+      xlvls = levels(datapoints[["x"]])
       xlabs = seq_along(xlvls)
       names(xlabs) = xlvls
-      datapoints$x = as.integer(datapoints$x)
+      datapoints[["x"]] = as.integer(datapoints[["x"]])
+    } else {
+      xlabs = NULL
+    }
+    if (is.factor(datapoints[["y"]])) {
+      ylvls = levels(datapoints[["y"]])
+      ylabs = seq_along(ylvls)
+      names(ylabs) = ylvls
+      datapoints[["y"]] = as.integer(datapoints[["y"]])
+    } else {
+      ylabs = NULL
     }
 
     # dodge
@@ -65,10 +91,13 @@ data_lines = function(dodge = 0, fixed.dodge = FALSE) {
       datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
     }
 
-    x = datapoints$x
+    x = datapoints[["x"]]
+    y = datapoints[["y"]]
     env2env(environment(), settings, c(
       "x",
+      "y",
       "xlabs",
+      "ylabs",
       "datapoints"
     ))
   }

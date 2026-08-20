@@ -52,7 +52,10 @@ group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: me
 
 \item{xlevels}{a character or numeric vector specifying the ordering of the
 levels of the \code{x} variable (if character) or the corresponding indexes
-(if numeric) for the plot.}
+(if numeric) for the plot. The special keyword \code{"asis"} takes the
+categories in the order that they appear in the data. Note that this
+argument only affects categorical (i.e., factor or character) \code{x}
+variables.}
 
 \item{xaxlabels}{a character vector with the axis labels for the \code{x} variable,
 defaulting to the levels of \code{x}.}

@@ -21,7 +21,10 @@
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
 #' @param xlevels a character or numeric vector specifying the ordering of the
 #'   levels of the `x` variable (if character) or the corresponding indexes
-#'   (if numeric) for the plot.
+#'   (if numeric) for the plot. The special keyword `"asis"` takes the
+#'   categories in the order that they appear in the data. Note that this
+#'   argument only affects categorical (i.e., factor or character) `x`
+#'   variables.
 #' @param xaxlabels a character vector with the axis labels for the `x` variable,
 #'   defaulting to the levels of `x`.
 #' @param offset optional specification for shifting bar baselines, accepting
@@ -171,11 +174,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
           if (is.null(FUN)) FUN = function(x, ...) mean(x, ..., na.rm = TRUE)
         }
         if (!is.factor(datapoints$x)) datapoints$x = factor(datapoints$x)
-        if (!is.null(xlevels)) {
-          xlevels = if(is.numeric(xlevels)) levels(datapoints$x)[xlevels] else xlevels
-          if (anyNA(xlevels) || !all(xlevels %in% levels(datapoints$x))) warning("not all 'xlevels' correspond to levels of 'x'")
-          datapoints$x = factor(datapoints$x, levels = xlevels)
-        }
+        datapoints$x = sanitize_xlevels(datapoints$x, xlevels)
         if (!is.null(xaxlabels)) levels(datapoints$x) = xaxlabels
         datapoints = aggregate(datapoints[, "y", drop = FALSE], datapoints[, c("x", "by", "facet")], FUN = FUN, drop = FALSE)
         datapoints$y[is.na(datapoints$y)] = 0 #FIXME: always?#

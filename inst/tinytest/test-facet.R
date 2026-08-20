@@ -644,6 +644,25 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_axes_outer_free")
 
+# Free facets with categories on the y-axis used to error out with
+# "'labels' is supplied and not 'at'": the eligible types were listed by name,
+# so anything else lost its tick positions but kept the labels. Levels are set
+# in data order here, so the snapshot does not depend on how a type orders its
+# categories. (#679)
+f = function() {
+  LOTR = data.frame(
+    name = rep(c("Fellowship", "Two Towers", "Return"), 2),
+    runtime = c(178, 179, 201, 208, 223, 251),
+    cut = rep(c("theatrical", "extended"), each = 3)
+  )
+  LOTR$name = factor(LOTR$name, levels = unique(LOTR$name))
+  tinyplot(
+    runtime ~ name, facet = ~cut, data = LOTR, type = "b",
+    flip = TRUE, facet.args = list(free = TRUE)
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_categorical_yaxis")
+
 #
 # restore original par settings
 #

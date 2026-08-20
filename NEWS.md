@@ -51,15 +51,15 @@ enable finer control and customization of faceted plots:
   mix of convenience keywords (symbols) known to `tinylabel()`, or formatting
   functions. A (named) vector or list can be used to separately format
   multi-variable facets, e.g. `labeller = c(country = toupper, size = ",")`.
-  (#295 @grantmcdermott)
+  (#684 @grantmcdermott)
 - `prefix`: for adding an informative prefix to facet titles. In its simplest
   form, `prefix = TRUE` prepends the facet variable name, e.g. `"vs = 0"` and
   `"vs = 1"` (rather than just `"0"` and `"1"`). Like `labeller` above,
   multi-variable facets can be prefixed separately via a (named) vector or list,
-  e.g. `prefix = c(am = "Automatic", vs = "V-shaped")`. (#295 @grantmcdermott)
+  e.g. `prefix = c(am = "Automatic", vs = "V-shaped")`. (#684 @grantmcdermott)
 - `sep`: controls how the individual variables of a multi-variable facet title
   are separated, e.g. use `sep = "\n"` to stack on separate lines rather than
-  concatenating via the default `":"`. (#295 @grantmcdermott)
+  concatenating via the default `":"`. (#684 @grantmcdermott)
 
 Note that each of these `facet.args` arguments is paired with an equivalent
 `tpar(facet.<arg>)` parameter. For example, call `tpar(facet.axes = "outer")` 

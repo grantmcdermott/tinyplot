@@ -664,6 +664,109 @@ f = function() {
 expect_snapshot_plot(f, label = "facet_free_categorical_yaxis")
 
 #
+## facet title prefixes (#295)
+
+# `prefix = TRUE` prepends the (deparsed) facet variable name, e.g. "vs = 0"
+# instead of a bare "0".
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~vs, facet.args = list(prefix = TRUE)
+  )
+}
+expect_snapshot_plot(f, label = "facet_prefix")
+
+# A character `prefix` supplies a custom name instead of the variable name.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~vs, facet.args = list(prefix = "Engine")
+  )
+}
+expect_snapshot_plot(f, label = "facet_prefix_custom")
+
+# Facet grids prefix both strips, and a character vector names each variable in
+# turn, ordered as they appear in the facet formula (LHS first).
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = vs ~ am, facet.args = list(prefix = c("Engine", "Transmission"))
+  )
+}
+expect_snapshot_plot(f, label = "facet_prefix_grid")
+
+# `sep` separates the individual variables of a multi-variable title. A newline
+# stacks them, which also has to be reserved for in the facet strip margins.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~am + vs, facet.args = list(sep = "\n")
+  )
+}
+expect_snapshot_plot(f, label = "facet_sep_newline")
+
+# ... and it applies to prefixed titles just the same
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = ~am + vs, facet.args = list(prefix = TRUE, sep = "\n")
+  )
+}
+expect_snapshot_plot(f, label = "facet_sep_newline_prefix")
+
+# Multi-line titles on a facet grid: the rotated RHS titles need the extra
+# margin width, else they (and their background rects) overflow the figure
+# region. (Sourced from a labeller here, since a grid with one variable per
+# side has no `sep` to apply.)
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = vs ~ am,
+    facet.args = list(
+      labeller = function(x) paste0("level\n", x),
+      bg = "grey90", border = "black"
+    )
+  )
+}
+expect_snapshot_plot(f, label = "facet_multiline_titles_grid")
+
+# `labeller` formats the facet values themselves, ahead of any prefix.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = transform(mtcars, vs = vs / 4),
+    facet = ~vs, facet.args = list(labeller = "percent", prefix = "Share")
+  )
+}
+expect_snapshot_plot(f, label = "facet_labeller")
+
+# A list of labellers formats each facet variable separately.
+f = function() {
+  d = transform(mtcars, vs = vs / 4, gear = paste0("g", gear))
+  tinyplot(
+    mpg ~ wt, data = d, facet = ~vs + gear,
+    facet.args = list(labeller = list("percent", toupper), prefix = TRUE)
+  )
+}
+expect_snapshot_plot(f, label = "facet_labeller_list")
+
+# Global fallback via tpar (also makes it available to themes)
+f = function() {
+  tpar(facet.prefix = TRUE)
+  on.exit(tpar(facet.prefix = NULL))
+  tinyplot(mpg ~ wt, data = mtcars, facet = ~vs)
+}
+expect_snapshot_plot(f, label = "facet_prefix_tpar")
+
+# ... but a per-call `facet.args$prefix` wins over the global default
+f = function() {
+  tpar(facet.prefix = TRUE)
+  on.exit(tpar(facet.prefix = NULL))
+  tinyplot(mpg ~ wt, data = mtcars, facet = ~vs, facet.args = list(prefix = FALSE))
+}
+expect_snapshot_plot(f, label = "facet_prefix_tpar_override")
+
+
+#
 # restore original par settings
 #
 

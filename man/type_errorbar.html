@@ -590,9 +590,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_errorbar(length = 0.05, dodge = 0, fixed.dodge = FALSE)
+<pre><code class="language-R">type_errorbar(length = 0.05, dodge = 0, fixed.dodge = FALSE, xlevels = "asis")
 
-type_pointrange(dodge = 0, fixed.dodge = FALSE)
+type_pointrange(dodge = 0, fixed.dodge = FALSE, xlevels = "asis")
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -629,6 +629,14 @@ Default value is 0 (no dodging). While we do not check, it is <em>strongly</em> 
 </td>
 <td>
 Logical. If <code>FALSE</code> (default), dodge positions are calculated independently for each <code>x</code> value, based only on the groups present at that position. If <code>TRUE</code>, dodge positions are based on all groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some groups are missing for a particular <code>x</code> value).
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="xlevels">xlevels</code>
+</td>
+<td>
+a character or numeric vector specifying the order in which the levels of the <code>x</code> variable should be plotted (as level names if character, or level indexes if numeric, e.g.&nbsp;<code>3:1</code>). Note that this argument only affects categorical (i.e., factor or character) <code>x</code> variables; it is ignored for numeric <code>x</code>. Unlike most other plot types, here it defaults to the special keyword <code>“asis”</code>, which takes the categories in the order that they appear in the data: these types are typically used for coefficient plots, where the row order of the data (e.g., the terms of a model) is usually intentional. Set <code>xlevels = NULL</code> to follow the factor levels instead, matching the other plot types.
 </td>
 </tr>
 </tbody></table>

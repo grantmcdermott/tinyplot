@@ -222,6 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#development-version" id="toc-development-version" class="nav-link" data-scroll-target="#development-version">Development version</a>
   <ul class="collapse">
+  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
   <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
   <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
   </ul></li>
@@ -241,7 +242,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#v0.6.0" id="toc-v0.6.0" class="nav-link" data-scroll-target="#v0.6.0">v0.6.0</a>
   <ul class="collapse">
-  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
+  <li><a href="#breaking-changes-1" id="toc-breaking-changes-1" class="nav-link" data-scroll-target="#breaking-changes-1">Breaking changes</a></li>
   <li><a href="#new-features-3" id="toc-new-features-3" class="nav-link" data-scroll-target="#new-features-3">New features</a></li>
   <li><a href="#bug-fixes-3" id="toc-bug-fixes-3" class="nav-link" data-scroll-target="#bug-fixes-3">Bug fixes</a></li>
   <li><a href="#documentation-1" id="toc-documentation-1" class="nav-link" data-scroll-target="#documentation-1">Documentation</a></li>
@@ -273,7 +274,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#v0.3.0" id="toc-v0.3.0" class="nav-link" data-scroll-target="#v0.3.0">v0.3.0</a>
   <ul class="collapse">
   <li><a href="#new-features-7" id="toc-new-features-7" class="nav-link" data-scroll-target="#new-features-7">New features</a></li>
-  <li><a href="#breaking-changes-1" id="toc-breaking-changes-1" class="nav-link" data-scroll-target="#breaking-changes-1">Breaking changes</a></li>
+  <li><a href="#breaking-changes-2" id="toc-breaking-changes-2" class="nav-link" data-scroll-target="#breaking-changes-2">Breaking changes</a></li>
   <li><a href="#bug-fixes-8" id="toc-bug-fixes-8" class="nav-link" data-scroll-target="#bug-fixes-8">Bug fixes</a></li>
   <li><a href="#misc-1" id="toc-misc-1" class="nav-link" data-scroll-target="#misc-1">Misc</a></li>
   </ul></li>
@@ -300,6 +301,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>If you are viewing this file on CRAN, please check the <a href="https://grantmcdermott.com/tinyplot/NEWS.html">latest NEWS</a> on our website where the formatting is also better.</em></p>
 <section id="development-version" class="level2">
 <h2 class="anchored" data-anchor-id="development-version">Development version</h2>
+<section id="breaking-changes" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h3>
+<ul>
+<li><code>type_lines()</code> and its shortcut equivalents like <code>"l"</code> and <code>"b"</code> now order categorical <code>x</code> data by (coerced) factor levels, rather than simple order of appearance. This resolves a longstanding tension between line types and other types like <code>type_points()</code>, which have always ordered the <code>x</code> axis by implied factor levels. It also improves layering consistency via <code>plt_add()</code> and co. so that plots are identical, regardless of whether lines are layered on top of points, or vice versa. Note that you can still select into the old behaviour by passing the (new) <code>xlevels = "asis"</code> argument as an explicit override; see “Other new features” below. (<a href="https://github.com/grantmcdermott/tinyplot/issues/683">#683</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+</section>
 <section id="new-features" class="level3">
 <h3 class="anchored" data-anchor-id="new-features">New features</h3>
 <section id="new-plot-types" class="level4">
@@ -313,6 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="other-new-features" class="level4">
 <h4 class="anchored" data-anchor-id="other-new-features">Other new features</h4>
 <ul>
+<li><code>type_points()</code>, <code>type_lines()</code>, <code>type_errorbar()</code>, and <code>type_pointrange()</code> gain an <code>xlevels</code> argument for reordering a categorical <code>x</code> variable on the fly (matching existing functionality for <code>type_barplot()</code> and several other types). Values can be a character vector of level names, a numeric vector of level indexes (e.g., <code>3:1</code>), or the new <code>"asis"</code> keyword, which takes the categories in the order that they appear in the data. The latter option is also the default for <code>type_errorbar()</code> and <code>type_pointrange()</code>, thus preserving existing behaviour since these two types are typically fed coefficient table data where the row order is intentional. (<a href="https://github.com/grantmcdermott/tinyplot/issues/683">#683</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Custom plot types have more control over the surrounding plot machinery, via a new <code>type_hints</code> mechanism. A type can declare properties about itself—that it draws its own axes, needs a secondary right-hand axis, uses proportional limits, fills its legend key from <code>col</code>, and so on—and <strong>tinyplot</strong> adjusts margins, axis limits and legend keys accordingly. Previously this behaviour was hard-coded against the names of built-in types, so it was unavailable to custom types. See <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html#type-hints">Advanced customization</a> in the <code>Types</code> vignette for the list of supported hints. (<a href="https://github.com/grantmcdermott/tinyplot/issues/543">#543</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>New <code>axes</code> argument for <code>facet.args</code>, giving explicit control over which facets draw their own axes: <code>"all"</code>, <code>"outer"</code> (drop redundant interior axes), or <code>"none"</code>. Previously this was only achievable as a side effect of <code>frame.plot = FALSE</code>, so <code>facet.args = list(axes = "outer")</code> now allows redundant axes to be dropped while <em>keeping</em> the facet frames. (<a href="https://github.com/grantmcdermott/tinyplot/issues/661">#661</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/673">#673</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)
 <ul>
@@ -332,8 +340,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
 <li><code>flip = TRUE</code> now flips the drawn geometry of the single-letter line types, not just the axes: <code>type = "h"</code> draws horizontal segments to the baseline, and the step types <code>"s"</code> and <code>"S"</code> swap which coordinate moves first. (<a href="https://github.com/grantmcdermott/tinyplot/issues/675">#675</a> <a href="https://github.com/haomeng797-ship-it"><span class="citation" data-cites="haomeng797-ship-it">@haomeng797-ship-it</span></a>)</li>
+<li>Line types now keep the category labels on a categorical y-axis, both for <code>flip = TRUE</code> and for a factor <code>y</code> variable. Previously the y-axis fell back to numeric tick labels for every line type except <code>"p"</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/679">#679</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Added layers now align on the category that each row belongs to, rather than on the row’s <em>position</em>. The latter only coincided with the right answer when the added layer’s rows happened to arrive in ascending order; other rows were permuted, and repeated categories collapsed onto a single position. (<a href="https://github.com/grantmcdermott/tinyplot/issues/679">#679</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Fixed several bugs specific to plots with free facets (i.e., <code>facet.args = list(free = TRUE)</code>):
 <ul>
+<li>A categorical y-axis no longer errors out with <code>'labels' is supplied and not 'at'</code>. The free-facet code path listed the eligible types by name, so any other type lost its tick positions while keeping the corresponding labels, whether flipped (e.g.&nbsp;<code>type = "b"</code> with <code>flip = TRUE</code>) or not (e.g.&nbsp;<code>type = "p"</code> with a factor <code>y</code> variable). (<a href="https://github.com/grantmcdermott/tinyplot/issues/679">#679</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Single-valued discrete axes no longer trigger invalid <code>par(usr)</code> values. (<a href="https://github.com/grantmcdermott/tinyplot/issues/668">#668</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>User-provided <code>x/ylim</code> overrides now work correctly with flipped plots. (<a href="https://github.com/grantmcdermott/tinyplot/issues/670">#670</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Axes now inherit the same themed <code>cex</code>, <code>lwd</code> and <code>lty</code> as their fixed-scale counterparts. Previously the free-facet code path built its axis calls by hand and so silently ignored <code>cex.axis</code>, <code>lwd.axis</code> and <code>lty.axis</code> (plus their per-side variants), which was most visible under themes that set them, e.g.&nbsp;<code>tinytheme("bw")</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/673">#673</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
@@ -452,7 +463,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="other-new-features-1" class="level4">
 <h4 class="anchored" data-anchor-id="other-new-features-1">Other new features</h4>
 <ul>
-<li>New and updated top-level <code>tinyplot()</code>/<code>plt()</code> arguments:
+<li><p>New and updated top-level <code>tinyplot()</code>/<code>plt()</code> arguments:</p>
 <ul>
 <li><p><code>cap = &lt;string&gt;</code> for adding a caption to your plots. Captions are drawn at the bottom of the plot and are best paired with dynamic themes (since separation from <code>sub</code> is guaranteed). Appearance is customizable via <code>tpar()</code> parameters: <code>adj.cap</code>, <code>cex.cap</code>, <code>col.cap</code>, <code>font.cap</code>, and <code>line.cap</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/592">#592</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
 <li><p><code>weights = &lt;varname&gt;</code> for adding weights to statistical transformations. Supported types are models (<code>type_lm()</code>, <code>type_glm()</code>, <code>type_loess()</code>) and distributions (<code>type_density()</code>, <code>type_histogram()</code>, <code>type_spineplot()</code>). A warning is emitted if <code>weights</code> is passed to an unsupported type and the argument is also ignored. The top-level <code>weights</code> argument supports non-standard evaluation (NSE) in the formula method, so that bare column names can be passed for convenience. Users can also pass a weights argument directly at the type-specific function level, but this must be a vector of correct length (no NSE). For example:</p>
@@ -476,7 +487,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The string <code>"rev"</code> (or <code>"reverse"</code>) reverses the auto-computed axis range, without needing to know the data extent in advance.</li>
 </ul></li>
 </ul></li>
-<li>Type-specific updates:
+<li><p>Type-specific updates:</p>
 <ul>
 <li><code>type_barplot()</code> gains an <code>offset</code> argument for shifting bar baselines away from zero. (<a href="https://github.com/grantmcdermott/tinyplot/issues/611">#611</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/615">#615</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)
 <ul>
@@ -490,7 +501,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 <li>Model-fit and various distribution types gain a <code>weights</code> argument; although this is best provided from the top-level <code>tinyplot()</code>/<code>plt()</code> call. See above.</li>
 </ul></li>
-<li><code>legend = list(title = FALSE)</code> now suppresses the legend title, matching the existing <code>title = NULL</code> behaviour. (<a href="https://github.com/grantmcdermott/tinyplot/issues/653">#653</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><p><code>legend = list(title = FALSE)</code> now suppresses the legend title, matching the existing <code>title = NULL</code> behaviour. (<a href="https://github.com/grantmcdermott/tinyplot/issues/653">#653</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
 </ul>
 </section>
 </section>
@@ -565,8 +576,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="v0.6.0" class="level2">
 <h2 class="anchored" data-anchor-id="v0.6.0">v0.6.0</h2>
-<section id="breaking-changes" class="level3">
-<h3 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h3>
+<section id="breaking-changes-1" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-changes-1">Breaking changes</h3>
 <ul>
 <li>“Breaking” change for internal development and custom types only: The plot settings and parameters from individual <code>tinyplot</code> calls are now stored in a dedicated (temporary) internal environment called <code>settings</code>, which can be accessed and modified by type-specific functions. This change will enable various internal enhancements, from improving the modularity and maintainability of the <code>tinyplot</code> codebase, to reducing memory overhead and performance (since we require fewer object copies). Looking ahead, we also expect that it will make it easier to support new features and integration with downstream packages. Most <code>tinyplot</code> users should be unaffected by these internal changes. However, users who have defined their own custom types will need to make some adjustments to match the new <code>settings</code> logic; details are provided in the updated <code>Types</code> vignette. (<a href="https://github.com/grantmcdermott/tinyplot/issues/473">#473</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a> and <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>The ancillary <code>fixed.pos</code> argument for dodged plots has been renamed to <code>fixed.dodge</code> to avoid ambiguity, especially when passed down from a top-level <code>tinyplot(...)</code> call. (<a href="https://github.com/grantmcdermott/tinyplot/issues/528">#528</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
@@ -704,9 +715,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Two new sets of top-level arguments allow for greater axis customization:</p>
 <ul>
 <li><code>xaxb</code>/<code>yaxb</code> control the manual break points of the axis tick marks. (<a href="https://github.com/grantmcdermott/tinyplot/issues/400">#400</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
-<li><code>xaxl</code>/<code>yaxl</code> apply a formatting function to change the appearance of the axis tick labels. (<a href="https://github.com/grantmcdermott/tinyplot/issues/363">#363</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/391">#391</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>xaxl</code>/<code>yaxl</code> apply a formatting function to change the appearance of the axis tick labels. (<a href="https://github.com/grantmcdermott/tinyplot/issues/363">#363</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/391">#391</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>) These <code>x/yaxb</code> and <code>x/yaxl</code> arguments can be used in complementary fashion; see the new (lower-level) <code>tinylabel</code> function documentation. For example:</li>
 </ul>
-<p>These <code>x/yaxb</code> and <code>x/yaxl</code> arguments can be used in complementary fashion; see the new (lower-level) <code>tinylabel</code> function documentation. For example:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>)<span class="sc">/</span><span class="dv">10</span>, <span class="at">yaxb =</span> <span class="fu">c</span>(.<span class="dv">17</span>, .<span class="dv">33</span>, .<span class="dv">5</span>, .<span class="dv">67</span>, .<span class="dv">83</span>), <span class="at">yaxl =</span> <span class="st">"%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>The <code>x/ymin</code> and <code>x/ymax</code> arguments can now be specified directly via the <code>tinyplot.formula()</code> method thanks to better NSE processing. For example, instead of having to write</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(dat, <span class="fu">tinyplot</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">by =</span> by <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -819,19 +829,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="other-new-features-3" class="level4">
 <h4 class="anchored" data-anchor-id="other-new-features-3">Other new features</h4>
 <ul>
-<li><p>New <code>tinyplot()</code> arguments:</p>
+<li>New <code>tinyplot()</code> arguments:
 <ul>
 <li><code>flip &lt;logical&gt;</code> allows for easily flipping (swapping) the orientation of the x and y axes. This should work regardless of plot type, e.g. <code>tinyplot(~Sepal.Length | Species, data = iris, type = "density", flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/216">#216</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>draw = &lt;draw_funcs&gt;</code> allows users to pass arbitrary drawing functions that are evaluated as-is, before the main plotting elements. A core use case is drawing common annotations across every facet of a faceted plot, e.g.&nbsp;text or threshold lines. (<a href="https://github.com/grantmcdermott/tinyplot/issues/245">#245</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>facet.args</code> gains a <code>free = &lt;logical&gt;</code> sub-argument for independently scaling the axes limits of individual facets. (<a href="https://github.com/grantmcdermott/tinyplot/issues/253">#253</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul></li>
-<li><p><code>tpar()</code> gains additional <code>grid.col</code>, <code>grid.lty</code>, and <code>grid.lwd</code> arguments for fine-grained control over the appearance of the default panel grid when <code>tinyplot(..., grid = TRUE)</code> is called. (<a href="https://github.com/grantmcdermott/tinyplot/issues/237">#237</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
-<li><p>The new <code>tinyplot_add()</code> (alias: <code>plt_add()</code>) convenience function allows easy layering of plots without having to specify repeat arguments. (<a href="https://github.com/grantmcdermott/tinyplot/issues/246">#246</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</p></li>
+<li><code>tpar()</code> gains additional <code>grid.col</code>, <code>grid.lty</code>, and <code>grid.lwd</code> arguments for fine-grained control over the appearance of the default panel grid when <code>tinyplot(..., grid = TRUE)</code> is called. (<a href="https://github.com/grantmcdermott/tinyplot/issues/237">#237</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>The new <code>tinyplot_add()</code> (alias: <code>plt_add()</code>) convenience function allows easy layering of plots without having to specify repeat arguments. (<a href="https://github.com/grantmcdermott/tinyplot/issues/246">#246</a> <a href="https://github.com/vincentarelbundock"><span class="citation" data-cites="vincentarelbundock">@vincentarelbundock</span></a>)</li>
 </ul>
 </section>
 </section>
-<section id="breaking-changes-1" class="level3">
-<h3 class="anchored" data-anchor-id="breaking-changes-1">Breaking changes</h3>
+<section id="breaking-changes-2" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-changes-2">Breaking changes</h3>
 <ul>
 <li>There are a few breaking changes to grouped density plots.
 <ul>
@@ -872,7 +882,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.2.1">v0.2.1</h2>
 <p>New Features:</p>
 <ul>
-<li>The <code>axes</code> argument of <code>tinyplot()</code>/<code>plt()</code> gains extra options for fine-grained control of the plot axes. In addition to the existing logical (<code>TRUE</code>/<code>FALSE</code>) option, users can now specify one of the following character keywords (or, just their first letters as a convenient shorthand):
+<li><p>The <code>axes</code> argument of <code>tinyplot()</code>/<code>plt()</code> gains extra options for fine-grained control of the plot axes. In addition to the existing logical (<code>TRUE</code>/<code>FALSE</code>) option, users can now specify one of the following character keywords (or, just their first letters as a convenient shorthand):</p>
 <ul>
 <li><code>"standard"</code> (with axis, ticks, and labels; equivalent to <code>TRUE</code>),</li>
 <li><code>"none"</code> (no axes; equivalent to <code>FALSE</code>),</li>
@@ -880,8 +890,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>"labels"</code> (only labels without ticks and axis line),</li>
 <li><code>"axis"</code> (only axis line and labels but no ticks).</li>
 </ul>
-Simultaneously, the main plotting functions also gain the <code>xaxt</code> and <code>yaxt</code> for <em>separately</em> controlling the two axes using the same keyword options. For example, <code>plt(0:10, xaxt = "l", yaxt = "t")</code> will yield a plot where the x-axis only contains labels and the y-axis contains both labels and ticks, but no axis line. (<a href="https://github.com/grantmcdermott/tinyplot/issues/190">#190</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
-<li>Support additional boxplot arguments like <code>varwidth</code>, <code>notch</code>, etc. Note that <code>tinyplot(..., type = "boxplot", boxwidth = &lt;num&gt;)</code> is equivalent to the <code>boxplot(..., width = &lt;num&gt;)</code>; we just use the “box(width)” prefix to avoid conflicting with the existing <code>tinyplot(..., width)</code> argument. (<a href="https://github.com/grantmcdermott/tinyplot/issues/196">#196</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<p>Simultaneously, the main plotting functions also gain the <code>xaxt</code> and <code>yaxt</code> for <em>separately</em> controlling the two axes using the same keyword options. For example, <code>plt(0:10, xaxt = "l", yaxt = "t")</code> will yield a plot where the x-axis only contains labels and the y-axis contains both labels and ticks, but no axis line. (<a href="https://github.com/grantmcdermott/tinyplot/issues/190">#190</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</p></li>
+<li><p>Support additional boxplot arguments like <code>varwidth</code>, <code>notch</code>, etc. Note that <code>tinyplot(..., type = "boxplot", boxwidth = &lt;num&gt;)</code> is equivalent to the <code>boxplot(..., width = &lt;num&gt;)</code>; we just use the “box(width)” prefix to avoid conflicting with the existing <code>tinyplot(..., width)</code> argument. (<a href="https://github.com/grantmcdermott/tinyplot/issues/196">#196</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</p></li>
 </ul>
 <p>Bug fixes:</p>
 <ul>
@@ -935,9 +945,8 @@ Simultaneously, the main plotting functions also gain the <code>xaxt</code> and 
 <li>To ensure consistent “dot.case” style for all <code>tinyplot()</code> function arguments, the following two arguments have been renamed (<code>old</code> =&gt; <code>new</code>):
 <ul>
 <li><code>par_restore</code> =&gt; <code>restore.par</code> (note the change in word order too!)</li>
-<li><code>ribbon_alpha</code> =&gt; <code>ribbon.alpha</code></li>
-</ul>
-We don’t believe that these two arguments are much used in practice. So hopefully it will only have a negligible effect on existing <code>tinyplot</code> code in the wild, even though it is a breaking change. (<a href="https://github.com/grantmcdermott/tinyplot/issues/149">#149</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>ribbon_alpha</code> =&gt; <code>ribbon.alpha</code> We don’t believe that these two arguments are much used in practice. So hopefully it will only have a negligible effect on existing <code>tinyplot</code> code in the wild, even though it is a breaking change. (<a href="https://github.com/grantmcdermott/tinyplot/issues/149">#149</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul></li>
 </ul>
 <p>New features:</p>
 <ul>

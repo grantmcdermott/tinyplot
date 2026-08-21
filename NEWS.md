@@ -107,6 +107,12 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
 ### Bug fixes
 
+- Density-based plots no longer error out on singleton groups, i.e. `by` and
+  `facet` combinations containing only one observation. Such groups are now
+  (silently) dropped by default. The affected types---`type_density()`,
+  `type_violin()`, and `type_ridge()`---also gain a `singletons` argument for
+  controlling this behaviour, e.g. option `"warn"` also drops singletons but
+  reports which groups were removed. (#300 @grantmcdermott)
 - `flip = TRUE` now flips the drawn geometry of the single-letter line types,
   not just the axes: `type = "h"` draws horizontal segments to the baseline,
   and the step types `"s"` and `"S"` swap which coordinate moves first.

@@ -81,6 +81,7 @@ importFrom(grDevices,
   pdf,
   png,
   recordGraphics,
+  recordPlot,
   svg,
   xy.coords
 )

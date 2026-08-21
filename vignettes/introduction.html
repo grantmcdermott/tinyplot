@@ -261,8 +261,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>aq <span class="ot">=</span> <span class="fu">transform</span>(</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  airquality,</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Month =</span> <span class="fu">factor</span>(month.abb[Month], <span class="at">levels =</span> month.abb[<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>]),</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">hot   =</span> <span class="fu">ifelse</span>(Temp<span class="sc">&gt;=</span><span class="dv">75</span>, <span class="st">"hot"</span>, <span class="st">"cold"</span>),</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">windy =</span> <span class="fu">ifelse</span>(Wind<span class="sc">&gt;=</span><span class="dv">15</span>, <span class="st">"windy"</span>, <span class="st">"calm"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">hot   =</span> Temp<span class="sc">&gt;=</span><span class="dv">75</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">windy =</span> Wind<span class="sc">&gt;=</span><span class="dv">15</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="equivalence-with-plot" class="level2">
@@ -589,7 +589,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The default behaviour of these model types can be adjusted by passing appropriate arguments to the equivalent <em>functional</em> version of the type in question. These functional types all follow a <code>type_&lt;typename&gt;</code> syntax, so that <code>"lm"</code> is paired with <code>type_lm()</code>, <code>"ridge"</code> with <code>type_ridge()</code>, etc. Below we illustrate with an adapted generalised linear model, where we explicitly pass a <a href="https://search.r-project.org/R/refmans/stats/html/family.html">family</a> argument to fit a logistic regression.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">I</span>(hot <span class="sc">==</span> <span class="st">"hot"</span>) <span class="sc">~</span> Wind, aq,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  hot <span class="sc">~</span> Wind, aq,</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># type = "glm", ## default is gaussian</span></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_glm</span>(<span class="at">family =</span> binomial),</span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Logit model: Temps above 75 °F"</span>,</span>
@@ -639,7 +639,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>To customize facets, simply pass a list of named arguments through the companion <code>facet.args</code> argument. Customization options include: override the default “square” facet window arrangement; allow free-scaled axes so that the limits of each individual facet are drawn independently; adjust the padding (margin) between individual facets; change the facet title text and background; etc. Here is a simple example where we (1) arrange the facets in a single row and (2) change the facet strip text and background fill.</p>
+<p>The companion <code>facet.args</code> argument accepts a list of (sub-)arguments for customizing your facets. Options include: <code>nrow</code>/<code>ncol</code> to override the default “square” facet window arrangement; <code>free</code> to allow free-scaled axes so that the limits of each individual facet are drawn independently; <code>fmar</code> to adjust the padding (margin) between individual facets; <code>labeller</code> to format the facet titles (see <code>?tinylabel</code>); <code>prefix</code> to prepend the facet variable name to the titles; as well as the regular text-based parameters like <code>cex</code>, <code>font</code>, <code>col</code>, <code>bg</code>, and <code>border</code> to change the facet title text and background.</p>
+<p>Here is a simple example where we (1) arrange the facets in a single row and (2) change the facet strip text and background fill.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day, aq,</span>
@@ -661,8 +662,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq,</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> windy <span class="sc">~</span> hot</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> windy <span class="sc">~</span> hot,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">prefix =</span> <span class="cn">TRUE</span>) <span class="co"># optional</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -671,6 +673,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>Note that we used the <code>prefix = TRUE</code> argument to prepend the facet variable names to the strip titles. This is entirely optional, but makes for a more informative display since our two faceting variables are logical and would othewise just display <code>TRUE</code>/<code>FALSE</code> without any context.</p>
 </section>
 <section id="layers" class="level2">
 <h2 class="anchored" data-anchor-id="layers">Layers</h2>
@@ -717,7 +720,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a> Temp <span class="sc">~</span> Day, <span class="at">data =</span> aq,</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a> <span class="at">facet =</span> windy <span class="sc">~</span> hot,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a> <span class="at">facet =</span> windy <span class="sc">~</span> hot, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">prefix =</span> <span class="cn">TRUE</span>),</span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a> <span class="co"># draw a horizontal (threshold) line in each facet using the abline function</span></span>
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a> <span class="at">draw =</span> <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">75</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

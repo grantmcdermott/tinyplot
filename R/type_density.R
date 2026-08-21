@@ -30,6 +30,15 @@
 #'   left alone. Bandwidths shared across subgroups are reported once and named
 #'   as joint; individual bandwidths are reported per group, truncated after
 #'   three so the label stays legible.
+#' @param singletons character string indicating what to do with singleton
+#'   groups, i.e. combinations of `by` and `facet` that consist of only 1 row.
+#'   The default `"drop"` option silently removes any singleton cases, although
+#'   they may still be represented as empty facets in your plot. `"warn"` also
+#'   drops singletons and further emits a warning with the offending cases.
+#'   Finally, `"none"` skips all singleton checks and retains the affected
+#'   groups; possibly leading to an error. Note that singletons require a
+#'   numeric `bw`, since the data-driven bandwidth rules need at least 2 
+#'   observations.
 #'
 #' @section Bandwidth selection: While the choice of smoothing bandwidth will
 #'   always stand to affect a density visualization, it gains an added
@@ -116,9 +125,11 @@ type_density = function(
         n = 512,
         # more args from density here?
         echo.bw = FALSE,
-        alpha = NULL
+        alpha = NULL,
+        singletons = c("drop", "warn", "none")
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
+    singletons = match.arg(singletons, c("drop", "warn", "none"))
     if (is.logical(joint.bw)) {
         joint.bw = ifelse(joint.bw, "mean", "none")
     }
@@ -127,7 +138,7 @@ type_density = function(
     out = list(
         data = data_density(bw = bw, adjust = adjust, kernel = kernel, n = n,
                             joint.bw = joint.bw, echo.bw = echo.bw,
-                            alpha = alpha),
+                            alpha = alpha, singletons = singletons),
         draw = NULL,
         name = "density"
     )
@@ -172,7 +183,7 @@ format_echo_vec = function(x, numeric = TRUE) {
 
 data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", echo.bw = character(0),
-                        alpha = NULL) {
+                        alpha = NULL, singletons = "drop") {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("by", "bg", "facet", "ylab", "col", "ribbon.alpha", "datapoints"))
         ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)
@@ -181,8 +192,9 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         
         if (is.null(ylab)) ylab = "Density"
         
+        skeys = singleton_keys(datapoints, c("by", "facet"), singletons)
         datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
-        datapoints = Filter(function(k) nrow(k) > 1, datapoints) # drop singletons
+        datapoints = drop_singletons(datapoints, skeys, singletons, settings)
         
         if (joint.bw == "none" || is.numeric(bw)) {
             dens_bw = bw

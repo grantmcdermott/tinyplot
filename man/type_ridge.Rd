@@ -19,7 +19,8 @@ type_ridge(
   gradient = FALSE,
   raster = FALSE,
   col = NULL,
-  alpha = NULL
+  alpha = NULL,
+  singletons = c("drop", "warn", "none")
 )
 }
 \arguments{
@@ -111,6 +112,16 @@ qualitative palette, or black if no theme is set.}
 transparency of the density fills. In most cases, will default to a value of
 1, i.e. fully opaque. But for some \code{by} grouped plots (excepting the special
 cases where \code{by==y} or \code{by==x}), will default to 0.6.}
+
+\item{singletons}{character string indicating what to do with singleton
+groups, i.e. combinations of \code{y}, \code{by}, and \code{facet} that consist of only 1
+row. The default \code{"drop"} option silently removes any singleton cases,
+although they may still be represented as empty ridge lines or facets in
+your plot. \code{"warn"} also drops singletons and further emits a warning with
+the offending cases. Finally, \code{"none"} skips all singleton checks and
+retains the affected groups; possibly leading to an error. Note that
+singletons require a numeric \code{bw}, since the data-driven bandwidth rules
+need at least 2 observations.}
 }
 \description{
 Type function for producing ridge plots (also known as joy plots),

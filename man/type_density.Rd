@@ -12,7 +12,8 @@ type_density(
     "cosine", "optcosine"),
   n = 512,
   echo.bw = FALSE,
-  alpha = NULL
+  alpha = NULL,
+  singletons = c("drop", "warn", "none")
 )
 }
 \arguments{
@@ -60,6 +61,16 @@ three so the label stays legible.}
 If no \code{alpha} value is provided, then will default to \code{tpar("ribbon.alpha")}
 (i.e., probably \code{0.2} unless this has been overridden by the user in their global
 settings.)}
+
+\item{singletons}{character string indicating what to do with singleton
+groups, i.e. combinations of \code{by} and \code{facet} that consist of only 1 row.
+The default \code{"drop"} option silently removes any singleton cases, although
+they may still be represented as empty facets in your plot. \code{"warn"} also
+drops singletons and further emits a warning with the offending cases.
+Finally, \code{"none"} skips all singleton checks and retains the affected
+groups; possibly leading to an error. Note that singletons require a
+numeric \code{bw}, since the data-driven bandwidth rules need at least 2
+observations.}
 }
 \description{
 Type function for density plots.

@@ -89,3 +89,17 @@ f = function() {
     type = type_violin(lighten = FALSE), theme = "clean2")
 }
 expect_snapshot_plot(f, label = "violin_groups_lighten_false")
+
+#
+## singleton groups (#300)
+
+# cyl == 4 & vs == 0 is a single car, so no density can be estimated for it
+f = function() {
+  plt(mpg ~ cyl, facet = ~vs, data = mtcars, type = "violin")
+}
+expect_snapshot_plot(f, label = "violin_singletons_drop")
+expect_error(
+  plt(mpg ~ cyl, facet = ~vs, data = mtcars, type = type_violin(singletons = "none")),
+  pattern = "at least 2 data points"
+)
+expect_error(type_violin(singletons = "nope"))

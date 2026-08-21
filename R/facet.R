@@ -234,6 +234,15 @@ draw_facet_window = function(
       }
     }
 
+    # Facet grids draw their row titles rotated into the RHS margin, so
+    # multi-line titles need extra width out there -- the counterpart to the
+    # fmar[3] bump that the top strips get above. Without it the rotated title
+    # (and its background rect) overflows the figure region. Regular facet
+    # titles all sit on top, so only grids need this.
+    if (isTRUE(attr(facet, "facet_grid")) && facet_newlines > 0) {
+      omar[4] = omar[4] + facet_newlines * facet_text
+    }
+
     if (dl_overshoot > 0) {
       fmar[4] = fmar[4] + dl_overshoot
     }
@@ -617,7 +626,10 @@ draw_facet_window = function(
         text(
           x = xpos,
           y = ypos,
-          labels = paste(facets[[ii]]),
+          # a labeller can return plotmath (e.g. tinylabel's "log"), in which
+          # case the element has to reach text() as a language object rather
+          # than being flattened by paste(); see facet_titles()
+          labels = if (is.expression(facets)) facets[[ii]] else paste(facets[[ii]]),
           adj = c(0.5, 0.5),
           cex = facet_text / cex_fct_adj,
           col = facet_col,
@@ -737,6 +749,15 @@ facet_layout = function(settings) {
   nfacet_cols = 1
   if (!is.null(facet)) {
     facets = if (is.factor(facet)) levels(facet) else sort(unique(facet))
+    # optional labelling and/or "varname = value" prefixing; see facet_titles()
+    facets = facet_titles(
+      facets,
+      labeller = facet.args[["labeller"]] %||% .tpar[["facet.labeller"]],
+      prefix = facet.args[["prefix"]] %||% .tpar[["facet.prefix"]],
+      facet_vars = settings$facet_vars,
+      facet_grid = isTRUE(attr(facet, "facet_grid")),
+      sep = facet.args[["sep"]] %||% .tpar[["facet.sep"]]
+    )
     ifacet = seq_along(facets)
     nfacets = length(facets)
     if (isTRUE(add)) {
@@ -794,6 +815,281 @@ facet_layout = function(settings) {
 #
 
 
+## Build the facet strip titles: optionally run the facet values through a
+## `tinylabel()` labeller, then optionally prefix them with their variable
+## name(s), e.g. "vs = 0" rather than a bare "0". See the `labeller`, `prefix`
+## and `sep` entries of `facet.args` in ?tinyplot.
+##
+## `labels` are the raw facet titles as computed in facet_layout(), i.e. the
+## levels (or sorted unique values) of the facet variable. `facet_vars` is the
+## list that sanitize_facet() resolves for the plot: an "x" element (the
+## variables behind the regular / top strip labels) and, for facet grids, a "y"
+## element (those behind the right strip labels).
+##
+## Composite titles are taken apart before either step is applied, so that a
+## labeller sees the individual facet *values* rather than the glued-together
+## string: grid titles split on "~" (matching the sub() patterns that
+## draw_facet_window() uses to split them again at draw time), and each side
+## then splits on the ":" that interaction() used for multi-variable facets.
+##
+## `labeller` and `prefix` both accept either one value for every facet
+## variable, or one per variable -- positionally, in the order the variables
+## appear in the `facet` specification, or named for the variables they apply
+## to. See match_facet_vars().
+##
+## `sep` separates the variables of a multi-variable title, whether or not they
+## are prefixed, e.g. "\n" to stack them on separate lines. It defaults to the
+## ":" that interaction() glued them with upstream, or to ", " once they carry
+## their own names, which is easier to read (compare "vs = 0, am = 1" against
+## "vs = 0:am = 1"). The name and its value are always joined by " = ".
+##
+## A labeller that returns plotmath (tinylabel's "log") survives as an
+## expression for a single unprefixed facet variable, which draw_facet_window()
+## hands to text() as-is; every other route glues strings together and so
+## deparses it.
+facet_titles = function(
+    labels,
+    labeller = NULL,
+    prefix = NULL,
+    facet_vars = NULL,
+    facet_grid = FALSE,
+    sep = NULL) {
+  has_prefix = !(is.null(prefix) || isFALSE(prefix))
+  if (is.null(labeller) && !has_prefix && is.null(sep)) return(labels)
+
+  ## separator between the variables of a multi-variable title (see above)
+  if (is.null(sep)) sep = if (has_prefix) ", " else ":"
+  if (isTRUE(facet_grid) && grepl("~", sep, fixed = TRUE)) {
+    stop(
+      "`facet.args$sep` cannot contain a \"~\" for facet grids, since that is ",
+      "the separator between the top and right strip titles.",
+      call. = FALSE
+    )
+  }
+
+  ## `facet_vars` holds one entry per side: each variable's levels, keyed by the
+  ## variable's name. Flattened here into *formula* order, i.e. the order the
+  ## user wrote them -- for a grid the LHS (drawn as the right-hand strips)
+  ## comes first, since get_facet_fml() swaps the sides internally to plot
+  ## rowwise. Splitting a per-variable input back out takes the y side off the
+  ## front to match.
+  nx = length(facet_vars[["x"]])
+  ny = length(facet_vars[["y"]])
+  lvls = c(facet_vars[["y"]], facet_vars[["x"]])
+  vars = names(lvls)
+  split_sides = function(x) {
+    if (is.null(x)) return(list(x = NULL, y = NULL))
+    if (length(vars) == 0L) return(list(x = x, y = x))
+    list(x = x[ny + seq_len(nx)], y = x[seq_len(ny)])
+  }
+
+  xnms = names(facet_vars[["x"]])
+  ynms = names(facet_vars[["y"]])
+  if (has_prefix) {
+    ## Also guards the internal entry point: anything that is neither a flag nor
+    ## name(s) used to fall through the branches below and be silently ignored,
+    ## leaving the public assert load-bearing for correctness rather than just
+    ## for error quality.
+    assert_facet_prefix(prefix, name = "facet.args$prefix")
+    if (is.character(prefix) || is.list(prefix)) {
+      pnms = match_facet_vars(prefix, vars, "facet.args$prefix")
+      ## a named input can name only some of the variables; the rest fall back
+      ## to their own (deparsed) name, exactly as `prefix = TRUE` would
+      if (length(vars) > 0L) {
+        pnms = lapply(seq_along(pnms), function(i) pnms[[i]] %||% vars[[i]])
+      }
+      pnms = as.character(unlist(pnms))
+      if (length(vars) == 0L) {
+        ## no known variable names (e.g. a facet variable that upstream methods
+        ## construct themselves): the string simply becomes the single prefix
+        xnms = pnms
+        ynms = NULL
+        nx = 1L
+      } else {
+        sides = split_sides(pnms)
+        xnms = sides[["x"]]
+        ynms = sides[["y"]]
+      }
+    } else if (nx + ny == 0L) {
+      ## prefix = TRUE, but we couldn't determine any variable names
+      has_prefix = FALSE
+    }
+  }
+
+  ## per-variable labellers, split across the two sides the same way
+  labellers = if (is.null(labeller)) {
+    NULL
+  } else {
+    match_facet_vars(labeller, vars, "facet.args$labeller")
+  }
+  sides = split_sides(labellers)
+  lvl_sides = split_sides(lvls)
+
+  if (isTRUE(facet_grid)) {
+    labels = as.character(labels)
+    xlabs = facet_titles_side(
+      sub("^(.*?)~.*", "\\1", labels), xnms, sides[["x"]], has_prefix, sep,
+      lvl_sides[["x"]]
+    )
+    ylabs = facet_titles_side(
+      sub("^.*?~(.*)", "\\1", labels), ynms, sides[["y"]], has_prefix, sep,
+      lvl_sides[["y"]]
+    )
+    paste0(xlabs, "~", ylabs)
+  } else {
+    facet_titles_side(labels, xnms, sides[["x"]], has_prefix, sep, lvl_sides[["x"]])
+  }
+}
+
+
+## Map the components of a composite facet title back onto the values they came
+## from. Splitting a title necessarily works on strings, since interaction()
+## flattened the variables into level labels upstream -- which would otherwise
+## hand a labeller "0" where an unsplit, single-variable facet hands it 0, so
+## that e.g. `labeller = as.logical` yields NA on the one and FALSE on the other
+## (#295). Restoring from the variable's own values keeps the two consistent.
+##
+## Only character input is restored (an unsplit facet still holds its original
+## values), and only when every component maps cleanly, so a level that defies
+## the round trip is left as the string it already was.
+restore_facet_values = function(x, lvls) {
+  if (is.null(lvls) || !is.character(x)) return(x)
+  idx = match(x, as.character(lvls))
+  if (anyNA(idx)) return(x)
+  return(lvls[idx])
+}
+
+
+## A facet variable's distinct values, in the order that interaction() lays its
+## levels out. Kept alongside the variable names so that facet_titles_side() can
+## map a component of a composite title back to the value it came from; see
+## restore_facet_values() there.
+facet_var_levels = function(v) {
+  if (is.factor(v)) levels(v) else sort(unique(v))
+}
+
+
+## The same, as the single-variable list that `facet_vars` expects.
+facet_var_list = function(v, name) {
+  out = list(facet_var_levels(v))
+  names(out) = name
+  return(out)
+}
+
+
+## Resolve a per-variable `facet.args` input (`prefix` strings, `labeller`
+## functions) into a list with one element per facet variable.
+##
+## Values can be supplied positionally, in the order the variables appear in the
+## `facet` specification -- for a grid that is the formula LHS first, then the
+## RHS, i.e. the order the user wrote them rather than the order tinyplot
+## happens to store them in. A single value is recycled across every variable.
+##
+## Alternatively they can be *named* for the variables they apply to, in which
+## case order is irrelevant and naming only some of the variables is fine: the
+## rest come back as NULL, for the caller to fill in with its own default (the
+## variable's own name for `prefix`, no labelling for `labeller`).
+match_facet_vars = function(x, vars, arg) {
+  ## NB: as.list() on a function returns its formals, so single functions have
+  ## to be wrapped by hand rather than coerced
+  x = if (is.function(x)) list(x) else if (is.list(x)) x else as.list(x)
+  nms = names(x)
+
+  if (!is.null(nms) && any(nzchar(nms))) {
+    if (!all(nzchar(nms))) {
+      stop("`", arg, "` should be either fully named or fully unnamed.", call. = FALSE)
+    }
+    if (length(vars) == 0L) {
+      stop(
+        "`", arg, "` cannot be named here, since the facet variable name(s) ",
+        "could not be determined.",
+        call. = FALSE
+      )
+    }
+    unknown = setdiff(nms, vars)
+    if (length(unknown) > 0L) {
+      stop(
+        "`", arg, "` was named for unknown facet variable(s): ",
+        paste(unknown, collapse = ", "),
+        ". Available facet variable(s): ", paste(vars, collapse = ", "), ".",
+        call. = FALSE
+      )
+    }
+    out = vector("list", length(vars))
+    names(out) = vars
+    out[nms] = x
+    return(out)
+  }
+
+  nvars = max(length(vars), 1L)
+  if (length(x) == 1L) x = rep(x, nvars)
+  if (length(x) != nvars) {
+    stop(
+      "`", arg, "` should be a single value, or one per facet variable (",
+      nvars, " here). Alternatively, name the values for the facet ",
+      "variable(s) they apply to.",
+      call. = FALSE
+    )
+  }
+  return(x)
+}
+
+
+## Workhorse for facet_titles(): label and/or prefix one side of a facet title.
+##
+## The single-variable case (by far the most common) hands the values to
+## tinylabel() untouched, i.e. still numeric, Date, etc., so that class-specific
+## labellers work. Multi-variable sides have to be split into their components
+## first, which means going through character; the labeller is then applied down
+## each component in turn -- one call per component, not per label -- since
+## labellers like "comma" and date formats derive a consistent format from the
+## whole vector. Components are then rejoined with `sep`, which is why the split
+## has to happen even when nothing is being labelled or prefixed. Any label that
+## doesn't split into as many components as we have names for it (e.g. a level
+## that itself contains a ":") is left alone.
+##
+## `labellers` is the per-variable list from match_facet_vars(), i.e. one element
+## per component of this side (or NULL for no labelling at all). `levels` is the
+## matching list of each variable's own values, used to undo the stringification
+## that splitting a composite title imposes; see restore_facet_values().
+facet_titles_side = function(
+    labels,
+    nms,
+    labellers = NULL,
+    has_prefix = FALSE,
+    sep = ":",
+    levels = NULL) {
+  n = length(nms)
+  at = function(x, j) if (is.null(x) || length(x) < j) NULL else x[[j]]
+
+  if (n <= 1L) {
+    labels = restore_facet_values(labels, at(levels, 1L))
+    labels = tinylabel(labels, at(labellers, 1L))
+    if (isTRUE(has_prefix) && n == 1L) labels = paste0(nms, " = ", labels)
+    return(labels)
+  }
+
+  parts = strsplit(as.character(labels), ":", fixed = TRUE)
+  ok = lengths(parts) == n
+  out = as.character(labels)
+  if (any(ok)) {
+    mat = do.call(rbind, parts[ok])
+    cols = lapply(
+      seq_len(n),
+      function(j) {
+        vals = restore_facet_values(mat[, j], at(levels, j))
+        as.character(tinylabel(vals, at(labellers, j)))
+      }
+    )
+    if (isTRUE(has_prefix)) {
+      cols = Map(function(nm, vals) paste0(nm, " = ", vals), nms, cols)
+    }
+    out[ok] = do.call(paste, c(cols, list(sep = sep)))
+  }
+  return(out)
+}
+
+
 # utility function for converting facet formulas into variables
 get_facet_fml = function(formula, data = NULL) {
   xfacet = yfacet = NULL
@@ -827,6 +1123,10 @@ get_facet_fml = function(formula, data = NULL) {
   yfacet = if (no_yfacet) NULL else mf[, yfacet_loc]
   xfacet = mf[, xfacet_loc:NCOL(mf)]
 
+  ## each facet variable's levels, keyed by its name; see facet_titles()
+  xfacet_vars = lapply(mf[xfacet_loc:NCOL(mf)], facet_var_levels)
+  yfacet_vars = if (no_yfacet) NULL else lapply(mf[yfacet_loc], facet_var_levels)
+
   ## return object
   xfacet = interaction(xfacet, sep = ":")
   if (no_yfacet) {
@@ -838,6 +1138,7 @@ get_facet_fml = function(formula, data = NULL) {
     attr(ret, "facet_grid") = TRUE
     attr(ret, "facet_nrow") = length(unique(yfacet))
   }
+  attr(ret, "facet_vars") = list(x = xfacet_vars, y = yfacet_vars)
 
   return(ret)
 }

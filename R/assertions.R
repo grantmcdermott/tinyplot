@@ -80,6 +80,49 @@ assert_flag = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
   }
 }
 
+# facet titles prefix: TRUE/FALSE, or custom name(s) for the facet variable(s).
+# The latter can be given as a character vector or as a list of strings (the
+# vector is the canonical form, but `labeller` takes a list and there is no
+# reason to reject the same container here).
+assert_facet_prefix = function(x, name = as.character(substitute(x))) {
+  if (is.null(x)) return(invisible(TRUE))
+  if (is.logical(x) && length(x) == 1L && !is.na(x)) return(invisible(TRUE))
+  if ((is.character(x) || is.list(x)) && length(x) >= 1L) {
+    if (all(vapply(x, is_string1, logical(1L)))) return(invisible(TRUE))
+  }
+  stop(
+    sprintf(
+      "`%s` must be a logical flag, or facet variable name(s) supplied as a character vector or list of strings.",
+      name
+    ),
+    call. = FALSE
+  )
+}
+
+is_string1 = function(x) {
+  isTRUE(check_string(x)) && !is.na(x)
+}
+
+# label formatter passed on to tinylabel(): a function, or one of its
+# convenience strings (e.g. "percent"). With `list.ok`, several of them --  as a
+# list or character vector -- are allowed too, e.g. one per facet variable.
+assert_labeller = function(x, name = as.character(substitute(x)), list.ok = FALSE) {
+  if (is.null(x) || is_labeller(x)) return(invisible(TRUE))
+  if (isTRUE(list.ok) && (is.list(x) || is.character(x)) && length(x) >= 1L) {
+    if (all(vapply(x, is_labeller, logical(1L)))) return(invisible(TRUE))
+  }
+  msg = if (isTRUE(list.ok)) {
+    "`%s` must be a function or a `tinylabel()` convenience string, or a list of them (one per facet variable)."
+  } else {
+    "`%s` must be a function, or a `tinylabel()` convenience string."
+  }
+  stop(sprintf(msg, name), call. = FALSE)
+}
+
+is_labeller = function(x) {
+  is.function(x) || (is.character(x) && length(x) == 1L && !is.na(x))
+}
+
 assert_length = function(x, len = 1, null.ok = FALSE, name = as.character(substitute(x))) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))

@@ -67,6 +67,9 @@
 #' * `facet.cex`: Expansion factor for facet titles. Defaults to `1`.
 #' * `facet.col`: Character or integer specifying the facet text colour. If an integer, will correspond to the user's default global colour palette (see `palette`). Defaults to `NULL`, which is equivalent to "black".
 #' * `facet.font`: An integer corresponding to the desired font face for facet titles. For most font families and graphics devices, one of four possible values: `1` (regular), `2` (bold), `3` (italic), or `4` (bold italic). Defaults to `NULL`, which is equivalent to `1` (i.e., regular).
+#' * `facet.labeller`: A formatting function (or [`tinylabel`] convenience string, e.g. `"percent"`) applied to the facet titles, or a list of them (or a character vector of convenience strings), optionally named for the facet variables they apply to, for formatting each facet variable differently. Defaults to `NULL` (no formatting). Applied to the underlying facet values, i.e. before any `facet.prefix` name is added. Equivalent to setting `tinyplot(..., facet.args = list(labeller = X))`, but globally.
+#' * `facet.prefix`: Logical or character controlling whether facet titles are prefixed with their variable name, e.g. `"vs = 0"` rather than just `"0"`. `TRUE` uses the variable name(s), while a character string---or a vector or list of them, one element per facet variable, optionally named for the variables they apply to---supplies custom name(s) instead. Defaults to `NULL`, which is equivalent to `FALSE` (no prefix). Equivalent to setting `tinyplot(..., facet.args = list(prefix = X))`, but globally.
+#' * `facet.sep`: Character string separating the individual variables of a multi-variable facet title, e.g. `"\n"` to stack them on separate lines. Ignored for single-variable facets. Defaults to `NULL`, i.e. the `":"` that the variables were combined with, or `", "` if they are prefixed via `facet.prefix` (above). Equivalent to setting `tinyplot(..., facet.args = list(sep = X))`, but globally.
 #' * `file.height`: Numeric specifying the height (in inches) of any plot that is written to disk using the `tinyplot(..., file = X)` argument. Defaults to `7`.
 #' * `file.res`: Numeric specifying the resolution (in dots per square inch) of any plot that is written to disk in bitmap format (i.e., PNG or JPEG) using the `tinyplot(..., file = X)` argument. Defaults to `300`.
 #' * `file.width`: Numeric specifying the width (in inches) of any plot that is written to disk using the `tinyplot(..., file = X)` argument. Defaults to `7`.
@@ -258,6 +261,9 @@ known_tpar = c(
     "facet.cex",
     "facet.col",
     "facet.font",
+    "facet.labeller",
+    "facet.prefix",
+    "facet.sep",
     "file.height",
     "file.res",
     "file.width",
@@ -314,6 +320,9 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["facet.font"]], len = 1, null.ok = TRUE, name = "facet.font")
   assert_numeric(.tpar[["facet.cex"]], len = 1, null.ok = TRUE, name = "facet.cex")
   assert_choice(.tpar[["facet.axes"]], c("all", "outer", "none"), null.ok = TRUE, name = "facet.axes")
+  assert_labeller(.tpar[["facet.labeller"]], name = "facet.labeller", list.ok = TRUE)
+  assert_facet_prefix(.tpar[["facet.prefix"]], name = "facet.prefix")
+  assert_string(.tpar[["facet.sep"]], null.ok = TRUE, name = "facet.sep")
   assert_numeric(.tpar[["side.sub"]], len = 1, null.ok = TRUE, name = "side.sub")
   assert_string(.tpar[["grid.bg"]], null.ok = TRUE, name = "grid.bg")
   assert_numeric(.tpar[["fmar"]], len = 4, null.ok = TRUE, name = "fmar")
@@ -381,6 +390,9 @@ init_tpar = function(rm_hook = FALSE) {
   .tpar$facet.col = if (is.null(getOption("tinyplot_facet.col"))) NULL else getOption("tinyplot_facet.col")
   .tpar$facet.bg = if (is.null(getOption("tinyplot_facet.bg"))) NULL else getOption("tinyplot_facet.bg")
   .tpar$facet.border = if (is.null(getOption("tinyplot_facet.border"))) NA else getOption("tinyplot_facet.border")
+  .tpar$facet.labeller = if (is.null(getOption("tinyplot_facet.labeller"))) NULL else getOption("tinyplot_facet.labeller")
+  .tpar$facet.prefix = if (is.null(getOption("tinyplot_facet.prefix"))) NULL else getOption("tinyplot_facet.prefix")
+  .tpar$facet.sep = if (is.null(getOption("tinyplot_facet.sep"))) NULL else getOption("tinyplot_facet.sep")
 
   # Plot grid
   .tpar$grid = if (is.null(getOption("tinyplot_grid"))) FALSE else as.logical(getOption("tinyplot_grid"))

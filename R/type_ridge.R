@@ -284,15 +284,16 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     if (isTRUE(x_by)) fill_by = FALSE
     # if (isTRUE(anyby) && is.null(alpha)) alpha = 0.6
 
+    if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
     ## reorder levels of y-variable if requested
     if (!is.null(ylevels)) {
-      if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
       datapoints$y = sanitize_xlevels(datapoints$y, ylevels, arg = "ylevels")
       if (y_by) datapoints$by = datapoints$y
     }
 
     ##
     datapoints = split(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
+    datapoints = Filter(function(k) nrow(k) > 1, datapoints) # drop singletons
 
     if (joint.bw == "none" || is.numeric(bw)) {
         dens_bw = bw

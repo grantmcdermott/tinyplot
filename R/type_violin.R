@@ -147,7 +147,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 
         
         datapoints = split(datapoints, list(datapoints$x, datapoints$by, datapoints$facet))
-        datapoints = Filter(function(k) nrow(k) > 0, datapoints)
+        datapoints = Filter(function(k) nrow(k) > 1, datapoints) # drop singletons
         
         if (joint.bw == "none" || is.numeric(bw)) {
             dens_bw = bw

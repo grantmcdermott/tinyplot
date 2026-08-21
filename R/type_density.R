@@ -182,7 +182,7 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         if (is.null(ylab)) ylab = "Density"
         
         datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
-        datapoints = Filter(function(k) nrow(k) > 0, datapoints)
+        datapoints = Filter(function(k) nrow(k) > 1, datapoints) # drop singletons
         
         if (joint.bw == "none" || is.numeric(bw)) {
             dens_bw = bw

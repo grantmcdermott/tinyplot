@@ -600,7 +600,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   n = 512,
   trim = FALSE,
   width = 0.9,
-  lighten = TRUE
+  lighten = TRUE,
+  singletons = c("warn", "drop", "none")
 )
 </code></pre>
 </section>
@@ -670,6 +671,14 @@ numeric (ideally in the range <code style="white-space: pre;">[0, 1]</code>, alt
 </td>
 <td>
 logical. Should the fills use a lighter, opaque tint of the series colour(s)? Default is <code>TRUE</code>, which keeps single- and multi-group displays consistent and lets the fill read cleanly over grid lines. Set to <code>FALSE</code> to use the fully-saturated palette colour(s) instead.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="singletons">singletons</code>
+</td>
+<td>
+character string indicating what to do with singleton groups, i.e.&nbsp;combinations of <code>x</code>, <code>by</code>, and <code>facet</code> that consist of only 1 row. The default <code>“warn”</code> option removes any singleton cases and emits a warning reporting how many there were. <code>“drop”</code> does the same thing, but quietly. In either case the dropped groups may still be represented as empty violins or facets in your plot. Finally, <code>“none”</code> skips all singleton checks and retains the affected groups; possibly leading to an error. Note that singletons require a numeric <code>bw</code>, since the data-driven bandwidth rules need at least 2 observations.
 </td>
 </tr>
 </tbody></table>

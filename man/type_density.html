@@ -630,7 +630,8 @@ window.Quarto = {
     "cosine", "optcosine"),
   n = 512,
   echo.bw = FALSE,
-  alpha = NULL
+  alpha = NULL,
+  singletons = c("warn", "drop", "none")
 )
 </code></pre>
 </section>
@@ -692,6 +693,14 @@ where to report the smoothing bandwidth (and the number of observations behind i
 </td>
 <td>
 numeric value between 0 and 1 specifying the opacity of ribbon shading If no <code>alpha</code> value is provided, then will default to <code>tpar(“ribbon.alpha”)</code> (i.e., probably <code>0.2</code> unless this has been overridden by the user in their global settings.)
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="singletons">singletons</code>
+</td>
+<td>
+character string indicating what to do with singleton groups, i.e.&nbsp;combinations of <code>by</code> and <code>facet</code> that consist of only 1 row. The default <code>“warn”</code> option removes any singleton cases and emits a warning reporting how many there were. <code>“drop”</code> does the same thing, but quietly. In either case the dropped groups may still be represented as empty facets in your plot. Finally, <code>“none”</code> skips all singleton checks and retains the affected groups; possibly leading to an error. Note that singletons require a numeric <code>bw</code>, since the data-driven bandwidth rules need at least 2 observations.
 </td>
 </tr>
 </tbody></table>

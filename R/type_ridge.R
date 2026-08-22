@@ -78,13 +78,13 @@
 #'
 #' @param singletons character string indicating what to do with singleton
 #' groups, i.e. combinations of `y`, `by`, and `facet` that consist of only 1
-#' row. The default `"drop"` option silently removes any singleton cases,
-#' although they may still be represented as empty ridge lines or facets in
-#' your plot. `"warn"` also drops singletons and further emits a warning
-#' reporting how many there were. Finally, `"none"` skips all singleton checks
-#' and retains the affected groups; possibly leading to an error. Note that
-#' singletons require a numeric `bw`, since the data-driven bandwidth rules
-#' need at least 2 observations.
+#' row. The default `"warn"` option removes any singleton cases and emits a
+#' warning reporting how many there were. `"drop"` does the same thing, but
+#' quietly. In either case the dropped groups may still be represented as empty
+#' ridge lines or facets in your plot. Finally, `"none"` skips all singleton
+#' checks and retains the affected groups; possibly leading to an error. Note
+#' that singletons require a numeric `bw`, since the data-driven bandwidth
+#' rules need at least 2 observations.
 #' @section Technical note on gradient fills:
 #'
 #' `tinyplot` uses two basic approaches for drawing gradient fills in ridge line
@@ -225,11 +225,11 @@ type_ridge = function(
     raster = FALSE,
     col = NULL,
     alpha = NULL,
-    singletons = c("drop", "warn", "none")
+    singletons = c("warn", "drop", "none")
     ) {
 
   kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
-  singletons = match.arg(singletons, c("drop", "warn", "none"))
+  singletons = match.arg(singletons, c("warn", "drop", "none"))
   if (is.logical(joint.bw)) {
     joint.bw = ifelse(joint.bw, "mean", "none")
   }
@@ -269,7 +269,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       raster = FALSE,
                       col = NULL,
                       alpha = NULL,
-                      singletons = "drop"
+                      singletons = "warn"
                       ) {
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by"))

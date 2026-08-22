@@ -15,13 +15,13 @@
 #'   `FALSE` to use the fully-saturated palette colour(s) instead.
 #' @param singletons character string indicating what to do with singleton
 #'   groups, i.e. combinations of `x`, `by`, and `facet` that consist of only 1
-#'   row. The default `"drop"` option silently removes any singleton cases,
-#'   although they may still be represented as empty violins or facets in your
-#'   plot. `"warn"` also drops singletons and further emits a warning reporting
-#'   how many there were. Finally, `"none"` skips all singleton checks and
-#'   retains the affected groups; possibly leading to an error. Note that
-#'   singletons require a numeric `bw`, since the data-driven bandwidth rules
-#'   need at least 2 observations.
+#'   row. The default `"warn"` option removes any singleton cases and emits a
+#'   warning reporting how many there were. `"drop"` does the same thing, but
+#'   quietly. In either case the dropped groups may still be represented as
+#'   empty violins or facets in your plot. Finally, `"none"` skips all singleton
+#'   checks and retains the affected groups; possibly leading to an error. Note
+#'   that singletons require a numeric `bw`, since the data-driven bandwidth
+#'   rules need at least 2 observations.
 #' @inherit stats::density details
 #' @details See [`type_density`] for more details and considerations related to
 #'   bandwidth selection and kernel types.
@@ -74,10 +74,10 @@ type_violin = function(
         trim = FALSE,
         width = 0.9,
         lighten = TRUE,
-        singletons = c("drop", "warn", "none")
+        singletons = c("warn", "drop", "none")
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
-    singletons = match.arg(singletons, c("drop", "warn", "none"))
+    singletons = match.arg(singletons, c("warn", "drop", "none"))
     if (is.logical(joint.bw)) {
         joint.bw = ifelse(joint.bw, "mean", "none")
     }
@@ -97,7 +97,7 @@ type_violin = function(
 
 data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", trim = FALSE, width = 0.9,
-                        lighten = TRUE, singletons = "drop") {
+                        lighten = TRUE, singletons = "warn") {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "by", "null_palette", "facet", "ylab", "col", "bg", "log", "null_by", "null_facet"))
         settings[["lighten"]] = lighten

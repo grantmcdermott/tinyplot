@@ -14,7 +14,7 @@ type_violin(
   trim = FALSE,
   width = 0.9,
   lighten = TRUE,
-  singletons = c("drop", "warn", "none")
+  singletons = c("warn", "drop", "none")
 )
 }
 \arguments{
@@ -61,13 +61,13 @@ displays consistent and lets the fill read cleanly over grid lines. Set to
 
 \item{singletons}{character string indicating what to do with singleton
 groups, i.e. combinations of \code{x}, \code{by}, and \code{facet} that consist of only 1
-row. The default \code{"drop"} option silently removes any singleton cases,
-although they may still be represented as empty violins or facets in your
-plot. \code{"warn"} also drops singletons and further emits a warning reporting
-how many there were. Finally, \code{"none"} skips all singleton checks and
-retains the affected groups; possibly leading to an error. Note that
-singletons require a numeric \code{bw}, since the data-driven bandwidth rules
-need at least 2 observations.}
+row. The default \code{"warn"} option removes any singleton cases and emits a
+warning reporting how many there were. \code{"drop"} does the same thing, but
+quietly. In either case the dropped groups may still be represented as
+empty violins or facets in your plot. Finally, \code{"none"} skips all singleton
+checks and retains the affected groups; possibly leading to an error. Note
+that singletons require a numeric \code{bw}, since the data-driven bandwidth
+rules need at least 2 observations.}
 }
 \description{
 Type function for violin plots, which are an alternative to box

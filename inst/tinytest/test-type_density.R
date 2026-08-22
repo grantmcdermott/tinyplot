@@ -118,17 +118,17 @@ expect_snapshot_plot(f, label = "density_echo_bw_cap_clean")
 #
 ## singleton groups (#300)
 
-# cyl == 4 & vs == 0 is a single car, so no density can be estimated for it
-f = function() {
-  plt(~mpg, facet = cyl ~ vs, data = mtcars, type = "density")
-}
-expect_snapshot_plot(f, label = "density_singletons_drop")
-
-# "warn" drops the same groups, but reports how many went
+# cyl == 4 & vs == 0 is a single car, so no density can be estimated for it.
+# The default reports the loss; "drop" does the same thing quietly.
 expect_warning(
-  plt(~mpg, facet = cyl ~ vs, data = mtcars, type = type_density(singletons = "warn")),
+  plt(~mpg, facet = cyl ~ vs, data = mtcars, type = "density"),
   pattern = "Dropped 1 singleton"
 )
+
+f = function() {
+  plt(~mpg, facet = cyl ~ vs, data = mtcars, type = type_density(singletons = "drop"))
+}
+expect_snapshot_plot(f, label = "density_singletons_drop")
 
 # "none" keeps them, which the data-driven bandwidth rules cannot cope with
 expect_error(

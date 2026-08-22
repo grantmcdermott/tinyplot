@@ -32,13 +32,13 @@
 #'   three so the label stays legible.
 #' @param singletons character string indicating what to do with singleton
 #'   groups, i.e. combinations of `by` and `facet` that consist of only 1 row.
-#'   The default `"drop"` option silently removes any singleton cases, although
-#'   they may still be represented as empty facets in your plot. `"warn"` also
-#'   drops singletons and further emits a warning reporting how many there
-#'   were. Finally, `"none"` skips all singleton checks and retains the affected
-#'   groups; possibly leading to an error. Note that singletons require a
-#'   numeric `bw`, since the data-driven bandwidth rules need at least 2
-#'   observations.
+#'   The default `"warn"` option removes any singleton cases and emits a
+#'   warning reporting how many there were. `"drop"` does the same thing, but
+#'   quietly. In either case the dropped groups may still be represented as
+#'   empty facets in your plot. Finally, `"none"` skips all singleton checks and
+#'   retains the affected groups; possibly leading to an error. Note that 
+#'   singletons require a numeric `bw`, since the data-driven bandwidth rules
+#'   need at least 2 observations.
 #'
 #' @section Bandwidth selection: While the choice of smoothing bandwidth will
 #'   always stand to affect a density visualization, it gains an added
@@ -126,10 +126,10 @@ type_density = function(
         # more args from density here?
         echo.bw = FALSE,
         alpha = NULL,
-        singletons = c("drop", "warn", "none")
+        singletons = c("warn", "drop", "none")
     ) {
     kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
-    singletons = match.arg(singletons, c("drop", "warn", "none"))
+    singletons = match.arg(singletons, c("warn", "drop", "none"))
     if (is.logical(joint.bw)) {
         joint.bw = ifelse(joint.bw, "mean", "none")
     }
@@ -183,7 +183,7 @@ format_echo_vec = function(x, numeric = TRUE) {
 
 data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                         joint.bw = "none", echo.bw = character(0),
-                        alpha = NULL, singletons = "drop") {
+                        alpha = NULL, singletons = "warn") {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("by", "bg", "facet", "ylab", "col", "ribbon.alpha", "datapoints"))
         ribbon.alpha = if (is.null(alpha)) .tpar[["ribbon.alpha"]] else (alpha)

@@ -34,10 +34,10 @@
 #'   groups, i.e. combinations of `by` and `facet` that consist of only 1 row.
 #'   The default `"drop"` option silently removes any singleton cases, although
 #'   they may still be represented as empty facets in your plot. `"warn"` also
-#'   drops singletons and further emits a warning with the offending cases.
-#'   Finally, `"none"` skips all singleton checks and retains the affected
+#'   drops singletons and further emits a warning reporting how many there
+#'   were. Finally, `"none"` skips all singleton checks and retains the affected
 #'   groups; possibly leading to an error. Note that singletons require a
-#'   numeric `bw`, since the data-driven bandwidth rules need at least 2 
+#'   numeric `bw`, since the data-driven bandwidth rules need at least 2
 #'   observations.
 #'
 #' @section Bandwidth selection: While the choice of smoothing bandwidth will
@@ -192,9 +192,8 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         
         if (is.null(ylab)) ylab = "Density"
         
-        skeys = singleton_keys(datapoints, c("by", "facet"), singletons)
         datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
-        datapoints = drop_singletons(datapoints, skeys, singletons, settings)
+        datapoints = drop_singletons(datapoints, singletons)
         
         if (joint.bw == "none" || is.numeric(bw)) {
             dens_bw = bw

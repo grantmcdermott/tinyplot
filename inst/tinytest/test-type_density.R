@@ -124,10 +124,10 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "density_singletons_drop")
 
-# "warn" drops the same groups, but names them
+# "warn" drops the same groups, but reports how many went
 expect_warning(
   plt(~mpg, facet = cyl ~ vs, data = mtcars, type = type_density(singletons = "warn")),
-  pattern = "vs = 0, cyl = 4"
+  pattern = "Dropped 1 singleton"
 )
 
 # "none" keeps them, which the data-driven bandwidth rules cannot cope with

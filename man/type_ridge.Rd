@@ -117,9 +117,9 @@ cases where \code{by==y} or \code{by==x}), will default to 0.6.}
 groups, i.e. combinations of \code{y}, \code{by}, and \code{facet} that consist of only 1
 row. The default \code{"drop"} option silently removes any singleton cases,
 although they may still be represented as empty ridge lines or facets in
-your plot. \code{"warn"} also drops singletons and further emits a warning with
-the offending cases. Finally, \code{"none"} skips all singleton checks and
-retains the affected groups; possibly leading to an error. Note that
+your plot. \code{"warn"} also drops singletons and further emits a warning
+reporting how many there were. Finally, \code{"none"} skips all singleton checks
+and retains the affected groups; possibly leading to an error. Note that
 singletons require a numeric \code{bw}, since the data-driven bandwidth rules
 need at least 2 observations.}
 }

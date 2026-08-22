@@ -170,3 +170,23 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "ridge_ylab_na_issue650")
 
+
+#
+## singleton groups (#300)
+
+# cyl == 4 & vs == 0 is a single car, so no density can be estimated for it.
+# The default reports the loss; "drop" does the same thing quietly.
+expect_warning(
+  plt(cyl ~ mpg, facet = ~vs, data = mtcars, type = "ridge"),
+  pattern = "Dropped 1 singleton"
+)
+
+f = function() {
+  plt(cyl ~ mpg, facet = ~vs, data = mtcars, type = type_ridge(singletons = "drop"))
+}
+expect_snapshot_plot(f, label = "ridge_singletons_drop")
+expect_error(
+  plt(cyl ~ mpg, facet = ~vs, data = mtcars, type = type_ridge(singletons = "none")),
+  pattern = "at least 2 data points"
+)
+expect_error(type_ridge(singletons = "nope"))

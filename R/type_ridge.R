@@ -76,6 +76,15 @@
 #' 1, i.e. fully opaque. But for some `by` grouped plots (excepting the special
 #' cases where `by==y` or `by==x`), will default to 0.6.
 #'
+#' @param singletons character string indicating what to do with singleton
+#' groups, i.e. combinations of `y`, `by`, and `facet` that consist of only 1
+#' row. The default `"warn"` option removes any singleton cases and emits a
+#' warning reporting how many there were. `"drop"` does the same thing, but
+#' quietly. In either case the dropped groups may still be represented as empty
+#' ridge lines or facets in your plot. Finally, `"none"` skips all singleton
+#' checks and retains the affected groups; possibly leading to an error. Note
+#' that singletons require a numeric `bw`, since the data-driven bandwidth
+#' rules need at least 2 observations.
 #' @section Technical note on gradient fills:
 #'
 #' `tinyplot` uses two basic approaches for drawing gradient fills in ridge line
@@ -215,10 +224,12 @@ type_ridge = function(
     gradient = FALSE,
     raster = FALSE,
     col = NULL,
-    alpha = NULL
+    alpha = NULL,
+    singletons = c("warn", "drop", "none")
     ) {
 
   kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
+  singletons = match.arg(singletons, c("warn", "drop", "none"))
   if (is.logical(joint.bw)) {
     joint.bw = ifelse(joint.bw, "mean", "none")
   }
@@ -236,7 +247,8 @@ type_ridge = function(
                       ylevels = ylevels,
                       raster = raster,
                       col = col,
-                      alpha = alpha
+                      alpha = alpha,
+                      singletons = singletons
                       ),
     name = "ridge"
   )
@@ -256,7 +268,8 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       ylevels = NULL,
                       raster = FALSE,
                       col = NULL,
-                      alpha = NULL
+                      alpha = NULL,
+                      singletons = "warn"
                       ) {
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by"))
@@ -284,15 +297,16 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     if (isTRUE(x_by)) fill_by = FALSE
     # if (isTRUE(anyby) && is.null(alpha)) alpha = 0.6
 
+    if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
     ## reorder levels of y-variable if requested
     if (!is.null(ylevels)) {
-      if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
       datapoints$y = sanitize_xlevels(datapoints$y, ylevels, arg = "ylevels")
       if (y_by) datapoints$by = datapoints$y
     }
 
     ##
     datapoints = split(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
+    datapoints = drop_singletons(datapoints, singletons)
 
     if (joint.bw == "none" || is.numeric(bw)) {
         dens_bw = bw

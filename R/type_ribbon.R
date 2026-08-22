@@ -4,6 +4,10 @@
 #'   If no `alpha` value is provided, then will default to `tpar("ribbon.alpha")`
 #'   (i.e., probably `0.2` unless this has been overridden by the user in their global
 #'   settings.)
+#' @param stack logical. Should the `by` groups be stacked on top of one
+#'   another, rather than overplotted from a common zero baseline? Only
+#'   relevant for grouped area plots. Default is `FALSE`. See the "Stacked
+#'   area plots" section below.
 #' @inheritParams type_errorbar
 #'
 #' @description Type constructor functions for producing polygon ribbons, which
@@ -18,6 +22,24 @@
 #' that dodging is only implemented for cases where the x-axis comprises a
 #' limited number of discrete cases (e.g., coefficient or event-study plots).
 #' See Examples.
+#'
+#' @section Stacked area plots:
+#'
+#' Passing `type_area(stack = TRUE)` stacks the `by` groups cumulatively,
+#' rather than drawing each one from a zero baseline. Groups are accumulated in
+#' the order of their (factor) levels, so the first level forms the bottom band
+#' and the top of the final band traces the group total. Stacking is computed
+#' separately within each facet.
+#'
+#' Since stacked bands do not overlap, they are drawn opaque by default (i.e.
+#' `alpha = 1`) instead of inheriting the usual semi-transparent `tpar(
+#' "ribbon.alpha")` shading. Pass an explicit `alpha` to override.
+#'
+#' Stacking assumes a single `y` value per group per `x` value. Groups that are
+#' missing an `x` value (or have an `NA` there) are treated as contributing
+#' zero at that point, so that a gap in one group does not shift the groups
+#' stacked above it. Note that stacking negative values is not meaningful and
+#' will produce overlapping bands.
 #'
 #' @examples
 #' x = 1:100 / 10
@@ -46,7 +68,22 @@
 #'
 #' # Area plots are often used for time series charts
 #' tinyplot(AirPassengers, type = "area")
-#' 
+#'
+#' #
+#' ## Stacked area plots
+#'
+#' # Grouped area plots can be stacked cumulatively, rather than being drawn
+#' # from a common zero baseline.
+#'
+#' ucb = as.data.frame(UCBAdmissions)
+#'
+#' tinyplot(
+#'   Freq ~ Dept | Admit, data = ucb,
+#'   facet = ~ Gender, facet.args = list(ncol = 1),
+#'   type = type_area(stack = TRUE),
+#'   frame = FALSE
+#' )
+#'
 #' #
 #' ## Dodged ribbon/area plots
 #' 

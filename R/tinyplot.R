@@ -603,18 +603,17 @@
 #'   main = "Temperatures by month and season"
 #' )
 #'
-#' # Users can override the default square window arrangement by passing `nrow`
-#' # or `ncol` to the helper facet.args argument. Note that we can also reduce
-#' # axis label repetition across facets by turning the plot frame off.
+#' # Customize facets by passing a list of options to the companion `facet.args`
+#' # argument. For example, here we arrange the facets in a single row and also
+#' # turn off the inner axes labels to reduce redundancy.
 #'
 #' tinyplot(
 #'   Temp ~ Day | Summer,
 #'   facet = ~Month,
-#'   facet.args = list(nrow = 1),
+#'   facet.args = list(nrow = 1, axes = "outer"),
 #'   data = aq,
 #'   type = "area",
 #'   palette = "dark2",
-#'   frame = FALSE,
 #'   main = "Temperatures by month and season"
 #' )
 #'
@@ -632,7 +631,6 @@
 #' 
 #' # (Note: The optional `prefix = TRUE` argument prepends the facet variable
 #' #  names to the strip titles, making for a more informative display here.)
-#'
 #'
 #' # To add common elements to each facet, use the `draw` argument
 #'

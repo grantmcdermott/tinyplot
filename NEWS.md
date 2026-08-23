@@ -62,12 +62,22 @@ enable finer control and customization of faceted plots:
   concatenating via the default `":"`. (#684 @grantmcdermott)
 
 Note that each of these `facet.args` arguments is paired with an equivalent
-`tpar(facet.<arg>)` parameter. For example, call `tpar(facet.axes = "outer")` 
+`tpar(facet.<arg>)` parameter. For example, call `tpar(facet.axes = "outer")`
 to set this behaviour globally. This also means that they can be set as part of
 a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
 #### Other new features
 
+- `type_area()` gains a `stack` argument for stacked area plots. A sister
+  `byord` argument enables convenient, on-the-fly (re-)ordering of stacking
+  layers through convenience keywords or custom functions (e.g.,
+  `byord = "end"` ranks groups according to their largest final value, while
+  `byord = "minvar"` puts the lowest variance group on the baseline, and
+  `byord = "rev"` simply reverses the existing level order). Custom
+  functions may additionally name an `x` argument to receive the group's `x`
+  values, as needed by any statistic that depends on their spacing.
+  Similarly, a new `FUN` argument permits stacking of multi-observation data by
+  collapsing repeated `y` values. (#688 @grantmcdermott)
 - `type_points()`, `type_lines()`, `type_errorbar()`, and `type_pointrange()`
   gain an `xlevels` argument for reordering a categorical `x` variable on the
   fly (matching existing functionality for `type_barplot()` and several other
@@ -107,6 +117,9 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
 ### Bug fixes
 
+- `type_area()` now labels a categorical `x` axis with its factor levels,
+  rather than falling back to the underlying integer positions.
+  (#688 @grantmcdermott)
 - Density-based plots no longer error out on singleton groups, i.e. `by` and
   `facet` combinations containing only one observation. Such groups are now
   dropped, together with a warning reporting how many were removed. The

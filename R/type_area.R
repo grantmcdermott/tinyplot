@@ -1,9 +1,9 @@
 #' @rdname type_ribbon
 #' @export
-type_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
+type_area = function(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL) {
     out = list(
         draw = NULL,
-        data = data_area(alpha = alpha, stack = stack, bylevels = bylevels, FUN = FUN),
+        data = data_area(alpha = alpha, stack = stack, byord = byord, FUN = FUN),
         name = "area"
     )
     class(out) = "tinyplot_type"
@@ -11,16 +11,9 @@ type_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
 }
 
 
-data_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
+data_area = function(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL) {
     assert_flag(stack)
     assert_function(FUN, null.ok = TRUE)
-    if (!is.null(bylevels) &&
-        !is.character(bylevels) && !is.numeric(bylevels) && !is.function(bylevels)) {
-        stop(
-            "`bylevels` must be NULL, a character or numeric vector, or a function.",
-            call. = FALSE
-        )
-    }
     # Stacked bands don't overlap, so the usual semi-transparent ribbon fill
     # only mutes them; default to opaque unless the user asks otherwise.
     ribbon.alpha = if (is.null(alpha) && isTRUE(stack)) {
@@ -41,7 +34,7 @@ data_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
             datapoints$x = as.integer(datapoints$x)
         }
 
-        # Collapse repeated cells *before* ranking below, so that `bylevels`
+        # Collapse repeated cells *before* ranking below, so that `byord`
         # sees the values that actually get drawn. Ranking first would sort on
         # raw per-cell sums, which unequal cell counts can order differently
         # from the aggregated bands.
@@ -52,9 +45,9 @@ data_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
         # The `by` level order sets the band order, and with it the legend
         # order and the palette assignment, so this has to happen up front.
         by = NULL
-        if (!is.null(bylevels)) {
-            datapoints$by = sanitize_bylevels(
-                datapoints$by, datapoints$y, datapoints$x, bylevels
+        if (!is.null(byord)) {
+            datapoints$by = sanitize_ord(
+                datapoints$by, datapoints$y, datapoints$x, byord, arg = "byord"
             )
             by = datapoints$by
         }

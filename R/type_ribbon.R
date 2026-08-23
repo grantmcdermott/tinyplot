@@ -8,19 +8,19 @@
 #'   another, rather than overplotted from a common zero baseline? Only
 #'   relevant for grouped area plots. Default is `FALSE`. See the "Stacked
 #'   area plots" section below.
-#' @param bylevels controls the order of the `by` groups and, thus, the order in
-#'   which they stack. Accepts the same values as the `xlevels` argument of
-#'   [`type_points()`] and friends (i.e., a character vector of level names, a
-#'   numeric vector of level indexes, or the `"asis"` keyword). More germanely,
-#'   accepts three additional keywords that rank groups according to their `y`
-#'   values along the `x` axis: `"start"`, `"end"`, and `"total"` (i.e., summed
-#'   `y` values over the full `x` axis range). These three options are
-#'   especially convenient for (re)ordering the layers of a stacked area plot on
-#'   the fly. Users can also pass their own custom function to determine both
-#'   the ranking statistic and its direction, e.g. `function(y) -median(y)`
-#'   would layer by median `y` value, from the biggest to the smallest. Default
-#'   is `NULL`, in which case the existing factor level order is retained. See
-#'   Examples, as well as the "Stacked area plots" section below.
+#' @param byord controls the order of the `by` groups and, thus, the order in
+#'   which they stack. Three keywords rank the groups according to their `y`
+#'   values along the `x` axis: `"start"` (value at the smallest `x`), `"end"`
+#'   (value at the largest `x`), and `"total"` (summed `y` values over the full
+#'   `x` axis range). Each ranks the largest group first, i.e. into the bottom
+#'   band. A fourth keyword, `"asis"`, takes the groups in the order that they
+#'   appear in the data. Users can also pass their own custom function to
+#'   determine both the ranking statistic and its direction, e.g.
+#'   `function(y) -median(y)` would layer by median `y` value, from the biggest
+#'   to the smallest. Default is `NULL`, in which case the existing factor level
+#'   order is retained; to set that order explicitly, call
+#'   `factor(levels = )` on the grouping variable beforehand. See Examples, as
+#'   well as the "Stacked area plots" section below.
 #' @param FUN a function for collapsing repeated `y` values within a group and
 #'   `x` position, used only when `stack = TRUE`. Defaults to `mean`, matching
 #'   [`type_barplot()`], so that the same data stacks to the same heights
@@ -48,13 +48,13 @@
 #' and the top of the final band traces the group total. Stacking is computed
 #' separately within each facet.
 #'
-#' The `bylevels` argument is a helpful companion to stacked area plots, since
-#' it controls which group ends up where. While it accepts various inputs, the
-#' most useful are the three positional keywords: `"start"`, `"end"`, and
-#' `"total"`. These rank the stacked `by` groups according to their `y`
-#'  values at the designated position along the `x` axis. Following convention,
-#'  the ranking runs in descending order, so that the biggest group is drawn
-#'  on the bottom layer to provide a stable visual baseline.
+#' The `byord` argument is a helpful companion to stacked area plots, since
+#' it controls which group ends up where. Most useful are the three positional
+#' keywords: `"start"`, `"end"`, and `"total"`. These rank the stacked `by`
+#' groups according to their `y` values at the designated position along the
+#' `x` axis. Following convention, the ranking runs in descending order, so that
+#' the biggest group is drawn on the bottom layer to provide a stable visual
+#' baseline.
 #'
 #' Stacking needs exactly one `y` value per group per `x` value. Repeated cells
 #' ---typically caused by a variable that is present in the data but absent from
@@ -146,12 +146,12 @@
 #'
 #' tinyplot(val ~ year | grp, data = dat, type = type_area(stack = TRUE))
 #'
-#' # Use `bylevels` to control which group stacks where. Here we stack by their
+#' # Use `byord` to control which group stacks where. Here we stack by their
 #' # largest end value.
 #'
 #' tinyplot(
 #'   val ~ year | grp, data = dat,
-#'   type = type_area(stack = TRUE, bylevels = "end")
+#'   type = type_area(stack = TRUE, byord = "end")
 #' )
 #'
 #' # Stacking expects a single `y` value per group per `x` value. Any repeats

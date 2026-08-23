@@ -68,9 +68,11 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
 #### Other new features
 
-- `type_area()` gains a `stack` argument for stacked area plots, plus `bylevels`
-  to control the stacking order, and `FUN` to collapse repeated `y` values.
-  (#688 @grantmcdermott)
+- `type_area()` gains a `stack` argument for stacked area plots, plus `byord`
+  to control the stacking order (`"start"`, `"end"` and `"total"` rank groups by
+  size, largest onto the baseline) and `FUN` to collapse repeated `y` values.
+  Stacked types list their legend keys bottom-up, via the new
+  `"legend_reversed"` entry in `type_hints`. (#688 @grantmcdermott)
 - `type_points()`, `type_lines()`, `type_errorbar()`, and `type_pointrange()`
   gain an `xlevels` argument for reordering a categorical `x` variable on the
   fly (matching existing functionality for `type_barplot()` and several other

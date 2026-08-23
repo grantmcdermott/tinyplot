@@ -5,7 +5,7 @@
 \alias{type_ribbon}
 \title{Ribbon and area plot types}
 \usage{
-type_area(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL)
+type_area(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL)
 
 type_ribbon(alpha = NULL, dodge = 0, fixed.dodge = FALSE)
 }
@@ -20,19 +20,19 @@ another, rather than overplotted from a common zero baseline? Only
 relevant for grouped area plots. Default is \code{FALSE}. See the "Stacked
 area plots" section below.}
 
-\item{bylevels}{controls the order of the \code{by} groups and, thus, the order in
-which they stack. Accepts the same values as the \code{xlevels} argument of
-\code{\link[=type_points]{type_points()}} and friends (i.e., a character vector of level names, a
-numeric vector of level indexes, or the \code{"asis"} keyword). More germanely,
-accepts three additional keywords that rank groups according to their \code{y}
-values along the \code{x} axis: \code{"start"}, \code{"end"}, and \code{"total"} (i.e., summed
-\code{y} values over the full \code{x} axis range). These three options are
-especially convenient for (re)ordering the layers of a stacked area plot on
-the fly. Users can also pass their own custom function to determine both
-the ranking statistic and its direction, e.g. \code{function(y) -median(y)}
-would layer by median \code{y} value, from the biggest to the smallest. Default
-is \code{NULL}, in which case the existing factor level order is retained. See
-Examples, as well as the "Stacked area plots" section below.}
+\item{byord}{controls the order of the \code{by} groups and, thus, the order in
+which they stack. Three keywords rank the groups according to their \code{y}
+values along the \code{x} axis: \code{"start"} (value at the smallest \code{x}), \code{"end"}
+(value at the largest \code{x}), and \code{"total"} (summed \code{y} values over the full
+\code{x} axis range). Each ranks the largest group first, i.e. into the bottom
+band. A fourth keyword, \code{"asis"}, takes the groups in the order that they
+appear in the data. Users can also pass their own custom function to
+determine both the ranking statistic and its direction, e.g.
+\code{function(y) -median(y)} would layer by median \code{y} value, from the biggest
+to the smallest. Default is \code{NULL}, in which case the existing factor level
+order is retained; to set that order explicitly, call
+\code{factor(levels = )} on the grouping variable beforehand. See Examples, as
+well as the "Stacked area plots" section below.}
 
 \item{FUN}{a function for collapsing repeated \code{y} values within a group and
 \code{x} position, used only when \code{stack = TRUE}. Defaults to \code{mean}, matching
@@ -86,13 +86,13 @@ the order of their (factor) levels, so the first level forms the bottom band
 and the top of the final band traces the group total. Stacking is computed
 separately within each facet.
 
-The \code{bylevels} argument is a helpful companion to stacked area plots, since
-it controls which group ends up where. While it accepts various inputs, the
-most useful are the three positional keywords: \code{"start"}, \code{"end"}, and
-\code{"total"}. These rank the stacked \code{by} groups according to their \code{y}
-values at the designated position along the \code{x} axis. Following convention,
-the ranking runs in descending order, so that the biggest group is drawn
-on the bottom layer to provide a stable visual baseline.
+The \code{byord} argument is a helpful companion to stacked area plots, since
+it controls which group ends up where. Most useful are the three positional
+keywords: \code{"start"}, \code{"end"}, and \code{"total"}. These rank the stacked \code{by}
+groups according to their \code{y} values at the designated position along the
+\code{x} axis. Following convention, the ranking runs in descending order, so that
+the biggest group is drawn on the bottom layer to provide a stable visual
+baseline.
 
 Stacking needs exactly one \code{y} value per group per \code{x} value. Repeated cells
 ---typically caused by a variable that is present in the data but absent from
@@ -183,12 +183,12 @@ dat$val = abs(sin(dat$year / 3) + as.integer(dat$grp)) + 1
 
 tinyplot(val ~ year | grp, data = dat, type = type_area(stack = TRUE))
 
-# Use `bylevels` to control which group stacks where. Here we stack by their
+# Use `byord` to control which group stacks where. Here we stack by their
 # largest end value.
 
 tinyplot(
   val ~ year | grp, data = dat,
-  type = type_area(stack = TRUE, bylevels = "end")
+  type = type_area(stack = TRUE, byord = "end")
 )
 
 # Stacking expects a single `y` value per group per `x` value. Any repeats

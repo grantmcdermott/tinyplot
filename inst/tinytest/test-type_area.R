@@ -65,20 +65,20 @@ expect_snapshot_plot(f, label = "area_stack_legend_bottom")
 
 
 #
-## bylevels -----
+## byord -----
 
 f = function() {
-  tinyplot(val ~ year | grp, data = dat, type = type_area(stack = TRUE, bylevels = "end"))
+  tinyplot(val ~ year | grp, data = dat, type = type_area(stack = TRUE, byord = "end"))
 }
-expect_snapshot_plot(f, label = "area_stack_bylevels_end")
+expect_snapshot_plot(f, label = "area_stack_byord_end")
 
-# repeated cells must be collapsed *before* `bylevels` ranks them, or the
+# repeated cells must be collapsed *before* `byord` ranks them, or the
 # ranking sorts on raw per-cell sums rather than the bands actually drawn
 f = function() {
   tinyplot(weight ~ Time | Diet, ChickWeight,
-           type = type_area(stack = TRUE, bylevels = "end"))
+           type = type_area(stack = TRUE, byord = "end"))
 }
-expect_snapshot_plot(f, label = "area_stack_bylevels_aggregated")
+expect_snapshot_plot(f, label = "area_stack_byord_aggregated")
 
 
 #
@@ -94,3 +94,20 @@ f = function() {
   tinyplot(Freq ~ Dept, data = ucb[ucb$Admit == "Admitted" & ucb$Gender == "Male", ], type = "area")
 }
 expect_snapshot_plot(f, label = "area_factor_x")
+
+
+#
+## byord rejects explicit levels -----
+
+# explicit level order belongs to factor(levels = ), not `byord`; accepting it
+# here would collapse the distinction between the two vocabularies
+expect_error(
+  tinyplot(val ~ year | grp, data = dat,
+           type = type_area(stack = TRUE, byord = c("C", "A", "B"))),
+  pattern = "must be NULL"
+)
+expect_error(
+  tinyplot(val ~ year | grp, data = dat,
+           type = type_area(stack = TRUE, byord = 3:1)),
+  pattern = "must be NULL"
+)

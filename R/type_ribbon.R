@@ -8,6 +8,24 @@
 #'   another, rather than overplotted from a common zero baseline? Only
 #'   relevant for grouped area plots. Default is `FALSE`. See the "Stacked
 #'   area plots" section below.
+#' @param bylevels controls the order of the `by` groups and, thus, the order in
+#'   which they stack. Accepts the same values as the `xlevels` argument of
+#'   [`type_points()`] and friends (i.e., a character vector of level names, a
+#'   numeric vector of level indexes, or the `"asis"` keyword). More germanely,
+#'   accepts a further three keywords that rank groups according to their `y`
+#'   values along the `x` axis: `"start"`, `"end"`, and `"total"` (i.e., summed
+#'   `y` values over the full `x` axis range). These three options are
+#'   especially convenient for stacked area plots, where it is helpful to order
+#'   layers by their relative `y` values. This usually means the biggest group
+#'   first (i.e., on the bottom layer). But users can also pass their own custom
+#'   function to determine both the ranking statistic and its direction, e.g.
+#'   `function(y) -median(y)` would layer by median `y` value, from the biggest
+#'   to the smallest. Default is `NULL`, in which case the existing factor level
+#'   order is retained. See Examples and the "Stacked area plots" section below.
+#' @param FUN a function for collapsing repeated `y` values within a group and
+#'   `x` position, used only when `stack = TRUE`. Defaults to `mean`, matching
+#'   [`type_barplot()`], so that the same data stacks to the same heights
+#'   whether it is drawn as bars or as an area.
 #' @inheritParams type_errorbar
 #'
 #' @description Type constructor functions for producing polygon ribbons, which
@@ -31,15 +49,35 @@
 #' and the top of the final band traces the group total. Stacking is computed
 #' separately within each facet.
 #'
-#' Since stacked bands do not overlap, they are drawn opaque by default (i.e.
-#' `alpha = 1`) instead of inheriting the usual semi-transparent `tpar(
-#' "ribbon.alpha")` shading. Pass an explicit `alpha` to override.
+#' The `bylevels` argument is a helpful companion to stacked area plots, since
+#' it controls which group ends up where. While it accepts various inputs, the
+#' most useful are the three positional keywords: `"start"`, `"end"`, and
+#' `"total"`. These rank the stacked `by` groups according to size---at the
+#' designated position along the `x` axis---so that the largest layer sits at
+#' the bottom and thus allowing for a more stable visual baseline.
 #'
-#' Stacking assumes a single `y` value per group per `x` value. Groups that are
-#' missing an `x` value (or have an `NA` there) are treated as contributing
-#' zero at that point, so that a gap in one group does not shift the groups
-#' stacked above it. Note that stacking negative values is not meaningful and
-#' will produce overlapping bands.
+#' Stacking needs exactly one `y` value per group per `x` value. Repeated cells
+#' ---typically caused by a variable that is present in the data but absent from
+#' the plot---are collapsed with `FUN` (default `mean`) rather than being
+#' stacked against each other. Conversely, groups that are *missing* an `x`
+#' value (or have an `NA` there) count as contributing zero at that point, so
+#' that a gap in one group does not shift the groups stacked above it. Note that
+#' stacking negative values is not meaningful and will produce overlapping
+#' bands.
+
+#' Note that the legend key for stacked area plots is deliberately inverted
+#' compared to other plot types (including non-stacked area plots) to ensure a
+#' consistent ordering with the "bottoms-up" layering of the stacked regions.
+#' Similarly, reordering of the `by` group levels will reassigns the palette,
+#' since group colours are allocated by level position. This matches what
+#' releveling a factor does elsewhere, but it does mean that reordering the
+#' bands repaints them.
+#'
+#'
+#' Finally, note that unlike non-stacked area plots, the stacked bands are
+#' drawn with opaque fill by default, since they do not overlap. Pass an
+#' explicit `alpha` or `fill` value to override.
+#'
 #'
 #' @examples
 #' x = 1:100 / 10
@@ -82,6 +120,14 @@
 #'   facet = ~ Gender, facet.args = list(ncol = 1),
 #'   type = type_area(stack = TRUE),
 #'   frame = FALSE
+#' )
+#'
+#' # Use `bylevels` to control which group stacks where. The size keywords rank
+#' # the groups largest-first, so the biggest band forms the baseline.
+#'
+#' tinyplot(
+#'   Freq ~ Dept | Admit, data = ucb, facet = ~ Gender,
+#'   type = type_area(stack = TRUE, bylevels = "total")
 #' )
 #'
 #' #

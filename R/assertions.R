@@ -323,7 +323,8 @@ known_type_hints = c(
   "has_rhs_axis",                  # secondary right-hand axis (reserve margin)
   "legend_border_fg",              # legend swatch border is always par("fg")
   "legend_fills_from_col",         # legend swatch fill comes from `col`
-  "legend_fills_from_seq_palette"  # ... or from the colour's sequential ramp
+  "legend_fills_from_seq_palette", # ... or from the colour's sequential ramp
+  "legend_reversed"                # list the key bottom-up, not top-down
 )
 
 ## Validate a type's declared hints.

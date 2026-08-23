@@ -1,9 +1,9 @@
 #' @rdname type_ribbon
 #' @export
-type_area = function(alpha = NULL, stack = FALSE) {
+type_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
     out = list(
         draw = NULL,
-        data = data_area(alpha = alpha, stack = stack),
+        data = data_area(alpha = alpha, stack = stack, bylevels = bylevels, FUN = FUN),
         name = "area"
     )
     class(out) = "tinyplot_type"
@@ -11,8 +11,16 @@ type_area = function(alpha = NULL, stack = FALSE) {
 }
 
 
-data_area = function(alpha = NULL, stack = FALSE) {
+data_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
     assert_flag(stack)
+    assert_function(FUN, null.ok = TRUE)
+    if (!is.null(bylevels) &&
+        !is.character(bylevels) && !is.numeric(bylevels) && !is.function(bylevels)) {
+        stop(
+            "`bylevels` must be NULL, a character or numeric vector, or a function.",
+            call. = FALSE
+        )
+    }
     # Stacked bands don't overlap, so the usual semi-transparent ribbon fill
     # only mutes them; default to opaque unless the user asks otherwise.
     ribbon.alpha = if (is.null(alpha) && isTRUE(stack)) {
@@ -33,8 +41,20 @@ data_area = function(alpha = NULL, stack = FALSE) {
             datapoints$x = as.integer(datapoints$x)
         }
 
+        # The `by` level order sets the band order, and with it the legend
+        # order and the palette assignment, so this has to happen up front.
+        by = NULL
+        if (!is.null(bylevels)) {
+            datapoints$by = sanitize_bylevels(
+                datapoints$by, datapoints$y, datapoints$x, bylevels
+            )
+            by = datapoints$by
+        }
+
         if (isTRUE(stack)) {
-            datapoints = stack_area(datapoints)
+            # bands read bottom-up, so the legend key should too
+            settings[["type_hints"]][["legend_reversed"]] = TRUE
+            datapoints = stack_area(datapoints, FUN = FUN)
         } else {
             datapoints$ymax = datapoints$y
             datapoints$ymin = rep.int(0, nrow(datapoints))
@@ -57,7 +77,7 @@ data_area = function(alpha = NULL, stack = FALSE) {
         settings$legend_args[["y.intersp"]] = settings$legend_args[["y.intersp"]] %||% 1.25
         settings$legend_args[["seg.len"]] = settings$legend_args[["seg.len"]] %||% 1.25
 
-        env2env(environment(), settings, c(
+        vars_to_settings = c(
             "datapoints",
             "x",
             "y",
@@ -66,7 +86,11 @@ data_area = function(alpha = NULL, stack = FALSE) {
             "xlabs",
             "type",
             "ribbon.alpha"
-        ))
+        )
+        # keep settings$by in step with datapoints$by if we releveled it
+        if (!is.null(by)) vars_to_settings = c(vars_to_settings, "by")
+
+        env2env(environment(), settings, vars_to_settings)
     }
     return(fun)
 }
@@ -77,7 +101,22 @@ data_area = function(alpha = NULL, stack = FALSE) {
 ## forms the bottom band. Returns `datapoints` with `ymin`/`ymax` set to the
 ## band edges and `y` set to the running total (the ribbon's line is drawn at
 ## `y`, i.e. along the top of each band).
-stack_area = function(datapoints) {
+stack_area = function(datapoints, FUN = NULL) {
+    # Stacking needs exactly one y per group per x. Repeated cells (typically a
+    # variable that is in the data but not in the plot) would otherwise be
+    # cumsum'd against each other into overlapping bands, so collapse them
+    # first. Matches data_barplot(), down to the default statistic, so that the
+    # same data stacks to the same heights whether drawn as bars or as an area.
+    cellid = paste(datapoints$facet, datapoints$x, datapoints$by, sep = "\r")
+    if (anyDuplicated(cellid)) {
+        if (is.null(FUN)) FUN = function(x, ...) mean(x, ..., na.rm = TRUE)
+        datapoints = aggregate(
+            datapoints[, "y", drop = FALSE],
+            datapoints[, c("x", "by", "facet")],
+            FUN = FUN
+        )
+    }
+
     # A gap in one group would otherwise drop every group stacked above it back
     # down to zero, so complete the facet x by x grid and treat missing (or NA)
     # cells as contributing zero.

@@ -716,6 +716,13 @@ build_legend_args = function(
     }
   }
 
+  # legend() lists its first entry at the top, so a type whose groups read
+  # bottom-up needs its key flipped or it runs backwards against the geometry it
+  # labels. Gradient legends already run bottom-up, so they are exempt. (#632)
+  if (isTRUE(legend_env[["type_hints"]][["legend_reversed"]]) && isFALSE(gradient)) {
+    legend_args = reverse_legend_keys(legend_args, n = length(lgnd_labs))
+  }
+
   # Populate legend environment with args and flags
   legend_env$args = legend_args
   legend_env$mcol = mcol_flag
@@ -724,6 +731,30 @@ build_legend_args = function(
   legend_env$outer_end = outer_end
   legend_env$outer_right = outer_right
   legend_env$outer_bottom = outer_bottom
+}
+
+
+## Flip a discrete legend key end-for-end. Every element below is positionally
+## aligned with the labels, so they all have to move together or the swatches
+## detach from their text. An allowlist rather than "reverse anything of length
+## n", because some non-grouped args are legitimately length 2 -- `inset` above
+## all -- and would be corrupted on any two-group plot. Scalars are skipped (a
+## recycled `lty`, or a `col` that legend_border_fg collapsed to par("fg")), as
+## is a `legend` still held as an unevaluated expression.
+reverse_legend_keys = function(legend_args, n) {
+  if (n < 2L) return(legend_args)
+  keys = c(
+    "legend",                              # the labels themselves
+    "col", "pch", "lty", "lwd",            # line/point key
+    "pt.bg", "pt.cex", "pt.lwd",           # point key fill and sizing
+    "fill", "border", "density", "angle",  # box key, only ever user-supplied
+    "text.col"                             # label colour, ditto
+  )
+  for (key in keys) {
+    val = legend_args[[key]]
+    if (is.atomic(val) && length(val) == n) legend_args[[key]] = rev(val)
+  }
+  legend_args
 }
 
 

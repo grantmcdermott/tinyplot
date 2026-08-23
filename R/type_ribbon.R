@@ -14,10 +14,16 @@
 #'   axis: `"start"` (value at the smallest `x`), `"end"` (value at the largest
 #'   `x`), and `"total"` (summed `y` values over the full `x` axis range). Each
 #'   ranks the largest group first, i.e. into the bottom band. A fourth
-#'   keyword, `"asis"`, takes the groups in the order that they appear in the
-#'   data. Users can also pass their own custom function to determine both the
-#'   ranking statistic and its direction, e.g. `function(y) -median(y)` would
-#'   layer by median `y` value, from the biggest to the smallest. Default is
+#'   keyword, `"minvar"`, instead ranks by variance and puts the *least*
+#'   variable group on the baseline, which is often the steadier choice since
+#'   every band inherits the movement of those below it. A fifth, `"asis"`,
+#'   takes the groups in the order that they appear in the data. Users can also
+#'   pass their own custom function to determine both the ranking statistic and
+#'   its direction, e.g. `function(y) -median(y)` would layer by median `y`
+#'   value, from the biggest to the smallest; name one of its arguments `x` and
+#'   it will additionally receive that group's `x` values, as needed by any
+#'   statistic that depends on their spacing (e.g.
+#'   `function(y, x) coef(lm(y ~ x))[2]` to layer by trend). Default is
 #'   `NULL`, in which case the existing factor level order is retained; to set
 #'   that order explicitly, call `factor(levels = )` on the grouping variable
 #'   beforehand. See Examples, as well as the "Stacked area plots" section
@@ -50,12 +56,16 @@
 #' separately within each facet.
 #'
 #' The `byord` argument is a helpful companion to stacked area plots, since it
-#' enables on-the-fly adjustment of the stacking order. Most useful are the
-#' three positional keywords: `"start"`, `"end"`, and `"total"`. These rank the
+#' enables on-the-fly adjustment of the stacking order. For example,
+#' three positional keywords---`"start"`, `"end"`, and `"total"`---rank the
 #' stacked `by` groups according to their `y` values at the designated position
 #' along the `x` axis. Following convention, the ranking runs in descending
-#' order, so that the biggest group is drawn on the bottom layer to provide a
-#' stable visual baseline.
+#' order, so that the biggest group is drawn on the bottom layer. However, size
+#' is not the only route to a stable baseline, though. Because each band is
+#' drawn on top of the ones below it, they all inherit whatever movement the
+#' bottom layer has; a large but volatile group can therefore be a worse choice
+#' of foundation than a small, steady one. The `"minvar"` keyword ranks by
+#' variance instead, placing the least variable group at the bottom.
 #'
 #' Stacking needs exactly one `y` value per group per `x` value. Repeated cells
 #' ---typically caused by a variable that is present in the data but absent from
@@ -112,8 +122,11 @@
 #' # Grouped area plots can be stacked cumulatively, rather than being drawn
 #' # from a common zero baseline.
 #'
+#' # Group B is small and steady; A and C are larger and wobblier.
 #' dat = expand.grid(year = 2000:2020, grp = factor(c("A", "B", "C")))
-#' dat$val = abs(sin(dat$year / 3) + as.integer(dat$grp)) + 1
+#' dat$val = as.integer(dat$grp) +
+#'   c(1.2, 0.1, 1.8)[dat$grp] * sin(dat$year / 3) +
+#'   c(0.06, 0.02, 0.10)[dat$grp] * (dat$year - 2000)
 #'
 #' tinyplot(val ~ year | grp, data = dat, type = type_area(stack = TRUE))
 #'
@@ -123,6 +136,24 @@
 #' tinyplot(
 #'   val ~ year | grp, data = dat,
 #'   type = type_area(stack = TRUE, byord = "end")
+#' )
+#'
+#' # `"minvar"` instead puts the *least variable* group on the baseline. Every
+#' # band inherits the movement of the ones below it, so a steady bottom layer
+#' # keeps the whole chart legible. Here that picks group B, which the default
+#' # level order leaves in the middle and `"end"`/`"total"` push to the top.
+#'
+#' tinyplot(
+#'   val ~ year | grp, data = dat,
+#'   type = type_area(stack = TRUE, byord = "minvar")
+#' )
+#'
+#' # Custom ranking functions are also accepted. Name an argument `x` and it
+#' # receives the group's x values too, which is what a slope needs.
+#'
+#' tinyplot(
+#'   val ~ year | grp, data = dat,
+#'   type = type_area(stack = TRUE, byord = function(y, x) coef(lm(y ~ x))[2])
 #' )
 #'
 #' # Stacking expects a single `y` value per group per `x` value. Any repeats

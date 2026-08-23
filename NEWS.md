@@ -71,7 +71,10 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 - `type_area()` gains a `stack` argument for stacked area plots. A sister
   `byord` argument enables convenient, on-the-fly (re-)ordering of stacking
   layers through convenience keywords or custom functions (e.g.,
-  `byord = "end"` ranks groups according to their largest final value).
+  `byord = "end"` ranks groups according to their largest final value, while
+  `byord = "minvar"` puts the lowest variance group on the baseline). Custom
+  functions may additionally name an `x` argument to receive the group's `x`
+  values, as needed by any statistic that depends on their spacing.
   Similarly, a new `FUN` argument permits stacking of multi-observation data by
   collapsing repeated `y` values. (#688 @grantmcdermott)
 - `type_points()`, `type_lines()`, `type_errorbar()`, and `type_pointrange()`

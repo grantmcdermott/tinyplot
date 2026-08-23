@@ -68,6 +68,9 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
 #### Other new features
 
+- `type_area()` gains a `stack` argument for stacked area plots, plus `bylevels`
+  to control the stacking order, and `FUN` to collapse repeated `y` values.
+  (#688 @grantmcdermott)
 - `type_points()`, `type_lines()`, `type_errorbar()`, and `type_pointrange()`
   gain an `xlevels` argument for reordering a categorical `x` variable on the
   fly (matching existing functionality for `type_barplot()` and several other
@@ -107,6 +110,9 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
 ### Bug fixes
 
+- `type_area()` now labels a categorical `x` axis with its factor levels,
+  rather than falling back to the underlying integer positions.
+  (#688 @grantmcdermott)
 - Density-based plots no longer error out on singleton groups, i.e. `by` and
   `facet` combinations containing only one observation. Such groups are now
   dropped, together with a warning reporting how many were removed. The

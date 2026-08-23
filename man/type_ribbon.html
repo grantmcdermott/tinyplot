@@ -572,6 +572,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#dodging-ribbon-plots" id="toc-dodging-ribbon-plots" class="nav-link" data-scroll-target="#dodging-ribbon-plots">Dodging ribbon plots</a></li>
+  <li><a href="#stacked-area-plots" id="toc-stacked-area-plots" class="nav-link" data-scroll-target="#stacked-area-plots">Stacked area plots</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
@@ -591,7 +592,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_area(alpha = NULL)
+<pre><code class="language-R">type_area(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL)
 
 type_ribbon(alpha = NULL, dodge = 0, fixed.dodge = FALSE)
 </code></pre>
@@ -605,6 +606,45 @@ type_ribbon(alpha = NULL, dodge = 0, fixed.dodge = FALSE)
 </td>
 <td>
 numeric value between 0 and 1 specifying the opacity of ribbon shading If no <code>alpha</code> value is provided, then will default to <code>tpar(“ribbon.alpha”)</code> (i.e., probably <code>0.2</code> unless this has been overridden by the user in their global settings.)
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="stack">stack</code>
+</td>
+<td>
+logical. Should the <code>by</code> groups be stacked on top of one another, rather than overplotted from a common zero baseline? Only relevant for grouped area plots. Default is <code>FALSE</code>. See the "Stacked area plots" section below.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="byord">byord</code>
+</td>
+<td>
+<p>keyword string or function. Permits on-the-fly (re)ordering of the <code>by</code> group layers, thus controlling the order in which they stack. Options are:</p>
+<ul>
+<li>
+<p><code>“start”</code>, <code>“end”</code>, and <code>“total”</code> are positional keywords that rank groups according to their <code>y</code> values along the <code>x</code> axis. In each case, the group with the largest value is stacked first as the bottom layer.</p>
+</li>
+<li>
+<p><code>“minvar”</code> ranks by variance and puts the lowest variance group on the baseline.</p>
+</li>
+<li>
+<p><code>“asis”</code> and <code>“rev”</code> permute the existing levels without consulting the data at all. The former takes the groups in the order that they appear in the data, while <code>“rev”</code> reverses the current level order.</p>
+</li>
+<li>
+<p>custom function that determines both the ranking statistic and its direction, e.g.&nbsp;<code>function(y) -median(y)</code> would layer by median <code>y</code> value, from the biggest to the smallest. Note: if a function requires access to a group’s <code>x</code> values, then one of its arguments <em>must</em> be named <code>x</code>, e.g. <code>function(y, x) coef(lm(y ~ x))[2]</code> would layer by trend.</p>
+</li>
+</ul>
+Default is <code>NULL</code>, in which case the existing factor level order is retained; to set that order explicitly, call <code>factor(levels = …)</code> on the grouping variable beforehand. See Examples, as well as the "Stacked area plots" section below.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="FUN">FUN</code>
+</td>
+<td>
+a function for collapsing repeated <code>y</code> values within a group and <code>x</code> position, used only when <code>stack = TRUE</code>. Defaults to <code>mean</code>, matching <code>type_barplot()</code>, so that the same data stacks to the same heights whether it is drawn as bars or as an area.
 </td>
 </tr>
 <tr>
@@ -637,6 +677,13 @@ Logical. If <code>FALSE</code> (default), dodge positions are calculated indepen
 <section id="dodging-ribbon-plots" class="level3">
 <h3 class="anchored" data-anchor-id="dodging-ribbon-plots">Dodging ribbon plots</h3>
 <p>We support dodging for grouped ribbon plots, enabling similar functionality to dodged errorbar and pointrange plots. However, it is strongly recommended that dodging is only implemented for cases where the x-axis comprises a limited number of discrete cases (e.g., coefficient or event-study plots). See Examples.</p>
+</section>
+<section id="stacked-area-plots" class="level3">
+<h3 class="anchored" data-anchor-id="stacked-area-plots">Stacked area plots</h3>
+<p>Passing <code>type_area(stack = TRUE)</code> stacks the <code>by</code> groups cumulatively, rather than drawing each one from a zero baseline. Groups are accumulated in the order of their (factor) levels, so the first level forms the bottom band and the top of the final band traces the group total. Stacking is computed separately within each facet.</p>
+<p>The <code>byord</code> argument is a helpful companion to stacked area plots, since it enables on-the-fly adjustment of the stacking order. For example, three positional keywords—<code>“start”</code>, <code>“end”</code>, and <code>“total”</code>—rank the stacked <code>by</code> groups according to their <code>y</code> values at the designated position along the <code>x</code> axis. Following convention, the ranking runs in descending order, so that the biggest group is drawn on the bottom layer. However, size is not the only route to a stable baseline. Because each band is drawn on top of the ones below it, they all inherit whatever movement the bottom layer has. A large but volatile group can therefore be a worse choice of foundation than a small, steady one. In this latter case, the <code>“minvar”</code> keyword would be a more appropriate choice since it places the lowest variance group at the bottom. Your choice of stacking ordering should therefore respond to the patterns in your data and which layers you want to emphasize.</p>
+<p>Stacking needs exactly one <code>y</code> value per group per <code>x</code> value. Repeated cells —typically caused by a variable that is present in the data but absent from the plot—are collapsed with <code>FUN</code> (default <code>mean</code>) rather than being stacked against each other. Conversely, groups that are <em>missing</em> an <code>x</code> value (or have an <code>NA</code> there) count as contributing zero at that point, so that a gap in one group does not shift the groups stacked above it. Note that stacking negative values is not meaningful and will produce overlapping bands. Note that the legend key for stacked area plots is deliberately inverted compared to other plot types (including non-stacked area plots) to ensure a consistent ordering with the "bottoms-up" layering of the stacked regions. Similarly, reordering of the <code>by</code> group levels will reassign the palette, since group colours are allocated by level position. This matches what releveling a factor does elsewhere, but it does mean that reordering the bands repaints them.</p>
+<p>Finally, note that unlike non-stacked area plots, the stacked bands are drawn with opaque fill by default, since they do not overlap. Pass an explicit <code>alpha</code> or <code>fill</code> value to override.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -695,26 +742,18 @@ Logical. If <code>FALSE</code> (default), dodge positions are calculated indepen
 </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Dodged ribbon/area plots</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Stacked area plots</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Dodged ribbon or area plots can be useful in cases where there is strong</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># overlap across groups (and a limited number of discrete x-axis values).</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Grouped area plots can be stacked cumulatively, rather than being drawn</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># from a common zero baseline.</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Before"</span>, <span class="st">"After"</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">grp =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="dv">2</span>),</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="fl">10.5</span>, <span class="dv">15</span>, <span class="fl">15.3</span>),</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwr =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="fl">8.5</span>, <span class="dv">13</span>, <span class="fl">13.3</span>),</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">upr =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="fl">12.5</span>, <span class="dv">17</span>, <span class="fl">17.3</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="sc">|</span> grp,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr,</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_ribbon</span>(),</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Overlappling ribbons"</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Group B is small and steady; A and C are larger and wobblier.</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">expand.grid</span>(<span class="at">year =</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2020</span>, <span class="at">grp =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>val <span class="ot">=</span> <span class="fu">as.integer</span>(dat<span class="sc">$</span>grp) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">1.2</span>, <span class="fl">0.1</span>, <span class="fl">1.8</span>)[dat<span class="sc">$</span>grp] <span class="sc">*</span> <span class="fu">sin</span>(dat<span class="sc">$</span>year <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.06</span>, <span class="fl">0.02</span>, <span class="fl">0.10</span>)[dat<span class="sc">$</span>grp] <span class="sc">*</span> (dat<span class="sc">$</span>year <span class="sc">-</span> <span class="dv">2000</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(val <span class="sc">~</span> year <span class="sc">|</span> grp, <span class="at">data =</span> dat, <span class="at">type =</span> <span class="fu">type_area</span>(<span class="at">stack =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -722,17 +761,121 @@ Logical. If <code>FALSE</code> (default), dodge positions are calculated indepen
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="sc">|</span> grp,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_ribbon</span>(<span class="at">dodge =</span> <span class="fl">0.1</span>),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Dodged ribbons"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use `byord` to control which group stacks where. Here we stack by their</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># largest end value.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  val <span class="sc">~</span> year <span class="sc">|</span> grp, <span class="at">data =</span> dat,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_area</span>(<span class="at">stack =</span> <span class="cn">TRUE</span>, <span class="at">byord =</span> <span class="st">"end"</span>)</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `"minvar"` instead puts the *least variable* group on the baseline. Every</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># band inherits the movement of the ones below it, so a steady bottom layer</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># keeps the whole chart legible. Here that picks group B, which the default</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># level order leaves in the middle and `"end"`/`"total"` push to the top.</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  val <span class="sc">~</span> year <span class="sc">|</span> grp, <span class="at">data =</span> dat,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_area</span>(<span class="at">stack =</span> <span class="cn">TRUE</span>, <span class="at">byord =</span> <span class="st">"minvar"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `"rev"` simply flips the existing level order, which is the one thing a</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ranking function cannot do (it never sees which group it was handed).</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  val <span class="sc">~</span> year <span class="sc">|</span> grp, <span class="at">data =</span> dat,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_area</span>(<span class="at">stack =</span> <span class="cn">TRUE</span>, <span class="at">byord =</span> <span class="st">"rev"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom ranking functions are also accepted. Name an argument `x` and it</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># receives the group's x values too, which is what a slope needs.</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  val <span class="sc">~</span> year <span class="sc">|</span> grp, <span class="at">data =</span> dat,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_area</span>(<span class="at">stack =</span> <span class="cn">TRUE</span>, <span class="at">byord =</span> <span class="cf">function</span>(y, x) <span class="fu">coef</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x))[<span class="dv">2</span>])</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stacking expects a single `y` value per group per `x` value. Any repeats</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># are collapsed for us first, using `FUN` (`mean` by default). Here, for</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># instance, ChickWeight records many chicks per diet at each timepoint.</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  weight <span class="sc">~</span> Time <span class="sc">|</span> Diet, <span class="at">data =</span> ChickWeight,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_area</span>(<span class="at">stack =</span> <span class="cn">TRUE</span>, <span class="at">FUN =</span> median)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (Illustrative purposes aside, we leave it to the reader to decide whether</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># stacking separate diets on top of one another makes any sense...)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Dodged ribbon/area plots</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Dodged ribbon or area plots can be useful in cases where there is strong</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># overlap across groups (and a limited number of discrete x-axis values).</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Before"</span>, <span class="st">"After"</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">grp =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="dv">2</span>),</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="fl">10.5</span>, <span class="dv">15</span>, <span class="fl">15.3</span>),</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwr =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="fl">8.5</span>, <span class="dv">13</span>, <span class="fl">13.3</span>),</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">upr =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="fl">12.5</span>, <span class="dv">17</span>, <span class="fl">17.3</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="sc">|</span> grp,</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr,</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_ribbon</span>(),</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Overlappling ribbons"</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="sc">|</span> grp,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_ribbon</span>(<span class="at">dodge =</span> <span class="fl">0.1</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Dodged ribbons"</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_ribbon_files/figure-html/unnamed-chunk-1-12.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

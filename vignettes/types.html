@@ -863,6 +863,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>type_spineplot()</code></td>
 <td>Draw the legend key border in the foreground colour rather than the group colour.</td>
 </tr>
+<tr class="even">
+<td><code>legend_reversed</code></td>
+<td><code>type_area(stack = TRUE)</code></td>
+<td>List the legend key bottom-up rather than top-down. For types whose groups read from the bottom of the plot upwards—stacking puts the first <code>by</code> level in the bottom band—so that the key reads in the same direction as the geometry rather than backwards against it.</td>
+</tr>
 </tbody>
 </table>
 <p>To see <code>type_hints</code> in action, consult the <a href="https://github.com/grantmcdermott/tinyplot/tree/main/R">source code</a> of the types listed above.</p>

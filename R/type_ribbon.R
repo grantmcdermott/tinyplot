@@ -10,24 +10,26 @@
 #'   area plots" section below.
 #' @param byord keyword string or function. Permits on-the-fly (re)ordering of
 #'   the `by` group layers, thus controlling the order in which they stack.
-#'   Three keywords rank the groups according to their `y` values along the `x`
-#'   axis: `"start"` (value at the smallest `x`), `"end"` (value at the largest
-#'   `x`), and `"total"` (summed `y` values over the full `x` axis range). Each
-#'   ranks the largest group first, i.e. into the bottom band. A fourth
-#'   keyword, `"minvar"`, instead ranks by variance and puts the *least*
-#'   variable group on the baseline, which is often the steadier choice since
-#'   every band inherits the movement of those below it. A fifth, `"asis"`,
-#'   takes the groups in the order that they appear in the data. Users can also
-#'   pass their own custom function to determine both the ranking statistic and
-#'   its direction, e.g. `function(y) -median(y)` would layer by median `y`
-#'   value, from the biggest to the smallest; name one of its arguments `x` and
-#'   it will additionally receive that group's `x` values, as needed by any
-#'   statistic that depends on their spacing (e.g.
-#'   `function(y, x) coef(lm(y ~ x))[2]` to layer by trend). Default is
-#'   `NULL`, in which case the existing factor level order is retained; to set
-#'   that order explicitly, call `factor(levels = )` on the grouping variable
-#'   beforehand. See Examples, as well as the "Stacked area plots" section
-#'   below.
+#'   Options are:
+#' 
+#'   - `"start"`, `"end"`, and `"total"` are positional keywords that rank groups
+#'   according to their `y` values along the `x` axis. In each case, the group
+#'   with the largest value is stacked first as the bottom layer.
+#'   - `"minvar"` ranks by variance and puts the lowest variance group on the
+#'   baseline.
+#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
+#'   data at all. The former takes the groups in the order that they appear in
+#'   the data, while `"rev"` reverses the current level order.
+#'   - custom function that determines both the ranking statistic and its
+#'   direction, e.g. `function(y) -median(y)` would layer by median `y` value,
+#'   from the biggest to the smallest. Note: if a function requires access to a
+#'   group's `x` values, then one of its arguments _must_ be named `x`, e.g.
+#'   `function(y, x) coef(lm(y ~ x))[2]` would layer by trend.
+#' 
+#'   Default is `NULL`, in which case the existing factor level order is
+#'   retained; to set that order explicitly, call `factor(levels = ...)` on the
+#'   grouping variable beforehand. See Examples, as well as the "Stacked area
+#'   plots" section below.
 #' @param FUN a function for collapsing repeated `y` values within a group and
 #'   `x` position, used only when `stack = TRUE`. Defaults to `mean`, matching
 #'   [`type_barplot()`], so that the same data stacks to the same heights
@@ -61,11 +63,14 @@
 #' stacked `by` groups according to their `y` values at the designated position
 #' along the `x` axis. Following convention, the ranking runs in descending
 #' order, so that the biggest group is drawn on the bottom layer. However, size
-#' is not the only route to a stable baseline, though. Because each band is
+#' is not the only route to a stable baseline. Because each band is
 #' drawn on top of the ones below it, they all inherit whatever movement the
-#' bottom layer has; a large but volatile group can therefore be a worse choice
-#' of foundation than a small, steady one. The `"minvar"` keyword ranks by
-#' variance instead, placing the least variable group at the bottom.
+#' bottom layer has. A large but volatile group can therefore be a worse choice
+#' of foundation than a small, steady one. In this latter case, the `"minvar"`
+#' keyword would be a more appropriate choice since it places the lowest
+#' variance group at the bottom. Your choice of stacking ordering should
+#' therefore respond to the patterns in your data and which layers you want to
+#' emphasize.
 #'
 #' Stacking needs exactly one `y` value per group per `x` value. Repeated cells
 #' ---typically caused by a variable that is present in the data but absent from
@@ -146,6 +151,14 @@
 #' tinyplot(
 #'   val ~ year | grp, data = dat,
 #'   type = type_area(stack = TRUE, byord = "minvar")
+#' )
+#'
+#' # `"rev"` simply flips the existing level order, which is the one thing a
+#' # ranking function cannot do (it never sees which group it was handed).
+#'
+#' tinyplot(
+#'   val ~ year | grp, data = dat,
+#'   type = type_area(stack = TRUE, byord = "rev")
 #' )
 #'
 #' # Custom ranking functions are also accepted. Name an argument `x` and it

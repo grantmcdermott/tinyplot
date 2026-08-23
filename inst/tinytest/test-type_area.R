@@ -108,6 +108,13 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "area_stack_byord_minvar")
 
+# "rev" flips the existing level order; unlike every other byord input it
+# consults no data, so it also works when `y` is absent or non-numeric
+f = function() {
+  tinyplot(val ~ year | grp, data = dat, type = type_area(stack = TRUE, byord = "rev"))
+}
+expect_snapshot_plot(f, label = "area_stack_byord_rev")
+
 # a ranking function that names an `x` argument receives the group's x values,
 # without which a slope cannot be computed against uneven spacing
 f = function() {

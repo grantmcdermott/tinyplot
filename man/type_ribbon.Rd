@@ -22,24 +22,27 @@ area plots" section below.}
 
 \item{byord}{keyword string or function. Permits on-the-fly (re)ordering of
 the \code{by} group layers, thus controlling the order in which they stack.
-Three keywords rank the groups according to their \code{y} values along the \code{x}
-axis: \code{"start"} (value at the smallest \code{x}), \code{"end"} (value at the largest
-\code{x}), and \code{"total"} (summed \code{y} values over the full \code{x} axis range). Each
-ranks the largest group first, i.e. into the bottom band. A fourth
-keyword, \code{"minvar"}, instead ranks by variance and puts the \emph{least}
-variable group on the baseline, which is often the steadier choice since
-every band inherits the movement of those below it. A fifth, \code{"asis"},
-takes the groups in the order that they appear in the data. Users can also
-pass their own custom function to determine both the ranking statistic and
-its direction, e.g. \code{function(y) -median(y)} would layer by median \code{y}
-value, from the biggest to the smallest; name one of its arguments \code{x} and
-it will additionally receive that group's \code{x} values, as needed by any
-statistic that depends on their spacing (e.g.
-\code{function(y, x) coef(lm(y ~ x))[2]} to layer by trend). Default is
-\code{NULL}, in which case the existing factor level order is retained; to set
-that order explicitly, call \code{factor(levels = )} on the grouping variable
-beforehand. See Examples, as well as the "Stacked area plots" section
-below.}
+Options are:
+\itemize{
+\item \code{"start"}, \code{"end"}, and \code{"total"} are positional keywords that rank groups
+according to their \code{y} values along the \code{x} axis. In each case, the group
+with the largest value is stacked first as the bottom layer.
+\item \code{"minvar"} ranks by variance and puts the lowest variance group on the
+baseline.
+\item \code{"asis"} and \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the groups in the order that they appear in
+the data, while \code{"rev"} reverses the current level order.
+\item custom function that determines both the ranking statistic and its
+direction, e.g. \code{function(y) -median(y)} would layer by median \code{y} value,
+from the biggest to the smallest. Note: if a function requires access to a
+group's \code{x} values, then one of its arguments \emph{must} be named \code{x}, e.g.
+\code{function(y, x) coef(lm(y ~ x))[2]} would layer by trend.
+}
+
+Default is \code{NULL}, in which case the existing factor level order is
+retained; to set that order explicitly, call \code{factor(levels = ...)} on the
+grouping variable beforehand. See Examples, as well as the "Stacked area
+plots" section below.}
 
 \item{FUN}{a function for collapsing repeated \code{y} values within a group and
 \code{x} position, used only when \code{stack = TRUE}. Defaults to \code{mean}, matching
@@ -99,11 +102,14 @@ three positional keywords---\code{"start"}, \code{"end"}, and \code{"total"}---r
 stacked \code{by} groups according to their \code{y} values at the designated position
 along the \code{x} axis. Following convention, the ranking runs in descending
 order, so that the biggest group is drawn on the bottom layer. However, size
-is not the only route to a stable baseline, though. Because each band is
+is not the only route to a stable baseline. Because each band is
 drawn on top of the ones below it, they all inherit whatever movement the
-bottom layer has; a large but volatile group can therefore be a worse choice
-of foundation than a small, steady one. The \code{"minvar"} keyword ranks by
-variance instead, placing the least variable group at the bottom.
+bottom layer has. A large but volatile group can therefore be a worse choice
+of foundation than a small, steady one. In this latter case, the \code{"minvar"}
+keyword would be a more appropriate choice since it places the lowest
+variance group at the bottom. Your choice of stacking ordering should
+therefore respond to the patterns in your data and which layers you want to
+emphasize.
 
 Stacking needs exactly one \code{y} value per group per \code{x} value. Repeated cells
 ---typically caused by a variable that is present in the data but absent from
@@ -183,6 +189,14 @@ tinyplot(
 tinyplot(
   val ~ year | grp, data = dat,
   type = type_area(stack = TRUE, byord = "minvar")
+)
+
+# `"rev"` simply flips the existing level order, which is the one thing a
+# ranking function cannot do (it never sees which group it was handed).
+
+tinyplot(
+  val ~ year | grp, data = dat,
+  type = type_area(stack = TRUE, byord = "rev")
 )
 
 # Custom ranking functions are also accepted. Name an argument `x` and it

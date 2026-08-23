@@ -4,6 +4,7 @@
 ##
 ##   - NULL:       keep the existing factor levels (the default)
 ##   - "asis":     the categories in the order they appear in the data
+##   - "rev":      the existing factor levels, reversed
 ##   - "start":    rank by the group's y value at the smallest x
 ##   - "end":      rank by the group's y value at the largest x
 ##   - "total":    rank by the group's summed y across every x
@@ -22,6 +23,15 @@
 ## keeps a tuning parameter carrying a default, e.g. `function(y, p = 0.9)`,
 ## from being silently handed x. x is passed by name, so the two arguments may
 ## be declared in either order.
+##
+## "asis" and "rev" are the two keywords that consult no data at all -- they
+## just permute the levels -- so they work when y is absent or non-numeric.
+## "rev" is also the one thing a ranking function cannot express: a function is
+## handed only its own group's y values, never its group identity or level
+## index, so it has no way to say "put me where I already am, backwards". Note
+## that it reverses the *existing* level order only; to reverse what another
+## keyword computed, negate it with a function instead (`function(y) sum(y)` is
+## the reverse of "total").
 ##
 ## The three size keywords rank largest first, i.e. into the first level, which
 ## is the bottom band of a stacked area. "minvar" ranks the *other* way --
@@ -44,7 +54,7 @@
 ## category: in the degenerate case of a group literally called "end", set the
 ## factor levels beforehand instead.
 
-ord_keywords = c("asis", "start", "end", "total", "minvar")
+ord_keywords = c("asis", "rev", "start", "end", "total", "minvar")
 
 sanitize_ord = function(v, y, x, ord, arg = "ord") {
   if (is.null(ord) || !is.factor(v)) {
@@ -62,9 +72,14 @@ sanitize_ord = function(v, y, x, ord, arg = "ord") {
     )
   }
 
-  # "asis" needs no y, and must work when y is absent or non-numeric
+  # "asis" and "rev" need no y, and must work when y is absent or non-numeric.
+  # factor() defaults `ordered` to is.ordered(v), so an ordered grouping stays
+  # ordered (and keeps its sequential palette) through either.
   if (identical(ord, "asis")) {
     return(factor(v, levels = unique(v)))
+  }
+  if (identical(ord, "rev")) {
+    return(factor(v, levels = rev(levels(v))))
   }
 
   if (identical(ord, "minvar")) {

@@ -72,7 +72,8 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
   `byord` argument enables convenient, on-the-fly (re-)ordering of stacking
   layers through convenience keywords or custom functions (e.g.,
   `byord = "end"` ranks groups according to their largest final value, while
-  `byord = "minvar"` puts the lowest variance group on the baseline). Custom
+  `byord = "minvar"` puts the lowest variance group on the baseline, and
+  `byord = "rev"` simply reverses the existing level order). Custom
   functions may additionally name an `x` argument to receive the group's `x`
   values, as needed by any statistic that depends on their spacing.
   Similarly, a new `FUN` argument permits stacking of multi-observation data by

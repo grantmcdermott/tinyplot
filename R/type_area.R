@@ -41,6 +41,14 @@ data_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
             datapoints$x = as.integer(datapoints$x)
         }
 
+        # Collapse repeated cells *before* ranking below, so that `bylevels`
+        # sees the values that actually get drawn. Ranking first would sort on
+        # raw per-cell sums, which unequal cell counts can order differently
+        # from the aggregated bands.
+        if (isTRUE(stack)) {
+            datapoints = aggregate_cells(datapoints, FUN = FUN)
+        }
+
         # The `by` level order sets the band order, and with it the legend
         # order and the palette assignment, so this has to happen up front.
         by = NULL
@@ -54,7 +62,7 @@ data_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
         if (isTRUE(stack)) {
             # bands read bottom-up, so the legend key should too
             settings[["type_hints"]][["legend_reversed"]] = TRUE
-            datapoints = stack_area(datapoints, FUN = FUN)
+            datapoints = stack_area(datapoints)
         } else {
             datapoints$ymax = datapoints$y
             datapoints$ymin = rep.int(0, nrow(datapoints))
@@ -96,27 +104,32 @@ data_area = function(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL) {
 }
 
 
+## Collapse repeated cells down to one `y` per group per `x`. Stacking needs
+## exactly one value per cell; repeats -- typically a variable that is in the
+## data but not in the plot -- would otherwise be cumsum'd against each other
+## into overlapping bands. Mirrors data_barplot(), default statistic included,
+## so that the same data stacks to the same heights whether it is drawn as bars
+## or as an area.
+aggregate_cells = function(datapoints, FUN = NULL) {
+    cellid = paste(datapoints$facet, datapoints$x, datapoints$by, sep = "\r")
+    if (!anyDuplicated(cellid)) {
+        return(datapoints)
+    }
+    if (is.null(FUN)) FUN = function(x, ...) mean(x, ..., na.rm = TRUE)
+    aggregate(
+        datapoints[, "y", drop = FALSE],
+        datapoints[, c("x", "by", "facet")],
+        FUN = FUN
+    )
+}
+
+
 ## Cumulatively stack `y` across the `by` groups, separately within each facet
 ## and x position. Groups accumulate in `by` level order, so the first level
 ## forms the bottom band. Returns `datapoints` with `ymin`/`ymax` set to the
 ## band edges and `y` set to the running total (the ribbon's line is drawn at
 ## `y`, i.e. along the top of each band).
-stack_area = function(datapoints, FUN = NULL) {
-    # Stacking needs exactly one y per group per x. Repeated cells (typically a
-    # variable that is in the data but not in the plot) would otherwise be
-    # cumsum'd against each other into overlapping bands, so collapse them
-    # first. Matches data_barplot(), down to the default statistic, so that the
-    # same data stacks to the same heights whether drawn as bars or as an area.
-    cellid = paste(datapoints$facet, datapoints$x, datapoints$by, sep = "\r")
-    if (anyDuplicated(cellid)) {
-        if (is.null(FUN)) FUN = function(x, ...) mean(x, ..., na.rm = TRUE)
-        datapoints = aggregate(
-            datapoints[, "y", drop = FALSE],
-            datapoints[, c("x", "by", "facet")],
-            FUN = FUN
-        )
-    }
-
+stack_area = function(datapoints) {
     # A gap in one group would otherwise drop every group stacked above it back
     # down to zero, so complete the facet x by x grid and treat missing (or NA)
     # cells as contributing zero.

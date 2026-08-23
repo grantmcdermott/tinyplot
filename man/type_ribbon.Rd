@@ -5,7 +5,7 @@
 \alias{type_ribbon}
 \title{Ribbon and area plot types}
 \usage{
-type_area(alpha = NULL)
+type_area(alpha = NULL, stack = FALSE, bylevels = NULL, FUN = NULL)
 
 type_ribbon(alpha = NULL, dodge = 0, fixed.dodge = FALSE)
 }
@@ -14,6 +14,30 @@ type_ribbon(alpha = NULL, dodge = 0, fixed.dodge = FALSE)
 If no \code{alpha} value is provided, then will default to \code{tpar("ribbon.alpha")}
 (i.e., probably \code{0.2} unless this has been overridden by the user in their global
 settings.)}
+
+\item{stack}{logical. Should the \code{by} groups be stacked on top of one
+another, rather than overplotted from a common zero baseline? Only
+relevant for grouped area plots. Default is \code{FALSE}. See the "Stacked
+area plots" section below.}
+
+\item{bylevels}{controls the order of the \code{by} groups and, thus, the order in
+which they stack. Accepts the same values as the \code{xlevels} argument of
+\code{\link[=type_points]{type_points()}} and friends (i.e., a character vector of level names, a
+numeric vector of level indexes, or the \code{"asis"} keyword). More germanely,
+accepts three additional keywords that rank groups according to their \code{y}
+values along the \code{x} axis: \code{"start"}, \code{"end"}, and \code{"total"} (i.e., summed
+\code{y} values over the full \code{x} axis range). These three options are
+especially convenient for (re)ordering the layers of a stacked area plot on
+the fly. Users can also pass their own custom function to determine both
+the ranking statistic and its direction, e.g. \code{function(y) -median(y)}
+would layer by median \code{y} value, from the biggest to the smallest. Default
+is \code{NULL}, in which case the existing factor level order is retained. See
+Examples, as well as the "Stacked area plots" section below.}
+
+\item{FUN}{a function for collapsing repeated \code{y} values within a group and
+\code{x} position, used only when \code{stack = TRUE}. Defaults to \code{mean}, matching
+\code{\link[=type_barplot]{type_barplot()}}, so that the same data stacks to the same heights
+whether it is drawn as bars or as an area.}
 
 \item{dodge}{Adjustment parameter for dodging overlapping points or ranges in
 grouped plots along the x-axis (or y-axis for flipped plots). Either:
@@ -51,6 +75,44 @@ to dodged errorbar and pointrange plots. However, it is strongly recommended
 that dodging is only implemented for cases where the x-axis comprises a
 limited number of discrete cases (e.g., coefficient or event-study plots).
 See Examples.
+}
+
+\section{Stacked area plots}{
+
+
+Passing \code{type_area(stack = TRUE)} stacks the \code{by} groups cumulatively,
+rather than drawing each one from a zero baseline. Groups are accumulated in
+the order of their (factor) levels, so the first level forms the bottom band
+and the top of the final band traces the group total. Stacking is computed
+separately within each facet.
+
+The \code{bylevels} argument is a helpful companion to stacked area plots, since
+it controls which group ends up where. While it accepts various inputs, the
+most useful are the three positional keywords: \code{"start"}, \code{"end"}, and
+\code{"total"}. These rank the stacked \code{by} groups according to their \code{y}
+values at the designated position along the \code{x} axis. Following convention,
+the ranking runs in descending order, so that the biggest group is drawn
+on the bottom layer to provide a stable visual baseline.
+
+Stacking needs exactly one \code{y} value per group per \code{x} value. Repeated cells
+---typically caused by a variable that is present in the data but absent from
+the plot---are collapsed with \code{FUN} (default \code{mean}) rather than being
+stacked against each other. Conversely, groups that are \emph{missing} an \code{x}
+value (or have an \code{NA} there) count as contributing zero at that point, so
+that a gap in one group does not shift the groups stacked above it. Note that
+stacking negative values is not meaningful and will produce overlapping
+bands.
+Note that the legend key for stacked area plots is deliberately inverted
+compared to other plot types (including non-stacked area plots) to ensure a
+consistent ordering with the "bottoms-up" layering of the stacked regions.
+Similarly, reordering of the \code{by} group levels will reassigns the palette,
+since group colours are allocated by level position. This matches what
+releveling a factor does elsewhere, but it does mean that reordering the
+bands repaints them.
+
+Finally, note that unlike non-stacked area plots, the stacked bands are
+drawn with opaque fill by default, since they do not overlap. Pass an
+explicit \code{alpha} or \code{fill} value to override.
 }
 
 \examples{
@@ -108,6 +170,40 @@ tinyplot(
   ymin = lwr, ymax = upr,
   type = type_ribbon(dodge = 0.1),
   main = "Dodged ribbons"
+)
+
+#
+## Stacked area plots
+
+# Grouped area plots can be stacked cumulatively, rather than being drawn
+# from a common zero baseline.
+
+# (A not very sensible example that sums *average* chick weights across diets
+# and over time...)
+
+cw = aggregate(weight ~ Time + Diet, data = ChickWeight, FUN = mean)
+
+tinyplot(
+  weight ~ Time | Diet, data = cw,
+  type = type_area(stack = TRUE)
+)
+
+# Use `bylevels` to control which group stacks where. The size keywords rank
+# the groups largest-first, so the biggest band forms the baseline. Here the
+# diets are reordered by their final mean weight.
+
+tinyplot(
+  weight ~ Time | Diet, data = cw,
+  type = type_area(stack = TRUE, bylevels = "end")
+)
+
+# Aside: Aggregating up front isn't actually necessary. Passing the raw data
+# gives the same plot, since repeated values are collapsed for us. Use `FUN`
+# to choose ange the summary statistic from its `mean` default.
+
+tinyplot(
+  weight ~ Time | Diet, data = ChickWeight,
+  type = type_area(stack = TRUE, bylevels = "end", FUN = median)
 )
 
 }

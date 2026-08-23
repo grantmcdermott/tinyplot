@@ -12,16 +12,15 @@
 #'   which they stack. Accepts the same values as the `xlevels` argument of
 #'   [`type_points()`] and friends (i.e., a character vector of level names, a
 #'   numeric vector of level indexes, or the `"asis"` keyword). More germanely,
-#'   accepts a further three keywords that rank groups according to their `y`
+#'   accepts three additional keywords that rank groups according to their `y`
 #'   values along the `x` axis: `"start"`, `"end"`, and `"total"` (i.e., summed
 #'   `y` values over the full `x` axis range). These three options are
-#'   especially convenient for stacked area plots, where it is helpful to order
-#'   layers by their relative `y` values. This usually means the biggest group
-#'   first (i.e., on the bottom layer). But users can also pass their own custom
-#'   function to determine both the ranking statistic and its direction, e.g.
-#'   `function(y) -median(y)` would layer by median `y` value, from the biggest
-#'   to the smallest. Default is `NULL`, in which case the existing factor level
-#'   order is retained. See Examples and the "Stacked area plots" section below.
+#'   especially convenient for (re)ordering the layers of a stacked area plot on
+#'   the fly. Users can also pass their own custom function to determine both
+#'   the ranking statistic and its direction, e.g. `function(y) -median(y)`
+#'   would layer by median `y` value, from the biggest to the smallest. Default
+#'   is `NULL`, in which case the existing factor level order is retained. See
+#'   Examples, as well as the "Stacked area plots" section below.
 #' @param FUN a function for collapsing repeated `y` values within a group and
 #'   `x` position, used only when `stack = TRUE`. Defaults to `mean`, matching
 #'   [`type_barplot()`], so that the same data stacks to the same heights
@@ -52,9 +51,10 @@
 #' The `bylevels` argument is a helpful companion to stacked area plots, since
 #' it controls which group ends up where. While it accepts various inputs, the
 #' most useful are the three positional keywords: `"start"`, `"end"`, and
-#' `"total"`. These rank the stacked `by` groups according to size---at the
-#' designated position along the `x` axis---so that the largest layer sits at
-#' the bottom and thus allowing for a more stable visual baseline.
+#' `"total"`. These rank the stacked `by` groups according to their `y`
+#'  values at the designated position along the `x` axis. Following convention,
+#'  the ranking runs in descending order, so that the biggest group is drawn
+#'  on the bottom layer to provide a stable visual baseline.
 #'
 #' Stacking needs exactly one `y` value per group per `x` value. Repeated cells
 #' ---typically caused by a variable that is present in the data but absent from
@@ -73,11 +73,9 @@
 #' releveling a factor does elsewhere, but it does mean that reordering the
 #' bands repaints them.
 #'
-#'
 #' Finally, note that unlike non-stacked area plots, the stacked bands are
 #' drawn with opaque fill by default, since they do not overlap. Pass an
 #' explicit `alpha` or `fill` value to override.
-#'
 #'
 #' @examples
 #' x = 1:100 / 10
@@ -108,29 +106,6 @@
 #' tinyplot(AirPassengers, type = "area")
 #'
 #' #
-#' ## Stacked area plots
-#'
-#' # Grouped area plots can be stacked cumulatively, rather than being drawn
-#' # from a common zero baseline.
-#'
-#' ucb = as.data.frame(UCBAdmissions)
-#'
-#' tinyplot(
-#'   Freq ~ Dept | Admit, data = ucb,
-#'   facet = ~ Gender, facet.args = list(ncol = 1),
-#'   type = type_area(stack = TRUE),
-#'   frame = FALSE
-#' )
-#'
-#' # Use `bylevels` to control which group stacks where. The size keywords rank
-#' # the groups largest-first, so the biggest band forms the baseline.
-#'
-#' tinyplot(
-#'   Freq ~ Dept | Admit, data = ucb, facet = ~ Gender,
-#'   type = type_area(stack = TRUE, bylevels = "total")
-#' )
-#'
-#' #
 #' ## Dodged ribbon/area plots
 #' 
 #' # Dodged ribbon or area plots can be useful in cases where there is strong
@@ -159,7 +134,41 @@
 #'   type = type_ribbon(dodge = 0.1),
 #'   main = "Dodged ribbons"
 #' )
+#'
+#' #
+#' ## Stacked area plots
+#'
+#' # Grouped area plots can be stacked cumulatively, rather than being drawn
+#' # from a common zero baseline.
 #' 
+#' # (A not very sensible example that sums *average* chick weights across diets
+#' # and over time...)
+#' 
+#' cw = aggregate(weight ~ Time + Diet, data = ChickWeight, FUN = mean)
+#'
+#' tinyplot(
+#'   weight ~ Time | Diet, data = cw,
+#'   type = type_area(stack = TRUE)
+#' )
+#'
+#' # Use `bylevels` to control which group stacks where. The size keywords rank
+#' # the groups largest-first, so the biggest band forms the baseline. Here the
+#' # diets are reordered by their final mean weight.
+#'
+#' tinyplot(
+#'   weight ~ Time | Diet, data = cw,
+#'   type = type_area(stack = TRUE, bylevels = "end")
+#' )
+#'
+#' # Aside: Aggregating up front isn't actually necessary. Passing the raw data
+#' # gives the same plot, since repeated values are collapsed for us. Use `FUN`
+#' # to choose ange the summary statistic from its `mean` default.
+#'
+#' tinyplot(
+#'   weight ~ Time | Diet, data = ChickWeight,
+#'   type = type_area(stack = TRUE, bylevels = "end", FUN = median)
+#' )
+#'
 #' @export
 type_ribbon = function(alpha = NULL, dodge = 0, fixed.dodge = FALSE) {
     out = list(

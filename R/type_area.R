@@ -131,15 +131,14 @@ aggregate_cells = function(datapoints, FUN = NULL) {
 ## `y`, i.e. along the top of each band).
 stack_area = function(datapoints) {
     # A gap in one group would otherwise drop every group stacked above it back
-    # down to zero, so complete the facet x by x grid and treat missing (or NA)
-    # cells as contributing zero.
-    cells = expand.grid(
-        x = sort(unique(datapoints$x)),
-        by = unique(datapoints$by),
-        facet = unique(datapoints$facet),
-        KEEP.OUT.ATTRS = FALSE,
-        stringsAsFactors = FALSE
-    )
+    # down to zero, so complete the grid and treat missing (or NA) cells as
+    # contributing zero. Cross `by` against the (facet, x) pairs that were
+    # actually observed, not against every x in the data: a facet must not
+    # inherit x positions that only exist in some other facet, or it ramps to
+    # zero across a range it never spanned.
+    fx = unique(datapoints[, c("facet", "x")])
+    fx = fx[order(fx$facet, fx$x), , drop = FALSE]
+    cells = merge(fx, data.frame(by = unique(datapoints$by)), by = NULL)
     if (nrow(cells) > nrow(datapoints)) {
         datapoints = merge(
             cells, datapoints,

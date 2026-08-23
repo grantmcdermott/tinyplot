@@ -68,7 +68,7 @@
 #' Note that the legend key for stacked area plots is deliberately inverted
 #' compared to other plot types (including non-stacked area plots) to ensure a
 #' consistent ordering with the "bottoms-up" layering of the stacked regions.
-#' Similarly, reordering of the `by` group levels will reassigns the palette,
+#' Similarly, reordering of the `by` group levels will reassign the palette,
 #' since group colours are allocated by level position. This matches what
 #' releveling a factor does elsewhere, but it does mean that reordering the
 #' bands repaints them.

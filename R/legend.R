@@ -690,6 +690,13 @@ build_legend_args = function(
     legend_args[["inset"]] = 0
   }
 
+  # legend() lists its first entry at the top, so a type whose groups read
+  # bottom-up needs its key flipped or it runs backwards against the geometry it
+  # labels. Gradient legends already run bottom-up, so they are exempt. (#632)
+  if (isTRUE(legend_env[["type_hints"]][["legend_reversed"]]) && isFALSE(gradient)) {
+    legend_args = reverse_legend_keys(legend_args, n = length(lgnd_labs))
+  }
+
   # Additional tweaks for horizontal and/or multi-column legends
   mcol_flag = !is.null(legend_args[["ncol"]]) && legend_args[["ncol"]] > 1
   user_inset = !is.null(legend_args[["inset"]])
@@ -714,13 +721,6 @@ build_legend_args = function(
     } else if (gradient) {
       legend_args[["x.intersp"]] = 0.5
     }
-  }
-
-  # legend() lists its first entry at the top, so a type whose groups read
-  # bottom-up needs its key flipped or it runs backwards against the geometry it
-  # labels. Gradient legends already run bottom-up, so they are exempt. (#632)
-  if (isTRUE(legend_env[["type_hints"]][["legend_reversed"]]) && isFALSE(gradient)) {
-    legend_args = reverse_legend_keys(legend_args, n = length(lgnd_labs))
   }
 
   # Populate legend environment with args and flags

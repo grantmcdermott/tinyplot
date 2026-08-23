@@ -40,6 +40,29 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "area_stack_flip")
 
+# facets with different x coverage must not inherit each other's x positions,
+# or the bands ramp to zero across a range the facet never spanned
+f = function() {
+  d = dat
+  d$half = ifelse(d$year < 2010, "early", "late")
+  tinyplot(
+    val ~ year | grp, data = d,
+    facet = ~half, facet.args = list(ncol = 1),
+    type = type_area(stack = TRUE)
+  )
+}
+expect_snapshot_plot(f, label = "area_stack_facet_ragged")
+
+# horizontal legends pad every label but the rightmost, so the key has to be
+# reversed before that padding is applied
+f = function() {
+  tinyplot(
+    val ~ year | grp, data = dat,
+    type = type_area(stack = TRUE), legend = "bottom!"
+  )
+}
+expect_snapshot_plot(f, label = "area_stack_legend_bottom")
+
 
 #
 ## bylevels -----

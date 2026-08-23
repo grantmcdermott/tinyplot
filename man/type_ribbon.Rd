@@ -178,32 +178,26 @@ tinyplot(
 # Grouped area plots can be stacked cumulatively, rather than being drawn
 # from a common zero baseline.
 
-# (A not very sensible example that sums *average* chick weights across diets
-# and over time...)
+dat = expand.grid(year = 2000:2020, grp = factor(c("A", "B", "C")))
+dat$val = abs(sin(dat$year / 3) + as.integer(dat$grp)) + 1
 
-cw = aggregate(weight ~ Time + Diet, data = ChickWeight, FUN = mean)
+tinyplot(val ~ year | grp, data = dat, type = type_area(stack = TRUE))
 
-tinyplot(
-  weight ~ Time | Diet, data = cw,
-  type = type_area(stack = TRUE)
-)
-
-# Use `bylevels` to control which group stacks where. The size keywords rank
-# the groups largest-first, so the biggest band forms the baseline. Here the
-# diets are reordered by their final mean weight.
+# Use `bylevels` to control which group stacks where. Here we stack by their
+# largest end value.
 
 tinyplot(
-  weight ~ Time | Diet, data = cw,
+  val ~ year | grp, data = dat,
   type = type_area(stack = TRUE, bylevels = "end")
 )
 
-# Aside: Aggregating up front isn't actually necessary. Passing the raw data
-# gives the same plot, since repeated values are collapsed for us. Use `FUN`
-# to choose ange the summary statistic from its `mean` default.
+# Stacking expects a single `y` value per group per `x` value. Any repeats
+# are collapsed for us first, using `FUN` (`mean` by default). Here, for
+# instance, ChickWeight records many chicks per diet at each timepoint.
 
 tinyplot(
   weight ~ Time | Diet, data = ChickWeight,
-  type = type_area(stack = TRUE, bylevels = "end", FUN = median)
+  type = type_area(stack = TRUE, FUN = median)
 )
 
 }

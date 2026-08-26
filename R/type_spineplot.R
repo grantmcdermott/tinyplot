@@ -4,11 +4,30 @@
 #'   are modified versions of histograms or mosaic plots, and particularly
 #'   useful for visualizing factor variables. Note that [`tinyplot`] defaults
 #'   to `type_spineplot()` if `y` is a factor variable.
-#' @param xlevels,ylevels a character or numeric vector specifying the ordering of the
-#'   levels of the `x` and `y` variables (if character) or the corresponding indexes
-#'   (if numeric) for the plot. The special keyword `"asis"` takes the
-#'   categories in the order that they appear in the data. Note that these
-#'   arguments only affect categorical (i.e., factor or character) variables.
+#' @param xlevels,xord two ways to control the order of the `x` variable, and
+#'   hence of the axis. Supply one or the other; if both are given, `xlevels`
+#'   takes precedence and `xord` is ignored. Both only affect categorical (i.e.,
+#'   factor or character) variables.
+#'
+#'   `xlevels` names the levels literally: a character vector of level names in
+#'   the desired order, or a numeric vector of the corresponding level indexes
+#'   (e.g. `3:1`).
+#'
+#'   `xord` instead derives the order from the data, via a keyword or a
+#'   function. Options are:
+#'
+#'   - `"total"` ranks the categories by frequency, most common first. (Both
+#'   axes of a spineplot are categorical, so there is no response to rank on and
+#'   observations are counted instead, weighted if `weights` is given.)
+#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
+#'   data at all. The former takes the categories in the order that they appear
+#'   in the data, while `"rev"` reverses the current level order.
+#'   - a custom function that determines both the ranking statistic and its
+#'   direction. The statistic is always sorted ascending, so `function(y) sum(y)`
+#'   reverses `"total"`.
+#'
+#'   Both default to `NULL`, i.e. keep the existing factor levels.
+#' @param ylevels,yord as for `xlevels` / `xord` above, but for the `y` variable.
 #' @inheritParams graphics::spineplot
 #' @param lighten logical. For grouped spineplots where the `y` variable is
 #'   itself the grouping variable (i.e. `y == by`), should the fills use a
@@ -94,10 +113,10 @@
 #' )
 #' 
 #' @export
-type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, ylevels = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
+type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, xord = NULL, ylevels = NULL, yord = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
   col = col
   out = list(
-    data = data_spineplot(off = off, breaks = breaks, xlevels = xlevels, ylevels = ylevels, xaxlabels = xaxlabels, yaxlabels = yaxlabels, weights = weights, lighten = lighten),
+    data = data_spineplot(off = off, breaks = breaks, xlevels = xlevels, xord = xord, ylevels = ylevels, yord = yord, xaxlabels = xaxlabels, yaxlabels = yaxlabels, weights = weights, lighten = lighten),
     draw = draw_spineplot(tol.ylab = tol.ylab, off = off, col = col, xaxlabels = xaxlabels, yaxlabels = yaxlabels, lighten = lighten),
     name = "spineplot"
   )
@@ -106,7 +125,7 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 }
 
 #' @importFrom grDevices nclass.Sturges
-data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
+data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, xord = NULL, ylevels = ylevels, yord = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
     fun = function(settings, ...) {
         env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "frame.plot", "xaxt", "yaxt", "lwd", "lty"))
         settings[["lighten"]] = lighten
@@ -164,6 +183,24 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         }
         if (!is.null(ylevels)) {
           datapoints$y = sanitize_xlevels(datapoints$y, ylevels, arg = "ylevels")
+          if (y_by) datapoints$by = datapoints$y
+        }
+        ## Both axes here are categorical, so there is no response to rank on:
+        ## the size keywords count observations instead (weighted, if given),
+        ## i.e. "total" orders the categories by frequency.
+        spine_w = if (!is.null(weights)) weights else rep.int(1, nrow(datapoints))
+        if (!is.null(xord) && is.null(xlevels) && x.categorical) {
+          datapoints$x = sanitize_ord(
+            datapoints$x, spine_w, NULL,
+            xord, arg = "xord", keywords = ord_keywords_scalar
+          )
+          if (x_by) datapoints$by = datapoints$x
+        }
+        if (!is.null(yord) && is.null(ylevels)) {
+          datapoints$y = sanitize_ord(
+            datapoints$y, spine_w, NULL,
+            yord, arg = "yord", keywords = ord_keywords_scalar
+          )
           if (y_by) datapoints$by = datapoints$y
         }
         

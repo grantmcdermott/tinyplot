@@ -4,7 +4,13 @@
 \alias{type_points}
 \title{Points plot type}
 \usage{
-type_points(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL)
+type_points(
+  clim = c(0.5, 2.5),
+  dodge = 0,
+  fixed.dodge = FALSE,
+  xlevels = NULL,
+  xord = NULL
+)
 }
 \arguments{
 \item{clim}{Numeric giving the lower and upper limits of the character
@@ -32,15 +38,33 @@ present at that position. If \code{TRUE}, dodge positions are based on all
 groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
 groups are missing for a particular \code{x} value).}
 
-\item{xlevels}{a character or numeric vector specifying the order in which
-the levels of the \code{x} variable should be plotted (as level names if
-character, or level indexes if numeric, e.g. \code{3:1}). The special keyword
-\code{"asis"} takes the categories in the order that they appear in the data,
-i.e. skipping the alphabetical sort that is otherwise applied when
-coercing a character variable to a factor. Note that this argument only
-affects categorical (i.e., factor or character) \code{x} variables; it is
-ignored for numeric \code{x}. The default \code{NULL} keeps the existing factor
-levels (alphabetical for character variables).}
+\item{xlevels, xord}{two ways to control the order of the \code{x} variable, and
+hence of the axis. Supply one or the other; if both are given, \code{xlevels}
+takes precedence and \code{xord} is ignored. Both only affect categorical (i.e.,
+factor or character) \code{x} variables; a numeric \code{x} is plotted at its own
+values and cannot be reordered, so supplying either there is ignored with a
+warning.
+
+\code{xlevels} names the levels literally: a character vector of level names in the
+desired order, or a numeric vector of the corresponding level indexes
+(e.g. \code{3:1}).
+
+\code{xord} instead derives the order from the data, via a keyword or a function.
+Options are:
+\itemize{
+\item \code{"total"} ranks the categories by the \code{y} values observed at each one,
+largest first.
+\item \code{"minvar"} ranks them by the variance of those values, lowest first.
+\item \code{"asis"} and \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they appear
+in the data, while \code{"rev"} reverses the current level order.
+\item a custom function that determines both the ranking statistic and its
+direction. The statistic is always sorted ascending, so \code{function(y) sum(y)}
+reverses \code{"total"}, and \code{function(y) -median(y)} ranks by median rather
+than by sum.
+}
+
+Both default to \code{NULL}, i.e. keep the existing factor levels.}
 }
 \description{
 Type function for plotting points, i.e. a scatter plot.

@@ -1284,6 +1284,12 @@ tinyplot.default = function(
     par(mar = dynmar_computed + .whtsbp)
   }
 
+  # A "legend_reversed" type reads bottom-up, so its key is flipped to match.
+  # Under `flip = TRUE` the same groups run left-to-right instead, and a
+  # vertical key has no height to concur with -- reading it top-down against
+  # bands laid out left-to-right just runs it backwards. Drop the hint.
+  if (isTRUE(flip)) type_hints[["legend_reversed"]] = NULL
+
   if (legend_draw_flag && !identical(legend_args[["x"]], "direct")) {
     if (!multi_legend) {
       ## simple case: single legend only

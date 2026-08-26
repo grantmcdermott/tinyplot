@@ -24,6 +24,11 @@
 ## from being silently handed x. x is passed by name, so the two arguments may
 ## be declared in either order.
 ##
+## Only types whose categories span a real secondary axis pass one (`x = NULL`
+## otherwise). Handing a barplot's ranking function the `by` level index would
+## let `lm(y ~ x)` quietly return a number that means nothing, so asking for `x`
+## where there is none is an error instead.
+##
 ## "asis" and "rev" are the two keywords that consult no data at all -- they
 ## just permute the levels -- so they work when y is absent or non-numeric.
 ## "rev" is also the one thing a ranking function cannot express: a function is
@@ -56,17 +61,45 @@
 
 ord_keywords = c("asis", "rev", "start", "end", "total", "minvar")
 
-sanitize_ord = function(v, y, x, ord, arg = "ord") {
-  if (is.null(ord) || !is.factor(v)) {
+## The three sets below track what a type's categories actually are, since that
+## is what decides which keywords can mean anything:
+##
+##   ord_keywords               a series along a secondary axis  (byord)
+##   ord_keywords_distribution  a distribution, but no axis      (points, ...)
+##   ord_keywords_scalar        a single value                   (bars, spines)
+##
+## "start"/"end" name a position along a *secondary* axis, so they only mean
+## what they say for categories that span one -- the `by` groups of a stacked
+## area, say. Elsewhere they would silently collapse onto "total" when there is
+## no grouping, and silently re-read as "first/last `by` level" when there is.
+ord_keywords_distribution = setdiff(ord_keywords, c("start", "end"))
+
+## "minvar" then needs each category to carry a spread of its own: the scatter
+## of points at an x position, the width of a ridge. A bar is a single
+## aggregate and a spine a proportion of a count, so ranking either by variance
+## would measure something the reader never sees -- cell values across
+## `by`/facets for a bar (which stacking sums away and `beside` splits into
+## separate bars), the supplied weights for a spine.
+ord_keywords_scalar = setdiff(ord_keywords_distribution, "minvar")
+
+sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords) {
+  # nlevels < 2 has exactly one ordering, so skip the work (and the degeneracy
+  # check below, which a single level would otherwise trip).
+  if (is.null(ord) || !is.factor(v) || nlevels(v) < 2L) {
     return(v)
   }
 
-  keyword = is.character(ord) && length(ord) == 1L && ord %in% ord_keywords
+  keyword = is.character(ord) && length(ord) == 1L && ord %in% keywords
   if (!keyword && !is.function(ord)) {
+    hint = if (is.character(ord) && length(ord) == 1L && ord %in% ord_keywords) {
+      sprintf("\n  \"%s\" is not available for this plot type.", ord)
+    } else {
+      "\n  To set the level order explicitly, use factor(levels = ) on the variable beforehand."
+    }
     stop(
       sprintf(
-        "`%s` must be NULL, one of %s, or a function.\n  To set the level order explicitly, use factor(levels = ) on the variable beforehand.",
-        arg, paste(sprintf('"%s"', ord_keywords), collapse = ", ")
+        "`%s` must be NULL, one of %s, or a function.%s",
+        arg, paste(sprintf('"%s"', keywords), collapse = ", "), hint
       ),
       call. = FALSE
     )
@@ -82,6 +115,20 @@ sanitize_ord = function(v, y, x, ord, arg = "ord") {
     return(factor(v, levels = rev(levels(v))))
   }
 
+  # Everything below ranks on numbers. Reaching here with a non-numeric is
+  # almost always a transposed formula (e.g. a ridge plot called with the
+  # continuous variable on the categorical side), so say that rather than
+  # letting var()/sum() fail with something cryptic about factors.
+  if (!is.numeric(y)) {
+    stop(
+      sprintf(
+        "`%s = \"%s\"` ranks on a numeric variable, but was given %s.\n  Only \"asis\" and \"rev\" work without one.",
+        arg, ord, class(y)[1L]
+      ),
+      call. = FALSE
+    )
+  }
+
   if (identical(ord, "minvar")) {
     # Ascending, i.e. *not* negated like the size keywords below: a stacked
     # baseline is steadiest when the least variable group sits on it, since
@@ -89,9 +136,26 @@ sanitize_ord = function(v, y, x, ord, arg = "ord") {
     # variance give NA and sort last (to the top), which is the right place
     # for them anyway.
     stat = tapply(y, v, function(z) var(z, na.rm = TRUE), default = NA_real_)
+    # A variance that is NA everywhere (one observation per group) or identical
+    # everywhere (constant weights) cannot order anything, and would otherwise
+    # return the input untouched -- a silent no-op is the worst outcome here.
+    if (length(unique(stat)) < 2L) {
+      stop(
+        sprintf(
+          "`%s = \"minvar\"` cannot order these groups: %s.",
+          arg,
+          if (all(is.na(stat))) {
+            "each has fewer than two observations, so there is no variance to rank on"
+          } else {
+            "every group has the same variance"
+          }
+        ),
+        call. = FALSE
+      )
+    }
   } else if (keyword) {
     if (identical(ord, "total")) {
-      keep = rep.int(TRUE, length(x))
+      keep = rep.int(TRUE, length(y))
     } else {
       edge = if (identical(ord, "start")) min(x, na.rm = TRUE) else max(x, na.rm = TRUE)
       keep = !is.na(x) & x == edge
@@ -99,11 +163,20 @@ sanitize_ord = function(v, y, x, ord, arg = "ord") {
     stat = tapply(y[keep], v[keep], function(z) sum(z, na.rm = TRUE), default = 0)
     stat = -stat # largest group first, i.e. the bottom band
   } else {
-    xord = order(x)
+    xord = if (is.null(x)) seq_along(y) else order(x)
     grps = split(y[xord], v[xord])
     # Hand over x too, but only to functions that ask for it by name; see the
     # note at the top of this file.
     want_x = "x" %in% names(formals(ord))
+    if (want_x && is.null(x)) {
+      stop(
+        sprintf(
+          "the `%s` function asks for `x`, but this plot type has no secondary axis to supply.\n  Its categories are a flat set, so drop the `x` argument and rank on `y` alone.",
+          arg
+        ),
+        call. = FALSE
+      )
+    }
     xgrps = if (want_x) split(x[xord], v[xord]) else NULL
     stat = vapply(
       seq_along(grps),

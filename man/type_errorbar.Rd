@@ -5,9 +5,15 @@
 \alias{type_pointrange}
 \title{Error bar and pointrange plot types}
 \usage{
-type_errorbar(length = 0.05, dodge = 0, fixed.dodge = FALSE, xlevels = "asis")
+type_errorbar(
+  length = 0.05,
+  dodge = 0,
+  fixed.dodge = FALSE,
+  xlevels = NULL,
+  xord = "asis"
+)
 
-type_pointrange(dodge = 0, fixed.dodge = FALSE, xlevels = "asis")
+type_pointrange(dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = "asis")
 }
 \arguments{
 \item{length}{length of the edges of the arrow head (in inches).}
@@ -34,17 +40,37 @@ present at that position. If \code{TRUE}, dodge positions are based on all
 groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
 groups are missing for a particular \code{x} value).}
 
-\item{xlevels}{a character or numeric vector specifying the order in which
-the levels of the \code{x} variable should be plotted (as level names if
-character, or level indexes if numeric, e.g. \code{3:1}). Note that this
-argument only affects categorical (i.e., factor or character) \code{x}
-variables; it is ignored for numeric \code{x}. Unlike most other plot types,
-here it defaults to the special keyword \code{"asis"}, which takes the
-categories in the order that they appear in the data: these types are
-typically used for coefficient plots, where the row order of the data
-(e.g., the terms of a model) is usually intentional. Set
-\code{xlevels = NULL} to follow the factor levels instead, matching the other
-plot types.}
+\item{xlevels, xord}{two ways to control the order of the \code{x} variable, and
+hence of the axis. Supply one or the other; if both are given, \code{xlevels}
+takes precedence and \code{xord} is ignored. Both only affect categorical (i.e.,
+factor or character) \code{x} variables; a numeric \code{x} is plotted at its own
+values and cannot be reordered, so supplying either there is ignored with a
+warning.
+
+\code{xlevels} names the levels literally: a character vector of level names in
+the desired order, or a numeric vector of the corresponding level indexes
+(e.g. \code{3:1}). Default is \code{NULL}.
+
+\code{xord} instead derives the order from the data, via a keyword or a
+function. Options are:
+\itemize{
+\item \code{"total"} ranks the categories by their \code{y} values, largest first.
+\item \code{"minvar"} ranks them by variance, lowest first. This needs more than one
+observation per category, so it does not apply to the usual one-row-per-
+term coefficient table.
+\item \code{"asis"} and \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they appear
+in the data, while \code{"rev"} reverses the current level order.
+\item a custom function that determines both the ranking statistic and its
+direction. The statistic is always sorted ascending, so \code{function(y) sum(y)}
+reverses \code{"total"}, and \code{function(y) -median(y)} ranks by median rather
+than by sum.
+}
+
+Unlike most other plot types, \code{xord} defaults to \code{"asis"} here rather than
+\code{NULL}: these types are typically used for coefficient plots, where the row
+order of the data (e.g., the terms of a model) is usually intentional. Set
+\code{xord = NULL} to follow the factor levels instead, matching the other types.}
 }
 \description{
 Type function(s) for producing error bar and pointrange plots.

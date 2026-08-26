@@ -9,7 +9,9 @@ type_spineplot(
   tol.ylab = 0.05,
   off = NULL,
   xlevels = NULL,
+  xord = NULL,
   ylevels = NULL,
+  yord = NULL,
   col = NULL,
   xaxlabels = NULL,
   yaxlabels = NULL,
@@ -29,11 +31,32 @@ type_spineplot(
 \item{off}{vertical offset between the bars (in per cent). It is fixed to
     \code{0} for spinograms and defaults to \code{2} for spine plots.}
 
-\item{xlevels, ylevels}{a character or numeric vector specifying the ordering of the
-levels of the \code{x} and \code{y} variables (if character) or the corresponding indexes
-(if numeric) for the plot. The special keyword \code{"asis"} takes the
-categories in the order that they appear in the data. Note that these
-arguments only affect categorical (i.e., factor or character) variables.}
+\item{xlevels, xord}{two ways to control the order of the \code{x} variable, and
+hence of the axis. Supply one or the other; if both are given, \code{xlevels}
+takes precedence and \code{xord} is ignored. Both only affect categorical (i.e.,
+factor or character) variables.
+
+\code{xlevels} names the levels literally: a character vector of level names in
+the desired order, or a numeric vector of the corresponding level indexes
+(e.g. \code{3:1}).
+
+\code{xord} instead derives the order from the data, via a keyword or a
+function. Options are:
+\itemize{
+\item \code{"total"} ranks the categories by frequency, most common first. (Both
+axes of a spineplot are categorical, so there is no response to rank on and
+observations are counted instead, weighted if \code{weights} is given.)
+\item \code{"asis"} and \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they appear
+in the data, while \code{"rev"} reverses the current level order.
+\item a custom function that determines both the ranking statistic and its
+direction. The statistic is always sorted ascending, so \code{function(y) sum(y)}
+reverses \code{"total"}.
+}
+
+Both default to \code{NULL}, i.e. keep the existing factor levels.}
+
+\item{ylevels, yord}{as for \code{xlevels} / \code{xord} above, but for the \code{y} variable.}
 
 \item{col}{a vector of fill colors of the same length as \code{levels(y)}.
     The default is to call \code{\link{gray.colors}}.}

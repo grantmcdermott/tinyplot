@@ -19,12 +19,32 @@
 #'   or the mid-way in the third category, respectively.
 #' @param FUN a function to compute the summary statistic for `y` within each
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
-#' @param xlevels a character or numeric vector specifying the ordering of the
-#'   levels of the `x` variable (if character) or the corresponding indexes
-#'   (if numeric) for the plot. The special keyword `"asis"` takes the
-#'   categories in the order that they appear in the data. Note that this
-#'   argument only affects categorical (i.e., factor or character) `x`
-#'   variables.
+#' @param xlevels,xord two ways to control the order of the `x` variable, and
+#'   hence of the axis. Supply one or the other; if both are given, `xlevels`
+#'   takes precedence and `xord` is ignored. Note that a numeric `x` is coerced
+#'   to a factor before the bars are drawn, so it is reordered like any other
+#'   categorical variable.
+#'
+#'   `xlevels` names the levels literally: a character vector of level names in
+#'   the desired order, or a numeric vector of the corresponding level indexes
+#'   (e.g. `3:1`).
+#'
+#'   `xord` instead derives the order from the data, via a keyword or a
+#'   function. Options are:
+#'
+#'   - `"total"` ranks the categories by value, largest first. In practice this
+#'   is the keyword most reach for, since it sorts the bars by height. Note that
+#'   it ranks the *aggregated* bars, i.e. whatever `FUN` produced, rather than
+#'   the underlying rows.
+#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
+#'   data at all. The former takes the categories in the order that they appear
+#'   in the data, while `"rev"` reverses the current level order.
+#'   - a custom function that determines both the ranking statistic and its
+#'   direction. The statistic is always sorted ascending, so `function(y) sum(y)`
+#'   reverses `"total"`, and `function(y) -median(y)` ranks by median rather
+#'   than by sum.
+#'
+#'   Both default to `NULL`, i.e. keep the existing factor levels.
 #' @param xaxlabels a character vector with the axis labels for the `x` variable,
 #'   defaulting to the levels of `x`.
 #' @param offset optional specification for shifting bar baselines, accepting
@@ -32,7 +52,8 @@
 #' 
 #'   - *Positions* via an unnamed numeric scalar or vector. Bars start at the
 #'   offset value(s) rather than zero, matched per x-level after any `xlevels`
-#'   reordering (a scalar is applied to all bars). Useful for waterfall charts.
+#'   or `xord` reordering (a scalar is applied to all bars). Useful for
+#'   waterfall charts.
 #'   The positional form cannot be combined with `center`.
 #'   - *Category* via a character vector such as `offset = "Unsure"`, or a
 #'   named numeric vector such as `offset = c(Unsure = 1.1)`. The named
@@ -58,6 +79,22 @@
 #' # Reorder x variable categories either by their character levels or numeric indexes
 #' tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = c("8", "6", "4"))
 #' tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
+#' 
+#' # Or let the data decide the order, rather than naming it. `xord = "total"`
+#' # sorts the bars by height; the ordering is shared across groups and facets.
+#' tinyplot(~ cyl, data = mtcars, type = "barplot", xord = "total")
+#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", xord = "total")
+#' 
+#' # The ranking statistic is always sorted ascending, so passing a function is
+#' # how you get the reverse: `sum` undoes what `"total"` does.
+#' tinyplot(~ cyl, data = mtcars, type = "barplot", xord = function(y) sum(y))
+#' 
+#' # The two arguments compose, `xlevels` first: here we fix an explicit order
+#' # and then flip it.
+#' tinyplot(
+#'   ~ cyl, data = mtcars, type = "barplot",
+#'   xlevels = c("8", "6", "4"), xord = "rev"
+#' )
 #' 
 #' # Note: Above we used automatic argument passing for `beside`. But this
 #' # wouldn't work for `width`, since it would conflict with the top-level
@@ -140,9 +177,9 @@
 #' tinyplot_add(type = "vline")
 #'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
   out = list(
-    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xaxlabels = xaxlabels, drop.zeros = drop.zeros, lighten = lighten),
+    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xord = xord, xaxlabels = xaxlabels, drop.zeros = drop.zeros, lighten = lighten),
     draw = draw_rect(),
     name = "barplot"
   )
@@ -151,7 +188,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
 }
 
 #' @importFrom stats aggregate
-data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
+data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
     fun = function(settings, ...) {
         env2env(
           settings,
@@ -175,11 +212,34 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         }
         if (!is.factor(datapoints$x)) datapoints$x = factor(datapoints$x)
         datapoints$x = sanitize_xlevels(datapoints$x, xlevels)
+        ## "asis" means "the order the categories appear in the data", and the
+        ## aggregate() below destroys that by sorting on the grouping columns.
+        ## It consults no `y`, so apply it here while the row order still
+        ## survives. The ranking keywords have the opposite requirement -- they
+        ## must see the aggregated bars -- and so stay below.
+        if (identical(xord, "asis") && is.null(xlevels)) {
+          datapoints$x = sanitize_ord(
+            datapoints$x, NULL, NULL,
+            xord, arg = "xord", keywords = ord_keywords_scalar
+          )
+        }
         if (!is.null(xaxlabels)) levels(datapoints$x) = xaxlabels
         datapoints = aggregate(datapoints[, "y", drop = FALSE], datapoints[, c("x", "by", "facet")], FUN = FUN, drop = FALSE)
         datapoints$y[is.na(datapoints$y)] = 0 #FIXME: always?#
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
+
+        ## `xord` ranks on the *aggregated* bars, so it has to run after the
+        ## aggregate() above -- ranking the raw cells would sort on sums while
+        ## the plot draws whatever FUN produced. It also has to run before the
+        ## `offset` block below, which is keyed positionally by x-level.
+        if (!is.null(xord) && !identical(xord, "asis") && is.null(xlevels)) {
+          datapoints$x = sanitize_ord(
+            datapoints$x, datapoints$y, NULL,
+            xord, arg = "xord", keywords = ord_keywords_scalar
+          )
+          datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), , drop = FALSE]
+        }
         
         ## `offset` accepts two distinct forms:
         ##  - unnamed numeric -> positional, keyed by x-level (waterfall)

@@ -11,6 +11,7 @@ type_barplot(
   offset = NULL,
   FUN = NULL,
   xlevels = NULL,
+  xord = NULL,
   xaxlabels = NULL,
   drop.zeros = FALSE,
   lighten = TRUE
@@ -36,7 +37,8 @@ one of two distinct forms. See the Examples for illustrations of both.
 \itemize{
 \item \emph{Positions} via an unnamed numeric scalar or vector. Bars start at the
 offset value(s) rather than zero, matched per x-level after any \code{xlevels}
-reordering (a scalar is applied to all bars). Useful for waterfall charts.
+or \code{xord} reordering (a scalar is applied to all bars). Useful for
+waterfall charts.
 The positional form cannot be combined with \code{center}.
 \item \emph{Category} via a character vector such as \code{offset = "Unsure"}, or a
 named numeric vector such as \code{offset = c(Unsure = 1.1)}. The named
@@ -50,12 +52,33 @@ grouping and \code{beside = FALSE}, but can be combined with \code{center}.
 \item{FUN}{a function to compute the summary statistic for \code{y} within each
 group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: mean).}
 
-\item{xlevels}{a character or numeric vector specifying the ordering of the
-levels of the \code{x} variable (if character) or the corresponding indexes
-(if numeric) for the plot. The special keyword \code{"asis"} takes the
-categories in the order that they appear in the data. Note that this
-argument only affects categorical (i.e., factor or character) \code{x}
-variables.}
+\item{xlevels, xord}{two ways to control the order of the \code{x} variable, and
+hence of the axis. Supply one or the other; if both are given, \code{xlevels}
+takes precedence and \code{xord} is ignored. Note that a numeric \code{x} is coerced
+to a factor before the bars are drawn, so it is reordered like any other
+categorical variable.
+
+\code{xlevels} names the levels literally: a character vector of level names in
+the desired order, or a numeric vector of the corresponding level indexes
+(e.g. \code{3:1}).
+
+\code{xord} instead derives the order from the data, via a keyword or a
+function. Options are:
+\itemize{
+\item \code{"total"} ranks the categories by value, largest first. In practice this
+is the keyword most reach for, since it sorts the bars by height. Note that
+it ranks the \emph{aggregated} bars, i.e. whatever \code{FUN} produced, rather than
+the underlying rows.
+\item \code{"asis"} and \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they appear
+in the data, while \code{"rev"} reverses the current level order.
+\item a custom function that determines both the ranking statistic and its
+direction. The statistic is always sorted ascending, so \code{function(y) sum(y)}
+reverses \code{"total"}, and \code{function(y) -median(y)} ranks by median rather
+than by sum.
+}
+
+Both default to \code{NULL}, i.e. keep the existing factor levels.}
 
 \item{xaxlabels}{a character vector with the axis labels for the \code{x} variable,
 defaulting to the levels of \code{x}.}
@@ -85,6 +108,22 @@ tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
 # Reorder x variable categories either by their character levels or numeric indexes
 tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = c("8", "6", "4"))
 tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
+
+# Or let the data decide the order, rather than naming it. `xord = "total"`
+# sorts the bars by height; the ordering is shared across groups and facets.
+tinyplot(~ cyl, data = mtcars, type = "barplot", xord = "total")
+tinyplot(~ cyl | vs, data = mtcars, type = "barplot", xord = "total")
+
+# The ranking statistic is always sorted ascending, so passing a function is
+# how you get the reverse: `sum` undoes what `"total"` does.
+tinyplot(~ cyl, data = mtcars, type = "barplot", xord = function(y) sum(y))
+
+# The two arguments compose, `xlevels` first: here we fix an explicit order
+# and then flip it.
+tinyplot(
+  ~ cyl, data = mtcars, type = "barplot",
+  xlevels = c("8", "6", "4"), xord = "rev"
+)
 
 # Note: Above we used automatic argument passing for `beside`. But this
 # wouldn't work for `width`, since it would conflict with the top-level

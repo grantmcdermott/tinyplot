@@ -3,15 +3,32 @@
 #' @description Type function for plotting points, i.e. a scatter plot.
 #' @param clim Numeric giving the lower and upper limits of the character
 #'   expansion (`cex`) normalization for bubble charts.
-#' @param xlevels a character or numeric vector specifying the order in which
-#'   the levels of the `x` variable should be plotted (as level names if
-#'   character, or level indexes if numeric, e.g. `3:1`). The special keyword
-#'   `"asis"` takes the categories in the order that they appear in the data,
-#'   i.e. skipping the alphabetical sort that is otherwise applied when
-#'   coercing a character variable to a factor. Note that this argument only
-#'   affects categorical (i.e., factor or character) `x` variables; it is
-#'   ignored for numeric `x`. The default `NULL` keeps the existing factor
-#'   levels (alphabetical for character variables).
+#' @param xlevels,xord two ways to control the order of the `x` variable, and
+#'   hence of the axis. Supply one or the other; if both are given, `xlevels`
+#'   takes precedence and `xord` is ignored. Both only affect categorical (i.e.,
+#'   factor or character) `x` variables; a numeric `x` is plotted at its own
+#'   values and cannot be reordered, so supplying either there is ignored with a
+#'   warning.
+#'
+#'   `xlevels` names the levels literally: a character vector of level names in the
+#'   desired order, or a numeric vector of the corresponding level indexes
+#'   (e.g. `3:1`).
+#'
+#'   `xord` instead derives the order from the data, via a keyword or a function.
+#'   Options are:
+#'
+#'   - `"total"` ranks the categories by the `y` values observed at each one,
+#'   largest first.
+#'   - `"minvar"` ranks them by the variance of those values, lowest first.
+#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
+#'   data at all. The former takes the categories in the order that they appear
+#'   in the data, while `"rev"` reverses the current level order.
+#'   - a custom function that determines both the ranking statistic and its
+#'   direction. The statistic is always sorted ascending, so `function(y) sum(y)`
+#'   reverses `"total"`, and `function(y) -median(y)` ranks by median rather
+#'   than by sum.
+#'
+#'   Both default to `NULL`, i.e. keep the existing factor levels.
 #' @inheritParams dodge_positions
 #'
 #' @examples
@@ -41,9 +58,9 @@
 #'   pch = 21, fill = 0.3)
 #'
 #' @export
-type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
+type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = NULL) {
   out = list(
-    data = data_points(clim = clim, dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels),
+    data = data_points(clim = clim, dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels, xord = xord),
     draw = draw_points(),
     name = "p"
   )
@@ -51,7 +68,7 @@ type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xleve
   return(out)
 }
 
-data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
+data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = NULL) {
   fun = function(settings, ...) {
     env2env(settings, environment(), "datapoints")
 
@@ -60,6 +77,16 @@ data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xleve
 
     # catch for factors (we should still be able to "force" plot these with points)
     datapoints$x = sanitize_xlevels(datapoints$x, xlevels)
+    warn_ignored_ordering(datapoints$x, xlevels, xord)
+    # `xord` must run here, before the factor is collapsed to integer
+    # positions below -- once x is an integer there are no levels left to
+    # reorder.
+    if (!is.null(xord) && is.null(xlevels)) {
+      datapoints$x = sanitize_ord(
+        datapoints$x, datapoints[["y"]], NULL,
+        xord, arg = "xord", keywords = ord_keywords_distribution
+      )
+    }
     if (is.factor(datapoints$x)) {
       xlvls = levels(datapoints$x)
       xlabs = seq_along(xlvls)

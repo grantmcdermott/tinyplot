@@ -257,16 +257,12 @@
 #'   the break points at which the axis tick-marks are to be drawn. Break points
 #'   outside the range of the data will be ignored if the associated axis
 #'   variable is categorical, or an explicit `x/ylim` range is given.
-#' @param xaxl,yaxl a function or a character keyword specifying the format of
-#'   the x- or y-axis tick labels. Note that this is a post-processing step that
-#'   affects the _appearance_ of the tick labels only; use in conjunction with
-#'   `x/yaxb` if you would like to adjust the position of the tick marks too. In
-#'   addition to user-supplied formatting functions (e.g., [`format`],
-#'   [`toupper`], [`abs`], or other custom function), several convenience
-#'   keywords (or their symbol equivalents) are available for common formatting
-#'   transformations: `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`),
-#'   `"dollar"` (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`). See the
-#'   [`tinylabel`] documentation for examples.
+#' @param xaxl,yaxl a function, character keyword, or named vector for
+#'   formatting or (re)labelling the x- or y-axis tick labels. Passed to
+#'   [`tinylabel`]; see the latter's help file for more detailed documentation
+#'   and examples. Note that this is a post-processing step that affects the
+#'   _appearance_ of the tick labels only; use in conjunction with `x/yaxb` if
+#'   you would like to adjust the position of the tick marks too.
 #' @param log a character string which contains `"x"` if the x axis is to be
 #'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
 #'   if both axes are to be logarithmic.

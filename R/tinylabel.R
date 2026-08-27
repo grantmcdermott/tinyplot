@@ -4,12 +4,27 @@
 #' ticks labels. This is what the top-level `xaxl` and `yaxl` arguments
 #' from [`tinyplot`] ultimately get passed to.
 #' @param x a numeric or character vector
-#' @param labeller a formatting function to be applied to `x`, e.g. [`format`],
-#'   [`toupper`], [`abs`], or other custom function (including from the popular
-#'   **scales** package). Can also be one of the following convenience strings
-#'   (symbols), for which common formatting transformations are provided:
-#'   `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`), `"dollar"`
-#'   (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`).
+#' @param labeller how the labels should be relabelled or reformatted. One of:
+#'
+#'   - a function to be applied to `x`, e.g. [`format`], [`toupper`], [`abs`],
+#'   or any other custom function (including from the popular **scales**
+#'   package).
+#'   - one of the following convenience strings (or their symbol equivalents),
+#'   for which common formatting transformations are provided: `"percent"`
+#'   (`"%"`), `"comma"` (`","`), `"log"` (`"l"`), `"dollar"` (`"$"`), `"euro"`
+#'   (`"€"`), or `"sterling"` (`"£"`).
+#'   - a *named* character vector or list, acting as a dictionary, e.g.
+#'   `c(setosa = "SET")`. Entries of `x` that match a name are replaced by the
+#'   corresponding value and the rest are left alone, so a partial mapping is
+#'   fine. The lookup is by value rather than by position, which means it is
+#'   unaffected by any reordering of the underlying categories.
+#'
+#'   Note that an *unnamed* character vector of length greater than one is an
+#'   error, rather than a positional replacement of the labels. Such a vector
+#'   could not be told apart from a formatting keyword when `x` is of length
+#'   one, and would not follow the categories if they were reordered. Pass a
+#'   function if you want to compute the labels positionally, e.g.
+#'   `function(x) LETTERS[seq_along(x)]`.
 #' @param na.ignore logical indicating whether the labelling function should
 #'   ignore `NA` values in `x`. In other words, should the `NA` values be left
 #'   as-is? Default is `TRUE`.
@@ -25,6 +40,10 @@
 #' tinylabel(x, "comma")
 #' tinylabel(x, ",") # same
 #' tinylabel(x, "$") # or "dollar"
+#'
+#' # a named vector acts as a dictionary: matched entries are replaced and the
+#' # rest are left alone
+#' tinylabel(c("setosa", "versicolor"), c(setosa = "SET"))
 #' 
 #' # invoke tinylabel from a parent tinyplot call...
 #' #   => x/yaxl for adjusting axes tick labels
@@ -93,8 +112,32 @@ tinylabel = function(x, labeller = NULL, na.ignore = TRUE, na.rm = TRUE) {
   } else {
     seq_along(x)
   }
+  if (is.list(labeller) && !is.null(names(labeller))) {
+    labeller = unlist(labeller)
+  }
   if (is.character(labeller)) {
-    labeller = labeller_fun((labeller))
+    # A *named* character vector is a dictionary: replace the labels it names
+    # and leave the rest alone. Names are what make this safe -- they cannot
+    # collide with the formatting keywords, they survive any `*ord`/`*levels`
+    # reordering (the mapping is by value, not by position), and a length
+    # mismatch is meaningless rather than silently recycled.
+    if (!is.null(names(labeller))) {
+      out = as.character(x)
+      hit = match(out, names(labeller))
+      out[!is.na(hit)] = unname(labeller)[hit[!is.na(hit)]]
+      return(out)
+    }
+    # An unnamed vector is a formatting keyword, and only ever that. Positional
+    # replacement is deliberately not supported: it could not be told apart
+    # from a keyword on a one-tick axis, and it would not follow the categories
+    # when they are reordered.
+    if (length(labeller) != 1L) {
+      stop(
+        "a character `labeller` must be a single formatting keyword, or a named vector mapping old labels to new ones.\n  For positional or computed labels, pass a function, e.g. `function(x) LETTERS[seq_along(x)]`.",
+        call. = FALSE
+      )
+    }
+    labeller = labeller_fun(labeller)
   }
   # don't need to subset if everything is being used. DateTime also require
   # exception logic (e.g., date format needs to be consistent for whole vector)
@@ -116,20 +159,18 @@ labeller_fun = function(label = "percent") {
     "\u00a3" = "sterling",
     "l"      = "log"
   )
-  if (label %in% names(labels)) {
-    label = labels[label]
-  }
-
-  ## all labels plus absolute value version
-  # labels = c("percent", "comma", "dollar", "euro", "sterling")
-  labels = c(labels, paste0("abs_", labels))
-
-  ## match full label first, then store abs_ info separately
-  label = match.arg(label, labels)
+  ## Strip any "abs_" prefix *before* resolving a symbol to its full name.
+  ## Doing it the other way round leaves "abs_," unresolvable, which is exactly
+  ## what a centered barplot produces from a symbol keyword: it prepends the
+  ## prefix itself (see type_barplot()).
   abs_ = substr(label, 1L, 4L) == "abs_"
   if (abs_) {
     label = substr(label, 5L, nchar(label))
   }
+  if (label %in% names(labels)) {
+    label = labels[label]
+  }
+  label = match.arg(label, unname(labels))
 
   ## actual formatting functions
 

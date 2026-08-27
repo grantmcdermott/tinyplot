@@ -48,34 +48,34 @@ at the specified \code{probs}. The quantiles are computed based on the density
 (rather than the raw original variable). Only one of \code{breaks} or
 \code{probs} must be specified.}
 
-\item{ylevels, yord}{two ways to control the order of the \code{y} variable, and
-hence of the axis. Supply one or the other; if both are given, \code{ylevels}
-takes precedence and \code{yord} is ignored. Note that a numeric \code{y} is coerced
-to a factor before the ridges are drawn, so it is reordered like any other
-categorical variable.
-
-\code{ylevels} names the levels literally: a character vector of level names in
-the desired order, or a numeric vector of the corresponding level indexes
-(e.g. \code{3:1}).
-
-\code{yord} instead derives the order from the data, via a keyword or a
-function. Options are:
+\item{ylevels, yord}{arguments controlling the order of the \code{y} variable, and
+hence of the y-axis. Supply one or the other; if both arguments are
+provided, \code{ylevels} takes precedence and \code{yord} is silently ignored.
+\itemize{
+\item \code{ylevels} specifies the levels \emph{literally}, either a character vector of
+level names in the desired order (e.g., \code{c("C", "B", "A")}), or a numeric
+vector of the corresponding level indexes (e.g. \code{3:1}).
+\item \code{yord} instead accepts a keyword or custom function, which then \emph{derives}
+the order from the data. Options are:
 \itemize{
 \item \code{"total"} ranks the ridges by summed \code{x}, largest first. (Ridge plots
 have no separate response, so the ranking runs on the continuous \code{x}
 variable.)
 \item \code{"minvar"} ranks them by the spread of each distribution, narrowest
 first.
-\item \code{"asis"} and \code{"rev"} permute the existing levels without consulting the
-data at all. The former takes the categories in the order that they appear
-in the data, while \code{"rev"} reverses the current level order.
+\item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they
+appear in the data, while the latter reverses the current level order.
 \item a custom function that determines both the ranking statistic and its
-direction. The statistic is always sorted ascending, so \code{function(y) sum(y)}
-reverses \code{"total"}, and \code{function(y) -median(y)} ranks by median rather
-than by sum.
+direction. The statistic is always sorted ascending, so
+\code{function(y) sum(y)} reverses \code{"total"}, and \code{function(y) -median(y)}
+ranks by median rather than by sum.
+}
 }
 
-Both default to \code{NULL}, i.e. keep the existing factor levels.}
+Note that a numeric \code{y} is coerced to a factor before the ridges are
+drawn, so it is reordered like any other categorical variable.
+Each argument defaults to \code{NULL}, i.e. keep the existing factor levels.}
 
 \item{bw}{the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
 see \code{\link[stats]{density}} for details and options.}

@@ -3,32 +3,33 @@
 #' @description Type function for plotting points, i.e. a scatter plot.
 #' @param clim Numeric giving the lower and upper limits of the character
 #'   expansion (`cex`) normalization for bubble charts.
-#' @param xlevels,xord two ways to control the order of the `x` variable, and
-#'   hence of the axis. Supply one or the other; if both are given, `xlevels`
-#'   takes precedence and `xord` is ignored. Both only affect categorical (i.e.,
-#'   factor or character) `x` variables; a numeric `x` is plotted at its own
-#'   values and cannot be reordered, so supplying either there is ignored with a
-#'   warning.
+#' @param xlevels,xord arguments controlling the order of the (categorical) `x`
+#'   variable, and hence of the x-axis. Supply one or the other; if both
+#'   arguments are provided, `xlevels` takes precedence and `xord` is silently
+#'   ignored.
 #'
-#'   `xlevels` names the levels literally: a character vector of level names in the
-#'   desired order, or a numeric vector of the corresponding level indexes
-#'   (e.g. `3:1`).
+#'   - `xlevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
 #'
-#'   `xord` instead derives the order from the data, via a keyword or a function.
-#'   Options are:
+#'   - `xord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
 #'
-#'   - `"total"` ranks the categories by the `y` values observed at each one,
-#'   largest first.
-#'   - `"minvar"` ranks them by the variance of those values, lowest first.
-#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
-#'   data at all. The former takes the categories in the order that they appear
-#'   in the data, while `"rev"` reverses the current level order.
-#'   - a custom function that determines both the ranking statistic and its
-#'   direction. The statistic is always sorted ascending, so `function(y) sum(y)`
-#'   reverses `"total"`, and `function(y) -median(y)` ranks by median rather
-#'   than by sum.
+#'     - `"total"` ranks the categories by the `y` values observed at each one,
+#'     largest first.
+#'     - `"minvar"` ranks them by the variance of those values, lowest first.
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted ascending, so
+#'     `function(y) sum(y)` reverses `"total"`, and `function(y) -median(y)`
+#'     ranks by median rather than by sum.
 #'
-#'   Both default to `NULL`, i.e. keep the existing factor levels.
+#'   Note that `x` is only reordered when it is categorical (i.e., factor or
+#'   character). A numeric `x` is plotted at its own values and cannot be
+#'   reordered, so supplying either argument there is ignored with a warning.
+#'   Each argument defaults to `NULL`, i.e. keep the existing factor levels.
 #' @inheritParams dodge_positions
 #'
 #' @examples

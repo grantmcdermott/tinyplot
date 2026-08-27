@@ -19,36 +19,32 @@
 #'   or the mid-way in the third category, respectively.
 #' @param FUN a function to compute the summary statistic for `y` within each
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
-#' @param xlevels,xord two ways to control the order of the `x` variable, and
-#'   hence of the axis. Supply one or the other; if both are given, `xlevels`
-#'   takes precedence and `xord` is ignored. Note that a numeric `x` is coerced
-#'   to a factor before the bars are drawn, so it is reordered like any other
-#'   categorical variable.
+#' @param xlevels,xord arguments controlling the order of the `x` variable, and
+#'   hence of the x-axis. Supply one or the other; if both arguments are
+#'   provided, `xlevels` takes precedence and `xord` is silently ignored.
 #'
-#'   `xlevels` names the levels literally: a character vector of level names in
-#'   the desired order, or a numeric vector of the corresponding level indexes
-#'   (e.g. `3:1`).
+#'   - `xlevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
 #'
-#'   `xord` instead derives the order from the data, via a keyword or a
-#'   function. Options are:
+#'   - `xord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
 #'
-#'   - `"total"` ranks the categories by value, largest first. In practice this
-#'   is the keyword most reach for, since it sorts the bars by height. Note that
-#'   it ranks the *aggregated* bars, i.e. whatever `FUN` produced, rather than
-#'   the underlying rows.
-#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
-#'   data at all. The former takes the categories in the order that they appear
-#'   in the data, while `"rev"` reverses the current level order.
-#'   - a custom function that determines both the ranking statistic and its
-#'   direction. The statistic is always sorted ascending, so `function(y) sum(y)`
-#'   reverses `"total"`, and `function(y) -median(y)` ranks by median rather
-#'   than by sum.
+#'     - `"total"` ranks the categories by value, largest first. In practice
+#'     this is the keyword most reach for, since it sorts the bars by height.
+#'     Note that it ranks the *aggregated* bars, i.e. whatever `FUN` produced,
+#'     rather than the underlying rows.
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted in ascending order, so
+#'     `function(y) sum(y)` reverses `"total"`, and `function(y) -median(y)`
+#'     ranks by median rather than by sum.
 #'
-#'   Both default to `NULL`, i.e. keep the existing factor levels.
-#' @param xaxlabels \[Deprecated\] a character vector with the axis labels for
-#'   the `x` variable. Use the top-level `xaxl` argument instead, which now
-#'   accepts a named vector mapping old labels to new ones, and applies
-#'   consistently across plot types.
+#'   Note that a numeric `x` is coerced to a factor before the bars are drawn,
+#'   so it is reordered like any other categorical variable.
+#'   Each argument defaults to `NULL`, i.e. keep the existing factor levels.
 #' @param offset optional specification for shifting bar baselines, accepting
 #'   one of two distinct forms. See the Examples for illustrations of both.
 #' 
@@ -71,6 +67,11 @@
 #'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group
 #'   displays consistent and lets the fill read cleanly over grid lines. Set to
 #'   `FALSE` to use the fully-saturated palette colour(s) instead.
+#' @param xaxlabels \[Deprecated\] a character vector with the axis labels for
+#'   the `x` variable. Use the top-level `xaxl` argument instead, which now
+#'   accepts a named vector mapping old labels to new ones, and applies
+#'   consistently across plot types. This argument will be removed in a future
+#'   release.
 #'
 #' @examples
 #' # Basic examples of frequency tables (without y variable)
@@ -179,7 +180,7 @@
 #' tinyplot_add(type = "vline")
 #'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, lighten = TRUE, xaxlabels = NULL) {
   if (!is.null(xaxlabels)) {
     warning(
       "'xaxlabels' is deprecated; use the top-level 'xaxl' argument instead, ",

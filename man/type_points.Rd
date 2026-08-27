@@ -38,33 +38,34 @@ present at that position. If \code{TRUE}, dodge positions are based on all
 groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
 groups are missing for a particular \code{x} value).}
 
-\item{xlevels, xord}{two ways to control the order of the \code{x} variable, and
-hence of the axis. Supply one or the other; if both are given, \code{xlevels}
-takes precedence and \code{xord} is ignored. Both only affect categorical (i.e.,
-factor or character) \code{x} variables; a numeric \code{x} is plotted at its own
-values and cannot be reordered, so supplying either there is ignored with a
-warning.
-
-\code{xlevels} names the levels literally: a character vector of level names in the
-desired order, or a numeric vector of the corresponding level indexes
-(e.g. \code{3:1}).
-
-\code{xord} instead derives the order from the data, via a keyword or a function.
-Options are:
+\item{xlevels, xord}{arguments controlling the order of the (categorical) \code{x}
+variable, and hence of the x-axis. Supply one or the other; if both
+arguments are provided, \code{xlevels} takes precedence and \code{xord} is silently
+ignored.
+\itemize{
+\item \code{xlevels} specifies the levels \emph{literally}, either a character vector of
+level names in the desired order (e.g., \code{c("C", "B", "A")}), or a numeric
+vector of the corresponding level indexes (e.g. \code{3:1}).
+\item \code{xord} instead accepts a keyword or custom function, which then \emph{derives}
+the order from the data. Options are:
 \itemize{
 \item \code{"total"} ranks the categories by the \code{y} values observed at each one,
 largest first.
 \item \code{"minvar"} ranks them by the variance of those values, lowest first.
-\item \code{"asis"} and \code{"rev"} permute the existing levels without consulting the
-data at all. The former takes the categories in the order that they appear
-in the data, while \code{"rev"} reverses the current level order.
+\item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they
+appear in the data, while the latter reverses the current level order.
 \item a custom function that determines both the ranking statistic and its
-direction. The statistic is always sorted ascending, so \code{function(y) sum(y)}
-reverses \code{"total"}, and \code{function(y) -median(y)} ranks by median rather
-than by sum.
+direction. The statistic is always sorted ascending, so
+\code{function(y) sum(y)} reverses \code{"total"}, and \code{function(y) -median(y)}
+ranks by median rather than by sum.
+}
 }
 
-Both default to \code{NULL}, i.e. keep the existing factor levels.}
+Note that \code{x} is only reordered when it is categorical (i.e., factor or
+character). A numeric \code{x} is plotted at its own values and cannot be
+reordered, so supplying either argument there is ignored with a warning.
+Each argument defaults to \code{NULL}, i.e. keep the existing factor levels.}
 }
 \description{
 Type function for plotting points, i.e. a scatter plot.

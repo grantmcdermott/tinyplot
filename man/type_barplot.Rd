@@ -12,9 +12,9 @@ type_barplot(
   FUN = NULL,
   xlevels = NULL,
   xord = NULL,
-  xaxlabels = NULL,
   drop.zeros = FALSE,
-  lighten = TRUE
+  lighten = TRUE,
+  xaxlabels = NULL
 )
 }
 \arguments{
@@ -52,38 +52,33 @@ grouping and \code{beside = FALSE}, but can be combined with \code{center}.
 \item{FUN}{a function to compute the summary statistic for \code{y} within each
 group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: mean).}
 
-\item{xlevels, xord}{two ways to control the order of the \code{x} variable, and
-hence of the axis. Supply one or the other; if both are given, \code{xlevels}
-takes precedence and \code{xord} is ignored. Note that a numeric \code{x} is coerced
-to a factor before the bars are drawn, so it is reordered like any other
-categorical variable.
-
-\code{xlevels} names the levels literally: a character vector of level names in
-the desired order, or a numeric vector of the corresponding level indexes
-(e.g. \code{3:1}).
-
-\code{xord} instead derives the order from the data, via a keyword or a
-function. Options are:
+\item{xlevels, xord}{arguments controlling the order of the \code{x} variable, and
+hence of the x-axis. Supply one or the other; if both arguments are
+provided, \code{xlevels} takes precedence and \code{xord} is silently ignored.
 \itemize{
-\item \code{"total"} ranks the categories by value, largest first. In practice this
-is the keyword most reach for, since it sorts the bars by height. Note that
-it ranks the \emph{aggregated} bars, i.e. whatever \code{FUN} produced, rather than
-the underlying rows.
-\item \code{"asis"} and \code{"rev"} permute the existing levels without consulting the
-data at all. The former takes the categories in the order that they appear
-in the data, while \code{"rev"} reverses the current level order.
+\item \code{xlevels} specifies the levels \emph{literally}, either a character vector of
+level names in the desired order (e.g., \code{c("C", "B", "A")}), or a numeric
+vector of the corresponding level indexes (e.g. \code{3:1}).
+\item \code{xord} instead accepts a keyword or custom function, which then \emph{derives}
+the order from the data. Options are:
+\itemize{
+\item \code{"total"} ranks the categories by value, largest first. In practice
+this is the keyword most reach for, since it sorts the bars by height.
+Note that it ranks the \emph{aggregated} bars, i.e. whatever \code{FUN} produced,
+rather than the underlying rows.
+\item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they
+appear in the data, while the latter reverses the current level order.
 \item a custom function that determines both the ranking statistic and its
-direction. The statistic is always sorted ascending, so \code{function(y) sum(y)}
-reverses \code{"total"}, and \code{function(y) -median(y)} ranks by median rather
-than by sum.
+direction. The statistic is always sorted in ascending order, so
+\code{function(y) sum(y)} reverses \code{"total"}, and \code{function(y) -median(y)}
+ranks by median rather than by sum.
+}
 }
 
-Both default to \code{NULL}, i.e. keep the existing factor levels.}
-
-\item{xaxlabels}{[Deprecated] a character vector with the axis labels for
-the \code{x} variable. Use the top-level \code{xaxl} argument instead, which now
-accepts a named vector mapping old labels to new ones, and applies
-consistently across plot types.}
+Note that a numeric \code{x} is coerced to a factor before the bars are drawn,
+so it is reordered like any other categorical variable.
+Each argument defaults to \code{NULL}, i.e. keep the existing factor levels.}
 
 \item{drop.zeros}{logical. Should bars with zero height be dropped? If set
 to \code{FALSE} (default) a zero height bar is still drawn for which the border
@@ -93,6 +88,12 @@ lines will still be visible.}
 series colour(s)? Default is \code{TRUE}, which keeps single- and multi-group
 displays consistent and lets the fill read cleanly over grid lines. Set to
 \code{FALSE} to use the fully-saturated palette colour(s) instead.}
+
+\item{xaxlabels}{[Deprecated] a character vector with the axis labels for
+the \code{x} variable. Use the top-level \code{xaxl} argument instead, which now
+accepts a named vector mapping old labels to new ones, and applies
+consistently across plot types. This argument will be removed in a future
+release.}
 }
 \description{
 Type function for producing barplots. For formulas of type

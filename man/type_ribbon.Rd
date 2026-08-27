@@ -24,25 +24,26 @@ area plots" section below.}
 the \code{by} group layers, thus controlling the order in which they stack.
 Options are:
 \itemize{
-\item \code{"start"}, \code{"end"}, and \code{"total"} are positional keywords that rank groups
-according to their \code{y} values along the \code{x} axis. In each case, the group
-with the largest value is stacked first as the bottom layer.
-\item \code{"minvar"} ranks by variance and puts the lowest variance group on the
+\item \code{"start"}, \code{"end"} and \code{"total"} are positional keywords that rank the
+groups by their \code{y} values along the \code{x} axis. In each case, the group with
+the largest value is stacked first, as the bottom layer.
+\item \code{"minvar"} ranks by variance, putting the lowest variance group on the
 baseline.
-\item \code{"asis"} and \code{"rev"} permute the existing levels without consulting the
+\item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
 data at all. The former takes the groups in the order that they appear in
-the data, while \code{"rev"} reverses the current level order.
-\item custom function that determines both the ranking statistic and its
-direction, e.g. \code{function(y) -median(y)} would layer by median \code{y} value,
-from the biggest to the smallest. Note: if a function requires access to a
-group's \code{x} values, then one of its arguments \emph{must} be named \code{x}, e.g.
+the data, while the latter reverses the current level order.
+\item a custom function that determines both the ranking statistic and its
+direction. The statistic is always sorted ascending, so
+\code{function(y) -median(y)} layers by median \code{y} value, from the biggest to
+the smallest. Note that if a function requires access to a group's \code{x}
+values, then one of its arguments \emph{must} be named \code{x}, e.g.
 \code{function(y, x) coef(lm(y ~ x))[2]} would layer by trend.
 }
 
-Default is \code{NULL}, in which case the existing factor level order is
-retained; to set that order explicitly, call \code{factor(levels = ...)} on the
-grouping variable beforehand. See Examples, as well as the "Stacked area
-plots" section below.}
+Defaults to \code{NULL}, i.e. keep the existing factor levels. To set that order
+explicitly, call \code{factor(levels = ...)} on the grouping variable
+beforehand. See Examples, as well as the "Stacked area plots" section
+below.}
 
 \item{FUN}{a function for collapsing repeated \code{y} values within a group and
 \code{x} position, used only when \code{stack = TRUE}. Defaults to \code{mean}, matching

@@ -4,31 +4,32 @@
 #'
 #' @inheritParams dodge_positions
 #' @inheritParams graphics::arrows
-#' @param xlevels,xord two ways to control the order of the `x` variable, and
-#'   hence of the axis. Supply one or the other; if both are given, `xlevels`
-#'   takes precedence and `xord` is ignored. Both only affect categorical (i.e.,
-#'   factor or character) `x` variables; a numeric `x` is plotted at its own
-#'   values and cannot be reordered, so supplying either there is ignored with a
-#'   warning.
+#' @param xlevels,xord arguments controlling the order of the `x` variable, and
+#'   hence of the x-axis. Supply one or the other; if both arguments are
+#'   provided, `xlevels` takes precedence and `xord` is silently ignored.
 #'
-#'   `xlevels` names the levels literally: a character vector of level names in
-#'   the desired order, or a numeric vector of the corresponding level indexes
-#'   (e.g. `3:1`). Default is `NULL`.
+#'   - `xlevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
 #'
-#'   `xord` instead derives the order from the data, via a keyword or a
-#'   function. Options are:
+#'   - `xord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
 #'
-#'   - `"total"` ranks the categories by their `y` values, largest first.
-#'   - `"minvar"` ranks them by variance, lowest first. This needs more than one
-#'   observation per category, so it does not apply to the usual one-row-per-
-#'   term coefficient table.
-#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
-#'   data at all. The former takes the categories in the order that they appear
-#'   in the data, while `"rev"` reverses the current level order.
-#'   - a custom function that determines both the ranking statistic and its
-#'   direction. The statistic is always sorted ascending, so `function(y) sum(y)`
-#'   reverses `"total"`, and `function(y) -median(y)` ranks by median rather
-#'   than by sum.
+#'     - `"total"` ranks the categories by their `y` values, largest first.
+#'     - `"minvar"` ranks them by variance, lowest first. This needs more than
+#'     one observation per category, so it does not apply to the usual
+#'     one-row-per-term coefficient table.
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted ascending, so
+#'     `function(y) sum(y)` reverses `"total"`, and `function(y) -median(y)`
+#'     ranks by median rather than by sum.
+#'
+#'   Note that `x` is only reordered when it is categorical (i.e., factor or
+#'   character). A numeric `x` is plotted at its own values and cannot be
+#'   reordered, so supplying either argument there is ignored with a warning.
 #'
 #'   Unlike most other plot types, `xord` defaults to `"asis"` here rather than
 #'   `NULL`: these types are typically used for coefficient plots, where the row

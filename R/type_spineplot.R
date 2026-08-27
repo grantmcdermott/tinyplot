@@ -4,34 +4,34 @@
 #'   are modified versions of histograms or mosaic plots, and particularly
 #'   useful for visualizing factor variables. Note that [`tinyplot`] defaults
 #'   to `type_spineplot()` if `y` is a factor variable.
-#' @param xlevels,xord two ways to control the order of the `x` variable, and
-#'   hence of the axis. Supply one or the other; if both are given, `xlevels`
-#'   takes precedence and `xord` is ignored. Both only affect categorical (i.e.,
-#'   factor or character) variables.
+#' @param xlevels,xord arguments controlling the order of the `x` variable, and
+#'   hence of the x-axis. Supply one or the other; if both arguments are
+#'   provided, `xlevels` takes precedence and `xord` is silently ignored.
 #'
-#'   `xlevels` names the levels literally: a character vector of level names in
-#'   the desired order, or a numeric vector of the corresponding level indexes
-#'   (e.g. `3:1`).
+#'   - `xlevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
 #'
-#'   `xord` instead derives the order from the data, via a keyword or a
-#'   function. Options are:
+#'   - `xord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
 #'
-#'   - `"total"` ranks the categories by frequency, most common first. (Both
-#'   axes of a spineplot are categorical, so there is no response to rank on and
-#'   observations are counted instead, weighted if `weights` is given.)
-#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
-#'   data at all. The former takes the categories in the order that they appear
-#'   in the data, while `"rev"` reverses the current level order.
-#'   - a custom function that determines both the ranking statistic and its
-#'   direction. The statistic is always sorted ascending, so `function(y) sum(y)`
-#'   reverses `"total"`.
+#'     - `"total"` ranks the categories by (weighted) frequency, i.e. most
+#'     common first.
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted ascending, so
+#'     `function(y) sum(y)` reverses `"total"`.
 #'
-#'   Both default to `NULL`, i.e. keep the existing factor levels.
-#' @param ylevels,yord as for `xlevels` / `xord` above, but for the `y` variable.
-#' @param xaxlabels,yaxlabels \[Deprecated\] character vectors for annotation of
-#'   the x and y axis. Use the top-level `xaxl` / `yaxl` arguments instead,
-#'   which accept a named vector mapping old labels to new ones, and apply
-#'   consistently across plot types.
+#'   Note that `x` is only reordered when it is categorical (i.e., factor or
+#'   character). Both arguments are thus ignored for spinograms, which have a
+#'   (binned) numeric `x` axis. Each argument defaults to `NULL`, i.e. keep the
+#'   existing factor levels.
+#' @param ylevels,yord as for `xlevels` / `xord` above, but for the `y`
+#'   variable. Note that `y` is always coerced to a factor for spineplots and
+#'   spinograms, so these arguments are always binding if provided. Be aware
+#'   that a numeric `y` gives one level per distinct value.
 #' @inheritParams graphics::spineplot
 #' @param lighten logical. For grouped spineplots where the `y` variable is
 #'   itself the grouping variable (i.e. `y == by`), should the fills use a
@@ -43,6 +43,10 @@
 #'   the lighter tint. Note that `lighten` has no effect on other spineplot
 #'   displays (single-group or `x == by`), which always use a sequential shading
 #'   ramp of the base colour.
+#' @param xaxlabels,yaxlabels \[Deprecated\] character vectors for annotation of
+#'   the x and y axis. Use the top-level `xaxl` / `yaxl` arguments instead,
+#'   which apply consistently across [`tinyplot`] types. These two type-specific
+#'   arguments will be removed in a future release.
 #' @examples
 #' # "spineplot" type convenience string
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot")
@@ -117,7 +121,7 @@
 #' )
 #' 
 #' @export
-type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, xord = NULL, ylevels = NULL, yord = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
+type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, xord = NULL, ylevels = NULL, yord = NULL, col = NULL, weights = NULL, lighten = FALSE, xaxlabels = NULL, yaxlabels = NULL) {
   col = col
   dep = c(if (!is.null(xaxlabels)) "xaxlabels", if (!is.null(yaxlabels)) "yaxlabels")
   if (length(dep)) {

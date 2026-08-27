@@ -27,33 +27,33 @@
 #' at the specified `probs`. The quantiles are computed based on the density
 #' (rather than the raw original variable). Only one of `breaks` or
 #' `probs` must be specified.
-#' @param ylevels,yord two ways to control the order of the `y` variable, and
-#'   hence of the axis. Supply one or the other; if both are given, `ylevels`
-#'   takes precedence and `yord` is ignored. Note that a numeric `y` is coerced
-#'   to a factor before the ridges are drawn, so it is reordered like any other
-#'   categorical variable.
+#' @param ylevels,yord arguments controlling the order of the `y` variable, and
+#'   hence of the y-axis. Supply one or the other; if both arguments are
+#'   provided, `ylevels` takes precedence and `yord` is silently ignored.
 #'
-#'   `ylevels` names the levels literally: a character vector of level names in
-#'   the desired order, or a numeric vector of the corresponding level indexes
-#'   (e.g. `3:1`).
+#'   - `ylevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
 #'
-#'   `yord` instead derives the order from the data, via a keyword or a
-#'   function. Options are:
+#'   - `yord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
 #'
-#'   - `"total"` ranks the ridges by summed `x`, largest first. (Ridge plots
-#'   have no separate response, so the ranking runs on the continuous `x`
-#'   variable.)
-#'   - `"minvar"` ranks them by the spread of each distribution, narrowest
-#'   first.
-#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
-#'   data at all. The former takes the categories in the order that they appear
-#'   in the data, while `"rev"` reverses the current level order.
-#'   - a custom function that determines both the ranking statistic and its
-#'   direction. The statistic is always sorted ascending, so `function(y) sum(y)`
-#'   reverses `"total"`, and `function(y) -median(y)` ranks by median rather
-#'   than by sum.
+#'     - `"total"` ranks the ridges by summed `x`, largest first. (Ridge plots
+#'     have no separate response, so the ranking runs on the continuous `x`
+#'     variable.)
+#'     - `"minvar"` ranks them by the spread of each distribution, narrowest
+#'     first.
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted ascending, so
+#'     `function(y) sum(y)` reverses `"total"`, and `function(y) -median(y)`
+#'     ranks by median rather than by sum.
 #'
-#'   Both default to `NULL`, i.e. keep the existing factor levels.
+#'   Note that a numeric `y` is coerced to a factor before the ridges are
+#'   drawn, so it is reordered like any other categorical variable.
+#'   Each argument defaults to `NULL`, i.e. keep the existing factor levels.
 #' @inheritParams stats::density
 #' @param bw the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
 #'   see \code{\link[stats]{density}} for details and options.

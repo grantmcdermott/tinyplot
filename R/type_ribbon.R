@@ -11,25 +11,26 @@
 #' @param byord keyword string or function. Permits on-the-fly (re)ordering of
 #'   the `by` group layers, thus controlling the order in which they stack.
 #'   Options are:
-#' 
-#'   - `"start"`, `"end"`, and `"total"` are positional keywords that rank groups
-#'   according to their `y` values along the `x` axis. In each case, the group
-#'   with the largest value is stacked first as the bottom layer.
-#'   - `"minvar"` ranks by variance and puts the lowest variance group on the
+#'
+#'   - `"start"`, `"end"` and `"total"` are positional keywords that rank the
+#'   groups by their `y` values along the `x` axis. In each case, the group with
+#'   the largest value is stacked first, as the bottom layer.
+#'   - `"minvar"` ranks by variance, putting the lowest variance group on the
 #'   baseline.
-#'   - `"asis"` and `"rev"` permute the existing levels without consulting the
+#'   - `"asis"` or `"rev"` permute the existing levels without consulting the
 #'   data at all. The former takes the groups in the order that they appear in
-#'   the data, while `"rev"` reverses the current level order.
-#'   - custom function that determines both the ranking statistic and its
-#'   direction, e.g. `function(y) -median(y)` would layer by median `y` value,
-#'   from the biggest to the smallest. Note: if a function requires access to a
-#'   group's `x` values, then one of its arguments _must_ be named `x`, e.g.
+#'   the data, while the latter reverses the current level order.
+#'   - a custom function that determines both the ranking statistic and its
+#'   direction. The statistic is always sorted ascending, so
+#'   `function(y) -median(y)` layers by median `y` value, from the biggest to
+#'   the smallest. Note that if a function requires access to a group's `x`
+#'   values, then one of its arguments _must_ be named `x`, e.g.
 #'   `function(y, x) coef(lm(y ~ x))[2]` would layer by trend.
-#' 
-#'   Default is `NULL`, in which case the existing factor level order is
-#'   retained; to set that order explicitly, call `factor(levels = ...)` on the
-#'   grouping variable beforehand. See Examples, as well as the "Stacked area
-#'   plots" section below.
+#'
+#'   Defaults to `NULL`, i.e. keep the existing factor levels. To set that order
+#'   explicitly, call `factor(levels = ...)` on the grouping variable
+#'   beforehand. See Examples, as well as the "Stacked area plots" section
+#'   below.
 #' @param FUN a function for collapsing repeated `y` values within a group and
 #'   `x` position, used only when `stack = TRUE`. Defaults to `mean`, matching
 #'   [`type_barplot()`], so that the same data stacks to the same heights

@@ -45,8 +45,10 @@
 #'   than by sum.
 #'
 #'   Both default to `NULL`, i.e. keep the existing factor levels.
-#' @param xaxlabels a character vector with the axis labels for the `x` variable,
-#'   defaulting to the levels of `x`.
+#' @param xaxlabels \[Deprecated\] a character vector with the axis labels for
+#'   the `x` variable. Use the top-level `xaxl` argument instead, which now
+#'   accepts a named vector mapping old labels to new ones, and applies
+#'   consistently across plot types.
 #' @param offset optional specification for shifting bar baselines, accepting
 #'   one of two distinct forms. See the Examples for illustrations of both.
 #' 
@@ -178,6 +180,14 @@
 #'
 #' @export
 type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
+  if (!is.null(xaxlabels)) {
+    warning(
+      "'xaxlabels' is deprecated; use the top-level 'xaxl' argument instead, ",
+      "e.g. tinyplot(..., xaxl = c(old = \"new\")) to rename particular ",
+      "categories, or xaxl = function(x) ... to compute the labels.",
+      call. = FALSE
+    )
+  }
   out = list(
     data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xord = xord, xaxlabels = xaxlabels, drop.zeros = drop.zeros, lighten = lighten),
     draw = draw_rect(),

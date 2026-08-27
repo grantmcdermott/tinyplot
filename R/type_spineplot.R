@@ -28,6 +28,10 @@
 #'
 #'   Both default to `NULL`, i.e. keep the existing factor levels.
 #' @param ylevels,yord as for `xlevels` / `xord` above, but for the `y` variable.
+#' @param xaxlabels,yaxlabels \[Deprecated\] character vectors for annotation of
+#'   the x and y axis. Use the top-level `xaxl` / `yaxl` arguments instead,
+#'   which accept a named vector mapping old labels to new ones, and apply
+#'   consistently across plot types.
 #' @inheritParams graphics::spineplot
 #' @param lighten logical. For grouped spineplots where the `y` variable is
 #'   itself the grouping variable (i.e. `y == by`), should the fills use a
@@ -115,6 +119,20 @@
 #' @export
 type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, xord = NULL, ylevels = NULL, yord = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
   col = col
+  dep = c(if (!is.null(xaxlabels)) "xaxlabels", if (!is.null(yaxlabels)) "yaxlabels")
+  if (length(dep)) {
+    warning(
+      sprintf(
+        "'%s' %s deprecated; ",
+        paste(dep, collapse = "' and '"),
+        if (length(dep) > 1L) "are" else "is"
+      ),
+      "use the top-level 'xaxl'/'yaxl' arguments instead, e.g. ",
+      "tinyplot(..., yaxl = c(old = \"new\")) to rename particular categories, ",
+      "or yaxl = function(x) ... to compute the labels.",
+      call. = FALSE
+    )
+  }
   out = list(
     data = data_spineplot(off = off, breaks = breaks, xlevels = xlevels, xord = xord, ylevels = ylevels, yord = yord, xaxlabels = xaxlabels, yaxlabels = yaxlabels, weights = weights, lighten = lighten),
     draw = draw_spineplot(tol.ylab = tol.ylab, off = off, col = col, xaxlabels = xaxlabels, yaxlabels = yaxlabels, lighten = lighten),
@@ -127,7 +145,7 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 #' @importFrom grDevices nclass.Sturges
 data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, xord = NULL, ylevels = ylevels, yord = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
     fun = function(settings, ...) {
-        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "frame.plot", "xaxt", "yaxt", "lwd", "lty"))
+        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "xaxl", "yaxl", "null_by", "null_facet", "col", "bg", "axes", "frame.plot", "xaxt", "yaxt", "lwd", "lty"))
         settings[["lighten"]] = lighten
       
         ## process weights: a top-level `weights` column (carried on datapoints
@@ -301,6 +319,15 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, xord = N
         # catch for x_by / y/by
         if (isTRUE(x_by)) datapoints$by = factor(rep(xaxlabels, each = ny)) # each x label extends over ny rows
         if (isTRUE(y_by)) datapoints$by = factor(rep_len(yaxlabels, nrow(datapoints)))
+
+        ## This type draws its own axes (see the `draws_own_axes` hint below),
+        ## so it never reaches the standard path where the top-level `xaxl` /
+        ## `yaxl` are applied. Apply them here instead, to the labels that
+        ## spine_axis() will actually draw. Deliberately after the `by` catch
+        ## above: `x/yaxl` are documented as affecting the tick labels only, so
+        ## a legend built from the same categories should be left alone.
+        if (!is.null(xaxl)) xaxlabels = tinylabel(xaxlabels, xaxl)
+        if (!is.null(yaxl)) yaxlabels = tinylabel(yaxlabels, yaxl)
 
         x = c(datapoints$xmin, datapoints$xmax)
         y = c(datapoints$ymin, datapoints$ymax)

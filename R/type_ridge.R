@@ -298,7 +298,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       singletons = "warn"
                       ) {
   fun = function(settings, ...) {
-    env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by"))
+    env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by", "yaxl"))
 
     # `col` may arrive either via the top-level `tinyplot(..., col =)` call
     # (stored in settings) or via the `type_ridge(col =)` constructor arg. The
@@ -496,6 +496,10 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       probs = probs,
       manbreaks = manbreaks,
       yaxt = yaxt_orig,
+      ## This type draws its own y-axis category labels (see `draws_own_axes`),
+      ## so it never reaches the standard path where `yaxl` is applied. Carry it
+      ## through for the tinyAxis() calls in draw_ridge() to use as a labeller.
+      yaxl = yaxl,
       raster = raster,
       ridge_theme = ridge_theme,
       x_by = x_by,
@@ -616,6 +620,7 @@ draw_ridge = function() {
     if (ridge_theme) {
       if (keep_axis(2)) {
         tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
+                 labeller = type_info[["yaxl"]],
                  padj = 0,
                  mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
                  tcl = 0)
@@ -623,7 +628,8 @@ draw_ridge = function() {
       if (identical(.tpar[["tinytheme"]], "ridge2") && keep_axis(1)) axis(1, labels = FALSE)
     } else {
       if (keep_axis(2)) {
-        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
+        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
+                 labeller = type_info[["yaxl"]])
       }
     }
   }

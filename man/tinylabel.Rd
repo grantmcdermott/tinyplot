@@ -9,12 +9,28 @@ tinylabel(x, labeller = NULL, na.ignore = TRUE, na.rm = TRUE)
 \arguments{
 \item{x}{a numeric or character vector}
 
-\item{labeller}{a formatting function to be applied to \code{x}, e.g. \code{\link{format}},
-\code{\link{toupper}}, \code{\link{abs}}, or other custom function (including from the popular
-\strong{scales} package). Can also be one of the following convenience strings
-(symbols), for which common formatting transformations are provided:
-\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
-(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
+\item{labeller}{how the labels should be relabelled or reformatted. One of:
+\itemize{
+\item a function to be applied to \code{x}, e.g. \code{\link{format}}, \code{\link{toupper}}, \code{\link{abs}},
+or any other custom function (including from the popular \strong{scales}
+package).
+\item one of the following convenience strings (or their symbol equivalents),
+for which common formatting transformations are provided: \code{"percent"}
+(\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"} (\code{"$"}), \code{"euro"}
+(\code{"€"}), or \code{"sterling"} (\code{"£"}).
+\item a \emph{named} character vector or list, acting as a dictionary, e.g.
+\code{c(setosa = "SET")}. Entries of \code{x} that match a name are replaced by the
+corresponding value and the rest are left alone, so a partial mapping is
+fine. The lookup is by value rather than by position, which means it is
+unaffected by any reordering of the underlying categories.
+}
+
+Note that an \emph{unnamed} character vector of length greater than one is an
+error, rather than a positional replacement of the labels. Such a vector
+could not be told apart from a formatting keyword when \code{x} is of length
+one, and would not follow the categories if they were reordered. Pass a
+function if you want to compute the labels positionally, e.g.
+\code{function(x) LETTERS[seq_along(x)]}.}
 
 \item{na.ignore}{logical indicating whether the labelling function should
 ignore \code{NA} values in \code{x}. In other words, should the \code{NA} values be left
@@ -38,6 +54,10 @@ x = 1e4
 tinylabel(x, "comma")
 tinylabel(x, ",") # same
 tinylabel(x, "$") # or "dollar"
+
+# a named vector acts as a dictionary: matched entries are replaced and the
+# rest are left alone
+tinylabel(c("setosa", "versicolor"), c(setosa = "SET"))
 
 # invoke tinylabel from a parent tinyplot call...
 #   => x/yaxl for adjusting axes tick labels

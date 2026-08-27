@@ -39,7 +39,9 @@ draw_legend(
 
 \item{lgnd_labs}{The labels passed to \code{legend(legend = ...)}.}
 
-\item{labeller}{Character or function for formatting the labels (\code{lgnd_labs}).
+\item{labeller}{Function, character keyword, or named vector for formatting
+or relabelling the labels (\code{lgnd_labs}). See \code{\link{tinylabel}} for the
+accepted forms.
 Passed down to \code{\link{tinylabel}}.}
 
 \item{type}{Plotting type(s), passed down from \link{tinyplot}.}

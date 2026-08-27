@@ -80,8 +80,10 @@ than by sum.
 
 Both default to \code{NULL}, i.e. keep the existing factor levels.}
 
-\item{xaxlabels}{a character vector with the axis labels for the \code{x} variable,
-defaulting to the levels of \code{x}.}
+\item{xaxlabels}{[Deprecated] a character vector with the axis labels for
+the \code{x} variable. Use the top-level \code{xaxl} argument instead, which now
+accepts a named vector mapping old labels to new ones, and applies
+consistently across plot types.}
 
 \item{drop.zeros}{logical. Should bars with zero height be dropped? If set
 to \code{FALSE} (default) a zero height bar is still drawn for which the border

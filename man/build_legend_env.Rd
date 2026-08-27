@@ -36,7 +36,8 @@ build_legend_env(
 
 \item{lgnd_labs}{The legend labels}
 
-\item{labeller}{Character or function for formatting labels}
+\item{labeller}{Function, character keyword, or named vector for formatting
+or relabelling the labels. See \code{\link{tinylabel}} for the accepted forms.}
 
 \item{type}{Plot type}
 

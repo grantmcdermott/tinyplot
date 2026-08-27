@@ -417,16 +417,12 @@ the break points at which the axis tick-marks are to be drawn. Break points
 outside the range of the data will be ignored if the associated axis
 variable is categorical, or an explicit \code{x/ylim} range is given.}
 
-\item{xaxl, yaxl}{a function or a character keyword specifying the format of
-the x- or y-axis tick labels. Note that this is a post-processing step that
-affects the \emph{appearance} of the tick labels only; use in conjunction with
-\code{x/yaxb} if you would like to adjust the position of the tick marks too. In
-addition to user-supplied formatting functions (e.g., \code{\link{format}},
-\code{\link{toupper}}, \code{\link{abs}}, or other custom function), several convenience
-keywords (or their symbol equivalents) are available for common formatting
-transformations: \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}),
-\code{"dollar"} (\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}). See the
-\code{\link{tinylabel}} documentation for examples.}
+\item{xaxl, yaxl}{a function, character keyword, or named vector for
+formatting or (re)labelling the x- or y-axis tick labels. Passed to
+\code{\link{tinylabel}}; see the latter's help file for more detailed documentation
+and examples. Note that this is a post-processing step that affects the
+\emph{appearance} of the tick labels only; use in conjunction with \code{x/yaxb} if
+you would like to adjust the position of the tick marks too.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be
 logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}

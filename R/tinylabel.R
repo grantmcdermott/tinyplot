@@ -178,7 +178,8 @@ labeller_fun = function(label = "percent") {
   # the unique values distinct, so a single consistent format can be applied to
   # the whole vector. Falls back to max_decimals.
   consistent_decimals = function(x, max_decimals = 5L) {
-    ux = unique(as.numeric(x))
+    # Deduplicate at printed precision (#689)
+    ux = unique(round(as.numeric(x), max_decimals))
     Find(
       function(d) {
         length(unique(sprintf(paste0("%.", d, "f"), ux))) == length(ux)

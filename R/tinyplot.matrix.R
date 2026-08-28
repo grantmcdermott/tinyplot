@@ -63,7 +63,7 @@
 #' # barplot(s)
 #' tinyplot(VADeaths, type = "barplot", beside = TRUE)
 #' tinyplot(t(VADeaths), type = "barplot", beside = TRUE)
-#' tinyplot(VADeaths, type = "barplot", beside = TRUE, facet = "by", legend = FALSE)
+#' tinyplot(VADeaths, type = "barplot", facet = "by", legend = FALSE)
 #' 
 #' @export
 tinyplot.matrix = function(x, type = NULL, legend = NULL, facet = NULL, xlab = NULL, ylab = NULL, ...) {

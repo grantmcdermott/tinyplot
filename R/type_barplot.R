@@ -121,7 +121,6 @@
 #' tinyplot(~ cyl, data = mtcars, type = "barplot")
 #' tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
 #' 
-#' 
 #' # Fancy frequency table (y = frequency aleady computed)
 #' tinyplot(
 #'   Freq ~ Sex | Survived, data = as.data.frame(Titanic),
@@ -147,7 +146,7 @@
 #' )
 #'
 #' #
-#' ## Offset
+#' ## Offset examples
 #'
 #' # 1. Waterfall plot
 #' d = data.frame(item = c("Sales", "Services", "Costs", "Returns", "TOTAL"),

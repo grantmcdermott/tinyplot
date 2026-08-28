@@ -84,7 +84,7 @@ tinyplot(VADeaths, type = "heatmap", theme = "heatmap", col = "white")
 # barplot(s)
 tinyplot(VADeaths, type = "barplot", beside = TRUE)
 tinyplot(t(VADeaths), type = "barplot", beside = TRUE)
-tinyplot(VADeaths, type = "barplot", beside = TRUE, facet = "by", legend = FALSE)
+tinyplot(VADeaths, type = "barplot", facet = "by", legend = FALSE)
 
 }
 \seealso{

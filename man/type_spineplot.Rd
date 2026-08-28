@@ -41,14 +41,14 @@ vector of the corresponding level indexes (e.g. \code{3:1}).
 \item \code{xord} instead accepts a keyword or custom function, which then \emph{derives}
 the order from the data. Options are:
 \itemize{
-\item \code{"total"} ranks the categories by (weighted) frequency, i.e. most
-common first.
+\item \code{"desc"} and \code{"asc"} rank the categories by (weighted) frequency,
+i.e. most or least common first. (Long forms like \code{"descending"} and \code{"increasing"} are also accepted.)
 \item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
 data at all. The former takes the categories in the order that they
 appear in the data, while the latter reverses the current level order.
 \item a custom function that determines both the ranking statistic and its
 direction. The statistic is always sorted ascending, so
-\code{function(y) sum(y)} reverses \code{"total"}.
+\code{function(y) -median(y)} ranks by median, largest first.
 }
 }
 

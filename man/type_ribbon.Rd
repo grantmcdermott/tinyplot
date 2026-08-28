@@ -24,9 +24,11 @@ area plots" section below.}
 the \code{by} group layers, thus controlling the order in which they stack.
 Options are:
 \itemize{
-\item \code{"start"}, \code{"end"} and \code{"total"} are positional keywords that rank the
-groups by their \code{y} values along the \code{x} axis. In each case, the group with
-the largest value is stacked first, as the bottom layer.
+\item \code{"desc"} and \code{"asc"} rank the groups by their summed \code{y} across the \code{x}
+axis, largest or smallest first. With \code{"desc"} the biggest group is stacked
+first, as the bottom layer. (Long forms like \code{"descending"} and \code{"increasing"} are also accepted.)
+\item \code{"start"} and \code{"end"} instead rank on the \code{y} values at the smallest and
+largest \code{x} respectively, again stacking the largest group first.
 \item \code{"minvar"} ranks by variance, putting the lowest variance group on the
 baseline.
 \item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
@@ -99,10 +101,11 @@ separately within each facet.
 
 The \code{byord} argument is a helpful companion to stacked area plots, since it
 enables on-the-fly adjustment of the stacking order. For example,
-three positional keywords---\code{"start"}, \code{"end"}, and \code{"total"}---rank the
-stacked \code{by} groups according to their \code{y} values at the designated position
-along the \code{x} axis. Following convention, the ranking runs in descending
-order, so that the biggest group is drawn on the bottom layer. However, size
+the size keywords---\code{"desc"}, \code{"start"}, and \code{"end"}---rank the
+stacked \code{by} groups according to their \code{y} values, either summed across the
+\code{x} axis or taken at one end of it. Following convention, the ranking runs in
+descending order, so that the biggest group is drawn on the bottom layer
+(use \code{"asc"} for the reverse). However, size
 is not the only route to a stable baseline. Because each band is
 drawn on top of the ones below it, they all inherit whatever movement the
 bottom layer has. A large but volatile group can therefore be a worse choice
@@ -185,7 +188,7 @@ tinyplot(
 # `"minvar"` instead puts the *least variable* group on the baseline. Every
 # band inherits the movement of the ones below it, so a steady bottom layer
 # keeps the whole chart legible. Here that picks group B, which the default
-# level order leaves in the middle and `"end"`/`"total"` push to the top.
+# level order leaves in the middle and `"end"`/`"desc"` push to the top.
 
 tinyplot(
   val ~ year | grp, data = dat,

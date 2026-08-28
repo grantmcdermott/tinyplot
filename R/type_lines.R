@@ -76,7 +76,8 @@ data_lines = function(dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = NUL
     if (!is.null(xord) && is.null(xlevels)) {
       datapoints[["x"]] = sanitize_ord(
         datapoints[["x"]], datapoints[["y"]], NULL,
-        xord, arg = "xord", keywords = ord_keywords_distribution
+        xord, arg = "xord", keywords = ord_keywords_distribution,
+        stat = "mean"
       )
     }
     if (is.factor(datapoints[["x"]])) {

@@ -15,7 +15,8 @@
 #'   - `xord` instead accepts a keyword or custom function, which then _derives_
 #'   the order from the data. Options are:
 #'
-#'     - `"total"` ranks the categories by their `y` values, largest first.
+#'     - `"desc"` and `"asc"` rank the categories by their mean `y` value,
+#'     largest or smallest first. (Long forms like `"descending"` and `"increasing"` are also accepted.)
 #'     - `"minvar"` ranks them by variance, lowest first. This needs more than
 #'     one observation per category, so it does not apply to the usual
 #'     one-row-per-term coefficient table.
@@ -24,8 +25,7 @@
 #'     appear in the data, while the latter reverses the current level order.
 #'     - a custom function that determines both the ranking statistic and its
 #'     direction. The statistic is always sorted ascending, so
-#'     `function(y) sum(y)` reverses `"total"`, and `function(y) -median(y)`
-#'     ranks by median rather than by sum.
+#'     `function(y) -median(y)` ranks by median, largest first.
 #'
 #'   Note that `x` is only reordered when it is categorical (i.e., factor or
 #'   character). A numeric `x` is plotted at its own values and cannot be

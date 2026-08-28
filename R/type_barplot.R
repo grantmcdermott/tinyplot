@@ -30,17 +30,23 @@
 #'   - `xord` instead accepts a keyword or custom function, which then _derives_
 #'   the order from the data. Options are:
 #'
-#'     - `"total"` ranks the categories by value, largest first. In practice
-#'     this is the keyword most reach for, since it sorts the bars by height.
-#'     Note that it ranks the *aggregated* bars, i.e. whatever `FUN` produced,
-#'     rather than the underlying rows.
+#'     - `"desc(ending)"` and `"asc(ending)"` rank (sort) the categories by bar
+#'     height, tallest or shortest first. Both the abbreviated and long form
+#'     strings are permitted, as are the `"decreasing"` and `"increasing"`
+#'     aliases. Note that the ranking is applied to the *aggregated* bars, i.e.
+#'     whatever `FUN` produced, rather than the underlying rows. With `by`
+#'     groups or facets, a single ordering is computed and shared across all of
+#'     them, by summing each category's bars over every group and facet. For
+#'     stacked bars that sum is the height of the full stack; with
+#'     `beside = TRUE` it is the group total rather than any individual bar. (A
+#'     factor carries one level order, so a per-facet ranking is not
+#'     expressible.)
 #'     - `"asis"` or `"rev"` permute the existing levels without consulting the
 #'     data at all. The former takes the categories in the order that they
 #'     appear in the data, while the latter reverses the current level order.
 #'     - a custom function that determines both the ranking statistic and its
 #'     direction. The statistic is always sorted in ascending order, so
-#'     `function(y) sum(y)` reverses `"total"`, and `function(y) -median(y)`
-#'     ranks by median rather than by sum.
+#'     `function(y) -median(y)` ranks by median, largest first.
 #'
 #'   Note that a numeric `x` is coerced to a factor before the bars are drawn,
 #'   so it is reordered like any other categorical variable.
@@ -74,54 +80,58 @@
 #'   release.
 #'
 #' @examples
-#' # Basic examples of frequency tables (without y variable)
-#' tinyplot(~ cyl, data = mtcars, type = "barplot")
-#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
-#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
+#' #
+#' ## Basic use
 #' 
-#' # Reorder x variable categories either by their character levels or numeric indexes
-#' tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = c("8", "6", "4"))
-#' tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
+#' sleep2 = transform(sleep, drug = group) # less misleading name (same people)
 #' 
-#' # Or let the data decide the order, rather than naming it. `xord = "total"`
-#' # sorts the bars by height; the ordering is shared across groups and facets.
-#' tinyplot(~ cyl, data = mtcars, type = "barplot", xord = "total")
-#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", xord = "total")
+#' tinyplot(extra ~ ID, data = sleep2, type = "barplot")
+#' tinyplot(extra ~ ID, data = sleep2, type = "barplot", xord = "desc")
+#' tinyplot(extra ~ ID | drug, data = sleep2, type = "barplot", beside = TRUE)
 #' 
-#' # The ranking statistic is always sorted ascending, so passing a function is
-#' # how you get the reverse: `sum` undoes what `"total"` does.
-#' tinyplot(~ cyl, data = mtcars, type = "barplot", xord = function(y) sum(y))
-#' 
-#' # The two arguments compose, `xlevels` first: here we fix an explicit order
-#' # and then flip it.
+#' # Change the aggregation (non-grouped case) from the `FUN = mean` default to
+#' # ask a more interesting question: which subject benefitted most from the
+#' # switch to drug 2?
 #' tinyplot(
-#'   ~ cyl, data = mtcars, type = "barplot",
-#'   xlevels = c("8", "6", "4"), xord = "rev"
+#'    extra ~ ID, data = sleep2, type = "barplot",
+#'    FUN = diff, xord = "desc",
+#'    main = "Sleep gain (drug 2 vs drug 1)"
 #' )
 #' 
-#' # Note: Above we used automatic argument passing for `beside`. But this
-#' # wouldn't work for `width`, since it would conflict with the top-level
+#' # Note: We used automatic argument passing for 'xord', `FUN`, etc. above. But
+#' # this wouldn't work for `width`, since it would conflict with the top-level
 #' # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
 #' # through the `type_barplot()` functional equivalent.
 #' tinyplot(
-#'   ~ cyl | vs, data = mtcars,
-#'   type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65)
+#'   extra ~ ID | drug, data = sleep2,
+#'   type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
 #' )
 #' 
-#' # Example for numeric y aggregated by x (default: FUN = mean) + facets
-#' tinyplot(
-#'   extra ~ ID | group, facet = "by", data = sleep,
-#'   type = "barplot",
-#'   theme = "clean2"
-#' )
+#' #
+#' ## matrix method (no formula required)
 #' 
-#' # Fancy frequency table:
+#' tinyplot(VADeaths, type = "barplot")
+#' tinyplot(VADeaths, type = "barplot", beside = TRUE)
+#' # etc. see ?tinyplot.matrix
+#' 
+#' #
+#' ## Frequency tables
+#' 
+#' # No y variable (frequency calculated on the fly)
+#' tinyplot(~ cyl, data = mtcars, type = "barplot")
+#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
+#' 
+#' 
+#' # Fancy frequency table (y = frequency aleady computed)
 #' tinyplot(
 #'   Freq ~ Sex | Survived, data = as.data.frame(Titanic),
 #'   facet = ~ Class, facet.args = list(nrow = 1),
-#'   type = "barplot", flip = TRUE,
+#'   type = "barplot", beside = TRUE, flip = TRUE,
 #'   theme = "clean2"
 #' )
+#' 
+#' #
+#' ## Centering
 #'
 #' # Centered barplot for conditional proportions of dark (black/brown) vs.
 #' # light (red/blond) hair color, conditional on eye color and sex.
@@ -136,7 +146,8 @@
 #'   theme = list("clean2", palette.qualitative = hcols)
 #' )
 #'
-#' # Use cases for the `offset` argument
+#' #
+#' ## Offset
 #'
 #' # 1. Waterfall plot
 #' d = data.frame(item = c("Sales", "Services", "Costs", "Returns", "TOTAL"),

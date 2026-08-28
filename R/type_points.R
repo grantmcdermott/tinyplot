@@ -15,16 +15,15 @@
 #'   - `xord` instead accepts a keyword or custom function, which then _derives_
 #'   the order from the data. Options are:
 #'
-#'     - `"total"` ranks the categories by the `y` values observed at each one,
-#'     largest first.
+#'     - `"desc"` and `"asc"` rank the categories by their mean `y` value,
+#'     largest or smallest first. (Long forms like `"descending"` and `"increasing"` are also accepted.)
 #'     - `"minvar"` ranks them by the variance of those values, lowest first.
 #'     - `"asis"` or `"rev"` permute the existing levels without consulting the
 #'     data at all. The former takes the categories in the order that they
 #'     appear in the data, while the latter reverses the current level order.
 #'     - a custom function that determines both the ranking statistic and its
 #'     direction. The statistic is always sorted ascending, so
-#'     `function(y) sum(y)` reverses `"total"`, and `function(y) -median(y)`
-#'     ranks by median rather than by sum.
+#'     `function(y) -median(y)` ranks by median, largest first.
 #'
 #'   Note that `x` is only reordered when it is categorical (i.e., factor or
 #'   character). A numeric `x` is plotted at its own values and cannot be
@@ -85,7 +84,8 @@ data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xleve
     if (!is.null(xord) && is.null(xlevels)) {
       datapoints$x = sanitize_ord(
         datapoints$x, datapoints[["y"]], NULL,
-        xord, arg = "xord", keywords = ord_keywords_distribution
+        xord, arg = "xord", keywords = ord_keywords_distribution,
+        stat = "mean"
       )
     }
     if (is.factor(datapoints$x)) {

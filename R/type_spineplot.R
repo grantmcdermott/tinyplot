@@ -15,14 +15,14 @@
 #'   - `xord` instead accepts a keyword or custom function, which then _derives_
 #'   the order from the data. Options are:
 #'
-#'     - `"total"` ranks the categories by (weighted) frequency, i.e. most
-#'     common first.
+#'     - `"desc"` and `"asc"` rank the categories by (weighted) frequency,
+#'     i.e. most or least common first. (Long forms like `"descending"` and `"increasing"` are also accepted.)
 #'     - `"asis"` or `"rev"` permute the existing levels without consulting the
 #'     data at all. The former takes the categories in the order that they
 #'     appear in the data, while the latter reverses the current level order.
 #'     - a custom function that determines both the ranking statistic and its
 #'     direction. The statistic is always sorted ascending, so
-#'     `function(y) sum(y)` reverses `"total"`.
+#'     `function(y) -median(y)` ranks by median, largest first.
 #'
 #'   Note that `x` is only reordered when it is categorical (i.e., factor or
 #'   character). Both arguments are thus ignored for spinograms, which have a
@@ -209,7 +209,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, xord = N
         }
         ## Both axes here are categorical, so there is no response to rank on:
         ## the size keywords count observations instead (weighted, if given),
-        ## i.e. "total" orders the categories by frequency.
+        ## i.e. "asc"/"desc" order the categories by frequency.
         spine_w = if (!is.null(weights)) weights else rep.int(1, nrow(datapoints))
         if (!is.null(xord) && is.null(xlevels) && x.categorical) {
           datapoints$x = sanitize_ord(

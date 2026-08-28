@@ -5,16 +5,17 @@
 ##   - NULL:       keep the existing factor levels (the default)
 ##   - "asis":     the categories in the order they appear in the data
 ##   - "rev":      the existing factor levels, reversed
+##   - "desc":     rank by the group's ranking statistic, largest first
+##   - "asc":      ditto, smallest first
 ##   - "start":    rank by the group's y value at the smallest x
 ##   - "end":      rank by the group's y value at the largest x
-##   - "total":    rank by the group's summed y across every x
 ##   - "minvar":   rank by the group's variance, least variable first
 ##
 ## ... and, for anything else, a function that is handed each group's y values
 ## (ordered by x) and returns a single number to sort *ascending* on. So
-## `function(y) -sum(y)` reproduces "total", and `function(y) sum(y)` reverses
-## it. This is the escape hatch for the reverse direction, and for statistics we
-## don't have a keyword for (`function(y) -median(y)`, etc.).
+## `function(y) -sum(y)` reproduces a summed "desc", and `function(y) sum(y)`
+## its "asc". This is the escape hatch for statistics we don't have a keyword
+## for (`function(y) -median(y)`, etc.).
 ##
 ## A function that declares a formal named `x` also receives that group's x
 ## values, which is what any statistic depending on the spacing between
@@ -35,13 +36,14 @@
 ## handed only its own group's y values, never its group identity or level
 ## index, so it has no way to say "put me where I already am, backwards". Note
 ## that it reverses the *existing* level order only; to reverse what another
-## keyword computed, negate it with a function instead (`function(y) sum(y)` is
-## the reverse of "total").
+## keyword computed, swap "asc" for "desc".
 ##
-## The three size keywords rank largest first, i.e. into the first level, which
-## is the bottom band of a stacked area. "minvar" ranks the *other* way --
-## smallest first -- because there the stable baseline is the calm group, not
-## the big one. Both directions serve the same end.
+## "start"/"end"/"minvar" each bake in a direction, since only one of the two
+## is ever wanted: the size keywords rank largest first, i.e. into the first
+## level, which is the bottom band of a stacked area, while "minvar" ranks the
+## *other* way -- smallest first -- because there the stable baseline is the
+## calm group, not the big one. Both directions serve the same end. Only
+## "asc"/"desc" name a direction without naming a statistic; see `stat` below.
 ##
 ## Explicit level names or indexes are deliberately *not* accepted here -- that
 ## is what sanitize_xlevels() is for, and letting both arguments take the same
@@ -59,7 +61,7 @@
 ## category: in the degenerate case of a group literally called "end", set the
 ## factor levels beforehand instead.
 
-ord_keywords = c("asis", "rev", "start", "end", "total", "minvar")
+ord_keywords = c("asis", "rev", "start", "end", "asc", "desc", "minvar")
 
 ## The three sets below track what a type's categories actually are, since that
 ## is what decides which keywords can mean anything:
@@ -70,7 +72,7 @@ ord_keywords = c("asis", "rev", "start", "end", "total", "minvar")
 ##
 ## "start"/"end" name a position along a *secondary* axis, so they only mean
 ## what they say for categories that span one -- the `by` groups of a stacked
-## area, say. Elsewhere they would silently collapse onto "total" when there is
+## area, say. Elsewhere they would silently collapse onto "desc" when there is
 ## no grouping, and silently re-read as "first/last `by` level" when there is.
 ord_keywords_distribution = setdiff(ord_keywords, c("start", "end"))
 
@@ -82,11 +84,28 @@ ord_keywords_distribution = setdiff(ord_keywords, c("start", "end"))
 ## separate bars), the supplied weights for a spine.
 ord_keywords_scalar = setdiff(ord_keywords_distribution, "minvar")
 
-sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords) {
+## Long-form spellings of the two direction keywords. Only "asc"/"desc" are
+## documented and only they appear in the error below; these exist so that
+## typing the word that comes naturally does not error. "inc"/"dec" are
+## deliberately absent: in code they read first as increment/decrement.
+ord_aliases = c(
+  ascending  = "asc",  increasing = "asc",
+  descending = "desc", decreasing = "desc"
+)
+
+sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords, stat = c("sum", "mean")) {
   # nlevels < 2 has exactly one ordering, so skip the work (and the degeneracy
   # check below, which a single level would otherwise trip).
   if (is.null(ord) || !is.factor(v) || nlevels(v) < 2L) {
     return(v)
+  }
+  stat = match.arg(stat)
+
+  # Normalise the long forms before anything else looks at `ord`, so that the
+  # keyword check, the error message and the branches below all see canonical
+  # spellings only.
+  if (is.character(ord) && length(ord) == 1L && ord %in% names(ord_aliases)) {
+    ord = unname(ord_aliases[[ord]])
   }
 
   keyword = is.character(ord) && length(ord) == 1L && ord %in% keywords
@@ -135,16 +154,16 @@ sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords) {
     # every band above inherits its movement. Groups too short to have a
     # variance give NA and sort last (to the top), which is the right place
     # for them anyway.
-    stat = tapply(y, v, function(z) var(z, na.rm = TRUE), default = NA_real_)
+    score = tapply(y, v, function(z) var(z, na.rm = TRUE), default = NA_real_)
     # A variance that is NA everywhere (one observation per group) or identical
     # everywhere (constant weights) cannot order anything, and would otherwise
     # return the input untouched -- a silent no-op is the worst outcome here.
-    if (length(unique(stat)) < 2L) {
+    if (length(unique(score)) < 2L) {
       stop(
         sprintf(
           "`%s = \"minvar\"` cannot order these groups: %s.",
           arg,
-          if (all(is.na(stat))) {
+          if (all(is.na(score))) {
             "each has fewer than two observations, so there is no variance to rank on"
           } else {
             "every group has the same variance"
@@ -154,14 +173,29 @@ sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords) {
       )
     }
   } else if (keyword) {
-    if (identical(ord, "total")) {
+    # `stat` picks the summary the *reader* sees. Types whose categories carry
+    # one value each -- a bar's height, a spine's count, one band of a stacked
+    # area at a given x -- sum, so that pooling across `by`/facets adds up the
+    # way the drawing does. Types whose categories carry a whole distribution
+    # (a column of points, a ridge) average instead: summing there ranks by
+    # group size, so a category of many small values outranks one of few large
+    # ones even though every one of its observations is lower.
+    agg = if (identical(stat, "mean")) mean else sum
+    if (identical(ord, "asc") || identical(ord, "desc")) {
       keep = rep.int(TRUE, length(y))
     } else {
       edge = if (identical(ord, "start")) min(x, na.rm = TRUE) else max(x, na.rm = TRUE)
       keep = !is.na(x) & x == edge
     }
-    stat = tapply(y[keep], v[keep], function(z) sum(z, na.rm = TRUE), default = 0)
-    stat = -stat # largest group first, i.e. the bottom band
+    # An absent group has no mean, so it sorts last rather than to zero; under
+    # a sum, zero *is* its total and ranks it correctly among the others.
+    score = tapply(
+      y[keep], v[keep], function(z) agg(z, na.rm = TRUE),
+      default = if (identical(stat, "mean")) NA_real_ else 0
+    )
+    # "start"/"end" rank largest first, i.e. the bottom band; "asc" is the one
+    # keyword here that wants the raw ascending order.
+    if (!identical(ord, "asc")) score = -score
   } else {
     xord = if (is.null(x)) seq_along(y) else order(x)
     grps = split(y[xord], v[xord])
@@ -178,7 +212,7 @@ sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords) {
       )
     }
     xgrps = if (want_x) split(x[xord], v[xord]) else NULL
-    stat = vapply(
+    score = vapply(
       seq_along(grps),
       function(i) {
         z = grps[[i]]
@@ -190,6 +224,6 @@ sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords) {
   }
 
   # seq_along() breaks ties on the existing level order; empty groups sort last
-  o = order(stat, seq_along(stat), na.last = TRUE)
+  o = order(score, seq_along(score), na.last = TRUE)
   factor(v, levels = levels(v)[o])
 }

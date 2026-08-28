@@ -38,9 +38,9 @@
 #'   - `yord` instead accepts a keyword or custom function, which then _derives_
 #'   the order from the data. Options are:
 #'
-#'     - `"total"` ranks the ridges by summed `x`, largest first. (Ridge plots
-#'     have no separate response, so the ranking runs on the continuous `x`
-#'     variable.)
+#'     - `"desc"` and `"asc"` rank the ridges by their mean `x` value, largest
+#'     or smallest first. (Long forms like `"descending"` and `"increasing"` are also accepted.) (Ridge plots have no
+#'     separate response, so the ranking runs on the continuous `x` variable.)
 #'     - `"minvar"` ranks them by the spread of each distribution, narrowest
 #'     first.
 #'     - `"asis"` or `"rev"` permute the existing levels without consulting the
@@ -48,8 +48,7 @@
 #'     appear in the data, while the latter reverses the current level order.
 #'     - a custom function that determines both the ranking statistic and its
 #'     direction. The statistic is always sorted ascending, so
-#'     `function(y) sum(y)` reverses `"total"`, and `function(y) -median(y)`
-#'     ranks by median rather than by sum.
+#'     `function(y) -median(y)` ranks by median, largest first.
 #'
 #'   Note that a numeric `y` is coerced to a factor before the ridges are
 #'   drawn, so it is reordered like any other categorical variable.
@@ -330,12 +329,13 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       if (y_by) datapoints$by = datapoints$y
     }
     ## `yord` ranks the ridges on the *continuous* variable, which for this
-    ## type is `x` -- there is no separate response to rank on. So "total"
-    ## orders by summed x, "minvar" by the spread of each distribution.
+    ## type is `x` -- there is no separate response to rank on. So "asc"/"desc"
+    ## order by mean x, "minvar" by the spread of each distribution.
     if (!is.null(yord) && is.null(ylevels)) {
       datapoints$y = sanitize_ord(
         datapoints$y, datapoints$x, NULL,
-        yord, arg = "yord", keywords = ord_keywords_distribution
+        yord, arg = "yord", keywords = ord_keywords_distribution,
+        stat = "mean"
       )
       if (y_by) datapoints$by = datapoints$y
     }

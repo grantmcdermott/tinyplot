@@ -58,9 +58,9 @@ vector of the corresponding level indexes (e.g. \code{3:1}).
 \item \code{yord} instead accepts a keyword or custom function, which then \emph{derives}
 the order from the data. Options are:
 \itemize{
-\item \code{"total"} ranks the ridges by summed \code{x}, largest first. (Ridge plots
-have no separate response, so the ranking runs on the continuous \code{x}
-variable.)
+\item \code{"desc"} and \code{"asc"} rank the ridges by their mean \code{x} value, largest
+or smallest first. (Long forms like \code{"descending"} and \code{"increasing"} are also accepted.) (Ridge plots have no
+separate response, so the ranking runs on the continuous \code{x} variable.)
 \item \code{"minvar"} ranks them by the spread of each distribution, narrowest
 first.
 \item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
@@ -68,8 +68,7 @@ data at all. The former takes the categories in the order that they
 appear in the data, while the latter reverses the current level order.
 \item a custom function that determines both the ranking statistic and its
 direction. The statistic is always sorted ascending, so
-\code{function(y) sum(y)} reverses \code{"total"}, and \code{function(y) -median(y)}
-ranks by median rather than by sum.
+\code{function(y) -median(y)} ranks by median, largest first.
 }
 }
 

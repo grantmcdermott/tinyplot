@@ -542,8 +542,9 @@ prepare_legend = function(settings) {
 #' @param legend_args Additional legend arguments
 #' @param by_dep The (deparsed) "by" grouping variable name
 #' @param lgnd_labs The legend labels
-#' @param labeller Function, character keyword, or named vector for formatting
-#'   or relabelling the labels. See [`tinylabel`] for the accepted forms.
+#' @param labeller Function, character keyword, or dictionary (named vector or
+#'   list) for formatting or relabelling the labels. See [`tinylabel`] for the
+#'   accepted forms.
 #' @param type Plot type
 #' @param pch Plotting character(s)
 #' @param lty Line type(s)
@@ -771,8 +772,9 @@ reverse_legend_keys = function(legend_args, n) {
 #' @param legend_args Additional legend arguments
 #' @param by_dep The (deparsed) "by" grouping variable name
 #' @param lgnd_labs The legend labels
-#' @param labeller Function, character keyword, or named vector for formatting
-#'   or relabelling the labels. See [`tinylabel`] for the accepted forms.
+#' @param labeller Function, character keyword, or dictionary (named vector or
+#'   list) for formatting or relabelling the labels. See [`tinylabel`] for the
+#'   accepted forms.
 #' @param type Plot type
 #' @param pch Plotting character(s)
 #' @param lty Line type(s)
@@ -881,10 +883,9 @@ build_legend_env = function(
 #'   \code{\link[graphics]{legend}}.
 #' @param by_dep The (deparsed) "by" grouping variable name.
 #' @param lgnd_labs The labels passed to `legend(legend = ...)`.
-#' @param labeller Function, character keyword, or named vector for formatting
-#'   or relabelling the labels (`lgnd_labs`). See [`tinylabel`] for the
-#'   accepted forms.
-#'   Passed down to [`tinylabel`].
+#' @param labeller Function, character keyword, or dictionary (named vector or
+#'   list) for formatting or relabelling the labels (`lgnd_labs`). See
+#'   [`tinylabel`] for the accepted forms. Passed down to [`tinylabel`].
 #' @param type Plotting type(s), passed down from [tinyplot].
 #' @param pch Plotting character(s), passed down from [tinyplot].
 #' @param lty Plotting linetype(s), passed down from [tinyplot].

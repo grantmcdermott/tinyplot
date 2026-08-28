@@ -89,8 +89,11 @@
 #'   `labeller = list(firm = toupper, yield = "%")`, with any variable left
 #'   unnamed not formatted. While not recommended, unnamed values are matched
 #'   positionally, according to the variable order in the `facet` formula
-#'   specification. Defaults to the value of `tpar("facet.labeller")`, which is
-#'   `NULL` (no formatting).
+#'   specification. Note that this per-variable naming claims the same slot that
+#'   a [`tinylabel`] dictionary would, so a dictionary has to be nested inside
+#'   it, e.g. `labeller = list(Species = c(setosa = "SET"))`; a bare named
+#'   vector is read as a per-variable mapping instead. Defaults to the value of
+#'   `tpar("facet.labeller")`, which is `NULL` (no formatting).
 #'   - `prefix` a logical or character value for prefixing the facet titles with
 #'   a descriptive name. Pass `TRUE` to prefix with the (deparsed) facet
 #'   variable name(s), e.g. `"am = 0"` instead of just `"0"`. Alternatively,
@@ -257,12 +260,12 @@
 #'   the break points at which the axis tick-marks are to be drawn. Break points
 #'   outside the range of the data will be ignored if the associated axis
 #'   variable is categorical, or an explicit `x/ylim` range is given.
-#' @param xaxl,yaxl a function, character keyword, or named vector for
-#'   formatting or (re)labelling the x- or y-axis tick labels. Passed to
-#'   [`tinylabel`]; see the latter's help file for more detailed documentation
-#'   and examples. Note that this is a post-processing step that affects the
-#'   _appearance_ of the tick labels only; use in conjunction with `x/yaxb` if
-#'   you would like to adjust the position of the tick marks too.
+#' @param xaxl,yaxl a function, character keyword, or dictionary (named vector
+#'   or list) for formatting or (re)labelling the x- or y-axis tick labels.
+#'   Passed to [`tinylabel`]; see the latter's help file for more detailed
+#'   documentation and examples. Note that this is a post-processing step that
+#'   affects the _appearance_ of the tick labels only; use in conjunction with
+#'   `x/yaxb` if you would like to adjust the position of the tick marks too.
 #' @param log a character string which contains `"x"` if the x axis is to be
 #'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
 #'   if both axes are to be logarithmic.

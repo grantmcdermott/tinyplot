@@ -29,16 +29,17 @@ package).
 for which common formatting transformations are provided: \code{"percent"}
 (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"} (\code{"$"}), \code{"euro"}
 (\code{"€"}), or \code{"sterling"} (\code{"£"}).
-\item a \emph{named} character vector or list, acting as a dictionary, e.g.
-\code{c(setosa = "SET")}. Entries of \code{x} that match a name are replaced by the
-corresponding value and the rest are left alone, so a partial mapping is
-fine. The lookup is by value rather than by position, which means it is
-unaffected by any reordering of the underlying categories.
+\item a dictionary, i.e. a \emph{named} character vector or list of form
+\code{c(old_lab = "new_lab", ...)}. Entries of \code{x} that match a name are
+replaced by the corresponding value and the rest are left alone, so a
+partial mapping is fine. The lookup is by value rather than by position,
+which means it is unaffected by any reordering of the underlying
+categories.
 }
 
 Note that an \emph{unnamed} character vector of length greater than one is an
 error, rather than a positional replacement of the labels. Such a vector
-could not be told apart from a formatting keyword when \code{x} is of length
+cannot be distinguished from a formatting keyword when \code{x} is of length
 one, and would not follow the categories if they were reordered. Pass a
 function if you want to compute the labels positionally, e.g.
 \code{function(x) LETTERS[seq_along(x)]}.}

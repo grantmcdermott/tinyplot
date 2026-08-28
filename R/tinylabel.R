@@ -13,15 +13,16 @@
 #'   for which common formatting transformations are provided: `"percent"`
 #'   (`"%"`), `"comma"` (`","`), `"log"` (`"l"`), `"dollar"` (`"$"`), `"euro"`
 #'   (`"€"`), or `"sterling"` (`"£"`).
-#'   - a *named* character vector or list, acting as a dictionary, e.g.
-#'   `c(setosa = "SET")`. Entries of `x` that match a name are replaced by the
-#'   corresponding value and the rest are left alone, so a partial mapping is
-#'   fine. The lookup is by value rather than by position, which means it is
-#'   unaffected by any reordering of the underlying categories.
+#'   - a dictionary, i.e. a *named* character vector or list of form
+#'   `c(old_lab = "new_lab", ...)`. Entries of `x` that match a name are
+#'   replaced by the corresponding value and the rest are left alone, so a
+#'   partial mapping is fine. The lookup is by value rather than by position,
+#'   which means it is unaffected by any reordering of the underlying
+#'   categories.
 #'
 #'   Note that an *unnamed* character vector of length greater than one is an
 #'   error, rather than a positional replacement of the labels. Such a vector
-#'   could not be told apart from a formatting keyword when `x` is of length
+#'   cannot be distinguished from a formatting keyword when `x` is of length
 #'   one, and would not follow the categories if they were reordered. Pass a
 #'   function if you want to compute the labels positionally, e.g.
 #'   `function(x) LETTERS[seq_along(x)]`.

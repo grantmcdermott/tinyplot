@@ -32,8 +32,9 @@ build_legend_args(
 
 \item{lgnd_labs}{The legend labels}
 
-\item{labeller}{Function, character keyword, or named vector for formatting
-or relabelling the labels. See \code{\link{tinylabel}} for the accepted forms.}
+\item{labeller}{Function, character keyword, or dictionary (named vector or
+list) for formatting or relabelling the labels. See \code{\link{tinylabel}} for the
+accepted forms.}
 
 \item{type}{Plot type}
 

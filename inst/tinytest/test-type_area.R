@@ -40,6 +40,9 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "area_stack_alpha")
 
+# flipping lays the bands out left-to-right, so the bottom-up reading the
+# reversed legend key exists to match no longer applies: the key runs in
+# level order here, not reversed
 f = function() {
   tinyplot(val ~ year | grp, data = dat, type = type_area(stack = TRUE), flip = TRUE)
 }
@@ -139,14 +142,31 @@ expect_error(
   pattern = "must be NULL"
 )
 
-# a one-argument function keeps working unchanged, and a second argument that
-# is *not* named `x` (e.g. a tuning parameter with a default) must not be fed
-# the x values by mistake
-dp = function(byord) {
-  d = data.frame(x = rep(1:4, 2), y = c(1, 2, 3, 100, 4, 4, 4, 4),
-                 by = factor(rep(c("a", "b"), each = 4)), facet = "f")
-  levels(tinyplot:::sanitize_ord(d$by, d$y, d$x, byord))
+# `a` carries the larger values, so "desc" stacks it first and "asc" reverses
+# that. Every case below is asserted against one of these two references.
+ord = data.frame(x = rep(1:4, 2), y = c(1, 2, 3, 100, 4, 4, 4, 4),
+                 grp = factor(rep(c("a", "b"), each = 4)))
+byo = function(byord) {
+  function() {
+    tinyplot(y ~ x | grp, data = ord, type = type_area(stack = TRUE, byord = byord))
+  }
 }
-expect_equal(dp(function(y) -median(y)), c("b", "a"))
-expect_equal(dp(function(y, p = 0.9) -as.numeric(quantile(y, p))), c("a", "b"))
-expect_equal(dp(function(y, x) coef(lm(y ~ x))[2]), c("b", "a"))
+expect_snapshot_plot(byo("desc"), label = "area_stack_byord_desc")
+expect_snapshot_plot(byo("asc"),  label = "area_stack_byord_asc")
+
+# a second argument that is *not* named `x` is a tuning parameter, and must not
+# be fed the x values by mistake. Dispatching on the count of formals rather
+# than their names handed `p` the vector c(1, 2, 3, 4), and quantile() then
+# errored on probabilities outside [0, 1] -- so this failing at all is the
+# regression, whatever the resulting order.
+expect_snapshot_plot(
+  byo(function(y, p = 0.9) -as.numeric(quantile(y, p))),
+  label = "area_stack_byord_desc"
+)
+
+# ...but "start"/"end" remain available for `byord`, where the groups really do
+# span a secondary axis
+f = function() {
+  tinyplot(val ~ year | grp, data = dat, type = type_area(stack = TRUE, byord = "start"))
+}
+expect_snapshot_plot(f, label = "area_stack_byord_start")

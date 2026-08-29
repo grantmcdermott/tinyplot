@@ -44,10 +44,14 @@ expect_snapshot_plot(f, label = "type_lines_layer_h_p")
 # "asis" keyword takes the categories in the order they appear in the data,
 # restoring the pre-fix behaviour on demand; forwarded automatically from the
 # top-level call.
-f = function() tinyplot(runtime ~ name, data = LOTR, type = "b", xlevels = "asis")
+f = function() tinyplot(runtime ~ name, data = LOTR, type = "b", xord = "asis")
 expect_snapshot_plot(f, label = "type_lines_xlevels_asis")
 
 # numeric indexes into the existing levels, via the constructor
 f = function() tinyplot(runtime ~ name, data = LOTR, type = type_points(xlevels = 3:1))
 expect_snapshot_plot(f, label = "type_points_xlevels_idx")
 
+
+# `xord` composes with `xlevels` and covers the keyword vocabulary
+f = function() tinyplot(runtime ~ name, data = LOTR, type = "b", xord = "rev")
+expect_snapshot_plot(f, label = "lines_xord_rev")

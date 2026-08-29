@@ -8,6 +8,13 @@ where the formatting is also better._
 
 ### Breaking changes
 
+- The `xaxlabels` argument of `type_barplot()`, and the `xaxlabels` /
+  `yaxlabels` arguments of `type_spineplot()`, are deprecated in favour of the
+  top-level `xaxl` / `yaxl` arguments, which accept a dictionary mapping old
+  labels to new ones and apply consistently across plot types. Supplying them
+  still works but warns. Note that `type_barplot()`'s `xaxlabels` renamed the
+  underlying factor levels, so repeated names merged categories; `xaxl`
+  relabels the ticks only and cannot do this. (#688 @grantmcdermott)
 - `type_lines()` and its shortcut equivalents like `"l"` and `"b"` now order
   categorical `x` data by (coerced) factor levels, rather than simple order of
   appearance. This resolves a longstanding tension between line types and
@@ -15,7 +22,7 @@ where the formatting is also better._
   implied factor levels. It also improves layering consistency via `plt_add()`
   and co. so that plots are identical, regardless of whether lines are layered
   on top of points, or vice versa. Note that you can still select into the
-  old behaviour by passing the (new) `xlevels = "asis"` argument as an
+  old behaviour by passing the (new) `xord = "asis"` argument as an
   explicit override; see "Other new features" below. (#683 @grantmcdermott)
 
 ### New features
@@ -66,6 +73,40 @@ Note that each of these `facet.args` arguments is paired with an equivalent
 to set this behaviour globally. This also means that they can be set as part of
 a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
+#### Improved facilities for ordering and labelling categorical variables
+
+Types with a categorical `x`, `y`, or `by` variable gain several new arguments
+that enable finer control over the order of their levels, as well as the labels
+used to display them:
+
+- Expanded `xlevels` support for reordering a categorical `x` variable on the
+  fly. `type_points()`, `type_lines()`, `type_errorbar()`, and
+  `type_pointrange()` all gain this (type-level) argument, matching existing
+  functionality for `type_barplot()` and several other types. Values can be a
+  character vector of level names or a numeric vector of level indexes, e.g.
+  `3:1`. (#683, #694 @grantmcdermott)
+- New `xord` / `yord` arguments for _deriving_ order from the data, rather
+  than stating it literally (which is what `x/ylevels` do). Specifically, every 
+  type that takes an `xlevels` or `ylevels` argument now also takes its `x/yord`
+  sibling. The two are complementary: `x/ylevels` name the levels explicitly,  
+  while `x/yord` computes them via type-appropriate keywords or a custom ranking
+  function. For example, `"desc(ending)"`/`"asc(ending)"` order by value, while
+  `"asis"` ignores factor levels and just takes the order of categories as they
+  appear in the data. Among other things this makes it possible to sort bars by
+  height (e.g., `type_barplot(xord = "desc")`), or ridges by their spread (e.g., 
+  `type_ridge(yord = "minvar")`) without relevelling the underlying factor by
+  hand. _Note: users should only supply one or the other. If both are given,
+  `x/ylevels` takes precedence and `x/yord` is ignored, since the former is
+  more explcit. (#683 #688, #694 @grantmcdermott)
+- `tinylabel()` gains a dictionary form, i.e, a *named* character vector or
+  list, mapping existing labels to new ones, e.g. `c(old = "new")`. Labels that
+  are not named are left alone, so a partial mapping is fine, and the lookup is
+  by value rather than by position, which means it is unaffected by any
+  reordering of the underlying categories. Because everything that formats
+  labels routes through `tinylabel()`, this is available anywhere a `labeller`
+  is accepted: the top-level `xaxl` / `yaxl` arguments, the legend's
+  `labeller`, `type_text()`, and facet titles. (#688 @grantmcdermott)
+
 #### Other new features
 
 - `type_area()` gains a `stack` argument for stacked area plots. A sister
@@ -78,16 +119,6 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
   values, as needed by any statistic that depends on their spacing.
   Similarly, a new `FUN` argument permits stacking of multi-observation data by
   collapsing repeated `y` values. (#688 @grantmcdermott)
-- `type_points()`, `type_lines()`, `type_errorbar()`, and `type_pointrange()`
-  gain an `xlevels` argument for reordering a categorical `x` variable on the
-  fly (matching existing functionality for `type_barplot()` and several other
-  types). Values can be a character vector of level names, a numeric vector of
-  level indexes (e.g., `3:1`), or the new `"asis"` keyword, which takes the
-  categories in the order that they appear in the data. The latter option is
-  also the default for `type_errorbar()` and `type_pointrange()`, thus
-  preserving existing behaviour since these two types are typically fed
-  coefficient table data where the row order is intentional.
-  (#683 @grantmcdermott)
 - Custom plot types have more control over the surrounding plot machinery, via a
   new `type_hints` mechanism. A type can declare properties about itself---that
   it draws its own axes, needs a secondary right-hand axis, uses proportional
@@ -117,6 +148,34 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
 ### Bug fixes
 
+- Layers added with `tinyplot_add()` now align correctly when the base plot type
+  coerces a numeric `x` variable to a factor, as `type_barplot()` and
+  `type_violin()` do. The base layer's categories are the coerced *labels*,
+  while the added layer still carried the raw values, so it was drawn at those
+  coordinates instead of at the category positions---often well outside the
+  plotting region. (#691 @grantmcdermott)
+- Axis labellers no longer blow up the decimal precision when the breaks are
+  symmetric about zero, as they are for a centered barplot. `tinyplot(...,
+  center = TRUE, yaxl = "percent")` labelled its axis `80.00000%` rather than
+  `80%`. (#688 @grantmcdermott)
+- The top-level `xaxl` / `yaxl` arguments now work for `type_spineplot()` and
+  `type_ridge()`. Both types draw their own axes, and so never reached the
+  standard path where those arguments are applied, meaning they were silently
+  ignored. (#688 @grantmcdermott)
+- Fixed the formatting keywords being unusable on a centered `type_barplot()`.
+  Centering prepends `"abs_"` to `yaxl`, but the prefix was applied before a
+  symbol was resolved to its full name, so documented values such as
+  `yaxl = ","` failed with an unrelated `match.arg()` error.
+  (#688 @grantmcdermott)
+- `xlevels` / `ylevels` no longer drop data silently. Naming a strict subset of
+  a variable's levels sent every other level to `NA`, quietly removing those
+  observations from the plot; this now warns. Supplying a value that matches no
+  level at all is now an error, rather than surfacing later as an unrelated
+  complaint about zero-length ranges. (#688 @grantmcdermott)
+- The legend key for a stacked `type_area()` is no longer reversed when
+  `flip = TRUE`. Flipping lays the bands out left-to-right, so the bottom-up
+  reading that the reversal exists to match no longer applies.
+  (#688 @grantmcdermott)
 - `type_area()` now labels a categorical `x` axis with its factor levels,
   rather than falling back to the underlying integer positions.
   (#688 @grantmcdermott)

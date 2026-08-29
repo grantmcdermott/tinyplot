@@ -74,10 +74,8 @@
 #'   displays consistent and lets the fill read cleanly over grid lines. Set to
 #'   `FALSE` to use the fully-saturated palette colour(s) instead.
 #' @param xaxlabels \[Deprecated\] a character vector with the axis labels for
-#'   the `x` variable. Use the top-level `xaxl` argument instead, which now
-#'   accepts a dictionary mapping old labels to new ones, and applies
-#'   consistently across plot types. This argument will be removed in a future
-#'   release.
+#'   the `x` variable. Use the top-level `xaxl` argument instead (see
+#'   `[tinylabel]`). This argument will be removed in a future release.
 #'
 #' @examples
 #' #
@@ -87,6 +85,11 @@
 #' 
 #' tinyplot(demand ~ Time, data = BOD, type = "bar") # "bar" is a shorthand
 #' tinyplot_add(type = "text", pos = 3, xpd = NA)    # add y values as text
+#' 
+#' # reordering (just to demonstrate; these aren't sensible for a time variable)
+#' tinyplot(demand ~ Time, data = BOD, type = "bar", xord = "asc")
+#' jumble = c("7","1","5","2","4","3") # note: Time = 6 is also missing
+#' tinyplot(demand ~ Time, data = BOD, type = "bar", xlevels = jumble) 
 #' 
 #' #
 #' ## Aggregated vs grouped values (multiple ys per x)
@@ -124,6 +127,15 @@
 #' tinyplot(
 #'   extra ~ ID | drug, data = sleep2,
 #'   type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
+#' )
+#' 
+#' # speaking of top-level args, use xaxl to format the x labels, e.g. with a
+#' # dictionary, keyword, or (here:) function
+#' 
+#' tinyplot(
+#'   extra ~ ID | drug, data = sleep2,
+#'   type = type_barplot(beside = TRUE, xord = "desc"),
+#'   xaxl = as.roman
 #' )
 #' 
 #' #

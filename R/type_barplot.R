@@ -75,33 +75,52 @@
 #'   `FALSE` to use the fully-saturated palette colour(s) instead.
 #' @param xaxlabels \[Deprecated\] a character vector with the axis labels for
 #'   the `x` variable. Use the top-level `xaxl` argument instead, which now
-#'   accepts a named vector mapping old labels to new ones, and applies
+#'   accepts a dictionary mapping old labels to new ones, and applies
 #'   consistently across plot types. This argument will be removed in a future
 #'   release.
 #'
 #' @examples
 #' #
-#' ## Basic use
+#' ## Basic use (raw values)
 #' 
-#' sleep2 = transform(sleep, drug = group) # less misleading name (same people)
+#' tinyplot(GNP ~ Year, data = longley, type = "barplot")
 #' 
-#' tinyplot(extra ~ ID, data = sleep2, type = "barplot")
-#' tinyplot(extra ~ ID, data = sleep2, type = "barplot", xord = "desc")
-#' tinyplot(extra ~ ID | drug, data = sleep2, type = "barplot", beside = TRUE)
+#' tinyplot(demand ~ Time, data = BOD, type = "bar") # "bar" is a shorthand
+#' tinyplot_add(type = "text", pos = 3, xpd = NA)    # add y values as text
 #' 
-#' # Change the aggregation (non-grouped case) from the `FUN = mean` default to
-#' # ask a more interesting question: which subject benefitted most from the
-#' # switch to drug 2?
+#' #
+#' ## Aggregated vs grouped values (multiple ys per x)
+#' 
+#' # each person receives two drugs
+#' sleep2 = transform(sleep, drug = group) # less misleading name
+#' 
+#' # default aggregation FUN is mean
 #' tinyplot(
-#'    extra ~ ID, data = sleep2, type = "barplot",
-#'    FUN = diff, xord = "desc",
-#'    main = "Sleep gain (drug 2 vs drug 1)"
+#'   extra ~ ID, data = sleep2,
+#'   type = "barplot",
+#'   main = "Mean extra sleep from 2 soporiphic drugs"
+#' )
+#' # switch to diff (answers a more relevant q: who benefits most from drug 2?)
+#' tinyplot(
+#'   extra ~ ID, data = sleep2,
+#'   type = "barplot", FUN = diff,
+#'   main = "Sleep gain (drug 2 vs drug 1)"
+#' )
+#' # we can sort in descending (or ascending) order too
+#' tinyplot(
+#'   extra ~ ID, data = sleep2,
+#'   type = "barplot", FUN = diff, xord = "desc",
+#'   main = "Sleep gain (drug 2 vs drug 1), ordered"
 #' )
 #' 
+#' # of course, we don't have to aggregate if we specify groups (stacked or non)
+#' tinyplot(extra ~ ID | drug, data = sleep2, type = "barplot", beside = TRUE)
+
 #' # Note: We used automatic argument passing for 'xord', `FUN`, etc. above. But
 #' # this wouldn't work for `width`, since it would conflict with the top-level
 #' # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
-#' # through the `type_barplot()` functional equivalent.
+#' # through the `type_barplot()` functional equivalent...
+#' 
 #' tinyplot(
 #'   extra ~ ID | drug, data = sleep2,
 #'   type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
@@ -120,6 +139,7 @@
 #' # No y variable (frequency calculated on the fly)
 #' tinyplot(~ cyl, data = mtcars, type = "barplot")
 #' tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
+#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
 #' 
 #' # Fancy frequency table (y = frequency aleady computed)
 #' tinyplot(
@@ -132,8 +152,8 @@
 #' #
 #' ## Centering
 #'
-#' # Centered barplot for conditional proportions of dark (black/brown) vs.
-#' # light (red/blond) hair color, conditional on eye color and sex.
+#' # Centered barplot for conditional proportions of "dark" (black/brown) vs.
+#' # "fair" (red/blond) hair color, conditional on eye color and sex.
 #' # Aside: use `lighten = FALSE` to avoid lightening the bar fill colors.
 #' hec = as.data.frame(proportions(HairEyeColor, 2:3))
 #' hcols = c("black", "sienna", "indianred", "goldenrod")
@@ -144,6 +164,7 @@
 #'   flip = TRUE, yaxl = "percent",
 #'   theme = list("clean2", palette.qualitative = hcols)
 #' )
+#' tinyplot_add(type = "vline", col = "white")
 #'
 #' #
 #' ## Offset examples
@@ -188,6 +209,7 @@
 #'   main = "Hypothetical Likert example with category offset"
 #' )
 #' tinyplot_add(type = "vline")
+#' tinyplot_add(type = "vline", v = 1, lty = 2)
 #'
 #' @export
 type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, lighten = TRUE, xaxlabels = NULL) {

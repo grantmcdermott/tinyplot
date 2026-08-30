@@ -231,6 +231,14 @@ expect_error(
   pattern = "matches none of the levels"
 )
 
+# `xord` is validated even where the ordering itself is a no-op, so that a typo
+# does not lie dormant until the data gains a second category
+one_level = data.frame(g = factor("only"), v = 1)
+expect_error(
+  tinyplot(v ~ g, data = one_level, type = type_barplot(xord = "des")),
+  pattern = "must be NULL"
+)
+
 # "start"/"end" name a position along a secondary axis, which x-categories do
 # not have; offering them here would silently alias "desc" (ungrouped) or
 # silently re-read as "first/last `by` level" (grouped)

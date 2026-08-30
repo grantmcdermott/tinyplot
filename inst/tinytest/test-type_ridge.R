@@ -207,6 +207,13 @@ expect_error(
   tinyplot(Sepal.Length ~ Species, data = iris, type = type_ridge(yord = "minvar")),
   pattern = "ranks on a numeric variable"
 )
+# ...including when the ranking is a function, which cannot be interpolated
+# into the message the way a keyword can
+expect_error(
+  tinyplot(Sepal.Length ~ Species, data = iris,
+           type = type_ridge(yord = function(z) -mean(z))),
+  pattern = "ranks on a numeric variable"
+)
 
 expect_error(
   tinyplot(Species ~ Sepal.Length, data = iris, type = type_ridge(yord = "start")),

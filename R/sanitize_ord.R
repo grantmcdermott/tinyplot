@@ -94,9 +94,12 @@ ord_aliases = c(
 )
 
 sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords, stat = c("sum", "mean")) {
-  # nlevels < 2 has exactly one ordering, so skip the work (and the degeneracy
-  # check below, which a single level would otherwise trip).
-  if (is.null(ord) || !is.factor(v) || nlevels(v) < 2L) {
+  # A non-factor is not reordered at all, and the call sites already warn about
+  # that wholesale (see warn_ignored_ordering()), so there is nothing here to
+  # validate. Bailing out before the checks below also keeps us from raising a
+  # warning and an error over the same argument, which would leave the warning
+  # unmuffled by the caller's tryCatch().
+  if (is.null(ord) || !is.factor(v)) {
     return(v)
   }
   stat = match.arg(stat)
@@ -124,6 +127,14 @@ sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords, stat
     )
   }
 
+  # One level has exactly one ordering, so there is no work left to do -- but
+  # only past the validation above, so that a typo is still caught on data that
+  # happens to hold a single category today and two tomorrow. The "minvar"
+  # degeneracy check below would misfire here too.
+  if (nlevels(v) < 2L) {
+    return(v)
+  }
+
   # "asis" and "rev" need no y, and must work when y is absent or non-numeric.
   # factor() defaults `ordered` to is.ordered(v), so an ordered grouping stays
   # ordered (and keeps its sequential palette) through either.
@@ -139,10 +150,18 @@ sanitize_ord = function(v, y, x, ord, arg = "ord", keywords = ord_keywords, stat
   # continuous variable on the categorical side), so say that rather than
   # letting var()/sum() fail with something cryptic about factors.
   if (!is.numeric(y)) {
+    # Name `ord` only when it is a keyword: sprintf() cannot coerce a closure,
+    # so interpolating a ranking function here would replace this diagnostic
+    # with an internal error about closures.
+    culprit = if (keyword) {
+      sprintf("`%s = \"%s\"`", arg, ord)
+    } else {
+      sprintf("the `%s` function", arg)
+    }
     stop(
       sprintf(
-        "`%s = \"%s\"` ranks on a numeric variable, but was given %s.\n  Only \"asis\" and \"rev\" work without one.",
-        arg, ord, class(y)[1L]
+        "%s ranks on a numeric variable, but was given %s.\n  Only \"asis\" and \"rev\" work without one.",
+        culprit, class(y)[1L]
       ),
       call. = FALSE
     )

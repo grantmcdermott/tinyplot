@@ -224,16 +224,12 @@ expect_error(
   tinyplot(~ cyl, data = mtcars, type = type_barplot(xord = c("8", "6", "4"))),
   pattern = "must be NULL"
 )
-# and `xlevels` no longer accepts the ord keywords
-# TODO: sanitize_xlevels() warns about the partial match and *then* aborts on
-# the complete miss. expect_error() does not muffle the warning, so it escapes
-# to R's deferred list and surfaces at the end of a suite run. Restore this and
-# the `xlevels = "rev"` case below once the no-match stop() is ordered ahead of
-# the partial-match warning.
-# expect_warning(
-#   tinyplot(~ cyl, data = mtcars, type = type_barplot(xlevels = "asis")),
-#   pattern = "correspond to levels"
-# )
+# and `xlevels` no longer accepts the ord keywords: a keyword matches none of
+# the levels, which is fatal rather than a silent all-NA factor
+expect_error(
+  tinyplot(~ cyl, data = mtcars, type = type_barplot(xlevels = "asis")),
+  pattern = "matches none of the levels"
+)
 
 # "start"/"end" name a position along a secondary axis, which x-categories do
 # not have; offering them here would silently alias "desc" (ungrouped) or
@@ -272,12 +268,6 @@ expect_warning(
   tinyplot(~ cyl, data = mtcars, type = type_barplot(xlevels = c("8", "4"))),
   pattern = "omits 1 of the 3 levels"
 )
-# and a complete miss is fatal, rather than surfacing later as an unrelated
-# error about zero-length ranges. (Commented out; see the TODO above.)
-# expect_error(
-#   tinyplot(~ cyl, data = mtcars, type = type_barplot(xlevels = "rev")),
-#   pattern = "matches none of the levels"
-# )
 
 asis_dat = data.frame(
   g = factor(c("z", "z", "a", "m", "m", "m")),   # appearance z,a,m; levels a,m,z

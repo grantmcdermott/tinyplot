@@ -28,24 +28,30 @@ sanitize_xlevels = function(x, xlevels, arg = "xlevels") {
     xlevels = levels(x)[xlevels]
   }
   v = substr(arg, 1, 1)
-  if (anyNA(xlevels) || !all(xlevels %in% levels(x))) {
-    warning(sprintf(
-      "not all '%s' correspond to levels of '%s'",
-      arg, v
-    ))
-  }
   # Naming a strict subset silently sends every other level to NA, which drops
   # those rows from the plot without a word. Ordering is all these arguments
   # claim to do, so treat a shortfall as a mistake worth flagging -- and a
   # complete miss (no supplied level matches at all) as fatal, since the
   # all-NA factor it produces only surfaces later as an unrelated error about
   # zero-length ranges.
+  #
+  # The fatal case has to be settled *before* either warning below, so that a
+  # complete miss aborts cleanly instead of warning on its way to the stop().
+  # A warning raised en route to an error is not muffled by the caller's
+  # tryCatch/expect_error, so it escapes to R's deferred list and resurfaces,
+  # unattributed, at the end of whatever was running.
   kept = intersect(levels(x), xlevels)
   if (length(kept) == 0L) {
     stop(sprintf(
       "'%s' matches none of the levels of '%s'.\n  Expected some of: %s",
       arg, v, paste(sprintf('"%s"', levels(x)), collapse = ", ")
     ), call. = FALSE)
+  }
+  if (anyNA(xlevels) || !all(xlevels %in% levels(x))) {
+    warning(sprintf(
+      "not all '%s' correspond to levels of '%s'",
+      arg, v
+    ))
   }
   dropped = setdiff(levels(x), xlevels)
   if (length(dropped) > 0L) {

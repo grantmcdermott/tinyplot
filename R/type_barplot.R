@@ -75,7 +75,7 @@
 #'   `FALSE` to use the fully-saturated palette colour(s) instead.
 #' @param xaxlabels \[Deprecated\] a character vector with the axis labels for
 #'   the `x` variable. Use the top-level `xaxl` argument instead (see
-#'   `[tinylabel]`). This argument will be removed in a future release.
+#'   [`tinylabel`]). This argument will be removed in a future release.
 #'
 #' @examples
 #' #
@@ -101,7 +101,7 @@
 #' tinyplot(
 #'   extra ~ ID, data = sleep2,
 #'   type = "barplot",
-#'   main = "Mean extra sleep from 2 soporiphic drugs"
+#'   main = "Mean extra sleep from 2 soporific drugs"
 #' )
 #' # switch to diff (answers a more relevant q: who benefits most from drug 2?)
 #' tinyplot(

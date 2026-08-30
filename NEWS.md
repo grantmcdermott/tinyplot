@@ -76,18 +76,18 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
 #### Ordering and labelling categorical variables
 
-This release bring several enhancements for working with _categorical_
+This release brings several enhancements for working with _categorical_
 variables, i.e. where `x`, `y`, or `by` are characters or factors with discrete
 levels. This includes improvements to existing arguments, as well as the
 provision of some new arguments that enable finer control over level ordering
 and convenient label formatting.
 
-- `xlevels`, `ylevels`: these (type-level) argument permit on-the-fly
+- `xlevels`, `ylevels`: these (type-level) arguments permit on-the-fly
   reordering of a categorical variable via _literal_ specification, either a
   character vector of level names (e.g., `c("C", "B", "A")`), or a numeric
   vector of level indices (e.g., `3:1`). While this argument is not new---having
-  been supported by `type_barplot` and several others types for a while---we now
-  extend `xlevels` support to  `type_points()`, `type_lines()`,
+  been supported by `type_barplot` and several other types for a while---we now
+  extend `xlevels` support to `type_points()`, `type_lines()`,
   `type_errorbar()`, and `type_pointrange()`. (#683, #694 @grantmcdermott)
 - `xord`, `yord`: these are new (type-level) arguments that provide an alternate
   ordering interface to `x/ylevels`. Specifically, while `x/ylevels` require a
@@ -96,18 +96,18 @@ and convenient label formatting.
   example, `"desc(ending)"`/`"asc(ending)"` orders by value, while `"asis"`
   ignores factor levels and just takes the order of appearance in the data as
   given. Among other things, this makes it possible to sort barplots by height
-  (e.g., `type_barplot(xord = "desc")`), or ridges by their spread (e.g., 
+  (e.g., `type_barplot(xord = "desc")`), or ridges by their spread (e.g.,
   `type_ridge(yord = "minvar")`) without relevelling the underlying factor by
   hand. (#683, #694 @grantmcdermott)
-- (Note: users should only supply one of preceding sets of arguments. If both
-  `x/ylevels` and `x/yord` are provided, the former takes precedence as the more
-  explicit.)
-- `tinylabel()` gains a dictionary form, i.e, a *named* character vector or
+- (Note: users should only supply one of the preceding sets of arguments. If
+  both `x/ylevels` and `x/yord` are provided, the former takes precedence as
+  the more explicit.)
+- `tinylabel()` gains a dictionary form, i.e., a *named* character vector or
   list that maps existing labels to new ones _a la_
   `c(old1 = "new1", old2 = "new2")`. Partial mapping is fine since the lookup is
   by value rather than by position, so that some levels can be left unnamed.
   Importantly, this behaviour extends to the rest of **tinyplot**'s
-  (re)labeling machinery---including `x/yaxl`, `type_text()`, and any function
+  (re)labelling machinery---including `x/yaxl`, `type_text()`, and any function
   with a `labeller` argument---since everything is routed through `tinylabel()`.
   (#690 @grantmcdermott)
 - The type-level `x/yaxlabels` arguments of `type_spineplot()` and
@@ -117,7 +117,7 @@ and convenient label formatting.
   arguments still work (with a warning) for now. But we will be formally
   removing them in a future release and, going forwards, encourage users to move
   over to `xaxl` and `yaxl` as the idiomatic **tinyplot** way to relabel
-  and format axes tick. (#692 @grantmcdermott)
+  and format axis ticks. (#692 @grantmcdermott)
 
 Beyond convenience, these improvements to categorical variable handling also
 provide the scaffolding to eliminate some niggling inconsistencies; for example,

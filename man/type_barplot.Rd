@@ -97,7 +97,7 @@ displays consistent and lets the fill read cleanly over grid lines. Set to
 
 \item{xaxlabels}{[Deprecated] a character vector with the axis labels for
 the \code{x} variable. Use the top-level \code{xaxl} argument instead (see
-\verb{[tinylabel]}). This argument will be removed in a future release.}
+\code{\link{tinylabel}}). This argument will be removed in a future release.}
 }
 \description{
 Type function for producing barplots. For formulas of type
@@ -130,7 +130,7 @@ sleep2 = transform(sleep, drug = group) # less misleading name
 tinyplot(
   extra ~ ID, data = sleep2,
   type = "barplot",
-  main = "Mean extra sleep from 2 soporiphic drugs"
+  main = "Mean extra sleep from 2 soporific drugs"
 )
 # switch to diff (answers a more relevant q: who benefits most from drug 2?)
 tinyplot(

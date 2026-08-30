@@ -16,8 +16,8 @@ ex: \code{type="p"}, \code{col="pink"}.}
 \description{
 Applies a summary function to \code{y} along unique values of \code{x}. For example,
 plot the mean \code{y} value for each \code{x} value. Internally,
-\code{type_summary()} applies a thin wrapper around \code{\link[stats]{ave}} and
-then passes the result to \code{\link{type_lines}} for drawing.
+\code{type_summary()} applies a thin wrapper around \code{\link[stats]{aggregate}}
+and then passes the result to \code{\link{type_lines}} for drawing.
 }
 \examples{
 # Plot the mean chick weight over time

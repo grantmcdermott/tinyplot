@@ -4,8 +4,8 @@
 #' @description
 #' Applies a summary function to `y` along unique values of `x`. For example,
 #' plot the mean `y` value for each `x` value. Internally,
-#' `type_summary()` applies a thin wrapper around \code{\link[stats]{ave}} and
-#' then passes the result to [`type_lines`] for drawing.
+#' `type_summary()` applies a thin wrapper around \code{\link[stats]{aggregate}}
+#' and then passes the result to [`type_lines`] for drawing.
 #'
 #' @param fun summarizing function. Should be compatible with
 #'   \code{\link[stats]{ave}}. Defaults to \code{\link[base]{mean}}.
@@ -43,14 +43,7 @@ type_summary = function(fun = mean, ...) {
     funky = function(settings, ...) {
       env2env(settings, environment(), c("datapoints", "by", "facet"))
 
-      datapoints = split(datapoints, list(datapoints$facet, datapoints$by), drop = TRUE)
-      datapoints = lapply(datapoints, function(dat) {
-        newy = ave(dat$y, dat$x, FUN = fun)
-        dat$y = newy
-        dat = dat[order(dat$x), ]
-        return(dat)
-      })
-      datapoints = do.call(rbind, datapoints)
+      datapoints = aggregate(y ~ x + facet + by, data = datapoints, FUN = fun)
       env2env(environment(), settings, "datapoints")
     }
     return(funky)

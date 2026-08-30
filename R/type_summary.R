@@ -9,6 +9,8 @@
 #'
 #' @param fun summarizing function. Should be compatible with
 #'   \code{\link[stats]{ave}}. Defaults to \code{\link[base]{mean}}.
+#' @inheritParams dodge_positions
+#' @inheritParams type_points
 #' @param ... Additional arguments are passed to the `lines()` function,
 #' ex: `type="p"`, `col="pink"`.
 #' @seealso [`ave`] which performs the summarizing (averaging) behind the
@@ -36,14 +38,36 @@
 #'
 #' @importFrom stats ave
 #' @export
-type_summary = function(fun = mean, ...) {
+type_summary = function(fun = mean, dodge = 0, fixed.dodge = FALSE, ...) {
   assert_function(fun)
   lines_args = list(...)
   data_summary = function(fun) {
     funky = function(settings, ...) {
       env2env(settings, environment(), c("datapoints", "by", "facet"))
+      datapoints[["rowid"]] = NULL
+      datapoints = aggregate(. ~ x + facet + by, data = datapoints, FUN = fun)
+      if (dodge != 0) {
+          if (is.factor(datapoints[["x"]])) {
+            xlvls = levels(datapoints[["x"]])
+            xlabs = seq_along(xlvls)
+            names(xlabs) = xlvls
+            datapoints[["x"]] = as.integer(datapoints[["x"]])
+            env2env(environment(), settings, "xlabs")
+          } else {
+            xlabs = NULL
+          }
+          if (is.factor(datapoints[["y"]])) {
+            ylvls = levels(datapoints[["y"]])
+            ylabs = seq_along(ylvls)
+            names(ylabs) = ylvls
+            datapoints[["y"]] = as.integer(datapoints[["y"]])
+            env2env(environment(), settings, "ylabs")
+          } else {
+            ylabs = NULL
+          }
 
-      datapoints = aggregate(y ~ x + facet + by, data = datapoints, FUN = fun)
+        datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
+      }
       env2env(environment(), settings, "datapoints")
     }
     return(funky)

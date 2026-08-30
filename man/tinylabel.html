@@ -611,7 +611,19 @@ a numeric or character vector
 <code id="labeller">labeller</code>
 </td>
 <td>
-a formatting function to be applied to <code>x</code>, e.g.&nbsp;<code>format</code>, <code>toupper</code>, <code>abs</code>, or other custom function (including from the popular <strong>scales</strong> package). Can also be one of the following convenience strings (symbols), for which common formatting transformations are provided: <code>“percent”</code> (<code>“%”</code>), <code>“comma”</code> (<code>“,”</code>), <code>“log”</code> (<code>“l”</code>), <code>“dollar”</code> (<code>“$”</code>), <code>“euro”</code> (<code>“€”</code>), or <code>“sterling”</code> (<code>“£”</code>).
+<p>how the labels should be relabelled or reformatted. One of:</p>
+<ul>
+<li>
+<p>a function to be applied to <code>x</code>, e.g.&nbsp;<code>format</code>, <code>toupper</code>, <code>abs</code>, or any other custom function (including from the popular <strong>scales</strong> package).</p>
+</li>
+<li>
+<p>one of the following convenience strings (or their symbol equivalents), for which common formatting transformations are provided: <code>“percent”</code> (<code>“%”</code>), <code>“comma”</code> (<code>“,”</code>), <code>“log”</code> (<code>“l”</code>), <code>“dollar”</code> (<code>“$”</code>), <code>“euro”</code> (<code>“€”</code>), or <code>“sterling”</code> (<code>“£”</code>).</p>
+</li>
+<li>
+<p>a dictionary, i.e.&nbsp;a <em>named</em> character vector or list of form <code>c(old_lab = “new_lab”, …)</code>. Entries of <code>x</code> that match a name are replaced by the corresponding value and the rest are left alone, so a partial mapping is fine. The lookup is by value rather than by position, which means it is unaffected by any reordering of the underlying categories.</p>
+</li>
+</ul>
+Note that an <em>unnamed</em> character vector of length greater than one is an error, rather than a positional replacement of the labels. Such a vector cannot be distinguished from a formatting keyword when <code>x</code> is of length one, and would not follow the categories if they were reordered. Pass a function if you want to compute the labels positionally, e.g. <code>function(x) LETTERS[seq_along(x)]</code>.
 </td>
 </tr>
 <tr>
@@ -658,13 +670,19 @@ logical indicating whether <code>NA</code> values should be removed from <code>x
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "$10,000"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># invoke tinylabel from a parent tinyplot call...</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   =&gt; x/yaxl for adjusting axes tick labels</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   =&gt; legend = list(labeller = ...) for adjusting the legend labels</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>s77 <span class="ot">=</span> <span class="fu">transform</span>(<span class="fu">data.frame</span>(state.x77), <span class="at">Illiteracy =</span> Illiteracy <span class="sc">/</span> <span class="dv">100</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Life.Exp <span class="sc">~</span> Income <span class="sc">|</span> Illiteracy, <span class="at">data =</span> s77,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">xaxl =</span> <span class="st">'$'</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">legend =</span> <span class="fu">list</span>(<span class="at">labeller =</span> <span class="st">'%'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a named vector acts as a dictionary: matched entries are replaced and the</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rest are left alone</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinylabel</span>(<span class="fu">c</span>(<span class="st">"setosa"</span>, <span class="st">"versicolor"</span>), <span class="fu">c</span>(<span class="at">setosa =</span> <span class="st">"SET"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "SET"        "versicolor"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># invoke tinylabel from a parent tinyplot call...</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   =&gt; x/yaxl for adjusting axes tick labels</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   =&gt; legend = list(labeller = ...) for adjusting the legend labels</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>s77 <span class="ot">=</span> <span class="fu">transform</span>(<span class="fu">data.frame</span>(state.x77), <span class="at">Illiteracy =</span> Illiteracy <span class="sc">/</span> <span class="dv">100</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Life.Exp <span class="sc">~</span> Income <span class="sc">|</span> Illiteracy, <span class="at">data =</span> s77,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">xaxl =</span> <span class="st">'$'</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">legend =</span> <span class="fu">list</span>(<span class="at">labeller =</span> <span class="st">'%'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -672,9 +690,9 @@ logical indicating whether <code>NA</code> values should be removed from <code>x
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># log example (combined with axis scaling)</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="at">x =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">c</span>(<span class="dv">10</span><span class="sc">:</span><span class="dv">0</span>), <span class="at">y =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">type =</span> <span class="st">"b"</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">log =</span> <span class="st">"x"</span>, <span class="at">xaxl =</span> <span class="st">"log"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># log example (combined with axis scaling)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="at">x =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">c</span>(<span class="dv">10</span><span class="sc">:</span><span class="dv">0</span>), <span class="at">y =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">type =</span> <span class="st">"b"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">log =</span> <span class="st">"x"</span>, <span class="at">xaxl =</span> <span class="st">"log"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -682,10 +700,10 @@ logical indicating whether <code>NA</code> values should be removed from <code>x
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># combine with `x/yaxb` to adjust the actual tick marks ("break points")</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># at the same time</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="at">x =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">c</span>(<span class="dv">10</span><span class="sc">:</span><span class="dv">0</span>), <span class="at">y =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">type =</span> <span class="st">"b"</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">log =</span> <span class="st">"x"</span>, <span class="at">xaxl =</span> <span class="st">"log"</span>, <span class="at">xaxb =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># combine with `x/yaxb` to adjust the actual tick marks ("break points")</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># at the same time</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="at">x =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">c</span>(<span class="dv">10</span><span class="sc">:</span><span class="dv">0</span>), <span class="at">y =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">type =</span> <span class="st">"b"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">log =</span> <span class="st">"x"</span>, <span class="at">xaxl =</span> <span class="st">"log"</span>, <span class="at">xaxb =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -693,18 +711,18 @@ logical indicating whether <code>NA</code> values should be removed from <code>x
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">## custom function examples</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="do">## example I: date formatting</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"2000/1/1"</span>), <span class="at">by =</span> <span class="st">"month"</span>, <span class="at">length.out =</span> <span class="dv">12</span>),</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">trend =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">12</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(trend <span class="sc">~</span> date, <span class="at">data =</span> dat,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">xaxl =</span> <span class="cf">function</span>(x) <span class="fu">format</span>(x, <span class="st">"%b, %Y"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">## custom function examples</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="do">## example I: date formatting</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"2000/1/1"</span>), <span class="at">by =</span> <span class="st">"month"</span>, <span class="at">length.out =</span> <span class="dv">12</span>),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">trend =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">12</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(trend <span class="sc">~</span> date, <span class="at">data =</span> dat,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">xaxl =</span> <span class="cf">function</span>(x) <span class="fu">format</span>(x, <span class="st">"%b, %Y"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -712,29 +730,29 @@ logical indicating whether <code>NA</code> values should be removed from <code>x
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## example II: string wrapping</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create a "vectorised" version of `base::strwrap` that breaks long</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># strings into new lines every 18 characters</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>strwrap18 <span class="ot">=</span> <span class="cf">function</span>(x) <span class="fu">sapply</span>(</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">strwrap</span>(x, <span class="at">width =</span> <span class="dv">18</span>, <span class="at">simplify =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  paste,</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># now demonstrate on a dataset with long y-tick labels</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>dat2 <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">rep</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>), <span class="dv">3</span>),</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tinyplot is a lightweight extension of the base R graphics system."</span>,</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"R is a language for statistical computing."</span>,</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Data visualization is an essential skill."</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat2, <span class="at">type =</span> <span class="st">"j"</span>,</span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">yaxl =</span> strwrap18,</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">theme =</span> <span class="st">"bw"</span>) <span class="co"># use theme for horizontal labels + dynamic margin</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## example II: string wrapping</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create a "vectorised" version of `base::strwrap` that breaks long</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># strings into new lines every 18 characters</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>strwrap18 <span class="ot">=</span> <span class="cf">function</span>(x) <span class="fu">sapply</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">strwrap</span>(x, <span class="at">width =</span> <span class="dv">18</span>, <span class="at">simplify =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  paste,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># now demonstrate on a dataset with long y-tick labels</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>dat2 <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">rep</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>), <span class="dv">3</span>),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tinyplot is a lightweight extension of the base R graphics system."</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"R is a language for statistical computing."</span>,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Data visualization is an essential skill."</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat2, <span class="at">type =</span> <span class="st">"j"</span>,</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">yaxl =</span> strwrap18,</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">theme =</span> <span class="st">"bw"</span>) <span class="co"># use theme for horizontal labels + dynamic margin</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

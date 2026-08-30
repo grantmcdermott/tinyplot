@@ -709,7 +709,7 @@ further arguments passed to <code>tinyplot</code>.
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># equivalent plot to an example in `?matplot`</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># digression: equivalent "o" plot to an example in `?matplot`</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sines <span class="ot">=</span> <span class="fu">outer</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="cf">function</span>(x, y) <span class="fu">sin</span>(x <span class="sc">/</span> <span class="dv">20</span> <span class="sc">*</span> pi <span class="sc">*</span> y))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(sines, <span class="at">type =</span> <span class="st">"o"</span>, <span class="at">pch =</span> <span class="st">"by"</span>, <span class="at">lty =</span> <span class="st">"by"</span>, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="fu">ncol</span>(sines)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -719,12 +719,39 @@ further arguments passed to <code>tinyplot</code>.
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `"tile"` + `"heatmap"` types lay the matrix out as a grid instead</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(VADeaths, <span class="at">type =</span> <span class="st">"heatmap"</span>, <span class="at">theme =</span> <span class="st">"heatmap"</span>, <span class="at">col =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># back to VADeaths running example, we can pass down other types too...</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># heatmap</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(VADeaths, <span class="at">type =</span> <span class="st">"heatmap"</span>, <span class="at">theme =</span> <span class="st">"heatmap"</span>, <span class="at">col =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="tinyplot.matrix_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># barplot(s)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(VADeaths, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinyplot.matrix_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="fu">t</span>(VADeaths), <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinyplot.matrix_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(VADeaths, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">legend =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tinyplot.matrix_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

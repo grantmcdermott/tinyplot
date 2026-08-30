@@ -598,6 +598,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   breaks = NULL,
   probs = NULL,
   ylevels = NULL,
+  yord = NULL,
   bw = "nrd0",
   joint.bw = c("mean", "full", "none"),
   adjust = 1,
@@ -649,10 +650,33 @@ Numeric. Instead of specifying the same <code>breaks</code> on the x-axis for al
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="ylevels">ylevels</code>
+<code id="ylevels">ylevels</code>, <code id="yord">yord</code>
 </td>
 <td>
-a character or numeric vector specifying in which order the levels of the y-variable should be plotted. The special keyword <code>“asis”</code> takes the categories in the order that they appear in the data.
+<p>arguments controlling the order of the <code>y</code> variable, and hence of the y-axis. Supply one or the other; if both arguments are provided, <code>ylevels</code> takes precedence and <code>yord</code> is silently ignored.</p>
+<ul>
+<li>
+<p><code>ylevels</code> specifies the levels <em>literally</em>, either a character vector of level names in the desired order (e.g., <code>c(“C”, “B”, “A”)</code>), or a numeric vector of the corresponding level indexes (e.g.&nbsp;<code>3:1</code>).</p>
+</li>
+<li>
+<p><code>yord</code> instead accepts a keyword or custom function, which then <em>derives</em> the order from the data. Options are:</p>
+<ul>
+<li>
+<p><code>“desc”</code> and <code>“asc”</code> rank the ridges by their mean <code>x</code> value, largest or smallest first. (Long forms like <code>“descending”</code> and <code>“increasing”</code> are also accepted.) (Ridge plots have no separate response, so the ranking runs on the continuous <code>x</code> variable.)</p>
+</li>
+<li>
+<p><code>“minvar”</code> ranks them by the spread of each distribution, narrowest first.</p>
+</li>
+<li>
+<p><code>“asis”</code> or <code>“rev”</code> permute the existing levels without consulting the data at all. The former takes the categories in the order that they appear in the data, while the latter reverses the current level order.</p>
+</li>
+<li>
+<p>a custom function that determines both the ranking statistic and its direction. The statistic is always sorted ascending, so <code>function(y) -median(y)</code> ranks by median, largest first.</p>
+</li>
+</ul>
+</li>
+</ul>
+Note that a numeric <code>y</code> is coerced to a factor before the ridges are drawn, so it is reordered like any other categorical variable. Each argument defaults to <code>NULL</code>, i.e.&nbsp;keep the existing factor levels.
 </td>
 </tr>
 <tr>

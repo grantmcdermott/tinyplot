@@ -595,12 +595,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   tol.ylab = 0.05,
   off = NULL,
   xlevels = NULL,
+  xord = NULL,
   ylevels = NULL,
+  yord = NULL,
   col = NULL,
-  xaxlabels = NULL,
-  yaxlabels = NULL,
   weights = NULL,
-  lighten = FALSE
+  lighten = FALSE,
+  xaxlabels = NULL,
+  yaxlabels = NULL
 )
 </code></pre>
 </section>
@@ -633,10 +635,38 @@ vertical offset between the bars (in per cent). It is fixed to <code>0</code> fo
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="xlevels">xlevels</code>, <code id="ylevels">ylevels</code>
+<code id="xlevels">xlevels</code>, <code id="xord">xord</code>
 </td>
 <td>
-a character or numeric vector specifying the ordering of the levels of the <code>x</code> and <code>y</code> variables (if character) or the corresponding indexes (if numeric) for the plot. The special keyword <code>“asis”</code> takes the categories in the order that they appear in the data. Note that these arguments only affect categorical (i.e., factor or character) variables.
+<p>arguments controlling the order of the <code>x</code> variable, and hence of the x-axis. Supply one or the other; if both arguments are provided, <code>xlevels</code> takes precedence and <code>xord</code> is silently ignored.</p>
+<ul>
+<li>
+<p><code>xlevels</code> specifies the levels <em>literally</em>, either a character vector of level names in the desired order (e.g., <code>c(“C”, “B”, “A”)</code>), or a numeric vector of the corresponding level indexes (e.g.&nbsp;<code>3:1</code>).</p>
+</li>
+<li>
+<p><code>xord</code> instead accepts a keyword or custom function, which then <em>derives</em> the order from the data. Options are:</p>
+<ul>
+<li>
+<p><code>“desc”</code> and <code>“asc”</code> rank the categories by (weighted) frequency, i.e.&nbsp;most or least common first. (Long forms like <code>“descending”</code> and <code>“increasing”</code> are also accepted.)</p>
+</li>
+<li>
+<p><code>“asis”</code> or <code>“rev”</code> permute the existing levels without consulting the data at all. The former takes the categories in the order that they appear in the data, while the latter reverses the current level order.</p>
+</li>
+<li>
+<p>a custom function that determines both the ranking statistic and its direction. The statistic is always sorted ascending, so <code>function(y) -median(y)</code> ranks by median, largest first.</p>
+</li>
+</ul>
+</li>
+</ul>
+Note that <code>x</code> is only reordered when it is categorical (i.e., factor or character). Both arguments are thus ignored for spinograms, which have a (binned) numeric <code>x</code> axis. Each argument defaults to <code>NULL</code>, i.e.&nbsp;keep the existing factor levels.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="ylevels">ylevels</code>, <code id="yord">yord</code>
+</td>
+<td>
+as for <code>xlevels</code> / <code>xord</code> above, but for the <code>y</code> variable. Note that <code>y</code> is always coerced to a factor for spineplots and spinograms, so these arguments are always binding if provided. Be aware that a numeric <code>y</code> gives one level per distinct value.
 </td>
 </tr>
 <tr>
@@ -645,14 +675,6 @@ a character or numeric vector specifying the ordering of the levels of the <code
 </td>
 <td>
 a vector of fill colors of the same length as <code>levels(y)</code>. The default is to call <code>gray.colors</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="xaxlabels">xaxlabels</code>, <code id="yaxlabels">yaxlabels</code>
-</td>
-<td>
-character vectors for annotation of x and y axis. Default to <code>levels(y)</code> and <code>levels(x)</code>, respectively for the spine plot. For <code>xaxlabels</code> in the spinogram, the breaks are used.
 </td>
 </tr>
 <tr>
@@ -669,6 +691,14 @@ numeric. A vector of frequency weights for each observation in the data. If <cod
 </td>
 <td>
 logical. For grouped spineplots where the <code>y</code> variable is itself the grouping variable (i.e.&nbsp;<code>y == by</code>), should the fills use a lighter, opaque tint of the series colour(s)? Default is <code>FALSE</code>, i.e.&nbsp;the fills use the fully-saturated palette colour(s). (Unlike the other area types such as <code>type_barplot</code>, where lightening is the default, spineplot tiles abut one another with no gap, so the darker saturated fills read better against their matching border colours.) Set to <code>TRUE</code> to opt in to the lighter tint. Note that <code>lighten</code> has no effect on other spineplot displays (single-group or <code>x == by</code>), which always use a sequential shading ramp of the base colour.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="xaxlabels">xaxlabels</code>, <code id="yaxlabels">yaxlabels</code>
+</td>
+<td>
+[Deprecated] character vectors for annotation of the x and y axis. Use the top-level <code>xaxl</code> / <code>yaxl</code> arguments instead, which apply consistently across <code>tinyplot</code> types. These two type-specific arguments will be removed in a future release.
 </td>
 </tr>
 </tbody></table>

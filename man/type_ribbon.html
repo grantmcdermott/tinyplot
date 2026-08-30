@@ -624,19 +624,22 @@ logical. Should the <code>by</code> groups be stacked on top of one another, rat
 <p>keyword string or function. Permits on-the-fly (re)ordering of the <code>by</code> group layers, thus controlling the order in which they stack. Options are:</p>
 <ul>
 <li>
-<p><code>“start”</code>, <code>“end”</code>, and <code>“total”</code> are positional keywords that rank groups according to their <code>y</code> values along the <code>x</code> axis. In each case, the group with the largest value is stacked first as the bottom layer.</p>
+<p><code>“desc”</code> and <code>“asc”</code> rank the groups by their summed <code>y</code> across the <code>x</code> axis, largest or smallest first. With <code>“desc”</code> the biggest group is stacked first, as the bottom layer. (Long forms like <code>“descending”</code> and <code>“increasing”</code> are also accepted.)</p>
 </li>
 <li>
-<p><code>“minvar”</code> ranks by variance and puts the lowest variance group on the baseline.</p>
+<p><code>“start”</code> and <code>“end”</code> instead rank on the <code>y</code> values at the smallest and largest <code>x</code> respectively, again stacking the largest group first.</p>
 </li>
 <li>
-<p><code>“asis”</code> and <code>“rev”</code> permute the existing levels without consulting the data at all. The former takes the groups in the order that they appear in the data, while <code>“rev”</code> reverses the current level order.</p>
+<p><code>“minvar”</code> ranks by variance, putting the lowest variance group on the baseline.</p>
 </li>
 <li>
-<p>custom function that determines both the ranking statistic and its direction, e.g.&nbsp;<code>function(y) -median(y)</code> would layer by median <code>y</code> value, from the biggest to the smallest. Note: if a function requires access to a group’s <code>x</code> values, then one of its arguments <em>must</em> be named <code>x</code>, e.g. <code>function(y, x) coef(lm(y ~ x))[2]</code> would layer by trend.</p>
+<p><code>“asis”</code> or <code>“rev”</code> permute the existing levels without consulting the data at all. The former takes the groups in the order that they appear in the data, while the latter reverses the current level order.</p>
+</li>
+<li>
+<p>a custom function that determines both the ranking statistic and its direction. The statistic is always sorted ascending, so <code>function(y) -median(y)</code> layers by median <code>y</code> value, from the biggest to the smallest. Note that if a function requires access to a group’s <code>x</code> values, then one of its arguments <em>must</em> be named <code>x</code>, e.g. <code>function(y, x) coef(lm(y ~ x))[2]</code> would layer by trend.</p>
 </li>
 </ul>
-Default is <code>NULL</code>, in which case the existing factor level order is retained; to set that order explicitly, call <code>factor(levels = …)</code> on the grouping variable beforehand. See Examples, as well as the "Stacked area plots" section below.
+Defaults to <code>NULL</code>, i.e.&nbsp;keep the existing factor levels. To set that order explicitly, call <code>factor(levels = …)</code> on the grouping variable beforehand. See Examples, as well as the "Stacked area plots" section below.
 </td>
 </tr>
 <tr>
@@ -681,7 +684,7 @@ Logical. If <code>FALSE</code> (default), dodge positions are calculated indepen
 <section id="stacked-area-plots" class="level3">
 <h3 class="anchored" data-anchor-id="stacked-area-plots">Stacked area plots</h3>
 <p>Passing <code>type_area(stack = TRUE)</code> stacks the <code>by</code> groups cumulatively, rather than drawing each one from a zero baseline. Groups are accumulated in the order of their (factor) levels, so the first level forms the bottom band and the top of the final band traces the group total. Stacking is computed separately within each facet.</p>
-<p>The <code>byord</code> argument is a helpful companion to stacked area plots, since it enables on-the-fly adjustment of the stacking order. For example, three positional keywords—<code>“start”</code>, <code>“end”</code>, and <code>“total”</code>—rank the stacked <code>by</code> groups according to their <code>y</code> values at the designated position along the <code>x</code> axis. Following convention, the ranking runs in descending order, so that the biggest group is drawn on the bottom layer. However, size is not the only route to a stable baseline. Because each band is drawn on top of the ones below it, they all inherit whatever movement the bottom layer has. A large but volatile group can therefore be a worse choice of foundation than a small, steady one. In this latter case, the <code>“minvar”</code> keyword would be a more appropriate choice since it places the lowest variance group at the bottom. Your choice of stacking ordering should therefore respond to the patterns in your data and which layers you want to emphasize.</p>
+<p>The <code>byord</code> argument is a helpful companion to stacked area plots, since it enables on-the-fly adjustment of the stacking order. For example, the size keywords—<code>“desc”</code>, <code>“start”</code>, and <code>“end”</code>—rank the stacked <code>by</code> groups according to their <code>y</code> values, either summed across the <code>x</code> axis or taken at one end of it. Following convention, the ranking runs in descending order, so that the biggest group is drawn on the bottom layer (use <code>“asc”</code> for the reverse). However, size is not the only route to a stable baseline. Because each band is drawn on top of the ones below it, they all inherit whatever movement the bottom layer has. A large but volatile group can therefore be a worse choice of foundation than a small, steady one. In this latter case, the <code>“minvar”</code> keyword would be a more appropriate choice since it places the lowest variance group at the bottom. Your choice of stacking ordering should therefore respond to the patterns in your data and which layers you want to emphasize.</p>
 <p>Stacking needs exactly one <code>y</code> value per group per <code>x</code> value. Repeated cells —typically caused by a variable that is present in the data but absent from the plot—are collapsed with <code>FUN</code> (default <code>mean</code>) rather than being stacked against each other. Conversely, groups that are <em>missing</em> an <code>x</code> value (or have an <code>NA</code> there) count as contributing zero at that point, so that a gap in one group does not shift the groups stacked above it. Note that stacking negative values is not meaningful and will produce overlapping bands. Note that the legend key for stacked area plots is deliberately inverted compared to other plot types (including non-stacked area plots) to ensure a consistent ordering with the "bottoms-up" layering of the stacked regions. Similarly, reordering of the <code>by</code> group levels will reassign the palette, since group colours are allocated by level position. This matches what releveling a factor does elsewhere, but it does mean that reordering the bands repaints them.</p>
 <p>Finally, note that unlike non-stacked area plots, the stacked bands are drawn with opaque fill by default, since they do not overlap. Pass an explicit <code>alpha</code> or <code>fill</code> value to override.</p>
 </section>
@@ -778,7 +781,7 @@ Logical. If <code>FALSE</code> (default), dodge positions are calculated indepen
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `"minvar"` instead puts the *least variable* group on the baseline. Every</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># band inherits the movement of the ones below it, so a steady bottom layer</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># keeps the whole chart legible. Here that picks group B, which the default</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># level order leaves in the middle and `"end"`/`"total"` push to the top.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># level order leaves in the middle and `"end"`/`"desc"` push to the top.</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  val <span class="sc">~</span> year <span class="sc">|</span> grp, <span class="at">data =</span> dat,</span>

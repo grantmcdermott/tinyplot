@@ -590,9 +590,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_errorbar(length = 0.05, dodge = 0, fixed.dodge = FALSE, xlevels = "asis")
+<pre><code class="language-R">type_errorbar(
+  length = 0.05,
+  dodge = 0,
+  fixed.dodge = FALSE,
+  xlevels = NULL,
+  xord = "asis"
+)
 
-type_pointrange(dodge = 0, fixed.dodge = FALSE, xlevels = "asis")
+type_pointrange(dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = "asis")
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -633,10 +639,34 @@ Logical. If <code>FALSE</code> (default), dodge positions are calculated indepen
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="xlevels">xlevels</code>
+<code id="xlevels">xlevels</code>, <code id="xord">xord</code>
 </td>
 <td>
-a character or numeric vector specifying the order in which the levels of the <code>x</code> variable should be plotted (as level names if character, or level indexes if numeric, e.g.&nbsp;<code>3:1</code>). Note that this argument only affects categorical (i.e., factor or character) <code>x</code> variables; it is ignored for numeric <code>x</code>. Unlike most other plot types, here it defaults to the special keyword <code>“asis”</code>, which takes the categories in the order that they appear in the data: these types are typically used for coefficient plots, where the row order of the data (e.g., the terms of a model) is usually intentional. Set <code>xlevels = NULL</code> to follow the factor levels instead, matching the other plot types.
+<p>arguments controlling the order of the <code>x</code> variable, and hence of the x-axis. Supply one or the other; if both arguments are provided, <code>xlevels</code> takes precedence and <code>xord</code> is silently ignored.</p>
+<ul>
+<li>
+<p><code>xlevels</code> specifies the levels <em>literally</em>, either a character vector of level names in the desired order (e.g., <code>c(“C”, “B”, “A”)</code>), or a numeric vector of the corresponding level indexes (e.g.&nbsp;<code>3:1</code>).</p>
+</li>
+<li>
+<p><code>xord</code> instead accepts a keyword or custom function, which then <em>derives</em> the order from the data. Options are:</p>
+<ul>
+<li>
+<p><code>“desc”</code> and <code>“asc”</code> rank the categories by their mean <code>y</code> value, largest or smallest first. (Long forms like <code>“descending”</code> and <code>“increasing”</code> are also accepted.)</p>
+</li>
+<li>
+<p><code>“minvar”</code> ranks them by variance, lowest first. This needs more than one observation per category, so it does not apply to the usual one-row-per-term coefficient table.</p>
+</li>
+<li>
+<p><code>“asis”</code> or <code>“rev”</code> permute the existing levels without consulting the data at all. The former takes the categories in the order that they appear in the data, while the latter reverses the current level order.</p>
+</li>
+<li>
+<p>a custom function that determines both the ranking statistic and its direction. The statistic is always sorted ascending, so <code>function(y) -median(y)</code> ranks by median, largest first.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Note that <code>x</code> is only reordered when it is categorical (i.e., factor or character). A numeric <code>x</code> is plotted at its own values and cannot be reordered, so supplying either argument there is ignored with a warning.</p>
+Unlike most other plot types, <code>xord</code> defaults to <code>“asis”</code> here rather than <code>NULL</code>: these types are typically used for coefficient plots, where the row order of the data (e.g., the terms of a model) is usually intentional. Set <code>xord = NULL</code> to follow the factor levels instead, matching the other types.
 </td>
 </tr>
 </tbody></table>

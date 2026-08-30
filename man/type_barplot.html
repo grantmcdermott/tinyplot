@@ -597,9 +597,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   offset = NULL,
   FUN = NULL,
   xlevels = NULL,
-  xaxlabels = NULL,
+  xord = NULL,
   drop.zeros = FALSE,
-  lighten = TRUE
+  lighten = TRUE,
+  xaxlabels = NULL
 )
 </code></pre>
 </section>
@@ -638,7 +639,7 @@ logical or numeric. In case of stacked barplots (<code>beside = FALSE</code>) sh
 <p>optional specification for shifting bar baselines, accepting one of two distinct forms. See the Examples for illustrations of both.</p>
 <ul>
 <li>
-<p><em>Positions</em> via an unnamed numeric scalar or vector. Bars start at the offset value(s) rather than zero, matched per x-level after any <code>xlevels</code> reordering (a scalar is applied to all bars). Useful for waterfall charts. The positional form cannot be combined with <code>center</code>.</p>
+<p><em>Positions</em> via an unnamed numeric scalar or vector. Bars start at the offset value(s) rather than zero, matched per x-level after any <code>xlevels</code> or <code>xord</code> reordering (a scalar is applied to all bars). Useful for waterfall charts. The positional form cannot be combined with <code>center</code>.</p>
 </li>
 <li>
 <p><em>Category</em> via a character vector such as <code>offset = “Unsure”</code>, or a named numeric vector such as <code>offset = c(Unsure = 1.1)</code>. The named level(s) of the <code>by</code> grouping are "set aside", i.e.&nbsp;pulled out of the (optionally centered) stack and drawn as standalone bars. This is useful for diverging/Likert plots where a neutral category (e.g.&nbsp;"Unsure") is shown apart from the diverging stack. The category form requires a <code>by</code> grouping and <code>beside = FALSE</code>, but can be combined with <code>center</code>.</p>
@@ -656,18 +657,30 @@ a function to compute the summary statistic for <code>y</code> within each group
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="xlevels">xlevels</code>
+<code id="xlevels">xlevels</code>, <code id="xord">xord</code>
 </td>
 <td>
-a character or numeric vector specifying the ordering of the levels of the <code>x</code> variable (if character) or the corresponding indexes (if numeric) for the plot. The special keyword <code>“asis”</code> takes the categories in the order that they appear in the data. Note that this argument only affects categorical (i.e., factor or character) <code>x</code> variables.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="xaxlabels">xaxlabels</code>
-</td>
-<td>
-a character vector with the axis labels for the <code>x</code> variable, defaulting to the levels of <code>x</code>.
+<p>arguments controlling the order of the <code>x</code> variable, and hence of the x-axis. Supply one or the other; if both arguments are provided, <code>xlevels</code> takes precedence and <code>xord</code> is silently ignored.</p>
+<ul>
+<li>
+<p><code>xlevels</code> specifies the levels <em>literally</em>, either a character vector of level names in the desired order (e.g., <code>c(“C”, “B”, “A”)</code>), or a numeric vector of the corresponding level indexes (e.g.&nbsp;<code>3:1</code>).</p>
+</li>
+<li>
+<p><code>xord</code> instead accepts a keyword or custom function, which then <em>derives</em> the order from the data. Options are:</p>
+<ul>
+<li>
+<p><code>“desc(ending)”</code> and <code>“asc(ending)”</code> rank (sort) the categories by bar height, tallest or shortest first. Both the abbreviated and long form strings are permitted, as are the <code>“decreasing”</code> and <code>“increasing”</code> aliases. Note that the ranking is applied to the <em>aggregated</em> bars, i.e. whatever <code>FUN</code> produced, rather than the underlying rows. With <code>by</code> groups or facets, a single ordering is computed and shared across all of them, by summing each category’s bars over every group and facet. For stacked bars that sum is the height of the full stack; with <code>beside = TRUE</code> it is the group total rather than any individual bar. (A factor carries one level order, so a per-facet ranking is not expressible.)</p>
+</li>
+<li>
+<p><code>“asis”</code> or <code>“rev”</code> permute the existing levels without consulting the data at all. The former takes the categories in the order that they appear in the data, while the latter reverses the current level order.</p>
+</li>
+<li>
+<p>a custom function that determines both the ranking statistic and its direction. The statistic is always sorted in ascending order, so <code>function(y) -median(y)</code> ranks by median, largest first.</p>
+</li>
+</ul>
+</li>
+</ul>
+Note that a numeric <code>x</code> is coerced to a factor before the bars are drawn, so it is reordered like any other categorical variable. Each argument defaults to <code>NULL</code>, i.e.&nbsp;keep the existing factor levels.
 </td>
 </tr>
 <tr>
@@ -686,6 +699,14 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 logical. Should the fills use a lighter, opaque tint of the series colour(s)? Default is <code>TRUE</code>, which keeps single- and multi-group displays consistent and lets the fill read cleanly over grid lines. Set to <code>FALSE</code> to use the fully-saturated palette colour(s) instead.
 </td>
 </tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="xaxlabels">xaxlabels</code>
+</td>
+<td>
+[Deprecated] a character vector with the axis labels for the <code>x</code> variable. Use the top-level <code>xaxl</code> argument instead (see <code>tinylabel</code>). This argument will be removed in a future release.
+</td>
+</tr>
 </tbody></table>
 </section>
 <section id="examples" class="level3">
@@ -693,8 +714,10 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic examples of frequency tables (without y variable)</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Basic use (raw values)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(GNP <span class="sc">~</span> Year, <span class="at">data =</span> longley, <span class="at">type =</span> <span class="st">"barplot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -702,7 +725,8 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(demand <span class="sc">~</span> Time, <span class="at">data =</span> BOD, <span class="at">type =</span> <span class="st">"bar"</span>) <span class="co"># "bar" is a shorthand</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"text"</span>, <span class="at">pos =</span> <span class="dv">3</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)    <span class="co"># add y values as text</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -710,7 +734,8 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reordering (just to demonstrate; these aren't sensible for a time variable)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(demand <span class="sc">~</span> Time, <span class="at">data =</span> BOD, <span class="at">type =</span> <span class="st">"bar"</span>, <span class="at">xord =</span> <span class="st">"asc"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -718,8 +743,8 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder x variable categories either by their character levels or numeric indexes</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">xlevels =</span> <span class="fu">c</span>(<span class="st">"8"</span>, <span class="st">"6"</span>, <span class="st">"4"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>jumble <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"7"</span>,<span class="st">"1"</span>,<span class="st">"5"</span>,<span class="st">"2"</span>,<span class="st">"4"</span>,<span class="st">"3"</span>) <span class="co"># note: Time = 6 is also missing</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(demand <span class="sc">~</span> Time, <span class="at">data =</span> BOD, <span class="at">type =</span> <span class="st">"bar"</span>, <span class="at">xlevels =</span> jumble) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -727,7 +752,18 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">xlevels =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Aggregated vs grouped values (multiple ys per x)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># each person receives two drugs</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>sleep2 <span class="ot">=</span> <span class="fu">transform</span>(sleep, <span class="at">drug =</span> group) <span class="co"># less misleading name</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># default aggregation FUN is mean</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID, <span class="at">data =</span> sleep2,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Mean extra sleep from 2 soporific drugs"</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -735,14 +771,12 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Above we used automatic argument passing for `beside`. But this</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># wouldn't work for `width`, since it would conflict with the top-level</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `tinyplot(..., width = &lt;width&gt;)` argument. It's safer to pass these args</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># through the `type_barplot()` functional equivalent.</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">drop.zeros =</span> <span class="cn">TRUE</span>, <span class="at">width =</span> <span class="fl">0.65</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># switch to diff (answers a more relevant q: who benefits most from drug 2?)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID, <span class="at">data =</span> sleep2,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">FUN =</span> diff,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Sleep gain (drug 2 vs drug 1)"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -750,11 +784,11 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example for numeric y aggregated by x (default: FUN = mean) + facets</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we can sort in descending (or ascending) order too</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID <span class="sc">|</span> group, <span class="at">facet =</span> <span class="st">"by"</span>, <span class="at">data =</span> sleep,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="st">"clean2"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID, <span class="at">data =</span> sleep2,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">FUN =</span> diff, <span class="at">xord =</span> <span class="st">"desc"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Sleep gain (drug 2 vs drug 1), ordered"</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
@@ -763,13 +797,8 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fancy frequency table:</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  Freq <span class="sc">~</span> Sex <span class="sc">|</span> Survived, <span class="at">data =</span> <span class="fu">as.data.frame</span>(Titanic),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span> Class, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">flip =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="st">"clean2"</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># of course, we don't have to aggregate if we specify groups (stacked or non)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(extra <span class="sc">~</span> ID <span class="sc">|</span> drug, <span class="at">data =</span> sleep2, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -777,18 +806,15 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Centered barplot for conditional proportions of dark (black/brown) vs.</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># light (red/blond) hair color, conditional on eye color and sex.</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Aside: use `lighten = FALSE` to avoid lightening the bar fill colors.</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>hec <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">proportions</span>(HairEyeColor, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>hcols <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"sienna"</span>, <span class="st">"indianred"</span>, <span class="st">"goldenrod"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: We used automatic argument passing for 'xord', `FUN`, etc. above. But</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># this wouldn't work for `width`, since it would conflict with the top-level</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `tinyplot(..., width = &lt;width&gt;)` argument. It's safer to pass these args</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># through the `type_barplot()` functional equivalent...</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  Freq <span class="sc">~</span> Eye <span class="sc">|</span> Hair, <span class="at">data =</span> hec,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span> Sex, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">1</span>),</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">lighten =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> hcols)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID <span class="sc">|</span> drug, <span class="at">data =</span> sleep2,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">xord =</span> <span class="st">"desc"</span>, <span class="at">width =</span> <span class="fl">0.5</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -796,20 +822,14 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use cases for the `offset` argument</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Waterfall plot</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">item =</span> <span class="fu">c</span>(<span class="st">"Sales"</span>, <span class="st">"Services"</span>, <span class="st">"Costs"</span>, <span class="st">"Returns"</span>, <span class="st">"TOTAL"</span>),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">40</span>, <span class="sc">-</span><span class="dv">80</span>, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">50</span>))</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>item <span class="ot">=</span> <span class="fu">factor</span>(d<span class="sc">$</span>item, <span class="at">levels =</span> d<span class="sc">$</span>item)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>offset <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(d<span class="sc">$</span>value[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]), <span class="dv">0</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  value <span class="sc">~</span> item <span class="sc">|</span> <span class="fu">I</span>(value <span class="sc">&lt;</span> <span class="dv">0</span>), <span class="at">data =</span> d,</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">offset =</span> d<span class="sc">$</span>offset, <span class="at">lighten =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="cn">NA</span>, <span class="co"># (optional: turn off border)</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="cn">FALSE</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fl">4.5</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"grey50"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># speaking of top-level args, use xaxl to format the x labels, e.g. with a</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dictionary, keyword, or (here:) function</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID <span class="sc">|</span> drug, <span class="at">data =</span> sleep2,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">xord =</span> <span class="st">"desc"</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">xaxl =</span> as.roman</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -817,37 +837,146 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Diverging/Likert layout: a character (or named numeric) offset "sets</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># aside" the named category, pulling it out of the centered stack and drawing</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># it as a standalone bar. Here a neutral "Unsure" response is shown apart from</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the diverging agree/disagree scale.</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>lik <span class="ot">=</span> <span class="fu">expand.grid</span>(</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">question =</span> <span class="fu">c</span>(<span class="st">"Pay"</span>, <span class="st">"Workload"</span>, <span class="st">"Manager"</span>, <span class="st">"Culture"</span>),</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">response =</span> <span class="fu">c</span>(<span class="st">"Strong disagree"</span>, <span class="st">"Disagree"</span>, <span class="st">"Agree"</span>, <span class="st">"Strong agree"</span>, <span class="st">"Unsure"</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>response <span class="ot">=</span> <span class="fu">factor</span>(lik<span class="sc">$</span>response, <span class="at">levels =</span> <span class="fu">unique</span>(lik<span class="sc">$</span>response))</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>share <span class="ot">=</span> <span class="fu">c</span>( <span class="co"># proportions summing to 1 within each question</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">15</span>,</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">20</span>, .<span class="dv">30</span>, .<span class="dv">15</span>, .<span class="dv">20</span>,</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">35</span>, .<span class="dv">20</span>, .<span class="dv">40</span>, .<span class="dv">30</span>,</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">25</span>, .<span class="dv">15</span>, .<span class="dv">35</span>, .<span class="dv">20</span>,</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">10</span>, .<span class="dv">05</span>, .<span class="dv">15</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># diverging palette: reds (disagree) -&gt; blues (agree), grey for "Unsure"</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"#b2182b"</span>, <span class="st">"#ef8a62"</span>, <span class="st">"#67a9cf"</span>, <span class="st">"#2166ac"</span>, <span class="st">"grey"</span>)</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  share <span class="sc">~</span> question <span class="sc">|</span> response, <span class="at">data =</span> lik,</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">offset =</span> <span class="st">"Unsure"</span>, <span class="at">lighten =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"top!"</span>, <span class="at">title =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> pal),</span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Hypothetical Likert example with category offset"</span></span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">## matrix method (no formula required)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(VADeaths, <span class="at">type =</span> <span class="st">"barplot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_barplot_files/figure-html/unnamed-chunk-1-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(VADeaths, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-12.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># etc. see ?tinyplot.matrix</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Frequency tables</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># No y variable (frequency calculated on the fly)</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-13.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-14.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-15.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fancy frequency table (y = frequency aleady computed)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  Freq <span class="sc">~</span> Sex <span class="sc">|</span> Survived, <span class="at">data =</span> <span class="fu">as.data.frame</span>(Titanic),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span> Class, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">nrow =</span> <span class="dv">1</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">flip =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="st">"clean2"</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-16.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Centering</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Centered barplot for conditional proportions of "dark" (black/brown) vs.</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># "fair" (red/blond) hair color, conditional on eye color and sex.</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Aside: use `lighten = FALSE` to avoid lightening the bar fill colors.</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>hec <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">proportions</span>(HairEyeColor, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>hcols <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"sienna"</span>, <span class="st">"indianred"</span>, <span class="st">"goldenrod"</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  Freq <span class="sc">~</span> Eye <span class="sc">|</span> Hair, <span class="at">data =</span> hec,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span> Sex, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">1</span>),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">lighten =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> hcols)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>, <span class="at">col =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-17.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Offset examples</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Waterfall plot</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">item =</span> <span class="fu">c</span>(<span class="st">"Sales"</span>, <span class="st">"Services"</span>, <span class="st">"Costs"</span>, <span class="st">"Returns"</span>, <span class="st">"TOTAL"</span>),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">40</span>, <span class="sc">-</span><span class="dv">80</span>, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">50</span>))</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>item <span class="ot">=</span> <span class="fu">factor</span>(d<span class="sc">$</span>item, <span class="at">levels =</span> d<span class="sc">$</span>item)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>offset <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(d<span class="sc">$</span>value[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]), <span class="dv">0</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  value <span class="sc">~</span> item <span class="sc">|</span> <span class="fu">I</span>(value <span class="sc">&lt;</span> <span class="dv">0</span>), <span class="at">data =</span> d,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">offset =</span> d<span class="sc">$</span>offset, <span class="at">lighten =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="cn">NA</span>, <span class="co"># (optional: turn off border)</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="cn">FALSE</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fl">4.5</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"grey50"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-18.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Diverging/Likert layout: a character (or named numeric) offset "sets</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># aside" the named category, pulling it out of the centered stack and drawing</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># it as a standalone bar. Here a neutral "Unsure" response is shown apart from</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the diverging agree/disagree scale.</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>lik <span class="ot">=</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">question =</span> <span class="fu">c</span>(<span class="st">"Pay"</span>, <span class="st">"Workload"</span>, <span class="st">"Manager"</span>, <span class="st">"Culture"</span>),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">response =</span> <span class="fu">c</span>(<span class="st">"Strong disagree"</span>, <span class="st">"Disagree"</span>, <span class="st">"Agree"</span>, <span class="st">"Strong agree"</span>, <span class="st">"Unsure"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>response <span class="ot">=</span> <span class="fu">factor</span>(lik<span class="sc">$</span>response, <span class="at">levels =</span> <span class="fu">unique</span>(lik<span class="sc">$</span>response))</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>share <span class="ot">=</span> <span class="fu">c</span>( <span class="co"># proportions summing to 1 within each question</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">15</span>,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">20</span>, .<span class="dv">30</span>, .<span class="dv">15</span>, .<span class="dv">20</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">35</span>, .<span class="dv">20</span>, .<span class="dv">40</span>, .<span class="dv">30</span>,</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">25</span>, .<span class="dv">15</span>, .<span class="dv">35</span>, .<span class="dv">20</span>,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">10</span>, .<span class="dv">05</span>, .<span class="dv">15</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co"># diverging palette: reds (disagree) -&gt; blues (agree), grey for "Unsure"</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"#b2182b"</span>, <span class="st">"#ef8a62"</span>, <span class="st">"#67a9cf"</span>, <span class="st">"#2166ac"</span>, <span class="st">"grey"</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  share <span class="sc">~</span> question <span class="sc">|</span> response, <span class="at">data =</span> lik,</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">offset =</span> <span class="st">"Unsure"</span>, <span class="at">lighten =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"top!"</span>, <span class="at">title =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> pal),</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Hypothetical Likert example with category offset"</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>)</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>, <span class="at">v =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-19.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

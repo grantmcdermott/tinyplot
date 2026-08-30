@@ -11,9 +11,10 @@ type_barplot(
   offset = NULL,
   FUN = NULL,
   xlevels = NULL,
-  xaxlabels = NULL,
+  xord = NULL,
   drop.zeros = FALSE,
-  lighten = TRUE
+  lighten = TRUE,
+  xaxlabels = NULL
 )
 }
 \arguments{
@@ -36,7 +37,8 @@ one of two distinct forms. See the Examples for illustrations of both.
 \itemize{
 \item \emph{Positions} via an unnamed numeric scalar or vector. Bars start at the
 offset value(s) rather than zero, matched per x-level after any \code{xlevels}
-reordering (a scalar is applied to all bars). Useful for waterfall charts.
+or \code{xord} reordering (a scalar is applied to all bars). Useful for
+waterfall charts.
 The positional form cannot be combined with \code{center}.
 \item \emph{Category} via a character vector such as \code{offset = "Unsure"}, or a
 named numeric vector such as \code{offset = c(Unsure = 1.1)}. The named
@@ -50,15 +52,39 @@ grouping and \code{beside = FALSE}, but can be combined with \code{center}.
 \item{FUN}{a function to compute the summary statistic for \code{y} within each
 group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: mean).}
 
-\item{xlevels}{a character or numeric vector specifying the ordering of the
-levels of the \code{x} variable (if character) or the corresponding indexes
-(if numeric) for the plot. The special keyword \code{"asis"} takes the
-categories in the order that they appear in the data. Note that this
-argument only affects categorical (i.e., factor or character) \code{x}
-variables.}
+\item{xlevels, xord}{arguments controlling the order of the \code{x} variable, and
+hence of the x-axis. Supply one or the other; if both arguments are
+provided, \code{xlevels} takes precedence and \code{xord} is silently ignored.
+\itemize{
+\item \code{xlevels} specifies the levels \emph{literally}, either a character vector of
+level names in the desired order (e.g., \code{c("C", "B", "A")}), or a numeric
+vector of the corresponding level indexes (e.g. \code{3:1}).
+\item \code{xord} instead accepts a keyword or custom function, which then \emph{derives}
+the order from the data. Options are:
+\itemize{
+\item \code{"desc(ending)"} and \code{"asc(ending)"} rank (sort) the categories by bar
+height, tallest or shortest first. Both the abbreviated and long form
+strings are permitted, as are the \code{"decreasing"} and \code{"increasing"}
+aliases. Note that the ranking is applied to the \emph{aggregated} bars, i.e.
+whatever \code{FUN} produced, rather than the underlying rows. With \code{by}
+groups or facets, a single ordering is computed and shared across all of
+them, by summing each category's bars over every group and facet. For
+stacked bars that sum is the height of the full stack; with
+\code{beside = TRUE} it is the group total rather than any individual bar. (A
+factor carries one level order, so a per-facet ranking is not
+expressible.)
+\item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they
+appear in the data, while the latter reverses the current level order.
+\item a custom function that determines both the ranking statistic and its
+direction. The statistic is always sorted in ascending order, so
+\code{function(y) -median(y)} ranks by median, largest first.
+}
+}
 
-\item{xaxlabels}{a character vector with the axis labels for the \code{x} variable,
-defaulting to the levels of \code{x}.}
+Note that a numeric \code{x} is coerced to a factor before the bars are drawn,
+so it is reordered like any other categorical variable.
+Each argument defaults to \code{NULL}, i.e. keep the existing factor levels.}
 
 \item{drop.zeros}{logical. Should bars with zero height be dropped? If set
 to \code{FALSE} (default) a zero height bar is still drawn for which the border
@@ -68,6 +94,10 @@ lines will still be visible.}
 series colour(s)? Default is \code{TRUE}, which keeps single- and multi-group
 displays consistent and lets the fill read cleanly over grid lines. Set to
 \code{FALSE} to use the fully-saturated palette colour(s) instead.}
+
+\item{xaxlabels}{[Deprecated] a character vector with the axis labels for
+the \code{x} variable. Use the top-level \code{xaxl} argument instead (see
+\code{\link{tinylabel}}). This argument will be removed in a future release.}
 }
 \description{
 Type function for producing barplots. For formulas of type
@@ -77,41 +107,93 @@ of \code{y} within each level of \code{x} is visualized, if necessary aggregated
 using some function (default: mean).
 }
 \examples{
-# Basic examples of frequency tables (without y variable)
+#
+## Basic use (raw values)
+
+tinyplot(GNP ~ Year, data = longley, type = "barplot")
+
+tinyplot(demand ~ Time, data = BOD, type = "bar") # "bar" is a shorthand
+tinyplot_add(type = "text", pos = 3, xpd = NA)    # add y values as text
+
+# reordering (just to demonstrate; these aren't sensible for a time variable)
+tinyplot(demand ~ Time, data = BOD, type = "bar", xord = "asc")
+jumble = c("7","1","5","2","4","3") # note: Time = 6 is also missing
+tinyplot(demand ~ Time, data = BOD, type = "bar", xlevels = jumble) 
+
+#
+## Aggregated vs grouped values (multiple ys per x)
+
+# each person receives two drugs
+sleep2 = transform(sleep, drug = group) # less misleading name
+
+# default aggregation FUN is mean
+tinyplot(
+  extra ~ ID, data = sleep2,
+  type = "barplot",
+  main = "Mean extra sleep from 2 soporific drugs"
+)
+# switch to diff (answers a more relevant q: who benefits most from drug 2?)
+tinyplot(
+  extra ~ ID, data = sleep2,
+  type = "barplot", FUN = diff,
+  main = "Sleep gain (drug 2 vs drug 1)"
+)
+# we can sort in descending (or ascending) order too
+tinyplot(
+  extra ~ ID, data = sleep2,
+  type = "barplot", FUN = diff, xord = "desc",
+  main = "Sleep gain (drug 2 vs drug 1), ordered"
+)
+
+# of course, we don't have to aggregate if we specify groups (stacked or non)
+tinyplot(extra ~ ID | drug, data = sleep2, type = "barplot", beside = TRUE)
+# Note: We used automatic argument passing for 'xord', `FUN`, etc. above. But
+# this wouldn't work for `width`, since it would conflict with the top-level
+# `tinyplot(..., width = <width>)` argument. It's safer to pass these args
+# through the `type_barplot()` functional equivalent...
+
+tinyplot(
+  extra ~ ID | drug, data = sleep2,
+  type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
+)
+
+# speaking of top-level args, use xaxl to format the x labels, e.g. with a
+# dictionary, keyword, or (here:) function
+
+tinyplot(
+  extra ~ ID | drug, data = sleep2,
+  type = type_barplot(beside = TRUE, xord = "desc"),
+  xaxl = as.roman
+)
+
+#
+## matrix method (no formula required)
+
+tinyplot(VADeaths, type = "barplot")
+tinyplot(VADeaths, type = "barplot", beside = TRUE)
+# etc. see ?tinyplot.matrix
+
+#
+## Frequency tables
+
+# No y variable (frequency calculated on the fly)
 tinyplot(~ cyl, data = mtcars, type = "barplot")
 tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
 tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
 
-# Reorder x variable categories either by their character levels or numeric indexes
-tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = c("8", "6", "4"))
-tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
-
-# Note: Above we used automatic argument passing for `beside`. But this
-# wouldn't work for `width`, since it would conflict with the top-level
-# `tinyplot(..., width = <width>)` argument. It's safer to pass these args
-# through the `type_barplot()` functional equivalent.
-tinyplot(
-  ~ cyl | vs, data = mtcars,
-  type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65)
-)
-
-# Example for numeric y aggregated by x (default: FUN = mean) + facets
-tinyplot(
-  extra ~ ID | group, facet = "by", data = sleep,
-  type = "barplot",
-  theme = "clean2"
-)
-
-# Fancy frequency table:
+# Fancy frequency table (y = frequency aleady computed)
 tinyplot(
   Freq ~ Sex | Survived, data = as.data.frame(Titanic),
   facet = ~ Class, facet.args = list(nrow = 1),
-  type = "barplot", flip = TRUE,
+  type = "barplot", beside = TRUE, flip = TRUE,
   theme = "clean2"
 )
 
-# Centered barplot for conditional proportions of dark (black/brown) vs.
-# light (red/blond) hair color, conditional on eye color and sex.
+#
+## Centering
+
+# Centered barplot for conditional proportions of "dark" (black/brown) vs.
+# "fair" (red/blond) hair color, conditional on eye color and sex.
 # Aside: use `lighten = FALSE` to avoid lightening the bar fill colors.
 hec = as.data.frame(proportions(HairEyeColor, 2:3))
 hcols = c("black", "sienna", "indianred", "goldenrod")
@@ -122,8 +204,10 @@ tinyplot(
   flip = TRUE, yaxl = "percent",
   theme = list("clean2", palette.qualitative = hcols)
 )
+tinyplot_add(type = "vline", col = "white")
 
-# Use cases for the `offset` argument
+#
+## Offset examples
 
 # 1. Waterfall plot
 d = data.frame(item = c("Sales", "Services", "Costs", "Returns", "TOTAL"),
@@ -165,5 +249,6 @@ tinyplot(
   main = "Hypothetical Likert example with category offset"
 )
 tinyplot_add(type = "vline")
+tinyplot_add(type = "vline", v = 1, lty = 2)
 
 }

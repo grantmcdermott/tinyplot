@@ -749,6 +749,18 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_labeller_list")
 
+# A dictionary can be nested inside that per-variable list, which is the only
+# way to reach one here: a bare named vector claims the same slot and is read
+# as a per-variable mapping instead. Partial mapping is fine -- "versicolor"
+# is not named, so it comes through untouched.
+f = function() {
+  tinyplot(
+    Sepal.Length ~ Petal.Length, data = iris, facet = ~Species,
+    facet.args = list(labeller = list(Species = c(setosa = "SET", virginica = "VIR")))
+  )
+}
+expect_snapshot_plot(f, label = "facet_labeller_dict")
+
 # All of the facet title arguments at once: a named `prefix` (so the order it
 # is written in doesn't matter), a `labeller`, and a `sep` to stack the two
 # variables. Note that the labeller sees each variable's own values rather than

@@ -192,3 +192,112 @@ f = function() {
     type = type_barplot(lighten = FALSE), theme = "clean2")
 }
 expect_snapshot_plot(f, label = "barplot_group_lighten_false")
+
+
+#
+## xord -----
+
+# sort bars by height -- not previously possible without relevelling by hand
+f = function() tinyplot(~ cyl, data = mtcars, type = type_barplot(xord = "desc"))
+expect_snapshot_plot(f, label = "barplot_xord_desc")
+
+f = function() tinyplot(~ cyl, data = mtcars, type = type_barplot(xord = "rev"))
+expect_snapshot_plot(f, label = "barplot_xord_rev")
+
+# `xord` must rank the *aggregated* bars, not the raw cells. With unequal cell
+# counts these two order the bars oppositely (means: few>mid>many; sums:
+# many>mid>few), so the pair pins the ranking to whatever FUN actually drew.
+bars = data.frame(
+  g = factor(rep(c("few", "many", "mid"), times = c(1, 6, 3))),
+  v = c(10, rep(3, 6), rep(5, 3))
+)
+
+f = function() tinyplot(v ~ g, data = bars, type = type_barplot(xord = "desc"))
+expect_snapshot_plot(f, label = "barplot_xord_aggregated_mean")
+
+f = function() tinyplot(v ~ g, data = bars, type = type_barplot(xord = "desc", FUN = sum))
+expect_snapshot_plot(f, label = "barplot_xord_aggregated_sum")
+
+
+# `xord` no longer accepts explicit levels; that is what `xlevels` is for
+expect_error(
+  tinyplot(~ cyl, data = mtcars, type = type_barplot(xord = c("8", "6", "4"))),
+  pattern = "must be NULL"
+)
+# and `xlevels` no longer accepts the ord keywords: a keyword matches none of
+# the levels, which is fatal rather than a silent all-NA factor
+expect_error(
+  tinyplot(~ cyl, data = mtcars, type = type_barplot(xlevels = "asis")),
+  pattern = "matches none of the levels"
+)
+
+# `xord` is validated even where the ordering itself is a no-op, so that a typo
+# does not lie dormant until the data gains a second category
+one_level = data.frame(g = factor("only"), v = 1)
+expect_error(
+  tinyplot(v ~ g, data = one_level, type = type_barplot(xord = "des")),
+  pattern = "must be NULL"
+)
+
+# "start"/"end" name a position along a secondary axis, which x-categories do
+# not have; offering them here would silently alias "desc" (ungrouped) or
+# silently re-read as "first/last `by` level" (grouped)
+expect_error(
+  tinyplot(~ cyl, data = mtcars, type = type_barplot(xord = "end")),
+  pattern = "not available for this plot type"
+)
+
+# a bar is a single aggregate, so it has no variance to rank on: "minvar" is
+# not part of this type's vocabulary at all
+expect_error(
+  tinyplot(~ cyl | vs, data = mtcars, type = type_barplot(xord = "minvar")),
+  pattern = "must be NULL"
+)
+
+# a ranking function may not ask for `x` here: bar categories are a flat set,
+# so the only thing to hand over would be the `by` level index -- a nominal
+# code that lm() would happily regress on and return a meaningless number
+expect_error(
+  tinyplot(~ cyl | vs, data = mtcars,
+           type = type_barplot(xord = function(y, x) coef(lm(y ~ x))[2])),
+  pattern = "no secondary axis"
+)
+# ...but a plain function is fine. "asc" is now the direct route to ascending
+# order, and must agree with the function that used to be the only way there
+f = function() tinyplot(~ cyl, data = mtcars, type = type_barplot(xord = function(y) sum(y)))
+expect_snapshot_plot(f, label = "barplot_xord_ascending")
+
+f = function() tinyplot(~ cyl, data = mtcars, type = type_barplot(xord = "asc"))
+expect_snapshot_plot(f, label = "barplot_xord_ascending")
+
+# naming a strict subset of levels silently dropped the rest to NA, taking
+# those observations out of the plot without a word (#645 follow-up)
+expect_warning(
+  tinyplot(~ cyl, data = mtcars, type = type_barplot(xlevels = c("8", "4"))),
+  pattern = "omits 1 of the 3 levels"
+)
+
+asis_dat = data.frame(
+  g = factor(c("z", "z", "a", "m", "m", "m")),   # appearance z,a,m; levels a,m,z
+  v = c(5, 5, 1, 3, 3, 3)
+)
+# what "asis" computes: appearance order, not level order
+expect_equal(
+  levels(tinyplot:::sanitize_ord(asis_dat$g, NULL, NULL, "asis", keywords = tinyplot:::ord_keywords_scalar)),
+  c("z", "a", "m")
+)
+# ...and *where* barplot applies it, which the unit call above cannot check:
+# "asis" has to run before aggregate(), which sorts on the grouping columns and
+# would otherwise leave it returning plain level order. The ranking keywords
+# have the opposite requirement, so the two are applied at different points.
+f = function() tinyplot(v ~ g, data = asis_dat, type = type_barplot(xord = "asis"))
+expect_snapshot_plot(f, label = "barplot_xord_asis")
+
+
+# xaxl dictionary relabelling (replaces deprecated, type-specific xaxalabels)
+f = function() {
+  tinyplot(~ cyl, data = mtcars, type = "barplot",
+           xaxl = c("4" = "four", "6" = "six", "8" = "eight"))
+}
+expect_snapshot_plot(f, label = "barplot_xaxl_dict")
+

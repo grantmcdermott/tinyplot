@@ -27,9 +27,32 @@
 #' at the specified `probs`. The quantiles are computed based on the density
 #' (rather than the raw original variable). Only one of `breaks` or
 #' `probs` must be specified.
-#' @param ylevels a character or numeric vector specifying in which order
-#' the levels of the y-variable should be plotted. The special keyword
-#' `"asis"` takes the categories in the order that they appear in the data.
+#' @param ylevels,yord arguments controlling the order of the `y` variable, and
+#'   hence of the y-axis. Supply one or the other; if both arguments are
+#'   provided, `ylevels` takes precedence and `yord` is silently ignored.
+#'
+#'   - `ylevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
+#'
+#'   - `yord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
+#'
+#'     - `"desc"` and `"asc"` rank the ridges by their mean `x` value, largest
+#'     or smallest first. (Long forms like `"descending"` and `"increasing"` are also accepted.) (Ridge plots have no
+#'     separate response, so the ranking runs on the continuous `x` variable.)
+#'     - `"minvar"` ranks them by the spread of each distribution, narrowest
+#'     first.
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted ascending, so
+#'     `function(y) -median(y)` ranks by median, largest first.
+#'
+#'   Note that a numeric `y` is coerced to a factor before the ridges are
+#'   drawn, so it is reordered like any other categorical variable.
+#'   Each argument defaults to `NULL`, i.e. keep the existing factor levels.
 #' @inheritParams stats::density
 #' @param bw the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
 #'   see \code{\link[stats]{density}} for details and options.
@@ -215,6 +238,7 @@ type_ridge = function(
     breaks = NULL,
     probs = NULL,
     ylevels = NULL,
+    yord = NULL,
     bw = "nrd0",
     joint.bw =  c("mean", "full", "none"),
     adjust = 1,
@@ -245,6 +269,7 @@ type_ridge = function(
                       breaks = breaks,
                       probs = probs,
                       ylevels = ylevels,
+                      yord = yord,
                       raster = raster,
                       col = col,
                       alpha = alpha,
@@ -265,14 +290,14 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       gradient = FALSE,
                       breaks = NULL,
                       probs = NULL,
-                      ylevels = NULL,
+                      ylevels = NULL, yord = NULL,
                       raster = FALSE,
                       col = NULL,
                       alpha = NULL,
                       singletons = "warn"
                       ) {
   fun = function(settings, ...) {
-    env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by"))
+    env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by", "yaxl"))
 
     # `col` may arrive either via the top-level `tinyplot(..., col =)` call
     # (stored in settings) or via the `type_ridge(col =)` constructor arg. The
@@ -301,6 +326,17 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     ## reorder levels of y-variable if requested
     if (!is.null(ylevels)) {
       datapoints$y = sanitize_xlevels(datapoints$y, ylevels, arg = "ylevels")
+      if (y_by) datapoints$by = datapoints$y
+    }
+    ## `yord` ranks the ridges on the *continuous* variable, which for this
+    ## type is `x` -- there is no separate response to rank on. So "asc"/"desc"
+    ## order by mean x, "minvar" by the spread of each distribution.
+    if (!is.null(yord) && is.null(ylevels)) {
+      datapoints$y = sanitize_ord(
+        datapoints$y, datapoints$x, NULL,
+        yord, arg = "yord", keywords = ord_keywords_distribution,
+        stat = "mean"
+      )
       if (y_by) datapoints$by = datapoints$y
     }
 
@@ -460,6 +496,10 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       probs = probs,
       manbreaks = manbreaks,
       yaxt = yaxt_orig,
+      ## This type draws its own y-axis category labels (see `draws_own_axes`),
+      ## so it never reaches the standard path where `yaxl` is applied. Carry it
+      ## through for the tinyAxis() calls in draw_ridge() to use as a labeller.
+      yaxl = yaxl,
       raster = raster,
       ridge_theme = ridge_theme,
       x_by = x_by,
@@ -580,6 +620,7 @@ draw_ridge = function() {
     if (ridge_theme) {
       if (keep_axis(2)) {
         tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
+                 labeller = type_info[["yaxl"]],
                  padj = 0,
                  mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
                  tcl = 0)
@@ -587,7 +628,8 @@ draw_ridge = function() {
       if (identical(.tpar[["tinytheme"]], "ridge2") && keep_axis(1)) axis(1, labels = FALSE)
     } else {
       if (keep_axis(2)) {
-        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
+        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
+                 labeller = type_info[["yaxl"]])
       }
     }
   }

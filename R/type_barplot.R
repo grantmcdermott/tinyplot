@@ -19,20 +19,45 @@
 #'   or the mid-way in the third category, respectively.
 #' @param FUN a function to compute the summary statistic for `y` within each
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
-#' @param xlevels a character or numeric vector specifying the ordering of the
-#'   levels of the `x` variable (if character) or the corresponding indexes
-#'   (if numeric) for the plot. The special keyword `"asis"` takes the
-#'   categories in the order that they appear in the data. Note that this
-#'   argument only affects categorical (i.e., factor or character) `x`
-#'   variables.
-#' @param xaxlabels a character vector with the axis labels for the `x` variable,
-#'   defaulting to the levels of `x`.
+#' @param xlevels,xord arguments controlling the order of the `x` variable, and
+#'   hence of the x-axis. Supply one or the other; if both arguments are
+#'   provided, `xlevels` takes precedence and `xord` is silently ignored.
+#'
+#'   - `xlevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
+#'
+#'   - `xord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
+#'
+#'     - `"desc(ending)"` and `"asc(ending)"` rank (sort) the categories by bar
+#'     height, tallest or shortest first. Both the abbreviated and long form
+#'     strings are permitted, as are the `"decreasing"` and `"increasing"`
+#'     aliases. Note that the ranking is applied to the *aggregated* bars, i.e.
+#'     whatever `FUN` produced, rather than the underlying rows. With `by`
+#'     groups or facets, a single ordering is computed and shared across all of
+#'     them, by summing each category's bars over every group and facet. For
+#'     stacked bars that sum is the height of the full stack; with
+#'     `beside = TRUE` it is the group total rather than any individual bar. (A
+#'     factor carries one level order, so a per-facet ranking is not
+#'     expressible.)
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted in ascending order, so
+#'     `function(y) -median(y)` ranks by median, largest first.
+#'
+#'   Note that a numeric `x` is coerced to a factor before the bars are drawn,
+#'   so it is reordered like any other categorical variable.
+#'   Each argument defaults to `NULL`, i.e. keep the existing factor levels.
 #' @param offset optional specification for shifting bar baselines, accepting
 #'   one of two distinct forms. See the Examples for illustrations of both.
 #' 
 #'   - *Positions* via an unnamed numeric scalar or vector. Bars start at the
 #'   offset value(s) rather than zero, matched per x-level after any `xlevels`
-#'   reordering (a scalar is applied to all bars). Useful for waterfall charts.
+#'   or `xord` reordering (a scalar is applied to all bars). Useful for
+#'   waterfall charts.
 #'   The positional form cannot be combined with `center`.
 #'   - *Category* via a character vector such as `offset = "Unsure"`, or a
 #'   named numeric vector such as `offset = c(Unsure = 1.1)`. The named
@@ -48,43 +73,99 @@
 #'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group
 #'   displays consistent and lets the fill read cleanly over grid lines. Set to
 #'   `FALSE` to use the fully-saturated palette colour(s) instead.
+#' @param xaxlabels \[Deprecated\] a character vector with the axis labels for
+#'   the `x` variable. Use the top-level `xaxl` argument instead (see
+#'   [`tinylabel`]). This argument will be removed in a future release.
 #'
 #' @examples
-#' # Basic examples of frequency tables (without y variable)
+#' #
+#' ## Basic use (raw values)
+#' 
+#' tinyplot(GNP ~ Year, data = longley, type = "barplot")
+#' 
+#' tinyplot(demand ~ Time, data = BOD, type = "bar") # "bar" is a shorthand
+#' tinyplot_add(type = "text", pos = 3, xpd = NA)    # add y values as text
+#' 
+#' # reordering (just to demonstrate; these aren't sensible for a time variable)
+#' tinyplot(demand ~ Time, data = BOD, type = "bar", xord = "asc")
+#' jumble = c("7","1","5","2","4","3") # note: Time = 6 is also missing
+#' tinyplot(demand ~ Time, data = BOD, type = "bar", xlevels = jumble) 
+#' 
+#' #
+#' ## Aggregated vs grouped values (multiple ys per x)
+#' 
+#' # each person receives two drugs
+#' sleep2 = transform(sleep, drug = group) # less misleading name
+#' 
+#' # default aggregation FUN is mean
+#' tinyplot(
+#'   extra ~ ID, data = sleep2,
+#'   type = "barplot",
+#'   main = "Mean extra sleep from 2 soporific drugs"
+#' )
+#' # switch to diff (answers a more relevant q: who benefits most from drug 2?)
+#' tinyplot(
+#'   extra ~ ID, data = sleep2,
+#'   type = "barplot", FUN = diff,
+#'   main = "Sleep gain (drug 2 vs drug 1)"
+#' )
+#' # we can sort in descending (or ascending) order too
+#' tinyplot(
+#'   extra ~ ID, data = sleep2,
+#'   type = "barplot", FUN = diff, xord = "desc",
+#'   main = "Sleep gain (drug 2 vs drug 1), ordered"
+#' )
+#' 
+#' # of course, we don't have to aggregate if we specify groups (stacked or non)
+#' tinyplot(extra ~ ID | drug, data = sleep2, type = "barplot", beside = TRUE)
+
+#' # Note: We used automatic argument passing for 'xord', `FUN`, etc. above. But
+#' # this wouldn't work for `width`, since it would conflict with the top-level
+#' # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
+#' # through the `type_barplot()` functional equivalent...
+#' 
+#' tinyplot(
+#'   extra ~ ID | drug, data = sleep2,
+#'   type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
+#' )
+#' 
+#' # speaking of top-level args, use xaxl to format the x labels, e.g. with a
+#' # dictionary, keyword, or (here:) function
+#' 
+#' tinyplot(
+#'   extra ~ ID | drug, data = sleep2,
+#'   type = type_barplot(beside = TRUE, xord = "desc"),
+#'   xaxl = as.roman
+#' )
+#' 
+#' #
+#' ## matrix method (no formula required)
+#' 
+#' tinyplot(VADeaths, type = "barplot")
+#' tinyplot(VADeaths, type = "barplot", beside = TRUE)
+#' # etc. see ?tinyplot.matrix
+#' 
+#' #
+#' ## Frequency tables
+#' 
+#' # No y variable (frequency calculated on the fly)
 #' tinyplot(~ cyl, data = mtcars, type = "barplot")
 #' tinyplot(~ cyl | vs, data = mtcars, type = "barplot")
 #' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", beside = TRUE)
 #' 
-#' # Reorder x variable categories either by their character levels or numeric indexes
-#' tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = c("8", "6", "4"))
-#' tinyplot(~ cyl, data = mtcars, type = "barplot", xlevels = 3:1)
-#' 
-#' # Note: Above we used automatic argument passing for `beside`. But this
-#' # wouldn't work for `width`, since it would conflict with the top-level
-#' # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
-#' # through the `type_barplot()` functional equivalent.
-#' tinyplot(
-#'   ~ cyl | vs, data = mtcars,
-#'   type = type_barplot(beside = TRUE, drop.zeros = TRUE, width = 0.65)
-#' )
-#' 
-#' # Example for numeric y aggregated by x (default: FUN = mean) + facets
-#' tinyplot(
-#'   extra ~ ID | group, facet = "by", data = sleep,
-#'   type = "barplot",
-#'   theme = "clean2"
-#' )
-#' 
-#' # Fancy frequency table:
+#' # Fancy frequency table (y = frequency aleady computed)
 #' tinyplot(
 #'   Freq ~ Sex | Survived, data = as.data.frame(Titanic),
 #'   facet = ~ Class, facet.args = list(nrow = 1),
-#'   type = "barplot", flip = TRUE,
+#'   type = "barplot", beside = TRUE, flip = TRUE,
 #'   theme = "clean2"
 #' )
+#' 
+#' #
+#' ## Centering
 #'
-#' # Centered barplot for conditional proportions of dark (black/brown) vs.
-#' # light (red/blond) hair color, conditional on eye color and sex.
+#' # Centered barplot for conditional proportions of "dark" (black/brown) vs.
+#' # "fair" (red/blond) hair color, conditional on eye color and sex.
 #' # Aside: use `lighten = FALSE` to avoid lightening the bar fill colors.
 #' hec = as.data.frame(proportions(HairEyeColor, 2:3))
 #' hcols = c("black", "sienna", "indianred", "goldenrod")
@@ -95,8 +176,10 @@
 #'   flip = TRUE, yaxl = "percent",
 #'   theme = list("clean2", palette.qualitative = hcols)
 #' )
+#' tinyplot_add(type = "vline", col = "white")
 #'
-#' # Use cases for the `offset` argument
+#' #
+#' ## Offset examples
 #'
 #' # 1. Waterfall plot
 #' d = data.frame(item = c("Sales", "Services", "Costs", "Returns", "TOTAL"),
@@ -138,11 +221,20 @@
 #'   main = "Hypothetical Likert example with category offset"
 #' )
 #' tinyplot_add(type = "vline")
+#' tinyplot_add(type = "vline", v = 1, lty = 2)
 #'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, lighten = TRUE, xaxlabels = NULL) {
+  if (!is.null(xaxlabels)) {
+    warning(
+      "'xaxlabels' is deprecated; use the top-level 'xaxl' argument instead, ",
+      "e.g. tinyplot(..., xaxl = c(old = \"new\")) to rename particular ",
+      "categories, or xaxl = function(x) ... to compute the labels.",
+      call. = FALSE
+    )
+  }
   out = list(
-    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xaxlabels = xaxlabels, drop.zeros = drop.zeros, lighten = lighten),
+    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xord = xord, xaxlabels = xaxlabels, drop.zeros = drop.zeros, lighten = lighten),
     draw = draw_rect(),
     name = "barplot"
   )
@@ -151,7 +243,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
 }
 
 #' @importFrom stats aggregate
-data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
+data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
     fun = function(settings, ...) {
         env2env(
           settings,
@@ -175,11 +267,34 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         }
         if (!is.factor(datapoints$x)) datapoints$x = factor(datapoints$x)
         datapoints$x = sanitize_xlevels(datapoints$x, xlevels)
+        ## "asis" means "the order the categories appear in the data", and the
+        ## aggregate() below destroys that by sorting on the grouping columns.
+        ## It consults no `y`, so apply it here while the row order still
+        ## survives. The ranking keywords have the opposite requirement -- they
+        ## must see the aggregated bars -- and so stay below.
+        if (identical(xord, "asis") && is.null(xlevels)) {
+          datapoints$x = sanitize_ord(
+            datapoints$x, NULL, NULL,
+            xord, arg = "xord", keywords = ord_keywords_scalar
+          )
+        }
         if (!is.null(xaxlabels)) levels(datapoints$x) = xaxlabels
         datapoints = aggregate(datapoints[, "y", drop = FALSE], datapoints[, c("x", "by", "facet")], FUN = FUN, drop = FALSE)
         datapoints$y[is.na(datapoints$y)] = 0 #FIXME: always?#
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
+
+        ## `xord` ranks on the *aggregated* bars, so it has to run after the
+        ## aggregate() above -- ranking the raw cells would sort on sums while
+        ## the plot draws whatever FUN produced. It also has to run before the
+        ## `offset` block below, which is keyed positionally by x-level.
+        if (!is.null(xord) && !identical(xord, "asis") && is.null(xlevels)) {
+          datapoints$x = sanitize_ord(
+            datapoints$x, datapoints$y, NULL,
+            xord, arg = "xord", keywords = ord_keywords_scalar
+          )
+          datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), , drop = FALSE]
+        }
         
         ## `offset` accepts two distinct forms:
         ##  - unnamed numeric -> positional, keyed by x-level (waterfall)

@@ -4,11 +4,34 @@
 #'   are modified versions of histograms or mosaic plots, and particularly
 #'   useful for visualizing factor variables. Note that [`tinyplot`] defaults
 #'   to `type_spineplot()` if `y` is a factor variable.
-#' @param xlevels,ylevels a character or numeric vector specifying the ordering of the
-#'   levels of the `x` and `y` variables (if character) or the corresponding indexes
-#'   (if numeric) for the plot. The special keyword `"asis"` takes the
-#'   categories in the order that they appear in the data. Note that these
-#'   arguments only affect categorical (i.e., factor or character) variables.
+#' @param xlevels,xord arguments controlling the order of the `x` variable, and
+#'   hence of the x-axis. Supply one or the other; if both arguments are
+#'   provided, `xlevels` takes precedence and `xord` is silently ignored.
+#'
+#'   - `xlevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
+#'
+#'   - `xord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
+#'
+#'     - `"desc"` and `"asc"` rank the categories by (weighted) frequency,
+#'     i.e. most or least common first. (Long forms like `"descending"` and `"increasing"` are also accepted.)
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted ascending, so
+#'     `function(y) -median(y)` ranks by median, largest first.
+#'
+#'   Note that `x` is only reordered when it is categorical (i.e., factor or
+#'   character). Both arguments are thus ignored for spinograms, which have a
+#'   (binned) numeric `x` axis. Each argument defaults to `NULL`, i.e. keep the
+#'   existing factor levels.
+#' @param ylevels,yord as for `xlevels` / `xord` above, but for the `y`
+#'   variable. Note that `y` is always coerced to a factor for spineplots and
+#'   spinograms, so these arguments are always binding if provided. Be aware
+#'   that a numeric `y` gives one level per distinct value.
 #' @inheritParams graphics::spineplot
 #' @param lighten logical. For grouped spineplots where the `y` variable is
 #'   itself the grouping variable (i.e. `y == by`), should the fills use a
@@ -20,6 +43,10 @@
 #'   the lighter tint. Note that `lighten` has no effect on other spineplot
 #'   displays (single-group or `x == by`), which always use a sequential shading
 #'   ramp of the base colour.
+#' @param xaxlabels,yaxlabels \[Deprecated\] character vectors for annotation of
+#'   the x and y axis. Use the top-level `xaxl` / `yaxl` arguments instead,
+#'   which apply consistently across [`tinyplot`] types. These two type-specific
+#'   arguments will be removed in a future release.
 #' @examples
 #' # "spineplot" type convenience string
 #' tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot")
@@ -94,10 +121,24 @@
 #' )
 #' 
 #' @export
-type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, ylevels = NULL, col = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
+type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = NULL, xord = NULL, ylevels = NULL, yord = NULL, col = NULL, weights = NULL, lighten = FALSE, xaxlabels = NULL, yaxlabels = NULL) {
   col = col
+  dep = c(if (!is.null(xaxlabels)) "xaxlabels", if (!is.null(yaxlabels)) "yaxlabels")
+  if (length(dep)) {
+    warning(
+      sprintf(
+        "'%s' %s deprecated; ",
+        paste(dep, collapse = "' and '"),
+        if (length(dep) > 1L) "are" else "is"
+      ),
+      "use the top-level 'xaxl'/'yaxl' arguments instead, e.g. ",
+      "tinyplot(..., yaxl = c(old = \"new\")) to rename particular categories, ",
+      "or yaxl = function(x) ... to compute the labels.",
+      call. = FALSE
+    )
+  }
   out = list(
-    data = data_spineplot(off = off, breaks = breaks, xlevels = xlevels, ylevels = ylevels, xaxlabels = xaxlabels, yaxlabels = yaxlabels, weights = weights, lighten = lighten),
+    data = data_spineplot(off = off, breaks = breaks, xlevels = xlevels, xord = xord, ylevels = ylevels, yord = yord, xaxlabels = xaxlabels, yaxlabels = yaxlabels, weights = weights, lighten = lighten),
     draw = draw_spineplot(tol.ylab = tol.ylab, off = off, col = col, xaxlabels = xaxlabels, yaxlabels = yaxlabels, lighten = lighten),
     name = "spineplot"
   )
@@ -106,9 +147,9 @@ type_spineplot = function(breaks = NULL, tol.ylab = 0.05, off = NULL, xlevels = 
 }
 
 #' @importFrom grDevices nclass.Sturges
-data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels = ylevels, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
+data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, xord = NULL, ylevels = ylevels, yord = NULL, xaxlabels = NULL, yaxlabels = NULL, weights = NULL, lighten = FALSE) {
     fun = function(settings, ...) {
-        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "null_by", "null_facet", "col", "bg", "axes", "frame.plot", "xaxt", "yaxt", "lwd", "lty"))
+        env2env(settings, environment(), c("datapoints", "xlim", "ylim", "facet", "facet.args", "by", "xaxb", "yaxb", "xaxl", "yaxl", "null_by", "null_facet", "col", "bg", "axes", "frame.plot", "xaxt", "yaxt", "lwd", "lty"))
         settings[["lighten"]] = lighten
       
         ## process weights: a top-level `weights` column (carried on datapoints
@@ -164,6 +205,24 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         }
         if (!is.null(ylevels)) {
           datapoints$y = sanitize_xlevels(datapoints$y, ylevels, arg = "ylevels")
+          if (y_by) datapoints$by = datapoints$y
+        }
+        ## Both axes here are categorical, so there is no response to rank on:
+        ## the size keywords count observations instead (weighted, if given),
+        ## i.e. "asc"/"desc" order the categories by frequency.
+        spine_w = if (!is.null(weights)) weights else rep.int(1, nrow(datapoints))
+        if (!is.null(xord) && is.null(xlevels) && x.categorical) {
+          datapoints$x = sanitize_ord(
+            datapoints$x, spine_w, NULL,
+            xord, arg = "xord", keywords = ord_keywords_scalar
+          )
+          if (x_by) datapoints$by = datapoints$x
+        }
+        if (!is.null(yord) && is.null(ylevels)) {
+          datapoints$y = sanitize_ord(
+            datapoints$y, spine_w, NULL,
+            yord, arg = "yord", keywords = ord_keywords_scalar
+          )
           if (y_by) datapoints$by = datapoints$y
         }
         
@@ -264,6 +323,15 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, ylevels 
         # catch for x_by / y/by
         if (isTRUE(x_by)) datapoints$by = factor(rep(xaxlabels, each = ny)) # each x label extends over ny rows
         if (isTRUE(y_by)) datapoints$by = factor(rep_len(yaxlabels, nrow(datapoints)))
+
+        ## This type draws its own axes (see the `draws_own_axes` hint below),
+        ## so it never reaches the standard path where the top-level `xaxl` /
+        ## `yaxl` are applied. Apply them here instead, to the labels that
+        ## spine_axis() will actually draw. Deliberately after the `by` catch
+        ## above: `x/yaxl` are documented as affecting the tick labels only, so
+        ## a legend built from the same categories should be left alone.
+        if (!is.null(xaxl)) xaxlabels = tinylabel(xaxlabels, xaxl)
+        if (!is.null(yaxl)) yaxlabels = tinylabel(yaxlabels, yaxl)
 
         x = c(datapoints$xmin, datapoints$xmax)
         y = c(datapoints$ymin, datapoints$ymax)

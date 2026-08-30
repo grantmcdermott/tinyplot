@@ -190,3 +190,48 @@ expect_error(
   pattern = "at least 2 data points"
 )
 expect_error(type_ridge(singletons = "nope"))
+
+
+#
+## yord -----
+
+# ridges rank on the continuous `x`, since there is no separate response
+f = function() tinyplot(Species ~ Sepal.Length, data = iris, type = type_ridge(yord = "minvar"))
+expect_snapshot_plot(f, label = "ridge_yord_minvar")
+
+f = function() tinyplot(Species ~ Sepal.Length, data = iris, type = type_ridge(yord = "rev"))
+expect_snapshot_plot(f, label = "ridge_yord_rev")
+
+# a transposed formula leaves nothing numeric to rank on; say so plainly
+expect_error(
+  tinyplot(Sepal.Length ~ Species, data = iris, type = type_ridge(yord = "minvar")),
+  pattern = "ranks on a numeric variable"
+)
+# ...including when the ranking is a function, which cannot be interpolated
+# into the message the way a keyword can
+expect_error(
+  tinyplot(Sepal.Length ~ Species, data = iris,
+           type = type_ridge(yord = function(z) -mean(z))),
+  pattern = "ranks on a numeric variable"
+)
+
+expect_error(
+  tinyplot(Species ~ Sepal.Length, data = iris, type = type_ridge(yord = "start")),
+  pattern = "not available for this plot type"
+)
+
+
+#
+## yaxl -----
+
+# ridge draws its own y-axis category labels, so `yaxl` has to be carried
+# through `type_info` to the tinyAxis() calls rather than picked up by the
+# standard axis path
+f = function() tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", yaxl = toupper)
+expect_snapshot_plot(f, label = "ridge_yaxl_toupper")
+
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge",
+           yaxl = c(setosa = "SET", virginica = "VIR"))
+}
+expect_snapshot_plot(f, label = "ridge_yaxl_dict")

@@ -4,19 +4,18 @@
 ##
 ##   - NULL:      keep the existing factor levels (the default everywhere
 ##                except type_errorbar()/type_pointrange())
-##   - "asis":    take the categories in the order they appear in the data,
-##                i.e. skip the alphabetical sorting that factor() applies
-##                when coercing a character variable (cf. read.table's
-##                `as.is` argument)
 ##   - character: the levels in the desired order
 ##   - numeric:   indexes into the existing levels, e.g. 3:1
 ##
 ## Only affects factors (character variables have already been coerced by
 ## sanitize_datapoints() when this runs inside a type_data() function); any
 ## other class is returned untouched, so the argument is inert for numeric
-## variables. A length-1 "asis" is always read as the keyword: in the
-## degenerate case of a category literally named "asis", set the factor
-## levels beforehand instead.
+## variables.
+##
+## Data-derived orderings -- "asis", "rev", ranking by size or variance -- are
+## deliberately *not* handled here. They belong to the sibling `*ord` arguments
+## and sanitize_ord(); keeping the two vocabularies disjoint is what makes each
+## argument name mean one thing. The two compose, `*levels` first.
 ##
 ## Site-specific follow-ups -- re-syncing `by` when it aliases the releveled
 ## variable (spineplot, ridge), or converting the factor to integer positions
@@ -25,16 +24,41 @@ sanitize_xlevels = function(x, xlevels, arg = "xlevels") {
   if (is.null(xlevels) || !is.factor(x)) {
     return(x)
   }
-  if (identical(xlevels, "asis")) {
-    return(factor(x, levels = unique(x)))
-  }
   if (is.numeric(xlevels)) {
     xlevels = levels(x)[xlevels]
+  }
+  v = substr(arg, 1, 1)
+  # Naming a strict subset silently sends every other level to NA, which drops
+  # those rows from the plot without a word. Ordering is all these arguments
+  # claim to do, so treat a shortfall as a mistake worth flagging -- and a
+  # complete miss (no supplied level matches at all) as fatal, since the
+  # all-NA factor it produces only surfaces later as an unrelated error about
+  # zero-length ranges.
+  #
+  # The fatal case has to be settled *before* either warning below, so that a
+  # complete miss aborts cleanly instead of warning on its way to the stop().
+  # A warning raised en route to an error is not muffled by the caller's
+  # tryCatch/expect_error, so it escapes to R's deferred list and resurfaces,
+  # unattributed, at the end of whatever was running.
+  kept = intersect(levels(x), xlevels)
+  if (length(kept) == 0L) {
+    stop(sprintf(
+      "'%s' matches none of the levels of '%s'.\n  Expected some of: %s",
+      arg, v, paste(sprintf('"%s"', levels(x)), collapse = ", ")
+    ), call. = FALSE)
   }
   if (anyNA(xlevels) || !all(xlevels %in% levels(x))) {
     warning(sprintf(
       "not all '%s' correspond to levels of '%s'",
-      arg, substr(arg, 1, 1)
+      arg, v
+    ))
+  }
+  dropped = setdiff(levels(x), xlevels)
+  if (length(dropped) > 0L) {
+    warning(sprintf(
+      "'%s' omits %d of the %d levels of '%s' (%s); those observations will not be plotted",
+      arg, length(dropped), nlevels(x), v,
+      paste(sprintf('"%s"', dropped), collapse = ", ")
     ))
   }
   factor(x, levels = xlevels)

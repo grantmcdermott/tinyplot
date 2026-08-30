@@ -22,8 +22,23 @@ align_layer = function(settings) {
   
   # Only adjust if original layer has named xlabs
   if (!is.null(names(xlabs_orig))) {
-    if (is.factor(settings$datapoints[["x"]])) {
-      # Case 1: relevel a factor (e.g., ribbon added to errorbars)
+    # The atomic branch of this condition covers a base layer that coerced a
+    # numeric/character x to a factor itself (bars, ridges): its categories are
+    # the *labels*, while the added layer still carries the raw values. Those
+    # values are releveled below just like a factor would be, and the resulting
+    # integer codes are the positions the base layer drew at.
+    #
+    # Both extra tests are load-bearing. Requiring the layer to have no named
+    # xlabs of its own leaves Case 2 owning layers that already converted --
+    # otherwise a base whose categories are literally "1", "2", "3" would have
+    # the layer's integer *positions* misread as labels. Requiring every value
+    # to match leaves a partial overlap alone, rather than silently turning the
+    # unmatched rows into NA and dropping them from the plot.
+    if (is.factor(settings$datapoints[["x"]]) ||
+        (is.null(names(xlabs_layer)) &&
+         all(as.character(settings$datapoints[["x"]]) %in% names(xlabs_orig)))) {
+      # Case 1: relevel a factor (e.g., ribbon added to errorbars), or an
+      # atomic x whose values name the original layer's categories
       settings$datapoints[["x"]] = tryCatch(
         factor(settings$datapoints[["x"]], levels = names(xlabs_orig)),
         error = function(e) {

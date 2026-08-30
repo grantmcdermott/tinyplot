@@ -220,8 +220,11 @@ format each variable differently, e.g.
 \code{labeller = list(firm = toupper, yield = "\%")}, with any variable left
 unnamed not formatted. While not recommended, unnamed values are matched
 positionally, according to the variable order in the \code{facet} formula
-specification. Defaults to the value of \code{tpar("facet.labeller")}, which is
-\code{NULL} (no formatting).
+specification. Note that this per-variable naming claims the same slot that
+a \code{\link{tinylabel}} dictionary would, so a dictionary has to be nested inside
+it, e.g. \code{labeller = list(Species = c(setosa = "SET"))}; a bare named
+vector is read as a per-variable mapping instead. Defaults to the value of
+\code{tpar("facet.labeller")}, which is \code{NULL} (no formatting).
 \item \code{prefix} a logical or character value for prefixing the facet titles with
 a descriptive name. Pass \code{TRUE} to prefix with the (deparsed) facet
 variable name(s), e.g. \code{"am = 0"} instead of just \code{"0"}. Alternatively,
@@ -417,16 +420,12 @@ the break points at which the axis tick-marks are to be drawn. Break points
 outside the range of the data will be ignored if the associated axis
 variable is categorical, or an explicit \code{x/ylim} range is given.}
 
-\item{xaxl, yaxl}{a function or a character keyword specifying the format of
-the x- or y-axis tick labels. Note that this is a post-processing step that
+\item{xaxl, yaxl}{a function, character keyword, or dictionary (named vector
+or list) for formatting or (re)labelling the x- or y-axis tick labels.
+Passed to \code{\link{tinylabel}}; see the latter's help file for more detailed
+documentation and examples. Note that this is a post-processing step that
 affects the \emph{appearance} of the tick labels only; use in conjunction with
-\code{x/yaxb} if you would like to adjust the position of the tick marks too. In
-addition to user-supplied formatting functions (e.g., \code{\link{format}},
-\code{\link{toupper}}, \code{\link{abs}}, or other custom function), several convenience
-keywords (or their symbol equivalents) are available for common formatting
-transformations: \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}),
-\code{"dollar"} (\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}). See the
-\code{\link{tinylabel}} documentation for examples.}
+\code{x/yaxb} if you would like to adjust the position of the tick marks too.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be
 logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}

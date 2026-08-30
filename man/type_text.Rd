@@ -27,11 +27,11 @@ a top-level \code{\link{tinyplot}} argument, which additionally supports non-sta
 evaluation against \code{data} and takes precedence if both are given. See
 Examples.}
 
-\item{labeller}{A formatting function (or convenience string) passed to
-\code{\link{tinylabel}} for formatting the \code{labels}. Useful for ensuring that the
-text labels match the formatting of an axis, e.g. \code{labeller = "\%"} to
-display the labels as percentages. Default is \code{NULL}, i.e. no formatting.
-See Examples.}
+\item{labeller}{A formatting function, convenience string, or dictionary
+(named vector or list) passed to \code{\link{tinylabel}} for formatting or
+relabelling the \code{labels}. Useful for ensuring that the text labels match
+the formatting of an axis, e.g. \code{labeller = "\%"} to display the labels as
+percentages. Default is \code{NULL}, i.e. no formatting. See Examples.}
 
 \item{adj}{one or two values in \eqn{[0, 1]} which specify the x
     (and optionally y) adjustment (\sQuote{justification}) of the

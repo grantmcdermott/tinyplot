@@ -3,15 +3,32 @@
 #' @description Type function for plotting points, i.e. a scatter plot.
 #' @param clim Numeric giving the lower and upper limits of the character
 #'   expansion (`cex`) normalization for bubble charts.
-#' @param xlevels a character or numeric vector specifying the order in which
-#'   the levels of the `x` variable should be plotted (as level names if
-#'   character, or level indexes if numeric, e.g. `3:1`). The special keyword
-#'   `"asis"` takes the categories in the order that they appear in the data,
-#'   i.e. skipping the alphabetical sort that is otherwise applied when
-#'   coercing a character variable to a factor. Note that this argument only
-#'   affects categorical (i.e., factor or character) `x` variables; it is
-#'   ignored for numeric `x`. The default `NULL` keeps the existing factor
-#'   levels (alphabetical for character variables).
+#' @param xlevels,xord arguments controlling the order of the (categorical) `x`
+#'   variable, and hence of the x-axis. Supply one or the other; if both
+#'   arguments are provided, `xlevels` takes precedence and `xord` is silently
+#'   ignored.
+#'
+#'   - `xlevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
+#'
+#'   - `xord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
+#'
+#'     - `"desc"` and `"asc"` rank the categories by their mean `y` value,
+#'     largest or smallest first. (Long forms like `"descending"` and `"increasing"` are also accepted.)
+#'     - `"minvar"` ranks them by the variance of those values, lowest first.
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted ascending, so
+#'     `function(y) -median(y)` ranks by median, largest first.
+#'
+#'   Note that `x` is only reordered when it is categorical (i.e., factor or
+#'   character). A numeric `x` is plotted at its own values and cannot be
+#'   reordered, so supplying either argument there is ignored with a warning.
+#'   Each argument defaults to `NULL`, i.e. keep the existing factor levels.
 #' @inheritParams dodge_positions
 #'
 #' @examples
@@ -41,9 +58,9 @@
 #'   pch = 21, fill = 0.3)
 #'
 #' @export
-type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
+type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = NULL) {
   out = list(
-    data = data_points(clim = clim, dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels),
+    data = data_points(clim = clim, dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels, xord = xord),
     draw = draw_points(),
     name = "p"
   )
@@ -51,7 +68,7 @@ type_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xleve
   return(out)
 }
 
-data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
+data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = NULL) {
   fun = function(settings, ...) {
     env2env(settings, environment(), "datapoints")
 
@@ -60,6 +77,17 @@ data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xleve
 
     # catch for factors (we should still be able to "force" plot these with points)
     datapoints$x = sanitize_xlevels(datapoints$x, xlevels)
+    warn_ignored_ordering(datapoints$x, xlevels, xord)
+    # `xord` must run here, before the factor is collapsed to integer
+    # positions below -- once x is an integer there are no levels left to
+    # reorder.
+    if (!is.null(xord) && is.null(xlevels)) {
+      datapoints$x = sanitize_ord(
+        datapoints$x, datapoints[["y"]], NULL,
+        xord, arg = "xord", keywords = ord_keywords_distribution,
+        stat = "mean"
+      )
+    }
     if (is.factor(datapoints$x)) {
       xlvls = levels(datapoints$x)
       xlabs = seq_along(xlvls)

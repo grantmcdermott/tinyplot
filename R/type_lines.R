@@ -12,7 +12,7 @@
 #' character) data according to the factor levels. Character variables are
 #' coerced with [factor()] and so end up in alphabetical order. To order the
 #' categories by their appearance in the data instead, use
-#' `xlevels = "asis"`, or set the levels explicitly, e.g.
+#' `xord = "asis"`, or set the levels explicitly, e.g.
 #' `factor(x, levels = unique(x))`.
 #'
 #' Note that the lines themselves are always drawn in the order that the rows
@@ -48,10 +48,10 @@
 #' )
 #' 
 #' @export
-type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
+type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = NULL) {
   out = list(
     draw = draw_lines(type = type),
-    data = data_lines(dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels),
+    data = data_lines(dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels, xord = xord),
     name = type
   )
   class(out) = "tinyplot_type"
@@ -59,7 +59,7 @@ type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE, xlevels = NULL
 }
 
 
-data_lines = function(dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
+data_lines = function(dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = NULL) {
   fun = function(settings, ...) {
     env2env(settings, environment(), "datapoints")
 
@@ -69,6 +69,17 @@ data_lines = function(dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
     # `factor(x, levels = ...)` is honoured, and that layering a line type onto
     # a point type (or vice versa) lands on the same categories. #679
     datapoints[["x"]] = sanitize_xlevels(datapoints[["x"]], xlevels)
+    warn_ignored_ordering(datapoints[["x"]], xlevels, xord)
+    # `xord` must run here, before the factor is collapsed to integer
+    # positions below -- once x is an integer there are no levels left to
+    # reorder.
+    if (!is.null(xord) && is.null(xlevels)) {
+      datapoints[["x"]] = sanitize_ord(
+        datapoints[["x"]], datapoints[["y"]], NULL,
+        xord, arg = "xord", keywords = ord_keywords_distribution,
+        stat = "mean"
+      )
+    }
     if (is.factor(datapoints[["x"]])) {
       xlvls = levels(datapoints[["x"]])
       xlabs = seq_along(xlvls)

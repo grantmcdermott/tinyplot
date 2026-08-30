@@ -72,12 +72,19 @@ tinyplot(VADeaths, type = "b")
 tinyplot(VADeaths, type = "b", legend = "direct", theme = "socviz")
 tinyplot(VADeaths, type = "b", legend = FALSE, facet = "by", theme = "socviz")
 
-# equivalent plot to an example in `?matplot`
+# digression: equivalent "o" plot to an example in `?matplot`
 sines = outer(1:20, 1:4, function(x, y) sin(x / 20 * pi * y))
 tinyplot(sines, type = "o", pch = "by", lty = "by", col = rainbow(ncol(sines)))
 
-# `"tile"` + `"heatmap"` types lay the matrix out as a grid instead
+# back to VADeaths running example, we can pass down other types too...
+
+# heatmap
 tinyplot(VADeaths, type = "heatmap", theme = "heatmap", col = "white")
+
+# barplot(s)
+tinyplot(VADeaths, type = "barplot", beside = TRUE)
+tinyplot(t(VADeaths), type = "barplot", beside = TRUE)
+tinyplot(VADeaths, type = "barplot", facet = "by", legend = FALSE)
 
 }
 \seealso{

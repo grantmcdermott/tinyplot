@@ -89,8 +89,11 @@
 #'   `labeller = list(firm = toupper, yield = "%")`, with any variable left
 #'   unnamed not formatted. While not recommended, unnamed values are matched
 #'   positionally, according to the variable order in the `facet` formula
-#'   specification. Defaults to the value of `tpar("facet.labeller")`, which is
-#'   `NULL` (no formatting).
+#'   specification. Note that this per-variable naming claims the same slot that
+#'   a [`tinylabel`] dictionary would, so a dictionary has to be nested inside
+#'   it, e.g. `labeller = list(Species = c(setosa = "SET"))`; a bare named
+#'   vector is read as a per-variable mapping instead. Defaults to the value of
+#'   `tpar("facet.labeller")`, which is `NULL` (no formatting).
 #'   - `prefix` a logical or character value for prefixing the facet titles with
 #'   a descriptive name. Pass `TRUE` to prefix with the (deparsed) facet
 #'   variable name(s), e.g. `"am = 0"` instead of just `"0"`. Alternatively,
@@ -257,16 +260,12 @@
 #'   the break points at which the axis tick-marks are to be drawn. Break points
 #'   outside the range of the data will be ignored if the associated axis
 #'   variable is categorical, or an explicit `x/ylim` range is given.
-#' @param xaxl,yaxl a function or a character keyword specifying the format of
-#'   the x- or y-axis tick labels. Note that this is a post-processing step that
+#' @param xaxl,yaxl a function, character keyword, or dictionary (named vector
+#'   or list) for formatting or (re)labelling the x- or y-axis tick labels.
+#'   Passed to [`tinylabel`]; see the latter's help file for more detailed
+#'   documentation and examples. Note that this is a post-processing step that
 #'   affects the _appearance_ of the tick labels only; use in conjunction with
-#'   `x/yaxb` if you would like to adjust the position of the tick marks too. In
-#'   addition to user-supplied formatting functions (e.g., [`format`],
-#'   [`toupper`], [`abs`], or other custom function), several convenience
-#'   keywords (or their symbol equivalents) are available for common formatting
-#'   transformations: `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`),
-#'   `"dollar"` (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`). See the
-#'   [`tinylabel`] documentation for examples.
+#'   `x/yaxb` if you would like to adjust the position of the tick marks too.
 #' @param log a character string which contains `"x"` if the x axis is to be
 #'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
 #'   if both axes are to be logarithmic.
@@ -1283,6 +1282,12 @@ tinyplot.default = function(
     dynmar_computed = .theme_mar + .dyn
     par(mar = dynmar_computed + .whtsbp)
   }
+
+  # A "legend_reversed" type reads bottom-up, so its key is flipped to match.
+  # Under `flip = TRUE` the same groups run left-to-right instead, and a
+  # vertical key has no height to concur with -- reading it top-down against
+  # bands laid out left-to-right just runs it backwards. Drop the hint.
+  if (isTRUE(flip)) type_hints[["legend_reversed"]] = NULL
 
   if (legend_draw_flag && !identical(legend_args[["x"]], "direct")) {
     if (!multi_legend) {

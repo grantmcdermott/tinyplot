@@ -103,16 +103,23 @@ is_string1 = function(x) {
   isTRUE(check_string(x)) && !is.na(x)
 }
 
-# label formatter passed on to tinylabel(): a function, or one of its
-# convenience strings (e.g. "percent"). With `list.ok`, several of them --  as a
-# list or character vector -- are allowed too, e.g. one per facet variable.
+# label formatter passed on to tinylabel(): a function, one of its convenience
+# strings (e.g. "percent"), or a dictionary. With `list.ok`, several of them --
+# as a list or character vector -- are allowed too, e.g. one per facet variable.
+#
+# A dictionary is only recognised *inside* that list, never as `x` itself: at
+# the top level a named vector is read as a per-variable mapping instead, which
+# is what makes `list(Species = c(setosa = "SET"))` mean something different
+# from a bare `c(setosa = "SET")`. match_facet_vars() enforces the top-level
+# reading; this only has to let the nested one through.
 assert_labeller = function(x, name = as.character(substitute(x)), list.ok = FALSE) {
   if (is.null(x) || is_labeller(x)) return(invisible(TRUE))
   if (isTRUE(list.ok) && (is.list(x) || is.character(x)) && length(x) >= 1L) {
-    if (all(vapply(x, is_labeller, logical(1L)))) return(invisible(TRUE))
+    ok = vapply(x, function(xi) is_labeller(xi) || is_dict(xi), logical(1L))
+    if (all(ok)) return(invisible(TRUE))
   }
   msg = if (isTRUE(list.ok)) {
-    "`%s` must be a function or a `tinylabel()` convenience string, or a list of them (one per facet variable)."
+    "`%s` must be a function, a `tinylabel()` convenience string, or a dictionary of labels -- or a list of them, one per facet variable."
   } else {
     "`%s` must be a function, or a `tinylabel()` convenience string."
   }
@@ -121,6 +128,18 @@ assert_labeller = function(x, name = as.character(substitute(x)), list.ok = FALS
 
 is_labeller = function(x) {
   is.function(x) || (is.character(x) && length(x) == 1L && !is.na(x))
+}
+
+# A tinylabel() dictionary: a *named* character vector, or a named list that
+# flattens to one, mapping existing labels to their replacements. Deliberately
+# mirrors what tinylabel() itself dispatches on (see R/tinylabel.R), so that
+# what passes validation here is exactly what it can consume. Note the overlap
+# with is_labeller() at length 1, where a one-entry dictionary and a
+# convenience string cannot be told apart -- and need not be, since both are
+# accepted either way.
+is_dict = function(x) {
+  if (is.list(x) && !is.null(names(x))) x = unlist(x)
+  is.character(x) && !is.null(names(x))
 }
 
 assert_length = function(x, len = 1, null.ok = FALSE, name = as.character(substitute(x))) {

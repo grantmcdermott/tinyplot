@@ -4,11 +4,33 @@
 \alias{type_summary}
 \title{Plot summary values of \code{y} at unique values of \code{x}}
 \usage{
-type_summary(fun = mean, ...)
+type_summary(fun = mean, dodge = 0, fixed.dodge = FALSE, ...)
 }
 \arguments{
 \item{fun}{summarizing function. Should be compatible with
 \code{\link[stats]{ave}}. Defaults to \code{\link[base]{mean}}.}
+
+\item{dodge}{Adjustment parameter for dodging overlapping points or ranges in
+grouped plots along the x-axis (or y-axis for flipped plots). Either:
+\itemize{
+\item numeric value in the range \verb{[0,1)}. Note that values are scaled
+relative to the spacing of x-axis breaks, e.g. \code{dodge = 0.1} places the
+outermost groups one-tenth of the way to adjacent breaks, \code{dodge = 0.5}
+places them midway between breaks, etc. Values < 0.5 are recommended.
+\item logical. If \code{TRUE}, the dodge width is calculated automatically based on
+the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If
+\code{FALSE} or 0, no dodging is performed.
+}
+
+Default value is 0 (no dodging). While we do not check, it is \emph{strongly}
+recommended that dodging only be used in cases where the x-axis comprises a
+limited number of discrete breaks.}
+
+\item{fixed.dodge}{Logical. If \code{FALSE} (default), dodge positions are
+calculated independently for each \code{x} value, based only on the groups
+present at that position. If \code{TRUE}, dodge positions are based on all
+groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
+groups are missing for a particular \code{x} value).}
 
 \item{...}{Additional arguments are passed to the \code{lines()} function,
 ex: \code{type="p"}, \code{col="pink"}.}
@@ -16,8 +38,8 @@ ex: \code{type="p"}, \code{col="pink"}.}
 \description{
 Applies a summary function to \code{y} along unique values of \code{x}. For example,
 plot the mean \code{y} value for each \code{x} value. Internally,
-\code{type_summary()} applies a thin wrapper around \code{\link[stats]{ave}} and
-then passes the result to \code{\link{type_lines}} for drawing.
+\code{type_summary()} applies a thin wrapper around \code{\link[stats]{aggregate}}
+and then passes the result to \code{\link{type_lines}} for drawing.
 }
 \examples{
 # Plot the mean chick weight over time

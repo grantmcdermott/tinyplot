@@ -170,6 +170,13 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "ridge_ylab_na_issue650")
 
+# Issue #703: a numeric (relative) `col.default`, e.g. -1 under "classic", must
+# resolve against the qualitative palette, not pass through as a literal colour.
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", theme = "classic")
+}
+expect_snapshot_plot(f, label = "ridge_theme_col_default_issue703")
+
 
 #
 ## singleton groups (#300)

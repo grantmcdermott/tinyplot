@@ -456,14 +456,17 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       breaks[length(breaks)] = pmax(breaks[length(breaks)], xlim[2L])
     }
 
-    # Single-group (or x_by) ridges: default the outline colour consistently
-    # with the other plot types. An explicit `col.default` wins; otherwise fall
-    # back to the first colour of the active qualitative palette (e.g. blue under
-    # "clean"), or base palette()[1] (black) when no theme palette is set. (#598)
-    if (is.null(col) && (!anyby || x_by)) {
-      col = get_tpar("col.default", default = NULL)
+    # `x_by` shades with a gradient along x, so `by_col()` returns a colour ramp
+    # rather than a flat outline (and skips `col.default`, which is qualitative-
+    # only). Resolve it here; every other case is left to `by_col()`. (#598)
+    if (is.null(col) && x_by) {
+      pal_q = .tpar[["palette.qualitative"]]
+      # `col.default` may be a (possibly negative) palette index, not a literal
+      # colour, so resolve it the way `by_col()` does. (#703)
+      col = resolve_col_default(
+        get_tpar("col.default", default = NULL), pal_q
+      )[["col_default"]]
       if (is.null(col)) {
-        pal_q = .tpar[["palette.qualitative"]]
         col = if (!is.null(pal_q)) {
           resolve_palette_spec(
             pal_q, ngrps = 1L, gradient = FALSE, ordered = FALSE,

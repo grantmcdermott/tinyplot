@@ -131,6 +131,11 @@ related to plot layering. See "Bug fixes" below.
   `"cat"` (console), in any combination; a destination the user has already
   labelled is left alone. Shared bandwidths are reported once and named as
   joint, individual bandwidths per group. (#287 @haomeng797-ship-it)
+- `type_summary()` gains a `dodge` (and `fixed.dodge`) argument, thus enabling 
+  dodging of grouped plots. This is mostly useful for adding summaries on top of
+  a base layer that is itself dodged. Separately, `type_summary()`'s internals
+  have been refactored to use `stats::aggregate` instead of `stats::ave`.
+  (#701 @grantmcdermott)
 - Custom plot types have more control over the surrounding plot machinery, via a
   new `type_hints` mechanism. A type can declare properties about itself---that
   it draws its own axes, needs a secondary right-hand axis, uses proportional

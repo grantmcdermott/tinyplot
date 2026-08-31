@@ -47,25 +47,15 @@ type_summary = function(fun = mean, dodge = 0, fixed.dodge = FALSE, ...) {
       datapoints[["rowid"]] = NULL
       datapoints = aggregate(. ~ x + facet + by, data = datapoints, FUN = fun)
       if (dodge != 0) {
-          if (is.factor(datapoints[["x"]])) {
-            xlvls = levels(datapoints[["x"]])
-            xlabs = seq_along(xlvls)
-            names(xlabs) = xlvls
-            datapoints[["x"]] = as.integer(datapoints[["x"]])
-            env2env(environment(), settings, "xlabs")
-          } else {
-            xlabs = NULL
-          }
-          if (is.factor(datapoints[["y"]])) {
-            ylvls = levels(datapoints[["y"]])
-            ylabs = seq_along(ylvls)
-            names(ylabs) = ylvls
-            datapoints[["y"]] = as.integer(datapoints[["y"]])
-            env2env(environment(), settings, "ylabs")
-          } else {
-            ylabs = NULL
-          }
-
+        if (is.factor(datapoints[["x"]])) {
+          xlvls = levels(datapoints[["x"]])
+          xlabs = seq_along(xlvls)
+          names(xlabs) = xlvls
+          datapoints[["x"]] = as.integer(datapoints[["x"]])
+          env2env(environment(), settings, "xlabs")
+        } else {
+          xlabs = NULL
+        }
         datapoints = dodge_positions(datapoints, dodge, fixed.dodge)
       }
       env2env(environment(), settings, "datapoints")

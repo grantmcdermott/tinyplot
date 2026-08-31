@@ -159,6 +159,8 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- `type_ridge()` no longer errors under themes that set a relative (negative)
+  numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
 - Layers added with `tinyplot_add()` now align correctly when the base plot type
   coerces a numeric `x` variable to a factor, as `type_barplot()` and
   `type_violin()` do. The base layer's categories are the coerced *labels*,

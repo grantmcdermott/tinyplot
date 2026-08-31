@@ -587,11 +587,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="unnumbered anchored" data-anchor-id="plot-summary-values-of-y-at-unique-values-of-x">Plot summary values of <code>y</code> at unique values of <code>x</code></h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Applies a summary function to <code>y</code> along unique values of <code>x</code>. For example, plot the mean <code>y</code> value for each <code>x</code> value. Internally, <code>type_summary()</code> applies a thin wrapper around <code>ave</code> and then passes the result to <code>type_lines</code> for drawing.</p>
+<p>Applies a summary function to <code>y</code> along unique values of <code>x</code>. For example, plot the mean <code>y</code> value for each <code>x</code> value. Internally, <code>type_summary()</code> applies a thin wrapper around <code>aggregate</code> and then passes the result to <code>type_lines</code> for drawing.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_summary(fun = mean, ...)
+<pre><code class="language-R">type_summary(fun = mean, dodge = 0, fixed.dodge = FALSE, ...)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -603,6 +603,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </td>
 <td>
 summarizing function. Should be compatible with <code>ave</code>. Defaults to <code>mean</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="dodge">dodge</code>
+</td>
+<td>
+<p>Adjustment parameter for dodging overlapping points or ranges in grouped plots along the x-axis (or y-axis for flipped plots). Either:</p>
+<ul>
+<li>
+<p>numeric value in the range <code style="white-space: pre;">[0,1)</code>. Note that values are scaled relative to the spacing of x-axis breaks, e.g.&nbsp;<code>dodge = 0.1</code> places the outermost groups one-tenth of the way to adjacent breaks, <code>dodge = 0.5</code> places them midway between breaks, etc. Values &lt; 0.5 are recommended.</p>
+</li>
+<li>
+<p>logical. If <code>TRUE</code>, the dodge width is calculated automatically based on the number of groups (0.1 per group for 2-4 groups, 0.45 for 5+ groups). If <code>FALSE</code> or 0, no dodging is performed.</p>
+</li>
+</ul>
+Default value is 0 (no dodging). While we do not check, it is <em>strongly</em> recommended that dodging only be used in cases where the x-axis comprises a limited number of discrete breaks.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="fixed.dodge">fixed.dodge</code>
+</td>
+<td>
+Logical. If <code>FALSE</code> (default), dodge positions are calculated independently for each <code>x</code> value, based only on the groups present at that position. If <code>TRUE</code>, dodge positions are based on all groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some groups are missing for a particular <code>x</code> value).
 </td>
 </tr>
 <tr>

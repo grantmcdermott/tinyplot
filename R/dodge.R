@@ -54,6 +54,15 @@ dodge_positions = function(
   
   if (is.logical(dodge)) {
     if (isTRUE(dodge)) {
+      if (!is.factor(datapoints[["by"]])) {
+        msg = paste0(
+          "`dodge = TRUE` only possible with discrete (categorical) `by`. ",
+          "Either specify numeric [0,1] dodge, or coerce ` by` to a factor.\n",
+          "Ignoring.\n"
+        )
+        warning(msg)
+        return(datapoints)
+      }
       n = nlevels(datapoints$by)
       dodge = if (n == 1) 0 else if (n <= 5) (n - 1) * 0.1 else 0.45
     } else {

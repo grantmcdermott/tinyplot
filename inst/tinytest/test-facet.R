@@ -576,7 +576,7 @@ expect_snapshot_plot(f, label = "facet_free_single_value")
 # free. A facet grid gets these whenever the data don't observe every
 # combination of the two facet variables (no mtcars car is both 8-cylinder and
 # straight-engined); a single facet variable gets them from an unused factor
-# level. Empty panels should fall back to the all-facet range.
+# level. Empty panels should fall back to the all-facet range. (#705)
 f = function() {
   tinyplot(
     mpg ~ wt, data = mtcars,

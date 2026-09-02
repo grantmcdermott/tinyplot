@@ -58,10 +58,21 @@ draw_facet_window = function(
   if (!is.null(xaxb) && !is.null(xlabs)) xlabs = xaxb
   if (!is.null(yaxb) && !is.null(ylabs)) ylabs = yaxb
 
-  # Fallback extent for free facets that hold no data; see facet_free_range()
-  xall = facet_free_range(c(x, xmin, xmax))
-  yall = facet_free_range(c(y, ymin, ymax))
-  
+  # Split once up front and index per facet below; splitting inside the facet
+  # loop is O(n) per facet per axis. The concatenated vectors also give us the
+  # all-facet fallback range for empty panels (see facet_free_range()).
+  xall = yall = xfree_split = yfree_split = NULL
+  if (isTRUE(facet.args[["free"]])) {
+    xcat = c(x, xmin, xmax)
+    ycat = c(y, ymin, ymax)
+    xall = facet_free_range(xcat)
+    yall = facet_free_range(ycat)
+    if (!is.null(facet)) {
+      xfree_split = split(xcat, facet)
+      yfree_split = split(ycat, facet)
+    }
+  }
+
   # draw background color only in the grid rectangle
   grid.bg = get_tpar("grid.bg", tpar_list = tpars)
   if (!is.null(grid.bg)) {
@@ -174,7 +185,6 @@ draw_facet_window = function(
         } else {
           if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
             # Free scales: measure every facet's ticks and keep the widest set.
-            yfree_split = split(c(y, ymin, ymax), facet)
             yaxlabs_all = lapply(yfree_split, function(yf) {
               axisTicks(usr = extendrange(facet_free_range(yf, yall), f = 0.04), log = par("ylog"))
             })
@@ -205,7 +215,6 @@ draw_facet_window = function(
       if (par("las") %in% 2:3) {
         # extra whitespace bump on the x axis
         if (is.null(xlabs) && isTRUE(facet.args[["free"]]) && null_xlim && !is.null(facet)) {
-          xfree_split = split(c(x, xmin, xmax), facet)
           xaxlabs_all = lapply(xfree_split, function(xf) {
             axisTicks(usr = extendrange(facet_free_range(xf, xall), f = 0.04), log = par("xlog"))
           })
@@ -409,8 +418,8 @@ draw_facet_window = function(
       if (isTRUE(facet.args[["free"]])) {
         # First, we need to calculate the plot extent and axes range of each
         # individual facet.
-        xfree = if (!is.null(facet)) split(c(x, xmin, xmax), facet)[[ii]] else c(x, xmin, xmax)
-        yfree = if (!is.null(facet)) split(c(y, ymin, ymax), facet)[[ii]] else c(y, ymin, ymax)
+        xfree = if (!is.null(facet)) xfree_split[[ii]] else xcat
+        yfree = if (!is.null(facet)) yfree_split[[ii]] else ycat
         if (null_xlim) xlim = facet_free_range(xfree, xall)
         if (null_ylim) ylim = facet_free_range(yfree, yall)
         # An axis is reversed either via the `rev_x`/`rev_y` flag (e.g. the
@@ -1221,11 +1230,12 @@ y_axis_labels = function(type, y, ylabs, xlabs, flip) {
 ## two variables, and an unused factor level does the same for one variable.
 ## range() then returns c(Inf, -Inf), which par(usr=) rejects. Fall back to the
 ## all-facet range so the empty panel draws like its neighbours, or to c(0, 1)
-## if even that is unusable (e.g. every value missing).
+## if even that is unusable (e.g. every value missing). (#705) The fallback is
+## itself a facet_free_range() result, so is already known to be finite.
 facet_free_range = function(v, fallback = NULL) {
   vf = v[is.finite(v)]
   if (length(vf)) return(range(vf))
-  if (length(fallback) == 2L && all(is.finite(fallback))) return(fallback)
+  if (!is.null(fallback)) return(fallback)
   c(0, 1)
 }
 

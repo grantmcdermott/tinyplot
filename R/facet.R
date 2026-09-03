@@ -26,6 +26,7 @@ draw_facet_window = function(
     xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl,
     ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl,
     rev_x = FALSE, rev_y = FALSE,
+    xlim_partial = NULL, ylim_partial = NULL,
     asp, log,
     # other args (in approx. alphabetical + group ordering)
     dots,
@@ -183,10 +184,11 @@ draw_facet_window = function(
         if (!is.null(.ylabset)) {
           yaxlabs = .ylabset[[1L]]
         } else {
-          if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
+          if (isTRUE(facet.args[["free"]]) && (null_ylim || !is.null(ylim_partial)) && !is.null(facet)) {
             # Free scales: measure every facet's ticks and keep the widest set.
             yaxlabs_all = lapply(yfree_split, function(yf) {
-              axisTicks(usr = extendrange(facet_free_range(yf, yall), f = 0.04), log = par("ylog"))
+              usr = extendrange(facet_free_lim(yf, yall, ylim_partial, "ylim"), f = 0.04)
+              axisTicks(usr = usr, log = par("ylog"))
             })
             widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = .cex_yaxs)), numeric(1L))
             yaxlabs = yaxlabs_all[[which.max(widths)]]
@@ -214,9 +216,10 @@ draw_facet_window = function(
       }
       if (par("las") %in% 2:3) {
         # extra whitespace bump on the x axis
-        if (is.null(xlabs) && isTRUE(facet.args[["free"]]) && null_xlim && !is.null(facet)) {
+        if (is.null(xlabs) && isTRUE(facet.args[["free"]]) && (null_xlim || !is.null(xlim_partial)) && !is.null(facet)) {
           xaxlabs_all = lapply(xfree_split, function(xf) {
-            axisTicks(usr = extendrange(facet_free_range(xf, xall), f = 0.04), log = par("xlog"))
+            usr = extendrange(facet_free_lim(xf, xall, xlim_partial, "xlim"), f = 0.04)
+            axisTicks(usr = usr, log = par("xlog"))
           })
           widths = vapply(xaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = .cex_xaxs)), numeric(1L))
           xaxlabs = xaxlabs_all[[which.max(widths)]]
@@ -420,8 +423,12 @@ draw_facet_window = function(
         # individual facet.
         xfree = if (!is.null(facet)) xfree_split[[ii]] else xcat
         yfree = if (!is.null(facet)) yfree_split[[ii]] else ycat
-        if (null_xlim) xlim = facet_free_range(xfree, xall)
-        if (null_ylim) ylim = facet_free_range(yfree, yall)
+        if (null_xlim || !is.null(xlim_partial)) {
+          xlim = facet_free_lim(xfree, xall, xlim_partial, "xlim")
+        }
+        if (null_ylim || !is.null(ylim_partial)) {
+          ylim = facet_free_lim(yfree, yall, ylim_partial, "ylim")
+        }
         # An axis is reversed either via the `rev_x`/`rev_y` flag (e.g. the
         # "reverse" keyword) or when the user supplies descending fixed limits
         # (e.g. xlim = c(10, 0)). The latter must be detected before extendrange()
@@ -1233,10 +1240,21 @@ y_axis_labels = function(type, y, ylabs, xlabs, flip) {
 ## if even that is unusable (e.g. every value missing). (#705) The fallback is
 ## itself a facet_free_range() result, so is already known to be finite.
 facet_free_range = function(v, fallback = NULL) {
+  # some types (e.g. barplot) leave a categorical axis as a factor
+  if (is.factor(v)) v = as.integer(v)
   vf = v[is.finite(v)]
   if (length(vf)) return(range(vf))
   if (!is.null(fallback)) return(fallback)
   c(0, 1)
+}
+
+
+## As above, but re-resolving a partial limit (scalar, or one NA) against the
+## facet's own range instead of the global one, which would collapse a free axis
+## back to a shared scale.
+facet_free_lim = function(v, fallback, partial = NULL, arg = "xlim") {
+  rng = facet_free_range(v, fallback)
+  if (is.null(partial)) rng else resolve_lim(partial, rng, arg)
 }
 
 

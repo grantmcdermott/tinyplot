@@ -940,6 +940,9 @@ tinyplot.default = function(
     null_by       = is.null(by),
     null_xlim     = is.null(xlim),
     null_ylim     = is.null(ylim),
+    # raw spec of a partial limit, for free facets to re-resolve per panel
+    xlim_partial  = if (is_partial_lim(xlim)) xlim else NULL,
+    ylim_partial  = if (is_partial_lim(ylim)) ylim else NULL,
     # when palette functions need pre-processing this check raises error
     null_palette  = tryCatch(is.null(palette), error = function(e) FALSE),
     x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridge"
@@ -1467,6 +1470,7 @@ tinyplot.default = function(
       xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
       ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
       rev_x = rev_x, rev_y = rev_y,
+      xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1501,6 +1505,7 @@ tinyplot.default = function(
       xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
       ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
       rev_x = rev_x, rev_y = rev_y,
+      xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       asp = asp, log = log,
       dots = dots,
       draw = draw,

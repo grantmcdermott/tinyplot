@@ -95,6 +95,14 @@ resolve_lim = function(lim, drng, arg = "xlim") {
   stop(sprintf("`%s` must be length 1 or 2, not length %d.", arg, n), call. = FALSE)
 }
 
+# Does a user-supplied x/ylim lean on the data range for at least one side, i.e.
+# the scalar (xlim = 0) or single-NA (xlim = c(0, NA)) form? Free facets have to
+# re-resolve those per panel; see facet_free_lim().
+is_partial_lim = function(lim) {
+  is.numeric(lim) &&
+    (length(lim) == 1L || (length(lim) == 2L && sum(is.na(lim)) == 1L))
+}
+
 # Resolve an axis-reversal keyword passed to x/ylim, e.g. xlim = "reverse" (or
 # the "rev" abbreviation). Returns a list with the (possibly NULL-ified) limit
 # and a logical flag. When a keyword is detected we strip the limit back to NULL

@@ -572,6 +572,31 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_single_value")
 
+# Free facets where a facet holds no data at all, so has no range of its own to
+# free. A facet grid gets these whenever the data don't observe every
+# combination of the two facet variables (no mtcars car is both 8-cylinder and
+# straight-engined); a single facet variable gets them from an unused factor
+# level. Empty panels should fall back to the all-facet range. (#705)
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = cyl ~ vs,
+    facet.args = list(prefix = TRUE, free = TRUE),
+    main = "Free facets: empty grid facet"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_empty_grid")
+
+f = function() {
+  dat = transform(mtcars, cyl = factor(cyl, levels = c(4, 6, 8, 10)))
+  tinyplot(
+    mpg ~ wt, data = dat,
+    facet = ~cyl, facet.args = list(free = TRUE),
+    main = "Free facets: unused factor level"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_empty_level")
+
 # Free facets combined with flip: the fixed continuous-axis limit must follow
 # the flip and be honoured, rather than the wrong axis being freed (issue #670)
 f = function() {
@@ -584,6 +609,30 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "facet_free_flip")
+
+# A partially specified limit -- the scalar form ("also cover this value") and the
+# one-NA form ("take the other side from the data") -- leans on the data range, so
+# free facets must resolve it against each panel's own range. Resolving it once
+# against the global range collapses the axis back to a shared scale.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, type = "p",
+    facet = ~cyl, facet.args = list(free = TRUE, ncol = 1),
+    ylim = 0,
+    main = "Free facets: scalar ylim"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_lim_scalar")
+
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, type = "p",
+    facet = ~cyl, facet.args = list(free = TRUE, ncol = 1),
+    ylim = c(NA, 40),
+    main = "Free facets: one-sided ylim"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_lim_one_sided")
 
 # `axes = "outer"` must also close up the whitespace that the dropped interior
 # axes would have occupied, i.e. match the spacing of a frameless plot rather

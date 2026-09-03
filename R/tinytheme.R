@@ -341,6 +341,7 @@ theme_default = list(
   dynmar = FALSE,
   facet.bg = NULL,
   facet.border = NA,
+  facet.drop = FALSE,
   family = par("family"), # ""
   fg = par("fg"),
   font = par("font"), # 1,

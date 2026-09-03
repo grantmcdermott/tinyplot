@@ -469,7 +469,7 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'
-#' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png svg xy.coords
+#' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png recordPlot svg xy.coords
 #' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit setNames
@@ -1767,6 +1767,8 @@ tinyplot.default = function(
       env = getNamespace('tinyplot')
     )
   }
+  
+  invisible(recordPlot())
 
 }
 

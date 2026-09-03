@@ -212,8 +212,13 @@ not 'at'`. The free-facet code path listed the eligible types by name, so
     (e.g. `type = "p"` with a factor `y` variable). (#679 @grantmcdermott)
   - Single-valued discrete axes no longer trigger invalid `par(usr)` values.
     (#668 @grantmcdermott)
+  - Similarly, empty facets (containing no data at all) no longer trigger
+    invalid `par(usr)` values either. (#705 @grantmcdermott)
   - User-provided `x/ylim` overrides now work correctly with flipped plots.
     (#670 @grantmcdermott)
+  - "Smart" partially specified `x/ylim` limits (e.g., `ylim = 0` or
+    `ylim = c(0, NA)`) are now resolved per facet, rather than once against the
+    range of the whole dataset. (#706 @grantmcdermott)
   - Axes now inherit the same themed `cex`, `lwd` and `lty` as their fixed-scale
     counterparts. Previously the free-facet code path built its axis calls by
     hand and so silently ignored `cex.axis`, `lwd.axis` and `lty.axis` (plus

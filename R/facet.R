@@ -21,6 +21,7 @@ draw_facet_window = function(
     facet_col, facet_bg, facet_border,
     facet, facets, ifacet,
     nfacets, nfacet_cols, nfacet_rows,
+    facet_blank = FALSE,
     # axes args
     axes, flip, frame.plot, oxaxis, oyaxis,
     xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl,
@@ -325,6 +326,27 @@ draw_facet_window = function(
   ## Loop over the individual facet windows and draw the plot region
   ## components (axes, titles, box, grid, etc.)
   for (ii in ifacet) {
+    # A grid cell that no observation uses keeps its slot, so the surrounding
+    # panels stay aligned, but drops its frame and grid lines to read as a gap
+    # rather than an empty box.
+    #
+    # Whether it keeps an axis depends on who owns the axes. Where interior axes
+    # are dropped (`.outer_axes`, e.g. tinytheme("float")), the edge axis serves
+    # the whole column or row, so the blank cell has to keep drawing it -- moving
+    # it to an inner panel would break the alignment of the bottom row. Where
+    # every panel draws its own instead (a framed theme, or free scales), no axis
+    # is load-bearing beyond its own panel, so a lone rule in a gap is just
+    # debris and the cell draws nothing at all.
+    .blank = length(facet_blank) >= ii && isTRUE(facet_blank[[ii]])
+    .fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
+    blank_axis = function(side) {
+      if (!.outer_axes || identical(.axes, "none")) return(FALSE)
+      pos = switch(as.character(side),
+        "1" = "bottom", "2" = "left", "3" = "top", "4" = "right", NULL
+      )
+      !is.null(pos) && isTRUE(is_facet_position(pos, ii, .fwa))
+    }
+
     # See: https://github.com/grantmcdermott/tinyplot/issues/65
     if (nfacets > 1) {
       mfgi = ceiling(ii / nfacet_cols)
@@ -465,13 +487,15 @@ draw_facet_window = function(
         # Free facets each need their own axes, since every panel has its own
         # scale. The one exception is an explicit `axes = "none"` request.
         .free_axes = !identical(.axes, "none")
+        .free_x = .free_axes && (!.blank || blank_axis(xside))
+        .free_y = .free_axes && (!.blank || blank_axis(yside))
         # Reuse the args_x/args_y lists built above rather than calling tinyAxis()
         # with a bare handful of arguments, so that free facets pick up the same
         # themed `cex`/`lwd`/`lty` (cex.axis, lwd.axis, lty.axis and their
         # per-side variants) as fixed ones. Only the per-facet bits are
         # overridden: the panel's own data, plus `at`/`labels` where this facet
         # needs explicit ticks.
-        if (.free_axes) {
+        if (.free_x) {
           .axf = args_x
           .axf[[1L]] = xfree
           if (!is.null(xlabs)) {
@@ -485,7 +509,7 @@ draw_facet_window = function(
           do.call(tinyAxis, .axf)
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
-        if (.free_axes) {
+        if (.free_y) {
           .ayf = args_y
           .ayf[[1L]] = yfree
           # Same signal as the fixed-scale branch above: named `ylabs` means the
@@ -510,8 +534,8 @@ draw_facet_window = function(
         # "outside" ones, else inner axes collide with the neighbouring panel.
         # Note xside/yside may be swapped (flipped boxplots), so gate on the
         # actual side rather than assuming 1/2.
-        .fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
         keep_axis = function(side) {
+          if (.blank) return(blank_axis(side))
           draw_facet_axis(
             side, ii, .fwa,
             framed = isTRUE(frame.plot),
@@ -673,7 +697,7 @@ draw_facet_window = function(
     # all; nor does a full box ("o") or no box ("n"); nor does a plot that still
     # draws its interior axes. All of those defer straight to box(), which is
     # cheaper, exact, and (unlike per-side segments) draws one joined polyline.
-    if (frame.plot) {
+    if (frame.plot && !.blank) {
       if (nfacets > 1 && .outer_axes && !(par("bty") %in% c("o", "O", "n", "N"))) {
         draw_facet_box(par("bty"), ii, list(ifacet = ifacet, nfacet_cols = nfacet_cols))
       } else {
@@ -683,7 +707,7 @@ draw_facet_window = function(
 
     # panel grid lines
     if (is.null(grid)) grid = get_tpar("grid", tpar_list = tpars)
-    if (!is.null(grid) && !isFALSE(grid)) {
+    if (!is.null(grid) && !isFALSE(grid) && !.blank) {
       gcol = get_tpar("grid.col", tpar_list = tpars)
       glty = get_tpar("grid.lty", tpar_list = tpars)
       glwd = get_tpar("grid.lwd", tpar_list = tpars)
@@ -742,6 +766,18 @@ draw_facet_window = function(
 }
 
 
+## droplevels() for a facet factor. Plain droplevels() strips the attributes a
+## facet carries (facet_grid, facet_nrow), so carry them across by hand.
+drop_facet_levels = function(f) {
+  if (!is.factor(f)) return(f)
+  a = attributes(f)
+  f = droplevels(f)
+  a[["levels"]] = levels(f)
+  attributes(f) = a
+  f
+}
+
+
 #' @rdname facet
 #' @keywords internal
 #' @param settings A list of settings as created by `tinyplot()`.
@@ -763,6 +799,25 @@ facet_layout = function(settings) {
   if (!is.null(facet)) {
     attributes(facet) = facet_attr
     attributes(datapoints$facet) = facet_attr
+  }
+
+  # Opt-in dropping of facet levels that no observation uses, which otherwise
+  # draw an empty panel. A wrapped layout drops the level outright, so the panel
+  # goes away. A grid can't: it is a rectangle of rows x columns, so removing a
+  # cell would misalign the panels that remain -- instead it keeps the slot and
+  # leaves it blank (see `facet_blank` below), reading as a gap.
+  .drop = !is.null(facet) &&
+    isTRUE(facet.args[["drop"]] %||% .tpar[["facet.drop"]])
+  .grid = isTRUE(attr(facet, "facet_grid"))
+  if (.drop && !.grid) {
+    facet = drop_facet_levels(facet)
+    datapoints$facet = drop_facet_levels(datapoints$facet)
+  }
+
+  # Which grid cells hold no data, indexed like `ifacet`.
+  facet_blank = FALSE
+  if (.drop && .grid) {
+    facet_blank = tabulate(facet, nlevels(facet)) == 0L
   }
 
   nfacet_rows = 1
@@ -824,7 +879,7 @@ facet_layout = function(settings) {
   env2env(
     environment(),
     settings,
-    c("datapoints", "facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")
+    c("datapoints", "facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj", "facet_blank")
   )
 }
 

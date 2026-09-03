@@ -610,6 +610,30 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_flip")
 
+# A partially specified limit -- the scalar form ("also cover this value") and the
+# one-NA form ("take the other side from the data") -- leans on the data range, so
+# free facets must resolve it against each panel's own range. Resolving it once
+# against the global range collapses the axis back to a shared scale.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, type = "p",
+    facet = ~cyl, facet.args = list(free = TRUE, ncol = 1),
+    ylim = 0,
+    main = "Free facets: scalar ylim"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_lim_scalar")
+
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, type = "p",
+    facet = ~cyl, facet.args = list(free = TRUE, ncol = 1),
+    ylim = c(NA, 40),
+    main = "Free facets: one-sided ylim"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_lim_one_sided")
+
 # `axes = "outer"` must also close up the whitespace that the dropped interior
 # axes would have occupied, i.e. match the spacing of a frameless plot rather
 # than leaving a gap behind (#637, #673). Testing with "float", which should

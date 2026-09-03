@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-35d3cfccd593dc186c87980bec54f2bc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-b5094435fd9d984d9b5c580374574846.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -326,6 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Themes with L-shaped axes (<code>"classic"</code>, <code>"socviz"</code>, <code>"tufte"</code>, and <code>"float"</code>) now default to <code>facet.axes = "outer"</code>, so that they drop the redundant interior axes of faceted plots.</li>
 </ul></li>
+<li><code>drop</code>: allows for the removal of empty facets. The behaviour varies slightly depending on whether a one-sided (wrapped) or two-sided (gridded) facet formula is specified. The former simply removes the missing factor level, while the latter retains its spot (to preserve the rectangular grid) but is not drawn. (<a href="https://github.com/grantmcdermott/tinyplot/issues/708">#708</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>labeller</code>: for formatting facet titles via <code>tinylabel()</code>. Accepts the usual mix of convenience keywords (symbols) known to <code>tinylabel()</code>, or formatting functions. A (named) vector or list can be used to separately format multi-variable facets, e.g.&nbsp;<code>labeller = c(country = toupper, size = ",")</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/684">#684</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>prefix</code>: for adding an informative prefix to facet titles. In its simplest form, <code>prefix = TRUE</code> prepends the facet variable name, e.g.&nbsp;<code>"vs = 0"</code> and <code>"vs = 1"</code> (rather than just <code>"0"</code> and <code>"1"</code>). Like <code>labeller</code> above, multi-variable facets can be prefixed separately via a (named) vector or list, e.g.&nbsp;<code>prefix = c(am = "Automatic", vs = "V-shaped")</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/684">#684</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>sep</code>: controls how the individual variables of a multi-variable facet title are separated, e.g.&nbsp;use <code>sep = "\n"</code> to stack on separate lines rather than concatenating via the default <code>":"</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/684">#684</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>

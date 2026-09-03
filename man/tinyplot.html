@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-35d3cfccd593dc186c87980bec54f2bc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-b5094435fd9d984d9b5c580374574846.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -780,6 +780,9 @@ grouping variable(s). The default behaviour is for groups to be represented in t
 </li>
 <li>
 <p><code>free</code> a logical value indicating whether the axis limits (scales) for each individual facet should adjust independently to match the range of the data within that facet. Default is <code>FALSE</code>. Separate free scaling of the x- or y-axis (i.e., whilst holding the other axis fixed) is not currently supported.</p>
+</li>
+<li>
+<p><code>drop</code> a logical value indicating whether facet levels that no observation uses should be dropped, rather than drawing an empty panel. Such levels arise from an unused factor level, or from a multi-variable facet like <code>~fvar1 + fvar2</code> whose cross-product covers combinations that the data never observe. Default is <code>FALSE</code>, i.e.&nbsp;the empty panels are drawn. For a two-sided (<code>fvar1 ~ fvar2</code>) grid, <code>drop = TRUE</code> cannot remove the panel outright, since the layout is a rectangle of rows by columns and doing so would misalign the panels that remain; instead the slot is kept but left blank, so that it reads as a gap rather than an empty box.</p>
 </li>
 <li>
 <p><code>axes</code> a character string for controlling which facets draw their own axes. One of <code>“all”</code> (every facet gets its own axes), <code>“outer”</code> (only the facets along the bottom and left edges of the grid, so that redundant interior axes are dropped), or <code>“none”</code> (no facet axes at all). If left unspecified (the default), the behaviour is inherited from <code>frame.plot</code>: framed plots draw axes in every facet, since each frame visually contains its own axes, while frameless plots (e.g.&nbsp;<code>tinytheme(“clean2”)</code>) draw only the outer ones. Use <code>axes = “outer”</code> to drop the interior axes while <em>keeping</em> the facet frames. Note that <code>axes</code> is ignored for free-scaled facets (<code>free = TRUE</code>), which necessarily require their own axes; the sole exception being <code>axes = “none”</code>, which is always respected.</p>

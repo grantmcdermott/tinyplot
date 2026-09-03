@@ -192,6 +192,15 @@ each individual facet should adjust independently to match the range of
 the data within that facet. Default is \code{FALSE}. Separate free scaling of
 the x- or y-axis (i.e., whilst holding the other axis fixed) is not
 currently supported.
+\item \code{drop} a logical value indicating whether facet levels that no
+observation uses should be dropped, rather than drawing an empty panel.
+Such levels arise from an unused factor level, or from a multi-variable
+facet like \code{~fvar1 + fvar2} whose cross-product covers combinations that
+the data never observe. Default is \code{FALSE}, i.e. the empty panels are
+drawn. For a two-sided (\code{fvar1 ~ fvar2}) grid, \code{drop = TRUE} cannot remove
+the panel outright, since the layout is a rectangle of rows by columns and
+doing so would misalign the panels that remain; instead the slot is kept
+but left blank, so that it reads as a gap rather than an empty box.
 \item \code{axes} a character string for controlling which facets draw their own
 axes. One of \code{"all"} (every facet gets its own axes), \code{"outer"} (only the
 facets along the bottom and left edges of the grid, so that redundant

@@ -55,6 +55,11 @@ enable finer control and customization of faceted plots:
   - Themes with L-shaped axes (`"classic"`, `"socviz"`, `"tufte"`, and
     `"float"`) now default to `facet.axes = "outer"`, so that they drop the
     redundant interior axes of faceted plots.
+- `drop`: allows for the removal of empty facets. The behaviour varies slightly
+  depending on whether a one-sided (wrapped) or two-sided (gridded) facet
+  formula is specified. The former simply removes the missing factor level,
+  while the latter retains its spot (to preserve the rectangular grid) but is
+  not drawn. (#708 @grantmcdermott)
 - `labeller`: for formatting facet titles via `tinylabel()`. Accepts the usual
   mix of convenience keywords (symbols) known to `tinylabel()`, or formatting
   functions. A (named) vector or list can be used to separately format

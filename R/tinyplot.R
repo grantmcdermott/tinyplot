@@ -61,6 +61,15 @@
 #'   the data within that facet. Default is `FALSE`. Separate free scaling of
 #'   the x- or y-axis (i.e., whilst holding the other axis fixed) is not
 #'   currently supported.
+#'   - `drop` a logical value indicating whether facet levels that no
+#'   observation uses should be dropped, rather than drawing an empty panel.
+#'   Such levels arise from an unused factor level, or from a multi-variable
+#'   facet like `~fvar1 + fvar2` whose cross-product covers combinations that
+#'   the data never observe. Default is `FALSE`, i.e. the empty panels are
+#'   drawn. For a two-sided (`fvar1 ~ fvar2`) grid, `drop = TRUE` cannot remove
+#'   the panel outright, since the layout is a rectangle of rows by columns and
+#'   doing so would misalign the panels that remain; instead the slot is kept
+#'   but left blank, so that it reads as a gap rather than an empty box.
 #'   - `axes` a character string for controlling which facets draw their own
 #'   axes. One of `"all"` (every facet gets its own axes), `"outer"` (only the
 #'   facets along the bottom and left edges of the grid, so that redundant
@@ -1463,6 +1472,7 @@ tinyplot.default = function(
       facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
       facet = facet,
       facets = facets, ifacet = ifacet,
+      facet_blank = facet_blank,
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
@@ -1499,6 +1509,7 @@ tinyplot.default = function(
       facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
       facet = datapoints$facet,
       facets = facets, ifacet = ifacet,
+      facet_blank = facet_blank,
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,

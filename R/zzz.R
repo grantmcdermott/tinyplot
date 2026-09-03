@@ -34,6 +34,7 @@
     "facet.args",
     "facet_attr",
     "facet_bg",
+    "facet_blank",
     "facet_border",
     "facet_by",
     "facet_col",

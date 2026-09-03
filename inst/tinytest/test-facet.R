@@ -96,6 +96,74 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_args_ncol")
 
+# `drop = TRUE` removes facet levels that no observation uses, which otherwise
+# draw an empty panel. (#707)
+f = function() {
+  dat = transform(mtcars, cyl = factor(cyl, levels = c(4, 6, 8, 10)))
+  tinyplot(
+    mpg ~ wt, data = dat, facet = ~cyl, facet.args = list(drop = TRUE),
+    main = "Unused facet level dropped"
+  )
+}
+expect_snapshot_plot(f, label = "facet_drop_level")
+
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, facet = ~cyl + vs,
+    facet.args = list(prefix = TRUE, drop = TRUE),
+    main = "Unobserved facet combination dropped"
+  )
+}
+expect_snapshot_plot(f, label = "facet_drop_combination")
+
+# A facet *grid* can't drop the cell, since the layout is a rectangle of rows x
+# columns and removing one would misalign the panels that remain. It keeps the
+# slot and draws nothing there, so the cell reads as a gap rather than an empty
+# box. The row/column title strips still draw.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, facet = cyl ~ vs,
+    facet.args = list(prefix = TRUE, drop = TRUE),
+    main = "Grid blanks unobserved cell"
+  )
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank")
+
+# A blank cell keeps its *outer* axes, which anchor the whole column (or row)
+# visually. Here `cyl = 8, gear = 4` is unobserved and sits on the bottom row, so
+# its x-axis still draws there, keeping all three bottom axes aligned rather than
+# pushing the middle one up a row. Interior axes go with the frame.
+f = function() {
+  tinytheme("float")
+  on.exit(tinytheme())
+  tinyplot(mpg ~ wt, data = mtcars, facet = cyl ~ gear,
+           facet.args = list(drop = TRUE),
+           main = "Blank cell: outer x-axis kept")
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank_outer_x")
+
+# ... and the same on the y side: dropping the single cyl = 4 / gear = 3 car
+# blanks the top-left cell, which keeps the left y-axis for its row.
+f = function() {
+  tinytheme("float")
+  on.exit(tinytheme())
+  dat = subset(mtcars, !(cyl == 4 & gear == 3))
+  tinyplot(mpg ~ wt, data = dat, facet = cyl ~ gear,
+           facet.args = list(drop = TRUE),
+           main = "Blank cell: outer y-axis kept")
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank_outer_y")
+
+# Under a framed theme every panel draws its own axes, so none of them is
+# load-bearing beyond its own panel and the blank cell draws nothing at all --
+# a lone rule in a gap would just be debris.
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars, facet = cyl ~ gear,
+           facet.args = list(drop = TRUE),
+           main = "Blank cell: framed theme draws no axis")
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank_framed")
+
 f = function() {
   with(
     mtcars,
@@ -849,6 +917,26 @@ f = function() {
   tinyplot(mpg ~ wt, data = mtcars, facet = ~vs, facet.args = list(prefix = FALSE))
 }
 expect_snapshot_plot(f, label = "facet_prefix_tpar_override")
+
+# Same global-fallback pattern for `drop`
+f = function() {
+  tpar(facet.drop = TRUE)
+  on.exit(tpar(facet.drop = NULL))
+  dat = transform(mtcars, cyl = factor(cyl, levels = c(4, 6, 8, 10)))
+  tinyplot(mpg ~ wt, data = dat, facet = ~cyl,
+           main = "tpar(facet.drop = TRUE)")
+}
+expect_snapshot_plot(f, label = "facet_drop_tpar")
+
+# ... and a per-call `facet.args$drop` wins over it
+f = function() {
+  tpar(facet.drop = TRUE)
+  on.exit(tpar(facet.drop = NULL))
+  dat = transform(mtcars, cyl = factor(cyl, levels = c(4, 6, 8, 10)))
+  tinyplot(mpg ~ wt, data = dat, facet = ~cyl, facet.args = list(drop = FALSE),
+           main = "Per-call drop = FALSE beats the tpar default")
+}
+expect_snapshot_plot(f, label = "facet_drop_tpar_override")
 
 
 #

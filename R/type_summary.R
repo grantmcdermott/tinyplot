@@ -8,13 +8,13 @@
 #' and then passes the result to [`type_lines`] for drawing.
 #'
 #' @param fun summarizing function. Should be compatible with
-#'   \code{\link[stats]{ave}}. Defaults to \code{\link[base]{mean}}.
+#'   \code{\link[stats]{aggregate}}. Defaults to \code{\link[base]{mean}}.
 #' @inheritParams dodge_positions
 #' @inheritParams type_points
 #' @param ... Additional arguments are passed to the `lines()` function,
-#' ex: `type="p"`, `col="pink"`.
-#' @seealso [`ave`] which performs the summarizing (averaging) behind the
-#'   scenes.
+#' e.g. `type="p"` or `col="pink"`.
+#' @seealso [`aggregate`] which performs the summarizing (aggregating) behind
+#' the scenes.
 #' @examples
 #' # Plot the mean chick weight over time
 #' tinyplot(weight ~ Time, data = ChickWeight, type = "summary")
@@ -36,7 +36,7 @@
 #'   type = type_summary(function(y) quantile(y, probs = 0.9) / max(y))
 #' )
 #'
-#' @importFrom stats ave
+#' @importFrom stats aggregate
 #' @export
 type_summary = function(fun = mean, dodge = 0, fixed.dodge = FALSE, ...) {
   assert_function(fun)

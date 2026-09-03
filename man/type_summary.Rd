@@ -8,7 +8,7 @@ type_summary(fun = mean, dodge = 0, fixed.dodge = FALSE, ...)
 }
 \arguments{
 \item{fun}{summarizing function. Should be compatible with
-\code{\link[stats]{ave}}. Defaults to \code{\link[base]{mean}}.}
+\code{\link[stats]{aggregate}}. Defaults to \code{\link[base]{mean}}.}
 
 \item{dodge}{Adjustment parameter for dodging overlapping points or ranges in
 grouped plots along the x-axis (or y-axis for flipped plots). Either:
@@ -33,7 +33,7 @@ groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
 groups are missing for a particular \code{x} value).}
 
 \item{...}{Additional arguments are passed to the \code{lines()} function,
-ex: \code{type="p"}, \code{col="pink"}.}
+e.g. \code{type="p"} or \code{col="pink"}.}
 }
 \description{
 Applies a summary function to \code{y} along unique values of \code{x}. For example,
@@ -64,6 +64,6 @@ tinyplot(
 
 }
 \seealso{
-\code{\link{ave}} which performs the summarizing (averaging) behind the
-scenes.
+\code{\link{aggregate}} which performs the summarizing (aggregating) behind
+the scenes.
 }

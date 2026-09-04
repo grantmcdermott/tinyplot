@@ -15,7 +15,9 @@ by_aesthetics = function(settings) {
   # Detect grouping characteristics
   by_ordered = FALSE
   by_continuous = !null_by && inherits(datapoints$by, c("numeric", "integer"))
-  if (isTRUE(by_continuous) && type %in% c("l", "b", "o", "ribbon", "polygon", "polypath", "boxplot", "chull")) {
+  # The connected line types go through segmented_lines() instead. "b" is
+  # still excluded pending its gap handling.
+  if (isTRUE(by_continuous) && type %in% c("b", "ribbon", "polygon", "polypath", "boxplot", "chull")) {
     # Only warn if a legend would actually be drawn: the reversion to a discrete
     # legend still needs to happen for correct grouping, but it's not worth
     # flagging when the user has suppressed the legend anyway (#656).

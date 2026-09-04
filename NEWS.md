@@ -176,6 +176,11 @@ related to plot layering. See "Bug fixes" below.
   are unaffected (and remain `drop.zeros`' business). Consequently, `col = NA`
   is no longer needed to suppress those rules, and has been dropped from the
   waterfall example in `?type_barplot`. (#711 @grantmcdermott)
+- Free facets (`facet.args = list(free = TRUE)`) no longer clip the geometry
+  around the end categories of a categorical axis, e.g. the first and last box
+  of a faceted boxplot. The extra room that a categorical axis needs either side
+  of its end categories was added to the fixed limits only, and the free path
+  re-derives its limits per panel. (#711 @grantmcdermott)
 - Layers added with `tinyplot_add()` now align correctly when the base plot type
   coerces a numeric `x` variable to a factor, as `type_barplot()` and
   `type_violin()` do. The base layer's categories are the coerced *labels*,

@@ -445,8 +445,13 @@ draw_facet_window = function(
         # individual facet.
         xfree = if (!is.null(facet)) xfree_split[[ii]] else xcat
         yfree = if (!is.null(facet)) yfree_split[[ii]] else ycat
+        # A categorical axis needs room either side of its end categories for the
+        # geometry drawn around them, else the end elements are clipped by the
+        # panel. lim_args() adds that to the fixed-scale limits; the same amount
+        # has to go onto the per-facet range we derive here.
+        .pad = if (identical(type, "boxplot")) c(-0.5, 0.5) else 0
         if (null_xlim || !is.null(xlim_partial)) {
-          xlim = facet_free_lim(xfree, xall, xlim_partial, "xlim")
+          xlim = facet_free_lim(xfree, xall, xlim_partial, "xlim") + .pad
         }
         if (null_ylim || !is.null(ylim_partial)) {
           ylim = facet_free_lim(yfree, yall, ylim_partial, "ylim")

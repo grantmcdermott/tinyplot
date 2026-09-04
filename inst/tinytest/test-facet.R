@@ -164,6 +164,15 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_drop_grid_blank_framed")
 
+# `draw` elements are panel content, so a blank cell skips them too. (#709)
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars, facet = vs ~ cyl,
+           facet.args = list(drop = TRUE),
+           draw = abline(v = 4, lty = 2),
+           main = "Blank cell: no draw elements")
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank_draw")
+
 f = function() {
   with(
     mtcars,

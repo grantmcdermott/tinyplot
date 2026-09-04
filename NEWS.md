@@ -59,7 +59,7 @@ enable finer control and customization of faceted plots:
   depending on whether a one-sided (wrapped) or two-sided (gridded) facet
   formula is specified. The former simply removes the missing factor level,
   while the latter retains its spot (to preserve the rectangular grid) but is
-  not drawn. (#708 @grantmcdermott)
+  not drawn. (#708, #710 @grantmcdermott)
 - `labeller`: for formatting facet titles via `tinylabel()`. Accepts the usual
   mix of convenience keywords (symbols) known to `tinylabel()`, or formatting
   functions. A (named) vector or list can be used to separately format

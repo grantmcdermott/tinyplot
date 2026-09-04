@@ -759,7 +759,7 @@ draw_facet_window = function(
     }
 
     # add any drawn elements
-    if (!is.null(draw)) eval(draw)
+    if (!is.null(draw) && !.blank) eval(draw)
   } # end of ii facet loop
 
   return(as.list(environment()))

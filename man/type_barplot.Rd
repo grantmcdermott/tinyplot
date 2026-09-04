@@ -217,7 +217,6 @@ d$offset = c(0, cumsum(d$value[1:3]), 0)
 tinyplot(
   value ~ item | I(value < 0), data = d,
   type = type_barplot(offset = d$offset, lighten = FALSE),
-  col = NA, # (optional: turn off border)
   legend = FALSE
 )
 tinyplot_add(type = type_vline(4.5), lty = 2, col = "grey50")

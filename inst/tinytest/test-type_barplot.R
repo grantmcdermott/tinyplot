@@ -301,3 +301,20 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "barplot_xaxl_dict")
 
+
+
+# A cell that no observation reaches is not a zero: aggregate() completes the
+# x-by-facet grid so that stacking has somewhere to stand, but those invented
+# cells must not draw a (zero-height) bar, which reads as a stray rule along the
+# baseline. Here carb = 1 is unobserved for vs = 0, and carb = 3, 6, 8 for
+# vs = 1. (#711)
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, type = "barplot", facet = ~vs,
+           facet.args = list(ncol = 1))
+}
+expect_snapshot_plot(f, label = "barplot_facet_unobserved")
+
+# ... while a genuine zero still draws (and is still `drop.zeros`' business)
+zero_dat = data.frame(g = factor(c("a", "b", "c")), v = c(2, 0, 3))
+f = function() tinyplot(v ~ g, data = zero_dat, type = "barplot")
+expect_snapshot_plot(f, label = "barplot_genuine_zero")

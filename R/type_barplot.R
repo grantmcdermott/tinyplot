@@ -189,7 +189,6 @@
 #' tinyplot(
 #'   value ~ item | I(value < 0), data = d,
 #'   type = type_barplot(offset = d$offset, lighten = FALSE),
-#'   col = NA, # (optional: turn off border)
 #'   legend = FALSE
 #' )
 #' tinyplot_add(type = type_vline(4.5), lty = 2, col = "grey50")
@@ -280,6 +279,12 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         }
         if (!is.null(xaxlabels)) levels(datapoints$x) = xaxlabels
         datapoints = aggregate(datapoints[, "y", drop = FALSE], datapoints[, c("x", "by", "facet")], FUN = FUN, drop = FALSE)
+        ## `drop = FALSE` completes the x-by-facet-by-by grid, which the stacking
+        ## and centering below rely on to be rectangular. The cells it invents are
+        ## not zeros, though, so flag them: a cell no observation reaches has no
+        ## bar to draw, and drawing it anyway leaves a zero-height rect, i.e. a
+        ## stray rule along the baseline. Genuine zeros are kept (see `drop.zeros`).
+        datapoints$.unobs = is.na(datapoints$y)
         datapoints$y[is.na(datapoints$y)] = 0 #FIXME: always?#
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
@@ -465,12 +470,16 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
             yok = abs(yt - yb) > 0
             df = df[yok,  , drop = FALSE]
           }
-          
+          # unobserved cells: keep them out of the drawn rectangles, now that the
+          # stacked/centered positions that needed them have been computed
+          df = df[!df$.unobs, , drop = FALSE]
+
           return(df)
         })
         datapoints = do.call("rbind", datapoints)
         nx = datapoints$nx[1]
         datapoints$nx = NULL
+        datapoints$.unobs = NULL
         xlabs = 1L:nx
         names(xlabs) = levels(datapoints$x)
 

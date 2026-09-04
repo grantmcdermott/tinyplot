@@ -166,6 +166,16 @@ related to plot layering. See "Bug fixes" below.
 
 - `type_ridge()` no longer errors under themes that set a relative (negative)
   numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
+- `type_barplot()` no longer draws a bar for a category that no observation
+  reaches. Internally the bars are computed off a completed grid, so that
+  stacking and centering have a rectangular set of cells to work with, but the
+  invented cells were then drawn as zero-height rectangles, i.e. a stray rule
+  along the baseline. Most visible in faceted plots, where a category is often
+  absent from some panels, and in grouped layouts like a waterfall chart, where
+  the rule landed on each bar's own baseline rather than at zero. Genuine zeros
+  are unaffected (and remain `drop.zeros`' business). Consequently, `col = NA`
+  is no longer needed to suppress those rules, and has been dropped from the
+  waterfall example in `?type_barplot`. (#711 @grantmcdermott)
 - Layers added with `tinyplot_add()` now align correctly when the base plot type
   coerces a numeric `x` variable to a factor, as `type_barplot()` and
   `type_violin()` do. The base layer's categories are the coerced *labels*,

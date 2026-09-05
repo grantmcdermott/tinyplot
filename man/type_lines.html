@@ -736,6 +736,42 @@ Note that <code>x</code> is only reordered when it is categorical (i.e., factor 
 </figure>
 </div>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A continuous `by` variable is also supported (as of tinyplot v0.8.0).</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This is particularly useful for trajectories, where a third variable (often</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># time) orders the path.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>time <span class="ot">=</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">8</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">600</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>spiral <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">time =</span> time, <span class="at">x =</span> time <span class="sc">*</span> <span class="fu">cos</span>(time), <span class="at">y =</span> time <span class="sc">*</span> <span class="fu">sin</span>(time))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="sc">|</span> time, <span class="at">data =</span> spiral,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">asp =</span> <span class="dv">1</span>, <span class="co"># optional args</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="st">"clean"</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_lines_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The canonical time-path example: the x-z projection of a Lorenz attractor.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>step <span class="ot">=</span> <span class="cf">function</span>(p, i) {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  p <span class="sc">+</span> <span class="fl">0.005</span> <span class="sc">*</span> <span class="fu">c</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">10</span> <span class="sc">*</span> (p[<span class="dv">2</span>] <span class="sc">-</span> p[<span class="dv">1</span>]),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    p[<span class="dv">1</span>] <span class="sc">*</span> (<span class="dv">28</span> <span class="sc">-</span> p[<span class="dv">3</span>]) <span class="sc">-</span> p[<span class="dv">2</span>],</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    p[<span class="dv">1</span>] <span class="sc">*</span> p[<span class="dv">2</span>] <span class="sc">-</span> <span class="dv">8</span><span class="sc">/</span><span class="dv">3</span> <span class="sc">*</span> p[<span class="dv">3</span>]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>lz <span class="ot">=</span> <span class="fu">do.call</span>(rbind, <span class="fu">Reduce</span>(step, <span class="dv">1</span><span class="sc">:</span><span class="dv">6000</span>, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">accumulate =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>lorenz <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">time =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(lz)) <span class="sc">*</span> <span class="fl">0.005</span>, <span class="at">x =</span> lz[, <span class="dv">1</span>], <span class="at">z =</span> lz[, <span class="dv">3</span>])</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(z <span class="sc">~</span> x <span class="sc">|</span> time, <span class="at">data =</span> lorenz, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">theme =</span> <span class="st">"clean"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_lines_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 
 

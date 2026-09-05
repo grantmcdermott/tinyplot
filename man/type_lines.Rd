@@ -120,4 +120,28 @@ tinyplot(
   theme = "socviz"
 )
 
+# A continuous `by` variable is also supported (as of tinyplot v0.8.0).
+# This is particularly useful for trajectories, where a third variable (often
+# time) orders the path.
+time = seq(0, 8*pi, length.out = 600)
+spiral = data.frame(time = time, x = time * cos(time), y = time * sin(time))
+tinyplot(
+  y ~ x | time, data = spiral,
+  type = "l",
+  lwd = 2, asp = 1, # optional args
+  theme = "clean"
+)
+
+# The canonical time-path example: the x-z projection of a Lorenz attractor.
+step = function(p, i) {
+  p + 0.005 * c(
+    10 * (p[2] - p[1]),
+    p[1] * (28 - p[3]) - p[2],
+    p[1] * p[2] - 8/3 * p[3]
+  )
+}
+lz = do.call(rbind, Reduce(step, 1:6000, c(1, 1, 1), accumulate = TRUE))
+lorenz = data.frame(time = seq_len(nrow(lz)) * 0.005, x = lz[, 1], z = lz[, 3])
+tinyplot(z ~ x | time, data = lorenz, type = "l", theme = "clean")
+
 }

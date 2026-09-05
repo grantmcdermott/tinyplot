@@ -155,6 +155,11 @@ related to plot layering. See "Bug fixes" below.
   long list of category names on the y-axis without also shrinking the x-axis.
   Both default to `NULL`, in which case the shared `cex.axis` value is used, so
   existing plots are unaffected. (#677 @grantmcdermott)
+- `type_lines()` and its shortcut equivalents like `"l"` and `"s"` now support a
+  _continuous_ `by` variable, drawing a colour gradient along the line itself
+  rather than reverting to a discrete legend. Useful for trajectories, where a
+  third variable (typically time) orders the path; see the new `?type_lines`
+  examples. (#712 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -204,7 +209,7 @@ related to plot layering. See "Bug fixes" below.
   to numeric tick labels for every line type except `"p"`.
   (#679 @grantmcdermott)
 - Added layers now align on the category that each row belongs to, rather than
-  on the row's _position_. The latter only coincided with the right answer when
+  on the row's _position_. Thie latter only coincided with the right answer when
   the added layer's rows happened to arrive in ascending order; other rows were
   permuted, and repeated categories collapsed onto a single position.
   (#679 @grantmcdermott)

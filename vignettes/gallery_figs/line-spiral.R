@@ -1,7 +1,7 @@
 library(tinyplot)
 
 ## a continuous `by` variable colours the line itself, rather than splitting
-## it into groups (#711)
+## it into groups
 time = seq(0, 10*pi, length.out = 800)
 spiral = data.frame(time = time, x = time * cos(time), y = time * sin(time))
 

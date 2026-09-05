@@ -1,7 +1,7 @@
 library(tinyplot)
 
 ## the canonical time-path: the x-z projection of a Lorenz attractor, where the
-## colour gradient is the only thing separating one pass from the next (#711)
+## colour gradient is the only thing separating one pass from the next
 step = function(p, i) {
   p + 0.005 * c(
     10 * (p[2] - p[1]),

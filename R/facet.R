@@ -458,21 +458,27 @@ draw_facet_window = function(
         # pair of arguments; see facet_relevel().
         .fxlabs = facet_labs[["x"]][[ii]] %||% xlabs
         .fylabs = facet_labs[["y"]][[ii]] %||% ylabs
-        # A categorical axis needs room either side of its end categories for the
-        # geometry drawn around them, else the end elements are clipped by the
-        # panel. lim_args() adds that to the fixed-scale limits; the same amount
-        # has to go onto the per-facet range we derive here.
-        # A re-levelled panel additionally knows exactly which categories it
-        # holds, so keep all of their ticks inside it: an offset (dodge, jitter)
-        # can pull the data short of its own end tick and clip the label off.
+        # `.pad`: room for the geometry drawn around an end category, as
+        # lim_args() adds to the fixed limits. A categorical axis is a set rather
+        # than a range, so the panel also keeps all of *its* ticks (every
+        # category, or just the ones it uses under `drop.levels`).
         .pad = if (identical(type, "boxplot")) c(-0.5, 0.5) else 0
+        # Keeping every category (the default) spans the *global* extent, so that
+        # the panels are identical and their ticks line up; under `drop.levels`
+        # each panel spans only the categories it uses.
+        .xall_cat = length(.fxlabs) > 0 && is.null(facet_labs[["x"]])
+        .yall_cat = length(.fylabs) > 0 && is.null(facet_labs[["y"]])
         if (null_xlim || !is.null(xlim_partial)) {
-          xlim = facet_free_lim(xfree, xall, xlim_partial, "xlim") + .pad
-          if (!is.null(facet_labs[["x"]]) && length(.fxlabs)) xlim = range(c(xlim, .fxlabs))
+          xlim = facet_free_lim(
+            if (.xall_cat) xcat else xfree, xall, xlim_partial, "xlim"
+          ) + .pad
+          if (length(.fxlabs)) xlim = range(c(xlim, .fxlabs))
         }
         if (null_ylim || !is.null(ylim_partial)) {
-          ylim = facet_free_lim(yfree, yall, ylim_partial, "ylim")
-          if (!is.null(facet_labs[["y"]]) && length(.fylabs)) ylim = range(c(ylim, .fylabs))
+          ylim = facet_free_lim(
+            if (.yall_cat) ycat else yfree, yall, ylim_partial, "ylim"
+          )
+          if (length(.fylabs)) ylim = range(c(ylim, .fylabs))
         }
         # An axis is reversed either via the `rev_x`/`rev_y` flag (e.g. the
         # "reverse" keyword) or when the user supplies descending fixed limits
@@ -796,14 +802,11 @@ facet_drop_levels_on = function(facet.args) {
 }
 
 
-## Which category (as a position in the global level set) does each row sit at?
-## Prefer the `.xcat`/`.ycat` codes stashed by the types that displace a row from
-## its own tick (dodge_positions(), type_jitter(), type_violin()), since the drawn
-## position is not a
-## reliable answer once an offset has moved a row off its tick. Fall back to the
-## positions themselves, but only where they are exact integers -- a dodge of 0.4
-## spreads categories 1-3 over -0.4 to 1.6, so rounding would mis-assign them.
-## NULL means "can't tell", and the caller leaves that axis alone.
+## Which category (a position in the global level set) does each row sit at? An
+## offset can move a row off its own tick, so prefer the `.xcat`/`.ycat` codes
+## stashed by the types that displace one (dodge_positions(), type_jitter(),
+## type_violin()) and fall back to the positions only where they are exact
+## integers. NULL means "can't tell", and the caller leaves that axis alone.
 cat_axis_codes = function(datapoints, ax = "x") {
   v = datapoints[[paste0(".", ax, "cat")]]
   if (is.null(v)) v = datapoints[[ax]]
@@ -886,18 +889,15 @@ facet_relevel = function(settings) {
       labs_by_facet[[f]] = map
     }
 
-    cols = paste0(ax, c("", "min", "max"))
-    for (col in cols) {
+    for (col in paste0(ax, c("", "min", "max"))) {
       v = datapoints[[col]]
-      if (!is.null(v) && is.numeric(v)) datapoints[[col]] = v + delta
-      # The same vectors also travel outside `datapoints` (some types leave a
-      # categorical axis as a factor there, e.g. barplot, and draw from
-      # xmin/xmax instead), and the free-scale ranges are computed off those.
+      if (is.null(v)) next
+      # a categorical axis is left as a factor by some types (barplot), which
+      # then draw from xmin/xmax; the free ranges read it either way
+      if (is.factor(v)) datapoints[[col]] = as.integer(v) + delta
+      else if (is.numeric(v)) datapoints[[col]] = v + delta
       sv = settings[[col]]
-      if (is.null(sv) || length(sv) != nrow(datapoints)) next
-      if (is.factor(sv)) {
-        settings[[col]] = as.integer(sv) + delta
-      } else if (is.numeric(sv)) {
+      if (!is.null(sv) && is.numeric(sv) && length(sv) == nrow(datapoints)) {
         settings[[col]] = sv + delta
       }
     }

@@ -184,6 +184,14 @@ related to plot layering. See "Bug fixes" below.
   are unaffected (and remain `drop.zeros`' business). Consequently, `col = NA`
   is no longer needed to suppress those rules, and has been dropped from the
   waterfall example in `?type_barplot`. (#711 @grantmcdermott)
+- Free facets (`facet.args = list(free = TRUE)`) now keep every category of a
+  categorical axis, so that the panels' ticks line up with each other. Panel
+  limits were derived from each panel's own data range, which clipped any
+  category falling outside it: an unused category was ticked where it happened to
+  sit between used ones but dropped at the panel edges, and panels ended up with
+  differing scales. (Use the new `drop.levels` above for the opposite behaviour,
+  i.e. each panel showing only the categories it uses.)
+  (#711 @grantmcdermott)
 - Free facets (`facet.args = list(free = TRUE)`) no longer clip the geometry
   around the end categories of a categorical axis, e.g. the first and last box
   of a faceted boxplot. The extra room that a categorical axis needs either side

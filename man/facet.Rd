@@ -2,6 +2,7 @@
 % Please edit documentation in R/facet.R
 \name{draw_facet_window}
 \alias{draw_facet_window}
+\alias{facet_relevel}
 \alias{facet_layout}
 \title{Draw facet windows}
 \usage{
@@ -70,6 +71,8 @@ draw_facet_window(
   dl_overshoot = 0
 )
 
+facet_relevel(settings)
+
 facet_layout(settings)
 }
 \arguments{
@@ -84,5 +87,13 @@ plot window with different facets, grids, axes, etc.
 \code{draw_facet_window} is the main workhorse function for setting the exterior
 plot elements as part of a \code{tinyplot} call, including adjustment of margins
 for dynamic themes, etc.
+}
+\details{
+\code{facet_relevel} implements \code{facet.args$drop.levels}: each free facet
+keeps only the categories it actually uses, re-levelled as if the panel's
+data had been passed through \code{factor()} on its own. Positions are shifted
+rather than recomputed, so a row's offset within its category (dodge,
+jitter, boxplot group offsets) and any rectangle width around it survive
+untouched.
 }
 \keyword{internal}

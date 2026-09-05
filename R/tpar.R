@@ -63,6 +63,7 @@
 #' * `dynmar`: Logical indicating whether `tinyplot` should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal `tinythemes()` logic and should _not_ be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 #' * `facet.axes`: Character string controlling which facets draw their own axes: `"all"` (each facet), `"outer"` (only facets on the outer edge of the facet grid, dropping redundant interior axes), or `"none"`. Defaults to `NULL`, whereby the choice is inferred from whether the plot is framed (see the `axes` argument of [`facet.args`][tinyplot]). Equivalent to setting `tinyplot(..., facet.args = list(axes = X))`, but globally, which also makes it available to themes.
 #' * `facet.drop`: Logical indicating whether facet levels that no observation uses should be dropped, rather than drawing an empty panel. Defaults to `FALSE`. Equivalent to setting `tinyplot(..., facet.args = list(drop = X))`, but globally, which also makes it available to themes.
+#' * `facet.drop.levels`: Logical indicating whether each free facet (`facet.args = list(free = TRUE)`) should keep only the categories of a categorical axis that it actually uses, re-levelled as if that panel's data had been passed through `factor()` on its own. Defaults to `FALSE`, i.e. every panel shows the full set of categories. Equivalent to setting `tinyplot(..., facet.args = list(drop.levels = X))`, but globally, which also makes it available to themes.
 #' * `facet.bg`: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NULL` (none).
 #' * `facet.border`: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NA` (none).
 #' * `facet.cex`: Expansion factor for facet titles. Defaults to `1`.
@@ -258,6 +259,7 @@ known_tpar = c(
     "gap.sub",
     "facet.axes",
     "facet.drop",
+    "facet.drop.levels",
     "facet.bg",
     "facet.border",
     "facet.cex",
@@ -323,6 +325,7 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["facet.cex"]], len = 1, null.ok = TRUE, name = "facet.cex")
   assert_choice(.tpar[["facet.axes"]], c("all", "outer", "none"), null.ok = TRUE, name = "facet.axes")
   assert_logical(.tpar[["facet.drop"]], null.ok = TRUE, name = "facet.drop")
+  assert_logical(.tpar[["facet.drop.levels"]], null.ok = TRUE, name = "facet.drop.levels")
   assert_labeller(.tpar[["facet.labeller"]], name = "facet.labeller", list.ok = TRUE)
   assert_facet_prefix(.tpar[["facet.prefix"]], name = "facet.prefix")
   assert_string(.tpar[["facet.sep"]], null.ok = TRUE, name = "facet.sep")

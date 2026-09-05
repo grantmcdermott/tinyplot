@@ -60,6 +60,12 @@ data_jitter = function(factor, amount) {
         } else {
             ylabs = NULL
         }
+        # record the categories before the jitter (and any group offsets) move
+        # points off their own tick; see cat_axis_codes()
+        if (facet_drop_levels_on(settings[["facet.args"]])) {
+            datapoints[[".xcat"]] = x
+            datapoints[[".ycat"]] = y
+        }
 
         # Apply group offsets from base layer (e.g., boxplot, violin, ridge)
         group_offsets = get_environment_variable(".group_offsets")

@@ -60,6 +60,14 @@ enable finer control and customization of faceted plots:
   formula is specified. The former simply removes the missing factor level,
   while the latter retains its spot (to preserve the rectangular grid) but is
   not drawn. (#708, #710 @grantmcdermott)
+- `drop.levels`: allows each free facet (`free = TRUE`) to keep only the
+  categories of a categorical axis that it actually uses. The panel's axis is
+  recomputed as if its own data had been passed through `factor()`, so that the
+  surviving categories are re-spaced evenly rather than leaving a gap where an
+  unused one sat. Note the distinction from `drop` above: the latter removes
+  empty _facets_, whereas `drop.levels` removes unused _categories within_ a
+  facet. Default is `FALSE`, i.e. every facet keeps the full set of categories.
+  (#711 @grantmcdermott)
 - `labeller`: for formatting facet titles via `tinylabel()`. Accepts the usual
   mix of convenience keywords (symbols) known to `tinylabel()`, or formatting
   functions. A (named) vector or list can be used to separately format

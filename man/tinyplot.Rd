@@ -201,6 +201,16 @@ drawn. For a two-sided (\code{fvar1 ~ fvar2}) grid, \code{drop = TRUE} cannot re
 the panel outright, since the layout is a rectangle of rows by columns and
 doing so would misalign the panels that remain; instead the slot is kept
 but left blank, so that it reads as a gap rather than an empty box.
+\item \code{drop.levels} a logical value indicating whether each facet should keep
+only the categories of a categorical axis that it actually uses. Default is
+\code{FALSE}, i.e. every facet shows the full set of categories, even those with
+no data in that panel. With \code{drop.levels = TRUE} a panel's axis is
+recomputed as if its data had been passed through \code{factor()} on its own, so
+the surviving categories are re-spaced evenly and no gaps are left behind.
+Requires free scales (\code{free = TRUE}), since fixed panels share a single
+axis and per-panel categories would misalign them. Note that this is
+distinct from \code{drop} above: \code{drop} removes empty \emph{facets}, whereas
+\code{drop.levels} removes unused \emph{categories within} a facet.
 \item \code{axes} a character string for controlling which facets draw their own
 axes. One of \code{"all"} (every facet gets its own axes), \code{"outer"} (only the
 facets along the bottom and left edges of the grid, so that redundant

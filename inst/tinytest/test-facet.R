@@ -949,6 +949,93 @@ expect_snapshot_plot(f, label = "facet_drop_tpar_override")
 
 
 #
+## drop.levels: unused categories *within* a free facet (#711)
+#
+
+# `carb` is non-contiguous within each `vs` panel: vs = 0 never sees carb = 1 and
+# vs = 1 never sees carb = 3, 6 or 8. By default every panel shows all of them.
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE),
+           main = "Default: every panel keeps all categories")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_default")
+
+# With drop.levels each panel is re-levelled as if its own data had been passed
+# through factor(), so unused categories go and the rest are evenly re-spaced.
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels = TRUE")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels")
+
+# Same for a type whose geometry is drawn around the category rather than on it:
+# the boxes are re-spaced with it, and the end ones stay inside the panel.
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, type = "box", facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels = TRUE (boxplot)")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_boxplot")
+
+# A type whose positions are offset off their own tick -- violin traces a density
+# outline, and grouped violins are dodged on top of that -- still re-levels, since
+# the category is carried alongside the drawn coordinates rather than inferred
+# from them.
+f = function() {
+  tinyplot(mpg ~ factor(carb) | factor(am), data = mtcars, type = "violin",
+           facet = ~vs, singletons = "drop",
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels = TRUE (grouped violin)")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_violin")
+
+# An added layer inherits the base layer's panel maps, so it lands on the
+# categories the base drew even when it does not cover all of them
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, type = "box", facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels = TRUE (added layer)")
+  tinyplot(mpg ~ factor(carb), data = subset(mtcars, carb %in% c(2, 4)),
+           facet = ~vs, type = "p", col = "red", add = TRUE,
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE))
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_layer")
+
+# A type that places its own categorical axis is outside this machinery, so say
+# so rather than quietly doing nothing
+expect_warning(
+  tinyplot(factor(gear) ~ mpg, data = mtcars, type = "ridge", facet = ~vs,
+           facet.args = list(free = TRUE, drop.levels = TRUE)),
+  pattern = "had no effect"
+)
+
+# Global fallback via tpar, as for the other facet.args
+f = function() {
+  tpar(facet.drop.levels = TRUE)
+  on.exit(tpar(facet.drop.levels = NULL))
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE),
+           main = "tpar(facet.drop.levels = TRUE)")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_tpar")
+
+# Fixed panels share one axis, so per-panel levels would misalign them
+expect_warning(
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(drop.levels = TRUE)),
+  pattern = "requires free scales"
+)
+
+expect_error(
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(drop.levels = "yes")),
+  pattern = "facet.args\\$drop.levels"
+)
+
+
+#
 # restore original par settings
 #
 

@@ -342,6 +342,7 @@ theme_default = list(
   facet.bg = NULL,
   facet.border = NA,
   facet.drop = FALSE,
+  facet.drop.levels = FALSE,
   family = par("family"), # ""
   fg = par("fg"),
   font = par("font"), # 1,

@@ -75,6 +75,13 @@ draw_facet_window = function(
     }
   }
 
+  # Per-panel category positions, when the panels were re-levelled
+  # (facet.args$drop.levels). Like `.fusr` further below, these travel via
+  # .tinyplot_env rather than as another argument; see facet_relevel().
+  facet_labs = if (facet_drop_levels_on(facet.args)) {
+    get_environment_variable(".facet_labs")
+  }
+
   # draw background color only in the grid rectangle
   grid.bg = get_tpar("grid.bg", tpar_list = tpars)
   if (!is.null(grid.bg)) {
@@ -445,16 +452,27 @@ draw_facet_window = function(
         # individual facet.
         xfree = if (!is.null(facet)) xfree_split[[ii]] else xcat
         yfree = if (!is.null(facet)) yfree_split[[ii]] else ycat
+        # A re-levelled panel (facet.args$drop.levels) has its own category
+        # positions and labels; otherwise every panel shares the global set. Like
+        # `.fusr` below, the maps travel via .tinyplot_env rather than as another
+        # pair of arguments; see facet_relevel().
+        .fxlabs = facet_labs[["x"]][[ii]] %||% xlabs
+        .fylabs = facet_labs[["y"]][[ii]] %||% ylabs
         # A categorical axis needs room either side of its end categories for the
         # geometry drawn around them, else the end elements are clipped by the
         # panel. lim_args() adds that to the fixed-scale limits; the same amount
         # has to go onto the per-facet range we derive here.
+        # A re-levelled panel additionally knows exactly which categories it
+        # holds, so keep all of their ticks inside it: an offset (dodge, jitter)
+        # can pull the data short of its own end tick and clip the label off.
         .pad = if (identical(type, "boxplot")) c(-0.5, 0.5) else 0
         if (null_xlim || !is.null(xlim_partial)) {
           xlim = facet_free_lim(xfree, xall, xlim_partial, "xlim") + .pad
+          if (!is.null(facet_labs[["x"]]) && length(.fxlabs)) xlim = range(c(xlim, .fxlabs))
         }
         if (null_ylim || !is.null(ylim_partial)) {
           ylim = facet_free_lim(yfree, yall, ylim_partial, "ylim")
+          if (!is.null(facet_labs[["y"]]) && length(.fylabs)) ylim = range(c(ylim, .fylabs))
         }
         # An axis is reversed either via the `rev_x`/`rev_y` flag (e.g. the
         # "reverse" keyword) or when the user supplies descending fixed limits
@@ -503,8 +521,8 @@ draw_facet_window = function(
         if (.free_x) {
           .axf = args_x
           .axf[[1L]] = xfree
-          if (!is.null(xlabs)) {
-            .axf = modifyList(.axf, list(at = xlabs, labels = names(xlabs)))
+          if (!is.null(.fxlabs)) {
+            .axf = modifyList(.axf, list(at = .fxlabs, labels = names(.fxlabs)))
           } else if (!is.null(xat)) {
             .axf = modifyList(.axf, list(at = xat))
           } else {
@@ -522,8 +540,8 @@ draw_facet_window = function(
           # instead not only dropped the labels for unlisted types, it left the
           # `labels` inherited from `args_y` without a matching `at`, which
           # axis() rejects outright. (#679)
-          if (!is.null(ylabs)) {
-            .ayf = modifyList(.ayf, list(at = ylabs, labels = names(ylabs)))
+          if (!is.null(.fylabs)) {
+            .ayf = modifyList(.ayf, list(at = .fylabs, labels = names(.fylabs)))
           } else if (!is.null(yat)) {
             .ayf = modifyList(.ayf, list(at = yat))
           } else {
@@ -768,6 +786,147 @@ draw_facet_window = function(
   } # end of ii facet loop
 
   return(as.list(environment()))
+}
+
+
+## Should each free panel re-level its categorical axes, i.e. keep only the
+## categories it actually uses? See facet_relevel().
+facet_drop_levels_on = function(facet.args) {
+  isTRUE(facet.args[["drop.levels"]] %||% .tpar[["facet.drop.levels"]])
+}
+
+
+## Which category (as a position in the global level set) does each row sit at?
+## Prefer the `.xcat`/`.ycat` codes stashed by the types that displace a row from
+## its own tick (dodge_positions(), type_jitter(), type_violin()), since the drawn
+## position is not a
+## reliable answer once an offset has moved a row off its tick. Fall back to the
+## positions themselves, but only where they are exact integers -- a dodge of 0.4
+## spreads categories 1-3 over -0.4 to 1.6, so rounding would mis-assign them.
+## NULL means "can't tell", and the caller leaves that axis alone.
+cat_axis_codes = function(datapoints, ax = "x") {
+  v = datapoints[[paste0(".", ax, "cat")]]
+  if (is.null(v)) v = datapoints[[ax]]
+  if (is.null(v)) return(NULL)
+  if (is.factor(v)) return(as.integer(v))
+  if (!is.numeric(v)) return(NULL)
+  # missing values carry no category, and are not drawn anyway; ignore them here
+  vv = v[!is.na(v)]
+  if (any(!is.finite(vv)) || any(vv != trunc(vv))) return(NULL)
+  as.integer(v)
+}
+
+
+#' @rdname facet
+#' @keywords internal
+#' @param settings A list of settings as created by `tinyplot()`.
+#' @details `facet_relevel` implements `facet.args$drop.levels`: each free facet
+#'   keeps only the categories it actually uses, re-levelled as if the panel's
+#'   data had been passed through `factor()` on its own. Positions are shifted
+#'   rather than recomputed, so a row's offset within its category (dodge,
+#'   jitter, boxplot group offsets) and any rectangle width around it survive
+#'   untouched.
+facet_relevel = function(settings) {
+  if (!facet_drop_levels_on(settings[["facet.args"]])) return(invisible())
+
+  datapoints = settings[["datapoints"]]
+  facet = datapoints[["facet"]]
+  if (is.null(facet) || length(unique(facet)) < 2L || nrow(datapoints) == 0L) {
+    return(invisible())
+  }
+  # Fixed panels share one axis, so per-panel level sets would misalign them.
+  if (!isTRUE(settings[["facet.args"]][["free"]])) {
+    warning(
+      "`facet.args$drop.levels` re-levels each panel's categorical axis ",
+      "independently, which requires free scales. Ignoring it, since ",
+      "`facet.args$free` is not TRUE.",
+      call. = FALSE
+    )
+    return(invisible())
+  }
+  facet = as.factor(facet)
+  fl = levels(facet)
+
+  # An added layer inherits the base layer's panel maps rather than deriving its
+  # own: it has to land on the categories the base layer actually drew, and its
+  # own rows may not cover the same ones.
+  add = isTRUE(settings[["add"]])
+
+  applied = FALSE
+  facet_labs = list()
+  for (ax in c("x", "y")) {
+    # named `xlabs`/`ylabs` is the signal that a type put categories on this axis
+    labs = settings[[paste0(ax, "labs")]]
+    if (is.null(labs) || is.null(names(labs))) next
+    codes = cat_axis_codes(datapoints, ax)
+    if (is.null(codes)) next
+    stored = if (add) get_environment_variable(".facet_labs")[[ax]] else NULL
+    if (add && is.null(stored)) next
+
+    # each row's category, by name, which is what both paths key off
+    row_names = names(labs)[match(codes, unname(labs))]
+    delta = numeric(nrow(datapoints))
+    labs_by_facet = vector("list", length(fl))
+    names(labs_by_facet) = fl
+    for (f in fl) {
+      idx = which(facet == f)
+      if (!length(idx)) next
+      if (!is.null(stored)) {
+        map = stored[[f]]
+      } else {
+        # rank within the panel's own levels, i.e. what factor() would have given
+        present = sort(unique(codes[idx]))
+        nm = names(labs)[match(present, unname(labs))]
+        ok = !is.na(nm)
+        map = stats::setNames(seq_along(present)[ok], nm[ok])
+      }
+      if (is.null(map) || !length(map)) next
+      # a category the panel does not hold maps to NA, i.e. is simply not drawn
+      delta[idx] = unname(map[row_names[idx]]) - codes[idx]
+      labs_by_facet[[f]] = map
+    }
+
+    cols = paste0(ax, c("", "min", "max"))
+    for (col in cols) {
+      v = datapoints[[col]]
+      if (!is.null(v) && is.numeric(v)) datapoints[[col]] = v + delta
+      # The same vectors also travel outside `datapoints` (some types leave a
+      # categorical axis as a factor there, e.g. barplot, and draw from
+      # xmin/xmax instead), and the free-scale ranges are computed off those.
+      sv = settings[[col]]
+      if (is.null(sv) || length(sv) != nrow(datapoints)) next
+      if (is.factor(sv)) {
+        settings[[col]] = as.integer(sv) + delta
+      } else if (is.numeric(sv)) {
+        settings[[col]] = sv + delta
+      }
+    }
+    facet_labs[[ax]] = labs_by_facet
+    applied = TRUE
+  }
+
+  # Say so rather than quietly doing nothing: either no axis holds categories, or
+  # the type places them itself and so is outside this machinery (type_ridge()).
+  if (!applied) {
+    warning(
+      "`facet.args$drop.levels` had no effect: this plot has no categorical ",
+      "axis that tinyplot positions itself",
+      if (isTRUE(settings[["type_hints"]][["draws_own_axes"]])) {
+        sprintf(" (the \"%s\" type draws its own axis labels)", settings[["type"]])
+      } else {
+        ""
+      },
+      ".",
+      call. = FALSE
+    )
+  }
+
+  # Where draw_facet_window() reads them from, and where any layer added on top
+  # inherits them; cf. `.fusr` and `xlabs_orig` in align_layer().
+  if (applied) set_environment_variable(.facet_labs = facet_labs)
+
+  settings[["datapoints"]] = datapoints
+  invisible()
 }
 
 

@@ -215,15 +215,18 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             # dodge groups (if any)
             if ((ngrps > 1)  && isFALSE(x_by) && isFALSE(facet_by)) {
                 xwidth = xwidth_orig / ngrps - 0.01
+                xcat = as.numeric(sub("^([0-9]+)\\..*", "\\1", names(datapoints)[d]))
                 x = rescale_num(x, to = c(0, xwidth))
-                x = x + as.numeric(sub("^([0-9]+)\\..*", "\\1", names(datapoints)[d])) - xwidth/2
+                x = x + xcat - xwidth/2
                 x = x + group_offsets[dat$by[1]]
             } else if (nfacets > 1) {
+                xcat = as.numeric(sub("^([0-9]+)\\..*", "\\1", names(datapoints)[d]))
                 x = rescale_num(x, to = c(0, xwidth))
-                x = x + as.numeric(sub("^([0-9]+)\\..*", "\\1", names(datapoints)[d])) - xwidth/2
+                x = x + xcat - xwidth/2
             } else {
+                xcat = d
                 x = rescale_num(x, to = c(0, xwidth))
-                x = x + d - xwidth/2
+                x = x + xcat - xwidth/2
             }
             
             x = c(x, NA)
@@ -235,6 +238,9 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                 y = y,
                 x = x
             )
+            # `x` traces the density outline, so it no longer sits on its own
+            # tick; carry the category position. See cat_axis_codes()
+            if (facet_drop_levels_on(settings[["facet.args"]])) out[[".xcat"]] = xcat
             return(out)
         })
         datapoints = do.call(rbind, datapoints)

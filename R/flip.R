@@ -20,6 +20,8 @@ flip_datapoints = function(settings) {
       datapoints = swap_columns(datapoints, "xmin", "ymin")
       datapoints = swap_columns(datapoints, "xmax", "ymax")
       datapoints = swap_columns(datapoints, "x", "y")
+      # the categorical bookkeeping travels with its axis; see cat_axis_codes()
+      datapoints = swap_columns(datapoints, ".xcat", ".ycat")
 
       # Swap all the x/y settings in the environment
       swap_elements(settings, "x", "y")

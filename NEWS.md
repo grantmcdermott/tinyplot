@@ -174,16 +174,18 @@ related to plot layering. See "Bug fixes" below.
 
 - `type_ridge()` no longer errors under themes that set a relative (negative)
   numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
-- `type_barplot()` no longer draws a bar for a category that no observation
-  reaches. Internally the bars are computed off a completed grid, so that
-  stacking and centering have a rectangular set of cells to work with, but the
-  invented cells were then drawn as zero-height rectangles, i.e. a stray rule
-  along the baseline. Most visible in faceted plots, where a category is often
-  absent from some panels, and in grouped layouts like a waterfall chart, where
-  the rule landed on each bar's own baseline rather than at zero. Genuine zeros
-  are unaffected (and remain `drop.zeros`' business). Consequently, `col = NA`
-  is no longer needed to suppress those rules, and has been dropped from the
-  waterfall example in `?type_barplot`. (#711 @grantmcdermott)
+- `type_barplot()` now asks `FUN` what a category that no observation reaches is
+  worth, rather than treating it as zero unconditionally. Internally the bars are
+  computed off a completed grid, so that stacking and centering have a
+  rectangular set of cells to work with, but the invented cells were then all
+  drawn as zero-height rectangles, i.e. a stray rule along the baseline. A
+  *count* (or sum) of nothing is genuinely 0, so those bars still draw; a *mean*
+  of nothing is undefined, so they no longer do. Since a zero-height bar only
+  reads as zero from a zero baseline, `offset` layouts (e.g. waterfall charts)
+  never draw one. Genuine zeros are unaffected either way, and remain
+  `drop.zeros`' business. Consequently, `col = NA` is no longer needed to
+  suppress those rules in a waterfall, and has been dropped from the example in
+  `?type_barplot`. (#711 @grantmcdermott)
 - Free facets (`facet.args = list(free = TRUE)`) now keep every category of a
   categorical axis, so that the panels' ticks line up with each other. Panel
   limits were derived from each panel's own data range, which clipped any

@@ -280,12 +280,19 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         if (!is.null(xaxlabels)) levels(datapoints$x) = xaxlabels
         datapoints = aggregate(datapoints[, "y", drop = FALSE], datapoints[, c("x", "by", "facet")], FUN = FUN, drop = FALSE)
         ## `drop = FALSE` completes the x-by-facet-by-by grid, which the stacking
-        ## and centering below rely on to be rectangular. The cells it invents are
-        ## not zeros, though, so flag them: a cell no observation reaches has no
-        ## bar to draw, and drawing it anyway leaves a zero-height rect, i.e. a
-        ## stray rule along the baseline. Genuine zeros are kept (see `drop.zeros`).
-        datapoints$.unobs = is.na(datapoints$y)
-        datapoints$y[is.na(datapoints$y)] = 0 #FIXME: always?#
+        ## and centering below rely on. aggregate() fills the cells it invents with
+        ## NA rather than calling FUN on them, so ask FUN what no data is worth: a
+        ## count (or sum) of nothing is 0 and draws like any other bar, while a
+        ## mean of nothing is undefined and draws nothing. A zero-height bar only
+        ## reads as zero from a zero baseline, so `offset` layouts never draw one.
+        na_y = is.na(datapoints$y)
+        if (any(na_y)) {
+          empty = tryCatch(suppressWarnings(FUN(numeric(0))), error = function(e) NULL)
+          drawable = is.numeric(empty) && length(empty) == 1L &&
+            is.finite(empty) && is.null(offset)
+          datapoints$y[na_y] = if (drawable) empty else 0
+          if (!drawable) datapoints$.unobs = na_y
+        }
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
 
@@ -470,9 +477,9 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
             yok = abs(yt - yb) > 0
             df = df[yok,  , drop = FALSE]
           }
-          # unobserved cells: keep them out of the drawn rectangles, now that the
-          # stacked/centered positions that needed them have been computed
-          df = df[!df$.unobs, , drop = FALSE]
+          # cells with no value to draw (see above), now that the stacked and
+          # centered positions that needed them have been computed
+          if (!is.null(df$.unobs)) df = df[!df$.unobs, , drop = FALSE]
 
           return(df)
         })

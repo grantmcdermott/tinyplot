@@ -303,16 +303,36 @@ expect_snapshot_plot(f, label = "barplot_xaxl_dict")
 
 
 
-# A cell that no observation reaches is not a zero: aggregate() completes the
-# x-by-facet grid so that stacking has somewhere to stand, but those invented
-# cells must not draw a (zero-height) bar, which reads as a stray rule along the
-# baseline. Here carb = 1 is unobserved for vs = 0, and carb = 3, 6, 8 for
-# vs = 1. (#711)
+# What is a cell that no observation reaches worth? aggregate() completes the
+# x-by-facet grid so that stacking has somewhere to stand, then fills those
+# invented cells with NA rather than calling FUN on them -- so FUN's own answer
+# for no data decides. A *mean* of nothing is undefined, so nothing is drawn:
+# here carb = 1 is unobserved for vs = 0, and carb = 3, 6, 8 for vs = 1. (#711)
 f = function() {
   tinyplot(mpg ~ factor(carb), data = mtcars, type = "barplot", facet = ~vs,
            facet.args = list(ncol = 1))
 }
 expect_snapshot_plot(f, label = "barplot_facet_unobserved")
+
+# ... whereas a *count* of nothing is 0, a real value, so the bar draws (flat,
+# along the baseline). cyl = 8 never occurs with vs = 1.
+f = function() {
+  tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by",
+           facet.args = list(ncol = 1))
+}
+expect_snapshot_plot(f, label = "barplot_facet_unobserved_count")
+
+# `offset` moves the baseline, and a zero-height bar only reads as zero from a
+# zero baseline, so an offset layout draws nothing there whatever FUN says. Every
+# item here has just one of the two `by` levels, so 5 of the 10 cells are empty.
+wf = data.frame(item = factor(c("Sales", "Costs", "TOTAL"), levels = c("Sales", "Costs", "TOTAL")),
+                value = c(100, -80, 20))
+wf$off = c(0, 100, 0)
+f = function() {
+  tinyplot(value ~ item | I(value < 0), data = wf, legend = FALSE,
+           type = type_barplot(offset = wf$off, FUN = sum))
+}
+expect_snapshot_plot(f, label = "barplot_offset_unobserved_sum")
 
 # ... while a genuine zero still draws (and is still `drop.zeros`' business)
 zero_dat = data.frame(g = factor(c("a", "b", "c")), v = c(2, 0, 3))

@@ -15,6 +15,10 @@
 #'   labels without ticks and axis line), or `"axis"` (only axis line and labels
 #'   but no ticks). Partial matching is allowed, e.g. `type = "s"`.
 #' @inheritParams tinylabel
+#' @param srt numeric giving the tick label rotation in degrees
+#'   counter-clockwise, or `NULL` (default) to leave the labels to base
+#'   `axis()` and its `las` setting. Any non-zero value is drawn by hand, since
+#'   `axis()` only understands the four right angles that `las` selects.
 #' @examples
 #' \dontrun{
 #' 
@@ -26,7 +30,8 @@
 #' tinyplot:::tinyAxis(x = 0:10, side = 2, type = "s", labeller = "$")
 #' }
 #' @keywords internal
-tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL) {
+tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL,
+                    srt = NULL) {
   type = match.arg(type, c("standard", "none", "labels", "ticks", "axis"))
   if (type == "none") {
     invisible(numeric(0L))
@@ -49,6 +54,20 @@ tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL) {
         args$at = if (!inherits(x, c("POSIXt", "Date"))) axTicks(args$side) else axTicksDateTime(args$side, x = x)  
         args$labels = tinylabel(args$at, labeller)
       }
+    }
+    if (!is.null(srt) && is.finite(srt) && srt %% 360 != 0) {
+      # Draw the line and ticks, but no labels -- Axis() hands back the tick
+      # positions it settled on, which is also what the rotated text needs.
+      lab = args[["labels"]]
+      args[["labels"]] = FALSE
+      at = do.call("Axis", args)
+      if (is.null(lab) || isTRUE(lab)) lab = format(at, trim = TRUE)
+      draw_rotated_labels(
+        side = args[["side"]], at = at, labels = lab, srt = srt,
+        cex = args[["cex.axis"]] %||% par("cex.axis"),
+        col = args[["col.axis"]], font = args[["font.axis"]]
+      )
+      return(invisible(at))
     }
     do.call("Axis", args)
   }
@@ -176,9 +195,165 @@ axis_tick_labels = function(labelset, lim, axb = NULL, axl = NULL, log = FALSE,
 ## there is nothing to clear, and the tick-row allowance still has to come back
 ## off. Callers guard the sign themselves, because they do not agree on what a
 ## non-positive result means -- see draw_facet_window().
-tick_label_extent = function(labels, cex = 1) {
+## `srt` rotates the labels off the axis, in degrees counter-clockwise. The
+## margin then has to clear the label's extent *perpendicular* to its axis,
+## which mixes the string's width and its height as it turns:
+##
+##   sides 1/3:  w*|sin(srt)| + h*|cos(srt)|
+##   sides 2/4:  w*|cos(srt)| + h*|sin(srt)|
+##
+## h is half the ink height of a text line, because the label is anchored on its
+## centre line and so only half of it projects onto the perpendicular. The full
+## line-height allowance dynmar_side() uses is wrong here: it over-reserves by
+## ~0.7*|cos(srt)| lines, which is visible as a gap between the tilted labels
+## and the axis title, since this one number places both.
+##
+## Both existing callers are recovered exactly -- side 1 at srt = 90 (las 2:3)
+## and side 2 at srt = 0 (las 1:2) both zero the h term and reduce to plain w --
+## so `srt = NULL` and those two angles stay interchangeable.
+tick_label_extent = function(labels, cex = 1, srt = NULL, side = 1L) {
   # An empty (as opposed to zero-width) set maxes to -Inf; treat it as no ink.
   w = suppressWarnings(max(strwidth(labels, "inches", cex = cex)))
   if (!is.finite(w)) w = 0
-  w / par("csi") - 0.5
+  w = w / par("csi")
+  if (is.null(srt)) return(w - 0.5)
+  rad = srt * pi / 180
+  h = 0.3 * cex
+  perp = if (side %in% c(1L, 3L)) {
+    w * abs(sin(rad)) + h * abs(cos(rad))
+  } else {
+    w * abs(cos(rad)) + h * abs(sin(rad))
+  }
+  perp - 0.5
+}
+
+
+## How far the end labels of a rotated axis reach *along* it, in margin lines.
+##
+## A vertical (las = 2) label sits in its own tick's column, so this never came
+## up before. Tilt it and the string leans sideways: on side 1 a positive `srt`
+## trails the first label off the left of the plot region, a negative one trails
+## the last off the right, by w*|cos(srt)| either way. Returns c(low, high) --
+## (left, right) for sides 1/3, (bottom, top) for 2/4 -- so the caller can widen
+## the margins that the lean would otherwise overrun.
+##
+## Only the part of the lean that clears the plot region needs margin. The end
+## ticks are usually inset from the edge -- half a category on a discrete axis,
+## the extendrange() padding on a continuous one -- and the label leans across
+## that inset first, over the panel, before it reaches the edge. `inset` is that
+## gap at each end, in margin lines; ignoring it over-reserves by exactly the
+## inset, which on a three-category axis is a sixth of the panel.
+tick_label_overhang = function(labels, cex = 1, srt = 0, side = 1L,
+                               inset = c(0, 0)) {
+  n = length(labels)
+  if (!n || !is.finite(srt) || srt %% 180 == 0) return(c(0, 0))
+  rad = srt * pi / 180
+  ends = suppressWarnings(
+    strwidth(labels[c(1L, n)], "inches", cex = cex) / par("csi")
+  )
+  ends[!is.finite(ends)] = 0
+  # The anchored end is the one nearest the plot, so the string leans away from
+  # it: towards the low end of the axis for a positive srt, the high end for a
+  # negative one. Only the label at that end of the axis can overrun.
+  lean = if (side %in% c(1L, 3L)) abs(cos(rad)) else abs(sin(rad))
+  reach = if (srt > 0) c(ends[1L] * lean, 0) else c(0, ends[2L] * lean)
+  inset[!is.finite(inset)] = 0
+  pmax(0, reach - inset)
+}
+
+
+## The gap between each end of an axis's plot region and its outermost tick, in
+## margin lines -- what a leaning label crosses before it overruns the panel.
+##
+## `at` are the tick positions and `usr` the region's extent, both in user
+## coordinates; `span_lines` is the region's width (or height) in lines. The
+## caller has to estimate that span from the margins it has computed so far,
+## which is one iteration short of exact: the lean it is about to add will widen
+## the margin slightly, shrinking the panel and so the inset. The error is a
+## fraction of a line and always in the safe direction (a slightly larger
+## reservation than needed).
+axis_tick_inset = function(at, usr, span_lines) {
+  if (!length(at) || length(usr) != 2L || !is.finite(span_lines)) return(c(0, 0))
+  at = at[is.finite(at)]
+  w = diff(range(usr))
+  if (!length(at) || !is.finite(w) || w <= 0) return(c(0, 0))
+  lo = (min(at) - min(usr)) / w
+  hi = (max(usr) - max(at)) / w
+  pmax(0, c(lo, hi) * span_lines)
+}
+
+
+## Where to anchor a rotated tick label, as a text() `adj` pair.
+##
+## The anchor goes on the end of the string nearest the plot, so the rest of it
+## leans away into the margin rather than back over the data. Which end that is
+## depends on how the string is pointing: on side 1 a string tilting up to the
+## right (sin(srt) > 0) is nearest the plot at its right end, so anchor there.
+##
+## When the string runs parallel to the axis there is no nearest end, so it is
+## centred along the axis and anchored on the edge facing the plot instead --
+## adj[2] = 1 puts the anchor at the top of the ink, 0 at the baseline.
+rotated_label_adj = function(side, srt) {
+  rad = srt * pi / 180
+  along = if (side %in% c(1L, 3L)) sin(rad) else cos(rad)
+  # Guard the parallel case with a tolerance: sin(pi) is 1.2e-16, not 0.
+  if (abs(along) < 1e-8) {
+    centred = switch(as.character(side), "1" = 1, "3" = 0, "2" = 0, "4" = 1)
+    return(c(0.5, centred))
+  }
+  near_high_end = if (side %in% c(1L, 2L)) along > 0 else along < 0
+  c(if (near_high_end) 1 else 0, 0.5)
+}
+
+
+## Draw an axis's tick labels at an arbitrary rotation.
+##
+## base axis() only understands las 0:3, so anything else has to be drawn by
+## hand: the caller suppresses axis()'s own labels and calls this for the line
+## of text. Labels sit mgp[2] + |tcl| lines off the axis, matching where axis()
+## would have put them, and are drawn with xpd = NA so a long string can lean
+## out into the figure margin.
+##
+## The offset is a *line* count, so it converts to user coordinates differently
+## at every device size. Computing it once at draw time would bake in the
+## coordinates of whatever device happened to be current, and the labels would
+## drift off the axis on the next resize -- hence recordGraphics(), which
+## re-runs the whole placement against the replayed device.
+draw_rotated_labels = function(side, at, labels, srt, cex = 1, col = NULL,
+                               font = NULL) {
+  if (!length(at) || !length(labels)) return(invisible(NULL))
+  recordGraphics(
+    rotated_labels_draw(side, at, labels, srt, cex, col, font),
+    list = list(
+      side = side, at = at, labels = labels, srt = srt,
+      cex = cex, col = col, font = font
+    ),
+    env = getNamespace("tinyplot")
+  )
+}
+
+rotated_labels_draw = function(side, at, labels, srt, cex, col, font) {
+  usr = par("usr")
+  off = (par("mgp")[2L] + max(0, -par("tcl"))) * par("csi")
+  adj = rotated_label_adj(side, srt)
+  args = list(labels = labels, srt = srt, adj = adj, cex = cex, xpd = NA)
+  if (!is.null(col)) args[["col"]] = col
+  if (!is.null(font)) args[["font"]] = font
+  if (side %in% c(1L, 3L)) {
+    edge = if (side == 1L) usr[3L] else usr[4L]
+    sgn = if (side == 1L) -1 else 1
+    args[["x"]] = at
+    args[["y"]] = grconvertY(
+      grconvertY(edge, "user", "inches") + sgn * off, "inches", "user"
+    )
+  } else {
+    edge = if (side == 2L) usr[1L] else usr[2L]
+    sgn = if (side == 2L) -1 else 1
+    args[["y"]] = at
+    args[["x"]] = grconvertX(
+      grconvertX(edge, "user", "inches") + sgn * off, "inches", "user"
+    )
+  }
+  do.call(text, args)
+  invisible(NULL)
 }

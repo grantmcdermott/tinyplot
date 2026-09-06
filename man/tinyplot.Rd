@@ -42,6 +42,8 @@ tinyplot(x, ...)
   yaxb = NULL,
   xaxl = NULL,
   yaxl = NULL,
+  xaxr = NULL,
+  yaxr = NULL,
   log = "",
   flip = FALSE,
   frame.plot = NULL,
@@ -435,6 +437,15 @@ Passed to \code{\link{tinylabel}}; see the latter's help file for more detailed
 documentation and examples. Note that this is a post-processing step that
 affects the \emph{appearance} of the tick labels only; use in conjunction with
 \code{x/yaxb} if you would like to adjust the position of the tick marks too.}
+
+\item{xaxr, yaxr}{numeric giving the rotation of the x- or y-axis tick labels,
+in degrees counter-clockwise. Defaults to the value of \code{tpar("xaxr")} /
+\code{tpar("yaxr")}, which is \code{NULL} (no rotation) unless a theme sets it.
+Rotation is an alternative to \code{las}, which is limited to the four right
+angles; any other angle is drawn by tinyplot rather than base \code{axis()}.
+Margins are widened to fit the tilted labels under a dynamic theme (see
+\code{tinytheme}), including the sideways lean of the labels at either end of
+the axis.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be
 logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}

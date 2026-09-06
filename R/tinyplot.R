@@ -275,6 +275,14 @@
 #'   documentation and examples. Note that this is a post-processing step that
 #'   affects the _appearance_ of the tick labels only; use in conjunction with
 #'   `x/yaxb` if you would like to adjust the position of the tick marks too.
+#' @param xaxr,yaxr numeric giving the rotation of the x- or y-axis tick labels,
+#'   in degrees counter-clockwise. Defaults to the value of `tpar("xaxr")` /
+#'   `tpar("yaxr")`, which is `NULL` (no rotation) unless a theme sets it.
+#'   Rotation is an alternative to `las`, which is limited to the four right
+#'   angles; any other angle is drawn by tinyplot rather than base `axis()`.
+#'   Margins are widened to fit the tilted labels under a dynamic theme (see
+#'   `tinytheme`), including the sideways lean of the labels at either end of
+#'   the axis.
 #' @param log a character string which contains `"x"` if the x axis is to be
 #'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
 #'   if both axes are to be logarithmic.
@@ -759,6 +767,8 @@ tinyplot.default = function(
     yaxb = NULL,
     xaxl = NULL,
     yaxl = NULL,
+    xaxr = NULL,
+    yaxr = NULL,
     log = "",
     flip = FALSE,
     frame.plot = NULL,
@@ -934,10 +944,12 @@ tinyplot.default = function(
     xaxt          = xaxt,
     xaxb          = xaxb,
     xaxl          = xaxl,
+    xaxr          = xaxr,
     xaxs          = xaxs,
     yaxt          = yaxt,
     yaxb          = yaxb,
     yaxl          = yaxl,
+    yaxr          = yaxr,
     yaxs          = yaxs,
     frame.plot    = frame.plot,
     xlim          = xlim,
@@ -1258,23 +1270,90 @@ tinyplot.default = function(
     .whtsbp_y_raw = 0
     .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
-    if (.las %in% 1:2) {
+    # A flipped boxplot draws the x variable up the side and the y variable
+    # along the bottom, so a rotation has to be measured against the side its
+    # labels actually land on. (The las branches below keep indexing 1/2
+    # directly, as they always have; that asymmetry is pre-existing.)
+    .xside = if (identical(type, "boxplot") && isTRUE(flip)) 2L else 1L
+    .yside = if (identical(type, "boxplot") && isTRUE(flip)) 1L else 2L
+    # A rotation always needs its own measurement, whatever `las` says: las
+    # only reaches the perpendicular case, and that is srt = 90 (x) / 0 (y).
+    if (!is.null(yaxr) || .las %in% 1:2) {
       yaxlabs = axis_tick_labels(
         y_axis_labels(type, y, ylabs, xlabs, flip),
         lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
         cex = .cex_yaxs
       )
-      .whtsbp_y_raw = tick_label_extent(yaxlabs, cex = .cex_yaxs)
-      .whtsbp[2] = .whtsbp_y_raw
+      if (!is.null(yaxr)) {
+        .whtsbp_y_raw = tick_label_extent(yaxlabs, cex = .cex_yaxs,
+                                          srt = yaxr, side = .yside)
+        .whtsbp[.yside] = .whtsbp_y_raw
+      } else {
+        .whtsbp_y_raw = tick_label_extent(yaxlabs, cex = .cex_yaxs)
+        .whtsbp[2] = .whtsbp_y_raw
+      }
     }
-    if (.las %in% 2:3) {
+    if (!is.null(xaxr) || .las %in% 2:3) {
       xaxlabs = axis_tick_labels(
         x_axis_labels(xlabs),
         lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
         cex = .cex_xaxs
       )
-      .whtsbp_x_raw = tick_label_extent(xaxlabs, cex = .cex_xaxs)
-      .whtsbp[1] = .whtsbp_x_raw
+      if (!is.null(xaxr)) {
+        .whtsbp_x_raw = tick_label_extent(xaxlabs, cex = .cex_xaxs,
+                                          srt = xaxr, side = .xside)
+        .whtsbp[.xside] = .whtsbp_x_raw
+      } else {
+        .whtsbp_x_raw = tick_label_extent(xaxlabs, cex = .cex_xaxs)
+        .whtsbp[1] = .whtsbp_x_raw
+      }
+    }
+    # A tilted label also leans along its axis, off the end of the plot region.
+    # That lean lands in the *adjacent* margin, so widen whichever one it would
+    # otherwise overrun. max() rather than +: the lean shares the margin with
+    # the tick labels and axis title already sitting there.
+    # The lean lands in the two margins flanking the labels' own side. It goes
+    # into .dyn -- the base margin -- and deliberately not into .whtsbp, which
+    # downstream reads as "how far the tick labels reach" when placing the axis
+    # titles. Widening .whtsbp would push those titles out by the whole lean,
+    # even though the lean sits at one end of the margin and the title is
+    # centred, so the two never actually meet. Growing the base margin instead
+    # moves the plot edge over and lets the title keep its own spacing.
+    #
+    # Only the shortfall is added: the tick labels and axis title already
+    # reserve .dyn + .whtsbp on that side, and the lean can share it.
+    .flank = function(side) if (side %in% c(1L, 3L)) c(2L, 4L) else c(1L, 3L)
+    .add_lean = function(dyn, ovh, sides) {
+      for (i in 1:2) {
+        need = ovh[i] - (dyn[sides[i]] + .whtsbp[sides[i]])
+        if (is.finite(need) && need > 0) dyn[sides[i]] = dyn[sides[i]] + need
+      }
+      dyn
+    }
+    # Panel extent in lines, from the margins settled so far, so the lean can be
+    # measured against how far the end ticks actually sit from the edge.
+    .span = function(axis) {
+      fin = par("fin")[if (axis == "x") 1L else 2L]
+      m = .theme_mar + .dyn
+      pad = if (axis == "x") m[2L] + m[4L] + .whtsbp[2L] + .whtsbp[4L]
+            else m[1L] + m[3L] + .whtsbp[1L] + .whtsbp[3L]
+      max(0, fin / par("csi") - pad)
+    }
+    if (!is.null(xaxr)) {
+      .at = if (!is.null(xlabs)) as.numeric(xlabs) else
+        axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog"))
+      .ins = axis_tick_inset(.at, extendrange(xlim, f = 0.04), .span("x"))
+      .ovh = tick_label_overhang(xaxlabs, cex = .cex_xaxs, srt = xaxr,
+                                 side = .xside, inset = .ins)
+      .dyn = .add_lean(.dyn, .ovh, .flank(.xside))
+    }
+    if (!is.null(yaxr)) {
+      .at = if (!is.null(ylabs)) as.numeric(ylabs) else
+        axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+      .ins = axis_tick_inset(.at, extendrange(ylim, f = 0.04), .span("y"))
+      .ovh = tick_label_overhang(yaxlabs, cex = .cex_yaxs, srt = yaxr,
+                                 side = .yside, inset = .ins)
+      .dyn = .add_lean(.dyn, .ovh, .flank(.yside))
     }
 
     # Under facets, per-facet tick labels render smaller (scaled by
@@ -1474,8 +1553,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       asp = asp, log = log,
@@ -1510,8 +1589,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       asp = asp, log = log,

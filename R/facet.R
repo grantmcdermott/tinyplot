@@ -24,8 +24,8 @@ draw_facet_window = function(
     facet_blank = FALSE,
     # axes args
     axes, flip, frame.plot, oxaxis, oyaxis,
-    xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl,
-    ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl,
+    xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl, xaxr = NULL,
+    ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl, yaxr = NULL,
     rev_x = FALSE, rev_y = FALSE,
     xlim_partial = NULL, ylim_partial = NULL,
     asp, log,
@@ -84,6 +84,11 @@ draw_facet_window = function(
 
   ## dynamic margins flag
   dynmar = isTRUE(get_tpar("dynmar", tpar_list = tpars))
+  # A flipped boxplot swaps which side each variable's labels land on, which a
+  # rotation has to be measured against. The las paths below keep indexing 1/2
+  # directly, as they always have.
+  .xside = if (identical(type, "boxplot") && isTRUE(flip)) 2L else 1L
+  .yside = if (identical(type, "boxplot") && isTRUE(flip)) 1L else 2L
   
   ## optionally allow to modify and restore the style of axis interval calculation
   if (!is.null(xaxs) || !is.null(yaxs)) {
@@ -179,7 +184,7 @@ draw_facet_window = function(
       # Ensure fmar[3] doesn't exceed omar[3] - 0.1, which would make
       # noma[3] negative and get clamped to 0, creating excess top space.
       if (fmar[3] + 0.1 > omar[3]) fmar[3] = omar[3] - 0.1
-      if (par("las") %in% 1:2) {
+      if (!is.null(yaxr) || par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
         .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
         # Only free scales need the per-facet limits, and only when no type has
@@ -193,7 +198,11 @@ draw_facet_window = function(
           lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
           free_lims = .yfree, cex = .cex_yaxs
         )
-        whtsbp = tick_label_extent(yaxlabs, cex = .cex_yaxs)
+        whtsbp = if (!is.null(yaxr)) {
+          tick_label_extent(yaxlabs, cex = .cex_yaxs, srt = yaxr, side = .yside)
+        } else {
+          tick_label_extent(yaxlabs, cex = .cex_yaxs)
+        }
         # The label width above is reserved once, and the nmar/noma split below
         # hands it to the *outer* margin -- correct when only the leftmost facet
         # draws a y axis. But when interior facets draw their own (e.g. framed
@@ -210,7 +219,7 @@ draw_facet_window = function(
           }
         }
       }
-      if (par("las") %in% 2:3) {
+      if (!is.null(xaxr) || par("las") %in% 2:3) {
         # extra whitespace bump on the x axis
         .xlabset = x_axis_labels(xlabs)
         .xfree = if (is.null(.xlabset) && isTRUE(facet.args[["free"]]) &&
@@ -222,7 +231,11 @@ draw_facet_window = function(
           lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
           free_lims = .xfree, cex = .cex_xaxs
         )
-        whtsbp = tick_label_extent(xaxlabs, cex = .cex_xaxs)
+        whtsbp = if (!is.null(xaxr)) {
+          tick_label_extent(xaxlabs, cex = .cex_xaxs, srt = xaxr, side = .xside)
+        } else {
+          tick_label_extent(xaxlabs, cex = .cex_xaxs)
+        }
         # As per the y axis above: keep the label width in fmar when interior
         # facets draw their own x axis, else release it to the outer margin.
         if (whtsbp > 0) {
@@ -233,6 +246,9 @@ draw_facet_window = function(
           }
         }
       }
+
+      # (The end labels' sideways lean is already in dynmar_computed, which omar
+      # is built from, so it needs no separate reservation here.)
 
       # reserve RHS margin for types with a secondary axis (e.g. spineplot)
       if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
@@ -288,24 +304,35 @@ draw_facet_window = function(
     omar = dynmar_computed
     # reserve RHS margin for types with a secondary axis (e.g. spineplot)
     if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
-    if (par("las") %in% 1:2) {
+    if (!is.null(yaxr) || par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
       yaxlabs = axis_tick_labels(
         y_axis_labels(type, y, ylabs, xlabs, flip),
         lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
         cex = .cex_yaxs
       )
-      omar[2] = omar[2] + tick_label_extent(yaxlabs, cex = .cex_yaxs)
+      if (!is.null(yaxr)) {
+        omar[.yside] = omar[.yside] +
+          tick_label_extent(yaxlabs, cex = .cex_yaxs, srt = yaxr, side = .yside)
+      } else {
+        omar[2] = omar[2] + tick_label_extent(yaxlabs, cex = .cex_yaxs)
+      }
     }
-    if (par("las") %in% 2:3) {
+    if (!is.null(xaxr) || par("las") %in% 2:3) {
       # extra whitespace bump on the x axis
       xaxlabs = axis_tick_labels(
         x_axis_labels(xlabs),
         lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
         cex = .cex_xaxs
       )
-      omar[1] = omar[1] + tick_label_extent(xaxlabs, cex = .cex_xaxs)
+      if (!is.null(xaxr)) {
+        omar[.xside] = omar[.xside] +
+          tick_label_extent(xaxlabs, cex = .cex_xaxs, srt = xaxr, side = .xside)
+      } else {
+        omar[1] = omar[1] + tick_label_extent(xaxlabs, cex = .cex_xaxs)
+      }
     }
+    # (As in the faceted branch: the lean is already carried by dynmar_computed.)
 
      par(mar = omar)
   }
@@ -387,6 +414,7 @@ draw_facet_window = function(
         side = xside,
         type = xaxt,
         labeller = xaxl,
+        srt = xaxr,
         cex.axis = get_tpar(c("cex.xaxs", "cex.axis"), 0.8, tpar_list = tpars),
         lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.xaxs", "lty.axis"), 1, tpar_list = tpars)
@@ -397,6 +425,7 @@ draw_facet_window = function(
         side = yside,
         type = yaxt,
         labeller = yaxl,
+        srt = yaxr,
         cex.axis = .ca,
         lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.yaxs", "lty.axis"), 1, tpar_list = tpars)

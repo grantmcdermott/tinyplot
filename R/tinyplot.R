@@ -1259,25 +1259,22 @@ tinyplot.default = function(
     .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
     if (.las %in% 1:2) {
-      .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
-      if (!is.null(.ylabset)) {
-        yaxlabs = .ylabset[[1L]]
-      } else {
-        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
-        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
-      }
-      if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      .whtsbp_y_raw = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") -
-                      grconvertX(0, from = "nfc", to = "lines") - 0.5
-      if (is.finite(.whtsbp_y_raw)) .whtsbp[2] = .whtsbp_y_raw
+      yaxlabs = axis_tick_labels(
+        y_axis_labels(type, y, ylabs, xlabs, flip),
+        lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+        cex = .cex_yaxs
+      )
+      .whtsbp_y_raw = tick_label_extent(yaxlabs, cex = .cex_yaxs)
+      .whtsbp[2] = .whtsbp_y_raw
     }
     if (.las %in% 2:3) {
-      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
-      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
-        if (!is.null(names(xlabs))) names(xlabs) else xlabs
-      if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      .whtsbp_x_raw = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
-      if (is.finite(.whtsbp_x_raw)) .whtsbp[1] = .whtsbp_x_raw
+      xaxlabs = axis_tick_labels(
+        x_axis_labels(xlabs),
+        lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+        cex = .cex_xaxs
+      )
+      .whtsbp_x_raw = tick_label_extent(xaxlabs, cex = .cex_xaxs)
+      .whtsbp[1] = .whtsbp_x_raw
     }
 
     # Under facets, per-facet tick labels render smaller (scaled by

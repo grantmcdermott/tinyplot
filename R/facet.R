@@ -182,24 +182,18 @@ draw_facet_window = function(
       if (par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
         .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
-        if (!is.null(.ylabset)) {
-          yaxlabs = .ylabset[[1L]]
-        } else {
-          if (isTRUE(facet.args[["free"]]) && (null_ylim || !is.null(ylim_partial)) && !is.null(facet)) {
-            # Free scales: measure every facet's ticks and keep the widest set.
-            yaxlabs_all = lapply(yfree_split, function(yf) {
-              usr = extendrange(facet_free_lim(yf, yall, ylim_partial, "ylim"), f = 0.04)
-              axisTicks(usr = usr, log = par("ylog"))
-            })
-            widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = .cex_yaxs)), numeric(1L))
-            yaxlabs = yaxlabs_all[[which.max(widths)]]
-          } else {
-            yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
-          }
+        # Only free scales need the per-facet limits, and only when no type has
+        # already put categories on the axis (those are shared across panels).
+        .yfree = if (is.null(.ylabset) && isTRUE(facet.args[["free"]]) &&
+                     (null_ylim || !is.null(ylim_partial)) && !is.null(facet)) {
+          lapply(yfree_split, function(yf) facet_free_lim(yf, yall, ylim_partial, "ylim"))
         }
-        if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-        # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
-        whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
+        yaxlabs = axis_tick_labels(
+          .ylabset,
+          lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+          free_lims = .yfree, cex = .cex_yaxs
+        )
+        whtsbp = tick_label_extent(yaxlabs, cex = .cex_yaxs)
         if (whtsbp > 0) {
           omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
           fmar[2] = fmar[2] + whtsbp * cex_fct_adj
@@ -217,19 +211,17 @@ draw_facet_window = function(
       }
       if (par("las") %in% 2:3) {
         # extra whitespace bump on the x axis
-        if (is.null(xlabs) && isTRUE(facet.args[["free"]]) && (null_xlim || !is.null(xlim_partial)) && !is.null(facet)) {
-          xaxlabs_all = lapply(xfree_split, function(xf) {
-            usr = extendrange(facet_free_lim(xf, xall, xlim_partial, "xlim"), f = 0.04)
-            axisTicks(usr = usr, log = par("xlog"))
-          })
-          widths = vapply(xaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = .cex_xaxs)), numeric(1L))
-          xaxlabs = xaxlabs_all[[which.max(widths)]]
-        } else {
-          xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
-            if (!is.null(names(xlabs))) names(xlabs) else xlabs
+        .xlabset = x_axis_labels(xlabs)
+        .xfree = if (is.null(.xlabset) && isTRUE(facet.args[["free"]]) &&
+                     (null_xlim || !is.null(xlim_partial)) && !is.null(facet)) {
+          lapply(xfree_split, function(xf) facet_free_lim(xf, xall, xlim_partial, "xlim"))
         }
-        if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-        whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
+        xaxlabs = axis_tick_labels(
+          .xlabset,
+          lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+          free_lims = .xfree, cex = .cex_xaxs
+        )
+        whtsbp = tick_label_extent(xaxlabs, cex = .cex_xaxs)
         if (whtsbp > 0) {
           omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
           fmar[1] = fmar[1] + whtsbp * cex_fct_adj
@@ -297,27 +289,21 @@ draw_facet_window = function(
     if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
     if (par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
-      .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
-      if (!is.null(.ylabset)) {
-        yaxlabs = .ylabset[[1L]]
-      } else {
-        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
-        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
-      }
-      if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") - 1
-      whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
-      omar[2] = omar[2] + whtsbp
+      yaxlabs = axis_tick_labels(
+        y_axis_labels(type, y, ylabs, xlabs, flip),
+        lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+        cex = .cex_yaxs
+      )
+      omar[2] = omar[2] + tick_label_extent(yaxlabs, cex = .cex_yaxs)
     }
     if (par("las") %in% 2:3) {
       # extra whitespace bump on the x axis
-      # xaxl = axTicks(1)
-      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
-      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
-        if (!is.null(names(xlabs))) names(xlabs) else xlabs
-      if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
-      omar[1] = omar[1] + whtsbp
+      xaxlabs = axis_tick_labels(
+        x_axis_labels(xlabs),
+        lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+        cex = .cex_xaxs
+      )
+      omar[1] = omar[1] + tick_label_extent(xaxlabs, cex = .cex_xaxs)
     }
 
      par(mar = omar)
@@ -1252,38 +1238,6 @@ get_facet_fml = function(formula, data = NULL) {
 facet_axes_framed = function(frame.plot, xaxt, yaxt) {
   if (any(c(xaxt, yaxt) == "t")) return(TRUE)
   isTRUE(frame.plot)
-}
-
-
-## Categorical y-axis tick labels, for margin measurement.
-##
-## Used by the whtsbp label-width blocks in tinyplot.default() and
-## draw_facet_window(), which each measure strwidth() on the result but otherwise
-## differ in how they apply it.
-##
-## Returns a one-element list wrapping the label set when a type puts categories
-## on the y axis, or NULL when it does not and the caller should fall back to its
-## own axisTicks() computation. The wrapper matters: `levels(y)` is itself NULL
-## for a ridge plot over a *numeric* y, and that empty result must stay
-## distinguishable from "this isn't a categorical axis" -- otherwise the caller
-## would substitute numeric ticks and bump the margin that the label-less axis
-## does not need.
-##
-## `ylabs` covers the general case of a type that has placed named categories on
-## the y axis. The ridge and flipped-boxplot cases are special: ridge takes its
-## categories from the y factor's levels, while a flipped boxplot has had its
-## categories swapped onto `xlabs` by flip_datapoints().
-y_axis_labels = function(type, y, ylabs, xlabs, flip) {
-  if (identical(type, "ridge")) {
-    return(list(levels(y)))
-  }
-  if (!is.null(ylabs)) {
-    return(list(if (!is.null(names(ylabs))) names(ylabs) else ylabs))
-  }
-  if (identical(type, "boxplot") && isTRUE(flip) && !is.null(xlabs)) {
-    return(list(if (!is.null(names(xlabs))) names(xlabs) else xlabs))
-  }
-  NULL
 }
 
 

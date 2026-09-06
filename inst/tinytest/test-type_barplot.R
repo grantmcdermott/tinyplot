@@ -334,6 +334,26 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "barplot_offset_unobserved_sum")
 
+# `na.as.zero` overrides the FUN-derived default either way
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           type = type_barplot(na.as.zero = TRUE),
+           facet.args = list(ncol = 1))
+}
+expect_snapshot_plot(f, label = "barplot_na_as_zero_true")
+
+f = function() {
+  tinyplot(~ cyl | vs, data = mtcars, facet = "by",
+           type = type_barplot(na.as.zero = FALSE),
+           facet.args = list(ncol = 1))
+}
+expect_snapshot_plot(f, label = "barplot_na_as_zero_false")
+
+expect_error(
+  tinyplot(~ cyl, data = mtcars, type = type_barplot(na.as.zero = "yes")),
+  pattern = "na.as.zero"
+)
+
 # ... while a genuine zero still draws (and is still `drop.zeros`' business)
 zero_dat = data.frame(g = factor(c("a", "b", "c")), v = c(2, 0, 3))
 f = function() tinyplot(v ~ g, data = zero_dat, type = "barplot")

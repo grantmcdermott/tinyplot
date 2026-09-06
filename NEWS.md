@@ -174,6 +174,12 @@ related to plot layering. See "Bug fixes" below.
 
 - `type_ridge()` no longer errors under themes that set a relative (negative)
   numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
+- `type_barplot()` gains a `na.as.zero` argument for controlling whether a
+  category that no observation reaches is treated as a zero (and so marked with a
+  flat bar along the baseline) or left undrawn. The default `NULL` lets `FUN`
+  decide, which is usually what you want; see the new "Empty cells" section of
+  `?type_barplot` for the full rule and its interaction with `offset` and
+  `drop.zeros`. (#711 @grantmcdermott)
 - `type_barplot()` now asks `FUN` what a category that no observation reaches is
   worth, rather than treating it as zero unconditionally. Internally the bars are
   computed off a completed grid, so that stacking and centering have a

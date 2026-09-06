@@ -13,6 +13,7 @@ type_barplot(
   xlevels = NULL,
   xord = NULL,
   drop.zeros = FALSE,
+  na.as.zero = NULL,
   lighten = TRUE,
   xaxlabels = NULL
 )
@@ -90,6 +91,11 @@ Each argument defaults to \code{NULL}, i.e. keep the existing factor levels.}
 to \code{FALSE} (default) a zero height bar is still drawn for which the border
 lines will still be visible.}
 
+\item{na.as.zero}{logical. Should a category that no observation reaches be
+treated as a zero? Defaults to \code{NULL}, i.e. let \code{FUN} decide; see the "Empty
+cells" section below. Set to \code{TRUE} to always mark such categories with a
+zero-height bar, or \code{FALSE} to never draw them.}
+
 \item{lighten}{logical. Should the fills use a lighter, opaque tint of the
 series colour(s)? Default is \code{TRUE}, which keeps single- and multi-group
 displays consistent and lets the fill read cleanly over grid lines. Set to
@@ -106,6 +112,34 @@ frequencies) of the levels of \code{x}. For formulas of type \code{y ~ x} the va
 of \code{y} within each level of \code{x} is visualized, if necessary aggregated
 using some function (default: mean).
 }
+\section{Empty cells}{
+
+
+Grouping (\code{by}) or faceting a barplot asks for a bar per combination of
+category, group and facet, and the data need not observe every one of them.
+The bars are computed off the completed set regardless, since the stacked and
+centered positions have to line up, which leaves the question of what an
+unobserved combination is worth.
+
+By default \code{FUN} answers it, because the answer depends on the statistic
+being plotted: a \emph{count} of no observations is \code{0}, a real value, and the bar
+is drawn (flat, along the baseline); a \emph{mean} of no observations is undefined,
+and nothing is drawn. Formally, the cell takes \code{FUN(numeric(0))} whenever that
+is a single finite value (\code{length()} and \code{sum()} both give \code{0}) and is
+otherwise left undrawn (\code{mean()} gives \code{NaN}, \code{median()} and \code{var()} give
+\code{NA}). Use \code{na.as.zero} to override this either way.
+
+Two related points. A zero-height bar only reads as zero when it is measured
+\emph{from} zero, so \code{offset} layouts (waterfall, diverging/Likert) never draw one
+unless \code{na.as.zero = TRUE} asks for it explicitly. And a bar that \emph{is} drawn
+flat is subject to \code{drop.zeros} like any other zero, so
+\verb{na.as.zero = TRUE, drop.zeros = TRUE} cancel out.
+
+Note lastly that a zero-height bar is a device-level hairline: SVG devices do
+not render a rectangle of zero height at all (per the SVG specification), so
+these marks show up on screen and in raster or PDF output but not in SVG.
+}
+
 \examples{
 #
 ## Basic use (raw values)
@@ -187,6 +221,27 @@ tinyplot(
   facet = ~ Class, facet.args = list(nrow = 1),
   type = "barplot", beside = TRUE, flip = TRUE,
   theme = "clean2"
+)
+
+#
+## Empty cells
+
+# No (mt)car has 8 cylinders and a straight engine, so that bar is a count of
+# zero and is marked as such (flat, along the baseline)
+tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by")
+
+# With a y variable the statistic is a mean rather than a count, and the mean
+# of no observations is undefined, so nothing is drawn for the empty cells
+# (here carb = 1 for vs = 0, and carb = 3, 6 and 8 for vs = 1)
+tinyplot(
+  mpg ~ factor(carb), data = mtcars, type = "barplot",
+  facet = ~ vs, facet.args = list(ncol = 1)
+)
+
+# ... use na.as.zero to mark them anyway
+tinyplot(
+  mpg ~ factor(carb), data = mtcars, type = type_barplot(na.as.zero = TRUE),
+  facet = ~ vs, facet.args = list(ncol = 1)
 )
 
 #

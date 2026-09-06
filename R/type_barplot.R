@@ -69,6 +69,10 @@
 #' @param drop.zeros logical. Should bars with zero height be dropped? If set
 #'   to `FALSE` (default) a zero height bar is still drawn for which the border
 #'   lines will still be visible.
+#' @param na.as.zero logical. Should a category that no observation reaches be
+#'   treated as a zero? Defaults to `NULL`, i.e. let `FUN` decide; see the "Empty
+#'   cells" section below. Set to `TRUE` to always mark such categories with a
+#'   zero-height bar, or `FALSE` to never draw them.
 #' @param lighten logical. Should the fills use a lighter, opaque tint of the
 #'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group
 #'   displays consistent and lets the fill read cleanly over grid lines. Set to
@@ -76,6 +80,32 @@
 #' @param xaxlabels \[Deprecated\] a character vector with the axis labels for
 #'   the `x` variable. Use the top-level `xaxl` argument instead (see
 #'   [`tinylabel`]). This argument will be removed in a future release.
+#'
+#' @section Empty cells:
+#'
+#'   Grouping (`by`) or faceting a barplot asks for a bar per combination of
+#'   category, group and facet, and the data need not observe every one of them.
+#'   The bars are computed off the completed set regardless, since the stacked and
+#'   centered positions have to line up, which leaves the question of what an
+#'   unobserved combination is worth.
+#'
+#'   By default `FUN` answers it, because the answer depends on the statistic
+#'   being plotted: a *count* of no observations is `0`, a real value, and the bar
+#'   is drawn (flat, along the baseline); a *mean* of no observations is undefined,
+#'   and nothing is drawn. Formally, the cell takes `FUN(numeric(0))` whenever that
+#'   is a single finite value (`length()` and `sum()` both give `0`) and is
+#'   otherwise left undrawn (`mean()` gives `NaN`, `median()` and `var()` give
+#'   `NA`). Use `na.as.zero` to override this either way.
+#'
+#'   Two related points. A zero-height bar only reads as zero when it is measured
+#'   *from* zero, so `offset` layouts (waterfall, diverging/Likert) never draw one
+#'   unless `na.as.zero = TRUE` asks for it explicitly. And a bar that *is* drawn
+#'   flat is subject to `drop.zeros` like any other zero, so
+#'   `na.as.zero = TRUE, drop.zeros = TRUE` cancel out.
+#'
+#'   Note lastly that a zero-height bar is a device-level hairline: SVG devices do
+#'   not render a rectangle of zero height at all (per the SVG specification), so
+#'   these marks show up on screen and in raster or PDF output but not in SVG.
 #'
 #' @examples
 #' #
@@ -160,6 +190,27 @@
 #'   type = "barplot", beside = TRUE, flip = TRUE,
 #'   theme = "clean2"
 #' )
+#'
+#' #
+#' ## Empty cells (see the section of the same name below)
+#'
+#' # No mtcars car has 8 cylinders and a straight engine, so that bar is a count
+#' # of zero and is marked as such (flat, along the baseline)
+#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by")
+#'
+#' # With a y variable the statistic is a mean rather than a count, and the mean
+#' # of no observations is undefined, so nothing is drawn for the empty cells
+#' # (here carb = 1 for vs = 0, and carb = 3, 6 and 8 for vs = 1)
+#' tinyplot(
+#'   mpg ~ factor(carb), data = mtcars, type = "barplot",
+#'   facet = ~ vs, facet.args = list(ncol = 1)
+#' )
+#'
+#' # ... use na.as.zero to mark them anyway
+#' tinyplot(
+#'   mpg ~ factor(carb), data = mtcars, type = type_barplot(na.as.zero = TRUE),
+#'   facet = ~ vs, facet.args = list(ncol = 1)
+#' )
 #' 
 #' #
 #' ## Centering
@@ -223,7 +274,7 @@
 #' tinyplot_add(type = "vline", v = 1, lty = 2)
 #'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, lighten = TRUE, xaxlabels = NULL) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, na.as.zero = NULL, lighten = TRUE, xaxlabels = NULL) {
   if (!is.null(xaxlabels)) {
     warning(
       "'xaxlabels' is deprecated; use the top-level 'xaxl' argument instead, ",
@@ -232,8 +283,9 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
       call. = FALSE
     )
   }
+  assert_logical(na.as.zero, null.ok = TRUE)
   out = list(
-    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xord = xord, xaxlabels = xaxlabels, drop.zeros = drop.zeros, lighten = lighten),
+    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xord = xord, xaxlabels = xaxlabels, drop.zeros = drop.zeros, na.as.zero = na.as.zero, lighten = lighten),
     draw = draw_rect(),
     name = "barplot"
   )
@@ -242,7 +294,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
 }
 
 #' @importFrom stats aggregate
-data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
+data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, xaxlabels = NULL, drop.zeros = FALSE, na.as.zero = NULL, lighten = TRUE) {
     fun = function(settings, ...) {
         env2env(
           settings,
@@ -287,11 +339,15 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         ## reads as zero from a zero baseline, so `offset` layouts never draw one.
         na_y = is.na(datapoints$y)
         if (any(na_y)) {
-          empty = tryCatch(suppressWarnings(FUN(numeric(0))), error = function(e) NULL)
-          drawable = is.numeric(empty) && length(empty) == 1L &&
-            is.finite(empty) && is.null(offset)
-          datapoints$y[na_y] = if (drawable) empty else 0
-          if (!drawable) datapoints$.unobs = na_y
+          fill = 0
+          if (is.null(na.as.zero)) {
+            empty = tryCatch(suppressWarnings(FUN(numeric(0))), error = function(e) NULL)
+            defined = is.numeric(empty) && length(empty) == 1L && is.finite(empty)
+            if (defined) fill = empty
+            na.as.zero = defined && is.null(offset)
+          }
+          datapoints$y[na_y] = if (na.as.zero) fill else 0
+          if (!na.as.zero) datapoints$.unobs = na_y
         }
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)

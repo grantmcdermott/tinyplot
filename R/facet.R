@@ -194,10 +194,6 @@ draw_facet_window = function(
           free_lims = .yfree, cex = .cex_yaxs
         )
         whtsbp = tick_label_extent(yaxlabs, cex = .cex_yaxs)
-        if (whtsbp > 0) {
-          omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
-          fmar[2] = fmar[2] + whtsbp * cex_fct_adj
-        }
         # The label width above is reserved once, and the nmar/noma split below
         # hands it to the *outer* margin -- correct when only the leftmost facet
         # draws a y axis. But when interior facets draw their own (e.g. framed
@@ -205,8 +201,13 @@ draw_facet_window = function(
         # labels overflow into the neighbouring panel. So only release it back to
         # the outer margin when interior axes aren't drawn at all; same rule
         # (and same reason) as the inter-facet gap above.
-        if (.outer_axes_eff) {
-          fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
+        # Both are nested: nothing reserved, nothing to release.
+        if (whtsbp > 0) {
+          omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
+          fmar[2] = fmar[2] + whtsbp * cex_fct_adj
+          if (.outer_axes_eff) {
+            fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
+          }
         }
       }
       if (par("las") %in% 2:3) {
@@ -222,14 +223,14 @@ draw_facet_window = function(
           free_lims = .xfree, cex = .cex_xaxs
         )
         whtsbp = tick_label_extent(xaxlabs, cex = .cex_xaxs)
+        # As per the y axis above: keep the label width in fmar when interior
+        # facets draw their own x axis, else release it to the outer margin.
         if (whtsbp > 0) {
           omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
           fmar[1] = fmar[1] + whtsbp * cex_fct_adj
-        }
-        # As per the y axis above: keep the label width in fmar when interior
-        # facets draw their own x axis, else release it to the outer margin.
-        if (.outer_axes_eff) {
-          fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
+          if (.outer_axes_eff) {
+            fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
+          }
         }
       }
 

@@ -180,8 +180,8 @@ related to plot layering. See "Bug fixes" below.
   - `type_barplot()` gains a `na.as.zero` argument for controlling whether a
     category that no observation reaches is treated as a zero (and so marked
     with a flat bar along the baseline) or left undrawn. The default `NULL`
-    lets `FUN` decide; see the new "Empty cells" section of `?type_barplot`.
-    (#711 @grantmcdermott)
+    lets `FUN` decide; see the new "Implicit zeros and empty cells" section of
+    `?type_barplot`. (#711 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -198,8 +198,8 @@ related to plot layering. See "Bug fixes" below.
     implicit zero; at least not unconditionally. Instead, behaviour is now
     governed by explicit rules, e.g. derived from `FUN` or the new `na.as.zero`
     argument (above). At the same time, explicit zeros remain unaffected. Again,
-    see the new "Empty cells" section of `?type_barplot` for details and
-    examples. (#711 @grantmcdermott)
+    see the new "Implicit zeros and empty cells" section of `?type_barplot` for
+    details and examples. (#711 @grantmcdermott)
 - `type_ridge()` no longer errors under themes that set a relative (negative)
   numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
 - Layers added with `tinyplot_add()` now align correctly on a categorical axis:

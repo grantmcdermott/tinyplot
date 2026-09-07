@@ -112,35 +112,33 @@ frequencies) of the levels of \code{x}. For formulas of type \code{y ~ x} the va
 of \code{y} within each level of \code{x} is visualized, if necessary aggregated
 using some function (default: mean).
 }
-\section{Empty cells}{
+\section{Implicit zeros and empty cells}{
 
 
-Grouping (\code{by}) or faceting a barplot asks for a bar per combination of
-category, group and facet, and the data need not observe every one of them.
-The bars are computed off the completed set regardless, since the stacked and
-centered positions have to line up, which leaves the question of what an
-unobserved combination is worth.
+Grouping (\code{by}) or faceting a barplot asks for a bar per unique combination
+(i.e., category + group + facet). However, some combinations may not be
+supported by any observations in the data. In these cases, the bars are
+still computed off the completed combination set; particularly since stacked
+and centered barplots have to line up regardless. Yet this in turn invites
+the question of whether an "empty" cell should be read as an implicit zero,
+or treated as missing (\code{NA}).
 
-By default \code{FUN} answers it, because the answer depends on the statistic
-being plotted: a \emph{count} of no observations is \code{0}, a real value, and the bar
-is drawn (flat, along the baseline); a \emph{mean} of no observations is undefined,
-and nothing is drawn. Formally, the cell takes \code{FUN(numeric(0))} whenever that
-is a single finite value (\code{length()} and \code{sum()} both give \code{0}) and is
-otherwise left undrawn (\code{mean()} gives \code{NaN}, \code{median()} and \code{var()} give
-\code{NA}). Use \code{na.as.zero} to override this either way. Note that
-\code{na.as.zero = TRUE} marks only the categories that could have held data:
-where \code{x}, \code{by} or \code{facet} share a variable, the combinations that cannot
-occur are never drawn.
+In most cases, the question is answered by the \code{FUN} aggregation. This is
+because it computes the actual value that is being plotted. For example, a
+\emph{count} of no observations is \code{0}, whereas a \emph{mean} of no observations is
+undefined and thus better treated as \code{NA} (similarly for other summary
+statistics like the variance or median). Nonetheless, users can override
+this behaviour either way with the \code{na.as.zero} argument.
 
-Two related points. A zero-height bar only reads as zero when it is measured
-\emph{from} zero, so \code{offset} layouts (waterfall, diverging/Likert) never draw one
-unless \code{na.as.zero = TRUE} asks for it explicitly. And a bar that \emph{is} drawn
-flat is subject to \code{drop.zeros} like any other zero, so
-\verb{na.as.zero = TRUE, drop.zeros = TRUE} cancel out.
-
-Note lastly that a zero-height bar is a device-level hairline: SVG devices do
-not render a rectangle of zero height at all (per the SVG specification), so
-these marks show up on screen and in raster or PDF output but not in SVG.
+Three related points are worth highlighting. First, a zero-height bar only
+reads as zero when it is measured \emph{from} zero. So \code{offset} layouts
+(waterfall, diverging/Likert) never draw one unless \code{na.as.zero = TRUE}
+asks for it explicitly. Second, a "zero" combination is still subject to
+the \code{drop.zeros} argument like any other zero. So
+\verb{na.as.zero = TRUE, drop.zeros = TRUE} cancel out. Finally,
+\code{na.as.zero = TRUE} marks only the categories that \emph{could} have held data.
+Where \code{x}, \code{by} or \code{facet} are mapped to the same variable, for example,
+most combinations cannot occur at all---and are never drawn, regardless.
 }
 
 \examples{
@@ -200,11 +198,11 @@ tinyplot(
 
 # of course, we don't have to aggregate if we specify groups (stacked or non)
 tinyplot(extra ~ ID | drug, data = sleep2, type = "barplot", beside = TRUE)
-# Note: We used automatic argument passing for 'xord', `FUN`, etc. above. But
-# this wouldn't work for `width`, since it would conflict with the top-level
-# `tinyplot(..., width = <width>)` argument. It's safer to pass these args
-# through the `type_barplot()` functional equivalent...
 
+# Aside: We used automatic argument passing for 'xord', `FUN`, etc. above.
+# But this wouldn't work for `width`, since it would conflict with the
+# top-level `tinyplot(..., width = <width>)` argument. It's safer to pass
+# these args through the `type_barplot()` functional equivalent...
 tinyplot(
   extra ~ ID | drug, data = sleep2,
   type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
@@ -234,23 +232,25 @@ tinyplot(
 )
 
 #
-## Empty cells (see the section of the same name below)
+## Implicit zeros and empty cells (see the section of the same name above)
 
-# No mtcars car has 8 cylinders and a straight engine, so that bar is a count
+# No (mt)car has 8 cylinders and a straight engine, so that bar is a count
 # of zero and is marked as such (flat, along the baseline)
 tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by")
 
-# With a y variable the statistic is a mean rather than a count, and the mean
-# of no observations is undefined, so nothing is drawn for the empty cells
-# (here carb = 1 for vs = 0, and carb = 3, 6 and 8 for vs = 1)
+# But in this example, the aggregating statistic is a mean rather than a
+# count. The mean of unobserved combinations (e.g.,  carb==1 & vs==0) is
+# is undefined, so nothing is drawn for the empty cells
 tinyplot(
-  mpg ~ factor(carb), data = mtcars, type = "barplot",
+  mpg ~ factor(carb), data = mtcars,
+  type = "barplot",
   facet = ~ vs, facet.args = list(ncol = 1)
 )
 
-# ... use na.as.zero to mark them anyway
+# ... use na.as.zero to override and mark as (implicit) zeros
 tinyplot(
-  mpg ~ factor(carb), data = mtcars, type = type_barplot(na.as.zero = TRUE),
+  mpg ~ factor(carb), data = mtcars,
+  type = type_barplot(na.as.zero = TRUE),
   facet = ~ vs, facet.args = list(ncol = 1)
 )
 

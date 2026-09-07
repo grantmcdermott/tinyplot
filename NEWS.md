@@ -67,7 +67,7 @@ enable finer control and customization of faceted plots:
   unused one sat. Note the distinction from `drop` above: the latter removes
   empty _facets_, whereas `drop.levels` removes unused _categories within_ a
   facet. Default is `FALSE`, i.e. every facet keeps the full set of categories.
-  (#711 @grantmcdermott)
+  (#718 @grantmcdermott)
 - `labeller`: for formatting facet titles via `tinylabel()`. Accepts the usual
   mix of convenience keywords (symbols) known to `tinylabel()`, or formatting
   functions. A (named) vector or list can be used to separately format
@@ -181,7 +181,7 @@ related to plot layering. See "Bug fixes" below.
     category that no observation reaches is treated as a zero (and so marked
     with a flat bar along the baseline) or left undrawn. The default `NULL`
     lets `FUN` decide; see the new "Implicit zeros and empty cells" section of
-    `?type_barplot`. (#711 @grantmcdermott)
+    `?type_barplot`. (#718 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -248,10 +248,10 @@ related to plot layering. See "Bug fixes" below.
   `facet.args = list(free = TRUE)`):
   - Panels now keep every category of a categorical axis, regardless of type,
     so that their ticks line up with each other. Use the new `drop.levels` arg
-    (above) for the opposite behaviour. (#711 @grantmcdermott)
+    (above) for the opposite behaviour. (#718 @grantmcdermott)
   - The geometry around the end categories of a categorical axis is no longer
     clipped, e.g. the first and last box of a faceted boxplot.
-    (#711 @grantmcdermott)
+    (#718 @grantmcdermott)
   - A categorical y-axis no longer errors out with `'labels' is supplied and
 not 'at'`. The free-t code path listed the eligible types by name, so
     any other type lost its tick positions while keeping the corresponding

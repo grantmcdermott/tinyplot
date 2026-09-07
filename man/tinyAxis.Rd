@@ -4,7 +4,7 @@
 \alias{tinyAxis}
 \title{Generic function for adding an axis to a (tiny)plot}
 \usage{
-tinyAxis(x = NULL, ..., type = "standard", labeller = NULL)
+tinyAxis(x = NULL, ..., type = "standard", labeller = NULL, srt = NULL)
 }
 \arguments{
 \item{x}{an object which indicates the range over which an axis should
@@ -43,6 +43,11 @@ cannot be distinguished from a formatting keyword when \code{x} is of length
 one, and would not follow the categories if they were reordered. Pass a
 function if you want to compute the labels positionally, e.g.
 \code{function(x) LETTERS[seq_along(x)]}.}
+
+\item{srt}{numeric giving the tick label rotation in degrees
+counter-clockwise, or \code{NULL} (default) to leave the labels to base
+\code{axis()} and its \code{las} setting. Any non-zero value is drawn by hand, since
+\code{axis()} only understands the four right angles that \code{las} selects.}
 }
 \description{
 Internal function used for adding an axis to a \code{\link{tinyplot}}

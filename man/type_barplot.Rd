@@ -110,6 +110,10 @@ using some function (default: mean).
 #
 ## Basic use (raw values)
 
+# (named) atomic vector
+tinyplot(c(A = 1, B = 2, C = 3), type = "barplot")
+
+# formula + data.frame method
 tinyplot(GNP ~ Year, data = longley, type = "barplot")
 
 tinyplot(demand ~ Time, data = BOD, type = "bar") # "bar" is a shorthand
@@ -119,6 +123,18 @@ tinyplot_add(type = "text", pos = 3, xpd = NA)    # add y values as text
 tinyplot(demand ~ Time, data = BOD, type = "bar", xord = "asc")
 jumble = c("7","1","5","2","4","3") # note: Time = 6 is also missing
 tinyplot(demand ~ Time, data = BOD, type = "bar", xlevels = jumble) 
+
+# useful top-level args:
+# 1) xaxl to format the x labels, e.g. with a dictionary, keyword, or (here:)
+#    function
+# 2) xaxr to rotate long category labels (best used with a dynamic theme)
+tinyplot(
+  demand ~ Time, data = BOD,
+  type = "bar",
+  xaxl = function(x) paste("Time =", x),
+  xaxr = 45,
+  theme = "broadsheet"
+)
 
 #
 ## Aggregated vs grouped values (multiple ys per x)
@@ -156,16 +172,7 @@ tinyplot(
   extra ~ ID | drug, data = sleep2,
   type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
 )
-
-# speaking of top-level args, use xaxl to format the x labels, e.g. with a
-# dictionary, keyword, or (here:) function
-
-tinyplot(
-  extra ~ ID | drug, data = sleep2,
-  type = type_barplot(beside = TRUE, xord = "desc"),
-  xaxl = as.roman
-)
-
+ 
 #
 ## matrix method (no formula required)
 

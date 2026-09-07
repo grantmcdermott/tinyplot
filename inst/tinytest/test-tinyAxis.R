@@ -4,7 +4,7 @@ using("tinysnapshot")
 cyl_labs = c(
   "4" = "Four cylinders",
   "6" = "Six cylinders",
-  "8" = "Eight cyclinders"
+  "8" = "Eight cylinders"
 )
 bars = function(...) {
   tinyplot(~cyl, data = mtcars, type = "barplot", xaxl = cyl_labs,

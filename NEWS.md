@@ -131,11 +131,11 @@ related to plot layering. See "Bug fixes" below.
 #### Other new features
 
 - New top-level `xaxr` and `yaxr` arguments allow rotating of the x- and y-axis
-  tick labels by abritary angles, closing a long-standing feature request
+  tick labels by arbitrary angles, closing a long-standing feature request
   (#346). Note that setting one overrides `las` for that axis. Best combined
-  with a dynamic theme, since margins are resized to fit the rotated. Also
-  settable via `tpar("x/yaxr")` and thus as part of a `tinytheme` too.
-  (#717 @grantmcdermott)
+  with a dynamic theme, since the plot margins are resized to fit the rotated
+  labels. Also settable via `tpar("x/yaxr")` and thus as part of a `tinytheme`
+  too. (#717 @grantmcdermott)
 - Custom plot types have more control over the surrounding plot machinery, via a
   new `type_hints` mechanism. A type can declare properties about itself---that
   it draws its own axes, needs a secondary right-hand axis, uses proportional

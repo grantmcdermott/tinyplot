@@ -232,29 +232,6 @@ tinyplot(
 )
 
 #
-## Implicit zeros and empty cells (see the section of the same name above)
-
-# No (mt)car has 8 cylinders and a straight engine, so that bar is a count
-# of zero and is marked as such (flat, along the baseline)
-tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by")
-
-# But in this example, the aggregating statistic is a mean rather than a
-# count. The mean of unobserved combinations (e.g.,  carb==1 & vs==0) is
-# is undefined, so nothing is drawn for the empty cells
-tinyplot(
-  mpg ~ factor(carb), data = mtcars,
-  type = "barplot",
-  facet = ~ vs, facet.args = list(ncol = 1)
-)
-
-# ... use na.as.zero to override and mark as (implicit) zeros
-tinyplot(
-  mpg ~ factor(carb), data = mtcars,
-  type = type_barplot(na.as.zero = TRUE),
-  facet = ~ vs, facet.args = list(ncol = 1)
-)
-
-#
 ## Centering
 
 # Centered barplot for conditional proportions of "dark" (black/brown) vs.
@@ -294,7 +271,6 @@ lik = expand.grid(
   question = c("Pay", "Workload", "Manager", "Culture"),
   response = c("Strong disagree", "Disagree", "Agree", "Strong agree", "Unsure")
 )
-lik$response = factor(lik$response, levels = unique(lik$response))
 lik$share = c( # proportions summing to 1 within each question
   .10, .25, .05, .15,
   .20, .30, .15, .20,
@@ -314,5 +290,28 @@ tinyplot(
 )
 tinyplot_add(type = "vline")
 tinyplot_add(type = "vline", v = 1, lty = 2)
+
+#
+## Implicit zeros and empty cells (see the section of the same name above)
+
+# No (mt)car has 8 cylinders and a straight engine, so that bar is a count
+# of zero and is marked as such (flat, along the baseline)
+tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by")
+
+# But in this example, the aggregating statistic is a mean rather than a
+# count. The mean of unobserved combinations (e.g.,  carb==1 & vs==0) is
+# is undefined, so nothing is drawn for the empty cells
+tinyplot(
+  mpg ~ factor(carb), data = mtcars,
+  type = "barplot",
+  facet = ~ vs, facet.args = list(ncol = 1)
+)
+
+# ... use na.as.zero to override and mark as (implicit) zeros
+tinyplot(
+  mpg ~ factor(carb), data = mtcars,
+  type = type_barplot(na.as.zero = TRUE),
+  facet = ~ vs, facet.args = list(ncol = 1)
+)
 
 }

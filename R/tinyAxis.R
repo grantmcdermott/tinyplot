@@ -310,9 +310,8 @@ rotated_label_adj = function(side, srt) {
 ##
 ## base axis() only understands las 0:3, so anything else has to be drawn by
 ## hand: the caller suppresses axis()'s own labels and calls this for the line
-## of text. Labels sit mgp[2] + |tcl| lines off the axis, matching where axis()
-## would have put them, and are drawn with xpd = NA so a long string can lean
-## out into the figure margin.
+## of text. Labels sit mgp[2] lines off the axis, where axis() puts its own, and
+## are drawn with xpd = NA so a long string can lean out into the margin.
 ##
 ## The offset is a *line* count, so it converts to user coordinates differently
 ## at every device size. Computing it once at draw time would bake in the
@@ -334,7 +333,7 @@ draw_rotated_labels = function(side, at, labels, srt, cex = 1, col = NULL,
 
 rotated_labels_draw = function(side, at, labels, srt, cex, col, font) {
   usr = par("usr")
-  off = (par("mgp")[2L] + max(0, -par("tcl"))) * par("csi")
+  off = par("mgp")[2L] * par("csi")
   adj = rotated_label_adj(side, srt)
   args = list(labels = labels, srt = srt, adj = adj, cex = cex, xpd = NA)
   if (!is.null(col)) args[["col"]] = col

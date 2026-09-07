@@ -258,10 +258,19 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
           if (is.null(xlab) || identical(xlab, "Index")) xlab = ylab
-          if (is.null(settings$y_dep) && is.null(ylab)) ylab = "Count"
-          datapoints$y = numeric(nrow(datapoints))          
-          if (!is.null(FUN)) warning("without 'y' variable 'FUN' specification is ignored")
-          FUN = length
+          if (is.character(attr(datapoints, "row.names"))) {
+            # A named atomic vector: its names are the categories and its values
+            # the bar heights (#714)
+            datapoints$y = datapoints$x
+            datapoints$x = rownames(datapoints)
+            if (is.null(FUN)) FUN = function(x, ...) mean(x, ..., na.rm = TRUE)
+          } else {
+            # Nothing to plot but the rows themselves, so the bars are counts.
+            if (is.null(settings$y_dep) && is.null(ylab)) ylab = "Count"
+            datapoints$y = numeric(nrow(datapoints))
+            if (!is.null(FUN)) warning("without 'y' variable 'FUN' specification is ignored")
+            FUN = length
+          }
         } else {
           if (is.null(FUN)) FUN = function(x, ...) mean(x, ..., na.rm = TRUE)
         }

@@ -2052,7 +2052,7 @@ tinyplot.formula = function(
   ## nice axis and legend labels
   dens_type = !is.null(type) && (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
   hist_type = !is.null(type) && (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
-  barp_type = !is.null(type) &&  (is.atomic(type) && identical(type, "barplot")) || (!is.atomic(type) && identical(type$name, "barplot"))
+  barp_type = !is.null(type) && (is.atomic(type) && type %in% c("bar", "barplot")) || (!is.atomic(type) && identical(type$name, "barplot"))
   if (is.null(x) && is.null(y)) {
     # Exception: both x and y NULL (e.g., ~ 0 with type = "segments").
     # Build labels from xmin/xmax/ymin/ymax names in the original call (m),

@@ -169,6 +169,8 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- Passing a named atomic vector to `type_barplot()` now uses the names as the
+  bar categories, matching base `barplot()`. (#714 @grantmcdermott)
 - `type_ridge()` no longer errors under themes that set a relative (negative)
   numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
 - Layers added with `tinyplot_add()` now align correctly when the base plot type

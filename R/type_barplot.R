@@ -95,7 +95,10 @@
 #'   and nothing is drawn. Formally, the cell takes `FUN(numeric(0))` whenever that
 #'   is a single finite value (`length()` and `sum()` both give `0`) and is
 #'   otherwise left undrawn (`mean()` gives `NaN`, `median()` and `var()` give
-#'   `NA`). Use `na.as.zero` to override this either way.
+#'   `NA`). Use `na.as.zero` to override this either way. Note that
+#'   `na.as.zero = TRUE` marks only the categories that could have held data:
+#'   where `x`, `by` or `facet` share a variable, the combinations that cannot
+#'   occur are never drawn.
 #'
 #'   Two related points. A zero-height bar only reads as zero when it is measured
 #'   *from* zero, so `offset` layouts (waterfall, diverging/Likert) never draw one
@@ -330,6 +333,13 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
           )
         }
         if (!is.null(xaxlabels)) levels(datapoints$x) = xaxlabels
+        ## Two aesthetics mapped to the same variable (`facet = "by"`, `by = x`, or
+        ## the same variable named twice) leave only the diagonal cells able to
+        ## hold data. Note this has to be settled before the aggregate() below
+        ## collapses the rows it is read off.
+        same_by_facet = isTRUE(facet_by) ||
+          identical(as.character(datapoints$by), as.character(datapoints$facet))
+        same_x_by = identical(as.character(datapoints$x), as.character(datapoints$by))
         datapoints = aggregate(datapoints[, "y", drop = FALSE], datapoints[, c("x", "by", "facet")], FUN = FUN, drop = FALSE)
         ## `drop = FALSE` completes the x-by-facet-by-by grid, which the stacking
         ## and centering below rely on. aggregate() fills the cells it invents with
@@ -347,7 +357,19 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
             na.as.zero = defined && is.null(offset)
           }
           datapoints$y[na_y] = if (na.as.zero) fill else 0
-          if (!na.as.zero) datapoints$.unobs = na_y
+          ## An off-diagonal cell of the above is impossible rather than empty, so
+          ## it is never drawn -- asking for zeros is not asking for combinations
+          ## that cannot exist.
+          impossible = rep(FALSE, nrow(datapoints))
+          if (same_by_facet) {
+            impossible = as.character(datapoints$by) != as.character(datapoints$facet)
+          }
+          if (same_x_by) {
+            impossible = impossible |
+              as.character(datapoints$x) != as.character(datapoints$by)
+          }
+          nodraw = if (na.as.zero) impossible else na_y | impossible
+          if (any(nodraw)) datapoints$.unobs = nodraw
         }
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)

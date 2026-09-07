@@ -127,7 +127,10 @@ is drawn (flat, along the baseline); a \emph{mean} of no observations is undefin
 and nothing is drawn. Formally, the cell takes \code{FUN(numeric(0))} whenever that
 is a single finite value (\code{length()} and \code{sum()} both give \code{0}) and is
 otherwise left undrawn (\code{mean()} gives \code{NaN}, \code{median()} and \code{var()} give
-\code{NA}). Use \code{na.as.zero} to override this either way.
+\code{NA}). Use \code{na.as.zero} to override this either way. Note that
+\code{na.as.zero = TRUE} marks only the categories that could have held data:
+where \code{x}, \code{by} or \code{facet} share a variable, the combinations that cannot
+occur are never drawn.
 
 Two related points. A zero-height bar only reads as zero when it is measured
 \emph{from} zero, so \code{offset} layouts (waterfall, diverging/Likert) never draw one
@@ -224,10 +227,10 @@ tinyplot(
 )
 
 #
-## Empty cells
+## Empty cells (see the section of the same name below)
 
-# No (mt)car has 8 cylinders and a straight engine, so that bar is a count of
-# zero and is marked as such (flat, along the baseline)
+# No mtcars car has 8 cylinders and a straight engine, so that bar is a count
+# of zero and is marked as such (flat, along the baseline)
 tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by")
 
 # With a y variable the statistic is a mean rather than a count, and the mean

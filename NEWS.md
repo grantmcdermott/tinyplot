@@ -192,6 +192,10 @@ related to plot layering. See "Bug fixes" below.
   `drop.zeros`' business. Consequently, `col = NA` is no longer needed to
   suppress those rules in a waterfall, and has been dropped from the example in
   `?type_barplot`. (#711 @grantmcdermott)
+- Relatedly, `type_barplot()` no longer draws bars for combinations that cannot
+  occur, i.e. where `x`, `by` or `facet` are mapped to the same variable, as in
+  `tinyplot(~cyl | cyl, type = "barplot")` or `facet = "by"`.
+  (#711 @grantmcdermott)
 - Free facets (`facet.args = list(free = TRUE)`) now keep every category of a
   categorical axis, so that the panels' ticks line up with each other. Panel
   limits were derived from each panel's own data range, which clipped any

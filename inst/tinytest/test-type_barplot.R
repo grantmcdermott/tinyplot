@@ -354,6 +354,24 @@ expect_error(
   pattern = "na.as.zero"
 )
 
+# Mapping two aesthetics to the same variable leaves only the diagonal cells able
+# to hold data, so the rest are impossible rather than empty and are never marked
+# as zeros -- not even with na.as.zero = TRUE. (#711)
+f = function() {
+  tinyplot(~ cyl | cyl, data = mtcars, type = "barplot", legend = FALSE,
+           main = "by == x: no phantom bars")
+}
+expect_snapshot_plot(f, label = "barplot_by_equals_x")
+
+# ... and the same where the facet, rather than x, repeats the `by` variable. The
+# `facet = "by"` keyword form of this is covered by barplot_facet above; here the
+# variable is simply named twice, which the keyword flag alone would miss.
+f = function() {
+  tinyplot(~ carb | vs, data = mtcars, type = "barplot", facet = ~vs,
+           facet.args = list(ncol = 1), main = "facet == by (same variable)")
+}
+expect_snapshot_plot(f, label = "barplot_facet_equals_by")
+
 # ... while a genuine zero still draws (and is still `drop.zeros`' business)
 zero_dat = data.frame(g = factor(c("a", "b", "c")), v = c(2, 0, 3))
 f = function() tinyplot(v ~ g, data = zero_dat, type = "barplot")

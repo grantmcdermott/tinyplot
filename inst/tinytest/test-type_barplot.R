@@ -301,3 +301,6 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "barplot_xaxl_dict")
 
+# A named atomic vector (#714)
+f = function() tinyplot(c("A" = 1, "B" = 2, "C" = 3), type = "barplot")
+expect_snapshot_plot(f, label = "barplot_named_vector")

@@ -169,18 +169,12 @@ draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inne
   )
 
   # Draw tick marks (white dashes)
-  lgnd_ticks = lgnd_labs
-  lgnd_ticks[labs_idx] = "-   -"
-  text(
-    x = lbl_x_anchor,
-    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
-    labels = lgnd_ticks,
-    cex = 1,
-    col = "white",
-    family = "sans",
-    xpd = NA,
-    adj = c(1, 0.5)
-  )
+  tick_y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs))[labs_idx]
+  tick_w = (rasterbox[3] - rasterbox[1]) / 5
+  segments(rasterbox[1], tick_y, rasterbox[1] + tick_w, tick_y,
+           col = "white", xpd = NA)
+  segments(rasterbox[3] - tick_w, tick_y, rasterbox[3], tick_y,
+           col = "white", xpd = NA)
 
   # Draw title
   text(
@@ -204,17 +198,13 @@ draw_gradient_labels_horizontal = function(rasterbox, lgnd_labs, legend_args) {
   )
 
   # Legend tick marks (white dashes)
-  lgnd_ticks = lgnd_labs
-  lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
-  text(
-    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
-    y = rasterbox[4],
-    labels = lgnd_ticks,
-    col = "white",
-    xpd = NA,
-    adj = c(0, 0.5),
-    srt = 90
-  )
+  labs_idx = !is.na(lgnd_labs)
+  tick_x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs))[labs_idx]
+  tick_h = (rasterbox[2] - rasterbox[4]) / 5
+  segments(tick_x, rasterbox[4], tick_x, rasterbox[4] + tick_h,
+           col = "white", xpd = NA)
+  segments(tick_x, rasterbox[2] - tick_h, tick_x, rasterbox[2],
+           col = "white", xpd = NA)
 
   # Legend title
   text(

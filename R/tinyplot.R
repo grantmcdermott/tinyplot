@@ -1367,6 +1367,34 @@ tinyplot.default = function(
       .whtsbp_x_raw = .whtsbp_x_raw * cex_fct_adj
     }
 
+    # Each axis title has to clear the tick labels drawn on *its own* side, and
+    # a flipped boxplot has the two variables trade sides -- so a measurement
+    # taken from the x variable may belong to side 2, and vice versa.
+    #
+    # Side 1 normally takes the x measurement. Flipped, the x labels are no
+    # longer down there at all (feeding it their extent pushes the title clean
+    # off the canvas), so it takes the y measurement if that side is rotated and
+    # nothing otherwise -- plain horizontal ticks need no allowance.
+    .side1_raw = if (.xside == 1L) {
+      .whtsbp_x_raw
+    } else if (!is.null(yaxr)) {
+      .whtsbp_y_raw
+    } else {
+      0
+    }
+
+    # The side-2 title has to clear whatever tick labels are drawn on side 2.
+    # Normally that is whtsbp_y_raw, and under flip it still is: y_axis_labels()
+    # is itself flip-aware and hands back the categorical labels that a flipped
+    # boxplot puts there. The one case it cannot cover is those same labels
+    # rotated -- it measures them lying flat -- so take the rotated measurement
+    # instead exactly then, and leave every other case alone.
+    .side2_raw = if (!is.null(xaxr) && .xside == 2L) {
+      .whtsbp_x_raw
+    } else {
+      .whtsbp_y_raw
+    }
+
     dynmar_computed = .theme_mar + .dyn
     par(mar = dynmar_computed + .whtsbp)
   }
@@ -1478,8 +1506,8 @@ tinyplot.default = function(
     ann = as.logical(ann)
     if (ann) draw_title(
       main, sub, cap, xlab, ylab, legend, legend_args, opar,
-      xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
-      ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0
+      xlab_line_offset = if (!is.null(dynmar_computed)) .side1_raw else 0,
+      ylab_line_offset = if (!is.null(dynmar_computed)) .side2_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0
     )
   }
 

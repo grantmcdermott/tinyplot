@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='504.00pt' height='504.00pt' viewBox='0 0 504.00 504.00'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA='>
+    <rect x='0.00' y='0.00' width='504.00' height='504.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
+<text x='274.51' y='499.68' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='14.67px' lengthAdjust='spacingAndGlyphs'>cyl</text>
+<text transform='translate(12.96,194.14) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.02px' lengthAdjust='spacingAndGlyphs'>Count</text>
+<text transform='translate(134.30,394.05) rotate(-90)' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='75.36px' lengthAdjust='spacingAndGlyphs'>Four cylinders</text>
+<text transform='translate(278.64,394.05) rotate(-90)' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='67.36px' lengthAdjust='spacingAndGlyphs'>Six cylinders</text>
+<text transform='translate(422.99,394.05) rotate(-90)' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='84.03px' lengthAdjust='spacingAndGlyphs'>Eight cyclinders</text>
+<line x1='53.66' y1='379.65' x2='53.66' y2='15.91' style='stroke-width: 0.75;' />
+<line x1='53.66' y1='379.65' x2='49.34' y2='379.65' style='stroke-width: 0.75;' />
+<line x1='53.66' y1='327.69' x2='49.34' y2='327.69' style='stroke-width: 0.75;' />
+<line x1='53.66' y1='275.72' x2='49.34' y2='275.72' style='stroke-width: 0.75;' />
+<line x1='53.66' y1='223.76' x2='49.34' y2='223.76' style='stroke-width: 0.75;' />
+<line x1='53.66' y1='171.80' x2='49.34' y2='171.80' style='stroke-width: 0.75;' />
+<line x1='53.66' y1='119.84' x2='49.34' y2='119.84' style='stroke-width: 0.75;' />
+<line x1='53.66' y1='67.88' x2='49.34' y2='67.88' style='stroke-width: 0.75;' />
+<line x1='53.66' y1='15.91' x2='49.34' y2='15.91' style='stroke-width: 0.75;' />
+<text x='43.58' y='383.78' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='43.58' y='331.82' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>2</text>
+<text x='43.58' y='279.85' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text x='43.58' y='227.89' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>6</text>
+<text x='43.58' y='175.93' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>8</text>
+<text x='43.58' y='123.97' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text x='43.58' y='72.01' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>12</text>
+<text x='43.58' y='20.04' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>14</text>
+</g>
+<defs>
+  <clipPath id='cpNTMuNjZ8NDk1LjM2fDguNjR8Mzc5LjY1'>
+    <rect x='53.66' y='8.64' width='441.70' height='371.01' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNTMuNjZ8NDk1LjM2fDguNjR8Mzc5LjY1)'>
+<rect x='70.02' y='93.86' width='120.29' height='285.79' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='214.37' y='197.78' width='120.29' height='181.87' style='stroke-width: 0.75; fill: #D3D3D3;' />
+<rect x='358.71' y='15.91' width='120.29' height='363.73' style='stroke-width: 0.75; fill: #D3D3D3;' />
+</g>
+</g>
+</svg>

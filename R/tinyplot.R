@@ -279,8 +279,11 @@
 #'   in degrees counter-clockwise; `NULL` (the default) leaves them unrotated.
 #'   Setting one overrides `las` for that axis alone, leaving the other axis
 #'   under `las` as usual, and `0` (or any multiple of 360) counts as no
-#'   rotation at all. Defaults to the value of `tpar("xaxr")` / `tpar("yaxr")`,
-#'   whose documentation covers the margin and label-spacing caveats.
+#'   rotation at all. Best paired with a dynamic theme (see `tinytheme`), since
+#'   that is what resizes the margins to fit the tilted labels; under the
+#'   default theme a long rotated label will be clipped unless you widen `mar`
+#'   yourself. Defaults to the value of `tpar("xaxr")` / `tpar("yaxr")`, whose
+#'   documentation covers this and the label-spacing caveat in more detail.
 #' @param log a character string which contains `"x"` if the x axis is to be
 #'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
 #'   if both axes are to be logarithmic.

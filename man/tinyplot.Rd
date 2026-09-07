@@ -442,8 +442,11 @@ affects the \emph{appearance} of the tick labels only; use in conjunction with
 in degrees counter-clockwise; \code{NULL} (the default) leaves them unrotated.
 Setting one overrides \code{las} for that axis alone, leaving the other axis
 under \code{las} as usual, and \code{0} (or any multiple of 360) counts as no
-rotation at all. Defaults to the value of \code{tpar("xaxr")} / \code{tpar("yaxr")},
-whose documentation covers the margin and label-spacing caveats.}
+rotation at all. Best paired with a dynamic theme (see \code{tinytheme}), since
+that is what resizes the margins to fit the tilted labels; under the
+default theme a long rotated label will be clipped unless you widen \code{mar}
+yourself. Defaults to the value of \code{tpar("xaxr")} / \code{tpar("yaxr")}, whose
+documentation covers this and the label-spacing caveat in more detail.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be
 logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}

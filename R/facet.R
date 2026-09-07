@@ -212,10 +212,10 @@ draw_facet_window = function(
         # (and same reason) as the inter-facet gap above.
         # Both are nested: nothing reserved, nothing to release.
         if (whtsbp > 0) {
-          omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
-          fmar[2] = fmar[2] + whtsbp * cex_fct_adj
+          omar[.yside] = omar[.yside] + whtsbp * cex_fct_adj
+          fmar[.yside] = fmar[.yside] + whtsbp * cex_fct_adj
           if (.outer_axes_eff) {
-            fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
+            fmar[.yside] = fmar[.yside] - (whtsbp * cex_fct_adj)
           }
         }
       }
@@ -239,10 +239,10 @@ draw_facet_window = function(
         # As per the y axis above: keep the label width in fmar when interior
         # facets draw their own x axis, else release it to the outer margin.
         if (whtsbp > 0) {
-          omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
-          fmar[1] = fmar[1] + whtsbp * cex_fct_adj
+          omar[.xside] = omar[.xside] + whtsbp * cex_fct_adj
+          fmar[.xside] = fmar[.xside] + whtsbp * cex_fct_adj
           if (.outer_axes_eff) {
-            fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
+            fmar[.xside] = fmar[.xside] - (whtsbp * cex_fct_adj)
           }
         }
       }

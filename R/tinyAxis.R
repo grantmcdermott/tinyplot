@@ -60,8 +60,16 @@ tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL,
       # positions it settled on, which is also what the rotated text needs.
       lab = args[["labels"]]
       args[["labels"]] = FALSE
+      # Take a date-time axis's ticks here rather than letting Axis() pick them,
+      # so that pretty()'s chosen label format comes back with them.
+      if (is.null(args[["at"]]) && inherits(x, c("Date", "POSIXt"))) {
+        args[["at"]] = axTicksDateTime(args[["side"]], x = x)
+      }
       at = do.call("Axis", args)
-      if (is.null(lab) || isTRUE(lab)) lab = format(at, trim = TRUE)
+      if (is.null(lab) || isTRUE(lab)) {
+        fmt = attr(args[["at"]], "format")
+        lab = if (!is.null(fmt)) format(at, format = fmt) else format(at, trim = TRUE)
+      }
       draw_rotated_labels(
         side = args[["side"]], at = at, labels = lab, srt = srt,
         cex = args[["cex.axis"]] %||% par("cex.axis"),
@@ -87,8 +95,13 @@ axTicksDateTime = function(side, x, ...) {
     class(rangeDateTime) = "Date"
   }
   z = pretty(rangeDateTime, n = par("lab")[2 - side%%2])
+  # pretty() picks a compact label format for the range and returns it as an
+  # attribute, which is what axis.Date()/axis.POSIXct() label with. Subsetting
+  # drops it, so carry it over for callers that format the ticks themselves.
+  fmt = attr(z, "format")
   keep = z >= range[1L] & z <= range[2L]
   z = z[keep]
+  if (!is.null(fmt)) attr(z, "format") = fmt
   return(z)
 }
 

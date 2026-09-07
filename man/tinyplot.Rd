@@ -439,25 +439,11 @@ affects the \emph{appearance} of the tick labels only; use in conjunction with
 \code{x/yaxb} if you would like to adjust the position of the tick marks too.}
 
 \item{xaxr, yaxr}{numeric giving the rotation of the x- or y-axis tick labels,
-in degrees counter-clockwise. Defaults to the value of \code{tpar("xaxr")} /
-\code{tpar("yaxr")}, which is \code{NULL} (no rotation) unless a theme sets it.
-Rotation is an alternative to \code{las}, which is limited to the four right
-angles; any other angle is drawn by tinyplot rather than base \code{axis()}.
-
-Setting one of these \strong{overrides \code{las} for that axis alone}, leaving the
-other axis under \code{las} as usual. So \code{las = 2} together with \code{xaxr = 45}
-tilts the x tick labels to 45 degrees while the y tick labels stay
-perpendicular; the reserved margin follows the angle that wins. A rotation
-of \code{0} (or any multiple of 360) counts as no rotation at all, and hands the
-axis back to \code{las}.
-
-Margins are widened to fit the tilted labels under a dynamic theme (see
-\code{tinytheme}), including the sideways lean of the labels at either end of
-the axis. Note that tinyplot draws rotated labels itself, so it does not
-inherit the automatic thinning that base \code{axis()} applies via \code{gap.axis}:
-labels overlap once the spacing between ticks drops below the height of a
-line of text, which for a rotation of \code{srt} degrees means a tick spacing
-narrower than \verb{line height / sin(srt)}.}
+in degrees counter-clockwise; \code{NULL} (the default) leaves them unrotated.
+Setting one overrides \code{las} for that axis alone, leaving the other axis
+under \code{las} as usual, and \code{0} (or any multiple of 360) counts as no
+rotation at all. Defaults to the value of \code{tpar("xaxr")} / \code{tpar("yaxr")},
+whose documentation covers the margin and label-spacing caveats.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be
 logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}

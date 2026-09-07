@@ -228,10 +228,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#legend-transparency" id="toc-legend-transparency" class="nav-link" data-scroll-target="#legend-transparency">Legend transparency</a></li>
   <li><a href="#multicolumn-legends" id="toc-multicolumn-legends" class="nav-link" data-scroll-target="#multicolumn-legends">Multicolumn legends</a></li>
   </ul></li>
-  <li><a href="#labels" id="toc-labels" class="nav-link" data-scroll-target="#labels">Labels</a>
-  <ul class="collapse">
-  <li><a href="#rotated-axis-labels" id="toc-rotated-axis-labels" class="nav-link" data-scroll-target="#rotated-axis-labels">Rotated axis labels</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -414,36 +410,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>(Admittedly, the end result is a bit compressed here because of the default aspect ratio that we use for figures on our website. But for regular interactive plots, or plots saved to disk, the aesthetic effect should be quite pleasing.)</p>
-</section>
-</section>
-<section id="labels" class="level2">
-<h2 class="anchored" data-anchor-id="labels">Labels</h2>
-<section id="rotated-axis-labels" class="level3">
-<h3 class="anchored" data-anchor-id="rotated-axis-labels">Rotated axis labels</h3>
-<p>When category labels are long or overlapping, users may want to rotate them for readability. One option is fully perpendicular (90°) axis labels, which <code>tinyplot</code> supports via themes, e.g.&nbsp;<code>tinytheme("clean", las = 2)</code>. If a user wants finer control over the degree of rotation—say, 45°—this requires a bit more manual effort since we do not support custom rotation out of the box. The workaround involves three steps:</p>
-<ol type="1">
-<li>Suppress the default x-axis with <code>xaxt = "n"</code>.</li>
-<li>Use <code>text()</code> to manually add rotated labels.</li>
-<li>Optionally, clear the y-axis label by setting <code>ylab = ""</code>.</li>
-</ol>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinyplot)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span>cyl, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">0</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Four cylinders"</span>, <span class="st">"Six cylinders"</span>, <span class="st">"Eight cylinders"</span>),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">srt =</span> <span class="dv">45</span>,          <span class="co"># rotate text 45 degrees</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj =</span> <span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">1.5</span>), <span class="co"># adjust text alignment</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">xpd =</span> <span class="cn">TRUE</span>)        <span class="co"># allow drawing outside plot region</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="tips_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Note that <code>adj</code> and <code>xpd</code> settings may require trial and error to position labels correctly. Also, removing the x-axis label by setting <code>ylab = ""</code> is unintuitive but currently necessary when using formulas like <code>~ cyl</code>.</p>
-<p>P.S. Another option for long axis labels is to wrap them at a designated character length. See the final example in the <a href="https://grantmcdermott.com/tinyplot/man/tinylabel.html"><code>tinylabel</code></a> documentation for an example.</p>
 
 
 </section>

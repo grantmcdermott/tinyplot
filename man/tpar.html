@@ -747,6 +747,9 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 <li>
 <p><code>ribbon.alpha</code>: Numeric factor in the range <code style="white-space: pre;">[0,1]</code> for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is <code>0.2</code>.</p>
 </li>
+<li>
+<p><code>xaxr</code>, <code>yaxr</code>: Numeric giving the rotation of the x- and y-axis tick labels, in degrees counter-clockwise; <code>NULL</code> (the default) leaves them unrotated. Unlike <code>las</code>, which is limited to the four right angles, any angle is permitted. Setting one overrides <code>las</code> for that axis alone, leaving the other axis under <code>las</code> as usual, and <code>0</code> (or any multiple of 360) counts as no rotation at all. Sets the default for the <code>xaxr</code> and <code>yaxr</code> arguments of <code>tinyplot()</code>, which take precedence. Two caveats follow from tinyplot drawing rotated labels itself rather than deferring to base <code>axis()</code>. First, margins are only resized to fit them under a theme with <code>dynmar = TRUE</code> (see <code>tinytheme</code>); under the default theme the margins are left alone, so a long rotated label will be clipped unless you widen <code>mar</code> yourself. Second, rotated labels do not inherit the thinning that <code>axis()</code> applies via <code>gap.axis</code>, so they start to overlap once the spacing between ticks falls below <code style="white-space: pre;">line height / sin(srt)</code>.</p>
+</li>
 </ul>
 </section>
 <section id="see-also" class="level3">

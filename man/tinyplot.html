@@ -627,6 +627,8 @@ tinyplot(
   yaxb = NULL,
   xaxl = NULL,
   yaxl = NULL,
+  xaxr = NULL,
+  yaxr = NULL,
   log = "",
   flip = FALSE,
   frame.plot = NULL,
@@ -1139,6 +1141,14 @@ numeric vector (or character vector, if appropriate) giving the break points at 
 </td>
 <td>
 a function, character keyword, or dictionary (named vector or list) for formatting or (re)labelling the x- or y-axis tick labels. Passed to <code>tinylabel</code>; see the latter’s help file for more detailed documentation and examples. Note that this is a post-processing step that affects the <em>appearance</em> of the tick labels only; use in conjunction with <code>x/yaxb</code> if you would like to adjust the position of the tick marks too.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="xaxr">xaxr</code>, <code id="yaxr">yaxr</code>
+</td>
+<td>
+numeric giving the rotation of the x- or y-axis tick labels, in degrees counter-clockwise; <code>NULL</code> (the default) leaves them unrotated. Setting one overrides <code>las</code> for that axis alone, leaving the other axis under <code>las</code> as usual, and <code>0</code> (or any multiple of 360) counts as no rotation at all. Best paired with a dynamic theme (see <code>tinytheme</code>), since that is what resizes the margins to fit the tilted labels; under the default theme a long rotated label will be clipped unless you widen <code>mar</code> yourself. Defaults to the value of <code>tpar(“xaxr”)</code> / <code>tpar(“yaxr”)</code>, whose documentation covers this and the label-spacing caveat in more detail.
 </td>
 </tr>
 <tr>

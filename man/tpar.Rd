@@ -99,6 +99,7 @@ you should rather use \code{par()} instead.
 \item \code{palette.qualitative}: Palette for qualitative colors. See the \code{palette} argument in \code{?tinyplot}.
 \item \code{palette.sequential}: Palette for sequential colors. See the \code{palette} argument in \code{?tinyplot}.
 \item \code{ribbon.alpha}: Numeric factor in the range \verb{[0,1]} for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is \code{0.2}.
+\item \code{xaxr}, \code{yaxr}: Numeric giving the rotation of the x- and y-axis tick labels, in degrees counter-clockwise; \code{NULL} (the default) leaves them unrotated. Unlike \code{las}, which is limited to the four right angles, any angle is permitted. Setting one overrides \code{las} for that axis alone, leaving the other axis under \code{las} as usual, and \code{0} (or any multiple of 360) counts as no rotation at all. Sets the default for the \code{xaxr} and \code{yaxr} arguments of \code{\link[=tinyplot]{tinyplot()}}, which take precedence. Two caveats follow from tinyplot drawing rotated labels itself rather than deferring to base \code{axis()}. First, margins are only resized to fit them under a theme with \code{dynmar = TRUE} (see \code{tinytheme}); under the default theme the margins are left alone, so a long rotated label will be clipped unless you widen \code{mar} yourself. Second, rotated labels do not inherit the thinning that \code{axis()} applies via \code{gap.axis}, so they start to overlap once the spacing between ticks falls below \verb{line height / sin(srt)}.
 }
 }
 

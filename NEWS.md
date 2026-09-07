@@ -138,17 +138,12 @@ related to plot layering. See "Bug fixes" below.
 
 #### Other new features
 
-- `type_density()` gains an `echo.bw` argument for reporting the smoothing
-  bandwidth and the number of observations behind it, neither of which is
-  visible from the curve itself. Destinations are `"sub"`, `"cap"`, and
-  `"cat"` (console), in any combination; a destination the user has already
-  labelled is left alone. Shared bandwidths are reported once and named as
-  joint, individual bandwidths per group. (#287 @haomeng797-ship-it)
-- `type_summary()` gains a `dodge` (and `fixed.dodge`) argument, thus enabling 
-  dodging of grouped plots. This is mostly useful for adding summaries on top of
-  a base layer that is itself dodged. Separately, `type_summary()`'s internals
-  have been refactored to use `stats::aggregate` instead of `stats::ave`.
-  (#701 @grantmcdermott)
+- New top-level `xaxr` and `yaxr` arguments allow rotating of the x- and y-axis
+  tick labels by arbitrary angles, closing a long-standing feature request
+  (#346). Note that setting one overrides `las` for that axis. Best combined
+  with a dynamic theme, since the plot margins are resized to fit the rotated
+  labels. Also settable via `tpar("x/yaxr")` and thus as part of a `tinytheme`
+  too. (#717 @grantmcdermott)
 - Custom plot types have more control over the surrounding plot machinery, via a
   new `type_hints` mechanism. A type can declare properties about itself---that
   it draws its own axes, needs a secondary right-hand axis, uses proportional
@@ -163,6 +158,25 @@ related to plot layering. See "Bug fixes" below.
   long list of category names on the y-axis without also shrinking the x-axis.
   Both default to `NULL`, in which case the shared `cex.axis` value is used, so
   existing plots are unaffected. (#677 @grantmcdermott)
+- `type_lines()` and its shortcut equivalents like `"l"` and `"s"` now support a
+  _continuous_ `by` variable, drawing a colour gradient along the line itself
+  rather than reverting to a discrete legend. Useful for trajectories, where a
+  third variable (typically time) orders the path; see the new `?type_lines`
+  examples. (#712 @grantmcdermott)
+- Type-specific updates:
+  - `type_density()` gains an `echo.bw` argument for reporting the smoothing
+    bandwidth and the number of observations behind it, neither of which is
+    visible from the curve itself. Destinations are `"sub"`, `"cap"`, and
+    `"cat"` (console), in any combination; a destination the user has already
+    labelled is left alone. Shared bandwidths are reported once and named as
+    joint, individual bandwidths per group. (#287 @haomeng797-ship-it)
+  - `type_area()` gains a `stack` argument for drawing stacked area plots. See
+    "New plot types" above for more details. (#688 @grantmcdermott)
+  - `type_summary()` gains a `dodge` (and `fixed.dodge`) argument, thus enabling 
+    dodging of grouped plots. This is mostly useful for adding summaries on top
+    of a base layer that is itself dodged. Separately, `type_summary()`'s
+    internals have been refactored to use `stats::aggregate` instead of
+    `stats::ave`. (#701 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -172,6 +186,8 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- Passing a named atomic vector to `type_barplot()` now uses the names as the
+  bar categories, matching base `barplot()`. (#714 @grantmcdermott)
 - `type_ridge()` no longer errors under themes that set a relative (negative)
   numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
 - `type_barplot()` gains a `na.as.zero` argument for controlling whether a
@@ -247,7 +263,7 @@ related to plot layering. See "Bug fixes" below.
   to numeric tick labels for every line type except `"p"`.
   (#679 @grantmcdermott)
 - Added layers now align on the category that each row belongs to, rather than
-  on the row's _position_. The latter only coincided with the right answer when
+  on the row's _position_. Thie latter only coincided with the right answer when
   the added layer's rows happened to arrive in ascending order; other rows were
   permuted, and repeated categories collapsed onto a single position.
   (#679 @grantmcdermott)

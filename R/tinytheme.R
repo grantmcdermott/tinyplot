@@ -375,6 +375,8 @@ theme_default = list(
   # axis styles below are only touched by the "heatmap" theme so far.
   xaxs = par("xaxs"), # "r"
   yaxs = par("yaxs"), # "r"
+  xaxr = NULL, # no tick label rotation unless set explicitly
+  yaxr = NULL, # no tick label rotation unless set explicitly
   xaxt = "standard",
   yaxt = "standard"
 )

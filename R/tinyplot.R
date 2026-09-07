@@ -285,6 +285,15 @@
 #'   documentation and examples. Note that this is a post-processing step that
 #'   affects the _appearance_ of the tick labels only; use in conjunction with
 #'   `x/yaxb` if you would like to adjust the position of the tick marks too.
+#' @param xaxr,yaxr numeric giving the rotation of the x- or y-axis tick labels,
+#'   in degrees counter-clockwise; `NULL` (the default) leaves them unrotated.
+#'   Setting one overrides `las` for that axis alone, leaving the other axis
+#'   under `las` as usual, and `0` (or any multiple of 360) counts as no
+#'   rotation at all. Best paired with a dynamic theme (see `tinytheme`), since
+#'   that is what resizes the margins to fit the tilted labels; under the
+#'   default theme a long rotated label will be clipped unless you widen `mar`
+#'   yourself. Defaults to the value of `tpar("xaxr")` / `tpar("yaxr")`, whose
+#'   documentation covers this and the label-spacing caveat in more detail.
 #' @param log a character string which contains `"x"` if the x axis is to be
 #'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
 #'   if both axes are to be logarithmic.
@@ -769,6 +778,8 @@ tinyplot.default = function(
     yaxb = NULL,
     xaxl = NULL,
     yaxl = NULL,
+    xaxr = NULL,
+    yaxr = NULL,
     log = "",
     flip = FALSE,
     frame.plot = NULL,
@@ -948,10 +959,12 @@ tinyplot.default = function(
     xaxt          = xaxt,
     xaxb          = xaxb,
     xaxl          = xaxl,
+    xaxr          = xaxr,
     xaxs          = xaxs,
     yaxt          = yaxt,
     yaxb          = yaxb,
     yaxl          = yaxl,
+    yaxr          = yaxr,
     yaxs          = yaxs,
     frame.plot    = frame.plot,
     xlim          = xlim,
@@ -1281,26 +1294,90 @@ tinyplot.default = function(
     .whtsbp_y_raw = 0
     .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
-    if (.las %in% 1:2) {
-      .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
-      if (!is.null(.ylabset)) {
-        yaxlabs = .ylabset[[1L]]
+    # A flipped boxplot draws the x variable up the side and the y variable
+    # along the bottom, so a rotation has to be measured against the side its
+    # labels actually land on. (The las branches below keep indexing 1/2
+    # directly, as they always have; that asymmetry is pre-existing.)
+    .xside = if (identical(type, "boxplot") && isTRUE(flip)) 2L else 1L
+    .yside = if (identical(type, "boxplot") && isTRUE(flip)) 1L else 2L
+    # A rotation always needs its own measurement, whatever `las` says: las
+    # only reaches the perpendicular case, and that is srt = 90 (x) / 0 (y).
+    if (!is.null(yaxr) || .las %in% 1:2) {
+      yaxlabs = axis_tick_labels(
+        y_axis_labels(type, y, ylabs, xlabs, flip),
+        lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+        cex = .cex_yaxs
+      )
+      if (!is.null(yaxr)) {
+        .whtsbp_y_raw = tick_label_extent(yaxlabs, cex = .cex_yaxs,
+                                          srt = yaxr, side = .yside)
+        .whtsbp[.yside] = .whtsbp_y_raw
       } else {
-        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
-        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
+        .whtsbp_y_raw = tick_label_extent(yaxlabs, cex = .cex_yaxs)
+        .whtsbp[2] = .whtsbp_y_raw
       }
-      if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      .whtsbp_y_raw = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") -
-                      grconvertX(0, from = "nfc", to = "lines") - 0.5
-      if (is.finite(.whtsbp_y_raw)) .whtsbp[2] = .whtsbp_y_raw
     }
-    if (.las %in% 2:3) {
-      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
-      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
-        if (!is.null(names(xlabs))) names(xlabs) else xlabs
-      if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      .whtsbp_x_raw = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
-      if (is.finite(.whtsbp_x_raw)) .whtsbp[1] = .whtsbp_x_raw
+    if (!is.null(xaxr) || .las %in% 2:3) {
+      xaxlabs = axis_tick_labels(
+        x_axis_labels(xlabs),
+        lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+        cex = .cex_xaxs
+      )
+      if (!is.null(xaxr)) {
+        .whtsbp_x_raw = tick_label_extent(xaxlabs, cex = .cex_xaxs,
+                                          srt = xaxr, side = .xside)
+        .whtsbp[.xside] = .whtsbp_x_raw
+      } else {
+        .whtsbp_x_raw = tick_label_extent(xaxlabs, cex = .cex_xaxs)
+        .whtsbp[1] = .whtsbp_x_raw
+      }
+    }
+    # A tilted label also leans along its axis, off the end of the plot region.
+    # That lean lands in the *adjacent* margin, so widen whichever one it would
+    # otherwise overrun. max() rather than +: the lean shares the margin with
+    # the tick labels and axis title already sitting there.
+    # The lean lands in the two margins flanking the labels' own side. It goes
+    # into .dyn -- the base margin -- and deliberately not into .whtsbp, which
+    # downstream reads as "how far the tick labels reach" when placing the axis
+    # titles. Widening .whtsbp would push those titles out by the whole lean,
+    # even though the lean sits at one end of the margin and the title is
+    # centred, so the two never actually meet. Growing the base margin instead
+    # moves the plot edge over and lets the title keep its own spacing.
+    #
+    # Only the shortfall is added: the tick labels and axis title already
+    # reserve .dyn + .whtsbp on that side, and the lean can share it.
+    .flank = function(side) if (side %in% c(1L, 3L)) c(2L, 4L) else c(1L, 3L)
+    .add_lean = function(dyn, ovh, sides) {
+      for (i in 1:2) {
+        need = ovh[i] - (dyn[sides[i]] + .whtsbp[sides[i]])
+        if (is.finite(need) && need > 0) dyn[sides[i]] = dyn[sides[i]] + need
+      }
+      dyn
+    }
+    # Panel extent in lines, from the margins settled so far, so the lean can be
+    # measured against how far the end ticks actually sit from the edge.
+    .span = function(axis) {
+      fin = par("fin")[if (axis == "x") 1L else 2L]
+      m = .theme_mar + .dyn
+      pad = if (axis == "x") m[2L] + m[4L] + .whtsbp[2L] + .whtsbp[4L]
+            else m[1L] + m[3L] + .whtsbp[1L] + .whtsbp[3L]
+      max(0, fin / par("csi") - pad)
+    }
+    if (!is.null(xaxr)) {
+      .at = if (!is.null(xlabs)) as.numeric(xlabs) else
+        axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog"))
+      .ins = axis_tick_inset(.at, extendrange(xlim, f = 0.04), .span("x"))
+      .ovh = tick_label_overhang(xaxlabs, cex = .cex_xaxs, srt = xaxr,
+                                 side = .xside, inset = .ins)
+      .dyn = .add_lean(.dyn, .ovh, .flank(.xside))
+    }
+    if (!is.null(yaxr)) {
+      .at = if (!is.null(ylabs)) as.numeric(ylabs) else
+        axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+      .ins = axis_tick_inset(.at, extendrange(ylim, f = 0.04), .span("y"))
+      .ovh = tick_label_overhang(yaxlabs, cex = .cex_yaxs, srt = yaxr,
+                                 side = .yside, inset = .ins)
+      .dyn = .add_lean(.dyn, .ovh, .flank(.yside))
     }
 
     # Under facets, per-facet tick labels render smaller (scaled by
@@ -1312,6 +1389,34 @@ tinyplot.default = function(
       .whtsbp = .whtsbp * cex_fct_adj
       .whtsbp_y_raw = .whtsbp_y_raw * cex_fct_adj
       .whtsbp_x_raw = .whtsbp_x_raw * cex_fct_adj
+    }
+
+    # Each axis title has to clear the tick labels drawn on *its own* side, and
+    # a flipped boxplot has the two variables trade sides -- so a measurement
+    # taken from the x variable may belong to side 2, and vice versa.
+    #
+    # Side 1 normally takes the x measurement. Flipped, the x labels are no
+    # longer down there at all (feeding it their extent pushes the title clean
+    # off the canvas), so it takes the y measurement if that side is rotated and
+    # nothing otherwise -- plain horizontal ticks need no allowance.
+    .side1_raw = if (.xside == 1L) {
+      .whtsbp_x_raw
+    } else if (!is.null(yaxr)) {
+      .whtsbp_y_raw
+    } else {
+      0
+    }
+
+    # The side-2 title has to clear whatever tick labels are drawn on side 2.
+    # Normally that is whtsbp_y_raw, and under flip it still is: y_axis_labels()
+    # is itself flip-aware and hands back the categorical labels that a flipped
+    # boxplot puts there. The one case it cannot cover is those same labels
+    # rotated -- it measures them lying flat -- so take the rotated measurement
+    # instead exactly then, and leave every other case alone.
+    .side2_raw = if (!is.null(xaxr) && .xside == 2L) {
+      .whtsbp_x_raw
+    } else {
+      .whtsbp_y_raw
     }
 
     dynmar_computed = .theme_mar + .dyn
@@ -1425,8 +1530,8 @@ tinyplot.default = function(
     ann = as.logical(ann)
     if (ann) draw_title(
       main, sub, cap, xlab, ylab, legend, legend_args, opar,
-      xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
-      ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0
+      xlab_line_offset = if (!is.null(dynmar_computed)) .side1_raw else 0,
+      ylab_line_offset = if (!is.null(dynmar_computed)) .side2_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0
     )
   }
 
@@ -1500,8 +1605,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       asp = asp, log = log,
@@ -1536,8 +1641,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       asp = asp, log = log,
@@ -1970,7 +2075,7 @@ tinyplot.formula = function(
   ## nice axis and legend labels
   dens_type = !is.null(type) && (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
   hist_type = !is.null(type) && (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
-  barp_type = !is.null(type) &&  (is.atomic(type) && identical(type, "barplot")) || (!is.atomic(type) && identical(type$name, "barplot"))
+  barp_type = !is.null(type) && (is.atomic(type) && type %in% c("bar", "barplot")) || (!is.atomic(type) && identical(type$name, "barplot"))
   if (is.null(x) && is.null(y)) {
     # Exception: both x and y NULL (e.g., ~ 0 with type = "segments").
     # Build labels from xmin/xmax/ymin/ymax names in the original call (m),

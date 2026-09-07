@@ -48,7 +48,15 @@ f = function() tinyplot(
 )
 expect_snapshot_plot(f, label = "legend_gradient_bg_scalar")
 
+f = function() tinyplot(
+  mpg ~ wt | disp, mtcars,
+  type = "l",
+  main = "Gradient legend (line segments)"
+)
+expect_snapshot_plot(f, label = "legend_gradient_line_segments")
+
 # check overrides ----
 
-# discrete override with warning for certain types (e.g. "l")
-expect_warning(tinyplot(mpg ~ wt | disp, mtcars, type = "l"))
+# discrete override with warning for the types that still can't carry a
+# per-observation colour (e.g. "b", whose gap handling isn't wired up yet)
+expect_warning(tinyplot(mpg ~ wt | disp, mtcars, type = "b"))

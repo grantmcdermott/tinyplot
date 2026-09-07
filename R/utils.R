@@ -28,7 +28,7 @@ text_line_count = function(x) {
 # Main/sub sit above/below the plot box on the top/bottom side and add to the
 # margin additively.
 # Tick-label *width* for sides 2/4 (and *height* for 1/3 under las 2:3) is
-# handled separately by the existing whtsbp logic in draw_facet_window().
+# handled separately by tick_label_extent() in tinyAxis.R.
 # The caller is expected to take max(theme_mar[side], dynmar_side(...)) so
 # that the theme's starting `mar` acts as a baseline padding.
 dynmar_side = function(side, label, main = NULL, sub = NULL, cap = NULL,

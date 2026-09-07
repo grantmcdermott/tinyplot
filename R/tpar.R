@@ -88,6 +88,7 @@
 #' * `palette.qualitative`: Palette for qualitative colors. See the `palette` argument in `?tinyplot`.
 #' * `palette.sequential`: Palette for sequential colors. See the `palette` argument in `?tinyplot`.
 #' * `ribbon.alpha`: Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is `0.2`.
+#' * `xaxr`, `yaxr`: Numeric giving the rotation of the x- and y-axis tick labels, in degrees counter-clockwise; `NULL` (the default) leaves them unrotated. Unlike `las`, which is limited to the four right angles, any angle is permitted. Setting one overrides `las` for that axis alone, leaving the other axis under `las` as usual, and `0` (or any multiple of 360) counts as no rotation at all. Sets the default for the `xaxr` and `yaxr` arguments of [`tinyplot()`], which take precedence. Two caveats follow from tinyplot drawing rotated labels itself rather than deferring to base `axis()`. First, margins are only resized to fit them under a theme with `dynmar = TRUE` (see `tinytheme`); under the default theme the margins are left alone, so a long rotated label will be clipped unless you widen `mar` yourself. Second, rotated labels do not inherit the thinning that `axis()` applies via `gap.axis`, so they start to overlap once the spacing between ticks falls below `line height / sin(srt)`.
 #'
 #' @importFrom graphics par
 #' @importFrom utils modifyList
@@ -291,7 +292,9 @@ known_tpar = c(
     "ribbon.alpha",
     "side.sub",
     "tinytheme",
+    "xaxr",
     "xaxt",
+    "yaxr",
     "yaxt"
 )
 
@@ -311,6 +314,8 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
   assert_numeric(.tpar[["cex.xaxs"]], len = 1, lower = 0, null.ok = TRUE, name = "cex.xaxs")
   assert_numeric(.tpar[["cex.yaxs"]], len = 1, lower = 0, null.ok = TRUE, name = "cex.yaxs")
+  assert_numeric(.tpar[["xaxr"]], len = 1, null.ok = TRUE, name = "xaxr")
+  assert_numeric(.tpar[["yaxr"]], len = 1, null.ok = TRUE, name = "yaxr")
   assert_flag(.tpar[["cairo"]], name = "cairo")
   assert_flag(.tpar[["dynmar"]], null.ok = FALSE, name = "dynmar")
   assert_choice(.tpar[["ljust"]], choice = c("left", "center", "l", "c"), null.ok = TRUE, name = "ljust")

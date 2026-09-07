@@ -113,7 +113,11 @@
 #' @examples
 #' #
 #' ## Basic use (raw values)
+#'
+#' # (named) atomic vector
+#' tinyplot(c(A = 1, B = 2, C = 3), type = "barplot")
 #' 
+#' # formula + data.frame method
 #' tinyplot(GNP ~ Year, data = longley, type = "barplot")
 #' 
 #' tinyplot(demand ~ Time, data = BOD, type = "bar") # "bar" is a shorthand
@@ -123,6 +127,18 @@
 #' tinyplot(demand ~ Time, data = BOD, type = "bar", xord = "asc")
 #' jumble = c("7","1","5","2","4","3") # note: Time = 6 is also missing
 #' tinyplot(demand ~ Time, data = BOD, type = "bar", xlevels = jumble) 
+#' 
+#' # useful top-level args:
+#' # 1) xaxl to format the x labels, e.g. with a dictionary, keyword, or (here:)
+#' #    function
+#' # 2) xaxr to rotate long category labels (best used with a dynamic theme)
+#' tinyplot(
+#'   demand ~ Time, data = BOD,
+#'   type = "bar",
+#'   xaxl = function(x) paste("Time =", x),
+#'   xaxr = 45,
+#'   theme = "broadsheet"
+#' )
 #' 
 #' #
 #' ## Aggregated vs grouped values (multiple ys per x)
@@ -161,16 +177,7 @@
 #'   extra ~ ID | drug, data = sleep2,
 #'   type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
 #' )
-#' 
-#' # speaking of top-level args, use xaxl to format the x labels, e.g. with a
-#' # dictionary, keyword, or (here:) function
-#' 
-#' tinyplot(
-#'   extra ~ ID | drug, data = sleep2,
-#'   type = type_barplot(beside = TRUE, xord = "desc"),
-#'   xaxl = as.roman
-#' )
-#' 
+#'  
 #' #
 #' ## matrix method (no formula required)
 #' 
@@ -312,10 +319,19 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         ## tabulate/aggregate datapoints
         if (is.null(datapoints$y)) {
           if (is.null(xlab) || identical(xlab, "Index")) xlab = ylab
-          if (is.null(settings$y_dep) && is.null(ylab)) ylab = "Count"
-          datapoints$y = numeric(nrow(datapoints))          
-          if (!is.null(FUN)) warning("without 'y' variable 'FUN' specification is ignored")
-          FUN = length
+          if (is.character(attr(datapoints, "row.names"))) {
+            # A named atomic vector: its names are the categories and its values
+            # the bar heights (#714)
+            datapoints$y = datapoints$x
+            datapoints$x = rownames(datapoints)
+            if (is.null(FUN)) FUN = function(x, ...) mean(x, ..., na.rm = TRUE)
+          } else {
+            # Nothing to plot but the rows themselves, so the bars are counts.
+            if (is.null(settings$y_dep) && is.null(ylab)) ylab = "Count"
+            datapoints$y = numeric(nrow(datapoints))
+            if (!is.null(FUN)) warning("without 'y' variable 'FUN' specification is ignored")
+            FUN = length
+          }
         } else {
           if (is.null(FUN)) FUN = function(x, ...) mean(x, ..., na.rm = TRUE)
         }

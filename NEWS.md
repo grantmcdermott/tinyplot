@@ -202,25 +202,17 @@ related to plot layering. See "Bug fixes" below.
     examples. (#711 @grantmcdermott)
 - `type_ridge()` no longer errors under themes that set a relative (negative)
   numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
-- Free facets (`facet.args = list(free = TRUE)`) now keep every category of a
-  categorical axis, so that the panels' ticks line up with each other. Panel
-  limits were derived from each panel's own data range, which clipped any
-  category falling outside it: an unused category was ticked where it happened to
-  sit between used ones but dropped at the panel edges, and panels ended up with
-  differing scales. (Use the new `drop.levels` above for the opposite behaviour,
-  i.e. each panel showing only the categories it uses.)
-  (#711 @grantmcdermott)
-- Free facets (`facet.args = list(free = TRUE)`) no longer clip the geometry
-  around the end categories of a categorical axis, e.g. the first and last box
-  of a faceted boxplot. The extra room that a categorical axis needs either side
-  of its end categories was added to the fixed limits only, and the free path
-  re-derives its limits per panel. (#711 @grantmcdermott)
-- Layers added with `tinyplot_add()` now align correctly when the base plot type
-  coerces a numeric `x` variable to a factor, as `type_barplot()` and
-  `type_violin()` do. The base layer's categories are the coerced *labels*,
-  while the added layer still carried the raw values, so it was drawn at those
-  coordinates instead of at the category positions---often well outside the
-  plotting region. (#691 @grantmcdermott)
+- Layers added with `tinyplot_add()` now align correctly on a categorical axis:
+  - They land on the category that each row belongs to, rather than on the row's
+    _position_. The latter only coincided with the right answer when the added
+    layer's rows happened to arrive in ascending order; other rows were
+    permuted, and repeated categories collapsed onto a single position.
+    (#679 @grantmcdermott)
+  - They also align when the base plot type coerces a numeric `x` variable to a
+    factor, as `type_barplot()` and `type_violin()` do. The base layer's
+    categories are the coerced *labels*, while the added layer still carried the
+    raw values, so it was drawn at those coordinates instead of at the category
+    positions---often well outside the plotting region. (#691 @grantmcdermott)
 - Axis labellers no longer blow up the decimal precision when the breaks are
   symmetric about zero, as they are for a centered barplot. `tinyplot(...,
   center = TRUE, yaxl = "percent")` labelled its axis `80.00000%` rather than
@@ -252,13 +244,14 @@ related to plot layering. See "Bug fixes" below.
   `flip = TRUE` and for a factor `y` variable. Previously the y-axis fell back
   to numeric tick labels for every line type except `"p"`.
   (#679 @grantmcdermott)
-- Added layers now align on the category that each row belongs to, rather than
-  on the row's _position_. Thie latter only coincided with the right answer when
-  the added layer's rows happened to arrive in ascending order; other rows were
-  permuted, and repeated categories collapsed onto a single position.
-  (#679 @grantmcdermott)
 - Fixed several bugs specific to plots with free facets (i.e.,
   `facet.args = list(free = TRUE)`):
+  - Panels now keep every category of a categorical axis, regardless of type,
+    so that their ticks line up with each other. Use the new `drop.levels` arg
+    (above) for the opposite behaviour. (#711 @grantmcdermott)
+  - The geometry around the end categories of a categorical axis is no longer
+    clipped, e.g. the first and last box of a faceted boxplot.
+    (#711 @grantmcdermott)
   - A categorical y-axis no longer errors out with `'labels' is supplied and
 not 'at'`. The free-t code path listed the eligible types by name, so
     any other type lost its tick positions while keeping the corresponding
@@ -278,16 +271,15 @@ not 'at'`. The free-t code path listed the eligible types by name, so
     hand and so silently ignored `cex.axis`, `lwd.axis` and `lty.axis` (plus
     their per-side variants), which was most visible under themes that set them,
     e.g. `tinytheme("bw")`. (#673 @grantmcdermott)
-- Axis tick labels now honour the themed `cex.axis` value. The internal axis call
-  passed it as `cex`, which base `axis()` ignores in favour of `cex.axis` when
-  sizing tick labels, so the setting had no effect on label size. This also means
-  the per-side `cex.xaxs`/`cex.yaxs` parameters (see above) take effect.
-  (#677 @grantmcdermott)
-- Dynamic margins now measure each axis at its own tick-label size. The margin
-  and whitespace calculations read only the shared `cex.axis`, so a plot that
-  set `cex.xaxs`/`cex.yaxs` to different values clipped the labels on the larger
-  axis and reserved dead whitespace on the smaller one, e.g.
-  `tinytheme("heatmap", cex.xaxs = 2, cex.yaxs = 0.5)`. (#677 @grantmcdermott)
+- Axis tick labels now honour their themed size, in two respects:
+  - The internal axis call passed `cex.axis` as `cex`, which base `axis()`
+    ignores in favour of `cex.axis` when sizing tick labels, so the setting had
+    no effect. This also means the per-side `cex.xaxs`/`cex.yaxs` parameters
+    (see above) take effect. (#677 @grantmcdermott)
+  - Dynamic margins read only the shared `cex.axis`, so a plot setting
+    `cex.xaxs`/`cex.yaxs` to different values clipped the labels on the larger
+    axis and reserved dead whitespace on the smaller one, e.g.
+    `tinytheme("heatmap", cex.xaxs = 2, cex.yaxs = 0.5)`. (#677 @grantmcdermott)
 - Grouped and faceted plots no longer redraw axes once per empty group. This was
   most visible for `"spineplot"` types (e.g. `facet = "by"`), where the
   self-drawn axis labels were overplotted several times and rendered too heavy.

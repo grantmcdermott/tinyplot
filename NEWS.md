@@ -158,12 +158,12 @@ related to plot layering. See "Bug fixes" below.
   long list of category names on the y-axis without also shrinking the x-axis.
   Both default to `NULL`, in which case the shared `cex.axis` value is used, so
   existing plots are unaffected. (#677 @grantmcdermott)
-- `type_lines()` and its shortcut equivalents like `"l"` and `"s"` now support a
-  _continuous_ `by` variable, drawing a colour gradient along the line itself
-  rather than reverting to a discrete legend. Useful for trajectories, where a
-  third variable (typically time) orders the path; see the new `?type_lines`
-  examples. (#712 @grantmcdermott)
 - Type-specific updates:
+  - `type_lines()` and its shortcut equivalents like `"l"` and `"s"` now support
+    a _continuous_ `by` variable, drawing a colour gradient along the line
+    itself rather than reverting to a discrete legend. Useful for trajectories,
+    where a third variable (typically time) orders the path; see the new
+    `?type_lines` examples. (#712 @grantmcdermott)
   - `type_density()` gains an `echo.bw` argument for reporting the smoothing
     bandwidth and the number of observations behind it, neither of which is
     visible from the curve itself. Destinations are `"sub"`, `"cap"`, and
@@ -177,6 +177,11 @@ related to plot layering. See "Bug fixes" below.
     of a base layer that is itself dodged. Separately, `type_summary()`'s
     internals have been refactored to use `stats::aggregate` instead of
     `stats::ave`. (#701 @grantmcdermott)
+  - `type_barplot()` gains a `na.as.zero` argument for controlling whether a
+    category that no observation reaches is treated as a zero (and so marked
+    with a flat bar along the baseline) or left undrawn. The default `NULL`
+    lets `FUN` decide; see the new "Empty cells" section of `?type_barplot`.
+    (#711 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -186,32 +191,17 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
-- Passing a named atomic vector to `type_barplot()` now uses the names as the
-  bar categories, matching base `barplot()`. (#714 @grantmcdermott)
+- `type_barplot()` receives several consistency improvements and bug fixes:
+  - Passing a named atomic vector now uses the names as the bar categories,
+    matching base `barplot()`. (#714 @grantmcdermott)
+  - A category that no observation reaches is no longer treated as as an
+    implicit zero; at least not unconditionally. Instead, behaviour is now
+    governed by explicit rules, e.g. derived from `FUN` or the new `na.as.zero`
+    argument (above). At the same time, explicit zeros remain unaffected. Again,
+    see the new "Empty cells" section of `?type_barplot` for details and
+    examples. (#711 @grantmcdermott)
 - `type_ridge()` no longer errors under themes that set a relative (negative)
   numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
-- `type_barplot()` gains a `na.as.zero` argument for controlling whether a
-  category that no observation reaches is treated as a zero (and so marked with a
-  flat bar along the baseline) or left undrawn. The default `NULL` lets `FUN`
-  decide, which is usually what you want; see the new "Empty cells" section of
-  `?type_barplot` for the full rule and its interaction with `offset` and
-  `drop.zeros`. (#711 @grantmcdermott)
-- `type_barplot()` now asks `FUN` what a category that no observation reaches is
-  worth, rather than treating it as zero unconditionally. Internally the bars are
-  computed off a completed grid, so that stacking and centering have a
-  rectangular set of cells to work with, but the invented cells were then all
-  drawn as zero-height rectangles, i.e. a stray rule along the baseline. A
-  *count* (or sum) of nothing is genuinely 0, so those bars still draw; a *mean*
-  of nothing is undefined, so they no longer do. Since a zero-height bar only
-  reads as zero from a zero baseline, `offset` layouts (e.g. waterfall charts)
-  never draw one. Genuine zeros are unaffected either way, and remain
-  `drop.zeros`' business. Consequently, `col = NA` is no longer needed to
-  suppress those rules in a waterfall, and has been dropped from the example in
-  `?type_barplot`. (#711 @grantmcdermott)
-- Relatedly, `type_barplot()` no longer draws bars for combinations that cannot
-  occur, i.e. where `x`, `by` or `facet` are mapped to the same variable, as in
-  `tinyplot(~cyl | cyl, type = "barplot")` or `facet = "by"`.
-  (#711 @grantmcdermott)
 - Free facets (`facet.args = list(free = TRUE)`) now keep every category of a
   categorical axis, so that the panels' ticks line up with each other. Panel
   limits were derived from each panel's own data range, which clipped any
@@ -270,7 +260,7 @@ related to plot layering. See "Bug fixes" below.
 - Fixed several bugs specific to plots with free facets (i.e.,
   `facet.args = list(free = TRUE)`):
   - A categorical y-axis no longer errors out with `'labels' is supplied and
-not 'at'`. The free-facet code path listed the eligible types by name, so
+not 'at'`. The free-t code path listed the eligible types by name, so
     any other type lost its tick positions while keeping the corresponding
     labels, whether flipped (e.g. `type = "b"` with `flip = TRUE`) or not
     (e.g. `type = "p"` with a factor `y` variable). (#679 @grantmcdermott)

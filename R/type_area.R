@@ -1,4 +1,5 @@
 #' @rdname type_ribbon
+#' @importFrom stats ave
 #' @export
 type_area = function(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL) {
     out = list(

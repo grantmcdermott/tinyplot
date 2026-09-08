@@ -231,6 +231,7 @@
 #' ## restore the default theme
 #' tinytheme()
 #'
+#' @importFrom stats ave
 #' @export
 type_ridge = function(
     scale = 1.5,

@@ -882,26 +882,32 @@ facet_relevel = function(settings) {
     stored = if (add) get_environment_variable(".facet_labs")[[ax]] else NULL
     if (add && is.null(stored)) next
 
-    # each row's category, by name, which is what both paths key off
-    row_names = names(labs)[match(codes, unname(labs))]
+    # `labs` may cover only some of the categories, since lim_args() subsets it to
+    # a requested `x/yaxb` break set, so the shift below is derived from the codes
+    # themselves and the names are used only for the ticks.
+    cat_names = names(labs)[match(codes, unname(labs))]
     delta = numeric(nrow(datapoints))
     labs_by_facet = vector("list", length(fl))
     names(labs_by_facet) = fl
     for (f in fl) {
       idx = which(facet == f)
       if (!length(idx)) next
+      present = sort(unique(codes[idx]))
+      if (!length(present)) next
       if (!is.null(stored)) {
+        # an added layer aligns by name, so that it lands on the categories the
+        # base layer drew; one it did not draw maps to NA, i.e. is not drawn
         map = stored[[f]]
+        if (is.null(map) || !length(map)) next
+        delta[idx] = unname(map[cat_names[idx]]) - codes[idx]
       } else {
         # rank within the panel's own levels, i.e. what factor() would have given
-        present = sort(unique(codes[idx]))
+        new = seq_along(present)
+        delta[idx] = new[match(codes[idx], present)] - codes[idx]
         nm = names(labs)[match(present, unname(labs))]
         ok = !is.na(nm)
-        map = stats::setNames(seq_along(present)[ok], nm[ok])
+        map = stats::setNames(new[ok], nm[ok])
       }
-      if (is.null(map) || !length(map)) next
-      # a category the panel does not hold maps to NA, i.e. is simply not drawn
-      delta[idx] = unname(map[row_names[idx]]) - codes[idx]
       labs_by_facet[[f]] = map
     }
 

@@ -1011,6 +1011,18 @@ expect_warning(
   pattern = "had no effect"
 )
 
+# A partial break set (`xaxb`) asks for fewer ticks than there are categories.
+# lim_args() subsets the label vector to match, so the re-levelling has to derive
+# its positions from the categories themselves: keying off the labels instead sent
+# every unlabelled category to NA, dropping its geometry (or erroring outright).
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, type = "p", facet = ~vs,
+           xaxb = c("2", "4"),
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels with a partial break set")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_xaxb")
+
 # Global fallback via tpar, as for the other facet.args
 f = function() {
   tpar(facet.drop.levels = TRUE)

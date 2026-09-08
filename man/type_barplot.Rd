@@ -92,8 +92,8 @@ to \code{FALSE} (default) a zero height bar is still drawn for which the border
 lines will still be visible.}
 
 \item{na.as.zero}{logical. Should a category that no observation reaches be
-treated as a zero? Defaults to \code{NULL}, i.e. let \code{FUN} decide; see the "Empty
-cells" section below. Set to \code{TRUE} to always mark such categories with a
+treated as a zero? Defaults to \code{NULL}, i.e. let \code{FUN} decide; see the
+"Implicit zeros and empty cells" section below. Set to \code{TRUE} to always mark such categories with a
 zero-height bar, or \code{FALSE} to never draw them.}
 
 \item{lighten}{logical. Should the fills use a lighter, opaque tint of the

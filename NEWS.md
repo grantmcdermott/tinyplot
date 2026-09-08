@@ -194,7 +194,7 @@ related to plot layering. See "Bug fixes" below.
 - `type_barplot()` receives several consistency improvements and bug fixes:
   - Passing a named atomic vector now uses the names as the bar categories,
     matching base `barplot()`. (#714 @grantmcdermott)
-  - A category that no observation reaches is no longer treated as as an
+  - A category that no observation reaches is no longer treated as an
     implicit zero; at least not unconditionally. Instead, behaviour is now
     governed by explicit rules, e.g. derived from `FUN` or the new `na.as.zero`
     argument (above). At the same time, explicit zeros remain unaffected. Again,
@@ -253,7 +253,7 @@ related to plot layering. See "Bug fixes" below.
     clipped, e.g. the first and last box of a faceted boxplot.
     (#718 @grantmcdermott)
   - A categorical y-axis no longer errors out with `'labels' is supplied and
-not 'at'`. The free-t code path listed the eligible types by name, so
+not 'at'`. The free-facet code path listed the eligible types by name, so
     any other type lost its tick positions while keeping the corresponding
     labels, whether flipped (e.g. `type = "b"` with `flip = TRUE`) or not
     (e.g. `type = "p"` with a factor `y` variable). (#679 @grantmcdermott)

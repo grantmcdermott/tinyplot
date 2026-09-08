@@ -70,8 +70,8 @@
 #'   to `FALSE` (default) a zero height bar is still drawn for which the border
 #'   lines will still be visible.
 #' @param na.as.zero logical. Should a category that no observation reaches be
-#'   treated as a zero? Defaults to `NULL`, i.e. let `FUN` decide; see the "Empty
-#'   cells" section below. Set to `TRUE` to always mark such categories with a
+#'   treated as a zero? Defaults to `NULL`, i.e. let `FUN` decide; see the
+#'   "Implicit zeros and empty cells" section below. Set to `TRUE` to always mark such categories with a
 #'   zero-height bar, or `FALSE` to never draw them.
 #' @param lighten logical. Should the fills use a lighter, opaque tint of the
 #'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group

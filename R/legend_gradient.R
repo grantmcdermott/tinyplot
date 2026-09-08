@@ -168,13 +168,14 @@ draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inne
     adj = lbl_adj
   )
 
-  # Draw tick marks (white dashes)
+  # Draw tick marks (white segments)
+  tick_frac = 1 / 5 # span of each tick viz. the width of the swatch
   tick_y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs))[labs_idx]
-  tick_w = (rasterbox[3] - rasterbox[1]) / 5
+  tick_w = (rasterbox[3] - rasterbox[1]) * tick_frac
   segments(rasterbox[1], tick_y, rasterbox[1] + tick_w, tick_y,
-           col = "white", xpd = NA)
+           col = "white", lwd = 1, lty = 1, xpd = NA)
   segments(rasterbox[3] - tick_w, tick_y, rasterbox[3], tick_y,
-           col = "white", xpd = NA)
+           col = "white", lwd = 1, lty = 1, xpd = NA)
 
   # Draw title
   text(
@@ -197,14 +198,15 @@ draw_gradient_labels_horizontal = function(rasterbox, lgnd_labs, legend_args) {
     adj = c(0.5, 1.25)
   )
 
-  # Legend tick marks (white dashes)
+  # Legend tick marks (white segments)
   labs_idx = !is.na(lgnd_labs)
+  tick_frac = 1 / 5
   tick_x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs))[labs_idx]
-  tick_h = (rasterbox[2] - rasterbox[4]) / 5
+  tick_h = (rasterbox[2] - rasterbox[4]) * tick_frac
   segments(tick_x, rasterbox[4], tick_x, rasterbox[4] + tick_h,
-           col = "white", xpd = NA)
+           col = "white", lwd = 1, lty = 1, xpd = NA)
   segments(tick_x, rasterbox[2] - tick_h, tick_x, rasterbox[2],
-           col = "white", xpd = NA)
+           col = "white", lwd = 1, lty = 1, xpd = NA)
 
   # Legend title
   text(

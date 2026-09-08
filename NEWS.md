@@ -305,6 +305,9 @@ not 'at'`. The free-facet code path listed the eligible types by name, so
   require was only applied when the type had to be inferred, so an explicit type
   was mistaken for an empty plot and never drawn. (#647 @grantmcdermott
   @zeileis)
+- Gradient legend tick marks are now drawn as line segments, rather than text
+  dashes, thus ensuring more consistent behaviour across devices and themes.
+  (#715 @JanMarvin @grantmcdermott)
 
 ## v0.7.0
 

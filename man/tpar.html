@@ -676,6 +676,9 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 <p><code>facet.drop</code>: Logical indicating whether facet levels that no observation uses should be dropped, rather than drawing an empty panel. Defaults to <code>FALSE</code>. Equivalent to setting <code>tinyplot(…, facet.args = list(drop = X))</code>, but globally, which also makes it available to themes.</p>
 </li>
 <li>
+<p><code>facet.drop.levels</code>: Logical indicating whether each free facet (<code>facet.args = list(free = TRUE)</code>) should keep only the categories of a categorical axis that it actually uses, re-levelled as if that panel’s data had been passed through <code>factor()</code> on its own. Defaults to <code>FALSE</code>, i.e.&nbsp;every panel shows the full set of categories. Equivalent to setting <code>tinyplot(…, facet.args = list(drop.levels = X))</code>, but globally, which also makes it available to themes.</p>
+</li>
+<li>
 <p><code>facet.bg</code>: Character or integer specifying the facet background colour. If an integer, will correspond to the user’s default colour palette (see <code>palette</code>). Passed to <code>rect</code>. Defaults to <code>NULL</code> (none).</p>
 </li>
 <li>

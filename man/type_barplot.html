@@ -571,6 +571,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#implicit-zeros-and-empty-cells" id="toc-implicit-zeros-and-empty-cells" class="nav-link" data-scroll-target="#implicit-zeros-and-empty-cells">Implicit zeros and empty cells</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
@@ -599,6 +600,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   xlevels = NULL,
   xord = NULL,
   drop.zeros = FALSE,
+  na.as.zero = NULL,
   lighten = TRUE,
   xaxlabels = NULL
 )
@@ -693,6 +695,14 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="na.as.zero">na.as.zero</code>
+</td>
+<td>
+logical. Should a category that no observation reaches be treated as a zero? Defaults to <code>NULL</code>, i.e.&nbsp;let <code>FUN</code> decide; see the "Implicit zeros and empty cells" section below. Set to <code>TRUE</code> to always mark such categories with a zero-height bar, or <code>FALSE</code> to never draw them.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="lighten">lighten</code>
 </td>
 <td>
@@ -708,6 +718,12 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </td>
 </tr>
 </tbody></table>
+</section>
+<section id="implicit-zeros-and-empty-cells" class="level3">
+<h3 class="anchored" data-anchor-id="implicit-zeros-and-empty-cells">Implicit zeros and empty cells</h3>
+<p>Grouping (<code>by</code>) or faceting a barplot asks for a bar per unique combination (i.e., category + group + facet). However, some combinations may not be supported by any observations in the data. In these cases, the bars are still computed off the completed combination set; particularly since stacked and centered barplots have to line up regardless. Yet this in turn invites the question of whether an "empty" cell should be read as an implicit zero, or treated as missing (<code>NA</code>).</p>
+<p>In most cases, the question is answered by the <code>FUN</code> aggregation. This is because it computes the actual value that is being plotted. For example, a <em>count</em> of no observations is <code>0</code>, whereas a <em>mean</em> of no observations is undefined and thus better treated as <code>NA</code> (similarly for other summary statistics like the variance or median). Nonetheless, users can override this behaviour either way with the <code>na.as.zero</code> argument.</p>
+<p>Three related points are worth highlighting. First, a zero-height bar only reads as zero when it is measured <em>from</em> zero. So <code>offset</code> layouts (waterfall, diverging/Likert) never draw one unless <code>na.as.zero = TRUE</code> asks for it explicitly. Second, a "zero" combination is still subject to the <code>drop.zeros</code> argument like any other zero. So <code style="white-space: pre;">na.as.zero = TRUE, drop.zeros = TRUE</code> cancel out. Finally, <code>na.as.zero = TRUE</code> marks only the categories that <em>could</em> have held data. Where <code>x</code>, <code>by</code> or <code>facet</code> are mapped to the same variable, for example, most combinations cannot occur at all—and are never drawn, regardless.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -834,15 +850,14 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: We used automatic argument passing for 'xord', `FUN`, etc. above. But</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># this wouldn't work for `width`, since it would conflict with the top-level</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `tinyplot(..., width = &lt;width&gt;)` argument. It's safer to pass these args</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># through the `type_barplot()` functional equivalent...</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID <span class="sc">|</span> drug, <span class="at">data =</span> sleep2,</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">xord =</span> <span class="st">"desc"</span>, <span class="at">width =</span> <span class="fl">0.5</span>)</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aside: We used automatic argument passing for 'xord', `FUN`, etc. above.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># But this wouldn't work for `width`, since it would conflict with the</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># top-level `tinyplot(..., width = &lt;width&gt;)` argument. It's safer to pass</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># these args through the `type_barplot()` functional equivalent...</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID <span class="sc">|</span> drug, <span class="at">data =</span> sleep2,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">xord =</span> <span class="st">"desc"</span>, <span class="at">width =</span> <span class="fl">0.5</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -947,10 +962,9 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 <span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  value <span class="sc">~</span> item <span class="sc">|</span> <span class="fu">I</span>(value <span class="sc">&lt;</span> <span class="dv">0</span>), <span class="at">data =</span> d,</span>
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">offset =</span> d<span class="sc">$</span>offset, <span class="at">lighten =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="cn">NA</span>, <span class="co"># (optional: turn off border)</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="cn">FALSE</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fl">4.5</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"grey50"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="cn">FALSE</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="fu">type_vline</span>(<span class="fl">4.5</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"grey50"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -966,30 +980,70 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">question =</span> <span class="fu">c</span>(<span class="st">"Pay"</span>, <span class="st">"Workload"</span>, <span class="st">"Manager"</span>, <span class="st">"Culture"</span>),</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">response =</span> <span class="fu">c</span>(<span class="st">"Strong disagree"</span>, <span class="st">"Disagree"</span>, <span class="st">"Agree"</span>, <span class="st">"Strong agree"</span>, <span class="st">"Unsure"</span>)</span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>response <span class="ot">=</span> <span class="fu">factor</span>(lik<span class="sc">$</span>response, <span class="at">levels =</span> <span class="fu">unique</span>(lik<span class="sc">$</span>response))</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>share <span class="ot">=</span> <span class="fu">c</span>( <span class="co"># proportions summing to 1 within each question</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">15</span>,</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">20</span>, .<span class="dv">30</span>, .<span class="dv">15</span>, .<span class="dv">20</span>,</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">35</span>, .<span class="dv">20</span>, .<span class="dv">40</span>, .<span class="dv">30</span>,</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">25</span>, .<span class="dv">15</span>, .<span class="dv">35</span>, .<span class="dv">20</span>,</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">10</span>, .<span class="dv">05</span>, .<span class="dv">15</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co"># diverging palette: reds (disagree) -&gt; blues (agree), grey for "Unsure"</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"#b2182b"</span>, <span class="st">"#ef8a62"</span>, <span class="st">"#67a9cf"</span>, <span class="st">"#2166ac"</span>, <span class="st">"grey"</span>)</span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  share <span class="sc">~</span> question <span class="sc">|</span> response, <span class="at">data =</span> lik,</span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">offset =</span> <span class="st">"Unsure"</span>, <span class="at">lighten =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"top!"</span>, <span class="at">title =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> pal),</span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Hypothetical Likert example with category offset"</span></span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>)</span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>, <span class="at">v =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>lik<span class="sc">$</span>share <span class="ot">=</span> <span class="fu">c</span>( <span class="co"># proportions summing to 1 within each question</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">15</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">20</span>, .<span class="dv">30</span>, .<span class="dv">15</span>, .<span class="dv">20</span>,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">35</span>, .<span class="dv">20</span>, .<span class="dv">40</span>, .<span class="dv">30</span>,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">25</span>, .<span class="dv">15</span>, .<span class="dv">35</span>, .<span class="dv">20</span>,</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  .<span class="dv">10</span>, .<span class="dv">10</span>, .<span class="dv">05</span>, .<span class="dv">15</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># diverging palette: reds (disagree) -&gt; blues (agree), grey for "Unsure"</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"#b2182b"</span>, <span class="st">"#ef8a62"</span>, <span class="st">"#67a9cf"</span>, <span class="st">"#2166ac"</span>, <span class="st">"grey"</span>)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  share <span class="sc">~</span> question <span class="sc">|</span> response, <span class="at">data =</span> lik,</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">offset =</span> <span class="st">"Unsure"</span>, <span class="at">lighten =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">flip =</span> <span class="cn">TRUE</span>, <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>, <span class="at">yaxl =</span> <span class="st">"percent"</span>,</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="st">"top!"</span>, <span class="at">title =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"clean2"</span>, <span class="at">palette.qualitative =</span> pal),</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Hypothetical Likert example with category offset"</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>)</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"vline"</span>, <span class="at">v =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_barplot_files/figure-html/unnamed-chunk-1-20.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Implicit zeros and empty cells (see the section of the same name above)</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># No (mt)car has 8 cylinders and a straight engine, so that bar is a count</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># of zero and is marked as such (flat, along the baseline)</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="sc">~</span> cyl <span class="sc">|</span> vs, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">facet =</span> <span class="st">"by"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-21.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># But in this example, the aggregating statistic is a mean rather than a</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># count. The mean of unobserved combinations (e.g.,  carb==1 &amp; vs==0) is</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># is undefined, so nothing is drawn for the empty cells</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  mpg <span class="sc">~</span> <span class="fu">factor</span>(carb), <span class="at">data =</span> mtcars,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span> vs, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-22.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... use na.as.zero to override and mark as (implicit) zeros</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  mpg <span class="sc">~</span> <span class="fu">factor</span>(carb), <span class="at">data =</span> mtcars,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_barplot</span>(<span class="at">na.as.zero =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">facet =</span> <span class="sc">~</span> vs, <span class="at">facet.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_barplot_files/figure-html/unnamed-chunk-1-23.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

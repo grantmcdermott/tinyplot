@@ -28,6 +28,7 @@ draw_facet_window = function(
     ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl, yaxr = NULL,
     rev_x = FALSE, rev_y = FALSE,
     xlim_partial = NULL, ylim_partial = NULL,
+    facet_labs = NULL,
     asp, log,
     # other args (in approx. alphabetical + group ordering)
     dots,
@@ -73,13 +74,6 @@ draw_facet_window = function(
       xfree_split = split(xcat, facet)
       yfree_split = split(ycat, facet)
     }
-  }
-
-  # Per-panel category positions, when the panels were re-levelled
-  # (facet.args$drop.levels). Like `.fusr` further below, these travel via
-  # .tinyplot_env rather than as another argument; see facet_relevel().
-  facet_labs = if (facet_drop_levels_on(facet.args)) {
-    get_environment_variable(".facet_labs")
   }
 
   # draw background color only in the grid rectangle
@@ -943,9 +937,13 @@ facet_relevel = function(settings) {
     )
   }
 
-  # Where draw_facet_window() reads them from, and where any layer added on top
-  # inherits them; cf. `.fusr` and `xlabs_orig` in align_layer().
-  if (applied) set_environment_variable(.facet_labs = facet_labs)
+  # The maps travel to draw_facet_window() as an argument, so that a replay (on
+  # device resize) uses the ones this plot computed. The copy in .tinyplot_env is
+  # for any layer added on top; cf. `xlabs_orig` in align_layer().
+  if (applied) {
+    settings[["facet_labs"]] = facet_labs
+    set_environment_variable(.facet_labs = facet_labs)
+  }
 
   settings[["datapoints"]] = datapoints
   invisible()

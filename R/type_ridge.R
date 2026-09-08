@@ -649,7 +649,7 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, ma
   if (!is.null(probs)) {
     ## map quantiles to breaks
     if (!(missing(breaks) || is.null(breaks))) stop("only one of 'breaks' and 'probs' must be specified")
-    breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
+    breaks = density_quantile(list(x = x, y = y - ymin), probs = probs)
   }
 
   ## sanity check
@@ -740,7 +740,7 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, man
   ## map quantiles to breaks
   if (!is.null(probs)) {
     if (!(missing(breaks) || is.null(breaks))) stop("only one of 'breaks' and 'probs' must be specified")
-    breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
+    breaks = density_quantile(list(x = x, y = y - ymin), probs = probs)
   }
 
   if (!is.null(alpha)) col = adjustcolor(col, alpha.f = alpha)
@@ -762,8 +762,7 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, man
 ## auxiliary function for determining quantiles based on density function
 
 #' @importFrom stats median approx
-#' @export
-quantile.density = function(x, probs = seq(0, 1, 0.25), ...) {
+density_quantile = function(x, probs = seq(0, 1, 0.25), ...) {
   ## sanity check for probabilities
   if (any(probs < 0 | probs > 1)) stop("'probs' outside [0,1]")
 

@@ -301,3 +301,81 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "barplot_xaxl_dict")
 
+
+
+# What is a cell that no observation reaches worth? aggregate() completes the
+# x-by-facet grid so that stacking has somewhere to stand, then fills those
+# invented cells with NA rather than calling FUN on them -- so FUN's own answer
+# for no data decides. A *mean* of nothing is undefined, so nothing is drawn:
+# here carb = 1 is unobserved for vs = 0, and carb = 3, 6, 8 for vs = 1. (#711)
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, type = "barplot", facet = ~vs,
+           facet.args = list(ncol = 1))
+}
+expect_snapshot_plot(f, label = "barplot_facet_unobserved")
+
+# ... whereas a *count* of nothing is 0, a real value, so the bar draws (flat,
+# along the baseline). cyl = 8 never occurs with vs = 1.
+f = function() {
+  tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by",
+           facet.args = list(ncol = 1))
+}
+expect_snapshot_plot(f, label = "barplot_facet_unobserved_count")
+
+# `offset` moves the baseline, and a zero-height bar only reads as zero from a
+# zero baseline, so an offset layout draws nothing there whatever FUN says. Every
+# item here has just one of the two `by` levels, so 5 of the 10 cells are empty.
+wf = data.frame(item = factor(c("Sales", "Costs", "TOTAL"), levels = c("Sales", "Costs", "TOTAL")),
+                value = c(100, -80, 20))
+wf$off = c(0, 100, 0)
+f = function() {
+  tinyplot(value ~ item | I(value < 0), data = wf, legend = FALSE,
+           type = type_barplot(offset = wf$off, FUN = sum))
+}
+expect_snapshot_plot(f, label = "barplot_offset_unobserved_sum")
+
+# `na.as.zero` overrides the FUN-derived default either way
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           type = type_barplot(na.as.zero = TRUE),
+           facet.args = list(ncol = 1))
+}
+expect_snapshot_plot(f, label = "barplot_na_as_zero_true")
+
+f = function() {
+  tinyplot(~ cyl | vs, data = mtcars, facet = "by",
+           type = type_barplot(na.as.zero = FALSE),
+           facet.args = list(ncol = 1))
+}
+expect_snapshot_plot(f, label = "barplot_na_as_zero_false")
+
+expect_error(
+  tinyplot(~ cyl, data = mtcars, type = type_barplot(na.as.zero = "yes")),
+  pattern = "na.as.zero"
+)
+
+# Mapping two aesthetics to the same variable leaves only the diagonal cells able
+# to hold data, so the rest are impossible rather than empty and are never marked
+# as zeros -- not even with na.as.zero = TRUE. (#711)
+f = function() {
+  tinyplot(~ cyl | cyl, data = mtcars, type = "barplot", legend = FALSE,
+           main = "by == x: no phantom bars")
+}
+expect_snapshot_plot(f, label = "barplot_by_equals_x")
+
+# ... and the same where the facet, rather than x, repeats the `by` variable. The
+# `facet = "by"` keyword form of this is covered by barplot_facet above; here the
+# variable is simply named twice, which the keyword flag alone would miss.
+f = function() {
+  tinyplot(~ carb | vs, data = mtcars, type = "barplot", facet = ~vs,
+           facet.args = list(ncol = 1), main = "facet == by (same variable)")
+}
+expect_snapshot_plot(f, label = "barplot_facet_equals_by")
+
+# ... while a genuine zero still draws (and is still `drop.zeros`' business)
+zero_dat = data.frame(g = factor(c("a", "b", "c")), v = c(2, 0, 3))
+f = function() tinyplot(v ~ g, data = zero_dat, type = "barplot")
+expect_snapshot_plot(f, label = "barplot_genuine_zero")
+# A named atomic vector (#714)
+f = function() tinyplot(c("A" = 1, "B" = 2, "C" = 3), type = "barplot")
+expect_snapshot_plot(f, label = "barplot_named_vector")

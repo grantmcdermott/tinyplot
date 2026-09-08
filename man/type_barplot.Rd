@@ -13,6 +13,7 @@ type_barplot(
   xlevels = NULL,
   xord = NULL,
   drop.zeros = FALSE,
+  na.as.zero = NULL,
   lighten = TRUE,
   xaxlabels = NULL
 )
@@ -90,6 +91,11 @@ Each argument defaults to \code{NULL}, i.e. keep the existing factor levels.}
 to \code{FALSE} (default) a zero height bar is still drawn for which the border
 lines will still be visible.}
 
+\item{na.as.zero}{logical. Should a category that no observation reaches be
+treated as a zero? Defaults to \code{NULL}, i.e. let \code{FUN} decide; see the
+"Implicit zeros and empty cells" section below. Set to \code{TRUE} to always mark such categories with a
+zero-height bar, or \code{FALSE} to never draw them.}
+
 \item{lighten}{logical. Should the fills use a lighter, opaque tint of the
 series colour(s)? Default is \code{TRUE}, which keeps single- and multi-group
 displays consistent and lets the fill read cleanly over grid lines. Set to
@@ -106,10 +112,43 @@ frequencies) of the levels of \code{x}. For formulas of type \code{y ~ x} the va
 of \code{y} within each level of \code{x} is visualized, if necessary aggregated
 using some function (default: mean).
 }
+\section{Implicit zeros and empty cells}{
+
+
+Grouping (\code{by}) or faceting a barplot asks for a bar per unique combination
+(i.e., category + group + facet). However, some combinations may not be
+supported by any observations in the data. In these cases, the bars are
+still computed off the completed combination set; particularly since stacked
+and centered barplots have to line up regardless. Yet this in turn invites
+the question of whether an "empty" cell should be read as an implicit zero,
+or treated as missing (\code{NA}).
+
+In most cases, the question is answered by the \code{FUN} aggregation. This is
+because it computes the actual value that is being plotted. For example, a
+\emph{count} of no observations is \code{0}, whereas a \emph{mean} of no observations is
+undefined and thus better treated as \code{NA} (similarly for other summary
+statistics like the variance or median). Nonetheless, users can override
+this behaviour either way with the \code{na.as.zero} argument.
+
+Three related points are worth highlighting. First, a zero-height bar only
+reads as zero when it is measured \emph{from} zero. So \code{offset} layouts
+(waterfall, diverging/Likert) never draw one unless \code{na.as.zero = TRUE}
+asks for it explicitly. Second, a "zero" combination is still subject to
+the \code{drop.zeros} argument like any other zero. So
+\verb{na.as.zero = TRUE, drop.zeros = TRUE} cancel out. Finally,
+\code{na.as.zero = TRUE} marks only the categories that \emph{could} have held data.
+Where \code{x}, \code{by} or \code{facet} are mapped to the same variable, for example,
+most combinations cannot occur at all---and are never drawn, regardless.
+}
+
 \examples{
 #
 ## Basic use (raw values)
 
+# (named) atomic vector
+tinyplot(c(A = 1, B = 2, C = 3), type = "barplot")
+
+# formula + data.frame method
 tinyplot(GNP ~ Year, data = longley, type = "barplot")
 
 tinyplot(demand ~ Time, data = BOD, type = "bar") # "bar" is a shorthand
@@ -119,6 +158,18 @@ tinyplot_add(type = "text", pos = 3, xpd = NA)    # add y values as text
 tinyplot(demand ~ Time, data = BOD, type = "bar", xord = "asc")
 jumble = c("7","1","5","2","4","3") # note: Time = 6 is also missing
 tinyplot(demand ~ Time, data = BOD, type = "bar", xlevels = jumble) 
+
+# useful top-level args:
+# 1) xaxl to format the x labels, e.g. with a dictionary, keyword, or (here:)
+#    function
+# 2) xaxr to rotate long category labels (best used with a dynamic theme)
+tinyplot(
+  demand ~ Time, data = BOD,
+  type = "bar",
+  xaxl = function(x) paste("Time =", x),
+  xaxr = 45,
+  theme = "broadsheet"
+)
 
 #
 ## Aggregated vs grouped values (multiple ys per x)
@@ -147,25 +198,16 @@ tinyplot(
 
 # of course, we don't have to aggregate if we specify groups (stacked or non)
 tinyplot(extra ~ ID | drug, data = sleep2, type = "barplot", beside = TRUE)
-# Note: We used automatic argument passing for 'xord', `FUN`, etc. above. But
-# this wouldn't work for `width`, since it would conflict with the top-level
-# `tinyplot(..., width = <width>)` argument. It's safer to pass these args
-# through the `type_barplot()` functional equivalent...
 
+# Aside: We used automatic argument passing for 'xord', `FUN`, etc. above.
+# But this wouldn't work for `width`, since it would conflict with the
+# top-level `tinyplot(..., width = <width>)` argument. It's safer to pass
+# these args through the `type_barplot()` functional equivalent...
 tinyplot(
   extra ~ ID | drug, data = sleep2,
   type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
 )
-
-# speaking of top-level args, use xaxl to format the x labels, e.g. with a
-# dictionary, keyword, or (here:) function
-
-tinyplot(
-  extra ~ ID | drug, data = sleep2,
-  type = type_barplot(beside = TRUE, xord = "desc"),
-  xaxl = as.roman
-)
-
+ 
 #
 ## matrix method (no formula required)
 
@@ -217,7 +259,6 @@ d$offset = c(0, cumsum(d$value[1:3]), 0)
 tinyplot(
   value ~ item | I(value < 0), data = d,
   type = type_barplot(offset = d$offset, lighten = FALSE),
-  col = NA, # (optional: turn off border)
   legend = FALSE
 )
 tinyplot_add(type = type_vline(4.5), lty = 2, col = "grey50")
@@ -230,7 +271,6 @@ lik = expand.grid(
   question = c("Pay", "Workload", "Manager", "Culture"),
   response = c("Strong disagree", "Disagree", "Agree", "Strong agree", "Unsure")
 )
-lik$response = factor(lik$response, levels = unique(lik$response))
 lik$share = c( # proportions summing to 1 within each question
   .10, .25, .05, .15,
   .20, .30, .15, .20,
@@ -250,5 +290,28 @@ tinyplot(
 )
 tinyplot_add(type = "vline")
 tinyplot_add(type = "vline", v = 1, lty = 2)
+
+#
+## Implicit zeros and empty cells (see the section of the same name above)
+
+# No (mt)car has 8 cylinders and a straight engine, so that bar is a count
+# of zero and is marked as such (flat, along the baseline)
+tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by")
+
+# But in this example, the aggregating statistic is a mean rather than a
+# count. The mean of unobserved combinations (e.g.,  carb==1 & vs==0) is
+# is undefined, so nothing is drawn for the empty cells
+tinyplot(
+  mpg ~ factor(carb), data = mtcars,
+  type = "barplot",
+  facet = ~ vs, facet.args = list(ncol = 1)
+)
+
+# ... use na.as.zero to override and mark as (implicit) zeros
+tinyplot(
+  mpg ~ factor(carb), data = mtcars,
+  type = type_barplot(na.as.zero = TRUE),
+  facet = ~ vs, facet.args = list(ncol = 1)
+)
 
 }

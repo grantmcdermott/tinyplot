@@ -9,23 +9,11 @@ fifa2026 = c(Spain = 14462, England = 12426, France = 12365, Germany = 11246, Po
 
 library("tinyplot")
 tinyplot(
-  x = 1:48,
-  y = fifa2026,
+  fifa2026,
   type = "barplot",
-  xlab = NA,
-  ylab = NA,
-  xaxt = "n",
-  yaxl = "%",
+  xaxr = 45, xord = "desc", # rotate xlabs at 45 deg and order (i.t.o. descending y values)
+  ylab = NA, yaxl = "%",
   main = "Spain most likely to (not) win the 2026 FIFA World Cup",
   cap = "Source: https://www.zeileis.org/news/fifa2026/",
-  theme = list("broadsheet", mar = c(4, 0.1, 0.6, 0.6), col.default = "#2A9D8F")
-)
-text(
-  1:48,
-  -0.001,
-  labels = names(fifa2026),
-  adj = c(1, 1.15),
-  cex = 0.5,
-  srt = 45,
-  xpd = TRUE
+  theme = list("broadsheet", col.default = "#2A9D8F", cex.xaxs = 0.5)
 )

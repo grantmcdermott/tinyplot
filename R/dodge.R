@@ -92,6 +92,12 @@ dodge_positions = function(
     cols = cols[cols %in% names(datapoints)]
   }
 
+  # A dodge moves a row off its own tick, so record where it started; this is the
+  # choke point for every dodging type. See cat_axis_codes(), the only consumer.
+  if (facet_drop_levels_on(settings[["facet.args"]])) {
+    datapoints[[".xcat"]] = datapoints[["x"]]
+  }
+
   if (fixed.dodge) {
     n = nlevels(datapoints$by)
     d = cumsum(rep(dodge, n))

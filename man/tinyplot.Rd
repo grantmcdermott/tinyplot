@@ -42,6 +42,8 @@ tinyplot(x, ...)
   yaxb = NULL,
   xaxl = NULL,
   yaxl = NULL,
+  xaxr = NULL,
+  yaxr = NULL,
   log = "",
   flip = FALSE,
   frame.plot = NULL,
@@ -201,6 +203,16 @@ drawn. For a two-sided (\code{fvar1 ~ fvar2}) grid, \code{drop = TRUE} cannot re
 the panel outright, since the layout is a rectangle of rows by columns and
 doing so would misalign the panels that remain; instead the slot is kept
 but left blank, so that it reads as a gap rather than an empty box.
+\item \code{drop.levels} a logical value indicating whether each facet should keep
+only the categories of a categorical axis that it actually uses. Default is
+\code{FALSE}, i.e. every facet shows the full set of categories, even those with
+no data in that panel. With \code{drop.levels = TRUE} a panel's axis is
+recomputed as if its data had been passed through \code{factor()} on its own, so
+the surviving categories are re-spaced evenly and no gaps are left behind.
+Requires free scales (\code{free = TRUE}), since fixed panels share a single
+axis and per-panel categories would misalign them. Note that this is
+distinct from \code{drop} above: \code{drop} removes empty \emph{facets}, whereas
+\code{drop.levels} removes unused \emph{categories within} a facet.
 \item \code{axes} a character string for controlling which facets draw their own
 axes. One of \code{"all"} (every facet gets its own axes), \code{"outer"} (only the
 facets along the bottom and left edges of the grid, so that redundant
@@ -435,6 +447,16 @@ Passed to \code{\link{tinylabel}}; see the latter's help file for more detailed
 documentation and examples. Note that this is a post-processing step that
 affects the \emph{appearance} of the tick labels only; use in conjunction with
 \code{x/yaxb} if you would like to adjust the position of the tick marks too.}
+
+\item{xaxr, yaxr}{numeric giving the rotation of the x- or y-axis tick labels,
+in degrees counter-clockwise; \code{NULL} (the default) leaves them unrotated.
+Setting one overrides \code{las} for that axis alone, leaving the other axis
+under \code{las} as usual, and \code{0} (or any multiple of 360) counts as no
+rotation at all. Best paired with a dynamic theme (see \code{tinytheme}), since
+that is what resizes the margins to fit the tilted labels; under the
+default theme a long rotated label will be clipped unless you widen \code{mar}
+yourself. Defaults to the value of \code{tpar("xaxr")} / \code{tpar("yaxr")}, whose
+documentation covers this and the label-spacing caveat in more detail.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be
 logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}

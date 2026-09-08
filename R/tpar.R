@@ -63,6 +63,7 @@
 #' * `dynmar`: Logical indicating whether `tinyplot` should attempt dynamic adjustment of margins to reduce whitespace and/or account for spacing of text elements (e.g., long horizontal y-axis labels). Note that this parameter is tightly coupled to internal `tinythemes()` logic and should _not_ be adjusted manually unless you really know what you are doing or don't mind risking unintended consequences to your plot.
 #' * `facet.axes`: Character string controlling which facets draw their own axes: `"all"` (each facet), `"outer"` (only facets on the outer edge of the facet grid, dropping redundant interior axes), or `"none"`. Defaults to `NULL`, whereby the choice is inferred from whether the plot is framed (see the `axes` argument of [`facet.args`][tinyplot]). Equivalent to setting `tinyplot(..., facet.args = list(axes = X))`, but globally, which also makes it available to themes.
 #' * `facet.drop`: Logical indicating whether facet levels that no observation uses should be dropped, rather than drawing an empty panel. Defaults to `FALSE`. Equivalent to setting `tinyplot(..., facet.args = list(drop = X))`, but globally, which also makes it available to themes.
+#' * `facet.drop.levels`: Logical indicating whether each free facet (`facet.args = list(free = TRUE)`) should keep only the categories of a categorical axis that it actually uses, re-levelled as if that panel's data had been passed through `factor()` on its own. Defaults to `FALSE`, i.e. every panel shows the full set of categories. Equivalent to setting `tinyplot(..., facet.args = list(drop.levels = X))`, but globally, which also makes it available to themes.
 #' * `facet.bg`: Character or integer specifying the facet background colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NULL` (none).
 #' * `facet.border`: Character or integer specifying the facet border colour. If an integer, will correspond to the user's default colour palette (see `palette`). Passed to `rect`. Defaults to `NA` (none).
 #' * `facet.cex`: Expansion factor for facet titles. Defaults to `1`.
@@ -87,6 +88,7 @@
 #' * `palette.qualitative`: Palette for qualitative colors. See the `palette` argument in `?tinyplot`.
 #' * `palette.sequential`: Palette for sequential colors. See the `palette` argument in `?tinyplot`.
 #' * `ribbon.alpha`: Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is `0.2`.
+#' * `xaxr`, `yaxr`: Numeric giving the rotation of the x- and y-axis tick labels, in degrees counter-clockwise; `NULL` (the default) leaves them unrotated. Unlike `las`, which is limited to the four right angles, any angle is permitted. Setting one overrides `las` for that axis alone, leaving the other axis under `las` as usual, and `0` (or any multiple of 360) counts as no rotation at all. Sets the default for the `xaxr` and `yaxr` arguments of [`tinyplot()`], which take precedence. Two caveats follow from tinyplot drawing rotated labels itself rather than deferring to base `axis()`. First, margins are only resized to fit them under a theme with `dynmar = TRUE` (see `tinytheme`); under the default theme the margins are left alone, so a long rotated label will be clipped unless you widen `mar` yourself. Second, rotated labels do not inherit the thinning that `axis()` applies via `gap.axis`, so they start to overlap once the spacing between ticks falls below `line height / sin(srt)`.
 #'
 #' @importFrom graphics par
 #' @importFrom utils modifyList
@@ -258,6 +260,7 @@ known_tpar = c(
     "gap.sub",
     "facet.axes",
     "facet.drop",
+    "facet.drop.levels",
     "facet.bg",
     "facet.border",
     "facet.cex",
@@ -289,7 +292,9 @@ known_tpar = c(
     "ribbon.alpha",
     "side.sub",
     "tinytheme",
+    "xaxr",
     "xaxt",
+    "yaxr",
     "yaxt"
 )
 
@@ -309,6 +314,8 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["adj.ylab"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "adj.ylab")
   assert_numeric(.tpar[["cex.xaxs"]], len = 1, lower = 0, null.ok = TRUE, name = "cex.xaxs")
   assert_numeric(.tpar[["cex.yaxs"]], len = 1, lower = 0, null.ok = TRUE, name = "cex.yaxs")
+  assert_numeric(.tpar[["xaxr"]], len = 1, null.ok = TRUE, name = "xaxr")
+  assert_numeric(.tpar[["yaxr"]], len = 1, null.ok = TRUE, name = "yaxr")
   assert_flag(.tpar[["cairo"]], name = "cairo")
   assert_flag(.tpar[["dynmar"]], null.ok = FALSE, name = "dynmar")
   assert_choice(.tpar[["ljust"]], choice = c("left", "center", "l", "c"), null.ok = TRUE, name = "ljust")
@@ -323,6 +330,7 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["facet.cex"]], len = 1, null.ok = TRUE, name = "facet.cex")
   assert_choice(.tpar[["facet.axes"]], c("all", "outer", "none"), null.ok = TRUE, name = "facet.axes")
   assert_logical(.tpar[["facet.drop"]], null.ok = TRUE, name = "facet.drop")
+  assert_logical(.tpar[["facet.drop.levels"]], null.ok = TRUE, name = "facet.drop.levels")
   assert_labeller(.tpar[["facet.labeller"]], name = "facet.labeller", list.ok = TRUE)
   assert_facet_prefix(.tpar[["facet.prefix"]], name = "facet.prefix")
   assert_string(.tpar[["facet.sep"]], null.ok = TRUE, name = "facet.sep")

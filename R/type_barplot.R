@@ -69,6 +69,10 @@
 #' @param drop.zeros logical. Should bars with zero height be dropped? If set
 #'   to `FALSE` (default) a zero height bar is still drawn for which the border
 #'   lines will still be visible.
+#' @param na.as.zero logical. Should a category that no observation reaches be
+#'   treated as a zero? Defaults to `NULL`, i.e. let `FUN` decide; see the
+#'   "Implicit zeros and empty cells" section below. Set to `TRUE` to always mark such categories with a
+#'   zero-height bar, or `FALSE` to never draw them.
 #' @param lighten logical. Should the fills use a lighter, opaque tint of the
 #'   series colour(s)? Default is `TRUE`, which keeps single- and multi-group
 #'   displays consistent and lets the fill read cleanly over grid lines. Set to
@@ -76,6 +80,33 @@
 #' @param xaxlabels \[Deprecated\] a character vector with the axis labels for
 #'   the `x` variable. Use the top-level `xaxl` argument instead (see
 #'   [`tinylabel`]). This argument will be removed in a future release.
+#'
+#' @section Implicit zeros and empty cells:
+#'
+#'   Grouping (`by`) or faceting a barplot asks for a bar per unique combination
+#'   (i.e., category + group + facet). However, some combinations may not be
+#'   supported by any observations in the data. In these cases, the bars are
+#'   still computed off the completed combination set; particularly since stacked
+#'   and centered barplots have to line up regardless. Yet this in turn invites
+#'   the question of whether an "empty" cell should be read as an implicit zero,
+#'   or treated as missing (`NA`).
+#'
+#'   In most cases, the question is answered by the `FUN` aggregation. This is
+#'   because it computes the actual value that is being plotted. For example, a
+#'   *count* of no observations is `0`, whereas a *mean* of no observations is
+#'   undefined and thus better treated as `NA` (similarly for other summary
+#'   statistics like the variance or median). Nonetheless, users can override
+#'   this behaviour either way with the `na.as.zero` argument.
+#'
+#'   Three related points are worth highlighting. First, a zero-height bar only
+#'   reads as zero when it is measured *from* zero. So `offset` layouts
+#'   (waterfall, diverging/Likert) never draw one unless `na.as.zero = TRUE`
+#'   asks for it explicitly. Second, a "zero" combination is still subject to
+#'   the `drop.zeros` argument like any other zero. So
+#'   `na.as.zero = TRUE, drop.zeros = TRUE` cancel out. Finally,
+#'   `na.as.zero = TRUE` marks only the categories that _could_ have held data.
+#'   Where `x`, `by` or `facet` are mapped to the same variable, for example,
+#'   most combinations cannot occur at all---and are never drawn, regardless.
 #'
 #' @examples
 #' #
@@ -134,12 +165,11 @@
 #' 
 #' # of course, we don't have to aggregate if we specify groups (stacked or non)
 #' tinyplot(extra ~ ID | drug, data = sleep2, type = "barplot", beside = TRUE)
-
-#' # Note: We used automatic argument passing for 'xord', `FUN`, etc. above. But
-#' # this wouldn't work for `width`, since it would conflict with the top-level
-#' # `tinyplot(..., width = <width>)` argument. It's safer to pass these args
-#' # through the `type_barplot()` functional equivalent...
 #' 
+#' # Aside: We used automatic argument passing for 'xord', `FUN`, etc. above.
+#' # But this wouldn't work for `width`, since it would conflict with the
+#' # top-level `tinyplot(..., width = <width>)` argument. It's safer to pass
+#' # these args through the `type_barplot()` functional equivalent...
 #' tinyplot(
 #'   extra ~ ID | drug, data = sleep2,
 #'   type = type_barplot(beside = TRUE, xord = "desc", width = 0.5)
@@ -196,7 +226,6 @@
 #' tinyplot(
 #'   value ~ item | I(value < 0), data = d,
 #'   type = type_barplot(offset = d$offset, lighten = FALSE),
-#'   col = NA, # (optional: turn off border)
 #'   legend = FALSE
 #' )
 #' tinyplot_add(type = type_vline(4.5), lty = 2, col = "grey50")
@@ -209,7 +238,6 @@
 #'   question = c("Pay", "Workload", "Manager", "Culture"),
 #'   response = c("Strong disagree", "Disagree", "Agree", "Strong agree", "Unsure")
 #' )
-#' lik$response = factor(lik$response, levels = unique(lik$response))
 #' lik$share = c( # proportions summing to 1 within each question
 #'   .10, .25, .05, .15,
 #'   .20, .30, .15, .20,
@@ -230,8 +258,31 @@
 #' tinyplot_add(type = "vline")
 #' tinyplot_add(type = "vline", v = 1, lty = 2)
 #'
+#' #
+#' ## Implicit zeros and empty cells (see the section of the same name above)
+#'
+#' # No (mt)car has 8 cylinders and a straight engine, so that bar is a count
+#' # of zero and is marked as such (flat, along the baseline)
+#' tinyplot(~ cyl | vs, data = mtcars, type = "barplot", facet = "by")
+#'
+#' # But in this example, the aggregating statistic is a mean rather than a
+#' # count. The mean of unobserved combinations (e.g.,  carb==1 & vs==0) is
+#' # is undefined, so nothing is drawn for the empty cells
+#' tinyplot(
+#'   mpg ~ factor(carb), data = mtcars,
+#'   type = "barplot",
+#'   facet = ~ vs, facet.args = list(ncol = 1)
+#' )
+#'
+#' # ... use na.as.zero to override and mark as (implicit) zeros
+#' tinyplot(
+#'   mpg ~ factor(carb), data = mtcars,
+#'   type = type_barplot(na.as.zero = TRUE),
+#'   facet = ~ vs, facet.args = list(ncol = 1)
+#' )
+#'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, lighten = TRUE, xaxlabels = NULL) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, na.as.zero = NULL, lighten = TRUE, xaxlabels = NULL) {
   if (!is.null(xaxlabels)) {
     warning(
       "'xaxlabels' is deprecated; use the top-level 'xaxl' argument instead, ",
@@ -240,8 +291,9 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
       call. = FALSE
     )
   }
+  assert_logical(na.as.zero, null.ok = TRUE)
   out = list(
-    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xord = xord, xaxlabels = xaxlabels, drop.zeros = drop.zeros, lighten = lighten),
+    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xord = xord, xaxlabels = xaxlabels, drop.zeros = drop.zeros, na.as.zero = na.as.zero, lighten = lighten),
     draw = draw_rect(),
     name = "barplot"
   )
@@ -250,7 +302,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
 }
 
 #' @importFrom stats aggregate
-data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, xaxlabels = NULL, drop.zeros = FALSE, lighten = TRUE) {
+data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, xaxlabels = NULL, drop.zeros = FALSE, na.as.zero = NULL, lighten = TRUE) {
     fun = function(settings, ...) {
         env2env(
           settings,
@@ -295,8 +347,44 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
           )
         }
         if (!is.null(xaxlabels)) levels(datapoints$x) = xaxlabels
+        ## Two aesthetics mapped to the same variable (`facet = "by"`, `by = x`, or
+        ## the same variable named twice) leave only the diagonal cells able to
+        ## hold data. Note this has to be settled before the aggregate() below
+        ## collapses the rows it is read off.
+        same_by_facet = isTRUE(facet_by) ||
+          identical(as.character(datapoints$by), as.character(datapoints$facet))
+        same_x_by = identical(as.character(datapoints$x), as.character(datapoints$by))
         datapoints = aggregate(datapoints[, "y", drop = FALSE], datapoints[, c("x", "by", "facet")], FUN = FUN, drop = FALSE)
-        datapoints$y[is.na(datapoints$y)] = 0 #FIXME: always?#
+        ## `drop = FALSE` completes the x-by-facet-by-by grid, which the stacking
+        ## and centering below rely on. aggregate() fills the cells it invents with
+        ## NA rather than calling FUN on them, so ask FUN what no data is worth: a
+        ## count (or sum) of nothing is 0 and draws like any other bar, while a
+        ## mean of nothing is undefined and draws nothing. A zero-height bar only
+        ## reads as zero from a zero baseline, so `offset` layouts never draw one.
+        na_y = is.na(datapoints$y)
+        if (any(na_y)) {
+          fill = 0
+          if (is.null(na.as.zero)) {
+            empty = tryCatch(suppressWarnings(FUN(numeric(0))), error = function(e) NULL)
+            defined = is.numeric(empty) && length(empty) == 1L && is.finite(empty)
+            if (defined) fill = empty
+            na.as.zero = defined && is.null(offset)
+          }
+          datapoints$y[na_y] = if (na.as.zero) fill else 0
+          ## An off-diagonal cell of the above is impossible rather than empty, so
+          ## it is never drawn -- asking for zeros is not asking for combinations
+          ## that cannot exist.
+          impossible = rep(FALSE, nrow(datapoints))
+          if (same_by_facet) {
+            impossible = as.character(datapoints$by) != as.character(datapoints$facet)
+          }
+          if (same_x_by) {
+            impossible = impossible |
+              as.character(datapoints$x) != as.character(datapoints$by)
+          }
+          nodraw = if (na.as.zero) impossible else na_y | impossible
+          if (any(nodraw)) datapoints$.unobs = nodraw
+        }
         if (!is.factor(datapoints$by)) datapoints$by = factor(datapoints$by)
         if (!is.factor(datapoints$facet)) datapoints$facet = factor(datapoints$facet)
 
@@ -481,12 +569,16 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
             yok = abs(yt - yb) > 0
             df = df[yok,  , drop = FALSE]
           }
-          
+          # cells with no value to draw (see above), now that the stacked and
+          # centered positions that needed them have been computed
+          if (!is.null(df$.unobs)) df = df[!df$.unobs, , drop = FALSE]
+
           return(df)
         })
         datapoints = do.call("rbind", datapoints)
         nx = datapoints$nx[1]
         datapoints$nx = NULL
+        datapoints$.unobs = NULL
         xlabs = 1L:nx
         names(xlabs) = levels(datapoints$x)
 

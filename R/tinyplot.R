@@ -70,6 +70,16 @@
 #'   the panel outright, since the layout is a rectangle of rows by columns and
 #'   doing so would misalign the panels that remain; instead the slot is kept
 #'   but left blank, so that it reads as a gap rather than an empty box.
+#'   - `drop.levels` a logical value indicating whether each facet should keep
+#'   only the categories of a categorical axis that it actually uses. Default is
+#'   `FALSE`, i.e. every facet shows the full set of categories, even those with
+#'   no data in that panel. With `drop.levels = TRUE` a panel's axis is
+#'   recomputed as if its data had been passed through `factor()` on its own, so
+#'   the surviving categories are re-spaced evenly and no gaps are left behind.
+#'   Requires free scales (`free = TRUE`), since fixed panels share a single
+#'   axis and per-panel categories would misalign them. Note that this is
+#'   distinct from `drop` above: `drop` removes empty *facets*, whereas
+#'   `drop.levels` removes unused *categories within* a facet.
 #'   - `axes` a character string for controlling which facets draw their own
 #'   axes. One of `"all"` (every facet gets its own axes), `"outer"` (only the
 #'   facets along the bottom and left edges of the grid, so that redundant
@@ -825,6 +835,10 @@ tinyplot.default = function(
     assert_labeller(facet.args[["labeller"]], name = "facet.args$labeller", list.ok = TRUE)
     assert_facet_prefix(facet.args[["prefix"]], name = "facet.args$prefix")
     assert_string(facet.args[["sep"]], null.ok = TRUE, name = "facet.args$sep")
+    assert_logical(
+      facet.args[["drop.levels"]],
+      null.ok = TRUE, name = "facet.args$drop.levels"
+    )
   }
 
   # save for tinyplot_add()
@@ -965,6 +979,8 @@ tinyplot.default = function(
     # raw spec of a partial limit, for free facets to re-resolve per panel
     xlim_partial  = if (is_partial_lim(xlim)) xlim else NULL,
     ylim_partial  = if (is_partial_lim(ylim)) ylim else NULL,
+    # per-panel categories under facet.args$drop.levels; see facet_relevel()
+    facet_labs    = NULL,
     # when palette functions need pre-processing this check raises error
     null_palette  = tryCatch(is.null(palette), error = function(e) FALSE),
     x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridge"
@@ -1110,6 +1126,9 @@ tinyplot.default = function(
 
   # ensure axis aligment of any added layers
   if (!add) {
+    # cleared here and repopulated by facet_relevel() below, so that a layer
+    # cannot inherit per-panel category maps from an earlier plot
+    set_environment_variable(.facet_labs = NULL)
     assign("xlabs_orig", settings[["xlabs"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
     assign(".group_offsets", settings[["group_offsets"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
     assign(".offsets_axis", settings[["offsets_axis"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
@@ -1146,6 +1165,12 @@ tinyplot.default = function(
 
   # facet_layout processes facet simplification, attribute restoration, and layout
   facet_layout(settings)
+
+  # free facets: optionally re-level each panel's categorical axis to the
+  # categories it actually uses (facet.args$drop.levels). Runs after the layout,
+  # so that `facet` has its final levels and the per-panel maps line up with the
+  # panel indices.
+  facet_relevel(settings)
 
 
   #
@@ -1586,6 +1611,7 @@ tinyplot.default = function(
       ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
+      facet_labs = facet_labs,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1622,6 +1648,7 @@ tinyplot.default = function(
       ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
+      facet_labs = facet_labs,
       asp = asp, log = log,
       dots = dots,
       draw = draw,

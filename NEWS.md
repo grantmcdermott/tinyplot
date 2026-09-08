@@ -60,6 +60,14 @@ enable finer control and customization of faceted plots:
   formula is specified. The former simply removes the missing factor level,
   while the latter retains its spot (to preserve the rectangular grid) but is
   not drawn. (#708, #710 @grantmcdermott)
+- `drop.levels`: allows each free facet (`free = TRUE`) to keep only the
+  categories of a categorical axis that it actually uses. The panel's axis is
+  recomputed as if its own data had been passed through `factor()`, so that the
+  surviving categories are re-spaced evenly rather than leaving a gap where an
+  unused one sat. Note the distinction from `drop` above: the latter removes
+  empty _facets_, whereas `drop.levels` removes unused _categories within_ a
+  facet. Default is `FALSE`, i.e. every facet keeps the full set of categories.
+  (#718 @grantmcdermott)
 - `labeller`: for formatting facet titles via `tinylabel()`. Accepts the usual
   mix of convenience keywords (symbols) known to `tinylabel()`, or formatting
   functions. A (named) vector or list can be used to separately format
@@ -150,12 +158,12 @@ related to plot layering. See "Bug fixes" below.
   long list of category names on the y-axis without also shrinking the x-axis.
   Both default to `NULL`, in which case the shared `cex.axis` value is used, so
   existing plots are unaffected. (#677 @grantmcdermott)
-- `type_lines()` and its shortcut equivalents like `"l"` and `"s"` now support a
-  _continuous_ `by` variable, drawing a colour gradient along the line itself
-  rather than reverting to a discrete legend. Useful for trajectories, where a
-  third variable (typically time) orders the path; see the new `?type_lines`
-  examples. (#712 @grantmcdermott)
 - Type-specific updates:
+  - `type_lines()` and its shortcut equivalents like `"l"` and `"s"` now support
+    a _continuous_ `by` variable, drawing a colour gradient along the line
+    itself rather than reverting to a discrete legend. Useful for trajectories,
+    where a third variable (typically time) orders the path; see the new
+    `?type_lines` examples. (#712 @grantmcdermott)
   - `type_density()` gains an `echo.bw` argument for reporting the smoothing
     bandwidth and the number of observations behind it, neither of which is
     visible from the curve itself. Destinations are `"sub"`, `"cap"`, and
@@ -169,6 +177,11 @@ related to plot layering. See "Bug fixes" below.
     of a base layer that is itself dodged. Separately, `type_summary()`'s
     internals have been refactored to use `stats::aggregate` instead of
     `stats::ave`. (#701 @grantmcdermott)
+  - `type_barplot()` gains a `na.as.zero` argument for controlling whether a
+    category that no observation reaches is treated as a zero (and so marked
+    with a flat bar along the baseline) or left undrawn. The default `NULL`
+    lets `FUN` decide; see the new "Implicit zeros and empty cells" section of
+    `?type_barplot`. (#718 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -178,16 +191,28 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
-- Passing a named atomic vector to `type_barplot()` now uses the names as the
-  bar categories, matching base `barplot()`. (#714 @grantmcdermott)
+- `type_barplot()` receives several consistency improvements and bug fixes:
+  - Passing a named atomic vector now uses the names as the bar categories,
+    matching base `barplot()`. (#714 @grantmcdermott)
+  - A category that no observation reaches is no longer treated as an
+    implicit zero; at least not unconditionally. Instead, behaviour is now
+    governed by explicit rules, e.g. derived from `FUN` or the new `na.as.zero`
+    argument (above). At the same time, explicit zeros remain unaffected. Again,
+    see the new "Implicit zeros and empty cells" section of `?type_barplot` for
+    details and examples. (#711 @grantmcdermott)
 - `type_ridge()` no longer errors under themes that set a relative (negative)
   numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
-- Layers added with `tinyplot_add()` now align correctly when the base plot type
-  coerces a numeric `x` variable to a factor, as `type_barplot()` and
-  `type_violin()` do. The base layer's categories are the coerced *labels*,
-  while the added layer still carried the raw values, so it was drawn at those
-  coordinates instead of at the category positions---often well outside the
-  plotting region. (#691 @grantmcdermott)
+- Layers added with `tinyplot_add()` now align correctly on a categorical axis:
+  - They land on the category that each row belongs to, rather than on the row's
+    _position_. The latter only coincided with the right answer when the added
+    layer's rows happened to arrive in ascending order; other rows were
+    permuted, and repeated categories collapsed onto a single position.
+    (#679 @grantmcdermott)
+  - They also align when the base plot type coerces a numeric `x` variable to a
+    factor, as `type_barplot()` and `type_violin()` do. The base layer's
+    categories are the coerced *labels*, while the added layer still carried the
+    raw values, so it was drawn at those coordinates instead of at the category
+    positions---often well outside the plotting region. (#691 @grantmcdermott)
 - Axis labellers no longer blow up the decimal precision when the breaks are
   symmetric about zero, as they are for a centered barplot. `tinyplot(...,
   center = TRUE, yaxl = "percent")` labelled its axis `80.00000%` rather than
@@ -219,13 +244,14 @@ related to plot layering. See "Bug fixes" below.
   `flip = TRUE` and for a factor `y` variable. Previously the y-axis fell back
   to numeric tick labels for every line type except `"p"`.
   (#679 @grantmcdermott)
-- Added layers now align on the category that each row belongs to, rather than
-  on the row's _position_. Thie latter only coincided with the right answer when
-  the added layer's rows happened to arrive in ascending order; other rows were
-  permuted, and repeated categories collapsed onto a single position.
-  (#679 @grantmcdermott)
 - Fixed several bugs specific to plots with free facets (i.e.,
   `facet.args = list(free = TRUE)`):
+  - Panels now keep every category of a categorical axis, regardless of type,
+    so that their ticks line up with each other. Use the new `drop.levels` arg
+    (above) for the opposite behaviour. (#718 @grantmcdermott)
+  - The geometry around the end categories of a categorical axis is no longer
+    clipped, e.g. the first and last box of a faceted boxplot.
+    (#718 @grantmcdermott)
   - A categorical y-axis no longer errors out with `'labels' is supplied and
 not 'at'`. The free-facet code path listed the eligible types by name, so
     any other type lost its tick positions while keeping the corresponding
@@ -245,16 +271,15 @@ not 'at'`. The free-facet code path listed the eligible types by name, so
     hand and so silently ignored `cex.axis`, `lwd.axis` and `lty.axis` (plus
     their per-side variants), which was most visible under themes that set them,
     e.g. `tinytheme("bw")`. (#673 @grantmcdermott)
-- Axis tick labels now honour the themed `cex.axis` value. The internal axis call
-  passed it as `cex`, which base `axis()` ignores in favour of `cex.axis` when
-  sizing tick labels, so the setting had no effect on label size. This also means
-  the per-side `cex.xaxs`/`cex.yaxs` parameters (see above) take effect.
-  (#677 @grantmcdermott)
-- Dynamic margins now measure each axis at its own tick-label size. The margin
-  and whitespace calculations read only the shared `cex.axis`, so a plot that
-  set `cex.xaxs`/`cex.yaxs` to different values clipped the labels on the larger
-  axis and reserved dead whitespace on the smaller one, e.g.
-  `tinytheme("heatmap", cex.xaxs = 2, cex.yaxs = 0.5)`. (#677 @grantmcdermott)
+- Axis tick labels now honour their themed size, in two respects:
+  - The internal axis call passed `cex.axis` as `cex`, which base `axis()`
+    ignores in favour of `cex.axis` when sizing tick labels, so the setting had
+    no effect. This also means the per-side `cex.xaxs`/`cex.yaxs` parameters
+    (see above) take effect. (#677 @grantmcdermott)
+  - Dynamic margins read only the shared `cex.axis`, so a plot setting
+    `cex.xaxs`/`cex.yaxs` to different values clipped the labels on the larger
+    axis and reserved dead whitespace on the smaller one, e.g.
+    `tinytheme("heatmap", cex.xaxs = 2, cex.yaxs = 0.5)`. (#677 @grantmcdermott)
 - Grouped and faceted plots no longer redraw axes once per empty group. This was
   most visible for `"spineplot"` types (e.g. `facet = "by"`), where the
   self-drawn axis labels were overplotted several times and rendered too heavy.

@@ -30,9 +30,12 @@
 <text x='79.92' y='407.81' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'> 200</text>
 <text x='79.92' y='378.05' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'> 400</text>
 <text x='79.92' y='348.29' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'> 600</text>
-<text x='79.92' y='407.81' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='79.92' y='378.05' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='79.92' y='348.29' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<line x1='61.92' y1='403.68' x2='65.52' y2='403.68' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='61.92' y1='373.92' x2='65.52' y2='373.92' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='61.92' y1='344.16' x2='65.52' y2='344.16' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='76.32' y1='403.68' x2='79.92' y2='403.68' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='76.32' y1='373.92' x2='79.92' y2='373.92' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='76.32' y1='344.16' x2='79.92' y2='344.16' style='stroke-width: 0.75; stroke: #FFFFFF;' />
 <text x='61.92' y='318.24' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='30.02px' lengthAdjust='spacingAndGlyphs'>depth</text>
 <text x='266.40' y='34.47' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Liberation Sans";' textLength='197.53px' lengthAdjust='spacingAndGlyphs'>Gradient legend (bottom left)</text>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='22.69px' lengthAdjust='spacingAndGlyphs'>long</text>

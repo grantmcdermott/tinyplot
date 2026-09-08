@@ -32,11 +32,16 @@
 <text x='435.04' y='206.27' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 3.0</text>
 <text x='435.04' y='187.94' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 3.5</text>
 <text x='435.04' y='170.49' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 4.0</text>
-<text x='435.04' y='242.05' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='435.04' y='223.72' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='435.04' y='206.27' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='435.04' y='187.94' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='435.04' y='170.49' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<line x1='417.04' y1='237.92' x2='420.64' y2='237.92' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='417.04' y1='219.59' x2='420.64' y2='219.59' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='417.04' y1='202.14' x2='420.64' y2='202.14' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='417.04' y1='183.81' x2='420.64' y2='183.81' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='417.04' y1='166.36' x2='420.64' y2='166.36' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='431.44' y1='237.92' x2='435.04' y2='237.92' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='431.44' y1='219.59' x2='435.04' y2='219.59' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='431.44' y1='202.14' x2='435.04' y2='202.14' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='431.44' y1='183.81' x2='435.04' y2='183.81' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='431.44' y1='166.36' x2='435.04' y2='166.36' style='stroke-width: 0.75; stroke: #FFFFFF;' />
 <text x='417.04' y='137.12' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='64.69px' lengthAdjust='spacingAndGlyphs'>Sepal.Width</text>
 <circle cx='424.60' cy='277.32' r='3.76' style='stroke-width: 0.75;' />
 <circle cx='424.60' cy='291.72' r='4.77' style='stroke-width: 0.75;' />

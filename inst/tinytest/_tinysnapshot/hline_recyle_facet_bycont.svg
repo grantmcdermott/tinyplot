@@ -31,10 +31,14 @@
 <text x='489.77' y='263.21' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='10.00px' lengthAdjust='spacingAndGlyphs'> 3</text>
 <text x='489.77' y='241.39' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='10.00px' lengthAdjust='spacingAndGlyphs'> 4</text>
 <text x='489.77' y='219.57' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='10.00px' lengthAdjust='spacingAndGlyphs'> 5</text>
-<text x='489.77' y='285.90' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='489.77' y='263.21' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='489.77' y='241.39' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='489.77' y='219.57' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<line x1='471.77' y1='281.77' x2='475.37' y2='281.77' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='471.77' y1='259.08' x2='475.37' y2='259.08' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='471.77' y1='237.26' x2='475.37' y2='237.26' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='471.77' y1='215.44' x2='475.37' y2='215.44' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='486.17' y1='281.77' x2='489.77' y2='281.77' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='486.17' y1='259.08' x2='489.77' y2='259.08' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='486.17' y1='237.26' x2='489.77' y2='237.26' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='486.17' y1='215.44' x2='489.77' y2='215.44' style='stroke-width: 0.75; stroke: #FFFFFF;' />
 <text x='471.77' y='191.44' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='12.00px' lengthAdjust='spacingAndGlyphs'>wt</text>
 </g>
 <defs>

@@ -141,6 +141,22 @@ draw_gradient_swatch = function(
 }
 
 
+# Draw the white tick marks on a gradient swatch. `at` = positions along the
+# swatch's long axis, `lo`/`hi` = its thickness bounds; ticks run inward from
+# both edges. lwd/lty are pinned so that themes setting par("lwd") (e.g. "bw")
+# don't decide legend tick legibility.
+draw_gradient_ticks = function(at, lo, hi, horiz = FALSE) {
+  tick_frac = 1 / 5 # span of each tick viz. the width of the swatch
+  tick_len = (hi - lo) * tick_frac
+  if (isTRUE(horiz)) {
+    segments(at, lo, at, lo + tick_len, col = "white", lwd = 1, lty = 1, xpd = NA)
+    segments(at, hi - tick_len, at, hi, col = "white", lwd = 1, lty = 1, xpd = NA)
+  } else {
+    segments(lo, at, lo + tick_len, at, col = "white", lwd = 1, lty = 1, xpd = NA)
+    segments(hi - tick_len, at, hi, at, col = "white", lwd = 1, lty = 1, xpd = NA)
+  }
+}
+
 # Draw vertical gradient legend labels, ticks, and title
 draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inner, outer_right) {
   labs_idx = !is.na(lgnd_labs)
@@ -169,13 +185,8 @@ draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inne
   )
 
   # Draw tick marks (white segments)
-  tick_frac = 1 / 5 # span of each tick viz. the width of the swatch
   tick_y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs))[labs_idx]
-  tick_w = (rasterbox[3] - rasterbox[1]) * tick_frac
-  segments(rasterbox[1], tick_y, rasterbox[1] + tick_w, tick_y,
-           col = "white", lwd = 1, lty = 1, xpd = NA)
-  segments(rasterbox[3] - tick_w, tick_y, rasterbox[3], tick_y,
-           col = "white", lwd = 1, lty = 1, xpd = NA)
+  draw_gradient_ticks(tick_y, rasterbox[1], rasterbox[3])
 
   # Draw title
   text(
@@ -200,13 +211,8 @@ draw_gradient_labels_horizontal = function(rasterbox, lgnd_labs, legend_args) {
 
   # Legend tick marks (white segments)
   labs_idx = !is.na(lgnd_labs)
-  tick_frac = 1 / 5
   tick_x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs))[labs_idx]
-  tick_h = (rasterbox[2] - rasterbox[4]) * tick_frac
-  segments(tick_x, rasterbox[4], tick_x, rasterbox[4] + tick_h,
-           col = "white", lwd = 1, lty = 1, xpd = NA)
-  segments(tick_x, rasterbox[2] - tick_h, tick_x, rasterbox[2],
-           col = "white", lwd = 1, lty = 1, xpd = NA)
+  draw_gradient_ticks(tick_x, rasterbox[4], rasterbox[2], horiz = TRUE)
 
   # Legend title
   text(

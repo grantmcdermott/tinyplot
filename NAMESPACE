@@ -119,6 +119,7 @@ importFrom(stats,
   aggregate,
   approx,
   as.formula,
+  ave,
   bw.SJ,
   bw.bcv,
   bw.nrd,
@@ -146,6 +147,7 @@ importFrom(stats,
   spline,
   terms,
   time,
+  var,
   weighted.mean
 )
 importFrom(tools,file_ext)

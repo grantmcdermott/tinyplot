@@ -141,6 +141,22 @@ draw_gradient_swatch = function(
 }
 
 
+# Draw the white tick marks on a gradient swatch. `at` = positions along the
+# swatch's long axis, `lo`/`hi` = its thickness bounds; ticks run inward from
+# both edges. lwd/lty are pinned so that themes setting par("lwd") (e.g. "bw")
+# don't decide legend tick legibility.
+draw_gradient_ticks = function(at, lo, hi, horiz = FALSE) {
+  tick_frac = 1 / 5 # span of each tick viz. the width of the swatch
+  tick_len = (hi - lo) * tick_frac
+  if (isTRUE(horiz)) {
+    segments(at, lo, at, lo + tick_len, col = "white", lwd = 1, lty = 1, xpd = NA)
+    segments(at, hi - tick_len, at, hi, col = "white", lwd = 1, lty = 1, xpd = NA)
+  } else {
+    segments(lo, at, lo + tick_len, at, col = "white", lwd = 1, lty = 1, xpd = NA)
+    segments(hi - tick_len, at, hi, at, col = "white", lwd = 1, lty = 1, xpd = NA)
+  }
+}
+
 # Draw vertical gradient legend labels, ticks, and title
 draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inner, outer_right) {
   labs_idx = !is.na(lgnd_labs)
@@ -168,19 +184,9 @@ draw_gradient_labels_vertical = function(rasterbox, lgnd_labs, legend_args, inne
     adj = lbl_adj
   )
 
-  # Draw tick marks (white dashes)
-  lgnd_ticks = lgnd_labs
-  lgnd_ticks[labs_idx] = "-   -"
-  text(
-    x = lbl_x_anchor,
-    y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs)),
-    labels = lgnd_ticks,
-    cex = 1,
-    col = "white",
-    family = "sans",
-    xpd = NA,
-    adj = c(1, 0.5)
-  )
+  # Draw tick marks (white segments)
+  tick_y = seq(rasterbox[2], rasterbox[4], length.out = length(lgnd_labs))[labs_idx]
+  draw_gradient_ticks(tick_y, rasterbox[1], rasterbox[3])
 
   # Draw title
   text(
@@ -203,18 +209,10 @@ draw_gradient_labels_horizontal = function(rasterbox, lgnd_labs, legend_args) {
     adj = c(0.5, 1.25)
   )
 
-  # Legend tick marks (white dashes)
-  lgnd_ticks = lgnd_labs
-  lgnd_ticks[!is.na(lgnd_ticks)] = "-   -"
-  text(
-    x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs)),
-    y = rasterbox[4],
-    labels = lgnd_ticks,
-    col = "white",
-    xpd = NA,
-    adj = c(0, 0.5),
-    srt = 90
-  )
+  # Legend tick marks (white segments)
+  labs_idx = !is.na(lgnd_labs)
+  tick_x = seq(rasterbox[1], rasterbox[3], length.out = length(lgnd_labs))[labs_idx]
+  draw_gradient_ticks(tick_x, rasterbox[4], rasterbox[2], horiz = TRUE)
 
   # Legend title
   text(

@@ -32,11 +32,16 @@
 <text x='470.79' y='272.06' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>  1</text>
 <text x='470.79' y='255.47' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>  2</text>
 <text x='470.79' y='238.02' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.33px' lengthAdjust='spacingAndGlyphs'>  3</text>
-<text x='470.79' y='306.09' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='470.79' y='289.51' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='470.79' y='272.06' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='470.79' y='255.47' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='470.79' y='238.02' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<line x1='452.79' y1='301.96' x2='456.39' y2='301.96' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='452.79' y1='285.38' x2='456.39' y2='285.38' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='452.79' y1='267.93' x2='456.39' y2='267.93' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='452.79' y1='251.35' x2='456.39' y2='251.35' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='452.79' y1='233.89' x2='456.39' y2='233.89' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='467.19' y1='301.96' x2='470.79' y2='301.96' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='467.19' y1='285.38' x2='470.79' y2='285.38' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='467.19' y1='267.93' x2='470.79' y2='267.93' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='467.19' y1='251.35' x2='470.79' y2='251.35' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='467.19' y1='233.89' x2='470.79' y2='233.89' style='stroke-width: 0.75; stroke: #FFFFFF;' />
 <text x='452.79' y='201.60' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='24.67px' lengthAdjust='spacingAndGlyphs'>Freq</text>
 <text x='452.79' y='216.00' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='47.34px' lengthAdjust='spacingAndGlyphs'>(z-score)</text>
 <text transform='translate(136.47,470.02) rotate(-90)' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'>mpg</text>

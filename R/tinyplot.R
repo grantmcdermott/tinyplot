@@ -500,7 +500,7 @@
 #' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png svg xy.coords
 #' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
-#' @importFrom stats na.omit setNames
+#' @importFrom stats na.omit setNames var
 #' @importFrom tools file_ext
 #'
 #' @examples

@@ -434,7 +434,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
                 sum, na.rm = TRUE
               )
               base_auto = max(col_tot, na.rm = TRUE)
-              aside = stats::setNames(rep(base_auto, length(offset)), offset)
+              aside = setNames(rep(base_auto, length(offset)), offset)
             } else {
               aside = offset
             }

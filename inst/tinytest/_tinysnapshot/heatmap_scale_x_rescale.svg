@@ -30,9 +30,12 @@
 <text x='464.77' y='303.47' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 0.2</text>
 <text x='464.77' y='269.44' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 0.6</text>
 <text x='464.77' y='234.53' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'> 1.0</text>
-<text x='464.77' y='303.47' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='464.77' y='269.44' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='464.77' y='234.53' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<line x1='446.77' y1='299.35' x2='450.37' y2='299.35' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='446.77' y1='265.31' x2='450.37' y2='265.31' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='446.77' y1='230.40' x2='450.37' y2='230.40' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='461.17' y1='299.35' x2='464.77' y2='299.35' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='461.17' y1='265.31' x2='464.77' y2='265.31' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='461.17' y1='230.40' x2='464.77' y2='230.40' style='stroke-width: 0.75; stroke: #FFFFFF;' />
 <text x='446.77' y='201.60' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='24.67px' lengthAdjust='spacingAndGlyphs'>Freq</text>
 <text x='446.77' y='216.00' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='53.36px' lengthAdjust='spacingAndGlyphs'>(rescaled)</text>
 <text transform='translate(136.19,470.02) rotate(-90)' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'>mpg</text>

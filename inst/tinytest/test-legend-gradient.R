@@ -16,6 +16,18 @@ f = function() tinyplot(
 )
 expect_snapshot_plot(f, label = "legend_gradient_outer_bottom")
 
+# Themes shrink the bottom margin, which is where the outer-bottom offset used
+# to be taken from par("mar")[2] (left) rather than [1] (bottom). The default
+# theme hides the bug, since there the two margins differ by only 0.1 lines.
+f = function() tinyplot(
+  lat ~ long | depth, quakes,
+  pch = 19,
+  theme = "bw",
+  legend = "bottom!",
+  main = "Gradient legend (bottom!, themed)"
+)
+expect_snapshot_plot(f, label = "legend_gradient_outer_bottom_theme")
+
 f = function() tinyplot(
   lat ~ long | depth, quakes,
   pch = 19,

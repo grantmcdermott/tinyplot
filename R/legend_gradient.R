@@ -108,7 +108,7 @@ draw_gradient_swatch = function(
     rb4_adj = lines_to_user_y(1.25)
 
     if (outer_bottom) {
-      rb2_adj = rb2_adj + lines_to_user_y(par("mar")[2])
+      rb2_adj = rb2_adj + lines_to_user_y(par("mar")[1])
       rasterbox[1] = rb1_adj
       rasterbox[2] = corners[3] - rb2_adj
       rasterbox[3] = rasterbox[1] + rb3_adj

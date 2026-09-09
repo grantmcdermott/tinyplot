@@ -308,6 +308,8 @@ not 'at'`. The free-facet code path listed the eligible types by name, so
 - Gradient legend tick marks are now drawn as line segments, rather than text
   dashes, thus ensuring more consistent behaviour across devices and themes.
   (#715 @JanMarvin @grantmcdermott)
+- Gradient legends drawn below the plot (e.g. `legend = "bottom!"`) no longer
+  ride up over the x-axis under dynamic themes. (#719 @grantmcdermott)
 
 ## v0.7.0
 

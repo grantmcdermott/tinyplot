@@ -141,7 +141,10 @@ f = function() tinyplot(
   Temp ~ Day | Month, data = aq,
   legend = legend(legend = month.abb[5:10])
 )
-expect_warning(expect_snapshot_plot(f, label = "legend_user_labs_override"))
+# the mismatch warning is only emitted when the plot is actually drawn
+if (snapshots_run) {
+  expect_warning(expect_snapshot_plot(f, label = "legend_user_labs_override"))
+}
 
 
 # override default legend margins with tpar("lmar")

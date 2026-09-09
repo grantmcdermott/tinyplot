@@ -225,6 +225,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
   <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New features</a></li>
   <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
+  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals">Internals</a></li>
   </ul></li>
   <li><a href="#v0.7.0" id="toc-v0.7.0" class="nav-link" data-scroll-target="#v0.7.0">v0.7.0</a>
   <ul class="collapse">
@@ -238,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#new-features-2" id="toc-new-features-2" class="nav-link" data-scroll-target="#new-features-2">New features</a></li>
   <li><a href="#bug-fixes-2" id="toc-bug-fixes-2" class="nav-link" data-scroll-target="#bug-fixes-2">Bug fixes</a></li>
   <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
-  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals">Internals</a></li>
+  <li><a href="#internals-1" id="toc-internals-1" class="nav-link" data-scroll-target="#internals-1">Internals</a></li>
   </ul></li>
   <li><a href="#v0.6.0" id="toc-v0.6.0" class="nav-link" data-scroll-target="#v0.6.0">v0.6.0</a>
   <ul class="collapse">
@@ -252,7 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#new-features-4" id="toc-new-features-4" class="nav-link" data-scroll-target="#new-features-4">New features</a></li>
   <li><a href="#bug-fixes-4" id="toc-bug-fixes-4" class="nav-link" data-scroll-target="#bug-fixes-4">Bug fixes</a></li>
   <li><a href="#documentation-2" id="toc-documentation-2" class="nav-link" data-scroll-target="#documentation-2">Documentation</a></li>
-  <li><a href="#internals-1" id="toc-internals-1" class="nav-link" data-scroll-target="#internals-1">Internals</a></li>
+  <li><a href="#internals-2" id="toc-internals-2" class="nav-link" data-scroll-target="#internals-2">Internals</a></li>
   </ul></li>
   <li><a href="#v0.4.2" id="toc-v0.4.2" class="nav-link" data-scroll-target="#v0.4.2">v0.4.2</a>
   <ul class="collapse">
@@ -269,7 +270,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#new-features-6" id="toc-new-features-6" class="nav-link" data-scroll-target="#new-features-6">New features:</a></li>
   <li><a href="#bug-fixes-7" id="toc-bug-fixes-7" class="nav-link" data-scroll-target="#bug-fixes-7">Bug fixes:</a></li>
   <li><a href="#website" id="toc-website" class="nav-link" data-scroll-target="#website">Website:</a></li>
-  <li><a href="#internals-2" id="toc-internals-2" class="nav-link" data-scroll-target="#internals-2">Internals:</a></li>
+  <li><a href="#internals-3" id="toc-internals-3" class="nav-link" data-scroll-target="#internals-3">Internals:</a></li>
   </ul></li>
   <li><a href="#v0.3.0" id="toc-v0.3.0" class="nav-link" data-scroll-target="#v0.3.0">v0.3.0</a>
   <ul class="collapse">
@@ -415,6 +416,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Univariate <code>y ~ 1</code> formulas no longer silently drop explicitly-typed layers, e.g.&nbsp;<code>tinyplot(body_mass ~ 1, data = penguins)</code> followed by <code>tinyplot_add(type = type_vline(4500))</code>. The x-axis swap these formulas require was only applied when the type had to be inferred, so an explicit type was mistaken for an empty plot and never drawn. (<a href="https://github.com/grantmcdermott/tinyplot/issues/647">#647</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a>)</li>
 <li>Gradient legend tick marks are now drawn as line segments, rather than text dashes, thus ensuring more consistent behaviour across devices and themes. (<a href="https://github.com/grantmcdermott/tinyplot/issues/715">#715</a> <a href="https://github.com/JanMarvin"><span class="citation" data-cites="JanMarvin">@JanMarvin</span></a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Gradient legends drawn below the plot (e.g.&nbsp;<code>legend = "bottom!"</code>) no longer ride up over the x-axis under dynamic themes. (<a href="https://github.com/grantmcdermott/tinyplot/issues/719">#719</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+</section>
+<section id="internals" class="level3">
+<h3 class="anchored" data-anchor-id="internals">Internals</h3>
+<ul>
+<li>Performance improvemnts. (<a href="https://github.com/grantmcdermott/tinyplot/issues/723">#723</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 </section>
@@ -613,8 +620,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Improved guidance for <a href="https://grantmcdermott.com/tinyplot/vignettes/types.html#custom-types">custom types</a> in the <code>Types</code> vignette. (<a href="https://github.com/grantmcdermott/tinyplot/issues/531">#531</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
-<section id="internals" class="level3">
-<h3 class="anchored" data-anchor-id="internals">Internals</h3>
+<section id="internals-1" class="level3">
+<h3 class="anchored" data-anchor-id="internals-1">Internals</h3>
 <ul>
 <li>We now encourage type-specific legend customizations within the individual <code>type_&lt;type&gt;</code> constructors. (<a href="https://github.com/grantmcdermott/tinyplot/issues/531">#531</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>Change maintainer email address.</li>
@@ -708,8 +715,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>’s <em>useR! 2025</em> <strong>tinyplot</strong> presentation has been added to the website as a standalone <a href="https://grantmcdermott.com/tinyplot/vignettes/useR2025/useR2025.html">vignette</a>.</li>
 </ul>
 </section>
-<section id="internals-1" class="level3">
-<h3 class="anchored" data-anchor-id="internals-1">Internals</h3>
+<section id="internals-2" class="level3">
+<h3 class="anchored" data-anchor-id="internals-2">Internals</h3>
 <ul>
 <li>Move <code>altdoc</code> from <code>Suggests</code> to <code>Config/Needs/website</code>. Thanks to <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a> for the suggestion and to <a href="https://github.com/eddelbuettel"><span class="citation" data-cites="eddelbuettel">@eddelbuettel</span></a> for help with the CI implementation.</li>
 <li>Add a <code>devcontainer.json</code> file for remote testing. (<a href="https://github.com/grantmcdermott/tinyplot/issues/480">#480</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
@@ -810,8 +817,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Improved website theme and navigation layout, especially on mobile. (<a href="https://github.com/grantmcdermott/tinyplot/issues/395">#395</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/411">#411</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/413">#413</a> <a href="https://github.com/zeileis"><span class="citation" data-cites="zeileis">@zeileis</span></a> and <a href="https://github.com/retostauffer"><span class="citation" data-cites="retostauffer">@retostauffer</span></a>)</li>
 </ul>
 </section>
-<section id="internals-2" class="level3">
-<h3 class="anchored" data-anchor-id="internals-2">Internals:</h3>
+<section id="internals-3" class="level3">
+<h3 class="anchored" data-anchor-id="internals-3">Internals:</h3>
 <ul>
 <li>The order of the nested loop for drawing interior plot elements has been switched. We now loop over facets first (outer loop) before looping over groups second (inner loop), rather than vice versa. The old/inverted nesting logic was mostly an artifact of development inertia and this new nesting logic should simplify the creation of certain plot types. (<a href="https://github.com/grantmcdermott/tinyplot/issues/331">#331</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>

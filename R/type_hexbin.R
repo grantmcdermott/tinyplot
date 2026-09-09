@@ -75,7 +75,7 @@
 #' set.seed(1234)
 #' dat = data.frame(x = rnorm(20000), y = rnorm(20000))
 #'
-#' # "hexbin" type convenience string
+#' # "hexbin"/"hex" type convenience string
 #' tinyplot(y ~ x, data = dat, type = "hexbin")
 #'
 #' # Use type_hexbin() to pass extra arguments

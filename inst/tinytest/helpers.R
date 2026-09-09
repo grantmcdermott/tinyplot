@@ -14,7 +14,7 @@ options("tinysnapshot_device_args" = list(
   system_fonts = list(symbol = "DejaVu Sans")
 ))
 
-# Mirror of the gate tinysnapshot uses to decide whether plot snapsho
+# Mirror the gate that tinysnapshot uses to decide whether plot snapshots run
 snapshots_run = local({
   os = getOption("tinysnapshot_os", default = Sys.info()[["sysname"]])
   skip = getOption(

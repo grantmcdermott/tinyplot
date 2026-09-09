@@ -14,12 +14,7 @@ options("tinysnapshot_device_args" = list(
   system_fonts = list(symbol = "DejaVu Sans")
 ))
 
-# Mirror of the gate tinysnapshot uses to decide whether plot snapshots run.
-# A skipped snapshot never calls the plotting function, so tests that assert on
-# a *side effect* of drawing (e.g. a warning) must skip in lockstep, or they
-# outlive the thing they depend on and fail for an unrelated-looking reason.
-# Mirrors both of tinysnapshot's conditions: the OS check (snapshots are pinned
-# to Linux above, so they never run on e.g. macOS) and the skip flag.
+# Mirror of the gate tinysnapshot uses to decide whether plot snapsho
 snapshots_run = local({
   os = getOption("tinysnapshot_os", default = Sys.info()[["sysname"]])
   skip = getOption(

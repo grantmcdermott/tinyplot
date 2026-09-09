@@ -112,9 +112,15 @@ env2env = function(source_env, target_env, keys = NULL) {
   if (is.null(keys)) {
     keys = ls(source_env, all.names = TRUE)
   }
-  for (nm in keys) {
-    assign(nm, source_env[[nm]], envir = target_env)
-  }
+  ## copy in one shot rather than one assign() per key: a single plot moves a
+  ## few hundred keys across ~20 calls, where the loop is about 4x slower.
+  ## ifnotfound preserves the old behaviour of writing NULL for an absent key,
+  ## and mget()'s inherits = FALSE default matches `[[` on an environment.
+  list2env(
+    mget(keys, envir = source_env, ifnotfound = list(NULL)),
+    envir = target_env
+  )
+  invisible(NULL)
 }
 
 

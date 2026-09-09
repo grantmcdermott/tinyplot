@@ -215,17 +215,41 @@ tpar = function(..., hook = FALSE) {
 }
 
 
+# Names that base par() recognises. Querying par() for anything else emits a
+# warning, and raising then suppressing it costs about four times the lookup
+# itself. Most tpar parameters are tinyplot's own (grid.bg, palette, x/yaxr,
+# ...), so without this guard every plot pays that penalty a dozen times over.
+#
+# Cached in .tinyplot_env on first use rather than at load time: par() needs an
+# open device, and calling it from .onLoad would open one as a side effect
+# (writing a stray Rplots.pdf). The name set does not vary by device, so a
+# single per-session cache is safe.
+base_par_names = function() {
+  # read directly rather than via get_environment_variable(): this sits on a
+  # path hit ~24 times per plot, where the helper's overhead is measurable
+  bpn = .tinyplot_env[[".base_par_names"]]
+  if (is.null(bpn)) {
+    # no.readonly = FALSE is the full set, including the read-only pars
+    # (cin, cra, csi, cxy, din, page); those cannot be set but are valid to
+    # query, so they belong here
+    bpn = names(par(no.readonly = FALSE))
+    set_environment_variable(.base_par_names = bpn)
+  }
+  return(bpn)
+}
+
 # Two levels of priority: .tpar[["name"]] -> par("name")
 get_tpar = function(opts, default = NULL, tpar_list = NULL) {
   if (is.null(tpar_list)) tpar_list = .tpar
   # parameter priority
   # .tpar[["name"]] -> par("name")
+  bpn = base_par_names()
   for (o in opts) {
     tp = tpar_list[[o]]
     if (!is.null(tp)) {
       return(tp)
-    } else {
-      p = suppressWarnings(par(o))
+    } else if (o %in% bpn) {
+      p = par(o)
       if (!is.null(p)) {
         return(p)
       }

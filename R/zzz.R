@@ -40,6 +40,7 @@
     "facet_col",
     "facet_dep",
     "facet_font",
+    "facet_labs",
     "facet_newlines",
     "facet_rect",
     "facet_text",

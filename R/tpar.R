@@ -229,12 +229,10 @@ base_par_names = function() {
   # path hit ~24 times per plot, where the helper's overhead is measurable
   bpn = .tinyplot_env[[".base_par_names"]]
   if (is.null(bpn)) {
-    # read-only pars are absent from par(no.readonly = FALSE) but still
-    # valid to query
-    bpn = c(
-      names(par(no.readonly = FALSE)),
-      "cin", "cra", "csi", "cxy", "din", "page"
-    )
+    # no.readonly = FALSE is the full set, including the read-only pars
+    # (cin, cra, csi, cxy, din, page); those cannot be set but are valid to
+    # query, so they belong here
+    bpn = names(par(no.readonly = FALSE))
     set_environment_variable(.base_par_names = bpn)
   }
   return(bpn)

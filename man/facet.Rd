@@ -49,6 +49,7 @@ draw_facet_window(
   rev_y = FALSE,
   xlim_partial = NULL,
   ylim_partial = NULL,
+  facet_labs = NULL,
   asp,
   log,
   dots,

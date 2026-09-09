@@ -30,9 +30,12 @@
 <text x='245.31' y='496.15' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>200</text>
 <text x='272.37' y='496.15' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>400</text>
 <text x='299.42' y='496.15' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>600</text>
-<text transform='translate(249.44,485.83) rotate(-90)' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text transform='translate(276.50,485.83) rotate(-90)' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text transform='translate(303.55,485.83) rotate(-90)' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<line x1='245.31' y1='485.83' x2='245.31' y2='482.23' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='272.37' y1='485.83' x2='272.37' y2='482.23' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='299.42' y1='485.83' x2='299.42' y2='482.23' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='245.31' y1='471.43' x2='245.31' y2='467.83' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='272.37' y1='471.43' x2='272.37' y2='467.83' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='299.42' y1='471.43' x2='299.42' y2='467.83' style='stroke-width: 0.75; stroke: #FFFFFF;' />
 <text x='223.49' y='481.70' text-anchor='end' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='33.34px' lengthAdjust='spacingAndGlyphs'>depth </text>
 </g>
 <defs>

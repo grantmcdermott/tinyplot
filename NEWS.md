@@ -311,6 +311,10 @@ not 'at'`. The free-facet code path listed the eligible types by name, so
 - Gradient legends drawn below the plot (e.g. `legend = "bottom!"`) no longer
   ride up over the x-axis under dynamic themes. (#719 @grantmcdermott)
 
+### Internals
+
+- Performance improvemnts. (#723 @grantmcdermott)
+
 ## v0.7.0
 
 **tinyplot** v0.7.0 is a big release with many new features, including major

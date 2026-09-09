@@ -258,8 +258,14 @@ tinylegend = function(legend_env) {
     legend_env$args[["text.width"]] = NULL
   }
 
-  # Re-measure legend dimensions (device size may have changed on resize)
-  legend_env$dims = measure_fake_legend(legend_env)
+  # Re-measure legend dimensions, but only when the device has actually
+  # changed. draw_legend() already measured on this device during setup, so on
+  # the initial draw the result is still current and a measuring pass costs
+  # about as much as drawing the legend itself. A resize replays through here
+  # with a different dev.size(), which forces the re-measure.
+  if (is.null(legend_env$dims) || !identical(legend_env$dims_dev, dev.size())) {
+    legend_env$dims = measure_fake_legend(legend_env)
+  }
 
   # Calculate and apply soma (outer margin adjustment based on legend size)
   # When soma_target is set (multi-legend), use it directly so all legends
@@ -388,6 +394,10 @@ measure_fake_legend = function(legend_env) {
       )
     }
   }
+
+  # Record the device this measurement was taken on, so callers can tell
+  # whether a cached result is still valid (see tinylegend()).
+  legend_env$dims_dev = dev.size()
 
   do.call("legend", fklgnd.args)
 }

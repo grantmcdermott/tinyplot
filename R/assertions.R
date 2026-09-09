@@ -40,9 +40,8 @@ check_true = function(x, null.ok = FALSE) {
 }
 
 assert_true = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be true.", name)
   if (!isTRUE(check_true(x, null.ok = null.ok))) {
-    stop(msg, call. = FALSE)
+    stop(sprintf("`%s` must be true.", name), call. = FALSE)
   }
 }
 
@@ -57,9 +56,8 @@ check_string = function(x, null.ok = FALSE) {
 }
 
 assert_string = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be a string.", name)
   if (!isTRUE(check_string(x, null.ok = null.ok))) {
-    stop(msg, call. = FALSE)
+    stop(sprintf("`%s` must be a string.", name), call. = FALSE)
   }
 }
 
@@ -74,9 +72,8 @@ check_flag = function(x, null.ok = FALSE) {
 }
 
 assert_flag = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be a logical flag.", name)
   if (!isTRUE(check_flag(x, null.ok = null.ok))) {
-    stop(msg, call. = FALSE)
+    stop(sprintf("`%s` must be a logical flag.", name), call. = FALSE)
   }
 }
 
@@ -146,8 +143,8 @@ assert_length = function(x, len = 1, null.ok = FALSE, name = as.character(substi
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
-  msg = sprintf("`%s` must be one of these lengths: %s", name, paste(len, collapse = ", "))
   if (!length(x) %in% len) {
+    msg = sprintf("`%s` must be one of these lengths: %s", name, paste(len, collapse = ", "))
     stop(msg, call. = FALSE)
   }
 }
@@ -165,8 +162,9 @@ assert_logical = function(x, null.ok = FALSE, name = as.character(substitute(x))
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
-  msg = sprintf("`%s` must be a logical vector", name)
-  if (!is.logical(x)) stop(msg, call. = FALSE)
+  if (!is.logical(x)) {
+    stop(sprintf("`%s` must be a logical vector", name), call. = FALSE)
+  }
 }
 
 
@@ -197,9 +195,9 @@ assert_integerish = function(x, len = NULL, lower = NULL, upper = NULL, null.ok 
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible())
   }
-  msg = sprintf("`%s` must be integer-ish", name)
   if (is.null(x) && !isTRUE(null.ok)) stop(sprintf("%s should not be NULL.", name), call. = FALSE)
   if (!isTRUE(check_integerish(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
+    msg = sprintf("`%s` must be integer-ish", name)
     if (!is.numeric(x)) msg = paste0(msg, "; it is not numeric")
     if (!is.null(len) && length(x) != len) msg = paste0(msg, sprintf("; its length must be %s", len))
     if (!is.null(lower) && any(x < lower)) msg = paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
@@ -229,8 +227,8 @@ check_numeric = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TR
 }
 
 assert_numeric = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be numeric", name)
   if (!isTRUE(check_numeric(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
+    msg = sprintf("`%s` must be numeric", name)
     if (!is.null(len) && length(x) != len) msg = paste0(msg, sprintf("; its length must be %s", len))
     if (!is.null(lower) && any(x < lower)) msg = paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
     if (!is.null(upper) && any(x > upper)) msg = paste0(msg, sprintf("; all values must be less than or equal to %s", upper))
@@ -239,12 +237,17 @@ assert_numeric = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = F
 }
 
 assert_data_frame = function(x, min_rows = 0, min_cols = 0, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be a data.frame.", name)
-  if (!is.data.frame(x)) stop(msg, call. = FALSE)
-  msg = sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
-  if (nrow(x) < min_rows) stop(msg, call. = FALSE)
-  msg = sprintf("Number of columns in `%s` must be at least `%s`", name, min_cols)
-  if (ncol(x) < min_cols) stop(msg, call. = FALSE)
+  if (!is.data.frame(x)) {
+    stop(sprintf("`%s` must be a data.frame.", name), call. = FALSE)
+  }
+  if (nrow(x) < min_rows) {
+    msg = sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
+    stop(msg, call. = FALSE)
+  }
+  if (ncol(x) < min_cols) {
+    msg = sprintf("Number of columns in `%s` must be at least `%s`", name, min_cols)
+    stop(msg, call. = FALSE)
+  }
 }
 
 

@@ -939,7 +939,7 @@ build_legend_env = function(
 #'   with a legend in the margin.
 #'
 #' @importFrom graphics grconvertX grconvertY rasterImage strheight strwidth xinch
-#' @importFrom grDevices as.raster recordGraphics
+#' @importFrom grDevices as.raster dev.size recordGraphics
 #' @importFrom utils modifyList
 #'
 #' @examples

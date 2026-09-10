@@ -64,6 +64,7 @@ tinyplot(x, ...)
   file = NULL,
   width = NULL,
   height = NULL,
+  record = NULL,
   asp = NA,
   theme = NULL,
   ...
@@ -651,6 +652,12 @@ graphics windows.}
 \code{width} (above) apply, e.g. will default to \code{tpar("file.height")} if not
 specified.}
 
+\item{record}{logical. Should the plot be recorded and returned as a
+replayable object (see \code{\link[grDevices]{recordPlot}})? Defaults to
+\code{FALSE}. Setting to \code{TRUE} allows for assignment and later recall, e.g.
+\verb{myplot = tinyplot(...); myplot}. This behaviour can also be set globally
+via \code{tpar(record = TRUE)}; an explicit argument here takes precedence.}
+
 \item{asp}{the y/xy/x aspect ratio, see \code{plot.window}.}
 
 \item{theme}{keyword string (e.g. \code{"clean"}) or list defining a theme. Passed
@@ -672,7 +679,10 @@ should not be specified in the same call.}
 when extracting the data from \code{formula} and \code{data}.}
 }
 \value{
-No return value, called for side effect of producing a plot.
+By default, no return value; called for the side effect of producing
+a plot. If \code{record = TRUE} (or globally via \code{tpar(record = TRUE)}), the
+plot is instead returned invisibly as a \code{"recordedplot"} object, which can
+be replayed later; see \code{\link[grDevices]{recordPlot}}.
 }
 \description{
 Enhances the base \code{\link[graphics]{plot}} function. Supported features

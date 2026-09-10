@@ -87,6 +87,7 @@
 #' * `lwd.xaxs`, `lwd.yaxs`: Line widths for the x- and y-axis lines, respectively. Both default to `NULL`, whereby the shared `lwd.axis` value is used instead.
 #' * `palette.qualitative`: Palette for qualitative colors. See the `palette` argument in `?tinyplot`.
 #' * `palette.sequential`: Palette for sequential colors. See the `palette` argument in `?tinyplot`.
+#' * `record`: Logical indicating whether `tinyplot()` should record plots and return them as replayable objects (see \code{\link[grDevices]{recordPlot}}). Defaults to `NULL`, which is equivalent to `FALSE`. Setting to `TRUE` allows for assignment and later recall, e.g. `myplot = tinyplot(...); myplot`. Sets the default for the `record` argument of [`tinyplot()`], which takes precedence.
 #' * `ribbon.alpha`: Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is `0.2`.
 #' * `xaxr`, `yaxr`: Numeric giving the rotation of the x- and y-axis tick labels, in degrees counter-clockwise; `NULL` (the default) leaves them unrotated. Unlike `las`, which is limited to the four right angles, any angle is permitted. Setting one overrides `las` for that axis alone, leaving the other axis under `las` as usual, and `0` (or any multiple of 360) counts as no rotation at all. Sets the default for the `xaxr` and `yaxr` arguments of [`tinyplot()`], which take precedence. Two caveats follow from tinyplot drawing rotated labels itself rather than deferring to base `axis()`. First, margins are only resized to fit them under a theme with `dynmar = TRUE` (see `tinytheme`); under the default theme the margins are left alone, so a long rotated label will be clipped unless you widen `mar` yourself. Second, rotated labels do not inherit the thinning that `axis()` applies via `gap.axis`, so they start to overlap once the spacing between ticks falls below `line height / sin(srt)`.
 #'
@@ -313,6 +314,7 @@ known_tpar = c(
     "pch",
     "palette.qualitative",
     "palette.sequential",
+    "record",
     "ribbon.alpha",
     "side.sub",
     "tinytheme",
@@ -344,6 +346,7 @@ assert_tpar = function(.tpar) {
   assert_flag(.tpar[["dynmar"]], null.ok = FALSE, name = "dynmar")
   assert_choice(.tpar[["ljust"]], choice = c("left", "center", "l", "c"), null.ok = TRUE, name = "ljust")
   assert_numeric(.tpar[["lmar"]], len = 2, null.ok = TRUE, name = "lmar")
+  assert_flag(.tpar[["record"]], null.ok = TRUE, name = "record")
   assert_numeric(.tpar[["ribbon.alpha"]], len = 1, lower = 0, upper = 1, null.ok = TRUE, name = "ribbon.alpha")
   assert_numeric(.tpar[["grid.lwd"]], len = 1, lower = 0, null.ok = TRUE, name = "grid.lwd")
   assert_grid(.tpar[["grid"]], null.ok = TRUE, name = "grid")

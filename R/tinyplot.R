@@ -467,6 +467,11 @@
 #'   \code{\link[tinyplot]{tpar}} (i.e., both defaulting to 7 inches, and where
 #'   the default resolution for bitmap files is also specified as 300
 #'   DPI).
+#' @param record logical. Should the plot be recorded and returned as a
+#'   replayable object (see \code{\link[grDevices]{recordPlot}})? Defaults to
+#'   `FALSE`. Setting to `TRUE` allows for assignment and later recall, e.g.
+#'   `myplot = tinyplot(...); myplot`. This behaviour can also be set globally
+#'   via `tpar(record = TRUE)`; an explicit argument here takes precedence.
 #' @param width numeric giving the plot width in inches. Together with `height`,
 #'  typically used in conjunction with the `file` argument above, overriding the
 #'  default values held in `tpar("file.width", "file.height")`. If either `width`
@@ -488,7 +493,10 @@
 #'   All remaining arguments from `...` can be further graphical parameters, see
 #'   \code{\link[graphics]{par}}).
 #'
-#' @returns No return value, called for side effect of producing a plot.
+#' @returns By default, no return value; called for the side effect of producing
+#'   a plot. If `record = TRUE` (or globally via `tpar(record = TRUE)`), the
+#'   plot is instead returned invisibly as a `"recordedplot"` object, which can
+#'   be replayed later; see \code{\link[grDevices]{recordPlot}}.
 #'
 #' @details
 #' Disregarding the enhancements that it supports, `tinyplot` tries as far as
@@ -497,7 +505,7 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'
-#' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png recordPlot svg xy.coords
+#' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.control dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png recordPlot svg xy.coords
 #' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit setNames var
@@ -800,6 +808,7 @@ tinyplot.default = function(
     file = NULL,
     width = NULL,
     height = NULL,
+    record = NULL,
     asp = NA,
     theme = NULL,
     ...) {
@@ -816,6 +825,10 @@ tinyplot.default = function(
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
   
+  # Resolve `record`: an explicit argument wins over the tpar default.
+  if (is.null(record)) record = get_tpar("record", default = FALSE)
+  assert_flag(record, name = "record")
+
   # Validate grid only for simple values; skip for unevaluated calls like grid()
   # which are passed as language objects from tinyplot.formula via substitute(). (#193)
   if (!is.null(grid) && !is.call(grid)) {
@@ -914,6 +927,7 @@ tinyplot.default = function(
     file          = file,
     width         = width,
     height        = height,
+    record        = record,
 
     # deparsed input for use in labels
     by_dep        = deparse1(substitute(by)),
@@ -1911,7 +1925,23 @@ tinyplot.default = function(
     )
   }
   
-  invisible(recordPlot())
+  if (isTRUE(record)) {
+    rec = recordPlot()
+    # A device that is not recording still yields a well-formed "recordedplot",
+    # just an empty one that replays blank. Say so rather than handing back
+    # something that silently does nothing.
+    if (length(rec[[1]]) == 0L) {
+      warning(
+        "`record = TRUE` but the current device is not recording, so the ",
+        "returned plot is empty and will replay blank. Call ",
+        "dev.control(displaylist = \"enable\") on the device first.",
+        call. = FALSE
+      )
+    }
+    return(invisible(rec))
+  }
+
+  return(invisible(NULL))
 
 }
 

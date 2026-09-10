@@ -37,7 +37,7 @@
 #'   to disambiguate from `frame.plot`.
 #' @param ... further arguments passed to `tinyplot`.
 #'
-#' @returns No return value, called for the side effect of producing a plot.
+#' @inherit tinyplot return
 #'
 #' @examples
 #' ## using tinyplot() with data frames

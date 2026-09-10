@@ -44,7 +44,7 @@
 #' tinyplot(mpg ~ wt, data = mtcars)
 #' tinyplot_add(subset = cyl == 4, col = "red", pch = 16)
 #'
-#' @returns No return value, called for side effect of producing a plot.
+#' @inherit tinyplot return
 #'
 #' @export
 tinyplot_add = function(...) {

@@ -18,7 +18,10 @@ so those that rely on non-standard evaluation against \code{data}---e.g.
 \code{\link{tinyplot}} call.}
 }
 \value{
-No return value, called for side effect of producing a plot.
+By default, no return value; called for the side effect of producing
+a plot. If \code{record = TRUE} (or globally via \code{tpar(record = TRUE)}), the
+plot is instead returned invisibly as a \code{"recordedplot"} object, which can
+be replayed later; see \code{\link[grDevices]{recordPlot}}.
 }
 \description{
 This convenience function grabs the preceding \code{tinyplot} call and updates it

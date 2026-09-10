@@ -36,7 +36,10 @@ titles default to \code{NA}, since the dimnames label both axes.}
 \item{...}{further arguments passed to \code{tinyplot}.}
 }
 \value{
-No return value, called for the side effect of producing a plot.
+By default, no return value; called for the side effect of producing
+a plot. If \code{record = TRUE} (or globally via \code{tpar(record = TRUE)}), the
+plot is instead returned invisibly as a \code{"recordedplot"} object, which can
+be replayed later; see \code{\link[grDevices]{recordPlot}}.
 }
 \description{
 Convenience interface for visualizing

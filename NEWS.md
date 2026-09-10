@@ -313,7 +313,7 @@ not 'at'`. The free-facet code path listed the eligible types by name, so
 
 ### Internals
 
-- Performance improvemnts. (#723, #724 @grantmcdermott)
+- Performance improvements. (#723, #724 @grantmcdermott)
 
 ## v0.7.0
 

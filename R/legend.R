@@ -261,9 +261,9 @@ tinylegend = function(legend_env) {
   # Re-measure legend dimensions, but only when the device has actually
   # changed. draw_legend() already measured on this device during setup, so on
   # the initial draw the result is still current and a measuring pass costs
-  # about as much as drawing the legend itself. A resize replays through here
-  # with a different dev.size(), which forces the re-measure.
-  if (is.null(legend_env$dims) || !identical(legend_env$dims_dev, dev.size())) {
+  # about as much as drawing the legend itself. A resize, or a replay onto a
+  # different device, fails the key comparison and forces the re-measure.
+  if (is.null(legend_env$dims) || !identical(legend_env$dims_dev, legend_dev_key())) {
     legend_env$dims = measure_fake_legend(legend_env)
   }
 
@@ -368,6 +368,17 @@ tinylegend = function(legend_env) {
 
 
 # Measure legend dimensions using a fake (non-plotted) legend
+# Identity of the device a legend measurement belongs to. Size alone is not
+# enough: replaying or copying a display list onto a same-sized device with a
+# different backend (dev.copy(), dev.print(), an IDE's plot export) yields
+# different text metrics, so the device itself has to be part of the key.
+# dev.cur() is a named integer, so this captures the backend as well as the
+# device number.
+legend_dev_key = function() {
+  list(dev = dev.cur(), size = dev.size())
+}
+
+
 measure_fake_legend = function(legend_env) {
   fklgnd.args = modifyList(
     legend_env$args,
@@ -395,9 +406,9 @@ measure_fake_legend = function(legend_env) {
     }
   }
 
-  # Record the device this measurement was taken on, so callers can tell
+  # Record which device this measurement was taken on, so callers can tell
   # whether a cached result is still valid (see tinylegend()).
-  legend_env$dims_dev = dev.size()
+  legend_env$dims_dev = legend_dev_key()
 
   do.call("legend", fklgnd.args)
 }

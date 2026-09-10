@@ -21,11 +21,14 @@ draw_facet_window = function(
     facet_col, facet_bg, facet_border,
     facet, facets, ifacet,
     nfacets, nfacet_cols, nfacet_rows,
+    facet_blank = FALSE,
     # axes args
     axes, flip, frame.plot, oxaxis, oyaxis,
-    xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl,
-    ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl,
+    xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl, xaxr = NULL,
+    ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl, yaxr = NULL,
     rev_x = FALSE, rev_y = FALSE,
+    xlim_partial = NULL, ylim_partial = NULL,
+    facet_labs = NULL,
     asp, log,
     # other args (in approx. alphabetical + group ordering)
     dots,
@@ -57,7 +60,22 @@ draw_facet_window = function(
   # if breaks are provided use these (but only if x/ylabs are null)
   if (!is.null(xaxb) && !is.null(xlabs)) xlabs = xaxb
   if (!is.null(yaxb) && !is.null(ylabs)) ylabs = yaxb
-  
+
+  # Split once up front and index per facet below; splitting inside the facet
+  # loop is O(n) per facet per axis. The concatenated vectors also give us the
+  # all-facet fallback range for empty panels (see facet_free_range()).
+  xall = yall = xfree_split = yfree_split = NULL
+  if (isTRUE(facet.args[["free"]])) {
+    xcat = c(x, xmin, xmax)
+    ycat = c(y, ymin, ymax)
+    xall = facet_free_range(xcat)
+    yall = facet_free_range(ycat)
+    if (!is.null(facet)) {
+      xfree_split = split(xcat, facet)
+      yfree_split = split(ycat, facet)
+    }
+  }
+
   # draw background color only in the grid rectangle
   grid.bg = get_tpar("grid.bg", tpar_list = tpars)
   if (!is.null(grid.bg)) {
@@ -67,6 +85,11 @@ draw_facet_window = function(
 
   ## dynamic margins flag
   dynmar = isTRUE(get_tpar("dynmar", tpar_list = tpars))
+  # A flipped boxplot swaps which side each variable's labels land on, which a
+  # rotation has to be measured against. The las paths below keep indexing 1/2
+  # directly, as they always have.
+  .xside = if (identical(type, "boxplot") && isTRUE(flip)) 2L else 1L
+  .yside = if (identical(type, "boxplot") && isTRUE(flip)) 1L else 2L
   
   ## optionally allow to modify and restore the style of axis interval calculation
   if (!is.null(xaxs) || !is.null(yaxs)) {
@@ -162,30 +185,24 @@ draw_facet_window = function(
       # Ensure fmar[3] doesn't exceed omar[3] - 0.1, which would make
       # noma[3] negative and get clamped to 0, creating excess top space.
       if (fmar[3] + 0.1 > omar[3]) fmar[3] = omar[3] - 0.1
-      if (par("las") %in% 1:2) {
+      if (!is.null(yaxr) || par("las") %in% 1:2) {
         # extra whitespace bump on the y axis
         .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
-        if (!is.null(.ylabset)) {
-          yaxlabs = .ylabset[[1L]]
-        } else {
-          if (isTRUE(facet.args[["free"]]) && null_ylim && !is.null(facet)) {
-            # Free scales: measure every facet's ticks and keep the widest set.
-            yfree_split = split(c(y, ymin, ymax), facet)
-            yaxlabs_all = lapply(yfree_split, function(yf) {
-              axisTicks(usr = extendrange(range(yf, na.rm = TRUE), f = 0.04), log = par("ylog"))
-            })
-            widths = vapply(yaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = .cex_yaxs)), numeric(1L))
-            yaxlabs = yaxlabs_all[[which.max(widths)]]
-          } else {
-            yaxlabs = axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
-          }
+        # Only free scales need the per-facet limits, and only when no type has
+        # already put categories on the axis (those are shared across panels).
+        .yfree = if (is.null(.ylabset) && isTRUE(facet.args[["free"]]) &&
+                     (null_ylim || !is.null(ylim_partial)) && !is.null(facet)) {
+          lapply(yfree_split, function(yf) facet_free_lim(yf, yall, ylim_partial, "ylim"))
         }
-        if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-        # whtsbp = grconvertX(max(strwidth(yaxl, "figure")), from = "nfc", to = "lines") - 1
-        whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
-        if (whtsbp > 0) {
-          omar = omar + c(0, whtsbp, 0, 0) * cex_fct_adj
-          fmar[2] = fmar[2] + whtsbp * cex_fct_adj
+        yaxlabs = axis_tick_labels(
+          .ylabset,
+          lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+          free_lims = .yfree, cex = .cex_yaxs
+        )
+        whtsbp = if (!is.null(yaxr)) {
+          tick_label_extent(yaxlabs, cex = .cex_yaxs, srt = yaxr, side = .yside)
+        } else {
+          tick_label_extent(yaxlabs, cex = .cex_yaxs)
         }
         # The label width above is reserved once, and the nmar/noma split below
         # hands it to the *outer* margin -- correct when only the leftmost facet
@@ -194,35 +211,45 @@ draw_facet_window = function(
         # labels overflow into the neighbouring panel. So only release it back to
         # the outer margin when interior axes aren't drawn at all; same rule
         # (and same reason) as the inter-facet gap above.
-        if (.outer_axes_eff) {
-          fmar[2] = fmar[2] - (whtsbp * cex_fct_adj)
+        # Both are nested: nothing reserved, nothing to release.
+        if (whtsbp > 0) {
+          omar[.yside] = omar[.yside] + whtsbp * cex_fct_adj
+          fmar[.yside] = fmar[.yside] + whtsbp * cex_fct_adj
+          if (.outer_axes_eff) {
+            fmar[.yside] = fmar[.yside] - (whtsbp * cex_fct_adj)
+          }
         }
       }
-      if (par("las") %in% 2:3) {
+      if (!is.null(xaxr) || par("las") %in% 2:3) {
         # extra whitespace bump on the x axis
-        if (is.null(xlabs) && isTRUE(facet.args[["free"]]) && null_xlim && !is.null(facet)) {
-          xfree_split = split(c(x, xmin, xmax), facet)
-          xaxlabs_all = lapply(xfree_split, function(xf) {
-            axisTicks(usr = extendrange(range(xf, na.rm = TRUE), f = 0.04), log = par("xlog"))
-          })
-          widths = vapply(xaxlabs_all, function(labs) max(strwidth(labs, "inches", cex = .cex_xaxs)), numeric(1L))
-          xaxlabs = xaxlabs_all[[which.max(widths)]]
-        } else {
-          xaxlabs = if (is.null(xlabs)) axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog")) else
-            if (!is.null(names(xlabs))) names(xlabs) else xlabs
+        .xlabset = x_axis_labels(xlabs)
+        .xfree = if (is.null(.xlabset) && isTRUE(facet.args[["free"]]) &&
+                     (null_xlim || !is.null(xlim_partial)) && !is.null(facet)) {
+          lapply(xfree_split, function(xf) facet_free_lim(xf, xall, xlim_partial, "xlim"))
         }
-        if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-        whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
-        if (whtsbp > 0) {
-          omar = omar + c(whtsbp, 0, 0, 0) * cex_fct_adj
-          fmar[1] = fmar[1] + whtsbp * cex_fct_adj
+        xaxlabs = axis_tick_labels(
+          .xlabset,
+          lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+          free_lims = .xfree, cex = .cex_xaxs
+        )
+        whtsbp = if (!is.null(xaxr)) {
+          tick_label_extent(xaxlabs, cex = .cex_xaxs, srt = xaxr, side = .xside)
+        } else {
+          tick_label_extent(xaxlabs, cex = .cex_xaxs)
         }
         # As per the y axis above: keep the label width in fmar when interior
         # facets draw their own x axis, else release it to the outer margin.
-        if (.outer_axes_eff) {
-          fmar[1] = fmar[1] - (whtsbp * cex_fct_adj)
+        if (whtsbp > 0) {
+          omar[.xside] = omar[.xside] + whtsbp * cex_fct_adj
+          fmar[.xside] = fmar[.xside] + whtsbp * cex_fct_adj
+          if (.outer_axes_eff) {
+            fmar[.xside] = fmar[.xside] - (whtsbp * cex_fct_adj)
+          }
         }
       }
+
+      # (The end labels' sideways lean is already in dynmar_computed, which omar
+      # is built from, so it needs no separate reservation here.)
 
       # reserve RHS margin for types with a secondary axis (e.g. spineplot)
       if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
@@ -278,30 +305,35 @@ draw_facet_window = function(
     omar = dynmar_computed
     # reserve RHS margin for types with a secondary axis (e.g. spineplot)
     if (isTRUE(type_hints[["has_rhs_axis"]])) omar[4] = 2.1
-    if (par("las") %in% 1:2) {
+    if (!is.null(yaxr) || par("las") %in% 1:2) {
       # extra whitespace bump on the y axis
-      .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
-      if (!is.null(.ylabset)) {
-        yaxlabs = .ylabset[[1L]]
+      yaxlabs = axis_tick_labels(
+        y_axis_labels(type, y, ylabs, xlabs, flip),
+        lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+        cex = .cex_yaxs
+      )
+      if (!is.null(yaxr)) {
+        omar[.yside] = omar[.yside] +
+          tick_label_extent(yaxlabs, cex = .cex_yaxs, srt = yaxr, side = .yside)
       } else {
-        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
-        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
+        omar[2] = omar[2] + tick_label_extent(yaxlabs, cex = .cex_yaxs)
       }
-      if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      # whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") - 1
-      whtsbp = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") - grconvertX(0, from = "nfc", to = "lines") - 0.5
-      omar[2] = omar[2] + whtsbp
     }
-    if (par("las") %in% 2:3) {
+    if (!is.null(xaxr) || par("las") %in% 2:3) {
       # extra whitespace bump on the x axis
-      # xaxl = axTicks(1)
-      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
-      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
-        if (!is.null(names(xlabs))) names(xlabs) else xlabs
-      if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      whtsbp = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
-      omar[1] = omar[1] + whtsbp
+      xaxlabs = axis_tick_labels(
+        x_axis_labels(xlabs),
+        lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+        cex = .cex_xaxs
+      )
+      if (!is.null(xaxr)) {
+        omar[.xside] = omar[.xside] +
+          tick_label_extent(xaxlabs, cex = .cex_xaxs, srt = xaxr, side = .xside)
+      } else {
+        omar[1] = omar[1] + tick_label_extent(xaxlabs, cex = .cex_xaxs)
+      }
     }
+    # (As in the faceted branch: the lean is already carried by dynmar_computed.)
 
      par(mar = omar)
   }
@@ -309,6 +341,27 @@ draw_facet_window = function(
   ## Loop over the individual facet windows and draw the plot region
   ## components (axes, titles, box, grid, etc.)
   for (ii in ifacet) {
+    # A grid cell that no observation uses keeps its slot, so the surrounding
+    # panels stay aligned, but drops its frame and grid lines to read as a gap
+    # rather than an empty box.
+    #
+    # Whether it keeps an axis depends on who owns the axes. Where interior axes
+    # are dropped (`.outer_axes`, e.g. tinytheme("float")), the edge axis serves
+    # the whole column or row, so the blank cell has to keep drawing it -- moving
+    # it to an inner panel would break the alignment of the bottom row. Where
+    # every panel draws its own instead (a framed theme, or free scales), no axis
+    # is load-bearing beyond its own panel, so a lone rule in a gap is just
+    # debris and the cell draws nothing at all.
+    .blank = length(facet_blank) >= ii && isTRUE(facet_blank[[ii]])
+    .fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
+    blank_axis = function(side) {
+      if (!.outer_axes || identical(.axes, "none")) return(FALSE)
+      pos = switch(as.character(side),
+        "1" = "bottom", "2" = "left", "3" = "top", "4" = "right", NULL
+      )
+      !is.null(pos) && isTRUE(is_facet_position(pos, ii, .fwa))
+    }
+
     # See: https://github.com/grantmcdermott/tinyplot/issues/65
     if (nfacets > 1) {
       mfgi = ceiling(ii / nfacet_cols)
@@ -362,6 +415,7 @@ draw_facet_window = function(
         side = xside,
         type = xaxt,
         labeller = xaxl,
+        srt = xaxr,
         cex.axis = get_tpar(c("cex.xaxs", "cex.axis"), 0.8, tpar_list = tpars),
         lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.xaxs", "lty.axis"), 1, tpar_list = tpars)
@@ -372,6 +426,7 @@ draw_facet_window = function(
         side = yside,
         type = yaxt,
         labeller = yaxl,
+        srt = yaxr,
         cex.axis = .ca,
         lwd = get_tpar(c("lwd.yaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.yaxs", "lty.axis"), 1, tpar_list = tpars)
@@ -405,10 +460,36 @@ draw_facet_window = function(
       if (isTRUE(facet.args[["free"]])) {
         # First, we need to calculate the plot extent and axes range of each
         # individual facet.
-        xfree = if (!is.null(facet)) split(c(x, xmin, xmax), facet)[[ii]] else c(x, xmin, xmax)
-        yfree = if (!is.null(facet)) split(c(y, ymin, ymax), facet)[[ii]] else c(y, ymin, ymax)
-        if (null_xlim) xlim = range(xfree, na.rm = TRUE)
-        if (null_ylim) ylim = range(yfree, na.rm = TRUE)
+        xfree = if (!is.null(facet)) xfree_split[[ii]] else xcat
+        yfree = if (!is.null(facet)) yfree_split[[ii]] else ycat
+        # A re-levelled panel (facet.args$drop.levels) has its own category
+        # positions and labels; otherwise every panel shares the global set. Like
+        # `.fusr` below, the maps travel via .tinyplot_env rather than as another
+        # pair of arguments; see facet_relevel().
+        .fxlabs = facet_labs[["x"]][[ii]] %||% xlabs
+        .fylabs = facet_labs[["y"]][[ii]] %||% ylabs
+        # `.pad`: room for the geometry drawn around an end category, as
+        # lim_args() adds to the fixed limits. A categorical axis is a set rather
+        # than a range, so the panel also keeps all of *its* ticks (every
+        # category, or just the ones it uses under `drop.levels`).
+        .pad = if (identical(type, "boxplot")) c(-0.5, 0.5) else 0
+        # Keeping every category (the default) spans the *global* extent, so that
+        # the panels are identical and their ticks line up; under `drop.levels`
+        # each panel spans only the categories it uses.
+        .xall_cat = length(.fxlabs) > 0 && is.null(facet_labs[["x"]])
+        .yall_cat = length(.fylabs) > 0 && is.null(facet_labs[["y"]])
+        if (null_xlim || !is.null(xlim_partial)) {
+          xlim = facet_free_lim(
+            if (.xall_cat) xcat else xfree, xall, xlim_partial, "xlim"
+          ) + .pad
+          if (length(.fxlabs)) xlim = range(c(xlim, .fxlabs))
+        }
+        if (null_ylim || !is.null(ylim_partial)) {
+          ylim = facet_free_lim(
+            if (.yall_cat) ycat else yfree, yall, ylim_partial, "ylim"
+          )
+          if (length(.fylabs)) ylim = range(c(ylim, .fylabs))
+        }
         # An axis is reversed either via the `rev_x`/`rev_y` flag (e.g. the
         # "reverse" keyword) or when the user supplies descending fixed limits
         # (e.g. xlim = c(10, 0)). The latter must be detected before extendrange()
@@ -445,17 +526,19 @@ draw_facet_window = function(
         # Free facets each need their own axes, since every panel has its own
         # scale. The one exception is an explicit `axes = "none"` request.
         .free_axes = !identical(.axes, "none")
+        .free_x = .free_axes && (!.blank || blank_axis(xside))
+        .free_y = .free_axes && (!.blank || blank_axis(yside))
         # Reuse the args_x/args_y lists built above rather than calling tinyAxis()
         # with a bare handful of arguments, so that free facets pick up the same
         # themed `cex`/`lwd`/`lty` (cex.axis, lwd.axis, lty.axis and their
         # per-side variants) as fixed ones. Only the per-facet bits are
         # overridden: the panel's own data, plus `at`/`labels` where this facet
         # needs explicit ticks.
-        if (.free_axes) {
+        if (.free_x) {
           .axf = args_x
           .axf[[1L]] = xfree
-          if (!is.null(xlabs)) {
-            .axf = modifyList(.axf, list(at = xlabs, labels = names(xlabs)))
+          if (!is.null(.fxlabs)) {
+            .axf = modifyList(.axf, list(at = .fxlabs, labels = names(.fxlabs)))
           } else if (!is.null(xat)) {
             .axf = modifyList(.axf, list(at = xat))
           } else {
@@ -465,7 +548,7 @@ draw_facet_window = function(
           do.call(tinyAxis, .axf)
         }
         if (.ymgp_shift > 0) par(mgp = par("mgp") - c(0, .ymgp_shift, 0))
-        if (.free_axes) {
+        if (.free_y) {
           .ayf = args_y
           .ayf[[1L]] = yfree
           # Same signal as the fixed-scale branch above: named `ylabs` means the
@@ -473,8 +556,8 @@ draw_facet_window = function(
           # instead not only dropped the labels for unlisted types, it left the
           # `labels` inherited from `args_y` without a matching `at`, which
           # axis() rejects outright. (#679)
-          if (!is.null(ylabs)) {
-            .ayf = modifyList(.ayf, list(at = ylabs, labels = names(ylabs)))
+          if (!is.null(.fylabs)) {
+            .ayf = modifyList(.ayf, list(at = .fylabs, labels = names(.fylabs)))
           } else if (!is.null(yat)) {
             .ayf = modifyList(.ayf, list(at = yat))
           } else {
@@ -490,8 +573,8 @@ draw_facet_window = function(
         # "outside" ones, else inner axes collide with the neighbouring panel.
         # Note xside/yside may be swapped (flipped boxplots), so gate on the
         # actual side rather than assuming 1/2.
-        .fwa = list(ifacet = ifacet, nfacet_cols = nfacet_cols)
         keep_axis = function(side) {
+          if (.blank) return(blank_axis(side))
           draw_facet_axis(
             side, ii, .fwa,
             framed = isTRUE(frame.plot),
@@ -653,7 +736,7 @@ draw_facet_window = function(
     # all; nor does a full box ("o") or no box ("n"); nor does a plot that still
     # draws its interior axes. All of those defer straight to box(), which is
     # cheaper, exact, and (unlike per-side segments) draws one joined polyline.
-    if (frame.plot) {
+    if (frame.plot && !.blank) {
       if (nfacets > 1 && .outer_axes && !(par("bty") %in% c("o", "O", "n", "N"))) {
         draw_facet_box(par("bty"), ii, list(ifacet = ifacet, nfacet_cols = nfacet_cols))
       } else {
@@ -663,7 +746,7 @@ draw_facet_window = function(
 
     # panel grid lines
     if (is.null(grid)) grid = get_tpar("grid", tpar_list = tpars)
-    if (!is.null(grid) && !isFALSE(grid)) {
+    if (!is.null(grid) && !isFALSE(grid) && !.blank) {
       gcol = get_tpar("grid.col", tpar_list = tpars)
       glty = get_tpar("grid.lty", tpar_list = tpars)
       glwd = get_tpar("grid.lwd", tpar_list = tpars)
@@ -715,10 +798,167 @@ draw_facet_window = function(
     }
 
     # add any drawn elements
-    if (!is.null(draw)) eval(draw)
+    if (!is.null(draw) && !.blank) eval(draw)
   } # end of ii facet loop
 
   return(as.list(environment()))
+}
+
+
+## Should each free panel re-level its categorical axes, i.e. keep only the
+## categories it actually uses? See facet_relevel().
+facet_drop_levels_on = function(facet.args) {
+  isTRUE(facet.args[["drop.levels"]] %||% .tpar[["facet.drop.levels"]])
+}
+
+
+## Which category (a position in the global level set) does each row sit at? An
+## offset can move a row off its own tick, so prefer the `.xcat`/`.ycat` codes
+## stashed by the types that displace one (dodge_positions(), type_jitter(),
+## type_violin()) and fall back to the positions only where they are exact
+## integers. NULL means "can't tell", and the caller leaves that axis alone.
+cat_axis_codes = function(datapoints, ax = "x") {
+  v = datapoints[[paste0(".", ax, "cat")]]
+  if (is.null(v)) v = datapoints[[ax]]
+  if (is.null(v)) return(NULL)
+  if (is.factor(v)) return(as.integer(v))
+  if (!is.numeric(v)) return(NULL)
+  # missing values carry no category, and are not drawn anyway; ignore them here
+  vv = v[!is.na(v)]
+  if (any(!is.finite(vv)) || any(vv != trunc(vv))) return(NULL)
+  as.integer(v)
+}
+
+
+#' @rdname facet
+#' @keywords internal
+#' @param settings A list of settings as created by `tinyplot()`.
+#' @details `facet_relevel` implements `facet.args$drop.levels`: each free facet
+#'   keeps only the categories it actually uses, re-levelled as if the panel's
+#'   data had been passed through `factor()` on its own. Positions are shifted
+#'   rather than recomputed, so a row's offset within its category (dodge,
+#'   jitter, boxplot group offsets) and any rectangle width around it survive
+#'   untouched.
+facet_relevel = function(settings) {
+  if (!facet_drop_levels_on(settings[["facet.args"]])) return(invisible())
+
+  datapoints = settings[["datapoints"]]
+  facet = datapoints[["facet"]]
+  if (is.null(facet) || length(unique(facet)) < 2L || nrow(datapoints) == 0L) {
+    return(invisible())
+  }
+  # Fixed panels share one axis, so per-panel level sets would misalign them.
+  if (!isTRUE(settings[["facet.args"]][["free"]])) {
+    warning(
+      "`facet.args$drop.levels` re-levels each panel's categorical axis ",
+      "independently, which requires free scales. Ignoring it, since ",
+      "`facet.args$free` is not TRUE.",
+      call. = FALSE
+    )
+    return(invisible())
+  }
+  facet = as.factor(facet)
+  fl = levels(facet)
+
+  # An added layer inherits the base layer's panel maps rather than deriving its
+  # own: it has to land on the categories the base layer actually drew, and its
+  # own rows may not cover the same ones.
+  add = isTRUE(settings[["add"]])
+
+  applied = FALSE
+  facet_labs = list()
+  for (ax in c("x", "y")) {
+    # named `xlabs`/`ylabs` is the signal that a type put categories on this axis
+    labs = settings[[paste0(ax, "labs")]]
+    if (is.null(labs) || is.null(names(labs))) next
+    codes = cat_axis_codes(datapoints, ax)
+    if (is.null(codes)) next
+    stored = if (add) get_environment_variable(".facet_labs")[[ax]] else NULL
+    if (add && is.null(stored)) next
+
+    # `labs` may cover only some of the categories, since lim_args() subsets it to
+    # a requested `x/yaxb` break set, so the shift below is derived from the codes
+    # themselves and the names are used only for the ticks.
+    cat_names = names(labs)[match(codes, unname(labs))]
+    delta = numeric(nrow(datapoints))
+    labs_by_facet = vector("list", length(fl))
+    names(labs_by_facet) = fl
+    for (f in fl) {
+      idx = which(facet == f)
+      if (!length(idx)) next
+      present = sort(unique(codes[idx]))
+      if (!length(present)) next
+      if (!is.null(stored)) {
+        # an added layer aligns by name, so that it lands on the categories the
+        # base layer drew; one it did not draw maps to NA, i.e. is not drawn
+        map = stored[[f]]
+        if (is.null(map) || !length(map)) next
+        delta[idx] = unname(map[cat_names[idx]]) - codes[idx]
+      } else {
+        # rank within the panel's own levels, i.e. what factor() would have given
+        new = seq_along(present)
+        delta[idx] = new[match(codes[idx], present)] - codes[idx]
+        nm = names(labs)[match(present, unname(labs))]
+        ok = !is.na(nm)
+        map = stats::setNames(new[ok], nm[ok])
+      }
+      labs_by_facet[[f]] = map
+    }
+
+    for (col in paste0(ax, c("", "min", "max"))) {
+      v = datapoints[[col]]
+      if (is.null(v)) next
+      # a categorical axis is left as a factor by some types (barplot), which
+      # then draw from xmin/xmax; the free ranges read it either way
+      if (is.factor(v)) datapoints[[col]] = as.integer(v) + delta
+      else if (is.numeric(v)) datapoints[[col]] = v + delta
+      sv = settings[[col]]
+      if (!is.null(sv) && is.numeric(sv) && length(sv) == nrow(datapoints)) {
+        settings[[col]] = sv + delta
+      }
+    }
+    facet_labs[[ax]] = labs_by_facet
+    applied = TRUE
+  }
+
+  # Say so rather than quietly doing nothing: either no axis holds categories, or
+  # the type places them itself and so is outside this machinery (type_ridge()).
+  if (!applied) {
+    warning(
+      "`facet.args$drop.levels` had no effect: this plot has no categorical ",
+      "axis that tinyplot positions itself",
+      if (isTRUE(settings[["type_hints"]][["draws_own_axes"]])) {
+        sprintf(" (the \"%s\" type draws its own axis labels)", settings[["type"]])
+      } else {
+        ""
+      },
+      ".",
+      call. = FALSE
+    )
+  }
+
+  # The maps travel to draw_facet_window() as an argument, so that a replay (on
+  # device resize) uses the ones this plot computed. The copy in .tinyplot_env is
+  # for any layer added on top; cf. `xlabs_orig` in align_layer().
+  if (applied) {
+    settings[["facet_labs"]] = facet_labs
+    set_environment_variable(.facet_labs = facet_labs)
+  }
+
+  settings[["datapoints"]] = datapoints
+  invisible()
+}
+
+
+## droplevels() for a facet factor. Plain droplevels() strips the attributes a
+## facet carries (facet_grid, facet_nrow), so carry them across by hand.
+drop_facet_levels = function(f) {
+  if (!is.factor(f)) return(f)
+  a = attributes(f)
+  f = droplevels(f)
+  a[["levels"]] = levels(f)
+  attributes(f) = a
+  f
 }
 
 
@@ -743,6 +983,25 @@ facet_layout = function(settings) {
   if (!is.null(facet)) {
     attributes(facet) = facet_attr
     attributes(datapoints$facet) = facet_attr
+  }
+
+  # Opt-in dropping of facet levels that no observation uses, which otherwise
+  # draw an empty panel. A wrapped layout drops the level outright, so the panel
+  # goes away. A grid can't: it is a rectangle of rows x columns, so removing a
+  # cell would misalign the panels that remain -- instead it keeps the slot and
+  # leaves it blank (see `facet_blank` below), reading as a gap.
+  .drop = !is.null(facet) &&
+    isTRUE(facet.args[["drop"]] %||% .tpar[["facet.drop"]])
+  .grid = isTRUE(attr(facet, "facet_grid"))
+  if (.drop && !.grid) {
+    facet = drop_facet_levels(facet)
+    datapoints$facet = drop_facet_levels(datapoints$facet)
+  }
+
+  # Which grid cells hold no data, indexed like `ifacet`.
+  facet_blank = FALSE
+  if (.drop && .grid) {
+    facet_blank = tabulate(facet, nlevels(facet)) == 0L
   }
 
   nfacet_rows = 1
@@ -804,7 +1063,7 @@ facet_layout = function(settings) {
   env2env(
     environment(),
     settings,
-    c("datapoints", "facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj")
+    c("datapoints", "facets", "ifacet", "nfacets", "nfacet_rows", "nfacet_cols", "oxaxis", "oyaxis", "cex_fct_adj", "facet_blank")
   )
 }
 
@@ -1180,35 +1439,29 @@ facet_axes_framed = function(frame.plot, xaxt, yaxt) {
 }
 
 
-## Categorical y-axis tick labels, for margin measurement.
-##
-## Used by the whtsbp label-width blocks in tinyplot.default() and
-## draw_facet_window(), which each measure strwidth() on the result but otherwise
-## differ in how they apply it.
-##
-## Returns a one-element list wrapping the label set when a type puts categories
-## on the y axis, or NULL when it does not and the caller should fall back to its
-## own axisTicks() computation. The wrapper matters: `levels(y)` is itself NULL
-## for a ridge plot over a *numeric* y, and that empty result must stay
-## distinguishable from "this isn't a categorical axis" -- otherwise the caller
-## would substitute numeric ticks and bump the margin that the label-less axis
-## does not need.
-##
-## `ylabs` covers the general case of a type that has placed named categories on
-## the y axis. The ridge and flipped-boxplot cases are special: ridge takes its
-## categories from the y factor's levels, while a flipped boxplot has had its
-## categories swapped onto `xlabs` by flip_datapoints().
-y_axis_labels = function(type, y, ylabs, xlabs, flip) {
-  if (identical(type, "ridge")) {
-    return(list(levels(y)))
-  }
-  if (!is.null(ylabs)) {
-    return(list(if (!is.null(names(ylabs))) names(ylabs) else ylabs))
-  }
-  if (identical(type, "boxplot") && isTRUE(flip) && !is.null(xlabs)) {
-    return(list(if (!is.null(names(xlabs))) names(xlabs) else xlabs))
-  }
-  NULL
+## internal convenience function for the data extent of a single free facet.
+## A facet can hold no data at all: a grid draws the full cross-product of its
+## two variables, and an unused factor level does the same for one variable.
+## range() then returns c(Inf, -Inf), which par(usr=) rejects. Fall back to the
+## all-facet range so the empty panel draws like its neighbours, or to c(0, 1)
+## if even that is unusable (e.g. every value missing). (#705) The fallback is
+## itself a facet_free_range() result, so is already known to be finite.
+facet_free_range = function(v, fallback = NULL) {
+  # some types (e.g. barplot) leave a categorical axis as a factor
+  if (is.factor(v)) v = as.integer(v)
+  vf = v[is.finite(v)]
+  if (length(vf)) return(range(vf))
+  if (!is.null(fallback)) return(fallback)
+  c(0, 1)
+}
+
+
+## As above, but re-resolving a partial limit (scalar, or one NA) against the
+## facet's own range instead of the global one, which would collapse a free axis
+## back to a shared scale.
+facet_free_lim = function(v, fallback, partial = NULL, arg = "xlim") {
+  rng = facet_free_range(v, fallback)
+  if (is.null(partial)) rng else resolve_lim(partial, rng, arg)
 }
 
 

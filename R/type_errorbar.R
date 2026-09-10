@@ -4,17 +4,37 @@
 #'
 #' @inheritParams dodge_positions
 #' @inheritParams graphics::arrows
-#' @param xlevels a character or numeric vector specifying the order in which
-#'   the levels of the `x` variable should be plotted (as level names if
-#'   character, or level indexes if numeric, e.g. `3:1`). Note that this
-#'   argument only affects categorical (i.e., factor or character) `x`
-#'   variables; it is ignored for numeric `x`. Unlike most other plot types,
-#'   here it defaults to the special keyword `"asis"`, which takes the
-#'   categories in the order that they appear in the data: these types are
-#'   typically used for coefficient plots, where the row order of the data
-#'   (e.g., the terms of a model) is usually intentional. Set
-#'   `xlevels = NULL` to follow the factor levels instead, matching the other
-#'   plot types.
+#' @param xlevels,xord arguments controlling the order of the `x` variable, and
+#'   hence of the x-axis. Supply one or the other; if both arguments are
+#'   provided, `xlevels` takes precedence and `xord` is silently ignored.
+#'
+#'   - `xlevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
+#'
+#'   - `xord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
+#'
+#'     - `"desc"` and `"asc"` rank the categories by their mean `y` value,
+#'     largest or smallest first. (Long forms like `"descending"` and `"increasing"` are also accepted.)
+#'     - `"minvar"` ranks them by variance, lowest first. This needs more than
+#'     one observation per category, so it does not apply to the usual
+#'     one-row-per-term coefficient table.
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted ascending, so
+#'     `function(y) -median(y)` ranks by median, largest first.
+#'
+#'   Note that `x` is only reordered when it is categorical (i.e., factor or
+#'   character). A numeric `x` is plotted at its own values and cannot be
+#'   reordered, so supplying either argument there is ignored with a warning.
+#'
+#'   Unlike most other plot types, `xord` defaults to `"asis"` here rather than
+#'   `NULL`: these types are typically used for coefficient plots, where the row
+#'   order of the data (e.g., the terms of a model) is usually intentional. Set
+#'   `xord = NULL` to follow the factor levels instead, matching the other types.
 #' @examples
 #' tinytheme("basic")
 #' 
@@ -97,10 +117,11 @@
 #' tinytheme() # reset theme
 #'
 #' @export
-type_errorbar = function(length = 0.05, dodge = 0, fixed.dodge = FALSE, xlevels = "asis") {
+type_errorbar = function(length = 0.05, dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = "asis") {
+    ord_supplied = !missing(xord) || !is.null(xlevels)
     out = list(
         draw = draw_errorbar(length = length),
-        data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels),
+        data = data_pointrange(dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels, xord = xord, ord_supplied = ord_supplied),
         name = "p"
     )
     class(out) = "tinyplot_type"

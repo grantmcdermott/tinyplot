@@ -341,6 +341,8 @@ theme_default = list(
   dynmar = FALSE,
   facet.bg = NULL,
   facet.border = NA,
+  facet.drop = FALSE,
+  facet.drop.levels = FALSE,
   family = par("family"), # ""
   fg = par("fg"),
   font = par("font"), # 1,
@@ -373,6 +375,8 @@ theme_default = list(
   # axis styles below are only touched by the "heatmap" theme so far.
   xaxs = par("xaxs"), # "r"
   yaxs = par("yaxs"), # "r"
+  xaxr = NULL, # no tick label rotation unless set explicitly
+  yaxr = NULL, # no tick label rotation unless set explicitly
   xaxt = "standard",
   yaxt = "standard"
 )

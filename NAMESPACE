@@ -68,6 +68,7 @@ importFrom(grDevices,
   dev.list,
   dev.new,
   dev.off,
+  dev.size,
   extendrange,
   gray.colors,
   hcl,
@@ -148,6 +149,7 @@ importFrom(stats,
   spline,
   terms,
   time,
+  var,
   weighted.mean
 )
 importFrom(tools,file_ext)

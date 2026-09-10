@@ -114,3 +114,32 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "density_echo_bw_cap_clean")
+
+#
+## singleton groups (#300)
+
+# cyl == 4 & vs == 0 is a single car, so no density can be estimated for it.
+# The default reports the loss; "drop" does the same thing quietly.
+expect_warning(
+  plt(~mpg, facet = cyl ~ vs, data = mtcars, type = "density"),
+  pattern = "Dropped 1 singleton"
+)
+
+f = function() {
+  plt(~mpg, facet = cyl ~ vs, data = mtcars, type = type_density(singletons = "drop"))
+}
+expect_snapshot_plot(f, label = "density_singletons_drop")
+
+# "none" keeps them, which the data-driven bandwidth rules cannot cope with
+expect_error(
+  plt(~mpg, facet = cyl ~ vs, data = mtcars, type = type_density(singletons = "none")),
+  pattern = "at least 2 data points"
+)
+# ... but a numeric bandwidth can
+f = function() {
+  plt(~mpg, facet = cyl ~ vs, data = mtcars,
+      type = type_density(singletons = "none", bw = 1))
+}
+expect_snapshot_plot(f, label = "density_singletons_none")
+
+expect_error(type_density(singletons = "nope"))

@@ -9,11 +9,11 @@
 #'   a top-level [`tinyplot`] argument, which additionally supports non-standard
 #'   evaluation against `data` and takes precedence if both are given. See
 #'   Examples.
-#' @param labeller A formatting function (or convenience string) passed to
-#'   [`tinylabel`] for formatting the `labels`. Useful for ensuring that the
-#'   text labels match the formatting of an axis, e.g. `labeller = "%"` to
-#'   display the labels as percentages. Default is `NULL`, i.e. no formatting.
-#'   See Examples.
+#' @param labeller A formatting function, convenience string, or dictionary
+#'   (named vector or list) passed to [`tinylabel`] for formatting or
+#'   relabelling the `labels`. Useful for ensuring that the text labels match
+#'   the formatting of an axis, e.g. `labeller = "%"` to display the labels as
+#'   percentages. Default is `NULL`, i.e. no formatting. See Examples.
 #' @param family The name of a font family. Default of `NULL` means that the
 #' family will be the same as the main plot text, following
 #' \code{\link[graphics]{par}}. Note that if a `family` argument is provided,

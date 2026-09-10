@@ -9,12 +9,14 @@ type_spineplot(
   tol.ylab = 0.05,
   off = NULL,
   xlevels = NULL,
+  xord = NULL,
   ylevels = NULL,
+  yord = NULL,
   col = NULL,
-  xaxlabels = NULL,
-  yaxlabels = NULL,
   weights = NULL,
-  lighten = FALSE
+  lighten = FALSE,
+  xaxlabels = NULL,
+  yaxlabels = NULL
 )
 }
 \arguments{
@@ -29,19 +31,39 @@ type_spineplot(
 \item{off}{vertical offset between the bars (in per cent). It is fixed to
     \code{0} for spinograms and defaults to \code{2} for spine plots.}
 
-\item{xlevels, ylevels}{a character or numeric vector specifying the ordering of the
-levels of the \code{x} and \code{y} variables (if character) or the corresponding indexes
-(if numeric) for the plot. The special keyword \code{"asis"} takes the
-categories in the order that they appear in the data. Note that these
-arguments only affect categorical (i.e., factor or character) variables.}
+\item{xlevels, xord}{arguments controlling the order of the \code{x} variable, and
+hence of the x-axis. Supply one or the other; if both arguments are
+provided, \code{xlevels} takes precedence and \code{xord} is silently ignored.
+\itemize{
+\item \code{xlevels} specifies the levels \emph{literally}, either a character vector of
+level names in the desired order (e.g., \code{c("C", "B", "A")}), or a numeric
+vector of the corresponding level indexes (e.g. \code{3:1}).
+\item \code{xord} instead accepts a keyword or custom function, which then \emph{derives}
+the order from the data. Options are:
+\itemize{
+\item \code{"desc"} and \code{"asc"} rank the categories by (weighted) frequency,
+i.e. most or least common first. (Long forms like \code{"descending"} and \code{"increasing"} are also accepted.)
+\item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they
+appear in the data, while the latter reverses the current level order.
+\item a custom function that determines both the ranking statistic and its
+direction. The statistic is always sorted ascending, so
+\code{function(y) -median(y)} ranks by median, largest first.
+}
+}
+
+Note that \code{x} is only reordered when it is categorical (i.e., factor or
+character). Both arguments are thus ignored for spinograms, which have a
+(binned) numeric \code{x} axis. Each argument defaults to \code{NULL}, i.e. keep the
+existing factor levels.}
+
+\item{ylevels, yord}{as for \code{xlevels} / \code{xord} above, but for the \code{y}
+variable. Note that \code{y} is always coerced to a factor for spineplots and
+spinograms, so these arguments are always binding if provided. Be aware
+that a numeric \code{y} gives one level per distinct value.}
 
 \item{col}{a vector of fill colors of the same length as \code{levels(y)}.
     The default is to call \code{\link{gray.colors}}.}
-
-\item{xaxlabels, yaxlabels}{character vectors for annotation of x and y axis.
-    Default to \code{levels(y)} and \code{levels(x)}, respectively for the
-    spine plot. For \code{xaxlabels} in the spinogram, the breaks are
-    used.}
 
 \item{weights}{numeric. A vector of frequency weights for each
     observation in the data. If \code{NULL} all weights are implicitly
@@ -58,6 +80,11 @@ better against their matching border colours.) Set to \code{TRUE} to opt in to
 the lighter tint. Note that \code{lighten} has no effect on other spineplot
 displays (single-group or \code{x == by}), which always use a sequential shading
 ramp of the base colour.}
+
+\item{xaxlabels, yaxlabels}{[Deprecated] character vectors for annotation of
+the x and y axis. Use the top-level \code{xaxl} / \code{yaxl} arguments instead,
+which apply consistently across \code{\link{tinyplot}} types. These two type-specific
+arguments will be removed in a future release.}
 }
 \description{
 Type function(s) for producing spineplots and spinograms, which

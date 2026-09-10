@@ -15,7 +15,7 @@ where the formatting is also better._
   implied factor levels. It also improves layering consistency via `plt_add()`
   and co. so that plots are identical, regardless of whether lines are layered
   on top of points, or vice versa. Note that you can still select into the
-  old behaviour by passing the (new) `xlevels = "asis"` argument as an
+  old behaviour by passing the (new) `xord = "asis"` argument as an
   explicit override; see "Other new features" below. (#683 @grantmcdermott)
 
 ### New features
@@ -32,6 +32,14 @@ where the formatting is also better._
   along the chosen margin by default. It also reverses the y-axis by default, so
   that the first row sits at the top (again matching `heatmap()`); pass an
   explicit `ylim` to override. (#677 @grantmcdermott)
+- While not strictly a new plot type, `type_area()` gains a new `stack` argument
+  for drawing _stacked_ area plots, where each layer represents a discrete `by`
+  category group. This functionality is further enhanced by two (also new)
+  sister arguments. First, `byord` enables on-the-fly (re-)ordering of the
+  stacked `by` layers, via convenience keywords or custom functions (e.g.,
+  `byord = "end"` ranks groups according to their largest final value). Second,
+  a `FUN` argument permits stacking of multi-observation data by collapsing
+  repeated `y` values. (#688 @grantmcdermott)
 
 #### Facet improvements
 
@@ -47,6 +55,19 @@ enable finer control and customization of faceted plots:
   - Themes with L-shaped axes (`"classic"`, `"socviz"`, `"tufte"`, and
     `"float"`) now default to `facet.axes = "outer"`, so that they drop the
     redundant interior axes of faceted plots.
+- `drop`: allows for the removal of empty facets. The behaviour varies slightly
+  depending on whether a one-sided (wrapped) or two-sided (gridded) facet
+  formula is specified. The former simply removes the missing factor level,
+  while the latter retains its spot (to preserve the rectangular grid) but is
+  not drawn. (#708, #710 @grantmcdermott)
+- `drop.levels`: allows each free facet (`free = TRUE`) to keep only the
+  categories of a categorical axis that it actually uses. The panel's axis is
+  recomputed as if its own data had been passed through `factor()`, so that the
+  surviving categories are re-spaced evenly rather than leaving a gap where an
+  unused one sat. Note the distinction from `drop` above: the latter removes
+  empty _facets_, whereas `drop.levels` removes unused _categories within_ a
+  facet. Default is `FALSE`, i.e. every facet keeps the full set of categories.
+  (#718 @grantmcdermott)
 - `labeller`: for formatting facet titles via `tinylabel()`. Accepts the usual
   mix of convenience keywords (symbols) known to `tinylabel()`, or formatting
   functions. A (named) vector or list can be used to separately format
@@ -62,22 +83,67 @@ enable finer control and customization of faceted plots:
   concatenating via the default `":"`. (#684 @grantmcdermott)
 
 Note that each of these `facet.args` arguments is paired with an equivalent
-`tpar(facet.<arg>)` parameter. For example, call `tpar(facet.axes = "outer")` 
+`tpar(facet.<arg>)` parameter. For example, call `tpar(facet.axes = "outer")`
 to set this behaviour globally. This also means that they can be set as part of
 a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
+#### Ordering and labelling categorical variables
+
+This release brings several enhancements for working with _categorical_
+variables, i.e. where `x`, `y`, or `by` are characters or factors with discrete
+levels. This includes improvements to existing arguments, as well as the
+provision of some new arguments that enable finer control over level ordering
+and convenient label formatting.
+
+- `xlevels`, `ylevels`: these (type-level) arguments permit on-the-fly
+  reordering of a categorical variable via _literal_ specification, either a
+  character vector of level names (e.g., `c("C", "B", "A")`), or a numeric
+  vector of level indices (e.g., `3:1`). While this argument is not new---having
+  been supported by `type_barplot` and several other types for a while---we now
+  extend `xlevels` support to `type_points()`, `type_lines()`,
+  `type_errorbar()`, and `type_pointrange()`. (#683, #694 @grantmcdermott)
+- `xord`, `yord`: these are new (type-level) arguments that provide an alternate
+  ordering interface to `x/ylevels`. Specifically, while `x/ylevels` require a
+  literal ordering, `x/yord` _computes_ the order on the fly, according to
+  (type-appropriate) convenience keywords or a custom ranking function. For
+  example, `"desc(ending)"`/`"asc(ending)"` orders by value, while `"asis"`
+  ignores factor levels and just takes the order of appearance in the data as
+  given. Among other things, this makes it possible to sort barplots by height
+  (e.g., `type_barplot(xord = "desc")`), or ridges by their spread (e.g.,
+  `type_ridge(yord = "minvar")`) without relevelling the underlying factor by
+  hand. (#683, #694 @grantmcdermott)
+- (Note: users should only supply one of the preceding sets of arguments. If
+  both `x/ylevels` and `x/yord` are provided, the former takes precedence as
+  the more explicit.)
+- `tinylabel()` gains a dictionary form, i.e., a *named* character vector or
+  list that maps existing labels to new ones _a la_
+  `c(old1 = "new1", old2 = "new2")`. Partial mapping is fine since the lookup is
+  by value rather than by position, so that some levels can be left unnamed.
+  Importantly, this behaviour extends to the rest of **tinyplot**'s
+  (re)labelling machinery---including `x/yaxl`, `type_text()`, and any function
+  with a `labeller` argument---since everything is routed through `tinylabel()`.
+  (#690 @grantmcdermott)
+- The type-level `x/yaxlabels` arguments of `type_spineplot()` and
+  `type_barplot()` are deprecated in favour of the top-level `x/yaxl` arguments.
+  The type-level arguments predated their top-level cousins, which now offer the
+  same functionality via a consistent interface across _all_ types. The old
+  arguments still work (with a warning) for now. But we will be formally
+  removing them in a future release and, going forwards, encourage users to move
+  over to `xaxl` and `yaxl` as the idiomatic **tinyplot** way to relabel
+  and format axis ticks. (#692 @grantmcdermott)
+
+Beyond convenience, these improvements to categorical variable handling also
+provide the scaffolding to eliminate some niggling inconsistencies; for example,
+related to plot layering. See "Bug fixes" below.
+
 #### Other new features
 
-- `type_points()`, `type_lines()`, `type_errorbar()`, and `type_pointrange()`
-  gain an `xlevels` argument for reordering a categorical `x` variable on the
-  fly (matching existing functionality for `type_barplot()` and several other
-  types). Values can be a character vector of level names, a numeric vector of
-  level indexes (e.g., `3:1`), or the new `"asis"` keyword, which takes the
-  categories in the order that they appear in the data. The latter option is
-  also the default for `type_errorbar()` and `type_pointrange()`, thus
-  preserving existing behaviour since these two types are typically fed
-  coefficient table data where the row order is intentional.
-  (#683 @grantmcdermott)
+- New top-level `xaxr` and `yaxr` arguments allow rotating of the x- and y-axis
+  tick labels by arbitrary angles, closing a long-standing feature request
+  (#346). Note that setting one overrides `las` for that axis. Best combined
+  with a dynamic theme, since the plot margins are resized to fit the rotated
+  labels. Also settable via `tpar("x/yaxr")` and thus as part of a `tinytheme`
+  too. (#717 @grantmcdermott)
 - Custom plot types have more control over the surrounding plot machinery, via a
   new `type_hints` mechanism. A type can declare properties about itself---that
   it draws its own axes, needs a secondary right-hand axis, uses proportional
@@ -87,17 +153,35 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
   custom types. See
   [Advanced customization](https://grantmcdermott.com/tinyplot/vignettes/types.html#type-hints)
   in the `Types` vignette for the list of supported hints. (#543 @grantmcdermott)
-- `type_density()` gains an `echo.bw` argument for reporting the smoothing
-  bandwidth and the number of observations behind it, neither of which is
-  visible from the curve itself. Destinations are `"sub"`, `"cap"`, and
-  `"cat"` (console), in any combination; a destination the user has already
-  labelled is left alone. Shared bandwidths are reported once and named as
-  joint, individual bandwidths per group. (#287 @haomeng797-ship-it)
 - New `cex.xaxs` and `cex.yaxs` graphical parameters allow the x- and y-axis
   tick labels to be sized independently, e.g. `tpar(cex.yaxs = 0.6)` to shrink a
   long list of category names on the y-axis without also shrinking the x-axis.
   Both default to `NULL`, in which case the shared `cex.axis` value is used, so
   existing plots are unaffected. (#677 @grantmcdermott)
+- Type-specific updates:
+  - `type_lines()` and its shortcut equivalents like `"l"` and `"s"` now support
+    a _continuous_ `by` variable, drawing a colour gradient along the line
+    itself rather than reverting to a discrete legend. Useful for trajectories,
+    where a third variable (typically time) orders the path; see the new
+    `?type_lines` examples. (#712 @grantmcdermott)
+  - `type_density()` gains an `echo.bw` argument for reporting the smoothing
+    bandwidth and the number of observations behind it, neither of which is
+    visible from the curve itself. Destinations are `"sub"`, `"cap"`, and
+    `"cat"` (console), in any combination; a destination the user has already
+    labelled is left alone. Shared bandwidths are reported once and named as
+    joint, individual bandwidths per group. (#287 @haomeng797-ship-it)
+  - `type_area()` gains a `stack` argument for drawing stacked area plots. See
+    "New plot types" above for more details. (#688 @grantmcdermott)
+  - `type_summary()` gains a `dodge` (and `fixed.dodge`) argument, thus enabling 
+    dodging of grouped plots. This is mostly useful for adding summaries on top
+    of a base layer that is itself dodged. Separately, `type_summary()`'s
+    internals have been refactored to use `stats::aggregate` instead of
+    `stats::ave`. (#701 @grantmcdermott)
+  - `type_barplot()` gains a `na.as.zero` argument for controlling whether a
+    category that no observation reaches is treated as a zero (and so marked
+    with a flat bar along the baseline) or left undrawn. The default `NULL`
+    lets `FUN` decide; see the new "Implicit zeros and empty cells" section of
+    `?type_barplot`. (#718 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -107,6 +191,51 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
 
 ### Bug fixes
 
+- `type_barplot()` receives several consistency improvements and bug fixes:
+  - Passing a named atomic vector now uses the names as the bar categories,
+    matching base `barplot()`. (#714 @grantmcdermott)
+  - A category that no observation reaches is no longer treated as an
+    implicit zero; at least not unconditionally. Instead, behaviour is now
+    governed by explicit rules, e.g. derived from `FUN` or the new `na.as.zero`
+    argument (above). At the same time, explicit zeros remain unaffected. Again,
+    see the new "Implicit zeros and empty cells" section of `?type_barplot` for
+    details and examples. (#711 @grantmcdermott)
+- `type_ridge()` no longer errors under themes that set a relative (negative)
+  numeric `col.default`, e.g. `theme = "classic"`. (#703 @grantmcdermott)
+- Layers added with `tinyplot_add()` now align correctly on a categorical axis:
+  - They land on the category that each row belongs to, rather than on the row's
+    _position_. The latter only coincided with the right answer when the added
+    layer's rows happened to arrive in ascending order; other rows were
+    permuted, and repeated categories collapsed onto a single position.
+    (#679 @grantmcdermott)
+  - They also align when the base plot type coerces a numeric `x` variable to a
+    factor, as `type_barplot()` and `type_violin()` do. The base layer's
+    categories are the coerced *labels*, while the added layer still carried the
+    raw values, so it was drawn at those coordinates instead of at the category
+    positions---often well outside the plotting region. (#691 @grantmcdermott)
+- Axis labellers no longer blow up the decimal precision when the breaks are
+  symmetric about zero, as they are for a centered barplot. `tinyplot(...,
+  center = TRUE, yaxl = "percent")` labelled its axis `80.00000%` rather than
+  `80%`. (#689 @grantmcdermott)
+- The top-level `xaxl` / `yaxl` arguments now work for `type_spineplot()` and
+  `type_ridge()`. Both types draw their own axes, and so never reached the
+  standard path where those arguments are applied, meaning they were silently
+  ignored. (#694 @grantmcdermott)
+- `xlevels` / `ylevels` no longer drop data silently. Naming a strict subset of
+  a variable's levels sent every other level to `NA`, quietly removing those
+  observations from the plot; this now warns. Supplying a value that matches no
+  level at all is now an error, rather than surfacing later as an unrelated
+  complaint about zero-length ranges. (#688, #694 @grantmcdermott)
+- `type_area()` now labels a categorical `x` axis with its factor levels,
+  rather than falling back to the underlying integer positions.
+  (#688 @grantmcdermott)
+- Density-based plots no longer error out on singleton groups, i.e. `by` and
+  `facet` combinations containing only one observation. Such groups are now
+  dropped, together with a warning reporting how many were removed. The
+  affected types---`type_density()`, `type_violin()`, and `type_ridge()`---also
+  gain a `singletons` argument for controlling this behaviour: option `"drop"`
+  removes them quietly, while `"none"` retains them (and so requires a numeric
+  `bw`). (#687 @grantmcdermott)
 - `flip = TRUE` now flips the drawn geometry of the single-letter line types,
   not just the axes: `type = "h"` draws horizontal segments to the baseline,
   and the step types `"s"` and `"S"` swap which coordinate moves first.
@@ -115,13 +244,14 @@ a (custom) theme, e.g. `tinytheme("clean", facet.axes = "outer")`.
   `flip = TRUE` and for a factor `y` variable. Previously the y-axis fell back
   to numeric tick labels for every line type except `"p"`.
   (#679 @grantmcdermott)
-- Added layers now align on the category that each row belongs to, rather than
-  on the row's _position_. The latter only coincided with the right answer when
-  the added layer's rows happened to arrive in ascending order; other rows were
-  permuted, and repeated categories collapsed onto a single position.
-  (#679 @grantmcdermott)
 - Fixed several bugs specific to plots with free facets (i.e.,
   `facet.args = list(free = TRUE)`):
+  - Panels now keep every category of a categorical axis, regardless of type,
+    so that their ticks line up with each other. Use the new `drop.levels` arg
+    (above) for the opposite behaviour. (#718 @grantmcdermott)
+  - The geometry around the end categories of a categorical axis is no longer
+    clipped, e.g. the first and last box of a faceted boxplot.
+    (#718 @grantmcdermott)
   - A categorical y-axis no longer errors out with `'labels' is supplied and
 not 'at'`. The free-facet code path listed the eligible types by name, so
     any other type lost its tick positions while keeping the corresponding
@@ -129,23 +259,27 @@ not 'at'`. The free-facet code path listed the eligible types by name, so
     (e.g. `type = "p"` with a factor `y` variable). (#679 @grantmcdermott)
   - Single-valued discrete axes no longer trigger invalid `par(usr)` values.
     (#668 @grantmcdermott)
+  - Similarly, empty facets (containing no data at all) no longer trigger
+    invalid `par(usr)` values either. (#705 @grantmcdermott)
   - User-provided `x/ylim` overrides now work correctly with flipped plots.
     (#670 @grantmcdermott)
+  - "Smart" partially specified `x/ylim` limits (e.g., `ylim = 0` or
+    `ylim = c(0, NA)`) are now resolved per facet, rather than once against the
+    range of the whole dataset. (#706 @grantmcdermott)
   - Axes now inherit the same themed `cex`, `lwd` and `lty` as their fixed-scale
     counterparts. Previously the free-facet code path built its axis calls by
     hand and so silently ignored `cex.axis`, `lwd.axis` and `lty.axis` (plus
     their per-side variants), which was most visible under themes that set them,
     e.g. `tinytheme("bw")`. (#673 @grantmcdermott)
-- Axis tick labels now honour the themed `cex.axis` value. The internal axis call
-  passed it as `cex`, which base `axis()` ignores in favour of `cex.axis` when
-  sizing tick labels, so the setting had no effect on label size. This also means
-  the per-side `cex.xaxs`/`cex.yaxs` parameters (see above) take effect.
-  (#677 @grantmcdermott)
-- Dynamic margins now measure each axis at its own tick-label size. The margin
-  and whitespace calculations read only the shared `cex.axis`, so a plot that
-  set `cex.xaxs`/`cex.yaxs` to different values clipped the labels on the larger
-  axis and reserved dead whitespace on the smaller one, e.g.
-  `tinytheme("heatmap", cex.xaxs = 2, cex.yaxs = 0.5)`. (#677 @grantmcdermott)
+- Axis tick labels now honour their themed size, in two respects:
+  - The internal axis call passed `cex.axis` as `cex`, which base `axis()`
+    ignores in favour of `cex.axis` when sizing tick labels, so the setting had
+    no effect. This also means the per-side `cex.xaxs`/`cex.yaxs` parameters
+    (see above) take effect. (#677 @grantmcdermott)
+  - Dynamic margins read only the shared `cex.axis`, so a plot setting
+    `cex.xaxs`/`cex.yaxs` to different values clipped the labels on the larger
+    axis and reserved dead whitespace on the smaller one, e.g.
+    `tinytheme("heatmap", cex.xaxs = 2, cex.yaxs = 0.5)`. (#677 @grantmcdermott)
 - Grouped and faceted plots no longer redraw axes once per empty group. This was
   most visible for `"spineplot"` types (e.g. `facet = "by"`), where the
   self-drawn axis labels were overplotted several times and rendered too heavy.
@@ -171,6 +305,15 @@ not 'at'`. The free-facet code path listed the eligible types by name, so
   require was only applied when the type had to be inferred, so an explicit type
   was mistaken for an empty plot and never drawn. (#647 @grantmcdermott
   @zeileis)
+- Gradient legend tick marks are now drawn as line segments, rather than text
+  dashes, thus ensuring more consistent behaviour across devices and themes.
+  (#715 @JanMarvin @grantmcdermott)
+- Gradient legends drawn below the plot (e.g. `legend = "bottom!"`) no longer
+  ride up over the x-axis under dynamic themes. (#719 @grantmcdermott)
+
+### Internals
+
+- Performance improvements. (#723, #724 @grantmcdermott)
 
 ## v0.7.0
 

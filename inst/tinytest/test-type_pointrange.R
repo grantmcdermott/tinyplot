@@ -72,7 +72,7 @@ fun = function() {
 }
 expect_snapshot_plot(fun, label = "pointrange_with_layers_flipped")
 
-# xlevels = NULL overrides the "asis" default, ordering the terms by their
+# xord = NULL overrides the "asis" default, ordering the terms by their
 # factor levels (alphabetical here) instead of their row order (#679)
 fun = function() {
     with(
@@ -82,8 +82,20 @@ fun = function() {
           y = y,
           ymin = ymin,
           ymax = ymax,
-          type = type_pointrange(xlevels = NULL)
+          type = type_pointrange(xord = NULL)
         )
       )
 }
 expect_snapshot_plot(fun, label = "pointrange_xlevels_null")
+
+# `xord` defaults to "asis" here, so the ignored-argument warning must key on
+# whether the user actually supplied it -- otherwise every numeric-x
+# coefficient plot would warn on its own default
+cf2 = data.frame(x = c(1, 2, 3), lo = c(0, 1, 2), hi = c(2, 3, 4))
+expect_silent(
+  tinyplot(x ~ x, data = cf2, ymin = lo, ymax = hi, type = type_pointrange())
+)
+expect_warning(
+  tinyplot(x ~ x, data = cf2, ymin = lo, ymax = hi, type = type_pointrange(xord = "rev")),
+  pattern = "only categorical"
+)

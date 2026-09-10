@@ -4,7 +4,7 @@
 \alias{tinyAxis}
 \title{Generic function for adding an axis to a (tiny)plot}
 \usage{
-tinyAxis(x = NULL, ..., type = "standard", labeller = NULL)
+tinyAxis(x = NULL, ..., type = "standard", labeller = NULL, srt = NULL)
 }
 \arguments{
 \item{x}{an object which indicates the range over which an axis should
@@ -20,12 +20,34 @@ arguments of the parent \code{\link[=tinyplot]{tinyplot()}} call. One of either:
 labels without ticks and axis line), or \code{"axis"} (only axis line and labels
 but no ticks). Partial matching is allowed, e.g. \code{type = "s"}.}
 
-\item{labeller}{a formatting function to be applied to \code{x}, e.g. \code{\link{format}},
-\code{\link{toupper}}, \code{\link{abs}}, or other custom function (including from the popular
-\strong{scales} package). Can also be one of the following convenience strings
-(symbols), for which common formatting transformations are provided:
-\code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"}
-(\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}).}
+\item{labeller}{how the labels should be relabelled or reformatted. One of:
+\itemize{
+\item a function to be applied to \code{x}, e.g. \code{\link{format}}, \code{\link{toupper}}, \code{\link{abs}},
+or any other custom function (including from the popular \strong{scales}
+package).
+\item one of the following convenience strings (or their symbol equivalents),
+for which common formatting transformations are provided: \code{"percent"}
+(\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}), \code{"dollar"} (\code{"$"}), \code{"euro"}
+(\code{"€"}), or \code{"sterling"} (\code{"£"}).
+\item a dictionary, i.e. a \emph{named} character vector or list of form
+\code{c(old_lab = "new_lab", ...)}. Entries of \code{x} that match a name are
+replaced by the corresponding value and the rest are left alone, so a
+partial mapping is fine. The lookup is by value rather than by position,
+which means it is unaffected by any reordering of the underlying
+categories.
+}
+
+Note that an \emph{unnamed} character vector of length greater than one is an
+error, rather than a positional replacement of the labels. Such a vector
+cannot be distinguished from a formatting keyword when \code{x} is of length
+one, and would not follow the categories if they were reordered. Pass a
+function if you want to compute the labels positionally, e.g.
+\code{function(x) LETTERS[seq_along(x)]}.}
+
+\item{srt}{numeric giving the tick label rotation in degrees
+counter-clockwise, or \code{NULL} (default) to leave the labels to base
+\code{axis()} and its \code{las} setting. Any non-zero value is drawn by hand, since
+\code{axis()} only understands the four right angles that \code{las} selects.}
 }
 \description{
 Internal function used for adding an axis to a \code{\link{tinyplot}}

@@ -27,9 +27,32 @@
 #' at the specified `probs`. The quantiles are computed based on the density
 #' (rather than the raw original variable). Only one of `breaks` or
 #' `probs` must be specified.
-#' @param ylevels a character or numeric vector specifying in which order
-#' the levels of the y-variable should be plotted. The special keyword
-#' `"asis"` takes the categories in the order that they appear in the data.
+#' @param ylevels,yord arguments controlling the order of the `y` variable, and
+#'   hence of the y-axis. Supply one or the other; if both arguments are
+#'   provided, `ylevels` takes precedence and `yord` is silently ignored.
+#'
+#'   - `ylevels` specifies the levels _literally_, either a character vector of
+#'   level names in the desired order (e.g., `c("C", "B", "A")`), or a numeric
+#'   vector of the corresponding level indexes (e.g. `3:1`).
+#'
+#'   - `yord` instead accepts a keyword or custom function, which then _derives_
+#'   the order from the data. Options are:
+#'
+#'     - `"desc"` and `"asc"` rank the ridges by their mean `x` value, largest
+#'     or smallest first. (Long forms like `"descending"` and `"increasing"` are also accepted.) (Ridge plots have no
+#'     separate response, so the ranking runs on the continuous `x` variable.)
+#'     - `"minvar"` ranks them by the spread of each distribution, narrowest
+#'     first.
+#'     - `"asis"` or `"rev"` permute the existing levels without consulting the
+#'     data at all. The former takes the categories in the order that they
+#'     appear in the data, while the latter reverses the current level order.
+#'     - a custom function that determines both the ranking statistic and its
+#'     direction. The statistic is always sorted ascending, so
+#'     `function(y) -median(y)` ranks by median, largest first.
+#'
+#'   Note that a numeric `y` is coerced to a factor before the ridges are
+#'   drawn, so it is reordered like any other categorical variable.
+#'   Each argument defaults to `NULL`, i.e. keep the existing factor levels.
 #' @inheritParams stats::density
 #' @param bw the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
 #'   see \code{\link[stats]{density}} for details and options.
@@ -76,6 +99,15 @@
 #' 1, i.e. fully opaque. But for some `by` grouped plots (excepting the special
 #' cases where `by==y` or `by==x`), will default to 0.6.
 #'
+#' @param singletons character string indicating what to do with singleton
+#' groups, i.e. combinations of `y`, `by`, and `facet` that consist of only 1
+#' row. The default `"warn"` option removes any singleton cases and emits a
+#' warning reporting how many there were. `"drop"` does the same thing, but
+#' quietly. In either case the dropped groups may still be represented as empty
+#' ridge lines or facets in your plot. Finally, `"none"` skips all singleton
+#' checks and retains the affected groups; possibly leading to an error. Note
+#' that singletons require a numeric `bw`, since the data-driven bandwidth
+#' rules need at least 2 observations.
 #' @section Technical note on gradient fills:
 #'
 #' `tinyplot` uses two basic approaches for drawing gradient fills in ridge line
@@ -199,6 +231,7 @@
 #' ## restore the default theme
 #' tinytheme()
 #'
+#' @importFrom stats ave
 #' @export
 type_ridge = function(
     scale = 1.5,
@@ -206,6 +239,7 @@ type_ridge = function(
     breaks = NULL,
     probs = NULL,
     ylevels = NULL,
+    yord = NULL,
     bw = "nrd0",
     joint.bw =  c("mean", "full", "none"),
     adjust = 1,
@@ -215,10 +249,12 @@ type_ridge = function(
     gradient = FALSE,
     raster = FALSE,
     col = NULL,
-    alpha = NULL
+    alpha = NULL,
+    singletons = c("warn", "drop", "none")
     ) {
 
   kernel = match.arg(kernel, c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine"))
+  singletons = match.arg(singletons, c("warn", "drop", "none"))
   if (is.logical(joint.bw)) {
     joint.bw = ifelse(joint.bw, "mean", "none")
   }
@@ -234,9 +270,11 @@ type_ridge = function(
                       breaks = breaks,
                       probs = probs,
                       ylevels = ylevels,
+                      yord = yord,
                       raster = raster,
                       col = col,
-                      alpha = alpha
+                      alpha = alpha,
+                      singletons = singletons
                       ),
     name = "ridge"
   )
@@ -253,13 +291,14 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                       gradient = FALSE,
                       breaks = NULL,
                       probs = NULL,
-                      ylevels = NULL,
+                      ylevels = NULL, yord = NULL,
                       raster = FALSE,
                       col = NULL,
-                      alpha = NULL
+                      alpha = NULL,
+                      singletons = "warn"
                       ) {
   fun = function(settings, ...) {
-    env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by"))
+    env2env(settings, environment(), c("datapoints", "yaxt", "xaxt", "null_by", "yaxl"))
 
     # `col` may arrive either via the top-level `tinyplot(..., col =)` call
     # (stored in settings) or via the `type_ridge(col =)` constructor arg. The
@@ -284,15 +323,27 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     if (isTRUE(x_by)) fill_by = FALSE
     # if (isTRUE(anyby) && is.null(alpha)) alpha = 0.6
 
+    if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
     ## reorder levels of y-variable if requested
     if (!is.null(ylevels)) {
-      if (!is.factor(datapoints$y)) datapoints$y = factor(datapoints$y)
       datapoints$y = sanitize_xlevels(datapoints$y, ylevels, arg = "ylevels")
+      if (y_by) datapoints$by = datapoints$y
+    }
+    ## `yord` ranks the ridges on the *continuous* variable, which for this
+    ## type is `x` -- there is no separate response to rank on. So "asc"/"desc"
+    ## order by mean x, "minvar" by the spread of each distribution.
+    if (!is.null(yord) && is.null(ylevels)) {
+      datapoints$y = sanitize_ord(
+        datapoints$y, datapoints$x, NULL,
+        yord, arg = "yord", keywords = ord_keywords_distribution,
+        stat = "mean"
+      )
       if (y_by) datapoints$by = datapoints$y
     }
 
     ##
     datapoints = split(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
+    datapoints = drop_singletons(datapoints, singletons)
 
     if (joint.bw == "none" || is.numeric(bw)) {
         dens_bw = bw
@@ -406,14 +457,17 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       breaks[length(breaks)] = pmax(breaks[length(breaks)], xlim[2L])
     }
 
-    # Single-group (or x_by) ridges: default the outline colour consistently
-    # with the other plot types. An explicit `col.default` wins; otherwise fall
-    # back to the first colour of the active qualitative palette (e.g. blue under
-    # "clean"), or base palette()[1] (black) when no theme palette is set. (#598)
-    if (is.null(col) && (!anyby || x_by)) {
-      col = get_tpar("col.default", default = NULL)
+    # `x_by` shades with a gradient along x, so `by_col()` returns a colour ramp
+    # rather than a flat outline (and skips `col.default`, which is qualitative-
+    # only). Resolve it here; every other case is left to `by_col()`. (#598)
+    if (is.null(col) && x_by) {
+      pal_q = .tpar[["palette.qualitative"]]
+      # `col.default` may be a (possibly negative) palette index, not a literal
+      # colour, so resolve it the way `by_col()` does. (#703)
+      col = resolve_col_default(
+        get_tpar("col.default", default = NULL), pal_q
+      )[["col_default"]]
       if (is.null(col)) {
-        pal_q = .tpar[["palette.qualitative"]]
         col = if (!is.null(pal_q)) {
           resolve_palette_spec(
             pal_q, ngrps = 1L, gradient = FALSE, ordered = FALSE,
@@ -446,6 +500,10 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       probs = probs,
       manbreaks = manbreaks,
       yaxt = yaxt_orig,
+      ## This type draws its own y-axis category labels (see `draws_own_axes`),
+      ## so it never reaches the standard path where `yaxl` is applied. Carry it
+      ## through for the tinyAxis() calls in draw_ridge() to use as a labeller.
+      yaxl = yaxl,
       raster = raster,
       ridge_theme = ridge_theme,
       x_by = x_by,
@@ -566,6 +624,7 @@ draw_ridge = function() {
     if (ridge_theme) {
       if (keep_axis(2)) {
         tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
+                 labeller = type_info[["yaxl"]],
                  padj = 0,
                  mgp = c(3, 1, 0) - c(0.5, 0.5 + 0.3, 0),
                  tcl = 0)
@@ -573,7 +632,8 @@ draw_ridge = function() {
       if (identical(.tpar[["tinytheme"]], "ridge2") && keep_axis(1)) axis(1, labels = FALSE)
     } else {
       if (keep_axis(2)) {
-        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]])
+        tinyAxis(x = d$y, side = 2, at = val, labels = lab, type = type_info[["yaxt"]],
+                 labeller = type_info[["yaxl"]])
       }
     }
   }
@@ -590,7 +650,7 @@ segmented_polygon = function(x, y, ymin = 0, breaks = range(x), probs = NULL, ma
   if (!is.null(probs)) {
     ## map quantiles to breaks
     if (!(missing(breaks) || is.null(breaks))) stop("only one of 'breaks' and 'probs' must be specified")
-    breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
+    breaks = density_quantile(list(x = x, y = y - ymin), probs = probs)
   }
 
   ## sanity check
@@ -681,7 +741,7 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, man
   ## map quantiles to breaks
   if (!is.null(probs)) {
     if (!(missing(breaks) || is.null(breaks))) stop("only one of 'breaks' and 'probs' must be specified")
-    breaks = quantile.density(list(x = x, y = y - ymin), probs = probs)
+    breaks = density_quantile(list(x = x, y = y - ymin), probs = probs)
   }
 
   if (!is.null(alpha)) col = adjustcolor(col, alpha.f = alpha)
@@ -703,7 +763,7 @@ segmented_raster = function(x, y, ymin = 0, breaks = range(x), probs = NULL, man
 ## auxiliary function for determining quantiles based on density function
 
 #' @importFrom stats median approx
-quantile.density = function(x, probs = seq(0, 1, 0.25), ...) {
+density_quantile = function(x, probs = seq(0, 1, 0.25), ...) {
   ## sanity check for probabilities
   if (any(probs < 0 | probs > 1)) stop("'probs' outside [0,1]")
 

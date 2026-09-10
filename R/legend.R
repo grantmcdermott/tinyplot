@@ -258,8 +258,14 @@ tinylegend = function(legend_env) {
     legend_env$args[["text.width"]] = NULL
   }
 
-  # Re-measure legend dimensions (device size may have changed on resize)
-  legend_env$dims = measure_fake_legend(legend_env)
+  # Re-measure legend dimensions, but only when the device has actually
+  # changed. draw_legend() already measured on this device during setup, so on
+  # the initial draw the result is still current and a measuring pass costs
+  # about as much as drawing the legend itself. A resize, or a replay onto a
+  # different device, fails the key comparison and forces the re-measure.
+  if (is.null(legend_env$dims) || !identical(legend_env$dims_dev, legend_dev_key())) {
+    legend_env$dims = measure_fake_legend(legend_env)
+  }
 
   # Calculate and apply soma (outer margin adjustment based on legend size)
   # When soma_target is set (multi-legend), use it directly so all legends
@@ -362,6 +368,17 @@ tinylegend = function(legend_env) {
 
 
 # Measure legend dimensions using a fake (non-plotted) legend
+# Identity of the device a legend measurement belongs to. Size alone is not
+# enough: replaying or copying a display list onto a same-sized device with a
+# different backend (dev.copy(), dev.print(), an IDE's plot export) yields
+# different text metrics, so the device itself has to be part of the key.
+# dev.cur() is a named integer, so this captures the backend as well as the
+# device number.
+legend_dev_key = function() {
+  list(dev = dev.cur(), size = dev.size())
+}
+
+
 measure_fake_legend = function(legend_env) {
   fklgnd.args = modifyList(
     legend_env$args,
@@ -388,6 +405,10 @@ measure_fake_legend = function(legend_env) {
       )
     }
   }
+
+  # Record which device this measurement was taken on, so callers can tell
+  # whether a cached result is still valid (see tinylegend()).
+  legend_env$dims_dev = legend_dev_key()
 
   do.call("legend", fklgnd.args)
 }
@@ -542,7 +563,9 @@ prepare_legend = function(settings) {
 #' @param legend_args Additional legend arguments
 #' @param by_dep The (deparsed) "by" grouping variable name
 #' @param lgnd_labs The legend labels
-#' @param labeller Character or function for formatting labels
+#' @param labeller Function, character keyword, or dictionary (named vector or
+#'   list) for formatting or relabelling the labels. See [`tinylabel`] for the
+#'   accepted forms.
 #' @param type Plot type
 #' @param pch Plotting character(s)
 #' @param lty Line type(s)
@@ -690,6 +713,13 @@ build_legend_args = function(
     legend_args[["inset"]] = 0
   }
 
+  # legend() lists its first entry at the top, so a type whose groups read
+  # bottom-up needs its key flipped or it runs backwards against the geometry it
+  # labels. Gradient legends already run bottom-up, so they are exempt. (#632)
+  if (isTRUE(legend_env[["type_hints"]][["legend_reversed"]]) && isFALSE(gradient)) {
+    legend_args = reverse_legend_keys(legend_args, n = length(lgnd_labs))
+  }
+
   # Additional tweaks for horizontal and/or multi-column legends
   mcol_flag = !is.null(legend_args[["ncol"]]) && legend_args[["ncol"]] > 1
   user_inset = !is.null(legend_args[["inset"]])
@@ -727,6 +757,30 @@ build_legend_args = function(
 }
 
 
+## Flip a discrete legend key end-for-end. Every element below is positionally
+## aligned with the labels, so they all have to move together or the swatches
+## detach from their text. An allowlist rather than "reverse anything of length
+## n", because some non-grouped args are legitimately length 2 -- `inset` above
+## all -- and would be corrupted on any two-group plot. Scalars are skipped (a
+## recycled `lty`, or a `col` that legend_border_fg collapsed to par("fg")), as
+## is a `legend` still held as an unevaluated expression.
+reverse_legend_keys = function(legend_args, n) {
+  if (n < 2L) return(legend_args)
+  keys = c(
+    "legend",                              # the labels themselves
+    "col", "pch", "lty", "lwd",            # line/point key
+    "pt.bg", "pt.cex", "pt.lwd",           # point key fill and sizing
+    "fill", "border", "density", "angle",  # box key, only ever user-supplied
+    "text.col"                             # label colour, ditto
+  )
+  for (key in keys) {
+    val = legend_args[[key]]
+    if (is.atomic(val) && length(val) == n) legend_args[[key]] = rev(val)
+  }
+  legend_args
+}
+
+
 #' Build legend environment
 #'
 #' @description Creates the legend environment by:
@@ -739,7 +793,9 @@ build_legend_args = function(
 #' @param legend_args Additional legend arguments
 #' @param by_dep The (deparsed) "by" grouping variable name
 #' @param lgnd_labs The legend labels
-#' @param labeller Character or function for formatting labels
+#' @param labeller Function, character keyword, or dictionary (named vector or
+#'   list) for formatting or relabelling the labels. See [`tinylabel`] for the
+#'   accepted forms.
 #' @param type Plot type
 #' @param pch Plotting character(s)
 #' @param lty Line type(s)
@@ -848,8 +904,9 @@ build_legend_env = function(
 #'   \code{\link[graphics]{legend}}.
 #' @param by_dep The (deparsed) "by" grouping variable name.
 #' @param lgnd_labs The labels passed to `legend(legend = ...)`.
-#' @param labeller Character or function for formatting the labels (`lgnd_labs`).
-#'   Passed down to [`tinylabel`].
+#' @param labeller Function, character keyword, or dictionary (named vector or
+#'   list) for formatting or relabelling the labels (`lgnd_labs`). See
+#'   [`tinylabel`] for the accepted forms. Passed down to [`tinylabel`].
 #' @param type Plotting type(s), passed down from [tinyplot].
 #' @param pch Plotting character(s), passed down from [tinyplot].
 #' @param lty Plotting linetype(s), passed down from [tinyplot].
@@ -893,7 +950,7 @@ build_legend_env = function(
 #'   with a legend in the margin.
 #'
 #' @importFrom graphics grconvertX grconvertY rasterImage strheight strwidth xinch
-#' @importFrom grDevices as.raster recordGraphics
+#' @importFrom grDevices as.raster dev.size recordGraphics
 #' @importFrom utils modifyList
 #'
 #' @examples

@@ -30,9 +30,12 @@
 <text x='476.42' y='273.68' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.00px' lengthAdjust='spacingAndGlyphs'>  50</text>
 <text x='476.42' y='250.99' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'> 100</text>
 <text x='476.42' y='228.30' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='23.34px' lengthAdjust='spacingAndGlyphs'> 150</text>
-<text x='476.42' y='273.68' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='476.42' y='250.99' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='476.42' y='228.30' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<line x1='458.42' y1='269.55' x2='462.02' y2='269.55' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='458.42' y1='246.86' x2='462.02' y2='246.86' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='458.42' y1='224.17' x2='462.02' y2='224.17' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='472.82' y1='269.55' x2='476.42' y2='269.55' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='472.82' y1='246.86' x2='476.42' y2='246.86' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='472.82' y1='224.17' x2='476.42' y2='224.17' style='stroke-width: 0.75; stroke: #FFFFFF;' />
 <text x='458.42' y='191.44' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='32.02px' lengthAdjust='spacingAndGlyphs'>Count</text>
 </g>
 <defs>

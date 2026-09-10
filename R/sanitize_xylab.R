@@ -19,6 +19,7 @@ sanitize_xylab = function(settings) {
   is_range = type %in% c("rect", "segments", "pointrange")
   is_ribbon = type %in% c("ribbon")
   is_index = !is_frequency && !is_ribbon && !is_density
+  is_named_atomic = is.null(y) && !is.null(names(x))
 
   ##### xlab
   if (!is.null(xlab)) {
@@ -29,6 +30,10 @@ sanitize_xylab = function(settings) {
     out_xlab = ""
   } else if (is_index && is.null(y) && !is.null(x)) {
     out_xlab = "Index"
+  } else if (type == "barplot" && is_named_atomic) {
+    # If bars are a named vector's values, the axis is labelled by its names,
+    # which have no name of their own. Same behaviour as base barplot(). (#714)
+    out_xlab = ""
   } else {
     out_xlab = x_dep
   }
@@ -36,6 +41,9 @@ sanitize_xylab = function(settings) {
   ##### ylab
   if (!is.null(ylab)) {
     out_ylab = ylab
+  } else if (type == "barplot" && is_named_atomic) {
+    # Heights are the vector's own values, not counts of anything.
+    out_ylab = x_dep
   } else if (is_frequency && is.null(y) && !is.null(x)) {
     out_ylab = if (type == "barplot") "Count" else "Frequency"
   } else if (is_density && is.null(y) && !is.null(x)) {

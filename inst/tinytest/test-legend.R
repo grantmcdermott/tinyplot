@@ -141,7 +141,10 @@ f = function() tinyplot(
   Temp ~ Day | Month, data = aq,
   legend = legend(legend = month.abb[5:10])
 )
-expect_warning(expect_snapshot_plot(f, label = "legend_user_labs_override"))
+# the mismatch warning is only emitted when the plot is actually drawn
+if (snapshots_run) {
+  expect_warning(expect_snapshot_plot(f, label = "legend_user_labs_override"))
+}
 
 
 # override default legend margins with tpar("lmar")
@@ -303,11 +306,11 @@ expect_snapshot_plot(f, label = "legend_right_dynmar_after_top")
 # The "continuous legend not supported" warning still fires for a continuous
 # `by` on an unsupported type ...
 expect_warning(
-  plt(mpg ~ wt | cyl, mtcars, type = "l"),
+  plt(mpg ~ wt | cyl, mtcars, type = "b"),
   "Continuous"
 )
 # ... but not when the legend is suppressed (#656): the internal reversion to
 # discrete grouping still happens, so only the (moot) warning is skipped.
 expect_silent(
-  plt(mpg ~ wt | cyl, mtcars, type = "l", legend = FALSE)
+  plt(mpg ~ wt | cyl, mtcars, type = "b", legend = FALSE)
 )

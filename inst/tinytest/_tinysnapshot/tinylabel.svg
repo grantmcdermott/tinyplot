@@ -32,11 +32,16 @@
 <text x='469.56' y='265.11' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='30.67px' lengthAdjust='spacingAndGlyphs'> 1.5%</text>
 <text x='469.56' y='245.91' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='30.67px' lengthAdjust='spacingAndGlyphs'> 2.0%</text>
 <text x='469.56' y='227.58' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='30.67px' lengthAdjust='spacingAndGlyphs'> 2.5%</text>
-<text x='469.56' y='302.64' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='469.56' y='283.44' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='469.56' y='265.11' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='469.56' y='245.91' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
-<text x='469.56' y='227.58' text-anchor='end' style='font-size: 12.00px;fill: #FFFFFF; font-family: "Liberation Sans";' textLength='17.98px' lengthAdjust='spacingAndGlyphs'>-   -</text>
+<line x1='451.56' y1='298.51' x2='455.16' y2='298.51' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='451.56' y1='279.31' x2='455.16' y2='279.31' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='451.56' y1='260.98' x2='455.16' y2='260.98' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='451.56' y1='241.78' x2='455.16' y2='241.78' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='451.56' y1='223.45' x2='455.16' y2='223.45' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='465.96' y1='298.51' x2='469.56' y2='298.51' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='465.96' y1='279.31' x2='469.56' y2='279.31' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='465.96' y1='260.98' x2='469.56' y2='260.98' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='465.96' y1='241.78' x2='469.56' y2='241.78' style='stroke-width: 0.75; stroke: #FFFFFF;' />
+<line x1='465.96' y1='223.45' x2='469.56' y2='223.45' style='stroke-width: 0.75; stroke: #FFFFFF;' />
 <text x='451.56' y='197.71' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='44.02px' lengthAdjust='spacingAndGlyphs'>Illiteracy</text>
 </g>
 <defs>

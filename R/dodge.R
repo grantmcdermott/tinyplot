@@ -54,6 +54,15 @@ dodge_positions = function(
   
   if (is.logical(dodge)) {
     if (isTRUE(dodge)) {
+      if (!is.factor(datapoints[["by"]])) {
+        msg = paste0(
+          "`dodge = TRUE` only possible with discrete (categorical) `by`. ",
+          "Either specify numeric [0,1] dodge, or coerce ` by` to a factor.\n",
+          "Ignoring.\n"
+        )
+        warning(msg)
+        return(datapoints)
+      }
       n = nlevels(datapoints$by)
       dodge = if (n == 1) 0 else if (n <= 5) (n - 1) * 0.1 else 0.45
     } else {
@@ -81,6 +90,12 @@ dodge_positions = function(
   if (is.null(cols)) {
     cols = c("x", "xmin", "xmax")
     cols = cols[cols %in% names(datapoints)]
+  }
+
+  # A dodge moves a row off its own tick, so record where it started; this is the
+  # choke point for every dodging type. See cat_axis_codes(), the only consumer.
+  if (facet_drop_levels_on(settings[["facet.args"]])) {
+    datapoints[[".xcat"]] = datapoints[["x"]]
   }
 
   if (fixed.dodge) {

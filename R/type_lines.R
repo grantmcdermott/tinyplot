@@ -12,7 +12,7 @@
 #' character) data according to the factor levels. Character variables are
 #' coerced with [factor()] and so end up in alphabetical order. To order the
 #' categories by their appearance in the data instead, use
-#' `xlevels = "asis"`, or set the levels explicitly, e.g.
+#' `xord = "asis"`, or set the levels explicitly, e.g.
 #' `factor(x, levels = unique(x))`.
 #'
 #' Note that the lines themselves are always drawn in the order that the rows
@@ -47,11 +47,35 @@
 #'   theme = "socviz"
 #' )
 #' 
+#' # A continuous `by` variable is also supported (as of tinyplot v0.8.0).
+#' # This is particularly useful for trajectories, where a third variable (often
+#' # time) orders the path.
+#' time = seq(0, 8*pi, length.out = 600)
+#' spiral = data.frame(time = time, x = time * cos(time), y = time * sin(time))
+#' tinyplot(
+#'   y ~ x | time, data = spiral,
+#'   type = "l",
+#'   lwd = 2, asp = 1, # optional args
+#'   theme = "clean"
+#' )
+#' 
+#' # The canonical time-path example: the x-z projection of a Lorenz attractor.
+#' step = function(p, i) {
+#'   p + 0.005 * c(
+#'     10 * (p[2] - p[1]),
+#'     p[1] * (28 - p[3]) - p[2],
+#'     p[1] * p[2] - 8/3 * p[3]
+#'   )
+#' }
+#' lz = do.call(rbind, Reduce(step, 1:6000, c(1, 1, 1), accumulate = TRUE))
+#' lorenz = data.frame(time = seq_len(nrow(lz)) * 0.005, x = lz[, 1], z = lz[, 3])
+#' tinyplot(z ~ x | time, data = lorenz, type = "l", theme = "clean")
+#' 
 #' @export
-type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
+type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = NULL) {
   out = list(
     draw = draw_lines(type = type),
-    data = data_lines(dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels),
+    data = data_lines(dodge = dodge, fixed.dodge = fixed.dodge, xlevels = xlevels, xord = xord),
     name = type
   )
   class(out) = "tinyplot_type"
@@ -59,7 +83,7 @@ type_lines = function(type = "l", dodge = 0, fixed.dodge = FALSE, xlevels = NULL
 }
 
 
-data_lines = function(dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
+data_lines = function(dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = NULL) {
   fun = function(settings, ...) {
     env2env(settings, environment(), "datapoints")
 
@@ -69,6 +93,17 @@ data_lines = function(dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
     # `factor(x, levels = ...)` is honoured, and that layering a line type onto
     # a point type (or vice versa) lands on the same categories. #679
     datapoints[["x"]] = sanitize_xlevels(datapoints[["x"]], xlevels)
+    warn_ignored_ordering(datapoints[["x"]], xlevels, xord)
+    # `xord` must run here, before the factor is collapsed to integer
+    # positions below -- once x is an integer there are no levels left to
+    # reorder.
+    if (!is.null(xord) && is.null(xlevels)) {
+      datapoints[["x"]] = sanitize_ord(
+        datapoints[["x"]], datapoints[["y"]], NULL,
+        xord, arg = "xord", keywords = ord_keywords_distribution,
+        stat = "mean"
+      )
+    }
     if (is.factor(datapoints[["x"]])) {
       xlvls = levels(datapoints[["x"]])
       xlabs = seq_along(xlvls)
@@ -105,8 +140,45 @@ data_lines = function(dodge = 0, fixed.dodge = FALSE, xlevels = NULL) {
 }
 
 
+## auxiliary function for drawing per-segment (gradient) lines
+##
+## lines() strokes a polyline once, so it only honours col[1]. segments() does
+## recycle, so we lag the coordinates instead. Line analogue of
+## segmented_polygon(). Continuous `by` only: per-segment strokes lose their
+## joins and restart the dash pattern.
+segmented_lines = function(x, y, col, lty = 1, lwd = 1, type = "l") {
+    n = length(x)
+    if (n < 2L) return(invisible(NULL))
+    col = rep_len(col, n)
+    if (type %in% c("s", "S")) {
+        # Each step splits into a horizontal and a vertical half.
+        if (type == "s") {
+            x0 = c(rbind(x[-n], x[-1L]))
+            y0 = c(rbind(y[-n], y[-n]))
+            x1 = c(rbind(x[-1L], x[-1L]))
+            y1 = c(rbind(y[-n], y[-1L]))
+        } else {
+            x0 = c(rbind(x[-n], x[-n]))
+            y0 = c(rbind(y[-n], y[-1L]))
+            x1 = c(rbind(x[-n], x[-1L]))
+            y1 = c(rbind(y[-1L], y[-1L]))
+        }
+        icol = c(rbind(col[-n], col[-n]))
+    } else {
+        x0 = x[-n]
+        y0 = y[-n]
+        x1 = x[-1L]
+        y1 = y[-1L]
+        icol = col[-n]
+    }
+    # NAs propagate into adjacent segments, which segments() skips silently.
+    segments(x0 = x0, y0 = y0, x1 = x1, y1 = y1,
+             col = icol, lty = lty, lwd = lwd)
+}
+
 draw_lines = function(type = "l") {
-    fun = function(ix, iy, icol, ipch, ibg, ilty, ilwd, icex = 1, flip = FALSE, ...) {
+    fun = function(ix, iy, icol, ipch, ibg, ilty, ilwd, icex = 1, flip = FALSE,
+                   by_continuous = FALSE, ...) {
         ltype = type
         if (isTRUE(flip)) {
             # flip_datapoints() has already swapped the coordinates, but the
@@ -132,6 +204,21 @@ draw_lines = function(type = "l") {
                 ltype = "s"
             }
         }
+        # Continuous `by` gives one colour per observation; lines() would
+        # drop all but the first.
+        if (isTRUE(by_continuous) && length(icol) > 1L &&
+            ltype %in% c("l", "o", "s", "S")) {
+            segmented_lines(
+                x = ix, y = iy, col = icol,
+                lty = ilty, lwd = ilwd, type = ltype
+            )
+            if (ltype == "o") {
+                points(x = ix, y = iy, col = icol, pch = ipch,
+                       bg = ibg, cex = icex)
+            }
+            return(invisible(NULL))
+        }
+
         lines(
             x = ix,
             y = iy,

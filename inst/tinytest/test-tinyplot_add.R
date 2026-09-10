@@ -142,3 +142,19 @@ f = function() {
   tinyplot_add(y ~ g, data = d2, type = "p", col = "red", pch = 16)
 }
 expect_snapshot_plot(f, label = "tinyplot_add_layer_category_alignment")
+
+# A base layer that coerces a numeric x to a factor itself (bars, violins, ...)
+# leaves its categories named by the *labels*, while the added layer still
+# carries the raw values. Those used to be plotted at their own coordinates,
+# landing far outside a panel that spans the factor positions. (#691)
+f = function() {
+  tinyplot(demand ~ Time, data = BOD, type = "barplot")
+  tinyplot_add(type = "text", pos = 3, xpd = NA)
+}
+expect_snapshot_plot(f, label = "tinyplot_add_numeric_x_barplot")
+
+f = function() {
+  tinyplot(len ~ dose, data = ToothGrowth, fill = 0.2, type = "violin")
+  tinyplot_add(type = type_summary(median, type = "p"))
+}
+expect_snapshot_plot(f, label = "tinyplot_add_numeric_x_violin")

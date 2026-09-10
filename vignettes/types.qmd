@@ -406,6 +406,7 @@ need only define the list of hints that you actually want:
 | `legend_fills_from_col` | `type_hexbin()`, `type_spineplot()` | Fill the legend key with the group colour (`col`) rather than `bg`. |
 | `legend_fills_from_seq_palette` | `type_ridge()` | Fill the legend key with a lighter step of the group colour's sequential ramp. |
 | `legend_border_fg` | `type_spineplot()` | Draw the legend key border in the foreground colour rather than the group colour. |
+| `legend_reversed` | `type_area(stack = TRUE)` | List the legend key bottom-up rather than top-down. For types whose groups read from the bottom of the plot upwards---stacking puts the first `by` level in the bottom band---so that the key reads in the same direction as the geometry rather than backwards against it. |
 
 To see `type_hints` in action, consult the
 [source code](https://github.com/grantmcdermott/tinyplot/tree/main/R) of the

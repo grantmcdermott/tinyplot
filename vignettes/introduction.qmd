@@ -250,7 +250,7 @@ plot area by adding a trailing "!" to these keywords. (As you may have realised,
 the default legend position is `"right!"`.) Let's demonstrate by moving the
 legend to the left of the plot.
 
-```{r legend_bottom}
+```{r legend_left}
 tinyplot(
   Temp ~ Day | Month, data = aq,
   type = "l",
@@ -279,7 +279,7 @@ the legend text to horizontal, etc. Here is a grouped density plot example,
 where we also add some shading by specifying that the background colour should
 vary by groups too.
 
-```{r density_topright}
+```{r density_top}
 tinyplot(
   ~ Temp | Month,
   data = aq,

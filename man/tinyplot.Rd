@@ -42,6 +42,8 @@ tinyplot(x, ...)
   yaxb = NULL,
   xaxl = NULL,
   yaxl = NULL,
+  xaxr = NULL,
+  yaxr = NULL,
   log = "",
   flip = FALSE,
   frame.plot = NULL,
@@ -192,6 +194,25 @@ each individual facet should adjust independently to match the range of
 the data within that facet. Default is \code{FALSE}. Separate free scaling of
 the x- or y-axis (i.e., whilst holding the other axis fixed) is not
 currently supported.
+\item \code{drop} a logical value indicating whether facet levels that no
+observation uses should be dropped, rather than drawing an empty panel.
+Such levels arise from an unused factor level, or from a multi-variable
+facet like \code{~fvar1 + fvar2} whose cross-product covers combinations that
+the data never observe. Default is \code{FALSE}, i.e. the empty panels are
+drawn. For a two-sided (\code{fvar1 ~ fvar2}) grid, \code{drop = TRUE} cannot remove
+the panel outright, since the layout is a rectangle of rows by columns and
+doing so would misalign the panels that remain; instead the slot is kept
+but left blank, so that it reads as a gap rather than an empty box.
+\item \code{drop.levels} a logical value indicating whether each facet should keep
+only the categories of a categorical axis that it actually uses. Default is
+\code{FALSE}, i.e. every facet shows the full set of categories, even those with
+no data in that panel. With \code{drop.levels = TRUE} a panel's axis is
+recomputed as if its data had been passed through \code{factor()} on its own, so
+the surviving categories are re-spaced evenly and no gaps are left behind.
+Requires free scales (\code{free = TRUE}), since fixed panels share a single
+axis and per-panel categories would misalign them. Note that this is
+distinct from \code{drop} above: \code{drop} removes empty \emph{facets}, whereas
+\code{drop.levels} removes unused \emph{categories within} a facet.
 \item \code{axes} a character string for controlling which facets draw their own
 axes. One of \code{"all"} (every facet gets its own axes), \code{"outer"} (only the
 facets along the bottom and left edges of the grid, so that redundant
@@ -220,8 +241,11 @@ format each variable differently, e.g.
 \code{labeller = list(firm = toupper, yield = "\%")}, with any variable left
 unnamed not formatted. While not recommended, unnamed values are matched
 positionally, according to the variable order in the \code{facet} formula
-specification. Defaults to the value of \code{tpar("facet.labeller")}, which is
-\code{NULL} (no formatting).
+specification. Note that this per-variable naming claims the same slot that
+a \code{\link{tinylabel}} dictionary would, so a dictionary has to be nested inside
+it, e.g. \code{labeller = list(Species = c(setosa = "SET"))}; a bare named
+vector is read as a per-variable mapping instead. Defaults to the value of
+\code{tpar("facet.labeller")}, which is \code{NULL} (no formatting).
 \item \code{prefix} a logical or character value for prefixing the facet titles with
 a descriptive name. Pass \code{TRUE} to prefix with the (deparsed) facet
 variable name(s), e.g. \code{"am = 0"} instead of just \code{"0"}. Alternatively,
@@ -417,16 +441,22 @@ the break points at which the axis tick-marks are to be drawn. Break points
 outside the range of the data will be ignored if the associated axis
 variable is categorical, or an explicit \code{x/ylim} range is given.}
 
-\item{xaxl, yaxl}{a function or a character keyword specifying the format of
-the x- or y-axis tick labels. Note that this is a post-processing step that
+\item{xaxl, yaxl}{a function, character keyword, or dictionary (named vector
+or list) for formatting or (re)labelling the x- or y-axis tick labels.
+Passed to \code{\link{tinylabel}}; see the latter's help file for more detailed
+documentation and examples. Note that this is a post-processing step that
 affects the \emph{appearance} of the tick labels only; use in conjunction with
-\code{x/yaxb} if you would like to adjust the position of the tick marks too. In
-addition to user-supplied formatting functions (e.g., \code{\link{format}},
-\code{\link{toupper}}, \code{\link{abs}}, or other custom function), several convenience
-keywords (or their symbol equivalents) are available for common formatting
-transformations: \code{"percent"} (\code{"\%"}), \code{"comma"} (\code{","}), \code{"log"} (\code{"l"}),
-\code{"dollar"} (\code{"$"}), \code{"euro"} (\code{"€"}), or \code{"sterling"} (\code{"£"}). See the
-\code{\link{tinylabel}} documentation for examples.}
+\code{x/yaxb} if you would like to adjust the position of the tick marks too.}
+
+\item{xaxr, yaxr}{numeric giving the rotation of the x- or y-axis tick labels,
+in degrees counter-clockwise; \code{NULL} (the default) leaves them unrotated.
+Setting one overrides \code{las} for that axis alone, leaving the other axis
+under \code{las} as usual, and \code{0} (or any multiple of 360) counts as no
+rotation at all. Best paired with a dynamic theme (see \code{tinytheme}), since
+that is what resizes the margins to fit the tilted labels; under the
+default theme a long rotated label will be clipped unless you widen \code{mar}
+yourself. Defaults to the value of \code{tpar("xaxr")} / \code{tpar("yaxr")}, whose
+documentation covers this and the label-spacing caveat in more detail.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be
 logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}
@@ -784,18 +814,17 @@ tinyplot(
   main = "Temperatures by month and season"
 )
 
-# Users can override the default square window arrangement by passing `nrow`
-# or `ncol` to the helper facet.args argument. Note that we can also reduce
-# axis label repetition across facets by turning the plot frame off.
+# Customize facets by passing a list of options to the companion `facet.args`
+# argument. For example, here we arrange the facets in a single row and also
+# turn off the inner axes labels to reduce redundancy.
 
 tinyplot(
   Temp ~ Day | Summer,
   facet = ~Month,
-  facet.args = list(nrow = 1),
+  facet.args = list(nrow = 1, axes = "outer"),
   data = aq,
   type = "area",
   palette = "dark2",
-  frame = FALSE,
   main = "Temperatures by month and season"
 )
 
@@ -813,7 +842,6 @@ tinyplot(
 
 # (Note: The optional `prefix = TRUE` argument prepends the facet variable
 #  names to the strip titles, making for a more informative display here.)
-
 
 # To add common elements to each facet, use the `draw` argument
 

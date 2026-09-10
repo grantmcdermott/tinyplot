@@ -96,6 +96,83 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_args_ncol")
 
+# `drop = TRUE` removes facet levels that no observation uses, which otherwise
+# draw an empty panel. (#707)
+f = function() {
+  dat = transform(mtcars, cyl = factor(cyl, levels = c(4, 6, 8, 10)))
+  tinyplot(
+    mpg ~ wt, data = dat, facet = ~cyl, facet.args = list(drop = TRUE),
+    main = "Unused facet level dropped"
+  )
+}
+expect_snapshot_plot(f, label = "facet_drop_level")
+
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, facet = ~cyl + vs,
+    facet.args = list(prefix = TRUE, drop = TRUE),
+    main = "Unobserved facet combination dropped"
+  )
+}
+expect_snapshot_plot(f, label = "facet_drop_combination")
+
+# A facet *grid* can't drop the cell, since the layout is a rectangle of rows x
+# columns and removing one would misalign the panels that remain. It keeps the
+# slot and draws nothing there, so the cell reads as a gap rather than an empty
+# box. The row/column title strips still draw.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, facet = cyl ~ vs,
+    facet.args = list(prefix = TRUE, drop = TRUE),
+    main = "Grid blanks unobserved cell"
+  )
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank")
+
+# A blank cell keeps its *outer* axes, which anchor the whole column (or row)
+# visually. Here `cyl = 8, gear = 4` is unobserved and sits on the bottom row, so
+# its x-axis still draws there, keeping all three bottom axes aligned rather than
+# pushing the middle one up a row. Interior axes go with the frame.
+f = function() {
+  tinytheme("float")
+  on.exit(tinytheme())
+  tinyplot(mpg ~ wt, data = mtcars, facet = cyl ~ gear,
+           facet.args = list(drop = TRUE),
+           main = "Blank cell: outer x-axis kept")
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank_outer_x")
+
+# ... and the same on the y side: dropping the single cyl = 4 / gear = 3 car
+# blanks the top-left cell, which keeps the left y-axis for its row.
+f = function() {
+  tinytheme("float")
+  on.exit(tinytheme())
+  dat = subset(mtcars, !(cyl == 4 & gear == 3))
+  tinyplot(mpg ~ wt, data = dat, facet = cyl ~ gear,
+           facet.args = list(drop = TRUE),
+           main = "Blank cell: outer y-axis kept")
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank_outer_y")
+
+# Under a framed theme every panel draws its own axes, so none of them is
+# load-bearing beyond its own panel and the blank cell draws nothing at all --
+# a lone rule in a gap would just be debris.
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars, facet = cyl ~ gear,
+           facet.args = list(drop = TRUE),
+           main = "Blank cell: framed theme draws no axis")
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank_framed")
+
+# `draw` elements are panel content, so a blank cell skips them too. (#709)
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars, facet = vs ~ cyl,
+           facet.args = list(drop = TRUE),
+           draw = abline(v = 4, lty = 2),
+           main = "Blank cell: no draw elements")
+}
+expect_snapshot_plot(f, label = "facet_drop_grid_blank_draw")
+
 f = function() {
   with(
     mtcars,
@@ -572,6 +649,31 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_free_single_value")
 
+# Free facets where a facet holds no data at all, so has no range of its own to
+# free. A facet grid gets these whenever the data don't observe every
+# combination of the two facet variables (no mtcars car is both 8-cylinder and
+# straight-engined); a single facet variable gets them from an unused factor
+# level. Empty panels should fall back to the all-facet range. (#705)
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars,
+    facet = cyl ~ vs,
+    facet.args = list(prefix = TRUE, free = TRUE),
+    main = "Free facets: empty grid facet"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_empty_grid")
+
+f = function() {
+  dat = transform(mtcars, cyl = factor(cyl, levels = c(4, 6, 8, 10)))
+  tinyplot(
+    mpg ~ wt, data = dat,
+    facet = ~cyl, facet.args = list(free = TRUE),
+    main = "Free facets: unused factor level"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_empty_level")
+
 # Free facets combined with flip: the fixed continuous-axis limit must follow
 # the flip and be honoured, rather than the wrong axis being freed (issue #670)
 f = function() {
@@ -584,6 +686,30 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "facet_free_flip")
+
+# A partially specified limit -- the scalar form ("also cover this value") and the
+# one-NA form ("take the other side from the data") -- leans on the data range, so
+# free facets must resolve it against each panel's own range. Resolving it once
+# against the global range collapses the axis back to a shared scale.
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, type = "p",
+    facet = ~cyl, facet.args = list(free = TRUE, ncol = 1),
+    ylim = 0,
+    main = "Free facets: scalar ylim"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_lim_scalar")
+
+f = function() {
+  tinyplot(
+    mpg ~ wt, data = mtcars, type = "p",
+    facet = ~cyl, facet.args = list(free = TRUE, ncol = 1),
+    ylim = c(NA, 40),
+    main = "Free facets: one-sided ylim"
+  )
+}
+expect_snapshot_plot(f, label = "facet_free_lim_one_sided")
 
 # `axes = "outer"` must also close up the whitespace that the dropped interior
 # axes would have occupied, i.e. match the spacing of a frameless plot rather
@@ -749,6 +875,18 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "facet_labeller_list")
 
+# A dictionary can be nested inside that per-variable list, which is the only
+# way to reach one here: a bare named vector claims the same slot and is read
+# as a per-variable mapping instead. Partial mapping is fine -- "versicolor"
+# is not named, so it comes through untouched.
+f = function() {
+  tinyplot(
+    Sepal.Length ~ Petal.Length, data = iris, facet = ~Species,
+    facet.args = list(labeller = list(Species = c(setosa = "SET", virginica = "VIR")))
+  )
+}
+expect_snapshot_plot(f, label = "facet_labeller_dict")
+
 # All of the facet title arguments at once: a named `prefix` (so the order it
 # is written in doesn't matter), a `labeller`, and a `sep` to stack the two
 # variables. Note that the labeller sees each variable's own values rather than
@@ -788,6 +926,125 @@ f = function() {
   tinyplot(mpg ~ wt, data = mtcars, facet = ~vs, facet.args = list(prefix = FALSE))
 }
 expect_snapshot_plot(f, label = "facet_prefix_tpar_override")
+
+# Same global-fallback pattern for `drop`
+f = function() {
+  tpar(facet.drop = TRUE)
+  on.exit(tpar(facet.drop = NULL))
+  dat = transform(mtcars, cyl = factor(cyl, levels = c(4, 6, 8, 10)))
+  tinyplot(mpg ~ wt, data = dat, facet = ~cyl,
+           main = "tpar(facet.drop = TRUE)")
+}
+expect_snapshot_plot(f, label = "facet_drop_tpar")
+
+# ... and a per-call `facet.args$drop` wins over it
+f = function() {
+  tpar(facet.drop = TRUE)
+  on.exit(tpar(facet.drop = NULL))
+  dat = transform(mtcars, cyl = factor(cyl, levels = c(4, 6, 8, 10)))
+  tinyplot(mpg ~ wt, data = dat, facet = ~cyl, facet.args = list(drop = FALSE),
+           main = "Per-call drop = FALSE beats the tpar default")
+}
+expect_snapshot_plot(f, label = "facet_drop_tpar_override")
+
+
+#
+## drop.levels: unused categories *within* a free facet (#711)
+#
+
+# `carb` is non-contiguous within each `vs` panel: vs = 0 never sees carb = 1 and
+# vs = 1 never sees carb = 3, 6 or 8. By default every panel shows all of them.
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE),
+           main = "Default: every panel keeps all categories")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_default")
+
+# With drop.levels each panel is re-levelled as if its own data had been passed
+# through factor(), so unused categories go and the rest are evenly re-spaced.
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels = TRUE")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels")
+
+# Same for a type whose geometry is drawn around the category rather than on it:
+# the boxes are re-spaced with it, and the end ones stay inside the panel.
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, type = "box", facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels = TRUE (boxplot)")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_boxplot")
+
+# A type whose positions are offset off their own tick -- violin traces a density
+# outline, and grouped violins are dodged on top of that -- still re-levels, since
+# the category is carried alongside the drawn coordinates rather than inferred
+# from them.
+f = function() {
+  tinyplot(mpg ~ factor(carb) | factor(am), data = mtcars, type = "violin",
+           facet = ~vs, singletons = "drop",
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels = TRUE (grouped violin)")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_violin")
+
+# An added layer inherits the base layer's panel maps, so it lands on the
+# categories the base drew even when it does not cover all of them
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, type = "box", facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels = TRUE (added layer)")
+  tinyplot(mpg ~ factor(carb), data = subset(mtcars, carb %in% c(2, 4)),
+           facet = ~vs, type = "p", col = "red", add = TRUE,
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE))
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_layer")
+
+# A type that places its own categorical axis is outside this machinery, so say
+# so rather than quietly doing nothing
+expect_warning(
+  tinyplot(factor(gear) ~ mpg, data = mtcars, type = "ridge", facet = ~vs,
+           facet.args = list(free = TRUE, drop.levels = TRUE)),
+  pattern = "had no effect"
+)
+
+# A partial break set (`xaxb`) asks for fewer ticks than there are categories.
+# lim_args() subsets the label vector to match, so the re-levelling has to derive
+# its positions from the categories themselves: keying off the labels instead sent
+# every unlabelled category to NA, dropping its geometry (or erroring outright).
+f = function() {
+  tinyplot(mpg ~ factor(carb), data = mtcars, type = "p", facet = ~vs,
+           xaxb = c("2", "4"),
+           facet.args = list(ncol = 1, free = TRUE, drop.levels = TRUE),
+           main = "drop.levels with a partial break set")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_xaxb")
+
+# Global fallback via tpar, as for the other facet.args
+f = function() {
+  tpar(facet.drop.levels = TRUE)
+  on.exit(tpar(facet.drop.levels = NULL))
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(ncol = 1, free = TRUE),
+           main = "tpar(facet.drop.levels = TRUE)")
+}
+expect_snapshot_plot(f, label = "facet_drop_levels_tpar")
+
+# Fixed panels share one axis, so per-panel levels would misalign them
+expect_warning(
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(drop.levels = TRUE)),
+  pattern = "requires free scales"
+)
+
+expect_error(
+  tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
+           facet.args = list(drop.levels = "yes")),
+  pattern = "facet.args\\$drop.levels"
+)
 
 
 #

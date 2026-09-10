@@ -170,3 +170,75 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "ridge_ylab_na_issue650")
 
+# Issue #703: a numeric (relative) `col.default`, e.g. -1 under "classic", must
+# resolve against the qualitative palette, not pass through as a literal colour.
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", theme = "classic")
+}
+expect_snapshot_plot(f, label = "ridge_theme_col_default_issue703")
+
+
+#
+## singleton groups (#300)
+
+# cyl == 4 & vs == 0 is a single car, so no density can be estimated for it.
+# The default reports the loss; "drop" does the same thing quietly.
+expect_warning(
+  plt(cyl ~ mpg, facet = ~vs, data = mtcars, type = "ridge"),
+  pattern = "Dropped 1 singleton"
+)
+
+f = function() {
+  plt(cyl ~ mpg, facet = ~vs, data = mtcars, type = type_ridge(singletons = "drop"))
+}
+expect_snapshot_plot(f, label = "ridge_singletons_drop")
+expect_error(
+  plt(cyl ~ mpg, facet = ~vs, data = mtcars, type = type_ridge(singletons = "none")),
+  pattern = "at least 2 data points"
+)
+expect_error(type_ridge(singletons = "nope"))
+
+
+#
+## yord -----
+
+# ridges rank on the continuous `x`, since there is no separate response
+f = function() tinyplot(Species ~ Sepal.Length, data = iris, type = type_ridge(yord = "minvar"))
+expect_snapshot_plot(f, label = "ridge_yord_minvar")
+
+f = function() tinyplot(Species ~ Sepal.Length, data = iris, type = type_ridge(yord = "rev"))
+expect_snapshot_plot(f, label = "ridge_yord_rev")
+
+# a transposed formula leaves nothing numeric to rank on; say so plainly
+expect_error(
+  tinyplot(Sepal.Length ~ Species, data = iris, type = type_ridge(yord = "minvar")),
+  pattern = "ranks on a numeric variable"
+)
+# ...including when the ranking is a function, which cannot be interpolated
+# into the message the way a keyword can
+expect_error(
+  tinyplot(Sepal.Length ~ Species, data = iris,
+           type = type_ridge(yord = function(z) -mean(z))),
+  pattern = "ranks on a numeric variable"
+)
+
+expect_error(
+  tinyplot(Species ~ Sepal.Length, data = iris, type = type_ridge(yord = "start")),
+  pattern = "not available for this plot type"
+)
+
+
+#
+## yaxl -----
+
+# ridge draws its own y-axis category labels, so `yaxl` has to be carried
+# through `type_info` to the tinyAxis() calls rather than picked up by the
+# standard axis path
+f = function() tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge", yaxl = toupper)
+expect_snapshot_plot(f, label = "ridge_yaxl_toupper")
+
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "ridge",
+           yaxl = c(setosa = "SET", virginica = "VIR"))
+}
+expect_snapshot_plot(f, label = "ridge_yaxl_dict")

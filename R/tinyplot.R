@@ -61,6 +61,25 @@
 #'   the data within that facet. Default is `FALSE`. Separate free scaling of
 #'   the x- or y-axis (i.e., whilst holding the other axis fixed) is not
 #'   currently supported.
+#'   - `drop` a logical value indicating whether facet levels that no
+#'   observation uses should be dropped, rather than drawing an empty panel.
+#'   Such levels arise from an unused factor level, or from a multi-variable
+#'   facet like `~fvar1 + fvar2` whose cross-product covers combinations that
+#'   the data never observe. Default is `FALSE`, i.e. the empty panels are
+#'   drawn. For a two-sided (`fvar1 ~ fvar2`) grid, `drop = TRUE` cannot remove
+#'   the panel outright, since the layout is a rectangle of rows by columns and
+#'   doing so would misalign the panels that remain; instead the slot is kept
+#'   but left blank, so that it reads as a gap rather than an empty box.
+#'   - `drop.levels` a logical value indicating whether each facet should keep
+#'   only the categories of a categorical axis that it actually uses. Default is
+#'   `FALSE`, i.e. every facet shows the full set of categories, even those with
+#'   no data in that panel. With `drop.levels = TRUE` a panel's axis is
+#'   recomputed as if its data had been passed through `factor()` on its own, so
+#'   the surviving categories are re-spaced evenly and no gaps are left behind.
+#'   Requires free scales (`free = TRUE`), since fixed panels share a single
+#'   axis and per-panel categories would misalign them. Note that this is
+#'   distinct from `drop` above: `drop` removes empty *facets*, whereas
+#'   `drop.levels` removes unused *categories within* a facet.
 #'   - `axes` a character string for controlling which facets draw their own
 #'   axes. One of `"all"` (every facet gets its own axes), `"outer"` (only the
 #'   facets along the bottom and left edges of the grid, so that redundant
@@ -89,8 +108,11 @@
 #'   `labeller = list(firm = toupper, yield = "%")`, with any variable left
 #'   unnamed not formatted. While not recommended, unnamed values are matched
 #'   positionally, according to the variable order in the `facet` formula
-#'   specification. Defaults to the value of `tpar("facet.labeller")`, which is
-#'   `NULL` (no formatting).
+#'   specification. Note that this per-variable naming claims the same slot that
+#'   a [`tinylabel`] dictionary would, so a dictionary has to be nested inside
+#'   it, e.g. `labeller = list(Species = c(setosa = "SET"))`; a bare named
+#'   vector is read as a per-variable mapping instead. Defaults to the value of
+#'   `tpar("facet.labeller")`, which is `NULL` (no formatting).
 #'   - `prefix` a logical or character value for prefixing the facet titles with
 #'   a descriptive name. Pass `TRUE` to prefix with the (deparsed) facet
 #'   variable name(s), e.g. `"am = 0"` instead of just `"0"`. Alternatively,
@@ -257,16 +279,21 @@
 #'   the break points at which the axis tick-marks are to be drawn. Break points
 #'   outside the range of the data will be ignored if the associated axis
 #'   variable is categorical, or an explicit `x/ylim` range is given.
-#' @param xaxl,yaxl a function or a character keyword specifying the format of
-#'   the x- or y-axis tick labels. Note that this is a post-processing step that
+#' @param xaxl,yaxl a function, character keyword, or dictionary (named vector
+#'   or list) for formatting or (re)labelling the x- or y-axis tick labels.
+#'   Passed to [`tinylabel`]; see the latter's help file for more detailed
+#'   documentation and examples. Note that this is a post-processing step that
 #'   affects the _appearance_ of the tick labels only; use in conjunction with
-#'   `x/yaxb` if you would like to adjust the position of the tick marks too. In
-#'   addition to user-supplied formatting functions (e.g., [`format`],
-#'   [`toupper`], [`abs`], or other custom function), several convenience
-#'   keywords (or their symbol equivalents) are available for common formatting
-#'   transformations: `"percent"` (`"%"`), `"comma"` (`","`), `"log"` (`"l"`),
-#'   `"dollar"` (`"$"`), `"euro"` (`"€"`), or `"sterling"` (`"£"`). See the
-#'   [`tinylabel`] documentation for examples.
+#'   `x/yaxb` if you would like to adjust the position of the tick marks too.
+#' @param xaxr,yaxr numeric giving the rotation of the x- or y-axis tick labels,
+#'   in degrees counter-clockwise; `NULL` (the default) leaves them unrotated.
+#'   Setting one overrides `las` for that axis alone, leaving the other axis
+#'   under `las` as usual, and `0` (or any multiple of 360) counts as no
+#'   rotation at all. Best paired with a dynamic theme (see `tinytheme`), since
+#'   that is what resizes the margins to fit the tilted labels; under the
+#'   default theme a long rotated label will be clipped unless you widen `mar`
+#'   yourself. Defaults to the value of `tpar("xaxr")` / `tpar("yaxr")`, whose
+#'   documentation covers this and the label-spacing caveat in more detail.
 #' @param log a character string which contains `"x"` if the x axis is to be
 #'   logarithmic, `"y"` if the y axis is to be logarithmic and `"xy"` or `"yx"`
 #'   if both axes are to be logarithmic.
@@ -473,7 +500,7 @@
 #' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png recordPlot svg xy.coords
 #' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
-#' @importFrom stats na.omit setNames
+#' @importFrom stats na.omit setNames var
 #' @importFrom tools file_ext
 #'
 #' @examples
@@ -603,18 +630,17 @@
 #'   main = "Temperatures by month and season"
 #' )
 #'
-#' # Users can override the default square window arrangement by passing `nrow`
-#' # or `ncol` to the helper facet.args argument. Note that we can also reduce
-#' # axis label repetition across facets by turning the plot frame off.
+#' # Customize facets by passing a list of options to the companion `facet.args`
+#' # argument. For example, here we arrange the facets in a single row and also
+#' # turn off the inner axes labels to reduce redundancy.
 #'
 #' tinyplot(
 #'   Temp ~ Day | Summer,
 #'   facet = ~Month,
-#'   facet.args = list(nrow = 1),
+#'   facet.args = list(nrow = 1, axes = "outer"),
 #'   data = aq,
 #'   type = "area",
 #'   palette = "dark2",
-#'   frame = FALSE,
 #'   main = "Temperatures by month and season"
 #' )
 #'
@@ -632,7 +658,6 @@
 #' 
 #' # (Note: The optional `prefix = TRUE` argument prepends the facet variable
 #' #  names to the strip titles, making for a more informative display here.)
-#'
 #'
 #' # To add common elements to each facet, use the `draw` argument
 #'
@@ -753,6 +778,8 @@ tinyplot.default = function(
     yaxb = NULL,
     xaxl = NULL,
     yaxl = NULL,
+    xaxr = NULL,
+    yaxr = NULL,
     log = "",
     flip = FALSE,
     frame.plot = NULL,
@@ -808,6 +835,10 @@ tinyplot.default = function(
     assert_labeller(facet.args[["labeller"]], name = "facet.args$labeller", list.ok = TRUE)
     assert_facet_prefix(facet.args[["prefix"]], name = "facet.args$prefix")
     assert_string(facet.args[["sep"]], null.ok = TRUE, name = "facet.args$sep")
+    assert_logical(
+      facet.args[["drop.levels"]],
+      null.ok = TRUE, name = "facet.args$drop.levels"
+    )
   }
 
   # save for tinyplot_add()
@@ -928,10 +959,12 @@ tinyplot.default = function(
     xaxt          = xaxt,
     xaxb          = xaxb,
     xaxl          = xaxl,
+    xaxr          = xaxr,
     xaxs          = xaxs,
     yaxt          = yaxt,
     yaxb          = yaxb,
     yaxl          = yaxl,
+    yaxr          = yaxr,
     yaxs          = yaxs,
     frame.plot    = frame.plot,
     xlim          = xlim,
@@ -943,6 +976,11 @@ tinyplot.default = function(
     null_by       = is.null(by),
     null_xlim     = is.null(xlim),
     null_ylim     = is.null(ylim),
+    # raw spec of a partial limit, for free facets to re-resolve per panel
+    xlim_partial  = if (is_partial_lim(xlim)) xlim else NULL,
+    ylim_partial  = if (is_partial_lim(ylim)) ylim else NULL,
+    # per-panel categories under facet.args$drop.levels; see facet_relevel()
+    facet_labs    = NULL,
     # when palette functions need pre-processing this check raises error
     null_palette  = tryCatch(is.null(palette), error = function(e) FALSE),
     x_by          = identical(x, by), # for "boxplot", "spineplot" and "ridge"
@@ -1088,6 +1126,9 @@ tinyplot.default = function(
 
   # ensure axis aligment of any added layers
   if (!add) {
+    # cleared here and repopulated by facet_relevel() below, so that a layer
+    # cannot inherit per-panel category maps from an earlier plot
+    set_environment_variable(.facet_labs = NULL)
     assign("xlabs_orig", settings[["xlabs"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
     assign(".group_offsets", settings[["group_offsets"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
     assign(".offsets_axis", settings[["offsets_axis"]], envir = get(".tinyplot_env", envir = parent.env(environment())))
@@ -1124,6 +1165,12 @@ tinyplot.default = function(
 
   # facet_layout processes facet simplification, attribute restoration, and layout
   facet_layout(settings)
+
+  # free facets: optionally re-level each panel's categorical axis to the
+  # categories it actually uses (facet.args$drop.levels). Runs after the layout,
+  # so that `facet` has its final levels and the per-panel maps line up with the
+  # panel indices.
+  facet_relevel(settings)
 
 
   #
@@ -1249,26 +1296,90 @@ tinyplot.default = function(
     .whtsbp_y_raw = 0
     .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
-    if (.las %in% 1:2) {
-      .ylabset = y_axis_labels(type, y, ylabs, xlabs, flip)
-      if (!is.null(.ylabset)) {
-        yaxlabs = .ylabset[[1L]]
+    # A flipped boxplot draws the x variable up the side and the y variable
+    # along the bottom, so a rotation has to be measured against the side its
+    # labels actually land on. (The las branches below keep indexing 1/2
+    # directly, as they always have; that asymmetry is pre-existing.)
+    .xside = if (identical(type, "boxplot") && isTRUE(flip)) 2L else 1L
+    .yside = if (identical(type, "boxplot") && isTRUE(flip)) 1L else 2L
+    # A rotation always needs its own measurement, whatever `las` says: las
+    # only reaches the perpendicular case, and that is srt = 90 (x) / 0 (y).
+    if (!is.null(yaxr) || .las %in% 1:2) {
+      yaxlabs = axis_tick_labels(
+        y_axis_labels(type, y, ylabs, xlabs, flip),
+        lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+        cex = .cex_yaxs
+      )
+      if (!is.null(yaxr)) {
+        .whtsbp_y_raw = tick_label_extent(yaxlabs, cex = .cex_yaxs,
+                                          srt = yaxr, side = .yside)
+        .whtsbp[.yside] = .whtsbp_y_raw
       } else {
-        ylim_usr = if (diff(ylim) == 0 && is.null(yaxb)) ylim + c(-0.5, 0.5) else extendrange(ylim, f = 0.04)
-        yaxlabs = axisTicks(usr = ylim_usr, log = par("ylog"))
+        .whtsbp_y_raw = tick_label_extent(yaxlabs, cex = .cex_yaxs)
+        .whtsbp[2] = .whtsbp_y_raw
       }
-      if (!is.null(yaxl)) yaxlabs = tinylabel(yaxlabs, yaxl)
-      .whtsbp_y_raw = grconvertX(max(strwidth(yaxlabs, "figure", cex = .cex_yaxs)), from = "nfc", to = "lines") -
-                      grconvertX(0, from = "nfc", to = "lines") - 0.5
-      if (is.finite(.whtsbp_y_raw)) .whtsbp[2] = .whtsbp_y_raw
     }
-    if (.las %in% 2:3) {
-      xlim_usr = if (diff(xlim) == 0 && is.null(xaxb)) xlim + c(-0.5, 0.5) else extendrange(xlim, f = 0.04)
-      xaxlabs = if (is.null(xlabs)) axisTicks(usr = xlim_usr, log = par("xlog")) else
-        if (!is.null(names(xlabs))) names(xlabs) else xlabs
-      if (!is.null(xaxl)) xaxlabs = tinylabel(xaxlabs, xaxl)
-      .whtsbp_x_raw = grconvertX(max(strwidth(xaxlabs, "figure", cex = .cex_xaxs)), from = "nfc", to = "lines") - 0.5
-      if (is.finite(.whtsbp_x_raw)) .whtsbp[1] = .whtsbp_x_raw
+    if (!is.null(xaxr) || .las %in% 2:3) {
+      xaxlabs = axis_tick_labels(
+        x_axis_labels(xlabs),
+        lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+        cex = .cex_xaxs
+      )
+      if (!is.null(xaxr)) {
+        .whtsbp_x_raw = tick_label_extent(xaxlabs, cex = .cex_xaxs,
+                                          srt = xaxr, side = .xside)
+        .whtsbp[.xside] = .whtsbp_x_raw
+      } else {
+        .whtsbp_x_raw = tick_label_extent(xaxlabs, cex = .cex_xaxs)
+        .whtsbp[1] = .whtsbp_x_raw
+      }
+    }
+    # A tilted label also leans along its axis, off the end of the plot region.
+    # That lean lands in the *adjacent* margin, so widen whichever one it would
+    # otherwise overrun. max() rather than +: the lean shares the margin with
+    # the tick labels and axis title already sitting there.
+    # The lean lands in the two margins flanking the labels' own side. It goes
+    # into .dyn -- the base margin -- and deliberately not into .whtsbp, which
+    # downstream reads as "how far the tick labels reach" when placing the axis
+    # titles. Widening .whtsbp would push those titles out by the whole lean,
+    # even though the lean sits at one end of the margin and the title is
+    # centred, so the two never actually meet. Growing the base margin instead
+    # moves the plot edge over and lets the title keep its own spacing.
+    #
+    # Only the shortfall is added: the tick labels and axis title already
+    # reserve .dyn + .whtsbp on that side, and the lean can share it.
+    .flank = function(side) if (side %in% c(1L, 3L)) c(2L, 4L) else c(1L, 3L)
+    .add_lean = function(dyn, ovh, sides) {
+      for (i in 1:2) {
+        need = ovh[i] - (dyn[sides[i]] + .whtsbp[sides[i]])
+        if (is.finite(need) && need > 0) dyn[sides[i]] = dyn[sides[i]] + need
+      }
+      dyn
+    }
+    # Panel extent in lines, from the margins settled so far, so the lean can be
+    # measured against how far the end ticks actually sit from the edge.
+    .span = function(axis) {
+      fin = par("fin")[if (axis == "x") 1L else 2L]
+      m = .theme_mar + .dyn
+      pad = if (axis == "x") m[2L] + m[4L] + .whtsbp[2L] + .whtsbp[4L]
+            else m[1L] + m[3L] + .whtsbp[1L] + .whtsbp[3L]
+      max(0, fin / par("csi") - pad)
+    }
+    if (!is.null(xaxr)) {
+      .at = if (!is.null(xlabs)) as.numeric(xlabs) else
+        axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog"))
+      .ins = axis_tick_inset(.at, extendrange(xlim, f = 0.04), .span("x"))
+      .ovh = tick_label_overhang(xaxlabs, cex = .cex_xaxs, srt = xaxr,
+                                 side = .xside, inset = .ins)
+      .dyn = .add_lean(.dyn, .ovh, .flank(.xside))
+    }
+    if (!is.null(yaxr)) {
+      .at = if (!is.null(ylabs)) as.numeric(ylabs) else
+        axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
+      .ins = axis_tick_inset(.at, extendrange(ylim, f = 0.04), .span("y"))
+      .ovh = tick_label_overhang(yaxlabs, cex = .cex_yaxs, srt = yaxr,
+                                 side = .yside, inset = .ins)
+      .dyn = .add_lean(.dyn, .ovh, .flank(.yside))
     }
 
     # Under facets, per-facet tick labels render smaller (scaled by
@@ -1282,9 +1393,43 @@ tinyplot.default = function(
       .whtsbp_x_raw = .whtsbp_x_raw * cex_fct_adj
     }
 
+    # Each axis title has to clear the tick labels drawn on *its own* side, and
+    # a flipped boxplot has the two variables trade sides -- so a measurement
+    # taken from the x variable may belong to side 2, and vice versa.
+    #
+    # Side 1 normally takes the x measurement. Flipped, the x labels are no
+    # longer down there at all (feeding it their extent pushes the title clean
+    # off the canvas), so it takes the y measurement if that side is rotated and
+    # nothing otherwise -- plain horizontal ticks need no allowance.
+    .side1_raw = if (.xside == 1L) {
+      .whtsbp_x_raw
+    } else if (!is.null(yaxr)) {
+      .whtsbp_y_raw
+    } else {
+      0
+    }
+
+    # The side-2 title has to clear whatever tick labels are drawn on side 2.
+    # Normally that is whtsbp_y_raw, and under flip it still is: y_axis_labels()
+    # is itself flip-aware and hands back the categorical labels that a flipped
+    # boxplot puts there. The one case it cannot cover is those same labels
+    # rotated -- it measures them lying flat -- so take the rotated measurement
+    # instead exactly then, and leave every other case alone.
+    .side2_raw = if (!is.null(xaxr) && .xside == 2L) {
+      .whtsbp_x_raw
+    } else {
+      .whtsbp_y_raw
+    }
+
     dynmar_computed = .theme_mar + .dyn
     par(mar = dynmar_computed + .whtsbp)
   }
+
+  # A "legend_reversed" type reads bottom-up, so its key is flipped to match.
+  # Under `flip = TRUE` the same groups run left-to-right instead, and a
+  # vertical key has no height to concur with -- reading it top-down against
+  # bands laid out left-to-right just runs it backwards. Drop the hint.
+  if (isTRUE(flip)) type_hints[["legend_reversed"]] = NULL
 
   if (legend_draw_flag && !identical(legend_args[["x"]], "direct")) {
     if (!multi_legend) {
@@ -1387,8 +1532,8 @@ tinyplot.default = function(
     ann = as.logical(ann)
     if (ann) draw_title(
       main, sub, cap, xlab, ylab, legend, legend_args, opar,
-      xlab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_x_raw else 0,
-      ylab_line_offset = if (!is.null(dynmar_computed)) .whtsbp_y_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0
+      xlab_line_offset = if (!is.null(dynmar_computed)) .side1_raw else 0,
+      ylab_line_offset = if (!is.null(dynmar_computed)) .side2_raw - max(0, .ymgp_shift) - .ylab_cex_shift else 0
     )
   }
 
@@ -1457,13 +1602,16 @@ tinyplot.default = function(
       facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
       facet = facet,
       facets = facets, ifacet = ifacet,
+      facet_blank = facet_blank,
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
       rev_x = rev_x, rev_y = rev_y,
+      xlim_partial = xlim_partial, ylim_partial = ylim_partial,
+      facet_labs = facet_labs,
       asp = asp, log = log,
       # other args (in approx. alphabetical + group ordering)
       dots = dots,
@@ -1492,12 +1640,15 @@ tinyplot.default = function(
       facet_col = facet_col, facet_bg = facet_bg, facet_border = facet_border,
       facet = datapoints$facet,
       facets = facets, ifacet = ifacet,
+      facet_blank = facet_blank,
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
       rev_x = rev_x, rev_y = rev_y,
+      xlim_partial = xlim_partial, ylim_partial = ylim_partial,
+      facet_labs = facet_labs,
       asp = asp, log = log,
       dots = dots,
       draw = draw,
@@ -1930,7 +2081,7 @@ tinyplot.formula = function(
   ## nice axis and legend labels
   dens_type = !is.null(type) && (is.atomic(type) && identical(type, "density")) || (!is.atomic(type) && identical(type$name, "density"))
   hist_type = !is.null(type) && (is.atomic(type) && type %in% c("hist", "histogram")) || (!is.atomic(type) && identical(type$name, "histogram"))
-  barp_type = !is.null(type) &&  (is.atomic(type) && identical(type, "barplot")) || (!is.atomic(type) && identical(type$name, "barplot"))
+  barp_type = !is.null(type) && (is.atomic(type) && type %in% c("bar", "barplot")) || (!is.atomic(type) && identical(type$name, "barplot"))
   if (is.null(x) && is.null(y)) {
     # Exception: both x and y NULL (e.g., ~ 0 with type = "segments").
     # Build labels from xmin/xmax/ymin/ymax names in the original call (m),

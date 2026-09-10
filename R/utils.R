@@ -28,7 +28,7 @@ text_line_count = function(x) {
 # Main/sub sit above/below the plot box on the top/bottom side and add to the
 # margin additively.
 # Tick-label *width* for sides 2/4 (and *height* for 1/3 under las 2:3) is
-# handled separately by the existing whtsbp logic in draw_facet_window().
+# handled separately by tick_label_extent() in tinyAxis.R.
 # The caller is expected to take max(theme_mar[side], dynmar_side(...)) so
 # that the theme's starting `mar` acts as a baseline padding.
 dynmar_side = function(side, label, main = NULL, sub = NULL, cap = NULL,
@@ -112,9 +112,15 @@ env2env = function(source_env, target_env, keys = NULL) {
   if (is.null(keys)) {
     keys = ls(source_env, all.names = TRUE)
   }
-  for (nm in keys) {
-    assign(nm, source_env[[nm]], envir = target_env)
-  }
+  ## copy in one shot rather than one assign() per key: a single plot moves a
+  ## few hundred keys across ~20 calls, where the loop is about 4x slower.
+  ## ifnotfound preserves the old behaviour of writing NULL for an absent key,
+  ## and mget()'s inherits = FALSE default matches `[[` on an environment.
+  list2env(
+    mget(keys, envir = source_env, ifnotfound = list(NULL)),
+    envir = target_env
+  )
+  invisible(NULL)
 }
 
 

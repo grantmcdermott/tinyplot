@@ -4,7 +4,13 @@
 \alias{type_lines}
 \title{Lines plot type}
 \usage{
-type_lines(type = "l", dodge = 0, fixed.dodge = FALSE, xlevels = NULL)
+type_lines(
+  type = "l",
+  dodge = 0,
+  fixed.dodge = FALSE,
+  xlevels = NULL,
+  xord = NULL
+)
 }
 \arguments{
 \item{type}{1-character string giving the type of plot desired.  The
@@ -40,15 +46,33 @@ present at that position. If \code{TRUE}, dodge positions are based on all
 groups, ensuring "fixed" spacing across x-axis breaks (i.e., even if some
 groups are missing for a particular \code{x} value).}
 
-\item{xlevels}{a character or numeric vector specifying the order in which
-the levels of the \code{x} variable should be plotted (as level names if
-character, or level indexes if numeric, e.g. \code{3:1}). The special keyword
-\code{"asis"} takes the categories in the order that they appear in the data,
-i.e. skipping the alphabetical sort that is otherwise applied when
-coercing a character variable to a factor. Note that this argument only
-affects categorical (i.e., factor or character) \code{x} variables; it is
-ignored for numeric \code{x}. The default \code{NULL} keeps the existing factor
-levels (alphabetical for character variables).}
+\item{xlevels, xord}{arguments controlling the order of the (categorical) \code{x}
+variable, and hence of the x-axis. Supply one or the other; if both
+arguments are provided, \code{xlevels} takes precedence and \code{xord} is silently
+ignored.
+\itemize{
+\item \code{xlevels} specifies the levels \emph{literally}, either a character vector of
+level names in the desired order (e.g., \code{c("C", "B", "A")}), or a numeric
+vector of the corresponding level indexes (e.g. \code{3:1}).
+\item \code{xord} instead accepts a keyword or custom function, which then \emph{derives}
+the order from the data. Options are:
+\itemize{
+\item \code{"desc"} and \code{"asc"} rank the categories by their mean \code{y} value,
+largest or smallest first. (Long forms like \code{"descending"} and \code{"increasing"} are also accepted.)
+\item \code{"minvar"} ranks them by the variance of those values, lowest first.
+\item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they
+appear in the data, while the latter reverses the current level order.
+\item a custom function that determines both the ranking statistic and its
+direction. The statistic is always sorted ascending, so
+\code{function(y) -median(y)} ranks by median, largest first.
+}
+}
+
+Note that \code{x} is only reordered when it is categorical (i.e., factor or
+character). A numeric \code{x} is plotted at its own values and cannot be
+reordered, so supplying either argument there is ignored with a warning.
+Each argument defaults to \code{NULL}, i.e. keep the existing factor levels.}
 }
 \description{
 Type function for plotting lines.
@@ -60,7 +84,7 @@ Like the other plot types, \code{type_lines()} places categorical (factor or
 character) data according to the factor levels. Character variables are
 coerced with \code{\link[=factor]{factor()}} and so end up in alphabetical order. To order the
 categories by their appearance in the data instead, use
-\code{xlevels = "asis"}, or set the levels explicitly, e.g.
+\code{xord = "asis"}, or set the levels explicitly, e.g.
 \code{factor(x, levels = unique(x))}.
 
 Note that the lines themselves are always drawn in the order that the rows
@@ -95,5 +119,29 @@ tinyplot(
   legend = list("direct", nudge_y = c("Tree 1" = 3, "Tree 3" = -5)), # manual
   theme = "socviz"
 )
+
+# A continuous `by` variable is also supported (as of tinyplot v0.8.0).
+# This is particularly useful for trajectories, where a third variable (often
+# time) orders the path.
+time = seq(0, 8*pi, length.out = 600)
+spiral = data.frame(time = time, x = time * cos(time), y = time * sin(time))
+tinyplot(
+  y ~ x | time, data = spiral,
+  type = "l",
+  lwd = 2, asp = 1, # optional args
+  theme = "clean"
+)
+
+# The canonical time-path example: the x-z projection of a Lorenz attractor.
+step = function(p, i) {
+  p + 0.005 * c(
+    10 * (p[2] - p[1]),
+    p[1] * (28 - p[3]) - p[2],
+    p[1] * p[2] - 8/3 * p[3]
+  )
+}
+lz = do.call(rbind, Reduce(step, 1:6000, c(1, 1, 1), accumulate = TRUE))
+lorenz = data.frame(time = seq_len(nrow(lz)) * 0.005, x = lz[, 1], z = lz[, 3])
+tinyplot(z ~ x | time, data = lorenz, type = "l", theme = "clean")
 
 }

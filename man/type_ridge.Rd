@@ -10,6 +10,7 @@ type_ridge(
   breaks = NULL,
   probs = NULL,
   ylevels = NULL,
+  yord = NULL,
   bw = "nrd0",
   joint.bw = c("mean", "full", "none"),
   adjust = 1,
@@ -19,7 +20,8 @@ type_ridge(
   gradient = FALSE,
   raster = FALSE,
   col = NULL,
-  alpha = NULL
+  alpha = NULL,
+  singletons = c("warn", "drop", "none")
 )
 }
 \arguments{
@@ -46,9 +48,33 @@ at the specified \code{probs}. The quantiles are computed based on the density
 (rather than the raw original variable). Only one of \code{breaks} or
 \code{probs} must be specified.}
 
-\item{ylevels}{a character or numeric vector specifying in which order
-the levels of the y-variable should be plotted. The special keyword
-\code{"asis"} takes the categories in the order that they appear in the data.}
+\item{ylevels, yord}{arguments controlling the order of the \code{y} variable, and
+hence of the y-axis. Supply one or the other; if both arguments are
+provided, \code{ylevels} takes precedence and \code{yord} is silently ignored.
+\itemize{
+\item \code{ylevels} specifies the levels \emph{literally}, either a character vector of
+level names in the desired order (e.g., \code{c("C", "B", "A")}), or a numeric
+vector of the corresponding level indexes (e.g. \code{3:1}).
+\item \code{yord} instead accepts a keyword or custom function, which then \emph{derives}
+the order from the data. Options are:
+\itemize{
+\item \code{"desc"} and \code{"asc"} rank the ridges by their mean \code{x} value, largest
+or smallest first. (Long forms like \code{"descending"} and \code{"increasing"} are also accepted.) (Ridge plots have no
+separate response, so the ranking runs on the continuous \code{x} variable.)
+\item \code{"minvar"} ranks them by the spread of each distribution, narrowest
+first.
+\item \code{"asis"} or \code{"rev"} permute the existing levels without consulting the
+data at all. The former takes the categories in the order that they
+appear in the data, while the latter reverses the current level order.
+\item a custom function that determines both the ranking statistic and its
+direction. The statistic is always sorted ascending, so
+\code{function(y) -median(y)} ranks by median, largest first.
+}
+}
+
+Note that a numeric \code{y} is coerced to a factor before the ridges are
+drawn, so it is reordered like any other categorical variable.
+Each argument defaults to \code{NULL}, i.e. keep the existing factor levels.}
 
 \item{bw}{the smoothing \code{\link[stats:bw.nrd]{bandwidth}} to be used,
 see \code{\link[stats]{density}} for details and options.}
@@ -111,6 +137,16 @@ qualitative palette, or black if no theme is set.}
 transparency of the density fills. In most cases, will default to a value of
 1, i.e. fully opaque. But for some \code{by} grouped plots (excepting the special
 cases where \code{by==y} or \code{by==x}), will default to 0.6.}
+
+\item{singletons}{character string indicating what to do with singleton
+groups, i.e. combinations of \code{y}, \code{by}, and \code{facet} that consist of only 1
+row. The default \code{"warn"} option removes any singleton cases and emits a
+warning reporting how many there were. \code{"drop"} does the same thing, but
+quietly. In either case the dropped groups may still be represented as empty
+ridge lines or facets in your plot. Finally, \code{"none"} skips all singleton
+checks and retains the affected groups; possibly leading to an error. Note
+that singletons require a numeric \code{bw}, since the data-driven bandwidth
+rules need at least 2 observations.}
 }
 \description{
 Type function for producing ridge plots (also known as joy plots),

@@ -14,5 +14,15 @@ options("tinysnapshot_device_args" = list(
   system_fonts = list(symbol = "DejaVu Sans")
 ))
 
+# Mirror the gate that tinysnapshot uses to decide whether plot snapshots run
+snapshots_run = local({
+  os = getOption("tinysnapshot_os", default = Sys.info()[["sysname"]])
+  skip = getOption(
+    "tinysnapshot_plot_skip",
+    default = !interactive() && !identical(Sys.getenv("NOT_CRAN"), "true")
+  )
+  Sys.info()[["sysname"]] %in% os && !skip
+})
+
 # reset theme in every file
 tinytheme()

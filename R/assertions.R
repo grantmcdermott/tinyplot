@@ -40,9 +40,8 @@ check_true = function(x, null.ok = FALSE) {
 }
 
 assert_true = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be true.", name)
   if (!isTRUE(check_true(x, null.ok = null.ok))) {
-    stop(msg, call. = FALSE)
+    stop(sprintf("`%s` must be true.", name), call. = FALSE)
   }
 }
 
@@ -57,9 +56,8 @@ check_string = function(x, null.ok = FALSE) {
 }
 
 assert_string = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be a string.", name)
   if (!isTRUE(check_string(x, null.ok = null.ok))) {
-    stop(msg, call. = FALSE)
+    stop(sprintf("`%s` must be a string.", name), call. = FALSE)
   }
 }
 
@@ -74,9 +72,8 @@ check_flag = function(x, null.ok = FALSE) {
 }
 
 assert_flag = function(x, null.ok = FALSE, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be a logical flag.", name)
   if (!isTRUE(check_flag(x, null.ok = null.ok))) {
-    stop(msg, call. = FALSE)
+    stop(sprintf("`%s` must be a logical flag.", name), call. = FALSE)
   }
 }
 
@@ -103,16 +100,23 @@ is_string1 = function(x) {
   isTRUE(check_string(x)) && !is.na(x)
 }
 
-# label formatter passed on to tinylabel(): a function, or one of its
-# convenience strings (e.g. "percent"). With `list.ok`, several of them --  as a
-# list or character vector -- are allowed too, e.g. one per facet variable.
+# label formatter passed on to tinylabel(): a function, one of its convenience
+# strings (e.g. "percent"), or a dictionary. With `list.ok`, several of them --
+# as a list or character vector -- are allowed too, e.g. one per facet variable.
+#
+# A dictionary is only recognised *inside* that list, never as `x` itself: at
+# the top level a named vector is read as a per-variable mapping instead, which
+# is what makes `list(Species = c(setosa = "SET"))` mean something different
+# from a bare `c(setosa = "SET")`. match_facet_vars() enforces the top-level
+# reading; this only has to let the nested one through.
 assert_labeller = function(x, name = as.character(substitute(x)), list.ok = FALSE) {
   if (is.null(x) || is_labeller(x)) return(invisible(TRUE))
   if (isTRUE(list.ok) && (is.list(x) || is.character(x)) && length(x) >= 1L) {
-    if (all(vapply(x, is_labeller, logical(1L)))) return(invisible(TRUE))
+    ok = vapply(x, function(xi) is_labeller(xi) || is_dict(xi), logical(1L))
+    if (all(ok)) return(invisible(TRUE))
   }
   msg = if (isTRUE(list.ok)) {
-    "`%s` must be a function or a `tinylabel()` convenience string, or a list of them (one per facet variable)."
+    "`%s` must be a function, a `tinylabel()` convenience string, or a dictionary of labels -- or a list of them, one per facet variable."
   } else {
     "`%s` must be a function, or a `tinylabel()` convenience string."
   }
@@ -123,12 +127,24 @@ is_labeller = function(x) {
   is.function(x) || (is.character(x) && length(x) == 1L && !is.na(x))
 }
 
+# A tinylabel() dictionary: a *named* character vector, or a named list that
+# flattens to one, mapping existing labels to their replacements. Deliberately
+# mirrors what tinylabel() itself dispatches on (see R/tinylabel.R), so that
+# what passes validation here is exactly what it can consume. Note the overlap
+# with is_labeller() at length 1, where a one-entry dictionary and a
+# convenience string cannot be told apart -- and need not be, since both are
+# accepted either way.
+is_dict = function(x) {
+  if (is.list(x) && !is.null(names(x))) x = unlist(x)
+  is.character(x) && !is.null(names(x))
+}
+
 assert_length = function(x, len = 1, null.ok = FALSE, name = as.character(substitute(x))) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
-  msg = sprintf("`%s` must be one of these lengths: %s", name, paste(len, collapse = ", "))
   if (!length(x) %in% len) {
+    msg = sprintf("`%s` must be one of these lengths: %s", name, paste(len, collapse = ", "))
     stop(msg, call. = FALSE)
   }
 }
@@ -146,8 +162,9 @@ assert_logical = function(x, null.ok = FALSE, name = as.character(substitute(x))
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
-  msg = sprintf("`%s` must be a logical vector", name)
-  if (!is.logical(x)) stop(msg, call. = FALSE)
+  if (!is.logical(x)) {
+    stop(sprintf("`%s` must be a logical vector", name), call. = FALSE)
+  }
 }
 
 
@@ -178,9 +195,9 @@ assert_integerish = function(x, len = NULL, lower = NULL, upper = NULL, null.ok 
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible())
   }
-  msg = sprintf("`%s` must be integer-ish", name)
   if (is.null(x) && !isTRUE(null.ok)) stop(sprintf("%s should not be NULL.", name), call. = FALSE)
   if (!isTRUE(check_integerish(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
+    msg = sprintf("`%s` must be integer-ish", name)
     if (!is.numeric(x)) msg = paste0(msg, "; it is not numeric")
     if (!is.null(len) && length(x) != len) msg = paste0(msg, sprintf("; its length must be %s", len))
     if (!is.null(lower) && any(x < lower)) msg = paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
@@ -210,8 +227,8 @@ check_numeric = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TR
 }
 
 assert_numeric = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be numeric", name)
   if (!isTRUE(check_numeric(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
+    msg = sprintf("`%s` must be numeric", name)
     if (!is.null(len) && length(x) != len) msg = paste0(msg, sprintf("; its length must be %s", len))
     if (!is.null(lower) && any(x < lower)) msg = paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
     if (!is.null(upper) && any(x > upper)) msg = paste0(msg, sprintf("; all values must be less than or equal to %s", upper))
@@ -220,12 +237,17 @@ assert_numeric = function(x, len = NULL, lower = NULL, upper = NULL, null.ok = F
 }
 
 assert_data_frame = function(x, min_rows = 0, min_cols = 0, name = as.character(substitute(x))) {
-  msg = sprintf("`%s` must be a data.frame.", name)
-  if (!is.data.frame(x)) stop(msg, call. = FALSE)
-  msg = sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
-  if (nrow(x) < min_rows) stop(msg, call. = FALSE)
-  msg = sprintf("Number of columns in `%s` must be at least `%s`", name, min_cols)
-  if (ncol(x) < min_cols) stop(msg, call. = FALSE)
+  if (!is.data.frame(x)) {
+    stop(sprintf("`%s` must be a data.frame.", name), call. = FALSE)
+  }
+  if (nrow(x) < min_rows) {
+    msg = sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
+    stop(msg, call. = FALSE)
+  }
+  if (ncol(x) < min_cols) {
+    msg = sprintf("Number of columns in `%s` must be at least `%s`", name, min_cols)
+    stop(msg, call. = FALSE)
+  }
 }
 
 
@@ -323,7 +345,8 @@ known_type_hints = c(
   "has_rhs_axis",                  # secondary right-hand axis (reserve margin)
   "legend_border_fg",              # legend swatch border is always par("fg")
   "legend_fills_from_col",         # legend swatch fill comes from `col`
-  "legend_fills_from_seq_palette"  # ... or from the colour's sequential ramp
+  "legend_fills_from_seq_palette", # ... or from the colour's sequential ramp
+  "legend_reversed"                # list the key bottom-up, not top-down
 )
 
 ## Validate a type's declared hints.

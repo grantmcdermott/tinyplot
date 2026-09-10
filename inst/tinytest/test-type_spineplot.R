@@ -127,3 +127,51 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "spineplot_yby_lighten_true")
+
+
+#
+## xord / yord -----
+
+# both spineplot axes are categorical, so the size keywords rank on frequency
+f = function() {
+  tinyplot(Species ~ cut(Sepal.Length, 3), data = iris, type = "spineplot", xord = "desc")
+}
+expect_snapshot_plot(f, label = "spineplot_xord_desc")
+
+f = function() {
+  tinyplot(Species ~ cut(Sepal.Length, 3), data = iris, type = "spineplot", yord = "rev")
+}
+expect_snapshot_plot(f, label = "spineplot_yord_rev")
+
+# a spine is a proportion of a count, with no dispersion of its own, so
+# "minvar" is not part of this type's vocabulary
+expect_error(
+  tinyplot(Species ~ cut(Sepal.Length, 3), data = iris, type = "spineplot", xord = "minvar"),
+  pattern = "must be NULL"
+)
+
+
+#
+## xaxl / yaxl -----
+
+# this type draws its own axes, so it never reaches the standard path where
+# `xaxl`/`yaxl` are applied; they are applied inside data_spineplot() instead
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot", yaxl = toupper)
+}
+expect_snapshot_plot(f, label = "spineplot_yaxl_toupper")
+
+f = function() {
+  tinyplot(Species ~ Sepal.Width, data = iris, type = "spineplot",
+           yaxl = c(setosa = "SET", virginica = "VIR"))
+}
+expect_snapshot_plot(f, label = "spineplot_yaxl_dict")
+
+# categorical x, and a numeric x whose breaks take a formatting keyword
+spine_d = data.frame(
+  grp  = factor(rep(c("alpha", "beta"), each = 50)),
+  resp = factor(rep(c("lo", "hi"), 50), levels = c("lo", "hi"))
+)
+f = function() tinyplot(resp ~ grp, data = spine_d, type = "spineplot", xaxl = toupper)
+expect_snapshot_plot(f, label = "spineplot_xaxl_toupper")
+

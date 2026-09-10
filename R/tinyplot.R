@@ -467,17 +467,6 @@
 #'   \code{\link[tinyplot]{tpar}} (i.e., both defaulting to 7 inches, and where
 #'   the default resolution for bitmap files is also specified as 300
 #'   DPI).
-#' @param record logical. Should the plot be recorded and returned as a
-#'   replayable object (see \code{\link[grDevices]{recordPlot}})? Defaults to
-#'   `FALSE`. Setting to `TRUE` allows for assignment and later recall, e.g.
-#'   `myplot = tinyplot(...); myplot`. This behaviour can also be set globally
-#'   via `tpar(record = TRUE)`; an explicit argument here takes precedence.
-#' 
-#'   Note that recording requires a device with an enabled display list (see
-#'   \code{\link[grDevices]{dev.control}}). Most interactive devices enable this
-#'   behaviour by default, whereas file-based devices do not. However `tinyplot`
-#'   automatically enables it for any device that it opens itself via `file`,
-#'   and further emits a warning if the current device is not recording.
 #' @param width numeric giving the plot width in inches. Together with `height`,
 #'  typically used in conjunction with the `file` argument above, overriding the
 #'  default values held in `tpar("file.width", "file.height")`. If either `width`
@@ -489,6 +478,17 @@
 #' @param height numeric giving the plot height in inches. Same considerations as
 #'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
 #'  specified.
+#' @param record logical. Should the plot be recorded and returned as a
+#'   replayable object (see \code{\link[grDevices]{recordPlot}})? Defaults to
+#'   `FALSE`. Setting to `TRUE` allows for assignment and later recall, e.g.
+#'   `myplot = tinyplot(...); myplot`. This behaviour can also be set globally
+#'   via `tpar(record = TRUE)`; an explicit argument here takes precedence.
+#' 
+#'   Note that recording requires a device with an enabled display list (see
+#'   \code{\link[grDevices]{dev.control}}). Most interactive devices enable this
+#'   behaviour by default, whereas file-based devices do not. However `tinyplot`
+#'   automatically enables it for any device that it opens itself via `file`,
+#'   and further emits a warning if the current device is not recording.
 #' @param asp the y/xy/x aspect ratio, see `plot.window`.
 #' @param theme keyword string (e.g. `"clean"`) or list defining a theme. Passed
 #'  on to [`tinytheme`], but reset upon exit so that the theme effect is only

@@ -656,7 +656,13 @@ specified.}
 replayable object (see \code{\link[grDevices]{recordPlot}})? Defaults to
 \code{FALSE}. Setting to \code{TRUE} allows for assignment and later recall, e.g.
 \verb{myplot = tinyplot(...); myplot}. This behaviour can also be set globally
-via \code{tpar(record = TRUE)}; an explicit argument here takes precedence.}
+via \code{tpar(record = TRUE)}; an explicit argument here takes precedence.
+
+Note that recording requires a device with an enabled display list (see
+\code{\link[grDevices]{dev.control}}). Most interactive devices enable this
+behaviour by default, whereas file-based devices do not. However \code{tinyplot}
+automatically enables it for any device that it opens itself via \code{file},
+and further emits a warning if the current device is not recording.}
 
 \item{asp}{the y/xy/x aspect ratio, see \code{plot.window}.}
 

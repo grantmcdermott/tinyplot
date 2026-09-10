@@ -68,13 +68,31 @@ expect_error(tpar(record = "yes"), pattern = "record")
 # poison every later call in this file. Reset it explicitly.
 tpar(record = NULL)
 
-# A recorded plot replays to the same output as the original draw.
-if (snapshots_run) {
-  svglite::svglite(tempfile(fileext = ".svg"), width = 7, height = 7)
-  dev.control(displaylist = "enable")
-  rec = tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris, record = TRUE)
+# A recorded plot replays to exactly the same output as the original draw.
+# Deliberately not a snapshot test: replaying onto a *different* device than the
+# one that recorded is not faithful (text metrics differ by backend), and the
+# snapshot device is configured separately from whatever records here. Comparing
+# two files produced in this session sidesteps that and tests the real property.
+if (requireNamespace("svglite", quietly = TRUE)) {
+  draw = function(f, record = FALSE) {
+    svglite::svglite(f, width = 7, height = 7)
+    on.exit(dev.off())
+    if (record) dev.control(displaylist = "enable")
+    tinyplot(Sepal.Length ~ Petal.Length | Species, data = iris, record = record)
+  }
+  f_native = tempfile(fileext = ".svg")
+  f_replay = tempfile(fileext = ".svg")
+  draw(f_native)
+  rec = draw(tempfile(fileext = ".svg"), record = TRUE)
+  svglite::svglite(f_replay, width = 7, height = 7)
+  replayPlot(rec)
   dev.off()
-  expect_snapshot_plot(function() replayPlot(rec), label = "record_replay")
+  native = readLines(f_native, warn = FALSE)
+  replay = readLines(f_replay, warn = FALSE)
+  # guard against the comparison passing vacuously on two empty files
+  expect_true(length(native) > 10L)
+  expect_identical(replay, native)
+  unlink(c(f_native, f_replay))
 }
 
 tpar(record = NULL)

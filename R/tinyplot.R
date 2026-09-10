@@ -430,10 +430,10 @@
 #'   `y` are plotted). The `draw` argument is primarily useful for adding common
 #'   elements to each facet of a faceted plot, e.g.
 #'   \code{\link[graphics]{abline}} or \code{\link[graphics]{text}}. Note that
-#'   this argument is somewhat experimental and that _no_ internal checking is
-#'   done for correctness; the provided argument is simply captured and
-#'   evaluated as-is within `tinyplot()` and thus has access to the local
-#'   definition of all variables such as `x`, `y`, etc. See Examples.
+#'   _no_ internal checking is done for correctness; the provided argument is
+#'   simply captured and evaluated as-is within `tinyplot()` and thus has
+#'   access to the local definition of all variables such as `x`, `y`, etc.
+#'   See Examples.
 #' @param restore.par a logical value indicating whether the
 #'   \code{\link[graphics]{par}} settings prior to calling `tinyplot` should be
 #'   restored on exit. Defaults to FALSE, which makes it possible to add
@@ -478,9 +478,10 @@
 #' @param height numeric giving the plot height in inches. Same considerations as
 #'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
 #'  specified.
-#' @param record logical. Should the plot be recorded and returned as a
-#'   replayable object (see \code{\link[grDevices]{recordPlot}})? Defaults to
-#'   `FALSE`. Setting to `TRUE` allows for assignment and later recall, e.g.
+#' @param record (experimental) a logical value indicating whether the plot
+#'   should be recorded and returned as a replayable object (see
+#'   \code{\link[grDevices]{recordPlot}}). Defaults to `FALSE`. Setting to
+#'   `TRUE` allows for assignment and later recall, e.g.
 #'   `myplot = tinyplot(...); myplot`. This behaviour can also be set globally
 #'   via `tpar(record = TRUE)`; an explicit argument here takes precedence.
 #' 

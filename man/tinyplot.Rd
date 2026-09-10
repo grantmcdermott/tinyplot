@@ -598,10 +598,10 @@ existing plot without having to repeat arguments.}
 \code{y} are plotted). The \code{draw} argument is primarily useful for adding common
 elements to each facet of a faceted plot, e.g.
 \code{\link[graphics]{abline}} or \code{\link[graphics]{text}}. Note that
-this argument is somewhat experimental and that \emph{no} internal checking is
-done for correctness; the provided argument is simply captured and
-evaluated as-is within \code{tinyplot()} and thus has access to the local
-definition of all variables such as \code{x}, \code{y}, etc. See Examples.}
+\emph{no} internal checking is done for correctness; the provided argument is
+simply captured and evaluated as-is within \code{tinyplot()} and thus has
+access to the local definition of all variables such as \code{x}, \code{y}, etc.
+See Examples.}
 
 \item{empty}{logical indicating whether the interior plot region should be
 left empty. The default is \code{FALSE}. Setting to \code{TRUE} has a similar effect
@@ -652,9 +652,10 @@ graphics windows.}
 \code{width} (above) apply, e.g. will default to \code{tpar("file.height")} if not
 specified.}
 
-\item{record}{logical. Should the plot be recorded and returned as a
-replayable object (see \code{\link[grDevices]{recordPlot}})? Defaults to
-\code{FALSE}. Setting to \code{TRUE} allows for assignment and later recall, e.g.
+\item{record}{(experimental) a logical value indicating whether the plot
+should be recorded and returned as a replayable object (see
+\code{\link[grDevices]{recordPlot}}). Defaults to \code{FALSE}. Setting to
+\code{TRUE} allows for assignment and later recall, e.g.
 \verb{myplot = tinyplot(...); myplot}. This behaviour can also be set globally
 via \code{tpar(record = TRUE)}; an explicit argument here takes precedence.
 

@@ -78,7 +78,7 @@ tinyplot(
     data = iris
 )
 
-# Special case: `by`==`x`. 
+# Special case: `by`==`x`.
 # Here we colour each bar (bin) according to its position along the x-axis
 tinyplot(
     ~ Petal.Width | Petal.Width,

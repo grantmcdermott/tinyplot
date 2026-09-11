@@ -36,3 +36,13 @@ f = function() {
            xaxl = cyl_labs, xaxr = 45, theme = "clean")
 }
 expect_snapshot_plot(f, label = "axis_rotation_flip")
+
+
+# Dynmar with repeated log calls (#725)
+f = function() {
+  tinytheme("ipsum")
+  on.exit(tinytheme())
+  plt(disp ~ mpg, data = mtcars, log = "y")
+  plt(disp ~ mpg, data = mtcars, log = "y")
+}
+expect_silent(f())

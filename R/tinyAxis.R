@@ -164,12 +164,14 @@ x_axis_labels = function(xlabs) {
 ## clear every panel's ticks, so all of them are measured and the widest wins.
 axis_tick_labels = function(labelset, lim, axb = NULL, axl = NULL, log = FALSE,
                             free_lims = NULL, cex = 1) {
+  ticks = function(l) {
+    u = axis_usr(l, log = log, axb = axb)
+    axisTicks(usr = u[["usr"]], log = u[["log"]])
+  }
   if (!is.null(labelset)) {
     out = labelset[[1L]]
   } else if (!is.null(free_lims)) {
-    sets = lapply(free_lims, function(l) {
-      axisTicks(usr = extendrange(l, f = 0.04), log = log)
-    })
+    sets = lapply(free_lims, ticks)
     widths = vapply(
       sets,
       function(s) max(strwidth(s, "inches", cex = cex)),
@@ -177,18 +179,41 @@ axis_tick_labels = function(labelset, lim, axb = NULL, axl = NULL, log = FALSE,
     )
     out = sets[[which.max(widths)]]
   } else {
-    # A single distinct value gives a zero-width range that extendrange() can't
-    # pad and axisTicks() can't tick, so widen it the way plot.window() does.
-    # An explicit `at` (xaxb/yaxb) supplies its own ticks, hence the guard.
-    usr = if (diff(lim) == 0 && is.null(axb)) {
-      lim + c(-0.5, 0.5)
-    } else {
-      extendrange(lim, f = 0.04)
-    }
-    out = axisTicks(usr = usr, log = log)
+    out = ticks(lim)
   }
   if (!is.null(axl)) out = tinylabel(out, axl)
   out
+}
+
+
+## Axis limits in the coordinate space axisTicks() and par("usr") speak.
+##
+## Callers hold limits in *data* units, but on a log axis axisTicks() reads
+## its `usr` in log10 units. Keeping that conversion here -- rather than
+## leaving each call site to remember it -- is the point of this helper: the
+## units contract and the padding rules stay in one place. Returns the padded
+## limits together with the log flag they were built under, so the caller
+## hands axisTicks() a matching pair.
+##
+## Margin measurement runs *before* plot.window(), so `log` must come from the
+## caller's own `log=` argument. par("xlog")/par("ylog") still describe the
+## previous plot on the device at that point (#725).
+##
+## A log axis can't represent a zero or negative limit, so those fall back to a
+## linear measurement: plot.window() raises its own, clearer complaint moments
+## later, and log10() here would only put "NaNs produced" in front of it.
+axis_usr = function(lim, log = FALSE, axb = NULL) {
+  log = isTRUE(log) && all(is.finite(lim)) && all(lim > 0)
+  if (log) lim = log10(lim)
+  # A single distinct value gives a zero-width range that extendrange() can't
+  # pad and axisTicks() can't tick, so widen it the way plot.window() does.
+  # An explicit `at` (xaxb/yaxb) supplies its own ticks, hence the guard.
+  usr = if (diff(lim) == 0 && is.null(axb)) {
+    lim + c(-0.5, 0.5)
+  } else {
+    extendrange(lim, f = 0.04)
+  }
+  list(usr = usr, log = log)
 }
 
 

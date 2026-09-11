@@ -209,6 +209,11 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- Fixed a bug where consecutive plots with (i) logged axes under (ii) a dynamic
+  theme would error, due to a stale `par("xlog")`/`par("ylog")` state. We now
+  avoid this by grabbing the log state directly from the top-level `log`
+  argument instead. Thanks to @eddelbuettel for the report.
+  (#725 @grantmcdermott)
 - `type_barplot()` receives several consistency improvements and bug fixes:
   - Passing a named atomic vector now uses the names as the bar categories,
     matching base `barplot()`. (#714 @grantmcdermott)

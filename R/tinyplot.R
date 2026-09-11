@@ -1317,6 +1317,11 @@ tinyplot.default = function(
     .whtsbp_y_raw = 0
     .whtsbp_x_raw = 0
     .las = get_tpar("las", tpar_list = .tpars, default = par("las"))
+    # Same reasoning for the log state: par("xlog")/par("ylog") still describe
+    # the previous plot on this device until plot.window() runs, which is after
+    # this block. Read the user's `log` argument instead (#725).
+    .xlog = grepl("x", log, fixed = TRUE)
+    .ylog = grepl("y", log, fixed = TRUE)
     # A flipped boxplot draws the x variable up the side and the y variable
     # along the bottom, so a rotation has to be measured against the side its
     # labels actually land on. (The las branches below keep indexing 1/2
@@ -1328,7 +1333,7 @@ tinyplot.default = function(
     if (!is.null(yaxr) || .las %in% 1:2) {
       yaxlabs = axis_tick_labels(
         y_axis_labels(type, y, ylabs, xlabs, flip),
-        lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+        lim = ylim, axb = yaxb, axl = yaxl, log = .ylog,
         cex = .cex_yaxs
       )
       if (!is.null(yaxr)) {
@@ -1343,7 +1348,7 @@ tinyplot.default = function(
     if (!is.null(xaxr) || .las %in% 2:3) {
       xaxlabs = axis_tick_labels(
         x_axis_labels(xlabs),
-        lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+        lim = xlim, axb = xaxb, axl = xaxl, log = .xlog,
         cex = .cex_xaxs
       )
       if (!is.null(xaxr)) {
@@ -1387,17 +1392,25 @@ tinyplot.default = function(
       max(0, fin / par("csi") - pad)
     }
     if (!is.null(xaxr)) {
+      .u = axis_usr(xlim, log = .xlog, axb = xaxb)
       .at = if (!is.null(xlabs)) as.numeric(xlabs) else
-        axisTicks(usr = extendrange(xlim, f = 0.04), log = par("xlog"))
-      .ins = axis_tick_inset(.at, extendrange(xlim, f = 0.04), .span("x"))
+        axisTicks(usr = .u[["usr"]], log = .u[["log"]])
+      # axisTicks() reports tick locations in data units, but the inset is a
+      # visual fraction of the panel, so both sides of it live in usr space.
+      if (.u[["log"]]) .at = log10(.at)
+      .ins = axis_tick_inset(.at, .u[["usr"]], .span("x"))
       .ovh = tick_label_overhang(xaxlabs, cex = .cex_xaxs, srt = xaxr,
                                  side = .xside, inset = .ins)
       .dyn = .add_lean(.dyn, .ovh, .flank(.xside))
     }
     if (!is.null(yaxr)) {
+      .u = axis_usr(ylim, log = .ylog, axb = yaxb)
       .at = if (!is.null(ylabs)) as.numeric(ylabs) else
-        axisTicks(usr = extendrange(ylim, f = 0.04), log = par("ylog"))
-      .ins = axis_tick_inset(.at, extendrange(ylim, f = 0.04), .span("y"))
+        axisTicks(usr = .u[["usr"]], log = .u[["log"]])
+      # axisTicks() reports tick locations in data units, but the inset is a
+      # visual fraction of the panel, so both sides of it live in usr space.
+      if (.u[["log"]]) .at = log10(.at)
+      .ins = axis_tick_inset(.at, .u[["usr"]], .span("y"))
       .ovh = tick_label_overhang(yaxlabs, cex = .cex_yaxs, srt = yaxr,
                                  side = .yside, inset = .ins)
       .dyn = .add_lean(.dyn, .ovh, .flank(.yside))

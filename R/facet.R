@@ -57,6 +57,13 @@ draw_facet_window = function(
   }
   
 
+  # Both dynmar branches below measure tick labels before the plot.window()
+  # calls in the facet loop, so the log state has to come from the caller's
+  # `log` argument -- par("xlog")/par("ylog") still describe the previous plot
+  # at that point (#725).
+  .xlog = grepl("x", log, fixed = TRUE)
+  .ylog = grepl("y", log, fixed = TRUE)
+
   # if breaks are provided use these (but only if x/ylabs are null)
   if (!is.null(xaxb) && !is.null(xlabs)) xlabs = xaxb
   if (!is.null(yaxb) && !is.null(ylabs)) ylabs = yaxb
@@ -196,7 +203,7 @@ draw_facet_window = function(
         }
         yaxlabs = axis_tick_labels(
           .ylabset,
-          lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+          lim = ylim, axb = yaxb, axl = yaxl, log = .ylog,
           free_lims = .yfree, cex = .cex_yaxs
         )
         whtsbp = if (!is.null(yaxr)) {
@@ -229,7 +236,7 @@ draw_facet_window = function(
         }
         xaxlabs = axis_tick_labels(
           .xlabset,
-          lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+          lim = xlim, axb = xaxb, axl = xaxl, log = .xlog,
           free_lims = .xfree, cex = .cex_xaxs
         )
         whtsbp = if (!is.null(xaxr)) {
@@ -309,7 +316,7 @@ draw_facet_window = function(
       # extra whitespace bump on the y axis
       yaxlabs = axis_tick_labels(
         y_axis_labels(type, y, ylabs, xlabs, flip),
-        lim = ylim, axb = yaxb, axl = yaxl, log = par("ylog"),
+        lim = ylim, axb = yaxb, axl = yaxl, log = .ylog,
         cex = .cex_yaxs
       )
       if (!is.null(yaxr)) {
@@ -323,7 +330,7 @@ draw_facet_window = function(
       # extra whitespace bump on the x axis
       xaxlabs = axis_tick_labels(
         x_axis_labels(xlabs),
-        lim = xlim, axb = xaxb, axl = xaxl, log = par("xlog"),
+        lim = xlim, axb = xaxb, axl = xaxl, log = .xlog,
         cex = .cex_xaxs
       )
       if (!is.null(xaxr)) {

@@ -11,22 +11,26 @@
 ## along and put it back when the plot is replayed.
 
 
-# Plot-scoped entries of .tinyplot_env: everything tinyplot_add() and the
-# layering machinery need in order to treat a replayed plot as "the current
-# plot". Deliberately excludes package-level config that is not tied to any
-# single plot: .base_par_names (a device cache), .registered_themes and
-# .tpar_hooks (user/session settings), and .saved_par_first (the session's
-# baseline par, which a replay has no business overwriting).
+# Plot-scoped entries of .tinyplot_env that tinyplot_add() and the layering
+# machinery need in order to treat a replayed plot as "the current plot".
+#
+# Two kinds of entry are deliberately absent. First, package-level config that
+# is not tied to any single plot: .base_par_names (a device cache),
+# .registered_themes and .tpar_hooks (session settings). Second -- and less
+# obviously -- the saved par/usr/dev state (.saved_par_before, .saved_par_after,
+# usr_orig, dev_orig). That state describes the device the plot was *recorded*
+# on, which need not be the device it is replayed onto: recording a plot with
+# `file = ` captures a file device that is then closed, so restoring its par on
+# replay leaves the live device inconsistent and a following tinyplot_add()
+# fails with "plot.new has not been called yet". Replaying redraws the plot on
+# the current device anyway, so that device's own par is the correct one to
+# keep.
 recorded_state_keys = c(
   ".last_call",
-  ".saved_par_before",
-  ".saved_par_after",
   ".group_offsets",
   ".offsets_axis",
   ".facet_labs",
   ".top_legend_soma",
-  "usr_orig",
-  "dev_orig",
   "xlabs_orig"
 )
 
@@ -35,15 +39,18 @@ recorded_state_keys = c(
 capture_record_state = function() {
   out = lapply(recorded_state_keys, function(k) .tinyplot_env[[k]])
   names(out) = recorded_state_keys
-  # Drop `record` from the stored call. tinyplot_add() rebuilds the last call,
-  # so leaving it in would make every layer added after a replay record itself
-  # too -- and warn if that device happens not to be recording. Recording
-  # describes how one call returned its value, not a property of the plot to be
-  # inherited; pass `record = TRUE` to tinyplot_add() explicitly to record a
-  # layered plot.
+  # Drop the per-call output directives from the stored call. tinyplot_add()
+  # rebuilds the last call, so leaving these in would make every layer added
+  # after a replay repeat them: `record` would re-record each layer (and warn
+  # if that device was not recording), while `file`/`width`/`height` would open
+  # a fresh device via setup_device() and then fail, because add-mode draws
+  # onto a plot that the new device does not have. These arguments describe how
+  # one call produced its output, not properties of the plot to be inherited;
+  # pass them to tinyplot_add() explicitly if a layer needs them.
   cal = out[[".last_call"]]
-  if (is.call(cal) && "record" %in% names(as.list(cal))) {
-    cal[["record"]] = NULL
+  if (is.call(cal)) {
+    drop = intersect(c("record", "file", "width", "height"), names(as.list(cal)))
+    for (nm in drop) cal[[nm]] = NULL
     out[[".last_call"]] = cal
   }
   return(out)

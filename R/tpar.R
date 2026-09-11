@@ -399,6 +399,10 @@ assert_tpar = function(.tpar) {
 }
 
 init_tpar = function(rm_hook = FALSE) {
+  # `record` changes what tinyplot() returns, not how the plot looks, so it
+  # survives the wipe below (tinytheme() calls init_tpar() on every switch).
+  record_old = .tpar[["record"]]
+
   rm(list = names(.tpar), envir = .tpar)
 
   if (isTRUE(rm_hook)) {
@@ -418,6 +422,15 @@ init_tpar = function(rm_hook = FALSE) {
   .tpar$file.width = if (is.null(getOption("tinyplot_file.width"))) 7 else as.numeric(getOption("tinyplot_file.width"))
   .tpar$file.height = if (is.null(getOption("tinyplot_file.height"))) 7 else as.numeric(getOption("tinyplot_file.height"))
   .tpar$file.res = if (is.null(getOption("tinyplot_file.res"))) 300 else as.numeric(getOption("tinyplot_file.res"))
+
+  # Record plots as replayable objects (see `?recordedtinyplot`)
+  .tpar$record = if (!is.null(record_old)) {
+    record_old
+  } else if (is.null(getOption("tinyplot_record"))) {
+    NULL
+  } else {
+    as.logical(getOption("tinyplot_record"))
+  }
 
   # Facet margin, i.e. gap between the individual facet windows
   .tpar$fmar = if (is.null(getOption("tinyplot_fmar"))) c(1, 1, 1, 1) else as.numeric(getOption("tinyplot_fmar"))

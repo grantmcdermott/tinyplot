@@ -40,6 +40,22 @@ expect_inherits(tinyplot(Sepal.Length ~ Petal.Length, data = iris), "recordedplo
 expect_null(tinyplot(Sepal.Length ~ Petal.Length, data = iris, record = FALSE))
 tpar(record = NULL)
 expect_null(tinyplot(Sepal.Length ~ Petal.Length, data = iris))
+
+# A theme switch must not clear tpar(record), including the ephemeral themes
+# that tinyplot(theme=) applies and then undoes around a single plot.
+tpar(record = TRUE)
+tinytheme("clean")
+expect_true(tpar("record"))
+tinytheme()
+expect_true(tpar("record"))
+expect_inherits(
+  tinyplot(Sepal.Length ~ Petal.Length, data = iris, theme = "clean"),
+  "recordedtinyplot"
+)
+expect_true(tpar("record"))
+tinyplot(Sepal.Length ~ Petal.Length, data = iris, theme = "default")
+expect_true(tpar("record"))
+tpar(record = NULL)
 dev.off()
 
 # A non-recording device yields an empty plot; warn rather than hand back

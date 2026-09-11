@@ -479,8 +479,8 @@
 #'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
 #'  specified.
 #' @param record (experimental) a logical value indicating whether the plot
-#'   should be recorded and returned as a replayable object (see
-#'   \code{\link[grDevices]{recordPlot}}). Defaults to `FALSE`. Setting to
+#'   should be recorded and returned as a replayable
+#'   \code{\link{recordedtinyplot}} object. Defaults to `FALSE`. Setting to
 #'   `TRUE` allows for assignment and later recall, e.g.
 #'   `myplot = tinyplot(...); myplot`. This behaviour can also be set globally
 #'   via `tpar(record = TRUE)`; an explicit argument here takes precedence.
@@ -502,8 +502,8 @@
 #'
 #' @returns By default, no return value; called for the side effect of producing
 #'   a plot. If `record = TRUE` (or globally via `tpar(record = TRUE)`), the
-#'   plot is instead returned invisibly as a `"recordedplot"` object, which can
-#'   be replayed later; see \code{\link[grDevices]{recordPlot}}.
+#'   plot is instead returned invisibly as a `"recordedtinyplot"` object, which
+#'   can be replayed later; see \code{\link{recordedtinyplot}}.
 #'
 #' @details
 #' Disregarding the enhancements that it supports, `tinyplot` tries as far as
@@ -1933,8 +1933,8 @@ tinyplot.default = function(
   }
   
   if (isTRUE(record)) {
-    rec = recordPlot()
-    # A device that is not recording still yields a well-formed "recordedplot",
+    rec = as_recordedtinyplot(recordPlot())
+    # A device that is not recording still yields a well-formed recording,
     # just an empty one that replays blank. Say so rather than handing back
     # something that silently does nothing.
     if (length(rec[[1]]) == 0L) {

@@ -183,6 +183,9 @@ related to plot layering. See "Bug fixes" below.
     with a flat bar along the baseline) or left undrawn. The default `NULL`
     lets `FUN` decide; see the new "Implicit zeros and empty cells" section of
     `?type_barplot`. (#718 @grantmcdermott)
+  - `type_histogram()` now (correctly) supports mapping `by` grouping along the
+    `x` variable, e.g. `tinyplot(~mpg | mpg, data = mtcars, type = "hist")`.
+    Bar colours map to mean bin values. (#727 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,

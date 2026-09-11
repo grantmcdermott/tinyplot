@@ -376,6 +376,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
+<li>Fixed a bug where consecutive plots with (i) logged axes under (ii) a dynamic theme would error, due to a stale <code>par("xlog")</code>/<code>par("ylog")</code> state. We now avoid this by grabbing the log state directly from the top-level <code>log</code> argument instead. Thanks to <a href="https://github.com/eddelbuettel"><span class="citation" data-cites="eddelbuettel">@eddelbuettel</span></a> for the report. (<a href="https://github.com/grantmcdermott/tinyplot/issues/725">#725</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>type_barplot()</code> receives several consistency improvements and bug fixes:
 <ul>
 <li>Passing a named atomic vector now uses the names as the bar categories, matching base <code>barplot()</code>. (<a href="https://github.com/grantmcdermott/tinyplot/issues/714">#714</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>

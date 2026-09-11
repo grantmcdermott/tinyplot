@@ -78,6 +78,14 @@ tinyplot(
     data = iris
 )
 
+# Special case: `by`==`x`. 
+# Here we colour each bar (bin) according to its position along the x-axis
+tinyplot(
+    ~ Petal.Width | Petal.Width,
+    type = "histogram",
+    data = iris
+)
+
 # Faceted version
 tinyplot(
     ~Petal.Width,

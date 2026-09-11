@@ -41,6 +41,14 @@
 #'     data = iris
 #' )
 #'
+#' # Special case: `by`==`x`.
+#' # Here we colour each bar (bin) according to its position along the x-axis
+#' tinyplot(
+#'     ~ Petal.Width | Petal.Width,
+#'     type = "histogram",
+#'     data = iris
+#' )
+#'
 #' # Faceted version
 #' tinyplot(
 #'     ~Petal.Width,
@@ -101,21 +109,35 @@ data_histogram = function(breaks = "Sturges",
     hright = right
 
     fun = function(settings, .breaks = hbreaks, .freebreaks = hfree.breaks, .freq = hfreq, .right = hright, .drop.zeros = hdrop.zeros, ...) {
-        env2env(settings, environment(), c("palette", "bg", "col", "plot", "datapoints", "ymin", "ymax", "xmin", "xmax", "freq", "ylab", "xlab", "facet", "ribbon.alpha", "by", "null_by", "null_palette"))
+        env2env(
+            settings,
+            environment(),
+            c(
+                "bg", "by", "col", "datapoints", "facet", "freq",
+                "null_by", "null_palette", "palette", "plot", "ribbon.alpha",
+                "x_by", "xlab", "xmax", "xmin", "ylab", "ymax", "ymin"
+            )
+        )
 
         has_weights = !is.null(datapoints[["weights"]])
         if (has_weights) settings$weights_used = TRUE
 
+        # `by == x`: colour each bin by its own position along the x-axis.
+        if (x_by) datapoints$by = ""
+
         hbreaks = ifelse(!sapply(.breaks, is.null), .breaks, "Sturges")
 
         # Multi-group displays fill from the palette at `ribbon.alpha`
-        # transparency via the `ribbon.alpha` keyword. For single-group displays
-        # with a theme palette active we leave `bg = NULL` so the fill tracks the
+        # transparency via the `ribbon.alpha` keyword. The transparency is there
+        # so that overlapping groups show through one another, which `x_by` bins
+        # never do (one group per bin) -- it would only wash out the gradient, so
+        # those fill from the palette outright. For single-group displays with a
+        # theme palette active we leave `bg = NULL` so the fill tracks the
         # resolved border colour (see by_bg), which honours `col.default`. With
         # no theme palette, single-group uses the neutral "lightgray" shared by
         # all single-group area fills (matches base R hist()).
         if (is.null(bg) && !null_by) {
-          bg = ribbon.alpha
+          bg = if (x_by) "by" else ribbon.alpha
         } else if (is.null(bg) && null_by && null_palette && is.null(get_tpar("palette.qualitative", default = NULL))) {
           bg = "lightgray"
         }
@@ -147,7 +169,9 @@ data_histogram = function(breaks = "Sturges",
             }
             freq = if (!is.null(.freq)) .freq else is.null(.freq) && h$equidist
             out = data.frame(
-                by = k$by[1], # already split
+                # `x_by`: one group per bin, valued at the bin's midpoint, so
+                # that the colours track the x-axis (see above)
+                by = if (x_by) h$mids else k$by[1], # already split
                 facet = k$facet[1], # already split
                 ymin = 0,
                 ymax = if (freq) h$counts else h$density,
@@ -169,7 +193,9 @@ data_histogram = function(breaks = "Sturges",
         ymax = datapoints$ymax
         xmin = datapoints$xmin
         xmax = datapoints$xmax
-        by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
+        # `x_by` keeps the per-bin values even if a single bin survives, since
+        # the original `by` vector is no longer the right length (or scale).
+        by = if (!x_by && length(unique(datapoints$by)) == 1) by else datapoints$by
         facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet
         
         # legend customizations

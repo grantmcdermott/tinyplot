@@ -100,3 +100,22 @@ f = function() {
   tinyplot(~Sepal.Length, data = iris, type = "histogram", weights = Petal.Width)
 }
 expect_snapshot_plot(f, label = "hist_weights")
+
+
+# `by == x`: each bin is coloured by its own position along the x-axis, rather
+# than every distinct x value being binned (and overplotted) as a group of its
+# own. (#725)
+f = function() {
+  tinyplot(~mpg | mpg, data = mtcars, type = "hist")
+}
+expect_snapshot_plot(f, label = "hist_by_equals_x")
+
+f = function() {
+  tinyplot(
+    ~Petal.Width | Petal.Width, data = iris,
+    facet = ~Species, facet.args = list(nrow = 1),
+    type = "hist"
+  )
+}
+expect_snapshot_plot(f, label = "hist_by_equals_x_faceted")
+

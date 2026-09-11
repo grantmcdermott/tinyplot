@@ -137,6 +137,12 @@ print.recordedtinyplot = function(x, ...) {
   rec = x
   attr(rec, "tinyplot_state") = NULL
   class(rec) = "recordedplot"
+  # replayPlot() re-executes the recorded par (a grDevices property, not
+  # ours), which would leave a themed plot's cosmetic par on the live device
+  # and leak into later plots. Restored below, once the replay is done. Only
+  # the keys a theme can set are read: the coordinate system must be left as
+  # the replay draws it, so that tinyplot_add() can still layer onto it.
+  pre_par = par(intersect(names(theme_default), base_par_names()))
   replayPlot(rec, ...)
   # Only now adopt the replayed plot as the current one: replaying redraws it,
   # so tinyplot_add() should target it rather than the previous plot.
@@ -156,6 +162,8 @@ print.recordedtinyplot = function(x, ...) {
   } else {
     par("usr")
   }
+  # Undo the leak noted above, mirroring what an ephemeral theme does on exit.
+  par(pre_par)
   return(invisible(x))
 }
 

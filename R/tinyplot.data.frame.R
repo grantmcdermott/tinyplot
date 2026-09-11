@@ -37,7 +37,12 @@
 #'   to disambiguate from `frame.plot`.
 #' @param ... further arguments passed to `tinyplot`.
 #'
-#' @returns No return value, called for the side effect of producing a plot.
+#' @returns By default, no return value; called for the side effect of producing
+#'   a plot. If `record = TRUE` (or globally via `tpar(record = TRUE)`), the
+#'   plot is instead returned invisibly as a `"recordedtinyplot"` object; see
+#'   \code{\link{recordedtinyplot}}. The exception is the pairs-style case
+#'   (more than two columns), which draws a grid of sub-plots and always
+#'   returns `NULL`.
 #'
 #' @examples
 #' ## using tinyplot() with data frames

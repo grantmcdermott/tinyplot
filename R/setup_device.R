@@ -1,5 +1,5 @@
 setup_device = function(settings) {
-  env2env(settings, environment(), c("file", "width", "height"))
+  env2env(settings, environment(), c("file", "width", "height", "record"))
 
   # write to file
   if (!is.null(file)) {
@@ -29,6 +29,10 @@ setup_device = function(settings) {
       svg = svg(filepath, width = filewidth, height = fileheight),
       stop("\nUnsupported file extension. Only '.png', '.jpg', '.pdf', or '.svg' are allowed.\n")
     )
+    # File devices default to displaylist = "inhibit", which would make
+    # recordPlot() return an empty plot. This device is opened and closed by
+    # tinyplot, so enabling it here has no effect on the user's own devices.
+    if (isTRUE(record)) dev.control(displaylist = "enable")
     dop$new = FALSE # catch for some interfaces
     par(dop)
 

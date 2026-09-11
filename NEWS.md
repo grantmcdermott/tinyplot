@@ -138,26 +138,27 @@ related to plot layering. See "Bug fixes" below.
 
 #### Other new features
 
-- New top-level `xaxr` and `yaxr` arguments allow rotating of the x- and y-axis
-  tick labels by arbitrary angles, closing a long-standing feature request
-  (#346). Note that setting one overrides `las` for that axis. Best combined
-  with a dynamic theme, since the plot margins are resized to fit the rotated
-  labels. Also settable via `tpar("x/yaxr")` and thus as part of a `tinytheme`
-  too. (#717 @grantmcdermott)
-- Custom plot types have more control over the surrounding plot machinery, via a
-  new `type_hints` mechanism. A type can declare properties about itself---that
-  it draws its own axes, needs a secondary right-hand axis, uses proportional
-  limits, fills its legend key from `col`, and so on---and **tinyplot** adjusts
-  margins, axis limits and legend keys accordingly. Previously this behaviour
-  was hard-coded against the names of built-in types, so it was unavailable to
-  custom types. See
-  [Advanced customization](https://grantmcdermott.com/tinyplot/vignettes/types.html#type-hints)
-  in the `Types` vignette for the list of supported hints. (#543 @grantmcdermott)
-- New `cex.xaxs` and `cex.yaxs` graphical parameters allow the x- and y-axis
-  tick labels to be sized independently, e.g. `tpar(cex.yaxs = 0.6)` to shrink a
-  long list of category names on the y-axis without also shrinking the x-axis.
-  Both default to `NULL`, in which case the shared `cex.axis` value is used, so
-  existing plots are unaffected. (#677 @grantmcdermott)
+- New top-level `tinyplot()`/`plt()` arguments:
+  - `xaxr` and `yaxr` enable rotating of the x- and y-axis tick labels by
+    arbitrary angles, closing a long-standing feature request (#346). Note that
+    setting one overrides `las` for that axis. Best combined with a dynamic
+    theme, since the plot margins are resized to fit the rotated labels. Also
+    settable globally via `tpar("x/yaxr")` and thus as part of a `tinytheme`
+    too. (#717 @grantmcdermott)
+  - (Experimental) `record` enables recording plots as replayable objects,
+    closing another long-standing feature request (#121). Specifically, setting
+    `record = TRUE` returns a `"recordedtinyplot"` object (see
+    `?recordedtinyplot`), allowing for assignment and later recall, e.g.
+    `myplot = tinyplot(...); myplot`. Also settable globally via
+    `tpar(record = TRUE)`, so that all `tinyplot()` plots are automatically
+    recorded---with potential memory implications for detailed plots with _many_
+    elements. Note that a recorded plot will still render its display on the
+    initialising call if you are using an interactive graphics device. While we 
+    have done our best to vet this new `record` functionality carefully, users
+    should still regard it as experimental. We may change its behaviour
+    (availability) in a future release if we observe undesirable side-effects.
+    Please help us by testing on your own machines and reporting any issues.
+    (#686 @grantmcdermott)
 - Type-specific updates:
   - `type_lines()` and its shortcut equivalents like `"l"` and `"s"` now support
     a _continuous_ `by` variable, drawing a colour gradient along the line
@@ -188,6 +189,20 @@ related to plot layering. See "Bug fixes" below.
     so that tiles meet the panel edge, and also rotates the tick labels against
     their respective axes. Colour fills default to the "tealgrn" sequential
     palette. (#677 @grantmcdermott)
+- Custom plot types have more control over the surrounding plot machinery, via a
+  new `type_hints` mechanism. A type can declare properties about itself---that
+  it draws its own axes, needs a secondary right-hand axis, uses proportional
+  limits, fills its legend key from `col`, and so on---and **tinyplot** adjusts
+  margins, axis limits and legend keys accordingly. Previously this behaviour
+  was hard-coded against the names of built-in types, so it was unavailable to
+  custom types. See
+  [Advanced customization](https://grantmcdermott.com/tinyplot/vignettes/types.html#type-hints)
+  in the `Types` vignette for the list of supported hints. (#543 @grantmcdermott)
+- New `cex.xaxs` and `cex.yaxs` graphical parameters allow the x- and y-axis
+  tick labels to be sized independently, e.g. `tpar(cex.yaxs = 0.6)` to shrink a
+  long list of category names on the y-axis without also shrinking the x-axis.
+  Both default to `NULL`, in which case the shared `cex.axis` value is used, so
+  existing plots are unaffected. (#677 @grantmcdermott)
 
 ### Bug fixes
 

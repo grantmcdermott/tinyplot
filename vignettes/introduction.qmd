@@ -555,25 +555,31 @@ tinyplot(
 )
 ```
 
-## Saving plots
+
+```{r theme_again}
+#| include: false
+tinytheme("clean2")
+```
+
+## Save and replay plots
 
 A final point to note is that **tinyplot** offers convenience features for
-exporting plots to disk. Simply invoke the `file` argument to specify the
-relevant file path (including the extension type). You can customize the output
-dimensions (in inches) via the accompanying `width` and `height`
+saving (and replaying) plots. For example, you can export a plot to disk simply
+by invoking the `file` argument and specifying the relevant file path (including
+the extension type). You can also customize the output
+dimensions (in inches) via the companion `width` and `height`
 arguments.^[The default dimensions are 7x7, with a resolution of 300 DPI.
 However, these too can be customized via the `file.width`, `file.height`, and
 `file.res` parameters in
 [`tpar()`](https://grantmcdermott.com/tinyplot/man/tpar.html).]
 
 ```{r save_plot}
-#| eval: false
 tinyplot(
   Temp ~ Day | Month, data = aq,
   file = "aq.png", width = 8, height = 5
 )
 
-# optional: delete the saved plot
+# optional: delete the saved png
 unlink("aq.png")
 ```
 
@@ -582,6 +588,34 @@ the traditional approach of manually opening an external graphics device, e.g.
 `png()`) is that all of your current graphic settings are automatically carried
 over to the exported file. Feel free to try yourself by setting some global
 graphics parameters via `tpar()` and then using `file` to save a plot.
+
+A related---albeit experimental---feature is the ability to _record_
+plots, keeping them in your session rather than writing them to disk. Pass
+`record = TRUE` and **tinyplot** hands back the plot as an object that you can
+assign, hold onto, and recall whenever you like. As per the example below, you
+can even record a plot that you write to disk and then retrieve it to your
+interactive session later on.
+
+```{r record_plot}
+p = tinyplot(
+  Temp ~ Day | Month, data = aq,
+  file = "aq2.png",
+  record = TRUE   # <-- record plot for later recall
+)
+unlink("aq2.png") # optional: delete the saved png
+
+# <draw more plots>
+
+p                    # replay initial plot (this time in our interactive window)
+plt_add(type = "lm") # add another layer onto it
+```
+
+As noted above, recording and replaying plots is still something of an
+experimental feature, introduced in **tinyplot** v0.8.0. We've made it opt-in
+via an explicit argument for now, although you can also enable it globally for
+your session via `tpar(record = TRUE)`. One caveat is that recording and
+assigning detailed plots with many elements can eventually take up quite a bit
+of memory.
 
 ## Reset theme
 

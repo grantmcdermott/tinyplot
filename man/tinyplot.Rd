@@ -64,6 +64,7 @@ tinyplot(x, ...)
   file = NULL,
   width = NULL,
   height = NULL,
+  record = NULL,
   asp = NA,
   theme = NULL,
   ...
@@ -597,10 +598,10 @@ existing plot without having to repeat arguments.}
 \code{y} are plotted). The \code{draw} argument is primarily useful for adding common
 elements to each facet of a faceted plot, e.g.
 \code{\link[graphics]{abline}} or \code{\link[graphics]{text}}. Note that
-this argument is somewhat experimental and that \emph{no} internal checking is
-done for correctness; the provided argument is simply captured and
-evaluated as-is within \code{tinyplot()} and thus has access to the local
-definition of all variables such as \code{x}, \code{y}, etc. See Examples.}
+\emph{no} internal checking is done for correctness; the provided argument is
+simply captured and evaluated as-is within \code{tinyplot()} and thus has
+access to the local definition of all variables such as \code{x}, \code{y}, etc.
+See Examples.}
 
 \item{empty}{logical indicating whether the interior plot region should be
 left empty. The default is \code{FALSE}. Setting to \code{TRUE} has a similar effect
@@ -651,6 +652,19 @@ graphics windows.}
 \code{width} (above) apply, e.g. will default to \code{tpar("file.height")} if not
 specified.}
 
+\item{record}{(experimental) a logical value indicating whether the plot
+should be recorded and returned as a replayable
+\code{\link{recordedtinyplot}} object. Defaults to \code{FALSE}. Setting to
+\code{TRUE} allows for assignment and later recall, e.g.
+\verb{myplot = tinyplot(...); myplot}. This behaviour can also be set globally
+via \code{tpar(record = TRUE)}; an explicit argument here takes precedence.
+
+Note that recording requires a device with an enabled display list (see
+\code{\link[grDevices]{dev.control}}). Most interactive devices enable this
+behaviour by default, whereas file-based devices do not. However \code{tinyplot}
+automatically enables it for any device that it opens itself via \code{file},
+and further emits a warning if the current device is not recording.}
+
 \item{asp}{the y/xy/x aspect ratio, see \code{plot.window}.}
 
 \item{theme}{keyword string (e.g. \code{"clean"}) or list defining a theme. Passed
@@ -672,7 +686,10 @@ should not be specified in the same call.}
 when extracting the data from \code{formula} and \code{data}.}
 }
 \value{
-No return value, called for side effect of producing a plot.
+By default, no return value; called for the side effect of producing
+a plot. If \code{record = TRUE} (or globally via \code{tpar(record = TRUE)}), the
+plot is instead returned invisibly as a \code{"recordedtinyplot"} object, which
+can be replayed later; see \code{\link{recordedtinyplot}}.
 }
 \description{
 Enhances the base \code{\link[graphics]{plot}} function. Supported features

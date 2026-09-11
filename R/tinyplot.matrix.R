@@ -40,7 +40,7 @@
 #'   titles default to `NA`, since the dimnames label both axes.
 #' @param ... further arguments passed to `tinyplot`.
 #'
-#' @returns No return value, called for the side effect of producing a plot.
+#' @inherit tinyplot return
 #'
 #' @seealso \code{\link[graphics]{matplot}}
 #'

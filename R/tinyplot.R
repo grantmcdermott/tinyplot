@@ -430,10 +430,10 @@
 #'   `y` are plotted). The `draw` argument is primarily useful for adding common
 #'   elements to each facet of a faceted plot, e.g.
 #'   \code{\link[graphics]{abline}} or \code{\link[graphics]{text}}. Note that
-#'   this argument is somewhat experimental and that _no_ internal checking is
-#'   done for correctness; the provided argument is simply captured and
-#'   evaluated as-is within `tinyplot()` and thus has access to the local
-#'   definition of all variables such as `x`, `y`, etc. See Examples.
+#'   _no_ internal checking is done for correctness; the provided argument is
+#'   simply captured and evaluated as-is within `tinyplot()` and thus has
+#'   access to the local definition of all variables such as `x`, `y`, etc.
+#'   See Examples.
 #' @param restore.par a logical value indicating whether the
 #'   \code{\link[graphics]{par}} settings prior to calling `tinyplot` should be
 #'   restored on exit. Defaults to FALSE, which makes it possible to add
@@ -478,6 +478,18 @@
 #' @param height numeric giving the plot height in inches. Same considerations as
 #'  `width` (above) apply, e.g. will default to `tpar("file.height")` if not
 #'  specified.
+#' @param record (experimental) a logical value indicating whether the plot
+#'   should be recorded and returned as a replayable
+#'   \code{\link{recordedtinyplot}} object. Defaults to `FALSE`. Setting to
+#'   `TRUE` allows for assignment and later recall, e.g.
+#'   `myplot = tinyplot(...); myplot`. This behaviour can also be set globally
+#'   via `tpar(record = TRUE)`; an explicit argument here takes precedence.
+#' 
+#'   Note that recording requires a device with an enabled display list (see
+#'   \code{\link[grDevices]{dev.control}}). Most interactive devices enable this
+#'   behaviour by default, whereas file-based devices do not. However `tinyplot`
+#'   automatically enables it for any device that it opens itself via `file`,
+#'   and further emits a warning if the current device is not recording.
 #' @param asp the y/xy/x aspect ratio, see `plot.window`.
 #' @param theme keyword string (e.g. `"clean"`) or list defining a theme. Passed
 #'  on to [`tinytheme`], but reset upon exit so that the theme effect is only
@@ -488,7 +500,10 @@
 #'   All remaining arguments from `...` can be further graphical parameters, see
 #'   \code{\link[graphics]{par}}).
 #'
-#' @returns No return value, called for side effect of producing a plot.
+#' @returns By default, no return value; called for the side effect of producing
+#'   a plot. If `record = TRUE` (or globally via `tpar(record = TRUE)`), the
+#'   plot is instead returned invisibly as a `"recordedtinyplot"` object, which
+#'   can be replayed later; see \code{\link{recordedtinyplot}}.
 #'
 #' @details
 #' Disregarding the enhancements that it supports, `tinyplot` tries as far as
@@ -497,7 +512,7 @@
 #' out existing `plot` calls for `tinyplot` (or its shorthand alias `plt`),
 #' without causing unexpected changes to the output.
 #'
-#' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png svg xy.coords
+#' @importFrom grDevices axisTicks adjustcolor cairo_pdf chull colorRampPalette dev.control dev.cur dev.list dev.off dev.new extendrange hcl.colors hcl.pals jpeg palette palette.colors palette.pals pdf png recordPlot svg xy.coords
 #' @importFrom graphics abline arrows axis Axis axTicks box boxplot grconvertX grconvertY hist lines mtext par plot.default plot.new plot.window points polygon polypath segments rect text title
 #' @importFrom utils modifyList head tail
 #' @importFrom stats na.omit setNames var
@@ -800,6 +815,7 @@ tinyplot.default = function(
     file = NULL,
     width = NULL,
     height = NULL,
+    record = NULL,
     asp = NA,
     theme = NULL,
     ...) {
@@ -816,6 +832,10 @@ tinyplot.default = function(
   par_first = get_saved_par("first")
   if (is.null(par_first)) set_saved_par("first", par())
   
+  # Resolve `record`: an explicit argument wins over the tpar default.
+  if (is.null(record)) record = get_tpar("record", default = FALSE)
+  assert_flag(record, name = "record")
+
   # Validate grid only for simple values; skip for unevaluated calls like grid()
   # which are passed as language objects from tinyplot.formula via substitute(). (#193)
   if (!is.null(grid) && !is.call(grid)) {
@@ -914,6 +934,7 @@ tinyplot.default = function(
     file          = file,
     width         = width,
     height        = height,
+    record        = record,
 
     # deparsed input for use in labels
     by_dep        = deparse1(substitute(by)),
@@ -1910,6 +1931,24 @@ tinyplot.default = function(
       env = getNamespace('tinyplot')
     )
   }
+  
+  if (isTRUE(record)) {
+    rec = as_recordedtinyplot(recordPlot(), flip = isTRUE(settings$flip))
+    # A device that is not recording still yields a well-formed recording,
+    # just an empty one that replays blank. Say so rather than handing back
+    # something that silently does nothing.
+    if (length(rec[[1]]) == 0L) {
+      warning(
+        "`record = TRUE` but the current device is not recording, so the ",
+        "returned plot is empty and will replay blank. Call ",
+        "dev.control(displaylist = \"enable\") on the device first.",
+        call. = FALSE
+      )
+    }
+    return(invisible(rec))
+  }
+
+  return(invisible(NULL))
 
 }
 

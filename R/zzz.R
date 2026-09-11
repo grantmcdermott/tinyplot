@@ -78,6 +78,7 @@
     "oxaxis",
     "oyaxis",
     "pch",
+    "record",
     "rev_x",
     "rev_y",
     "ribbon.alpha",

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>type_tile – tinyplot</title>
+<title>recordedtinyplot – tinyplot</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -213,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/type_abline.html">Types</a></li><li class="breadcrumb-item"><a href="../man/type_tile.html">type_heatmap</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/draw_legend.html">Utilities</a></li><li class="breadcrumb-item"><a href="../man/recordedtinyplot.html">recordedtinyplot</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -302,13 +302,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Types</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/type_abline.html" class="sidebar-item-text sidebar-link">
@@ -371,7 +371,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/type_tile.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_heatmap</span></a>
   </div>
 </li>
@@ -523,13 +523,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Utilities</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/draw_legend.html" class="sidebar-item-text sidebar-link">
@@ -544,7 +544,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/recordedtinyplot.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/recordedtinyplot.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">recordedtinyplot</span></a>
   </div>
 </li>
@@ -572,12 +572,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#tile-and-heatmap-plot-types" id="toc-tile-and-heatmap-plot-types" class="nav-link active" data-scroll-target="#tile-and-heatmap-plot-types">Tile and heatmap plot types</a>
+  <li><a href="#recorded-tinyplot-objects" id="toc-recorded-tinyplot-objects" class="nav-link active" data-scroll-target="#recorded-tinyplot-objects">Recorded tinyplot objects</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
+  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
@@ -585,28 +586,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/type_abline.html">Types</a></li><li class="breadcrumb-item"><a href="../man/type_tile.html">type_heatmap</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/draw_legend.html">Utilities</a></li><li class="breadcrumb-item"><a href="../man/recordedtinyplot.html">recordedtinyplot</a></li></ol></nav></header>
 
 
 
 
-<section id="tile-and-heatmap-plot-types" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="tile-and-heatmap-plot-types">Tile and heatmap plot types</h2>
+<section id="recorded-tinyplot-objects" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="recorded-tinyplot-objects">Recorded tinyplot objects</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Type functions for tile plots, i.e.&nbsp;a grid of rectangles whose fill colour encodes a third variable. <code>type_tile()</code> is the default building block for these gridded shapes, drawing the values exactly as supplied. It underpins heatmaps, correlation matrices, calendar plots, confusion matrices, and similar displays.</p>
-<p><code>type_heatmap()</code> is a specialised case that first rescales the fill values within each category of one axis. Reach for it when those values are not already on a common scale.</p>
+<p>Objects of class <code>recordedtinyplot</code> are returned by <code>tinyplot(…, record = TRUE)</code>. They are a thin wrapper around <code>recordPlot</code>—thus conferring the same replay functionality—but with the initializing plot call and state added, so that recorded (tiny)plots play nicely with <code>tinyplot_add()</code> and friends.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_tile(width = 1, height = 1)
+<pre><code class="language-R">## S3 method for class 'recordedtinyplot'
+print(x, ...)
 
-type_heatmap(
-  width = 1,
-  height = 1,
-  scale = c("none", "x", "y"),
-  method = c("zscore", "rescale")
-)
+## S3 method for class 'recordedtinyplot'
+str(object, ...)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -614,209 +611,54 @@ type_heatmap(
 <table role="presentation">
 <tbody><tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="width">width</code>, <code id="height">height</code>
+<code id="x">x</code>
 </td>
 <td>
-Numeric tile dimensions in data units. Both default to <code>1</code>, which produces contiguous tiles on categorical (or unit-spaced numeric) axes. Values below <code>1</code> inset the tiles, leaving gaps between them. Recycled across tiles, so a vector may be used for variable sizes.
+a <code>recordedtinyplot</code> object, returned by a <code>tinyplot(…, record = TRUE)</code> call.
 </td>
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="scale">scale</code>
+<code id="...">…</code>
 </td>
 <td>
-<p>Character. Should the <code>by</code> (fill) values be scaled <em>within</em> each category of one axis? One of <code>“none”</code> (default, i.e.&nbsp;the raw values are used), <code>“x”</code>, or <code>“y”</code>. Scaling is what makes a raw matrix legible when its variables span very different magnitudes: left alone, the largest-magnitude column monopolises the entire colour ramp. See Examples.</p>
-<p>Note that <code>“x”</code> and <code>“y”</code> refer to the axes <em>as written in the formula</em>, i.e.&nbsp;before any <code>flip = TRUE</code> is applied. We deliberately avoid base R’s <code>“row”</code>/<code>“column”</code> wording, since a tile’s position depends on which variable the user placed where in the formula, so there is no fixed matrix orientation to refer to.</p>
-Rescaling is computed independently per facet; pooling across facets would pin a panel on a different scale to one end of the ramp and lose its internal structure. Since rescaled values are no longer in the units of the <code>by</code> variable, the legend title is annotated accordingly.
+further arguments passed to <code>replayPlot</code>.
 </td>
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="method">method</code>
+<code id="object">object</code>
 </td>
 <td>
-<p>Character. How should the values be rescaled, if <code>scale</code> is not <code>“none”</code>? Either <code>“zscore”</code> (default) to centre each group and divide by its standard deviation, or <code>“rescale”</code> to map each group onto the unit interval [0, 1]. Ignored when <code>scale = “none”</code>.</p>
-<p><code>“zscore”</code> matches base R’s <code>heatmap</code> and keeps values comparable across groups, since <code>-1</code> means "one standard deviation below this group’s mean" everywhere. <code>“rescale”</code> instead pins every group’s minimum and maximum to the ends of the colour ramp, which uses the palette more fully but makes the endpoints an artefact of the transform rather than a feature of the data.</p>
-Groups with no spread—a constant column, or a single tile—would divide by zero, so they are set to the midpoint of the target range (<code>0.5</code> and <code>0</code> respectively) and a warning is emitted.
+a <code>recordedtinyplot</code> object.
 </td>
 </tr>
 </tbody></table>
 </section>
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>Tile plots are specified as <code>z ~ x</code> with the fill variable passed as the <code>by</code> grouping, i.e.&nbsp;<code>tinyplot(y ~ x | z, type = “tile”)</code>. The <code>x</code> and <code>y</code> variables may be factors, characters, or numerics; the <code>by</code> variable supplies the fill and will typically be numeric, yielding a continuous colour gradient and colourbar legend. Omitting <code>by</code> leaves the tiles unfilled, since there is nothing for the fill to encode; pass an explicit <code>fill</code> (or <code>bg</code>) if you want a uniform colour in that case.</p>
-<p>Unlike the closely-related <code>type_rect</code>, which requires explicit <code>xmin</code>/<code>xmax</code>/<code>ymin</code>/<code>ymax</code> bounds, <code>type_tile()</code> derives the tile bounds for you: each tile is centred on its <code>x</code>/<code>y</code> position and extends <code>width/2</code> and <code>height/2</code> in each direction. Categorical axes are converted to consecutive integer positions and the axis tick labels are taken from the factor levels automatically.</p>
-<p>Explicit bounds still take precedence. Passing any of <code>xmin</code>, <code>xmax</code>, <code>ymin</code>, or <code>ymax</code> leaves that dimension untouched, which is useful for irregular or unequal-width tiles (e.g.&nbsp;binned continuous data). Bounds may be given for one axis while the other is derived.</p>
-<p>Note that tiles are opaque and drawn edge-to-edge, so the default axis padding and grid lines of most themes are redundant (and the grid is hidden behind the tiles in any case). We therefore ship a dedicated <code>“heatmap”</code> theme that removes the padding and grid, rotates the tick labels, and switches to a sequential palette. See <code>tinytheme()</code> and the Examples.</p>
-<p><code>type_heatmap()</code>’s <code>scale</code> argument is the analogue of the <code>scale</code> argument in base R’s <code>heatmap</code>, and like the latter it z-scores along the chosen margin by default. Pass <code>method = “rescale”</code> to map each group onto the unit [0, 1] interval instead.</p>
-<p><code>type_heatmap()</code> also reverses the y-axis by default, so that the first row sits at the top, matching how one reads a matrix (and again cf.&nbsp;base R’s <code>heatmap()</code> and <code>image</code>). Pass an explicit <code>ylim</code> to override. <code>type_tile()</code> makes no such adjustment, since it draws the values exactly as supplied.</p>
-<p>Either way, note that scaling along a margin necessarily discards the <em>relative</em> spread of each group: a narrow-range column will occupy as much of the colour ramp as a wide-range one, since both are divided by their own measure of spread. That is the price of making a matrix of incomparable units legible; use <code>scale = “none”</code> (or <code>type_tile()</code>) when preserving cross-group magnitudes matters more.</p>
+<p>Recording requires a device whose display list is enabled (see <code>dev.control</code>); without one there is nothing to record and the returned plot will replay blank. Interactive devices—the plot pane of an IDE, say—typically enable it by default, whereas file-based devices (<code>png</code>, <code>pdf</code>, <code>svg</code>, …) do not. <code>tinyplot()</code> enables it for any device that it opens itself via the <code>file</code> argument, and warns if the current device is not recording.</p>
+<p>Printing a recorded plot—either explicitly with <code>print()</code>, or simply by evaluating it at the console—is what restores the initializing call, so that a subsequent <code>tinyplot_add()</code> layers onto it. Calling <code>replayPlot()</code> on the object instead redraws it just as it would any other recording, but leaves the current plot context untouched; layering after that route targets whichever plot was drawn last.</p>
+<p>This class is experimental, as is the <code>record</code> argument that produces it.</p>
+</section>
+<section id="value" class="level3">
+<h3 class="anchored" data-anchor-id="value">Value</h3>
+<p><code>print()</code> replays the plot and returns <code>x</code> invisibly.</p>
 </section>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p><code>type_rect</code> for the lower-level rectangle type that <code>type_tile()</code> builds on, and <code>tinytheme()</code> for the companion <code>“heatmap”</code> theme.</p>
+<p><code>recordPlot</code> and <code>replayPlot</code>, which this class wraps and defers to for the actual recording and replaying. <code>dev.control</code> for enabling a device’s display list, without which there is nothing to record.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinyplot"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># It is recommended to use the dedicated "heatmap" theme for tile plots</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>(<span class="st">"heatmap"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## type_tile ----</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation matrix of the base `attitude` dataset in "long" form.</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>catt <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(<span class="fu">cor</span>(attitude)), <span class="at">responseName =</span> <span class="st">"Correlation"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Var1 <span class="sc">~</span> Var2 <span class="sc">|</span> Correlation, <span class="at">data =</span> catt, <span class="at">type =</span> <span class="st">"tile"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fancier version where we reverse the y-axis (to mimic the usual correlation</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># matrix layout), add white borders around each tile, and suppress the legend</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># but layer on the values as text</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  Var1 <span class="sc">~</span> Var2 <span class="sc">|</span> Correlation, <span class="at">data =</span> catt,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"tile"</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"white"</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Correlation matrix of base attitude dataset"</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="st">"rev"</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"text"</span>, <span class="at">labels =</span> <span class="fu">round</span>(catt<span class="sc">$</span>Correlation, <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pass scaled tile widths and heights through type_tile() for a gridded look</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  Var1 <span class="sc">~</span> Var2 <span class="sc">|</span> Correlation, <span class="at">data =</span> catt,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_tile</span>(<span class="at">width =</span> <span class="fl">0.9</span>, <span class="at">height =</span> <span class="fl">0.9</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># It doesn't really work for this example, but you can easily switch to a</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># diverging palettes if it makes sense for your data</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  Var1 <span class="sc">~</span> Var2 <span class="sc">|</span> Correlation, <span class="at">data =</span> catt,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_tile</span>(<span class="at">width =</span> <span class="fl">0.9</span>, <span class="at">height =</span> <span class="fl">0.9</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"tropic"</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Numeric axes work too, e.g. a (reshaped long) data.frame of volcano heights</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>volc <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x         =</span> <span class="fu">as.vector</span>(<span class="fu">row</span>(volcano)),</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y         =</span> <span class="fu">as.vector</span>(<span class="fu">col</span>(volcano)),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation =</span> <span class="fu">as.vector</span>(volcano)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="sc">|</span> elevation, <span class="at">data =</span> volc,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"tile"</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="st">"void"</span>, <span class="co"># void theme looks better with this numeric example</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Maunga Whau volcano"</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## type_heatmap ----</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Raw data matrices are usually dominated by their largest-magnitude column.</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># `type_heatmap()` can rescale within each column to make the rest legible.</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(<span class="fu">as.matrix</span>(mtcars)))</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># first, the unscaled version: only `disp` and `hp` are visible</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  Var1 <span class="sc">~</span> Var2 <span class="sc">|</span> Freq, <span class="at">data =</span> mt,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"heatmap"</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and now scaled within each x variable (i.e., column). The default is to</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># z-score, matching base R's `heatmap(scale = "column")`.</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  Var1 <span class="sc">~</span> Var2 <span class="sc">|</span> Freq, <span class="at">data =</span> mt,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_heatmap</span>(<span class="at">scale =</span> <span class="st">"x"</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `method = "rescale"` maps each column onto [0, 1] instead. This uses the</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># colour ramp more fully, at the cost of pinning every column's min and max to</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># the same two colours.</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  Var1 <span class="sc">~</span> Var2 <span class="sc">|</span> Freq, <span class="at">data =</span> mt,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_heatmap</span>(<span class="at">scale =</span> <span class="st">"x"</span>, <span class="at">method =</span> <span class="st">"rescale"</span>),</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="cn">NA</span>, <span class="at">ylab =</span> <span class="cn">NA</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">## tips ----</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># tip 1: use tinyplot.matrix() directly to avoid reshaping</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="fu">as.matrix</span>(mtcars), <span class="at">type =</span> <span class="fu">type_heatmap</span>(<span class="at">scale =</span> <span class="st">"x"</span>), <span class="at">col =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tip 2: use per-axis tick label scaling (cex) for dense heatmaps</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="fu">as.matrix</span>(mtcars), <span class="at">type =</span> <span class="fu">type_heatmap</span>(<span class="at">scale =</span> <span class="st">"x"</span>), <span class="at">col =</span> <span class="st">"white"</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">theme =</span> <span class="fu">list</span>(<span class="st">"heatmap"</span>, <span class="at">cex.yaxs =</span> <span class="fl">0.75</span>, <span class="at">cex.xaxs =</span> <span class="fl">1.25</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="type_tile_files/figure-html/unnamed-chunk-1-10.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## restore the default theme</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="fu">tinyplot</span>(Sepal.Length <span class="sc">~</span> Petal.Length <span class="sc">|</span> Species, <span class="at">data =</span> iris,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">record =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)  <span class="co"># some other plot</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>p               <span class="co"># replay, restoring plot context</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>)  <span class="co"># layers onto p, not onto the 1:10 plot</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 

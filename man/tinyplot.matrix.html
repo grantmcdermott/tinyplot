@@ -544,6 +544,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/recordedtinyplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recordedtinyplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/tinylabel.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tinylabel</span></a>
   </div>
@@ -665,7 +671,7 @@ further arguments passed to <code>tinyplot</code>.
 </section>
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>No return value, called for the side effect of producing a plot.</p>
+<p>By default, no return value; called for the side effect of producing a plot. If <code>record = TRUE</code> (or globally via <code>tpar(record = TRUE)</code>), the plot is instead returned invisibly as a <code>“recordedtinyplot”</code> object, which can be replayed later; see <code>recordedtinyplot</code>.</p>
 </section>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>

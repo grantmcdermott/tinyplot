@@ -225,7 +225,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#more-plot-types" id="toc-more-plot-types" class="nav-link" data-scroll-target="#more-plot-types">More plot types</a></li>
   <li><a href="#facets" id="toc-facets" class="nav-link" data-scroll-target="#facets">Facets</a></li>
   <li><a href="#layers" id="toc-layers" class="nav-link" data-scroll-target="#layers">Layers</a></li>
-  <li><a href="#saving-plots" id="toc-saving-plots" class="nav-link" data-scroll-target="#saving-plots">Saving plots</a></li>
+  <li><a href="#save-and-replay-plots" id="toc-save-and-replay-plots" class="nav-link" data-scroll-target="#save-and-replay-plots">Save and replay plots</a></li>
   <li><a href="#reset-theme" id="toc-reset-theme" class="nav-link" data-scroll-target="#reset-theme">Reset theme</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
@@ -755,26 +755,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="saving-plots" class="level2">
-<h2 class="anchored" data-anchor-id="saving-plots">Saving plots</h2>
-<p>A final point to note is that <strong>tinyplot</strong> offers convenience features for exporting plots to disk. Simply invoke the <code>file</code> argument to specify the relevant file path (including the extension type). You can customize the output dimensions (in inches) via the accompanying <code>width</code> and <code>height</code> arguments.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<section id="save-and-replay-plots" class="level2">
+<h2 class="anchored" data-anchor-id="save-and-replay-plots">Save and replay plots</h2>
+<p>A final point to note is that <strong>tinyplot</strong> offers convenience features for saving (and replaying) plots. For example, you can export a plot to disk simply by invoking the <code>file</code> argument and specifying the relevant file path (including the extension type). You can also customize the output dimensions (in inches) via the companion <code>width</code> and <code>height</code> arguments.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq,</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"aq.png"</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span></span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co"># optional: delete the saved plot</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co"># optional: delete the saved png</span></span>
 <span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="st">"aq.png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Alongside convenience, the benefit of this native <strong>tinyplot</strong> approach (versus the traditional approach of manually opening an external graphics device, e.g. <code>png()</code>) is that all of your current graphic settings are automatically carried over to the exported file. Feel free to try yourself by setting some global graphics parameters via <code>tpar()</code> and then using <code>file</code> to save a plot.</p>
+<p>A related—albeit experimental—feature is the ability to <em>record</em> plots, keeping them in your session rather than writing them to disk. Pass <code>record = TRUE</code> and <strong>tinyplot</strong> hands back the plot as an object that you can assign, hold onto, and recall whenever you like. As per the example below, you can even record a plot that you write to disk and then retrieve it to your interactive session later on.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="fu">tinyplot</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"aq2.png"</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">record =</span> <span class="cn">TRUE</span>   <span class="co"># &lt;-- record plot for later recall</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="st">"aq2.png"</span>) <span class="co"># optional: delete the saved png</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># &lt;draw more plots&gt;</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>p                    <span class="co"># replay initial plot (this time in our interactive window)</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plt_add</span>(<span class="at">type =</span> <span class="st">"lm"</span>) <span class="co"># add another layer onto it</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="introduction_files/figure-html/record_plot-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As noted above, recording and replaying plots is still something of an experimental feature, introduced in <strong>tinyplot</strong> v0.8.0. We’ve made it opt-in via an explicit argument for now, although you can also enable it globally for your session via <code>tpar(record = TRUE)</code>. One caveat is that recording and assigning detailed plots with many elements can eventually take up quite a bit of memory.</p>
 </section>
 <section id="reset-theme" class="level2">
 <h2 class="anchored" data-anchor-id="reset-theme">Reset theme</h2>
 <p>Don’t forget to reset the plot theme.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reset theme to default</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reset theme to default</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytheme</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="conclusion" class="level2">

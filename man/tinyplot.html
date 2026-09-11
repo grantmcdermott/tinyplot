@@ -544,6 +544,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/recordedtinyplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recordedtinyplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/tinylabel.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tinylabel</span></a>
   </div>
@@ -649,6 +655,7 @@ tinyplot(
   file = NULL,
   width = NULL,
   height = NULL,
+  record = NULL,
   asp = NA,
   theme = NULL,
   ...
@@ -1313,7 +1320,7 @@ logical. If TRUE, then elements are added to the current plot rather than drawin
 <code id="draw">draw</code>
 </td>
 <td>
-a function that draws directly on the plot canvas (before <code>x</code> and <code>y</code> are plotted). The <code>draw</code> argument is primarily useful for adding common elements to each facet of a faceted plot, e.g. <code>abline</code> or <code>text</code>. Note that this argument is somewhat experimental and that <em>no</em> internal checking is done for correctness; the provided argument is simply captured and evaluated as-is within <code>tinyplot()</code> and thus has access to the local definition of all variables such as <code>x</code>, <code>y</code>, etc. See Examples.
+a function that draws directly on the plot canvas (before <code>x</code> and <code>y</code> are plotted). The <code>draw</code> argument is primarily useful for adding common elements to each facet of a faceted plot, e.g. <code>abline</code> or <code>text</code>. Note that <em>no</em> internal checking is done for correctness; the provided argument is simply captured and evaluated as-is within <code>tinyplot()</code> and thus has access to the local definition of all variables such as <code>x</code>, <code>y</code>, etc. See Examples.
 </td>
 </tr>
 <tr>
@@ -1358,6 +1365,15 @@ numeric giving the plot height in inches. Same considerations as <code>width</co
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="record">record</code>
+</td>
+<td>
+<p>(experimental) a logical value indicating whether the plot should be recorded and returned as a replayable <code>recordedtinyplot</code> object. Defaults to <code>FALSE</code>. Setting to <code>TRUE</code> allows for assignment and later recall, e.g. <code style="white-space: pre;">myplot = tinyplot(…); myplot</code>. This behaviour can also be set globally via <code>tpar(record = TRUE)</code>; an explicit argument here takes precedence.</p>
+Note that recording requires a device with an enabled display list (see <code>dev.control</code>). Most interactive devices enable this behaviour by default, whereas file-based devices do not. However <code>tinyplot</code> automatically enables it for any device that it opens itself via <code>file</code>, and further emits a warning if the current device is not recording.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="asp">asp</code>
 </td>
 <td>
@@ -1396,7 +1412,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 </section>
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>No return value, called for side effect of producing a plot.</p>
+<p>By default, no return value; called for the side effect of producing a plot. If <code>record = TRUE</code> (or globally via <code>tpar(record = TRUE)</code>), the plot is instead returned invisibly as a <code>“recordedtinyplot”</code> object, which can be replayed later; see <code>recordedtinyplot</code>.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>

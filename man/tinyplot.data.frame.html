@@ -544,6 +544,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/recordedtinyplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recordedtinyplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/tinylabel.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tinylabel</span></a>
   </div>
@@ -658,7 +664,7 @@ further arguments passed to <code>tinyplot</code>.
 </section>
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>No return value, called for the side effect of producing a plot.</p>
+<p>By default, no return value; called for the side effect of producing a plot. If <code>record = TRUE</code> (or globally via <code>tpar(record = TRUE)</code>), the plot is instead returned invisibly as a <code>“recordedtinyplot”</code> object; see <code>recordedtinyplot</code>. The exception is the pairs-style case (more than two columns), which draws a grid of sub-plots and always returns <code>NULL</code>.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>

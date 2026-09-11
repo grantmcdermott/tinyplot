@@ -544,6 +544,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/recordedtinyplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recordedtinyplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/tinylabel.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tinylabel</span></a>
   </div>
@@ -746,6 +752,9 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 </li>
 <li>
 <p><code>palette.sequential</code>: Palette for sequential colors. See the <code>palette</code> argument in <code>?tinyplot</code>.</p>
+</li>
+<li>
+<p><code>record</code>: (experimental) Logical indicating whether <code>tinyplot()</code> should record plots and return them as replayable <code>recordedtinyplot</code> objects. Defaults to <code>NULL</code>, which is equivalent to <code>FALSE</code>. Setting to <code>TRUE</code> allows for assignment and later recall, e.g.&nbsp;<code style="white-space: pre;">myplot = tinyplot(…); myplot</code>. Sets the default for the <code>record</code> argument of <code>tinyplot()</code>, which takes precedence. Note that recording requires a device with an enabled display list (see <code>dev.control</code>). Most interactive devices enable this behaviour by default, whereas file-based devices do not. However <code>tinyplot()</code> automatically enables it for any device that it opens itself via <code>file</code>, and further emits a warning if the current device is not recording.</p>
 </li>
 <li>
 <p><code>ribbon.alpha</code>: Numeric factor in the range <code style="white-space: pre;">[0,1]</code> for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is <code>0.2</code>.</p>

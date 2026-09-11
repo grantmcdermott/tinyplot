@@ -154,6 +154,8 @@ website:
               file: man/draw_legend.qmd
             - text: get_saved_par
               file: man/get_saved_par.qmd
+            - text: recordedtinyplot
+              file: man/recordedtinyplot.qmd
             # - text: tinyAxis
             #   file: man/tinyAxis.qmd
             - text: tinylabel

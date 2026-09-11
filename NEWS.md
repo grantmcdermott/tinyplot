@@ -147,8 +147,8 @@ related to plot layering. See "Bug fixes" below.
     too. (#717 @grantmcdermott)
   - (Experimental) `record` enables recording plots as replayable objects,
     closing another long-standing feature request (#121). Specifically, setting
-    `record = TRUE` returns a `"recordedplot"` object (see
-    `?grDevices::recordPlot`), allowing for assignment and later recall, e.g.
+    `record = TRUE` returns a `"recordedtinyplot"` object (see
+    `?recordedtinyplot`), allowing for assignment and later recall, e.g.
     `myplot = tinyplot(...); myplot`. Also settable globally via
     `tpar(record = TRUE)`, so that all `tinyplot()` plots are automatically
     recorded---with potential memory implications for detailed plots with _many_

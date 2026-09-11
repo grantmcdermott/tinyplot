@@ -25,9 +25,9 @@
 Objects of class \code{recordedtinyplot} are returned by
 \code{tinyplot(..., record = TRUE)}. They are a thin wrapper around
 \code{\link[grDevices]{recordPlot}}---thus conferring the same replay
-functionality via \code{\link[grDevices]{replayPlot}}---but with the
-initializing plot call and state added, so that recorded (tiny)plots play
-nicely with \code{\link{tinyplot_add}()} and friends.
+functionality---but with the initializing plot call and state added, so that
+recorded (tiny)plots play nicely with \code{\link{tinyplot_add}()} and
+friends.
 }
 \details{
 Recording requires a device whose display list is enabled (see
@@ -37,6 +37,13 @@ plot pane of an IDE, say---typically enable it by default, whereas
 file-based devices (\code{png}, \code{pdf}, \code{svg}, ...) do not. \code{tinyplot()} enables
 it for any device that it opens itself via the \code{file} argument, and warns
 if the current device is not recording.
+
+Printing a recorded plot---either explicitly with \code{print()}, or simply by
+evaluating it at the console---is what restores the initializing call, so
+that a subsequent \code{\link{tinyplot_add}()} layers onto it. Calling
+\code{\link[grDevices]{replayPlot}()} on the object instead redraws it
+just as it would any other recording, but leaves the current plot context
+untouched; layering after that route targets whichever plot was drawn last.
 
 This class is experimental, as is the \code{record} argument that produces it.
 }

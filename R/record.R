@@ -71,8 +71,11 @@ restore_record_state = function(state) {
 # Wrap a recordedplot, stashing the state alongside it. The result still
 # inherits from "recordedplot", so replayPlot() and everything else that
 # expects a bare recording keep working.
-as_recordedtinyplot = function(rec) {
-  attr(rec, "tinyplot_state") = capture_record_state()
+as_recordedtinyplot = function(rec, flip = FALSE) {
+  state = capture_record_state()
+  # Needed to recompute usr_orig on replay, below.
+  state[["flip"]] = isTRUE(flip)
+  attr(rec, "tinyplot_state") = state
   class(rec) = c("recordedtinyplot", "recordedplot")
   return(rec)
 }
@@ -83,9 +86,9 @@ as_recordedtinyplot = function(rec) {
 #' @description Objects of class `recordedtinyplot` are returned by
 #' `tinyplot(..., record = TRUE)`. They are a thin wrapper around
 #' \code{\link[grDevices]{recordPlot}}---thus conferring the same replay
-#' functionality via \code{\link[grDevices]{replayPlot}}---but with the
-#' initializing plot call and state added, so that recorded (tiny)plots play
-#' nicely with \code{\link{tinyplot_add}()} and friends.
+#' functionality---but with the initializing plot call and state added, so that
+#' recorded (tiny)plots play nicely with \code{\link{tinyplot_add}()} and
+#' friends.
 #'
 #' @param x a `recordedtinyplot` object, returned by a
 #' `tinyplot(..., record = TRUE)` call.
@@ -100,6 +103,13 @@ as_recordedtinyplot = function(rec) {
 #' file-based devices (`png`, `pdf`, `svg`, ...) do not. `tinyplot()` enables
 #' it for any device that it opens itself via the `file` argument, and warns
 #' if the current device is not recording.
+#'
+#' Printing a recorded plot---either explicitly with `print()`, or simply by
+#' evaluating it at the console---is what restores the initializing call, so
+#' that a subsequent \code{\link{tinyplot_add}()} layers onto it. Calling
+#' \code{\link[grDevices]{replayPlot}()} on the object instead redraws it
+#' just as it would any other recording, but leaves the current plot context
+#' untouched; layering after that route targets whichever plot was drawn last.
 #'
 #' This class is experimental, as is the `record` argument that produces it.
 #'
@@ -130,7 +140,22 @@ print.recordedtinyplot = function(x, ...) {
   replayPlot(rec, ...)
   # Only now adopt the replayed plot as the current one: replaying redraws it,
   # so tinyplot_add() should target it rather than the previous plot.
-  restore_record_state(attr(x, "tinyplot_state"))
+  state = attr(x, "tinyplot_state")
+  restore_record_state(state)
+  # align_layer() validates that a layer is being added to the plot it thinks
+  # is current, by comparing usr_orig/dev_orig against the live device. Those
+  # describe whichever plot was drawn last, which after a replay is the
+  # *intervening* plot, so the comparison fails and categorical layers silently
+  # skip alignment. Recompute them from the plot we just drew. Note we derive
+  # these from the live device rather than restoring the recorded values: the
+  # recording may come from a device that no longer exists (`file = `), and
+  # restoring its par leaves the current device inconsistent.
+  .tinyplot_env[["dev_orig"]] = dev.cur()
+  .tinyplot_env[["usr_orig"]] = if (isTRUE(state[["flip"]])) {
+    par("usr")[c(3, 4, 1, 2)]
+  } else {
+    par("usr")
+  }
   return(invisible(x))
 }
 

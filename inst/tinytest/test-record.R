@@ -105,33 +105,40 @@ if (requireNamespace("svglite", quietly = TRUE)) {
   unlink(c(f_native, f_replay))
 }
 
-# The point of the wrapper: replaying restores plot context, so a subsequent
+# The point of the wrapper: replaying restores plot context, so a following
 # tinyplot_add() layers onto the replayed plot rather than whichever plot was
-# drawn most recently.
+# drawn most recently. Reordered categories make this a strict test -- it also
+# covers align_layer(), which validates against usr_orig/dev_orig and so needs
+# those refreshed on replay rather than left describing the intervening plot.
 if (requireNamespace("svglite", quietly = TRUE)) {
+  d1 = data.frame(g = factor(c("a", "b", "c")), y = c(1, 2, 3))
+  d2 = data.frame(
+    g = factor(c("a", "b", "c"), levels = c("c", "b", "a")),
+    y = c(1.5, 2.5, 3.5)
+  )
   f_ref = tempfile(fileext = ".svg")
-  f_test = tempfile(fileext = ".svg")
+  f_rep = tempfile(fileext = ".svg")
 
   svglite::svglite(f_ref, width = 7, height = 7)
-  tinyplot(dist ~ speed, data = cars)
-  tinyplot_add(type = "lm")
+  tinyplot(y ~ g, data = d1)
+  tinyplot_add(y ~ g, data = d2, col = "red")
   dev.off()
 
   svglite::svglite(tempfile(fileext = ".svg"), width = 7, height = 7)
   dev.control(displaylist = "enable")
-  rec = tinyplot(dist ~ speed, data = cars, record = TRUE)
-  tinyplot(1:10) # intervening plot: without the wrapper, add() would target this
+  rec = tinyplot(y ~ g, data = d1, record = TRUE)
+  tinyplot(1:10) # intervening plot: leaves usr_orig describing *this* plot
   dev.off()
 
-  svglite::svglite(f_test, width = 7, height = 7)
+  svglite::svglite(f_rep, width = 7, height = 7)
   print(rec)
-  tinyplot_add(type = "lm")
+  tinyplot_add(y ~ g, data = d2, col = "red")
   dev.off()
 
   ref = readLines(f_ref, warn = FALSE)
   expect_true(length(ref) > 10L)
-  expect_identical(readLines(f_test, warn = FALSE), ref)
-  unlink(c(f_ref, f_test))
+  expect_identical(readLines(f_rep, warn = FALSE), ref)
+  unlink(c(f_ref, f_rep))
 }
 
 tpar(record = NULL)

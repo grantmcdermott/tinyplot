@@ -1933,7 +1933,7 @@ tinyplot.default = function(
   }
   
   if (isTRUE(record)) {
-    rec = as_recordedtinyplot(recordPlot())
+    rec = as_recordedtinyplot(recordPlot(), flip = isTRUE(settings$flip))
     # A device that is not recording still yields a well-formed recording,
     # just an empty one that replays blank. Say so rather than handing back
     # something that silently does nothing.

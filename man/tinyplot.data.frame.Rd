@@ -39,8 +39,10 @@ to disambiguate from \code{frame.plot}.}
 \value{
 By default, no return value; called for the side effect of producing
 a plot. If \code{record = TRUE} (or globally via \code{tpar(record = TRUE)}), the
-plot is instead returned invisibly as a \code{"recordedtinyplot"} object, which
-can be replayed later; see \code{\link{recordedtinyplot}}.
+plot is instead returned invisibly as a \code{"recordedtinyplot"} object; see
+\code{\link{recordedtinyplot}}. The exception is the pairs-style case
+(more than two columns), which draws a grid of sub-plots and always
+returns \code{NULL}.
 }
 \description{
 Convenience interface for visualizing

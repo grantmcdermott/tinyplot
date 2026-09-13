@@ -628,7 +628,9 @@ tinyplot(
   xaxt = NULL,
   yaxt = NULL,
   xaxs = NULL,
+  xpad = NULL,
   yaxs = NULL,
+  ypad = NULL,
   xaxb = NULL,
   yaxb = NULL,
   xaxl = NULL,
@@ -1135,6 +1137,14 @@ character specifying the type of x-axis and y-axis, respectively. See <code>axes
 </td>
 <td>
 character specifying the style of the interval calculation used for the x-axis and y-axis, respectively. See <code>par</code> for the possible values.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="xpad">xpad</code>, <code id="ypad">ypad</code>
+</td>
+<td>
+numeric specifying how much padding, as a fraction of the data range, should be added to each end of the axes. Defaults to <code>NULL</code>, in which case behaviour depends on the value of <code>x/yaxs</code>. In most cases, this will translate to a value of <code>0.04</code>, i.e.&nbsp;4% padding on each end (see <code>par</code>).
 </td>
 </tr>
 <tr>

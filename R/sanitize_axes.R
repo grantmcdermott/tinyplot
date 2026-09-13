@@ -1,6 +1,6 @@
 sanitize_axes = function(settings) {
   env2env(settings, environment(),
-          c("axes", "xaxt", "yaxt", "frame.plot", "xaxr", "yaxr"))
+          c("axes", "xaxt", "yaxt", "frame.plot", "xaxr", "yaxr", "xpad", "ypad"))
   ## handle defaults of axes, xaxt, yaxt, frame.plot
   ## - convert axes to character if necessary
   ## - set defaults of xaxt/yaxt (if these are NULL) based on axes
@@ -35,6 +35,18 @@ sanitize_axes = function(settings) {
   if (!is.null(xaxr) && (!is.finite(xaxr) || xaxr %% 360 == 0)) xaxr = NULL
   if (!is.null(yaxr) && (!is.finite(yaxr) || yaxr %% 360 == 0)) yaxr = NULL
 
-  env2env(environment(), settings,
-          c("axes", "xaxt", "yaxt", "frame.plot", "xaxr", "yaxr"))
+  ## axis padding: an explicit x/ypad wins over the theme's tpar setting. This
+  ## has to resolve here, before flip_datapoints() swaps the pair -- resolving
+  ## it later would leave a tpar default attached to the axis rather than to
+  ## the variable, so the two paths would disagree under `flip`.
+  if (is.null(xpad)) xpad = get_tpar("xpad")
+  if (is.null(ypad)) ypad = get_tpar("ypad")
+  assert_numeric(xpad, len = 1, lower = 0, null.ok = TRUE, name = "xpad")
+  assert_numeric(ypad, len = 1, lower = 0, null.ok = TRUE, name = "ypad")
+
+  env2env(
+    environment(),
+    settings,
+    c("axes", "xaxt", "yaxt", "frame.plot", "xaxr", "yaxr", "xpad", "ypad")
+  )
 }

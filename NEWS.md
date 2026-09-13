@@ -138,12 +138,12 @@ related to plot layering. See "Bug fixes" below.
 
 #### Axis aesthetics
 
-- Point-like glyphs (`"p"`, `"l"`, `"pointrange"`, `"errorbar"`, and friends) 
-  gain smart padding behaviour for categorical axes. Most notably, we use more
-  generous padding by default when there are few unique categories (levels), so 
-  that the end tick marks aren't drawn flush against the plot frame. Users can
-  also override with the new `x/ypad` arguments (see below) to match their own
-  aesthetic preferences. (#662 @grantmcdermott)
+- Point-like glyphs (`"p"`, `"l"`, `"errorbar"`, and friends) gain smart padding
+  behaviour for categorical axes. Most notably, we now use more generous axis
+  padding when there are few unique categories (levels), so that the end tick
+  marks aren't drawn flush against the plot frame. Users can also override with
+  the new `x/ypad` arguments (see below) to match their own aesthetic
+  preferences. (#662 @grantmcdermott)
 
 #### Other new features
 

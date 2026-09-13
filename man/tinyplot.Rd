@@ -37,7 +37,9 @@ tinyplot(x, ...)
   xaxt = NULL,
   yaxt = NULL,
   xaxs = NULL,
+  xpad = NULL,
   yaxs = NULL,
+  ypad = NULL,
   xaxb = NULL,
   yaxb = NULL,
   xaxl = NULL,
@@ -436,6 +438,12 @@ respectively. See \code{axes} for the possible values.}
 \item{xaxs, yaxs}{character specifying the style of the interval calculation
 used for the x-axis and y-axis, respectively. See
 \code{\link[graphics]{par}} for the possible values.}
+
+\item{xpad, ypad}{numeric specifying how much padding, as a fraction of the
+data range, should be added to each end of the axes. Defaults to \code{NULL},
+in which case behaviour depends on the value of \code{x/yaxs}. In most cases,
+this will translate to a value of \code{0.04}, i.e. 4\% padding on each end (see
+\code{\link[graphics]{par}}).}
 
 \item{xaxb, yaxb}{numeric vector (or character vector, if appropriate) giving
 the break points at which the axis tick-marks are to be drawn. Break points

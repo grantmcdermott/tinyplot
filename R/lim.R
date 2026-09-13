@@ -7,7 +7,7 @@ lim_args = function(settings) {
     c(
       "xaxb", "xlabs", "xlim", "null_xlim", "rev_x",
       "yaxb", "ylabs", "ylim", "null_ylim", "rev_y",
-      "datapoints", "type", "type_hints"
+      "datapoints", "type", "type_hints", "xpad", "ypad", "log"
     )
   )
 
@@ -51,6 +51,25 @@ lim_args = function(settings) {
   if (null_xlim && !is.null(xaxb) && !prop_lim) xlim = range(c(xlim, xaxb))
   if (null_ylim && !is.null(yaxb) && !prop_lim) ylim = range(c(ylim, yaxb))
 
+  # If no explicit user pad -> base x/yaxs = "r" expands as per normal. If
+  # non-null, downstream overrides with x/yaxs = "i" (i.e., limits are already
+  # final).
+  xpad = xpad %||% get_tpar("xpad")
+  ypad = ypad %||% get_tpar("ypad")
+  # No upper bound: a large pad is merely a zoomed-out plot. A negative one is
+  # never what anyone meant -- it crops the data, and past -0.5 collapses or
+  # reverses the axis -- so it is refused rather than drawn.
+  assert_numeric(xpad, len = 1, lower = 0, null.ok = TRUE, name = "xpad")
+  assert_numeric(ypad, len = 1, lower = 0, null.ok = TRUE, name = "ypad")
+  if (!is.null(xpad)) {
+    xlim = expand_lim(widen_degenerate(xlim), xpad,
+                      log = grepl("x", log, fixed = TRUE))
+  }
+  if (!is.null(ypad)) {
+    ylim = expand_lim(widen_degenerate(ylim), ypad,
+                      log = grepl("y", log, fixed = TRUE))
+  }
+
   # reverse axis direction last, once the range is otherwise finalized
   if (isTRUE(rev_x)) xlim = rev(xlim)
   if (isTRUE(rev_y)) ylim = rev(ylim)
@@ -59,7 +78,7 @@ lim_args = function(settings) {
   env2env(
     environment(),
     settings,
-    c("xlim", "ylim", "xlabs", "ylabs", "xaxb", "yaxb")
+    c("xlim", "ylim", "xpad", "ypad", "xlabs", "ylabs", "xaxb", "yaxb")
   )
 }
 
@@ -67,6 +86,32 @@ lim_args = function(settings) {
 #
 # x/ylim helpers ----
 #
+
+# Widen a data range by `pad` at each end, as a fraction of the range.
+#
+# A logged axis is expanded in log space, which is where base applies it too --
+# expanding the raw values would put the padding in the wrong place entirely
+# once the range spans decades.
+expand_lim = function(lim, pad, log = FALSE) {
+  if (length(lim) != 2L || !all(is.finite(lim))) return(lim)
+  if (!is.finite(pad) || pad == 0) return(lim)
+  logged = isTRUE(log) && all(lim > 0)
+  if (logged) lim = log10(lim)
+  out = lim + c(-1, 1) * pad * diff(lim)
+  if (logged) out = 10^out
+  out
+}
+
+# Widen a zero-width range the way base R does before any style expansion is
+# applied: out to 0.4 of the value either side, or to +/-1 when the value is
+# zero. Kept separate from expand_lim() because the three places tinyplot
+# expands a range do not currently agree on this rule (base's here, 0.04 of the
+# value in free facets, half a unit in the dynmar predictor). Reconciling them
+# is a behaviour change and deliberately not part of this one.
+widen_degenerate = function(lim) {
+  if (length(lim) != 2L || !all(is.finite(lim)) || diff(lim) != 0) return(lim)
+  lim + c(-1, 1) * (if (lim[1L] == 0) 1 else 0.4 * abs(lim[1L]))
+}
 
 # Resolve a user-supplied x/ylim that may be a scalar or contains a single NA.
 # `lim`  : raw user value (already known to be non-NULL)

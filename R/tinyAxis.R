@@ -202,13 +202,17 @@ axis_tick_labels = function(labelset, lim, axb = NULL, axl = NULL, log = FALSE,
 ## A log axis can't represent a zero or negative limit, so those fall back to a
 ## linear measurement: plot.window() raises its own, clearer complaint moments
 ## later, and log10() here would only put "NaNs produced" in front of it.
-axis_usr = function(lim, log = FALSE, axb = NULL) {
+axis_usr = function(lim, log = FALSE, axb = NULL, pad = NULL) {
   log = isTRUE(log) && all(is.finite(lim)) && all(lim > 0)
   if (log) lim = log10(lim)
   # A single distinct value gives a zero-width range that extendrange() can't
   # pad and axisTicks() can't tick, so widen it the way plot.window() does.
   # An explicit `at` (xaxb/yaxb) supplies its own ticks, hence the guard.
-  usr = if (diff(lim) == 0 && is.null(axb)) {
+  # A non-NULL `pad` means lim_args() has already expanded these limits, so
+  # there is nothing left to add.
+  usr = if (!is.null(pad)) {
+    lim
+  } else if (diff(lim) == 0 && is.null(axb)) {
     lim + c(-0.5, 0.5)
   } else {
     extendrange(lim, f = 0.04)

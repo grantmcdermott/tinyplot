@@ -275,6 +275,11 @@
 #' @param xaxs,yaxs character specifying the style of the interval calculation
 #'   used for the x-axis and y-axis, respectively. See
 #'   \code{\link[graphics]{par}} for the possible values.
+#' @param xpad,ypad numeric specifying how much padding, as a fraction of the
+#'   data range, should be added to each end of the axes. Defaults to `NULL`,
+#'   in which case behaviour depends on the value of `x/yaxs`. In most cases,
+#'   this will translate to a value of `0.04`, i.e. 4% padding on each end (see
+#'   \code{\link[graphics]{par}}).
 #' @param xaxb,yaxb numeric vector (or character vector, if appropriate) giving
 #'   the break points at which the axis tick-marks are to be drawn. Break points
 #'   outside the range of the data will be ignored if the associated axis
@@ -788,7 +793,9 @@ tinyplot.default = function(
     xaxt = NULL,
     yaxt = NULL,
     xaxs = NULL,
+    xpad = NULL,
     yaxs = NULL,
+    ypad = NULL,
     xaxb = NULL,
     yaxb = NULL,
     xaxl = NULL,
@@ -982,11 +989,13 @@ tinyplot.default = function(
     xaxl          = xaxl,
     xaxr          = xaxr,
     xaxs          = xaxs,
+    xpad          = xpad,
     yaxt          = yaxt,
     yaxb          = yaxb,
     yaxl          = yaxl,
     yaxr          = yaxr,
     yaxs          = yaxs,
+    ypad          = ypad,
     frame.plot    = frame.plot,
     xlim          = xlim,
     ylim          = ylim,
@@ -1392,7 +1401,7 @@ tinyplot.default = function(
       max(0, fin / par("csi") - pad)
     }
     if (!is.null(xaxr)) {
-      .u = axis_usr(xlim, log = .xlog, axb = xaxb)
+      .u = axis_usr(xlim, log = .xlog, axb = xaxb, pad = xpad)
       .at = if (!is.null(xlabs)) as.numeric(xlabs) else
         axisTicks(usr = .u[["usr"]], log = .u[["log"]])
       # axisTicks() reports tick locations in data units, but the inset is a
@@ -1404,7 +1413,7 @@ tinyplot.default = function(
       .dyn = .add_lean(.dyn, .ovh, .flank(.xside))
     }
     if (!is.null(yaxr)) {
-      .u = axis_usr(ylim, log = .ylog, axb = yaxb)
+      .u = axis_usr(ylim, log = .ylog, axb = yaxb, pad = ypad)
       .at = if (!is.null(ylabs)) as.numeric(ylabs) else
         axisTicks(usr = .u[["usr"]], log = .u[["log"]])
       # axisTicks() reports tick locations in data units, but the inset is a
@@ -1533,10 +1542,14 @@ tinyplot.default = function(
       }
       par(mar = dynmar_computed + .whtsbp)
       if (!is.null(xlim) && !is.null(ylim)) {
-        plot.window(xlim = xlim, ylim = ylim)
+        plot.window(xlim = xlim, ylim = ylim,
+                  xaxs = if (is.null(xpad)) par("xaxs") else "i",
+                  yaxs = if (is.null(ypad)) par("yaxs") else "i")
       }
     } else if (direct_labels_flag && !is.null(xlim) && !is.null(ylim)) {
-      plot.window(xlim = xlim, ylim = ylim)
+      plot.window(xlim = xlim, ylim = ylim,
+                  xaxs = if (is.null(xpad)) par("xaxs") else "i",
+                  yaxs = if (is.null(ypad)) par("yaxs") else "i")
     }
 
     # Expand right margin for direct labels based on actual label overshoot
@@ -1559,7 +1572,9 @@ tinyplot.default = function(
           cur_mar[4] = cur_mar[4] + overshoot_lines
           par(mar = cur_mar)
         }
-        plot.window(xlim = xlim, ylim = ylim)
+        plot.window(xlim = xlim, ylim = ylim,
+                  xaxs = if (is.null(xpad)) par("xaxs") else "i",
+                  yaxs = if (is.null(ypad)) par("yaxs") else "i")
       }
     }
 
@@ -1641,8 +1656,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr, xpad = xpad,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr, ypad = ypad,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       facet_labs = facet_labs,
@@ -1678,8 +1693,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr, xpad = xpad,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr, ypad = ypad,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       facet_labs = facet_labs,

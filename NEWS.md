@@ -223,6 +223,8 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- `type_text()` no longer converts a categorical axis to a numeric one.
+  (#730 @grantmcdermott)
 - Fixed a bug where consecutive plots with (i) logged axes under (ii) a dynamic
   theme would error, due to a stale `par("xlog")`/`par("ylog")` state. We now
   avoid this by grabbing the log state directly from the top-level `log`

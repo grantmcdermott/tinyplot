@@ -71,3 +71,9 @@ expect_snapshot_plot(f, label = "text_labels_nse")
 expect_error(tinyplot(mpg ~ wt, data = mtcars, type = "text", labels = c("a", "b")))
 # top-level `labels` overrides the constructor-level arg
 expect_silent(tinyplot(1:3, type = type_text(labels = "x"), labels = c("a", "b", "c")))
+
+# A categorical axis stays categorical (#730)
+f = function() {
+  tinyplot(x = LETTERS[1:2], y = 1:2, type = "text")
+}
+expect_snapshot_plot(f, label = "text_categorical_x")

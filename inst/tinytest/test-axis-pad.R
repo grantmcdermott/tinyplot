@@ -77,4 +77,61 @@ tpar(xpad = NULL)
 expect_error(tpar(ypad = -1), pattern = "ypad")
 tpar(ypad = NULL)
 
+
+# With no explicit pad, a categorical axis of a point-like type gets a quarter
+# of the tick gap instead of the usual 4%, so its end categories aren't drawn
+# flush against the frame.
+cats = function(n) factor(letters[1:n], levels = letters[1:n])
+cat_usr = function(n = 3, ...) {
+  tinyplot(cats(n), seq_len(n), ...)
+  par("usr")
+}
+
+# Constant in tick gaps however many categories there are -- until 4% of the
+# span reaches further on its own, which is where it hands back to base.
+expect_equal(cat_usr(2, type = "p")[1:2], c(0.75, 2.25))
+expect_equal(cat_usr(7, type = "p")[1:2], c(0.75, 7.25))
+expect_equal(cat_usr(8, type = "p")[1:2], c(0.72, 8.28))
+
+# Each type that declares the hint does so in its own data function.
+expect_equal(cat_usr(3, type = "l")[1:2], c(0.75, 3.25))
+rng = function(...) {
+  d = data.frame(g = cats(3), y = c(1, 5, 10))
+  tinyplot(y ~ g, ymin = y - 1, ymax = y + 1, data = d, ...)
+  par("usr")
+}
+expect_equal(rng(type = "errorbar")[1:2], c(0.75, 3.25)) # "pointrange" same
+
+# An explicit pad still wins, and the buffer follows its variable under a flip.
+expect_equal(cat_usr(3, type = "p", xpad = 0)[1:2], c(1, 3))
+expect_equal(cat_usr(3, type = "p", flip = TRUE)[3:4], c(0.75, 3.25))
+
+# Dodging widens the drawn extent past n-1; the gutter clears what is actually
+# drawn, so cat_pad() has to read the limits rather than the category count.
+dodged = function(dodge) {
+  d = data.frame(g = rep(cats(3), 4), y = rnorm(12), m = rep(c("m1", "m2"), 6))
+  tinyplot(y ~ g | m, ymin = y - 1, ymax = y + 1, data = d,
+           type = type_pointrange(dodge = dodge))
+  par("usr")[1:2]
+}
+set.seed(1)
+expect_equal(diff(dodged(0.3)) - diff(dodged(0)), 0.9, tolerance = 1e-8)
+
+# Free facets derive a range per panel, so the buffer has to be worked out per
+# panel too. Nine categories globally puts the whole plot past the breakeven,
+# but a dropped panel holding three is back under it -- the one case where the
+# facet path has to reach for the buffer itself rather than inherit the pad
+# lim_args() already computed. `.fusr` is where a free panel's extent lives;
+# par("usr") reports the outer region once the plot is finished.
+expect_equal({
+  d = data.frame(
+    g = factor(rep(letters[1:9], each = 2), levels = letters[1:9]),
+    y = rep(c(1, 2), 9),
+    f = rep(c("p", "q", "r"), each = 6)
+  )
+  tinyplot(y ~ g, facet = ~f, data = d, type = "p",
+           facet.args = list(free = TRUE, drop.levels = TRUE))
+  tinyplot:::get_environment_variable(".fusr")[[1]][1:2]
+}, c(0.75, 3.25))
+
 dev.off()

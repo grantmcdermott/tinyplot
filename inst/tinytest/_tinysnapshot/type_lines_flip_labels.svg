@@ -39,13 +39,13 @@
 <text x='274.75' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>190</text>
 <text x='358.23' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>195</text>
 <text x='441.70' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>200</text>
-<line x1='59.04' y1='416.80' x2='59.04' y2='72.80' style='stroke-width: 0.75;' />
-<line x1='59.04' y1='416.80' x2='51.84' y2='416.80' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='393.41' x2='59.04' y2='96.19' style='stroke-width: 0.75;' />
+<line x1='59.04' y1='393.41' x2='51.84' y2='393.41' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='244.80' x2='51.84' y2='244.80' style='stroke-width: 0.75;' />
-<line x1='59.04' y1='72.80' x2='51.84' y2='72.80' style='stroke-width: 0.75;' />
-<text transform='translate(41.76,416.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='56.70px' lengthAdjust='spacingAndGlyphs'>Fellowship</text>
+<line x1='59.04' y1='96.19' x2='51.84' y2='96.19' style='stroke-width: 0.75;' />
+<text transform='translate(41.76,393.41) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='56.70px' lengthAdjust='spacingAndGlyphs'>Fellowship</text>
 <text transform='translate(41.76,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='36.02px' lengthAdjust='spacingAndGlyphs'>Return</text>
-<text transform='translate(41.76,72.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='63.14px' lengthAdjust='spacingAndGlyphs'>Two Towers</text>
+<text transform='translate(41.76,96.19) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='63.14px' lengthAdjust='spacingAndGlyphs'>Two Towers</text>
 <polygon points='59.04,430.56 473.76,430.56 473.76,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
 </g>
 <defs>
@@ -54,10 +54,10 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-<line x1='74.75' y1='409.61' x2='90.75' y2='79.99' style='stroke-width: 0.75;' />
-<line x1='97.62' y1='75.85' x2='451.88' y2='241.75' style='stroke-width: 0.75;' />
-<circle cx='74.40' cy='416.80' r='2.70' style='stroke-width: 0.75;' />
-<circle cx='91.10' cy='72.80' r='2.70' style='stroke-width: 0.75;' />
+<line x1='74.80' y1='386.22' x2='90.69' y2='103.38' style='stroke-width: 0.75;' />
+<line x1='97.77' y1='98.89' x2='451.73' y2='242.10' style='stroke-width: 0.75;' />
+<circle cx='74.40' cy='393.41' r='2.70' style='stroke-width: 0.75;' />
+<circle cx='91.10' cy='96.19' r='2.70' style='stroke-width: 0.75;' />
 <circle cx='458.40' cy='244.80' r='2.70' style='stroke-width: 0.75;' />
 </g>
 </g>

@@ -28,13 +28,13 @@
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='30.02px' lengthAdjust='spacingAndGlyphs'>name</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='40.02px' lengthAdjust='spacingAndGlyphs'>runtime</text>
-<line x1='74.40' y1='430.56' x2='458.40' y2='430.56' style='stroke-width: 0.75;' />
-<line x1='74.40' y1='430.56' x2='74.40' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='100.51' y1='430.56' x2='432.29' y2='430.56' style='stroke-width: 0.75;' />
+<line x1='100.51' y1='430.56' x2='100.51' y2='437.76' style='stroke-width: 0.75;' />
 <line x1='266.40' y1='430.56' x2='266.40' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='458.40' y1='430.56' x2='458.40' y2='437.76' style='stroke-width: 0.75;' />
-<text x='74.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='56.70px' lengthAdjust='spacingAndGlyphs'>Fellowship</text>
+<line x1='432.29' y1='430.56' x2='432.29' y2='437.76' style='stroke-width: 0.75;' />
+<text x='100.51' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='56.70px' lengthAdjust='spacingAndGlyphs'>Fellowship</text>
 <text x='266.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='36.02px' lengthAdjust='spacingAndGlyphs'>Return</text>
-<text x='458.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='63.14px' lengthAdjust='spacingAndGlyphs'>Two Towers</text>
+<text x='432.29' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='63.14px' lengthAdjust='spacingAndGlyphs'>Two Towers</text>
 <line x1='59.04' y1='386.89' x2='59.04' y2='87.76' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='386.89' x2='51.84' y2='386.89' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='312.10' x2='51.84' y2='312.10' style='stroke-width: 0.75;' />
@@ -54,8 +54,8 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-<circle cx='74.40' cy='416.80' r='2.70' style='stroke-width: 0.75;' />
-<circle cx='458.40' cy='401.84' r='2.70' style='stroke-width: 0.75;' />
+<circle cx='100.51' cy='416.80' r='2.70' style='stroke-width: 0.75;' />
+<circle cx='432.29' cy='401.84' r='2.70' style='stroke-width: 0.75;' />
 <circle cx='266.40' cy='72.80' r='2.70' style='stroke-width: 0.75;' />
 </g>
 </g>

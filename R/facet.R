@@ -24,8 +24,8 @@ draw_facet_window = function(
     facet_blank = FALSE,
     # axes args
     axes, flip, frame.plot, oxaxis, oyaxis,
-    xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl, xaxr = NULL,
-    ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl, yaxr = NULL,
+    xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl, xaxr = NULL, xpad = NULL,
+    ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl, yaxr = NULL, ypad = NULL,
     rev_x = FALSE, rev_y = FALSE,
     xlim_partial = NULL, ylim_partial = NULL,
     facet_labs = NULL,
@@ -388,6 +388,10 @@ draw_facet_window = function(
     ## Solution: Only pass on relevant args using name checking and do.call.
     ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
     pdots = dots[names(dots) %in% names(formals(plot.default))]
+    # Explicit user pad -> calculated limits are already final, so avoid
+    # automatic par(x/yaxs = "r") expansion. "i" takes limits as fixed.
+    if (!is.null(xpad)) pdots[["xaxs"]] = "i"
+    if (!is.null(ypad)) pdots[["yaxs"]] = "i"
     ## catch for flipped boxplots...
     if (type == "boxplot" && isTRUE(flip)) {
       log_flip = log
@@ -485,13 +489,18 @@ draw_facet_window = function(
         # each panel spans only the categories it uses.
         .xall_cat = length(.fxlabs) > 0 && is.null(facet_labs[["x"]])
         .yall_cat = length(.fylabs) > 0 && is.null(facet_labs[["y"]])
-        if (null_xlim || !is.null(xlim_partial)) {
+        # A panel that derives its own range still has to expand it; one that
+        # inherits the fixed limits does not, because lim_args() expanded those
+        # already. Re-expanding an inherited range applies the padding twice.
+        .derived_x = null_xlim || !is.null(xlim_partial)
+        .derived_y = null_ylim || !is.null(ylim_partial)
+        if (.derived_x) {
           xlim = facet_free_lim(
             if (.xall_cat) xcat else xfree, xall, xlim_partial, "xlim"
           ) + .pad
           if (length(.fxlabs)) xlim = range(c(xlim, .fxlabs))
         }
-        if (null_ylim || !is.null(ylim_partial)) {
+        if (.derived_y) {
           ylim = facet_free_lim(
             if (.yall_cat) ycat else yfree, yall, ylim_partial, "ylim"
           )
@@ -504,9 +513,15 @@ draw_facet_window = function(
         # the descending order. (#644)
         rev_xext = isTRUE(rev_x) || (!null_xlim && length(xlim) == 2L && xlim[2L] < xlim[1L])
         rev_yext = isTRUE(rev_y) || (!null_ylim && length(ylim) == 2L && ylim[2L] < ylim[1L])
-        # extendrange() returns an ascending pair, so reverse afterwards
-        xext = extendrange(sort(xlim), f = 0.04)
-        yext = extendrange(sort(ylim), f = 0.04)
+        # expand_lim() returns an ascending pair, so reverse afterwards
+        xext = sort(xlim)
+        yext = sort(ylim)
+        # Free panels expand at a flat rate regardless of xaxs/yaxs; the
+        # barplot_facet_free snapshot will catch you if you change that.
+        .padded_x = !is.null(xpad) && !.derived_x  # lim_args() got to it first
+        .padded_y = !is.null(ypad) && !.derived_y
+        if (!.padded_x) xext = expand_lim(xext, xpad %||% 0.04)
+        if (!.padded_y) yext = expand_lim(yext, ypad %||% 0.04)
         # A facet with a single distinct x (or y) value yields a zero-width
         # extent, which par(usr=) rejects. Mirror base plot.window() and pad
         # a degenerate range symmetrically so the facet still draws. (#668)

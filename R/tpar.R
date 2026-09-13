@@ -89,6 +89,7 @@
 #' * `palette.sequential`: Palette for sequential colors. See the `palette` argument in `?tinyplot`.
 #' * `record`: (experimental) Logical indicating whether `tinyplot()` should record plots and return them as replayable \code{\link{recordedtinyplot}} objects. Defaults to `NULL`, which is equivalent to `FALSE`. Setting to `TRUE` allows for assignment and later recall, e.g. `myplot = tinyplot(...); myplot`. Sets the default for the `record` argument of [`tinyplot()`], which takes precedence. Note that recording requires a device with an enabled display list (see \code{\link[grDevices]{dev.control}}). Most interactive devices enable this behaviour by default, whereas file-based devices do not. However `tinyplot()` automatically enables it for any device that it opens itself via `file`, and further emits a warning if the current device is not recording.
 #' * `ribbon.alpha`: Numeric factor in the range `[0,1]` for modifying the opacity alpha of "ribbon" and "area" type plots. Default value is `0.2`.
+#' * `xpad`, `ypad`: Numeric specifying how much padding, as a fraction of the data range, should be added to each end of the x- and y-axis, respectively. Both default to `NULL`, in which case behaviour depends on the value of `x/yaxs`. In most cases, this will translate to a value of `0.04`, i.e. 4% padding on each end (see \code{\link[graphics]{par}}). Sets the default for the `xpad` and `ypad` arguments of [`tinyplot()`], which take precedence.
 #' * `xaxr`, `yaxr`: Numeric giving the rotation of the x- and y-axis tick labels, in degrees counter-clockwise; `NULL` (the default) leaves them unrotated. Unlike `las`, which is limited to the four right angles, any angle is permitted. Setting one overrides `las` for that axis alone, leaving the other axis under `las` as usual, and `0` (or any multiple of 360) counts as no rotation at all. Sets the default for the `xaxr` and `yaxr` arguments of [`tinyplot()`], which take precedence. Two caveats follow from tinyplot drawing rotated labels itself rather than deferring to base `axis()`. First, margins are only resized to fit them under a theme with `dynmar = TRUE` (see `tinytheme`); under the default theme the margins are left alone, so a long rotated label will be clipped unless you widen `mar` yourself. Second, rotated labels do not inherit the thinning that `axis()` applies via `gap.axis`, so they start to overlap once the spacing between ticks falls below `line height / sin(srt)`.
 #'
 #' @importFrom graphics par
@@ -320,8 +321,10 @@ known_tpar = c(
     "tinytheme",
     "xaxr",
     "xaxt",
+    "xpad",
     "yaxr",
-    "yaxt"
+    "yaxt",
+    "ypad"
 )
 
 
@@ -342,6 +345,8 @@ assert_tpar = function(.tpar) {
   assert_numeric(.tpar[["cex.yaxs"]], len = 1, lower = 0, null.ok = TRUE, name = "cex.yaxs")
   assert_numeric(.tpar[["xaxr"]], len = 1, null.ok = TRUE, name = "xaxr")
   assert_numeric(.tpar[["yaxr"]], len = 1, null.ok = TRUE, name = "yaxr")
+  assert_numeric(.tpar[["xpad"]], len = 1, lower = 0, null.ok = TRUE, name = "xpad")
+  assert_numeric(.tpar[["ypad"]], len = 1, lower = 0, null.ok = TRUE, name = "ypad")
   assert_flag(.tpar[["cairo"]], name = "cairo")
   assert_flag(.tpar[["dynmar"]], null.ok = FALSE, name = "dynmar")
   assert_choice(.tpar[["ljust"]], choice = c("left", "center", "l", "c"), null.ok = TRUE, name = "ljust")

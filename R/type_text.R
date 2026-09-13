@@ -166,14 +166,26 @@ data_text = function(labels = NULL, labeller = NULL, clim = c(0.5, 2.5)) {
       labels = tinylabel(labels, labeller)
     }
     datapoints$labels = labels
+    # Collapse a categorical axis to its level positions, keeping the levels as
+    # the axis labels. (#730)
     if (is.factor(datapoints$x)) {
-      datapoints$x = as.numeric(datapoints$x)
+      xlvls = levels(datapoints$x)
+      xlabs = seq_along(xlvls)
+      names(xlabs) = xlvls
+      datapoints$x = as.integer(datapoints$x)
+    } else {
+      xlabs = NULL
     }
     if (is.factor(datapoints$y)) {
-      datapoints$y = as.numeric(datapoints$y)
+      ylvls = levels(datapoints$y)
+      ylabs = seq_along(ylvls)
+      names(ylabs) = ylvls
+      datapoints$y = as.integer(datapoints$y)
+    } else {
+      ylabs = NULL
     }
 
-    env2env(environment(), settings, "datapoints")
+    env2env(environment(), settings, c("datapoints", "xlabs", "ylabs"))
   }
   return(fun)
 }

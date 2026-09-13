@@ -388,10 +388,6 @@ draw_facet_window = function(
     ## Solution: Only pass on relevant args using name checking and do.call.
     ## Idea borrowed from here: https://stackoverflow.com/a/4128401/4115816
     pdots = dots[names(dots) %in% names(formals(plot.default))]
-    # Explicit user pad -> calculated limits are already final, so avoid
-    # automatic par(x/yaxs = "r") expansion. "i" takes limits as fixed.
-    if (!is.null(xpad)) pdots[["xaxs"]] = "i"
-    if (!is.null(ypad)) pdots[["yaxs"]] = "i"
     ## catch for flipped boxplots...
     if (type == "boxplot" && isTRUE(flip)) {
       log_flip = log
@@ -399,6 +395,10 @@ draw_facet_window = function(
         if (log == "x") log_flip = "y"
         if (log == "y") log_flip = "x"
       }
+      # Explicit user pad -> calculated limits are already final, so avoid
+      # automatic par(x/yaxs = "r") expansion. "i" takes limits as fixed.
+      if (!is.null(ypad)) pdots[["xaxs"]] = "i"
+      if (!is.null(xpad)) pdots[["yaxs"]] = "i"
       do.call(
         "plot.window",
         c(list(xlim = ylim, ylim = xlim, asp = asp, log = log_flip), pdots)
@@ -407,6 +407,11 @@ draw_facet_window = function(
       yside = 1
     } else {
       ## ... standard plot window for all other cases
+      
+      # Explicit user pad -> calculated limits are already final, so avoid
+      # automatic par(x/yaxs = "r") expansion. "i" takes limits as fixed.
+      if (!is.null(xpad)) pdots[["xaxs"]] = "i"
+      if (!is.null(ypad)) pdots[["yaxs"]] = "i"
       do.call(
         "plot.window",
         c(list(xlim = xlim, ylim = ylim, asp = asp, log = log), pdots)

@@ -51,16 +51,6 @@ lim_args = function(settings) {
   if (null_xlim && !is.null(xaxb) && !prop_lim) xlim = range(c(xlim, xaxb))
   if (null_ylim && !is.null(yaxb) && !prop_lim) ylim = range(c(ylim, yaxb))
 
-  # If no explicit user pad -> base x/yaxs = "r" expands as per normal. If
-  # non-null, downstream overrides with x/yaxs = "i" (i.e., limits are already
-  # final).
-  xpad = xpad %||% get_tpar("xpad")
-  ypad = ypad %||% get_tpar("ypad")
-  # No upper bound: a large pad is merely a zoomed-out plot. A negative one is
-  # never what anyone meant -- it crops the data, and past -0.5 collapses or
-  # reverses the axis -- so it is refused rather than drawn.
-  assert_numeric(xpad, len = 1, lower = 0, null.ok = TRUE, name = "xpad")
-  assert_numeric(ypad, len = 1, lower = 0, null.ok = TRUE, name = "ypad")
   if (!is.null(xpad)) {
     xlim = expand_lim(widen_degenerate(xlim), xpad,
                       log = grepl("x", log, fixed = TRUE))

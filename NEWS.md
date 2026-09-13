@@ -139,6 +139,10 @@ related to plot layering. See "Bug fixes" below.
 #### Other new features
 
 - New top-level `tinyplot()`/`plt()` arguments:
+  - `xpad` and `ypad` enable control over how much padding (as a fraction of the
+    data range) is added to each end of the axes. Following base R conventions,
+    the default for most plots is `0.04`, i.e. 4% padding on each side. Also
+    settable globally via `tpar("x/ypad")`. (#662 @grantmcdermott)
   - `xaxr` and `yaxr` enable rotating of the x- and y-axis tick labels by
     arbitrary angles, closing a long-standing feature request (#346). Note that
     setting one overrides `las` for that axis. Best combined with a dynamic

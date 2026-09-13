@@ -276,10 +276,21 @@
 #'   used for the x-axis and y-axis, respectively. See
 #'   \code{\link[graphics]{par}} for the possible values.
 #' @param xpad,ypad numeric specifying how much padding, as a fraction of the
-#'   data range, should be added to each end of the axes. Defaults to `NULL`,
-#'   in which case behaviour depends on the value of `x/yaxs`. In most cases,
-#'   this will translate to a value of `0.04`, i.e. 4% padding on each end (see
-#'   \code{\link[graphics]{par}}).
+#'   data range, should be added to each end of the axes. If `NULL` (the
+#'   default), follows an automatic padding heuristic that tries to optimize for
+#'   plot aesthetic depending on the axis type:
+#'
+#'   - numeric axis: inherited from `x/yaxs`. Under the default `x/yaxs = "r"`
+#'     style, this means `0.04`, i.e. 4% padding on each end (see
+#'     \code{\link[graphics]{par}}).
+#'
+#'   - categorical axis: behaviour depends on the glyph-type and number of
+#'     unique categories, and therefore tick marks. For example, point-like
+#'     glyphs with numerous (8+) categories inherit the same padding logic as a
+#'     numeric axis (i.e., usually 4%). For cases with fewer unique categories,
+#'     the padding will instead correspond to 25% of the gap between interior
+#'     tick marks, so that the end categories aren't drawn flush against the
+#'     plot frame.
 #' @param xaxb,yaxb numeric vector (or character vector, if appropriate) giving
 #'   the break points at which the axis tick-marks are to be drawn. Break points
 #'   outside the range of the data will be ignored if the associated axis

@@ -118,20 +118,33 @@ set.seed(1)
 expect_equal(diff(dodged(0.3)) - diff(dodged(0)), 0.9, tolerance = 1e-8)
 
 # Free facets derive a range per panel, so the buffer has to be worked out per
-# panel too. Nine categories globally puts the whole plot past the breakeven,
-# but a dropped panel holding three is back under it -- the one case where the
-# facet path has to reach for the buffer itself rather than inherit the pad
-# lim_args() already computed. `.fusr` is where a free panel's extent lives;
-# par("usr") reports the outer region once the plot is finished.
-expect_equal({
+# panel too -- a dropped panel spanning fewer categories than the plot cannot
+# just inherit. `.fusr` is where a free panel's extent lives; par("usr")
+# reports the outer region once the plot is finished.
+panel_reach = function(cats_per_panel, n_global, ...) {
+  g = rep(letters[seq_len(n_global)], length.out = sum(cats_per_panel))
   d = data.frame(
-    g = factor(rep(letters[1:9], each = 2), levels = letters[1:9]),
-    y = rep(c(1, 2), 9),
-    f = rep(c("p", "q", "r"), each = 6)
+    g = factor(g, levels = letters[seq_len(n_global)]),
+    y = seq_along(g),
+    f = rep(seq_along(cats_per_panel), cats_per_panel)
   )
   tinyplot(y ~ g, facet = ~f, data = d, type = "p",
-           facet.args = list(free = TRUE, drop.levels = TRUE))
-  tinyplot:::get_environment_variable(".fusr")[[1]][1:2]
-}, c(0.75, 3.25))
+           facet.args = list(free = TRUE, drop.levels = TRUE), ...)
+  fu = tinyplot:::get_environment_variable(".fusr")
+  vapply(seq_along(cats_per_panel),
+         function(i) fu[[i]][2] - cats_per_panel[i], numeric(1))
+}
+
+# Nine categories globally puts the plot past the breakeven, so lim_args()
+# computes nothing and the facet path has to reach for the buffer itself.
+expect_equal(panel_reach(c(3, 3, 3), 9)[1], 0.25)
+
+# Three globally puts it under, so lim_args() does compute a pad -- but that is
+# a fraction of the *global* span, and a narrower panel needs its own. Reusing
+# it gave a two-category panel 0.125 instead of 0.25. (#732)
+expect_equal(panel_reach(c(3, 2), 3), c(0.25, 0.25))
+
+# An explicit pad is the user's business and still applies verbatim throughout.
+expect_equal(panel_reach(c(3, 2), 3, xpad = 0), c(0, 0))
 
 dev.off()

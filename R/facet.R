@@ -26,6 +26,7 @@ draw_facet_window = function(
     axes, flip, frame.plot, oxaxis, oyaxis,
     xlabs, xlim, null_xlim, xaxt, xaxs, xaxb, xaxl, xaxr = NULL, xpad = NULL,
     ylabs, ylim, null_ylim, yaxt, yaxs, yaxb, yaxl, yaxr = NULL, ypad = NULL,
+    xpad_user = NULL, ypad_user = NULL,
     rev_x = FALSE, rev_y = FALSE,
     xlim_partial = NULL, ylim_partial = NULL,
     facet_labs = NULL,
@@ -528,8 +529,8 @@ draw_facet_window = function(
         # A panel that derives its own categorical range asks for the same
         # buffer lim_args() gives an unfaceted one, so the two agree.
         .catpad = isTRUE(type_hints[["pads_cat_axis"]])
-        .xp = xpad %||% (if (.catpad && length(.fxlabs)) cat_pad(xext))
-        .yp = ypad %||% (if (.catpad && length(.fylabs)) cat_pad(yext))
+        .xp = xpad_user %||% (if (.catpad && length(.fxlabs)) cat_pad(xext))
+        .yp = ypad_user %||% (if (.catpad && length(.fylabs)) cat_pad(yext))
         if (!.padded_x) xext = expand_lim(xext, .xp %||% 0.04)
         if (!.padded_y) yext = expand_lim(yext, .yp %||% 0.04)
         # A facet with a single distinct x (or y) value yields a zero-width

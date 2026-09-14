@@ -143,7 +143,7 @@ related to plot layering. See "Bug fixes" below.
   padding when there are few unique categories (levels), so that the end tick
   marks aren't drawn flush against the plot frame. Users can also override with
   the new `x/ypad` arguments (see below) to match their own aesthetic
-  preferences. (#662 @grantmcdermott)
+  preferences. (#732 @grantmcdermott)
 
 #### Other new features
 

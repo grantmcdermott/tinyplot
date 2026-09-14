@@ -46,6 +46,8 @@ sanitize_axes = function(settings) {
   ## Keep the user's pad distinct from the one lim_args() may synthesize for a
   ## categorical axis: that one is a fraction of the whole plot's range, so a
   ## free panel spanning fewer categories has to work its own out instead.
+  ## Captured here rather than in lim_args() because that never runs on the
+  ## `add = TRUE` path; flip_datapoints() swaps the pair alongside x/ypad.
   xpad_user = xpad
   ypad_user = ypad
 

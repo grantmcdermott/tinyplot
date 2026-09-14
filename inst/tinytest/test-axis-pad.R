@@ -102,8 +102,10 @@ rng = function(...) {
 }
 expect_equal(rng(type = "errorbar")[1:2], c(0.75, 3.25)) # "pointrange" same
 
-# An explicit pad still wins, and the buffer follows its variable under a flip.
+# An explicit pad still wins, as does an explicit xaxs = "i", and the buffer
+# follows its variable under a flip.
 expect_equal(cat_usr(3, type = "p", xpad = 0)[1:2], c(1, 3))
+expect_equal(cat_usr(3, type = "p", xaxs = "i")[1:2], c(1, 3))
 expect_equal(cat_usr(3, type = "p", flip = TRUE)[3:4], c(0.75, 3.25))
 
 # Dodging widens the drawn extent past n-1; the gutter clears what is actually

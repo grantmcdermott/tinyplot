@@ -7,7 +7,8 @@ lim_args = function(settings) {
     c(
       "xaxb", "xlabs", "xlim", "null_xlim", "rev_x",
       "yaxb", "ylabs", "ylim", "null_ylim", "rev_y",
-      "datapoints", "type", "type_hints", "xpad", "ypad", "log"
+      "datapoints", "type", "type_hints", "xpad", "ypad", "xaxs", "yaxs",
+      "log"
     )
   )
 
@@ -53,11 +54,14 @@ lim_args = function(settings) {
 
   # A categorical axis asks for its buffer in category widths; xpad speaks in
   # fractions of the range. Convert and let the existing machinery apply it.
-  xpad_user = xpad
-  ypad_user = ypad
+  # An explicit x/yaxs = "i" asked for tight limits, so leave those alone.
   if (isTRUE(type_hints[["pads_cat_axis"]])) {
-    if (is.null(xpad) && !is.null(xlabs)) xpad = cat_pad(xlim)
-    if (is.null(ypad) && !is.null(ylabs)) ypad = cat_pad(ylim)
+    if (is.null(xpad) && !is.null(xlabs) && !identical(xaxs, "i")) {
+      xpad = cat_pad(xlim)
+    }
+    if (is.null(ypad) && !is.null(ylabs) && !identical(yaxs, "i")) {
+      ypad = cat_pad(ylim)
+    }
   }
 
   if (!is.null(xpad)) {
@@ -77,8 +81,7 @@ lim_args = function(settings) {
   env2env(
     environment(),
     settings,
-    c("xlim", "ylim", "xpad", "ypad", "xpad_user", "ypad_user",
-      "xlabs", "ylabs", "xaxb", "yaxb")
+    c("xlim", "ylim", "xpad", "ypad", "xlabs", "ylabs", "xaxb", "yaxb")
   )
 }
 

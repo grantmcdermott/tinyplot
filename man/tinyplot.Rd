@@ -453,7 +453,9 @@ glyphs with numerous (8+) categories inherit the same padding logic as a
 numeric axis (i.e., usually 4\%). For cases with fewer unique categories,
 the padding will instead correspond to 25\% of the gap between interior
 tick marks, so that the end categories aren't drawn flush against the
-plot frame. An explicit \code{x/yaxs = "i"} still yields tight limits.
+plot frame. Note that providing an explicit \code{x/ylim} or setting
+\code{x/yaxs = "i"} skips this heuristic in favour of the standard numeric
+behaviour.
 }}
 
 \item{xaxb, yaxb}{numeric vector (or character vector, if appropriate) giving

@@ -54,12 +54,12 @@ lim_args = function(settings) {
 
   # A categorical axis asks for its buffer in category widths; xpad speaks in
   # fractions of the range. Convert and let the existing machinery apply it.
-  # An explicit x/yaxs = "i" asked for tight limits, so leave those alone.
+  # An explicit x/ylim or x/yaxs = "i" is the user's call; leave those to base.
   if (isTRUE(type_hints[["pads_cat_axis"]])) {
-    if (is.null(xpad) && !is.null(xlabs) && !identical(xaxs, "i")) {
+    if (is.null(xpad) && !is.null(xlabs) && null_xlim && !identical(xaxs, "i")) {
       xpad = cat_pad(xlim)
     }
-    if (is.null(ypad) && !is.null(ylabs) && !identical(yaxs, "i")) {
+    if (is.null(ypad) && !is.null(ylabs) && null_ylim && !identical(yaxs, "i")) {
       ypad = cat_pad(ylim)
     }
   }

@@ -290,7 +290,9 @@
 #'     numeric axis (i.e., usually 4%). For cases with fewer unique categories,
 #'     the padding will instead correspond to 25% of the gap between interior
 #'     tick marks, so that the end categories aren't drawn flush against the
-#'     plot frame. An explicit `x/yaxs = "i"` still yields tight limits.
+#'     plot frame. Note that providing an explicit `x/ylim` or setting
+#'     `x/yaxs = "i"` skips this heuristic in favour of the standard numeric
+#'     behaviour.
 #' @param xaxb,yaxb numeric vector (or character vector, if appropriate) giving
 #'   the break points at which the axis tick-marks are to be drawn. Break points
 #'   outside the range of the data will be ignored if the associated axis

@@ -93,6 +93,8 @@ data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xleve
       xlabs = seq_along(xlvls)
       names(xlabs) = xlvls
       datapoints$x = as.integer(datapoints$x)
+      # More generous padding if categorical x-axis; better plot aesthetic
+      settings[["type_hints"]][["pads_cat_axis"]] = TRUE
     } else {
       xlabs = NULL
     }
@@ -101,6 +103,8 @@ data_points = function(clim = c(0.5, 2.5), dodge = 0, fixed.dodge = FALSE, xleve
       ylabs = seq_along(ylvls)
       names(ylabs) = ylvls
       datapoints$y = as.integer(datapoints$y)
+      # More generous padding if categorical y-axis; better plot aesthetic
+      settings[["type_hints"]][["pads_cat_axis"]] = TRUE
     } else {
       ylabs = NULL
     }

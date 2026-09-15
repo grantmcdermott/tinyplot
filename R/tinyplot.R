@@ -276,10 +276,23 @@
 #'   used for the x-axis and y-axis, respectively. See
 #'   \code{\link[graphics]{par}} for the possible values.
 #' @param xpad,ypad numeric specifying how much padding, as a fraction of the
-#'   data range, should be added to each end of the axes. Defaults to `NULL`,
-#'   in which case behaviour depends on the value of `x/yaxs`. In most cases,
-#'   this will translate to a value of `0.04`, i.e. 4% padding on each end (see
-#'   \code{\link[graphics]{par}}).
+#'   data range, should be added to each end of the axes. If `NULL` (the
+#'   default), follows an automatic padding heuristic that tries to optimize for
+#'   plot aesthetic depending on the axis type:
+#'
+#'   - numeric axis: inherited from `x/yaxs`. Under the default `x/yaxs = "r"`
+#'     style, this means `0.04`, i.e. 4% padding on each end (see
+#'     \code{\link[graphics]{par}}).
+#'
+#'   - categorical axis: behaviour depends on the glyph-type and number of
+#'     unique categories, and therefore tick marks. For example, point-like
+#'     glyphs with numerous (8+) categories inherit the same padding logic as a
+#'     numeric axis (i.e., usually 4%). For cases with fewer unique categories,
+#'     the padding will instead correspond to 25% of the gap between interior
+#'     tick marks, so that the end categories aren't drawn flush against the
+#'     plot frame. Note that providing an explicit `x/ylim` or setting
+#'     `x/yaxs = "i"` skips this heuristic in favour of the standard numeric
+#'     behaviour.
 #' @param xaxb,yaxb numeric vector (or character vector, if appropriate) giving
 #'   the break points at which the axis tick-marks are to be drawn. Break points
 #'   outside the range of the data will be ignored if the associated axis
@@ -1656,8 +1669,8 @@ tinyplot.default = function(
       # axes args
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr, xpad = xpad,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr, ypad = ypad,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr, xpad = xpad, xpad_user = xpad_user,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr, ypad = ypad, ypad_user = ypad_user,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       facet_labs = facet_labs,
@@ -1693,8 +1706,8 @@ tinyplot.default = function(
       nfacets = nfacets, nfacet_cols = nfacet_cols, nfacet_rows = nfacet_rows,
       axes = axes, flip = flip, frame.plot = frame.plot,
       oxaxis = oxaxis, oyaxis = oyaxis,
-      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr, xpad = xpad,
-      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr, ypad = ypad,
+      xlabs = xlabs, xlim = xlim, null_xlim = null_xlim, xaxt = xaxt, xaxs = xaxs, xaxb = xaxb, xaxl = xaxl, xaxr = xaxr, xpad = xpad, xpad_user = xpad_user,
+      ylabs = ylabs, ylim = ylim, null_ylim = null_ylim, yaxt = yaxt, yaxs = yaxs, yaxb = yaxb, yaxl = yaxl, yaxr = yaxr, ypad = ypad, ypad_user = ypad_user,
       rev_x = rev_x, rev_y = rev_y,
       xlim_partial = xlim_partial, ylim_partial = ylim_partial,
       facet_labs = facet_labs,

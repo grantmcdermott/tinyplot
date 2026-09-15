@@ -346,7 +346,8 @@ known_type_hints = c(
   "legend_border_fg",              # legend swatch border is always par("fg")
   "legend_fills_from_col",         # legend swatch fill comes from `col`
   "legend_fills_from_seq_palette", # ... or from the colour's sequential ramp
-  "legend_reversed"                # list the key bottom-up, not top-down
+  "legend_reversed",               # list the key bottom-up, not top-down
+  "pads_cat_axis"                  # buffer the ends of a categorical axis
 )
 
 ## Validate a type's declared hints.

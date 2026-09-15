@@ -28,15 +28,15 @@
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <text x='266.40' y='485.28' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.00px' lengthAdjust='spacingAndGlyphs'>x</text>
 <text transform='translate(12.96,244.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='6.00px' lengthAdjust='spacingAndGlyphs'>y</text>
-<line x1='74.40' y1='430.56' x2='458.40' y2='430.56' style='stroke-width: 0.75;' />
-<line x1='74.40' y1='430.56' x2='74.40' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='202.40' y1='430.56' x2='202.40' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='330.40' y1='430.56' x2='330.40' y2='437.76' style='stroke-width: 0.75;' />
-<line x1='458.40' y1='430.56' x2='458.40' y2='437.76' style='stroke-width: 0.75;' />
-<text x='74.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='54.67px' lengthAdjust='spacingAndGlyphs'>(Intercept)</text>
-<text x='202.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>hp</text>
-<text x='330.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='59.34px' lengthAdjust='spacingAndGlyphs'>factor(cyl)6</text>
-<text x='458.40' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='59.34px' lengthAdjust='spacingAndGlyphs'>factor(cyl)8</text>
+<line x1='88.66' y1='430.56' x2='444.14' y2='430.56' style='stroke-width: 0.75;' />
+<line x1='88.66' y1='430.56' x2='88.66' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='207.15' y1='430.56' x2='207.15' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='325.65' y1='430.56' x2='325.65' y2='437.76' style='stroke-width: 0.75;' />
+<line x1='444.14' y1='430.56' x2='444.14' y2='437.76' style='stroke-width: 0.75;' />
+<text x='88.66' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='54.67px' lengthAdjust='spacingAndGlyphs'>(Intercept)</text>
+<text x='207.15' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>hp</text>
+<text x='325.65' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='59.34px' lengthAdjust='spacingAndGlyphs'>factor(cyl)6</text>
+<text x='444.14' y='456.48' text-anchor='middle' style='font-size: 12.00px; font-family: "Liberation Sans";' textLength='59.34px' lengthAdjust='spacingAndGlyphs'>factor(cyl)8</text>
 <line x1='59.04' y1='391.79' x2='59.04' y2='87.28' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='391.79' x2='51.84' y2='391.79' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='315.66' x2='51.84' y2='315.66' style='stroke-width: 0.75;' />
@@ -56,22 +56,22 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNTkuMDR8NDczLjc2fDU5LjA0fDQzMC41Ng==)'>
-<line x1='74.40' y1='122.32' x2='74.40' y2='72.80' style='stroke-width: 0.75;' />
-<polyline points='70.80,122.32 74.40,122.32 78.00,122.32 ' style='stroke-width: 0.75;' />
-<polyline points='78.00,72.80 74.40,72.80 70.80,72.80 ' style='stroke-width: 0.75;' />
-<line x1='202.40' y1='316.09' x2='202.40' y2='315.60' style='stroke-width: 0.75;' />
-<polyline points='198.80,316.09 202.40,316.09 206.00,316.09 ' style='stroke-width: 0.75;' />
-<polyline points='206.00,315.60 202.40,315.60 198.80,315.60 ' style='stroke-width: 0.75;' />
-<line x1='330.40' y1='386.65' x2='330.40' y2='335.53' style='stroke-width: 0.75;' />
-<polyline points='326.80,386.65 330.40,386.65 334.00,386.65 ' style='stroke-width: 0.75;' />
-<polyline points='334.00,335.53 330.40,335.53 326.80,335.53 ' style='stroke-width: 0.75;' />
-<line x1='458.40' y1='416.80' x2='458.40' y2='344.26' style='stroke-width: 0.75;' />
-<polyline points='454.80,416.80 458.40,416.80 462.00,416.80 ' style='stroke-width: 0.75;' />
-<polyline points='462.00,344.26 458.40,344.26 454.80,344.26 ' style='stroke-width: 0.75;' />
-<circle cx='74.40' cy='97.56' r='2.70' style='stroke-width: 0.75;' />
-<circle cx='202.40' cy='315.84' r='2.70' style='stroke-width: 0.75;' />
-<circle cx='330.40' cy='361.09' r='2.70' style='stroke-width: 0.75;' />
-<circle cx='458.40' cy='380.53' r='2.70' style='stroke-width: 0.75;' />
+<line x1='88.66' y1='122.32' x2='88.66' y2='72.80' style='stroke-width: 0.75;' />
+<polyline points='85.06,122.32 88.66,122.32 92.26,122.32 ' style='stroke-width: 0.75;' />
+<polyline points='92.26,72.80 88.66,72.80 85.06,72.80 ' style='stroke-width: 0.75;' />
+<line x1='207.15' y1='316.09' x2='207.15' y2='315.60' style='stroke-width: 0.75;' />
+<polyline points='203.55,316.09 207.15,316.09 210.75,316.09 ' style='stroke-width: 0.75;' />
+<polyline points='210.75,315.60 207.15,315.60 203.55,315.60 ' style='stroke-width: 0.75;' />
+<line x1='325.65' y1='386.65' x2='325.65' y2='335.53' style='stroke-width: 0.75;' />
+<polyline points='322.05,386.65 325.65,386.65 329.25,386.65 ' style='stroke-width: 0.75;' />
+<polyline points='329.25,335.53 325.65,335.53 322.05,335.53 ' style='stroke-width: 0.75;' />
+<line x1='444.14' y1='416.80' x2='444.14' y2='344.26' style='stroke-width: 0.75;' />
+<polyline points='440.54,416.80 444.14,416.80 447.74,416.80 ' style='stroke-width: 0.75;' />
+<polyline points='447.74,344.26 444.14,344.26 440.54,344.26 ' style='stroke-width: 0.75;' />
+<circle cx='88.66' cy='97.56' r='2.70' style='stroke-width: 0.75;' />
+<circle cx='207.15' cy='315.84' r='2.70' style='stroke-width: 0.75;' />
+<circle cx='325.65' cy='361.09' r='2.70' style='stroke-width: 0.75;' />
+<circle cx='444.14' cy='380.53' r='2.70' style='stroke-width: 0.75;' />
 </g>
 </g>
 </svg>

@@ -33,6 +33,7 @@ flip_datapoints = function(settings) {
       swap_elements(settings, "xlabs", "ylabs")
       swap_elements(settings, "xlim", "ylim")
       swap_elements(settings, "xpad", "ypad")
+      swap_elements(settings, "xpad_user", "ypad_user")
       swap_elements(settings, "null_xlim", "null_ylim")
       swap_elements(settings, "rev_x", "rev_y")
       swap_elements(settings, "xmax", "ymax")

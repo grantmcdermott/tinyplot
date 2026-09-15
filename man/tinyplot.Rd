@@ -440,10 +440,23 @@ used for the x-axis and y-axis, respectively. See
 \code{\link[graphics]{par}} for the possible values.}
 
 \item{xpad, ypad}{numeric specifying how much padding, as a fraction of the
-data range, should be added to each end of the axes. Defaults to \code{NULL},
-in which case behaviour depends on the value of \code{x/yaxs}. In most cases,
-this will translate to a value of \code{0.04}, i.e. 4\% padding on each end (see
-\code{\link[graphics]{par}}).}
+data range, should be added to each end of the axes. If \code{NULL} (the
+default), follows an automatic padding heuristic that tries to optimize for
+plot aesthetic depending on the axis type:
+\itemize{
+\item numeric axis: inherited from \code{x/yaxs}. Under the default \code{x/yaxs = "r"}
+style, this means \code{0.04}, i.e. 4\% padding on each end (see
+\code{\link[graphics]{par}}).
+\item categorical axis: behaviour depends on the glyph-type and number of
+unique categories, and therefore tick marks. For example, point-like
+glyphs with numerous (8+) categories inherit the same padding logic as a
+numeric axis (i.e., usually 4\%). For cases with fewer unique categories,
+the padding will instead correspond to 25\% of the gap between interior
+tick marks, so that the end categories aren't drawn flush against the
+plot frame. Note that providing an explicit \code{x/ylim} or setting
+\code{x/yaxs = "i"} skips this heuristic in favour of the standard numeric
+behaviour.
+}}
 
 \item{xaxb, yaxb}{numeric vector (or character vector, if appropriate) giving
 the break points at which the axis tick-marks are to be drawn. Break points

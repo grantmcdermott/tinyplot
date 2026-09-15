@@ -136,6 +136,15 @@ Beyond convenience, these improvements to categorical variable handling also
 provide the scaffolding to eliminate some niggling inconsistencies; for example,
 related to plot layering. See "Bug fixes" below.
 
+#### Axis aesthetics
+
+- Point-like glyphs (`"p"`, `"l"`, `"errorbar"`, and friends) gain smart padding
+  behaviour for categorical axes. Most notably, we now use more generous axis
+  padding when there are few unique categories (levels), so that the end tick
+  marks aren't drawn flush against the plot frame. Users can also override with
+  the new `x/ypad` arguments (see below) to match their own aesthetic
+  preferences. (#732 @grantmcdermott)
+
 #### Other new features
 
 - New top-level `tinyplot()`/`plt()` arguments:

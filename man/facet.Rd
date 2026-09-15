@@ -47,6 +47,8 @@ draw_facet_window(
   yaxl,
   yaxr = NULL,
   ypad = NULL,
+  xpad_user = NULL,
+  ypad_user = NULL,
   rev_x = FALSE,
   rev_y = FALSE,
   xlim_partial = NULL,

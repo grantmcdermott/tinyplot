@@ -73,6 +73,8 @@ data_pointrange = function(dodge, fixed.dodge, xlevels = NULL, xord = "asis", or
       xlabs = seq_along(xlvls)
       names(xlabs) = xlvls
       datapoints$x = as.integer(datapoints$x)
+      # More generous padding for better plot aesthetic
+      settings[["type_hints"]][["pads_cat_axis"]] = TRUE
     }
     datapoints$xmin = datapoints$x
     datapoints$xmax = datapoints$x

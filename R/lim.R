@@ -7,7 +7,8 @@ lim_args = function(settings) {
     c(
       "xaxb", "xlabs", "xlim", "null_xlim", "rev_x",
       "yaxb", "ylabs", "ylim", "null_ylim", "rev_y",
-      "datapoints", "type", "type_hints", "xpad", "ypad", "log"
+      "datapoints", "type", "type_hints", "xpad", "ypad", "xaxs", "yaxs",
+      "log"
     )
   )
 
@@ -50,6 +51,18 @@ lim_args = function(settings) {
   prop_lim = isTRUE(type_hints[["has_proportional_lim"]])
   if (null_xlim && !is.null(xaxb) && !prop_lim) xlim = range(c(xlim, xaxb))
   if (null_ylim && !is.null(yaxb) && !prop_lim) ylim = range(c(ylim, yaxb))
+
+  # A categorical axis asks for its buffer in category widths; xpad speaks in
+  # fractions of the range. Convert and let the existing machinery apply it.
+  # An explicit x/ylim or x/yaxs = "i" is the user's call; leave those to base.
+  if (isTRUE(type_hints[["pads_cat_axis"]])) {
+    if (is.null(xpad) && !is.null(xlabs) && null_xlim && !identical(xaxs, "i")) {
+      xpad = cat_pad(xlim)
+    }
+    if (is.null(ypad) && !is.null(ylabs) && null_ylim && !identical(yaxs, "i")) {
+      ypad = cat_pad(ylim)
+    }
+  }
 
   if (!is.null(xpad)) {
     xlim = expand_lim(widen_degenerate(xlim), xpad,
@@ -102,6 +115,21 @@ widen_degenerate = function(lim) {
   if (length(lim) != 2L || !all(is.finite(lim)) || diff(lim) != 0) return(lim)
   lim + c(-1, 1) * (if (lim[1L] == 0) 1 else 0.4 * abs(lim[1L]))
 }
+
+
+# The categorical buffer as the fraction of the range that `xpad` wants, one
+# category being one unit. Takes `lim` rather than a category count because
+# dodging widens the span past n-1, and the gutter should clear what is drawn.
+# Past a span of reach/0.04 (eight categories at the default) base's own 4%
+# already reaches further, so NULL hands those plots back to it untouched. A
+# quarter of a category, not the half box-like types take: a box is most of a
+# category wide and needs the room; a point is not.
+cat_pad = function(lim, reach = 0.25) {
+  span = abs(diff(lim))
+  if (!is.finite(span) || span == 0 || span > reach / 0.04) return(NULL)
+  reach / span
+}
+
 
 # Resolve a user-supplied x/ylim that may be a scalar or contains a single NA.
 # `lim`  : raw user value (already known to be non-NULL)

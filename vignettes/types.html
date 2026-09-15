@@ -864,6 +864,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Draw the legend key border in the foreground colour rather than the group colour.</td>
 </tr>
 <tr class="even">
+<td><code>pads_cat_axis</code></td>
+<td><code>type_points()</code>, <code>type_lines()</code>, <code>type_pointrange()</code>, <code>type_errorbar()</code>, <code>type_text()</code></td>
+<td>Buffer the ends of a categorical axis, so that the outermost categories aren’t drawn flush against the plot frame. Declare it for types whose glyphs sit <em>on</em> their tick with no width of their own; see <code>xpad</code> in <code>?tinyplot</code> or <code>?tpar</code> for the details.</td>
+</tr>
+<tr class="odd">
 <td><code>legend_reversed</code></td>
 <td><code>type_area(stack = TRUE)</code></td>
 <td>List the legend key bottom-up rather than top-down. For types whose groups read from the bottom of the plot upwards—stacking puts the first <code>by</code> level in the bottom band—so that the key reads in the same direction as the geometry rather than backwards against it.</td>
@@ -897,7 +902,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars, <span class="at">type =</span> <span class="fu">type_error</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `settings$type_data()`:
-! add, alpha, axes, bg, bubble, bubble_alpha, bubble_bg_alpha, bubble_pch, by, by_dep, call, cap, cex, cex_dep, col, datapoints, dodge, dots, draw, facet, facet_attr, facet_by, facet_dep, facet_labs, facet_vars, facet.args, file, fill, flip, frame.plot, group_offsets, height, labels, legend, legend_args, lighten, log, lty, lwd, null_by, null_facet, null_palette, null_xlim, null_ylim, offsets_axis, palette, pch, record, rev_x, rev_y, ribbon.alpha, sub, type, type_data, type_draw, type_hints, type_info, type_name, weights, weights_used, width, x, x_by, x_dep, xaxb, xaxl, xaxr, xaxs, xaxt, xlab, xlabs, xlim, xlim_partial, xmax, xmax_dep, xmin, xmin_dep, xpad, y, y_dep, yaxb, yaxl, yaxr, yaxs, yaxt, ygroup, ylab, ylabs, ylim, ylim_partial, ymax, ymax_dep, ymin, ymin_dep, ypad</code></pre>
+! add, alpha, axes, bg, bubble, bubble_alpha, bubble_bg_alpha, bubble_pch, by, by_dep, call, cap, cex, cex_dep, col, datapoints, dodge, dots, draw, facet, facet_attr, facet_by, facet_dep, facet_labs, facet_vars, facet.args, file, fill, flip, frame.plot, group_offsets, height, labels, legend, legend_args, lighten, log, lty, lwd, null_by, null_facet, null_palette, null_xlim, null_ylim, offsets_axis, palette, pch, record, rev_x, rev_y, ribbon.alpha, sub, type, type_data, type_draw, type_hints, type_info, type_name, weights, weights_used, width, x, x_by, x_dep, xaxb, xaxl, xaxr, xaxs, xaxt, xlab, xlabs, xlim, xlim_partial, xmax, xmax_dep, xmin, xmin_dep, xpad, xpad_user, y, y_dep, yaxb, yaxl, yaxr, yaxs, yaxt, ygroup, ylab, ylabs, ylim, ylim_partial, ymax, ymax_dep, ymin, ymin_dep, ypad, ypad_user</code></pre>
 </div>
 </div>
 <p>As we can see, the <code>settings</code> environment contains many parameters that custom types can use as inputs or modify as needed.</p>

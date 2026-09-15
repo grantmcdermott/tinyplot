@@ -347,6 +347,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Beyond convenience, these improvements to categorical variable handling also provide the scaffolding to eliminate some niggling inconsistencies; for example, related to plot layering. See “Bug fixes” below.</p>
 </section>
+<section id="axis-aesthetics" class="level4">
+<h4 class="anchored" data-anchor-id="axis-aesthetics">Axis aesthetics</h4>
+<ul>
+<li>Point-like glyphs (<code>"p"</code>, <code>"l"</code>, <code>"errorbar"</code>, and friends) gain smart padding behaviour for categorical axes. Most notably, we now use more generous axis padding when there are few unique categories (levels), so that the end tick marks aren’t drawn flush against the plot frame. Users can also override with the new <code>x/ypad</code> arguments (see below) to match their own aesthetic preferences. (<a href="https://github.com/grantmcdermott/tinyplot/issues/732">#732</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+</ul>
+</section>
 <section id="other-new-features" class="level4">
 <h4 class="anchored" data-anchor-id="other-new-features">Other new features</h4>
 <ul>

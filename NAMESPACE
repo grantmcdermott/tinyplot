@@ -50,6 +50,7 @@ export(type_ribbon)
 export(type_ridge)
 export(type_rug)
 export(type_segments)
+export(type_sina)
 export(type_spineplot)
 export(type_spline)
 export(type_summary)
@@ -148,6 +149,7 @@ importFrom(stats,
   qt,
   quantile,
   reformulate,
+  runif,
   sd,
   setNames,
   spline,

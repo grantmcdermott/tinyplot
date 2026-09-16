@@ -211,7 +211,7 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         
         dens = lapply(datapoints, function(dat) {
             wts = if (has_weights) dat[["weights"]] / sum(dat[["weights"]]) else NULL
-            density(dat$x, bw = dens_bw, kernel = kernel, n = n, weights = wts)
+            density(dat$x, bw = dens_bw, adjust = adjust, kernel = kernel, n = n, weights = wts)
         })
 
         if (length(echo.bw)) {

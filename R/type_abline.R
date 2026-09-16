@@ -107,92 +107,95 @@
 #'
 #' @export
 type_abline = function(a = 0, b = 1) {
-  data_abline = function(settings, ...) {
+  ablines_type(a = a, b = b, name = "abline")
+}
+
+
+# Shared internals for type_abline(), type_hline(), and type_vline()
+ablines_type = function(a = NULL, b = NULL, h = NULL, v = NULL, name) {
+  params = list(a = a, b = b, h = h, v = v)
+  params = params[!vapply(params, is.null, logical(1))]
+  for (p in names(params)) assert_numeric(params[[p]], name = p)
+  data_ablines = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "lwd", "lty", "col"))
     if (nrow(datapoints) == 0) {
-      msg = "`type_abline() only works on existing plots with x and y data points."
+      msg = sprintf(
+        "`type_%s()` only works on existing plots with x and y data points.",
+        name
+      )
       stop(msg, call. = FALSE)
     }
     # keep track of unique lty and lwd (needed for group catch / escape hatch
-    # later in draw_hline)
-    ul_lwd = length(unique(lwd))
-    ul_lty = length(unique(lty))
-    ul_col = length(unique(col))
-    type_info = list(ul_lty = ul_lty, ul_lwd = ul_lwd, ul_col = ul_col)
+    # later in draw_ablines)
+    type_info = list(
+      ul_lty = length(unique(lty)),
+      ul_lwd = length(unique(lwd)),
+      ul_col = length(unique(col))
+    )
     env2env(environment(), settings, "type_info")
   }
-  draw_abline = function() {
-    fun = function(ifacet, iby, data_facet, icol, ilty, ilwd,
-                   ngrps, nfacets, by_continuous, facet_by,
-                   type_info, flip = FALSE,
-                   ...) {
-      # flag for aesthetics by groups
-      grp_aes = type_info[["ul_col"]] == 1 || type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps
+  draw_ablines = function(ifacet, iby, data_facet, icol, ilty, ilwd,
+                          ngrps, nfacets, by_continuous, facet_by,
+                          type_info, flip = FALSE,
+                          ...) {
+    # flag for aesthetics by groups
+    grp_aes = type_info[["ul_col"]] == 1 ||
+      type_info[["ul_lty"]] == ngrps ||
+      type_info[["ul_lwd"]] == ngrps
 
-      if (length(a) != 1) {
-        if (!length(a) %in% c(ngrps, nfacets, ngrps * nfacets)) {
-          msg = "Length of 'a' must be 1, or equal to the number of facets or number of groups (or product thereof)."
+    # recycle each line parameter across groups and/or facets
+    for (p in names(params)) {
+      val = params[[p]]
+      if (length(val) != 1) {
+        if (!length(val) %in% c(ngrps, nfacets, ngrps * nfacets)) {
+          msg = sprintf(
+            "Length of '%s' must be 1, or equal to the number of facets or number of groups (or product thereof).",
+            p
+          )
           stop(msg, call. = FALSE)
         }
-        if (!facet_by && length(a) == nfacets) {
-          a = a[ifacet]
-          if (!grp_aes && type_info[["ul_col"]] != ngrps) {
-            icol = 1
-          } else if (by_continuous) {
+        if (!facet_by && length(val) == nfacets) {
+          val = val[ifacet]
+          if ((!grp_aes && type_info[["ul_col"]] != ngrps) || by_continuous) {
             icol = 1
           }
-        } else if (!by_continuous && length(a) == ngrps * nfacets) {
-          a = a[ifacet * ngrps - c(ngrps - iby)]
+        } else if (!by_continuous && length(val) == ngrps * nfacets) {
+          val = val[ifacet * ngrps - c(ngrps - iby)]
         } else if (!by_continuous) {
-          a = a[iby]
+          val = val[iby]
         }
       } else if (!grp_aes) {
         icol = 1
       }
-
-      if (length(b) != 1) {
-        if (!length(b) %in% c(ngrps, nfacets, ngrps * nfacets)) {
-          msg = "Length of 'b' must be 1, or equal to the number of facets or number of groups (or product thereof)."
-          stop(msg, call. = FALSE)
-        }
-        if (!facet_by && length(b) == nfacets) {
-          b = b[ifacet]
-          if (!grp_aes && type_info[["ul_col"]] != ngrps) {
-            icol = 1
-          } else if (by_continuous) {
-            icol = 1
-          }
-        } else if (!by_continuous && length(b) == ngrps * nfacets) {
-          b = b[ifacet * ngrps - c(ngrps - iby)]
-        } else if (!by_continuous) {
-          b = b[iby]
-        }
-      } else if (!grp_aes) {
-        icol = 1
-      }
-
-      if (type_info[["ul_col"]] != 1 && !(type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps)) {
-        icol = 1
-      }
-
-      # under flip, y = a + b*x is drawn with the axes swapped, i.e. as
-      # x = (y - a) / b in plotting coordinates (vertical line if b == 0)
-      if (isTRUE(flip)) {
-        if (b == 0) {
-          abline(v = a, col = icol, lty = ilty, lwd = ilwd)
-        } else {
-          abline(a = -a / b, b = 1 / b, col = icol, lty = ilty, lwd = ilwd)
-        }
-      } else {
-        abline(a = a, b = b, col = icol, lty = ilty, lwd = ilwd)
-      }
+      params[[p]] = val
     }
-    return(fun)
+
+    if (name == "abline" && type_info[["ul_col"]] != 1 &&
+      !(type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps)) {
+      icol = 1
+    }
+
+    # Line parameters refer to the original (pre-flip) variables, so under flip
+    # we swap orientation: h <-> v, and y = a + b*x becomes x = (y - a) / b in
+    # plotting coordinates (i.e., a vertical line if b == 0)
+    if (isTRUE(flip)) {
+      params = switch(name,
+        hline = list(v = params[["h"]]),
+        vline = list(h = params[["v"]]),
+        abline = if (all(params[["b"]] == 0)) {
+          list(v = params[["a"]])
+        } else {
+          list(a = -params[["a"]] / params[["b"]], b = 1 / params[["b"]])
+        }
+      )
+    }
+
+    do.call(abline, c(params, list(col = icol, lty = ilty, lwd = ilwd)))
   }
   out = list(
-    draw = draw_abline(),
-    data = data_abline,
-    name = "abline"
+    draw = draw_ablines,
+    data = data_ablines,
+    name = name
   )
   class(out) = "tinyplot_type"
   return(out)

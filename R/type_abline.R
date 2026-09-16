@@ -5,6 +5,11 @@
 #' While `type_abline`, `type_hline`, and `type_vline` can be called in a base
 #' plot layer, we expect that they will typically be called as subsequent
 #' layers via [`tinyplot_add`].
+#'
+#' Line parameters always refer to the original (pre-flip) variables. So, if
+#' `flip = TRUE`, then `type_hline()` draws vertical line(s) at the given `y`
+#' value(s), `type_vline()` draws horizontal line(s) at the given `x` value(s),
+#' and `type_abline()` draws the line \eqn{y = a + bx} with the axes swapped.
 #' @section Recycling logic:
 #' The recycling behaviour of the line parameters (i.e., `a`, `b`, `h`, or `v`)
 #' is adaptive, depending on whether `by` or `facet` grouping is detected. While
@@ -72,6 +77,16 @@
 #' tinyplot_add(type = type_vline(with(mtcars, tapply(hp, cyl, mean))), lty = 2)
 #'
 #' #
+#' ## Flipped plots
+#'
+#' # Line parameters refer to the original x and y variables, so "hline" is
+#' # drawn vertically and "vline" horizontally when flip = TRUE
+#' tinyplot(mpg ~ wt, data = mtcars, flip = TRUE)
+#' tinyplot_add(type = type_hline(20), col = "hotpink")
+#' tinyplot_add(type = type_vline(3), col = "dodgerblue")
+#' tinyplot_add(type = type_abline(a = 37, b = -5), lty = 2)
+#'
+#' #
 #' ## Recycling logic
 #'
 #' # length(h) == no. of groups
@@ -109,7 +124,7 @@ type_abline = function(a = 0, b = 1) {
   draw_abline = function() {
     fun = function(ifacet, iby, data_facet, icol, ilty, ilwd,
                    ngrps, nfacets, by_continuous, facet_by,
-                   type_info,
+                   type_info, flip = FALSE,
                    ...) {
       # flag for aesthetics by groups
       grp_aes = type_info[["ul_col"]] == 1 || type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps
@@ -160,7 +175,17 @@ type_abline = function(a = 0, b = 1) {
         icol = 1
       }
 
-      abline(a = a, b = b, col = icol, lty = ilty, lwd = ilwd)
+      # under flip, y = a + b*x is drawn with the axes swapped, i.e. as
+      # x = (y - a) / b in plotting coordinates (vertical line if b == 0)
+      if (isTRUE(flip)) {
+        if (b == 0) {
+          abline(v = a, col = icol, lty = ilty, lwd = ilwd)
+        } else {
+          abline(a = -a / b, b = 1 / b, col = icol, lty = ilty, lwd = ilwd)
+        }
+      } else {
+        abline(a = a, b = b, col = icol, lty = ilty, lwd = ilwd)
+      }
     }
     return(fun)
   }

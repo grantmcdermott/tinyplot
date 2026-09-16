@@ -22,7 +22,7 @@ type_hline = function(h = 0) {
   draw_hline = function() {
     fun = function(ifacet, iby, data_facet, icol, ilty, ilwd,
                    ngrps, nfacets, by_continuous, facet_by,
-                   type_info,
+                   type_info, flip = FALSE,
                    ...) {
       # flag for aesthetics by groups
       grp_aes = type_info[["ul_col"]] == 1 || type_info[["ul_lty"]] == ngrps || type_info[["ul_lwd"]] == ngrps
@@ -48,7 +48,12 @@ type_hline = function(h = 0) {
         icol = 1
       }
 
-      abline(h = h, col = icol, lty = ilty, lwd = ilwd)
+      # under flip, the y variable runs along the horizontal axis
+      if (isTRUE(flip)) {
+        abline(v = h, col = icol, lty = ilty, lwd = ilwd)
+      } else {
+        abline(h = h, col = icol, lty = ilty, lwd = ilwd)
+      }
     }
     return(fun)
   }

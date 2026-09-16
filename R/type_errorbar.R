@@ -62,7 +62,7 @@
 #' tinytheme("classic")
 #' tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "errorbar",
 #'          flip = TRUE)
-#' tinyplot_add(type = 'vline', lty = 2)
+#' tinyplot_add(type = "hline", lty = 2) # "hline" b/c flip = TRUE (not vline!)
 #' 
 #' tinytheme("basic") # back to basic theme for the remaining examples
 #' 

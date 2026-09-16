@@ -140,3 +140,21 @@ f = function() {
   )
 }
 expect_snapshot_plot(f, label = "flip_type_h_grouped")
+
+
+# flipped straight line types (#733)
+
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars, flip = TRUE, main = "Flipped h/v/ablines")
+  tinyplot_add(type = type_hline(20), col = "hotpink")
+  tinyplot_add(type = type_vline(3), col = "dodgerblue")
+  tinyplot_add(type = type_abline(a = 37, b = -5), lty = 2)
+}
+expect_snapshot_plot(f, label = "flip_ablines")
+
+f = function() {
+  tinyplot(mpg ~ wt, facet = ~am, data = mtcars, flip = TRUE)
+  tinyplot_add(type = type_hline(c(15, 25)), col = "hotpink")
+  tinyplot_add(type = type_abline(a = 20, b = 0), lty = 2)
+}
+expect_snapshot_plot(f, label = "flip_ablines_facet_zero_slope")

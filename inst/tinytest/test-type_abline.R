@@ -56,6 +56,13 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "vline_univariate_y1")
 
+f = function() {
+  tinyplot(mpg ~ wt, data = mtcars)
+  tinyplot_add(type = type_abline(a = 37, b = -5), lty = 2)
+  tinyplot_add(type = type_abline(a = 20, b = 0), col = "hotpink")
+}
+expect_snapshot_plot(f, label = "abline")
+
 ## TODO: uncomment this when ready to test. Probably after the tinyplot_add
 ## refactor to save in an environment instead of global option
 # f = function() {

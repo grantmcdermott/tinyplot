@@ -25,5 +25,5 @@ plt(
   theme = list("clean2", palette.qualitative = pal),
   main = "Likert example with \"Unsure\" category offset"
 )
-plt_add(type = "vline")
-# plt_add(type = "vline", v = 1, lty = 2) ## optional
+plt_add(type = "hline") # note: "hline" b/c flip = TRUE (not "vline"!)
+# plt_add(type = type_hline(1), lty = 2) ## optional 

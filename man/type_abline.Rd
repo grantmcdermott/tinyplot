@@ -30,6 +30,11 @@ These functions add straight line(s) through the current plot.
 While \code{type_abline}, \code{type_hline}, and \code{type_vline} can be called in a base
 plot layer, we expect that they will typically be called as subsequent
 layers via \code{\link{tinyplot_add}}.
+
+Line parameters always refer to the original (pre-flip) variables. So, if
+\code{flip = TRUE}, then \code{type_hline()} draws vertical line(s) at the given \code{y}
+value(s), \code{type_vline()} draws horizontal line(s) at the given \code{x} value(s),
+and \code{type_abline()} draws the line \eqn{y = a + bx} with the axes swapped.
 }
 \section{Recycling logic}{
 
@@ -96,6 +101,16 @@ tinyplot_add(type = type_hline(with(mtcars, tapply(mpg, cyl, mean))), lty = 2)
 
 # Similar idea for vline
 tinyplot_add(type = type_vline(with(mtcars, tapply(hp, cyl, mean))), lty = 2)
+
+#
+## Flipped plots
+
+# Line parameters refer to the original x and y variables, so "hline" is
+# drawn vertically and "vline" horizontally when flip = TRUE
+tinyplot(mpg ~ wt, data = mtcars, flip = TRUE)
+tinyplot_add(type = type_hline(20), col = "hotpink")
+tinyplot_add(type = type_vline(3), col = "dodgerblue")
+tinyplot_add(type = type_abline(a = 37, b = -5), lty = 2)
 
 #
 ## Recycling logic

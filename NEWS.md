@@ -229,6 +229,11 @@ related to plot layering. See "Bug fixes" below.
 
 - `type_text()` no longer converts a categorical axis to a numeric one.
   (#730 @grantmcdermott)
+- `type_hline()`, `type_vline()`, and `type_abline()` now respect
+  `flip = TRUE`, so that (e.g.) `h` refers to the flipped `y` variable and is
+  drawn vertically. Code that previously used `type_vline()` as a workaround
+  for a vertical line on a flipped plot should switch to `type_hline()`, and
+  vice versa. (#733 @grantmcdermott)
 - The `adjust` argument of `type_density()`, `type_violin()`, and
   `type_ridge()` was accepted but never passed on to the underlying
   `density()` call, so it silently did nothing. (#734 @grantmcdermott)

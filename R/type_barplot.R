@@ -213,7 +213,7 @@
 #'   flip = TRUE, yaxl = "percent",
 #'   theme = list("clean2", palette.qualitative = hcols)
 #' )
-#' tinyplot_add(type = "vline", col = "white")
+#' tinyplot_add(type = "hline", col = "white") # "hline" b/c flip = TRUE
 #'
 #' #
 #' ## Offset examples
@@ -255,8 +255,8 @@
 #'   theme = list("clean2", palette.qualitative = pal),
 #'   main = "Hypothetical Likert example with category offset"
 #' )
-#' tinyplot_add(type = "vline")
-#' tinyplot_add(type = "vline", v = 1, lty = 2)
+#' tinyplot_add(type = "hline") # "hline" b/c flip = TRUE
+#' tinyplot_add(type = type_hline(1), lty = 2) # ditto
 #'
 #' #
 #' ## Implicit zeros and empty cells (see the section of the same name above)

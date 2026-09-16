@@ -68,7 +68,7 @@ fun = function() {
     flip = TRUE
   )
   tinyplot_add(type = "ribbon")
-  tinyplot_add(type = "vline", lty = 2)
+  tinyplot_add(type = "hline", lty = 2) # "hline" b/c flip = TRUE (not vline!)
 }
 expect_snapshot_plot(fun, label = "pointrange_with_layers_flipped")
 

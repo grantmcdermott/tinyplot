@@ -184,6 +184,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         dens_bw = prep[["dens_bw"]]
         xwidth = prep[["xwidth"]]
         group_offsets = prep[["group_offsets"]]
+        grp_levels = prep[["grp_levels"]]
         offsets_axis = prep[["offsets_axis"]]
         xlabs = prep[["xlabs"]]
 
@@ -213,7 +214,9 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 
             xcat = dat$x[1]
             x = rescale_num(x, to = c(0, xwidth)) + xcat - xwidth / 2
-            if (prep[["dodged"]]) x = x + group_offsets[dat$by[1]]
+            if (prep[["dodged"]]) {
+                x = x + group_offsets[match(dat$by[1], grp_levels)]
+            }
 
             x = c(x, NA)
             y = c(y, NA)
@@ -314,6 +317,19 @@ dist_prep = function(
     ngrps = if (null_by || by_continuous) 1L else length(unique(datapoints[["by"]]))
     nfacets = if (null_facet) 1L else length(unique(datapoints[["facet"]]))
 
+    ## The groups that the dodge slots below are built for, in slot order.
+    ## Callers must look a row's slot up by *position among these*, never by the
+    ## factor's integer code: a `by` carrying an unused level, or a numeric one
+    ## whose values are not positions at all, would otherwise index past the end
+    ## of the offsets and silently turn those rows' `x` into NA.
+    grp_levels = if (null_by || by_continuous) {
+        NULL
+    } else if (is.factor(datapoints[["by"]])) {
+        levels(droplevels(datapoints[["by"]]))
+    } else {
+        sort(unique(datapoints[["by"]]))
+    }
+
     ## Convert x to consecutive integer positions, keeping the labels for the axis
     datapoints[["x"]] = as.factor(datapoints[["x"]])
     if (x_by) datapoints[["by"]] = datapoints[["x"]]
@@ -357,7 +373,10 @@ dist_prep = function(
     } else {
         cells
     }
-    if (joint.bw == "none" || is.numeric(bw)) {
+    ## With every cell a retained singleton there is nothing to derive a
+    ## bandwidth from -- and nothing to smooth either, since the caller draws
+    ## those rows directly -- so leave `bw` as supplied rather than erroring.
+    if (joint.bw == "none" || is.numeric(bw) || length(smoothable) == 0L) {
         dens_bw = bw
     } else if (joint.bw == "mean") {
         # Use weighted mean of subgroup bandwidths
@@ -387,6 +406,7 @@ dist_prep = function(
         xlabs = xlabs,
         dens_bw = dens_bw,
         group_offsets = group_offsets,
+        grp_levels = grp_levels,
         offsets_axis = "x",
         ngrps = ngrps,
         nfacets = nfacets,

@@ -223,8 +223,18 @@ related to plot layering. See "Bug fixes" below.
 - The `adjust` argument of `type_density()`, `type_violin()`, and
   `type_ridge()` was accepted but never passed on to the underlying
   `density()` call, so it silently did nothing. (#734 @grantmcdermott)
-- `type_violin(joint.bw = "full")` computed the joint bandwidth from the `x`
-  categories rather than the `y` values being smoothed. (#734 @grantmcdermott)
+- `type_violin()` receives two further bug fixes:
+  - `joint.bw = "full"` computed the joint bandwidth from the `x` categories
+    rather than the `y` values being smoothed. (#734 @grantmcdermott)
+  - Dodge offsets were keyed by the `by` variable's underlying integer codes.
+    A numeric `by` therefore errored outright, and a factor `by` carrying an
+    unused level silently dropped the affected group from the plot. Offsets are
+    now keyed by position among the observed groups. (#734 @grantmcdermott)
+  - A numeric (continuous) `by` now reverts to discrete groups and a matching
+    discrete legend, as it already did for `"boxplot"`, `"polygon"` and the
+    other types that cannot render a colour gradient. Previously every violin
+    was drawn in the same colour while the legend showed a colourbar.
+    (#734 @grantmcdermott)
 - Fixed a bug where consecutive plots with (i) logged axes under (ii) a dynamic
   theme would error, due to a stale `par("xlog")`/`par("ylog")` state. We now
   avoid this by grabbing the log state directly from the top-level `log`

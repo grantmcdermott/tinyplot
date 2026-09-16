@@ -40,9 +40,23 @@ type_sina = function(
 }
 
 
-## Van der Corput sequence: a deterministic stand-in for runif() that spreads
-## successive values evenly rather than independently, so points fill the
-## available width instead of clumping and leaving gaps.
+## The first `n` van der Corput values, mapped onto [-1, 1] and centred: a
+## deterministic stand-in for runif(-1, 1) that spreads successive values evenly
+## rather than independently, so points fill the available width instead of
+## clumping and leaving gaps.
+##
+## The raw sequence only balances about the midpoint at n = 2^k - 1; at every
+## other n it leans left (n = 2 gives c(0, -0.5), so neither point sits right of
+## the tick). Centring fixes the lean, and can overshoot the envelope by ~0.1%
+## in the process, so clamp it back -- points escaping the density bounds would
+## defeat the whole point of the type.
+centred_van_der_corput = function(n) {
+    u = 2 * van_der_corput(n) - 1
+    u = u - mean(u)
+    pmax(pmin(u, 1), -1)
+}
+
+
 van_der_corput = function(n, base = 2) {
     vapply(
         seq_len(n),
@@ -78,13 +92,18 @@ data_sina = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         dens_bw = prep[["dens_bw"]]
         xwidth = prep[["xwidth"]]
         group_offsets = prep[["group_offsets"]]
+        grp_levels = prep[["grp_levels"]]
         offsets_axis = prep[["offsets_axis"]]
         xlabs = prep[["xlabs"]]
 
         datapoints = lapply(cells, function(dat) {
             nobs = nrow(dat)
             xcat = dat[["x"]][1]
-            dodge = if (prep[["dodged"]]) group_offsets[dat[["by"]][1]] else 0
+            dodge = if (prep[["dodged"]]) {
+                group_offsets[match(dat[["by"]][1], grp_levels)]
+            } else {
+                0
+            }
 
             # a lone observation has no density to be displaced by, so it just
             # sits on its group's tick
@@ -113,7 +132,7 @@ data_sina = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                 # walk the sequence in y order, so that neighbouring points
                 # (the ones at risk of overlapping) land far apart
                 u = numeric(nobs)
-                u[order(dat[["y"]])] = 2 * van_der_corput(nobs) - 1
+                u[order(dat[["y"]])] = centred_van_der_corput(nobs)
             }
 
             dat[["x"]] = xcat + u * halfwidth * xwidth / 2 + dodge

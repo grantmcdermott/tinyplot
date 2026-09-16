@@ -44,6 +44,22 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "violin_groups_argpass")
 
+# dodge offsets used to be keyed by the `by` variable's integer codes. A
+# numeric `by` errored outright; it now downgrades to discrete groups like the
+# other polygon-alike types, so the fills match the legend. (#734)
+expect_warning(
+  plt(len ~ supp | dose, data = ToothGrowth, type = "violin"),
+  pattern = "Continuous legends not supported"
+)
+
+# a factor `by` carrying an unused level silently dropped that group (#734)
+expect_silent(
+  plt(
+    len ~ supp | factor(dose, levels = c(0.25, 0.5, 1, 2)),
+    data = ToothGrowth, type = "violin"
+  )
+)
+
 # don't dodge if by (groups) and x are the same
 f = function() {
   plt(Sepal.Length ~ Species | Species, iris, type = "violin", legend = FALSE)

@@ -32,6 +32,10 @@ where the formatting is also better._
   along the chosen margin by default. It also reverses the y-axis by default, so
   that the first row sits at the top (again matching `heatmap()`); pass an
   explicit `ylim` to override. (#677 @grantmcdermott)
+- `type_sina()` / `"sina"` for [sina plots](https://en.wikipedia.org/wiki/Sina_plot),
+  a variant of the violin plot where the raw observations are displayed as points,
+  with each group's width bounded by its density. This makes them arguably a more
+  principled version of the beeswarm plot. (#734 @grantmcdermott)
 - While not strictly a new plot type, `type_area()` gains a new `stack` argument
   for drawing _stacked_ area plots, where each layer represents a discrete `by`
   category group. This functionality is further enhanced by two (also new)
@@ -225,6 +229,21 @@ related to plot layering. See "Bug fixes" below.
 
 - `type_text()` no longer converts a categorical axis to a numeric one.
   (#730 @grantmcdermott)
+- The `adjust` argument of `type_density()`, `type_violin()`, and
+  `type_ridge()` was accepted but never passed on to the underlying
+  `density()` call, so it silently did nothing. (#734 @grantmcdermott)
+- `type_violin()` receives two further bug fixes:
+  - `joint.bw = "full"` computed the joint bandwidth from the `x` categories
+    rather than the `y` values being smoothed. (#734 @grantmcdermott)
+  - Dodge offsets were keyed by the `by` variable's underlying integer codes.
+    A numeric `by` therefore errored outright, and a factor `by` carrying an
+    unused level silently dropped the affected group from the plot. Offsets are
+    now keyed by position among the observed groups. (#734 @grantmcdermott)
+  - A numeric (continuous) `by` now reverts to discrete groups and a matching
+    discrete legend, as it already did for `"boxplot"`, `"polygon"` and the
+    other types that cannot render a colour gradient. Previously every violin
+    was drawn in the same colour while the legend showed a colourbar.
+    (#734 @grantmcdermott)
 - Fixed a bug where consecutive plots with (i) logged axes under (ii) a dynamic
   theme would error, due to a stale `par("xlog")`/`par("ylog")` state. We now
   avoid this by grabbing the log state directly from the top-level `log`

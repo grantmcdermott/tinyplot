@@ -89,6 +89,7 @@ a convenience string (with default behaviour) or a companion `type_*()` function
 | `"histogram"` / `"hist"`   | `type_histogram()`  | Creates a histogram of a single variable.      | [link](/man/type_histogram.qmd) |
 | `"qq"`                     | `type_qq()`         | Creates a quantile-quantile plot.              | [link](/man/type_qq.qmd) |
 | `"ridge"`                  | `type_ridge()`      | Creates a ridgeline (aka joy) plot.            | [link](/man/type_ridge.qmd) |
+| `"sina"`                   | `type_sina()`       | Scatters observations within a violin envelope. | [link](/man/type_violin.qmd) |
 | `"spineplot"` / `"spine"`  | `type_spineplot()`  | Creates a spine plot or spinogram.             | [link](/man/type_spineplot.qmd) |
 | `"violin"`                 | `type_violin()`     | Creates a violin plot.                         | [link](/man/type_violin.qmd) |
   

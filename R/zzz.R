@@ -106,6 +106,7 @@
     "xmax_dep",
     "xmin",
     "xmin_dep",
+    "xpad",
     "y",
     "y_dep",
     "yaxb",
@@ -120,6 +121,7 @@
     "ymax",
     "ymax_dep",
     "ymin",
-    "ymin_dep"
+    "ymin_dep",
+    "ypad"
   ))
 }

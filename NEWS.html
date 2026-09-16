@@ -385,6 +385,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
 <li><code>type_text()</code> no longer converts a categorical axis to a numeric one. (<a href="https://github.com/grantmcdermott/tinyplot/issues/730">#730</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li><code>type_hline()</code>, <code>type_vline()</code>, and <code>type_abline()</code> now respect <code>flip = TRUE</code>, so that (e.g.) <code>h</code> refers to the flipped <code>y</code> variable and is drawn vertically. Code that previously used <code>type_vline()</code> as a workaround for a vertical line on a flipped plot should switch to <code>type_hline()</code>, and vice versa. (<a href="https://github.com/grantmcdermott/tinyplot/issues/733">#733</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li>The <code>adjust</code> argument of <code>type_density()</code>, <code>type_violin()</code>, and <code>type_ridge()</code> was accepted but never passed on to the underlying <code>density()</code> call, so it silently did nothing. (<a href="https://github.com/grantmcdermott/tinyplot/issues/734">#734</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 <li><code>type_violin()</code> receives two further bug fixes:
 <ul>

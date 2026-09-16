@@ -113,8 +113,11 @@ type_abline = function(a = 0, b = 1) {
 
 # Shared internals for type_abline(), type_hline(), and type_vline()
 ablines_type = function(a = NULL, b = NULL, h = NULL, v = NULL, name) {
-  params = list(a = a, b = b, h = h, v = v)
-  params = params[!vapply(params, is.null, logical(1))]
+  params = switch(name,
+    abline = list(a = a, b = b),
+    hline = list(h = h),
+    vline = list(v = v)
+  )
   for (p in names(params)) assert_numeric(params[[p]], name = p)
   data_ablines = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "lwd", "lty", "col"))
@@ -177,12 +180,13 @@ ablines_type = function(a = NULL, b = NULL, h = NULL, v = NULL, name) {
 
     # Line parameters refer to the original (pre-flip) variables, so under flip
     # we swap orientation: h <-> v, and y = a + b*x becomes x = (y - a) / b in
-    # plotting coordinates (i.e., a vertical line if b == 0)
+    # plotting coordinates (i.e., a vertical line if b == 0). Note that abline()
+    # only uses the first a/b values, so we only check the first slope.
     if (isTRUE(flip)) {
       params = switch(name,
         hline = list(v = params[["h"]]),
         vline = list(h = params[["v"]]),
-        abline = if (all(params[["b"]] == 0)) {
+        abline = if (params[["b"]][1] == 0) {
           list(v = params[["a"]])
         } else {
           list(a = -params[["a"]] / params[["b"]], b = 1 / params[["b"]])

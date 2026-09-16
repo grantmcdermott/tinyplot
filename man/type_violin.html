@@ -213,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/type_abline.html">Types</a></li><li class="breadcrumb-item"><a href="../man/type_violin.html">type_violin</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/type_abline.html">Types</a></li><li class="breadcrumb-item"><a href="../man/type_violin.html">type_sina</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -479,6 +479,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/type_violin.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">type_sina</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/type_spineplot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_spineplot</span></a>
   </div>
@@ -509,7 +515,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/type_violin.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/type_violin.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">type_violin</span></a>
   </div>
 </li>
@@ -572,28 +578,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#violin-plot-type" id="toc-violin-plot-type" class="nav-link active" data-scroll-target="#violin-plot-type">Violin plot type</a>
+  <li><a href="#violin-and-sina-plot-types" id="toc-violin-and-sina-plot-types" class="nav-link active" data-scroll-target="#violin-and-sina-plot-types">Violin and sina plot types</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/type_abline.html">Types</a></li><li class="breadcrumb-item"><a href="../man/type_violin.html">type_violin</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/type_abline.html">Types</a></li><li class="breadcrumb-item"><a href="../man/type_violin.html">type_sina</a></li></ol></nav></header>
 
 
 
 
-<section id="violin-plot-type" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="violin-plot-type">Violin plot type</h2>
+<section id="violin-and-sina-plot-types" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="violin-and-sina-plot-types">Violin and sina plot types</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Type function for violin plots, which are an alternative to box plots for visualizing continuous distributions (by group) in the form of mirrored densities.</p>
+<p>Type functions for violin plots, which are an alternative to box plots for visualizing continuous distributions (by group) in the form of mirrored densities. <code>type_violin()</code> draws the smooth outline of each density, while <code>type_sina()</code> scatters the underlying observations as points within the same outline (similar to a beeswarm plot).</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -608,6 +616,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width = 0.9,
   lighten = TRUE,
   singletons = c("warn", "drop", "none")
+)
+
+type_sina(
+  bw = "nrd0",
+  joint.bw = c("mean", "full", "none"),
+  adjust = 1,
+  kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
+    "cosine", "optcosine"),
+  n = 512,
+  trim = FALSE,
+  width = 0.9,
+  method = c("quasirandom", "random"),
+  singletons = c("keep", "warn", "drop")
 )
 </code></pre>
 </section>
@@ -660,7 +681,7 @@ the bandwidth used is actually <code>adjust*bw</code>. This makes it easy to spe
 <code id="trim">trim</code>
 </td>
 <td>
-logical indicating whether the violins should be trimmed to the range of the data. Default is <code>FALSE</code>.
+logical indicating whether the densities should be trimmed to the range of the data. Default is <code>FALSE</code>. For <code>type_sina()</code> this only affects the envelope that bounds the displacement, so it matters mainly for exact alignment with a <code>type_violin()</code> layer drawn the same way.
 </td>
 </tr>
 <tr>
@@ -668,7 +689,7 @@ logical indicating whether the violins should be trimmed to the range of the dat
 <code id="width">width</code>
 </td>
 <td>
-numeric (ideally in the range <code style="white-space: pre;">[0, 1]</code>, although this isn’t enforced) giving the normalized width of the individual violins.
+numeric (ideally in the range <code style="white-space: pre;">[0, 1]</code>, although this isn’t enforced) giving the normalized width of the individual violins. For <code>type_sina()</code> this is the width of the (undrawn) violin that the points are scattered inside.
 </td>
 </tr>
 <tr>
@@ -676,7 +697,7 @@ numeric (ideally in the range <code style="white-space: pre;">[0, 1]</code>, alt
 <code id="lighten">lighten</code>
 </td>
 <td>
-logical. Should the fills use a lighter, opaque tint of the series colour(s)? Default is <code>TRUE</code>, which keeps single- and multi-group displays consistent and lets the fill read cleanly over grid lines. Set to <code>FALSE</code> to use the fully-saturated palette colour(s) instead.
+logical. Should the fills use a lighter, opaque tint of the series colour(s)? Default is <code>TRUE</code>, which keeps single- and multi-group displays consistent and lets the fill read cleanly over grid lines. Set to <code>FALSE</code> to use the fully-saturated palette colour(s) instead. Only applies to <code>type_violin()</code>, since <code>type_sina()</code> has no fill of its own.
 </td>
 </tr>
 <tr>
@@ -684,7 +705,17 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 <code id="singletons">singletons</code>
 </td>
 <td>
-character string indicating what to do with singleton groups, i.e.&nbsp;combinations of <code>x</code>, <code>by</code>, and <code>facet</code> that consist of only 1 row. The default <code>“warn”</code> option removes any singleton cases and emits a warning reporting how many there were. <code>“drop”</code> does the same thing, but quietly. In either case the dropped groups may still be represented as empty violins or facets in your plot. Finally, <code>“none”</code> skips all singleton checks and retains the affected groups; possibly leading to an error. Note that singletons require a numeric <code>bw</code>, since the data-driven bandwidth rules need at least 2 observations.
+<p>character string indicating what to do with singleton groups, i.e.&nbsp;combinations of <code>x</code>, <code>by</code>, and <code>facet</code> that consist of only 1 row. Both types accept <code>“warn”</code>, which removes any singleton cases and emits a warning reporting how many there were, and <code>“drop”</code>, which does the same thing quietly. In either case the dropped groups may still be represented as empty violins or facets in your plot.</p>
+<p>The remaining option differs by type, as does the default. <code>type_violin()</code> defaults to <code>“warn”</code> and also accepts <code>“none”</code>, which skips all singleton checks and retains the affected groups; possibly leading to an error. Note that singletons then require a numeric <code>bw</code>, since the data-driven bandwidth rules need at least 2 observations.</p>
+<code>type_sina()</code> instead defaults to <code>“keep”</code>, which draws the lone observation on its group’s tick. No density can be estimated from a single point, but the point itself is still worth showing, and discarding an observation from what is fundamentally a scatter plot is worse than discarding an unrenderable violin. There is no <code>“none”</code> for this type, since <code>“keep”</code> already retains these cases without error.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="method">method</code>
+</td>
+<td>
+character string giving how <code>type_sina()</code> spreads points across the available width at each <code>y</code> value. <code>“quasirandom”</code> (the default) walks a low-discrepancy sequence, which fills the width more evenly than chance does and—unlike <code>type_jitter</code>—is deterministic, so repeated calls give the same plot without setting a seed. <code>“random”</code> draws the displacements uniformly at random instead.
 </td>
 </tr>
 </tbody></table>
@@ -692,6 +723,15 @@ character string indicating what to do with singleton groups, i.e.&nbsp;combinat
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
 <p>See <code>type_density</code> for more details and considerations related to bandwidth selection and kernel types.</p>
+<p>A sina plot (Sidiropoulos et al., 2018) is closely related to a beeswarm plot, but is arguably the more principled of the two. Both spread a group’s observations sideways to expose its shape. A beeswarm does so by packing points until they no longer collide, which makes its width an artefact of the <em>rendering</em>: change the symbol size or the device and the swarm changes shape. A sina instead displaces each point by the kernel density at its own <code>y</code> value, so its width is a property of the <em>data</em>, stable across devices and comparable between groups. The trade-off is occlusion: a beeswarm guarantees that no point hides another, whereas a sina accepts the occasional overlap. If you need collision-free packing, use a dedicated package such as <a href="https://CRAN.R-project.org/package=beeswarm"><span class="pkg">beeswarm</span></a>.</p>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<p>Sidiropoulos, N., Sohi, S. H., Pedersen, T. L., Porse, B. T., Winther, O., Rapin, N., and Bagger, F. O. (2018). <cite>SinaPlot: An Enhanced Chart for Simple and Truthful Representation of Single Observations Over Multiple Classes</cite>. Journal of Computational and Graphical Statistics, 27(3), 673-676. Available: https://doi.org/10.1080/10618600.2017.1366914</p>
+</section>
+<section id="see-also" class="level3">
+<h3 class="anchored" data-anchor-id="see-also">See Also</h3>
+<p>type_boxplot, type_density and type_ridge for the other ways of displaying a distribution by group, and type_jitter for displacing points without reference to a density.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -752,18 +792,52 @@ character string indicating what to do with singleton groups, i.e.&nbsp;combinat
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># note: above we relied on `...` argument passing alongside the "violin"</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># type convenience string. But this won't work for `width`, since it will</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># clash with the top-level `tinyplot(..., width = &lt;width&gt;)` arg. To ensure</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># correct arg passing, it's safer to use the functional `type_violin()` type.</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  len <span class="sc">~</span> dose <span class="sc">|</span> supp, <span class="at">data =</span> ToothGrowth,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_violin</span>(<span class="at">width =</span> <span class="fl">0.75</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the "sina" type shows the observations themselves, rather than a smooth</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># outline drawn around them</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(weight <span class="sc">~</span> feed, <span class="at">data =</span> chickwts, <span class="at">type =</span> <span class="st">"sina"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="type_violin_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># layering a sina on top of a violin lines up exactly, since the points are</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># displaced by the violin's own half-width</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(weight <span class="sc">~</span> feed, <span class="at">data =</span> chickwts, <span class="at">type =</span> <span class="st">"violin"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot_add</span>(<span class="at">type =</span> <span class="st">"sina"</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">"black"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_violin_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># unlike `type_violin()`, `type_sina()` supports a continuous `by` variable;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># it colours the points rather than splitting them into groups</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  Sepal.Length <span class="sc">~</span> Species <span class="sc">|</span> Petal.Width, <span class="at">data =</span> iris,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"sina"</span>, <span class="at">pch =</span> <span class="dv">16</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_violin_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># note: above we relied on `...` argument passing alongside the type</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># convenience strings. But this won't work for `width`, since it will</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># clash with the top-level `tinyplot(..., width = &lt;width&gt;)` arg. To ensure</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># correct arg passing, it's safer to use the functional type.</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  len <span class="sc">~</span> dose <span class="sc">|</span> supp, <span class="at">data =</span> ToothGrowth,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_violin</span>(<span class="at">width =</span> <span class="fl">0.75</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="type_violin_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

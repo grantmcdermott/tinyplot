@@ -134,6 +134,8 @@ website:
               file: man/type_rug.qmd
             - text: type_segments
               file: man/type_segments.qmd
+            - text: type_sina
+              file: man/type_violin.qmd
             - text: type_spineplot
               file: man/type_spineplot.qmd
             - text: type_spline

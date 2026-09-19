@@ -7,6 +7,18 @@
 #' layer on top of the existing plot. `plt_add()` is a shorthand alias for
 #' `tinyplot_add()`.
 #'
+#' @section Adding versus drawing:
+#'
+#' `tinyplot_add()` layers new elements _on top_ of the existing plot. The
+#' complementary, top-level `tinyplot(..., draw = <>)` argument works in the
+#' opposite direction: it layers _underneath_ the main plot elements.
+#'
+#' However, note that `draw` is fully generic---it accepts any drawing or
+#' annotation expression---and this includes `tinyplot_add()` itself. Passing
+#' `draw = tinyplot_add(...)` thus yields a regular tinyplot layer, inheriting
+#' from the enclosing call in the usual way, but drawn below the main elements
+#' rather than above them. See Examples.
+#'
 #' @section Limitations:
 #' - `tinyplot_add()` works reliably only when adding to a plot originally
 #'   created using the [`tinyplot.formula`] method with a valid `data` argument.
@@ -25,24 +37,50 @@
 #' [`tinyplot`] call.
 #'
 #' @examples
+#' #
+#' ## Basic use
+#'
 #' tinyplot(Sepal.Width ~ Sepal.Length | Species,
 #'   facet = ~Species,
 #'   data = iris)
-#'
 #' tinyplot_add(type = "lm") ## or : plt_add(type = "lm")
 #'
-#' ## Note: the previous function is equivalent to (but much more convenient
-#' ## than) re-writing the full call with the new type and `add=TRUE`:
-#'
+#' ## the previous line is equivalent to (but much more convenient than)
+#' ## re-writing the full call with the new type and `add=TRUE`:
 #' # tinyplot(Sepal.Width ~ Sepal.Length | Species,
 #' #          facet = ~Species,
 #' #          data = iris,
 #' #          type = "lm",
 #' #          add = TRUE)
 #'
-#' ## Arguments relying on non-standard evaluation (e.g. `subset`) work too:
+#' ## arguments relying on non-standard evaluation (e.g. `subset`) work too:
 #' tinyplot(mpg ~ wt, data = mtcars)
 #' tinyplot_add(subset = cyl == 4, col = "red", pch = 16)
+#'
+#' #
+#' ## add(ing) vs draw(ing)
+#'
+#' dat = data.frame(x = 1:3, y = 0)
+#'
+#' ## the `draw` argument layers *underneath* the main plot elements...
+#' tinyplot(
+#'   y ~ x, data = dat, pch = 19, cex = 10,
+#'   draw = abline(h = 0, lwd = 4, col = "hotpink")
+#' )
+#'
+#' ## ... whereas `tinyplot_add()` layers *on top*.
+#' tinyplot(y ~ x, data = dat, pch = 19, cex = 10)
+#' tinyplot_add(type = type_hline(0), lwd = 4, col = "hotpink")
+#'
+#' ## combine = best of both worlds? Since `draw` is generic, we can hand it
+#' ## `tinyplot_add()` directly. The line is drawn as a regular tinyplot layer,
+#' ## but underneath once more. This is especially useful for, say. flipped
+#' ## plots since correct axes inheritance is preserved. (Note that a plain
+#' ## `abline(h = 0)` is not flip-aware)
+#' tinyplot(
+#'   y ~ x, data = dat, pch = 19, cex = 10, flip = TRUE,
+#'   draw = tinyplot_add(type = type_hline(0), lwd = 4, col = "hotpink")
+#' )
 #'
 #' @inherit tinyplot return
 #'

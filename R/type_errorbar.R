@@ -36,7 +36,7 @@
 #'   order of the data (e.g., the terms of a model) is usually intentional. Set
 #'   `xord = NULL` to follow the factor levels instead, matching the other types.
 #' @examples
-#' tinytheme("basic")
+#' tinytheme("basic") # filled points & background grid (but not dynamic yet)
 #' 
 #' #
 #' ## Basic coefficient plot(s)
@@ -56,10 +56,10 @@
 #' #
 #' ## Flipped plots
 #' 
-#' # For flipped errobar / pointrange plots, it is recommended to use a dynamic
-#' # theme that applies horizontal axis tick labels
+#' # For flipped errobar / pointrange plots, it is recommended to use a
+#' # *dynamic* theme for horizontal axis tick labels + appropriate spacing
 #'
-#' tinytheme("classic")
+#' tinytheme("classic") # or  "clean(2)", "bw", "socviz", "float", ... 
 #' tinyplot(est ~ term, ymin = lwr, ymax = upr, data = coefs, type = "errorbar",
 #'          flip = TRUE)
 #' tinyplot_add(type = "hline", lty = 2) # "hline" b/c flip = TRUE (not vline!)
@@ -114,8 +114,48 @@
 #'          dodge = 0.1, fixed.dodge = TRUE)
 #' tinyplot_add(type = "l", lty = 2)
 #'
+#' #
+#' ## Handling (long/overlapping) tick labels
+#' 
+#' # You may face the annoyance of long and/or overlapping tick labels, e.g.
+#' mod2 = lm(mpg ~ 0 + factor(cyl) * factor(am), mtcars)
+#' coefs2 = data.frame(names(coef(mod2)), coef(mod2), confint(mod2))
+#' colnames(coefs2) = c("term", "est", "lwr", "upr")
+#' # (re-usable plot function)
+#' demo_plot = function(...) {
+#'   tinyplot(
+#'     est ~ term, ymin = lwr, ymax = upr,
+#'     data = coefs2,
+#'     type = "errorbar",
+#'     xlab = NA,
+#'     ylab = "MPG (miles per gallon)",
+#'     main = "Impact on fuel efficiency",
+#'     ...
+#'   )
+#' }
+#' demo_plot()
+#' 
+#' # Here are some useful arguments (strategies) to solve...
+#' 
+#' # 1) dynamic theme + rotated x-labels
+#' demo_plot(theme = "clean", xaxr = 45)
+#' # 2) dynamic theme + labeller function (here: removing redundant text)
+#' demo_plot(theme = "clean", xaxl = function(x) gsub("factor\\(|\\)", "", x))
+#' # 3) dynamic theme + flipped axes
+#' demo_plot(theme = "clean", flip = TRUE)
+#' # 4) any combination of the above, e.g., labeller dictionary + flipped axes
+#' dict = c(
+#'   "factor(cyl)4"             = "Manual\n4 Cyclinders",
+#'   "factor(cyl)6"             = "Manual\n6 Cyclinders",
+#'   "factor(cyl)8"             = "Manual\n8 Cyclinders",
+#'   "factor(cyl)4:factor(am)1" = "Automatic\n4 Cylinders",
+#'   "factor(cyl)6:factor(am)1" = "Automatic\n6 Cylinders",
+#'   "factor(cyl)8:factor(am)1" = "Automatic\n8 Cylinders"
+#' )
+#' demo_plot(theme = "clean", flip = TRUE, xaxl = dict)
+#' 
 #' tinytheme() # reset theme
-#'
+#' 
 #' @export
 type_errorbar = function(length = 0.05, dodge = 0, fixed.dodge = FALSE, xlevels = NULL, xord = "asis") {
     ord_supplied = !missing(xord) || !is.null(xlevels)

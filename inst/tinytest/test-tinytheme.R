@@ -249,3 +249,32 @@ f = function() {
   )
 }
 expect_silent(f())
+
+
+## tinytheme_get() (#629)
+
+# a bare reset reports the default theme
+tinytheme()
+expect_equal(tinytheme_get(), "default")
+
+tinytheme("classic")
+expect_equal(tinytheme_get(), "classic")
+
+# the save/restore idiom the accessor exists for
+otheme = tinytheme_get()
+tinytheme("bw")
+expect_equal(tinytheme_get(), "bw")
+tinytheme(otheme)
+expect_equal(tinytheme_get(), "classic")
+
+# extra tpar overrides don't change the reported theme name
+tinytheme("ipsum", las = 2)
+expect_equal(tinytheme_get(), "ipsum")
+
+# registered themes report their own name
+tinytheme_register("float3", theme = "float", grid = TRUE)
+tinytheme("float3")
+expect_equal(tinytheme_get(), "float3")
+tinytheme_unregister("float3")
+
+tinytheme()

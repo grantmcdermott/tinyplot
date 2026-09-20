@@ -938,7 +938,10 @@ tinyplot.default = function(
     } else {
       dtheme = theme_default
       otheme = opar[names(dtheme)]
-      on.exit(do.call(tinytheme, otheme), add = TRUE)
+      on.exit({
+        do.call(tinytheme, otheme)
+        restore_plot_region(opar[["mar"]]) # See #629
+      }, add = TRUE)
     }
   }
 

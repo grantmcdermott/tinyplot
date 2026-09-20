@@ -46,3 +46,19 @@ f = function() {
   plt(disp ~ mpg, data = mtcars, log = "y")
 }
 expect_silent(f())
+
+
+#
+## las as a per-call argument (#353)
+#
+
+# `las` was accepted by tpar()/tinytheme() but ignored as an argument.
+f = function() tinyplot(1:10, las = 1)
+expect_snapshot_plot(f, label = "axis_las1")
+
+# An explicit `las` must beat a theme's default, but dynmar still has to reserve
+# room for the rotated x labels.
+f = function() {
+  tinyplot(bill_len ~ species, data = penguins, las = 2, theme = "dynamic")
+}
+expect_snapshot_plot(f, label = "axis_las2_override")

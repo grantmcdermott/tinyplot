@@ -39,9 +39,11 @@ sanitize_axes = function(settings) {
   ## tick label orientation. Unlike x/yaxr, not resolved against get_tpar():
   ## that reads the global .tpar, which lacks the active theme's own las (queued
   ## in a hook), so folding it in would overwrite a theme's las with 0.
-  assert_numeric(las, len = 1, lower = 0, upper = 3, null.ok = TRUE, name = "las")
-  if (!is.null(las) && las %% 1 != 0) {
-    stop("`las` must be a whole number in 0:3", call. = FALSE)
+  ## one membership test, so NA/NaN/Inf and fractions all land on the same
+  ## message rather than tripping over a comparison that returns NA
+  assert_numeric(las, len = 1, null.ok = TRUE, name = "las")
+  if (!is.null(las) && !(las %in% 0:3)) {
+    stop("`las` must be one of 0, 1, 2, or 3", call. = FALSE)
   }
 
   ## axis padding: an explicit x/ypad wins over the theme's tpar setting. This

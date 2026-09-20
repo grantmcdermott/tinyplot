@@ -305,9 +305,9 @@
 #'   `x/yaxb` if you would like to adjust the position of the tick marks too.
 #' @param las numeric in `0:3` giving the orientation of the axis tick labels,
 #'   following the base \code{\link[graphics]{par}} convention: `0` (parallel
-#'   to the axis, the default), `1` (always horizontal), `2` (perpendicular to
-#'   the axis), or `3` (always vertical). `NULL` (the default) defers to the
-#'   active theme, then to `par("las")`. Passing it here overrides both, but
+#'   to the axis), `1` (always horizontal), `2` (perpendicular to the axis), or
+#'   `3` (always vertical). `NULL` (the default) defers to the active theme,
+#'   then to `par("las")`. Passing it here overrides both, but
 #'   only for this plot; unlike `tpar(las=)` or `tinytheme(las=)` it does not
 #'   persist. For rotations other than the four right angles, see `xaxr`/`yaxr`
 #'   below.

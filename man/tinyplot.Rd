@@ -483,9 +483,9 @@ documentation covers this and the label-spacing caveat in more detail.}
 
 \item{las}{numeric in \code{0:3} giving the orientation of the axis tick labels,
 following the base \code{\link[graphics]{par}} convention: \code{0} (parallel
-to the axis, the default), \code{1} (always horizontal), \code{2} (perpendicular to
-the axis), or \code{3} (always vertical). \code{NULL} (the default) defers to the
-active theme, then to \code{par("las")}. Passing it here overrides both, but
+to the axis), \code{1} (always horizontal), \code{2} (perpendicular to the axis), or
+\code{3} (always vertical). \code{NULL} (the default) defers to the active theme,
+then to \code{par("las")}. Passing it here overrides both, but
 only for this plot; unlike \code{tpar(las=)} or \code{tinytheme(las=)} it does not
 persist. For rotations other than the four right angles, see \code{xaxr}/\code{yaxr}
 below.}

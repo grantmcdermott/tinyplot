@@ -46,6 +46,7 @@ tinyplot(x, ...)
   yaxl = NULL,
   xaxr = NULL,
   yaxr = NULL,
+  las = NULL,
   log = "",
   flip = FALSE,
   frame.plot = NULL,
@@ -479,6 +480,15 @@ that is what resizes the margins to fit the tilted labels; under the
 default theme a long rotated label will be clipped unless you widen \code{mar}
 yourself. Defaults to the value of \code{tpar("xaxr")} / \code{tpar("yaxr")}, whose
 documentation covers this and the label-spacing caveat in more detail.}
+
+\item{las}{numeric in \code{0:3} giving the orientation of the axis tick labels,
+following the base \code{\link[graphics]{par}} convention: \code{0} (parallel
+to the axis, the default), \code{1} (always horizontal), \code{2} (perpendicular to
+the axis), or \code{3} (always vertical). \code{NULL} (the default) defers to the
+active theme, then to \code{par("las")}. Passing it here overrides both, but
+only for this plot; unlike \code{tpar(las=)} or \code{tinytheme(las=)} it does not
+persist. For rotations other than the four right angles, see \code{xaxr}/\code{yaxr}
+below.}
 
 \item{log}{a character string which contains \code{"x"} if the x axis is to be
 logarithmic, \code{"y"} if the y axis is to be logarithmic and \code{"xy"} or \code{"yx"}

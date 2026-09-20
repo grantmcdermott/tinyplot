@@ -163,6 +163,12 @@ related to plot layering. See "Bug fixes" below.
     theme, since the plot margins are resized to fit the rotated labels. Also
     settable globally via `tpar(xaxr = <xaxr>, yaxr = <yaxr>)` and thus as part
     of a `tinytheme` too. (#717 @grantmcdermott)
+  - `las` does the same thing, but limited to the four right angles of base R's
+    `par(las=)` convention, having previously been settable only via `tpar()` or
+    a theme. Note that this top-level argument applies to a single plot only and
+    takes precedence over the active theme, so it can also be used to opt _out_
+    of a theme's `las`, e.g. `tinyplot(..., theme = "clean", las = 0)`.
+    (#353 @grantmcdermott)
   - (Experimental) `record` enables recording plots as replayable objects,
     closing another long-standing feature request (#121). Specifically, setting
     `record = TRUE` returns a `"recordedtinyplot"` object (see

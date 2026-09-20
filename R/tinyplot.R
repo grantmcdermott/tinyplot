@@ -303,6 +303,14 @@
 #'   documentation and examples. Note that this is a post-processing step that
 #'   affects the _appearance_ of the tick labels only; use in conjunction with
 #'   `x/yaxb` if you would like to adjust the position of the tick marks too.
+#' @param las numeric in `0:3` giving the orientation of the axis tick labels,
+#'   following the base \code{\link[graphics]{par}} convention: `0` (parallel
+#'   to the axis), `1` (always horizontal), `2` (perpendicular to the axis), or
+#'   `3` (always vertical). `NULL` (the default) defers to the active theme,
+#'   then to `par("las")`. Passing it here overrides both, but
+#'   only for this plot; unlike `tpar(las=)` or `tinytheme(las=)` it does not
+#'   persist. For rotations other than the four right angles, see `xaxr`/`yaxr`
+#'   below.
 #' @param xaxr,yaxr numeric giving the rotation of the x- or y-axis tick labels,
 #'   in degrees counter-clockwise; `NULL` (the default) leaves them unrotated.
 #'   Setting one overrides `las` for that axis alone, leaving the other axis
@@ -815,6 +823,7 @@ tinyplot.default = function(
     yaxl = NULL,
     xaxr = NULL,
     yaxr = NULL,
+    las = NULL,
     log = "",
     flip = FALSE,
     frame.plot = NULL,
@@ -1009,6 +1018,7 @@ tinyplot.default = function(
     yaxr          = yaxr,
     yaxs          = yaxs,
     ypad          = ypad,
+    las           = las,
     frame.plot    = frame.plot,
     xlim          = xlim,
     ylim          = ylim,
@@ -1236,6 +1246,27 @@ tinyplot.default = function(
   env2env(settings, environment())
 
   #
+  ## per-call tick label orientation -----
+  #
+  # A theme sets its own las at plot.new(), so ours is appended after its hook
+  # (last appended runs last). The direct par() covers add = TRUE, which fires
+  # no plot.new(). Undone on exit, so the override stays per-call. (#353)
+  #
+  if (!is.null(las)) {
+    .las_old = par("las")
+    .las_hook = function() par(las = las)
+    setHook("before.plot.new", .las_hook, action = "append")
+    on.exit({
+      .hks = getHook("before.plot.new")
+      .keep = !vapply(.hks, identical, logical(1), .las_hook)
+      setHook("before.plot.new", .hks[.keep], action = "replace")
+      # par() would *open* a device if none is left (e.g. after `file=`)
+      if (!is.null(dev.list())) par(las = .las_old)
+    }, add = TRUE)
+    par(las = las)
+  }
+
+  #
   ## dynmar: compute margins up front -----
   #
   # Under dynmar themes, compute the full margin once before any drawing.
@@ -1267,6 +1298,8 @@ tinyplot.default = function(
       .bp = environment(.h)[["base_par"]]
       if (is.list(.bp)) .tpars = modifyList(.tpars, .bp)
     }
+    # runs before plot.new(), so the las hook hasn't fired and par() is stale
+    if (!is.null(las)) .tpars[["las"]] = las
     if (!is.null(.tpars[["mar"]])) .theme_mar = .tpars[["mar"]]
 
     # Tick-label cex is per-side (cex.xaxs/cex.yaxs), each falling back to the

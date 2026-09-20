@@ -1,6 +1,7 @@
 sanitize_axes = function(settings) {
   env2env(settings, environment(),
-          c("axes", "xaxt", "yaxt", "frame.plot", "xaxr", "yaxr", "xpad", "ypad"))
+          c("axes", "xaxt", "yaxt", "frame.plot", "xaxr", "yaxr", "xpad", "ypad",
+            "las"))
   ## handle defaults of axes, xaxt, yaxt, frame.plot
   ## - convert axes to character if necessary
   ## - set defaults of xaxt/yaxt (if these are NULL) based on axes
@@ -35,6 +36,16 @@ sanitize_axes = function(settings) {
   if (!is.null(xaxr) && (!is.finite(xaxr) || xaxr %% 360 == 0)) xaxr = NULL
   if (!is.null(yaxr) && (!is.finite(yaxr) || yaxr %% 360 == 0)) yaxr = NULL
 
+  ## tick label orientation. Unlike x/yaxr, not resolved against get_tpar():
+  ## that reads the global .tpar, which lacks the active theme's own las (queued
+  ## in a hook), so folding it in would overwrite a theme's las with 0.
+  ## one membership test, so NA/NaN/Inf and fractions all land on the same
+  ## message rather than tripping over a comparison that returns NA
+  assert_numeric(las, len = 1, null.ok = TRUE, name = "las")
+  if (!is.null(las) && !(las %in% 0:3)) {
+    stop("`las` must be one of 0, 1, 2, or 3", call. = FALSE)
+  }
+
   ## axis padding: an explicit x/ypad wins over the theme's tpar setting. This
   ## has to resolve here, before flip_datapoints() swaps the pair -- resolving
   ## it later would leave a tpar default attached to the axis rather than to
@@ -55,6 +66,6 @@ sanitize_axes = function(settings) {
     environment(),
     settings,
     c("axes", "xaxt", "yaxt", "frame.plot", "xaxr", "yaxr", "xpad", "ypad",
-      "xpad_user", "ypad_user")
+      "xpad_user", "ypad_user", "las")
   )
 }

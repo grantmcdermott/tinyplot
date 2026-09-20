@@ -643,6 +643,7 @@ tinyplot(
   yaxl = NULL,
   xaxr = NULL,
   yaxr = NULL,
+  las = NULL,
   log = "",
   flip = FALSE,
   frame.plot = NULL,
@@ -1183,6 +1184,14 @@ a function, character keyword, or dictionary (named vector or list) for formatti
 </td>
 <td>
 numeric giving the rotation of the x- or y-axis tick labels, in degrees counter-clockwise; <code>NULL</code> (the default) leaves them unrotated. Setting one overrides <code>las</code> for that axis alone, leaving the other axis under <code>las</code> as usual, and <code>0</code> (or any multiple of 360) counts as no rotation at all. Best paired with a dynamic theme (see <code>tinytheme</code>), since that is what resizes the margins to fit the tilted labels; under the default theme a long rotated label will be clipped unless you widen <code>mar</code> yourself. Defaults to the value of <code>tpar(“xaxr”)</code> / <code>tpar(“yaxr”)</code>, whose documentation covers this and the label-spacing caveat in more detail.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="las">las</code>
+</td>
+<td>
+numeric in <code>0:3</code> giving the orientation of the axis tick labels, following the base <code>par</code> convention: <code>0</code> (parallel to the axis), <code>1</code> (always horizontal), <code>2</code> (perpendicular to the axis), or <code>3</code> (always vertical). <code>NULL</code> (the default) defers to the active theme, then to <code>par(“las”)</code>. Passing it here overrides both, but only for this plot; unlike <code>tpar(las=)</code> or <code>tinytheme(las=)</code> it does not persist. For rotations other than the four right angles, see <code>xaxr</code>/<code>yaxr</code> below.
 </td>
 </tr>
 <tr>

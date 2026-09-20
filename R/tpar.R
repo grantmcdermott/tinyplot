@@ -100,6 +100,7 @@
 #' stages of a `tinyplot` call (and used for internal accounting purposes).
 #' [`tinytheme`] allows users to easily set a group of graphics parameters
 #' in a single function call, according to a variety of predefined themes.
+#' [`tinytheme_get`] returns the name of the currently active theme.
 #'
 #' @examples
 #' # Return a list of existing base and tinyplot graphic params

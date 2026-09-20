@@ -145,4 +145,5 @@ is a convenience function for retrieving graphical parameters at different
 stages of a \code{tinyplot} call (and used for internal accounting purposes).
 \code{\link{tinytheme}} allows users to easily set a group of graphics parameters
 in a single function call, according to a variety of predefined themes.
+\code{\link{tinytheme_get}} returns the name of the currently active theme.
 }

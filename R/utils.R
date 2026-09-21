@@ -229,6 +229,63 @@ restore_margin_inner = function(ooma, topmar_epsilon = 0.1) {
 }
 
 
+#' Restore the original plot region
+#'
+#' @description A theme applies its margins through the `before.plot.new` hook,
+#'   so they live in the current graphics state but never reach `par()`.
+#'   Rolling an ephemeral theme back therefore leaves `par(plt)` describing a
+#'   different region than the one we just drew into. Base R recomputes the
+#'   device clipping rectangle from `par()`, but only when `xpd` changes, so
+#'   anything added afterwards gets silently truncated to the wrong rectangle
+#'   as soon as some intervening call touches `xpd` (e.g. `box()`, `mtext()`,
+#'   or `type_text(xpd = NA)`). See #629.
+#'
+#'   Fix: put the original (drawn-into) region back, then hand `mar_before`
+#'   back at the next `plot.new()` so the theme's margins don't leak into the
+#'   following plot.
+#'
+#' @param mar_before Pre-theme inner margins (from par("mar"))
+#'
+#' @returns NULL (called for side effect of resetting par("plt"))
+#'
+#' @keywords internal
+restore_plot_region = function(mar_before) {
+  if (is.null(dev.list())) return(invisible(NULL))
+  # read .saved_par_after directly: get_saved_par()'s match.arg() costs more
+  # than everything else here put together
+  dplt = .tinyplot_env[[".saved_par_after"]][["plt"]]
+  if (is.null(dplt) || all(par("plt") == dplt)) return(invisible(NULL))
+  par(plt = dplt)
+  # Arm the reset for the next plot.new(). `dplt` doubles as the sentinel: mar
+  # and plt are derived from each other, so plt still matching on the way out
+  # means nothing else has claimed the margins since.
+  .tinyplot_env[[".mar_pending"]] = list(mar = mar_before, plt = dplt)
+  hks = getHook("before.plot.new")
+  if (!any(vapply(hks, function(h) isTRUE(attr(h, "tinyplot_mar")), logical(1)))) {
+    # first in line, so a theme's own margin hook still has the last word
+    setHook("before.plot.new", mar_reset_hook, action = "prepend")
+  }
+  invisible(NULL)
+}
+
+
+# Installed once by restore_plot_region() and then left registered, so that
+# re-arming is a bare assignment. Every tinyplot_add() layer re-enters
+# restore_plot_region() -- the theme rollback resets `plt` just beforehand --
+# and setHook()/getHook() churn on each of them measurably outweighs leaving
+# an inert closure in place. A no-op unless some plot has armed it.
+mar_reset_hook = structure(
+  function() {
+    pending = .tinyplot_env[[".mar_pending"]]
+    if (is.null(pending)) return(invisible(NULL))
+    .tinyplot_env[[".mar_pending"]] = NULL
+    if (all(par("plt") == pending[["plt"]])) par(mar = pending[["mar"]])
+    invisible(NULL)
+  },
+  tinyplot_mar = TRUE
+)
+
+
 # Convert colour(s) to HCL-like (Luv) coordinates, preserving alpha. Helper for
 # seq_palette(). (Originally lived in type_spineplot.R.)
 #' @importFrom grDevices col2rgb convertColor hcl

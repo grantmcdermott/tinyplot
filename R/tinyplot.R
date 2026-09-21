@@ -938,7 +938,10 @@ tinyplot.default = function(
     } else {
       dtheme = theme_default
       otheme = opar[names(dtheme)]
-      on.exit(do.call(tinytheme, otheme), add = TRUE)
+      on.exit({
+        do.call(tinytheme, otheme)
+        restore_plot_region(opar[["mar"]]) # See #629
+      }, add = TRUE)
     }
   }
 
@@ -1283,7 +1286,7 @@ tinyplot.default = function(
     # Read the theme's intended mar. Also build a tpars list from the theme
     # definition so dynmar_side uses theme mgp/tcl/las (which aren't in
     # par() yet since the before.plot.new hook hasn't fired).
-    .tinytheme = get_tpar("tinytheme", default = "default")
+    .tinytheme = tinytheme_get()
     .theme_def = get_theme_def(.tinytheme)
     if (identical(.theme_def, theme_default)) .theme_def = NULL
     .theme_mar = if (!is.null(.theme_def[["mar"]])) .theme_def[["mar"]] else par("mar")

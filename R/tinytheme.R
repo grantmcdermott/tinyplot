@@ -117,6 +117,8 @@
 #' @return The function returns nothing. It is called for its side effects.
 #' 
 #' @seealso [`tpar`] which does the heavy lifting under the hood;
+#'   [tinytheme_get()] for retrieving the name of the active theme;
+#'   [tinytheme_list()] for listing the names of all available themes;
 #'   [tinytheme_register()] for registering custom named themes.
 #'
 #' @examples
@@ -294,6 +296,47 @@ tinytheme = function(
   }
 
   return(invisible(NULL))
+}
+
+
+#' @title Get the currently active theme
+#'
+#' @description Returns the name of the [`tinytheme`] that is currently in
+#'   effect. Handy for saving a theme and restoring it later, or for querying
+#'   the active theme programmatically.
+#'
+#' @details A thin convenience wrapper around the `"tinytheme"` entry of
+#'   [`tpar`]. The difference is that it always returns a plain character
+#'   string, including in a session where no theme has been set yet (where
+#'   `tpar("tinytheme")` returns `NULL` rather than `"default"`). Use [`tpar`]
+#'   if you want the full set of underlying theme settings, rather than just
+#'   the name.
+#'
+#'   Note that a theme passed to the `tinyplot(..., theme =)` argument is
+#'   ephemeral: it is reset on exit, so it is only visible to
+#'   `tinytheme_get()` from inside that same call (e.g. via `draw`).
+#'
+#' @returns A character string naming the active theme.
+#'
+#' @seealso [tinytheme], [tinytheme_register], [tpar]
+#'
+#' @examples
+#' # no theme set yet
+#' tinytheme_get()
+#'
+#' # save the current theme, switch, then restore it afterwards
+#' otheme = tinytheme_get()
+#' tinytheme("classic")
+#' tinytheme_get()
+#'
+#' tinyplot(mpg ~ wt, data = mtcars)
+#'
+#' tinytheme(otheme) # back to where we started
+#' tinytheme_get()
+#'
+#' @export
+tinytheme_get = function() {
+  get_tpar("tinytheme", default = "default")
 }
 
 
@@ -771,7 +814,7 @@ get_theme_def = function(name) {
 #'   `tinytheme_list()` returns a named list with character vectors `builtin`
 #'   and `registered`. `tinytheme_unregister()` returns `NULL` (invisibly).
 #'
-#' @seealso [tinytheme()]
+#' @seealso [tinytheme()], [tinytheme_get()]
 #'
 #' @examples
 #' # Register a custom theme based on "float" but with a grid

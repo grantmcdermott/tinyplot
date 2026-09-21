@@ -56,5 +56,5 @@ tinytheme_unregister("float2")
 
 }
 \seealso{
-\code{\link[=tinytheme]{tinytheme()}}
+\code{\link[=tinytheme]{tinytheme()}}, \code{\link[=tinytheme_get]{tinytheme_get()}}
 }

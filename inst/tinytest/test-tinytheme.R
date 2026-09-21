@@ -215,6 +215,15 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "ephemeral_default_theme_add")
 
+# Layers added after an ephemeral theme should not be clipped to the wrong
+# region once an intervening annotation has toggled `xpd` (#629)
+f = function() {
+  plt(0, 0, theme = "classic")
+  plt_add(par("usr")[1], y = 0.3, type = type_text(labels = "foo", xpd = NA, pos = 2))
+  plt_add(type = type_hline(0.3))
+}
+expect_snapshot_plot(f, label = "tinytheme_ephemeral_clip_xpd")
+
 # User mar override respected under dynmar (#587)
 f = function() {
   tinytheme("dynamic", mar = c(5, 5, 5, 5))
@@ -249,3 +258,32 @@ f = function() {
   )
 }
 expect_silent(f())
+
+
+## tinytheme_get() (#629)
+
+# a bare reset reports the default theme
+tinytheme()
+expect_equal(tinytheme_get(), "default")
+
+tinytheme("classic")
+expect_equal(tinytheme_get(), "classic")
+
+# the save/restore idiom the accessor exists for
+otheme = tinytheme_get()
+tinytheme("bw")
+expect_equal(tinytheme_get(), "bw")
+tinytheme(otheme)
+expect_equal(tinytheme_get(), "classic")
+
+# extra tpar overrides don't change the reported theme name
+tinytheme("ipsum", las = 2)
+expect_equal(tinytheme_get(), "ipsum")
+
+# registered themes report their own name
+tinytheme_register("float3", theme = "float", grid = TRUE)
+tinytheme("float3")
+expect_equal(tinytheme_get(), "float3")
+tinytheme_unregister("float3")
+
+tinytheme()

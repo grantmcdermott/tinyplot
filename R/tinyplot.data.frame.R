@@ -170,7 +170,7 @@ tinypairs = function (x, by = NULL, labs = FALSE, frames = FALSE, ...) {
   ## language object because `cl` is a matched call, so `cl[["theme"]]` is
   ## unevaluated (e.g. the call `list("dark")`, not a list).
   cex_fct_adj = ifelse(n > 2, 0.66, 0.83) # use same scaling as with faceted plots.
-  active_theme = get_tpar("tinytheme", default = "default")
+  active_theme = tinytheme_get()
   theme_arg = cl[["theme"]]
   if (is.null(theme_arg)) {
     theme_ij = bquote(list(.(active_theme), cex = .(cex_fct_adj)))

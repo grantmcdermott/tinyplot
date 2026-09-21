@@ -216,5 +216,7 @@ tinytheme()
 }
 \seealso{
 \code{\link{tpar}} which does the heavy lifting under the hood;
+\code{\link[=tinytheme_get]{tinytheme_get()}} for retrieving the name of the active theme;
+\code{\link[=tinytheme_list]{tinytheme_list()}} for listing the names of all available themes;
 \code{\link[=tinytheme_register]{tinytheme_register()}} for registering custom named themes.
 }

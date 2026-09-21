@@ -216,6 +216,8 @@ related to plot layering. See "Bug fixes" below.
     so that tiles meet the panel edge, and also rotates the tick labels against
     their respective axes. Colour fills default to the "tealgrn" sequential
     palette. (#677 @grantmcdermott)
+  - New `tinytheme_get()` function returns the name of the currently active
+    theme. (#629 @grantmcdermott)
 - Custom plot types have more control over the surrounding plot machinery, via a
   new `type_hints` mechanism. A type can declare properties about itself---that
   it draws its own axes, needs a secondary right-hand axis, uses proportional
@@ -233,6 +235,12 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- Annotations and layers added after a plot that used an ephemeral `theme`
+  argument are no longer clipped to the wrong region. Only triggered once an
+  intervening annotation changed `xpd` (e.g. `box()`, `mtext()`, or
+  `type_text(xpd = NA)`), since that is what makes base R recompute the
+  clipping rectangle. Thanks to @bastistician for the report.
+  (#629 @grantmcdermott)
 - `type_text()` no longer converts a categorical axis to a numeric one.
   (#730 @grantmcdermott)
 - `type_hline()`, `type_vline()`, and `type_abline()` now respect

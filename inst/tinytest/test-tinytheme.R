@@ -236,7 +236,7 @@ expect_equal(tinytheme_get(), "classic")
 # as do the user's own tpar() settings
 tpar(grid = TRUE)
 plt(1, theme = "dark")
-expect_true(isTRUE(get_tpar("grid")))
+expect_true(isTRUE(tpar("grid")))
 
 tinytheme()
 invisible(dev.off())

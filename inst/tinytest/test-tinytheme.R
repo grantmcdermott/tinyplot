@@ -215,6 +215,15 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "ephemeral_default_theme_add")
 
+# Layers added after an ephemeral theme should not be clipped to the wrong
+# region once an intervening annotation has toggled `xpd` (#629)
+f = function() {
+  plt(0, 0, theme = "classic")
+  plt_add(par("usr")[1], y = 0.3, type = type_text(labels = "foo", xpd = NA, pos = 2))
+  plt_add(type = type_hline(0.3))
+}
+expect_snapshot_plot(f, label = "tinytheme_ephemeral_clip_xpd")
+
 # User mar override respected under dynmar (#587)
 f = function() {
   tinytheme("dynamic", mar = c(5, 5, 5, 5))

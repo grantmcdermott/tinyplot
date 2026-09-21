@@ -294,6 +294,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/tinytheme_get.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tinytheme_get</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/tinytheme_register.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tinytheme_list</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/tinytheme_register.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tinytheme_register</span></a>
   </div>
@@ -775,7 +787,7 @@ Logical. If <code>TRUE</code>, base graphical parameters persist across plots vi
 </section>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p><code>graphics::par</code> which <code>tpar</code> builds on top of. <code>get_saved_par</code> is a convenience function for retrieving graphical parameters at different stages of a <code>tinyplot</code> call (and used for internal accounting purposes). <code>tinytheme</code> allows users to easily set a group of graphics parameters in a single function call, according to a variety of predefined themes.</p>
+<p><code>graphics::par</code> which <code>tpar</code> builds on top of. <code>get_saved_par</code> is a convenience function for retrieving graphical parameters at different stages of a <code>tinyplot</code> call (and used for internal accounting purposes). <code>tinytheme</code> allows users to easily set a group of graphics parameters in a single function call, according to a variety of predefined themes. <code>tinytheme_get</code> returns the name of the currently active theme.</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>

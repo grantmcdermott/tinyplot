@@ -74,6 +74,10 @@ website:
           contents:
             - text: tinytheme
               file: man/tinytheme.qmd
+            - text: tinytheme_get
+              file: man/tinytheme_get.qmd
+            - text: tinytheme_list
+              file: man/tinytheme_register.qmd
             - text: tinytheme_register
               file: man/tinytheme_register.qmd
         - section: "Types"

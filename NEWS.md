@@ -235,6 +235,12 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- Annotations and layers added after a plot that used an ephemeral `theme`
+  argument are no longer clipped to the wrong region. Only triggered once an
+  intervening annotation changed `xpd` (e.g. `box()`, `mtext()`, or
+  `type_text(xpd = NA)`), since that is what makes base R recompute the
+  clipping rectangle. Thanks to @bastistician for the report.
+  (#629 @grantmcdermott)
 - `type_text()` no longer converts a categorical axis to a numeric one.
   (#730 @grantmcdermott)
 - `type_hline()`, `type_vline()`, and `type_abline()` now respect

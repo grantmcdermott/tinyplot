@@ -341,11 +341,6 @@ tinyplot(
 )
 ```
 
-```{r}
-#| include: false
-tinytheme("clean2")
-```
-
 Similarly, **tinyplot** also supports special types to fit models and display
 their predictions, along with confidence intervals. Here is a somewhat silly
 example where we fit a linear model to predict temperature by day of month.^[The
@@ -553,12 +548,6 @@ tinyplot(
     text(5.5, 75, "Hot", pos = 3, offset = 0.4)
   }
 )
-```
-
-
-```{r theme_again}
-#| include: false
-tinytheme("clean2")
 ```
 
 ## Save and replay plots

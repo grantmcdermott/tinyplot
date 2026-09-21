@@ -922,6 +922,13 @@ tinyplot.default = function(
 
   # Ephemeral theme
   if (!is.null(theme)) {
+    # Capture the outgoing theme before the ephemeral one replaces it. `opar`
+    # carries base par values only, so the theme's *name* is not among them.
+    ptheme = tinytheme_get()
+    # tinytheme() calls init_tpar(), which wipes .tpar wholesale -- taking any
+    # user tpar() settings with it. An ephemeral theme should leave no trace,
+    # so snapshot the settings here and put them back on exit. (#739)
+    ptpar = as.list(.tpar)
     if (is.character(theme) && length(theme) == 1) {
       tinytheme(theme)
     } else if (is.list(theme)) {
@@ -934,12 +941,32 @@ tinyplot.default = function(
       # clobbered. Only needed for "default" theme which uses hook = FALSE
       # and thus sets par(mar) immediately. (#557)
       par(mar = opar$mar)
-      on.exit(init_tpar(rm_hook = TRUE), add = TRUE)
+      on.exit({
+        init_tpar(rm_hook = TRUE)
+        # init_tpar() wipes .tpar wholesale, so a persistent theme has to be
+        # reset explicitly. (#739)
+        if (!identical(ptheme, "default")) tinytheme(ptheme)
+        reset_tpar(ptpar)
+      }, add = TRUE)
     } else {
       dtheme = theme_default
       otheme = opar[names(dtheme)]
       on.exit({
-        do.call(tinytheme, otheme)
+        if (identical(ptheme, "default")) {
+          # No persistent theme was active. reset_tpar() below restores .tpar
+          # wholesale, so all that is left here is to drop the ephemeral
+          # theme's hooks and hand the user's own par settings back directly.
+          init_tpar(rm_hook = TRUE)
+          upar = otheme[!is.na(names(otheme))]
+          if (length(upar) > 0) par(upar)
+        } else {
+          # A persistent theme *was* active, so restore it by name. We must
+          # not splat `opar` on top: those are the theme's pre-hook par values,
+          # so passing them back as overrides would clobber the very theme we
+          # are restoring. (#739)
+          tinytheme(ptheme)
+        }
+        reset_tpar(ptpar)
         restore_plot_region(opar[["mar"]]) # See #629
       }, add = TRUE)
     }

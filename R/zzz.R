@@ -55,6 +55,7 @@
     "iby",
     "ifacet",
     "labels",
+    "las",
     "legend",
     "legend_args",
     "legend_draw_flag",
@@ -107,6 +108,7 @@
     "xmin",
     "xmin_dep",
     "xpad",
+    "xpad_user",
     "y",
     "y_dep",
     "yaxb",
@@ -122,6 +124,7 @@
     "ymax_dep",
     "ymin",
     "ymin_dep",
-    "ypad"
+    "ypad",
+    "ypad_user"
   ))
 }

@@ -474,3 +474,15 @@ init_tpar = function(rm_hook = FALSE) {
 ## initialize internal environment for tpar variables
 .tpar = new.env()
 init_tpar()
+
+
+# Restore a snapshot of .tpar taken with as.list(). Used to roll back an
+# ephemeral theme, whose tinytheme() calls wipe .tpar via init_tpar() and would
+# otherwise discard the user's own tpar() settings along with it. (#739)
+reset_tpar = function(snapshot) {
+  nms = names(.tpar)
+  extra = nms[!nms %in% names(snapshot)]
+  if (length(extra) > 0) rm(list = extra, envir = .tpar)
+  list2env(snapshot, envir = .tpar)
+  invisible(NULL)
+}

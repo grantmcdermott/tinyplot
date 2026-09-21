@@ -235,6 +235,9 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- An ephemeral `theme` argument no longer clobbers a persistent `tinytheme()`
+  i.e., beyond the intended single plot override. Similarly for a user's own
+  `tpar()` settings. (#739 @grantmcdermott)
 - Annotations and layers added after a plot that used an ephemeral `theme`
   argument are no longer clipped to the wrong region. Only triggered once an
   intervening annotation changed `xpd` (e.g. `box()`, `mtext()`, or

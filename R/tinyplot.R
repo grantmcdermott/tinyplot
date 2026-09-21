@@ -953,8 +953,12 @@ tinyplot.default = function(
       otheme = opar[names(dtheme)]
       on.exit({
         if (identical(ptheme, "default")) {
-          # No persistent theme was active; still restore user's par settings.
-          do.call(tinytheme, otheme)
+          # No persistent theme was active. reset_tpar() below restores .tpar
+          # wholesale, so all that is left here is to drop the ephemeral
+          # theme's hooks and hand the user's own par settings back directly.
+          init_tpar(rm_hook = TRUE)
+          upar = otheme[!is.na(names(otheme))]
+          if (length(upar) > 0) par(upar)
         } else {
           # A persistent theme *was* active, so restore it by name. We must
           # not splat `opar` on top: those are the theme's pre-hook par values,

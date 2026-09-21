@@ -216,6 +216,8 @@ related to plot layering. See "Bug fixes" below.
     so that tiles meet the panel edge, and also rotates the tick labels against
     their respective axes. Colour fills default to the "tealgrn" sequential
     palette. (#677 @grantmcdermott)
+  - New `tinytheme_get()` function returns the name of the currently active
+    theme. (#629 @grantmcdermott)
 - Custom plot types have more control over the surrounding plot machinery, via a
   new `type_hints` mechanism. A type can declare properties about itself---that
   it draws its own axes, needs a secondary right-hand axis, uses proportional

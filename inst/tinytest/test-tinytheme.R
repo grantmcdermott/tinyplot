@@ -224,6 +224,24 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "tinytheme_ephemeral_clip_xpd")
 
+## an ephemeral theme should leave no trace (#739)
+
+pdf(NULL)
+
+# a persistent theme survives an ephemeral one
+tinytheme("classic")
+plt(1, theme = "dark")
+expect_equal(tinytheme_get(), "classic")
+
+# as do the user's own tpar() settings
+tpar(grid = TRUE)
+plt(1, theme = "dark")
+expect_true(isTRUE(get_tpar("grid")))
+
+tinytheme()
+invisible(dev.off())
+
+
 # User mar override respected under dynmar (#587)
 f = function() {
   tinytheme("dynamic", mar = c(5, 5, 5, 5))

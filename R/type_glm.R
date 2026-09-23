@@ -55,7 +55,7 @@ data_glm = function(family, se, level, type, weights = NULL, ...) {
             # the same as omitting the argument
             .w = x[["weights"]]
             fit = glm(y ~ x, data = x, family = family, weights = .w)
-            nd = data.frame(x = seq(min(x$x, na.rm = TRUE), max(x$x, na.rm = TRUE), length.out = 100))
+            nd = data.frame(x = model_grid(x$x, 100, settings$log))
             nd$by = x$by[1]
             nd$facet = x$facet[1]
             if (se == TRUE) {

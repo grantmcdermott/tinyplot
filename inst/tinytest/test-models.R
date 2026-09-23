@@ -94,3 +94,20 @@ expect_warning(
   plt(Temp ~ Wind, data = airquality, type = "p", weights = Day),
   pattern = "ignored by this plot type"
 )
+# type_loess() substitutes the fast lowess() pass for loess() where the two are
+# equivalent: unweighted local linear fits, without standard errors, on a
+# linear x-axis (#509)
+f = function() plt(dist ~ speed, data = cars, type = type_loess(degree = 1, se = FALSE))
+expect_snapshot_plot(f, label = "model_loess_fast")
+
+# ...but not on a log axis, where lowess() interpolates too coarsely through the
+# compressed decades. Note that `log` is a display option, so the fit itself is
+# still computed on raw x (as in base R, and as tinyplot always has).
+f = function() {
+  set.seed(42)
+  d = data.frame(x = 10^runif(150, 0, 5))
+  d$y = log10(d$x) + rnorm(nrow(d), sd = 0.3)
+  plt(y ~ x, data = d, log = "x", type = "p", col = "grey80")
+  plt_add(type = type_loess(span = 0.1), col = "black")
+}
+expect_snapshot_plot(f, label = "model_loess_logx")

@@ -327,3 +327,17 @@ seq_palette = function(x, n, power = 1.5, grayscale = FALSE) {
       alpha = alpha
     )[1L:n]
 }
+
+# Equally-spaced prediction grid across the range of `x`, for model types that
+# draw a fitted curve. The grid is built on the log scale if the x-axis is
+# logarithmic, since a grid that is uniform in data space bunches into the
+# right-hand decades and leaves the left of the plot as a few straight
+# segments. `log` is the par-style string, i.e. "x", "xy", etc.
+model_grid = function(x, n = 100, log = "") {
+    rng = range(x, na.rm = TRUE)
+    if (grepl("x", log %||% "", fixed = TRUE) && all(rng > 0)) {
+        rng = log10(rng)
+        return(10^seq(rng[1L], rng[2L], length.out = n))
+    }
+    seq(rng[1L], rng[2L], length.out = n)
+}

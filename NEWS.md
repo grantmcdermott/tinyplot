@@ -210,6 +210,8 @@ related to plot layering. See "Bug fixes" below.
   - `type_histogram()` now (correctly) supports mapping `by` grouping along the
     `x` variable, e.g. `tinyplot(~mpg | mpg, data = mtcars, type = "hist")`.
     Bar colours map to mean bin values. (#727 @grantmcdermott)
+  - `type_loess()` is now much faster on large data. Thanks to @eleuven for
+    bringing this slowness issue to our attention. (#509 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -235,6 +237,10 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- `type_lm()`, `type_glm()` and `type_loess()` now space their prediction grid
+  evenly in `log(x)` when the x-axis is logarithmic. Previously a `log = "x"`
+  plot spanning several decades drew the left-hand ones as a few straight
+  segments. (#509 @grantmcdermott)
 - An ephemeral `theme` argument no longer clobbers a persistent `tinytheme()`
   i.e., beyond the intended single plot override. Similarly for a user's own
   `tpar()` settings. (#739 @grantmcdermott)

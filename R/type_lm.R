@@ -59,7 +59,7 @@ data_lm = function(se, level, weights = NULL, ...) {
             # the same as omitting the argument
             .w = x[["weights"]]
             fit = lm(y ~ x, data = x, weights = .w)
-            nd = data.frame(x = seq(min(x$x, na.rm = TRUE), max(x$x, na.rm = TRUE), length.out = 100))
+            nd = data.frame(x = model_grid(x$x, 100, settings$log))
             nd$by = x$by[1]
             nd$facet = x$facet[1]
             if (se == TRUE) {

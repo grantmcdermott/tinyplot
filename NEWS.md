@@ -232,9 +232,20 @@ related to plot layering. See "Bug fixes" below.
   long list of category names on the y-axis without also shrinking the x-axis.
   Both default to `NULL`, in which case the shared `cex.axis` value is used, so
   existing plots are unaffected. (#677 @grantmcdermott)
+- `type_loess()` is now much faster on large data (~13x at 20,000 obs). First,
+  the predicted fit is now evaluated on a grid of `n` points (default: 100)
+  rather than at every observation, mimicking the approach of `type_(g)lm`.
+  Second, the faster `stats::lowess()` is used in place of `stats::loess()`
+  where the two are equivalent. See `?type_loess` for details. Thanks to
+  @eleuven for bringing this slowness issue to our attention.
+  (#509 @grantmcdermott)
 
 ### Bug fixes
 
+- `type_lm()`, `type_glm()` and `type_loess()` now space their prediction grid
+  evenly in `log(x)` when the x-axis is logarithmic. Previously a `log = "x"`
+  plot spanning several decades drew the left-hand ones as a few straight
+  segments. (#509 @grantmcdermott)
 - An ephemeral `theme` argument no longer clobbers a persistent `tinytheme()`
   i.e., beyond the intended single plot override. Similarly for a user's own
   `tpar()` settings. (#739 @grantmcdermott)

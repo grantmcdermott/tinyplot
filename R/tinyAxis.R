@@ -177,6 +177,10 @@ x_axis_labels = function(xlabs) {
 ##
 ## `free_lims` carries the per-facet limits under free scales. The margin has to
 ## clear every panel's ticks, so all of them are measured and the widest wins.
+## (Free facets drop a fixed `axb`, so it only counts once those are ruled out.)
+##
+## Otherwise explicit breaks (`axb`) are the ticks the axis draws, so measure
+## them rather than the axisTicks() default.
 axis_tick_labels = function(labelset, lim, axb = NULL, axl = NULL, log = FALSE,
                             free_lims = NULL, cex = 1) {
   ticks = function(l) {
@@ -193,6 +197,8 @@ axis_tick_labels = function(labelset, lim, axb = NULL, axl = NULL, log = FALSE,
       numeric(1L)
     )
     out = sets[[which.max(widths)]]
+  } else if (!is.null(axb)) {
+    out = axb
   } else {
     out = ticks(lim)
   }

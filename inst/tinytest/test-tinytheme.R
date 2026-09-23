@@ -261,6 +261,12 @@ f = function() {
 }
 expect_snapshot_plot(f, label = "tinytheme_dynmar_multiline_xlabs")
 
+# ... including when the newline comes from an xaxl labeller on a numeric axis
+f = function() {
+  plt(1, 1, xaxb = 1, xaxl = c("1" = "Hello\nWorld"), theme = "dynamic")
+}
+expect_snapshot_plot(f, label = "tinytheme_dynmar_multiline_xaxl")
+
 ## palette functions (#593)
 pal = colorRampPalette(c("darkblue", "deeppink", "cornsilk"))
 

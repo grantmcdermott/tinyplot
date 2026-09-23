@@ -210,6 +210,8 @@ related to plot layering. See "Bug fixes" below.
   - `type_histogram()` now (correctly) supports mapping `by` grouping along the
     `x` variable, e.g. `tinyplot(~mpg | mpg, data = mtcars, type = "hist")`.
     Bar colours map to mean bin values. (#727 @grantmcdermott)
+  - `type_loess()` is now much faster on large data.Thanks to @eleuven for
+    bringing this slowness issue to our attention. (#509 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`
     and `type_heatmap()` types (see above). The theme removes all axis padding,
@@ -232,13 +234,6 @@ related to plot layering. See "Bug fixes" below.
   long list of category names on the y-axis without also shrinking the x-axis.
   Both default to `NULL`, in which case the shared `cex.axis` value is used, so
   existing plots are unaffected. (#677 @grantmcdermott)
-- `type_loess()` is now much faster on large data (~13x at 20,000 obs). First,
-  the predicted fit is now evaluated on a grid of `n` points (default: 100)
-  rather than at every observation, mimicking the approach of `type_(g)lm`.
-  Second, the faster `stats::lowess()` is used in place of `stats::loess()`
-  where the two are equivalent. See `?type_loess` for details. Thanks to
-  @eleuven for bringing this slowness issue to our attention.
-  (#509 @grantmcdermott)
 
 ### Bug fixes
 

@@ -210,7 +210,7 @@ related to plot layering. See "Bug fixes" below.
   - `type_histogram()` now (correctly) supports mapping `by` grouping along the
     `x` variable, e.g. `tinyplot(~mpg | mpg, data = mtcars, type = "hist")`.
     Bar colours map to mean bin values. (#727 @grantmcdermott)
-  - `type_loess()` is now much faster on large data.Thanks to @eleuven for
+  - `type_loess()` is now much faster on large data. Thanks to @eleuven for
     bringing this slowness issue to our attention. (#509 @grantmcdermott)
 - Themes:
   - `"heatmap"` provides a dedicated companion theme to the new `type_tile()`

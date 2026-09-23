@@ -91,8 +91,11 @@ data_loess = function(span, degree, family, control, se, level, n = 100, weights
         has_weights = !is.null(datapoints[["weights"]])
         if (has_weights) settings$weights_used = TRUE
         # lowess() defaults to robustness iterations where loess() does not, so
-        # the two only agree if we set `iter` from the requested loess family
+        # the two only agree if we set `iter` from the requested loess family.
+        # Note that the counts differ by one: loess's `iterations` includes the
+        # initial fit, whereas lowess's `iter` counts only the reweightings.
         robust = identical(match.arg(family, c("gaussian", "symmetric")), "symmetric")
+        iter = if (robust) max(0L, (control[["iterations"]] %||% 4L) - 1L) else 0L
         # lowess() interpolates between fit points spaced `delta` apart in raw x.
         # That is invisible on a linear axis, even for badly skewed x, since the
         # dense region is compressed into a narrow strip. A log axis stretches
@@ -114,7 +117,7 @@ data_loess = function(span, degree, family, control, se, level, n = 100, weights
             # fast path: lowess() is only equivalent to loess() for unweighted,
             # local linear fits on a linear axis, and cannot return standard errors
             if (!isTRUE(se) && degree == 1 && is.null(.w) && !xlog) {
-                lw = lowess(dat$x, dat$y, f = span, iter = if (robust) 3L else 0L)
+                lw = lowess(dat$x, dat$y, f = span, iter = iter)
                 # lowess() returns sorted x, with a single fitted value per tied
                 # x, so `ties = "ordered"` skips a redundant (and noisy) regularize
                 nd$y = approx(lw$x, lw$y, xout = nd$x, ties = "ordered")$y

@@ -135,23 +135,23 @@
 #' }
 #' demo_plot()
 #' 
-#' # Here are some useful arguments (strategies) to solve...
+#' # Here are some useful arguments (strategies) to avoid this annoyance...
 #' 
 #' # 1) dynamic theme + rotated x-labels
 #' demo_plot(theme = "clean", xaxr = 45)
-#' # 2) dynamic theme + labeller function (here: removing redundant text)
-#' demo_plot(theme = "clean", xaxl = function(x) gsub("factor\\(|\\)", "", x))
-#' # 3) dynamic theme + flipped axes
-#' demo_plot(theme = "clean", flip = TRUE)
-#' # 4) any combination of the above, e.g., labeller dictionary + flipped axes
+#' # 2) dynamic theme + labeller function (here: dictionary w/ newline spacing)
 #' dict = c(
 #'   "factor(cyl)4"             = "Manual\n4 Cyclinders",
 #'   "factor(cyl)6"             = "Manual\n6 Cyclinders",
 #'   "factor(cyl)8"             = "Manual\n8 Cyclinders",
-#'   "factor(cyl)4:factor(am)1" = "Automatic\n4 Cylinders",
+#'   "factor(am)1"              = "Automatic\n4 Cylinders",
 #'   "factor(cyl)6:factor(am)1" = "Automatic\n6 Cylinders",
 #'   "factor(cyl)8:factor(am)1" = "Automatic\n8 Cylinders"
 #' )
+#' demo_plot(theme = "clean", xaxl = dict)
+#' # 3) dynamic theme + flipped axes
+#' demo_plot(theme = "clean", flip = TRUE)
+#' # 4) any combination of the above, e.g., labeller dictionary + flipped axes
 #' demo_plot(theme = "clean", flip = TRUE, xaxl = dict)
 #' 
 #' tinytheme() # reset theme

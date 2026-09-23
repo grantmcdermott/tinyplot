@@ -237,6 +237,8 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- Multi-line x-axis tick labels (e.g. `"Hello\nWorld"`) are now spaced
+  correctly under dynamic themes. (#742 @grantmcdermott)
 - `type_lm()`, `type_glm()` and `type_loess()` now space their prediction grid
   evenly in `log(x)` when the x-axis is logarithmic. Previously a `log = "x"`
   plot spanning several decades drew the left-hand ones as a few straight

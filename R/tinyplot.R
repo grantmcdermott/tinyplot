@@ -1444,6 +1444,22 @@ tinyplot.default = function(
         .whtsbp_x_raw = tick_label_extent(xaxlabs, cex = .cex_xaxs)
         .whtsbp[1] = .whtsbp_x_raw
       }
+    } else if (.xside == 1L && !identical(xaxt, "none") && !identical(xaxt, "n")) {
+      # Horizontal multi-line x labels hang below the tick row (see tinyAxis()).
+      # Reserve the extra lines in the base margin, so the facet branches of
+      # draw_facet_window() inherit them via dynmar_computed, and push the xlab
+      # down by the same amount via .whtsbp_x_raw (-> .side1_raw).
+      # Only categories or a labeller can put a newline in a label, so plain
+      # numeric ticks skip the measurement.
+      if (!is.null(xlabs) || !is.null(xaxl)) {
+        xaxlabs = axis_tick_labels(
+          x_axis_labels(xlabs),
+          lim = xlim, axb = xaxb, axl = xaxl, log = .xlog,
+          cex = .cex_xaxs
+        )
+        .whtsbp_x_raw = tick_label_extra_lines(xaxlabs, cex = .cex_xaxs)
+        .dyn[1] = .dyn[1] + .whtsbp_x_raw
+      }
     }
     # A tilted label also leans along its axis, off the end of the plot region.
     # That lean lands in the *adjacent* margin, so widen whichever one it would

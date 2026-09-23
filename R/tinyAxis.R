@@ -19,6 +19,10 @@
 #'   counter-clockwise, or `NULL` (default) to leave the labels to base
 #'   `axis()` and its `las` setting. Any non-zero value is drawn by hand, since
 #'   `axis()` only understands the four right angles that `las` selects.
+#' @param hang logical. If `TRUE`, multi-line side-1 tick labels (under `las`
+#'   0 or 1) hang down from their first line, rather than growing upwards into
+#'   the ticks as base `axis()` does. Used by `dynmar` themes, which reserve
+#'   margin space for the extra lines.
 #' @examples
 #' \dontrun{
 #' 
@@ -31,7 +35,7 @@
 #' }
 #' @keywords internal
 tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL,
-                    srt = NULL) {
+                    srt = NULL, hang = FALSE) {
   type = match.arg(type, c("standard", "none", "labels", "ticks", "axis"))
   if (type == "none") {
     invisible(numeric(0L))
@@ -76,6 +80,17 @@ tinyAxis = function(x = NULL, ..., type = "standard", labeller = NULL,
         col = args[["col.axis"]], font = args[["font.axis"]]
       )
       return(invisible(at))
+    }
+    # Base axis() grows a multi-line side-1 label *upwards* from its last line,
+    # into the ticks. Under dynmar -- which reserves margin for the extra lines,
+    # see tick_label_extra_lines() -- hang them down from the first line instead.
+    # The caller passes `hang` rather than us reading tpar("dynmar") here: this
+    # runs inside recordGraphics(), and on replay an ephemeral theme is gone.
+    if (isTRUE(hang) && identical(as.numeric(args[["side"]]), 1) &&
+        is.null(args[["padj"]]) && par("las") %in% 0:1) {
+      args[["padj"]] = tick_label_padj(
+        args[["labels"]], cex = args[["cex.axis"]] %||% par("cex.axis")
+      )
     }
     do.call("Axis", args)
   }
@@ -267,6 +282,29 @@ tick_label_extent = function(labels, cex = 1, srt = NULL, side = 1L) {
     w * abs(cos(rad)) + h * abs(sin(rad))
   }
   perp - 0.5
+}
+
+
+## Extra margin lines that multi-line tick labels need when they run parallel
+## to side 1 (las 0:1): every line beyond the first, which the tick-row
+## allowance in dynmar_side() already covers.
+tick_label_extra_lines = function(labels, cex = 1) {
+  if (!is.character(labels) || !length(labels)) return(0)
+  n = max(nchar(gsub("[^\n]", "", labels)))
+  n * cex * par("lheight")
+}
+
+
+## Per-label `padj` that hangs a multi-line side-1 tick label down from its
+## first line, so that line sits where a single-line label would. padj is a
+## fraction of each string's own height, so the (n - 1)-line shift is divided
+## through by it. Single-line labels get 0, i.e. axis()'s default.
+tick_label_padj = function(labels, cex = 1) {
+  if (!is.character(labels)) return(NULL)
+  n = nchar(gsub("[^\n]", "", labels))
+  if (!any(n > 0)) return(NULL)
+  lh = strheight("X\nX", "inches", cex = cex) - strheight("X", "inches", cex = cex)
+  n * lh / strheight(labels, "inches", cex = cex)
 }
 
 

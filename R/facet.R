@@ -433,6 +433,7 @@ draw_facet_window = function(
         type = xaxt,
         labeller = xaxl,
         srt = xaxr,
+        hang = dynmar,
         cex.axis = get_tpar(c("cex.xaxs", "cex.axis"), 0.8, tpar_list = tpars),
         lwd = get_tpar(c("lwd.xaxs", "lwd.axis"), 1, tpar_list = tpars),
         lty = get_tpar(c("lty.xaxs", "lty.axis"), 1, tpar_list = tpars)

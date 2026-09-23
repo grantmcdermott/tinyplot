@@ -4,7 +4,14 @@
 \alias{tinyAxis}
 \title{Generic function for adding an axis to a (tiny)plot}
 \usage{
-tinyAxis(x = NULL, ..., type = "standard", labeller = NULL, srt = NULL)
+tinyAxis(
+  x = NULL,
+  ...,
+  type = "standard",
+  labeller = NULL,
+  srt = NULL,
+  hang = FALSE
+)
 }
 \arguments{
 \item{x}{an object which indicates the range over which an axis should
@@ -48,6 +55,11 @@ function if you want to compute the labels positionally, e.g.
 counter-clockwise, or \code{NULL} (default) to leave the labels to base
 \code{axis()} and its \code{las} setting. Any non-zero value is drawn by hand, since
 \code{axis()} only understands the four right angles that \code{las} selects.}
+
+\item{hang}{logical. If \code{TRUE}, multi-line side-1 tick labels (under \code{las}
+0 or 1) hang down from their first line, rather than growing upwards into
+the ticks as base \code{axis()} does. Used by \code{dynmar} themes, which reserve
+margin space for the extra lines.}
 }
 \description{
 Internal function used for adding an axis to a \code{\link{tinyplot}}

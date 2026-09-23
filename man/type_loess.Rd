@@ -11,6 +11,7 @@ type_loess(
   control = loess.control(),
   se = TRUE,
   level = 0.95,
+  n = 100,
   weights = NULL
 )
 }
@@ -34,6 +35,13 @@ type_loess(
 
 \item{level}{the confidence level required if \code{se = TRUE}. Default is 0.95.}
 
+\item{n}{integer. Number of equally-spaced points at which the fitted model
+is evaluated for drawing, per group. Default is 100. Note that this affects
+only where the fitted curve is sampled, not the fit itself, which always
+uses every observation. Larger values trace a wiggly fit more faithfully, at
+proportionally greater cost; consider raising it if you combine a small
+\code{span} with a large dataset.}
+
 \item{weights}{an optional numeric vector of observation weights for the model
 fit, of the same length as the number of data points. Weights can also be
 supplied via the top-level \code{weights} argument of \code{\link{tinyplot}} (which is
@@ -44,10 +52,52 @@ precedence if both are given).}
 Type function for plotting a LOESS (LOcal regrESSion) fit.
 Arguments are passed to \code{\link[stats]{loess}}.
 }
+\section{Plotting large data}{
+
+\code{\link[stats]{loess}} can be a time-consuming algorithm. From a
+plotting perspective, though, the expensive half is usually not the model fit
+but the \emph{prediction} step (\code{y} values corresponding to each \code{x}).
+\code{type_loess()} mitigates this in two ways.
+
+First, the fitted model is evaluated on an equally-spaced grid of \code{n} points
+spanning the data range of each group, rather than at every observation. On
+large data this skips a great deal of redundant work---dozens of observations
+can crowd into a single pixel, so evaluating the curve at each of them costs
+time without revealing anything---while \code{n} points remain ample to trace a
+smooth curve. The model is still fitted on the full dataset, so the estimates
+are unchanged. It's only the points along \code{x} at which they are read off that
+differ. (If the x-axis is logarithmic, the grid is spaced evenly in \code{log(x)},
+so that the curve is traced evenly across the plot.)
+
+Second, once prediction is cheap the fit itself becomes the bottleneck, and
+here \code{\link[stats]{lowess}} is substituted for \code{loess()} wherever the
+two are equivalent: unweighted local linear fits, without standard errors, on
+a non-logarithmic x-axis. That path smooths millions of observations in
+seconds. Standard errors, quadratic fits and weighted fits all fall back to
+\code{loess()}, as does a logarithmic x-axis, where \code{lowess()} interpolates too
+coarsely through the compressed decades.
+
+Note that \code{se = TRUE} carries a hard ceiling of its own:
+\code{\link[stats]{predict.loess}}'s workspace grows quadratically in the
+number of observations---regardless of how many points you predict at---and
+fails outright at around 38,000. Confidence intervals are thus unavailable at
+the sizes where the \code{lowess()} path matters most, and \code{se = FALSE} is
+required to draw a smooth over very large data.
+}
+
 \examples{
 # "loess" type convenience string
 tinyplot(dist ~ speed, data = cars, type = "loess")
 
 # Use `type_loess()` to pass extra arguments for customization
 tinyplot(dist ~ speed, data = cars, type = type_loess(span = 0.5, degree = 1))
+
+# The fast `lowess` path is used automatically where it is equivalent, which
+# makes short work of larger datasets
+tinyplot(sunspots, type = "l", col = "grey")
+tinyplot_add(type = type_loess(span = 0.05, degree = 1, se = FALSE), lwd = 2)
+
+# Raise `n` if a small `span` needs more than 100 points to trace faithfully
+tinyplot(sunspots, type = "l", col = "grey")
+tinyplot_add(type = type_loess(span = 0.05, degree = 1, se = FALSE, n = 500), lwd = 2)
 }

@@ -234,6 +234,10 @@ related to plot layering. See "Bug fixes" below.
   long list of category names on the y-axis without also shrinking the x-axis.
   Both default to `NULL`, in which case the shared `cex.axis` value is used, so
   existing plots are unaffected. (#677 @grantmcdermott)
+- Type constructors that take a function argument now accept both `FUN` and
+  `fun`, e.g. `type_summary(FUN = median)` and `type_barplot(fun = sum)`.
+  `FUN` is the documented form for summarising types, following base R's
+  `aggregate()`. (#695 @grantmcdermott)
 
 ### Bug fixes
 

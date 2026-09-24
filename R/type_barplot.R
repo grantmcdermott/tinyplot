@@ -17,8 +17,10 @@
 #'   of an even number). Additionally it is possible to set `center = 2` or
 #'   `center = 2.5` to indicate that centering should be after the second category
 #'   or the mid-way in the third category, respectively.
-#' @param FUN a function to compute the summary statistic for `y` within each
+#' @param fun,FUN a function to compute the summary statistic for `y` within each
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
+#'   `FUN` is a (backwards-compatible) alias for `fun`. Supply only one or the
+#'   other; `fun` takes precedence if both are provided.
 #' @param xlevels,xord arguments controlling the order of the `x` variable, and
 #'   hence of the x-axis. Supply one or the other; if both arguments are
 #'   provided, `xlevels` takes precedence and `xord` is silently ignored.
@@ -34,7 +36,7 @@
 #'     height, tallest or shortest first. Both the abbreviated and long form
 #'     strings are permitted, as are the `"decreasing"` and `"increasing"`
 #'     aliases. Note that the ranking is applied to the *aggregated* bars, i.e.
-#'     whatever `FUN` produced, rather than the underlying rows. With `by`
+#'     whatever `fun` produced, rather than the underlying rows. With `by`
 #'     groups or facets, a single ordering is computed and shared across all of
 #'     them, by summing each category's bars over every group and facet. For
 #'     stacked bars that sum is the height of the full stack; with
@@ -70,7 +72,7 @@
 #'   to `FALSE` (default) a zero height bar is still drawn for which the border
 #'   lines will still be visible.
 #' @param na.as.zero logical. Should a category that no observation reaches be
-#'   treated as a zero? Defaults to `NULL`, i.e. let `FUN` decide; see the
+#'   treated as a zero? Defaults to `NULL`, i.e. let `fun` decide; see the
 #'   "Implicit zeros and empty cells" section below. Set to `TRUE` to always mark such categories with a
 #'   zero-height bar, or `FALSE` to never draw them.
 #' @param lighten logical. Should the fills use a lighter, opaque tint of the
@@ -91,7 +93,7 @@
 #'   the question of whether an "empty" cell should be read as an implicit zero,
 #'   or treated as missing (`NA`).
 #'
-#'   In most cases, the question is answered by the `FUN` aggregation. This is
+#'   In most cases, the question is answered by the `fun` aggregation. This is
 #'   because it computes the actual value that is being plotted. For example, a
 #'   *count* of no observations is `0`, whereas a *mean* of no observations is
 #'   undefined and thus better treated as `NA` (similarly for other summary
@@ -144,7 +146,7 @@
 #' # each person receives two drugs
 #' sleep2 = transform(sleep, drug = group) # less misleading name
 #' 
-#' # default aggregation FUN is mean
+#' # default aggregation fun is mean
 #' tinyplot(
 #'   extra ~ ID, data = sleep2,
 #'   type = "barplot",
@@ -153,20 +155,20 @@
 #' # switch to diff (answers a more relevant q: who benefits most from drug 2?)
 #' tinyplot(
 #'   extra ~ ID, data = sleep2,
-#'   type = "barplot", FUN = diff,
+#'   type = "barplot", fun = diff,
 #'   main = "Sleep gain (drug 2 vs drug 1)"
 #' )
 #' # we can sort in descending (or ascending) order too
 #' tinyplot(
 #'   extra ~ ID, data = sleep2,
-#'   type = "barplot", FUN = diff, xord = "desc",
+#'   type = "barplot", fun = diff, xord = "desc",
 #'   main = "Sleep gain (drug 2 vs drug 1), ordered"
 #' )
 #' 
 #' # of course, we don't have to aggregate if we specify groups (stacked or non)
 #' tinyplot(extra ~ ID | drug, data = sleep2, type = "barplot", beside = TRUE)
 #' 
-#' # Aside: We used automatic argument passing for 'xord', `FUN`, etc. above.
+#' # Aside: We used automatic argument passing for 'xord', `fun`, etc. above.
 #' # But this wouldn't work for `width`, since it would conflict with the
 #' # top-level `tinyplot(..., width = <width>)` argument. It's safer to pass
 #' # these args through the `type_barplot()` functional equivalent...
@@ -282,7 +284,9 @@
 #' )
 #'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, na.as.zero = NULL, lighten = TRUE, xaxlabels = NULL) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, fun = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, na.as.zero = NULL, lighten = TRUE, xaxlabels = NULL, FUN = NULL) {
+  # `FUN` is an alias, so `fun` wins if both are supplied.
+  fun = fun %||% FUN
   if (!is.null(xaxlabels)) {
     warning(
       "'xaxlabels' is deprecated; use the top-level 'xaxl' argument instead, ",
@@ -293,7 +297,7 @@ type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
   }
   assert_logical(na.as.zero, null.ok = TRUE)
   out = list(
-    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = FUN, xlevels = xlevels, xord = xord, xaxlabels = xaxlabels, drop.zeros = drop.zeros, na.as.zero = na.as.zero, lighten = lighten),
+    data = data_barplot(width = width, beside = beside, center = center, offset = offset, FUN = fun, xlevels = xlevels, xord = xord, xaxlabels = xaxlabels, drop.zeros = drop.zeros, na.as.zero = na.as.zero, lighten = lighten),
     draw = draw_rect(),
     name = "barplot"
   )

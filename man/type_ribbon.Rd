@@ -5,7 +5,7 @@
 \alias{type_ribbon}
 \title{Ribbon and area plot types}
 \usage{
-type_area(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL)
+type_area(alpha = NULL, stack = FALSE, byord = NULL, fun = NULL)
 
 type_ribbon(alpha = NULL, dodge = 0, fixed.dodge = FALSE)
 }
@@ -47,7 +47,7 @@ explicitly, call \code{factor(levels = ...)} on the grouping variable
 beforehand. See Examples, as well as the "Stacked area plots" section
 below.}
 
-\item{FUN}{a function for collapsing repeated \code{y} values within a group and
+\item{fun}{a function for collapsing repeated \code{y} values within a group and
 \code{x} position, used only when \code{stack = TRUE}. Defaults to \code{mean}, matching
 \code{\link[=type_barplot]{type_barplot()}}, so that the same data stacks to the same heights
 whether it is drawn as bars or as an area.}
@@ -117,7 +117,7 @@ emphasize.
 
 Stacking needs exactly one \code{y} value per group per \code{x} value. Repeated cells
 ---typically caused by a variable that is present in the data but absent from
-the plot---are collapsed with \code{FUN} (default \code{mean}) rather than being
+the plot---are collapsed with \code{fun} (default \code{mean}) rather than being
 stacked against each other. Conversely, groups that are \emph{missing} an \code{x}
 value (or have an \code{NA} there) count as contributing zero at that point, so
 that a gap in one group does not shift the groups stacked above it. Note that
@@ -212,12 +212,12 @@ tinyplot(
 )
 
 # Stacking expects a single `y` value per group per `x` value. Any repeats
-# are collapsed for us first, using `FUN` (`mean` by default). Here, for
+# are collapsed for us first, using `fun` (`mean` by default). Here, for
 # instance, ChickWeight records many chicks per diet at each timepoint.
 
 tinyplot(
   weight ~ Time | Diet, data = ChickWeight,
-  type = type_area(stack = TRUE, FUN = median)
+  type = type_area(stack = TRUE, fun = median)
 )
 
 # (Illustrative purposes aside, we leave it to the reader to decide whether

@@ -616,7 +616,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">type_area(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL)
+<pre><code class="language-R">type_area(alpha = NULL, stack = FALSE, byord = NULL, fun = NULL)
 
 type_ribbon(alpha = NULL, dodge = 0, fixed.dodge = FALSE)
 </code></pre>
@@ -668,7 +668,7 @@ Defaults to <code>NULL</code>, i.e.&nbsp;keep the existing factor levels. To set
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="FUN">FUN</code>
+<code id="fun">fun</code>
 </td>
 <td>
 a function for collapsing repeated <code>y</code> values within a group and <code>x</code> position, used only when <code>stack = TRUE</code>. Defaults to <code>mean</code>, matching <code>type_barplot()</code>, so that the same data stacks to the same heights whether it is drawn as bars or as an area.
@@ -709,7 +709,7 @@ Logical. If <code>FALSE</code> (default), dodge positions are calculated indepen
 <h3 class="anchored" data-anchor-id="stacked-area-plots">Stacked area plots</h3>
 <p>Passing <code>type_area(stack = TRUE)</code> stacks the <code>by</code> groups cumulatively, rather than drawing each one from a zero baseline. Groups are accumulated in the order of their (factor) levels, so the first level forms the bottom band and the top of the final band traces the group total. Stacking is computed separately within each facet.</p>
 <p>The <code>byord</code> argument is a helpful companion to stacked area plots, since it enables on-the-fly adjustment of the stacking order. For example, the size keywords—<code>“desc”</code>, <code>“start”</code>, and <code>“end”</code>—rank the stacked <code>by</code> groups according to their <code>y</code> values, either summed across the <code>x</code> axis or taken at one end of it. Following convention, the ranking runs in descending order, so that the biggest group is drawn on the bottom layer (use <code>“asc”</code> for the reverse). However, size is not the only route to a stable baseline. Because each band is drawn on top of the ones below it, they all inherit whatever movement the bottom layer has. A large but volatile group can therefore be a worse choice of foundation than a small, steady one. In this latter case, the <code>“minvar”</code> keyword would be a more appropriate choice since it places the lowest variance group at the bottom. Your choice of stacking ordering should therefore respond to the patterns in your data and which layers you want to emphasize.</p>
-<p>Stacking needs exactly one <code>y</code> value per group per <code>x</code> value. Repeated cells —typically caused by a variable that is present in the data but absent from the plot—are collapsed with <code>FUN</code> (default <code>mean</code>) rather than being stacked against each other. Conversely, groups that are <em>missing</em> an <code>x</code> value (or have an <code>NA</code> there) count as contributing zero at that point, so that a gap in one group does not shift the groups stacked above it. Note that stacking negative values is not meaningful and will produce overlapping bands. Note that the legend key for stacked area plots is deliberately inverted compared to other plot types (including non-stacked area plots) to ensure a consistent ordering with the "bottoms-up" layering of the stacked regions. Similarly, reordering of the <code>by</code> group levels will reassign the palette, since group colours are allocated by level position. This matches what releveling a factor does elsewhere, but it does mean that reordering the bands repaints them.</p>
+<p>Stacking needs exactly one <code>y</code> value per group per <code>x</code> value. Repeated cells —typically caused by a variable that is present in the data but absent from the plot—are collapsed with <code>fun</code> (default <code>mean</code>) rather than being stacked against each other. Conversely, groups that are <em>missing</em> an <code>x</code> value (or have an <code>NA</code> there) count as contributing zero at that point, so that a gap in one group does not shift the groups stacked above it. Note that stacking negative values is not meaningful and will produce overlapping bands. Note that the legend key for stacked area plots is deliberately inverted compared to other plot types (including non-stacked area plots) to ensure a consistent ordering with the "bottoms-up" layering of the stacked regions. Similarly, reordering of the <code>by</code> group levels will reassign the palette, since group colours are allocated by level position. This matches what releveling a factor does elsewhere, but it does mean that reordering the bands repaints them.</p>
 <p>Finally, note that unlike non-stacked area plots, the stacked bands are drawn with opaque fill by default, since they do not overlap. Pass an explicit <code>alpha</code> or <code>fill</code> value to override.</p>
 </section>
 <section id="examples" class="level3">
@@ -847,12 +847,12 @@ Logical. If <code>FALSE</code> (default), dodge positions are calculated indepen
 </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stacking expects a single `y` value per group per `x` value. Any repeats</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># are collapsed for us first, using `FUN` (`mean` by default). Here, for</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># are collapsed for us first, using `fun` (`mean` by default). Here, for</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># instance, ChickWeight records many chicks per diet at each timepoint.</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  weight <span class="sc">~</span> Time <span class="sc">|</span> Diet, <span class="at">data =</span> ChickWeight,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_area</span>(<span class="at">stack =</span> <span class="cn">TRUE</span>, <span class="at">FUN =</span> median)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">type_area</span>(<span class="at">stack =</span> <span class="cn">TRUE</span>, <span class="at">fun =</span> median)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>

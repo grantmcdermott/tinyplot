@@ -620,13 +620,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   beside = FALSE,
   center = FALSE,
   offset = NULL,
-  FUN = NULL,
+  fun = NULL,
   xlevels = NULL,
   xord = NULL,
   drop.zeros = FALSE,
   na.as.zero = NULL,
   lighten = TRUE,
-  xaxlabels = NULL
+  xaxlabels = NULL,
+  FUN = NULL
 )
 </code></pre>
 </section>
@@ -675,10 +676,10 @@ logical or numeric. In case of stacked barplots (<code>beside = FALSE</code>) sh
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="FUN">FUN</code>
+<code id="fun">fun</code>, <code id="FUN">FUN</code>
 </td>
 <td>
-a function to compute the summary statistic for <code>y</code> within each group of <code>x</code> in case of using a two-sided formula <code>y ~ x</code> (default: mean).
+a function to compute the summary statistic for <code>y</code> within each group of <code>x</code> in case of using a two-sided formula <code>y ~ x</code> (default: mean). <code>FUN</code> is a (backwards-compatible) alias for <code>fun</code>. Supply only one or the other; <code>fun</code> takes precedence if both are provided.
 </td>
 </tr>
 <tr>
@@ -695,7 +696,7 @@ a function to compute the summary statistic for <code>y</code> within each group
 <p><code>xord</code> instead accepts a keyword or custom function, which then <em>derives</em> the order from the data. Options are:</p>
 <ul>
 <li>
-<p><code>“desc(ending)”</code> and <code>“asc(ending)”</code> rank (sort) the categories by bar height, tallest or shortest first. Both the abbreviated and long form strings are permitted, as are the <code>“decreasing”</code> and <code>“increasing”</code> aliases. Note that the ranking is applied to the <em>aggregated</em> bars, i.e. whatever <code>FUN</code> produced, rather than the underlying rows. With <code>by</code> groups or facets, a single ordering is computed and shared across all of them, by summing each category’s bars over every group and facet. For stacked bars that sum is the height of the full stack; with <code>beside = TRUE</code> it is the group total rather than any individual bar. (A factor carries one level order, so a per-facet ranking is not expressible.)</p>
+<p><code>“desc(ending)”</code> and <code>“asc(ending)”</code> rank (sort) the categories by bar height, tallest or shortest first. Both the abbreviated and long form strings are permitted, as are the <code>“decreasing”</code> and <code>“increasing”</code> aliases. Note that the ranking is applied to the <em>aggregated</em> bars, i.e. whatever <code>fun</code> produced, rather than the underlying rows. With <code>by</code> groups or facets, a single ordering is computed and shared across all of them, by summing each category’s bars over every group and facet. For stacked bars that sum is the height of the full stack; with <code>beside = TRUE</code> it is the group total rather than any individual bar. (A factor carries one level order, so a per-facet ranking is not expressible.)</p>
 </li>
 <li>
 <p><code>“asis”</code> or <code>“rev”</code> permute the existing levels without consulting the data at all. The former takes the categories in the order that they appear in the data, while the latter reverses the current level order.</p>
@@ -722,7 +723,7 @@ logical. Should bars with zero height be dropped? If set to <code>FALSE</code> (
 <code id="na.as.zero">na.as.zero</code>
 </td>
 <td>
-logical. Should a category that no observation reaches be treated as a zero? Defaults to <code>NULL</code>, i.e.&nbsp;let <code>FUN</code> decide; see the "Implicit zeros and empty cells" section below. Set to <code>TRUE</code> to always mark such categories with a zero-height bar, or <code>FALSE</code> to never draw them.
+logical. Should a category that no observation reaches be treated as a zero? Defaults to <code>NULL</code>, i.e.&nbsp;let <code>fun</code> decide; see the "Implicit zeros and empty cells" section below. Set to <code>TRUE</code> to always mark such categories with a zero-height bar, or <code>FALSE</code> to never draw them.
 </td>
 </tr>
 <tr>
@@ -746,7 +747,7 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 <section id="implicit-zeros-and-empty-cells" class="level3">
 <h3 class="anchored" data-anchor-id="implicit-zeros-and-empty-cells">Implicit zeros and empty cells</h3>
 <p>Grouping (<code>by</code>) or faceting a barplot asks for a bar per unique combination (i.e., category + group + facet). However, some combinations may not be supported by any observations in the data. In these cases, the bars are still computed off the completed combination set; particularly since stacked and centered barplots have to line up regardless. Yet this in turn invites the question of whether an "empty" cell should be read as an implicit zero, or treated as missing (<code>NA</code>).</p>
-<p>In most cases, the question is answered by the <code>FUN</code> aggregation. This is because it computes the actual value that is being plotted. For example, a <em>count</em> of no observations is <code>0</code>, whereas a <em>mean</em> of no observations is undefined and thus better treated as <code>NA</code> (similarly for other summary statistics like the variance or median). Nonetheless, users can override this behaviour either way with the <code>na.as.zero</code> argument.</p>
+<p>In most cases, the question is answered by the <code>fun</code> aggregation. This is because it computes the actual value that is being plotted. For example, a <em>count</em> of no observations is <code>0</code>, whereas a <em>mean</em> of no observations is undefined and thus better treated as <code>NA</code> (similarly for other summary statistics like the variance or median). Nonetheless, users can override this behaviour either way with the <code>na.as.zero</code> argument.</p>
 <p>Three related points are worth highlighting. First, a zero-height bar only reads as zero when it is measured <em>from</em> zero. So <code>offset</code> layouts (waterfall, diverging/Likert) never draw one unless <code>na.as.zero = TRUE</code> asks for it explicitly. Second, a "zero" combination is still subject to the <code>drop.zeros</code> argument like any other zero. So <code style="white-space: pre;">na.as.zero = TRUE, drop.zeros = TRUE</code> cancel out. Finally, <code>na.as.zero = TRUE</code> marks only the categories that <em>could</em> have held data. Where <code>x</code>, <code>by</code> or <code>facet</code> are mapped to the same variable, for example, most combinations cannot occur at all—and are never drawn, regardless.</p>
 </section>
 <section id="examples" class="level3">
@@ -826,7 +827,7 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># each person receives two drugs</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>sleep2 <span class="ot">=</span> <span class="fu">transform</span>(sleep, <span class="at">drug =</span> group) <span class="co"># less misleading name</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># default aggregation FUN is mean</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># default aggregation fun is mean</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID, <span class="at">data =</span> sleep2,</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>,</span>
@@ -842,7 +843,7 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># switch to diff (answers a more relevant q: who benefits most from drug 2?)</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID, <span class="at">data =</span> sleep2,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">FUN =</span> diff,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">fun =</span> diff,</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Sleep gain (drug 2 vs drug 1)"</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -855,7 +856,7 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we can sort in descending (or ascending) order too</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  extra <span class="sc">~</span> ID, <span class="at">data =</span> sleep2,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">FUN =</span> diff, <span class="at">xord =</span> <span class="st">"desc"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"barplot"</span>, <span class="at">fun =</span> diff, <span class="at">xord =</span> <span class="st">"desc"</span>,</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Sleep gain (drug 2 vs drug 1), ordered"</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -874,7 +875,7 @@ logical. Should the fills use a lighter, opaque tint of the series colour(s)? De
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aside: We used automatic argument passing for 'xord', `FUN`, etc. above.</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aside: We used automatic argument passing for 'xord', `fun`, etc. above.</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># But this wouldn't work for `width`, since it would conflict with the</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># top-level `tinyplot(..., width = &lt;width&gt;)` argument. It's safer to pass</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># these args through the `type_barplot()` functional equivalent...</span></span>

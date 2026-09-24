@@ -206,7 +206,7 @@ expect_snapshot_plot(f, label = "barplot_xord_rev")
 
 # `xord` must rank the *aggregated* bars, not the raw cells. With unequal cell
 # counts these two order the bars oppositely (means: few>mid>many; sums:
-# many>mid>few), so the pair pins the ranking to whatever FUN actually drew.
+# many>mid>few), so the pair pins the ranking to whatever `fun` actually drew.
 bars = data.frame(
   g = factor(rep(c("few", "many", "mid"), times = c(1, 6, 3))),
   v = c(10, rep(3, 6), rep(5, 3))
@@ -215,8 +215,14 @@ bars = data.frame(
 f = function() tinyplot(v ~ g, data = bars, type = type_barplot(xord = "desc"))
 expect_snapshot_plot(f, label = "barplot_xord_aggregated_mean")
 
-f = function() tinyplot(v ~ g, data = bars, type = type_barplot(xord = "desc", FUN = sum))
+f = function() tinyplot(v ~ g, data = bars, type = type_barplot(xord = "desc", fun = sum))
 expect_snapshot_plot(f, label = "barplot_xord_aggregated_sum")
+
+# `FUN` is a backwards-compatible alias for `fun` (this type's released
+# spelling); `fun` wins if both are given. No other type accepts `FUN`. (#695)
+expect_equal(type_barplot(FUN = sum), type_barplot(fun = sum))
+expect_equal(type_barplot(fun = median, FUN = sum), type_barplot(fun = median))
+expect_equal(type_barplot(5/6, FALSE, FALSE, NULL, sum), type_barplot(fun = sum))
 
 
 # `xord` no longer accepts explicit levels; that is what `xlevels` is for
@@ -305,7 +311,7 @@ expect_snapshot_plot(f, label = "barplot_xaxl_dict")
 
 # What is a cell that no observation reaches worth? aggregate() completes the
 # x-by-facet grid so that stacking has somewhere to stand, then fills those
-# invented cells with NA rather than calling FUN on them -- so FUN's own answer
+# invented cells with NA rather than calling `fun` on them -- so `fun`'s own answer
 # for no data decides. A *mean* of nothing is undefined, so nothing is drawn:
 # here carb = 1 is unobserved for vs = 0, and carb = 3, 6, 8 for vs = 1. (#711)
 f = function() {
@@ -323,18 +329,18 @@ f = function() {
 expect_snapshot_plot(f, label = "barplot_facet_unobserved_count")
 
 # `offset` moves the baseline, and a zero-height bar only reads as zero from a
-# zero baseline, so an offset layout draws nothing there whatever FUN says. Every
+# zero baseline, so an offset layout draws nothing there whatever `fun` says. Every
 # item here has just one of the two `by` levels, so 5 of the 10 cells are empty.
 wf = data.frame(item = factor(c("Sales", "Costs", "TOTAL"), levels = c("Sales", "Costs", "TOTAL")),
                 value = c(100, -80, 20))
 wf$off = c(0, 100, 0)
 f = function() {
   tinyplot(value ~ item | I(value < 0), data = wf, legend = FALSE,
-           type = type_barplot(offset = wf$off, FUN = sum))
+           type = type_barplot(offset = wf$off, fun = sum))
 }
 expect_snapshot_plot(f, label = "barplot_offset_unobserved_sum")
 
-# `na.as.zero` overrides the FUN-derived default either way
+# `na.as.zero` overrides the `fun`-derived default either way
 f = function() {
   tinyplot(mpg ~ factor(carb), data = mtcars, facet = ~vs,
            type = type_barplot(na.as.zero = TRUE),

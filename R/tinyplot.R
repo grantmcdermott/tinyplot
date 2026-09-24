@@ -1070,6 +1070,7 @@ tinyplot.default = function(
 
     # unevaluated expressions with side effects
     draw          = substitute(draw),
+    data          = data, # for facet formulas passed to the default method
     facet         = facet,
     facet.args    = facet.args,
     palette       = substitute(palette),

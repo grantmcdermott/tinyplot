@@ -11,6 +11,14 @@ sanitize_datapoints = function(settings) {
     )
   )
 
+  ## drop degenerate dimensions from array inputs, e.g. a 1-row or 1-column
+  ## matrix is just a vector (#548)
+  drop_dims = function(z) {
+    if (length(dim(z)) > 1L && sum(dim(z) > 1L) <= 1L) drop(z) else z
+  }
+  x = drop_dims(x); xmin = drop_dims(xmin); xmax = drop_dims(xmax)
+  y = drop_dims(y); ymin = drop_dims(ymin); ymax = drop_dims(ymax)
+
   ## coerce character and logical variables to factors
   ## (aside: we won't risk converting x and y logicals to factors b/c it can
   ##  mess up types that rely on predict underneath the hood, e.g type_lm)
@@ -53,5 +61,9 @@ sanitize_datapoints = function(settings) {
   }
 
   # potentially modified variables
-  env2env(environment(), settings, c("x", "y", "xaxt", "datapoints"))
+  env2env(
+    environment(),
+    settings,
+    c("x", "xmin", "xmax", "y", "ymin", "ymax", "xaxt", "datapoints")
+  )
 }

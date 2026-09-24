@@ -91,5 +91,5 @@ tinyplot(VADeaths, type = "barplot", facet = "by", legend = FALSE)
 
 }
 \seealso{
-\code{\link[graphics]{matplot}}
+\code{\link{tinyplot.array}}, \code{\link[graphics]{matplot}}
 }

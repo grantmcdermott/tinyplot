@@ -237,6 +237,8 @@ related to plot layering. See "Bug fixes" below.
 
 ### Bug fixes
 
+- Free facets (`facet.args = list(free = TRUE)`) now respect `asp`.
+  (#744 @grantmcdermott)
 - Multi-line x-axis tick labels (e.g. `"Hello\nWorld"`) are now spaced
   correctly under dynamic themes. (#742 @grantmcdermott)
 - `type_lm()`, `type_glm()` and `type_loess()` now space their prediction grid

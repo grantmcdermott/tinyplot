@@ -4,10 +4,10 @@
 \alias{type_function}
 \title{Plot a function}
 \usage{
-type_function(fun = dnorm, args = list(), n = 101, ...)
+type_function(fun = dnorm, args = list(), n = 101, ..., FUN = NULL)
 }
 \arguments{
-\item{fun}{Function of \code{x} to plot. Defaults to \code{\link[stats]{dnorm}}.}
+\item{fun, FUN}{Function of \code{x} to plot. Defaults to \code{\link[stats]{dnorm}}.}
 
 \item{args}{List of additional arguments to be passed to \code{fun}.}
 

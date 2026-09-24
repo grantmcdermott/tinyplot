@@ -17,7 +17,7 @@
 #'   of an even number). Additionally it is possible to set `center = 2` or
 #'   `center = 2.5` to indicate that centering should be after the second category
 #'   or the mid-way in the third category, respectively.
-#' @param FUN a function to compute the summary statistic for `y` within each
+#' @param FUN,fun a function to compute the summary statistic for `y` within each
 #'   group of `x` in case of using a two-sided formula `y ~ x` (default: mean).
 #' @param xlevels,xord arguments controlling the order of the `x` variable, and
 #'   hence of the x-axis. Supply one or the other; if both arguments are
@@ -282,7 +282,8 @@
 #' )
 #'
 #' @export
-type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, na.as.zero = NULL, lighten = TRUE, xaxlabels = NULL) {
+type_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NULL, FUN = NULL, xlevels = NULL, xord = NULL, drop.zeros = FALSE, na.as.zero = NULL, lighten = TRUE, xaxlabels = NULL, fun = NULL) {
+  FUN = fun %||% FUN
   if (!is.null(xaxlabels)) {
     warning(
       "'xaxlabels' is deprecated; use the top-level 'xaxl' argument instead, ",

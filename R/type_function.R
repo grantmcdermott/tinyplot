@@ -4,7 +4,7 @@
 #' When using `type_function()` in a `tinyplot()` call, the `x` value indicates
 #' the range of values to plot on the x-axis.
 #'
-#' @param fun Function of `x` to plot. Defaults to \code{\link[stats]{dnorm}}.
+#' @param fun,FUN Function of `x` to plot. Defaults to \code{\link[stats]{dnorm}}.
 #' @param args List of additional arguments to be passed to `fun`.
 #' @param n Number of points to interpolate on the x axis.
 #' @param ... Additional arguments are passed to the `lines()` function,
@@ -33,7 +33,9 @@
 #' tinyplot(x = -4:4, type = type_function(fun = function(x) 0.5 * exp(-abs(x))))
 #'
 #' @export
-type_function = function(fun = dnorm, args = list(), n = 101, ...) {
+type_function = function(fun = dnorm, args = list(), n = 101, ...,
+                         FUN = NULL) {
+  fun = FUN %||% fun
   assert_function(fun)
   lines_args = list(...)
   data_function = function(args, fun) {

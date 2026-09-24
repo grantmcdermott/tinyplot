@@ -10,6 +10,7 @@ type_hexbin(
   mincnt = 1,
   maxcnt = Inf,
   border = NA,
+  FUN = NULL,
   fun = NULL
 )
 }
@@ -29,7 +30,7 @@ Set a colour (e.g. \code{"black"}) for outlined hexagons. Passing the sentinel
 string \code{"fill"} matches the border to each cell's fill colour, which
 produces perfectly seamless tiling.}
 
-\item{fun}{Function used to summarise a \emph{numeric} \code{by} variable within each
+\item{FUN, fun}{Function used to summarise a \emph{numeric} \code{by} variable within each
 cell (see Details). Defaults to \code{NULL}, which is equivalent to \code{mean}. Has
 no effect when \code{by} is absent (count mode) or discrete (modal mode).}
 }
@@ -58,8 +59,8 @@ the \code{by} variable within each cell, drawn with a discrete qualitative
 palette and legend. Useful for mapping the dominant category across a
 dense scatter.
 \item \strong{Numeric \code{by}.} The fill encodes a per-cell summary of the \code{by}
-variable---by default the mean, or any other function passed via \code{fun}
-(e.g. \code{fun = sum}). Like the original no-\code{by} case, the legend is drawn
+variable---by default the mean, or any other function passed via \code{FUN}
+(e.g. \code{FUN = sum}). Like the original no-\code{by} case, the legend is drawn
 as a continuous gradient. This is the hexagonal analogue of a binned
 heatmap.
 }

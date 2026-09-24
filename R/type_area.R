@@ -1,7 +1,9 @@
 #' @rdname type_ribbon
 #' @importFrom stats ave
 #' @export
-type_area = function(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL) {
+type_area = function(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL,
+                     fun = NULL) {
+    FUN = fun %||% FUN
     out = list(
         draw = NULL,
         data = data_area(alpha = alpha, stack = stack, byord = byord, FUN = FUN),

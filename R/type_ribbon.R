@@ -33,7 +33,7 @@
 #'   explicitly, call `factor(levels = ...)` on the grouping variable
 #'   beforehand. See Examples, as well as the "Stacked area plots" section
 #'   below.
-#' @param FUN a function for collapsing repeated `y` values within a group and
+#' @param FUN,fun a function for collapsing repeated `y` values within a group and
 #'   `x` position, used only when `stack = TRUE`. Defaults to `mean`, matching
 #'   [`type_barplot()`], so that the same data stacks to the same heights
 #'   whether it is drawn as bars or as an area.

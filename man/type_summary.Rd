@@ -4,10 +4,10 @@
 \alias{type_summary}
 \title{Plot summary values of \code{y} at unique values of \code{x}}
 \usage{
-type_summary(fun = mean, dodge = 0, fixed.dodge = FALSE, ...)
+type_summary(FUN = mean, dodge = 0, fixed.dodge = FALSE, ..., fun = NULL)
 }
 \arguments{
-\item{fun}{summarizing function. Should be compatible with
+\item{FUN, fun}{summarizing function. Should be compatible with
 \code{\link[stats]{aggregate}}. Defaults to \code{\link[base]{mean}}.}
 
 \item{dodge}{Adjustment parameter for dodging overlapping points or ranges in

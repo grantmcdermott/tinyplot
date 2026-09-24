@@ -15,7 +15,8 @@ type_barplot(
   drop.zeros = FALSE,
   na.as.zero = NULL,
   lighten = TRUE,
-  xaxlabels = NULL
+  xaxlabels = NULL,
+  fun = NULL
 )
 }
 \arguments{
@@ -50,7 +51,7 @@ shown apart from the diverging stack. The category form requires a \code{by}
 grouping and \code{beside = FALSE}, but can be combined with \code{center}.
 }}
 
-\item{FUN}{a function to compute the summary statistic for \code{y} within each
+\item{FUN, fun}{a function to compute the summary statistic for \code{y} within each
 group of \code{x} in case of using a two-sided formula \code{y ~ x} (default: mean).}
 
 \item{xlevels, xord}{arguments controlling the order of the \code{x} variable, and

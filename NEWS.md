@@ -154,7 +154,7 @@ related to plot layering. See "Bug fixes" below.
 - `tinyplot.array()`: for (unclassed) `array` objects with up to four
   dimensions. This extends the `tinyplot.matrix()` conventions by mapping the
   third dimension to facets, and a fourth to a facet grid. The names of the
-  dimnames (if any) are used for the axis, legend, and facet titles. (#548
+  dimnames (if any) are used for the axis, legend, and facet titles. (#746
   @grantmcdermott)
 
 #### Other new features
@@ -253,10 +253,11 @@ related to plot layering. See "Bug fixes" below.
 
 - Degenerate array inputs, i.e. 1-row or 1-column matrices, are now dropped
   to plain vectors, so that e.g. `tinyplot(1:10, array(1:10, c(1, 10)))` works
-  just like `plot()`. (#548 @tony-aw @zeileis @grantmcdermott)
+  just like `plot()`. (#548, #746 @tony-aw @zeileis @grantmcdermott)
 - Two-sided facet formulas (`facet = rows ~ cols`) now work with the default
   (non-formula) method, e.g. `tinyplot(x, y, facet = a ~ b, data = dat)`.
-  Previously this errored because `data` was not forwarded. (@grantmcdermott)
+  Previously this errored because `data` was not forwarded. (#746
+  @grantmcdermott)
 - Free facets (`facet.args = list(free = TRUE)`) now respect `asp`.
   (#744 @grantmcdermott)
 - Multi-line x-axis tick labels (e.g. `"Hello\nWorld"`) are now spaced

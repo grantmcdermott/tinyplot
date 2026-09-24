@@ -42,7 +42,7 @@ where the formatting is also better._
   sister arguments. First, `byord` enables on-the-fly (re-)ordering of the
   stacked `by` layers, via convenience keywords or custom functions (e.g.,
   `byord = "end"` ranks groups according to their largest final value). Second,
-  a `FUN` argument permits stacking of multi-observation data by collapsing
+  a `fun` argument permits stacking of multi-observation data by collapsing
   repeated `y` values. (#688 @grantmcdermott)
 
 #### Facet improvements
@@ -205,8 +205,14 @@ related to plot layering. See "Bug fixes" below.
   - `type_barplot()` gains a `na.as.zero` argument for controlling whether a
     category that no observation reaches is treated as a zero (and so marked
     with a flat bar along the baseline) or left undrawn. The default `NULL`
-    lets `FUN` decide; see the new "Implicit zeros and empty cells" section of
+    lets `fun` decide; see the new "Implicit zeros and empty cells" section of
     `?type_barplot`. (#718 @grantmcdermott)
+  - `type_barplot()`'s aggregation argument is now spelled `fun`, for
+    consistency with the other types that take a function and with
+    **tinyplot**'s lowercase argument naming generally. `FUN` is retained as a
+    backwards-compatible alias, so existing code keeps working; supply one or
+    the other, and `fun` takes precedence if both are given.
+    (#695 @grantmcdermott)
   - `type_histogram()` now (correctly) supports mapping `by` grouping along the
     `x` variable, e.g. `tinyplot(~mpg | mpg, data = mtcars, type = "hist")`.
     Bar colours map to mean bin values. (#727 @grantmcdermott)
@@ -234,10 +240,6 @@ related to plot layering. See "Bug fixes" below.
   long list of category names on the y-axis without also shrinking the x-axis.
   Both default to `NULL`, in which case the shared `cex.axis` value is used, so
   existing plots are unaffected. (#677 @grantmcdermott)
-- Type constructors that take a function argument now accept both `FUN` and
-  `fun`, e.g. `type_summary(FUN = median)` and `type_barplot(fun = sum)`.
-  `FUN` is the documented form for summarising types, following base R's
-  `aggregate()`. (#695 @grantmcdermott)
 
 ### Bug fixes
 
@@ -290,7 +292,7 @@ related to plot layering. See "Bug fixes" below.
     matching base `barplot()`. (#714 @grantmcdermott)
   - A category that no observation reaches is no longer treated as an
     implicit zero; at least not unconditionally. Instead, behaviour is now
-    governed by explicit rules, e.g. derived from `FUN` or the new `na.as.zero`
+    governed by explicit rules, e.g. derived from `fun` or the new `na.as.zero`
     argument (above). At the same time, explicit zeros remain unaffected. Again,
     see the new "Implicit zeros and empty cells" section of `?type_barplot` for
     details and examples. (#711 @grantmcdermott)

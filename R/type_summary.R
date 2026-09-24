@@ -7,7 +7,7 @@
 #' `type_summary()` applies a thin wrapper around \code{\link[stats]{aggregate}}
 #' and then passes the result to [`type_lines`] for drawing.
 #'
-#' @param FUN,fun summarizing function. Should be compatible with
+#' @param fun summarizing function. Should be compatible with
 #'   \code{\link[stats]{aggregate}}. Defaults to \code{\link[base]{mean}}.
 #' @inheritParams dodge_positions
 #' @inheritParams type_points
@@ -38,9 +38,7 @@
 #'
 #' @importFrom stats aggregate
 #' @export
-type_summary = function(FUN = mean, dodge = 0, fixed.dodge = FALSE, ...,
-                        fun = NULL) {
-  fun = fun %||% FUN
+type_summary = function(fun = mean, dodge = 0, fixed.dodge = FALSE, ...) {
   assert_function(fun)
   lines_args = list(...)
   data_summary = function(fun) {

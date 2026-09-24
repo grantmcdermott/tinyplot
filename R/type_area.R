@@ -1,12 +1,10 @@
 #' @rdname type_ribbon
 #' @importFrom stats ave
 #' @export
-type_area = function(alpha = NULL, stack = FALSE, byord = NULL, FUN = NULL,
-                     fun = NULL) {
-    FUN = fun %||% FUN
+type_area = function(alpha = NULL, stack = FALSE, byord = NULL, fun = NULL) {
     out = list(
         draw = NULL,
-        data = data_area(alpha = alpha, stack = stack, byord = byord, FUN = FUN),
+        data = data_area(alpha = alpha, stack = stack, byord = byord, FUN = fun),
         name = "area"
     )
     class(out) = "tinyplot_type"

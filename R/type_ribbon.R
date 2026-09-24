@@ -33,7 +33,7 @@
 #'   explicitly, call `factor(levels = ...)` on the grouping variable
 #'   beforehand. See Examples, as well as the "Stacked area plots" section
 #'   below.
-#' @param FUN,fun a function for collapsing repeated `y` values within a group and
+#' @param fun a function for collapsing repeated `y` values within a group and
 #'   `x` position, used only when `stack = TRUE`. Defaults to `mean`, matching
 #'   [`type_barplot()`], so that the same data stacks to the same heights
 #'   whether it is drawn as bars or as an area.
@@ -78,7 +78,7 @@
 #'
 #' Stacking needs exactly one `y` value per group per `x` value. Repeated cells
 #' ---typically caused by a variable that is present in the data but absent from
-#' the plot---are collapsed with `FUN` (default `mean`) rather than being
+#' the plot---are collapsed with `fun` (default `mean`) rather than being
 #' stacked against each other. Conversely, groups that are *missing* an `x`
 #' value (or have an `NA` there) count as contributing zero at that point, so
 #' that a gap in one group does not shift the groups stacked above it. Note that
@@ -174,12 +174,12 @@
 #' )
 #'
 #' # Stacking expects a single `y` value per group per `x` value. Any repeats
-#' # are collapsed for us first, using `FUN` (`mean` by default). Here, for
+#' # are collapsed for us first, using `fun` (`mean` by default). Here, for
 #' # instance, ChickWeight records many chicks per diet at each timepoint.
 #'
 #' tinyplot(
 #'   weight ~ Time | Diet, data = ChickWeight,
-#'   type = type_area(stack = TRUE, FUN = median)
+#'   type = type_area(stack = TRUE, fun = median)
 #' )
 #'
 #' # (Illustrative purposes aside, we leave it to the reader to decide whether

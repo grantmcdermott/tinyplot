@@ -23,8 +23,8 @@
 #'     palette and legend. Useful for mapping the dominant category across a
 #'     dense scatter.
 #'   * **Numeric `by`.** The fill encodes a per-cell summary of the `by`
-#'     variable---by default the mean, or any other function passed via `FUN`
-#'     (e.g. `FUN = sum`). Like the original no-`by` case, the legend is drawn
+#'     variable---by default the mean, or any other function passed via `fun`
+#'     (e.g. `fun = sum`). Like the original no-`by` case, the legend is drawn
 #'     as a continuous gradient. This is the hexagonal analogue of a binned
 #'     heatmap.
 #'
@@ -55,7 +55,7 @@
 #'   Set a colour (e.g. `"black"`) for outlined hexagons. Passing the sentinel
 #'   string `"fill"` matches the border to each cell's fill colour, which
 #'   produces perfectly seamless tiling.
-#' @param FUN,fun Function used to summarise a *numeric* `by` variable within each
+#' @param fun Function used to summarise a *numeric* `by` variable within each
 #'   cell (see Details). Defaults to `NULL`, which is equivalent to `mean`. Has
 #'   no effect when `by` is absent (count mode) or discrete (modal mode).
 #'
@@ -114,8 +114,7 @@
 #'
 #' @export
 type_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf,
-                       border = NA, FUN = NULL, fun = NULL) {
-  fun = fun %||% FUN
+                       border = NA, fun = NULL) {
   out = list(
     draw = draw_hexbin(border = border),
     data = data_hexbin(xbins = xbins, shape = shape, mincnt = mincnt,

@@ -554,6 +554,12 @@ draw_facet_window = function(
         }
         fusr = get(".fusr", envir = get(".tinyplot_env", envir = parent.env(environment())))
         fusr[[ii]] = c(xext, yext)
+        # Honour `asp` by letting plot.window() widen the (already padded)
+        # extent to the panel's aspect ratio, and record the result. (#555)
+        if (!is.null(asp) && is.finite(asp) && asp > 0) {
+          plot.window(xlim = xext, ylim = yext, asp = asp, xaxs = "i", yaxs = "i")
+          fusr[[ii]] = par("usr")
+        }
         assign(".fusr", fusr, envir = get(".tinyplot_env", envir = parent.env(environment())))
         # Explicitly set (override) the current facet extent
         par(usr = fusr[[ii]])

@@ -47,3 +47,17 @@ f = function() {
   tinyplot(mtcars$wt, mtcars$mpg, facet = am ~ vs, data = mtcars)
 }
 expect_snapshot_plot(f, label = "facet_grid_default_method")
+
+# 1D arrays (e.g. from tapply) alongside a `y` defer to the default method
+f = function() {
+  tinyplot(
+    tapply(mtcars$mpg, mtcars$cyl, mean),
+    tapply(mtcars$hp, mtcars$cyl, mean),
+    type = "b"
+  )
+}
+expect_snapshot_plot(f, label = "array_1d_with_y")
+
+# single-column matrices ignore facet = "by"
+f = function() tinyplot(matrix(1:5), facet = "by", type = "b")
+expect_snapshot_plot(f, label = "matrix_1col_facet_by")

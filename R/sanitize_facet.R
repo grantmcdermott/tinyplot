@@ -3,7 +3,7 @@ sanitize_facet = function(settings) {
     settings,
     environment(),
     c(
-      "facet", "by", "null_facet", "facet_attr", "facet_by",
+      "facet", "data", "by", "null_facet", "facet_attr", "facet_by",
       "by_dep", "facet_dep", "legend_args"
     )
   )
@@ -26,10 +26,8 @@ sanitize_facet = function(settings) {
       # facet titles inherit the "by" variable name (same as the legend title)
       facet_vars = list(x = facet_var_list(by, legend_args[["title"]] %||% by_dep))
     } else if (inherits(facet, "formula")) {
+      # (grid layout is read off the "facet_grid" attribute downstream)
       facet = get_facet_fml(facet, data = data)
-      if (isTRUE(attr(facet, "facet_grid"))) {
-        facet.args[["nrow"]] = attr(facet, "facet_nrow")
-      }
       facet_vars = attr(facet, "facet_vars")
     } else {
       # recorded by tinyplot.formula(), else fall back to the deparsed input of

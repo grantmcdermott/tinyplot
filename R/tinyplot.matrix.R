@@ -81,12 +81,11 @@ tinyplot.matrix = function(x, type = NULL, legend = NULL, facet = NULL, xlab = N
 ## documented in ?tinyplot.matrix; dimensions 3 and 4 (if any) are mapped to
 ## facets, as a wrap and a grid, respectively.
 array_plot = function(x, type = NULL, legend = NULL, facet = NULL,
-                      xlab = NULL, ylab = NULL, dep = NULL, ...) {
+                      xlab = NULL, ylab = NULL, ylim = NULL, dep = NULL, ...) {
   ## Default to points. We set this explicitly (rather than relying on
   ## tinyplot's auto-inference) because the x-axis row labels are passed as a
   ## factor, which would otherwise be inferred as a boxplot.
   if (is.null(type)) type = "p"
-  rev_y = FALSE
   dims = dim(x)
   dnms = dimnames(x)
   ## names(dimnames(x)), if any, e.g. for arrays built from a table
@@ -133,17 +132,21 @@ array_plot = function(x, type = NULL, legend = NULL, facet = NULL,
     ## implies the orientation here, not the choice of type. (type_heatmap()
     ## additionally defaults to this on its own, for the formula method; the two
     ## are idempotent and so compose safely.)
-    rev_y = !"ylim" %in% names(list(...))
+    if (is.null(ylim)) ylim = "reverse"
   } else {
     if (dims[2] == 1L) {
+      ## a single column is a simple index plot, so there is nothing to group
+      ## (or facet) by
       by = NULL
       legend = FALSE
-    } else if (!is.null(dnms[[2]])) {
-      by = dim_factor(2)
-      if (is.null(legend)) legend = list(title = dvar(2))
+      if (identical(facet, "by")) facet = NULL
     } else {
       by = dim_factor(2)
-      legend = FALSE
+      if (is.null(dnms[[2]])) {
+        legend = FALSE
+      } else if (is.null(legend)) {
+        legend = list(title = dvar(2))
+      }
     }
     ## If the matrix has row names, use them for the x-axis tick labels via an
     ## ordered factor (preserving row order). Otherwise fall back to a plain
@@ -162,42 +165,29 @@ array_plot = function(x, type = NULL, legend = NULL, facet = NULL,
   }
 
   ## Higher dimensions become facets: the 3rd dimension as a wrap, or (with a
-  ## 4th) as the rows of a grid whose columns are the 4th dimension. We build
-  ## the facet factor ourselves, mimicking what get_facet_fml() returns for a
-  ## `dim3 ~ dim4` formula.
+  ## 4th) as the rows of a grid whose columns are the 4th dimension, i.e. the
+  ## same as a `dim3 ~ dim4` facet formula.
   if (length(dims) > 2L) {
-    fvar = function(k, f) {
-      out = list(levels(f))
-      names(out) = dvar(k) %||% paste0("dim", k)
-      out
-    }
+    fvars = function(k, f) facet_var_list(f, dvar(k) %||% paste0("dim", k))
     f3 = dim_factor(3)
     if (length(dims) == 3L) {
       facet = f3
-      attr(facet, "facet_vars") = list(x = fvar(3, f3))
+      attr(facet, "facet_vars") = list(x = fvars(3, f3))
     } else {
       f4 = dim_factor(4)
-      ## NOTE: the grid columns come first, since mfrow plots rowwise
-      facet = interaction(f4, f3, sep = "~", lex.order = FALSE)
-      attr(facet, "facet_grid") = TRUE
-      attr(facet, "facet_nrow") = dims[3]
-      attr(facet, "facet_vars") = list(x = fvar(4, f4), y = fvar(3, f3))
+      facet = facet_grid_factor(f4, f3, fvars(4, f4), fvars(3, f3))
     }
   }
 
-  ## (a direct call, rather than do.call(), avoids deparsing the long vectors
-  ## into tinyplot's internal labels and keeps any `...` expressions intact)
-  draw = function(...) {
-    tinyplot.default(
-      x = xx, y = yy,
-      type = type,
-      by = by,
-      facet = facet,
-      legend = legend,
-      xlab = xlab,
-      ylab = ylab,
-      ...
-    )
-  }
-  if (rev_y) draw(ylim = "reverse", ...) else draw(...)
+  tinyplot.default(
+    x = xx, y = yy,
+    type = type,
+    by = by,
+    facet = facet,
+    legend = legend,
+    xlab = xlab,
+    ylab = ylab,
+    ylim = ylim,
+    ...
+  )
 }

@@ -54,8 +54,9 @@ with a separate \code{by} group for each element of the second dimension.
 Higher dimensions are then mapped to facets:
 \itemize{
 \item 1D arrays are treated as a single-column matrix, i.e. a simple index
-plot.
-\item 2D arrays are matrices and are passed on to
+plot. If a \code{y} variable is also supplied, e.g. \code{tinyplot(tapply(...), y)},
+then the array is instead treated as a plain \code{x} vector.
+\item 2D arrays are matrices, and hence dispatch to
 \code{\link{tinyplot.matrix}}.
 \item 3D arrays are faceted by the third dimension (i.e., a "facet wrap").
 \item 4D arrays are faceted by the third and fourth dimensions, as the rows

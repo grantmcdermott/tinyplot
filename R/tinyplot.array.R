@@ -12,8 +12,9 @@
 #'   Higher dimensions are then mapped to facets:
 #'
 #'   - 1D arrays are treated as a single-column matrix, i.e. a simple index
-#'   plot.
-#'   - 2D arrays are matrices and are passed on to
+#'   plot. If a `y` variable is also supplied, e.g. `tinyplot(tapply(...), y)`,
+#'   then the array is instead treated as a plain `x` vector.
+#'   - 2D arrays are matrices, and hence dispatch to
 #'   \code{\link{tinyplot.matrix}}.
 #'   - 3D arrays are faceted by the third dimension (i.e., a "facet wrap").
 #'   - 4D arrays are faceted by the third and fourth dimensions, as the rows
@@ -71,16 +72,27 @@ tinyplot.array = function(x, type = NULL, legend = NULL, facet = NULL, xlab = NU
       call. = FALSE
     )
   }
-  if (nd > 2L && !is.null(facet)) {
+  if (nd <= 2L) {
+    assert_choice(facet, "by", null.ok = TRUE)
+  } else if (!is.null(facet)) {
     stop(
       "`facet` must be NULL for arrays with 3 or more dimensions, since the ",
       "facets are determined by the array dimensions.",
       call. = FALSE
     )
   }
-  if (nd <= 2L) assert_choice(facet, "by", null.ok = TRUE)
-  ## 1D arrays are treated as a single-column matrix
   if (nd == 1L) {
+    ## A 1D array (e.g. from tapply()) passed alongside a `y` variable is just
+    ## an x vector, so hand the call on to the default method. We check the
+    ## unmatched call, since a positional `y` would otherwise be matched to
+    ## one of this method's formals (`type`, `legend`, etc.).
+    cl = sys.call()
+    nms = names(cl) %||% character(length(cl))
+    if ("y" %in% nms || (length(cl) > 2L && !nzchar(nms[3L]))) {
+      cl[[1L]] = tinyplot.default
+      return(eval(cl, parent.frame()))
+    }
+    ## Otherwise, it is treated as a single-column matrix
     dn = dimnames(x)
     dim(x) = c(length(x), 1L)
     if (!is.null(dn)) dimnames(x) = c(dn, list(NULL))

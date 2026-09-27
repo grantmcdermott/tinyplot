@@ -11,6 +11,7 @@
   facet = NULL,
   xlab = NULL,
   ylab = NULL,
+  xy = NULL,
   ...
 )
 }
@@ -31,6 +32,11 @@ deparsed matrix name. \code{xlab} defaults to \code{"Index"} when the matrix has
 row names; when it does, the row names already label the ticks so the
 x-axis title is suppressed. For \code{"tile"} and \code{"heatmap"} types both
 titles default to \code{NA}, since the dimnames label both axes.}
+
+\item{xy}{which dimension (if any) holds x/y pairs; see Details. The default
+\code{NULL} auto-detects it, \code{FALSE} opts out, and a dimension index or name
+selects it explicitly. The selected dimension must have length 2, and its
+dimnames (if any) are used as the axis titles.}
 
 \item{...}{further arguments passed to \code{tinyplot}.}
 }
@@ -67,7 +73,27 @@ reshape them first.
 
 Dimension names are used to label the groups, facets, and axis ticks, while
 the names of the dimnames (if any) are used as the axis, legend, and facet
-titles.
+titles. To assign the dimensions to different roles, rearrange them first
+with \code{\link[base]{aperm}}.
+
+\strong{x/y pairs.} Arrays often hold a stack of matrices, one per variable,
+e.g. the hip and knee angles of the \code{gait} data (\code{Time} x \code{Subject} x
+\code{Variable}). If an array of three or more dimensions has exactly one
+length-2 dimension besides the first, then its two slices are plotted
+against each other, as x and y. Each of the remaining dimensions then
+shifts down a role:
+\itemize{
+\item The first dimension becomes \code{by}, and orders the points along each path.
+It is kept numeric where possible (its dimnames, e.g. times, or else its
+index), so that each path is drawn as a line with a colour gradient. If
+the dimnames are not numeric, then the groups are discrete and drawn as
+points instead.
+\item The second dimension becomes a facet wrap (e.g. one panel per subject).
+\item The third dimension (if any) makes this a facet grid, as its columns.
+}
+
+Control this via the \code{xy} argument. Tile and heatmap types are exempt,
+since they need the array values as their fill.
 
 Note that contingency tables created by \code{\link[base]{table}} (e.g.,
 \code{HairEyeColor} or \code{Titanic}) are of class \code{"table"} and hence do not
@@ -93,6 +119,15 @@ tinyplot(sims4, type = "b", facet.args = list(prefix = TRUE))
 
 # tile/heatmap types lay out each 2D slice as a grid
 tinyplot(sims4[1:5, , , ], type = "heatmap", theme = "heatmap")
+
+# x/y pairs: a length-2 dimension is plotted as x vs y
+if (getRversion() >= "4.5.0") {
+  # hip vs knee angle through the gait cycle, coloured by time and
+  # faceted by boy
+  tinyplot(gait[, 1:9, ])
+  # opt out, to plot the angles against time instead
+  tinyplot(gait[, 1:9, ], type = "l", xy = FALSE, legend = FALSE)
+}
 
 }
 \seealso{

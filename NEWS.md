@@ -154,7 +154,9 @@ related to plot layering. See "Bug fixes" below.
 - `tinyplot.array()`: for (unclassed) `array` objects with up to four
   dimensions. This extends the `tinyplot.matrix()` conventions by mapping the
   third dimension to facets, and a fourth to a facet grid. The names of the
-  dimnames (if any) are used for the axis, legend, and facet titles.
+  dimnames (if any) are used for the axis, legend, and facet titles. Arrays
+  with a length-2 dimension (e.g., `gait`) are plotted as x/y pairs, i.e. one
+  slice against the other. See the `tinyplot.array`-specific `xy`  argument.
   (#746 @grantmcdermott)
 
 #### Other new features

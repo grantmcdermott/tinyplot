@@ -61,3 +61,19 @@ expect_snapshot_plot(f, label = "array_1d_with_y")
 # single-column matrices ignore facet = "by"
 f = function() tinyplot(matrix(1:5), facet = "by", type = "b")
 expect_snapshot_plot(f, label = "matrix_1col_facet_by")
+
+# x/y pairs from a length-2 dimension: by (gradient) along the 1st dimension,
+# faceted by the 2nd
+set.seed(42)
+tt = seq(0, 2 * pi, length.out = 20)
+loops = array(
+  c(outer(cos(tt), 1:4) + rnorm(80, sd = 0.1),
+    outer(sin(tt), 1:4) + rnorm(80, sd = 0.1)),
+  dim = c(20, 4, 2),
+  dimnames = list(time = NULL, subject = paste0("s", 1:4), var = c("u", "v"))
+)
+f = function() tinyplot(loops)
+expect_snapshot_plot(f, label = "array_xy")
+expect_error(tinyplot(loops, xy = "subject"), "must have length 2")
+expect_error(tinyplot(loops, xy = 3, type = "heatmap"), "not supported")
+expect_error(tinyplot(loops, facet = "by"), "must be NULL")

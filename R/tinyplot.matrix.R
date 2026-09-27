@@ -77,15 +77,14 @@ tinyplot.matrix = function(x, type = NULL, legend = NULL, facet = NULL, xlab = N
 
 ## Internal workhorse shared by the matrix and array methods. Converts an array
 ## with 2-4 dimensions to long form and passes it on to tinyplot.default(). The
-## first two dimensions follow the matrix conventions
-## documented in ?tinyplot.matrix; dimensions 3 and 4 (if any) are mapped to
-## facets, as a wrap and a grid, respectively.
-array_plot = function(x, type = NULL, legend = NULL, facet = NULL,
+## first two dimensions follow the matrix conventions documented in
+## ?tinyplot.matrix, i.e. x-axis and `by`, and any further dimensions are mapped
+## to facets, as a wrap and a grid, respectively. If `y` is supplied (an array
+## of the same shape), then `x` and `y` hold x/y pairs instead. Each dimension
+## then shifts down a role: the 1st becomes `by`, drawn along each path, and the
+## 2nd and 3rd (if any) the facets.
+array_plot = function(x, y = NULL, type = NULL, legend = NULL, facet = NULL,
                       xlab = NULL, ylab = NULL, ylim = NULL, dep = NULL, ...) {
-  ## Default to points. We set this explicitly (rather than relying on
-  ## tinyplot's auto-inference) because the x-axis row labels are passed as a
-  ## factor, which would otherwise be inferred as a boxplot.
-  if (is.null(type)) type = "p"
   dims = dim(x)
   dnms = dimnames(x)
   ## names(dimnames(x)), if any, e.g. for arrays built from a table
@@ -105,15 +104,36 @@ array_plot = function(x, type = NULL, legend = NULL, facet = NULL,
       factor(lvls[i], levels = lvls, ordered = ordered)
     }
   }
+  ## the dimensions that become facets
+  fdims = seq_along(dims)[-seq_len(if (is.null(y)) 2L else 1L)]
 
-  ## Tile and heatmap types need a different mapping to the matplot convention
-  ## below: they want the matrix laid out as a grid (columns on x, rows on y)
-  ## with the *values* supplied as the fill, rather than a series per column
-  ## with the values on y. Detect via the resolved type name, so that both the
-  ## convenience strings and the type_*() constructors are covered.
-  tname = if (inherits(type, "tinyplot_type")) type[["name"]] else type
-  if (is.character(tname) && length(tname) == 1L &&
-      tname %in% c("tile", "heatmap")) {
+  ## x/y pairs aside, tile and heatmap types need a different mapping to the
+  ## matplot convention below: they want the matrix laid out as a grid
+  ## (columns on x, rows on y) with the *values* supplied as the fill, rather
+  ## than a series per column with the values on y. Detect via the resolved
+  ## type name, so that both the convenience strings and the type_*()
+  ## constructors are covered.
+  if (!is.null(y)) {
+    xx = as.vector(x)
+    yy = as.vector(y)
+    ## The 1st dimension orders the points along each path, e.g. time, so we
+    ## keep it numeric where possible (the index, or numeric dimnames). That
+    ## way `by` is continuous and the path is drawn as a single colour gradient
+    ## by type "l". Otherwise, fall back to discrete groups and points.
+    lvls = dnms[[1]]
+    lvls = if (is.null(lvls)) {
+      seq_len(dims[1])
+    } else {
+      type.convert(lvls, as.is = TRUE)
+    }
+    by = if (is.numeric(lvls)) {
+      lvls[as.vector(slice.index(x, 1))]
+    } else {
+      dim_factor(1, ordered = TRUE)
+    }
+    if (is.null(type)) type = if (is.numeric(by)) "l" else "p"
+    if (is.null(legend)) legend = list(title = dvar(1))
+  } else if (is_grid_type(type)) {
     ## Note the row levels are *not* reversed here. Row 1 belongs at the *top*
     ## of a matrix display (cf. `heatmap()`, `image()`), but we get that by
     ## defaulting the y-axis to reversed below, which keeps it overridable via
@@ -134,6 +154,10 @@ array_plot = function(x, type = NULL, legend = NULL, facet = NULL,
     ## are idempotent and so compose safely.)
     if (is.null(ylim)) ylim = "reverse"
   } else {
+    ## Default to points. We set this explicitly (rather than relying on
+    ## tinyplot's auto-inference) because the x-axis row labels are passed as
+    ## a factor, which would otherwise be inferred as a boxplot.
+    if (is.null(type)) type = "p"
     if (dims[2] == 1L) {
       ## a single column is a simple index plot, so there is nothing to group
       ## (or facet) by
@@ -164,18 +188,20 @@ array_plot = function(x, type = NULL, legend = NULL, facet = NULL,
     if (is.null(ylab)) ylab = dep
   }
 
-  ## Higher dimensions become facets: the 3rd dimension as a wrap, or (with a
-  ## 4th) as the rows of a grid whose columns are the 4th dimension, i.e. the
-  ## same as a `dim3 ~ dim4` facet formula.
-  if (length(dims) > 2L) {
+  ## The remaining dimensions become facets: the first as a wrap, or (with a
+  ## second) as the rows of a grid whose columns are the second, i.e. the same
+  ## as a `rows ~ cols` facet formula.
+  if (length(fdims)) {
     fvars = function(k, f) facet_var_list(f, dvar(k) %||% paste0("dim", k))
-    f3 = dim_factor(3)
-    if (length(dims) == 3L) {
-      facet = f3
-      attr(facet, "facet_vars") = list(x = fvars(3, f3))
+    fr = dim_factor(fdims[1])
+    if (length(fdims) == 1L) {
+      facet = fr
+      attr(facet, "facet_vars") = list(x = fvars(fdims[1], fr))
     } else {
-      f4 = dim_factor(4)
-      facet = facet_grid_factor(f4, f3, fvars(4, f4), fvars(3, f3))
+      fc = dim_factor(fdims[2])
+      facet = facet_grid_factor(
+        fc, fr, fvars(fdims[2], fc), fvars(fdims[1], fr)
+      )
     }
   }
 
@@ -190,4 +216,11 @@ array_plot = function(x, type = NULL, legend = NULL, facet = NULL,
     ylim = ylim,
     ...
   )
+}
+
+
+## Tile and heatmap types, which lay out a matrix (slice) as a grid
+is_grid_type = function(type) {
+  tname = if (inherits(type, "tinyplot_type")) type[["name"]] else type
+  is.character(tname) && length(tname) == 1L && tname %in% c("tile", "heatmap")
 }

@@ -1070,6 +1070,7 @@ tinyplot.default = function(
 
     # unevaluated expressions with side effects
     draw          = substitute(draw),
+    data          = data, # for facet formulas passed to the default method
     facet         = facet,
     facet.args    = facet.args,
     palette       = substitute(palette),
@@ -2209,25 +2210,21 @@ tinyplot.formula = function(
     } else {
       if (xtype %in% c("none", "empty")) {
         facet = yfacet
-        fvars = list(x = yfacet_vars)
+        attr(facet, "facet_vars") = list(x = yfacet_vars)
         if (xtype == "empty") {
           if (is.null(facet.args)) facet.args = list()
           if (is.null(facet.args[["nrow"]])) facet.args[["nrow"]] = length(unique(yfacet))
         }
       } else if (ytype %in% c("none", "empty")) {
         facet = xfacet
-        fvars = list(x = xfacet_vars)
+        attr(facet, "facet_vars") = list(x = xfacet_vars)
         if (ytype == "empty") {
           if (is.null(facet.args)) facet.args = list()
           if (is.null(facet.args[["nrow"]])) facet.args[["nrow"]] = 1L
         }
       } else {
-        facet = interaction(xfacet, yfacet, sep = "~")
-        attr(facet, "facet_grid") = TRUE
-        attr(facet, "facet_nrow") = length(unique(yfacet))
-        fvars = list(x = xfacet_vars, y = yfacet_vars)
+        facet = facet_grid_factor(xfacet, yfacet, xfacet_vars, yfacet_vars)
       }
-      attr(facet, "facet_vars") = fvars
     }
   } else if (!is.null(facet) && !inherits(facet, "formula") &&
              is.null(attr(facet, "facet_vars")) && !identical(facet, "by")) {

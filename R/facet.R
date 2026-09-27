@@ -1430,16 +1430,25 @@ get_facet_fml = function(formula, data = NULL) {
   xfacet = interaction(xfacet, sep = ":")
   if (no_yfacet) {
     ret = xfacet
+    attr(ret, "facet_vars") = list(x = xfacet_vars, y = NULL)
   } else {
-    # yfacet = interaction(yfacet, sep = ":")
-    ## NOTE: We "swap" the formula LHS and RHS since mfrow plots rowwise
-    ret = interaction(xfacet, yfacet, sep = "~")
-    attr(ret, "facet_grid") = TRUE
-    attr(ret, "facet_nrow") = length(unique(yfacet))
+    ret = facet_grid_factor(xfacet, yfacet, xfacet_vars, yfacet_vars)
   }
-  attr(ret, "facet_vars") = list(x = xfacet_vars, y = yfacet_vars)
 
   return(ret)
+}
+
+
+## Combine the column (x) and row (y) facet factors into a single grid facet,
+## with the attributes that facet_layout() and facet_titles() expect. NOTE: the
+## columns come first (i.e. we "swap" a formula's LHS and RHS), since mfrow
+## plots rowwise.
+facet_grid_factor = function(xfacet, yfacet, xvars, yvars) {
+  out = interaction(xfacet, yfacet, sep = "~")
+  attr(out, "facet_grid") = TRUE
+  attr(out, "facet_nrow") = length(unique(yfacet))
+  attr(out, "facet_vars") = list(x = xvars, y = yvars)
+  out
 }
 
 

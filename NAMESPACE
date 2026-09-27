@@ -2,6 +2,7 @@
 
 S3method(print,recordedtinyplot)
 S3method(str,recordedtinyplot)
+S3method(tinyplot,array)
 S3method(tinyplot,data.frame)
 S3method(tinyplot,default)
 S3method(tinyplot,density)

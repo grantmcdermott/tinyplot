@@ -64,6 +64,8 @@ website:
               file: man/tinyplot_add.qmd
         - section: "Methods"
           contents:
+            - text: tinyplot.array
+              file: man/tinyplot.array.qmd
             - text: tinyplot.data.frame
               file: man/tinyplot.data.frame.qmd
             - text: tinyplot.matrix

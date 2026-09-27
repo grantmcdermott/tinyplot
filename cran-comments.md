@@ -22,7 +22,12 @@ Win Builder
 
 ## Reverse dependency checks
 
-TODO: fill in after revdep-v0.8.0 workflow completes.
+We ran reverse-dependency checks on all 16 CRAN revdeps. All packages that
+could be checked showed no status change from the current CRAN version of
+tinyplot. One package, 'RTMB', failed to install in our CI environment under
+both the old and new versions of tinyplot (identical ERROR, unrelated to this
+submission -- RTMB requires a TMB/C++ toolchain build that did not complete in
+our runner).
 
 P.S. We continue to run a comprehensive test suite comprising hundreds of test
 snapshots (i.e., SVG images) as part of our CI development workflow. See:

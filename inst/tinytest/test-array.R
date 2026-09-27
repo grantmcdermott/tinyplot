@@ -77,3 +77,7 @@ expect_snapshot_plot(f, label = "array_xy")
 expect_error(tinyplot(loops, xy = "subject"), "must have length 2")
 expect_error(tinyplot(loops, xy = 3, type = "heatmap"), "not supported")
 expect_error(tinyplot(loops, facet = "by"), "must be NULL")
+
+# facet = FALSE folds the facets into `by`, i.e. one path per subject
+f = function() tinyplot(loops, facet = FALSE)
+expect_snapshot_plot(f, label = "array_xy_nofacet")

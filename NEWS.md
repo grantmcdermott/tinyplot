@@ -157,6 +157,7 @@ related to plot layering. See "Bug fixes" below.
   dimnames (if any) are used for the axis, legend, and facet titles. Arrays
   with a length-2 dimension (e.g., `gait`) are plotted as x/y pairs, i.e. one
   slice against the other. See the `tinyplot.array`-specific `xy`  argument.
+  Passing `facet = FALSE` draws everything in a single panel instead.
   (#746 @grantmcdermott)
 
 #### Other new features

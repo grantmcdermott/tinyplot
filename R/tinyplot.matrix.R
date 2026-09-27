@@ -106,6 +106,18 @@ array_plot = function(x, y = NULL, type = NULL, legend = NULL, facet = NULL,
   }
   ## the dimensions that become facets
   fdims = seq_along(dims)[-seq_len(if (is.null(y)) 2L else 1L)]
+  ## facet = FALSE folds these into the `by` groups instead
+  fold = isFALSE(facet) && length(fdims) > 0L
+  if (isFALSE(facet)) facet = NULL
+  ## `by` groups (and legend title) spanning one or more dimensions
+  group_by = function(ks) {
+    if (length(ks) == 1L) return(dim_factor(ks))
+    interaction(lapply(ks, dim_factor), sep = ":", lex.order = TRUE)
+  }
+  group_title = function(ks) {
+    v = unlist(lapply(ks, dvar))
+    if (length(v) == length(ks)) paste(v, collapse = ":")
+  }
 
   ## x/y pairs aside, tile and heatmap types need a different mapping to the
   ## matplot convention below: they want the matrix laid out as a grid
@@ -116,24 +128,39 @@ array_plot = function(x, y = NULL, type = NULL, legend = NULL, facet = NULL,
   if (!is.null(y)) {
     xx = as.vector(x)
     yy = as.vector(y)
-    ## The 1st dimension orders the points along each path, e.g. time, so we
-    ## keep it numeric where possible (the index, or numeric dimnames). That
-    ## way `by` is continuous and the path is drawn as a single colour gradient
-    ## by type "l". Otherwise, fall back to discrete groups and points.
-    lvls = dnms[[1]]
-    lvls = if (is.null(lvls)) {
-      seq_len(dims[1])
+    if (fold) {
+      ## Without facets, each path needs its own (discrete) `by` group, so
+      ## that the 1st dimension merely orders the points along it.
+      by = group_by(fdims)
+      if (is.null(type)) type = "l"
+      if (is.null(legend)) legend = list(title = group_title(fdims))
     } else {
-      type.convert(lvls, as.is = TRUE)
+      ## The 1st dimension orders the points along each path, e.g. time, so we
+      ## keep it numeric where possible (the index, or numeric dimnames). That
+      ## way `by` is continuous and the path is drawn as a single colour
+      ## gradient by type "l". Otherwise, fall back to discrete groups and
+      ## points.
+      lvls = dnms[[1]]
+      lvls = if (is.null(lvls)) {
+        seq_len(dims[1])
+      } else {
+        type.convert(lvls, as.is = TRUE)
+      }
+      by = if (is.numeric(lvls)) {
+        lvls[as.vector(slice.index(x, 1))]
+      } else {
+        dim_factor(1, ordered = TRUE)
+      }
+      if (is.null(type)) type = if (is.numeric(by)) "l" else "p"
+      if (is.null(legend)) legend = list(title = dvar(1))
     }
-    by = if (is.numeric(lvls)) {
-      lvls[as.vector(slice.index(x, 1))]
-    } else {
-      dim_factor(1, ordered = TRUE)
-    }
-    if (is.null(type)) type = if (is.numeric(by)) "l" else "p"
-    if (is.null(legend)) legend = list(title = dvar(1))
   } else if (is_grid_type(type)) {
+    if (fold) {
+      stop(
+        "`facet = FALSE` is not supported for \"tile\" or \"heatmap\" types.",
+        call. = FALSE
+      )
+    }
     ## Note the row levels are *not* reversed here. Row 1 belongs at the *top*
     ## of a matrix display (cf. `heatmap()`, `image()`), but we get that by
     ## defaulting the y-axis to reversed below, which keeps it overridable via
@@ -158,18 +185,20 @@ array_plot = function(x, y = NULL, type = NULL, legend = NULL, facet = NULL,
     ## tinyplot's auto-inference) because the x-axis row labels are passed as
     ## a factor, which would otherwise be inferred as a boxplot.
     if (is.null(type)) type = "p"
-    if (dims[2] == 1L) {
+    ## group by the columns (unless there is just one) and any folded facets
+    bdims = c(if (dims[2] > 1L) 2L, if (fold) fdims)
+    if (!length(bdims)) {
       ## a single column is a simple index plot, so there is nothing to group
       ## (or facet) by
       by = NULL
       legend = FALSE
       if (identical(facet, "by")) facet = NULL
     } else {
-      by = dim_factor(2)
-      if (is.null(dnms[[2]])) {
+      by = group_by(bdims)
+      if (all(vapply(dnms[bdims], is.null, NA))) {
         legend = FALSE
       } else if (is.null(legend)) {
-        legend = list(title = dvar(2))
+        legend = list(title = group_title(bdims))
       }
     }
     ## If the matrix has row names, use them for the x-axis tick labels via an
@@ -191,7 +220,7 @@ array_plot = function(x, y = NULL, type = NULL, legend = NULL, facet = NULL,
   ## The remaining dimensions become facets: the first as a wrap, or (with a
   ## second) as the rows of a grid whose columns are the second, i.e. the same
   ## as a `rows ~ cols` facet formula.
-  if (length(fdims)) {
+  if (length(fdims) && !fold) {
     fvars = function(k, f) facet_var_list(f, dvar(k) %||% paste0("dim", k))
     fr = dim_factor(fdims[1])
     if (length(fdims) == 1L) {

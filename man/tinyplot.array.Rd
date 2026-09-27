@@ -24,8 +24,12 @@
 legend when the matrix has named columns, and to suppress it otherwise. For
 \code{"tile"} and \code{"heatmap"} types it is suppressed by default.}
 
-\item{facet}{must be \code{NULL} for arrays with three or more dimensions, since
-the facets are then determined by the array dimensions.}
+\item{facet}{must be \code{NULL} (the default) or \code{FALSE} for arrays with three
+or more dimensions, since the facets are then determined by the array
+dimensions. \code{FALSE} draws everything in a single panel instead, by folding
+the facet dimensions into the \code{by} groups. For x/y pairs, these groups
+then replace the first dimension as \code{by}, so that each path is drawn
+separately. Not supported for tile and heatmap types.}
 
 \item{xlab, ylab}{axis labels passed on to \code{tinyplot}. \code{ylab} defaults to the
 deparsed matrix name. \code{xlab} defaults to \code{"Index"} when the matrix has no
@@ -124,10 +128,20 @@ tinyplot(sims4[1:5, , , ], type = "heatmap", theme = "heatmap")
 # x/y pairs: a length-2 dimension is plotted as x vs y
 # (e.g., hip vs knee angle through the gait cycle, coloured by time and
 # faceted by boy)
-tinyplot(gait[, 1:9, ])
+gait9 = gait[, 1:9, ] # take a subset for demonstration
+tinyplot(gait9)
 
-# opt out, to plot the angles against time instead
-tinyplot(gait[, 1:9, ], type = "l", xy = FALSE, legend = FALSE)
+# all boys in a single panel instead
+tinyplot(gait9, facet = FALSE)
+
+# ... or in the background of each boy's own panel
+tinyplot(
+  gait9,
+  draw = tinyplot(gait9, col = "lightgray", facet = FALSE, add = TRUE)
+)
+
+# opt out of x/y pairs, to plot the angles against time instead
+tinyplot(gait9, type = "l", xy = FALSE, legend = FALSE)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

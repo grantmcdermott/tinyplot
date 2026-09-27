@@ -51,8 +51,12 @@
 #'
 #' @inheritParams tinyplot.matrix
 #' @param x an object of class `"array"`.
-#' @param facet must be `NULL` for arrays with three or more dimensions, since
-#'   the facets are then determined by the array dimensions.
+#' @param facet must be `NULL` (the default) or `FALSE` for arrays with three
+#'   or more dimensions, since the facets are then determined by the array
+#'   dimensions. `FALSE` draws everything in a single panel instead, by folding
+#'   the facet dimensions into the `by` groups. For x/y pairs, these groups
+#'   then replace the first dimension as `by`, so that each path is drawn
+#'   separately. Not supported for tile and heatmap types.
 #' @param xy which dimension (if any) holds x/y pairs; see Details. The default
 #'   `NULL` auto-detects it, `FALSE` opts out, and a dimension index or name
 #'   selects it explicitly. The selected dimension must have length 2, and its
@@ -88,10 +92,20 @@
 #' # x/y pairs: a length-2 dimension is plotted as x vs y
 #' # (e.g., hip vs knee angle through the gait cycle, coloured by time and
 #' # faceted by boy)
-#' tinyplot(gait[, 1:9, ])
+#' gait9 = gait[, 1:9, ] # take a subset for demonstration
+#' tinyplot(gait9)
 #'
-#' # opt out, to plot the angles against time instead
-#' tinyplot(gait[, 1:9, ], type = "l", xy = FALSE, legend = FALSE)
+#' # all boys in a single panel instead
+#' tinyplot(gait9, facet = FALSE)
+#'
+#' # ... or in the background of each boy's own panel
+#' tinyplot(
+#'   gait9,
+#'   draw = tinyplot(gait9, col = "lightgray", facet = FALSE, add = TRUE)
+#' )
+#'
+#' # opt out of x/y pairs, to plot the angles against time instead
+#' tinyplot(gait9, type = "l", xy = FALSE, legend = FALSE)
 #'
 #' @export
 tinyplot.array = function(x, type = NULL, legend = NULL, facet = NULL, xlab = NULL, ylab = NULL, xy = NULL, ...) {
@@ -142,12 +156,13 @@ tinyplot.array = function(x, type = NULL, legend = NULL, facet = NULL, xlab = NU
     x = array(x[si == 1L], dim(x)[-k], dimnames(x)[-k])
   }
 
+  ## (facet = FALSE is fine for any array: it folds the facets into `by`)
   if (is.null(k) && nd <= 2L) {
-    assert_choice(facet, "by", null.ok = TRUE)
-  } else if (!is.null(facet)) {
+    if (!isFALSE(facet)) assert_choice(facet, "by", null.ok = TRUE)
+  } else if (!is.null(facet) && !isFALSE(facet)) {
     stop(
-      "`facet` must be NULL for arrays with 3 or more dimensions (or x/y ",
-      "pairs), since the facets are determined by the array dimensions.",
+      "`facet` must be NULL or FALSE for arrays with 3 or more dimensions (or ",
+      "x/y pairs), since the facets are determined by the array dimensions.",
       call. = FALSE
     )
   }

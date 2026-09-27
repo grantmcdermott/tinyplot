@@ -144,7 +144,7 @@ array_plot = function(x, y = NULL, type = NULL, legend = NULL, facet = NULL,
       lvls = if (is.null(lvls)) {
         seq_len(dims[1])
       } else {
-        type.convert(lvls, as.is = TRUE)
+        utils::type.convert(lvls, as.is = TRUE)
       }
       by = if (is.numeric(lvls)) {
         lvls[as.vector(slice.index(x, 1))]

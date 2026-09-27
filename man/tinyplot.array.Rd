@@ -120,15 +120,15 @@ tinyplot(sims4, type = "b", facet.args = list(prefix = TRUE))
 # tile/heatmap types lay out each 2D slice as a grid
 tinyplot(sims4[1:5, , , ], type = "heatmap", theme = "heatmap")
 
+\dontshow{if (getRversion() >= "4.5.0") withAutoprint(\{ # examplesIf}
 # x/y pairs: a length-2 dimension is plotted as x vs y
-if (getRversion() >= "4.5.0") {
-  # hip vs knee angle through the gait cycle, coloured by time and
-  # faceted by boy
-  tinyplot(gait[, 1:9, ])
-  # opt out, to plot the angles against time instead
-  tinyplot(gait[, 1:9, ], type = "l", xy = FALSE, legend = FALSE)
-}
+# (e.g., hip vs knee angle through the gait cycle, coloured by time and
+# faceted by boy)
+tinyplot(gait[, 1:9, ])
 
+# opt out, to plot the angles against time instead
+tinyplot(gait[, 1:9, ], type = "l", xy = FALSE, legend = FALSE)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link{tinyplot.matrix}}, \code{\link[graphics]{matplot}}

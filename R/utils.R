@@ -341,3 +341,54 @@ model_grid = function(x, n = 100, log = "") {
     }
     seq(rng[1L], rng[2L], length.out = n)
 }
+
+
+## Row-bind a list of data frames, like do.call(rbind, lst) but much faster
+## for many pieces: each column is combined in a single unlist() rather than
+## by rbind.data.frame's per-piece assignments (which are particularly slow
+## for factors). Row names are reset. NULL pieces are skipped and an empty
+## list gives NULL, as with rbind. Inputs the fast path can't reproduce 1:1
+## (differing column names, factor/character mixes, differing classed
+## attributes, list columns) fall back to rbind itself.
+rbind_dfs = function(lst) {
+  lst = lst[!vapply(lst, is.null, logical(1))]
+  if (!length(lst)) return(NULL)
+  nms = names(lst[[1]])
+  fast = length(nms) > 0 &&
+    all(vapply(lst, function(d) identical(names(d), nms), logical(1)))
+  if (fast) {
+    out = lapply(nms, function(nm) bind_vecs(lapply(lst, `[[`, nm)))
+    fast = !any(vapply(out, is.null, logical(1)))
+  }
+  if (fast) {
+    names(out) = nms
+    attr(out, "row.names") = .set_row_names(length(out[[1L]]))
+    class(out) = "data.frame"
+  } else {
+    out = do.call(rbind, unname(lst))
+    rownames(out) = NULL
+  }
+  out
+}
+
+## Combine one column's pieces for rbind_dfs(); NULL means "can't, fall back".
+bind_vecs = function(vals) {
+  if (!all(vapply(vals, is.atomic, logical(1)))) return(NULL)
+  objs = vapply(vals, is.object, logical(1))
+  # plain vectors coerce up the same hierarchy as rbind (logical < ... <
+  # character); unordered factors union their levels in order, as rbind does
+  if (!any(objs)) return(unlist(vals, use.names = FALSE))
+  facs = vapply(vals, function(v) identical(class(v), "factor"), logical(1))
+  if (all(facs)) return(unlist(vals, use.names = FALSE))
+  if (!all(objs)) return(NULL)
+  # other classed vectors (Date, POSIXct, ordered, ...) only when every piece
+  # carries the same attributes, which then carry over unchanged
+  attrs = lapply(vals, function(v) {
+    a = attributes(v)
+    a[names(a) != "names"]
+  })
+  if (!all(vapply(attrs, identical, logical(1), attrs[[1L]]))) return(NULL)
+  out = unlist(lapply(vals, unclass), use.names = FALSE)
+  attributes(out) = attrs[[1L]]
+  out
+}

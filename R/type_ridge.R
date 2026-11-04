@@ -370,7 +370,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
       )
       return(out)
     })
-    datapoints = do.call(rbind, datapoints)
+    datapoints = rbind_dfs(datapoints)
 
     if (is.character(joint.max)) {
       joint.max = match.arg(joint.max, c("all", "facet", "by"))
@@ -390,10 +390,10 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         ksplit[[idx]]$ymax = ksplit[[idx]]$ymax + idx - 1
         ksplit[[idx]]$ymin = ksplit[[idx]]$ymin + idx - 1
       }
-      k = do.call(rbind, ksplit)
+      k = rbind_dfs(ksplit)
       return(k)
     }
-    datapoints = do.call(rbind, lapply(datapoints, offset_z))
+    datapoints = rbind_dfs(lapply(datapoints, offset_z))
 
     # Store y-level offsets for added layers (e.g., jitter)
     ylevs = unique(datapoints$y)

@@ -181,7 +181,7 @@ data_histogram = function(breaks = "Sturges",
             )
             return(out)
         })
-        datapoints = do.call(rbind, datapoints)
+        datapoints = rbind_dfs(datapoints)
 
         if (is.null(ylab)) {
             ylab = ifelse(datapoints$freq[1], "Frequency", "Density")

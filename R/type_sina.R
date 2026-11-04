@@ -141,7 +141,7 @@ data_sina = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             if (facet_drop_levels_on(settings[["facet.args"]])) dat[[".xcat"]] = xcat
             return(dat)
         })
-        datapoints = do.call(rbind, datapoints)
+        datapoints = rbind_dfs(datapoints)
 
         by = if (length(unique(datapoints[["by"]])) == 1) by else datapoints[["by"]]
         facet = if (length(unique(datapoints[["facet"]])) == 1) facet else datapoints[["facet"]]

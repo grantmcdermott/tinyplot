@@ -294,7 +294,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, xord = N
         ny = attr(datapoints[[1]], "ny") ## ditto
         xat = lapply(datapoints, attr, "xat")
         yat = lapply(datapoints, attr, "yat")
-        datapoints = do.call(rbind, datapoints)
+        datapoints = rbind_dfs(datapoints)
          
         if (is.null(yaxlabels)) yaxlabels = rev(levels(y))
       

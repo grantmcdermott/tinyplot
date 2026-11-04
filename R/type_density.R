@@ -241,7 +241,7 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
                 x = d$x
             )
         }, datapoints, dens)
-        datapoints = do.call(rbind, datapoints)
+        datapoints = rbind_dfs(datapoints)
         datapoints$ymax = datapoints$y
         datapoints$ymin = rep.int(0, nrow(datapoints))
         

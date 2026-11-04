@@ -159,7 +159,7 @@ tinytest::run_test_file("inst/tinytest/test-legend.R")
 ```
 
 ### Continuous Integration
-All contributions should go through a pull request. PRs against `main` automatically trigger GitHub Actions CI, which runs `R CMD check` (including the full test suite) on Ubuntu with both R-release and R-devel. Snapshot tests are included in this CI run, so even if you can't run them locally, CI will catch any regressions.
+PRs against `main` automatically trigger GitHub Actions CI, which runs `R CMD check` (including the full test suite) on Ubuntu with both R-release and R-devel. Snapshot tests are included in this CI run, so even if you can't run them locally, CI will catch any regressions.
 
 ### CRAN Submissions
 The test suite (snapshot SVGs in particular) adds significant size to the installed package. Tests are only intended to run locally and on CI — not on CRAN.
@@ -188,6 +188,12 @@ Some features require manual testing, particularly:
 - Window resize behaviour (legends, facets, layers should stay aligned)
 - Positron IDE compatibility
 - Interactive device behaviour
+
+## Contributing
+
+All contributions should go through a pull request against `main`.
+
+- **Always work on a fresh branch.** Every PR-based contribution must start on a new branch created from the latest `origin/main` (`git fetch && git switch -c <branch> origin/main`). Never commit directly to `main`, and never reuse or stack work onto an existing feature branch. Overriding this requires explicit opt-in from the maintainer.
 
 ## Development Workflow
 

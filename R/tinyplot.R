@@ -1625,6 +1625,10 @@ tinyplot.default = function(
   if (identical(legend_args[["x"]], "direct") && !direct_labels_flag && !isTRUE(add)) {
     warning("legend=\"direct\" requires discrete groups via `by`. Falling back to no legend.")
   }
+  # Direct labels bypass draw_legend(), so apply any user labeller here
+  if (direct_labels_flag) {
+    lgnd_labs = tinylabel(lgnd_labs, labeller = legend_args[["labeller"]])
+  }
 
   if (!add) {
     # Reinstate dynmar margins and user coordinates after draw_legend
@@ -1969,7 +1973,6 @@ tinyplot.default = function(
   }
 
   if (direct_labels_flag) {
-    dl_labs = lgnd_labs
     repel = legend_args[["repel"]]
     has_nudge = !is.null(legend_args[["nudge_x"]]) || !is.null(legend_args[["nudge_y"]])
     if (has_nudge && !is.null(repel) && !isFALSE(repel)) {
@@ -2016,14 +2019,14 @@ tinyplot.default = function(
         dl_y = repel_text(
           x = rep(0, length(dl_y)), y = dl_y,
           widths = rep(0, length(dl_y)),
-          heights = strheight(dl_labs, units = "user"),
+          heights = strheight(lgnd_labs, units = "user"),
           min_gap = min_gap, axis = "y"
         )[["y"]]
       }
 
       for (k in seq_along(fi_info)) {
         if (!is.null(fi_info[[k]])) {
-          text(dl_x[k], dl_y[k], labels = dl_labs[k],
+          text(dl_x[k], dl_y[k], labels = lgnd_labs[k],
                col = fi_info[[k]]$col, pos = 4, offset = 0.3, xpd = NA)
         }
       }

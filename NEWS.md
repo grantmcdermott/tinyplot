@@ -4,6 +4,13 @@ _If you are viewing this file on CRAN, please check the
 [latest NEWS](https://grantmcdermott.com/tinyplot/NEWS.html) on our website
 where the formatting is also better._
 
+## Development version
+
+### Bug fixes
+
+- `legend = list("direct", labeller = ...)` now applies the labeller to direct
+  labels, which previously ignored it. (#748 @grantmcdermott)
+
 ## v0.8.0
 
 ### Breaking changes

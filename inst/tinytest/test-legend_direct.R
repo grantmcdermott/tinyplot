@@ -93,3 +93,12 @@ expect_warning(
   plt(Sepal.Length ~ Petal.Length | Sepal.Width, data = iris, legend = "direct"),
   "discrete groups"
 )
+
+# labeller is applied to direct labels (#748); wide labels also check that the
+# right margin expands to fit the formatted (not raw) strings
+f = function() {
+  plt(circumference ~ age | Tree, data = Orange, type = "l",
+      legend = list("direct", labeller = function(x) paste("Tree number", x)))
+  box("outer", lty = 2)
+}
+expect_snapshot_plot(f, label = "legend_direct_labeller")

@@ -57,21 +57,19 @@ centred_van_der_corput = function(n) {
 }
 
 
-van_der_corput = function(n, base = 2) {
-    vapply(
-        seq_len(n),
-        function(i) {
-            out = 0
-            f = 1 / base
-            while (i > 0) {
-                out = out + f * (i %% base)
-                i = i %/% base
-                f = f / base
-            }
-            out
-        },
-        numeric(1)
-    )
+## Vectorised over the points, looping only over their (log n) digits. Integer
+## arithmetic keeps %% and %/% fast; results match the per-point loop exactly.
+van_der_corput = function(n, base = 2L) {
+    base = as.integer(base)
+    i = seq_len(n)
+    out = numeric(n)
+    f = 1 / base
+    while (any(i > 0L)) {
+        out = out + f * (i %% base)
+        i = i %/% base
+        f = f / base
+    }
+    out
 }
 
 

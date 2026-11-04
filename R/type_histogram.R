@@ -154,7 +154,12 @@ data_histogram = function(breaks = "Sturges",
             if (has_weights) {
                 bin = findInterval(k$x, h$breaks, rightmost.closed = TRUE, left.open = .right)
                 bin[bin < 1L] = 1L
-                wsum = vapply(seq_along(h$mids), function(b) sum(k$weights[bin == b]), numeric(1))
+                # one pass to group the weights by bin (rather than a scan of
+                # all of them per bin), then sum() each group
+                nbins = length(h$mids)
+                bin[bin > nbins] = NA_integer_
+                bin = structure(bin, levels = as.character(seq_len(nbins)), class = "factor")
+                wsum = vapply(split(k$weights, bin), sum, numeric(1), USE.NAMES = FALSE)
                 bw = diff(h$breaks)
                 h$counts = wsum
                 h$density = wsum / sum(k$weights) / bw

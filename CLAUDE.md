@@ -193,7 +193,7 @@ Some features require manual testing, particularly:
 
 All contributions should go through a pull request against `main`.
 
-- **Always work on a fresh branch.** Every PR-based contribution must start on a new branch created from the latest `origin/main` (`git fetch && git switch -c <branch> origin/main`). Never commit directly to `main`, and never reuse or stack work onto an existing feature branch. Overriding this requires explicit opt-in from the maintainer.
+- **Always work on a fresh branch.** Every PR-based contribution must start on a new branch created from the latest `origin/main` (`git fetch && git switch --no-track -c <branch> origin/main`, then `git push -u origin <branch>` on first push). The `--no-track` matters: without it the branch tracks `origin/main`, so a plain `git push` or an IDE "sync" pushes straight to `main`. Never commit directly to `main`, and never reuse or stack work onto an existing feature branch. Overriding this requires explicit opt-in from the maintainer.
 
 ## Development Workflow
 

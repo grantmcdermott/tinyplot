@@ -176,6 +176,32 @@ split_rows = function(f) {
 }
 
 
+## A lean data.frame(...) for building per-group pieces: NULL arguments are
+## dropped and length-1 ones recycled, as data.frame() does, but without its
+## argument checking and name handling (which dominate for small pieces).
+quick_df = function(...) {
+  x = list(...)
+  x = x[!vapply(x, is.null, logical(1))]
+  n = if (length(x)) max(lengths(x)) else 0L
+  x = lapply(x, function(v) if (length(v) == n) v else rep(v, length.out = n))
+  attr(x, "row.names") = .set_row_names(n)
+  class(x) = "data.frame"
+  x
+}
+
+## split(df, f, drop) for data frames: the same groups in the same order, but
+## each piece is built by indexing its columns directly rather than through
+## `[.data.frame` and its row name bookkeeping (the pieces get fresh row names).
+split_df = function(df, f, drop = FALSE) {
+  rows = split(seq_len(nrow(df)), f, drop = drop)
+  lapply(rows, function(r) {
+    out = lapply(df, `[`, r)
+    attr(out, "row.names") = .set_row_names(length(r))
+    class(out) = "data.frame"
+    out
+  })
+}
+
 
 # Convenience function for swapping variables (e.g., use in flipped plots)
 swap_variables = function(env, ...) {

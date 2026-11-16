@@ -102,7 +102,7 @@ data_loess = function(span, degree, family, control, se, level, n = 100, weights
         # that region across the plot, where the interpolation dominates (we
         # measured errors up to 37% of the y-range), so the shortcut is off there.
         xlog = grepl("x", settings$log %||% "", fixed = TRUE)
-        datapoints = split(datapoints, list(datapoints$facet, datapoints$by))
+        datapoints = split_df(datapoints, list(datapoints$facet, datapoints$by))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
         datapoints = lapply(datapoints, function(dat) {
             # .w is NULL when no weights column is present, which loess() treats

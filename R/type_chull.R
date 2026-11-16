@@ -30,13 +30,13 @@ data_chull = function() {
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "by", "facet"))
 
-    datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
+    datapoints = split_df(datapoints, list(datapoints$by, datapoints$facet))
     datapoints = Filter(function(k) nrow(k) > 0, datapoints)
 
     datapoints = lapply(datapoints, function(dat) {
       idx = grDevices::chull(dat$x, dat$y)
       idx = c(idx, idx[1L])
-      data.frame(
+      quick_df(
         x = dat$x[idx],
         y = dat$y[idx],
         by = dat$by[1L],

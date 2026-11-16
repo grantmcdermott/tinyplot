@@ -46,7 +46,7 @@ data_lm = function(se, level, weights = NULL, ...) {
         }
         has_weights = !is.null(datapoints[["weights"]])
         if (has_weights) settings$weights_used = TRUE
-        dat = split(datapoints, list(datapoints$facet, datapoints$by))
+        dat = split_df(datapoints, list(datapoints$facet, datapoints$by))
         dat = lapply(dat, function(x) {
             if (nrow(x) == 0) {
                 return(x)

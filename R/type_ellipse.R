@@ -56,7 +56,7 @@ data_ellipse = function(level = 0.95, segments = 100) {
   fun = function(settings, ...) {
     env2env(settings, environment(), c("datapoints", "by", "facet"))
 
-    datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
+    datapoints = split_df(datapoints, list(datapoints$by, datapoints$facet))
     datapoints = Filter(function(k) nrow(k) >= 3, datapoints)
 
     radius = sqrt(qchisq(level, df = 2))
@@ -69,7 +69,7 @@ data_ellipse = function(level = 0.95, segments = 100) {
       eig = eigen(cov_mat, symmetric = TRUE)
       scale_mat = eig$vectors %*% diag(sqrt(eig$values) * radius)
       pts = unit %*% t(scale_mat)
-      data.frame(
+      quick_df(
         x = pts[, 1] + center[1],
         y = pts[, 2] + center[2],
         by = dat$by[1L],

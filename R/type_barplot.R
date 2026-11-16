@@ -521,7 +521,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
         }
 
         ## calculate bar rectangles per facet 
-        sdat = split(datapoints, datapoints$facet)
+        sdat = split_df(datapoints, datapoints$facet)
         datapoints = lapply(sdat, function(df)  {
           
           df = df[order(df$x), , drop = FALSE]

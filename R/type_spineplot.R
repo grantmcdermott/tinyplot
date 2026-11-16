@@ -232,10 +232,10 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, xord = N
         # if either x_by or y_by are TRUE, we'll only split by facets and then
         # use some simple logic to assign colouring on the backend
         if (isTRUE(x_by) || isTRUE(y_by)) {
-          datapoints = split(datapoints, list(datapoints$facet))
+          datapoints = split_df(datapoints, list(datapoints$facet))
           datapoints = Filter(function(k) nrow(k) > 0, datapoints)
         } else {
-          datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
+          datapoints = split_df(datapoints, list(datapoints$by, datapoints$facet))
           datapoints = Filter(function(k) nrow(k) > 0, datapoints)
         }
         
@@ -270,7 +270,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, xord = N
           xleft = rep(xat[1L:nx], rep(ny, nx))
           xright = rep(xat[2L:(nx+1L)] - off, rep(ny, nx))
           
-          out = data.frame(
+          out = quick_df(
             by = dat$by[1], # already split
             facet = dat$facet[1], # already split
             ymin = ybottom,

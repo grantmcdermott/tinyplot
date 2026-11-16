@@ -259,7 +259,7 @@ data_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf,
     # Bin within each facet, keeping shared bounds.
     has_facet = !is.null(datapoints[["facet"]])
     fac = if (has_facet) datapoints[["facet"]] else rep("", nrow(datapoints))
-    parts = split(datapoints, fac)
+    parts = split_df(datapoints, fac)
     parts = Filter(function(k) nrow(k) > 0, parts)
 
     # Index by position, not by name: the no-facet split key is "" and

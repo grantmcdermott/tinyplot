@@ -192,7 +192,7 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         
         if (is.null(ylab)) ylab = "Density"
         
-        datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
+        datapoints = split_df(datapoints, list(datapoints$by, datapoints$facet))
         # datapoints = Filter(function(k) nrow(k) > 1, datapoints) # drop singletons (rather use dedicated function below)
         datapoints = drop_singletons(datapoints, singletons)
         
@@ -234,7 +234,7 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         }
 
         datapoints = Map(function(dat, d) {
-            data.frame(
+            quick_df(
                 by = dat$by[1], # already split
                 facet = dat$facet[1], # already split
                 y = d$y,

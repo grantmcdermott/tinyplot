@@ -27,7 +27,15 @@ cases = list(
     d(x = 1, g = factor("b", lvls))
   ),
   nulls = list(NULL, d(x = 1), NULL, d(x = 2)),
-  name_order = list(d(x = 1, y = 2), d(y = 3, x = 4))
+  name_order = list(d(x = 1, y = 2), d(y = 3, x = 4)),
+  dup_names = list(
+    data.frame(x = 1, x = 2, check.names = FALSE),
+    data.frame(x = 3, x = 4, check.names = FALSE)
+  ),
+  matrix_col = list(
+    transform(d(id = 1:2), m = I(matrix(1:4, 2))),
+    transform(d(id = 3:4), m = I(matrix(5:8, 2)))
+  )
 )
 for (nm in names(cases)) {
   expect_identical(rbind_dfs(cases[[nm]]), ref(cases[[nm]]), info = nm)

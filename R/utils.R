@@ -349,7 +349,7 @@ model_grid = function(x, n = 100, log = "") {
 ## for factors). Row names are reset. NULL pieces are skipped and an empty
 ## list gives NULL, as with rbind. Inputs the fast path can't reproduce 1:1
 ## (differing column names, factor/character mixes, differing classed
-## attributes, list columns) fall back to rbind itself.
+## attributes, list or matrix columns) fall back to rbind itself.
 rbind_dfs = function(lst) {
   lst = lst[!vapply(lst, is.null, logical(1))]
   if (!length(lst)) return(NULL)
@@ -357,7 +357,8 @@ rbind_dfs = function(lst) {
   fast = length(nms) > 0 &&
     all(vapply(lst, function(d) identical(names(d), nms), logical(1)))
   if (fast) {
-    out = lapply(nms, function(nm) bind_vecs(lapply(lst, `[[`, nm)))
+    # by position, as duplicated names would make `[[` pick the first match
+    out = lapply(seq_along(nms), function(j) bind_vecs(lapply(lst, `[[`, j)))
     fast = !any(vapply(out, is.null, logical(1)))
   }
   if (fast) {
@@ -373,7 +374,9 @@ rbind_dfs = function(lst) {
 
 ## Combine one column's pieces for rbind_dfs(); NULL means "can't, fall back".
 bind_vecs = function(vals) {
-  if (!all(vapply(vals, is.atomic, logical(1)))) return(NULL)
+  # matrix (or array) columns would be flattened by unlist()
+  plain = function(v) is.atomic(v) && is.null(dim(v))
+  if (!all(vapply(vals, plain, logical(1)))) return(NULL)
   objs = vapply(vals, is.object, logical(1))
   # plain vectors coerce up the same hierarchy as rbind (logical < ... <
   # character); unordered factors union their levels in order, as rbind does

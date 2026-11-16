@@ -387,4 +387,3 @@ model_grid = function(x, n = 100, log = "") {
     }
     seq(rng[1L], rng[2L], length.out = n)
 }
-

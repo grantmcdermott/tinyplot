@@ -227,10 +227,12 @@ Steps:
 **Important:** Step 7 applies to any new exported function or page, not just plot types. Whenever you add or rename an exported function that gets its own `.Rd` page, add it to `altdoc/quarto_website.yml` under the appropriate section.
 
 ### Grouped data in type `data` functions
-When a `data` function builds one data frame per group, combine them with
-`rbind_dfs(pieces)` (`R/utils.R`) rather than `do.call(rbind, pieces)`. It
-gives the same result (with fresh row names), is much faster with many
-groups, and falls back to `rbind` for anything unusual. Likewise, avoid
+When a `data` function builds one piece per group, make each piece a plain
+`list(...)` of columns rather than a `data.frame(...)`, and combine them with
+`rbind_dfs(pieces)` (`R/utils.R`) rather than `do.call(rbind, pieces)`.
+`rbind_dfs()` treats list pieces as `data.frame()` would (dropping `NULL`
+columns and recycling length-1 ones), gives the same result as `rbind` (with
+fresh row names), and is much faster with many groups. Likewise, avoid
 per-observation loops such as `vapply(seq_len(n), ...)`: vectorise over the
 data instead (see `van_der_corput()` in `R/type_sina.R`).
 

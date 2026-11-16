@@ -221,7 +221,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             x = c(x, NA)
             y = c(y, NA)
 
-            out = data.frame(
+            out = list(
                 by = dat$by[1], # already split
                 facet = dat$facet[1], # already split
                 y = y,

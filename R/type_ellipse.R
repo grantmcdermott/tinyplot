@@ -69,7 +69,7 @@ data_ellipse = function(level = 0.95, segments = 100) {
       eig = eigen(cov_mat, symmetric = TRUE)
       scale_mat = eig$vectors %*% diag(sqrt(eig$values) * radius)
       pts = unit %*% t(scale_mat)
-      data.frame(
+      list(
         x = pts[, 1] + center[1],
         y = pts[, 2] + center[2],
         by = dat$by[1L],

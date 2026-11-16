@@ -234,7 +234,7 @@ data_density = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
         }
 
         datapoints = Map(function(dat, d) {
-            data.frame(
+            list(
                 by = dat$by[1], # already split
                 facet = dat$facet[1], # already split
                 y = d$y,

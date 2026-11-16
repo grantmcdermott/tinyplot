@@ -270,7 +270,7 @@ data_spineplot = function(off = NULL, breaks = NULL, xlevels = xlevels, xord = N
           xleft = rep(xat[1L:nx], rep(ny, nx))
           xright = rep(xat[2L:(nx+1L)] - off, rep(ny, nx))
           
-          out = data.frame(
+          out = list(
             by = dat$by[1], # already split
             facet = dat$facet[1], # already split
             ymin = ybottom,

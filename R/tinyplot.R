@@ -1825,28 +1825,23 @@ tinyplot.default = function(
   # We'll do this via a nested loops:
   #  1) Outer loop over facets
   #  2) Inner loop over groups
-  if (!is.null(datapoints$facet)) {
-    split_data = split(datapoints, datapoints$facet)
-    split_data = lapply(split_data, as.list)
-  } else {
-    split_data = list(as.list(datapoints))
-  }
+  # One element per facet; with discrete `by` groups, each of those is in turn
+  # a list of the facet's groups. See split_cells().
+  split_data = split_cells(
+    datapoints,
+    split_by = !null_by && !isTRUE(by_continuous)
+  )
 
   if (direct_labels_flag) .dl_info = lapply(seq_along(split_data), function(x) vector("list", ngrps))
 
   ## Outer loop over the facets
   for (i in seq_along(split_data)) {
-    # Split group-level data again to grab any "by" groups
     idata = split_data[[i]]
-    iby = idata[["by"]]
-    if (!null_by) { ## maybe all(iby=="")
+    if (!null_by) {
       if (isTRUE(by_continuous)) {
         idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
         idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
         idata = list(idata)
-      } else {
-        idata = lapply(idata, split, iby)
-        idata = do.call(function(...) Map("list", ...), idata)
       }
     } else {
       idata = list(idata)

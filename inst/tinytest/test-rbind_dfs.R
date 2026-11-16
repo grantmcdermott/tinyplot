@@ -41,3 +41,18 @@ for (nm in names(cases)) {
   expect_identical(rbind_dfs(cases[[nm]]), ref(cases[[nm]]), info = nm)
 }
 expect_null(rbind_dfs(list()))
+
+## plain-list pieces are treated as data.frame() would treat them: NULL
+## columns dropped and length-1 columns recycled
+lp = list(
+  list(by = factor("a", lvls), facet = NULL, y = c(1, 2, 3)),
+  list(by = factor("b", lvls), facet = NULL, y = c(4, 5))
+)
+expect_identical(
+  rbind_dfs(lp),
+  ref(lapply(lp, function(p) do.call(data.frame, Filter(Negate(is.null), p))))
+)
+expect_identical(
+  rbind_dfs(list(list(x = 1, y = 1:2), d(x = 3, y = 3L))),
+  ref(list(d(x = c(1, 1), y = 1:2), d(x = 3, y = 3L)))
+)

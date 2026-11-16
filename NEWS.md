@@ -13,13 +13,15 @@ where the formatting is also better._
 
 ### Internals
 
-- Faster grouped plot types, using base R tricks for grouped operations from
+- Faster grouped and faceted plots, using base R tricks for grouped
+  operations from
   [this post](https://nathaneastwood.github.io/2026/10/25/poorman-tips-and-tricks-for-faster-grouped-operations-in-base-r/)
-  by @nathaneastwood. Per-group results are now combined column-wise rather
-  than via `do.call(rbind, ...)`. With many groups, this makes types like
-  `"density"`, `"ridge"`, `"spline"`, `"violin"` and weighted `"histogram"`
-  up to about 2x faster, while roughly halving memory use. `"sina"` is about
-  6x faster. (#752 @grantmcdermott)
+  by @nathaneastwood. Rows are now split once by position, and per-group
+  results are combined column-wise rather than via `do.call(rbind, ...)`.
+  Plots of large data with `by` groups and/or facets, and grouped types like
+  `"density"`, `"histogram"`, `"spline"`, `"chull"` and `"ellipse"` with many
+  groups, are up to about 3x faster, often with much less memory. `"sina"` is
+  about 6x faster. (#752, #753 @grantmcdermott)
 
 ## v0.8.0
 

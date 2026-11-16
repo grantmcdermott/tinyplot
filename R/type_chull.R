@@ -36,7 +36,7 @@ data_chull = function() {
     datapoints = lapply(datapoints, function(dat) {
       idx = grDevices::chull(dat$x, dat$y)
       idx = c(idx, idx[1L])
-      data.frame(
+      list(
         x = dat$x[idx],
         y = dat$y[idx],
         by = dat$by[1L],

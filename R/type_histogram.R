@@ -158,8 +158,12 @@ data_histogram = function(breaks = "Sturges",
                 # all of them per bin), then sum() each group
                 nbins = length(h$mids)
                 bin[bin > nbins] = NA_integer_
-                bin = structure(bin, levels = as.character(seq_len(nbins)), class = "factor")
-                wsum = vapply(split(k$weights, bin), sum, numeric(1), USE.NAMES = FALSE)
+                bin = structure(
+                    bin, levels = as.character(seq_len(nbins)), class = "factor"
+                )
+                wsum = vapply(
+                    split(k$weights, bin), sum, numeric(1), USE.NAMES = FALSE
+                )
                 bw = diff(h$breaks)
                 h$counts = wsum
                 h$density = wsum / sum(k$weights) / bw

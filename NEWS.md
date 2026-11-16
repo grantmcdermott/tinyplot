@@ -21,8 +21,10 @@ where the formatting is also better._
   up to about 2x faster, while roughly halving memory use. `"sina"` is about
   6x faster. (#752 @grantmcdermott)
 - Faster plots of large data with `by` groups and/or facets, using the same
-  tricks. Rows are now split once by position, rather than splitting the data
-  frame by facet and then every column again by group. (#PR @grantmcdermott)
+  tricks: rows are now split once by position, rather than splitting the data
+  frame by facet and then every column again by group. These plots, and
+  grouped types like `"histogram"`, `"chull"`, `"ellipse"` and `"spline"`,
+  are up to about 2x faster. (#PR @grantmcdermott)
 
 ## v0.8.0
 

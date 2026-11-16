@@ -82,7 +82,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-eb3757b58b6e13495f94bb1b73d86607.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-63069128cbb6ff6a05444d2d569e7722.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -317,7 +317,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="internals" class="level3">
 <h3 class="anchored" data-anchor-id="internals">Internals</h3>
 <ul>
-<li>Faster grouped plot types, using base R tricks for grouped operations from <a href="https://nathaneastwood.github.io/2026/10/25/poorman-tips-and-tricks-for-faster-grouped-operations-in-base-r/">this post</a> by <a href="https://github.com/nathaneastwood"><span class="citation" data-cites="nathaneastwood">@nathaneastwood</span></a>. Per-group results are now combined column-wise rather than via <code>do.call(rbind, ...)</code>. With many groups, this makes types like <code>"density"</code>, <code>"ridge"</code>, <code>"spline"</code>, <code>"violin"</code> and weighted <code>"histogram"</code> up to about 2x faster, while roughly halving memory use. <code>"sina"</code> is about 6x faster. (<a href="https://github.com/grantmcdermott/tinyplot/issues/752">#752</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
+<li>Faster grouped and faceted plots, using base R tricks for grouped operations from <a href="https://nathaneastwood.github.io/2026/10/25/poorman-tips-and-tricks-for-faster-grouped-operations-in-base-r/">this post</a> by <a href="https://github.com/nathaneastwood"><span class="citation" data-cites="nathaneastwood">@nathaneastwood</span></a>. Rows are now split once by position, and per-group results are combined column-wise rather than via <code>do.call(rbind, ...)</code>. Plots of large data with <code>by</code> groups and/or facets, and grouped types like <code>"density"</code>, <code>"histogram"</code>, <code>"spline"</code>, <code>"chull"</code> and <code>"ellipse"</code> with many groups, are up to about 3x faster, often with much less memory. <code>"sina"</code> is about 6x faster. (<a href="https://github.com/grantmcdermott/tinyplot/issues/752">#752</a>, <a href="https://github.com/grantmcdermott/tinyplot/issues/753">#753</a> <a href="https://github.com/grantmcdermott"><span class="citation" data-cites="grantmcdermott">@grantmcdermott</span></a>)</li>
 </ul>
 </section>
 </section>

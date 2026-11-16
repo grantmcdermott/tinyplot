@@ -16,7 +16,7 @@ where the formatting is also better._
 - Faster plots of large data with `by` groups and/or facets, using base R
   tricks for grouped operations from
   [this post](https://nathaneastwood.github.io/2026/10/25/poorman-tips-and-tricks-for-faster-grouped-operations-in-base-r/)
-  by Nathan Eastwood. Rows are now split once by position, rather than
+  by @nathaneastwood. Rows are now split once by position, rather than
   splitting the data frame by facet and then every column again by group.
   Plot output is unchanged. (#PR @grantmcdermott)
 

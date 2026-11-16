@@ -342,7 +342,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     }
 
     ##
-    datapoints = split_df(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
+    datapoints = split(datapoints, list(datapoints$y, datapoints$by, datapoints$facet))
     datapoints = drop_singletons(datapoints, singletons)
 
     if (joint.bw == "none" || is.numeric(bw)) {
@@ -360,7 +360,7 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
 
     datapoints = lapply(datapoints, function(dat) {
       dens = density(dat$x, bw = dens_bw, adjust = adjust, kernel = kernel, n = n)
-      out = quick_df(
+      out = list(
         by = dat$by[1], # already split
         facet = dat$facet[1], # already split
         x = dens$x,
@@ -383,9 +383,9 @@ data_ridge = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
     }
     datapoints$ymax = datapoints$ymax / joint.max * scale
 
-    datapoints = split_df(datapoints, datapoints$facet)
+    datapoints = split(datapoints, datapoints$facet)
     offset_z = function(k) {
-      ksplit = split_df(k, k$y)
+      ksplit = split(k, k$y)
       for (idx in seq_along(ksplit)) {
         ksplit[[idx]]$ymax = ksplit[[idx]]$ymax + idx - 1
         ksplit[[idx]]$ymin = ksplit[[idx]]$ymin + idx - 1

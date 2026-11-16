@@ -221,7 +221,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             x = c(x, NA)
             y = c(y, NA)
 
-            out = quick_df(
+            out = list(
                 by = dat$by[1], # already split
                 facet = dat$facet[1], # already split
                 y = y,
@@ -352,9 +352,9 @@ dist_prep = function(
     ## A continuous `by` is a colour scale rather than a grouping, so it must
     ## not key the split; every cell would hold a single observation.
     if (by_continuous) {
-        cells = split_df(datapoints, list(datapoints[["x"]], datapoints[["facet"]]))
+        cells = split(datapoints, list(datapoints[["x"]], datapoints[["facet"]]))
     } else {
-        cells = split_df(
+        cells = split(
             datapoints,
             list(datapoints[["x"]], datapoints[["by"]], datapoints[["facet"]])
         )

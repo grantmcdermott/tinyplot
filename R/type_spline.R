@@ -37,7 +37,7 @@ data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
     fun = function(settings, ...) {
         env2env(settings, environment(), "datapoints")
 
-        datapoints = split_df(datapoints, list(datapoints$facet, datapoints$by), drop = TRUE)
+        datapoints = split(datapoints, list(datapoints$facet, datapoints$by), drop = TRUE)
         datapoints = lapply(datapoints, function(dat) {
             if (is.null(n)) n = 3 * length(dat$x)
             if (is.null(xmax)) xmax = max(dat$x)
@@ -47,7 +47,6 @@ data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
             } else {
                 fit = spline(x = dat$x, y = dat$y, n = n, method = method, xmin = xmin, xmax = xmax, xout = xout, ties = ties)
             }
-            fit = quick_df(x = fit$x, y = fit$y)
             fit$facet = dat$facet[1]
             fit$by = dat$by[1]
             fit

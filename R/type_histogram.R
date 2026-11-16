@@ -143,7 +143,7 @@ data_histogram = function(breaks = "Sturges",
         }
 
         if (!.freebreaks) xbreaks = hist(datapoints$x, breaks = hbreaks, right = .right, plot = FALSE)$breaks
-        datapoints = split_df(datapoints, list(datapoints$by, datapoints$facet))
+        datapoints = split(datapoints, list(datapoints$by, datapoints$facet))
         datapoints = Filter(function(k) nrow(k) > 0, datapoints)
 
         datapoints = lapply(datapoints, function(k) {
@@ -177,7 +177,7 @@ data_histogram = function(breaks = "Sturges",
                 h$mids = h$mids[nzidx]
             }
             freq = if (!is.null(.freq)) .freq else is.null(.freq) && h$equidist
-            out = quick_df(
+            out = list(
                 # `x_by`: one group per bin, valued at the bin's midpoint, so
                 # that the colours track the x-axis (see above)
                 by = if (x_by) h$mids else k$by[1], # already split

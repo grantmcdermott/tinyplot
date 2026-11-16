@@ -175,30 +175,51 @@ split_rows = function(f) {
   out
 }
 
+## Split the draw loop's data into one element per facet (a single element
+## without facets). With `split_by = TRUE`, each facet's element is in turn a
+## list with one element per `by` group, empty groups included, so that group
+## `ii` lines up with its aesthetics everywhere. Each piece is a plain list of
+## columns.
+##
+## Rather than splitting the data frame by facet and then every column again by
+## group, this finds each cell's row positions once and subsets the columns by
+## position. With a factor `by` every facet has the same groups, so a single
+## split_rows() over the combined facet x by code covers them all.
+split_cells = function(datapoints, split_by = FALSE) {
+  cols = as.list(datapoints)
+  # empty cells (e.g. groups absent from a facet) can all share one copy
+  empty = lapply(cols, `[`, integer(0))
+  take = function(rows) {
+    if (is.null(rows)) return(cols) # NULL means all rows
+    if (!length(rows)) return(empty)
+    lapply(cols, `[`, rows)
+  }
+  by = cols[["by"]]
+  facet = cols[["facet"]]
 
-## A lean data.frame(...) for building per-group pieces: NULL arguments are
-## dropped and length-1 ones recycled, as data.frame() does, but without its
-## argument checking and name handling (which dominate for small pieces).
-quick_df = function(...) {
-  x = list(...)
-  x = x[!vapply(x, is.null, logical(1))]
-  n = if (length(x)) max(lengths(x)) else 0L
-  x = lapply(x, function(v) if (length(v) == n) v else rep(v, length.out = n))
-  attr(x, "row.names") = .set_row_names(n)
-  class(x) = "data.frame"
-  x
-}
+  if (split_by && is.factor(by) && (is.null(facet) || is.factor(facet))) {
+    nby = nlevels(by)
+    nfct = if (is.null(facet)) 1L else nlevels(facet)
+    cell = as.integer(by)
+    if (!is.null(facet)) cell = (as.integer(facet) - 1L) * nby + cell
+    cell = structure(
+      cell, levels = as.character(seq_len(nfct * nby)), class = "factor"
+    )
+    cells = lapply(split_rows(cell), take)
+    return(lapply(seq_len(nfct), function(i) {
+      out = cells[(i - 1L) * nby + seq_len(nby)]
+      names(out) = levels(by)
+      out
+    }))
+  }
 
-## split(df, f, drop) for data frames: the same groups in the same order, but
-## each piece is built by indexing its columns directly rather than through
-## `[.data.frame` and its row name bookkeeping (the pieces get fresh row names).
-split_df = function(df, f, drop = FALSE) {
-  rows = split(seq_len(nrow(df)), f, drop = drop)
-  lapply(rows, function(r) {
-    out = lapply(df, `[`, r)
-    attr(out, "row.names") = .set_row_names(length(r))
-    class(out) = "data.frame"
-    out
+  fct_rows = if (is.null(facet)) list(NULL) else split_rows(facet)
+  if (!split_by) return(lapply(fct_rows, take))
+  # A non-factor `by` (e.g. a numeric one reverted to discrete groups) takes its
+  # groups from the values present in each facet, as split() always has.
+  lapply(fct_rows, function(rows) {
+    iby = if (is.null(rows)) by else by[rows]
+    lapply(split(rows %||% seq_along(by), iby), take)
   })
 }
 
@@ -393,12 +414,22 @@ model_grid = function(x, n = 100, log = "") {
 ## for many pieces: each column is combined in a single unlist() rather than
 ## by rbind.data.frame's per-piece assignments (which are particularly slow
 ## for factors). Row names are reset. NULL pieces are skipped and an empty
-## list gives NULL, as with rbind. Inputs the fast path can't reproduce 1:1
+## list gives NULL, as with rbind. Pieces may also be plain lists of columns,
+## which is much cheaper than data.frame() for many small pieces: they're
+## treated as data.frame() would treat them, dropping NULL columns and
+## recycling length-1 ones. Inputs the fast path can't reproduce 1:1
 ## (differing column names, factor/character mixes, differing classed
 ## attributes, list or matrix columns) fall back to rbind itself.
 rbind_dfs = function(lst) {
   lst = lst[!vapply(lst, is.null, logical(1))]
   if (!length(lst)) return(NULL)
+  lst = lapply(lst, function(d) {
+    if (is.data.frame(d)) return(d)
+    d = d[!vapply(d, is.null, logical(1))]
+    n = if (length(d)) max(lengths(d)) else 0L
+    d = lapply(d, function(v) if (length(v) == n) v else rep(v, length.out = n))
+    structure(d, row.names = .set_row_names(n), class = "data.frame")
+  })
   nms = names(lst[[1]])
   fast = length(nms) > 0 &&
     all(vapply(lst, function(d) identical(names(d), nms), logical(1)))

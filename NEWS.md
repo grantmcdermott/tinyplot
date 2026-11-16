@@ -16,10 +16,11 @@ where the formatting is also better._
 - Faster grouped plot types, using base R tricks for grouped operations from
   [this post](https://nathaneastwood.github.io/2026/10/25/poorman-tips-and-tricks-for-faster-grouped-operations-in-base-r/)
   by @nathaneastwood. Per-group results are now combined column-wise rather
-  than via `do.call(rbind, ...)`, which speeds up types like `"density"`,
-  `"violin"`, `"ridge"` and `"spline"` with many groups and roughly halves
-  their memory use. `"sina"` and weighted `"histogram"` plots are also much
-  faster. Plot output is unchanged. (#752 @grantmcdermott)
+  than via `do.call(rbind, ...)`. With many groups, this makes `"density"`,
+  `"ridge"` and `"spline"` about 1.7x faster, and `"violin"`, `"ellipse"`
+  and `"chull"` about 1.3x faster, while roughly halving memory use. Weighted
+  `"histogram"` plots are about 2x faster, and `"sina"` about 6x faster.
+  Plot output is unchanged. (#752 @grantmcdermott)
 
 ## v0.8.0
 

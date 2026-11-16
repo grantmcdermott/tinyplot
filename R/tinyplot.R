@@ -1830,8 +1830,13 @@ tinyplot.default = function(
   # columns by position. A NULL entry stands for "all rows", which avoids
   # copying the data when there are no facets or groups.
   dp_cols = as.list(datapoints)
+  # Empty cells (e.g. groups absent from a facet) all get the same zero-row
+  # columns, so build those once rather than subsetting every column again.
+  dp_empty = lapply(dp_cols, `[`, integer(0))
   dp_take = function(rows) {
-    if (is.null(rows)) dp_cols else lapply(dp_cols, `[`, rows)
+    if (is.null(rows)) return(dp_cols)
+    if (!length(rows)) return(dp_empty)
+    lapply(dp_cols, `[`, rows)
   }
   dp_facet = datapoints$facet
   by_split = !null_by && !isTRUE(by_continuous)

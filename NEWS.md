@@ -19,7 +19,7 @@ where the formatting is also better._
   than via `do.call(rbind, ...)`, which speeds up types like `"density"`,
   `"violin"`, `"ridge"` and `"spline"` with many groups and roughly halves
   their memory use. `"sina"` and weighted `"histogram"` plots are also much
-  faster. Plot output is unchanged. (#PR @grantmcdermott)
+  faster. Plot output is unchanged. (#752 @grantmcdermott)
 
 ## v0.8.0
 

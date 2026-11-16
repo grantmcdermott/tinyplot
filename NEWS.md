@@ -11,6 +11,15 @@ where the formatting is also better._
 - `legend = list("direct", labeller = ...)` now applies the labeller to direct
   labels, which previously ignored it. (#748 @grantmcdermott)
 
+### Internals
+
+- Faster plots of large data with `by` groups and/or facets, using base R
+  tricks for grouped operations from
+  [this post](https://nathaneastwood.github.io/2026/10/25/poorman-tips-and-tricks-for-faster-grouped-operations-in-base-r/)
+  by Nathan Eastwood. Rows are now split once by position, rather than
+  splitting the data frame by facet and then every column again by group.
+  Plot output is unchanged. (#PR @grantmcdermott)
+
 ## v0.8.0
 
 ### Breaking changes

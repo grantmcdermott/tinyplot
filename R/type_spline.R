@@ -53,7 +53,7 @@ data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
             fit
             return(fit)
         })
-        datapoints = do.call(rbind, datapoints)
+        datapoints = rbind_dfs(datapoints)
         env2env(environment(), settings, "datapoints")
     }
     return(fun)

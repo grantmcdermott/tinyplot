@@ -226,6 +226,17 @@ Steps:
 
 **Important:** Step 7 applies to any new exported function or page, not just plot types. Whenever you add or rename an exported function that gets its own `.Rd` page, add it to `altdoc/quarto_website.yml` under the appropriate section.
 
+### Grouped data in type `data` functions
+When a `data` function builds one data frame per group, combine them with
+`rbind_dfs(pieces)` (`R/utils.R`) rather than `do.call(rbind, pieces)`. It
+gives the same result (with fresh row names), is much faster with many
+groups, and falls back to `rbind` for anything unusual. To split the input
+by group, use `split_df(datapoints, f)` rather than `split(datapoints, f)`,
+and build each group's piece with `quick_df(...)` rather than
+`data.frame(...)`; both skip overhead that dominates for small pieces.
+Likewise, avoid per-observation loops such as `vapply(seq_len(n), ...)`:
+vectorise over the data instead (see `van_der_corput()` in `R/type_sina.R`).
+
 ### Modifying Legend Behaviour
 Type-specific legend customizations should go in the type's `data` function by modifying `settings$legend_args`:
 ```r

@@ -74,7 +74,7 @@ data_glm = function(family, se, level, type, weights = NULL, ...) {
             }
             nd
         })
-        datapoints = do.call(rbind, dat)
+        datapoints = rbind_dfs(dat)
         datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), ]
         
         # legend customizations - same as ribbon but add line through square

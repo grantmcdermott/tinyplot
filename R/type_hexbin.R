@@ -275,7 +275,7 @@ data_hexbin = function(xbins = 30, shape = 1, mincnt = 1, maxcnt = Inf,
       hb[["facet"]] = if (has_facet) k[["facet"]][1L] else part_names[idx]
       hb
     })
-    binned = do.call(rbind, binned)
+    binned = rbind_dfs(binned)
 
     # Count filtering.
     if (!is.null(binned)) {

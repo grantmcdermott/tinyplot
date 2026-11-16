@@ -579,7 +579,7 @@ data_barplot = function(width = 5/6, beside = FALSE, center = FALSE, offset = NU
 
           return(df)
         })
-        datapoints = do.call("rbind", datapoints)
+        datapoints = rbind_dfs(datapoints)
         nx = datapoints$nx[1]
         datapoints$nx = NULL
         datapoints$.unobs = NULL

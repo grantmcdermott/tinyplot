@@ -76,7 +76,7 @@ data_ellipse = function(level = 0.95, segments = 100) {
         facet = dat$facet[1L]
       )
     })
-    datapoints = do.call(rbind, datapoints)
+    datapoints = rbind_dfs(datapoints)
 
     by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
     facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet

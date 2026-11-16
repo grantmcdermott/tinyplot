@@ -11,6 +11,16 @@ where the formatting is also better._
 - `legend = list("direct", labeller = ...)` now applies the labeller to direct
   labels, which previously ignored it. (#748 @grantmcdermott)
 
+### Internals
+
+- Faster grouped plot types, using base R tricks for grouped operations from
+  [this post](https://nathaneastwood.github.io/2026/10/25/poorman-tips-and-tricks-for-faster-grouped-operations-in-base-r/)
+  by @nathaneastwood. Per-group results are now combined column-wise rather
+  than via `do.call(rbind, ...)`. With many groups, this makes types like
+  `"density"`, `"ridge"`, `"spline"`, `"violin"` and weighted `"histogram"`
+  up to about 2x faster, while roughly halving memory use. `"sina"` is about
+  6x faster. (#752 @grantmcdermott)
+
 ## v0.8.0
 
 ### Breaking changes

@@ -135,7 +135,7 @@ data_loess = function(span, degree, family, control, se, level, n = 100, weights
             }
             nd
         })
-        datapoints = do.call(rbind, datapoints)
+        datapoints = rbind_dfs(datapoints)
         datapoints = datapoints[order(datapoints$facet, datapoints$by, datapoints$x), ]
         
         # legend customizations - same as ribbon but add line through square

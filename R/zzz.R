@@ -83,7 +83,6 @@
     "rev_x",
     "rev_y",
     "ribbon.alpha",
-    "split_data",
     "tpars",
     "type",
     "type_hints",

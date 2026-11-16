@@ -157,6 +157,26 @@ rescale_num = function(x, from = NULL, to = NULL) {
 }
 
 
+## Row positions for every level of the factor `f`, identical to
+## split(seq_along(f), f): empty levels give integer(0), NAs are dropped and
+## rows keep their original order within each level. Up to a few thousand
+## levels this is several times faster than split(), since it needs only one
+## (stable) radix order() and then contiguous slices of it. With very many,
+## very small groups the per-level slicing loses out, so hand those to split().
+split_rows = function(f) {
+  if (!is.factor(f)) f = as.factor(f)
+  nlev = nlevels(f)
+  if (nlev > 1e4L) return(split(seq_along(f), f))
+  o = order(f, method = "radix")
+  cnt = tabulate(f, nlev)
+  start = cumsum(cnt) - cnt
+  out = lapply(seq_len(nlev), function(k) o[start[k] + seq_len(cnt[k])])
+  names(out) = levels(f)
+  out
+}
+
+
+
 # Convenience function for swapping variables (e.g., use in flipped plots)
 swap_variables = function(env, ...) {
   pairs = list(...)
@@ -341,3 +361,4 @@ model_grid = function(x, n = 100, log = "") {
     }
     seq(rng[1L], rng[2L], length.out = n)
 }
+

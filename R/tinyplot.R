@@ -1825,31 +1825,62 @@ tinyplot.default = function(
   # We'll do this via a nested loops:
   #  1) Outer loop over facets
   #  2) Inner loop over groups
-  if (!is.null(datapoints$facet)) {
-    split_data = split(datapoints, datapoints$facet)
-    split_data = lapply(split_data, as.list)
+  # Rather than splitting the data frame (and then every column again by
+  # group), we find each facet's and group's row positions and subset the
+  # columns by position. A NULL entry stands for "all rows", which avoids
+  # copying the data when there are no facets or groups.
+  dp_cols = as.list(datapoints)
+  dp_take = function(rows) {
+    if (is.null(rows)) dp_cols else lapply(dp_cols, `[`, rows)
+  }
+  dp_facet = datapoints$facet
+  by_split = !null_by && !isTRUE(by_continuous)
+  # With a factor `by`, every facet has the same groups, so one pass over the
+  # combined facet x by code finds every cell's rows up front.
+  by_presplit = by_split && is.factor(dp_cols[["by"]]) &&
+    (is.null(dp_facet) || is.factor(dp_facet))
+  if (by_presplit) {
+    by_levs = levels(dp_cols[["by"]])
+    nby = length(by_levs)
+    nfct = if (is.null(dp_facet)) 1L else nlevels(dp_facet)
+    cell = as.integer(dp_cols[["by"]])
+    if (!is.null(dp_facet)) cell = (as.integer(dp_facet) - 1L) * nby + cell
+    cell = structure(
+      cell, levels = as.character(seq_len(nfct * nby)), class = "factor"
+    )
+    cell_rows = split_rows(cell)
+    fct_rows = lapply(seq_len(nfct), function(i) {
+      out = cell_rows[(i - 1L) * nby + seq_len(nby)]
+      names(out) = by_levs
+      out
+    })
+  } else if (!is.null(dp_facet)) {
+    fct_rows = split_rows(dp_facet)
   } else {
-    split_data = list(as.list(datapoints))
+    fct_rows = list(NULL)
   }
 
-  if (direct_labels_flag) .dl_info = lapply(seq_along(split_data), function(x) vector("list", ngrps))
+  if (direct_labels_flag) .dl_info = lapply(seq_along(fct_rows), function(x) vector("list", ngrps))
 
   ## Outer loop over the facets
-  for (i in seq_along(split_data)) {
-    # Split group-level data again to grab any "by" groups
-    idata = split_data[[i]]
-    iby = idata[["by"]]
-    if (!null_by) { ## maybe all(iby=="")
-      if (isTRUE(by_continuous)) {
-        idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
-        idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
-        idata = list(idata)
-      } else {
-        idata = lapply(idata, split, iby)
-        idata = do.call(function(...) Map("list", ...), idata)
-      }
-    } else {
+  for (i in seq_along(fct_rows)) {
+    irows = fct_rows[[i]]
+    if (by_presplit) {
+      idata = lapply(irows, dp_take)
+    } else if (by_split) { ## maybe all(iby=="")
+      # A non-factor `by` (e.g. a numeric one reverted to discrete groups)
+      # takes its groups from the values present in this facet, as split()
+      # always has.
+      iby = if (is.null(irows)) dp_cols[["by"]] else dp_cols[["by"]][irows]
+      idata = split(irows %||% seq_len(nrow(datapoints)), iby)
+      idata = lapply(idata, dp_take)
+    } else if (!null_by) {
+      idata = dp_take(irows)
+      idata[["col"]] = col[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
+      idata[["bg"]] = bg[round(rescale_num(idata$by, from = range(datapoints$by), to = c(1, 100)))]
       idata = list(idata)
+    } else {
+      idata = list(dp_take(irows))
       if (isTRUE(by_continuous)) {
         if (length(col) != 1) {
           idata[[1]][["col"]] = col[round(rescale_num(by, to = c(1, 100)))]

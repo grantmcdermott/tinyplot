@@ -1047,6 +1047,20 @@ expect_error(
 )
 
 
+# Facets that are missing some `by` groups (and a facet level with no data at
+# all) must keep each group in its own colour across panels
+f = function() {
+  d = data.frame(
+    x = 1:12, y = c(1:12),
+    g = factor(rep(c("a", "b", "c"), 4)),
+    f = factor(rep(c("F1", "F2"), each = 6), levels = c("F1", "F2", "F3"))
+  )
+  d = d[!(d$f == "F2" & d$g == "b"), ]
+  tinyplot(y ~ x | g, data = d, facet = ~f, pch = 19, cex = 2)
+}
+expect_snapshot_plot(f, label = "facet_by_missing_groups")
+
+
 #
 # restore original par settings
 #

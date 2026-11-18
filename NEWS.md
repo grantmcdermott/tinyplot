@@ -11,6 +11,18 @@ where the formatting is also better._
 - `legend = list("direct", labeller = ...)` now applies the labeller to direct
   labels, which previously ignored it. (#748 @grantmcdermott)
 
+### Internals
+
+- Faster grouped and faceted plots, using base R tricks for grouped
+  operations from
+  [this post](https://nathaneastwood.github.io/2026/10/25/poorman-tips-and-tricks-for-faster-grouped-operations-in-base-r/)
+  by @nathaneastwood. Rows are now split once by position, and per-group
+  results are combined column-wise rather than via `do.call(rbind, ...)`.
+  Plots of large data with `by` groups and/or facets, and grouped types like
+  `"density"`, `"histogram"`, `"spline"`, `"chull"` and `"ellipse"` with many
+  groups, are up to about 3x faster, often with much less memory. `"sina"` is
+  about 6x faster. (#752, #753 @grantmcdermott)
+
 ## v0.8.0
 
 ### Breaking changes

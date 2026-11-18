@@ -47,13 +47,12 @@ data_spline = function(n, method, xmin, xmax, xout, ties, ...) {
             } else {
                 fit = spline(x = dat$x, y = dat$y, n = n, method = method, xmin = xmin, xmax = xmax, xout = xout, ties = ties)
             }
-            fit = as.data.frame(fit)
             fit$facet = dat$facet[1]
             fit$by = dat$by[1]
             fit
             return(fit)
         })
-        datapoints = do.call(rbind, datapoints)
+        datapoints = rbind_dfs(datapoints)
         env2env(environment(), settings, "datapoints")
     }
     return(fun)

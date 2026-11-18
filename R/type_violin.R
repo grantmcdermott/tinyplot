@@ -221,7 +221,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             x = c(x, NA)
             y = c(y, NA)
 
-            out = data.frame(
+            out = list(
                 by = dat$by[1], # already split
                 facet = dat$facet[1], # already split
                 y = y,
@@ -232,7 +232,7 @@ data_violin = function(bw = "nrd0", adjust = 1, kernel = "gaussian", n = 512,
             if (facet_drop_levels_on(settings[["facet.args"]])) out[[".xcat"]] = xcat
             return(out)
         })
-        datapoints = do.call(rbind, datapoints)
+        datapoints = rbind_dfs(datapoints)
         datapoints = datapoints[1:(nrow(datapoints)-1), ]
 
         by = if (length(unique(datapoints$by)) == 1) by else datapoints$by

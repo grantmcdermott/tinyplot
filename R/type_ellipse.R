@@ -69,14 +69,14 @@ data_ellipse = function(level = 0.95, segments = 100) {
       eig = eigen(cov_mat, symmetric = TRUE)
       scale_mat = eig$vectors %*% diag(sqrt(eig$values) * radius)
       pts = unit %*% t(scale_mat)
-      data.frame(
+      list(
         x = pts[, 1] + center[1],
         y = pts[, 2] + center[2],
         by = dat$by[1L],
         facet = dat$facet[1L]
       )
     })
-    datapoints = do.call(rbind, datapoints)
+    datapoints = rbind_dfs(datapoints)
 
     by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
     facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet

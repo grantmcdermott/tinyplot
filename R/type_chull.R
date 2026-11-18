@@ -36,14 +36,14 @@ data_chull = function() {
     datapoints = lapply(datapoints, function(dat) {
       idx = grDevices::chull(dat$x, dat$y)
       idx = c(idx, idx[1L])
-      data.frame(
+      list(
         x = dat$x[idx],
         y = dat$y[idx],
         by = dat$by[1L],
         facet = dat$facet[1L]
       )
     })
-    datapoints = do.call(rbind, datapoints)
+    datapoints = rbind_dfs(datapoints)
 
     by = if (length(unique(datapoints$by)) == 1) by else datapoints$by
     facet = if (length(unique(datapoints$facet)) == 1) facet else datapoints$facet

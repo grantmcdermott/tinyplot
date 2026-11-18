@@ -314,3 +314,11 @@ expect_warning(
 expect_silent(
   plt(mpg ~ wt | cyl, mtcars, type = "b", legend = FALSE)
 )
+
+# A labeller listed first in the legend list (rather than a position) must not
+# break the check for a "top!" legend in draw_title()
+f = function() {
+  plt(mpg ~ wt | factor(cyl), mtcars,
+      legend = list(labeller = c("4" = "four", "6" = "six", "8" = "eight")))
+}
+expect_snapshot_plot(f, label = "legend_labeller_first_dict")

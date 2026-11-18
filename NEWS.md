@@ -10,6 +10,8 @@ where the formatting is also better._
 
 - `legend = list("direct", labeller = ...)` now applies the labeller to direct
   labels, which previously ignored it. (#748 @grantmcdermott)
+- `legend` lists that start with a labeller no longer error when the labeller
+  is a dictionary with several entries. (#751 @wachtermh)
 
 ### Internals
 
